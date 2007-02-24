@@ -162,6 +162,8 @@ opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
+opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
+opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.33.1')
 wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
 opts.AddOption( wxwidgets_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
@@ -264,7 +266,11 @@ if not SConsAddons.Util.hasHelpFlag():
       Exit(1)
 
    fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
-   if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", '2.0' ):
+   if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
+      Exit(1)
+
+   fgpBoost = sca_util.FlagPollParser('Boost.Filesystem')
+   if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
       Exit(1)
 
    ## Try to save the options if possible and if the user did

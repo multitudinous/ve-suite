@@ -24,7 +24,8 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['GLU','GL'])
-lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs')
+#lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs')
+lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --get-extra_libs'%lib_env['VRJugglerVersion'])
 osg_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_NURBSLib%s' %(execOsgPatTag),

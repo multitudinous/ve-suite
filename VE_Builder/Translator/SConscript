@@ -34,12 +34,7 @@ srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', s), srcs)
 env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 env.Append(CPPPATH = ['#/VE_Builder/Utilities'])
-env.Append(LIBPATH = '#',
-              LIBS = 'VE_UtilLib')
+env.Append(LIBPATH = '#', LIBS = 'VE_UtilLib')
 
-for lib in vtk:
-   env.Append(LIBS = lib)
-for lib in boost:
-   env.Append(LIBS = lib)
 env.ParseConfig( 'flagpoll vtk --cflags --libs' )
 env.Program(pj('#','bin',Platform,'Translator'), source = srcs)
