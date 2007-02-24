@@ -71,8 +71,10 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
-lib_env.ParseConfig('flagpoll gmtl bullet --libs --cflags')
-lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll bullet --libs --cflags')
+lib_env.ParseConfig('flagpoll gmtl --libs --cflags')
+lib_env.ParseConfig('flagpoll vpr gadgeteer --require-Version=%s --libs --cflags'%lib_env['VPRVersion'])
+#lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
 
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
