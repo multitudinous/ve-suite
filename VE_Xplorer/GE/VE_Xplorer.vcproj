@@ -198,8 +198,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				Description="Compiling VE-Launcher"
-				CommandLine="call $(VE_SUITE_HOME)\VE_Installer\installer\buildVELauncher.exe.bat"
+				Description=""
+				CommandLine=""
 			/>
 		</Configuration>
 	</Configurations>

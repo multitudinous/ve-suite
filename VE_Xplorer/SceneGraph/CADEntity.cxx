@@ -15,124 +15,14 @@
 
 #include <osg/Fog>
 #include <osg/Node>
-//#include <osg/NodeVisitor>
 #include <osg/Group>
-#include <osg/Geode>
-#include <osg/Geometry>
 #include <osg/MatrixTransform>
-#include <osg/TriangleIndexFunctor>
+#endif
 
 //C/C++ libraries
 #include <cassert>
 
 using namespace VE_SceneGraph;
-
-class TriIndexFunc
-{
-public:
-   TriIndexFunc(){;}
-   ~TriIndexFunc(){;}
-
-   void inline operator()( unsigned int pos1, unsigned int pos2, unsigned int pos3 )
-   {
-      triangleIndex.push_back( pos1 );
-      triangleIndex.push_back( pos2 );
-      triangleIndex.push_back( pos3 );
-   }
-
-   std::vector< unsigned int > triangleIndex;
-};
-#endif
-
-class Mesh : public osg::NodeVisitor
-{
-public:
-	Mesh( osg::Node* osg_node )
-	:
-	NodeVisitor( TRAVERSE_ALL_CHILDREN )
-	{
-		triMesh = new btTriangleMesh;
-
-		osg_node->accept( *this );
-		this->CreateBBMesh();
-		this->CreateExactMesh();
-	}
-
-	virtual ~Mesh()
-	{
-		if( collision_shape_bb )
-		{
-			delete collision_shape_bb;
-		}
-
-		if (collision_shape_exact )
-		{
-			delete collision_shape_exact;
-		}
-	}
-
-	virtual void apply( osg::Geode& geode )
-	{ 
-		bb.expandBy( geode.getBoundingBox() );
-
-		osg::TriangleIndexFunctor< TriIndexFunc > TIF;
-		osg::ref_ptr< osg::Vec3Array > vertex_array;
-
-		for( unsigned int i = 0; i < geode.getNumDrawables(); i++ )
-		{
-			geode.getDrawable( i )->accept( TIF );
-			vertex_array = dynamic_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
-
-			btVector3 v1, v2, v3;
-
-			for( unsigned int i = 0; i < TIF.triangleIndex.size()/3; i++ )
-			{
-				triMesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( i*3  ) ).x(),
-															vertex_array->at( TIF.triangleIndex.at( i*3  ) ).y(),
-															vertex_array->at( TIF.triangleIndex.at( i*3  ) ).z() ),
-											 btVector3( vertex_array->at( TIF.triangleIndex.at( i*3+1) ).x(),
-															vertex_array->at( TIF.triangleIndex.at( i*3+1) ).y(),
-															vertex_array->at( TIF.triangleIndex.at( i*3+1) ).z() ),
-											 btVector3( vertex_array->at( TIF.triangleIndex.at( i*3+2) ).x(),
-															vertex_array->at( TIF.triangleIndex.at( i*3+2) ).y(),
-															vertex_array->at( TIF.triangleIndex.at( i*3+2) ).z() ) );
-			}
-
-		}
-
-	}
-
-	void CreateBBMesh()
-	{
-		
-		collision_shape_bb = new btBoxShape( btVector3( (bb.xMax()-bb.xMin())*0.5f,
-																		(bb.yMax()-bb.yMin())*0.5f,
-																		(bb.zMax()-bb.zMin())*0.5f ) );
-	}
-
-	void CreateExactMesh()
-	{
-
-		collision_shape_exact = new btBvhTriangleMeshShape( triMesh );
-	}
-
-	btCollisionShape* GetBBMesh()
-	{
-		return collision_shape_bb;
-	}
-
-	btCollisionShape* GetExactMesh()
-	{
-		return collision_shape_exact;
-	}
-
-private:
-	osg::BoundingBox bb;
-	btTriangleMesh* triMesh;
-
-	btCollisionShape* collision_shape_bb;
-	btCollisionShape* collision_shape_exact;
-};
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream )
@@ -150,6 +40,8 @@ restitution(0.0f)
    fileName.assign( geomFile );
 	this->dcs->addChild( this->node->GetNode() );
    worldDCS->AddChild( this->dcs.get() );
+
+	physics_mesh = 0;
 
    #ifdef _PERFORMER
    fog = new pfFog();
@@ -170,21 +62,6 @@ void CADEntity::Initialize( float op_val )
    setOpac( op_val );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::InitPhysics()
-{
-	osg::ref_ptr< Mesh > mesh = new Mesh( this->node->GetNode() );
-
-	collision_shape = mesh->GetBBMesh();
-
-	btTransform transform;
-	transform.setIdentity();
-	this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
-	this->rigid_body->setFriction( this->friction );
-	this->rigid_body->setRestitution( this->restitution );
-
-	dcs->SetbtRigidBody( rigid_body );
-}
-////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetMass( float m )
 {
 	mass = m;
@@ -192,10 +69,10 @@ void CADEntity::SetMass( float m )
 	if( collision_shape )
 	{
 		//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-		bool dynamic = (mass != 0.0f);
+		bool dynamic = ( mass != 0.0f );
 
 		btVector3 localInertia( 0, 0, 0 );
-		if(dynamic)
+		if( dynamic )
 		{
 			collision_shape->calculateLocalInertia( mass, localInertia );
 		}
@@ -204,10 +81,11 @@ void CADEntity::SetMass( float m )
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetFriction( float f )
 {
-	friction=f;
+	friction = f;
 
-	if(rigid_body){
-		rigid_body->setFriction(friction);
+	if( rigid_body )
+	{
+		rigid_body->setFriction( friction );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -218,6 +96,24 @@ void CADEntity::SetRestitution( float r )
 	if( rigid_body )
 	{
 		rigid_body->setRestitution( restitution );
+	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetPhysics( bool p )
+{
+	if( p && !physics_mesh )
+	{
+		physics_mesh = new PhysicsMesh( this->node->GetNode() );
+
+		collision_shape = this->physics_mesh->GetBBMesh();
+
+		btTransform transform;
+		transform.setOrigin( btVector3( GetDCS()->getPosition().x(), GetDCS()->getPosition().y(), GetDCS()->getPosition().z() ) );
+		this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
+		this->rigid_body->setFriction( this->friction );
+		this->rigid_body->setRestitution( this->restitution );
+
+		dcs->SetbtRigidBody( rigid_body );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -268,29 +164,6 @@ float CADEntity::getOpacity()
 {
    return this->op;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-void CADEntity::UpdateMatTransform()
-{
-   osg::Matrix matrix;
-   osg::Quat quat;
-
-   btVector3 position;
-   btQuaternion quaternion;
-
-   if(rigid_body && rigid_body->getMotionState()){
-      position=rigid_body->getWorldTransform().getOrigin();
-      
-      matrix.setTrans(position.getX(),position.getY(),position.getZ());
-   
-      btQuaternion quaternion=solid->getWorldTransform().getRotation();
-      quat.set(quaternion.getX(),quaternion.getY(),quaternion.getZ(),quaternion.getW());
-      matrix.setRotate(quat);
-	}
-
-   matTrans->setMatrix(matrix);
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
 {

@@ -223,6 +223,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PhysicsMesh.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhysicsSimulator.cxx"
 				>
 			</File>
@@ -312,6 +316,10 @@
 			</File>
 			<File
 				RelativePath=".\Group.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PhysicsMesh.h"
 				>
 			</File>
 			<File

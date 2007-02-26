@@ -6,10 +6,14 @@
 
 #include "VE_Installer/include/VEConfig.h"
 
+
+//Should not have to include these here
 #include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/PhysicsMesh.h"
 
 namespace VE_SceneGraph
 {
+	class DCS;
 	class CADEntityHelper;
 }
 
@@ -21,6 +25,8 @@ namespace osg
 }
 #include <osg/Fog>
 #endif
+
+class PhysicsMesh;
 
 class btRigidBody;
 class btCollisionShape;
@@ -40,6 +46,8 @@ public:
 	void SetMass( float m );
 	void SetFriction( float f );
 	void SetRestitution( float r );
+
+	void SetPhysics( bool p );
 
    std::string GetFilename();
    std::string GetModuleName();
@@ -63,17 +71,18 @@ public:
 
 private:
 	void Initialize( float );
-	void InitPhysics();
 
-   //Group* _masterNode;
 	VE_SceneGraph::CADEntityHelper* node;
 	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
    btRigidBody* rigid_body;
+	osg::ref_ptr< PhysicsMesh > physics_mesh;
 	btCollisionShape* collision_shape;
 
 	float mass;
 	float friction;
 	float restitution;
+
+	bool physics;
 
    int mat_count;
    int color;
@@ -88,8 +97,7 @@ private:
 
    bool _transparencyFlag;
 
-   //char* fileName;
-   std::string fileName;//[512];
+   std::string fileName;		//[512];
    std::string _filename;
    std::string _moduleName;
 
@@ -98,7 +106,6 @@ private:
 #endif
 
 };
-
 }
 
 #endif //CAD_ENTITY_H

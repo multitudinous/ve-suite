@@ -6,7 +6,6 @@ PhysicsSimulator API
 /*!\class VE_SceneGraph::PhysicsSimulator
 * 
 */
-
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
@@ -32,7 +31,7 @@ namespace VE_SceneGraph
       public:
          void ExitPhysics();                                   //Functions as the destructor
 
-         void UpdatePhysics(float dt);
+         void UpdatePhysics( float dt );
          void ResetScene();
 
          void ShootBox(const btVector3& destination);

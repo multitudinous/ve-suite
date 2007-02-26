@@ -26,9 +26,9 @@
 
 using namespace VE_SceneGraph;
 
-const int maxProxies=32766;
+const int maxProxies = 32766;
 
-vprSingletonImp(PhysicsSimulator);
+vprSingletonImp( PhysicsSimulator );
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
@@ -140,29 +140,36 @@ void PhysicsSimulator::InitPhysics()
 	//dynamics_world->setDebugDrawer(&debugDrawer);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::UpdatePhysics(float dt)
+void PhysicsSimulator::UpdatePhysics( float dt )
 {
-	if (dynamics_world){
+	printf( "dt = %f: ", dt );
 
+   if ( dynamics_world )
+	{
 		//during idle mode, just run 1 simulation step maximum
-		int maxSimSubSteps=idle ? 1 : 1;
-		if(idle){
-			dt=1.0/420.f;
+		int maxSimSubSteps = idle ? 1 : 1;
+		if( idle )
+		{
+			dt = 1.0/420.f;
 		}
 
-		int numSimSteps=dynamics_world->stepSimulation(dt,maxSimSubSteps);
-		if(!numSimSteps){
-				printf("Interpolated transforms\n");
+		int numSimSteps = dynamics_world->stepSimulation( dt, maxSimSubSteps );
+		if( !numSimSteps )
+		{
+				printf( "Interpolated transforms\n" );
 		}
 
-		else{
-			if(numSimSteps > maxSimSubSteps){
+		else
+		{
+			if( numSimSteps > maxSimSubSteps )
+			{
 				//detect dropping frames
-				printf("Dropped (%i) simulation steps out of %i\n",numSimSteps - maxSimSubSteps,numSimSteps);
+				printf( "Dropped (%i) simulation steps out of %i\n", numSimSteps - maxSimSubSteps, numSimSteps );
 			}
 
-			else{
-				printf("Simulated (%i) steps\n",numSimSteps);
+			else
+			{
+				printf( "Simulated (%i) steps\n", numSimSteps );
 			}
 		}
 	}
@@ -277,21 +284,22 @@ void PhysicsSimulator::SetShootSpeed(float speed)
    shoot_speed=speed;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btRigidBody* PhysicsSimulator::CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape)
+btRigidBody* PhysicsSimulator::CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape )
 {
 	//RigidBody is dynamic if and only if mass is non zero, otherwise static
-	bool dynamic=(mass!=0.0f);
+	bool dynamic = (mass != 0.0f);
 
-	btVector3 localInertia(0,0,0);
-   if(dynamic){
-		shape->calculateLocalInertia(mass,localInertia);
+	btVector3 localInertia( 0 ,0, 0 );
+   if( dynamic )
+	{
+		shape->calculateLocalInertia( mass, localInertia );
    }
 
 	//Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* myMotionState=new btDefaultMotionState(startTransform);
-	btRigidBody* body=new btRigidBody(mass,myMotionState,shape,localInertia);
+	btDefaultMotionState* myMotionState = new btDefaultMotionState( startTransform );
+	btRigidBody* body = new btRigidBody( mass, myMotionState, shape, localInertia );
 
-	dynamics_world->addRigidBody(body);
+	dynamics_world->addRigidBody( body );
 	
 	return body;
 }

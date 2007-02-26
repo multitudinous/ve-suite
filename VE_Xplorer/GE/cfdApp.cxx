@@ -40,7 +40,10 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
+
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -142,7 +145,6 @@ cfdApp::cfdApp( int argc, char* argv[] )
    clearColor.push_back( 0.0f );
    clearColor.push_back( 0.0f );
    clearColor.push_back( 1.0f );
-   
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::exit()
@@ -451,6 +453,7 @@ void cfdApp::preFrame( void )
 void cfdApp::latePreFrame( void )
 {
    static long lastFrame=0;
+	//Used for framerate calculation as integers only
    static float lastTime=0.0f;
 
    vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
@@ -458,26 +461,28 @@ void cfdApp::latePreFrame( void )
    //call the parent method
    _vjobsWrapper->GetUpdateClusterStateVariables();
 
-   #ifdef _OSG
-      //This is order dependent
-      //don't move above function call
-      if( _frameStamp.valid() )
-      {
-         _frameStamp->setFrameNumber(_frameNumber++);
-         _frameStamp->setReferenceTime(this->_vjobsWrapper->GetSetAppTime(-1));
-         //This is a frame rate calculation
-         float deltaTime=this->_vjobsWrapper->GetSetAppTime(-1)-lastTime;
-         if( deltaTime >= 1.0f )
-         {
-            float framerate;
-            framerate=_frameNumber-lastFrame;
-				VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
+	float current_time = this->_vjobsWrapper->GetSetAppTime( -1 );
 
-            lastTime=this->_vjobsWrapper->GetSetAppTime(-1);
-            lastFrame=_frameNumber;
-         }
+#ifdef _OSG
+   //This is order dependent
+   //don't move above function call
+   if( _frameStamp.valid() )
+   {
+      _frameStamp->setFrameNumber( _frameNumber++ );
+      _frameStamp->setReferenceTime( current_time );
+      //This is a frame rate calculation
+      float deltaTime = current_time - lastTime;
+      if( deltaTime >= 1.0f )
+      {
+         float framerate;
+         framerate = _frameNumber - lastFrame;
+			VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
+
+         lastTime = current_time;
+         lastFrame = _frameNumber;
       }
-   #endif
+   }
+#endif
          
    VE_SceneGraph::cfdPfSceneManagement::instance()->PreFrameUpdate();
    ///////////////////////
@@ -488,6 +493,7 @@ void cfdApp::latePreFrame( void )
    svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
    ///////////////////////
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
+	
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -513,6 +519,22 @@ void cfdApp::latePreFrame( void )
 
    cfdExecutive::instance()->PreFrameUpdate();
    this->_vjobsWrapper->PreFrameUpdate();
+
+
+	//Update physics objects with time passed from last frame
+	//**********************************************************************
+#ifdef _OSG
+	//Used for physics_simulator to grab real dt per frame as floats
+	static float previous_time = 0.0f;
+
+	float dt = current_time - previous_time;
+	//std::cout<<dt<<std::endl;
+	VE_SceneGraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
+	previous_time = current_time;
+#endif
+	//**********************************************************************
+
+
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
    this->update();

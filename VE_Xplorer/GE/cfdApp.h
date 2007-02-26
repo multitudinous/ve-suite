@@ -188,7 +188,7 @@ public:
    //biv --may convert this to a singleton later
    VE_TextureBased::cfdPBufferManager* _pbuffer;
 #endif
-   osg::ref_ptr<osg::FrameStamp> _frameStamp;
+   osg::ref_ptr< osg::FrameStamp > _frameStamp;
    osg::Timer _timer;
    osg::Timer_t _start_tick;
    unsigned int _frameNumber;
