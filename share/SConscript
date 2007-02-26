@@ -8,3 +8,12 @@ Import('ves_pkg')
 launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 jconfFile = sca_util.getFilesRecursiveByExt( '.', ['.jconf'] )
 launcherBundle.addFiles( jconfFile )
+
+##env = ves_pkg.getEnv().Copy()
+##if env.has_key('SVN_Date'):
+##=env['SVN_Date']
+##execute the command
+##add to launcherBundle
+   
+
+
