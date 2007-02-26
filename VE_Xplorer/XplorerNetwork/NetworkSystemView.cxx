@@ -266,9 +266,31 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		loadedModel.get()->setName(model->GetModelName());
 
 		//Rotate the 3d comps 90 degrees around X axis
+		//corrects issue with initial model location
 		osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
 		rotatedComp.get()->addChild(loadedModel.get());
 		rotatedComp.get()->setRotation(osg::Quat(osg::DegreesToRadians(90.0), osg::Vec3d(1.0, 0.0, 0.0)));
+
+		//rotate/scale/mirror component
+		osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
+		mirrorComp.get()->addChild(rotatedComp.get());
+	
+		int mirror = model->GetIconMirror();
+		float rotation = model->GetIconRotation();
+		float iconScale = model->GetIconScale();
+		if(mirror > 0 && mirror < 3)
+		{
+			//horizontally
+			if(mirror == 1)
+				mirrorComp.get()->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(0.0, 1.0, 0.0)));
+			//vertically
+			else
+				mirrorComp.get()->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
+		}
+		//rotate
+		osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
+		reRotatedComp.get()->addChild(mirrorComp.get());
+		reRotatedComp.get()->setRotation(osg::Quat(osg::DegreesToRadians(rotation), osg::Vec3d(0.0, 1.0, 0.0)));
 
 		//move the text to the -y
 		//osg::ref_ptr<osg::MatrixTransform> textTrans = new osg::MatrixTransform();
@@ -282,9 +304,9 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//Scale up 3D comps & text
 		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
-		scale.get()->addChild(rotatedComp.get());
+		scale.get()->addChild(reRotatedComp.get());
 		scale.get()->addChild(textTrans.get());
-		scale.get()->setScale(5.0f);
+		scale.get()->setScale(5.0f * iconScale);
 
 		//translate to comp with name to correct location
 		//osg::ref_ptr<osg::MatrixTransform> mModelTrans = new osg::MatrixTransform();
