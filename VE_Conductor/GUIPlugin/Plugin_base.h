@@ -69,6 +69,7 @@ class wxDC;
 class wxRect;
 class wxWindow;
 class wxDialog;
+class wxImage;
 
 #define edge_size 10
 class UIDialog;

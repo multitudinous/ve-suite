@@ -52,6 +52,7 @@
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
+#include <wx/image.h>
 #include <wx/wx.h>
 #include <math.h>
 
