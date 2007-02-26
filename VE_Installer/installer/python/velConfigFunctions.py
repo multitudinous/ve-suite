@@ -71,7 +71,7 @@ def LoadConfig(name, state, loadLastConfig = False):
     ##Set config
     config = wx.Config.Get()
     path = '../%s' % name
-    if not config.HasGroup(path):
+    if not config.HasGroup(path) and path != '../%s' % DEFAULT_CONFIG:
         raise NonexistantConfigError(name)
     config.SetPath(path)
     ##Set the configs read in.

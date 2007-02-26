@@ -1,9 +1,9 @@
 #!/bin/sh
 #Soften: Corrects the paths for the libraries made for
 #VE-Launcher's Linux self-executable.
+#One arg passed: the install-dir
 
-cd dist
-for i in *.so
+for i in $1/*.so
 do
 	if chrpath $i 2>/dev/null | grep = >/dev/null
 	then
@@ -11,4 +11,3 @@ do
 		chrpath -d $i
 	fi
 done
-cd ..

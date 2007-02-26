@@ -53,6 +53,6 @@ cd ${homeDir}
 FreezePython --install-dir=${installDir} --include-path=python --init-script=ConsoleSetLibPath velauncher.py
 
 #Correct its libraries' paths.
-${pathCorrectionScript}
+${pathCorrectionScript} ${installDir}
 
 echo "Finished building velauncher executable."
