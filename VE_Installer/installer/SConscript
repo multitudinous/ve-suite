@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg' 'baseEnv' 'LauncherExe')
+Import('ves_pkg')
 
 launcherBundle = ves_pkg.createFileBundle( 'bin' )
 pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )
@@ -11,11 +11,3 @@ pyFile += sca_util.getFilesRecursiveByExt( '.', ['.xpm'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.bmp'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 launcherBundle.addFiles( pyFile )
-
-##Build self-executable   
-env = baseEnv().Copy()
-print env["CXPATH"] ##TESTER
-env.Append(PATH = env["CXPATH"])
-if env["PythonHome"] != "":
-    env["PYTHONHOME"] = env["PythonHome"]
-print env["PYTHONHOME"] ##TESTER
