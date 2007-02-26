@@ -8,14 +8,15 @@
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
+#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
 //PhysicsSimulator only supports OpenSceneGraph
 #ifdef _OSG
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
-#include "btBulletDynamicsCommon.h"
 
 //#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
 //#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
@@ -126,7 +127,7 @@ void PhysicsSimulator::InitPhysics()
    #else
       broadphase=new btSimpleBroadphase;
    #endif //USE_SWEEP_AND_PRUNE
-	
+
    #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
       //This is optional
    #else

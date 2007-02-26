@@ -46,6 +46,7 @@ env.ParseConfig('flagpoll TAO \
                           --libs --cflags')
 env.ParseConfig('flagpoll vrjuggler --require-Version=%s --get-vrj-ogl-libs --libs --cflags'%env['VRJugglerVersion'])
 env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%env['BoostVersion'])
+env.ParseConfig('flagpoll bullet --libs --cflags')
 #opal_options.apply( env )
 #ode_options.apply( env )
 #opal_options.apply( env )

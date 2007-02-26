@@ -1,5 +1,5 @@
-#ifndef PHYSICS_SIMULATOR_H
-#define PHYSICS_SIMULATOR_H
+#ifndef VE_PHYSICS_SIMULATOR_H
+#define VE_PHYSICS_SIMULATOR_H
 /*!\file PhysicsSimulator.h
 PhysicsSimulator API
 */
@@ -16,6 +16,8 @@ PhysicsSimulator API
 #include <gadget/Type/PositionInterface.h>
 
 #include <LinearMath/btTransform.h>
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
 
 class	btDynamicsWorld;
 class btCollisionDispatcher;
