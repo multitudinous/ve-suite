@@ -58,7 +58,7 @@ public:
 		this->CreateExactMesh();
 	}
 
-	~Mesh()
+	virtual ~Mesh()
 	{
 		if( collision_shape_bb )
 		{

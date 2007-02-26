@@ -51,9 +51,19 @@ Plugin_base API
 
 #include <wx/object.h>
 #include <wx/icon.h>
+///Default xpm's
+#include "VE_Conductor/xpm/contour.xpm"
+#include "VE_Conductor/xpm/cad_tree_selected.xpm"
+#include "VE_Conductor/xpm/cad_tree_unselected.xpm"
+#include "VE_Conductor/xpm/cspline.xpm"
+#include "VE_Conductor/xpm/isosurface.xpm"
+#include "VE_Conductor/xpm/ROItb.xpm"
+#include "VE_Conductor/xpm/square.xpm"
+#include "VE_Conductor/xpm/streamlines.xpm"
+#include "VE_Conductor/xpm/vector.xpm"
+#include "VE_Conductor/xpm/vectortb.xpm"
 
-
-
+///Forward declarations
 class wxPoint;
 class wxDC;
 class wxRect;
@@ -247,6 +257,8 @@ protected:
    }
    
    std::string iconFilename;
+   
+   std::map< std::string, wxImage > defaultIconMap;
    
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };

@@ -49,7 +49,6 @@
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-#include "VE_Conductor/xpm/square.xpm"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
@@ -108,6 +107,13 @@ REI_Plugin::REI_Plugin()
    portsDialog = 0;
    
    iconFilename = "DefaultPlugin";
+   
+   defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
+   defaultIconMap[ "isosurface.xpm" ] = wxImage( isosurface_xpm );
+   defaultIconMap[ "ROItb.xpm" ] = wxImage( ROItb_xpm );
+   defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
+   defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
+   defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1178,6 +1184,27 @@ void REI_Plugin::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, float scale)
 {
+std::cout << "icon path " << path << std::endl;
+   //Try and find default icons if needed
+   std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
+   if ( iter != defaultIconMap.end() )
+   {
+      iconFilename = path;
+      //now scale it up or down according to the specified scale
+      icon_w = iter->second.GetWidth();
+      icon_h = iter->second.GetHeight();
+      
+      delete my_icon;
+      my_icon = new wxBitmap( iter->second );
+
+      n_pts = 4;
+      
+      poly[0]=wxPoint(0,0);
+      poly[1]=wxPoint(icon_w,0);
+      poly[2]=wxPoint(icon_w,icon_h);
+      poly[3]=wxPoint(0,icon_h);
+      return;
+   }
 	//wxImage* my_img = new wxImage();
 	//bool exists = my_img->LoadFile(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
 	std::string fullPath = "2DIcons/" + path + ".jpg";

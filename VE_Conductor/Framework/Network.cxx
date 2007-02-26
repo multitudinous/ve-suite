@@ -2447,17 +2447,21 @@ void Network::CreateNetwork( std::string xmlNetwork )
       REI_Plugin* tempPlugin = 0;
       if ( cls == 0 )
       {
-		  tempPlugin = new DefaultPlugin();
-		  if ( !model->GetIconFilename().empty() )
-		  {   
-			  tempPlugin->SetImageIcon(model->GetIconFilename(), model->GetIconRotation(), model->GetIconMirror(), model->GetIconScale());
-		  }
+         tempPlugin = new DefaultPlugin();
       }
       else
       {
          tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
       }
 
+      if ( model->GetIconFilename() != "DefaultPlugin" )
+      {   
+         tempPlugin->SetImageIcon( model->GetIconFilename(), 
+                                   model->GetIconRotation(), 
+                                   model->GetIconMirror(), 
+                                   model->GetIconScale() );
+      }
+      
       Module temp_mod;
       unsigned int num = model->GetModelID();
 	   modules[ num ] = temp_mod;
@@ -2613,17 +2617,14 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
 	      hello->Show();
    }
 }
-
-// EPRI TAG
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void  Network::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 {
    if (m_selMod<0) 
       return;
    modules[m_selMod].GetPlugin()->FinancialData();
 }
-
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 {  
 	VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
@@ -2632,18 +2633,18 @@ void  Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
 	wxMessageDialog(this, desc, title).ShowModal();
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void  Network::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 {
 	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
-	REI_Plugin * tempPlugin = modules[m_selMod].GetPlugin();
-    IconChooser * chooser = new IconChooser(NULL, "2DIcons");
+	REI_Plugin* tempPlugin = modules[m_selMod].GetPlugin();
+   IconChooser* chooser = new IconChooser(NULL, "2DIcons");
 	chooser->SetPlugin(tempPlugin);
 	chooser->ShowModal();
+   //delete chooser;
 }
-
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 {  
 	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
@@ -2700,7 +2701,7 @@ void  Network::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	//if(results->IsSubmit())
 	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void  Network::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 {  
 	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
