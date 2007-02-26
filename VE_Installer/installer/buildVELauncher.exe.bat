@@ -1,3 +1,4 @@
-cd /D C:\devEnv\VE_Suite_1.0\VE_Installer\installer
-set PYTHONPATH=C:\devEnv\VE_Suite_1.0\VE_Installer\installer\python
+call ..\setup.bat
+cd /D %VE_SUITE_HOME%\VE_Installer\installer
+set PYTHONPATH=%VE_SUITE_HOME%\VE_Installer\installer\python
 python setup.py py2exe -b 1
