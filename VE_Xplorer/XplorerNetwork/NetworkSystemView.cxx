@@ -255,8 +255,14 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//add 3d blocks
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
-		osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
-		text->UpdateText(model->GetModelName());
+		//osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
+		//text->UpdateText(model->GetModelName());
+		osg::ref_ptr<osg::Geode> text = new osg::Geode();
+		osg::ref_ptr<osgText::Text> label = new osgText::Text();
+		label->setText(model->GetModelName());
+		label->setAutoRotateToScreen(true);
+		label->setCharacterSize(10);
+		text->addDrawable(label.get());
 
 		//add red block id if block .ive file is not found
 		if(loadedModel.get() == NULL)
