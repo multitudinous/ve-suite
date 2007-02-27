@@ -538,6 +538,7 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
 {
    mBtBody = rigidBody;
    udcb->SetbtRigidBody( mBtBody );
+   UpdatePhysicsTransform();
 }
 #ifdef _OSG
 ////////////////////////////////////////////

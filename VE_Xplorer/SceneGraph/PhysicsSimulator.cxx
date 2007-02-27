@@ -11,19 +11,31 @@
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 #include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
+
 //PhysicsSimulator only supports OpenSceneGraph
 #ifdef _OSG
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
-
 //#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
 //#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
 //#include "BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h"
 
 #include <osg/Geode>
+#include <osg/Geometry>
 #include <osg/ShapeDrawable>
+
+#include <osgDB/ReadFile>
+#include <osgDB/WriteFile>
+#include <osgDB/ReaderWriter>
+#include <osgDB/Registry>
+#include <osgDB/FileUtils>
+
+#include <sstream>
+#include <ostream>
+#include <string>
 
 using namespace VE_SceneGraph;
 
@@ -34,19 +46,21 @@ vprSingletonImp( PhysicsSimulator );
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
 :
-idle(true),
-shoot_speed(40.0f)
+idle( true ),
+shoot_speed( 50.0f )
 {
-   head.init("VJHead");
+   head.init( "VJHead" );
 
    this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-   if(this->dynamics_world){
+   if( this->dynamics_world )
+	{
 	   //Remove the rigidbodies from the dynamics world and delete them
-	   for(int i=0;i<dynamics_world->getNumCollisionObjects();i++){
+	   for(int i=0;i<dynamics_world->getNumCollisionObjects();i++)
+		{
 		   btCollisionObject* obj=dynamics_world->getCollisionObjectArray()[i];
 		   dynamics_world->removeCollisionObject(obj);
 		   delete obj;
@@ -61,21 +75,30 @@ void PhysicsSimulator::ExitPhysics()
    //but it looks like they are still hanging around, so delete them for now.
 
    //Delete dispatcher
-   if(this->dispatcher){
+   if( this->dispatcher )
+	{
 	   delete this->dispatcher;
    }
    
    //Delete broadphase
-   if(this->broadphase){
+   if( this->broadphase )
+	{
 	   delete this->broadphase;
    }
 
    //Delete solver
-   if(this->solver){
+   if( this->solver )
+	{
       delete this->solver;
    }
-
    //*************************************************************************//
+
+	for( unsigned int i = 0; i < box_vector.size(); i++ )
+	{
+		delete box_vector.at( i );
+	}
+
+	box_vector.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //By default, Bullet will use its own nearcallback, but you can override it using dispatcher->setNearCallback()
@@ -112,18 +135,18 @@ void customNearCallback(btBroadphasePair& collisionPair, btCollisionDispatcher& 
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitPhysics()
 {
-   dispatcher=new btCollisionDispatcher();
+   dispatcher = new btCollisionDispatcher();
 
    #ifdef USE_CUSTOM_NEAR_CALLBACK
 	   //This is optional
-	   dispatcher->setNearCallback(customNearCallback);
+	   dispatcher->setNearCallback( customNearCallback );
    #endif //USE_CUSTOM_NEAR_CALLBACK
 
    #ifdef USE_SWEEP_AND_PRUNE
-      btVector3 worldAabbMin(-10000,-10000,-10000);
-	   btVector3 worldAabbMax(10000,10000,10000);
+      btVector3 worldAabbMin( -10000, -10000, -10000 );
+	   btVector3 worldAabbMax( 10000, 10000, 10000 );
 
-	   broadphase=new btAxisSweep3(worldAabbMin,worldAabbMax,maxProxies);
+	   broadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
    #else
       broadphase=new btSimpleBroadphase;
    #endif //USE_SWEEP_AND_PRUNE
@@ -132,17 +155,19 @@ void PhysicsSimulator::InitPhysics()
       //This is optional
    #else
       //Default constraint solver
-      solver=new btSequentialImpulseConstraintSolver;
+      solver = new btSequentialImpulseConstraintSolver;
    #endif //REGISTER_CUSTOM_COLLISION_ALGORITHM
 	
-   dynamics_world=new btDiscreteDynamicsWorld(dispatcher,broadphase,solver);
-	dynamics_world->setGravity(btVector3(0,0,-10));
+   dynamics_world = new btDiscreteDynamicsWorld( dispatcher, broadphase, solver );
+	dynamics_world->setGravity( btVector3( 0, 0, -10 ) );
 
 	//dynamics_world->setDebugDrawer(&debugDrawer);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
+	dynamics_world->stepSimulation( dt );
+	/*
 	printf( "dt = %f: ", dt );
 
    if ( dynamics_world )
@@ -174,6 +199,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 			}
 		}
 	}
+	*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ResetScene()
@@ -223,50 +249,103 @@ void PhysicsSimulator::ResetScene()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::ShootBox(const btVector3& destination)
+void PhysicsSimulator::ShootBox( const btVector3& destination )
 {
-	if(dynamics_world){
-		float mass=1.0f;
+	if( dynamics_world )
+	{
+      //Create osg::Box to visually represent rigid body
+      osg::ref_ptr< osg::Geode > geode = new osg::Geode;
+
+		osg::ref_ptr< osg::Geometry > box = new osg::Geometry;
+
+      osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
+
+		//Left
+	   vertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+
+		//Near
+	   vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
+				
+	   //Right
+      vertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, 0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, 0.5f, 0.5f ) );
+
+	   //Far
+	   vertices->push_back( osg::Vec3( 0.5f, 0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, 0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
+				
+	   //Top
+	   vertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, 0.5f, 0.5f ) );
+				
+	   //Bottom
+	   vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, 0.5f, -0.5f ) );
+      vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
+
+		box->setVertexArray( vertices.get() );
+
+		osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
+		colors->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
+		box->setColorArray( colors.get() );
+		box->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+		osg::ref_ptr< osg::Vec3Array > normals = new osg::Vec3Array;
+		normals->push_back( osg::Vec3( -1.0f, 0.0f, 0.0f ) );					//Left
+		normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );					//Near
+		normals->push_back( osg::Vec3( 1.0f, 0.0f, 0.0f ) );					//Right
+		normals->push_back( osg::Vec3( 0.0f, 1.0f, 0.0f ) );					//Far
+		normals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );					//Top
+		normals->push_back( osg::Vec3( 0.0f, 0.0f, -1.0f ) );					//Bottom
+		box->setNormalArray( normals.get() );
+		box->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+
+		box->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices.get()->size() ) );
+
+		geode->addDrawable( box.get() );
+		
+		std::ostringstream box_ss;
+
+		osgDB::writeNodeFile( *geode, "C:/Users/JK/Desktop/Models/box.osg" );
+
+		osgDB::Registry::instance()->getReaderWriterForExtension("osg")->writeNode( *geode, box_ss );
+
+		box_vector.push_back( new VE_SceneGraph::CADEntity( "C:/Users/JK/Desktop/Models/box.osg", VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), false ) );
+		box_vector.back()->SetPhysics( true );
+
+		float mass = 1.0f;
 		btTransform transform;
 		transform.setIdentity();
       gadget::PositionData* head_pos;
-      head_pos=head->getPositionData();
+      head_pos = head->getPositionData();
 		btVector3 position;
-      position.setValue(head_pos->mPosData[0][3],head_pos->mPosData[1][3],head_pos->mPosData[2][3]);
-		transform.setOrigin(position);
+      position.setValue( head_pos->mPosData[0][3], head_pos->mPosData[1][3], head_pos->mPosData[2][3] );
+		transform.setOrigin( position );
 
-		btCollisionShape* box_shape=new btBoxShape(btVector3(1.0f,1.0f,1.0f));
-		btRigidBody* body=this->CreateRigidBody(mass,transform,box_shape);
+		btCollisionShape* box_shape = new btBoxShape( btVector3( 1.0f, 1.0f, 1.0f ) );
+		btRigidBody* body = this->CreateRigidBody( mass, transform, box_shape );
 
-      //Create osg::Box to visually represent rigid body
-      osg::ref_ptr<osg::Geode> geode=new osg::Geode;
-
-      osg::ref_ptr<osg::Box> box=new osg::Box(osg::Vec3(0.0f,0.0f,0.0f),1.0f);
-      osg::ref_ptr<osg::TessellationHints> hints=new osg::TessellationHints;
-      osg::ref_ptr<osg::ShapeDrawable> sd=new osg::ShapeDrawable(box.get(),hints.get());
-
-      hints->setDetailRatio(1.0f);
-
-      sd->setColor(osg::Vec4(1.0f,0.0f,0.0f,0.4f));
-
-      osg::ref_ptr<osg::StateSet> stateset=new osg::StateSet;
-	   stateset->setMode(GL_BLEND,osg::StateAttribute::ON);
-	   stateset->setRenderingHint(osg::StateSet::OPAQUE_BIN);
-	   sd->setStateSet(stateset.get());
-
-      geode->addDrawable(sd.get());
-
-      //capsule_sequence->addChild(geode.get())
-
-
-		btVector3 lin_vel(destination[0]-position[0],destination[1]-position[1],destination[2]-position[2]);
+		btVector3 lin_vel( destination[0]+position[0], destination[1]+position[1], destination[2]+position[2] );
 		lin_vel.normalize();
-		lin_vel*=shoot_speed;
+		lin_vel *= shoot_speed;
 
-		body->getWorldTransform().setOrigin(position);
-		body->getWorldTransform().setRotation(btQuaternion(0,0,0,1));
-		body->setLinearVelocity(lin_vel);
-		body->setAngularVelocity(btVector3(0,0,0));
+		body->getWorldTransform().setOrigin( position );
+		body->getWorldTransform().setRotation( btQuaternion( 0, 0, 0, 1 ) );
+		body->setLinearVelocity( lin_vel );
+		body->setAngularVelocity( btVector3( 0, 0, 0 ) );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////

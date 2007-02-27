@@ -108,13 +108,18 @@ void CADEntity::SetPhysics( bool p )
 		collision_shape = this->physics_mesh->GetBBMesh();
 
 		btTransform transform;
-		transform.setOrigin( btVector3( GetDCS()->getPosition().x(), GetDCS()->getPosition().y(), GetDCS()->getPosition().z() ) );
+		
 		this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
 		this->rigid_body->setFriction( this->friction );
 		this->rigid_body->setRestitution( this->restitution );
 
 		dcs->SetbtRigidBody( rigid_body );
 	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetExactShape()
+{
+	collision_shape = this->physics_mesh->GetExactMesh();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()

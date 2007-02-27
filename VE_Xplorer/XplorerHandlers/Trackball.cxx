@@ -183,9 +183,10 @@ void Trackball::Mouse(int button,int state,int x,int y)
 		tb_moving=true;
 
       //If physics is enabled, shoot a box on right-mouse click
-      //if(button==51 && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()){
-         //VE_SceneGraph::PhysicsSimulator::instance()->ShootBox();
-      //}
+      if(button==51 /*&& !selection && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()*/){
+			btVector3 destination( 0, 0, 0 );
+			//VE_SceneGraph::PhysicsSimulator::instance()->ShootBox( destination );
+      }
    }
 
    else if(state==0){

@@ -36,7 +36,7 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
-	CADEntity( std::string, VE_SceneGraph::DCS* , bool isStream = false );
+	CADEntity( std::string, VE_SceneGraph::DCS*, bool isStream = false );
    ~CADEntity();
 
 	VE_SceneGraph::DCS* GetDCS();
@@ -48,6 +48,7 @@ public:
 	void SetRestitution( float r );
 
 	void SetPhysics( bool p );
+	void SetExactShape();
 
    std::string GetFilename();
    std::string GetModuleName();

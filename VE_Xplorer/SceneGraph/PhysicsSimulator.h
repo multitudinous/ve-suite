@@ -19,6 +19,14 @@ PhysicsSimulator API
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
+//C/C++ Libraries
+#include <vector>
+
+namespace VE_SceneGraph
+{
+	class CADEntity;
+}
+
 class	btDynamicsWorld;
 class btCollisionDispatcher;
 class btOverlappingPairCache;
@@ -36,21 +44,21 @@ namespace VE_SceneGraph
          void UpdatePhysics( float dt );
          void ResetScene();
 
-         void ShootBox(const btVector3& destination);
+         void ShootBox( const btVector3& destination );
 
-         void SetPhysicsState(bool state);
+         void SetPhysicsState( bool state );
          bool GetPhysicsState();
 
-         void SetShootSpeed(float speed);
+         void SetShootSpeed( float speed );
 
-         btRigidBody* CreateRigidBody(float mass,const btTransform& startTransform,btCollisionShape* shape);
+         btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
 
          btDynamicsWorld* GetDynamicsWorld();
 
       private:
          PhysicsSimulator();
          ~PhysicsSimulator(){;}                                //Never gets called, don't implement
-         vprSingletonHeader(PhysicsSimulator);
+         vprSingletonHeader( PhysicsSimulator );
 
          void InitPhysics();
 
@@ -58,6 +66,8 @@ namespace VE_SceneGraph
          float shoot_speed;
 
          gadget::PositionInterface head;
+
+			std::vector< VE_SceneGraph::CADEntity* > box_vector;
 
          //Manages physics objects and constraints and implements update of all objects each frame
          //******************************************//
