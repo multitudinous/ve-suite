@@ -361,6 +361,28 @@ void REI_Plugin::DrawID(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::DrawName(wxDC* dc)
+{
+  int i;
+  int x, y;
+  int w, h;
+  wxCoord xoff = pos.x;
+  wxCoord yoff = pos.y;
+
+  x=0; y=0;
+
+  for (i=0; i<n_pts; i++)
+    {
+      x+=poly[i].x;
+      y+=poly[i].y;
+    }
+  x=x/n_pts; y = y/n_pts;
+
+  dc->GetTextExtent(name, &w, &h);
+  dc->DrawText(name, (x-w/2+xoff), (y-h/2+yoff));
+}
+
+/////////////////////////////////////////////////////////////////////////////
 UIDialog* REI_Plugin::UI(wxWindow* parent)
 {
   if (dlg!=NULL)

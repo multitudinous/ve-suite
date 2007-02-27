@@ -1933,6 +1933,7 @@ void Network::ReDraw(wxDC &dc)
    {
       modules[ iter->first ].GetPlugin()->DrawIcon(&dc);
       modules[ iter->first ].GetPlugin()->DrawID(&dc);
+      modules[ iter->first ].GetPlugin()->DrawName(&dc);
    }
 
    // draw all the links
@@ -2453,7 +2454,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
       {
          tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
       }
-
+	  tempPlugin->SetName(model->GetModelName().c_str());
       if ( model->GetIconFilename() != "DefaultPlugin" )
       {   
          tempPlugin->SetImageIcon( model->GetIconFilename(), 

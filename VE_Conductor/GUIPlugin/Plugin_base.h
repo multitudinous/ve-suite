@@ -112,6 +112,8 @@ public:
    virtual void DrawIcon(wxDC* dc);
    ///Draw he id for a particular plugin
    void DrawID(wxDC* dc);
+   ///Draw he name for a particular plugin
+   void DrawName(wxDC* dc);
    ///Set the start drawing location
    void SetPos(wxPoint pt);
    ///Return the bounding box;
