@@ -94,8 +94,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_Scen
    _rootNode = rootNode;
 
    // get scale factors of the worldDCS...
-   Matrix44f mat;
-   mat = this->worldDCS->GetMat();
+   Matrix44f mat = this->worldDCS->GetMat();
 
    Vec3f r;
    
@@ -465,17 +464,18 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
       this->pos[i] = this->loc[i] + CURSOR_DIST*this->dir[i];
       this->pos_c[i] = this->pos[i] + wx[i]; //compensate for world translation
    }
-   vprDEBUG(vesDBG, 3) <<"wx:"<<wx[0]<<","<<wx[1]<<","<<wx[2]
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG, 3) <<"pos:"<<pos[0]<<","<<pos[1]<<","<<pos[2]
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG, 3) <<"pos_c:"<<pos_c[0]<<","<<pos_c[1]<<","<<pos_c[2]
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG, 3) << this->last_cursor_type << " : " << this->cursorId
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG, 3) << this->last_pReso << " : " << this->pReso
-                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG, 3) << this->last_pSize << " : " << this->pSize
+   vprDEBUG(vesDBG, 3) <<"|\tcfdCursor::Update " << std::endl
+                        <<"\twx:"<<wx[0]<<","<<wx[1]<<","<<wx[2]
+                           << std::endl
+                        <<"\tpos:"<<pos[0]<<","<<pos[1]<<","<<pos[2]
+                           << std::endl 
+                        <<"\tpos_c:"<<pos_c[0]<<","<<pos_c[1]<<","<<pos_c[2]
+                           << std::endl 
+                        << this->last_cursor_type << " : " << this->cursorId
+                           << std::endl 
+                        << this->last_pReso << " : " << this->pReso
+                           << std::endl 
+                        << this->last_pSize << " : " << this->pSize
                            << std::endl << vprDEBUG_FLUSH;
 
    if (  ( this->last_cursor_type != this->cursorId ) ||
@@ -711,8 +711,7 @@ void cfdCursor::SetTranslation( void )
    loc_f[ 2 ] = this->loc[ 2 ];
 
    // get pfMatrix of worldDCS
-   Matrix44f worldMat;
-   worldMat = this->worldDCS->GetMat();
+   Matrix44f worldMat = this->worldDCS->GetMat();
 
    Matrix44f totalMat;
    if ( this->activeDataSetDCS.valid() )

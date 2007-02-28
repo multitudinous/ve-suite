@@ -444,19 +444,11 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    this->cursor->Update( this->nav->GetCursorLocation(),
                          this->nav->GetDirection(), this->nav->worldTrans );
 
-   // Fix later
-   /*
-   if( cursorId == CUBE)
-   {
-       this->cursor->getExtent( this->cur_box );   //record current box cursor position
-   }
-   */
-
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
-
 	display_information->LatePreFrame();
+   vprDEBUG(vesDBG,3) << "|\tEnd cfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)

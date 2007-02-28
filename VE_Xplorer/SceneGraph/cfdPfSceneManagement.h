@@ -43,7 +43,6 @@ cfdPfSceneManagement API
 */
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
-
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
@@ -99,7 +98,7 @@ private:
    //std::string    param;
    std::string _param;
    osg::ref_ptr< VE_SceneGraph::Group > rootNode;
-	osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;
+   osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;
    osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
 	osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
    osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
