@@ -505,7 +505,7 @@ std::string CORBAServiceList::GetNetwork( void )
    
    try
    {
-      std::string network = veCE->GetNetwork();
+      std::string network = veCE->GetNetwork( p_ui_i->UIName_.c_str() );
       return network;
    }
    catch ( ... )

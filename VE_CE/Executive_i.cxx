@@ -498,7 +498,8 @@ void Body_Executive_i::SetNetwork (
 }
 ////////////////////////////////////////////////////////////////////////////  
 char * Body_Executive_i::GetNetwork ( 
-    ACE_ENV_SINGLE_ARG_DECL
+    const char * moduleName
+    ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -510,7 +511,10 @@ char * Body_Executive_i::GetNetwork (
    _mutex.release();
 
    if ( xmlNetwork.empty() )
-      ClientMessage( "No Current VES Network Present In VE-CE.\n" );
+   {   
+      uis_[ moduleName ]->Raise( "No Current VES Network Present In VE-CE.\n" );
+      //ClientMessage( "No Current VES Network Present In VE-CE.\n" );      
+   }
   
    return CORBA::string_dup( xmlNetwork.c_str() );
 }

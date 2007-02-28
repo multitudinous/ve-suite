@@ -195,7 +195,7 @@ virtual void SetNetwork (
     , Error::EUnknown
   ));
 
-virtual char * GetNetwork (
+virtual char * GetNetwork ( const char* moduleName
     ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((

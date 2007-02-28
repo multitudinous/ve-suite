@@ -2454,7 +2454,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
       {
          tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
       }
-	  tempPlugin->SetName(model->GetModelName().c_str());
+	  tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
       if ( model->GetIconFilename() != "DefaultPlugin" )
       {   
          tempPlugin->SetImageIcon( model->GetIconFilename(), 

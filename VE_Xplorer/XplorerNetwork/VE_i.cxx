@@ -207,7 +207,7 @@ void Body_UI_i::GetNetworkFromCE( void )
 {
    try 
    { 
-      const char* tempNetwork = executive_->GetNetwork();
+      const char* tempNetwork = executive_->GetNetwork( UIName_.c_str() );
       std::string network( tempNetwork );
       if ( !network.empty() )
       {

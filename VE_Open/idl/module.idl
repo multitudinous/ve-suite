@@ -168,7 +168,7 @@ module Body{
     void SetModuleUI(in long module_id, in string ui) raises(Error::EUnknown);
 
     //This is to get the network, called by the UI
-    string GetNetwork() raises(Error::EUnknown);
+    string GetNetwork( in string moduleName ) raises(Error::EUnknown);
     
     //This is to set up the executive watch list, Called by the UI (the editable one)
     void SetWatchList(in Types::ArrayLong id) raises(Error::EUnknown);
