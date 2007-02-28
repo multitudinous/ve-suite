@@ -48,6 +48,7 @@ public:
 	void SetRestitution( float r );
 
 	void SetPhysics( bool p );
+	void SetBBShape();
 	void SetExactShape();
 
    std::string GetFilename();

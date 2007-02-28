@@ -41,13 +41,14 @@ restitution(0.0f)
 	this->dcs->addChild( this->node->GetNode() );
    worldDCS->AddChild( this->dcs.get() );
 
+	rigid_body = 0;
 	physics_mesh = 0;
 
    #ifdef _PERFORMER
    fog = new pfFog();
    #elif _OSG
    //setup fog
-   fog=new osg::Fog();
+   fog = new osg::Fog();
    #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -104,22 +105,45 @@ void CADEntity::SetPhysics( bool p )
 	if( p && !physics_mesh )
 	{
 		physics_mesh = new PhysicsMesh( this->node->GetNode() );
-
-		collision_shape = this->physics_mesh->GetBBMesh();
-
-		btTransform transform;
-		
-		this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
-		this->rigid_body->setFriction( this->friction );
-		this->rigid_body->setRestitution( this->restitution );
-
-		dcs->SetbtRigidBody( rigid_body );
 	}
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetBBShape()
+{
+	if( rigid_body )
+	{
+		VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( rigid_body );
+		delete rigid_body;
+	}
+
+	collision_shape = this->physics_mesh->GetBBMesh();
+
+	btTransform transform;
+		
+	this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
+	this->rigid_body->setFriction( this->friction );
+	this->rigid_body->setRestitution( this->restitution );
+
+	dcs->SetbtRigidBody( rigid_body );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetExactShape()
 {
+	if( rigid_body )
+	{
+		VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( rigid_body );
+		delete rigid_body;
+	}
+
 	collision_shape = this->physics_mesh->GetExactMesh();
+
+	btTransform transform;
+		
+	this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
+	this->rigid_body->setFriction( this->friction );
+	this->rigid_body->setRestitution( this->restitution );
+
+	dcs->SetbtRigidBody( rigid_body );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
