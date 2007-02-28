@@ -40,7 +40,7 @@
  * Class defining a KnotVector for NURBS object.
  */
 
-#include "VE_Xplorer/SceneGraph/NURBS/Export.h"
+#include "VE_Installer/include/VEConfig.h"
 #include <vector>
 #include <map>
 #include <string>

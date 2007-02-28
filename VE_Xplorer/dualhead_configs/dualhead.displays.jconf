@@ -31,7 +31,7 @@
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
-         <border>true</border>
+         <border>false</border>
          <hide_mouse>false</hide_mouse>
          <active>true</active>
          <surface_viewports>

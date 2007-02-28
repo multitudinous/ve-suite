@@ -178,7 +178,7 @@ void ShaderHelper::LoadTransparencyProgram()
 void ShaderHelper::LoadGLSLProgram(VE_XML::VE_Shader::Program* glslProgram)
 {
 #ifdef _OSG
-   //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
+   std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
    if(!_ss.valid())
    {
       _ss = new osg::StateSet();
