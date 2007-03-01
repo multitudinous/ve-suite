@@ -46,6 +46,10 @@
 #include <osg/Vec4>
 #include <osg/AutoTransform>
 #include <osg/Group>
+#include <osg/Image>
+#include <osg/TextureRectangle>
+#include <osg/TexMat>
+#include <osg/StateSet>
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Xplorer/SceneGraph/TextTexture.h"
 
@@ -257,12 +261,64 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
 		//osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
 		//text->UpdateText(model->GetModelName());
-		osg::ref_ptr<osg::Geode> text = new osg::Geode();
-		osg::ref_ptr<osgText::Text> label = new osgText::Text();
-		label->setText(model->GetModelName());
-		label->setAutoRotateToScreen(true);
-		label->setCharacterSize(10);
-		text->addDrawable(label.get());
+		
+		//Result Pane
+		osg::ref_ptr<osg::Group> resultPane = new osg::Group();
+
+		osg::ref_ptr<osgText::Text> text = new osgText::Text();
+		osg::Vec4 layoutColor(0.0f,0.0f,0.0f,1.0f);
+        text->setColor(layoutColor);
+		text->setText(model->GetModelName());
+		//text->setAutoRotateToScreen(true);
+		text->setCharacterSize(0.5);
+
+		osg::ref_ptr<osg::Geode> textGeode = new osg::Geode();
+		textGeode->addDrawable(text.get());
+
+		osg::ref_ptr<osg::AutoTransform> transTextGeode = new osg::AutoTransform();
+		transTextGeode->addChild(textGeode.get());
+		transTextGeode->setPosition(osg::Vec3d(-1.0, 0.0, 0.1));
+
+		osg::ref_ptr<osg::Geometry> pane = new osg::Geometry;
+		osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array(4);
+		(*coords)[0] = osg::Vec3f(-1.5, -2.0, 0);//original png size is 300X400 => 3X4
+		(*coords)[1] = osg::Vec3f(1.5, -2.0, 0);
+		(*coords)[2] = osg::Vec3f(1.5, 2.0, 0);
+		(*coords)[3] = osg::Vec3f(-1.5, 2.0, 0);
+
+		pane->setVertexArray(coords.get());
+		pane->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4));
+
+		osg::Vec2Array* texcoords = new osg::Vec2Array(4);
+		(*texcoords)[0].set(0.0f, 0.0f);
+		(*texcoords)[1].set(1.0f, 0.0f);
+		(*texcoords)[2].set(1.0f, 1.0f);
+		(*texcoords)[3].set(0.0f, 1.0f);
+		pane->setTexCoordArray(0,texcoords);
+
+		osg::Vec3Array* normals = new osg::Vec3Array(1);
+		(*normals)[0].set(0.0f,0.0f,1.0f);
+		pane->setNormalArray(normals);
+		pane->setNormalBinding(osg::Geometry::BIND_OVERALL);
+		
+		// load image
+		osg::Image* img = osgDB::readImageFile("Xplorer_images/test_dashboard.png");
+
+		// setup texture
+		osg::TextureRectangle* texture = new osg::TextureRectangle(img);
+		osg::TexMat* texmat = new osg::TexMat;
+		texmat->setScaleByTextureRectangleSize(true);
+
+		// setup state
+		osg::StateSet* state = pane->getOrCreateStateSet();
+		state->setTextureAttributeAndModes(0, texture, osg::StateAttribute::ON);
+		state->setTextureAttributeAndModes(0, texmat, osg::StateAttribute::ON);
+
+		osg::ref_ptr<osg::Geode> paneGeode = new osg::Geode();
+		paneGeode->addDrawable(pane.get());
+
+		resultPane->addChild(transTextGeode.get());
+		resultPane->addChild(paneGeode.get());
 
 		//add red block id if block .ive file is not found
 		if(loadedModel.get() == NULL)
@@ -293,6 +349,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 			else
 				mirrorComp.get()->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 		}
+
 		//rotate
 		osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
 		reRotatedComp.get()->addChild(mirrorComp.get());
@@ -305,8 +362,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//move the text to the -y
 		osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
-		textTrans.get()->addChild(text.get());
-		textTrans.get()->setPosition(osg::Vec3d(0.0, -loadedModel.get()->getBound().radius(), 0.0));
+		textTrans.get()->addChild(resultPane.get());
+		textTrans.get()->setPosition(osg::Vec3d(0.0, loadedModel.get()->getBound().radius(), 0.0));
+		//textTrans.get()->setAutoRotateMode(osg::AutoTransform::ROTATE_TO_SCREEN);
+		textTrans.get()->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
 		//Scale up 3D comps & text
 		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
