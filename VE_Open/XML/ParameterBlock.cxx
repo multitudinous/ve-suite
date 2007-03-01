@@ -101,8 +101,8 @@ ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input)
    }
    return *this;
 }
-//////////////////////////////////////////////
-void ParameterBlock::SetId(unsigned int id)
+////////////////////////////////////////////////
+void ParameterBlock::SetBlockId(unsigned int id)
 {
    _id = id;
 }
@@ -130,6 +130,15 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
 
    if ( currentElement )
    {
+      if(currentElement->hasAttribute(xercesString("id")))
+      {
+         std::string emptyCheck;
+         VE_XML::XMLObject::GetAttribute(currentElement,"id",emptyCheck);
+         if(!emptyCheck.empty())
+         {
+            uuid = emptyCheck;
+         }
+      }
       //get variables by tags
       DOMElement* dataValueStringName = 0;
       //get the transform
@@ -141,6 +150,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
       }
       _dcs = new Transform();
       _dcs->SetObjectFromXMLData( dataValueStringName );
+      
       //Get the block id
       dataValueStringName = GetSubElement( currentElement, "blockID", 0 );
       _id = ExtractFromSimpleElement< unsigned int >( dataValueStringName );
@@ -169,6 +179,7 @@ void ParameterBlock::_updateVEElement( std::string input )
    //Add code here to update the specific sub elements
    SetSubElement( "blockID", _id );
    SetSubElement( "blockName", paramName );
+   SetAttribute( "id", uuid );
    DOMElement* tempElement;
    tempElement = SetSubElement( "transform", _dcs );
    SetAttribute( "objectType", _dcs->GetObjectType(), tempElement );
@@ -178,8 +189,8 @@ void ParameterBlock::_updateVEElement( std::string input )
       SetAttribute( "objectType", _properties.at( i )->GetObjectType(), tempElement );
    }
 }
-//////////////////////////////////////
-unsigned int ParameterBlock::GetId()
+/////////////////////////////////////////
+unsigned int ParameterBlock::GetBlockId()
 {
    return _id;
 }

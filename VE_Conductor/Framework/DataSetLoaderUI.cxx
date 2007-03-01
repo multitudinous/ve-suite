@@ -686,7 +686,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
       paramBlock = veModel->GetInformationPacket( -1 );
       tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
       paramBlock->SetName( tempStr );
-      paramBlock->SetId( ::wxNewId() );
+      paramBlock->SetBlockId( ::wxNewId() );
       EnableUI( true );
    }
   

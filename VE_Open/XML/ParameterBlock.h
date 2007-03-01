@@ -70,7 +70,7 @@ public:
 
    ///Set the identification number.
    ///\param id The number specifiying what type of data is in this parameter block.
-   void SetId(unsigned int id);
+   void SetBlockId(unsigned int id);
    ///Set the name of the parameter block.
    ///\param name The name of the parameter block.
    void SetName( std::string name );
@@ -88,7 +88,8 @@ public:
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Return the block ID.
-   unsigned int GetId( void );
+   unsigned int GetBlockId( void );
+
    ///Return the paramter block.
    std::string GetName( void );
    ///Return the Transform.
