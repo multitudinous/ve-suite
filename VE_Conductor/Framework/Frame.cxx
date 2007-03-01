@@ -1100,7 +1100,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
    {
 	   bkpFileName.ClearExt();
 	   bkpFileName.SetName( newDataSetName.GetValue() ); 
-	   bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
+	   //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
 	   VE_XML::Command returnState;
 	   returnState.SetCommandName("getNetwork");
