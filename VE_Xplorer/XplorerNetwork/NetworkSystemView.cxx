@@ -302,7 +302,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		pane->setNormalBinding(osg::Geometry::BIND_OVERALL);
 		
 		// load image
-		osg::Image* img = osgDB::readImageFile("Xplorer_images/test_dashboard.png");
+		osg::Image* img = osgDB::readImageFile("F:/suite/share/dashboard.png");
 
 		// setup texture
 		osg::TextureRectangle* texture = new osg::TextureRectangle(img);
