@@ -902,12 +902,6 @@ except getopt.GetoptError:
     usage()
     sys.exit(2)
 
-##Prepare previous config
-##Prepare data storage
-previousState = CoveredConfig()
-##Restore config values from last time.
-LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
-
 ##Check if dev mode's on
 if ("--dev", "") in opts or ("-d", "") in opts:
     ##Run VE-Suite in dev mode? Turned to True if --dev passed.
@@ -922,6 +916,12 @@ if ("--dev", "") in opts or ("-d", "") in opts:
     BASE_CONFIG["Directory"] = VELAUNCHER_DIR
 else:
     devMode = False
+
+##Prepare previous config
+##Prepare data storage
+previousState = CoveredConfig()
+##Restore config values from last time.
+LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
 ##Window boot
 if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
