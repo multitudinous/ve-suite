@@ -88,7 +88,7 @@ public:
    osg::ref_ptr< osg::Geode > CreateAxisLabels( std::string textIn, double x, double y, double z );
    ///Create the lines to represent the axes
    osg::ref_ptr< osg::Geode > CreateAxisLines( void );
-   
+
 private:
    double bbox[ 6 ];
    std::string xAxisLabel;

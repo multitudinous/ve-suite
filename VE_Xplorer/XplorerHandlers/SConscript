@@ -100,6 +100,7 @@ sources = Split("""
    DisplayInformation.cxx
    DisplayEventHandler.cxx
    QCClearDataEH.cxx
+   DataTransformEH.cxx
 """)
 
 headers = Split("""
@@ -198,6 +199,7 @@ headers = Split("""
    DisplayInformation.h
    DisplayEventHandler.h
    QCClearDataEH.h
+   DataTransformEH.h
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 

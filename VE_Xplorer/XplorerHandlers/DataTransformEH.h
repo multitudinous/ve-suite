@@ -25,17 +25,16 @@
  * -----------------------------------------------------------------
  * Date modified: $Date: 2006-09-29 21:31:32 -0500 (Fri, 29 Sep 2006) $
  * Version:       $Rev: 5598 $
- * Author:        $Author: mccdo $
- * Id:            $Id: ChangeCursorEventHandler.h 5598 2006-09-30 02:31:32Z mccdo $
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef BBOX_EVENT_HANDLER_H
-#define BBOX_EVENT_HANDLER_H
+#ifndef VE_DATA_TRANSFORM_EVENT_HANDLER_H
+#define VE_DATA_TRANSFORM_EVENT_HANDLER_H
 
-#include <map>
-#include "VE_Installer/include/VEConfig.h"
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_XML
 {
@@ -49,35 +48,35 @@ namespace VE_Xplorer
    class cfdVEBaseClass;
 }
 
-namespace VE_EVENTS
-{
-class VE_XPLORER_EXPORTS BBoxEventHandler: public EventHandler
+namespace VE_EVENTS{
+class VE_XPLORER_EXPORTS DataTransformEventHandler: public EventHandler
 {
 public:
    ///Constructor
-   BBoxEventHandler();
+   DataTransformEventHandler();
 
    ///Copy Constructor
-   BBoxEventHandler(const BBoxEventHandler& rhs);
+   DataTransformEventHandler(const DataTransformEventHandler& rhs);
 
    ///Destructor
-   virtual ~BBoxEventHandler();
+   virtual ~DataTransformEventHandler();
 
    ///Equal operator
-   BBoxEventHandler& operator=(const BBoxEventHandler& rhs);
+   DataTransformEventHandler& operator=(const DataTransformEventHandler& rhs);
+
+   ///Exectute the event
+   ///\param xmlObject The current xmlObject event.
+   void Execute(VE_XML::XMLObject* veXMLObject);
 
    ///Set the cfdModel.
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-   
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( VE_XML::XMLObject* command); 
 
-private:
-   VE_Xplorer::cfdModel* _activeModel;
+protected:
+   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
+
 };
 }
-#endif// BBOX_EVENT_HANDLER_H
+#endif// VE_EVENT_HANDLER_H
