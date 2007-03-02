@@ -50,8 +50,7 @@ rm -f *.pyc
 cd ${homeDir}
 
 #Build standalone exe.
-FreezePython --install-dir=${installDir} --include-path=python
---init-script=ConsoleSetLibPath ----include-modules= velauncher.py
+FreezePython --install-dir=${installDir} --include-path=python --init-script=ConsoleSetLibPath velauncher.py
 
 #Correct its libraries' paths.
 ${pathCorrectionScript} ${installDir}
