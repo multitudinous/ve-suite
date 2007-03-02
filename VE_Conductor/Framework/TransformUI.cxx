@@ -31,11 +31,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/TransformUI.h"
+#include "VE_Conductor/Framework/DataSetLoaderUI.h"
 
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/ParameterBlock.h"
+#include "VE_Open/XML/Model/Model.h"
 
 #include <wx/sizer.h>
 #include <wx/statbox.h>
@@ -152,6 +159,8 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
    transformPanelSizer->Add( transformPropSizer,1,wxEXPAND|wxALIGN_CENTER);
    this->SetAutoLayout(true);
    this->SetSizer(transformPanelSizer);
+
+//   paramBlock = 0;
 }
 ///////////////////////////////////////////////////////////////////
 TransformUI::~TransformUI( void )
@@ -161,34 +170,85 @@ TransformUI::~TransformUI( void )
 ///////////////////////////////////////////////////////////////////
 void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED(event) )
 {
-   if ( transform )
+   if ( _transform )
    {
       std::vector<double> temp;
 
       temp.push_back(_xTransformCtrl->GetValue());
       temp.push_back(_yTransformCtrl->GetValue());
       temp.push_back(_zTransformCtrl->GetValue());
-      transform->GetTranslationArray()->SetArray(temp);
-
+      _transform->GetTranslationArray()->SetArray(temp);
+std::cout<<"YTRANSFORM :"<<temp.at(1)<<std::endl;
       temp.clear();
 
       temp.push_back(_xScaleCtrl->GetValue());
       temp.push_back(_yScaleCtrl->GetValue());
       temp.push_back(_zScaleCtrl->GetValue());
-      transform->GetScaleArray()->SetArray(temp);
+      _transform->GetScaleArray()->SetArray(temp);
 
       temp.clear();
 
       temp.push_back(_xRotationCtrl->GetValue());
       temp.push_back(_yRotationCtrl->GetValue());
       temp.push_back(_zRotationCtrl->GetValue());
-      transform->GetRotationArray()->SetArray(temp);
+      _transform->GetRotationArray()->SetArray(temp);
 
       temp.clear();
+
+      
+
+      VE_XML::DataValuePair* paramBlockID = new VE_XML::DataValuePair();
+      paramBlockID->SetData(std::string("Parameter Block ID"), _id);
+      _instructions.push_back(paramBlockID);
+//std::cout<<"NO"<<std::endl;}      
+std::cout<<"PARAMID :"<<_id<<std::endl;
+      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+      updateTransform->SetData("Transform", _transform);
+      _instructions.push_back(updateTransform);
+std::cout<<"TRANSFORM :"<<std::endl;
+//     paramBlock->GetTransform()
+//      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+//      updateTransform->SetDataType("XMLOBJECT");
+//      updateTransform->SetData("Transform",paramBlock->GetTransform());
+//      _instructions.push_back(updateTransform);
+
+//      _sendCommandsToXplorer();
+
+      ///send command to xplorer
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName( "DATA_TRANSFORM_UPDATE" );
+      veCommand->AddDataValuePair( paramBlockID );
+      veCommand->AddDataValuePair( updateTransform );
+   //   serviceList->SendCommandStringToXplorer( veCommand );
+
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+
+      //clean up memory
+      delete veCommand;
    }
 }
 ///////////////////////////////////////////////////////////////////
-/*VE_XML::Transform* CADNodePropertiesDlg::GetTransform( void )
+void TransformUI::SetParamBlockTransform( VE_XML::Transform* transform )
 {
-   return transform;
-}*/
+   _transform = transform;
+}
+///////////////////////////////////////////////////
+void TransformUI::_sendCommandsToXplorer()
+{/*
+   VE_XML::Command* command=new VE_XML::Command();
+
+   for(size_t i=0;i<_instructions.size();i++)
+   {
+      command->AddDataValuePair(_instructions.at(i));
+   }
+   command->SetCommandName(_commandName);
+   serviceList->SendCommandStringToXplorer(command);
+   //Clean up memory
+   delete command;*/
+}
+////////////////////////////////////////////////////
+void TransformUI::SetParamBlockID( std::string id )
+{
+   _id = id;
+}
+

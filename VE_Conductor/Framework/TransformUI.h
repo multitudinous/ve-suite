@@ -40,54 +40,82 @@ TransformUI API
 */
 #include <wx/panel.h>
 #include <wx/spinctrl.h>
+#include <vector>
+#include <wx/wx.h>
 
+class DataSetLoaderUI;
 class wxSpinCtrlDbl;
+
 
 namespace VE_XML
 {
-class Transform;
+   class Transform;
+   class DataValuePair;
+   class ParameterBlock;
+   namespace VE_Model
+   {
+      class Model;
+   }
 }
 
 namespace VE_Conductor
 {
-namespace GUI_Utilities
-{
-class TransformUI : public wxPanel
-{
-public:
-   ///Constructor
-   TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform );
-   ///Destructor
-   virtual ~TransformUI();
-
-   ///Enums used by wxwidgets
-   enum TRANSFORM_UI
+   namespace GUI_Utilities
    {
-      TRANSFORM_PANEL_ID,///<The transform panel ID.
-   };
+      class TransformUI : public wxPanel
+      {
+      public:
+         ///Constructor
+         TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform );
+         ///Destructor
+         virtual ~TransformUI();
 
-   ///Callback for the transform ui
-   void UpdateTransform( wxSpinEvent& event );
-   ///Get the current transform
-   //VE_XML::Transform* GetTransform( void );
-private:
-   VE_XML::Transform* transform;///<The Trasnform for the ui.
+         ///Enums used by wxwidgets
+         enum TRANSFORM_UI
+         {
+            TRANSFORM_PANEL_ID,///<The transform panel ID.
+         };
 
-   ///Transform panel controls
-   wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
-   wxSpinCtrlDbl* _yTransformCtrl;///<Y translation control
-   wxSpinCtrlDbl* _zTransformCtrl;///<Z translation control
+         ///Callback for the transform ui
+         void UpdateTransform( wxSpinEvent& event );
+         ///Get the current transform
+         //VE_XML::Transform* GetTransform( void );
 
-   wxSpinCtrlDbl* _xRotationCtrl;///<X rotation control
-   wxSpinCtrlDbl* _yRotationCtrl;///<Y rotation control
-   wxSpinCtrlDbl* _zRotationCtrl;///<Z rotation control
+         ///Get the current parameter block id
+         void SetParamBlockID( std::string id );
+         ///Get the current parameter block transform
+         void SetParamBlockTransform( VE_XML::Transform* transform );
 
-   wxSpinCtrlDbl* _xScaleCtrl;///<X scale control
-   wxSpinCtrlDbl* _yScaleCtrl;///<Y scale control
-   wxSpinCtrlDbl* _zScaleCtrl;///<Z scale control
+      private:
+         VE_XML::Transform* transform;///<The Trasnform for the ui.
 
-   DECLARE_EVENT_TABLE()
-};
-}
+         ///Transform panel controls
+         wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
+         wxSpinCtrlDbl* _yTransformCtrl;///<Y translation control
+         wxSpinCtrlDbl* _zTransformCtrl;///<Z translation control
+
+         wxSpinCtrlDbl* _xRotationCtrl;///<X rotation control
+         wxSpinCtrlDbl* _yRotationCtrl;///<Y rotation control
+         wxSpinCtrlDbl* _zRotationCtrl;///<Z rotation control
+
+         wxSpinCtrlDbl* _xScaleCtrl;///<X scale control
+         wxSpinCtrlDbl* _yScaleCtrl;///<Y scale control
+         wxSpinCtrlDbl* _zScaleCtrl;///<Z scale control
+
+         std::string _commandName;///<The command name.
+         std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+
+         std::string _id;///<parameter block id
+         VE_XML::Transform* _transform;///<parameter block transform
+
+         ///Send the Command back to VE-Xplorer.
+         void _sendCommandsToXplorer();
+
+         DataSetLoaderUI* dataset;
+         VE_XML::ParameterBlock* paramBlock;
+
+         DECLARE_EVENT_TABLE()
+      };
+   }
 }
 #endif //_TRANSFORM_UI_H

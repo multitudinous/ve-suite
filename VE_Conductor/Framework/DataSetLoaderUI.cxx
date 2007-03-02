@@ -48,6 +48,7 @@
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/string.h>
+#include <wx/wx.h>
 
 ////@end includes
 
@@ -514,11 +515,13 @@ void DataSetLoaderUI::OnButton6Click( wxCommandEvent& WXUNUSED(event) )
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
    //wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
    //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
+   VE_Conductor::GUI_Utilities::TransformUI* transformPanel = new VE_Conductor::GUI_Utilities::TransformUI( &transformDialog, _("Transform Input"), paramBlock->GetTransform());
 
    if ( paramBlock )
    {
-      mainSizer->Add( new VE_Conductor::GUI_Utilities::TransformUI( &transformDialog, _("Transform Input"), paramBlock->GetTransform() ), 
-                  -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
+      mainSizer->Add( transformPanel, -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
+std::cout<<" IS PARAMBLOCK"<<std::endl;
+
    }
    else
    {
@@ -533,6 +536,11 @@ void DataSetLoaderUI::OnButton6Click( wxCommandEvent& WXUNUSED(event) )
    //assign the group to the panel              
    transformDialog.SetSizer(mainSizer);
    mainSizer->Fit( &transformDialog ); 
+
+   //set parameterblock unique (GUID) id for transform GUI
+   transformPanel->SetParamBlockID( paramBlock->GetID() );
+   transformPanel->SetParamBlockTransform( paramBlock->GetTransform() );
+
    if ( transformDialog.ShowModal() == wxID_OK )
    {
       ;
@@ -621,11 +629,12 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED(event) )
 void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event) )
 {
    /// wxEVT_COMMAND_COMBOBOX_SELECTED event handler for ID_LISTBOX
-   // When we change the combox the newly slected item
+   // When we change the combobox the newly selected item
    // should be queried and all other widgets should be update with
    // appropriate info
-   wxString selection = dataSetList->GetStringSelection();
 
+   wxString selection = dataSetList->GetStringSelection();
+std::cout<<wxConvCurrent->cWX2MB( selection )<<std::endl;
    if ( selection == wxString( _("Add Dataset") ) )
    {
       lastAddition = dataSetList->Append( _("Type new data block name here") );
@@ -644,7 +653,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event)
    }
 
    size_t numParamBlocks = veModel->GetNumberOfInformationPackets();
-
+std::cout<<"NUMBER OF PACKETS: "<<numParamBlocks<<std::endl;
    for ( size_t i = 0; i < numParamBlocks; ++i )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
@@ -681,7 +690,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
    {
       _availableDatasets.Add(newDataSetName.GetValue());
       dataSetList->Append(newDataSetName.GetValue());
-      dataSetList->SetSelection(0);
+      dataSetList->SetStringSelection(newDataSetName.GetValue());
       
       paramBlock = veModel->GetInformationPacket( -1 );
       tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
@@ -733,4 +742,18 @@ bool DataSetLoaderUI::DatasetExists(std::string name)
    }
    return false;
 }
-
+/////////////////////////////////////////////////////////////
+std::string DataSetLoaderUI::GetActiveDataSetName()
+{
+   return paramBlock->GetName();
+}
+/////////////////////////////////////////////////////////////
+VE_XML::ParameterBlock* DataSetLoaderUI::GetParamBlock()
+{
+   return paramBlock;
+}
+/////////////////////////////////////////////////////////////
+VE_XML::VE_Model::Model* DataSetLoaderUI::GetModel()
+{
+   return veModel;
+}

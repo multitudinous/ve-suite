@@ -172,6 +172,9 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_INFORMATION_PACKET_ADD_NAME
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
+   std::string GetActiveDataSetName();
+   VE_XML::ParameterBlock* GetParamBlock();
+   
    ///Disable/enable the buttons
    ///\param flag Bool to control the ui.
    void EnableUI( bool flag );
@@ -223,6 +226,9 @@ public:
 ////@end DataSetLoaderUI member variables
    VE_XML::VE_Model::Model* veModel;
    VE_XML::ParameterBlock* paramBlock;
+
+   VE_XML::VE_Model::Model* GetModel( void );
+
    int lastAddition;
 };
 
