@@ -1056,7 +1056,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
  
    std::cout << "\tTotal no. of solutions = " << numSolns << std::endl;
    
-   assert( (numSolns == numStarVertices) && "Please export data per vertex rather than per cell." );
+   assert( (numSolns <= numStarVertices) && "Please export data per vertex rather than per cell." );
    std::cout << std::endl;
 
    // If vector data exists, then vector magnitude scalar will exist as well.
