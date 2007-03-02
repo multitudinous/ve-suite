@@ -43,9 +43,10 @@ TransformUI API
 #include <vector>
 #include <wx/wx.h>
 
+#include <string>
+
 class DataSetLoaderUI;
 class wxSpinCtrlDbl;
-
 
 namespace VE_XML
 {
