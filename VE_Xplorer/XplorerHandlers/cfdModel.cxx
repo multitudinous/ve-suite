@@ -700,11 +700,21 @@ void cfdModel::CreateClone( std::string cloneID, std::string originalID, std::st
 {
    if(originalType == std::string("Assembly"))
    {
-      _cloneList[cloneID] = new VE_SceneGraph::Clone(GetAssembly(originalID));
+      //This is a hack to handle the case where an orginial assembly is deleted
+      //but the clone is not changed
+      if ( GetAssembly(originalID) )
+      {
+         _cloneList[cloneID] = new VE_SceneGraph::Clone(GetAssembly(originalID));
+      }
    }
    else if(originalType == std::string("Part"))
    {
-      _cloneList[cloneID] = new VE_SceneGraph::Clone( GetPart(originalID)->GetNode()->GetNode() );
+      //This is a hack to handle the case where an orginial assembly is deleted
+      //but the clone is not changed
+      if ( GetPart(originalID) )
+      {
+         _cloneList[cloneID] = new VE_SceneGraph::Clone( GetPart(originalID)->GetNode()->GetNode() );
+      }
    }
    
 }
@@ -979,6 +989,19 @@ void cfdModel::UpdateMaterialComponent(std::string nodeID, std::string attribute
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntity* cfdModel::GetPart(std::string partID)
 {
+   std::map< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+   iter = _partList.find( partID );
+   
+   if ( iter == _partList.end() )
+   {
+      for ( iter = _partList.begin(); iter != _partList.end(); ++iter )
+      {
+         std::cout << "Parts that are available: " << iter->first 
+                     << " " << iter->second->GetFilename() << std::endl;
+      }
+      return 0;
+   }
+
    return _partList[partID];
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -989,6 +1012,14 @@ VE_SceneGraph::DCS* cfdModel::GetAssembly(std::string assemblyID)
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Clone* cfdModel::GetClone(std::string cloneID)
 {
+   std::map< std::string, VE_SceneGraph::Clone* >::iterator iter;
+   iter = _cloneList.find( cloneID );
+   
+   if ( iter == _cloneList.end() )
+   {
+      std::cout << "Clone not available: " << cloneID << std::endl;
+      return 0;
+   }
    return _cloneList[cloneID];
 }
 ////////////////////////////////////////////////////////////////////////////////

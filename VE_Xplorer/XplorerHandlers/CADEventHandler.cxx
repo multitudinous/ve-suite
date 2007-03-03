@@ -162,7 +162,10 @@ void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
    else if(activeNode->GetNodeType() == "Clone")
    {
       //std::cout<<"Setting transform on Clone: "<<nodeID<<std::endl;
-      transform = _activeModel->GetClone(nodeID)->GetClonedGraph();
+      if ( _activeModel->GetClone(nodeID) )
+      {
+         transform = _activeModel->GetClone(nodeID)->GetClonedGraph();
+      }
    }
    if( transform )
    {
@@ -259,14 +262,18 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          //std::cout<<"      ---Set transform---"<<std::endl;
          _setAttributesOnNode(clone);
          //std::cout<<"      ---Set Attributes---"<<std::endl;
-         parentAssembly->AddChild(_activeModel->GetClone(clone->GetID())->GetClonedGraph());
-			_activeModel->GetClone(clone->GetID())->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
-         VE_SceneGraph::DCS* tempFile = _activeModel->GetClone(clone->GetID())->GetClonedGraph();
-         //set the uuid on the osg node so that we can get back to vexml
-         osg::Node::DescriptionList descriptorsList;
-         descriptorsList.push_back( "VE_XML_ID" );
-         descriptorsList.push_back( clone->GetID() );
-         tempFile->setDescriptions( descriptorsList );
+         VE_SceneGraph::Clone* tempClone = _activeModel->GetClone(clone->GetID());
+         if ( tempClone )
+         {
+            parentAssembly->AddChild( tempClone->GetClonedGraph() );
+            tempClone->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
+            VE_SceneGraph::DCS* tempFile = tempClone->GetClonedGraph();
+            //set the uuid on the osg node so that we can get back to vexml
+            osg::Node::DescriptionList descriptorsList;
+            descriptorsList.push_back( "VE_XML_ID" );
+            descriptorsList.push_back( clone->GetID() );
+            tempFile->setDescriptions( descriptorsList );            
+         }
       }
    }
    else
