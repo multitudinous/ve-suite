@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
 #include "VE_Conductor/Framework/TransformUI.h"
 #include "VE_Conductor/Framework/DataSetLoaderUI.h"
 
 #include "VE_Builder/Utilities/gui/spinctld.h"
-
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"

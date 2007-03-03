@@ -482,6 +482,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataTransformEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Device.cxx"
 				>
 				<FileConfiguration
@@ -988,6 +992,10 @@
 			</File>
 			<File
 				RelativePath=".\DataSetScalarBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataTransformEH.h"
 				>
 			</File>
 			<File

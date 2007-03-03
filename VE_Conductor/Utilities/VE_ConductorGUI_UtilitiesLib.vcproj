@@ -277,6 +277,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\WPDialog.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -340,6 +344,10 @@
 			</File>
 			<File
 				RelativePath=".\TBIsosurface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WPDialog.h"
 				>
 			</File>
 		</Filter>
