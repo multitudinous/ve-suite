@@ -91,13 +91,14 @@ public:
    int cfdIso_value;
 
 private:
-   //void UpdateTracker( float x[3], float v[3] ); // Update the position of the cursors.
-
+   ///Create seed points to be used by streamline algorithms
+   void CreateSeedPoints( void );
+   
    vtkStreamLine*     stream;
    vtkTubeFilter*     tubeFilter;
    vtkPolyDataMapper* mapper;
    vtkRungeKutta45*   integ;  
-
+   vtkPolyData*       seedPoints;///>PolyData for the seed points
    float propagationTime;
    float integrationStepLength;
    float stepLength;
@@ -105,6 +106,16 @@ private:
    float lineDiameter;
    int   streamArrows;
    float arrowDiameter;
+   int xValue;///>number of points for x direction
+   int yValue;///>number of points for y direction
+   int zValue;///>number of points for z direction
+
+   int xMinBB;///>number of points for x direction
+   int yMinBB;///>number of points for y direction
+   int zMinBB;///>number of points for z direction
+   int xMaxBB;///>number of points for x direction
+   int yMaxBB;///>number of points for y direction
+   int zMaxBB;///>number of points for z direction
 };
 }
 #endif

@@ -79,9 +79,18 @@ cfdStreamers::cfdStreamers( void )
    this->lineDiameter = 1.0f;
    arrowDiameter = 1;
    streamArrows = 0;
-   pointSource = 0;
+   //pointSource = 0;
 
-//   command = 0;
+   xValue = 0;
+   yValue = 0;
+   zValue = 0;
+   seedPoints = 0;
+   xMinBB = 0;
+   yMinBB = 0;
+   zMinBB = 0;
+   xMaxBB = 100;
+   yMaxBB = 100;
+   zMaxBB = 100;
 }
 
 cfdStreamers::~cfdStreamers()
@@ -94,7 +103,7 @@ cfdStreamers::~cfdStreamers()
 
 void cfdStreamers::Update( void )
 {
-   if ( pointSource == NULL )
+   if ( seedPoints == NULL )
    {
       vprDEBUG(vesDBG,0) << "|\tcfdStreamers::Update, No Cursor Type Selected" << std::endl << vprDEBUG_FLUSH;
       return;
@@ -174,7 +183,7 @@ aa Assign Normals NORMALS POINT_DATA
    {
       streamPoints = vtkStreamPoints::New();
       streamPoints->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
-      streamPoints->SetSource( this->pointSource );
+      streamPoints->SetSource( seedPoints );
       streamPoints->SetTimeIncrement( this->stepLength * 500 );
       streamPoints->SetMaximumPropagationTime( this->propagationTime );
       streamPoints->SetIntegrationStepLength( this->integrationStepLength );    
@@ -202,7 +211,7 @@ aa Assign Normals NORMALS POINT_DATA
    }
    this->stream->SetNumberOfThreads( 1 );
 
-   this->stream->SetSource( this->pointSource );
+   this->stream->SetSource( seedPoints );
    this->stream->SetIntegrator( this->integ );
    //stream->GetOutput()->ReleaseDataFlagOn();
    
@@ -449,4 +458,70 @@ void cfdStreamers::UpdateCommand()
    activeModelDVP = objectCommand->GetDataValuePair( "Use Last Seed Pt" );
    unsigned int lastSeedPt;
    activeModelDVP->GetData( lastSeedPt );
+   
+   ////////////////////
+   //Set the number of seed points in each direction and get the %BB info
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( xMaxBB );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( yMaxBB );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( zMaxBB );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( xMinBB );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( yMinBB );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( zMinBB );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( xValue );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( yValue );   
+   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+   //activeModelDVP->GetData( zValue );
+   CreateSeedPoints();
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdStreamers::CreateSeedPoints( void )
+{
+   double bounds[ 6 ];
+   GetActiveDataSet()->GetDataSet()->GetBounds(bounds);
+   double xMin=bounds[0] * xMinBB;
+   double xMax=bounds[1] * xMaxBB;
+   double yMin=bounds[2] * yMinBB;
+   double yMax=bounds[3] * yMaxBB;
+   double zMin=bounds[4] * zMinBB;
+   double zMax=bounds[5] * zMaxBB;
+   
+   double xLoc = 0;
+   double yLoc = 0;
+   double zLoc = 0;
+   int number = 0;
+   //insert evenly spaced points inside bounding box
+   vtkPoints* points = vtkPoints::New();
+   for (int i = 1; i <= xValue ; ++i)
+	{
+      xLoc = ( xMin + ((xMax-xMin)*(i))/(xValue+1));
+      for (int j = 1; j <= yValue; ++j)
+      {
+         yLoc = ( yMin + ((yMax-yMin)*(j))/(yValue+1));
+         for(int k = 1; k <= zValue; k++)			
+			{
+            //points added in ptMin + length*iteration/(number of equal segments)
+            //where (number of equal segments) = ptValue+1
+            zLoc = ( zMin + ((zMax-zMin)*(k))/(zValue+1));
+            points->InsertPoint( number, xLoc, yLoc, zLoc ); 
+            number=number+1;
+			}
+		}
+	}
+   
+   //create polydata to be glyphed
+   if ( seedPoints )
+   {
+      seedPoints->Delete();
+   }
+   seedPoints = vtkPolyData::New();
+   seedPoints->SetPoints(points);
+   points->Delete();
 }
