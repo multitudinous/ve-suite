@@ -61,6 +61,14 @@ namespace VE_XML
    class DataValuePair;
 }
 
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
+   class WPDialog;
+}
+}
+
 class wxRadioBox;
 class wxSlider;
 class wxButton;
@@ -104,7 +112,8 @@ public:
       PLANE_SIZE_SLIDER,
       NUMBER_PTS_SLIDER,
       ADVANCED_STREAMLINE_BUTTON,
-      COMPUTE_STREAMLINE_BUTTON
+      COMPUTE_STREAMLINE_BUTTON,
+      SET_SEED_POINTS_BUTTON
    };
 
     void SendCommandsToXplorer( void );
@@ -134,13 +143,14 @@ public:
    wxButton*   itemButton14;
 ////@end Streamlines member variables
 protected: 
-   void _onCursorSelect(wxCommandEvent& );
-   void _onDirection(wxCommandEvent& );
-   void _onIntegrateDir(wxCommandEvent& );
-   void _onPointsSlider(wxScrollEvent& );
-   void _onAdvanced(wxCommandEvent& );
+   void _onCursorSelect(wxCommandEvent& event );
+   void _onDirection(wxCommandEvent& event );
+   void _onIntegrateDir(wxCommandEvent& event );
+   void _onPointsSlider(wxScrollEvent& event );
+   void _onAdvanced(wxCommandEvent& event );
    void _onSizeSlider(wxScrollEvent& event);
    void _onCompute(wxCommandEvent& event);
+   void SetSeedPoints( wxCommandEvent& event );
 
    ///Update the streamlines information
    void _updateStreamlineInformation();
@@ -176,6 +186,7 @@ protected:
    DOMDocument* doc;
    VE_XML::DOMDocumentManager* domManager;
 
+   VE_Conductor::GUI_Utilities::WPDialog* seedPointDialog;
    std::string ConvertUnicode( const wxChar* data )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

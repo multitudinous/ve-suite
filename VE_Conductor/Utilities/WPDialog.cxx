@@ -71,7 +71,7 @@ void WPDialog::_createDualSliders()
 //X Slider
   _xBounds = new DualSlider(this, -1, 1,0,100, 0, 100, wxDefaultPosition,
 	  wxDefaultSize,wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,
-	  wxString("X Bounds"));
+	  wxString( _T("X Bounds") ) );
    WPMinSliderCallback* minX = new WPMinSliderCallback(this,"X");
    WPMaxSliderCallback* maxX = new WPMaxSliderCallback(this,"X");
    WPBothMoveCallback* bothX = new WPBothMoveCallback(this,"X");
@@ -83,7 +83,7 @@ void WPDialog::_createDualSliders()
 //Y slider   
      _yBounds = new DualSlider(this, -1, 1,0,100, 0, 100, wxDefaultPosition,
 	  wxDefaultSize,wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,
-	  wxString("Y Bounds"));
+	  wxString( _T("Y Bounds") ));
    WPMinSliderCallback* minY = new WPMinSliderCallback(this,"Y");
    WPMaxSliderCallback* maxY = new WPMaxSliderCallback(this,"Y");
    WPBothMoveCallback* bothY = new WPBothMoveCallback(this,"Y");
@@ -96,7 +96,7 @@ void WPDialog::_createDualSliders()
 
   _zBounds = new DualSlider(this, -1, 1,0,100, 0, 100, wxDefaultPosition,
 	  wxDefaultSize,wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,
-	  wxString("Z Bounds"));
+	  wxString( _T("Z Bounds") ) );
    WPMinSliderCallback* minZ = new WPMinSliderCallback(this,"Z");
    WPMaxSliderCallback* maxZ = new WPMaxSliderCallback(this,"Z");
    WPBothMoveCallback* bothZ = new WPBothMoveCallback(this,"Z");
@@ -211,7 +211,7 @@ void WPDialog::SendCommands()
 ////////////////////////////////////////////////////////////////////
 wxSizer* WPDialog::_buildSpecificWidgets()
 {
-   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, wxT("Volume Clipping Planes"));
+   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, _("Volume Clipping Planes"));
    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(dualSliderGroup,wxVERTICAL);
 
    _createDualSliders();

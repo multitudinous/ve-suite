@@ -35,6 +35,8 @@
 
 #include "VE_Conductor/Framework/streamlines.h"
 #include "VE_Conductor/Framework/vistab.h"
+#include "VE_Conductor/Utilities/WPDialog.h"
+
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include <wx/sizer.h>
@@ -49,6 +51,7 @@
 #include <wx/statbox.h>
 #include <iostream>
 
+using namespace VE_Conductor::GUI_Utilities;
 
 BEGIN_EVENT_TABLE( Streamlines, wxDialog )
 ////@begin Streamlines event table entries 
@@ -59,6 +62,7 @@ BEGIN_EVENT_TABLE( Streamlines, wxDialog )
    EVT_COMMAND_SCROLL(PLANE_SIZE_SLIDER,           Streamlines::_onSizeSlider)
    EVT_BUTTON        (ADVANCED_STREAMLINE_BUTTON,  Streamlines::_onAdvanced)
    EVT_BUTTON        (COMPUTE_STREAMLINE_BUTTON,   Streamlines::_onCompute)
+   EVT_BUTTON        (SET_SEED_POINTS_BUTTON,      Streamlines::SetSeedPoints)
 ////@end Streamlines event table entries
 END_EVENT_TABLE()
 
@@ -88,7 +92,8 @@ bool Streamlines::Create( wxWindow* parent, wxWindowID id,
    _nPointsPerPlane = 2;
    itemButton13 = 0;
    itemButton14 = 0;
-
+   seedPointDialog = 0;
+   
    _lastIntegrationStepSize = 1000.0;
    _lastPropagationSize = 1.0;
    _lastLineDiameter = 0.0;
@@ -173,6 +178,9 @@ void Streamlines::CreateControls()
 
     wxButton* itemButton13 = new wxButton( itemDialog1, COMPUTE_STREAMLINE_BUTTON, _T("Compute Streamline"), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add(itemButton13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    wxButton* seedPointsbutton = new wxButton( itemDialog1, SET_SEED_POINTS_BUTTON, _T("Seed Points"), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer12->Add(seedPointsbutton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
     wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer12->Add(itemButton14, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
@@ -390,28 +398,36 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
       }
    }
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onCursorSelect(wxCommandEvent& WXUNUSED(event))
 {
    _cursorType = ConvertUnicode( _cursorRBox->GetStringSelection() );
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onDirection(wxCommandEvent& WXUNUSED(event))
 {
    _streamlineDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onIntegrateDir(wxCommandEvent& WXUNUSED(event))
 {
    _integrationDirection = ConvertUnicode( _integrationRBox->GetStringSelection() );
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onSizeSlider(wxScrollEvent& WXUNUSED(event))
 {
    _streamSize = static_cast<double>(_sizeSlider->GetValue());
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onPointsSlider(wxScrollEvent& WXUNUSED(event))
 {
    _nPointsPerPlane = _nPointsSlider->GetValue();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
+{
+   seedPointDialog = new WPDialog( static_cast< wxWindow* >( this ), 0, "Seed Point Controls" );
+   seedPointDialog->ShowModal();
+   seedPointDialog->Destroy();
+   seedPointDialog = 0;
 }

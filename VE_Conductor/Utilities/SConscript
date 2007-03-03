@@ -18,6 +18,7 @@ utils_srcs = Split("""
    DualSlider.cxx
    ROIDialog.cxx
    BaseDialog.cxx
+   WPDialog.cxx
 """)
 
 gui_srcs = Split("""
@@ -38,6 +39,7 @@ utils_h = Split("""
    DualSlider.h
    ROIDialog.h
    BaseDialog.h
+   WPDialog.h
 """)
 
 gui_h = Split("""
