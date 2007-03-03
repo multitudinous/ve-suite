@@ -110,12 +110,12 @@ private:
    int yValue;///>number of points for y direction
    int zValue;///>number of points for z direction
 
-   int xMinBB;///>number of points for x direction
-   int yMinBB;///>number of points for y direction
-   int zMinBB;///>number of points for z direction
-   int xMaxBB;///>number of points for x direction
-   int yMaxBB;///>number of points for y direction
-   int zMaxBB;///>number of points for z direction
+   double xMinBB;///>number of points for x direction
+   double yMinBB;///>number of points for y direction
+   double zMinBB;///>number of points for z direction
+   double xMaxBB;///>number of points for x direction
+   double yMaxBB;///>number of points for y direction
+   double zMaxBB;///>number of points for z direction
 };
 }
 #endif

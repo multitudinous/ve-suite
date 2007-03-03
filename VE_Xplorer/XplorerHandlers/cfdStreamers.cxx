@@ -461,24 +461,37 @@ void cfdStreamers::UpdateCommand()
    
    ////////////////////
    //Set the number of seed points in each direction and get the %BB info
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( xMaxBB );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( yMaxBB );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( zMaxBB );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( xMinBB );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( yMinBB );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( zMinBB );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( xValue );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( yValue );   
-   //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-   //activeModelDVP->GetData( zValue );
+   //Extract the advanced settings from the commands
+   //activeModelDVP = objectCommand->GetDataValuePair( "Seed_Point_Settings" );
+   //objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   activeModelDVP = objectCommand->GetDataValuePair( "Max_X_BB" );
+   //if 1 is there then they all are there
+   if ( activeModelDVP )
+   {
+      activeModelDVP->GetData( xMaxBB );   
+      vprDEBUG(vesDBG,0) << "|\txMaxBB : " << xMaxBB << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Max_Y_BB" );
+      activeModelDVP->GetData( yMaxBB );   
+      vprDEBUG(vesDBG,0) << "|\tyMaxBB : " << yMaxBB << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Max_Z_BB" );
+      activeModelDVP->GetData( zMaxBB );   
+      vprDEBUG(vesDBG,0) << "|\tzMaxBB : " << zMaxBB << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Min_X_BB" );
+      activeModelDVP->GetData( xMinBB );   
+      vprDEBUG(vesDBG,0) << "|\txMinBB : " << xMinBB << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Min_Y_BB" );
+      activeModelDVP->GetData( yMinBB );   
+      vprDEBUG(vesDBG,0) << "|\tyMinBB : " << yMinBB << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Min_Z_BB" );
+      activeModelDVP->GetData( zMinBB );   
+      vprDEBUG(vesDBG,0) << "|\tzMinBB : " << zMinBB << std::endl << vprDEBUG_FLUSH;
+      //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+      //activeModelDVP->GetData( xValue );   
+      //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+      //activeModelDVP->GetData( yValue );   
+      //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
+      //activeModelDVP->GetData( zValue );
+   }
    CreateSeedPoints();
 }
 ////////////////////////////////////////////////////////////////////////////////

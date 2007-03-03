@@ -385,22 +385,23 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
    {
       advancedSettings->AddDataValuePair(_advancedSettings.at(i));
    }
+   //Add the dvp's for the seed point info
+   //VE_XML::Command* seedPointSettings = new VE_XML::Command();
+   //seedPointSettings->SetCommandName("Set_Seed_Point_Settings");
+   for(size_t i =0; i < seedPointInformation.size(); i++)
+   {
+      advancedSettings->AddDataValuePair( seedPointInformation.at(i) );
+   }
+
    //dvp representing the advanced settings within the contours information
    VE_XML::DataValuePair* advancedStreamlineSettings = new VE_XML::DataValuePair();
    advancedStreamlineSettings->SetData("Advanced Streamline Settings",advancedSettings);
    newCommand->AddDataValuePair(advancedStreamlineSettings);
 
-   //Add the dvp's for the seed point info
-   VE_XML::Command* seedPointSettings = new VE_XML::Command();
-   seedPointSettings->SetCommandName("Set_Seed_Point_Settings");
-   for(size_t i =0; i < seedPointInformation.size(); i++)
-   {
-      seedPointSettings->AddDataValuePair( seedPointInformation.at(i) );
-   }
    //dvp representing the advanced settings within the contours information
-   VE_XML::DataValuePair* seedPoint = new VE_XML::DataValuePair();
-   seedPoint->SetData( "Seed_Point_Settings", seedPointSettings );
-   newCommand->AddDataValuePair( seedPoint );
+   //VE_XML::DataValuePair* seedPoint = new VE_XML::DataValuePair();
+   //seedPoint->SetData( "Seed_Point_Settings", seedPointSettings );
+   //newCommand->AddDataValuePair( seedPoint );
    
    try
    {

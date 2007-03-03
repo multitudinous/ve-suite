@@ -273,17 +273,17 @@ bool WPDialog::TransferDataFromWindow( void )
    seedPointDVP.push_back( tempDVP );
    ////////////////
    tempDVP = new VE_XML::DataValuePair();
-   tempDVP->SetData("Min_Z_BB",
+   tempDVP->SetData("Max_Z_BB",
                     static_cast<double>( _zBounds->GetMaxSliderValue() )/100.0 ); 
    seedPointDVP.push_back( tempDVP );
    ////////////////
    tempDVP = new VE_XML::DataValuePair();
-   tempDVP->SetData("Min_Y_BB",
+   tempDVP->SetData("Max_Y_BB",
                     static_cast<double>( _yBounds->GetMaxSliderValue() )/100.0 ); 
    seedPointDVP.push_back( tempDVP );
    ////////////////
    tempDVP = new VE_XML::DataValuePair();
-   tempDVP->SetData("Min_X_BB",
+   tempDVP->SetData("Max_X_BB",
                     static_cast<double>( _xBounds->GetMaxSliderValue() )/100.0 ); 
    seedPointDVP.push_back( tempDVP );
    return true;
