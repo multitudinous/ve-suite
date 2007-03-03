@@ -41,7 +41,7 @@
     <xs:complexContent>
       <xs:extension base="CADNode">
         <xs:sequence>
-          <xs:element name="instance" type="CADNode" maxOccurs="1" />
+          <xs:element name="originalNode" type="CADNode" maxOccurs="1" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
