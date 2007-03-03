@@ -138,7 +138,7 @@ public:
 
 ////@begin Streamlines member variables
 
-
+    virtual ~Streamlines();
   
    wxButton*   itemButton14;
 ////@end Streamlines member variables
@@ -166,6 +166,7 @@ protected:
 
    std::vector<VE_XML::DataValuePair*> _advancedSettings;///<The advanced settings.
    std::vector<VE_XML::DataValuePair*> _streamlineInformation;///<The streamline setting data
+   std::vector< VE_XML::DataValuePair* > seedPointInformation;///<The streamline setting data
 
    double _streamSize;///<The size of the streamlines.
    unsigned int _nPointsPerPlane;///<The number of seed points.

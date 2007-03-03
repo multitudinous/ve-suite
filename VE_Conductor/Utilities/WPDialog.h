@@ -14,7 +14,7 @@ namespace GUI_Utilities
 class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
 
 {
-   public:
+public:
    //Constructor
       WPDialog(wxWindow* parent, int id, std::string title);
    
@@ -34,7 +34,14 @@ class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
    
    void SetCommand(std::string name){;}
    
-   protected:
+   ///Get the seed point vector
+   std::vector< VE_XML::DataValuePair* > GetSeedPointDVPVector( void );
+   ///Callback used to set the dvp vector
+   void SetVectorDVP( void );
+   ///Transfer the seed points info from the window
+   virtual bool TransferDataFromWindow( void );
+   
+protected:
    
    class WPMinSliderCallback: public
    	VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
@@ -111,18 +118,18 @@ class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
       WPDialog* _wpdlg;
     };
 
-//Build the DualSliders for the dialog
-void _createDualSliders();
+   //Build the DualSliders for the dialog
+   void _createDualSliders();
 
-//Add controls for dialog
-virtual void _buildGUI();
-virtual wxSizer* _buildSpecificWidgets();
-
-
-//
-VE_Conductor::GUI_Utilities::DualSlider* _xBounds;
-VE_Conductor::GUI_Utilities::DualSlider* _yBounds;
-VE_Conductor::GUI_Utilities::DualSlider* _zBounds;
+   //Add controls for dialog
+   virtual void _buildGUI();
+   virtual wxSizer* _buildSpecificWidgets();
+   
+   //
+   VE_Conductor::GUI_Utilities::DualSlider* _xBounds;
+   VE_Conductor::GUI_Utilities::DualSlider* _yBounds;
+   VE_Conductor::GUI_Utilities::DualSlider* _zBounds;
+   std::vector< VE_XML::DataValuePair* > seedPointDVP;
 };
 
 }

@@ -114,7 +114,15 @@ bool Streamlines::Create( wxWindow* parent, wxWindowID id,
 ////@end Streamlines creation
     return true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+Streamlines::~Streamlines( void )
+{
+   for ( size_t i = 0; i < seedPointInformation.size(); ++i )
+   {
+      delete seedPointInformation.at( i );
+   }
+   seedPointInformation.clear();   
+}
 /*!
  * Control creation for Streamlines
  */
@@ -381,6 +389,18 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
    VE_XML::DataValuePair* advancedStreamlineSettings = new VE_XML::DataValuePair();
    advancedStreamlineSettings->SetData("Advanced Streamline Settings",advancedSettings);
    newCommand->AddDataValuePair(advancedStreamlineSettings);
+
+   //Add the dvp's for the seed point info
+   VE_XML::Command* seedPointSettings = new VE_XML::Command();
+   seedPointSettings->SetCommandName("Set_Seed_Point_Settings");
+   for(size_t i =0; i < seedPointInformation.size(); i++)
+   {
+      seedPointSettings->AddDataValuePair( seedPointInformation.at(i) );
+   }
+   //dvp representing the advanced settings within the contours information
+   VE_XML::DataValuePair* seedPoint = new VE_XML::DataValuePair();
+   seedPoint->SetData( "Seed_Point_Settings", seedPointSettings );
+   newCommand->AddDataValuePair( seedPoint );
    
    try
    {
@@ -388,14 +408,13 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
    }
    catch(...)
    {
-      {
-         wxMessageBox( _("Invalid Parent"),_("Communication Failure"), 
-            wxOK | wxICON_INFORMATION );
-         if(newCommand)
-         {
-            delete newCommand;
-         }
-      }
+      wxMessageBox( _("Invalid Parent"),_("Communication Failure"), 
+         wxOK | wxICON_INFORMATION );
+   }
+
+   if(newCommand)
+   {
+      delete newCommand;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,8 +445,16 @@ void Streamlines::_onPointsSlider(wxScrollEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
 {
+   //Clear the old dvps if there were any
+   for ( size_t i = 0; i < seedPointInformation.size(); ++i )
+   {
+      delete seedPointInformation.at( i );
+   }
+   seedPointInformation.clear();
+   
    seedPointDialog = new WPDialog( static_cast< wxWindow* >( this ), 0, "Seed Point Controls" );
    seedPointDialog->ShowModal();
+   seedPointInformation = seedPointDialog->GetSeedPointDVPVector();
    seedPointDialog->Destroy();
    seedPointDialog = 0;
 }

@@ -28,7 +28,11 @@ BaseDialog(parent, id, title)
 ////////////////////////////////////////////////////////////////////////////////////
 WPDialog::~WPDialog()
 {
-
+   /*for ( size_t i = 0; i < seedPointDVP.size(); ++i )
+   {
+      delete seedPointDVP.at( i );
+   }*/
+   seedPointDVP.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////////
 void WPDialog::_buildGUI()
@@ -109,7 +113,7 @@ void WPDialog::_createDualSliders()
 ////////////////////////////////////////////////////////////////////////////////////
 void WPDialog::WPMinSliderCallback::SliderOperation()
 {
-//what does TP stand for?
+   //what does TP stand for?
    _wpdlg->SetCommandName("Min WP Update");
 
    VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
@@ -230,6 +234,58 @@ wxSizer* WPDialog::_buildSpecificWidgets()
 
    return mainSizer;
 }
+////////////////////////////////////////////////////////////////////////////////
+void WPDialog::SetVectorDVP( void )
+{
+/*   _zBounds->GetMinSliderValue();
+   _yBounds->GetMinSliderValue();
+   _xBounds->GetMinSliderValue();
 
-
+   _zBounds->GetMaxSliderValue();
+   _yBounds->GetMaxSliderValue();
+   _xBounds->GetMaxSliderValue();
+   
+   seedPointDVP*/
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< VE_XML::DataValuePair* > WPDialog::GetSeedPointDVPVector( void )
+{
+   return seedPointDVP;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool WPDialog::TransferDataFromWindow( void )
+{
+   VE_XML::DataValuePair* tempDVP;
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Min_Z_BB",
+                    static_cast<double>( _zBounds->GetMinSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Min_Y_BB",
+                    static_cast<double>( _yBounds->GetMinSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Min_X_BB",
+                    static_cast<double>( _xBounds->GetMinSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Min_Z_BB",
+                    static_cast<double>( _zBounds->GetMaxSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Min_Y_BB",
+                    static_cast<double>( _yBounds->GetMaxSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Min_X_BB",
+                    static_cast<double>( _xBounds->GetMaxSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   return true;
+}
    
