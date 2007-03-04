@@ -88,9 +88,9 @@ cfdStreamers::cfdStreamers( void )
    xMinBB = 0;
    yMinBB = 0;
    zMinBB = 0;
-   xMaxBB = 100;
-   yMaxBB = 100;
-   zMaxBB = 100;
+   xMaxBB = 1;
+   yMaxBB = 1;
+   zMaxBB = 1;
 }
 
 cfdStreamers::~cfdStreamers()

@@ -309,7 +309,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       }
    }*/
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::CreateActorThread( void * )
 {
    // DO NOT put scene graph manipulation code in this function
@@ -396,7 +396,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
       }
    } // End of While loop
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::streamers( void )
 {
    vprDEBUG(vesDBG,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
@@ -440,3 +440,4 @@ void cfdSteadyStateVizHandler::streamers( void )
    this->_activeObject->Update();
    //this->_activeObject = NULL;
 }
+////////////////////////////////////////////////////////////////////////////////
