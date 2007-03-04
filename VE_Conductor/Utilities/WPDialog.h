@@ -6,6 +6,9 @@
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Conductor/Utilities/BaseDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
+
+class wxSpinCtrl;
+
 namespace VE_Conductor
 {
 
@@ -130,9 +133,10 @@ protected:
    VE_Conductor::GUI_Utilities::DualSlider* _yBounds;
    VE_Conductor::GUI_Utilities::DualSlider* _zBounds;
    std::vector< VE_XML::DataValuePair* > seedPointDVP;
+   wxSpinCtrl* numXPointsSpinner;
+   wxSpinCtrl* numYPointsSpinner;
+   wxSpinCtrl* numZPointsSpinner;
 };
-
 }
-
 }
 #endif  //_WP_DIALOG_H

@@ -46,6 +46,7 @@ class vtkTubeFilter;
 class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkRungeKutta45;
+class vtkPoints;
 
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
@@ -99,6 +100,7 @@ private:
    vtkPolyDataMapper* mapper;
    vtkRungeKutta45*   integ;  
    vtkPolyData*       seedPoints;///>PolyData for the seed points
+   vtkPoints*         points;///>Seed Points raw data
    float propagationTime;
    float integrationStepLength;
    float stepLength;
@@ -106,9 +108,9 @@ private:
    float lineDiameter;
    int   streamArrows;
    float arrowDiameter;
-   int xValue;///>number of points for x direction
-   int yValue;///>number of points for y direction
-   int zValue;///>number of points for z direction
+   unsigned int xValue;///>number of points for x direction
+   unsigned int yValue;///>number of points for y direction
+   unsigned int zValue;///>number of points for z direction
 
    double xMinBB;///>number of points for x direction
    double yMinBB;///>number of points for y direction

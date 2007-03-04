@@ -85,6 +85,7 @@ cfdStreamers::cfdStreamers( void )
    yValue = 4;
    zValue = 4;
    seedPoints = 0;
+   points = 0;
    xMinBB = 0;
    yMinBB = 0;
    zMinBB = 0;
@@ -294,7 +295,7 @@ aa Assign Normals NORMALS POINT_DATA
    {
 		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
       tempGeode->TranslateToGeode( temp );
-      geodes.push_back( tempGeode.get() ); 
+      geodes.push_back( tempGeode ); 
       this->updateFlag = true;
    }
    catch( std::bad_alloc )
@@ -485,12 +486,15 @@ void cfdStreamers::UpdateCommand()
       activeModelDVP = objectCommand->GetDataValuePair( "Min_Z_BB" );
       activeModelDVP->GetData( zMinBB );   
       vprDEBUG(vesDBG,0) << "|\tzMinBB : " << zMinBB << std::endl << vprDEBUG_FLUSH;
-      //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-      //activeModelDVP->GetData( xValue );   
-      //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-      //activeModelDVP->GetData( yValue );   
-      //activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
-      //activeModelDVP->GetData( zValue );
+      activeModelDVP = objectCommand->GetDataValuePair( "Num_X_Points" );
+      activeModelDVP->GetData( xValue );   
+      vprDEBUG(vesDBG,0) << "|\tX Points : " << xValue << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Num_Y_Points" );
+      activeModelDVP->GetData( yValue );   
+      vprDEBUG(vesDBG,0) << "|\tY Points : " << yValue << std::endl << vprDEBUG_FLUSH;
+      activeModelDVP = objectCommand->GetDataValuePair( "Num_Z_Points" );
+      activeModelDVP->GetData( zValue );
+      vprDEBUG(vesDBG,0) << "|\tZ Points : " << zValue << std::endl << vprDEBUG_FLUSH;
    }
    CreateSeedPoints();
 }
@@ -516,22 +520,27 @@ void cfdStreamers::CreateSeedPoints( void )
    double zLoc = 0;
    int number = 0;
    //insert evenly spaced points inside bounding box
-   vtkPoints* points = vtkPoints::New();
-   double deltaX = (xMax-xMin)/(xValue+1);
-   double deltaY = (yMax-yMin)/(yValue+1);
-   double deltaZ = (zMax-zMin)/(zValue+1);
+   if ( points )
+   {      
+      points->Delete();
+   }
+   points = vtkPoints::New();
+   double deltaX = (xMax-xMin)/double(xValue+1);
+   double deltaY = (yMax-yMin)/double(yValue+1);
+   double deltaZ = (zMax-zMin)/double(zValue+1);
    
-   for (int i = 1; i <= xValue; ++i)
+   for (unsigned int i = 1; i <= xValue; ++i)
 	{
       xLoc = xMin + (i*deltaX);
-      for (int j = 1; j <= yValue; ++j)
+      for (unsigned int j = 1; j <= yValue; ++j)
       {
          yLoc = yMin + (j*deltaY);
-         for(int k = 1; k <= zValue; k++)			
+         for(unsigned int k = 1; k <= zValue; k++)			
 			{
             //points added in ptMin + length*iteration/(number of equal segments)
             //where (number of equal segments) = ptValue+1
             zLoc = zMin + (k*deltaZ);
+//std::cout << xLoc << " " <<  yLoc << " " <<  zLoc << std::endl;
             points->InsertPoint( number, xLoc, yLoc, zLoc ); 
             number=number+1;
 			}
@@ -545,5 +554,4 @@ void cfdStreamers::CreateSeedPoints( void )
    }
    seedPoints = vtkPolyData::New();
    seedPoints->SetPoints(points);
-   points->Delete();
 }

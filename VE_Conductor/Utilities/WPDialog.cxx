@@ -6,6 +6,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include <wx/statbox.h>
+#include <wx/spinctrl.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 
@@ -15,6 +16,10 @@ BaseDialog(parent, id, title)
    _xBounds = 0;
    _yBounds = 0;
    _zBounds = 0;
+   numXPointsSpinner = 0;
+   numYPointsSpinner = 0;
+   numZPointsSpinner = 0;
+   
    _buildGUI();
    /*
    wxSize displaySize = ::wxGetDisplaySize();
@@ -50,13 +55,31 @@ void WPDialog::_buildGUI()
    wxBoxSizer* zdualSizer = new wxBoxSizer (wxHORIZONTAL);
    zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND); 
    
-     wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
-     _addOKButton(buttonRowSizer);
+   numXPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), -1, 
+                                       wxEmptyString, 
+                                       wxDefaultPosition, wxDefaultSize, 
+                                       wxSP_ARROW_KEYS, 1, 100, 4 );
+   numYPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), -1, 
+                                       wxEmptyString, 
+                                       wxDefaultPosition, wxDefaultSize, 
+                                       wxSP_ARROW_KEYS, 1, 100, 4 );
+   numZPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), -1, 
+                                       wxEmptyString, 
+                                       wxDefaultPosition, wxDefaultSize, 
+                                       wxSP_ARROW_KEYS, 1, 100, 4 );
+
+   wxBoxSizer* spinnerRowSizer = new wxBoxSizer(wxHORIZONTAL);
+   spinnerRowSizer->Add( numXPointsSpinner, 0, wxALIGN_LEFT, 5 );
+   spinnerRowSizer->Add( numYPointsSpinner, 0, wxALIGN_LEFT, 5 );
+   spinnerRowSizer->Add( numZPointsSpinner, 0, wxALIGN_LEFT, 5 );
    
+   wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
+   _addOKButton(buttonRowSizer);
    
    mainSizer->Add(xdualSizer,1,wxALIGN_CENTER|wxEXPAND);  
    mainSizer->Add(ydualSizer,1,wxALIGN_CENTER|wxEXPAND);   
    mainSizer->Add(zdualSizer,1,wxALIGN_CENTER|wxEXPAND);   
+   mainSizer->Add(spinnerRowSizer,1,wxALIGN_CENTER|wxEXPAND);   
    
    mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER|wxEXPAND);
    
@@ -285,6 +308,21 @@ bool WPDialog::TransferDataFromWindow( void )
    tempDVP = new VE_XML::DataValuePair();
    tempDVP->SetData("Max_X_BB",
                     static_cast<double>( _xBounds->GetMaxSliderValue() )/100.0 ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Num_X_Points", 
+                    static_cast< unsigned int>( numXPointsSpinner->GetValue() ) ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Num_Y_Points", 
+                    static_cast< unsigned int>( numYPointsSpinner->GetValue() ) ); 
+   seedPointDVP.push_back( tempDVP );
+   ////////////////
+   tempDVP = new VE_XML::DataValuePair();
+   tempDVP->SetData("Num_Z_Points", 
+                    static_cast< unsigned int>( numZPointsSpinner->GetValue() ) ); 
    seedPointDVP.push_back( tempDVP );
    return true;
 }
