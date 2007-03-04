@@ -83,7 +83,7 @@ public:
 
    void SetIntegrationDirection( int );
 
-   void SetPropagationTime( int );
+   void SetPropagationTime( double value );
 
    void SetIntegrationStepLength( int );
 

@@ -861,9 +861,10 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
    // AND THE DATASET IS NOT MODIFIED
    //This is expensive so has been removed
-   //this->bbDiagonal = this->GetDataSet()->GetLength();
-   //vprDEBUG(vesDBG,1) << "\tthis->bbDiagonal = " << this->bbDiagonal
-   //                       << std::endl << vprDEBUG_FLUSH;
+   //This is needed for streamline calcs
+   this->bbDiagonal = this->GetDataSet()->GetLength();
+   vprDEBUG(vesDBG,1) << "\tthis->bbDiagonal = " << this->bbDiagonal
+                          << std::endl << vprDEBUG_FLUSH;
 
    // Read or compute the length of the diagonal of the bounding box
    // of the average cell. 

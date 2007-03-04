@@ -336,9 +336,9 @@ void cfdStreamers::SetIntegrationDirection( int value )
    this->integrationDirection = value;
 }
 
-void cfdStreamers::SetPropagationTime( int value )
+void cfdStreamers::SetPropagationTime( double value )
 {
-   this->propagationTime = (float)value * 
+   this->propagationTime = value * 
                   ( 100.0f * this->GetActiveDataSet()->GetMaxTime() / 20.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -421,12 +421,12 @@ void cfdStreamers::UpdateCommand()
    
    /////////////////////
    activeModelDVP = objectCommand->GetDataValuePair( "Propagation Time" );
-   double propagationTime = 1.0f;
-   activeModelDVP->GetData( propagationTime );
+   double tempPropagationTime = 1.0f;
+   activeModelDVP->GetData( tempPropagationTime );
    vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
-      << propagationTime 
+      << tempPropagationTime 
       << std::endl << vprDEBUG_FLUSH;
-   this->SetPropagationTime( static_cast< int >( propagationTime ) );
+   this->SetPropagationTime( tempPropagationTime );
    
    /////////////////////
    activeModelDVP = objectCommand->GetDataValuePair( "Diameter" );
