@@ -125,17 +125,16 @@ case "$CFDHOSTTYPE" in
 
 ;;
 	Darwin*)
-   export FLAGPOLL_PATH=${VE_SUITE_HOME}/VE_Installer/fpc:/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks/lib/flagpoll
+   export FLAGPOLL_PATH=${VE_SUITE_HOME}/VE_Installer/fpc:/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/install-darwin/lib/flagpoll
    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/vrjuggler/cppdom-0.6.6/lib/flagpoll
-   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/vrjuggler/gmtl-0.4.12-install/share/pkgconfig
-   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/ACE_TAO/install/lib/pkgconfig:/opt/local/lib/pkgconfig
-   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/bullet-install/lib/pkgconfig
+   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/ACE_TAO/install/lib/pkgconfig
+   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/bullet-2.43/install-darwin/lib/pkgconfig:/opt/local/share/pkgconfig
 
    #setenv JDK_HOME /usr/java
    export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk-cvs/install
    export TAO_HOME=/Volumes/data/VE_Suite_Deps/ACE_TAO/install
    #export WX_HOME=/Volumes/data/VE_Suite_Deps/wxWidgets/install
-   export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/build-darwin/instlinks
+   export VJ_BASE_DIR=/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/install-darwin
    export OSG_HOME=/Volumes/data/VE_Suite_Deps/OSG_OP_OT-1.2/install
    #setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
@@ -146,7 +145,7 @@ case "$CFDHOSTTYPE" in
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/test_two/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${TAO_HOME}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:/Volumes/data/VE_Suite_Deps/opal-install/lib
-   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:/opt/local/lib
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:/opt/local/lib:/Volumes/data/VE_Suite_Deps/bullet-2.43/install-darwin/lib
 
    export PATH=${TAO_HOME}/bin:${PATH}
 
