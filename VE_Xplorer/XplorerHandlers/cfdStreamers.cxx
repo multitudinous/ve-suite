@@ -81,9 +81,9 @@ cfdStreamers::cfdStreamers( void )
    streamArrows = 0;
    //pointSource = 0;
 
-   xValue = 0;
-   yValue = 0;
-   zValue = 0;
+   xValue = 4;
+   yValue = 4;
+   zValue = 4;
    seedPoints = 0;
    xMinBB = 0;
    yMinBB = 0;
@@ -499,12 +499,17 @@ void cfdStreamers::CreateSeedPoints( void )
 {
    double bounds[ 6 ];
    GetActiveDataSet()->GetDataSet()->GetBounds(bounds);
-   double xMin=bounds[0] * xMinBB;
-   double xMax=bounds[1] * xMaxBB;
-   double yMin=bounds[2] * yMinBB;
-   double yMax=bounds[3] * yMaxBB;
-   double zMin=bounds[4] * zMinBB;
-   double zMax=bounds[5] * zMaxBB;
+   
+   double xDiff = bounds[1] - bounds[0];
+   double yDiff = bounds[3] - bounds[2];
+   double zDiff = bounds[5] - bounds[4];
+   
+   double xMin = bounds[0] + (xDiff * xMinBB);
+   double xMax = bounds[0] + (xDiff * xMaxBB);
+   double yMin = bounds[2] + (yDiff * yMinBB);
+   double yMax = bounds[2] + (yDiff * yMaxBB);
+   double zMin = bounds[4] + (zDiff * zMinBB);
+   double zMax = bounds[4] + (zDiff * zMaxBB);
    
    double xLoc = 0;
    double yLoc = 0;
@@ -512,17 +517,21 @@ void cfdStreamers::CreateSeedPoints( void )
    int number = 0;
    //insert evenly spaced points inside bounding box
    vtkPoints* points = vtkPoints::New();
-   for (int i = 1; i <= xValue ; ++i)
+   double deltaX = (xMax-xMin)/(xValue+1);
+   double deltaY = (yMax-yMin)/(yValue+1);
+   double deltaZ = (zMax-zMin)/(zValue+1);
+   
+   for (int i = 1; i <= xValue; ++i)
 	{
-      xLoc = ( xMin + ((xMax-xMin)*(i))/(xValue+1));
+      xLoc = xMin + (i*deltaX);
       for (int j = 1; j <= yValue; ++j)
       {
-         yLoc = ( yMin + ((yMax-yMin)*(j))/(yValue+1));
+         yLoc = yMin + (j*deltaY);
          for(int k = 1; k <= zValue; k++)			
 			{
             //points added in ptMin + length*iteration/(number of equal segments)
             //where (number of equal segments) = ptValue+1
-            zLoc = ( zMin + ((zMax-zMin)*(k))/(zValue+1));
+            zLoc = zMin + (k*deltaZ);
             points->InsertPoint( number, xLoc, yLoc, zLoc ); 
             number=number+1;
 			}

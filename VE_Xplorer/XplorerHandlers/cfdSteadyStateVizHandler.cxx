@@ -350,7 +350,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             if (  contourTest == NULL && 
                   vectorTest == NULL &&
                   momentumTest == NULL &&   
-                  streamersTest == NULL &&
+                  //streamersTest == NULL &&
                   animStreamerTest == NULL &&
                   animImgTest == NULL )
             {
@@ -361,13 +361,13 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
                this->_activeObject->Update();      
                //this->_activeObject->SetSequence( 0 );
             }
-            else if ( streamersTest != NULL )
+            /*else if ( streamersTest != NULL )
             {
                vprDEBUG(vesDBG,1) << "interactive object." 
                                        << std::endl << vprDEBUG_FLUSH;
                // if we are not already computing streamlines
                this->streamers();  
-            }
+            }*/
             else if ( animStreamerTest != NULL )
             {
                // if we are not already computing animatedStreamlines
