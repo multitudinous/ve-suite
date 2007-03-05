@@ -8,6 +8,10 @@ export Mime_Directory=$HOME/.local/share/mime
 export Applications_Directory=$HOME/.local/share/applications
 
 ##Copy MimeType package & update Mime database
+mkdir $Mime_Directory
+mkdir $Mime_Directory/packages
+mkdir $Applications_Directory
+
 cp $Mime_Type_Package $Mime_Directory/packages/$Mime_Type_Package
 update-mime-database $Mime_Directory
 
