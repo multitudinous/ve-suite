@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=VE-Suite
+X-Category=Graphics;Science;DataVisualization;Engineering;
+MimeType=application/x-vesuite;
+Exec=/home/users/mikelem/Desktop/VE_Suite/VE_Installer/installer/velauncher.py
+Icon=ve_icon48x48
+Type=Application
+Terminal=true
+NoDisplay=false
