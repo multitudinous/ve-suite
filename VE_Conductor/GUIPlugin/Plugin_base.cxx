@@ -376,10 +376,11 @@ void REI_Plugin::DrawName(wxDC* dc)
       x+=poly[i].x;
       y+=poly[i].y;
     }
-  x=x/n_pts; y = y/n_pts;
+  x=x/n_pts; 
+  y = y/n_pts;
 
   dc->GetTextExtent(name, &w, &h);
-  dc->DrawText(name, (x-w/2+xoff), (y-h/2+yoff));
+  dc->DrawText(name, (x-w/2+xoff), pos.y + (y*2));
 }
 
 /////////////////////////////////////////////////////////////////////////////
