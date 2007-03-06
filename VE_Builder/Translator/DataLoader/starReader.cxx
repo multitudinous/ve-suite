@@ -99,7 +99,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 {
    vtkUnstructuredGrid * uGrid = NULL;
 
-   FILE * fvertices = fopen( this->starVertFileName.c_str(), "r" );
+   std::ifstream fvertices( this->starVertFileName.c_str() );
 
    if ( fvertices == NULL )
    {
@@ -109,8 +109,11 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    }
 
    int starcdVersion = 0;
+
    //Read the header information again from the star files to get version
-   int tempGet = std::getc( fvertices );
+   int tempGet = 0;
+   tempGet = fvertices.get();
+
    if ( tempGet == 'P' )
    {
       starcdVersion = 4;
@@ -119,15 +122,16 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    {
       starcdVersion = 324;
    }
-   std::putc( tempGet, fvertices );
+
    std::cout << "StarCD Version " << starcdVersion << std::endl;
    std::cout << "\nReading vertex data from " << this->starVertFileName << std::endl;
+
    //Read the header information again from the star 4 files
    if ( starcdVersion == 4 )
    {
-      char* tempBuffer = new char[ 512 ];
-      std::fgets( tempBuffer, 512, fvertices );
-      std::fgets( tempBuffer, 512, fvertices );
+      char * tempBuffer= new char[512];
+      fvertices.getline(tempBuffer,512);
+      fvertices.getline(tempBuffer,512);
       delete [] tempBuffer;
    }
    
@@ -138,16 +142,18 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    // the offset of the vertex numbering
    int vertexId;
    float vx, vy, vz;
-   fscanf(fvertices, "%d %f %f %f\n", &vertexId, &vx, &vy, &vz);
+
+   fvertices >> vertexId >> vx >> vy >> vz;
+
    int vShift = vertexId;
    int maxOrigVertexId = vertexId;
    int numStarVertices = 1;
 
    // Read the remainder of the vertex lines and continue to count the vertices
    // and keep track of the minimum and maximum vertex IDs
-   while( ! feof(fvertices) )
+   while( !fvertices.eof() )
    {
-      fscanf(fvertices, "%d %f %f %f\n", &vertexId, &vx, &vy, &vz);
+      fvertices >> vertexId >> vx >> vy >> vz;
       if ( vShift > vertexId ) vShift = vertexId;
       if ( maxOrigVertexId < vertexId ) maxOrigVertexId = vertexId;
       numStarVertices++;
@@ -164,26 +170,28 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    vtkPoints *vertices = vtkPoints::New();
    vertices->SetNumberOfPoints( maxOrigVertexId-vShift+1 );
 
-   // Rewind the file and reread all of the vertex lines and store the vertex
+   // Reread all of the vertex lines and store the vertex
    // info in the vertices array using shifted vertex numbering
-   std::rewind( fvertices );
+   fvertices.seekg( std::ios_base::beg);
+
+
    if ( starcdVersion == 4 )
    {
-      char* tempBuffer = new char[ 512 ];
-      std::fgets( tempBuffer, 512, fvertices );
-      std::fgets( tempBuffer, 512, fvertices );
+      char * tempBuffer= new char[512];
+      fvertices.getline(tempBuffer,512);
+      fvertices.getline(tempBuffer,512);
       delete [] tempBuffer;
    }
    
-   while( ! feof(fvertices) )
+   while( !fvertices.eof() )
    {
-      fscanf(fvertices, "%d %f %f %f\n", &vertexId, &vx, &vy, &vz);
+      fvertices >> vertexId >> vx >> vy >> vz;
       vertices->SetPoint( vertexId-vShift, vx, vy, vz );
       if ( this->debug > 1 )
          std::cout << "Inserted point # " << vertexId-vShift << ": "
               << "\t" << vx << "\t" << vy << "\t" << vz << std::endl;
    }
-   fclose( fvertices );
+   fvertices.close();
 
    uGrid = vtkUnstructuredGrid::New();
    uGrid->SetPoints( vertices );
@@ -192,7 +200,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    // now for the cell data...
    std::cout << "\nReading cell data from " << this->starCellFileName << std::endl;
 
-   FILE * fcells = fopen( this->starCellFileName.c_str(), "r" );
+   std::ifstream fcells( this->starCellFileName.c_str() );
    if ( fcells == NULL )
    {
       std::cerr <<"\nError - Cannot open the designated cell file: "
@@ -412,20 +420,24 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       vertList->Delete();
       delete [] tempLine;
    }
-   std::cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << std::endl;
-   std::cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << std::endl;
+   // std::cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << std::endl;
+   // std::cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << std::endl;
 
    // Read the cell vertex connectivity and write vtk cells...  
-   rewind( fcells );
+   fcells.seekg( std::ios_base::beg);
+
    if ( starcdVersion == 324 )
    {
-      while( ! feof(fcells) )
+      while( !fcells.eof() )
       {
+         /*
          fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
          &cId, 
          &cPt[0], &cPt[1], &cPt[2], &cPt[3], &cPt[4], &cPt[5], &cPt[6], &cPt[7], 
          &cGroup, &cType); 
-
+         */
+         fcells >> cId >> cPt[0] >> cPt[1] >> cPt[2] >> cPt[3] >> cPt[4] >> cPt[5] >> cPt[6] >> cPt[7] >> cGroup >> cType;
+         
          // reject all types except for cells or samm cells
          if ( cType != 1 && cType != -1) continue;
 
@@ -453,10 +465,14 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          if ( cType == -1 )                // star-cd samm cells
          {
             // read second line of this record...
+            /*
             fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
             &sId, 
             &sPt[0], &sPt[1], &sPt[2], &sPt[3], &sPt[4], &sPt[5], &sPt[6], &sPt[7],
             &sGroup, &sType);
+            */
+
+            fcells >> sId >> sPt[0] >> sPt[1] >> sPt[2] >> sPt[3] >> sPt[4] >> sPt[5] >> sPt[6] >> sPt[7] >> sGroup >> sType;           
 
             for ( i=0; i<8; i++ ) sPt[i] -= vShift;
 
@@ -467,10 +483,15 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                     << "\t" << sPt[6] << "\t" << sPt[7] << std::endl;
                       
             // read third line of this record...
+            /*
             fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
                    &sId, &tPt[0], &tPt[1], &tPt[2], &tPt[3],
                    &tPt[4], &tPt[5], &tPt[6], &tPt[7], 
                    &sGroup, &sType);
+            */
+
+           fcells >> sId >> tPt[0] >> tPt[1] >> tPt[2] >> tPt[3] >> tPt[4] >> tPt[5] >> tPt[6] >> tPt[7] >> sGroup >> sType;
+
 
             if ( this->debug ) 
                std::cout << "                                    On line 3, vertices: " 
@@ -898,7 +919,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          }
       }
    }
-   fclose( fcells );
+   fcells.close();
 
    // now for the solution data
    std::cout << "\nReading solution data from " << this->starUsrFileName << std::endl;
