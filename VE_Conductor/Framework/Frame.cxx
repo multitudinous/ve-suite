@@ -34,7 +34,6 @@
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
 #include <wx/msgdlg.h>
-#include <wx/filename.h>
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
@@ -141,8 +140,22 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU(wxID_NEW, AppFrame::New)
    // this is probably a bug and needs to be fixed
    EVT_MENU(wxID_EXIT, AppFrame::FrameClose)
-   EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences)
+   EVT_MENU(ID_PREFERENCES, AppFrame::OnPreferences)
    EVT_MENU(wxID_OPEN, AppFrame::Open)
+
+	// use max of 10 for recent file list, bind each ID to OpenRecentFile
+	EVT_MENU(v21ID_BASE_RECENT  , AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+1, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+2, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+3, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+4, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+5, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+6, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+7, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+8, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_BASE_RECENT+9, AppFrame::OpenRecentFile)
+	EVT_MENU(v21ID_CLEAR_RECENT,  AppFrame::ClearRecentFile)
+
    EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
    EVT_MENU(QUERY_FROM_SERVER, AppFrame::QueryFromServer)
    EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
@@ -247,9 +260,14 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    _displayMode = "Tablet";
    _detectDisplayAndCreate();
    
+	path			= _("NO_FILE_OPENED");
+	directory	= _("NO_FILE_OPENED");
+	fname			= _("NO_FILE_OPENED");
+
+ 
    GetConfig(NULL);
-   
-   CreateMenu();
+
+	CreateMenu();
    //CreateTB();
    CreateStatusBar();
    SetStatusText( _("VE-Conductor Status") );
@@ -469,16 +487,16 @@ void AppFrame::CreateVETab()
    //SetSizer( sizerTab );*/
 }
 
+//////////////////////////////////////////////////////////////////////////
 void AppFrame::GetConfig(wxConfig* config)
 {
   wxConfig* cfg = config;
   if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-  int i;
-  
+  bool exist = false;
+
   wxString key = FEATURE;
   if (cfg->Exists (key)) 
   {
-      bool exist = false;
       exist  = cfg->Read (key + _T("/") + F_FINANCIAL, &f_financial);
       exist  = cfg->Read (key + _T("/") + F_GEOMETRY, &f_geometry);
       exist  = cfg->Read (key + _T("/") + F_VISUALIZATION, &f_visualization);
@@ -489,11 +507,23 @@ void AppFrame::GetConfig(wxConfig* config)
 		f_geometry = true;
 		f_visualization = true;
 	}
- //}
-  if (!config) delete cfg;
 
+	key = RECENT_FILE;
+	wxString pathDummy;
+	exist = true;
+	int counter = 0;
+
+	while( exist == true )	
+	{
+		exist = cfg->Read( key + wxString::Format (_("%i"), counter), &pathDummy );
+		if( exist == true )		recentFileArchive.push_back( wxFileName(pathDummy) );
+		counter++;
+	}
+
+  if (!config) delete cfg;
 }
-//////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::GetAppropriateSubDialogSize()
 {
    int displayWidth= 0;
@@ -572,6 +602,7 @@ void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
   if (!config) delete cfg;
 }
 
+//////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig(wxConfig* config)
 {
 	//store config
@@ -582,9 +613,41 @@ void AppFrame::StoreConfig(wxConfig* config)
 	cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
 	cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
 	cfg->Write (key+_T("/") + F_VISUALIZATION, f_visualization);
+
 	if (!config) delete cfg;
 }
 
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::StoreRecentFile( wxConfig* config )
+{
+	//store recent menus in config
+	wxConfig* cfg = config;
+	if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+	
+	wxString key = RECENT_FILE;
+	bool exist = false;
+
+	//remove old
+	for(int i=0; i<10; i++)
+	{
+		exist = cfg->HasEntry (key + wxString::Format(_("%i"), i));
+
+		if(exist)	
+		{	
+			cfg->DeleteEntry (key + wxString::Format(_("%i")), false);
+		}
+	}
+
+	//store new
+	for(int i=0; i<recentFileArchive.size(); i++)
+	{
+		cfg->Write (key + wxString::Format(_("%i"), i), recentFileArchive.at(i).GetFullPath() );
+	}
+
+	if (!config) delete cfg;
+}
+
+//////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
    if ( GetDisplayMode() == "Desktop" )
@@ -654,6 +717,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 
    StoreFrameSize(GetRect(), NULL);
    StoreConfig(NULL);
+	StoreRecentFile(NULL);
    Destroy();
 }
 
@@ -671,9 +735,17 @@ void AppFrame::CreateMenu()
    edit_menu = new wxMenu;
    help_menu = new wxMenu;
 //   config_menu = new wxMenu;
+	openRecentMenu = new wxMenu;
+	// TODO update openRecentMenu
 
-   file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
-   file_menu->Append(wxID_OPEN, _("&Open ..\tCtrl+O"));
+   file_menu->Append( wxID_NEW, _("&New\tCtrl+N") );
+   file_menu->Append( wxID_OPEN, _("&Open ..\tCtrl+O") );
+
+	InitRecentFile();
+
+	file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), openRecentMenu, _("Open recent menu") );
+   file_menu->AppendSeparator();
+
    file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"));
    file_menu->Append(wxID_SAVEAS, _("Save &as ..\tCtrl+Shift+S"));
    file_menu->AppendSeparator();
@@ -705,6 +777,9 @@ void AppFrame::CreateMenu()
    aspenMenu->Append( RUN_ASPEN_NETWORK, _("Run Simulation") );
    aspenMenu->Append( CONDUCTOR_FIND, _("Find") );
    con_menu->Append( ASPEN_CONNECTION_MENU,   _("Aspen"), aspenMenu, _("Aspen connection") );
+
+	//file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), aspenMenu, _("NOTHING") );
+
 
    con_menu->AppendSeparator();
    con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
@@ -924,6 +999,7 @@ void AppFrame::Save( wxCommandEvent& event )
    }
 }
 
+//////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 {
    wxFileName vesFileName;
@@ -961,15 +1037,18 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
    
    if ( vesFileName.HasName() ) 
    {
-      path = vesFileName.GetFullPath();
-      directory = vesFileName.GetPath();
-      fname = vesFileName.GetFullName();
+		SetRecentFile(vesFileName);
+
+      path			= vesFileName.GetFullPath();
+      directory	= vesFileName.GetPath();
+      fname			= vesFileName.GetFullName();
       ///now write the file out from domdocument manager
       //wrtie to path
       std::string data = network->Save( ConvertUnicode( path.c_str() ) );
    }
 }
 
+//////////////////////////////////////////////////////////////////////////
 void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog
@@ -999,13 +1078,15 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       New( event );
 
       path = vesFileName.GetFullPath();
-      path.Replace( _("\\"), _("/"), true );
+		path.Replace( _("\\"), _("/"), true );
       directory = vesFileName.GetPath();
       //change conductor working dir
       ::wxSetWorkingDirectory( directory );
       path = vesFileName.GetFullName();
       std::string tempDir = ConvertUnicode( directory.c_str() );
-      
+		
+		SetRecentFile( wxFileName(dialog.GetPath()) );
+
       if ( tempDir.empty() )
       {
          tempDir = "./";
@@ -1044,6 +1125,229 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       SubmitToServer( event );      
    }
 }
+
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::InitRecentFile()
+{
+	int i;
+	int openRecentFile_ID = v21ID_BASE_RECENT;
+	wxString dummyString;
+
+	if(recentFileArchive.size() == 0)
+	{
+		openRecentMenu->Append (openRecentFile_ID, _("None"));
+		openRecentMenu->Enable (openRecentFile_ID, false);
+	}
+	else 
+	{
+		for( i=(recentFileArchive.size()-1); i>=0; i-- )
+		{
+			dummyString = recentFileArchive.at(i).GetFullName();
+			openRecentMenu->Append (openRecentFile_ID + i, dummyString.SubString(0, dummyString.size() - 5));
+		}
+	}
+
+	openRecentMenu->AppendSeparator();
+	openRecentMenu->Append( v21ID_CLEAR_RECENT, _("Clear recent file list") );
+}
+
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::ClearRecentFile( wxCommandEvent& WXUNUSED(event) )
+{
+	// TODO maintaing list with only the current file will not work due to how Open(.) is structured, it doesn't always save the full path
+	
+	if(path == _("NO_FILE_OPENED"))
+	{
+		recentFileArchive.clear();
+	}
+	else
+	{
+		wxFileName vesCurrentOpen = recentFileArchive.at(recentFileArchive.size()-1);
+		recentFileArchive.clear();
+		recentFileArchive.push_back(vesCurrentOpen); 
+	}
+
+	
+
+
+	//wxFileName currentFile = NULL;
+	//if( ??? )								currentFile = ???
+	
+	//if( currentFile )					recentFileArchive.push_back(currentFile);
+
+	SetRecentMenu();
+}
+
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::DeleteRecentFile(wxFileName vesFileName)
+{
+	// PROMPT BOX look at SaveAs() -- box that states fill has been moved or deleted, and ask them with radio buttons
+	// a) to continue to Open menu, b) cancel and return to current working document
+	std::vector< wxFileName > dummyList;
+	int i;
+	bool deleteFile = false;
+
+	for(i=0; i<recentFileArchive.size(); i++)
+	{
+		if(vesFileName.GetFullPath() == recentFileArchive.at(i).GetFullPath())
+			deleteFile = true;
+
+		if(!deleteFile)	dummyList.push_back(recentFileArchive.at(i));
+		else					deleteFile = false;
+	}
+	recentFileArchive.clear();
+	
+	for(i=0; i<dummyList.size(); i++)
+	{
+		recentFileArchive.push_back(dummyList.at(i));
+	}
+	dummyList.clear();
+
+	SetRecentMenu();
+}
+
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::SetRecentFile(wxFileName vesFileName)
+{
+	std::vector< wxFileName > dummyList;
+	dummyList.clear();
+	int i;
+	int offset = 0;
+	bool repeat = false;
+
+	// check if path is already in list, erase old location and place up front
+	for(i=0; i<recentFileArchive.size(); i++)
+	{
+		if(vesFileName.GetFullPath() == recentFileArchive.at(i).GetFullPath())
+		{
+			repeat = true;
+		}
+
+		if(!repeat)		dummyList.push_back(recentFileArchive.at(i));
+		else				repeat = false;
+	}
+	recentFileArchive.clear();
+
+	if( dummyList.size() >= 10 )	offset = dummyList.size()-9;
+
+	for(i=0+offset; i<dummyList.size(); i++)
+		recentFileArchive.push_back(dummyList.at(i));
+
+	recentFileArchive.push_back( vesFileName.GetFullPath() );
+	dummyList.clear();
+
+	SetRecentMenu();
+}
+
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::SetRecentMenu()
+{
+	int i;
+	int openRecentFile_ID = v21ID_BASE_RECENT;
+	wxString dummyFullName, dummyDirectory;
+
+	// clear menu
+	openRecentMenu->Delete( v21ID_CLEAR_RECENT );
+	openRecentMenu->Delete( wxID_SEPARATOR ); //&wxMenuItem::IsSeparator );
+
+	size_t menuSize = openRecentMenu->GetMenuItemCount();
+	while( menuSize > 0 )
+	{
+		openRecentMenu->Delete(v21ID_BASE_RECENT + menuSize - 1);
+		menuSize = openRecentMenu->GetMenuItemCount();
+	}
+
+	// set menu
+	if( recentFileArchive.size() == 0 )
+	{
+		openRecentMenu->Append (openRecentFile_ID, _("None"));
+		openRecentMenu->Enable (openRecentFile_ID, false);
+	}
+
+	for( i=(recentFileArchive.size()-1); i>=0; i-- )
+	{
+		dummyFullName  = recentFileArchive.at(i).GetFullName();
+		dummyDirectory	= recentFileArchive.at(i).GetPath();
+		openRecentMenu->Append( openRecentFile_ID + i, dummyFullName.SubString(0, dummyFullName.size() - 5) );
+		openRecentMenu->SetHelpString( openRecentFile_ID + i, dummyDirectory );
+	}
+
+	openRecentMenu->AppendSeparator();
+	openRecentMenu->Append( v21ID_CLEAR_RECENT, _("Clear recent file list") );
+}
+
+//////////////////////////////////////////////////////////////////////////
+void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
+{
+	int placeChosen = event.GetId();
+	wxFileName vesFileName;
+
+	vesFileName = recentFileArchive.at(placeChosen - v21ID_BASE_RECENT);
+
+	// TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
+
+	New( event );
+
+	path			= vesFileName.GetFullPath();
+	directory	= vesFileName.GetPath();
+	fname			= vesFileName.GetFullName();
+
+	SetRecentFile(vesFileName);
+
+   std::string tempDir = ConvertUnicode( directory.c_str() );
+	if ( tempDir.empty() )
+	{
+		tempDir = "./";
+	}
+
+	//Send Command to change xplorer working dir
+	// Create the command and data value pairs
+	VE_XML::DataValuePair* dataValuePair = 
+                  new VE_XML::DataValuePair(  std::string("STRING") );
+	dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
+	VE_XML::Command* veCommand = new VE_XML::Command();
+	veCommand->SetCommandName( std::string("Change Working Directory") );
+	veCommand->AddDataValuePair( dataValuePair );
+	serviceList->SendCommandStringToXplorer( veCommand );
+	delete veCommand;
+
+	//Clear the viewpoints data
+	//Since the data is "managed" by Xplorer we need to notify 
+	//Xplorer when we load a new ves file to clear viewpoints since
+	//They don't go with the new data.
+
+	//Dummy data that isn't used but I don't know if a command will work
+	//w/o a DVP 
+	VE_XML::DataValuePair* dvp = 
+                  new VE_XML::DataValuePair(  std::string("STRING") );
+	dvp->SetData( "Clear Quat Data", tempDir );
+	VE_XML::Command* vec = new VE_XML::Command();
+	vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+	vec->AddDataValuePair( dvp );
+	serviceList->SendCommandStringToXplorer( vec );
+	delete vec;
+
+	//Now laod the xml data now that we are in the correct directory
+	SubmitToServer( event );      
+	network->Load( ConvertUnicode( path.c_str() ) );
+	SubmitToServer( event );      	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {

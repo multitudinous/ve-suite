@@ -58,6 +58,7 @@ Frame API
 #include <wx/splitter.h>
 #include <wx/timer.h>
 #include <wx/dialog.h>
+#include <wx/filename.h>
 
 //Frame size
 const wxString LOCATION = _T("Framesize");
@@ -71,6 +72,7 @@ const wxString FEATURE = _T("Feature");
 const wxString F_FINANCIAL = _T("Financial");
 const wxString F_GEOMETRY = _T("Geometry");
 const wxString F_VISUALIZATION = _T("Visualization");
+const wxString RECENT_FILE = _T("Recent_File");
 //cyang
 
 class OrbThread;
@@ -191,6 +193,14 @@ public:
       CHANGE_XPLORER_VIEW_NETWORK,
       CHANGE_XPLORER_VIEW_CAD,
       CHANGE_XPLORER_VIEW_LOGO,
+
+		// for debugging purposes
+		v21ID_DUMMY,
+
+		// always enum these last 
+		OPEN_RECENT_CONNECTION_MENU,
+		v21ID_CLEAR_RECENT,
+		v21ID_BASE_RECENT,
    };
 
    void OnClose( wxCloseEvent& event );
@@ -236,6 +246,8 @@ public:
    wxMenu* xplorerViewMenu;
    wxMenu* xplorerDisplayMenu;
 
+	wxMenu* openRecentMenu;
+
    //configuration flags   //cyang
    bool f_financial;
    bool f_geometry;
@@ -262,7 +274,10 @@ protected:
   int m_frameNr;
   wxString fname;
   wxString directory;
-  wxString path;	
+  wxString path;
+
+  //wxString Recent[]; 
+  std::vector< wxFileName > recentFileArchive;
 	
   VjObs_var vjobs;
 
@@ -282,6 +297,7 @@ protected:
    
    wxRect DetermineFrameSize (wxConfig* config);
    void StoreFrameSize (wxRect rect, wxConfig* config);
+	void StoreRecentFile ( wxConfig* config );
    void CreateMenu();
    void CreateTB();
    void ZoomIn(wxCommandEvent &event);
@@ -291,6 +307,15 @@ protected:
    void OnPreferences(wxCommandEvent &event);
    
    void Open(wxCommandEvent &event);
+	
+	// TODO -- cleanup
+	void InitRecentFile();
+	void SetRecentMenu();
+	void DeleteRecentFile( wxFileName vesFileName );
+	void SetRecentFile( wxFileName vesFileName );
+	void ClearRecentFile( wxCommandEvent& WXUNUSED(event) );
+	void OpenRecentFile( wxCommandEvent& event ); //wxCommandEvent &event);
+
    void SubmitToServer(wxCommandEvent &event);
    void LoadFromServer(wxCommandEvent &event);
    
