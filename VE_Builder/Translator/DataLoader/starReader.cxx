@@ -36,8 +36,6 @@
 #include <fstream>
 #include <cassert>
 
-#include <cstdio>
-
 #include <vtkUnstructuredGrid.h>
 #include <vtkPoints.h>
 #include <vtkFloatArray.h> // this code requires VTK4
