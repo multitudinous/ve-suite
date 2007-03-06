@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Conductor/Framework/streamlines.h"
@@ -144,7 +142,7 @@ void Streamlines::CreateControls()
     wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer4, 0, wxGROW|wxALL, 5);
 
-    wxString itemRadioBox5Strings[] = {
+    /*wxString itemRadioBox5Strings[] = {
         _T("none"),
         _T("point"),
         _T("line"),
@@ -159,7 +157,7 @@ void Streamlines::CreateControls()
         _T("z")
     };
     _directionRBox = new wxRadioBox( itemDialog1, DIRECTION_RBOX, _T("Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
-    itemBoxSizer4->Add(_directionRBox, 0, wxALIGN_TOP|wxALL, 5);
+    itemBoxSizer4->Add(_directionRBox, 0, wxALIGN_TOP|wxALL, 5);*/
 
     wxString itemRadioBox7Strings[] = {
         _T("backward"),

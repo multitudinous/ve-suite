@@ -319,7 +319,7 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	newSceneViewer->setDrawBufferValue( GL_NONE );
 	//**************************************************************************
 
-	newSceneViewer->setSmallFeatureCullingPixelSize( 20 );
+	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
 	newSceneViewer->setFrameStamp( _frameStamp.get() );
 

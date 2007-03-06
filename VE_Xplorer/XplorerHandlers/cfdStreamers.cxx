@@ -183,7 +183,7 @@ aa Assign Normals NORMALS POINT_DATA
    if ( streamArrows )
    {
       streamPoints = vtkStreamPoints::New();
-      streamPoints->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
+      streamPoints->SetInput( static_cast< vtkDataSet* >( this->GetActiveDataSet()->GetDataSet() ) );
       streamPoints->SetSource( seedPoints );
       streamPoints->SetTimeIncrement( this->stepLength * 500 );
       streamPoints->SetMaximumPropagationTime( this->propagationTime );
@@ -234,7 +234,7 @@ aa Assign Normals NORMALS POINT_DATA
    if ( streamArrows )
    {
       cone = vtkConeSource::New();
-      cone->SetResolution( 3 );
+      cone->SetResolution( 5 );
 
       cones = vtkGlyph3D::New();
       cones->SetInput( streamPoints->GetOutput() );
@@ -243,13 +243,14 @@ aa Assign Normals NORMALS POINT_DATA
       //cones->SetScaleModeToScaleByVector();
       cones->SetScaleModeToDataScalingOff();
       cones->SetVectorModeToUseVector();
-      cones->GetOutput()->ReleaseDataFlagOn();
+      //cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
 //      append->AddInput( tubeFilter->GetOutput() );  
       append->AddInput( stream->GetOutput() );
       append->AddInput( cones->GetOutput() );
-      append->GetOutput()->ReleaseDataFlagOn();
+      append->Update();
+      //append->GetOutput()->ReleaseDataFlagOn();
 
       /*tris->SetInput( append->GetOutput() );
       tris->GetOutput()->ReleaseDataFlagOn();  
@@ -264,7 +265,7 @@ aa Assign Normals NORMALS POINT_DATA
       normals->ComputePointNormalsOn();
       normals->ComputeCellNormalsOff();
       normals->NonManifoldTraversalOff();
-      normals->GetOutput()->ReleaseDataFlagOn();
+      //normals->GetOutput()->ReleaseDataFlagOn();
 
       this->mapper->SetInput( normals->GetOutput() );
    }
@@ -446,9 +447,11 @@ void cfdStreamers::UpdateCommand()
    // note that multiplying by 0.005 is the same as dividing by 200, or the range
    this->lineDiameter = (diameter + 110) * 0.005 *  20;
    
-   vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
+   vprDEBUG(vesDBG,1) << "|\tNew Streamline Diameter : " 
       << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
-   arrowDiameter = localLineDiameter * 4.0f;
+   arrowDiameter = localLineDiameter * 60.0f;
+   vprDEBUG(vesDBG,1) << "|\tNew Arrow Diameter : " 
+      << arrowDiameter << std::endl << vprDEBUG_FLUSH;
    
    /////////////////////
    //activeModelDVP = objectCommand->GetDataValuePair( "Sphere/Arrow/Particle Size" );

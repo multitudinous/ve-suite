@@ -178,7 +178,7 @@ void ShaderHelper::LoadTransparencyProgram()
 void ShaderHelper::LoadGLSLProgram(VE_XML::VE_Shader::Program* glslProgram)
 {
 #ifdef _OSG
-   std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
+   //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
    if(!_ss.valid())
    {
       _ss = new osg::StateSet();
@@ -247,13 +247,13 @@ void ShaderHelper::_extractTextureFromShader(VE_XML::VE_Shader::TextureImage tex
    unsigned int tUnit = textureImage.GetTextureUnit();
    unsigned int dimension = textureImage.GetDimension();
 
-   std::cout<<"Reading image file: "<<textureImage.GetImageFile()<<std::endl;
+   //std::cout<<"Reading image file: "<<textureImage.GetImageFile()<<std::endl;
    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
    osg::ref_ptr<osg::Texture> genericTexture;
    std::string textureType("");
    textureImage.GetType(textureType);
 
-   std::cout<<"Extracting: "<<textureType<<std::endl;
+   //std::cout<<"Extracting: "<<textureType<<std::endl;
    if(textureType == "1D" )
    {
       osg::ref_ptr<osg::Texture1D> texture1D = new osg::Texture1D();
@@ -279,7 +279,7 @@ void ShaderHelper::_extractTextureFromShader(VE_XML::VE_Shader::TextureImage tex
    }
    else if(textureType == "Cube")
    {
-      std::cout<<"Cube map"<<std::endl;
+      //std::cout<<"Cube map"<<std::endl;
       osg::ref_ptr<osg::TextureCubeMap> textureCubeMap = new osg::TextureCubeMap();
       textureCubeMap->setImage(osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile(textureImage.GetImageFile("Positive X")));
       textureCubeMap->setImage(osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile(textureImage.GetImageFile("Negative X")));
@@ -298,7 +298,7 @@ void ShaderHelper::_extractTextureFromShader(VE_XML::VE_Shader::TextureImage tex
 
    if(genericTexture.valid())
    {
-      std::cout<<"Setting up texture parameters for shader!"<<std::endl;
+      //std::cout<<"Setting up texture parameters for shader!"<<std::endl;
       std::string minFilter;
       textureImage.GetFilterMode("Minification",minFilter);
       

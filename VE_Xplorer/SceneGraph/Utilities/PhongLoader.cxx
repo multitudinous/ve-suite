@@ -71,9 +71,9 @@ PhongLoader::~PhongLoader()
 void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSource)
 {
 #ifdef _OSG
-std::cout<<"Loading shader!!"<<std::endl;
-std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
-std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
+   //std::cout<<"Loading shader!!"<<std::endl;
+   //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
+   //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
    VE_XML::VE_Shader::Shader* vertShader = new VE_XML::VE_Shader::Shader();
    vertShader->SetShaderType("Vertex");
    vertShader->SetShaderSource(vertexSource);
