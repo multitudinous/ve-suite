@@ -125,6 +125,9 @@ class Launch:
     def Unix(self):
         """Launches the chosen programs under an Unix OS.
 
+        NOTE: In Cluster mode, makes program calls through /usr/bin/X11.
+        Make sure this links to your /usr/X11R#/bin directory.
+        
         Keyword arguments:
         runName, runConductor, runXplorer -- Run NameServer/Conductor/Xplorer?
         typeXplorer -- Which Xplorer program to run.
@@ -133,7 +136,7 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-        subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
+        subprocess.Popen(["/usr/bin/X11/xset", "-display", ":0.0", "-dpms",
                           "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
@@ -324,8 +327,8 @@ class Launch:
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
             self.clusterScript += "ssh $1 << EOF\n"
             ##Turn off comp's screen saver
-            ##self.clusterScript += "/usr/X11R6/bin/xset -display :0.0 -dpms s "+\
-            ##                      "reset s off\n"
+            self.clusterScript += "/usr/bin/X11/xset -display :0.0" + \
+                                  " -dpms s reset s off\n"
             self.WriteToClusterScript("PYTHONPATH")
             self.WriteToClusterScript("DISPLAY")
         else:
