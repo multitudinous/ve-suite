@@ -3,7 +3,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
-#include "VE_Xplorer/Xplorerhandlers/Wand.h"
+#include "VE_Xplorer/XplorerHandlers/Wand.h"
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceEventHandler.h"

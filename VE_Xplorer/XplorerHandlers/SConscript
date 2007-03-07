@@ -68,8 +68,7 @@ sources = Split("""
    MaterialModeUpdateEH.cxx
    MaterialUpdateEH.cxx
    KeyboardMouse.cxx
-   Trackball.cxx
-   TrackballEventHandler.cxx
+   KeyboardMouseEH.cxx
    cfdObjectHandler.cxx
    SelectionHandler.cxx
    CreateVisObjectEventHandler.cxx
@@ -101,6 +100,7 @@ sources = Split("""
    DisplayEventHandler.cxx
    QCClearDataEH.cxx
    DataTransformEH.cxx
+   Wand.cxx
 """)
 
 headers = Split("""
@@ -167,8 +167,7 @@ headers = Split("""
    MaterialModeUpdateEH.h
    MaterialUpdateEH.h
    KeyboardMouse.h
-   Trackball.h
-   TrackballEventHandler.h
+   KeyboardMouseEH.h
    cfdObjectHandler.h
    SelectionHandler.h
    CreateVisObjectEventHandler.h
@@ -200,6 +199,7 @@ headers = Split("""
    DisplayEventHandler.h
    QCClearDataEH.h
    DataTransformEH.h
+   Wand.h
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 
