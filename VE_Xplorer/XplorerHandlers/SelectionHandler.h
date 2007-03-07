@@ -27,7 +27,7 @@ namespace VE_Xplorer
 
          void ActivateSelection();
          void DeactivateSelection();
-         void SelectObjects();
+         void Traverse();
 
       private:
          bool active;

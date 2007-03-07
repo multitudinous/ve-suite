@@ -36,7 +36,7 @@ void SelectionHandler::DeactivateSelection()
    active=false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SelectionHandler::SelectObjects()
+void SelectionHandler::Traverse()
 {
    osgUtil::IntersectVisitor intersectVisitor;
    osgUtil::IntersectVisitor::HitList hitList;

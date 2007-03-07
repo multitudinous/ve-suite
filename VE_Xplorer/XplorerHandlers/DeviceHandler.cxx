@@ -2,43 +2,45 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
-#include "VE_Xplorer/XplorerHandlers/Trackball.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
+#include "VE_Xplorer/Xplorerhandlers/Wand.h"
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/TrackballEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h"
 #include "VE_Xplorer/XplorerHandlers/ViewEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-vprSingletonImp(VE_Xplorer::DeviceHandler);
+vprSingletonImp( VE_Xplorer::DeviceHandler );
 
 using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 {
-   trackball=new VE_Xplorer::Trackball();
-   keyboard_mouse=new VE_Xplorer::KeyboardMouse();
+   keyboard_mouse = new VE_Xplorer::KeyboardMouse();
+	wand = new VE_Xplorer::Wand();
 
-   device_mode=0;
+   device_mode = 0;
 
-   _eventHandlers[std::string("VIEW_SELECTION")]=new VE_EVENTS::ViewEventHandler();
-   _eventHandlers[std::string("CHANGE_DEVICE_MODE")]=new VE_EVENTS::DeviceEventHandler();
-   _eventHandlers[std::string("TRACKBALL_PROPERTIES")]=new VE_EVENTS::TrackballEventHandler();
+   _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
+   _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceEventHandler();
+   _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
 {
-   if(trackball){
-      delete trackball;
+   if( keyboard_mouse )
+	{
+      delete keyboard_mouse;
    }
 
-   if(keyboard_mouse){
-      delete keyboard_mouse;
+	if( wand )
+	{
+      delete wand;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,17 +58,15 @@ void DeviceHandler::ExecuteCommands()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
-   //Update KeyboardMouse events
-   keyboard_mouse->ProcessKeyboardMouseEvents();
-
    //Update Device Properties
    ExecuteCommands();
 
    //Update Device events
-   switch(device_mode){
+   switch( device_mode )
+	{
    
       //Update Trackball events
-      case 0: trackball->ProcessTrackballEvents();
+      case 0: keyboard_mouse->UpdateNavigation();
 
       //case 1:
    
@@ -76,9 +76,9 @@ void DeviceHandler::ProcessDeviceEvents()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetMode(unsigned int mode)
+void DeviceHandler::SetMode( unsigned int mode )
 {
-   device_mode=mode;
+   device_mode = mode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int DeviceHandler::GetMode()
@@ -86,13 +86,13 @@ unsigned int DeviceHandler::GetMode()
    return device_mode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Trackball* DeviceHandler::GetTrackball()
-{
-	return trackball;
-}
-////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse* DeviceHandler::GetKeyboardMouse()
 {
 	return keyboard_mouse;
+}
+////////////////////////////////////////////////////////////////////////////////
+Wand* DeviceHandler::GetWand()
+{
+	return wand;
 }
 ////////////////////////////////////////////////////////////////////////////////

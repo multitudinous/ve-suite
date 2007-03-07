@@ -56,7 +56,7 @@
 #include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 #include "VE_Xplorer/XplorerHandlers/DisplayEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
-#include "VE_Xplorer/XplorerHandlers/Trackball.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
@@ -487,8 +487,8 @@ float cfdEnvironmentHandler::GetFrameRate()
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
-   VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Reshape(_windowWidth,_windowHeight);
-	VE_Xplorer::DeviceHandler::instance()->GetTrackball()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
+   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Reshape(_windowWidth,_windowHeight);
+	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdEnvironmentHandler::CreateObjects( void )

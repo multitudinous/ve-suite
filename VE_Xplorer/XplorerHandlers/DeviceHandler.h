@@ -8,17 +8,18 @@ DeviceHandler API
 * 
 */
 
-#include <string>
-#include <vector>
-#include <map>
+#include "VE_Installer/include/VEConfig.h"
 
 #include <vpr/Util/Singleton.h>
-#include "VE_Installer/include/VEConfig.h"
+
+//C/C++ Libraries
+#include <string>
+#include <map>
 
 namespace VE_Xplorer
 {
-   class Trackball;
    class KeyboardMouse;
+	class Wand;
 }
 
 namespace VE_EVENTS
@@ -28,33 +29,33 @@ namespace VE_EVENTS
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS DeviceHandler                                  //public vpr::Singleton<DeviceHandler>
-   {
-      public:
-         DeviceHandler();
-         ~DeviceHandler(){;}                                               //Never gets called, don't implement
-         vprSingletonHeader(DeviceHandler);
+class VE_XPLORER_EXPORTS DeviceHandler
+{
+public:
+	DeviceHandler();
+   ~DeviceHandler(){;}
+   vprSingletonHeader( DeviceHandler );
 
-         void CleanUp();
-         void ExecuteCommands();                                           //Execute commands from VE_Conductor
-         void ProcessDeviceEvents();                                       //Process all events for active device
+   void CleanUp();
+   void ExecuteCommands();
+   void ProcessDeviceEvents();
 
-         void SetMode(unsigned int mode);                                  //Set the selected device mode
+   void SetMode( unsigned int mode );
 
-         unsigned int GetMode();                                           //Return the selected device mode
+   unsigned int GetMode();
 
-	      Trackball* GetTrackball();                                        //Accessor for Trackball
-         KeyboardMouse* GetKeyboardMouse();                                //Accessor for KeyboardMouse
+   KeyboardMouse* GetKeyboardMouse();
+	Wand* GetWand();
 
-      private:
-         Trackball* trackball;
-         KeyboardMouse* keyboard_mouse;
+private:
+   KeyboardMouse* keyboard_mouse;
+	Wand* wand;
 
-         unsigned int device_mode;                                         //Tells which device is selected
+   unsigned int device_mode;
 
-         std::map<std::string,VE_EVENTS::EventHandler*> _eventHandlers;    //The event handler for commands
+   std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
-   };
+};
 }
 
-#endif
+#endif //DEVICE_HANDLER_H

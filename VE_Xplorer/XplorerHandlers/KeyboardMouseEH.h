@@ -1,11 +1,11 @@
-#ifndef TRACKBALL_EVENT_HANDLER_H
-#define TRACKBALL_EVENT_HANDLER_H
+#ifndef KEYBOARD_MOUSE_EVENT_HANDLER_H
+#define KEYBOARD_MOUSE_EVENT_HANDLER_H
 
-/*!\file TrackballEventHandler.h
-  TrackballEventHandler API
+/*!\file KeyboardMouseEH.h
+  KeyboardMouseEventHandler API
   */
-/*!\class TrackballEventHandler
- * Class for changing trackball properties in xplorer
+/*!\class KeyboardMouseEventHandler
+ * Class for changing KeyboardMouse properties in xplorer
  */
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
@@ -22,17 +22,17 @@ namespace VE_Xplorer
 
 namespace VE_EVENTS
 {
-   class TrackballEventHandler:public EventHandler
+   class KeyboardMouseEventHandler:public EventHandler
    {
       public:
          //Constructor
-         TrackballEventHandler();
+         KeyboardMouseEventHandler();
 
          //Copy Constructor
-         TrackballEventHandler(const TrackballEventHandler& ceh);
+         KeyboardMouseEventHandler(const KeyboardMouseEventHandler& ceh);
 
          //Destructor
-         virtual ~TrackballEventHandler();
+         virtual ~KeyboardMouseEventHandler();
 
          //Set the cfdModel
          //param model The cfdModelHandler to execute the Command on
@@ -43,11 +43,11 @@ namespace VE_EVENTS
          void Execute(VE_XML::XMLObject* command); 
 
          //Equal operator
-         TrackballEventHandler& operator=(const TrackballEventHandler& rhs);
+         KeyboardMouseEventHandler& operator=(const KeyboardMouseEventHandler& rhs);
    
       protected:
 
    };
 }
 
-#endif//TRACKBALL_EVENT_HANDLER_H
+#endif//KEYBOARD_MOUSE_EVENT_HANDLER_H

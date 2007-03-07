@@ -59,9 +59,9 @@ void DeviceProperties::BuildGUI()
    device_splitter=new wxSplitterWindow(this,DEVICE_SPLITTERWINDOW,wxDefaultPosition,wxSize(100,100),wxNO_BORDER);
    device_splitter->SetMinimumPaneSize(0);
 
-   wxString list_box_strings[]={_("Trackball"),_("Wand")};
+   wxString list_box_strings[]={_("KeyboardMouse"),_("Wand")};
    wxListBox* list_box_1=new wxListBox(device_splitter,DEVICE_LISTBOX,wxDefaultPosition,wxDefaultSize,2,list_box_strings,wxLB_SINGLE);
-   list_box_1->SetStringSelection(_("Trackball"));
+   list_box_1->SetStringSelection(_("KeyboardMouse"));
 
    wxPanel* panel_trackball=new wxPanel(device_splitter,DEVICE_TRACKBALL_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
    wxBoxSizer* box_sizer_3=new wxBoxSizer(wxVERTICAL);

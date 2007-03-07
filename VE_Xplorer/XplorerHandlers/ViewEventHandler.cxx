@@ -4,8 +4,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
-
-#include "VE_Xplorer/XplorerHandlers/Trackball.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -54,14 +53,17 @@ void ViewEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    viewDVP->GetData(view);
 
    if(viewDVP){
-      if(view==0){
-         VE_Xplorer::DeviceHandler::instance()->GetTrackball()->FrameAll();
+      if(view==0)
+		{
+         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->FrameAll();
       }
-      else if(view==1){
+      else if(view==1)
+		{
          
       }
-      else if(view==2){
-         VE_Xplorer::DeviceHandler::instance()->GetTrackball()->ResetTransforms();
+      else if(view==2)
+		{
+         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->ResetTransforms();
       }
    }
 }

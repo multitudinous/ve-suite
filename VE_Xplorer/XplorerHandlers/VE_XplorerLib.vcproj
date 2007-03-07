@@ -582,6 +582,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyboardMouseEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialModeUpdateEH.cxx"
 				>
 			</File>
@@ -650,32 +654,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Trackball.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\TrackballEventHandler.cxx"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\ViewEventHandler.cxx"
 				>
 				<FileConfiguration
@@ -696,6 +674,10 @@
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Wand.cxx"
+				>
 			</File>
 			<File
 				RelativePath=".\WireframeEventHandler.cxx"
@@ -1031,6 +1013,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyboardMouseEH.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialModeUpdateEH.h"
 				>
 			</File>
@@ -1099,19 +1085,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Trackball.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TrackballEventHandler.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ViewEventHandler.h"
 				>
 			</File>
 			<File
 				RelativePath=".\vtkSmartPtr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Wand.h"
 				>
 			</File>
 			<File

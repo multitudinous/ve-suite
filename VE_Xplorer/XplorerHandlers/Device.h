@@ -21,22 +21,20 @@ namespace osg
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS Device
-   {
-      public:
-         Device();
-         virtual ~Device(){;}
+class VE_XPLORER_EXPORTS Device
+{
+public:
+   Device();
+   virtual ~Device(){;}
 
-			//virtual void UpdateNavigation() = 0;
-			
-			//virtual void UpdateSelection() = 0;
+	virtual void UpdateNavigation() = 0;
+	virtual void UpdateSelection() = 0;
 
-			//virtual osg::ref_ptr< osg::LineSegment > GetLineSegment() = 0;
+	//virtual osg::ref_ptr< osg::LineSegment > GetLineSegment() = 0;
 
+private:			
 
-      private:
-
-   };
+};
 }
 
-#endif
+#endif //DEVICE_H

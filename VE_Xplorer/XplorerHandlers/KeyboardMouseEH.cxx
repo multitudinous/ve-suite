@@ -1,11 +1,10 @@
 #include <string>
 
-#include "VE_Xplorer/XplorerHandlers/TrackballEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
-
-#include "VE_Xplorer/XplorerHandlers/Trackball.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -23,29 +22,30 @@
 using namespace VE_EVENTS;
 
 ////////////////////////////////////////////////////////////////////////////////
-TrackballEventHandler::TrackballEventHandler()
+KeyboardMouseEventHandler::KeyboardMouseEventHandler()
+:
+VE_EVENTS::EventHandler()
+{
+   ;
+}
+////////////////////////////////////////////////////////////////////////////////
+KeyboardMouseEventHandler::KeyboardMouseEventHandler(const KeyboardMouseEventHandler& rhs)
 :VE_EVENTS::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-TrackballEventHandler::TrackballEventHandler(const TrackballEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+KeyboardMouseEventHandler::~KeyboardMouseEventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-TrackballEventHandler::~TrackballEventHandler()
+void KeyboardMouseEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler)
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TrackballEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler)
-{
-   ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void TrackballEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void KeyboardMouseEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
    VE_XML::DataValuePair* animateDVP=command->GetDataValuePair("AnimateID");
@@ -54,16 +54,18 @@ void TrackballEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    animateDVP->GetData(animate);
 
    if(animateDVP){
-      if(animate==0){
-         VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Animate(false);
+      if(animate==0)
+		{
+         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Animate(false);
       }
-      else if(animate==1){
-         VE_Xplorer::DeviceHandler::instance()->GetTrackball()->Animate(true);
+      else if(animate==1)
+		{
+         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Animate(true);
       }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-TrackballEventHandler& TrackballEventHandler::operator=(const TrackballEventHandler& rhs)
+KeyboardMouseEventHandler& KeyboardMouseEventHandler::operator=(const KeyboardMouseEventHandler& rhs)
 {
    if(this!=&rhs){
       VE_EVENTS::EventHandler::operator=(rhs);
