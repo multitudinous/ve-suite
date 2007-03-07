@@ -5,19 +5,9 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options vtk_options')
 
 sources = Split("""
-    cfdClone.cxx
-    cfdDCS.cxx
-    cfdFILE.cxx
     cfdFileInfo.cxx
-    cfdGeode.cxx
-    cfdGroup.cxx
-    cfdNode.cxx
     cfdPfSceneManagement.cxx
     cfdRawNodeTraverser.cxx
-    cfdSceneNode.cxx
-    cfdSequence.cxx
-    cfdSwitch.cxx
-    cfdTempAnimation.cxx
     vtkActorToOSG.cxx
     vtkActorToPF.cxx
     Triangles.cxx
@@ -39,19 +29,9 @@ sources = Split("""
 
 
 headers = Split("""
-    cfdClone.h
-    cfdDCS.h
-    cfdFILE.h
     cfdFileInfo.h
-    cfdGeode.h
-    cfdGroup.h
-    cfdNode.h
     cfdPfSceneManagement.h
     cfdRawNodeTraverser.h
-    cfdSceneNode.h
-    cfdSequence.h
-    cfdSwitch.h
-    cfdTempAnimation.h
     vtkActorToOSG.h
     vtkActorToPF.h
     Triangles.h
