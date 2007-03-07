@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=MimeType
+MimeType=application/x-vesuite
+Icon=vesuite
+Comment=VES File
+Patterns=*.ves;
+X-KDE-AutoEmbed=false
+Name=VE-Suite
