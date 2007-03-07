@@ -12,7 +12,6 @@ sources = Split("""
     vtkActorToPF.cxx
     Triangles.cxx
     Text.cxx
-    ModelOccluder.cxx
     DCS.cxx
     Switch.cxx
     Group.cxx
@@ -36,7 +35,6 @@ headers = Split("""
     vtkActorToPF.h
     Triangles.h
     Text.h
-    ModelOccluder.h
     DCS.h
     Group.h
     Switch.h
