@@ -48,8 +48,9 @@ DeviceHandler API
 
 namespace VE_Xplorer
 {
-   class KeyboardMouse;
-	class Wand;
+   class Device;
+   //class KeyboardMouse;
+	//class Wand;
 }
 
 namespace VE_EVENTS
@@ -68,21 +69,19 @@ public:
 
    void CleanUp();
    void ExecuteCommands();
+
+   VE_Xplorer::Device* GetActiveDevice();
    void ProcessDeviceEvents();
 
-   void SetMode( unsigned int mode );
 
-   unsigned int GetMode();
-
-   KeyboardMouse* GetKeyboardMouse();
-	Wand* GetWand();
+   //KeyboardMouse* GetKeyboardMouse();
+	//Wand* GetWand();
 
 private:
-   KeyboardMouse* keyboard_mouse;
-	Wand* wand;
+   //KeyboardMouse* keyboard_mouse;
+	//Wand* wand;
 
-   unsigned int device_mode;
-
+   std::map< std::string, VE_Xplorer::Device* > devices;
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
 };

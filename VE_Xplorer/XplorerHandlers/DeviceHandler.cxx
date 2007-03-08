@@ -20,10 +20,11 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 {
-   keyboard_mouse = new VE_Xplorer::KeyboardMouse();
-	wand = new VE_Xplorer::Wand();
+   //keyboard_mouse = new VE_Xplorer::KeyboardMouse();
+	//wand = new VE_Xplorer::Wand();
 
-   device_mode = 0;
+   devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
+   devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
 
    _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceEventHandler();
@@ -33,6 +34,7 @@ DeviceHandler::DeviceHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
 {
+   /*
    if( keyboard_mouse )
 	{
       delete keyboard_mouse;
@@ -42,16 +44,17 @@ void DeviceHandler::CleanUp()
 	{
       delete wand;
    }
+   */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
 {
    std::map< std::string, VE_EVENTS::EventHandler* >::iterator currentEventHandler;
-   if(cfdModelHandler::instance()->GetXMLCommand())
+   if( cfdModelHandler::instance()->GetXMLCommand() )
 	{
-      currentEventHandler=_eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+      currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
 
-      if(currentEventHandler!=_eventHandlers.end())
+      if( currentEventHandler != _eventHandlers.end() )
 		{
          currentEventHandler->second->SetGlobalBaseObject();
          currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
@@ -59,33 +62,29 @@ void DeviceHandler::ExecuteCommands()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
+VE_Xplorer::Device* DeviceHandler::GetActiveDevice()
+{
+   std::map< std::string, VE_Xplorer::Device* >::iterator currentDevice;
+   if( cfdModelHandler::instance()->GetXMLCommand() )
+   {
+      currentDevice = devices.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+   }
+
+   return currentDevice->second;
+}
+////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
-   //Update Device Properties
+   //Update Device properties
    ExecuteCommands();
 
-   //Update Device events
-   switch( device_mode )
-	{
-   
-      //Update KeyboardMouse events
-      case 0: keyboard_mouse->UpdateNavigation();
+   //Get the active device
 
-      //case 1:
-   
-   }
+
 }
+
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetMode( unsigned int mode )
-{
-   device_mode = mode;
-}
-////////////////////////////////////////////////////////////////////////////////
-unsigned int DeviceHandler::GetMode()
-{
-   return device_mode;
-}
-////////////////////////////////////////////////////////////////////////////////
+/*
 KeyboardMouse* DeviceHandler::GetKeyboardMouse()
 {
 	return keyboard_mouse;
@@ -96,3 +95,4 @@ Wand* DeviceHandler::GetWand()
 	return wand;
 }
 ////////////////////////////////////////////////////////////////////////////////
+*/
