@@ -167,7 +167,7 @@
 				AdditionalDependencies="vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib comctl32.lib ws2_32.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_UtilLib_d.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="false"

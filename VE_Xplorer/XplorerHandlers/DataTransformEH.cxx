@@ -33,7 +33,10 @@
 #include "VE_Xplorer/XplorerHandlers/DataTransformEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/XplorerHandlers/SeedPoints.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
@@ -94,6 +97,9 @@ void DataTransformEventHandler::Execute(VE_XML::XMLObject* xmlObject)
          transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
          transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
          transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
+		 VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+         VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+         VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
       }
       
    }

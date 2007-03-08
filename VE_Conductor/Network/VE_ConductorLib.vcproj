@@ -168,7 +168,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib"
 				OutputFile="$(OutDir)\VE_ConductorLib_d.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;"
 				GenerateDebugInformation="true"

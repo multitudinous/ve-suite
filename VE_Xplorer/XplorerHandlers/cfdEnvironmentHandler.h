@@ -40,10 +40,11 @@ cfdEnvironmentHandler API
 */
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
-
+#include "VE_Xplorer/XplorerHandlers/SeedPoints.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 #include <map>
 #include <vector>
-
+#include <osg/ref_ptr>
 namespace VE_Xplorer
 {
 	class cfdNavigate;
@@ -64,7 +65,6 @@ namespace VE_Xplorer
    #endif //_OSG
    #endif //VE_PATENTED
 }
-
 namespace VE_EVENTS
 {
    class EventHandler;
@@ -148,8 +148,15 @@ public:
    void DeactivateGeometryPicking( void );
    #endif //VE_PATENTED
    #endif //_OSG 
+   ///Get the seed points drawable
+   SeedPoints* GetSeedPoints();
+
+   ///Get the seed points drawable
+   VE_SceneGraph::DCS* GetSeedPointsDCS();
 
 private:
+   osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
+   osg::ref_ptr<VE_SceneGraph::DCS> _seedPointsDCS;///<The DCS for the seed points
    cfdNavigate* nav;
    cfdTeacher* _teacher;
    cfdSoundHandler* _soundHandler;

@@ -65,7 +65,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2d.lib"
 				OutputFile="$(OutDir)/VE_Model_d.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/VE_Model_d.pdb"

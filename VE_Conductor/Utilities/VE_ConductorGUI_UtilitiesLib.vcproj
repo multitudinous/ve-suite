@@ -166,9 +166,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib taod.lib"
+				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib taod.lib"
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib_d.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
@@ -266,18 +266,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TBIsosurface.cxx"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\WPDialog.cxx"
 				>
 			</File>
@@ -340,10 +328,6 @@
 			</File>
 			<File
 				RelativePath=".\Tag.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TBIsosurface.h"
 				>
 			</File>
 			<File

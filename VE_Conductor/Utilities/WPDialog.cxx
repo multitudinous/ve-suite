@@ -26,9 +26,12 @@ BaseDialog(parent, id, title)
     wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
    this->SetSize( dialogPosition );
    */
-   wxSize displaySize = ::wxGetDisplaySize();
+   /*wxSize displaySize = ::wxGetDisplaySize();
    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition ); 
+   this->SetSize( dialogPosition );*/
+   GetSizer()->Fit(this);
+   GetSizer()->SetSizeHints(this);
+   Centre();
 }
 ////////////////////////////////////////////////////////////////////////////////////
 WPDialog::~WPDialog()
@@ -90,7 +93,7 @@ void WPDialog::_buildGUI()
    SetAutoLayout(true);
    
    SetSizer(mainSizer);
-   mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
+   //mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
 }
 ////////////////////////////////////////////////////////////////////////////////////
 void WPDialog::_createDualSliders()
@@ -211,8 +214,6 @@ void WPDialog::WPBothMoveCallback::SliderOperation()
    VE_XML::DataValuePair* maxvalue = new VE_XML::DataValuePair;
    maxvalue->SetData("WP Value",
 	   static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
-   
-   
    
    _wpdlg->AddInstruction(minvalue);
    _wpdlg->AddInstruction(maxvalue);

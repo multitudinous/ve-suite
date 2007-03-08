@@ -148,6 +148,7 @@
 				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4291"
+				ShowIncludes="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -606,6 +607,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SeedPointActivateEH.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SeedPoints.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\SelectionHandler.cxx"
 				>
 			</File>
@@ -1034,6 +1043,14 @@
 			</File>
 			<File
 				RelativePath=".\ScalarBarEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SeedPointActivateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SeedPoints.h"
 				>
 			</File>
 			<File

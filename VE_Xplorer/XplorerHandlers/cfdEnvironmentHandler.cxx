@@ -57,6 +57,7 @@
 #include "VE_Xplorer/XplorerHandlers/DisplayEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
+#include "VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
@@ -120,11 +121,20 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 
    _updateBackgroundColor = false;
 
+   ///create seed points drawable
+   _seedPoints = new VE_Xplorer::SeedPoints(4,4,1);
+   _seedPoints->Toggle(false);
+   
+   ///add a transform for manipulation of the seed points to sync with the active dataset
+   _seedPointsDCS = new VE_SceneGraph::DCS();
+   _seedPointsDCS->addChild(_seedPoints.get());
+
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
    _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
    _eventHandlers[ std::string("Change Working Directory") ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
    _eventHandlers[ std::string("CHANGE_BACKGROUND_COLOR") ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
    _eventHandlers[ std::string("DISPLAY_SELECTION") ] = new VE_EVENTS::DisplayEventHandler();
+   _eventHandlers[ std::string("Display Seed Points") ] = new VE_EVENTS::SeedPointActivateEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
@@ -399,7 +409,7 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
    if( cfdModelHandler::instance()->GetXMLCommand() )
    {
-      vprDEBUG(vesDBG,3) << "Command Name : "
+      vprDEBUG(vesDBG,1) << "Command Name : "
                            << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                            << std::endl<< vprDEBUG_FLUSH;
       currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
@@ -489,6 +499,24 @@ void cfdEnvironmentHandler::PostFrameUpdate()
 	//Update the values in trackball
    VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Reshape(_windowWidth,_windowHeight);
 	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
+{
+	if(_seedPoints.valid())
+	{
+		return _seedPoints.get();
+	}
+	return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
+{
+	if(_seedPointsDCS.valid())
+	{
+		return _seedPointsDCS.get();
+	}
+	return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdEnvironmentHandler::CreateObjects( void )
