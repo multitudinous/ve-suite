@@ -52,32 +52,32 @@ namespace VE_Xplorer
 
 namespace VE_EVENTS
 {
-   class DeviceEventHandler:public EventHandler
-   {
-      public:
-         //Constructor
-         DeviceEventHandler();
+class DeviceEventHandler:public EventHandler
+{
+public:
+   //Constructor
+   DeviceEventHandler();
 
-         //Copy Constructor
-         DeviceEventHandler(const DeviceEventHandler& ceh);
+   //Copy Constructor
+   DeviceEventHandler(const DeviceEventHandler& ceh);
 
-         //Destructor
-         virtual ~DeviceEventHandler();
+   //Destructor
+   virtual ~DeviceEventHandler();
 
-         //Set the cfdModel
-         //param model The cfdModelHandler to execute the Command on
-         void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
+   //Set the cfdModel
+   //param model The cfdModelHandler to execute the Command on
+   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
+      
+   //Exectute the event
+   //param xmlObject The current xmlObject event.
+   void Execute(VE_XML::XMLObject* command); 
+
+   //Equal operator
+   DeviceEventHandler& operator=(const DeviceEventHandler& rhs);
    
-         //Exectute the event
-         //param xmlObject The current xmlObject event.
-         void Execute(VE_XML::XMLObject* command); 
+protected:
 
-         //Equal operator
-         DeviceEventHandler& operator=(const DeviceEventHandler& rhs);
-   
-      protected:
-
-   };
+};
 }
 
 #endif//DEVICE_EVENT_HANDLER_H

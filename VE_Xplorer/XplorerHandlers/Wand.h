@@ -71,7 +71,7 @@ public:
    ///Initialize some variables in the class
    void Initialize( void );
 	virtual void UpdateNavigation();
-	virtual osg::LineSegment* UpdateSelection();
+	virtual void UpdateSelection();
    ///bool to set the rotation method
    void SetHeadRotationFlag( int );
    ///New function for testing the new VECommand structure

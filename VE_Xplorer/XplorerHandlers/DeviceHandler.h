@@ -70,7 +70,8 @@ public:
    void CleanUp();
    void ExecuteCommands();
 
-   VE_Xplorer::Device* GetActiveDevice();
+   void SetActiveDevice( std::string device );
+   void SetDeviceMode( unsigned int mode );
    void ProcessDeviceEvents();
 
    VE_Xplorer::Wand* GetWand();
@@ -80,6 +81,7 @@ private:
    std::map< std::string, VE_Xplorer::Device* > devices;
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
+   VE_Xplorer::Device* active_device;
    bool navigation;
 
 };

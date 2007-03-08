@@ -23,13 +23,15 @@ using namespace VE_EVENTS;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler()
-:VE_EVENTS::EventHandler()
+:
+VE_EVENTS::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DeviceEventHandler::DeviceEventHandler(const DeviceEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
+:
+VE_EVENTS::EventHandler()
 {
    ;
 }
@@ -39,29 +41,40 @@ DeviceEventHandler::~DeviceEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler)
+void DeviceEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void DeviceEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
 {
-   VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-   VE_XML::DataValuePair* DVP=command->GetDataValuePair("DeviceMode");
+   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+   std::string device;
+   
 
-   unsigned int device_mode;
-   DVP->GetData( device_mode );
-
-   if(DVP)
+   if( command->GetCommandName() == "CHANGE_DEVICE_MODE" )
    {
-      //VE_Xplorer::DeviceHandler::instance()->SetMode(device_mode);
+      unsigned int mode;
+      command->GetDataValuePair( "Mode" )->GetData( mode );
+
+      VE_Xplorer::DeviceHandler::instance()->SetDeviceMode( mode );
    }
+
+   else if( command->GetCommandName() == "CHANGE_DEVICE" )
+   {
+      std::string device;
+      command->GetDataValuePair( "Device" )->GetData( device );
+
+      VE_Xplorer::DeviceHandler::instance()->SetActiveDevice( device );
+   }
+ 
 }
 ////////////////////////////////////////////////////////////////////////////////
-DeviceEventHandler& DeviceEventHandler::operator=(const DeviceEventHandler& rhs)
+DeviceEventHandler& DeviceEventHandler::operator=( const DeviceEventHandler& rhs )
 {
-   if(this!=&rhs){
-      VE_EVENTS::EventHandler::operator=(rhs);
+   if( this != &rhs )
+   {
+      VE_EVENTS::EventHandler::operator=( rhs );
    }
 
    return *this;

@@ -25,6 +25,8 @@ navigation( true )
    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
 
+   active_device = devices.find( "KeyboardMouse" )->second;
+
    _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceEventHandler();
    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
@@ -51,15 +53,22 @@ void DeviceHandler::ExecuteCommands()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::Device* DeviceHandler::GetActiveDevice()
+void DeviceHandler::SetActiveDevice( std::string device )
 {
-   std::map< std::string, VE_Xplorer::Device* >::iterator currentDevice;
-   if( cfdModelHandler::instance()->GetXMLCommand() )
+   active_device = devices.find( device )->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetDeviceMode( unsigned int mode )
+{
+   if( mode == 0 )
    {
-      currentDevice = devices.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+      navigation = true;
    }
 
-   return currentDevice->second;
+   else
+   {
+      navigation = false;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
@@ -67,11 +76,15 @@ void DeviceHandler::ProcessDeviceEvents()
    //Update Device properties
    ExecuteCommands();
 
-   //Get the active device
+   if( navigation )
+   {
+      active_device->UpdateNavigation();
+   }
 
-
-   // --- Temporary Fix --- //
-   this->GetKeyboardMouse()->UpdateNavigation();
+   else
+   {
+      active_device->UpdateSelection();
+   }
 
 }
 ////////////////////////////////////////////////////////////////////////////////

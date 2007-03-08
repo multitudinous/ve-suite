@@ -147,11 +147,12 @@ void KeyboardMouse::UpdateNavigation()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::LineSegment* KeyboardMouse::UpdateSelection()
+void KeyboardMouse::UpdateSelection()
 {
    osg::ref_ptr< osg::LineSegment > ls = new osg::LineSegment;
 
-	return ls.get();
+   //Virtual function defined in Device.cxx
+	this->Traverse();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Animate( bool animate )
@@ -206,12 +207,14 @@ void KeyboardMouse::TBMouse( int button, int state, int x, int y )
 		tb_prevPos[1]=(float)y/(float)tb_height;
 		tb_moving=true;
 
+      /*
       //If physics is enabled, shoot a box on right-mouse click
-      if(button==51 /*&& !selection && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState()*/)
+      if(button==51 && VE_SceneGraph::PhysicsSimulator::instance()->GetPhysicsState())
 		{
 			btVector3 destination( 0, 0, 0 );
-			//VE_SceneGraph::PhysicsSimulator::instance()->ShootBox( destination );
+			VE_SceneGraph::PhysicsSimulator::instance()->ShootBox( destination );
       }
+      */
    }
 
    else if(state==0)
