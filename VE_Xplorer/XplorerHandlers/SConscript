@@ -100,6 +100,8 @@ sources = Split("""
    QCClearDataEH.cxx
    DataTransformEH.cxx
    Wand.cxx
+	SeedPoints.cxx
+	SeedPointActivateEH.cxx
 """)
 
 headers = Split("""
@@ -198,6 +200,8 @@ headers = Split("""
    QCClearDataEH.h
    DataTransformEH.h
    Wand.h
+	SeedPoints.h
+	SeedPointActivateEH.h
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 
