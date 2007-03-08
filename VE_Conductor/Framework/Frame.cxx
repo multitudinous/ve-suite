@@ -2002,30 +2002,27 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
-   VE_XML::Command* command=new VE_XML::Command();
+   VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
+   VE_XML::Command* command = new VE_XML::Command();
    
-   long int mode;
+   unsigned int mode;
 
-   if(xplorerDeviceMenu->IsChecked(NAVIGATION_MODE))
+   if( xplorerDeviceMenu->IsChecked( NAVIGATION_MODE ) )
    {
-      mode=0;
-   }
-   else if(xplorerDeviceMenu->IsChecked(SELECTION_MODE))
-   {
-      mode=1;
-   }
-   else
-   {
-      mode=-1;
+      mode = 0;
    }
 
-   DVP->SetData(std::string("DeviceMode"),mode);
+   else if( xplorerDeviceMenu->IsChecked( SELECTION_MODE ) )
+   {
+      mode = 1;
+   }
+
+   DVP->SetData( std::string( "Mode" ), mode );
    
-   command->SetCommandName(std::string("CHANGE_DEVICE_MODE"));
-   command->AddDataValuePair(DVP);
+   command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
+   command->AddDataValuePair( DVP );
 
-   serviceList->SendCommandStringToXplorer(command);
+   serviceList->SendCommandStringToXplorer( command );
    
    delete command;
 }
