@@ -32,7 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PHYSICS_MESH_H
 #define PHYSICS_MESH_H
-
+/*!\file PhysicsMesh.h
+PhysicsMesh API
+*/
+/*!\class PhysicsMesh
+* 
+*/
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 #include <osg/BoundingBox>

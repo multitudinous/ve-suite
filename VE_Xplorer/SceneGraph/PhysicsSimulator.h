@@ -68,48 +68,48 @@ class btCollisionShape;
 
 namespace VE_SceneGraph
 {
-   class VE_SCENEGRAPH_EXPORTS PhysicsSimulator                //: public vpr::Singleton< PhysicsSimulator >
-   {
-      public:
-         void ExitPhysics();                                   //Functions as the destructor
+class VE_SCENEGRAPH_EXPORTS PhysicsSimulator                //: public vpr::Singleton< PhysicsSimulator >
+{
+public:
+   void ExitPhysics();                                   //Functions as the destructor
 
-         void UpdatePhysics( float dt );
-         void ResetScene();
+   void UpdatePhysics( float dt );
+   void ResetScene();
 
-         void ShootBox( const btVector3& destination );
+   void ShootBox( const btVector3& destination );
 
-         void SetPhysicsState( bool state );
-         bool GetPhysicsState();
+   void SetPhysicsState( bool state );
+   bool GetPhysicsState();
 
-         void SetShootSpeed( float speed );
+   void SetShootSpeed( float speed );
 
-         btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
+   btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
 
-         btDynamicsWorld* GetDynamicsWorld();
+   btDynamicsWorld* GetDynamicsWorld();
 
-      private:
-         PhysicsSimulator();
-         ~PhysicsSimulator(){;}                                //Never gets called, don't implement
-         vprSingletonHeader( PhysicsSimulator );
+private:
+   PhysicsSimulator();
+   ~PhysicsSimulator(){;}                                //Never gets called, don't implement
+   vprSingletonHeader( PhysicsSimulator );
 
-         void InitPhysics();
+   void InitPhysics();
 
-         bool idle;
-         float shoot_speed;
+   bool idle;
+   float shoot_speed;
 
-         gadget::PositionInterface head;
+   gadget::PositionInterface head;
 
-			std::vector< VE_SceneGraph::CADEntity* > box_vector;
+	std::vector< VE_SceneGraph::CADEntity* > box_vector;
 
-         //Manages physics objects and constraints and implements update of all objects each frame
-         //******************************************//
-	      btDynamicsWorld* dynamics_world;
+   //Manages physics objects and constraints and implements update of all objects each frame
+   //******************************************//
+	btDynamicsWorld* dynamics_world;
 
-         btCollisionDispatcher* dispatcher;
-         btOverlappingPairCache* broadphase;
-         btSequentialImpulseConstraintSolver* solver;
-         //******************************************//
-   };
+   btCollisionDispatcher* dispatcher;
+   btOverlappingPairCache* broadphase;
+   btSequentialImpulseConstraintSolver* solver;
+   //******************************************//
+};
 }
 
 #endif //_OSG

@@ -38,7 +38,6 @@
 
 #include "VE_Installer/include/VEConfig.h"
 
-
 //Should not have to include these here
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/PhysicsMesh.h"
