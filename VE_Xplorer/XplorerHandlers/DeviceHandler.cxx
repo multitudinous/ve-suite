@@ -37,7 +37,14 @@ navigation( true )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
 {
+   //Delete devices in map
+   std::map< std::string, VE_Xplorer::Device* >::iterator itr;
+   for( itr = devices.begin(); itr != devices.end(); )
+   {
+      devices.erase( itr++ );
+   }
 
+   devices.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
