@@ -64,15 +64,17 @@ void WPDialog::_buildGUI()
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
+   numXPointsSpinner->SetValue(4);
    numYPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
+   numYPointsSpinner->SetValue(4);
    numZPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
-
+   numZPointsSpinner->SetValue(1);
    wxBoxSizer* spinnerRowSizer = new wxBoxSizer(wxHORIZONTAL);
    spinnerRowSizer->Add( numXPointsSpinner, 0, wxALIGN_LEFT, 5 );
    spinnerRowSizer->Add( numYPointsSpinner, 0, wxALIGN_LEFT, 5 );

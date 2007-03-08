@@ -43,6 +43,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 using namespace VE_Conductor::GUI_Utilities;
@@ -53,7 +54,7 @@ BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
 :wxDialog((wxWindow*) parent, id, wxString(title.c_str(), wxConvUTF8), wxDefaultPosition, wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX))
 {
-   _vjObsPtr = 0;
+   //_vjObsPtr = 0;
    _commandName = "";
    SetIcon( ve_icon32x32_xpm );
 }
@@ -64,7 +65,7 @@ BaseDialog::~BaseDialog()
 //////////////////////////////////////////////////////////
 void BaseDialog::SetVjObsPtr(VjObs_ptr xplorerCom)
 {
-   _vjObsPtr = xplorerCom;
+   //_vjObsPtr = xplorerCom;
 }
 //////////////////////////////////////////////
 void BaseDialog::ClearInstructions()
@@ -111,31 +112,31 @@ void BaseDialog::_sendCommandsToXplorer()
 
    commandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
 
-   char* tempDoc = new char[ commandString.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandString.c_str() );
+   //char* tempDoc = new char[ commandString.size() + 1 ];
+   //tempDoc = CORBA::string_dup( commandString.c_str() );
 
-   if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
+   if ( !commandString.empty() )
    {
       try
       {
          //std::cout<<"---The command to send---"<<std::endl;
          //std::cout<<tempDoc<<std::endl;
          // CORBA releases the allocated memory so we do not have to
-         _vjObsPtr->SetCommandString( tempDoc );
+         //_vjObsPtr->SetCommandString( tempDoc );
+         VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(newCommand);
+         delete newCommand;
       }
       catch ( ... )
       {
          wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
                         _("Communication Failure"), wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
+         delete newCommand;
       }
    }
    else
    {
-      delete [] tempDoc;
+      delete newCommand;
    }
-   //Clean up memory
-   delete newCommand;
 
    ClearInstructions();
 }

@@ -427,8 +427,10 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
       delete seedPointInformation.at( i );
    }
    seedPointInformation.clear();
-   
-   seedPointDialog = new WPDialog( static_cast< wxWindow* >( this ), 0, "Seed Point Controls" );
+   if(!seedPointDialog)
+   {
+      seedPointDialog = new WPDialog( static_cast< wxWindow* >( this ), 0, "Seed Point Controls" );
+   }
    //display the seed points
    VE_XML::Command* newCommand = new VE_XML::Command();
    try
@@ -439,6 +441,8 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
 	  newCommand->AddDataValuePair(seedPointDVP);
 	  VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 	  delete newCommand;
+
+     
    }
    catch(...)
    {
@@ -446,8 +450,53 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
       wxOK | wxICON_INFORMATION );
 	  delete newCommand;
    }
+   VE_XML::Command* boundsCommand = new VE_XML::Command();
+   try
+   {
+	  boundsCommand->SetCommandName("Seed Points Bounds");
+     std::vector<double> seedPointBounds;
+     seedPointDialog->GetBounds(seedPointBounds);
+
+     VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
+     coordinate->SetData("Coordinate","All Bounds");
+     boundsCommand->AddDataValuePair(coordinate);
+
+     VE_XML::DataValuePair* seedPointBoundsDVP = new VE_XML::DataValuePair();
+     seedPointBoundsDVP->SetData("Bounds",seedPointBounds);
+	  boundsCommand->AddDataValuePair(seedPointBoundsDVP);
+	  VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( boundsCommand );
+	  delete boundsCommand;
+
+   }
+   catch(...)
+   {
+	   wxMessageBox( _("Invalid command!"),_(boundsCommand->GetCommandName().c_str()), 
+      wxOK | wxICON_INFORMATION );
+	  delete newCommand;
+   }
+   VE_XML::Command* dimensionsCommand = new VE_XML::Command();
+   try
+   {
+	  dimensionsCommand->SetCommandName("Seed Points Dimensions");
+     std::vector<long> seedPointDims;
+     seedPointDialog->GetDimensions(seedPointDims);
+
+     VE_XML::DataValuePair* dimensions = new VE_XML::DataValuePair();
+     dimensions->SetData("Dimensions",seedPointDims);
+     dimensionsCommand->AddDataValuePair(dimensions);
+
+     VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( dimensionsCommand );
+	  delete dimensionsCommand;
+
+   }
+   catch(...)
+   {
+	   wxMessageBox( _("Invalid command!"),_(dimensionsCommand->GetCommandName().c_str()), 
+      wxOK | wxICON_INFORMATION );
+	  delete dimensionsCommand;
+   }
    seedPointDialog->ShowModal();
    seedPointInformation = seedPointDialog->GetSeedPointDVPVector();
-   seedPointDialog->Destroy();
-   seedPointDialog = 0;
+   /*seedPointDialog->Destroy();
+   seedPointDialog = 0;*/
 }
