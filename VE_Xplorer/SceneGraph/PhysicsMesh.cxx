@@ -45,6 +45,11 @@ PhysicsMesh::~PhysicsMesh()
 	{
 		delete collision_shape_exact;
 	}
+
+	if( triMesh )
+	{
+		delete triMesh;
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsMesh::apply( osg::Geode& geode )
