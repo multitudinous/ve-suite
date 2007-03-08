@@ -113,6 +113,15 @@ public:
    ///Turn the node display off/on
    ///\param onOff Flag to determine on off of the node.
    void Toggle(bool onOff);
+
+   ///Update a boundary for the bbox
+   ///\param newBoundsValue The new value infomation
+   ///\param coordinate The coordinate direction to update\n "X","Y","Z"
+   ///\param minMax Indicates which value to update "Min" or "Max"
+   void UpdateBounds(double newBoundsValue,
+                     std::string coordinate="X",
+                     std::string minMax="Min");
+
 protected:
    class PointsDrawable: public osg::Drawable
    {
@@ -154,7 +163,12 @@ protected:
 	  ///the draw immediate mode method is where the OSG wraps up the drawing of
       /// of OpenGL primitives.
       virtual void drawImplementation(osg::State& currentState) const;
-   protected:
+
+      ///Update a specific boundary
+      ///\param index The index of the boundary
+      ///\param value The new value
+      void UpdateBound(unsigned int index,double value);
+protected:
       unsigned int _dimensions[3];///<The dimensions
       float _bounds[6];///<The bounding box
       float _color[4];///<The color properties of the points

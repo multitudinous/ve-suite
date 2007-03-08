@@ -58,6 +58,9 @@
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h"
+#include "VE_Xplorer/XplorerHandlers/SPBoundEH.h"
+#include "VE_Xplorer/XplorerHandlers/SPDimensionsEH.h"
+
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
@@ -135,6 +138,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _eventHandlers[ std::string("CHANGE_BACKGROUND_COLOR") ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
    _eventHandlers[ std::string("DISPLAY_SELECTION") ] = new VE_EVENTS::DisplayEventHandler();
    _eventHandlers[ std::string("Display Seed Points") ] = new VE_EVENTS::SeedPointActivateEventHandler();
+   _eventHandlers[ std::string("Seed Points Bounds") ] = new VE_EVENTS::SeedPointBoundsEventHandler();
+   _eventHandlers[ std::string("Seed Points Dimensions") ] = new VE_EVENTS::SeedPointDimensionsEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
@@ -409,7 +414,7 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
    if( cfdModelHandler::instance()->GetXMLCommand() )
    {
-      vprDEBUG(vesDBG,1) << "Command Name : "
+      vprDEBUG(vesDBG,3) << "Command Name : "
                            << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                            << std::endl<< vprDEBUG_FLUSH;
       currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );

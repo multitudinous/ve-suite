@@ -41,6 +41,7 @@
 #include <osg/Point>
 #include <osg/Node>
 #include <osg/Uniform>
+#include <iostream>
 using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////
 SeedPoints::SeedPoints(unsigned int nX , unsigned int nY,
@@ -68,7 +69,7 @@ SeedPoints::SeedPoints(unsigned int nX , unsigned int nY,
 
    _points = new PointsDrawable(dimensions,bounds);
    _points->SetColor(color);
-   _pointSize = 10.f;
+   _pointSize = 20.f;
    _points->SetAlpha(1.0);
    _initializePoints();
    addDrawable(_points.get());
@@ -123,8 +124,8 @@ void SeedPoints::SetDimensions(unsigned int numX,
 {
    if(_points.valid())
    {
-      unsigned int dimensions[3];
-      dimensions[0] = numX;
+     unsigned int dimensions[3];
+     dimensions[0] = numX;
 	  dimensions[1] = numY;
 	  dimensions[2] = numZ;
 	  _points->SetDimensions(dimensions);
@@ -156,15 +157,15 @@ void SeedPoints::_initializePoints()
    osg::ref_ptr<osg::PointSprite> sprite = new osg::PointSprite();
    _stateSet->setTextureAttributeAndModes(0, sprite.get(), osg::StateAttribute::ON|osg::StateAttribute::PROTECTED);
 
-    /// Give some size to the points to be able to see the sprite
-    _pointAttributes = new osg::Point();
-    _pointAttributes->setSize(_pointSize);
-    _stateSet->setAttribute(_pointAttributes);
+   /// Give some size to the points to be able to see the sprite
+   _pointAttributes = new osg::Point();
+   _pointAttributes->setSize(_pointSize);
+   _stateSet->setAttribute(_pointAttributes);
 
-    /// Disable depth test to avoid sort problems and Lighting
-    _stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-    _stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
-
+   /// Disable depth test to avoid sort problems and Lighting
+   _stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
+   _stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+   _stateSet->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
 	osg::ref_ptr<osg::Uniform> pointColor = new osg::Uniform("pointColor",
                                                                               osg::Vec4(1.0,1.0,0.0,1.0));
     // frag shader for the points
@@ -173,8 +174,7 @@ void SeedPoints::_initializePoints()
     "void main(void) \n"
     "{ \n"
     "\n"
-	"vec4 color = vec4(0,0,1,1);\n"
-	"gl_FragColor = (step(.25,distance(gl_TexCoord[0].xy,vec2(.5,.5))))?vec4(0,0,0,0):pointColor;\n"
+	"gl_FragColor = (step(.25,distance(gl_TexCoord[0].xy,vec2(.5,.5))))?vec4(1,0,0,0):pointColor;\n"
     "}\n";
    osg::ref_ptr<osg::Program> program = new osg::Program;
    _stateSet->setAttribute(program.get());
@@ -182,13 +182,23 @@ void SeedPoints::_initializePoints()
    osg::ref_ptr<osg::Shader> fragShader = new osg::Shader(osg::Shader::FRAGMENT, 
                                                                            fragShaderSource);
    program->addShader(fragShader.get());
-   _points->setStateSet(_stateSet.get());
+   //_points->setStateSet(_stateSet.get());
    _stateSet->addUniform(pointColor.get());
+   setStateSet(_stateSet.get());
 }
 //////////////////////////////////////////////
 void SeedPoints::Toggle(bool onOff)
 {
 	setNodeMask((onOff)?1:0);
+}
+///////////////////////////////////////////////////////////////////////////////
+void SeedPoints::UpdateBounds(double newBoundsValue,
+                              std::string coordinate,
+                              std::string minMax)
+{
+   unsigned int indexShift = (coordinate=="X")?0:(coordinate=="Y")?2:4;
+   unsigned int index = (minMax=="Min")?indexShift:indexShift+1;
+   _points->UpdateBound(index,newBoundsValue);
 }
 /////////////////////////////////////////////////////////////////////////////
 ///PointsDrawable class
@@ -196,7 +206,7 @@ void SeedPoints::Toggle(bool onOff)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 SeedPoints::PointsDrawable::PointsDrawable(unsigned int* dimensions, float* bounds)
 {
-	//setUseDisplayList(false);
+	setUseDisplayList(false);
    _dimensions[0] = dimensions[0];
    _dimensions[1] = dimensions[1];
    _dimensions[2] = dimensions[2];
@@ -271,6 +281,17 @@ void SeedPoints::PointsDrawable::SetColor(float* color)
 	_color[2] = color[2];
 	dirtyDisplayList();
 }
+/////////////////////////////////////////////////////////////////////////////
+void SeedPoints::PointsDrawable::UpdateBound(unsigned int index,double value)
+{
+   if(index <6)
+   {
+      _bounds[index] = value;
+      return;
+   }
+   std::cout<<"Invalid Boundary index: "<<index<<std::endl;
+   std::cout<<"SeedPoints::PointsDrawable::UpdateBound()"<<std::endl;
+}
 ///////////////////////////////////////////////////////////////////
 void SeedPoints::PointsDrawable::SetAlpha(float alpha)
 {
@@ -281,7 +302,7 @@ void SeedPoints::PointsDrawable::SetAlpha(float alpha)
 osg::BoundingBox SeedPoints::PointsDrawable::computeBound() const
 {
 	return osg::BoundingBox(_bounds[0],_bounds[1],
-		                           _bounds[2],_bounds[3],
+		                     _bounds[2],_bounds[3],
 								   _bounds[4],_bounds[5]);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////

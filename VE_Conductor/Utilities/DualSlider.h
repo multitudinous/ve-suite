@@ -101,10 +101,10 @@ public:
    ///Get the slider buffer value
    int GetSliderBuffer();
 
-   ///Get the min slider maximum value.
+   ///Get the slider maximum value.
    int GetSliderMaximum();
 
-   ///Get the min slider minimum value.
+   ///Get the slider minimum value.
    int GetSliderMinimum();
 
    ///Get the value of the minimum slider

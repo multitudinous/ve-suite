@@ -1,9 +1,11 @@
-@ECHO OFF
+@ECHO ON
 REM Double click this file to start the app in the test directory
 
-call .\setup.bat
+call ..\setup.bat
 REM Go to where your parameter file is...
 
-cd %VE_WORKING_DIR%
+cd .\
 
-project_tao_osg_vep_cluster_d.exe %VJ_BASE_DIR%/configFiles/simstandalone.jconf  -ORBInitRef NameService=corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService -ORBDottedDecimalAddresses 1
+set VEXMASTER=costello
+project_tao_osg_vep_d.exe ..\..\share\vecr_configs\vecr.jconf  -ORBInitRef NameService=corbaloc:iiop:costello:1239/NameService -ORBDottedDecimalAddresses 1 -VESCluster
+pause

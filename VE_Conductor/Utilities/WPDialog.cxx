@@ -6,10 +6,12 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include <wx/statbox.h>
-#include <wx/spinctrl.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 
+BEGIN_EVENT_TABLE(WPDialog,BaseDialog)
+EVT_SPINCTRL(WPDialog::DIMENSION_SPINNER_ID,WPDialog::_updateDimensions)
+END_EVENT_TABLE()
 WPDialog::WPDialog(wxWindow* parent, int id, std::string title):
 BaseDialog(parent, id, title)
 {
@@ -58,15 +60,15 @@ void WPDialog::_buildGUI()
    wxBoxSizer* zdualSizer = new wxBoxSizer (wxHORIZONTAL);
    zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND); 
    
-   numXPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), -1, 
+   numXPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
-   numYPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), -1, 
+   numYPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
-   numZPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), -1, 
+   numZPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
@@ -95,12 +97,59 @@ void WPDialog::_buildGUI()
    SetSizer(mainSizer);
    //mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
 }
-////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
+void WPDialog::GetDimensions(std::vector<long>& dimensions)
+{
+   if(numXPointsSpinner && numYPointsSpinner &&numZPointsSpinner)
+   {
+      dimensions.clear();
+      dimensions.push_back(numXPointsSpinner->GetValue());
+      dimensions.push_back(numYPointsSpinner->GetValue());
+      dimensions.push_back(numZPointsSpinner->GetValue());
+   }
+}
+////////////////////////////////////////////////////
+void WPDialog::GetBounds(std::vector<double>& bounds)
+{
+   //this is a percentage
+   if(_xBounds&&_yBounds&&_zBounds)
+   {
+      bounds.clear();
+      bounds.push_back( 
+      static_cast<double>(_xBounds->GetMinSliderValue())/100.0);
+      bounds.push_back(  
+      static_cast<double>(_xBounds->GetMaxSliderValue())/100.0);
+      bounds.push_back(  
+      static_cast<double>(_yBounds->GetMinSliderValue())/100.0);
+      bounds.push_back( 
+      static_cast<double>(_yBounds->GetMaxSliderValue())/100.0);
+      bounds.push_back(  
+      static_cast<double>(_zBounds->GetMinSliderValue())/100.0);
+      bounds.push_back(  
+      static_cast<double>(_zBounds->GetMaxSliderValue())/100.0);
+   }
+}
+////////////////////////////////////////////////////
+void WPDialog::_updateDimensions(wxSpinEvent& event)
+{
+   SetCommand("Seed Points Dimensions");
+   std::vector<long> dimensions;
+   dimensions.push_back(numXPointsSpinner->GetValue());
+   dimensions.push_back(numYPointsSpinner->GetValue());
+   dimensions.push_back(numZPointsSpinner->GetValue());
+
+   VE_XML::DataValuePair* value = new VE_XML::DataValuePair;
+   value->SetData("Dimensions",dimensions);
+   AddInstruction(value);
+   SendCommands();
+   ClearInstructions();
+}
+///////////////////////////////////
 void WPDialog::_createDualSliders()
 {
 //X Slider
   _xBounds = new DualSlider(this, -1, 1,0,100, 0, 100, wxDefaultPosition,
-	  wxDefaultSize,wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,
+                            wxDefaultSize,wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,
 	  wxString( _T("X Bounds") ) );
    WPMinSliderCallback* minX = new WPMinSliderCallback(this,"X");
    WPMaxSliderCallback* maxX = new WPMaxSliderCallback(this,"X");
@@ -140,7 +189,7 @@ void WPDialog::_createDualSliders()
 void WPDialog::WPMinSliderCallback::SliderOperation()
 {
    //what does TP stand for?
-   _wpdlg->SetCommandName("Min WP Update");
+   _wpdlg->SetCommandName("Seed Points Bounds");
 
    VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
    coordinate->SetDataType("STRING");
@@ -149,13 +198,11 @@ void WPDialog::WPMinSliderCallback::SliderOperation()
    _wpdlg->AddInstruction(coordinate);
    
    VE_XML::DataValuePair* direction = new VE_XML::DataValuePair();
-   direction->SetDataType("STRING");
-   direction->SetDataName(std::string("Direction"));
-   direction->SetDataString("Positive");
+   direction->SetData("MinMax","Min");
    _wpdlg->AddInstruction(direction);
    
    VE_XML::DataValuePair* value = new VE_XML::DataValuePair;
-   value->SetData("WP Value",
+   value->SetData("Value",
 	   static_cast<double>(_dualSlider->GetMinSliderValue())/100.0);
    _wpdlg->AddInstruction(value);
    
@@ -165,23 +212,18 @@ void WPDialog::WPMinSliderCallback::SliderOperation()
 ////////////////////////////////////////////////////////////////////////////////////
 void WPDialog::WPMaxSliderCallback::SliderOperation()
 {
-//what does TP stand for?
-   _wpdlg->SetCommand("Max WP Update");
+   _wpdlg->SetCommand("Seed Points Bounds");
 
    VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
-   coordinate->SetDataType("STRING");
-   coordinate->SetDataName(std::string("Coordinate"));
-   coordinate->SetDataString(_direction);
+   coordinate->SetData(std::string("Coordinate"),_direction);
    _wpdlg->AddInstruction(coordinate);
    
    VE_XML::DataValuePair* direction = new VE_XML::DataValuePair();
-   direction->SetDataType("STRING");
-   direction->SetDataName(std::string("Direction"));
-   direction->SetDataString("Negative");
+   direction->SetData(std::string("MinMax"),"Max");
    _wpdlg->AddInstruction(direction);
    
    VE_XML::DataValuePair* value = new VE_XML::DataValuePair;
-   value->SetData("WP Value",
+   value->SetData("Value",
 	   static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
    _wpdlg->AddInstruction(value);
    
@@ -191,28 +233,23 @@ void WPDialog::WPMaxSliderCallback::SliderOperation()
 ////////////////////////////////////////////////////////////////////////////////////
 void WPDialog::WPBothMoveCallback::SliderOperation()
 {
-//what does TP stand for?
-   _wpdlg->SetCommand("Both WP Update");
+   _wpdlg->SetCommand("Seed Points Bounds");
 
    VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
-   coordinate->SetDataType("STRING");
-   coordinate->SetDataName(std::string("Coordinate"));
-   coordinate->SetDataString(_direction);
+   coordinate->SetData(std::string("Coordinate"),_direction);
    _wpdlg->AddInstruction(coordinate);
    
    VE_XML::DataValuePair* direction = new VE_XML::DataValuePair();
-   direction->SetDataType("STRING");
-   direction->SetDataName(std::string("Direction"));
-   direction->SetDataString("Both");
+   direction->SetData(std::string("MinMax"),"Both");
    _wpdlg->AddInstruction(direction);
    
    VE_XML::DataValuePair* minvalue = new VE_XML::DataValuePair;
-   minvalue->SetData("WP Value",
+   minvalue->SetData("Min Value",
 	   static_cast<double>(_dualSlider->GetMinSliderValue())/100.0); 
  
  
    VE_XML::DataValuePair* maxvalue = new VE_XML::DataValuePair;
-   maxvalue->SetData("WP Value",
+   maxvalue->SetData("Max Value",
 	   static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
    
    _wpdlg->AddInstruction(minvalue);

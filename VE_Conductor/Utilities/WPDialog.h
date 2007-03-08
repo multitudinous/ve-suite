@@ -7,7 +7,8 @@
 #include "VE_Conductor/Utilities/BaseDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
 
-class wxSpinCtrl;
+#include <wx/spinctrl.h>
+
 
 namespace VE_Conductor
 {
@@ -18,6 +19,10 @@ class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
 
 {
 public:
+   enum SEEDPOINT_IDS
+   {
+      DIMENSION_SPINNER_ID
+   };
    //Constructor
       WPDialog(wxWindow* parent, int id, std::string title);
    
@@ -35,7 +40,7 @@ public:
    void AddInstruction(VE_XML::DataValuePair* newInstruct);
    
    
-   void SetCommand(std::string name){;}
+   void SetCommand(std::string name){_commandName = name;}
    
    ///Get the seed point vector
    std::vector< VE_XML::DataValuePair* > GetSeedPointDVPVector( void );
@@ -43,9 +48,20 @@ public:
    void SetVectorDVP( void );
    ///Transfer the seed points info from the window
    virtual bool TransferDataFromWindow( void );
-   
+
+   ///Get the slider values for the bounds
+   ///\param bounds The current slider values
+   void GetBounds(std::vector<double>& bounds);
+
+   ///Get the spinner values for the dimensions
+   ///\param dimensions The x y z dimensions
+   void GetDimensions(std::vector<long>& dimensions);
 protected:
    
+   ///Update the dimensions of the seed points bbox
+   ///\param event The wxCommand event.
+   void _updateDimensions(wxSpinEvent& event);
+
    class WPMinSliderCallback: public
    	VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
    {
@@ -55,7 +71,7 @@ protected:
       
       {
          _direction = direction;
-	 _wpdlg = parent;
+	      _wpdlg = parent;
       }
       
       virtual ~WPMinSliderCallback()
@@ -80,7 +96,7 @@ protected:
       
       {
          _direction = direction;
-	 _wpdlg = parent;
+	      _wpdlg = parent;
       }
       
       virtual ~WPBothMoveCallback()
@@ -136,6 +152,8 @@ protected:
    wxSpinCtrl* numXPointsSpinner;
    wxSpinCtrl* numYPointsSpinner;
    wxSpinCtrl* numZPointsSpinner;
+   DECLARE_EVENT_TABLE()
+
 };
 }
 }
