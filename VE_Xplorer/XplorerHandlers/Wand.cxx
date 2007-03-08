@@ -23,10 +23,10 @@
 * Boston, MA 02111-1307, USA.
 *
 * -----------------------------------------------------------------
-* Date modified: $Date: 2007-02-06 16:35:58 -0600 (Tue, 06 Feb 2007) $
-* Version:       $Rev: 6788 $
-* Author:        $Author: jbkoch $
-* Id:            $Id: CORBAServiceList.h 6788 2007-02-06 22:35:58Z jbkoch $
+* Date modified: $Date$
+* Version:       $Rev$
+* Author:        $Author$
+* Id:            $Id$
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/

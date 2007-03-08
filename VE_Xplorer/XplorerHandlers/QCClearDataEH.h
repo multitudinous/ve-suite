@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2006-09-29 21:31:32 -0500 (Fri, 29 Sep 2006) $
- * Version:       $Rev: 5598 $
- * Author:        $Author: mccdo $
- * Id:            $Id: QCClearDataEH.h 5598 2006-09-30 02:31:32Z mccdo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

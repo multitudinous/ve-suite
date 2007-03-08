@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2006-07-28 20:47:10 -0500 (Fri, 28 Jul 2006) $
- * Version:       $Rev: 5067 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: TextTexture.h 6855 2007-02-09 23:40:37Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
