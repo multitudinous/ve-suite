@@ -57,8 +57,8 @@ public:
    Device();
    virtual ~Device(){;}
 
-	virtual void UpdateNavigation() = 0;
-   virtual void UpdateSelection() = 0;
+	virtual void UpdateNavigation();
+   virtual void UpdateSelection();
 
    virtual void Traverse();
 
