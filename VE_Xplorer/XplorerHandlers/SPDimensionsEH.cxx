@@ -41,7 +41,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-#include <vtkDataset.h>
+#include <vtkDataSet.h>
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////

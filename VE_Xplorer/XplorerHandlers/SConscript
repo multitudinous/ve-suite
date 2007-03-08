@@ -105,6 +105,8 @@ sources = Split("""
    QCClearDataEH.cxx
    DataTransformEH.cxx
    Wand.cxx
+   SeedPointActivateEH.cxx
+   SeedPoints.cxx
 """)
 
 headers = Split("""
