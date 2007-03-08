@@ -73,6 +73,10 @@ sources = Split("""
    CreateVisObjectEventHandler.cxx
    ClearVisObjectsEventHandler.cxx
    ChangeCursorEventHandler.cxx
+   SPDimensionsEH.cxx
+   SPBoundEH.cxx
+   SeedPoints.cxx
+   SeedPointActivateEH.cxx
    TBTransientModeUpdateEH.cxx
    TBTransientDurationUpdateEH.cxx
    TBIsosurfaceEnableEH.cxx
@@ -100,8 +104,6 @@ sources = Split("""
    QCClearDataEH.cxx
    DataTransformEH.cxx
    Wand.cxx
-	SeedPoints.cxx
-	SeedPointActivateEH.cxx
 """)
 
 headers = Split("""
@@ -173,6 +175,10 @@ headers = Split("""
    CreateVisObjectEventHandler.h
    ClearVisObjectsEventHandler.h
    ChangeCursorEventHandler.h
+   SeedPoints.h
+   SeedPointActiveEH.h
+   SPBoundEH.h
+   SPDimensionsEH.h
    TBTransientModeUpdateEH.h
    TBTransientDurationUpdateEH.h
    TBIsosurfaceEnableEH.h
@@ -200,8 +206,6 @@ headers = Split("""
    QCClearDataEH.h
    DataTransformEH.h
    Wand.h
-	SeedPoints.h
-	SeedPointActivateEH.h
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 
