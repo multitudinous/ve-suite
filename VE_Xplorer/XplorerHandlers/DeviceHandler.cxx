@@ -19,10 +19,9 @@ using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
+:
+navigation( true )
 {
-   //keyboard_mouse = new VE_Xplorer::KeyboardMouse();
-	//wand = new VE_Xplorer::Wand();
-
    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
 
@@ -34,17 +33,7 @@ DeviceHandler::DeviceHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
 {
-   /*
-   if( keyboard_mouse )
-	{
-      delete keyboard_mouse;
-   }
 
-	if( wand )
-	{
-      delete wand;
-   }
-   */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
@@ -81,18 +70,18 @@ void DeviceHandler::ProcessDeviceEvents()
    //Get the active device
 
 
-}
+   // --- Temporary Fix --- //
+   this->GetKeyboardMouse()->UpdateNavigation();
 
-////////////////////////////////////////////////////////////////////////////////
-/*
-KeyboardMouse* DeviceHandler::GetKeyboardMouse()
-{
-	return keyboard_mouse;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Wand* DeviceHandler::GetWand()
 {
-	return wand;
+   return dynamic_cast< VE_Xplorer::Wand* >( devices.find( "Wand" )->second );
 }
 ////////////////////////////////////////////////////////////////////////////////
-*/
+KeyboardMouse* DeviceHandler::GetKeyboardMouse()
+{
+	return dynamic_cast< VE_Xplorer::KeyboardMouse* >( devices.find( "KeyboardMouse" )->second );
+}
+////////////////////////////////////////////////////////////////////////////////

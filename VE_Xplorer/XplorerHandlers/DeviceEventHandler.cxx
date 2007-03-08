@@ -50,10 +50,11 @@ void DeviceEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    VE_XML::DataValuePair* DVP=command->GetDataValuePair("DeviceMode");
 
    unsigned int device_mode;
-   DVP->GetData(device_mode);
+   DVP->GetData( device_mode );
 
-   if(DVP){
-      VE_Xplorer::DeviceHandler::instance()->SetMode(device_mode);
+   if(DVP)
+   {
+      //VE_Xplorer::DeviceHandler::instance()->SetMode(device_mode);
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

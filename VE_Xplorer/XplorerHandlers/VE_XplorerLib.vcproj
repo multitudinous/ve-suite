@@ -615,10 +615,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SelectionHandler.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\StoredSceneEH.cxx"
 				>
 			</File>
@@ -1051,10 +1047,6 @@
 			</File>
 			<File
 				RelativePath=".\SeedPoints.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SelectionHandler.h"
 				>
 			</File>
 			<File
