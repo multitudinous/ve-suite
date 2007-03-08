@@ -70,7 +70,6 @@ sources = Split("""
    KeyboardMouse.cxx
    KeyboardMouseEH.cxx
    cfdObjectHandler.cxx
-   SelectionHandler.cxx
    CreateVisObjectEventHandler.cxx
    ClearVisObjectsEventHandler.cxx
    ChangeCursorEventHandler.cxx
@@ -169,7 +168,6 @@ headers = Split("""
    KeyboardMouse.h
    KeyboardMouseEH.h
    cfdObjectHandler.h
-   SelectionHandler.h
    CreateVisObjectEventHandler.h
    ClearVisObjectsEventHandler.h
    ChangeCursorEventHandler.h
