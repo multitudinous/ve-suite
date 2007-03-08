@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-02-17 19:26:41 -0600 (Sat, 17 Feb 2007) $
- * Version:       $Rev: 6946 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: CADEntity.h 6946 2007-02-18 01:26:41Z jbkoch $
+ * Date modified: $Date:  $
+ * Version:       $Rev:  $
+ * Author:        $Author:  $
+ * Id:            $Id:  $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
