@@ -26,7 +26,7 @@ public:
 	~KeyboardMouse();
 
 	virtual void UpdateNavigation();
-	virtual void UpdateSelection();
+	virtual osg::LineSegment* UpdateSelection();
 
 	void Animate( bool animate );
 	void Reshape( unsigned int width, unsigned int height );

@@ -32,7 +32,8 @@
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/Wand.h"
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
+// --- OSG Stuff --- //
+#include <osg/LineSegment>
 
 //C/C++ Libraries
 #include <iostream>
@@ -469,9 +470,11 @@ void Wand::UpdateNavigation()
    //this->UpdateLoc( this->worldTrans );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateSelection()
+osg::LineSegment* Wand::UpdateSelection()
 {
-	;
+   osg::ref_ptr< osg::LineSegment > ls = new osg::LineSegment;
+
+	return ls.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetHeadRotationFlag( int input )

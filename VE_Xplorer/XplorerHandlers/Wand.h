@@ -44,6 +44,8 @@ Wand API
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 namespace VE_SceneGraph
 {
    class DCS;
@@ -69,7 +71,7 @@ public:
    ///Initialize some variables in the class
    void Initialize( void );
 	virtual void UpdateNavigation();
-	virtual void UpdateSelection();
+	virtual osg::LineSegment* UpdateSelection();
    ///bool to set the rotation method
    void SetHeadRotationFlag( int );
    ///New function for testing the new VECommand structure

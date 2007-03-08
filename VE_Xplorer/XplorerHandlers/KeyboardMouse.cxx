@@ -8,10 +8,12 @@
 
 #include <LinearMath/btVector3.h>
 
+// --- OSG Stuff --- //
 #include <osg/Group>
 #include <osg/BoundingSphere>
 #include <osg/BoundingBox>
 #include <osg/CameraNode>
+#include <osg/LineSegment>
 
 //C/C++ Libraries
 #include <iostream>
@@ -86,7 +88,7 @@ void KeyboardMouse::UpdateNavigation()
       }
       */
 
-		else if( type == gadget::MouseButtonPressEvent )
+	   else if( type == gadget::MouseButtonPressEvent )
 		{
          gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
 
@@ -145,9 +147,11 @@ void KeyboardMouse::UpdateNavigation()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateSelection()
+osg::LineSegment* KeyboardMouse::UpdateSelection()
 {
-	;
+   osg::ref_ptr< osg::LineSegment > ls = new osg::LineSegment;
+
+	return ls.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Animate( bool animate )

@@ -46,12 +46,15 @@ void DeviceHandler::CleanUp()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
 {
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-   if(cfdModelHandler::instance()->GetXMLCommand()){
-      currentEventHandler=_eventHandlers.find(cfdModelHandler::instance()->GetXMLCommand()->GetCommandName());
-      if(currentEventHandler!=_eventHandlers.end()){
+   std::map< std::string, VE_EVENTS::EventHandler* >::iterator currentEventHandler;
+   if(cfdModelHandler::instance()->GetXMLCommand())
+	{
+      currentEventHandler=_eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+
+      if(currentEventHandler!=_eventHandlers.end())
+		{
          currentEventHandler->second->SetGlobalBaseObject();
-         currentEventHandler->second->Execute(cfdModelHandler::instance()->GetXMLCommand());
+         currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
       }
    }
 }
@@ -65,14 +68,11 @@ void DeviceHandler::ProcessDeviceEvents()
    switch( device_mode )
 	{
    
-      //Update Trackball events
+      //Update KeyboardMouse events
       case 0: keyboard_mouse->UpdateNavigation();
 
       //case 1:
    
-
-      //Update MouseSelection events
-      //mouse_selection->SelectObjects();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

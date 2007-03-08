@@ -28,9 +28,7 @@ public:
    virtual ~Device(){;}
 
 	virtual void UpdateNavigation() = 0;
-	virtual void UpdateSelection() = 0;
-
-	//virtual osg::ref_ptr< osg::LineSegment > GetLineSegment() = 0;
+   virtual osg::LineSegment* UpdateSelection() = 0;
 
 private:			
 
