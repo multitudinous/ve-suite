@@ -1,5 +1,5 @@
 /* XPM */
-static char * cad_tree_selected32x32_xpm[] = {
+static char * cad_tree_selected_xpm[] = {
 "32 32 137 2",
 "  	c None",
 ". 	c #7B7B7B",
