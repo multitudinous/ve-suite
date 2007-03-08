@@ -48,8 +48,8 @@
 #include "VE_Conductor/xpm/icon4.xpm"
 #include "VE_Conductor/xpm/icon5.xpm"
 
-#include "VE_Conductor/xpm/cad_tree_selected32x32.xpm"
-#include "VE_Conductor/xpm/cad_tree_unselected32x32.xpm"
+#include "VE_Conductor/xpm/cad_tree_selected.xpm"
+#include "VE_Conductor/xpm/cad_tree_unselected.xpm"
 
 #include <string>
 
@@ -269,9 +269,9 @@ void CADTreeBuilder::_createImageList()
     wxIcon icons[5];
     icons[0] = wxIcon(icon1_xpm);
     icons[1] = wxIcon(icon2_xpm);
-    icons[2] = wxIcon(cad_tree_unselected32x32_xpm);
+    icons[2] = wxIcon(cad_tree_unselected_xpm);
     icons[3] = wxIcon(icon4_xpm);
-    icons[4] = wxIcon(cad_tree_selected32x32_xpm);
+    icons[4] = wxIcon(cad_tree_selected_xpm);
 
     int sizeOrig = icons[0].GetWidth();
     for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
