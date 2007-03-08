@@ -509,26 +509,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\DeviceEventHandler.cxx"
+				RelativePath=".\DeviceEH.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\DeviceHandler.cxx"
@@ -551,6 +533,10 @@
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\DeviceModeEH.cxx"
+				>
 			</File>
 			<File
 				RelativePath=".\DisplayEventHandler.cxx"
@@ -621,13 +607,6 @@
 			<File
 				RelativePath=".\SPDimensionsEH.cxx"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\StoredSceneEH.cxx"
@@ -1005,11 +984,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DeviceEventHandler.h"
+				RelativePath=".\DeviceEH.h"
 				>
 			</File>
 			<File
 				RelativePath=".\DeviceHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DeviceModeEH.h"
 				>
 			</File>
 			<File

@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef DEVICE_EVENT_HANDLER_H
-#define DEVICE_EVENT_HANDLER_H
-/*!\file DeviceEventHandler.h
-  DeviceEventHandler API
+#ifndef DEVICE_MODE_EVENT_HANDLER_H
+#define DEVICE_MODE_EVENT_HANDLER_H
+/*!\file DeviceModeEH.h
+  DeviceModeEventHandler API
   */
-/*!\class DeviceEventHandler
- * Class for changing trackball properties in xplorer
+/*!\class DeviceModeEventHandler
+ * Class for changing between navigation and selection for the active device
  */
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 
@@ -52,32 +52,32 @@ namespace VE_Xplorer
 
 namespace VE_EVENTS
 {
-class DeviceEventHandler:public EventHandler
+class DeviceModeEventHandler : public EventHandler
 {
 public:
    //Constructor
-   DeviceEventHandler();
+   DeviceModeEventHandler();
 
    //Copy Constructor
-   DeviceEventHandler(const DeviceEventHandler& ceh);
+   DeviceModeEventHandler( const DeviceModeEventHandler& ceh );
 
    //Destructor
-   virtual ~DeviceEventHandler();
+   virtual ~DeviceModeEventHandler();
 
    //Set the cfdModel
    //param model The cfdModelHandler to execute the Command on
-   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
+   void SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler );
       
    //Exectute the event
    //param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* command); 
+   void Execute( VE_XML::XMLObject* command ); 
 
    //Equal operator
-   DeviceEventHandler& operator=(const DeviceEventHandler& rhs);
+   DeviceModeEventHandler& operator=( const DeviceModeEventHandler& rhs );
    
 protected:
 
 };
 }
 
-#endif//DEVICE_EVENT_HANDLER_H
+#endif//DEVICE_MODE_EVENT_HANDLER_H
