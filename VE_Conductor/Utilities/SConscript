@@ -67,6 +67,7 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','XML','CAD'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 lib_env.ParseConfig('flagpoll TAO TAO_Messaging TAO_Valuetype  --cflags --libs')
+lib_env.ParseConfig('flagpoll vrjuggler --cflags')
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
