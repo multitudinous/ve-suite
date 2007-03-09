@@ -660,6 +660,10 @@ class Launch:
         Overwrites a filled variable in normal mode.
         If overwrite == True, overwrites the variable in both modes."""
 ##        if self.settings["DevMode"] and not overwrite:
+        ##Fix to stop errors when passing None as the default.
+        if default == None:
+            default = "None"
+        ##Write the var to the environment.
         if not overwrite and not EnvVarEmpty(var):
             os.environ[var] = os.getenv(var, default)
         else:
