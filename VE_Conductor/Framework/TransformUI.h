@@ -44,7 +44,6 @@ TransformUI API
 #include <wx/wx.h>
 
 #include <string>
-
 class DataSetLoaderUI;
 class wxSpinCtrlDbl;
 

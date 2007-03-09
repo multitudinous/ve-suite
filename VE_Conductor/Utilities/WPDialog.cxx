@@ -99,7 +99,7 @@ void WPDialog::_buildGUI()
    SetSizer(mainSizer);
    //mainSizer->Fit(dynamic_cast<BaseDialog*>(this));
 }
-//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 void WPDialog::GetDimensions(std::vector<long>& dimensions)
 {
    if(numXPointsSpinner && numYPointsSpinner &&numZPointsSpinner)
@@ -110,7 +110,7 @@ void WPDialog::GetDimensions(std::vector<long>& dimensions)
       dimensions.push_back(numZPointsSpinner->GetValue());
    }
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 void WPDialog::GetBounds(std::vector<double>& bounds)
 {
    //this is a percentage
@@ -318,6 +318,8 @@ std::vector< VE_XML::DataValuePair* > WPDialog::GetSeedPointDVPVector( void )
 ////////////////////////////////////////////////////////////////////////////////
 bool WPDialog::TransferDataFromWindow( void )
 {
+   seedPointDVP.clear();
+   
    VE_XML::DataValuePair* tempDVP;
    ////////////////
    tempDVP = new VE_XML::DataValuePair();

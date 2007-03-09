@@ -345,6 +345,13 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
    _updateStreamlineInformation();
    _updateAdvancedSettings();
 
+    VE_XML::Command* veCommand = new VE_XML::Command();
+    veCommand->SetCommandName( std::string("Display Seed Points") );
+   VE_XML::DataValuePair* seedPointDVP = new VE_XML::DataValuePair();
+   seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
+   veCommand->AddDataValuePair(seedPointDVP);
+   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   delete veCommand;   
    VE_XML::Command* newCommand = new VE_XML::Command();
    newCommand->SetCommandName("UPDATE_STREAMLINE_SETTINGS");
 
@@ -495,8 +502,8 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
       wxOK | wxICON_INFORMATION );
 	  delete dimensionsCommand;
    }
-   seedPointDialog->ShowModal();
-   seedPointInformation = seedPointDialog->GetSeedPointDVPVector();
-   /*seedPointDialog->Destroy();
-   seedPointDialog = 0;*/
+   if(seedPointDialog->ShowModal())
+   {
+      seedPointInformation = seedPointDialog->GetSeedPointDVPVector();
+   }
 }
