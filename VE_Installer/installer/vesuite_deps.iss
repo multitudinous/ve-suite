@@ -33,20 +33,26 @@ SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 [Types]
+Name: full; Description: Full installation
+Name: custom; Description: Custom installation; Flags: iscustom
+
+
 Name: full; Description: All pre-compiled dependencies
 Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
 Name: vecns; Description: VE-Conductor(GUI) and Name Server
 Name: custom; Description: Custom; Flags: iscustom
 
 [Components]
-Name: depsbuildenv; Description: Headers and Libs
-Name: vtk; Description: Visualiztion ToolKit; Types: vexosg full
-Name: acetao; Description: ACE/TAO; Types: vecns vexosg full
+Name: depsbuildenv; Description: Headers and Libs; Types: full
+Name: vtk; Description: Visualiztion ToolKit; Types: vexosg  full
+Name: acetao; Description: ACE/TAO; Types: vecns vexosg  full
 Name: wxwidgets; Description: wxWidgets 2.8.0; Types: vecns full
-Name: xercesc; Description: Xerces-C++; Types: vecns vexosg full
+Name: xercesc; Description: Xerces-C++; Types: vecns vexosg  full
 Name: osg; Description: OpenSceneGraph; Types: vexosg full
-Name: juggler; Description: vrJuggler; Types: vexosg full
+Name: juggler; Description: vrJuggler; Types: vexosg  full
 Name: apr; Description: Apache APR; Types: vexosg vecns full
+;Name: opal; Description: Open Physics Abstraction Library OPAL; Types: vexosg full
+;Name: ode; Description: Open Dynamics Engine; Types: vexosg full
 [Files]
 Source: {#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#APRUTILHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
@@ -193,7 +199,8 @@ Source: {#OSGHOME}\..\Producer\bin\win32\*.dll; DestDir: {app}\bin; Components: 
 ;Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgdb_ivd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler{#JUGGLERVERSION}; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
@@ -233,12 +240,12 @@ Source: {#WXHOME}\lib\vc_dll\mswd\wx\setup.h; DestDir: {app}\include\wx\; Attrib
 Source: {#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\tao\*.h; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-
-Source: {#JUGGLERINSTHOME}\share\vrjuggler\data\configFiles\*; DestDir: {app}\share\configFiles; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\share\vrjuggler\data\configFiles\*; DestDir: {app}\share\configFiles; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\share\vrjuggler\data\definitions\*; DestDir: {app}\share\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
-Source: {#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\vrJuggler{#JUGGLERVERSION}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler depsbuildenv; Languages: 
-Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\vrJuggler{#JUGGLERVERSION}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
+Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-depdom_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 Source: {#OSGHOME}\..\Producer\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -249,10 +256,7 @@ Source: {#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; DestDir: {app}\bin; Comp
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxbase28_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
-;Source: ..\..\..\..\Documents and Settings\biv\Desktop\vrjuggler-2.0.3-1-vc80-setup.exe; DestDir: {tmp}; Flags: deleteafterinstall
 
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-;[Run]
-;Filename: {tmp}\vrjuggler-2.0.3-1-vc80-setup.exe; WorkingDir: {tmp}; Description: VRJuggler Install; StatusMsg: Installing VRJuggler{#JUGGLERVERSION}; Flags: postinstall skipifdoesntexist; Components: juggler
