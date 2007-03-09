@@ -520,7 +520,6 @@ void DataSetLoaderUI::OnButton6Click( wxCommandEvent& WXUNUSED(event) )
    if ( paramBlock )
    {
       mainSizer->Add( transformPanel, -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
-std::cout<<" IS PARAMBLOCK"<<std::endl;
 
    }
    else
