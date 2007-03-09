@@ -69,7 +69,7 @@ SeedPoints::SeedPoints(unsigned int nX , unsigned int nY,
 
    _points = new PointsDrawable(dimensions,bounds);
    _points->SetColor(color);
-   _pointSize = 20.f;
+   _pointSize = 10.f;
    _points->SetAlpha(1.0);
    _initializePoints();
    addDrawable(_points.get());
@@ -102,19 +102,20 @@ void SeedPoints::SetPointAlpha(float alpha)
 	}
 }
 ////////////////////////////////////////////////////////////////////////////
-void SeedPoints::SetBounds(float xMin,float yMin, float zMin,
-                                   float xMax,float yMax, float zMax)
+void SeedPoints::SetBounds(float xMin,float xMax,
+                           float yMin,float yMax, 
+                            float zMin,float zMax)
 {
    if(_points.valid())
    {
       float bounds [6];
       bounds[0] = xMin;
-	  bounds[1] = xMax;
-	  bounds[2] = yMin;
-	  bounds[3] = yMax;
-	  bounds[4] = zMin;
-	  bounds[5] = zMax;
-	  _points->SetBounds(bounds);
+	   bounds[1] = xMax;
+	   bounds[2] = yMin;
+	   bounds[3] = yMax;
+	   bounds[4] = zMin;
+	   bounds[5] = zMax;
+	   _points->SetBounds(bounds);
 	}
 }
 ////////////////////////////////////////////////////////////////
@@ -163,19 +164,19 @@ void SeedPoints::_initializePoints()
    _stateSet->setAttribute(_pointAttributes);
 
    /// Disable depth test to avoid sort problems and Lighting
-   _stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
-   _stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
+   //_stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
+   //_stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
    _stateSet->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-   _stateSet->setBinNumber(99);
+   //_stateSet->setBinNumber(99);
 	osg::ref_ptr<osg::Uniform> pointColor = new osg::Uniform("pointColor",
-                                                                              osg::Vec4(1.0,1.0,0.0,1.0));
+                                                             osg::Vec4(1.0,1.0,0.0,.7));
     // frag shader for the points
     char fragShaderSource[] = 
 	"uniform vec4 pointColor;\n"
     "void main(void) \n"
     "{ \n"
     "\n"
-	"gl_FragColor = (step(.25,distance(gl_TexCoord[0].xy,vec2(.5,.5))))?vec4(1,0,0,0):pointColor;\n"
+	"gl_FragColor = (step(.25,distance(gl_TexCoord[0].xy,vec2(.5,.5))))?vec4(0,0,0,0):pointColor;\n"
     "}\n";
    osg::ref_ptr<osg::Program> program = new osg::Program;
    _stateSet->setAttribute(program.get());

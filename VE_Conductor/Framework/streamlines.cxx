@@ -162,18 +162,18 @@ void Streamlines::CreateControls()
     };
     _integrationRBox = new wxRadioBox( itemDialog1, INTEGRATION_DIR_RBOX, _T("Integration Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox7Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(_integrationRBox, 0, wxALIGN_TOP|wxALL, 5);
+   _integrationRBox->SetStringSelection("both directions");
+    //wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
+    //itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    //_sizeSlider = new wxSlider( itemDialog1, PLANE_SIZE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    //itemStaticBoxSizer3->Add(_sizeSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
-    _sizeSlider = new wxSlider( itemDialog1, PLANE_SIZE_SLIDER, 50, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(_sizeSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    //wxStaticText* itemStaticText10 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Number of Point (Per Plane Direction)"), wxDefaultPosition, wxDefaultSize, 0 );
+    //itemStaticBoxSizer3->Add(itemStaticText10, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    wxStaticText* itemStaticText10 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Number of Point (Per Plane Direction)"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add(itemStaticText10, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
-
-    _nPointsSlider = new wxSlider( itemDialog1, NUMBER_PTS_SLIDER, 2, 2, 20, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(_nPointsSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    //_nPointsSlider = new wxSlider( itemDialog1, NUMBER_PTS_SLIDER, 2, 2, 20, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    //itemStaticBoxSizer3->Add(_nPointsSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer(wxHORIZONTAL);
     itemStaticBoxSizer3->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -448,8 +448,6 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
 	  newCommand->AddDataValuePair(seedPointDVP);
 	  VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 	  delete newCommand;
-
-     
    }
    catch(...)
    {

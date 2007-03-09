@@ -87,8 +87,8 @@ public:
    ///\param xMax Maximum x
    ///\param yMax Maximum y
    ///\param zMax Maximum z
-   void SetBounds(float xMin,float yMin, float zMin,
-                  float xMax,float yMax, float zMax);
+   void SetBounds(float xMin,float xMax,float yMax,float yMin, 
+                   float zMin,float zMax);
    
    ///Set the dimensions of the seed point volume
    ///\param numX The number in X.
