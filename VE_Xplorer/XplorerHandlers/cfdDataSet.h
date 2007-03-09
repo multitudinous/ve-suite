@@ -44,7 +44,6 @@ cfdDataSet API
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 #include "VE_Xplorer/SceneGraph/Geode.h"
-
 #ifdef USE_OMP
 #define MAX_DATA 20
 #endif
@@ -64,6 +63,7 @@ namespace VE_Xplorer
    class cfdPlanes;
    class DataSetAxis;
    class DataSetScalarBar;
+   //class SeedPoints;
 }
 
 namespace VE_SceneGraph
@@ -258,6 +258,8 @@ namespace VE_Xplorer
         void SetDataSetScalarState( unsigned int state );
         ///Get the scalar bar
         VE_Xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
+
+		
 private:
          std::map< std::string, std::string > dataSetUUIDMap;
          
@@ -315,9 +317,9 @@ private:
          osg::ref_ptr< VE_SceneGraph::Geode > wireframeGeode;
          //VE_SceneGraph::cfdTempAnimation* animation;
 
-			osg::ref_ptr< VE_SceneGraph::DCS > dcs;
+		osg::ref_ptr< VE_SceneGraph::DCS > dcs;
          osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
-			osg::ref_ptr< VE_SceneGraph::Group > classic;
+		osg::ref_ptr< VE_SceneGraph::Group > classic;
          osg::ref_ptr< VE_SceneGraph::Group > textureBased; 
 
          VE_Xplorer::DataSetAxis* dataSetAxes;

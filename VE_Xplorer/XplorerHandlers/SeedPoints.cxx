@@ -163,8 +163,8 @@ void SeedPoints::_initializePoints()
    _stateSet->setAttribute(_pointAttributes);
 
    /// Disable depth test to avoid sort problems and Lighting
-   _stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF);
-   _stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF);
+   _stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
+   _stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
    _stateSet->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
 	osg::ref_ptr<osg::Uniform> pointColor = new osg::Uniform("pointColor",
                                                                               osg::Vec4(1.0,1.0,0.0,1.0));
@@ -182,9 +182,9 @@ void SeedPoints::_initializePoints()
    osg::ref_ptr<osg::Shader> fragShader = new osg::Shader(osg::Shader::FRAGMENT, 
                                                                            fragShaderSource);
    program->addShader(fragShader.get());
-   //_points->setStateSet(_stateSet.get());
+   _points->setStateSet(_stateSet.get());
    _stateSet->addUniform(pointColor.get());
-   setStateSet(_stateSet.get());
+   //setStateSet(_stateSet.get());
 }
 //////////////////////////////////////////////
 void SeedPoints::Toggle(bool onOff)

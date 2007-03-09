@@ -793,6 +793,7 @@ void cfdDataSet::LoadData()
    }
 
    this->SetType();
+  
 }
 
 int cfdDataSet::CountNumberOfParameters( const int numComponents )
