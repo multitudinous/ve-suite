@@ -178,7 +178,7 @@ headers = Split("""
    ClearVisObjectsEventHandler.h
    ChangeCursorEventHandler.h
    SeedPoints.h
-   SeedPointActiveEH.h
+   SeedPointActivateEH.h
    SPBoundEH.h
    SPDimensionsEH.h
    TBTransientModeUpdateEH.h
@@ -224,7 +224,7 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Open','XML'),
                         pj('#', buildDir, 'VE_Open','XML','Model'),
                         pj('#', buildDir, 'VE_Open','XML','CAD')])
-lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --get-vrj-ogl-libs --libs --cflags'%lib_env['VRJugglerVersion'])
 lib_env.ParseConfig('flagpoll bullet --libs --cflags')
 lib_env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%lib_env['BoostVersion'])
 vtk_options.apply( lib_env )

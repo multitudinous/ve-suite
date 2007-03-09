@@ -162,7 +162,7 @@ void Streamlines::CreateControls()
     };
     _integrationRBox = new wxRadioBox( itemDialog1, INTEGRATION_DIR_RBOX, _T("Integration Direction"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox7Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(_integrationRBox, 0, wxALIGN_TOP|wxALL, 5);
-   _integrationRBox->SetStringSelection("both directions");
+   _integrationRBox->SetStringSelection( _("both directions") );
     //wxStaticText* itemStaticText8 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Size(%)"), wxDefaultPosition, wxDefaultSize, 0 );
     //itemStaticBoxSizer3->Add(itemStaticText8, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
@@ -451,7 +451,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
    }
    catch(...)
    {
-	   wxMessageBox( _("Invalid command!"),_(newCommand->GetCommandName().c_str()), 
+	   wxMessageBox( _("Invalid command!"),wxString(newCommand->GetCommandName().c_str(),wxConvUTF8), 
       wxOK | wxICON_INFORMATION );
 	  delete newCommand;
    }
@@ -475,7 +475,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
    }
    catch(...)
    {
-	   wxMessageBox( _("Invalid command!"),_(boundsCommand->GetCommandName().c_str()), 
+	   wxMessageBox( _("Invalid command!"), wxString(boundsCommand->GetCommandName().c_str(),wxConvUTF8), 
       wxOK | wxICON_INFORMATION );
 	  delete newCommand;
    }
@@ -496,7 +496,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
    }
    catch(...)
    {
-	   wxMessageBox( _("Invalid command!"),_(dimensionsCommand->GetCommandName().c_str()), 
+	   wxMessageBox( _("Invalid command!"), wxString(dimensionsCommand->GetCommandName().c_str(),wxConvUTF8), 
       wxOK | wxICON_INFORMATION );
 	  delete dimensionsCommand;
    }
