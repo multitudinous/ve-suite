@@ -166,6 +166,7 @@ void SeedPoints::_initializePoints()
    _stateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
    _stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF|osg::StateAttribute::PROTECTED);
    _stateSet->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+   _stateSet->setBinNumber(99);
 	osg::ref_ptr<osg::Uniform> pointColor = new osg::Uniform("pointColor",
                                                                               osg::Vec4(1.0,1.0,0.0,1.0));
     // frag shader for the points
