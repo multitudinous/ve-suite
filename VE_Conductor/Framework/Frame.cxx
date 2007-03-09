@@ -176,6 +176,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
+   EVT_MENU( WAND, AppFrame::ChangeDevice )
+   EVT_MENU( KEYBOARD_MOUSE, AppFrame::ChangeDevice )
+
    EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
    EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
 
@@ -832,16 +835,21 @@ void AppFrame::CreateMenu()
 
 	xplorerMenu = new wxMenu();
    xplorerDeviceMenu = new wxMenu();
+   xplorerDeviceModeMenu = new wxMenu();
 	xplorerJugglerMenu = new wxMenu();
    xplorerDisplayMenu = new wxMenu();
    xplorerViewMenu = new wxMenu();
    wxMenu* xplorerView = new wxMenu();
 
-   xplorerDeviceMenu->AppendRadioItem( NAVIGATION_MODE, _("Navigation") );
-   xplorerDeviceMenu->AppendRadioItem( SELECTION_MODE,  _("Selection") );
-   xplorerDeviceMenu->Check( NAVIGATION_MODE, true);
+   xplorerDeviceMenu->AppendRadioItem( WAND, _("Wand") );
+   xplorerDeviceMenu->AppendRadioItem( KEYBOARD_MOUSE,  _("Keyboard Mouse") );
+   xplorerDeviceMenu->Check( KEYBOARD_MOUSE, true);
    xplorerDeviceMenu->AppendSeparator();
-   xplorerDeviceMenu->Append( DEVICE_PROPERTIES, _("Properties") );
+   xplorerDeviceMenu->Append( XPLORER_DEVICE_MODE, _("Mode"), xplorerDeviceModeMenu,  _("Used to change the mode of the active device") );
+   xplorerDeviceMenu->Append( DEVICE_PROPERTIES,    _("Properties") );
+   //
+   xplorerDeviceModeMenu->AppendRadioItem( NAVIGATION_MODE, _("Navigation") );
+   xplorerDeviceModeMenu->AppendRadioItem( SELECTION_MODE,  _("Selection") );
    //
    xplorerDisplayMenu->AppendCheckItem( FRAME_RATE,        _("Frame Rate") );
    xplorerDisplayMenu->AppendCheckItem( COORDINATE_SYSTEM, _("Coord System") );
@@ -865,7 +873,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( XPLORER_DEVICES,    _("Device Mode"),        xplorerDeviceMenu,  _("Used to change device modes and properties") );
+   xplorerMenu->Append( XPLORER_DEVICE,    _("Devices"),            xplorerDeviceMenu,  _("Used to change the active device") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
@@ -1332,22 +1340,6 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	network->Load( ConvertUnicode( path.c_str() ) );
 	SubmitToServer( event );      	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
@@ -1999,6 +1991,34 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
    }
 }
 ///////////////////////////////////////////////////////////////////
+void AppFrame::ChangeDevice( wxCommandEvent& WXUNUSED(event) )
+{
+   //Create the command and data value pairs
+   VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
+   VE_XML::Command* command = new VE_XML::Command();
+   
+   std::string device;
+
+   if( xplorerDeviceMenu->IsChecked( WAND ) )
+   {
+      device = "Wand";
+   }
+
+   else if( xplorerDeviceMenu->IsChecked( KEYBOARD_MOUSE ) )
+   {
+      device = "Keyboard Mouse";
+   }
+
+   DVP->SetData( std::string( "Device" ), device );
+   
+   command->SetCommandName( std::string( "CHANGE_DEVICE" ) );
+   command->AddDataValuePair( DVP );
+
+   serviceList->SendCommandStringToXplorer( command );
+   
+   delete command;
+}
+///////////////////////////////////////////////////////////////////
 void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
 {
    //Create the command and data value pairs
@@ -2007,12 +2027,12 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    
    unsigned int mode;
 
-   if( xplorerDeviceMenu->IsChecked( NAVIGATION_MODE ) )
+   if( xplorerDeviceModeMenu->IsChecked( NAVIGATION_MODE ) )
    {
       mode = 0;
    }
 
-   else if( xplorerDeviceMenu->IsChecked( SELECTION_MODE ) )
+   else if( xplorerDeviceModeMenu->IsChecked( SELECTION_MODE ) )
    {
       mode = 1;
    }

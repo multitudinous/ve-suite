@@ -157,10 +157,14 @@ public:
       v21ID_CONTACTS,
       v21ID_PLATFORM,
 
-      XPLORER_DEVICES,
+      XPLORER_DEVICE,
+      WAND,
+      KEYBOARD_MOUSE,
+      DEVICE_PROPERTIES,
+
+      XPLORER_DEVICE_MODE,
       NAVIGATION_MODE,
       SELECTION_MODE,
-      DEVICE_PROPERTIES,
 
       XPLORER_DISPLAY,
       FRAME_RATE,
@@ -242,6 +246,7 @@ public:
    wxMenu *help_menu;
    wxMenu* xplorerMenu;
    wxMenu* xplorerDeviceMenu;
+   wxMenu* xplorerDeviceModeMenu;
    wxMenu* xplorerJugglerMenu;
    wxMenu* xplorerViewMenu;
    wxMenu* xplorerDisplayMenu;
@@ -357,6 +362,9 @@ protected:
    void LaunchSoundsPane(wxCommandEvent& event);
    void LaunchStreamlinePane(wxCommandEvent& event);
    void LaunchRecordScenes( wxCommandEvent& event );
+
+   //Change the active device in xplorer
+   void ChangeDevice(wxCommandEvent& event);
 
    //Change the device mode in xplorer
    void ChangeDeviceMode(wxCommandEvent& event);
