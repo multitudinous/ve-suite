@@ -336,16 +336,16 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 /////////////////////////////////////////////
 void cfdQuatCamHandler::ClearQuaternionData()
 {
-   if ( !QuatCams.empty() )
+   //if ( !QuatCams.empty() )
    {
-      for ( unsigned int i=0; i<QuatCams.size(); i++ )
+      for ( size_t i=0; i<QuatCams.size(); i++ )
       {
          delete QuatCams.at(i);
       } 
       QuatCams.clear();
    }
 
-   if ( !flyThroughList.empty() )
+   //if ( !flyThroughList.empty() )
    {
       flyThroughList.clear();
    }
