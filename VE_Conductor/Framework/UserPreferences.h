@@ -42,6 +42,9 @@ UserPreferences API
 #include <wx/gdicmn.h>
 #include <wx/dialog.h>
 #include <wx/intl.h>
+#include <wx/propdlg.h>
+#include <wx/generic/propdlg.h>
+#include <wx/bookctrl.h>
 
 class wxCheckListBox;
 
@@ -71,7 +74,7 @@ class wxCheckListBox;
  * DataSetLoaderUI class declaration
  */
 
-class UserPreferences: public wxDialog
+class UserPreferences: public wxPropertySheetDialog
 {    
 public:
    /// Constructors

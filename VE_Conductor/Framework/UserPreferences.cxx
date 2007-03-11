@@ -36,6 +36,8 @@
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/checklst.h>
+#include <wx/generic/propdlg.h>
+#include <wx/bookctrl.h>
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/UserPreferences.h"
@@ -59,7 +61,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    prefChkBx = NULL;
    interactiveState = false;
    //SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-   wxDialog::Create( parent, id, caption, pos, size, style );
+   wxPropertySheetDialog::Create( parent, id, caption, pos, size, style );
 
    CreateControls();
    
@@ -79,27 +81,27 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::CreateControls()
 {    
-    UserPreferences* userPrefDialog = this;
+   UserPreferences* userPrefDialog = this;
 
-    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    userPrefDialog->SetSizer(itemBoxSizer2);
-    wxString choices[1];
-    choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
-    
-    prefChkBx = new wxCheckListBox( userPrefDialog, ID_PREFERENCE_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
-    itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
-   ///////////////////////////////////////////////////////
-    wxStdDialogButtonSizer* okCancelButton = new wxStdDialogButtonSizer();
+   CreateButtons(wxOK|wxCANCEL|wxHELP);
 
-    itemBoxSizer2->Add(okCancelButton, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    wxButton* itemButton26 = new wxButton( userPrefDialog, wxID_OK, _("Ok"), wxDefaultPosition, wxDefaultSize, 0 );
-    //itemButton26->SetDefault();
-    okCancelButton->AddButton(itemButton26);
+   // Add page
+   wxPanel* panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+   GetBookCtrl()->AddPage(panel, _("General"));
+   wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
+   panel->SetSizer(itemBoxSizer2);
+   wxString choices[1];
+   choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
+   prefChkBx = new wxCheckListBox( panel, ID_PREFERENCE_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
+   itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+   ////////////////////////////////////////
 
-    wxButton* itemButton27 = new wxButton( userPrefDialog, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0 );
-    okCancelButton->AddButton(itemButton27);
-
-    okCancelButton->Realize();
+   panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+   GetBookCtrl()->AddPage(panel, _("Xplorer Settings"));
+   panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+   GetBookCtrl()->AddPage(panel, _("User Mode"));
+   panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+   GetBookCtrl()->AddPage(panel, _("Defaults"));
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
