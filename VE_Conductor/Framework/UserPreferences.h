@@ -40,11 +40,8 @@ UserPreferences API
 */
 #include <wx/string.h>
 #include <wx/gdicmn.h>
-#include <wx/dialog.h>
 #include <wx/intl.h>
 #include <wx/propdlg.h>
-#include <wx/generic/propdlg.h>
-#include <wx/bookctrl.h>
 
 class wxCheckListBox;
 
