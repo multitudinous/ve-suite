@@ -137,6 +137,7 @@ public:
    float* GetWorldRotation();
 
    void SetHeadRotationFlag( int );
+   void SetSubZeroFlag( int );
 
    // New function for testing the new VECommand structure
    void SetVECommand( VE_XML::Command* veCommand );
@@ -224,6 +225,7 @@ private:
    float rotationStepSize;
 
    int rotationFlag;
+   int subzeroFlag;
 
    // class used to store xml command
    VE_XML::Command* command;

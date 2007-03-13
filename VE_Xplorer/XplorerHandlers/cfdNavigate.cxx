@@ -75,6 +75,7 @@ cfdNavigate::cfdNavigate( )
 
    command = 0;
    rotationFlag = 1;
+   subzeroFlag = 1;
 }
 
 cfdNavigate::~cfdNavigate( )
@@ -301,6 +302,10 @@ void cfdNavigate::updateNavigationFromGUI()
    if ( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )         
    {
       this->SetHeadRotationFlag( this->cfdIso_value );
+   }
+   else if ( !newCommand.compare( "Z_ZERO_PLANE" ) )         
+   {
+      this->SetSubZeroFlag( this->cfdIso_value );
    }
    else if ( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )         
    {
@@ -602,6 +607,14 @@ void cfdNavigate::updateNavigationFromGUI()
    for ( unsigned int i = 0; i < 3; i++ )
       tempArray[ i ] = -this->worldTrans[ i ];
 
+   //Do not allow translation below z = 0 plane
+   if( subzeroFlag ){
+      if( tempArray[2] < 0 )
+      {
+         tempArray[2] = 0;
+      }
+   }
+
    vprDEBUG(vesDBG,3) << " Navigate" << std::endl << vprDEBUG_FLUSH;
    this->worldDCS->SetTranslationArray( tempArray );
    this->worldDCS->SetRotationArray( this->worldRot );   
@@ -621,6 +634,11 @@ float* cfdNavigate::GetWorldRotation()
 void cfdNavigate::SetHeadRotationFlag( int input )
 {
    rotationFlag = input;
+}
+//////////////////////////////////////////
+void cfdNavigate::SetSubZeroFlag( int input )
+{
+   subzeroFlag = input;
 }
 //////////////////////////////////////////
 void cfdNavigate::SetVECommand( VE_XML::Command* veCommand )
