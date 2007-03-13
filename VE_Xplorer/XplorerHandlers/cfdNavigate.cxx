@@ -75,7 +75,7 @@ cfdNavigate::cfdNavigate( )
 
    command = 0;
    rotationFlag = 1;
-   subzeroFlag = 1;
+   subzeroFlag = 0;
 }
 
 cfdNavigate::~cfdNavigate( )

@@ -410,7 +410,7 @@ void NavigationPane::BuildPane( void )
    wxBoxSizer* miscGroup2 = new wxBoxSizer(wxHORIZONTAL);
    subZeroChk = new wxCheckBox( scrollWindow, SUB_ZERO_CHK, wxT("Lower Limit ( z = 0 )"));
 
-   subZeroChk->SetValue( true );
+   subZeroChk->SetValue( false );
    miscGroup2->Add( subZeroChk, 0, wxALL|wxALIGN_LEFT, 5 );
 
    // Add everything to static box sizer
