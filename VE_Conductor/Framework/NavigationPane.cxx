@@ -76,6 +76,7 @@ BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
    EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, NavigationPane::OnRotStepSlider)
    EVT_BUTTON        ( RESET_NAV_POSITION, NavigationPane::OnResetNavPosition)
    EVT_CHECKBOX      ( HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
+   EVT_CHECKBOX      ( SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
   //EVT_LEFT_UP(NavigationPane::onMouse)
 END_EVENT_TABLE()
 
@@ -121,6 +122,8 @@ NavigationPane::NavigationPane()
    SendCommandsToXplorer();
    dataValueName = "ROTATE_ABOUT_HEAD";
    cIso_value = headRotationChk->GetValue();
+   dataValueName = "Z_ZERO_PLANE";
+   cIso_value = subZeroChk->GetValue();
    SendCommandsToXplorer();
 }
 ////////////////////////////////////////////////////
@@ -397,17 +400,24 @@ void NavigationPane::BuildPane( void )
    headRotationChk = new wxCheckBox( scrollWindow, HEAD_ROTATE_CHK,
                                     wxT("Rotate About Users Head"));
    headRotationChk->SetValue( true );
-   miscGroup->Add( headRotationChk,1,wxALL|wxALIGN_LEFT, 5);
+   miscGroup->Add( headRotationChk, 1, wxALL|wxALIGN_LEFT, 5 );
 
    resetNavPosition = new wxButton(scrollWindow, RESET_NAV_POSITION,
                                     wxT("Reset Nav Position"));
-   miscGroup->Add( resetNavPosition,1,wxALL|wxALIGN_LEFT, 5);
-   miscGroup->Add( picSizer,1,wxALIGN_RIGHT);
+   miscGroup->Add( resetNavPosition,1,wxALL|wxALIGN_LEFT, 5 );
+   miscGroup->Add( picSizer, 1, wxALIGN_RIGHT);
+
+   wxBoxSizer* miscGroup2 = new wxBoxSizer(wxHORIZONTAL);
+   subZeroChk = new wxCheckBox( scrollWindow, SUB_ZERO_CHK, wxT("Lower Limit ( z = 0 )"));
+
+   subZeroChk->SetValue( true );
+   miscGroup2->Add( subZeroChk, 0, wxALL|wxALIGN_LEFT, 5 );
 
    // Add everything to static box sizer
-   buttonStaticBoxSizer->Add( navCol,4,wxALIGN_CENTER_HORIZONTAL);
-   buttonStaticBoxSizer->Add( stepSizeGroup,2,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   buttonStaticBoxSizer->Add( miscGroup,2,wxALL|wxALIGN_LEFT, 5);
+   buttonStaticBoxSizer->Add( navCol,        4, wxALIGN_CENTER_HORIZONTAL      );
+   buttonStaticBoxSizer->Add( stepSizeGroup, 2, wxALL|wxALIGN_LEFT|wxEXPAND, 5 );
+   buttonStaticBoxSizer->Add( miscGroup2,    0, wxALL|wxALIGN_LEFT,          5 );
+   buttonStaticBoxSizer->Add( miscGroup,     2, wxALL|wxALIGN_LEFT,          5 );
 
    scrollWindow->SetSizer( buttonStaticBoxSizer );
 }
@@ -506,7 +516,14 @@ void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
    cIso_value = headRotationChk->GetValue();
    SendCommandsToXplorer();
 }
-//////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED(event) )
+{
+   dataValueName = "Z_ZERO_PLANE";
+   cIso_value = subZeroChk->GetValue();
+   SendCommandsToXplorer();
+}
+///////////////////////////////////////////////////////////////////
 void NavigationPane::SendCommandsToXplorer( void )
 {
    // Create the command and data value pairs

@@ -101,6 +101,7 @@ public:
       TRANS_STEP_SLIDER,
       ROT_STEP_SLIDER,
       HEAD_ROTATE_CHK,
+      SUB_ZERO_CHK,
       RESET_NAV_POSITION
       //NONE= -1000
    };
@@ -123,6 +124,7 @@ public:
    void OnRotStepSlider( wxScrollEvent& event);
    void OnResetNavPosition( wxCommandEvent& event );
    void OnHeadCheck( wxCommandEvent& event );
+   void OnSubZeroCheck( wxCommandEvent& event );
    void SendCommandsToXplorer( void );
 
    // Build the navigation pane
@@ -151,6 +153,7 @@ protected:
    wxSlider*   translationStepSize;
    wxSlider*   rotationStepSize;
    wxCheckBox* headRotationChk;
+   wxCheckBox* subZeroChk;
    wxButton*   resetNavPosition;
 protected:
    wxImage* _image1;

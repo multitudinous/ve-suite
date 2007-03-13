@@ -181,6 +181,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
    EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceMode )
+   EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -267,11 +269,11 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 	directory	= _("NO_FILE_OPENED");
 	fname			= _("NO_FILE_OPENED");
 
- 
+
    GetConfig(NULL);
 
 	CreateMenu();
-   //CreateTB();
+   CreateTB();
    CreateStatusBar();
    SetStatusText( _("VE-Conductor Status") );
 
@@ -922,17 +924,17 @@ void AppFrame::CreateMenu()
 
 void AppFrame::CreateTB()
 {
-   toolbar=CreateToolBar(wxTB_FLAT|wxTB_HORIZONTAL);
-   toolbar->SetBackgroundColour(wxColour(192,192,192));
-   toolbar->SetToolBitmapSize(wxSize(32,32));
-   wxBitmap selection_bitmap(selection32x32_xpm);
-   toolbar->AddTool(ID_SELECTION_TOOLBAR, _(""),selection_bitmap,_("Selection"),wxITEM_RADIO);
-   wxBitmap navigation_bitmap(navigation32x32_xpm);
-   toolbar->AddTool(ID_NAVIGATION_TOOLBAR, _(""),navigation_bitmap, _("Navigation"),wxITEM_RADIO);
+   toolbar = CreateToolBar( wxTB_FLAT | wxTB_HORIZONTAL );
+   toolbar->SetBackgroundColour( wxColour( 192, 192, 192 ) );
+   toolbar->SetToolBitmapSize( wxSize( 32, 32 ) );
+   wxBitmap navigation_bitmap( navigation32x32_xpm );
+   toolbar->AddTool( NAVIGATION_TOOLBAR, _( "" ), navigation_bitmap, _( "Navigation" ), wxITEM_RADIO );
+   wxBitmap selection_bitmap( selection32x32_xpm );
+   toolbar->AddTool( SELECTION_TOOLBAR, _( "" ), selection_bitmap, _( "Selection" ), wxITEM_RADIO );
    toolbar->AddSeparator();
    toolbar->Realize();
 
-   this->SetToolBar(toolbar);
+   this->SetToolBar( toolbar );
 }
 
 void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
@@ -2006,7 +2008,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& WXUNUSED(event) )
 
    else if( xplorerDeviceMenu->IsChecked( KEYBOARD_MOUSE ) )
    {
-      device = "Keyboard Mouse";
+      device = "KeyboardMouse";
    }
 
    DVP->SetData( std::string( "Device" ), device );
@@ -2036,6 +2038,18 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    {
       mode = 1;
    }
+
+   /*
+   else if( toolbar-> )
+   {
+      mode = 0;
+   }
+
+   else if( xplorerDeviceModeMenu->IsChecked( SELECTION_MODE ) )
+   {
+      mode = 1;
+   }
+   */
 
    DVP->SetData( std::string( "Mode" ), mode );
    
