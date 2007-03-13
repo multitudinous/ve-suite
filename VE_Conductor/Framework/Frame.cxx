@@ -511,19 +511,19 @@ void AppFrame::GetConfig(wxConfig* config)
 		f_visualization = true;
 	}
 
-	key = RECENT_FILE;
-	wxString pathDummy;
-	exist = true;
-	int counter = 0;
+   key = LOCATION + wxString::Format( _("%d"), m_frameNr) + _T("/") + RECENT_FILE;
+   wxString pathDummy;
+   int counter = 0;
+   exist = cfg->Exists( key + wxString::Format( _("%i"), counter) );
+   while( exist == true )	
+   {
+      exist = cfg->Read( key + wxString::Format (_("%i"), counter), &pathDummy );
+      if( exist == true )
+         recentFileArchive.push_back( wxFileName(pathDummy) );
+      counter++;
+   }
 
-	while( exist == true )	
-	{
-		exist = cfg->Read( key + wxString::Format (_("%i"), counter), &pathDummy );
-		if( exist == true )		recentFileArchive.push_back( wxFileName(pathDummy) );
-		counter++;
-	}
-
-  if (!config) delete cfg;
+   if (!config) delete cfg;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -625,19 +625,19 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 {
 	//store recent menus in config
 	wxConfig* cfg = config;
-	if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+	if (!config) cfg = new wxConfig( wxTheApp->GetAppName() );
 	
-	wxString key = RECENT_FILE;
+   wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr) + _T("/") + RECENT_FILE;
 	bool exist = false;
 
 	//remove old
 	for(int i=0; i<10; i++)
 	{
-		exist = cfg->HasEntry (key + wxString::Format(_("%i"), i));
+		exist = cfg->HasEntry(key + wxString::Format(_("%i"), i));
 
 		if(exist)	
 		{	
-			cfg->DeleteEntry (key + wxString::Format(_("%i")), false);
+			cfg->DeleteEntry( key + wxString::Format(_("%i")), false);
 		}
 	}
 

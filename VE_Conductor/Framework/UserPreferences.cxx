@@ -38,6 +38,7 @@
 #include <wx/checklst.h>
 #include <wx/generic/propdlg.h>
 #include <wx/bookctrl.h>
+#include <wx/panel.h>
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/UserPreferences.h"

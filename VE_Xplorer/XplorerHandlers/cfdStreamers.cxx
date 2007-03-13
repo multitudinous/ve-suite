@@ -528,22 +528,22 @@ void cfdStreamers::CreateSeedPoints( void )
       points->Delete();
    }
    points = vtkPoints::New();
-   double deltaX = (xMax-xMin)/double(xValue+1);
-   double deltaY = (yMax-yMin)/double(yValue+1);
-   double deltaZ = (zMax-zMin)/double(zValue+1);
+   double deltaX = (xMax-xMin)/double(xValue-1);
+   double deltaY = (yMax-yMin)/double(yValue-1);
+   double deltaZ = (zMax-zMin)/double(zValue-1);
    
-   for (unsigned int i = 1; i <= xValue; ++i)
+   for (unsigned int i = 0; i < xValue; ++i)
 	{
       xLoc = xMin + (i*deltaX);
-      for (unsigned int j = 1; j <= yValue; ++j)
+      for (unsigned int j = 0; j < yValue; ++j)
       {
          yLoc = yMin + (j*deltaY);
-         for(unsigned int k = 1; k <= zValue; k++)			
+         for(unsigned int k = 0; k < zValue; k++)			
 			{
             //points added in ptMin + length*iteration/(number of equal segments)
             //where (number of equal segments) = ptValue+1
             zLoc = zMin + (k*deltaZ);
-//std::cout << xLoc << " " <<  yLoc << " " <<  zLoc << std::endl;
+            //std::cout << xLoc << " " <<  yLoc << " " <<  zLoc << std::endl;
             points->InsertPoint( number, xLoc, yLoc, zLoc ); 
             number=number+1;
 			}
