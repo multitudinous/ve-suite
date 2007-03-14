@@ -278,7 +278,7 @@ void CADEntityHelper::LoadFile( std::string filename
    if ( twosidedlighting )
    {
       lightModel = new osg::LightModel;
-      lightModel->setTwoSided( false );
+      lightModel->setTwoSided( true );
    }
       
       

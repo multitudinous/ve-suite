@@ -86,7 +86,7 @@ bool Streamlines::Create( wxWindow* parent, wxWindowID id,
    _sizeSlider = 0;
    _nPointsSlider = 0;
    _streamlineDirection = "x";
-   _integrationDirection = "forward";
+   _integrationDirection = "both directions";
    _cursorType = "none";
    _streamSize = .5;
    _nPointsPerPlane = 2;

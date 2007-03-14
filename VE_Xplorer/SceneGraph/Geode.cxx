@@ -43,6 +43,7 @@
 
 #include <osg/Geode>
 #include <osg/Node>
+#include <osg/LightModel>
 #include <osg/CopyOp>
 #elif _OPENSG
 #endif
@@ -83,6 +84,9 @@ void Geode::TranslateToGeode( vtkActor* actor )
    VE_SceneGraph::vtkActorToPF( actor, this, _vtkDebugLevel );
 #elif _OSG
    VE_SceneGraph::vtkActorToOSG(actor, this, _vtkDebugLevel);
+   osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
+   lightModel->setTwoSided( true );
+   this->getOrCreateStateSet()->setAttributeAndModes( lightModel.get(), osg::StateAttribute::ON);
 #elif _OPENSG
 #endif
 }

@@ -344,12 +344,14 @@ void cfdExecutive::GetEverything( void )
          // if a module is on the pugins map but not on the id map
          foundPlugin->second->RemoveSelfFromSG();
          cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
-         // Must delete current instance of vebaseclass object
-         delete _plugins[ foundPlugin->first ];
-         _plugins.erase( foundPlugin++ );
+         // Remove a plugins event handler map
+         // do this before the foundPlugin is deleted
          std::map< int, std::map< std::string, cfdVEBaseClass* > >::iterator cmdIter;
          cmdIter = pluginEHMap.find( foundPlugin->first );
          pluginEHMap.erase( cmdIter );
+         // Must delete current instance of vebaseclass object
+         delete _plugins[ foundPlugin->first ];
+         _plugins.erase( foundPlugin++ );
       }
       else
       {
