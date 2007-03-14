@@ -633,6 +633,15 @@ class Launch:
             ##Write the libraries & paths.
             self.EnvAppend(libraryPath, libList, ':')
             self.EnvAppend("PATH", pathList, ':')
+        ##Update other vars listed.
+        for var in self.settings["ExtraVariables"]:
+            if self.settings["Debug"]:
+                if os.getenv(var) != None:
+                    print "%s: %s" %(var, os.getenv(var))
+                else:
+                    print "%s isn't set." %(var)
+            if os.getenv(var) != None:
+                self.WriteToClusterScript(var)
 
 
     def EnvAppend(self, var, appendages, sep):
@@ -673,6 +682,7 @@ class Launch:
         if self.settings["Debug"]:
             print "%s: %s" %(var, os.getenv(var))
 
+
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.
 
@@ -688,4 +698,3 @@ class Launch:
                 self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
         elif windows:
             self.clusterScript += 'set %s=%s\n' %(var, os.getenv(var))
-

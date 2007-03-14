@@ -31,7 +31,8 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "ClusterMaster",
                  "OSGNotifyLevel",
                  "User",
-                 "FileDir"]
+                 "FileDir",
+                 "ExtraVariables"]
     if saveLastConfig:
         ##Variables that only the main config stores.
         strWrites.append("Directory")
@@ -82,7 +83,8 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "BuilderDir",
                 "OSGNotifyLevel",
                 "User",
-                "FileDir"]
+                "FileDir",
+                "ExtraVariables"]
     intReads = ["Mode",
                 "VPRDebug",
                 "MasterWait",

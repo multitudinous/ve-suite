@@ -58,11 +58,11 @@ config.SetPath(DEFAULT_CONFIG)
 wx.Config.Set(config)
 
 ##TESTERS
-print "Path: ", sys.path[0]
-print "Executable: ", sys.executable
-print "CWD: ", os.getcwd()
-print "AbsPath: ", os.path.abspath(sys.executable)
-print "Location of velauncher: ", VELAUNCHER_DIR
+##print "Path: ", sys.path[0]
+##print "Executable: ", sys.executable
+##print "CWD: ", os.getcwd()
+##print "AbsPath: ", os.path.abspath(sys.executable)
+##print "Location of velauncher: ", VELAUNCHER_DIR
 
 class LauncherWindow(wx.Frame):
     """Manages the launcher's main window and its data.

@@ -4,6 +4,7 @@ import os
 from velBase import *
 from velClusterDict import *
 from velCoveredConfig import *
+from velExtraVarsWindow import *
 from string import strip, replace
 
 class ClusterWindow(wx.Dialog):
@@ -18,12 +19,7 @@ class ClusterWindow(wx.Dialog):
         OnClose(event)
     """
     def __init__(self, parent, state, title = "Cluster Settings"):
-        """Sets up the Jconf window.
-
-        Keyword arguments:
-        D: The linked Cluster dictionary this window modifies.
-        clusterMaster: Name of the cluster's Master.
-        """
+        """Sets up the Jconf window."""
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title,
                            style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         ##Data storage.
@@ -36,6 +32,10 @@ class ClusterWindow(wx.Dialog):
         self.bAdd.SetToolTip(wx.ToolTip("Add a slave listing."))
         self.bDelete = wx.Button(self, -1, "Delete")
         self.bDelete.SetToolTip(wx.ToolTip("Delete a slave listing."))
+        self.bExtraVars = wx.Button(self, -1, "Pass Extra Vars")
+        self.bExtraVars.SetToolTip(wx.ToolTip("Set extra environment" +
+                                              " variables for VE-Suite to" +
+                                              " pass."))
         ##Build master display.
         self.masterCtrl = wx.TextCtrl(self, -1)
         self.masterCtrl.SetToolTip(wx.ToolTip("Name the master computer."))
@@ -55,6 +55,7 @@ class ClusterWindow(wx.Dialog):
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
+        self.Bind(wx.EVT_BUTTON, self.ExtraVars, self.bExtraVars)
         self.Bind(wx.EVT_TEXT, self.UpdateExampleCode, self.userCtrl)
         self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
         self.Bind(wx.EVT_CLOSE, self.OnClose)
@@ -62,7 +63,8 @@ class ClusterWindow(wx.Dialog):
         ##Add/Rename/Delete buttons.
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.AddMany([self.bAdd, VERTICAL_SPACE,
-                          self.bDelete])
+                          self.bDelete, VERTICAL_SPACE,
+                          self.bExtraVars])
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         ##List field + buttons.
         columnSizer.Add(self.clustList, 1, wx.EXPAND)
@@ -212,6 +214,12 @@ class ClusterWindow(wx.Dialog):
             ##Update other data & display.
             self.UpdateData()
             self.UpdateDisplay()
+
+    def ExtraVars(self, event):
+        """Opens up the Extra Vars editing window."""
+        extraVarsWindow = ExtraVarsWindow(self, self.state)
+        extraVarsWindow.ShowModal()
+        
 
     def OnClose(self, event):
         """Closes ClusterWindow."""

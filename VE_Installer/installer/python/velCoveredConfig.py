@@ -151,4 +151,6 @@ class CoveredConfig(CoveredState):
         ##Change JugglerDep
         if surface["JugglerDep"] == None:
             surface["JugglerDep"] = "None"
+        ##Split ExtraVars
+        surface["ExtraVariables"] = CreateListFromText(surface["ExtraVariables"])
         return surface

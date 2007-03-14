@@ -21,11 +21,13 @@ if hasattr(sys, 'frozen') and sys.frozen == 1:
     VELAUNCHER_DIR = os.path.realpath(os.path.abspath(sys.executable))
 else:
     VELAUNCHER_DIR = sys.path[0]
+
 ##Fixes directory passed for velauncher to vesuite.
 if os.path.basename(VELAUNCHER_DIR) == "velauncher":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR),
                          "share", "vesuite", "examples")
+
 ##Image settings.
 IMAGES_DIR = join(os.path.dirname(VELAUNCHER_DIR), "bin", "installerImages")
 if not os.path.isdir(IMAGES_DIR):
@@ -39,6 +41,7 @@ if windows:
 else:
     CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.tsh")
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
+
 ##Config settings.
 CONFIG_FILE = "VE-Suite-Launcher"
 DEFAULT_CONFIG = "previous"
@@ -48,6 +51,7 @@ DEPS_CONFIG = "Dependencies"
 RECENTFILES_CONFIG = "RecentFiles"
 RECENT_COUNT = 10
 RECENT_MENU_ID = 600
+
 ##Default setting values.
 DEFAULT_TAO_MACHINE = "localhost"
 DEFAULT_TAO_PORT = "1239"
@@ -55,6 +59,7 @@ RADIO_XPLORER_LIST = ["Non-Cluster", "Cluster"]
 XPLORER_TYPE_LIST = ["OSG-VEP", "OSG-VEPC"]
 DEFAULT_SOLO_XPLORER = XPLORER_TYPE_LIST[0]
 DEFAULT_CLUSTER_XPLORER = XPLORER_TYPE_LIST[1]
+
 ##Settings for launcher's GUI layout.
 INITIAL_WINDOW_SIZE = (500, -1)
 INITIAL_JCONF_WINDOW_SIZE = (250, 250)
@@ -73,6 +78,9 @@ VERTICAL_SPACE = (-1, BORDER)
 HORIZONTAL_SPACE = (BORDER, -1)
 LEFT_MARGIN = HORIZONTAL_SPACE
 NULL_SPACE = (0, 0)
+  ##Used in text input lists we need to separate.
+SEPARATOR_CHARS = [',', ':', ';']
+
 ##Covers for the CoveredConfig.
 ##Higher-numbered covers "cover up" lower-numbered covers.
 UNAVAILABLE_LAYER = 0
@@ -178,6 +186,18 @@ def EnvVarEmpty(var):
         return True
     else:
         return False
+
+
+def CreateListFromText(textBlock):
+    """Turns a text list into an array list.
+    
+    First, replaces all chars in SEPARATOR_CHARS with spaces.
+    Then, splits the textBlock based on whitespace."""
+    for charToReplace in SEPARATOR_CHARS:
+        textBlock = textBlock.replace(charToReplace, ' ')
+        print textBlock
+    return textBlock.split()
+
 
 def usage():
     """Prints a list of acceptable arguments for command line velauncher.py."""
