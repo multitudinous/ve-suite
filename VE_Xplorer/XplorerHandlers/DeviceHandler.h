@@ -82,8 +82,7 @@ private:
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
    VE_Xplorer::Device* active_device;
-   bool navigation;
-
+   int device_mode;
 };
 }
 

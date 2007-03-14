@@ -21,7 +21,7 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
-navigation( true )
+device_mode( 0 )
 {
    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
@@ -69,15 +69,7 @@ void DeviceHandler::SetActiveDevice( std::string device )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetDeviceMode( unsigned int mode )
 {
-   if( mode == 0 )
-   {
-      navigation = true;
-   }
-
-   else
-   {
-      navigation = false;
-   }
+   device_mode = mode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
@@ -85,12 +77,12 @@ void DeviceHandler::ProcessDeviceEvents()
    //Update Device properties
    ExecuteCommands();
 
-   if( navigation )
+   if( device_mode == 0 )
    {
       active_device->UpdateNavigation();
    }
 
-   else
+   else if( device_mode == 1 )
    {
       active_device->UpdateSelection();
    }

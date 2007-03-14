@@ -62,8 +62,8 @@ public:
 
    virtual void Traverse();
 
-private:			
-
+protected:
+   
 };
 }
 

@@ -59,44 +59,50 @@ public:
 	virtual void UpdateSelection();
 
 	void Animate( bool animate );
-	void Reshape( unsigned int width, unsigned int height );
-	void SetFOVy( float _top, float _bottom, float _near );
+	void Reshape( unsigned int w, unsigned int h );
+	void SetFOVy( float t, float b, float n );
    void ResetTransforms();
    void FrameAll();
 
 private:
    gadget::KeyboardMouseInterface mKeyboard;
 
-   void TBKeyboard( int key );
-	void TBMouse( int button, int state, int x, int y );
-	void TBMotion( int x, int y );
+   void ProcessKBEvents( int mode );
 
-	bool tb_moving;
-	bool tb_animate;
+   int key;
+	int button;
+   int state;
+   int x;
+   int y;
 
-	unsigned int tb_width;
-	unsigned int tb_height;
+   unsigned int width;
+	unsigned int height;
 
-	int tb_key;
-	int tb_button;
+   float aspect_ratio;
+	float fovy_ratio;
+	float fovy;
+
+   void TBKeyboard();
+	void TBMouse();
+	void TBMotion();
+
+   void RotateView( float dx, float dy );
+	void Twist( float dx, float dy );
+	void Zoom( float dy );
+	void Pan( float dx, float dy );
+	void Rotate( float x_val, float y_val, float z_val, float angle );
 
 	float tb_currPos[2];
 	float tb_prevPos[2];
 	float tb_magnitude;
 	float tb_sensitivity;
-	float tb_aspectRatio;
-	float tb_FOVyRatio;
-	float tb_FOVy;
+
+   bool tb_animate;
 
 	//Is of form [row][column]
 	gmtl::Matrix44f tb_transform;
 	gmtl::Matrix44f tb_accuTransform;
 
-	void RotateView( float dx, float dy );
-	void Twist( float dx, float dy );
-	void Zoom( float dy );
-	void Pan( float dx, float dy );
-	void Rotate( float x, float y, float z, float angle );
 };
 }
 
