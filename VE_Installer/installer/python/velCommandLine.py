@@ -8,7 +8,7 @@ from velCoveredConfig import *
 from velServerKillWindow import *
 from velJconfDict import *
 from velClusterDict import *
-from velConfigFunctions import *
+from velSaveLoadConfig import *
 import velShell
 import velArguments
 

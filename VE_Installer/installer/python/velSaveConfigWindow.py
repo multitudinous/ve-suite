@@ -4,7 +4,7 @@ import wx ##Used for GUI
 
 from velBase import *
 from velCoveredConfig import *
-from velConfigFunctions import *
+from velSaveLoadConfig import *
 
 class SaveConfigWindow(wx.Dialog):
     """Lets user choose name to save config under.

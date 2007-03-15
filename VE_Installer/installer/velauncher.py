@@ -34,7 +34,7 @@ except:
 from velModes import *
 from velCoveredConfig import *
 import velDependencies
-from velConfigFunctions import *
+from velSaveLoadConfig import *
 from velSaveConfigWindow import *
 from velJconfDict import *
 from velClusterDict import *
