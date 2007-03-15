@@ -201,7 +201,6 @@ public:
 
 		// always enum these last 
 		OPEN_RECENT_CONNECTION_MENU,
-		v21ID_CLEAR_RECENT,
 		v21ID_BASE_RECENT,
    };
 

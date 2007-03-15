@@ -154,7 +154,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 	EVT_MENU(v21ID_BASE_RECENT+7, AppFrame::OpenRecentFile)
 	EVT_MENU(v21ID_BASE_RECENT+8, AppFrame::OpenRecentFile)
 	EVT_MENU(v21ID_BASE_RECENT+9, AppFrame::OpenRecentFile)
-	EVT_MENU(v21ID_CLEAR_RECENT,  AppFrame::ClearRecentFile)
 
    EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
    EVT_MENU(QUERY_FROM_SERVER, AppFrame::QueryFromServer)
@@ -265,9 +264,9 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    _displayMode = "Tablet";
    _detectDisplayAndCreate();
    
-	path			= _("NO_FILE_OPENED");
-	directory	= _("NO_FILE_OPENED");
-	fname			= _("NO_FILE_OPENED");
+	path			= _("");
+	directory	= _("");
+	fname			= _("");
 
 
    GetConfig(NULL);
@@ -997,7 +996,7 @@ void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
 void AppFrame::Save( wxCommandEvent& event )
 {
    //First time call save will be the same as SaveAs
-   if ( path == wxString("", wxConvUTF8) ) 
+   if ( path == wxString( "", wxConvUTF8) ) 
    {
       SaveAs( event );
    }
@@ -1156,38 +1155,7 @@ void AppFrame::InitRecentFile()
 			openRecentMenu->Append (openRecentFile_ID + i, dummyString.SubString(0, dummyString.size() - 5));
 		}
 	}
-
-	openRecentMenu->AppendSeparator();
-	openRecentMenu->Append( v21ID_CLEAR_RECENT, _("Clear recent file list") );
 }
-
-//////////////////////////////////////////////////////////////////////////
-void AppFrame::ClearRecentFile( wxCommandEvent& WXUNUSED(event) )
-{
-	// TODO maintaing list with only the current file will not work due to how Open(.) is structured, it doesn't always save the full path
-	
-	if(path == _("NO_FILE_OPENED"))
-	{
-		recentFileArchive.clear();
-	}
-	else
-	{
-		wxFileName vesCurrentOpen = recentFileArchive.at(recentFileArchive.size()-1);
-		recentFileArchive.clear();
-		recentFileArchive.push_back(vesCurrentOpen); 
-	}
-
-	
-
-
-	//wxFileName currentFile = NULL;
-	//if( ??? )								currentFile = ???
-	
-	//if( currentFile )					recentFileArchive.push_back(currentFile);
-
-	SetRecentMenu();
-}
-
 //////////////////////////////////////////////////////////////////////////
 void AppFrame::DeleteRecentFile(wxFileName vesFileName)
 {
@@ -1256,10 +1224,6 @@ void AppFrame::SetRecentMenu()
 	int openRecentFile_ID = v21ID_BASE_RECENT;
 	wxString dummyFullName, dummyDirectory;
 
-	// clear menu
-	openRecentMenu->Delete( v21ID_CLEAR_RECENT );
-	openRecentMenu->Delete( wxID_SEPARATOR ); //&wxMenuItem::IsSeparator );
-
 	size_t menuSize = openRecentMenu->GetMenuItemCount();
 	while( menuSize > 0 )
 	{
@@ -1281,9 +1245,6 @@ void AppFrame::SetRecentMenu()
 		openRecentMenu->Append( openRecentFile_ID + i, dummyFullName.SubString(0, dummyFullName.size() - 5) );
 		openRecentMenu->SetHelpString( openRecentFile_ID + i, dummyDirectory );
 	}
-
-	openRecentMenu->AppendSeparator();
-	openRecentMenu->Append( v21ID_CLEAR_RECENT, _("Clear recent file list") );
 }
 
 //////////////////////////////////////////////////////////////////////////
