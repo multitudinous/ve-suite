@@ -173,6 +173,11 @@ opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If true, make the distribution packages as part of the build', 'no')
 opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'yes')
 opts.Add('tao', 'If true, use TAO in the build', 'yes')
+##Added options for velauncher build.
+##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
+##opts.Add('CxPath', "Set CXPATH to find 
+##opts.Add('PythonHome', "Set PYTHONHOME to find python's executable and libs", '')
+##End added velauncher build options.
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
 opts.Add('options_file', 'Provide a file name for the options caches', '')
 opts.Add('SVN_Previous_Date', 'helptet','')
@@ -205,7 +210,7 @@ Targets:
 
       ce - Build VE-CE
       > scons ce
-
+      
    Make sure that:
       vrjuggler, 
       gmtl, 
@@ -308,7 +313,7 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv['libdir'] = LIBDIR
 
    distDir = pj(buildDir, 'dist')
-   Export('PREFIX', 'LIBDIR', 'distDir')
+   Export('PREFIX', 'LIBDIR', 'distDir')##, 'LauncherExe')
 
    # Create the GMTL package
    ves_pkg = sca_auto_dist.Package(name="VE_Suite", version = "%i.%i.%i"%VE_SUITE_VERSION,
@@ -443,5 +448,27 @@ if not SConsAddons.Util.hasHelpFlag():
    
    ##Install it if the packages have been setup to do so
    baseEnv.Alias('install',[installed_targets,PREFIX])
+   
+   ##Compression calls.
+   ##NOTE: If VE_Suite isn't the only thing written to PREFIX,
+   ## these will compress everything in PREFIX. Could get ugly.
+   ##Tar it if set to do so.
+   if 'tar' in COMMAND_LINE_TARGETS:
+      tarFile = "vesuite.tar.gz"
+      baseEnv.Alias('tar', tarFile)
+      baseEnv.Append(TARFLAGS = '-c -z')
+      baseEnv.Tar(tarFile, PREFIX)
+   ##Zip it if set to do so.
+   ##NOTE: If zip says it's missing files & crashing,
+   ## try deleting .sconsign.dblite from the VE_Suite directory.
+   if 'zip' in COMMAND_LINE_TARGETS:
+      zipFile = "vesuite.zip"
+      baseEnv.Alias('zip', zipFile)
+      ##zipped = [pj( PREFIX, 'bin' ),
+      ##          pj( PREFIX, 'include' ),
+      ##          pj( PREFIX, 'lib' ),
+      ##          pj( PREFIX, 'share' )]
+      baseEnv.Zip(zipFile, PREFIX)
+   
    Default('.')
 
