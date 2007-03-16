@@ -1,3 +1,4 @@
+// TODO: Fill in documentation, document the virtual functions.
 #ifndef UNIT_WRAPPER_H_
 #define UNIT_WRAPPER_H_
 
@@ -13,6 +14,7 @@ namespace VE_CE
    class EventHandler;
 }
 
+/// ???
 class  UnitWrapper : public virtual POA_Body::Unit
 {
 public:

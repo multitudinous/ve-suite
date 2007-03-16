@@ -34,11 +34,11 @@
 /*!\file EventHandler.h
   EventHandler API
   */
-/*!\class EventHandler
- * Base class for event handling.
- */
 /*!\namespace VE_CE
  * Namespace for ve-event handlers.
+ */
+/*!\class VE_CE::EventHandler
+ * Base class for event handling.
  */
 
 namespace VE_XML

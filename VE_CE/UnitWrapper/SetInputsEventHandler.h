@@ -34,11 +34,8 @@
 /*!\file SetInputsEventHandler.h
   SetInputsEventHandler API
   */
-/*!\class SetInputsEventHandler
+/*!\class VE_CE::SetInputsEventHandler
  * Inputs for event handling.
- */
-/*!\namespace VE_CE
- * Namespace for ve-event handlers.
  */
 #include "VE_CE/UnitWrapper/EventHandler.h"
 

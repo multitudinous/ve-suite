@@ -34,11 +34,8 @@
 /*!\file GetResultsEventHandler.h
   GetResultsEventHandler API
   */
-/*!\class GetResultsEventHandler
+/*!\class VE_CE::GetResultsEventHandler
  * Inputs for event handling.
- */
-/*!\namespace VE_CE
- * Namespace for ve-event handlers.
  */
 #include "VE_CE/UnitWrapper/EventHandler.h"
 
