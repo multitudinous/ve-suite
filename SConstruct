@@ -363,7 +363,8 @@ if not SConsAddons.Util.hasHelpFlag():
    tempName = pj(inst_paths['flagpoll'], pc_filename)
    cppdom_pc = baseEnv.ConfigBuilder(tempName, 
                            pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
-   installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), tempName)
+   if 'install' in COMMAND_LINE_TARGETS:
+   	installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), tempName)
    #baseEnv.AddPostAction(cppdom_pc, Chmod('$TARGET', 0644))
    #baseEnv.Install(inst_paths['bin'], cppdom_pc)
    
