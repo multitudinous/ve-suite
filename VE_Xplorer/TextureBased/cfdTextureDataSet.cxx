@@ -49,21 +49,20 @@ using namespace VE_TextureBased;
 //Constructor                   //
 //////////////////////////////////
 TextureDataInfo::TextureDataInfo()
+   : _name(" "), _tm(0)
 {
-   _name = " ";
-   _tm = 0;
 }
 ////////////////////////////////////////////////////////////
 TextureDataInfo::TextureDataInfo(const TextureDataInfo& tdi)
+   : _name(tdi._name), _tm(new cfdTextureManager(*tdi._tm))
 {
-   _name = tdi._name;
-   _tm = new cfdTextureManager(*tdi._tm);
 }
 ///////////////////////////////////
 TextureDataInfo::~TextureDataInfo()
 {
    _name.clear();
-   if(_tm){
+   if(_tm)
+   {
       delete _tm;
       _tm = 0;
    }
@@ -105,35 +104,33 @@ TextureDataInfo& TextureDataInfo::operator=(const TextureDataInfo& tdi)
 //Constructor                       //
 //////////////////////////////////////
 cfdTextureDataSet::cfdTextureDataSet()
+   : _fileName('\0'), _volVisNode(new cfdVolumeVisualization), _nScalars(0),
+     _nVectors(0), _activeTM(0), _activeDataType(SCALAR)
 {
-   _fileName = '\0';
-   _volVisNode = new cfdVolumeVisualization();
-   _nScalars = 0;
-   _nVectors = 0;
-   _activeTM = 0;
-   _activeDataType = SCALAR;
 }
 ///////////////////////////////////////
 //Destructor                         //
 ///////////////////////////////////////
 cfdTextureDataSet::~cfdTextureDataSet()
 {
-   if(!_fileName.empty()){
+   if(!_fileName.empty())
+   {
       _fileName.clear();
    }
-   if(_volVisNode){
+   if(_volVisNode)
+   {
       delete _volVisNode;
       _volVisNode = 0;
    }
    
    for(unsigned int i = 0; i < _nScalars; i++)
    {
-      delete _scalars.at(i);
+      delete _scalars[i];
    }
    _scalars.clear();
    for(unsigned int i = 0; i < _nVectors; i++)
    {
-      delete _vectors.at(i);
+      delete _vectors[i];
    }
    _vectors.clear();
 }
@@ -191,11 +188,7 @@ cfdTextureDataSet::DataType cfdTextureDataSet::ActiveDataType()
 ////////////////////////////////////////////////////////////////
 cfdTextureManager* cfdTextureDataSet::GetActiveTextureManager()
 {
-   if(_activeTM)
-   {
-      return _activeTM;
-   }
-   return 0;
+   return _activeTM;
 }
 //////////////////////////////////////////////////////////////
 std::string cfdTextureDataSet::ScalarName(unsigned int index)
@@ -271,7 +264,7 @@ int cfdTextureDataSet::FindScalar(std::string name)
 {
    for(unsigned int i = 0; i < _nScalars; i++)
    {
-      if(strstr(_scalars.at(i)->GetName().c_str(),name.c_str()))
+      if(_scalars.at(i)->GetName().find(name) != std::string::npos)
       {
          return i;
       }
@@ -283,7 +276,7 @@ int cfdTextureDataSet::FindVector(std::string name)
 {
    for(unsigned int i = 0; i < _nVectors; i++)
    {
-      if(strstr(_vectors.at(i)->GetName().c_str(),name.c_str()))
+      if(_vectors.at(i)->GetName().find(name) != std::string::npos)
       {
          return i;
       }

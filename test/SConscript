@@ -1,0 +1,50 @@
+import os 
+import sys
+import string
+pj = os.path.join
+Import("baseEnv RootDir")
+
+env = baseEnv.Copy()
+
+# Make an action for generating the test files.
+cxx_test_flags = '--error-printer --have-eh'
+cxx_test = Action('python %s %s -o $TARGET $SOURCES' % (
+                  pj(RootDir, 'external', 'cxxtest-3.10.1', 'cxxtestgen.py'),
+                  cxx_test_flags) )
+
+CxxTestBuilder = Builder(action=cxx_test)
+env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
+                  CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
+                             pj('#', 'external', 'loki-0.1.6', 'include')],
+                  LIBS = ['sqlite3'])
+
+# Provide a list of headers that have to be run through CxxTest to create
+# the source files.
+test_hdrs = Split("""
+   DatabaseTest.h
+   SQLiteDriverTest.h
+   VariantTest.h
+""")
+env.CxxTest('TestRunner.cpp', test_hdrs)
+
+srcs = Split("""
+   TestRunner.cpp
+""")
+
+orig_srcs = Split("""
+   SQLiteDriver.cxx
+""")
+orig_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), orig_srcs)
+srcs.extend(orig_srcs)
+   
+loki_srcs = Split("""
+   SmallObj.cpp
+   Singleton.cpp
+   SmartPtr.cpp
+""")
+loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s), 
+                loki_srcs)
+srcs.extend(loki_srcs)
+
+
+env.Program('TestRunner', srcs)
