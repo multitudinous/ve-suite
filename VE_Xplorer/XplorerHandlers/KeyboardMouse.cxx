@@ -216,7 +216,7 @@ void KeyboardMouse::Reshape( unsigned int w, unsigned int h )
 
    aspect_ratio = (float)width / (float)height;
 
-   std::cout<< aspect_ratio <<std::endl;
+//   std::cout<< aspect_ratio <<std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFOVy( float t, float b, float n )
