@@ -402,7 +402,16 @@ void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
 void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 {
    _translator->setBatchOff();
+   
    UpdateStatus( "Translating to 3D texture files. . ." );
+   if(!_numFiles)
+   {
+      wxString errorMsg = _("No files found in: ") + _inputDir;
+      wxMessageDialog(this,errorMsg, 
+                        _("Texture Translator"),
+                      wxICON_EXCLAMATION|wxICON_HAND).ShowModal(); 
+      UpdateStatus( "No files found!!!" );
+   }
    //char* oname;
    wxString statusMsg = _("");
 
@@ -441,7 +450,8 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       }
    }
    
-   if(_fileProgress){
+   if(_fileProgress)
+   {
       delete _fileProgress;
       _fileProgress = 0;
    }
