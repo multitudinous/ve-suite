@@ -36,11 +36,11 @@
 #define CE_UTILITIES_IPORT_H
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_CE/Utilities/Port.h"
-///Input port class
 namespace VE_CE
 {
 namespace Utilities
 {
+///Input port class
 class VE_CE_UTILS_EXPORTS IPort : public Port 
 {
 public:

@@ -34,9 +34,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_CONNECTION_H
 #define CE_UTILITIES_CONNECTION_H
+/* \file Connection.h
+ * VE_CE Connection API
+ */
 #include "VE_Installer/include/VEConfig.h"
-///This class is basically a link
-///It has an id, input port, output port
 
 namespace VE_CE
 {
@@ -45,21 +46,31 @@ namespace Utilities
 class IPort;
 class OPort;
 
+///This class is basically a link
+///It has an id, input port, output port
 class VE_CE_UTILS_EXPORTS Connection 
 {
 public:
+   ///??
    Connection(int);
+   ///??
    Connection(const Connection&);
    ~Connection();
 
+   ///??
    void copy (const Connection&);
 
+   ///??
    IPort* get_iport ();
+   ///??
    OPort* get_oport ();
 
+   ///??
    void connect_iport (IPort*);
+   ///??
    void connect_oport (OPort*);
 
+   ///??
    int get_id();
 
 private:

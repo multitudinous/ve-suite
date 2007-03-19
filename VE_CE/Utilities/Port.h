@@ -34,10 +34,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_PORT_H
 #define CE_UTILITIES_PORT_H
+/*!\file VE_CE/Utilities/Port.h
+ * VE-CE Port API
+ */
 #include "VE_Installer/include/VEConfig.h"
 #include <vector>
 
-///Port base class
 namespace VE_CE
 {
 namespace Utilities
@@ -45,28 +47,37 @@ namespace Utilities
 class Connection;
 class Module;
 
+///Port base class
 class VE_CE_UTILS_EXPORTS Port 
 {
 public:
+   ///??
    Port( int, Module* );
+   ///??
    Port( const Port& );
    virtual ~Port();
 
+   ///??
    void copy (const Port&);
 
+   ///??
    int         nconnections   ();
+   ///??
    Connection* connection     (int);
+   ///??
    void        add_connection (Connection*);
 
+   ///??
    Module* get_module( void );
    ///Get the port id
    int get_id( void );
 
 protected:
+   ///??
    std::vector<Connection*> _connections;
-   // Module this port is connected to
+   /// Module this port is connected to
    Module* _module;
-   // id of the port
+   /// id of the port
    int _id;
 };
 }

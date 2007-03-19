@@ -40,7 +40,6 @@
 #include <stack>
 #include <set>
 
-///Scheduler that uses all the previous classes
 namespace VE_CE
 {
 namespace Utilities
@@ -48,25 +47,37 @@ namespace Utilities
 class Module;
 class Network;
 
+///Scheduler that uses all the previous classes
 class VE_CE_UTILS_EXPORTS Scheduler
 {
 public:
+   ///??
    Scheduler();
+   ///??
    Scheduler(Network*);
+   ///??
    ~Scheduler();
 
+   ///??
    void clear();  
    //void reset();
+   ///??
    void set_net( Network* );
 
+   ///??
    void sweep    (Module*);
+   ///??
    int  schedule (Module*);
+   ///??
    int  execute  (Module*);
 
+   ///??
    unsigned int snodes_size () { return _schedule_nodes._nodes.size(); }
 
+   ///??
    void print_schedule ();
 
+   ///??
    Network* _net;
   
 private:

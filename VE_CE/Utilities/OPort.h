@@ -38,7 +38,6 @@
 #include "VE_CE/Utilities/Port.h"
 #include "VE_Open/skel/moduleS.h"
 //#include "VE_Conductor/Framework/interface.h"
-///Output port class
 namespace VE_XML
 {
    class Command;
@@ -47,6 +46,7 @@ namespace VE_CE
 {
 namespace Utilities
 {
+///Output port class
 class VE_CE_UTILS_EXPORTS OPort : public Port 
 {
 public:

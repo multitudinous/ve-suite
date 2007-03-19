@@ -69,6 +69,7 @@ public:
    virtual void SetBaseObject(VE_XML::XMLObject* baseObject=0) = 0;
    
 protected:
+   ///??
    VE_XML::XMLObject* _baseObject;
 };
 }

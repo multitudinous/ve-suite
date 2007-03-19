@@ -14,7 +14,7 @@ namespace VE_CE
    class EventHandler;
 }
 
-/// ???
+///??
 class  UnitWrapper : public virtual POA_Body::Unit
 {
 public:
@@ -28,14 +28,22 @@ public:
 protected:
    Body::Executive_var executive_;
    unsigned int return_state;
+   ///??
    std::string UnitName_;
    //::Types::ArrayLong_var id_;
+   ///??
    CORBA::Long activeId;
+   ///??
    std::string status_;
+   ///??
    std::string data_;
+   ///??
    std::map< std::string, VE_XML::VE_Model::Model* > xmlModelMap;
+   ///??
    std::map< std::string, std::vector< VE_XML::XMLObject* > > inputsMap;
+   ///??
    std::map< std::string, std::vector< VE_XML::XMLObject* > > resultsMap;
+   ///??
    std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;
    
 public:
