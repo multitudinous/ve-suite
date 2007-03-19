@@ -5,7 +5,7 @@
 #Run as an executable (./linuxVESuiteTypeInstall.sh), not in a "source" command.
 #To work properly, a path to velauncher.py must be set in PATH in your
 #~/.cshrc file.
-#After you're finished setting it up, relog to put the changes into effect.
+#After you're finished setting it up, re-login to put the changes into effect.
 
 #NOTE: Only works for GNOME 2.8+ at the moment.
 #KDE requires a different Mime_Directory & Applications_Directory.
@@ -41,3 +41,4 @@ mkdir -p $Icon_Directory
 cp $Icon_File_Location $Icon_Directory/$Icon_File
 
 echo "Done."
+echo "Re-login for settings to take effect."

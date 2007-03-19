@@ -41,3 +41,4 @@ mkdir -p $Icon_Directory
 cp $Icon_File_Location $Icon_Directory/vesuite.png
 
 echo "Done."
+echo "Re-login for settings to take effect."

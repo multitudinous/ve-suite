@@ -154,7 +154,6 @@ def CFDHostType():
         piped.close()
     return cfdHostType
 CFD_HOST_TYPE = CFDHostType()
-##print CFD_HOST_TYPE ##TESTER
 
 class QuitLaunchError(Exception):
     """Defines error raised if user manually quits launch."""
