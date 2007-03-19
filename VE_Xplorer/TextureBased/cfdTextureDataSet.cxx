@@ -104,7 +104,7 @@ TextureDataInfo& TextureDataInfo::operator=(const TextureDataInfo& tdi)
 //Constructor                       //
 //////////////////////////////////////
 cfdTextureDataSet::cfdTextureDataSet()
-   : _fileName('\0'), _volVisNode(new cfdVolumeVisualization), _nScalars(0),
+   : _volVisNode(new cfdVolumeVisualization), _nScalars(0),
      _nVectors(0), _activeTM(0), _activeDataType(SCALAR)
 {
 }
