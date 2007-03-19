@@ -40,14 +40,13 @@ Device API
 */
 #include "VE_Installer/include/VEConfig.h"
 
-#ifdef _OSG
 #include <osg/ref_ptr>
+#include <osgUtil/IntersectVisitor>
 
-namespace osg
+namespace osg 
 {
-	class LineSegment;
+  class Vec3f;
 }
-#endif
 
 namespace VE_Xplorer
 {
@@ -60,10 +59,10 @@ public:
 	virtual void UpdateNavigation();
    virtual void UpdateSelection();
 
-   virtual void Traverse();
-
 protected:
-   
+   virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+   virtual void ProcessHit( osgUtil::IntersectVisitor::HitList hitList );
+   virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 };
 }
 
