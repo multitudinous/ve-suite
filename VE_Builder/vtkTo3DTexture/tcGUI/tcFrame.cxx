@@ -52,6 +52,8 @@ BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_RADIOBOX(GRID_RBOX,TCFrame::_onGridTypeCallback)
    EVT_MENU(GRID_PROPERTY,TCFrame::_transientGridTypeSelection)
    EVT_MENU(TIME_STEP_RANGE,TCFrame::_onTransientMinimum)
+   EVT_TEXT(INPUT_TEXT_BOX,TCFrame::_onUpdateDirectoryText)
+   EVT_TEXT(OUTPUT_TEXT_BOX,TCFrame::_onUpdateDirectoryText)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -464,6 +466,12 @@ void TCFrame::_onResolutionCallback(wxCommandEvent& event)
       default:
          break;
    };
+}
+///////////////////////////////////////////////////////////
+void TCFrame::_onUpdateDirectoryText(wxCommandEvent& event)
+{
+   _inputDir = wxString(_inputDirBox->GetValue(), wxConvUTF8);
+   _outputDir = wxString(_outputDirBox->GetValue(), wxConvUTF8);
 }
 ////////////////////////////////////////////////////
 void TCFrame::_onQuitCallback(wxCommandEvent& event)

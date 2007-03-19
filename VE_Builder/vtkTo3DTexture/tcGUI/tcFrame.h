@@ -141,6 +141,9 @@ protected:
    void _onGridTypeCallback(wxCommandEvent& event);
    void _transientGridTypeSelection(wxCommandEvent& event);
    void _onTransientMinimum(wxCommandEvent& event);
+
+   ///Update the directories based on text input
+   void _onUpdateDirectoryText(wxCommandEvent& event);
 private:
    int numProcessors;
    int rank;
