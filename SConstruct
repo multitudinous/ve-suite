@@ -448,7 +448,8 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_pkg.build( install=False )
    
    ##Install it if the packages have been setup to do so
-   baseEnv.Alias('install',[installed_targets,PREFIX])
+   if 'install' in COMMAND_LINE_TARGETS:
+      baseEnv.Alias('install',[installed_targets,PREFIX])
    
    ##Compression calls.
    ##NOTE: If VE_Suite isn't the only thing written to PREFIX,
