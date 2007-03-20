@@ -700,7 +700,12 @@ void cfdApp::draw()
    unsigned x_size = unsigned( vp_sx*float( w_width) );
    unsigned y_size = unsigned( vp_sy*float( w_height) );
 
-   cfdEnvironmentHandler::instance()->SetWindowDimensions(x_size,y_size);
+
+
+   //There is no resize event as of now
+   //cfdEnvironmentHandler::instance()->SetWindowDimensions(x_size,y_size);
+
+
 
    // Add the tree to the scene viewer and set properties
    sv->setSceneData(getScene());
@@ -729,7 +734,8 @@ void cfdApp::draw()
 	//Allow trackball to grab frustum values to calculate FOVy
 	cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_TOP],
 																		 frustum[vrj::Frustum::VJ_BOTTOM],
-                                                       frustum[vrj::Frustum::VJ_NEAR]);
+                                                       frustum[vrj::Frustum::VJ_NEAR],
+                                                       frustum[vrj::Frustum::VJ_FAR]);
 
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
