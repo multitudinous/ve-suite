@@ -104,17 +104,16 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
          VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
          VE_XML::DataValuePair* seedPointsFlag = command->GetDataValuePair( "OnOff" );
          //check to see if the seed points exist
-		 if(!VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
-		 {
-			 VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());
-          
-          VE_SceneGraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
-          VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
-          seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
-          seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
-          seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
-		 }
-		 VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
+		   if(!VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
+         {
+			   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
+         }
+         VE_SceneGraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
+         VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
+         seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
+         seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
+         seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
+		   VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
       } 
    }
    catch(...)

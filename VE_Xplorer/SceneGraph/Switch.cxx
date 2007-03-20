@@ -37,8 +37,128 @@
 #include <algorithm>
 #include <string>
 
-using namespace VE_SceneGraph;
+#include <osgDB/Registry>
+#include <osgDB/Input>
+#include <osgDB/Output>
 
+using namespace VE_SceneGraph;
+// forward declare functions to use later.
+bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr);
+bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
+
+// register the read and write functions with the osgDB::Registry.
+osgDB::RegisterDotOsgWrapperProxy g_SwitchProxy
+(
+    new osg::Switch,
+    "Switch",
+    "Object Node Switch Group VE_SceneGraph::Switch",
+    &VESwitch_readLocalData,
+    &VESwitch_writeLocalData
+);
+///////////////////////////////////////////////////////////////
+bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr)
+{
+    bool iteratorAdvanced = false;
+
+    VE_SceneGraph::Switch& sw = static_cast<VE_SceneGraph::Switch&>(obj);
+
+    if (fr.matchSequence("value"))
+    {
+        if (fr[1].matchWord("ALL_CHILDREN_ON"))
+        {
+            sw.setAllChildrenOn();
+            iteratorAdvanced = true;
+            fr+=2;
+        }
+        else if (fr[1].matchWord("ALL_CHILDREN_OFF"))
+        {
+            sw.setAllChildrenOff();
+            iteratorAdvanced = true;
+            fr+=2;
+        }
+        else if (fr[1].isInt())
+        {
+            unsigned int value;
+            fr[1].getUInt(value);
+            sw.setSingleChildOn(value);
+            iteratorAdvanced = true;
+            fr+=2;
+        }
+    }
+
+    if (fr[0].matchWord("NewChildDefaultValue"))
+    {
+        if (fr[1].matchWord("TRUE")) 
+        {
+            sw.setNewChildDefaultValue(true);
+            iteratorAdvanced = true;
+            fr += 2;
+        }
+        else if (fr[1].matchWord("FALSE"))
+        {
+            sw.setNewChildDefaultValue(false);
+            iteratorAdvanced = true;
+            fr += 2;
+        }
+        else if (fr[1].isInt())
+        {
+            int value;
+            fr[1].getInt(value);
+            sw.setNewChildDefaultValue(value!=0);
+            iteratorAdvanced = true;
+            fr += 2;
+        }
+    }
+
+    if (fr.matchSequence("ValueList {"))
+    {
+        int entry = fr[0].getNoNestedBrackets();
+
+        // move inside the brakets.
+        fr += 2;
+
+        unsigned int pos=0;
+        while (!fr.eof() && fr[0].getNoNestedBrackets()>entry)
+        {
+            int value;
+            if (fr[0].getInt(value))
+            {
+                sw.setValue(pos,value!=0);
+                ++pos;
+            }
+            ++fr;
+        }
+
+        ++fr;
+        
+        iteratorAdvanced = true;
+        
+    }
+
+    return iteratorAdvanced;
+}
+///////////////////////////////////////////////////////////
+bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
+{
+   const osg::Switch& sw = static_cast<const osg::Switch&>(obj);
+   fw.writeObject(sw);
+/*
+    fw.indent()<<"NewChildDefaultValue "<<sw.getNewChildDefaultValue()<<std::endl;
+
+    fw.indent()<<"ValueList {"<< std::endl;
+    fw.moveIn();
+    const Switch::ValueList& values = sw.getValueList();
+    for(Switch::ValueList::const_iterator itr=values.begin();
+        itr!=values.end();
+        ++itr)
+    {
+        fw.indent()<<*itr<<std::endl;
+    }
+    fw.moveOut();
+    fw.indent()<<"}"<< std::endl;
+*/
+    return true;
+}
 ////////////////////////////////////////////////////////////////////////////////
 Switch::Switch()
 {

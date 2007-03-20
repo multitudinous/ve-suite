@@ -170,7 +170,7 @@ void cfdRawNodeTraverser::_traverseNode(pfNode* cNode)
    }
 #ifdef _OSG
    if(!strcmp(cNode->className(),"Group")||
-      !strcmp(cNode->className(),"MatrixTransform")||
+      !strcmp(cNode->className(),"DCS")||
       !strcmp(cNode->className(),"Sequence")||
       !strcmp(cNode->className(),"Switch")){
       osg::ref_ptr<osg::Group> curGroup = dynamic_cast<osg::Group*>(cNode);
