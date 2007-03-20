@@ -5,6 +5,8 @@
 // --- OSG Stuff --- //
 #include <osg/LineSegment>
 
+#include <osgUtil/IntersectVisitor>
+
 using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -19,6 +21,11 @@ void Device::UpdateNavigation()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateSelection()
+{
+   ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::ProcessSelection( )
 {
    osg::Vec3f start_point;
    osg::Vec3f end_point;
@@ -36,33 +43,30 @@ void Device::UpdateSelection()
    osgUtil::IntersectVisitor::HitList hit_list;
    hit_list = intersect_visitor.getHitList( line_segment.get() );
 
-   this->ProcessHit( hit_list );
-   this->DrawLine( start_point, end_point );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
-{
-   ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::ProcessHit( osgUtil::IntersectVisitor::HitList hitList )
-{
+   //Traversal part
    osgUtil::Hit objectHit;
 
-   if ( hitList.empty() )
+   if ( hit_list.empty() )
    {
       return;
    }
 
    else
    {
-      for( unsigned int i = 0; i <  hitList.size(); i++ )
+      for( unsigned int i = 0; i <  hit_list.size(); i++ )
       {
-         objectHit = hitList[i];
+         objectHit = hit_list[i];
 
          //Do something
       }
    }
+
+   this->DrawLine( start_point, end_point );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
+{
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )

@@ -91,11 +91,11 @@ void DeviceHandler::ProcessDeviceEvents()
 ////////////////////////////////////////////////////////////////////////////////
 Wand* DeviceHandler::GetWand()
 {
-   return dynamic_cast< VE_Xplorer::Wand* >( devices.find( "Wand" )->second );
+   return static_cast< VE_Xplorer::Wand* >( devices.find( "Wand" )->second );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse* DeviceHandler::GetKeyboardMouse()
 {
-	return dynamic_cast< VE_Xplorer::KeyboardMouse* >( devices.find( "KeyboardMouse" )->second );
+	return static_cast< VE_Xplorer::KeyboardMouse* >( devices.find( "KeyboardMouse" )->second );
 }
 ////////////////////////////////////////////////////////////////////////////////

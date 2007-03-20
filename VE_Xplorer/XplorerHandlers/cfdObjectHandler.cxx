@@ -311,8 +311,7 @@ void cfdObjectHandler::UpdateObjectHandler()
    }
 }
 
-void cfdObjectHandler::SetupStartEndPoint(osg::Vec3f * startPoint, 
-					  osg::Vec3f * endPoint)
+void cfdObjectHandler::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
 {
    float * wandPosition  =  this->navigator->GetObjLocation();
    //double * worldPosition = this->navigator->GetWorldLocation();

@@ -10,9 +10,12 @@
 
 // --- OSG Stuff --- //
 #include <osg/Group>
+#include <osg/Geode>
+#include <osg/Geometry>
 #include <osg/BoundingSphere>
 #include <osg/BoundingBox>
-#include <osg/CameraNode>
+//#include <osg/PolygonStipple>
+#include <osg/LineWidth>
 #include <osg/LineSegment>
 
 //C/C++ Libraries
@@ -39,8 +42,14 @@ width( 1 ),
 height( 1 ),
 
 aspect_ratio( 0.0f ),
-fovy_ratio( 0.0f ),
+wc_x_trans_ratio( 0.0f ),
+wc_y_trans_ratio( 0.0f ),
 fovy( 0.0f ),
+far_plane( 0.0f ),
+
+wc_screen_width( 0.0f ),
+wc_screen_height( 0.0f ),
+wc_screen_zval( 0.0f ),
 
 tb_magnitude( 0.0f ),
 tb_sensitivity( 1.0e-06 ),
@@ -71,11 +80,49 @@ void KeyboardMouse::UpdateNavigation()
 void KeyboardMouse::UpdateSelection()
 {
    this->ProcessKBEvents( 1 );
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
+void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
+{
 
-   osg::ref_ptr< osg::LineSegment > ls = new osg::LineSegment;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
+{
+   osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+   osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
+   osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
+   osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
+   osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
 
-   //Virtual function defined in Device.cxx
-	this->Traverse();
+   vertices->push_back( start_point );
+   vertices->push_back( end_point );
+   line->setVertexArray( vertices.get() );
+
+   colors->push_back( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
+   line->setColorArray( colors.get() );
+   line->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+   osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth;
+	linewidth->setWidth( 4.0f );
+	stateset->setAttribute( linewidth.get() );
+	line->setStateSet( stateset.get() );
+
+   line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
+
+   geode->addDrawable( line.get() );
+
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild( geode.get() );
+      
+}
+*/
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
+{
+   wc_screen_width = values.find( "xmax" )->second - values.find( "xmin" )->second;
+   wc_screen_height = values.find( "ymax" )->second - values.find( "ymin" )->second;
+   wc_screen_zval = values.find( "zval" )->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessKBEvents( int mode )
@@ -107,7 +154,13 @@ void KeyboardMouse::ProcessKBEvents( int mode )
          //Navigation mode
          if( mode == 0 )
          {
-			   this->TBKeyboard();
+			   this->NavKeyboard();
+         }
+
+         //Selection mode
+         else if( mode == 1 )
+         {
+            this->SelKeyboard();
          }
 		}
 
@@ -121,7 +174,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 
 	   else if( type == gadget::MouseButtonPressEvent )
 		{
-         gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast<gadget::MouseEvent>(*i);
+         gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast< gadget::MouseEvent >(*i);
          button = mouse_evt->getButton();
          state = 1;
          x = mouse_evt->getX();
@@ -130,7 +183,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
          //Navigation mode
          if( mode == 0 )
          {
-			   this->TBMouse();
+			   this->NavMouse();
 
 			   //If in animation mode, stop the animation with mouse press event
 			   if( tb_animate )
@@ -138,6 +191,12 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 				   gmtl::identity( tb_transform );
 				   tb_transform[0][3] = tb_transform[1][3] = tb_transform[2][3] = 0.0f;
 			   }
+         }
+
+         //Selection mode
+         else if( mode == 1 )
+         {
+            this->SelMouse();
          }
 		}
 
@@ -152,7 +211,13 @@ void KeyboardMouse::ProcessKBEvents( int mode )
          //Navigation mode
          if( mode == 0 )
          {
-			   this->TBMouse();
+			   this->NavMouse();
+         }
+
+         //Selection mode
+         else if( mode == 1 )
+         {
+            this->SelMouse();
          }
 		}
 
@@ -165,7 +230,13 @@ void KeyboardMouse::ProcessKBEvents( int mode )
          //Navigation mode
          if( mode == 0 )
          {
-			   this->TBMotion();
+			   this->NavMotion();
+         }
+
+         //Selection mode
+         else if( mode == 1 )
+         {
+            this->SelMotion();
          }
 		}
 	}
@@ -173,35 +244,51 @@ void KeyboardMouse::ProcessKBEvents( int mode )
    //Navigation mode
    if( mode == 0 )
    {
-      //Split apart the current matrix into rotation and translation parts
-      gmtl::Matrix44f accuRotation;
-      gmtl::Matrix44f matrix;
-
-      for( int i = 0; i < 3; i++ )
-	   {
-         //Get the current rotation matrix
-         accuRotation[i][0] = tb_accuTransform[i][0];
-         accuRotation[i][1] = tb_accuTransform[i][1];
-         accuRotation[i][2] = tb_accuTransform[i][2];
-
-         //Get the current translation matrix
-         matrix[i][3] = tb_accuTransform[i][3];
-      }
-
-      //Multiply by the transform and then by the rotation
-      matrix *= tb_transform;
-      matrix *= accuRotation;
-
-      //Set the current matrix
-      VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
-
-      //If not in animation mode, reset the transform
-      if( !tb_animate )
-	   {
-         gmtl::identity( tb_transform );
-         tb_transform[0][3] = tb_transform[1][3] = tb_transform[2][3] = 0.0f;
-      }
+      this->ProcessNavigationEvents();
    }
+
+   //Selection mode
+   else if( mode == 1 )
+   {
+      this->ProcessSelectionEvents();
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::ProcessNavigationEvents()
+{
+   //Split apart the current matrix into rotation and translation parts
+   gmtl::Matrix44f accuRotation;
+   gmtl::Matrix44f matrix;
+
+   for( int i = 0; i < 3; i++ )
+	{
+      //Get the current rotation matrix
+      accuRotation[i][0] = tb_accuTransform[i][0];
+      accuRotation[i][1] = tb_accuTransform[i][1];
+      accuRotation[i][2] = tb_accuTransform[i][2];
+
+      //Get the current translation matrix
+      matrix[i][3] = tb_accuTransform[i][3];
+   }
+
+   //Multiply by the transform and then by the rotation
+   matrix *= tb_transform;
+   matrix *= accuRotation;
+
+   //Set the current matrix
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
+
+   //If not in animation mode, reset the transform
+   if( !tb_animate )
+	{
+      gmtl::identity( tb_transform );
+      tb_transform[0][3] = tb_transform[1][3] = tb_transform[2][3] = 0.0f;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::ProcessSelectionEvents()
+{
+   return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Animate( bool animate )
@@ -209,27 +296,29 @@ void KeyboardMouse::Animate( bool animate )
    tb_animate = animate;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Reshape( unsigned int w, unsigned int h )
+void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 {
 	width = w;
 	height = h;
 
    aspect_ratio = (float)width / (float)height;
 
-//   std::cout<< aspect_ratio <<std::endl;
+   wc_x_trans_ratio = ( wc_screen_width )  / (float)width;
+   wc_y_trans_ratio = ( wc_screen_height ) / (float)height;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFOVy( float t, float b, float n )
+void KeyboardMouse::SetFrustumValues( float t, float b, float n, float f )
 {
 	float topAngle = OneEightyDivPI * atan( t / n );
    float tempDiv = fabs( b ) / n;
 	float bottomAngle = OneEightyDivPI * atan( tempDiv );
 
-   fovy_ratio = topAngle / bottomAngle;
 	fovy = topAngle + bottomAngle;
+
+   far_plane = f;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::TBKeyboard()
+void KeyboardMouse::NavKeyboard()
 {
    //If "r" is pressed
    if( key == 35 )
@@ -247,7 +336,7 @@ void KeyboardMouse::TBKeyboard()
    key = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::TBMouse()
+void KeyboardMouse::NavMouse()
 {
 
 	if( state == 1 )
@@ -264,7 +353,7 @@ void KeyboardMouse::TBMouse()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::TBMotion()
+void KeyboardMouse::NavMotion()
 {
    if( !state )
 	{
@@ -276,13 +365,13 @@ void KeyboardMouse::TBMotion()
 	float dx = tb_currPos[0] - tb_prevPos[0];
 	float dy = tb_currPos[1] - tb_prevPos[1];
 
-	tb_magnitude = sqrtf( dx*dx + dy*dy );
+	tb_magnitude = sqrtf( dx * dx + dy * dy );
    if( tb_magnitude < tb_sensitivity )
 	{
       return;
    }
 
-   if( button == 49 && ( x > 0.1*width && x < 0.9*width ) && ( y > 0.1*height && y < 0.9*height ) )
+   if( button == 49 && ( x > 0.1 * width && x < 0.9 * width ) && ( y > 0.1 * height && y < 0.9 * height ) )
 	{
    	RotateView( dx, dy );
    }
@@ -306,6 +395,44 @@ void KeyboardMouse::TBMotion()
 	tb_prevPos[1] = tb_currPos[1];
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelKeyboard()
+{
+   return;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelMouse()
+{
+   if( state == 1 )
+	{
+	   return;
+   }
+
+   else if( state == 0 && button == 49 )
+	{
+      this->ProcessSelectionEvents();
+
+
+		//osg::Vec3f start_point;
+      //osg::Vec3f end_point;
+      
+      //start_point.set( x, near_plane, y );
+      //end_point.set( x, far_plane, y );
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelMotion()
+{
+   if( !state )
+	{
+		return;
+   }
+
+   if( button == 49 )
+   {
+      //osg::ref_ptr< osg::Geometry > selection_rectangle = new osg::Geometry;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
    VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( identity( tb_accuTransform ) );
@@ -322,21 +449,21 @@ void KeyboardMouse::FrameAll()
    osg::BoundingSphere bs;
    for( unsigned int i = 0; i < root->getNumChildren(); i++ )
 	{
-      bs.expandBy( root->getChild(i)->getBound() );
+      bs.expandBy( root->getChild( i )->getBound() );
    }
 
-   float Theta = (fovy*0.5f)*(PIDivOneEighty);
+   float Theta = ( fovy * 0.5f ) * PIDivOneEighty;
    float x_val = bs.center().x();
 
    float y_val;
    if( aspect_ratio <= 1.0f )
 	{
-      y_val = (bs.radius()/tan(Theta))*aspect_ratio;
+      y_val = ( bs.radius() / tan( Theta ) ) * aspect_ratio;
    }
 
    else
 	{
-      y_val = (bs.radius()/tan(Theta));
+      y_val = bs.radius() / tan(Theta);
    }
 
    float z_val = bs.center().z();
@@ -358,14 +485,16 @@ void KeyboardMouse::FrameAll()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( float dx, float dy )
 {
-   float angle = tb_magnitude*400.0f;
-
    gmtl::Matrix44f mat;
-	identity( mat );
 	float tb_axis[3];
+
+   identity( mat );
+   float angle = tb_magnitude * 400.0f;
+
 	tb_axis[0] = mat[0][0]*dy + mat[2][0]*dx;
 	tb_axis[1] = mat[0][1]*dy + mat[2][1]*dx;
 	tb_axis[2] = mat[0][2]*dy + mat[2][2]*dx;
+
 	Rotate( tb_axis[0], tb_axis[1], tb_axis[2], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -373,6 +502,7 @@ void KeyboardMouse::Twist( float dx, float dy )
 {
    gmtl::Matrix44f mat;
 	identity( mat );
+
 	float Theta = atan2f( tb_prevPos[0]-0.5, tb_prevPos[1]-0.5 );
 	float newTheta = atan2f( tb_currPos[0]-0.5, tb_currPos[1]-0.5 );
 	float angle = (OneEightyDivPI)*(Theta-newTheta);
@@ -382,8 +512,8 @@ void KeyboardMouse::Twist( float dx, float dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( float dy )
 {
-	float viewlength=fabs( tb_accuTransform[1][3] );
-	float d = (viewlength*(1/(1+dy*2)))-viewlength;
+	float viewlength = fabs( tb_accuTransform[1][3] );
+	float d = (viewlength*(1/(1+dy*2))) - viewlength;
 
    //**********Temporary Fix**********//
 	if( ( tb_accuTransform[1][3] > -offset ) && ( tb_accuTransform[1][3] < offset ) )

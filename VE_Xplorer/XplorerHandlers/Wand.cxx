@@ -472,10 +472,7 @@ void Wand::UpdateNavigation()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateSelection()
 {
-   osg::ref_ptr< osg::LineSegment > ls = new osg::LineSegment;
-
-   //Virtual function defined in Device.cxx
-	this->Traverse();
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetHeadRotationFlag( int input )

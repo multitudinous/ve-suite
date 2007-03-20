@@ -46,6 +46,12 @@ cfdDisplaySettings::cfdDisplaySettings( void )
 
 	xSize = 0;
 	ySize = 0;
+
+   newXmin = 0;
+   newXmax = 0;
+   newYmin = 0;
+   newYmax = 0;
+   newZval = 0;
 }
 //////////////////////////////////////////////////////////////////////////
 bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray )
@@ -128,7 +134,6 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 #endif
 
 			
-
          elements.at(i)->setProperty(  "size", 1, ySize );
          elements.at(i)->setProperty(  "origin", 0, 0 );
          elements.at(i)->setProperty(  "origin", 1, 0 );
@@ -145,8 +150,8 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
             double newXScreenDim = 0.0019050f * xSize;
             double xScreenDif = newXScreenDim - xScreenDim;
             double xScreenDifHalf = xScreenDif * 0.5f;
-            double newXmin = xmin - xScreenDifHalf;
-            double newXmax = xmax + xScreenDifHalf;
+            newXmin = xmin - xScreenDifHalf;
+            newXmax = xmax + xScreenDifHalf;
          
             svPtr->setProperty(  "lower_left_corner", 0, newXmin );
             svPtr->setProperty(  "lower_right_corner", 0, newXmax );
@@ -160,13 +165,15 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
             double newYScreenDim = 0.001786f * ySize;
             double yScreenDif = newYScreenDim - yScreenDim;
             double yScreenDifHalf = yScreenDif * 0.5f;
-            double newYmin = ymin - yScreenDifHalf;
-            double newYmax = ymax + yScreenDifHalf;
+            newYmin = ymin - yScreenDifHalf;
+            newYmax = ymax + yScreenDifHalf;
          
             svPtr->setProperty(  "lower_left_corner", 1, newYmin );
             svPtr->setProperty(  "lower_right_corner", 1, newYmin );
             svPtr->setProperty(  "upper_left_corner", 1, newYmax );
             svPtr->setProperty(  "upper_right_corner", 1, newYmax );
+
+            newZval = svPtr->getProperty< double >(  "lower_left_corner", 2 );
          }
 
          ChangeDisplayElements( false, elements.at(i) );
@@ -180,6 +187,19 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )
 {
 	return std::pair< int, int >( xSize, ySize );
+}
+////////////////////////////////////////////////////////////////////////////////
+std::map< std::string, double > cfdDisplaySettings::GetScreenCornerValues( void )
+{
+   std::map< std::string, double > values;
+
+   values[ std::string( "xmin" ) ] = newXmin;
+   values[ std::string( "xmax" ) ] = newXmax;
+   values[ std::string( "ymin" ) ] = newYmin;
+   values[ std::string( "ymax" ) ] = newYmax;
+   values[ std::string( "zval" ) ] = newZval;
+
+   return values;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDisplaySettings::ChangeDisplayElements( bool remove, 

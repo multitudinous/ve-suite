@@ -71,6 +71,7 @@ public:
    virtual void UpdateCommand() { ; }
 
 	std::pair< int, int > GetScreenResolution( void );
+   std::map< std::string, double > GetScreenCornerValues( void );
    
 private:
    ///This function removes/adds elements to the current display system in
@@ -84,6 +85,12 @@ private:
 
 	int xSize;
 	int ySize;
+
+   double newXmin;
+   double newXmax;
+   double newYmin;
+   double newYmax;
+   double newZval;
 };
 }
 #endif

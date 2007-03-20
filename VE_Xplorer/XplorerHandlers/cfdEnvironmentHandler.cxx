@@ -382,12 +382,14 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    // Initialize DisplayInformation
    //
-   #ifdef _OSG
-      std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
-      this->display_information = new VE_Xplorer::DisplayInformation;
-		std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
-		this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
-   #endif
+   std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
+   this->display_information = new VE_Xplorer::DisplayInformation;
+   std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
+	this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
+
+   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetWindowValues( screenDims.first, screenDims.second );
+   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
@@ -472,11 +474,12 @@ void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
 	_windowHeight = h;
 }
 
-void cfdEnvironmentHandler::SetFrustumValues(float _top,float _bottom,float _near)
+void cfdEnvironmentHandler::SetFrustumValues( float _top, float _bottom, float _near, float _far )
 {
-	_frustumTop=_top;
-	_frustumBottom=_bottom;
-	_frustumNear=_near;
+	_frustumTop = _top;
+	_frustumBottom = _bottom;
+	_frustumNear = _near;
+   _frustumFar = _far;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int cfdEnvironmentHandler::GetWindowWidth()
@@ -502,8 +505,7 @@ float cfdEnvironmentHandler::GetFrameRate()
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
-   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Reshape(_windowWidth,_windowHeight);
-	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFOVy(_frustumTop,_frustumBottom,_frustumNear);
+	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFrustumValues( _frustumTop, _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
@@ -512,6 +514,7 @@ VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
 	{
 		return _seedPoints.get();
 	}
+
 	return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

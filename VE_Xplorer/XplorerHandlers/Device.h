@@ -41,7 +41,6 @@ Device API
 #include "VE_Installer/include/VEConfig.h"
 
 #include <osg/ref_ptr>
-#include <osgUtil/IntersectVisitor>
 
 namespace osg 
 {
@@ -60,8 +59,8 @@ public:
    virtual void UpdateSelection();
 
 protected:
+   virtual void ProcessSelection();
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
-   virtual void ProcessHit( osgUtil::IntersectVisitor::HitList hitList );
    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 };
 }

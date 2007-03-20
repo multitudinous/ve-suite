@@ -57,10 +57,14 @@ public:
 
 	virtual void UpdateNavigation();
 	virtual void UpdateSelection();
+   //virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+   //virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
+
+   void SetScreenCornerValues( std::map< std::string, double > values );
 
 	void Animate( bool animate );
-	void Reshape( unsigned int w, unsigned int h );
-	void SetFOVy( float t, float b, float n );
+	void SetWindowValues( unsigned int w, unsigned int h );
+	void SetFrustumValues( float t, float b, float n, float f );
    void ResetTransforms();
    void FrameAll();
 
@@ -68,6 +72,8 @@ private:
    gadget::KeyboardMouseInterface mKeyboard;
 
    void ProcessKBEvents( int mode );
+   void ProcessNavigationEvents();
+   void ProcessSelectionEvents();
 
    int key;
 	int button;
@@ -79,12 +85,22 @@ private:
 	unsigned int height;
 
    float aspect_ratio;
-	float fovy_ratio;
+   float wc_x_trans_ratio;
+   float wc_y_trans_ratio;
 	float fovy;
+   float far_plane;
 
-   void TBKeyboard();
-	void TBMouse();
-	void TBMotion();
+   double wc_screen_width;
+   double wc_screen_height;
+   double wc_screen_zval;
+
+   void NavKeyboard();
+	void NavMouse();
+	void NavMotion();
+
+   void SelKeyboard();
+	void SelMouse();
+	void SelMotion();
 
    void RotateView( float dx, float dy );
 	void Twist( float dx, float dy );
@@ -98,6 +114,8 @@ private:
 	float tb_sensitivity;
 
    bool tb_animate;
+
+   float sel_initial[2];
 
 	//Is of form [row][column]
 	gmtl::Matrix44f tb_transform;
