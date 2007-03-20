@@ -25,11 +25,18 @@ void Device::UpdateSelection()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::ProcessSelection( )
+void Device::ProcessSelection()
 {
    osg::Vec3f start_point;
    osg::Vec3f end_point;
    this->SetStartEndPoint( &start_point, &end_point );
+
+   /*
+   std::cout << start_point.x() << std::endl;
+   std::cout << start_point.y() << std::endl;
+   std::cout << start_point.z() << std::endl;
+   std::cout << std::endl;
+   */
    
    osg::ref_ptr< osg::LineSegment > line_segment = new osg::LineSegment();
    line_segment->set( start_point, end_point );

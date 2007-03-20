@@ -387,9 +387,8 @@ void cfdEnvironmentHandler::InitScene( void )
    std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
 	this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
 
-   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetWindowValues( screenDims.first, screenDims.second );
    VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
-
+   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetWindowValues( screenDims.first, screenDims.second );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device

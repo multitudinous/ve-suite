@@ -70,8 +70,10 @@ public:
 
    ///Initialize some variables in the class
    void Initialize( void );
+
 	virtual void UpdateNavigation();
 	virtual void UpdateSelection();
+
    ///bool to set the rotation method
    void SetHeadRotationFlag( int );
    ///New function for testing the new VECommand structure
@@ -82,6 +84,10 @@ public:
    void UpdateDir( void );
    ///Update the juggler reference frame wand position  
    void UpdateLoc( void );
+
+protected:
+   virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+   virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
       
 private:
    gadget::DigitalInterface digital[6];

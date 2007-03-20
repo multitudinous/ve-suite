@@ -42,13 +42,13 @@ width( 1 ),
 height( 1 ),
 
 aspect_ratio( 0.0f ),
-wc_x_trans_ratio( 0.0f ),
-wc_y_trans_ratio( 0.0f ),
 fovy( 0.0f ),
 far_plane( 0.0f ),
 
-wc_screen_width( 0.0f ),
-wc_screen_height( 0.0f ),
+wc_screen_xmin( 0.0f ),
+wc_screen_xmax( 0.0f ),
+wc_screen_ymin( 0.0f ),
+wc_screen_ymax( 0.0f ),
 wc_screen_zval( 0.0f ),
 
 tb_magnitude( 0.0f ),
@@ -82,13 +82,28 @@ void KeyboardMouse::UpdateSelection()
    this->ProcessKBEvents( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
 void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
 {
+   double wc_x_trans_ratio = ( wc_screen_xmax - wc_screen_xmin )  / width;
+   double wc_y_trans_ratio = ( wc_screen_ymax - wc_screen_ymin ) / height;
 
+   double transformed_x = wc_screen_xmin + ( x * wc_x_trans_ratio );
+   double transformed_y = wc_screen_ymax - ( y * wc_y_trans_ratio );
+
+   /*
+   std::cout << wc_screen_xmin << std::endl;
+   std::cout << wc_screen_xmax << std::endl;
+   std::cout << wc_screen_ymin << std::endl;
+   std::cout << wc_screen_ymax << std::endl;
+   std::cout << wc_screen_zval << std::endl;
+   std::cout << std::endl;
+   */
+
+   startPoint->set( transformed_x, wc_screen_zval, transformed_y );
+   endPoint->set( transformed_x, far_plane, transformed_y );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
+void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 {
    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
    osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
@@ -96,8 +111,8 @@ void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
 
-   vertices->push_back( start_point );
-   vertices->push_back( end_point );
+   vertices->push_back( startPoint );
+   vertices->push_back( endPoint );
    line->setVertexArray( vertices.get() );
 
    colors->push_back( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
@@ -116,12 +131,13 @@ void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
    VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild( geode.get() );
       
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
 {
-   wc_screen_width = values.find( "xmax" )->second - values.find( "xmin" )->second;
-   wc_screen_height = values.find( "ymax" )->second - values.find( "ymin" )->second;
+   wc_screen_xmin = values.find( "xmin" )->second;
+   wc_screen_xmax = values.find( "xmax" )->second;
+   wc_screen_ymin = values.find( "ymin" )->second;
+   wc_screen_ymax = values.find( "ymax" )->second;
    wc_screen_zval = values.find( "zval" )->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -302,9 +318,6 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 	height = h;
 
    aspect_ratio = (float)width / (float)height;
-
-   wc_x_trans_ratio = ( wc_screen_width )  / (float)width;
-   wc_y_trans_ratio = ( wc_screen_height ) / (float)height;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues( float t, float b, float n, float f )
@@ -355,7 +368,7 @@ void KeyboardMouse::NavMouse()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMotion()
 {
-   if( !state )
+   if( state == 0 )
 	{
 		return;
    }
@@ -409,14 +422,7 @@ void KeyboardMouse::SelMouse()
 
    else if( state == 0 && button == 49 )
 	{
-      this->ProcessSelectionEvents();
-
-
-		//osg::Vec3f start_point;
-      //osg::Vec3f end_point;
-      
-      //start_point.set( x, near_plane, y );
-      //end_point.set( x, far_plane, y );
+      this->ProcessSelection();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -443,7 +449,7 @@ void KeyboardMouse::FrameAll()
    osg::ref_ptr< osg::Group > root = new osg::Group;
    root->addChild( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
 
-   tb_accuTransform=VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+   tb_accuTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
    //Get the selected objects and expand by their bounding box
    osg::BoundingSphere bs;

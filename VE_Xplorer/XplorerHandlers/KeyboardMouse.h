@@ -57,8 +57,6 @@ public:
 
 	virtual void UpdateNavigation();
 	virtual void UpdateSelection();
-   //virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
-   //virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 
    void SetScreenCornerValues( std::map< std::string, double > values );
 
@@ -67,6 +65,10 @@ public:
 	void SetFrustumValues( float t, float b, float n, float f );
    void ResetTransforms();
    void FrameAll();
+
+protected:
+   virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+   virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 
 private:
    gadget::KeyboardMouseInterface mKeyboard;
@@ -85,13 +87,13 @@ private:
 	unsigned int height;
 
    float aspect_ratio;
-   float wc_x_trans_ratio;
-   float wc_y_trans_ratio;
 	float fovy;
    float far_plane;
 
-   double wc_screen_width;
-   double wc_screen_height;
+   double wc_screen_xmin;
+   double wc_screen_xmax;
+   double wc_screen_ymin;
+   double wc_screen_ymax;
    double wc_screen_zval;
 
    void NavKeyboard();
