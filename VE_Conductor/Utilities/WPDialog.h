@@ -29,7 +29,6 @@ public:
    //Destructor
    virtual ~WPDialog();
    
-   
    ///Set the name of the command
    void SetCommandName(std::string name);
   
@@ -38,7 +37,6 @@ public:
 
    ///Add an instruction to send. This is for access in the callbacks.
    void AddInstruction(VE_XML::DataValuePair* newInstruct);
-   
    
    void SetCommand(std::string name){_commandName = name;}
    

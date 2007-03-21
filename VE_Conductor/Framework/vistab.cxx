@@ -519,7 +519,12 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
       VE_XML::DataValuePair* seedPointDVP = new VE_XML::DataValuePair();
       seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
       veCommand->AddDataValuePair(seedPointDVP);
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+      
+	  VE_XML::DataValuePair* activeDataset = new VE_XML::DataValuePair;
+      activeDataset->SetData("Active Dataset",GetActiveDatasetName());
+      veCommand->AddDataValuePair(activeDataset);
+	  
+	  VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
       delete veCommand;   
    }
 }

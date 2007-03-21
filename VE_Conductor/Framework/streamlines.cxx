@@ -438,6 +438,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
    {
       seedPointDialog = new WPDialog( static_cast< wxWindow* >( this ), 0, "Seed Point Controls" );
    }
+   //seedPointDialog->SetActiveDataset(dynamic_cast<Vistab*>(GetParent())->GetActiveDatasetName());
    //display the seed points
    VE_XML::Command* newCommand = new VE_XML::Command();
    try
@@ -446,6 +447,10 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
 	  VE_XML::DataValuePair* seedPointDVP = new VE_XML::DataValuePair();
 	  seedPointDVP->SetData("OnOff",static_cast<unsigned int>(1));
 	  newCommand->AddDataValuePair(seedPointDVP);
+
+	  VE_XML::DataValuePair* activeDataset = new VE_XML::DataValuePair;
+      activeDataset->SetData("Active Dataset",dynamic_cast<Vistab*>(GetParent())->GetActiveDatasetName());
+      newCommand->AddDataValuePair(activeDataset);
 	  VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 	  delete newCommand;
    }
