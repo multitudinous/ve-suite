@@ -13,10 +13,10 @@ pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 launcherBundle.addFiles( pyFile )
 
 linuxDClick = ves_pkg.createFileBundle( pj('share','vesuite','misc' ) )
-dclickFiles = ['gnomeVesTypeInstall.sh',
+dclickFiles = ['vesuiteGnomeConfig.sh',
 		'VE-Suite.xml',
 		'vesuite.desktop',
 		pj('installerImages','gnome-mime-application-x-vesuite.png'),
-		'kdeVesTypeInstall.sh',
+		'vesuiteKdeConfig.sh',
 		'ves.desktop']
 linuxDClick.addFiles( dclickFiles )
