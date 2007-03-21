@@ -103,16 +103,16 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
          ///what happens if texture is somehow added first? Is that possible?
          VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
          VE_XML::DataValuePair* seedPointsFlag = command->GetDataValuePair( "OnOff" );
-		 VE_XML::DataValuePair* activeDataset = command->GetDataValuePair( "Active Dataset" );
-		 std::string datasetname;
-		 activeDataset->GetData(datasetname);
-		 //check to see if the seed points exist
-		 if(!VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
-		 {
+		   VE_XML::DataValuePair* activeDataset = command->GetDataValuePair( "Active Dataset" );
+		   std::string datasetname;
+		   activeDataset->GetData(datasetname);
+		   //check to see if the seed points exist
+		   if(!VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
+		   {
             VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
-		 }
+		   }
 		 
-		 VE_SceneGraph::DCS* tempDCS = _activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname))->GetDCS();
+		   VE_SceneGraph::DCS* tempDCS = _activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname))->GetDCS();
          VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
          
 		 seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );

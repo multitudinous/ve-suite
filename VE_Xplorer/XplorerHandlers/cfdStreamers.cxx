@@ -528,9 +528,9 @@ void cfdStreamers::CreateSeedPoints( void )
       points->Delete();
    }
    points = vtkPoints::New();
-   double deltaX = (xMax-xMin)/double(xValue-1);
-   double deltaY = (yMax-yMin)/double(yValue-1);
-   double deltaZ = (zMax-zMin)/double(zValue-1);
+   double deltaX = (xValue==1)?0:(xMax-xMin)/double(xValue-1);
+   double deltaY = (yValue==1)?0:(yMax-yMin)/double(yValue-1);
+   double deltaZ = (zValue==1)?0:(zMax-zMin)/double(zValue-1);
    
    for (unsigned int i = 0; i < xValue; ++i)
 	{
