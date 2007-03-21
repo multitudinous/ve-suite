@@ -65,6 +65,11 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
+#ifdef _OSG
+   #include <osgDB/WriteFile>
+   #include <osg/Node>
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::DCS* worldDCS )
 {
@@ -401,7 +406,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       }
       else
       {
-         writePFBFile( VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), (std::string)pfb_filename );
+         writePFBFile( VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), pfb_filename );
       }
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
@@ -410,7 +415,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << store_int << std::endl << vprDEBUG_FLUSH;
       
       // increment the counter and reset the id to -1...
-      this->pfb_count ++;
+      this->pfb_count++;
       return true;
    }
 
@@ -425,6 +430,10 @@ void cfdTeacher::UpdateCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName)
 {
+#ifdef _OSG
+   osgDB::writeNodeFile(*dynamic_cast< osg::Node* >(graph),fileName);
+#endif
+/*
    VE_Xplorer::cfdRawNodeWriteTraverser cfdWT(fileName);
 
    //set the graph
@@ -434,6 +443,6 @@ void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileN
    cfdWT.setCallback(1);
 
    //write out the file
-   cfdWT.writeFile();
+   cfdWT.writeFile();*/
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -50,8 +50,7 @@ RegisterDotOsgWrapperProxy ve_GeodeProxy
     "Geode",
     "Object Node Geode VE_SceneGraph::Geode",
     &VEGeode_readLocalData,
-    &VEGeode_writeLocalData,
-    DotOsgWrapper::READ_AND_WRITE
+    &VEGeode_writeLocalData
 );
 
 bool VEGeode_readLocalData(Object& obj, Input& fr)

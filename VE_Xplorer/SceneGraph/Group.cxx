@@ -93,13 +93,13 @@ bool VEGroup_readLocalData(osg::Object& obj, osgDB::Input& fr)
 bool VEGroup_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
 {
    ///call the base class writer
-   const osg::Group& group = static_cast<const osg::Group&>(obj);
-    fw.writeObject(group);
-    /*fw.indent() << "num_children " << group.getNumChildren() << std::endl;
+   const VE_SceneGraph::Group& group = static_cast<const VE_SceneGraph::Group&>(obj);
+    //fw.writeObject(group);
+    fw.indent() << "num_children " << group.getNumChildren() << std::endl;
     for(unsigned int i=0;i<group.getNumChildren();++i)
     {
         fw.writeObject(*group.getChild(i));
-    }*/
+    }
     return true;
 }
 

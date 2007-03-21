@@ -140,9 +140,9 @@ bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr)
 ///////////////////////////////////////////////////////////
 bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
 {
-   const osg::Switch& sw = static_cast<const osg::Switch&>(obj);
-   fw.writeObject(sw);
-/*
+   const VE_SceneGraph::Switch& sw = static_cast<const VE_SceneGraph::Switch&>(obj);
+   //fw.writeObject(sw);
+
     fw.indent()<<"NewChildDefaultValue "<<sw.getNewChildDefaultValue()<<std::endl;
 
     fw.indent()<<"ValueList {"<< std::endl;
@@ -156,7 +156,7 @@ bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
     }
     fw.moveOut();
     fw.indent()<<"}"<< std::endl;
-*/
+
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////

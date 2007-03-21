@@ -51,8 +51,7 @@ RegisterDotOsgWrapperProxy ve_DCSProxy
     "DCS",
     "Object Node Transform PositionAttitudeTransform Group VE_SceneGraph::DCS",
     &VEDCS_readLocalData,
-    &VEDCS_writeLocalData,
-    DotOsgWrapper::READ_AND_WRITE
+    &VEDCS_writeLocalData
 );
 
 bool VEDCS_readLocalData(Object& obj, Input& fr)
