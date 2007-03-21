@@ -22,8 +22,10 @@ env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
 # the source files.
 test_hdrs = Split("""
    DatabaseTest.h
+   ScalarDataTest.h
    SQLiteDriverTest.h
    VariantTest.h
+   VectorDataTest.h
 """)
 env.CxxTest('TestRunner.cpp', test_hdrs)
 
