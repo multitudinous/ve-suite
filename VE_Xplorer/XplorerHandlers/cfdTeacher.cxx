@@ -214,7 +214,7 @@ void cfdTeacher::RecordScene()
 #ifdef _PERFORMER
                   << this->pfb_count << ".pfb";
 #elif _OSG
-         << this->pfb_count << ".ive";
+         << this->pfb_count << ".osg";
 #endif
    std::string dirString = dirStringStream.str();
    pfb_filename = dirString.c_str();
@@ -352,7 +352,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 #ifdef _PERFORMER
                         << this->pfb_count << ".pfb";
 #elif _OSG
-         << this->pfb_count << ".ive";
+         << this->pfb_count << ".osg";
 #endif
       std::string dirString = dirStringStream.str();
       pfb_filename = dirString.c_str();
@@ -425,7 +425,6 @@ void cfdTeacher::UpdateCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName)
 {
-   
    VE_Xplorer::cfdRawNodeWriteTraverser cfdWT(fileName);
 
    //set the graph
@@ -436,22 +435,5 @@ void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileN
 
    //write out the file
    cfdWT.writeFile();
-
-   /*
-   //make sure we have a writer
-   if(!_cfdWT){
-      _cfdWT = new cfdWriteTraverser(fileName);
-   }else{
-      _cfdWT->setOutputFileName(fileName);
-   }
-   //set the graph
-   _cfdWT->setNode(graph);
-
-   //set the "swapping" callback
-   _cfdWT->setCallback(1);
-
-   //write out the file
-   _cfdWT->writePfbFile();
-   */
 }
 ////////////////////////////////////////////////////////////////////////////////

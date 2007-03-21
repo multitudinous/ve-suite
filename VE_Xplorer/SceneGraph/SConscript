@@ -24,6 +24,8 @@ sources = Split("""
     TextTexture.cxx
     FindParentsVisitor.cxx
     PhysicsMesh.cxx
+    DCSOSGReaderWriter.cxx
+    GeodeOSGReaderWriter.cxx
 """)
 
 

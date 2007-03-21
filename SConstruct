@@ -365,6 +365,7 @@ if not SConsAddons.Util.hasHelpFlag():
                            pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
    if 'install' in COMMAND_LINE_TARGETS:
    	installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), tempName)
+     	baseEnv.Alias('install',[installed_targets,PREFIX])
    #baseEnv.AddPostAction(cppdom_pc, Chmod('$TARGET', 0644))
    #baseEnv.Install(inst_paths['bin'], cppdom_pc)
    
@@ -446,11 +447,7 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_pkg.build( install=True )
    else:
       ves_pkg.build( install=False )
-   
-   ##Install it if the packages have been setup to do so
-   if 'install' in COMMAND_LINE_TARGETS:
-      baseEnv.Alias('install',[installed_targets,PREFIX])
-   
+      
    ##Compression calls.
    ##NOTE: If VE_Suite isn't the only thing written to PREFIX,
    ## these will compress everything in PREFIX. Could get ugly.
