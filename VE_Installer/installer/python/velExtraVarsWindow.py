@@ -22,7 +22,7 @@ class ExtraVarsWindow(wx.Dialog):
                            style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         ##Data storage.
         self.state = state
-        ##Build master display.
+        ##Build list box.
         self.variableBlock = wx.TextCtrl(self, -1, style = wx.TE_MULTILINE)
         self.variableBlock.SetToolTip(wx.ToolTip("Enter a list of environment variables."))
         ##Build OK button.
@@ -35,6 +35,8 @@ class ExtraVarsWindow(wx.Dialog):
         self.Bind(wx.EVT_CLOSE, self.OnClose)
         ##Construct layout.
         mainSizer = wx.BoxSizer(wx.VERTICAL)
+        mainSizer.Add(wx.StaticText(self, -1, "List the variables you want passed. Ex:"))
+        mainSizer.Add(wx.StaticText(self, -1, "OSG_HOME, PF_ENABLED, ROTO_PATH"))
         mainSizer.Add(self.variableBlock, 1, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.Add(bOk, 0, wx.EXPAND, BORDER)
         ##Set size, position.

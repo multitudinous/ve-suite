@@ -1,15 +1,16 @@
 #!/bin/sh
 
-#This script sets up MIME-type and .desktop files for .ves files to run
-#VE-Suite when they're double-clicked.
-#Run as an executable (./linuxVESuiteTypeInstall.sh), not in a "source" command.
-#To work properly, a path to velauncher.py must be set in PATH in your
-#~/.cshrc file.
+#This script sets up MIME-type and .desktop files for:
+#1. Running VE-Suite when .ves files are double-clicked.
+#2. Giving .ves files the VE-Suite icon.
+#3. Inserting VE-Suite into the application menu.
+
+#Run as an executable ( ./vesuiteGnomeConfig.sh ), not in a "source" command.
+#To work properly, a path to velauncher.py must be
+#set in PATH in your ~/.cshrc file.
 #After you're finished setting it up, re-login to put the changes into effect.
 
-#NOTE: Only works for GNOME 2.8+ at the moment.
-#KDE requires a different Mime_Directory & Applications_Directory.
-#GNOME versions before 2.7 use a different schema for MIME-type/.desktop data.
+#NOTE: This script only works with Gnome 2.8+ desktop.
 
 #Files
 export Mime_Type_Package_File=VE-Suite.xml
