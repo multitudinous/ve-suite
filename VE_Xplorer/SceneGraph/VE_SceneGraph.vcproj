@@ -215,7 +215,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DCSOSGReaderWriter.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Geode.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\GeodeOSGReaderWriter.cxx"
 				>
 			</File>
 			<File
