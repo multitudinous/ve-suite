@@ -365,6 +365,7 @@ protected:
 
    //Change the device mode in xplorer
    void ChangeDeviceMode(wxCommandEvent& event);
+   void ChangeDeviceModeTB(wxCommandEvent& event);
 
    void DisplaySelection(wxCommandEvent& event);
 

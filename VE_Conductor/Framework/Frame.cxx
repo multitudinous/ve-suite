@@ -180,8 +180,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
    EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceMode )
-   EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceMode )
+   EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceModeTB )
+   EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceModeTB )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -1993,24 +1993,48 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    if( xplorerDeviceModeMenu->IsChecked( NAVIGATION_MODE ) )
    {
       mode = 0;
+
+      toolbar->ToggleTool( NAVIGATION_TOOLBAR, true );
    }
 
    else if( xplorerDeviceModeMenu->IsChecked( SELECTION_MODE ) )
    {
       mode = 1;
+
+      toolbar->ToggleTool( SELECTION_TOOLBAR, true );
    }
 
-   /*
-   else if( toolbar-> )
+   DVP->SetData( std::string( "Mode" ), mode );
+   
+   command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
+   command->AddDataValuePair( DVP );
+
+   serviceList->SendCommandStringToXplorer( command );
+   
+   delete command;
+}
+///////////////////////////////////////////////////////////////////
+void AppFrame::ChangeDeviceModeTB( wxCommandEvent& WXUNUSED(event) )
+{
+   //Create the command and data value pairs
+   VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
+   VE_XML::Command* command = new VE_XML::Command();
+   
+   unsigned int mode;
+
+   if( toolbar->GetToolState( NAVIGATION_TOOLBAR ) == true )
    {
       mode = 0;
+
+      xplorerDeviceModeMenu->Check( NAVIGATION_MODE, true );
    }
 
-   else if( xplorerDeviceModeMenu->IsChecked( SELECTION_MODE ) )
+   else if( toolbar->GetToolState( SELECTION_TOOLBAR ) == true )
    {
       mode = 1;
+
+      xplorerDeviceModeMenu->Check( SELECTION_MODE, true );
    }
-   */
 
    DVP->SetData( std::string( "Mode" ), mode );
    
