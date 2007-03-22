@@ -74,6 +74,7 @@ public:
 	VE_SceneGraph::Group* GetRootNode( void );
 	VE_SceneGraph::DCS* GetWorldDCS( void );
 	VE_SceneGraph::DCS* GetNetworkDCS( void );
+	VE_SceneGraph::DCS* GetActiveSwitchNode( void );
 
    ///Set the node on the switch node that is active
    ///\param activeNode node to activate

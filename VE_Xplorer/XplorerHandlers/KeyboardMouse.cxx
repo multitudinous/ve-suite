@@ -447,9 +447,9 @@ void KeyboardMouse::ResetTransforms()
 void KeyboardMouse::FrameAll()
 {
    osg::ref_ptr< osg::Group > root = new osg::Group;
-   root->addChild( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+   root->addChild( VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode() );
 
-   tb_accuTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+   tb_accuTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->GetMat();
 
    //Get the selected objects and expand by their bounding box
    osg::BoundingSphere bs;
@@ -486,7 +486,7 @@ void KeyboardMouse::FrameAll()
       tb_accuTransform[2][3] -= z_val;
    }
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( tb_accuTransform );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->SetMat( tb_accuTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( float dx, float dy )

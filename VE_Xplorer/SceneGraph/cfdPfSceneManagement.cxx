@@ -50,6 +50,7 @@
 #include <osgDB/WriteFile>
 #include <osg/PositionAttitudeTransform>
 #include <osg/MatrixTransform>
+#include <osg/Switch>
 #endif
 
 #ifndef WIN32
@@ -230,4 +231,17 @@ void cfdPfSceneManagement::PreFrameUpdate( void )
 {
    networkDCS->SetTranslationArray( worldDCS->GetVETranslationArray() );
    networkDCS->SetRotationArray( worldDCS->GetRotationArray() );
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* cfdPfSceneManagement::GetActiveSwitchNode( void )
+{
+   osg::Switch::ValueList boolList = _logoSwitch->getValueList();
+   
+   for ( size_t i = 0; i < boolList.size(); ++i )
+   {
+      if ( boolList.at( i ) )
+      {
+         return dynamic_cast< VE_SceneGraph::DCS* >( _logoSwitch->getChild( i ) );
+      }
+   }
 }
