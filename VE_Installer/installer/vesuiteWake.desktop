@@ -1,9 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=VE-Suite Launcher
+Name=VE-Suite Wake Cluster
 Categories=Graphics;Science;DataVisualization;Engineering;VESuite;
-MimeType=application/x-vesuite;
-Exec=velauncher.py
+Exec=vesuiteWake.sh
 Icon=ve-suite.png
 Type=Application
 Terminal=true
