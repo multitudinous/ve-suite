@@ -112,13 +112,17 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
             VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
 		   }
 		 
-		   VE_SceneGraph::DCS* tempDCS = _activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname))->GetDCS();
+         //this seems to be a bad sequence of calls but we need to set the
+         //active dataset otherwise this set of calls goes in every seed pointEH
+         //as well as all the commands have to lug this extra info.
+         _activeModel->SetActiveDataSet(_activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname)));
+		   VE_SceneGraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
          VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
          
-		 seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
+		   seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
          seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
          seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
-		 VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
+		   VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
       } 
    }
    catch(...)
