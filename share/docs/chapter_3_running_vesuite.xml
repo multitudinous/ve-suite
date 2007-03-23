@@ -210,7 +210,7 @@
       Transformations affect its members as well; see the Assembly section for
       more information.</para>
     </section>
-
+        
     <section id="toggling_geometry">
       <title>Togging Geometric Objects</title>
       <para>You can toggle the visibility of geometric objects ON and OFF.
@@ -255,6 +255,55 @@
       and click <guibutton>Remove...</guibutton>.</para>
     </section>
 
+    <section id="geometry_colors">
+      <title>Coloring Geometric Objects</title>
+      
+      <para>The geometry's color is determined by its Material attribute;
+      to change it, open the geometry's Properties, go to the Attributes tab,
+      and right-click the Material attribute you want to change.</para>
+      
+      <para>On Windows, the color dialog box looks like this:</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/colorwheel1.jpg" />
+        </imageobject>
+      </mediaobject>
+      
+      <para>You can select one of the basic colors in the upper-left corner,
+      or you can use the color map and luminosity slider on the right side
+      of the dialogue to make your own color. Your chosen color will appear
+      in the Color|Solid preview below.</para>
+      
+      <para>If you make your own color, be sure to check the luminosity slider.
+      Your color will appear black or white if it's set too low or high.</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/colorwheel2.jpg" />
+        </imageobject>
+      </mediaobject>
+      
+      <para>Click OK when you have your new color. Don't bother adding it to
+      your Custom Colors; they'll be forgotten once the dialog's closed.</para>
+      
+      <para>On non-Windows systems, the color dialog box looks like this:</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/colorwheel3.jpg" />
+        </imageobject>
+      </mediaobject>
+      
+      <para>Here, you can select a color from the Palette, or use the color
+      ring and triangle to make a custom color. The bar below the color ring
+      shows the old color on the left and the new color on the right.</para>
+      
+      <para>To make a custom color, choose its hue by clicking in the color
+      ring, then choose its saturation and value by clicking in the color
+      triangle. Click OK when you have your new color.</para>
+    </section>
+    
     <section id="using assemblies">
       <title>Using Assemblies</title>
       
