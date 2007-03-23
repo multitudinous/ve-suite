@@ -5,7 +5,8 @@
 #include "VE_Installer/include/VEConfig.h"
 #include <wx/wx.h>
 #include <wx/frame.h>
-#include <wx/dialog.h>
+#include <wx/dirdlg.h>
+#include <wx/menu.h>
 #include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/notebook.h>
@@ -15,27 +16,32 @@
 #undef IconChooser_STYLE
 #define IconChooser_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 
-class VE_GUIPLUGINS_EXPORTS IconChooser : public wxDialog
+class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		IconChooser(wxWindow *parent, std::string path, wxWindowID id = 1, const wxString &title = wxT("IconChooser"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE);
+		IconChooser(wxWindow *parent, /*std::string path,*/ wxWindowID id = 1, const wxString &title = wxT("IconChooser"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE);
 		virtual ~IconChooser();
 		void WxButtonClick(wxCommandEvent& event);
 		void okButtonClick(wxCommandEvent& event);
 		void cancelButtonClick(wxCommandEvent& event);
+		void IconDirectoryClick(wxCommandEvent& event);
 		//void AppendList(const char * input);
 		void SetPlugin( REI_Plugin * plugin);
+		void AddIconsDir(wxString directory);
 		
 	private:		
 		std::map< int, std::string > iconPaths;
 		wxTextCtrl * WxEdit;
 		REI_Plugin * thePlugin;
-		wxString directory;
+		//wxString directory;
 		wxButton * okButton;
 		wxButton * cancelButton;
+		wxDirDialog *WxDirDialog;
+		wxMenuBar *WxMenuBar1;
+		wxNotebook * WxNotebook;
 		//wxChoice *WxChoice;
         //wxArrayString componentList;
 		

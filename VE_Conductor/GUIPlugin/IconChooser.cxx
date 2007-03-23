@@ -2,16 +2,17 @@
 #include <wx/dir.h>
 #include <wx/image.h>
 
-BEGIN_EVENT_TABLE(IconChooser,wxDialog)	
+BEGIN_EVENT_TABLE(IconChooser,wxFrame)	
 	EVT_CLOSE(IconChooser::OnClose)
-	EVT_BUTTON(1002,IconChooser::okButtonClick)
-	EVT_BUTTON(1003,IconChooser::cancelButtonClick)
+	EVT_BUTTON(1003,IconChooser::okButtonClick)
+	EVT_BUTTON(1004,IconChooser::cancelButtonClick)
+	EVT_MENU(1005, IconChooser::IconDirectoryClick)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-IconChooser::IconChooser(wxWindow *parent, std::string path,wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxDialog(parent, id, title, position, size, style)
+IconChooser::IconChooser(wxWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+: wxFrame(parent, id, title, position, size, style)
 {
-	directory = wxString(path.c_str(), wxConvUTF8);
+	//directory = wxString(path.c_str(), wxConvUTF8);
 	CreateGUIControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -23,15 +24,21 @@ IconChooser::~IconChooser()
 void IconChooser::CreateGUIControls()
 {
 	wxPanel * WxPanel = new wxPanel(this, 1000, wxPoint(0,0), wxSize(640,480));
-	wxNotebook * WxNotebook = new wxNotebook(WxPanel, 1001, wxPoint(0,0),wxSize(617,460));
+	WxNotebook = new wxNotebook(WxPanel, 1001, wxPoint(0,0),wxSize(617,460));
 	WxEdit = new wxTextCtrl(WxPanel, 1002, wxT(""), wxPoint(40, 463), wxSize(400,21), 0, wxDefaultValidator, wxT(""));
 	WxEdit->SetEditable(false);
-	okButton = new wxButton(WxPanel, 1002, wxT("OK"), wxPoint(450, 463));
-	cancelButton = new wxButton(WxPanel, 1003, wxT("Cancel"), wxPoint(535, 463));
+	okButton = new wxButton(WxPanel, 1003, wxT("OK"), wxPoint(450, 463));
+	cancelButton = new wxButton(WxPanel, 1004, wxT("Cancel"), wxPoint(535, 463));
 	//WxChoice = new wxChoice(WxPanel, 1003, wxPoint(220,3), wxSize(200,21), componentList, 0, wxDefaultValidator, wxT("Components"));
 	//WxChoice->SetSelection(-1);
 
    {
+	WxMenuBar1 = new wxMenuBar();
+	wxMenu * AddMenu = new wxMenu(0);
+	AddMenu->Append(1005, wxT("Icon Directory"), wxT(""), wxITEM_NORMAL);
+	WxMenuBar1->Append(AddMenu, wxT("Add"));
+	SetMenuBar(WxMenuBar1);
+
       int buttonCount = 4000;
       std::vector< wxImage > defaultIcons;
       defaultIcons.push_back( wxImage( contour_xpm ) );
@@ -85,8 +92,52 @@ void IconChooser::CreateGUIControls()
       }
    }
 
-   //Parse the default directory structure
+	SetTitle(wxT("VE Icon Chooser"));
+	SetIcon(wxNullIcon);
+	SetSize(8,8,630,550);
+	Center();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::OnClose(wxCloseEvent& event)
+{
+	Destroy();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::WxButtonClick(wxCommandEvent& event)
+{
+    //wxString id;
+    //id.Printf("%d", event.GetId());
+	//WxEdit->SetValue(id);
+	WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
+	//thePlugin->SetImageIcon(iconPaths[event.GetId()]);
+}
+////////////////////////////////////////////////////////////////////////////////
+//void IconChooser::AppendList(const char * input)
+//{
+//	WxChoice->Append(wxString(input,wxConvUTF8));
+//}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::SetPlugin( REI_Plugin * plugin)
+{
+	thePlugin = plugin;
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::okButtonClick(wxCommandEvent& event)
+{
+	thePlugin->SetImageIcon(WxEdit->GetValue().c_str());
+	Destroy();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::cancelButtonClick(wxCommandEvent& event)
+{
+	Destroy();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::AddIconsDir(wxString directory)
+{
+	//Parse the default directory structure
    //wxString directory( _("F:/ASPENV21/2DIcons") );
+   //wxString directory = wxString(path, wxConvUTF8);
    wxString dirname;
    wxDir parentDir (directory);
    bool isParentTrue = parentDir.GetFirst(&dirname);
@@ -146,45 +197,12 @@ void IconChooser::CreateGUIControls()
       }
       isParentTrue = parentDir.GetNext(&dirname);
    }
-
-	SetTitle(wxT("VE Icon Chooser"));
-	SetIcon(wxNullIcon);
-	SetSize(8,8,623,530);
-	Center();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IconChooser::OnClose(wxCloseEvent& event)
+void IconChooser::IconDirectoryClick(wxCommandEvent& event)
 {
-	Destroy();
-}
-////////////////////////////////////////////////////////////////////////////////
-void IconChooser::WxButtonClick(wxCommandEvent& event)
-{
-    //wxString id;
-    //id.Printf("%d", event.GetId());
-	//WxEdit->SetValue(id);
-	WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
-	//thePlugin->SetImageIcon(iconPaths[event.GetId()]);
-}
-////////////////////////////////////////////////////////////////////////////////
-//void IconChooser::AppendList(const char * input)
-//{
-//	WxChoice->Append(wxString(input,wxConvUTF8));
-//}
-////////////////////////////////////////////////////////////////////////////////
-void IconChooser::SetPlugin( REI_Plugin * plugin)
-{
-	thePlugin = plugin;
-}
-////////////////////////////////////////////////////////////////////////////////
-void IconChooser::okButtonClick(wxCommandEvent& event)
-{
-	thePlugin->SetImageIcon(WxEdit->GetValue().c_str());
-	Destroy();
-}
-////////////////////////////////////////////////////////////////////////////////
-void IconChooser::cancelButtonClick(wxCommandEvent& event)
-{
-	Destroy();
+	WxDirDialog = new wxDirDialog(this);
+	WxDirDialog->ShowModal();
+	AddIconsDir(WxDirDialog->GetPath());
 }
 ////////////////////////////////////////////////////////////////////////////////
