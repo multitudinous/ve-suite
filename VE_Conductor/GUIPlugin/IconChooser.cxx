@@ -4,6 +4,8 @@
 
 BEGIN_EVENT_TABLE(IconChooser,wxDialog)	
 	EVT_CLOSE(IconChooser::OnClose)
+	EVT_BUTTON(1002,IconChooser::okButtonClick)
+	EVT_BUTTON(1003,IconChooser::cancelButtonClick)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 IconChooser::IconChooser(wxWindow *parent, std::string path,wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
@@ -22,8 +24,10 @@ void IconChooser::CreateGUIControls()
 {
 	wxPanel * WxPanel = new wxPanel(this, 1000, wxPoint(0,0), wxSize(640,480));
 	wxNotebook * WxNotebook = new wxNotebook(WxPanel, 1001, wxPoint(0,0),wxSize(617,460));
-	WxEdit = new wxTextCtrl(WxPanel, 1002, wxT(""), wxPoint(120, 463), wxSize(400,21), 0, wxDefaultValidator, wxT(""));
+	WxEdit = new wxTextCtrl(WxPanel, 1002, wxT(""), wxPoint(40, 463), wxSize(400,21), 0, wxDefaultValidator, wxT(""));
 	WxEdit->SetEditable(false);
+	okButton = new wxButton(WxPanel, 1002, wxT("OK"), wxPoint(450, 463));
+	cancelButton = new wxButton(WxPanel, 1003, wxT("Cancel"), wxPoint(535, 463));
 	//WxChoice = new wxChoice(WxPanel, 1003, wxPoint(220,3), wxSize(200,21), componentList, 0, wxDefaultValidator, wxT("Components"));
 	//WxChoice->SetSelection(-1);
 
@@ -160,7 +164,7 @@ void IconChooser::WxButtonClick(wxCommandEvent& event)
     //id.Printf("%d", event.GetId());
 	//WxEdit->SetValue(id);
 	WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
-	thePlugin->SetImageIcon(iconPaths[event.GetId()]);
+	//thePlugin->SetImageIcon(iconPaths[event.GetId()]);
 }
 ////////////////////////////////////////////////////////////////////////////////
 //void IconChooser::AppendList(const char * input)
@@ -171,5 +175,16 @@ void IconChooser::WxButtonClick(wxCommandEvent& event)
 void IconChooser::SetPlugin( REI_Plugin * plugin)
 {
 	thePlugin = plugin;
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::okButtonClick(wxCommandEvent& event)
+{
+	thePlugin->SetImageIcon(WxEdit->GetValue().c_str());
+	Destroy();
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::cancelButtonClick(wxCommandEvent& event)
+{
+	Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////

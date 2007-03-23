@@ -24,6 +24,8 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxDialog
 		IconChooser(wxWindow *parent, std::string path, wxWindowID id = 1, const wxString &title = wxT("IconChooser"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE);
 		virtual ~IconChooser();
 		void WxButtonClick(wxCommandEvent& event);
+		void okButtonClick(wxCommandEvent& event);
+		void cancelButtonClick(wxCommandEvent& event);
 		//void AppendList(const char * input);
 		void SetPlugin( REI_Plugin * plugin);
 		
@@ -32,6 +34,8 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxDialog
 		wxTextCtrl * WxEdit;
 		REI_Plugin * thePlugin;
 		wxString directory;
+		wxButton * okButton;
+		wxButton * cancelButton;
 		//wxChoice *WxChoice;
         //wxArrayString componentList;
 		

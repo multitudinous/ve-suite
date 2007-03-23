@@ -2640,7 +2640,7 @@ void  Network::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	REI_Plugin* tempPlugin = modules[m_selMod].GetPlugin();
-   IconChooser* chooser = new IconChooser(NULL, "2DIcons");
+   IconChooser* chooser = new IconChooser(this, "2DIcons");
 	chooser->SetPlugin(tempPlugin);
 	chooser->ShowModal();
    //delete chooser;
