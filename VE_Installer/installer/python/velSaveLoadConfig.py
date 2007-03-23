@@ -98,9 +98,10 @@ def LoadConfig(name, state, loadLastConfig = False):
         strReads.append("Directory")
         boolReads.append("Debug")
         boolReads.append("AutoRunVes")
-        strReads.append("JugglerDep")
         if not EnvVarEmpty("VJ_BASE_DIR"):
             state.Edit("JugglerDep", os.getenv("VJ_BASE_DIR"))
+        else:
+            strReads.append("JugglerDep")
         if config.Exists(RECENTFILES_CONFIG):
             state.Edit("RecentFiles", RecentFiles())
         if config.Exists(DEPS_CONFIG):
