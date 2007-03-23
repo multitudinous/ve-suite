@@ -6,6 +6,9 @@
 
 #include <btBulletDynamicsCommon.h>
 
+//C/C++ Libraries
+#include <iostream>
+
 class TriIndexFunc
 {
 public:
@@ -27,33 +30,29 @@ PhysicsMesh::PhysicsMesh( osg::Node* osg_node )
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-	triMesh = new btTriangleMesh;
+	tri_mesh = 0;
+   collision_shape = 0;
 
 	osg_node->accept( *this );
-	this->CreateBBMesh();
-	this->CreateExactMesh();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsMesh::~PhysicsMesh()
 {
-	if( collision_shape_bb )
+   if( tri_mesh )
 	{
-		delete collision_shape_bb;
+		delete tri_mesh;
 	}
 
-	if( collision_shape_exact )
+	if( collision_shape )
 	{
-		delete collision_shape_exact;
-	}
-
-	if( triMesh )
-	{
-		delete triMesh;
+		delete collision_shape;
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsMesh::apply( osg::Geode& geode )
 { 
+   tri_mesh = new btTriangleMesh;
+
 	for( unsigned int i = 0; i < geode.getNumDrawables(); i++ )
 	{
 		osg::TriangleIndexFunctor< TriIndexFunc > TIF;
@@ -62,13 +61,16 @@ void PhysicsMesh::apply( osg::Geode& geode )
 		geode.getDrawable( i )->accept( TIF );
 		vertex_array = dynamic_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
 
-		bb.expandBy( geode.getBoundingBox() );
+      for( unsigned int i = 0; i < geode.getNumDrawables(); i++ )
+      {
+		   bb.expandBy( geode.getDrawable( i )->getBound() );
+      }
 
 		btVector3 v1, v2, v3;
 
 		for( unsigned int k = 0; k < TIF.triangleIndex.size()/3; k++ )
 		{
-			triMesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( k*3  ) ).x(),
+			tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( k*3  ) ).x(),
 														vertex_array->at( TIF.triangleIndex.at( k*3  ) ).y(),
 														vertex_array->at( TIF.triangleIndex.at( k*3  ) ).z() ),
 										 btVector3( vertex_array->at( TIF.triangleIndex.at( k*3+1) ).x(),
@@ -81,25 +83,45 @@ void PhysicsMesh::apply( osg::Geode& geode )
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsMesh::CreateBBMesh()
+void PhysicsMesh::CreateBoundingBoxShape()
 {
-	collision_shape_bb = new btBoxShape( btVector3( (bb.xMax()-bb.xMin())*0.5f,
-																	(bb.yMax()-bb.yMin())*0.5f,
-																	(bb.zMax()-bb.zMin())*0.5f ) );
+   if( collision_shape )
+   {
+      delete collision_shape;
+   }
+
+	collision_shape = new btBoxShape( btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
+															   ( bb.yMax() - bb.yMin() ) * 0.5f,
+																( bb.zMax() - bb.zMin() ) * 0.5f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsMesh::CreateExactMesh()
+void PhysicsMesh::CreateStaticConcaveShape()
 {
-	collision_shape_exact = new btBvhTriangleMeshShape( triMesh, false );
+   if( collision_shape )
+   {
+      delete collision_shape;
+   }
+
+	collision_shape = new btBvhTriangleMeshShape( tri_mesh, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-btCollisionShape* PhysicsMesh::GetBBMesh()
+void PhysicsMesh::CreateConvexShape()
 {
-	return collision_shape_bb;
+   if( collision_shape )
+   {
+      delete collision_shape;
+   }
+
+	collision_shape = new btConvexTriangleMeshShape( tri_mesh );
 }
 ////////////////////////////////////////////////////////////////////////////////
-btCollisionShape* PhysicsMesh::GetExactMesh()
+btCollisionShape* PhysicsMesh::GetCollisionShape()
 {
-	return collision_shape_exact;
+   if( !collision_shape )
+   {
+      std::cout << "A collision shape has not yet been specified" << std::endl;
+   }
+
+   return collision_shape;
 }
 ////////////////////////////////////////////////////////////////////////////////

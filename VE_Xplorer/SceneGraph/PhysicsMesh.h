@@ -53,18 +53,21 @@ public:
 
 	virtual void apply( osg::Geode& geode );
 
-	void CreateBBMesh();
-	void CreateExactMesh();
+   //A box shape created from the osg::BoundingBox of the mesh shape
+	void CreateBoundingBoxShape();
+   //A concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
+   void CreateStaticConcaveShape();
+   //Create a convex hull shape from a triangle mesh, mesh can be concave or convex
+   void CreateConvexShape();
 
-	btCollisionShape* GetBBMesh();
-	btCollisionShape* GetExactMesh();
+   //Return the collision shape
+	btCollisionShape* GetCollisionShape();
 
 private:
 	osg::BoundingBox bb;
-	btTriangleMesh* triMesh;
 
-	btCollisionShape* collision_shape_bb;
-	btCollisionShape* collision_shape_exact;
+	btTriangleMesh* tri_mesh;
+	btCollisionShape* collision_shape;
 };
 
 #endif //PHYSICS_MESH_H

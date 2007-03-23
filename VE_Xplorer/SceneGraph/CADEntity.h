@@ -79,8 +79,7 @@ public:
 	void SetRestitution( float r );
 
 	void SetPhysics( bool p );
-	void SetBBShape();
-	void SetExactShape();
+   void SetCollisionShape( int collision_type );
 
    std::string GetFilename();
    std::string GetModuleName();
@@ -109,7 +108,7 @@ private:
 	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
    btRigidBody* rigid_body;
 	osg::ref_ptr< PhysicsMesh > physics_mesh;
-	btCollisionShape* collision_shape;
+   btCollisionShape* collision_shape;
 
 	float mass;
 	float friction;
