@@ -10,6 +10,9 @@
 
 namespace VE_TextureBased
 {
+   /// Convenience typedef of a single timesteps scalar data map.
+   typedef std::map<std::string, float> ScalarDataMap;
+
    /**
     * Represents a set of scalars that is used in a texture data set.  This is
     * the group of scalars that will have a value for each timestep.
@@ -72,6 +75,26 @@ namespace VE_TextureBased
             return std::numeric_limits<float>::quiet_NaN();
          }
          return mScalarMap.find(name)->second[idx];
+      }
+
+      /**
+       * Gets the scalar data map associated with all scalars at index idx.
+       *
+       * @param   idx      the index of the values to get.
+       *
+       * @return     a scalar data map of each scalars value at index idx.
+       *
+       * @note    No bounds checking is performed on idx.
+       */
+      ScalarDataMap getScalar(const size_t idx) const
+      {
+         ScalarDataMap results;
+         std::map<std::string, std::vector<float> >::const_iterator itr;
+         for (itr = mScalarMap.begin(); itr != mScalarMap.end(); ++itr)
+         {
+            results.insert(std::make_pair(itr->first, itr->second[idx]));
+         }
+         return results;
       }
 
       /**
@@ -144,6 +167,7 @@ namespace VE_TextureBased
       std::map<std::string, std::vector<float> >            mScalarMap;
       
    };
+
 }
 #endif
 #endif
