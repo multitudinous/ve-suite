@@ -37,6 +37,8 @@ import SConsAddons.Options.FlagPollBasedOption as fp_opt
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
 ########### Setup build dir and name
+RootDir = os.getcwd()
+Export('RootDir')
 GetPlatform = sca_util.GetPlatform
 Export('GetPlatform')
 GetArch = sca_util.GetArch
@@ -358,6 +360,7 @@ if not SConsAddons.Util.hasHelpFlag():
    }
    ##env.ConfigBuilder('gmtl.pc','gmtl.pc.in',submap = gmtl_pc_submap)
    ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
+   installed_targets = []
    name_parts = ['osg', cppdom_version_str, arch]
    pc_filename = "-".join(name_parts) + ".fpc"
    tempName = pj(inst_paths['flagpoll'], pc_filename)
@@ -432,6 +435,11 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Alias('docs', docsSubdirs)
    else:
       ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs, veiSubdirs, shareSubdirs]
+
+   # Build the test suite if asked.
+   if 'testsuite' in COMMAND_LINE_TARGETS:
+      ves_dirs.append(pj('#', 'test'))
+      baseEnv.Alias('testsuite', pj('#', 'test'))
 
    ## directory for dzr files
    ves_dirs += [pj( buildDir,'VE_Installer','mk')]
