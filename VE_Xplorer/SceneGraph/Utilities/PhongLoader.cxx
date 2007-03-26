@@ -82,7 +82,6 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    fragShader->SetShaderType("Fragment");
    fragShader->SetShaderSource(fragmentSource);
 
-
    VE_XML::VE_Shader::Uniform amaterial;
    amaterial.SetType("Float");
    amaterial.SetName("ambientMaterial");
@@ -131,6 +130,9 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    glslProgram.SetFragmentShader(fragShader);
 
    LoadGLSLProgram(&glslProgram);
+
+   //enable 2 sided lighting fix
+   _ss->setMode(GL_VERTEX_PROGRAM_TWO_SIDE,osg::StateAttribute::ON);
 #elif _PERFORMER
 #endif
 }
@@ -152,6 +154,8 @@ void PhongLoader::SyncShaderAndStateSet()
         "        eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);\n"
         "                lightPos=gl_LightSource[0].position.xyz;\n"
         "        normal=vec3(gl_NormalMatrix*gl_Normal);\n"
+        "        gl_FrontSecondaryColor=vec4(1.0);\n"
+        "        gl_BackSecondaryColor=vec4(0.0);\n"
         "}\n"
     );
    std::string fSource(
@@ -169,6 +173,10 @@ void PhongLoader::SyncShaderAndStateSet()
       "void main()\n"
       "{\n"
       "    vec3 N=normalize(normal);\n"
+      "    if(gl_SecondaryColor.r < .5)\n"
+      "    {\n"
+      "       N=-N; \n"
+      "    }\n"
       "    vec3 L=normalize(lightPos);\n"
       "    float NDotL=max(dot(N,L),0.0);\n"
 
