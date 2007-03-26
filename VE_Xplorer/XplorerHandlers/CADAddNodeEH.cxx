@@ -118,14 +118,20 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
             throw "Clone already exists";
          }
       }
-      parentAssembly = _activeModel->GetAssembly(node->GetParent());
-
-      if(!parentAssembly)
+      
+      
+      if(!_activeModel->AssemblyExists("rootNode"))
       {
+         node->SetParent("rootNode");
          //create the root
-         _activeModel->CreateAssembly( node->GetParent() );
+         _activeModel->CreateAssembly(node->GetParent() );
          parentAssembly = _activeModel->GetAssembly( node->GetParent() );
+         parentAssembly->SetName("rootNode");
          _activeModel->GetDCS()->AddChild( parentAssembly );
+      }
+      else
+      {
+         parentAssembly = _activeModel->GetAssembly(node->GetParent());
       }
 
       if(nodeType == "Assembly")

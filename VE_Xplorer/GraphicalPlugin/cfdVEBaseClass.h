@@ -165,11 +165,10 @@ private:
    std::string _network;
 
 protected:
-   void CreateObjects( void );
    long pos_x;
    long pos_y;
 
-   VE_SceneGraph::DCS* GetWorldDCS();
+   //VE_SceneGraph::DCS* GetWorldDCS();
 
    std::map<std::string, long *>                      _int;
    std::map<std::string, double *>                    _double;

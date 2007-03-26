@@ -291,103 +291,12 @@ cfdModel* cfdVEBaseClass::GetCFDModel( void )
    return _model;
 }
 //////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::CreateObjects( void )
-{
-   int numObjects;
-   char text[ 256 ];
-   char textLine[ 256 ];
 
-   std::ifstream input;
-   input.open( this->_param.c_str() );
-   input >> numObjects; 
-   input.getline( text, 256 );   //skip past remainder of line
-
-   vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : "
-                          << numObjects << std::endl  << vprDEBUG_FLUSH;
-   for ( int i = 0; i < numObjects; i++ )
-   {
-      int id;
-      input >> id;
-      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : "
-                             << id << std::endl << vprDEBUG_FLUSH;
-      input.getline( text, 256 );   //skip past remainder of line
-      if ( id == 9 ) // if it is an geom file
-      {
-         char fileName[100];
-         float stlColor[3];
-         int color;
-         int transFlag;
-
-         input >> transFlag;
-         input.getline( textLine, 256 );   //skip past remainder of line
-         vprDEBUG(vesDBG,0) << " geometry transparency flag = "
-                                << transFlag
-                                << std::endl << vprDEBUG_FLUSH;
-
-         // read color flag
-         input >> color;
-         vprDEBUG(vesDBG,0) << " stl color flag = " << color
-                                << std::endl << vprDEBUG_FLUSH;
-
-         // read color if color flag = 1
-         if( color == 1)
-         {
-            for(int i=0;i<3;i++)
-            {
-               input >> stlColor[ i ];
-            }
-            vprDEBUG(vesDBG,0) << "\tcolor: " << stlColor[ 0 ] << " : "
-                                   << stlColor[ 1 ] << " : "
-                                   << stlColor[ 2 ]
-                                   << std::endl << vprDEBUG_FLUSH;
-         }
-         input.getline( textLine, 256 );   //skip past remainder of line
-
-         vprDEBUG(vesDBG,0) << " geometry DCS parameters:" 
-                                << std::endl << vprDEBUG_FLUSH;
-         float scale[3], trans[3], rotate[3];   // pfDCS stuff
-         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
-         input >> fileName;
-         input.getline( textLine, 256 );   //skip past remainder of line
-
-         int test1 = fileIO::isFileReadable( fileName );
-         if ( test1 == 1 )
-         { 
-            vprDEBUG(vesDBG,0) << " geometry fileName = " << fileName
-                                   << std::endl << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            std::cerr << "ERROR: unreadable geometry file = " << fileName 
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit(1);
-         }
-
-         vprDEBUG(vesDBG,0) << " scale = " << scale[0] << " : "
-                                << scale[1] << " : " << scale[2]
-                                << std::endl << vprDEBUG_FLUSH;
-
-         _model->CreateGeomDataSet( fileName );
-         _model->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-         _model->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-         _model->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-         _model->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
-         _model->GetGeomDataSet( -1 )->setOpac( 1 );
-      }
-      else
-      {
-         // Skip past block
-         _readParam->ContinueRead( input, id );
-      }
-   }
-}
 //////////////////////////////////////////////////////////////////   
-VE_SceneGraph::DCS* cfdVEBaseClass::GetWorldDCS()
+/*VE_SceneGraph::DCS* cfdVEBaseClass::GetWorldDCS()
 {
    return this->worldDCS.get();
-}
+}*/
 //////////////////////////////////////////////////////////////////   
 void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::Model* tempModel )
 {

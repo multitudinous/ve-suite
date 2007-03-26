@@ -49,7 +49,7 @@ RegisterDotOsgWrapperProxy ve_DCSProxy
 (
     new VE_SceneGraph::DCS,
     "DCS",
-    "Object Node Transform PositionAttitudeTransform Group VE_SceneGraph::DCS",
+    "Object Node Transform Group VE_SceneGraph::DCS ",
     &VEDCS_readLocalData,
     &VEDCS_writeLocalData
 );

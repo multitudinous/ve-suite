@@ -49,9 +49,9 @@ bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
 // register the read and write functions with the osgDB::Registry.
 osgDB::RegisterDotOsgWrapperProxy g_SwitchProxy
 (
-    new osg::Switch,
+    new VE_SceneGraph::Switch,
     "Switch",
-    "Object Node Switch Group VE_SceneGraph::Switch",
+    "Object Node VE_SceneGraph::Switch Group ",
     &VESwitch_readLocalData,
     &VESwitch_writeLocalData
 );

@@ -48,7 +48,7 @@ RegisterDotOsgWrapperProxy ve_GeodeProxy
 (
     new VE_SceneGraph::Geode,
     "Geode",
-    "Object Node Geode VE_SceneGraph::Geode",
+    "Object Node VE_SceneGraph::Geode",
     &VEGeode_readLocalData,
     &VEGeode_writeLocalData
 );

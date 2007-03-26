@@ -59,7 +59,7 @@ osgDB::RegisterDotOsgWrapperProxy ve_GroupProxy
 (
     new VE_SceneGraph::Group,
     "Group",
-    "Object Node Group VE_SceneGraph::Group",
+    "Object Node VE_SceneGraph::Group",
     &VEGroup_readLocalData,
     &VEGroup_writeLocalData
 );

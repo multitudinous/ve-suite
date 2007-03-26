@@ -794,7 +794,7 @@ void cfdModel::MakeCADRootTransparent()
 
    try
    {
-      (*_assemblyList.begin()).second->setStateSet(attribute.get());
+      _assemblyList["rootNode"]->setStateSet(attribute.get());
    }
    catch(...)
    {
