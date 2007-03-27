@@ -66,8 +66,9 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 #ifdef _OSG
-   #include <osgDB/WriteFile>
-   #include <osg/Node>
+#include <osgDB/WriteFile>
+#include <osg/Node>
+#include <osgUtil/Optimizer>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -431,6 +432,8 @@ void cfdTeacher::UpdateCommand()
 void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName)
 {
 #ifdef _OSG
+   osgUtil::Optimizer optimizer;
+   optimizer.optimize(dynamic_cast< osg::Node* >(graph));
    osgDB::writeNodeFile(*dynamic_cast< osg::Node* >(graph),fileName);
 #endif
 /*
