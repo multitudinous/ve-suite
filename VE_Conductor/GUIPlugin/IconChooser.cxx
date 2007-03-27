@@ -124,7 +124,7 @@ void IconChooser::SetPlugin( REI_Plugin * plugin)
 ////////////////////////////////////////////////////////////////////////////////
 void IconChooser::okButtonClick(wxCommandEvent& event)
 {
-	thePlugin->SetImageIcon(WxEdit->GetValue().c_str());
+	thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ) );
 	Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -2641,7 +2641,7 @@ void  Network::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	REI_Plugin* tempPlugin = modules[m_selMod].GetPlugin();
     IconChooser* chooser = new IconChooser(this);//, "2DIcons");
-	chooser->AddIconsDir(wxString("2DIcons"));
+	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
 	chooser->Show();
    //delete chooser;
