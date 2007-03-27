@@ -37,36 +37,47 @@ export Mimetype_Icon_File_Location=installerImages/$Mimetype_Icon_File
 export Menu_Icon_File_Location=installerImages/$Menu_Icon_Source
 #Set GlobalConfig
 #GlobalConfig determines whether a user-only or global config is made.
-case $1 in
-   --user)
-      #User-only config
-      export GlobalConfig=False
-      ;;
-   --global)
-      #Global config
-      export GlobalConfig=True
-      ;;
-   "")
-      #Default config:
-      #Global if user can write to /usr/share/
-      #otherwise user-only.
-      if [ -w "/usr/share/" ]
-      then
-         export GlobalConfig=True
-      else
+export Uninstall=False
+for InputArgument in $1 $2
+do
+   case $InputArgument in
+      --user)
+         #User-only config
          export GlobalConfig=False
-      fi
-      ;;
-   *)
-      #Invalid arg. Spit out error message and quit.
-      echo "Invalid argument passed."
-      echo "Try '--user' or '--global' to choose the configuration's scope."
-      exit 0
-      ;;
-esac
+         ;;
+      --global)
+         #Global config
+         export GlobalConfig=True
+         ;;
+      --uninstall)
+         export Uninstall=True
+         ;;
+      "")
+         #Default config:
+         #Global if user can write to /usr/share/
+         #otherwise user-only.
+         if [ -z "$GlobalConfig" ]
+         then
+            if [ -w "/usr/share/" ]
+            then
+               export GlobalConfig=True
+            else
+               export GlobalConfig=False
+            fi
+         fi
+         ;;
+      *)
+         #Invalid arg. Spit out error message and quit.
+         echo "Invalid argument passed."
+         echo "Try '--user' or '--global' to choose the configuration's scope."
+         echo "Try '--uninstall' to uninstall the configuration."
+         exit 0
+         ;;
+   esac
+done
 
 #Set Install Directories
-if [ $GlobalConfig == "True" ]
+if [ "$GlobalConfig" == "True" ]
 then
    echo "Setting up global configuration."
    export Mime_Directory=/usr/share/mime
@@ -80,25 +91,49 @@ else
 fi
 
 ##Copy MimeType package & update Mime database
-echo "Installing MIME-type package for VE-Suite..."
-mkdir -p $Mime_Directory/packages
-cp $Mimetype_Package_File_Location $Mime_Directory/packages/$Mimetype_Package_File
-update-mime-database $Mime_Directory
+if [ $Uninstall == "True" ]
+then
+   echo "Uninstalling MIME-type package for VE-Suite..."
+   rm $Mime_Directory/packages/$Mimetype_Package_File
+   update-mime-database $Mime_Directory
+else
+   echo "Installing MIME-type package for VE-Suite..."
+   mkdir -p $Mime_Directory/packages
+   cp $Mimetype_Package_File_Location $Mime_Directory/packages/$Mimetype_Package_File
+   update-mime-database $Mime_Directory
+fi
 
 ##Install Desktop package
-echo "Installing .desktop file for VE-Suite..."
-mkdir -p $Applications_Directory
-desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Desktop_File_Location
-desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Reboot_File_Location
-desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Shutdown_File_Location
-desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Wake_File_Location
+if [ $Uninstall == "True" ]
+then
+   echo "Uninstalling .desktop file for VE-Suite..."
+   rm -f $Applications_Directory/vrac-$Desktop_File
+   rm -f $Applications_Directory/vrac-$Reboot_File
+   rm -f $Applications_Directory/vrac-$Shutdown_File
+   rm -f $Applications_Directory/vrac-$Wake_File
+   update-desktop-database $Applications_Directory
+else
+   echo "Installing .desktop file for VE-Suite..."
+   mkdir -p $Applications_Directory
+   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Desktop_File_Location
+   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Reboot_File_Location
+   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Shutdown_File_Location
+   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Wake_File_Location
+fi
 
 ##Install icon file
-echo "Installing icon for .ves files..."
-mkdir -p $Icon_Directory/hicolor/48x48/mimetypes
-mkdir -p $Icon_Directory/hicolor/32x32/apps
-cp $Mimetype_Icon_File_Location $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
-cp $Menu_Icon_File_Location $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
+if [ $Uninstall == "True" ]
+then
+   echo "Uninstalling icon for .ves files..."
+   rm -f $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
+   rm -f $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
+else
+   echo "Installing icon for .ves files..."
+   mkdir -p $Icon_Directory/hicolor/48x48/mimetypes
+   mkdir -p $Icon_Directory/hicolor/32x32/apps
+   cp $Mimetype_Icon_File_Location $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
+   cp $Menu_Icon_File_Location $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
+fi
 
 echo "Done."
 echo "Re-login for settings to take effect."
