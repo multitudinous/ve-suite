@@ -188,6 +188,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AttributeOSGReaderWriter.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialHelper.cxx"
 				>
 			</File>

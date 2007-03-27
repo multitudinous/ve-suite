@@ -231,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GroupOSGReaderWriter.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhysicsMesh.cxx"
 				>
 			</File>
@@ -244,6 +248,10 @@
 			</File>
 			<File
 				RelativePath=".\Switch.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SwitchOSGReaderWriter.cxx"
 				>
 			</File>
 			<File
