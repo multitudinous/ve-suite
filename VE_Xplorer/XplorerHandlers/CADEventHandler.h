@@ -74,7 +74,16 @@ public:
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-   
+  
+   ///Set the node descriptors from the xml to the SceneNode
+   ///\param nodeID The CADNode to update
+   ///\param nodeType The type of CADNode
+   ///\param descriptorName The name of the descriptor
+   ///\param descriptorValue The value of the descriptor
+   void SetNodeDescriptors(std::string nodeID,
+                           std::string nodeType,
+                           std::string descriptorName,
+                           std::string descriptorValue);
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute(VE_XML::XMLObject* command); 

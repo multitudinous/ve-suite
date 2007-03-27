@@ -796,7 +796,7 @@ void cfdModel::MakeCADRootTransparent()
 
    try
    {
-      _assemblyList["rootNode"]->setStateSet(attribute.get());
+      _assemblyList[_rootCADNode->GetID()]->setStateSet(attribute.get());
    }
    catch(...)
    {
@@ -816,9 +816,9 @@ void cfdModel::MakeCADRootOpaque()
 #ifdef _OSG
    try
    {
-      if( _assemblyList["rootNode"]->getStateSet() )
+      if( _assemblyList[_rootCADNode->GetID()]->getStateSet() )
       {   
-         _assemblyList["rootNode"]->getStateSet()->clear();
+         _assemblyList[_rootCADNode->GetID()]->getStateSet()->clear();
       }
    }
    catch(...)

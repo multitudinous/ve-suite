@@ -123,6 +123,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       {
          ///add the root to the VEBaseClass DCS
          node->SetParent("rootNode");
+         _activeModel->SetRootCADNode(node);
       }
       else
       {
@@ -130,6 +131,15 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
          if(!_activeModel->AssemblyExists(node->GetParent()))
          {
             _activeModel->CreateAssembly(node->GetParent());
+            //We have to initialize some properties on the root node since
+            //we are not creating it from xml data.
+            //From intial creation, the top level node is called Model_Geometry in the GUI.
+            //After that, CADSetNameEH handles the name appropriately.
+            _activeModel->GetAssembly(node->GetParent())->setName("Model_Geometry");
+
+            //update the top level node descriptors
+            SetNodeDescriptors(node->GetParent(),"Assembly","VE_XML_ID",node->GetParent());
+            ///Add the top level CAD to the VEBaseClass
             _activeModel->GetDCS()->addChild(_activeModel->GetAssembly(node->GetParent()));
          }
       }

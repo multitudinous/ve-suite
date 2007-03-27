@@ -178,6 +178,33 @@ void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
       std::cout<<"No transform found!!"<<std::endl;
    }
 }
+///////////////////////////////////////////////////////////////////////
+void CADEventHandler::SetNodeDescriptors(std::string nodeID,
+                                         std::string nodeType,
+                                         std::string descriptorName,
+                                         std::string descriptorValue)
+{
+   //set the uuid on the osg node so that we can get back to vexml
+   osg::Node::DescriptionList descriptorsList;
+   descriptorsList.push_back( descriptorName );
+   descriptorsList.push_back( descriptorValue );
+   
+   if(nodeType == "Assembly")
+   {
+      VE_SceneGraph::DCS* assemblyNode = _activeModel->GetAssembly(nodeID);
+      assemblyNode->setDescriptions( descriptorsList );
+   }
+   else if(nodeType == "Part")
+   {
+      VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(nodeID);
+      partNode->GetNode()->GetNode()->setDescriptions( descriptorsList );
+   }
+   else if(nodeType == "Clone")
+   {
+      VE_SceneGraph::Clone* cloneNode = _activeModel->GetClone(nodeID);
+      cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
+   }
+}
 /////////////////////////////////////////////////////////////////////////
 void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 {
@@ -215,12 +242,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             _addNodeToNode(newAssembly->GetID(), newAssembly->GetChild(i));
          }
 			_activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
-         //set the uuid on the osg node so that we can get back to vexml
-         osg::Node::DescriptionList descriptorsList;
-         descriptorsList.push_back( "VE_XML_ID" );
-         descriptorsList.push_back( newAssembly->GetID() );
-         VE_SceneGraph::DCS* tempFile = _activeModel->GetAssembly(newAssembly->GetID());
-         tempFile->setDescriptions( descriptorsList );
+         SetNodeDescriptors(newAssembly->GetID(),"Assembly","VE_XML_ID",newAssembly->GetID());
       }
       else if(activeNode->GetNodeType() == "Part")
       {
@@ -243,19 +265,18 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          if ( partNode->GetNode()->GetNode() )
          {
             partNode->GetNode()->SetName(newPart->GetNodeName());
-            //set the uuid on the osg node so that we can get back to vexml
-            osg::Node::DescriptionList descriptorsList;
-            descriptorsList.push_back( "VE_XML_ID" );
-            descriptorsList.push_back( newPart->GetID() );
-            partNode->GetNode()->GetNode()->setDescriptions( descriptorsList );
+            
             //set the visibility
             partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
-            
+
             vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
             _setTransformOnNode(newPart);
             vprDEBUG( vesDBG, 1 ) <<"|\t---Set transform---"<< std::endl << vprDEBUG_FLUSH;
             _setAttributesOnNode(newPart);
             vprDEBUG( vesDBG, 1 ) <<"|\t---Set Attributes---"<< std::endl << vprDEBUG_FLUSH;
+
+            //set the uuid on the osg node so that we can get back to vexml
+            SetNodeDescriptors(newPart->GetID(),"Part","VE_XML_ID",newPart->GetID());
          }
          else
          {
@@ -278,14 +299,12 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          VE_SceneGraph::Clone* tempClone = _activeModel->GetClone(clone->GetID());
          if ( tempClone )
          {
+            tempClone->GetClonedGraph()->setName(clone->GetNodeName());
             parentAssembly->AddChild( tempClone->GetClonedGraph() );
             tempClone->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
-            VE_SceneGraph::DCS* tempFile = tempClone->GetClonedGraph();
+
             //set the uuid on the osg node so that we can get back to vexml
-            osg::Node::DescriptionList descriptorsList;
-            descriptorsList.push_back( "VE_XML_ID" );
-            descriptorsList.push_back( clone->GetID() );
-            tempFile->setDescriptions( descriptorsList );            
+            SetNodeDescriptors(clone->GetID(),"Clone","VE_XML_ID",clone->GetID());
          }
       }
    }

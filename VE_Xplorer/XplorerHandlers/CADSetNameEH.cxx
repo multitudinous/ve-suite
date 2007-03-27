@@ -83,24 +83,54 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
 
+      std::string errorString;
+          
       //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         std::cout<<"Setting name: "<<newName->GetDataString()<<std::endl;
-         _activeModel->GetAssembly(nodeID->GetDataString())->SetName(newName->GetDataString());
+         if(_activeModel->AssemblyExists(nodeID->GetDataString()))
+         {
+            std::cout<<"Setting name: "<<newName->GetDataString()<<std::endl;
+            _activeModel->GetAssembly(nodeID->GetDataString())->SetName(newName->GetDataString());
+         }
+         else
+         {
+            errorString = std::string("Assembly: ") + newName->GetDataString()+ std::string(" not added to the graph yet!");;
+            throw(errorString);
+         }
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
-         _activeModel->GetPart(nodeID->GetDataString())->GetNode()->SetName(newName->GetDataString());
+         if(_activeModel->PartExists(nodeID->GetDataString()))
+         {
+            _activeModel->GetPart(nodeID->GetDataString())->GetNode()->SetName(newName->GetDataString());
+         }
+         else
+         {
+            errorString = std::string("Part: ") + newName->GetDataString()+ std::string(" not added to the graph yet!");;
+            throw(errorString);
+         }
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph()->SetName(newName->GetDataString());
+         if(_activeModel->CloneExists(nodeID->GetDataString()))
+         {
+            _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph()->SetName(newName->GetDataString());
+         }
+         else
+         {
+            errorString = std::string("Clone: ") + newName->GetDataString()+ std::string(" not added to the graph yet!");;
+            throw(errorString);
+         }
       }
+   }
+   catch(std::string str)
+   {
+      std::cout<<str<<std::endl;
    }
    catch(...)
    {
       std::cout<<"Error!!"<<std::endl;
-      std::cout<<"---Invalid node specified to remove!---"<<std::endl;
+      std::cout<<"---Invalid node specified to rename!---"<<std::endl;
    }
 }
