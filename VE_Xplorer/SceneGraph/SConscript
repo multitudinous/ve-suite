@@ -26,6 +26,8 @@ sources = Split("""
     PhysicsMesh.cxx
     DCSOSGReaderWriter.cxx
     GeodeOSGReaderWriter.cxx
+    GroupOSGReaderWriter.cxx
+    SwitchOSGReaderWriter.cxx
 """)
 
 
