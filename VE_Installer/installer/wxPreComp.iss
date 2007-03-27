@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define WXVERSION "2.8.0"
+#define WXVERSION "2.8.3"
 #define MyAppName "WxWidgets Pre-Compile"
 #define MyAppVerName "WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
@@ -30,7 +30,7 @@ BackColor2=$4080ff
 WizardImageBackColor=clGray
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WizardImageStretch=false
-AppVersion=
+AppVersion={#WXVERSION}_{#VEVERSION}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
