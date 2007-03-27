@@ -118,22 +118,22 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
             throw "Clone already exists";
          }
       }
-      
-      
-      if(!_activeModel->AssemblyExists("rootNode"))
+      ///This is the root
+      if(node->GetParent().empty())
       {
+         ///add the root to the VEBaseClass DCS
          node->SetParent("rootNode");
-         //create the root
-         _activeModel->CreateAssembly(node->GetParent() );
-         parentAssembly = _activeModel->GetAssembly( node->GetParent() );
-         parentAssembly->SetName("rootNode");
-         _activeModel->GetDCS()->AddChild( parentAssembly );
       }
       else
       {
-         parentAssembly = _activeModel->GetAssembly(node->GetParent());
+         ///need to check if parent is on the graph already
+         if(!_activeModel->AssemblyExists(node->GetParent()))
+         {
+            _activeModel->CreateAssembly(node->GetParent());
+            _activeModel->GetDCS()->addChild(_activeModel->GetAssembly(node->GetParent()));
+         }
       }
-
+      
       if(nodeType == "Assembly")
          _addNodeToNode(node->GetParent(),assembly);
       else if(nodeType == "Part")

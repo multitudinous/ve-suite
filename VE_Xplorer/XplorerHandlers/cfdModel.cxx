@@ -104,6 +104,8 @@ cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
 #endif
    _rootCADNode = 0;
    modelID = 10000000;
+   ///probably need a uuid for the VEBaseClass DCS instead of "rootNode"
+   _assemblyList["rootNode"] = _worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdModel::~cfdModel()

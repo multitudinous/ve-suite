@@ -184,7 +184,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
    VE_SceneGraph::DCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);
 
-   vprDEBUG( vesDBG, 1 ) << "|---Adding node---" << parentID 
+   vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent---" << parentID 
                            << std::endl << vprDEBUG_FLUSH;
    if( parentAssembly )
    {
@@ -206,8 +206,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
          _setAttributesOnNode(newAssembly);
          //std::cout<<"      ---Set Attributes---"<<std::endl;
-
          parentAssembly->AddChild(_activeModel->GetAssembly(newAssembly->GetID()));
+
          unsigned int nChildren = newAssembly->GetNumberOfChildren();
          for(unsigned int i = 0; i < nChildren; i++)
          {
