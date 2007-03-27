@@ -293,6 +293,11 @@ void CADEntityHelper::LoadFile( std::string filename
 #endif
       cadNode->setName(filename.c_str());
    }
+   else
+   {
+      std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " 
+                  << filename << std::endl;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*CADEntityHelper* CADEntityHelper::Clone( int level )

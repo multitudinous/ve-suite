@@ -184,7 +184,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
    VE_SceneGraph::DCS* parentAssembly = 0;
    parentAssembly = _activeModel->GetAssembly(parentID);
 
-   vprDEBUG( vesDBG, 1 ) << "|---Adding node---" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( vesDBG, 1 ) << "|---Adding node---" << parentID 
+                           << std::endl << vprDEBUG_FLUSH;
    if( parentAssembly )
    {
       if(activeNode->GetNodeType() == "Assembly")
@@ -224,31 +225,43 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
       else if(activeNode->GetNodeType() == "Part")
       {
          CADPart* newPart = dynamic_cast<CADPart*>(activeNode);
-         vprDEBUG( vesDBG, 1 ) <<"|\t---Part---"<< std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( vesDBG, 1 ) <<"|\t---"<<newPart->GetID()<<"---"<< std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---Part---"
+                                 << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---"<<newPart->GetID()
+                                 <<"---"<< std::endl << vprDEBUG_FLUSH;
          std::string tempFilename = newPart->GetCADFileName();
          boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
-         vprDEBUG( vesDBG, 1 ) << tempFilename << std::endl << correctedPath.native_file_string() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---" << tempFilename << "---" 
+                                 << correctedPath.native_file_string() 
+                                 << std::endl << vprDEBUG_FLUSH;
           _activeModel->CreatePart( correctedPath.native_file_string(),
                                     newPart->GetID(),
                                     parentID
                                   );
 
          VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(newPart->GetID());
-         partNode->GetNode()->SetName(newPart->GetNodeName());
-         //set the uuid on the osg node so that we can get back to vexml
-         osg::Node::DescriptionList descriptorsList;
-         descriptorsList.push_back( "VE_XML_ID" );
-         descriptorsList.push_back( newPart->GetID() );
-         partNode->GetNode()->GetNode()->setDescriptions( descriptorsList );
-         //set the visibility
-			partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
-
-         vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
-         _setTransformOnNode(newPart);
-         vprDEBUG( vesDBG, 1 ) <<"|\t---Set transform---"<< std::endl << vprDEBUG_FLUSH;
-         _setAttributesOnNode(newPart);
-         vprDEBUG( vesDBG, 1 ) <<"|\t---Set Attributes---"<< std::endl << vprDEBUG_FLUSH;
+         if ( partNode->GetNode()->GetNode() )
+         {
+            partNode->GetNode()->SetName(newPart->GetNodeName());
+            //set the uuid on the osg node so that we can get back to vexml
+            osg::Node::DescriptionList descriptorsList;
+            descriptorsList.push_back( "VE_XML_ID" );
+            descriptorsList.push_back( newPart->GetID() );
+            partNode->GetNode()->GetNode()->setDescriptions( descriptorsList );
+            //set the visibility
+            partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
+            
+            vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
+            _setTransformOnNode(newPart);
+            vprDEBUG( vesDBG, 1 ) <<"|\t---Set transform---"<< std::endl << vprDEBUG_FLUSH;
+            _setAttributesOnNode(newPart);
+            vprDEBUG( vesDBG, 1 ) <<"|\t---Set Attributes---"<< std::endl << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: " 
+                        << correctedPath.native_file_string() << std::endl;
+         }
       }
       else if(activeNode->GetNodeType() == "Clone")
       {
@@ -278,7 +291,6 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
    }
    else
    {
-      std::cout<<"No parent found!"<<std::endl;
+      std::cout<<"|---No parent found---id "<< parentID << std::endl;
    }
-   //std::cout<<"---Done---"<<std::endl;
 }

@@ -814,8 +814,10 @@ void cfdModel::MakeCADRootOpaque()
 #ifdef _OSG
    try
    {
-      if((*_assemblyList.begin()).second->getStateSet())
-         (*_assemblyList.begin()).second->getStateSet()->clear();
+      if( _assemblyList["rootNode"]->getStateSet() )
+      {   
+         _assemblyList["rootNode"]->getStateSet()->clear();
+      }
    }
    catch(...)
    {
