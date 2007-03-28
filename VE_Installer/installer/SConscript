@@ -10,13 +10,23 @@ pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.xpm'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.bmp'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
-launcherBundle.addFiles( pyFile )
+runScripts = ['vesuiteReboot.sh',
+              'vesuiteWake.sh',
+              'vesuiteShutdown.sh'
+             ]
+launcherBundle.addFiles( runScripts )
 
 linuxDClick = ves_pkg.createFileBundle( pj('share','vesuite','misc' ) )
 dclickFiles = ['vesuiteGnomeConfig.sh',
 		'VE-Suite.xml',
 		'vesuite.desktop',
 		pj('installerImages','gnome-mime-application-x-vesuite.png'),
+		pj('installerImages','ve_icon32x32.png'),
 		'vesuiteKdeConfig.sh',
-		'ves.desktop']
+		'ves.desktop',
+                'vesuiteReboot.desktop',
+                'vesuiteShutdown.desktop',
+                'vesuiteWake.desktop',
+              ]
 linuxDClick.addFiles( dclickFiles )
+linuxDClick.addFiles( runScripts )
