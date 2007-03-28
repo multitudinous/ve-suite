@@ -12,7 +12,8 @@ pyFile += sca_util.getFilesRecursiveByExt( '.', ['.bmp'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 runScripts = ['vesuiteReboot.sh',
               'vesuiteWake.sh',
-              'vesuiteShutdown.sh'
+              'vesuiteShutdown.sh',
+	      'velauncher.sh'
              ]
 launcherBundle.addFiles( runScripts )
 
@@ -23,6 +24,7 @@ dclickFiles = ['vesuiteGnomeConfig.sh',
 		pj('installerImages','gnome-mime-application-x-vesuite.png'),
 		pj('installerImages','ve_icon32x32.png'),
 		'vesuiteKdeConfig.sh',
+		'velauncher.sh',
 		'ves.desktop',
                 'vesuiteReboot.desktop',
                 'vesuiteShutdown.desktop',
