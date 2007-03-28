@@ -327,6 +327,7 @@ private:
    bool mMoveOldVTKDataSets;   
 
    VE_XML::VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
+   std::string rootCADNodeID;///<ID for root CAD node id
    unsigned int modelID;
 #ifdef _OSG
          std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.

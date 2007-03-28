@@ -186,15 +186,6 @@ cfdModel::~cfdModel()
    }
    transientDataSets.clear();
    */
-   
-	/*
-   if( animation )
-   {
-      delete animation;
-      animation = 0;
-   }
-	*/
-
 /*
    // The following block is broken
    // It loops more than it should (ie, twice for a single dataset)
@@ -207,20 +198,17 @@ cfdModel::~cfdModel()
       mVTKDataSets.erase( itr++ );
    }
 */
-   // Do we need to delete these
-   // it should be tested  
- /*this->switchNode = new VE_SceneGraph::Switch;
-   this->classic = new VE_SceneGraph::Group;
-   this->textureBased = new VE_SceneGraph::Group;
-*/
 
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
-   if(_rootCADNode)
+   //cfdModel does not own this memory therefore should not delete it
+   //the owner class of this data should delete it
+   //if this casues as memory leak then this should be fixed else where
+   /*if(_rootCADNode)
    {
       delete _rootCADNode;
       _rootCADNode = 0;
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::PreFrameUpdate()
@@ -691,6 +679,7 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 void cfdModel::SetRootCADNode(VE_XML::VE_CAD::CADNode* node)
 {
    _rootCADNode = node;
+   rootCADNodeID = _rootCADNode->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADNode* cfdModel::GetRootCADNode()
@@ -816,9 +805,9 @@ void cfdModel::MakeCADRootOpaque()
 #ifdef _OSG
    try
    {
-      if( _assemblyList[_rootCADNode->GetID()]->getStateSet() )
+      if( _assemblyList[ rootCADNodeID ]->getStateSet() )
       {   
-         _assemblyList[_rootCADNode->GetID()]->getStateSet()->clear();
+         _assemblyList[ rootCADNodeID ]->getStateSet()->clear();
       }
    }
    catch(...)
