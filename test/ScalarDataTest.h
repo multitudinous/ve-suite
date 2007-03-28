@@ -18,7 +18,7 @@ public:
       {
          v1.push_back(static_cast<float>(i)); 
       }
-      sd.addScalar("Temperature", v1);
+      sd.setScalar("Temperature", v1);
       TS_ASSERT(sd.hasScalar("Temperature"));
       TS_ASSERT_EQUALS(sd.size("Temperature"), 9);
       
@@ -38,7 +38,7 @@ public:
       {
          v1.push_back(static_cast<float>(i)); 
       }
-      sd.addScalar("Temperature", v1);
+      sd.setScalar("Temperature", v1);
       TS_ASSERT(sd.hasScalar("Temperature"));
       TS_ASSERT_EQUALS(sd.size("Temperature"), 9);
       TS_ASSERT_EQUALS(sd.hasScalar("DoesNotExist"), false);

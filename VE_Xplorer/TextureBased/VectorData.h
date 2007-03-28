@@ -7,80 +7,200 @@
 
 #ifdef VE_PATENTED
 
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_TextureBased
 {
+   // Convenience typedef.
+   typedef std::map<std::string, gmtl::Vec3f> VectorMap;
+
    /**
     * Represents a data Vector of a texture data set.
     */
-   struct VE_TEXTURE_BASED_EXPORTS VectorData
+   class VE_TEXTURE_BASED_EXPORTS VectorDataSet
    {
+   public:
+      
+
       /**
        * Default Ctor
        */
-      VectorData()
+      VectorDataSet()
       {}
 
       /**
-       * Ctor that just takes a vector; this is so gmtl::Vec3f objects can
-       * be used to initialize a VectorData object.
-       */
-      VectorData(const gmtl::Vec3f& vec)
-         : mData(vec)
-      {}
-
-      /**
-       * Ctor that takes a vector and a string.
+       * Adds a set of vector values to this data set.  If a data set of the
+       * same name already exists, it is replaced with the given one.
        *
-       * @param   vec      the vector data.
-       * @param   name     the name of the vector.
+       * @param   name     the name of the vector to set.
+       * @param   values   the values of the vector.
        */
-      VectorData(const std::string& name, const gmtl::Vec3f& vec)
-         : mName(name), mData(vec)
-      {}
-
-      /**
-       * Implicit conversion operator provided to allow the use of VectorData
-       * objects with APIs that only accept gmtl::Vec3f.
-       */
-      operator gmtl::Vec3f()
+      void setVector(const std::string& name, 
+                     const std::vector<gmtl::Vec3f>& values)
       {
-         return mData;
+         mVectorMap[name] = values;
       }
 
       /**
-       * Array operator overload for convenience.
+       * Sets the value of the specified vector at the given index.  If
+       * either the vector name does not exist, or the index is greater than
+       * 1 + the current maximum index, this will return false.
        *
-       * @param   idx      the array index.
+       * @param   name     the name of the vector to set a value of.
+       * @param   idx      the index of the vector to set the value at.
+       * @param   value    the value to set the vector to.
        *
-       * @return     the value of mData[idx].
+       * @return     true if successful, false otherwise.
        */
-      float& operator[](const size_t idx)
+      bool setVector(const std::string& name, const size_t idx, 
+                     const gmtl::Vec3f& value)
       {
-         return mData[idx];
+         if (mVectorMap.find(name) == mVectorMap.end() ||
+             idx > mVectorMap[name].size())
+         {
+            return false;
+         }
+         if (idx == mVectorMap[name].size())
+         {
+            // Since the index is one beyond the current maximum, we have
+            // to actually add the value to the vector instead of setting it.
+            mVectorMap[name].push_back(value);
+         }
+         else
+         {
+            mVectorMap[name][idx] = value;
+         }
+         return true;
       }
 
       /**
-       * const array operator overload so that const VectorData objects will
-       * compile without error.
+       * Sets the value of vectors in this VectorDataSet at the specified
+       * index (timestep).
        *
-       * @param   idx      the array index.
+       * @param   idx      the index to set the values of
+       * @param   values   the values to set for the given index.
        *
-       * @return     the value of mData[idx].
+       * @return     true if successful, false otherwise
        */
-      const float& operator[](const size_t idx) const
+      bool setVector(const size_t idx, const VectorMap& values)
       {
-         return mData[idx];
+         VectorMap::const_iterator itr;
+         for (itr = values.begin(); itr != values.end(); ++itr)
+         {
+            if (idx > mVectorMap[itr->first].size())
+            {
+               return false;
+            }
+            else if (idx == mVectorMap[itr->first].size())
+            {
+               mVectorMap[itr->first].push_back(itr->second); 
+            }
+            else
+            {
+               mVectorMap[itr->first][idx] = itr->second;
+            }
+         }
+         return true;
       }
 
-      /// The name of the vector.
-      std::string                                  mName;
+      /**
+       * Gets the all the values of the specified vector.
+       *
+       * @param   name     the name of the vector to retrieve values of.
+       *
+       * @return     all the values of the given vector; if the name does not
+       *             exist, an empty vector is returned.
+       */
+      std::vector<gmtl::Vec3f> getVector(const std::string& name) const
+      {
+         std::vector<gmtl::Vec3f> empty;
+         if (mVectorMap.find(name) != mVectorMap.end())
+         {
+            return mVectorMap.find(name)->second;
+         }
+         return empty;
+      }
 
-      /// The vector data.
-      gmtl::Vec3f                                  mData;
+      /**
+       * Gets the value of the specified vector at the specified index.
+       * If the vector or index do not exist, it will return a gmtl::Vec3f
+       * with the value of NaN for all components.
+       *
+       * @param   name     the name of the vector to get the value of.
+       * @param   idx      the index of the desired value.
+       *
+       * @return     the value of name at idx, or gmtl::Vec3f(NaN, NaN, NaN)
+       */
+      gmtl::Vec3f getVector(const std::string& name, const size_t idx) const
+      {
+         if (mVectorMap.find(name) != mVectorMap.end() &&
+             idx < mVectorMap.find(name)->second.size())
+         {
+            return mVectorMap.find(name)->second[idx]; 
+         }
+         float NaN = std::numeric_limits<float>::quiet_NaN();
+         return gmtl::Vec3f(NaN, NaN, NaN);
+      }
+
+      /**
+       * Gets the value of all vectors at the specified timestep.
+       * If the timestep does not exist, this will return an empty map.
+       *
+       * @param   idx      the timestep to retrieve the values of
+       *
+       * @return     the values of all vectors at timestep idx.
+       */
+      VectorMap getVector(const size_t idx) const
+      {
+         VectorMap results;
+         std::map<std::string, std::vector<gmtl::Vec3f> >::const_iterator itr;
+         for (itr = mVectorMap.begin(); itr != mVectorMap.end(); ++itr)
+         {
+            if (idx < itr->second.size())
+            {
+               results[itr->first] = itr->second[idx];
+            }
+         }
+         return results;
+      }
+
+      /**
+       * Checks to see if this VectorDataSet contains a vector with the 
+       * given name.
+       *
+       * @param   name     the name of the vector to lookup.
+       *
+       * @return     true if the vector is in this dataset, false otherwise.
+       */
+      bool hasVector(const std::string& name)
+      {
+         return mVectorMap.find(name) != mVectorMap.end();
+      }
+
+      /**
+       * Returns the number of values for the specified vector.
+       *
+       * @param   name     the name of the vector to return the value count of.
+       *
+       * @return     the number of values associated with the named vector.
+       */
+      const size_t size(const std::string& name) const
+      {
+         std::map<std::string, std::vector<gmtl::Vec3f> >::const_iterator itr =
+            mVectorMap.find(name);
+         if (itr == mVectorMap.end())
+         {
+            return 0;
+         }
+         return itr->second.size();
+      }
+
+   private:
+
+      /// The map of vector names to their values.
+      std::map<std::string, std::vector<gmtl::Vec3f> >         mVectorMap;
+
    };
-
-   // Convenience typedef
-   typedef std::vector<VectorData> VectorDataSet;
 }
 
 #endif

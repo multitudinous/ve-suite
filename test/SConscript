@@ -24,7 +24,6 @@ test_hdrs = Split("""
    DatabaseTest.h
    ScalarDataTest.h
    SQLiteDriverTest.h
-   TimestepDataTest.h
    VariantTest.h
    VectorDataTest.h
 """)

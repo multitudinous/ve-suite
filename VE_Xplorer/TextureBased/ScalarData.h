@@ -8,6 +8,8 @@
 
 #ifdef VE_PATENTED
 
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_TextureBased
 {
    /// Convenience typedef of a single timesteps scalar data map.
@@ -17,7 +19,7 @@ namespace VE_TextureBased
     * Represents a set of scalars that is used in a texture data set.  This is
     * the group of scalars that will have a value for each timestep.
     */
-   class ScalarDataSet
+   class VE_TEXTURE_BASED_EXPORTS ScalarDataSet
    {
    public:
 
@@ -34,9 +36,30 @@ namespace VE_TextureBased
        * @param   name     the name of the scalar to add.
        * @param   values   the values of the scalar.
        */
-      void addScalar(const std::string& name, const std::vector<float>& values)
+      void setScalar(const std::string& name, const std::vector<float>& values)
       {
          mScalarMap[name] = values;
+      }
+
+      /**
+       * Sets a value of a scalar dataset at a particular index.
+       *
+       * @param   name     the name of the scalar to set a value for.
+       * @param   idx      the index of the value to set. 
+       * @param   value    the value to set.
+       *
+       * @return     true if successful, false otherwise.
+       */
+      bool setScalar(const std::string& name, const size_t idx, 
+                     const float value)
+      {
+         if (mScalarMap.find(name) == mScalarMap.end() ||
+             idx >= mScalarMap[name].size())
+         {
+            return false;
+         }
+         (mScalarMap[name])[idx] = value;
+         return true;
       }
 
       /**
@@ -95,27 +118,6 @@ namespace VE_TextureBased
             results.insert(std::make_pair(itr->first, itr->second[idx]));
          }
          return results;
-      }
-
-      /**
-       * Sets a value of a scalar dataset at a particular index.
-       *
-       * @param   name     the name of the scalar to set a value for.
-       * @param   idx      the index of the value to set. 
-       * @param   value    the value to set.
-       *
-       * @return     true if successful, false otherwise.
-       */
-      bool setScalar(const std::string& name, const size_t idx, 
-                     const float value)
-      {
-         if (mScalarMap.find(name) == mScalarMap.end() ||
-             idx >= mScalarMap[name].size())
-         {
-            return false;
-         }
-         (mScalarMap[name])[idx] = value;
-         return true;
       }
 
 
