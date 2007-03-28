@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE_Suite"
-#define MyAppVerName "VE_Suite 1.0.4"
+#define MyAppVerName "VE_Suite 1.0.5"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -55,7 +55,7 @@ Name: vexplorer; Description: VE-Xplorer; Types: full
 Name: veconductor; Description: VE-Conductor (GUI); Types: full
 Name: vebuildenv; Description: Headers and Libs; Types: full
 Name: examples; Description: Example datasets; Types: full
-Name: buildertools; Description: VE-Suite Utilities; Types: full
+Name: buildertools; Description: VE-Suite BuilderTools; Types: full
 [Registry]
 Root: HKCU; Subkey: Software\VE-Suite-Launcher; ValueType: none; Flags: uninsdeletekeyifempty
 Root: HKCU; Subkey: Software\VE-Conductor; ValueType: none; Components: " examples vebuildenv veconductor vexplorer nameserver"; Tasks: " desktopVELauncherIcon"; Flags: uninsdeletekeyifempty
@@ -97,12 +97,12 @@ Source: {#VEHOME}\VE_Open\skel\*; DestDir: {app}\include\VE_Open\skel; Attribs: 
 Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-Source: {#VEHOME}/share/dualhead_configs/*.jconf; DestDir: {app}\share\vesuite\dualhead_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
-Source: {#VEHOME}/share/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\stereo_desktop; Components: nameserver; Flags: recursesubdirs createallsubdirs
-Source: {#VEHOME}/share/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vecr_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
+Source: {#VEHOME}/share/dualhead_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\dualhead_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
+Source: {#VEHOME}/share/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\stereo_desktop; Components: nameserver; Flags: recursesubdirs createallsubdirs
+Source: {#VEHOME}/share/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\vecr_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
 
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#VEHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
+;Source: {#VEHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 ;Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 ;Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
@@ -127,3 +127,9 @@ Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe;
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
 [Run]
 Filename: {tmp}\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; WorkingDir: {tmp}; Description: Install VE-BuilderTools; StatusMsg: Installing VE-BuilderTools {#VEVERSION}_{#SVNVERSION}; Flags: postinstall; Components: buildertools; Tasks: 
+[_ISToolPreCompile]
+Name: .\buildVELauncher.exe.bat; Parameters: ; Flags: " abortonerror"
+[_ISTool]
+UseAbsolutePaths=false
+LogFile=C:\devEnv\VE_Suite_1.0\VE_Installer\installer\compile.log
+LogFileAppend=false
