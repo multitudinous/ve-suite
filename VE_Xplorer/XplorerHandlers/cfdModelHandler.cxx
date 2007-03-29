@@ -61,6 +61,7 @@
 #include "VE_Xplorer/XplorerHandlers/CADAddAttributeEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADSetActiveAttributeEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADSetNameEH.h"
+#include "VE_Xplorer/XplorerHandlers/CADSetRootNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADToggleEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADRemoveAttributeEH.h"
 
@@ -126,6 +127,7 @@ cfdModelHandler::cfdModelHandler( void )
    nullCommand->SetCommandName( "NULL" );
    
    tbased = false;
+   _eventHandlers[ std::string("SET_ROOT_CAD_NODE")] = new VE_EVENTS::CADSetRootNodeEventHandler();   
    _eventHandlers[ std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();   
    _eventHandlers[ std::string("CAD_ADD_NODE") ] = new VE_EVENTS::CADAddNodeEventHandler();
    _eventHandlers[ std::string("CAD_DELETE_NODE") ] = new VE_EVENTS::CADDeleteNodeEventHandler();

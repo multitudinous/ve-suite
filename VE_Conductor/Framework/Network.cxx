@@ -2820,8 +2820,8 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
 
       cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
+   cadDialog->SetVjObsPtr( VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer() );
    cadDialog->SetRootCADNode(veModel->GetGeometry());
-   cadDialog->SetVjObsPtr( xplorerPtr.in() );
    cadDialog->ShowModal();
    // Get cadnode back
    if(cadDialog->GetRootCADNode())

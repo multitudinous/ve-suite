@@ -163,10 +163,14 @@ public:
    unsigned int GetNumberOfGeomDataSets( void );
    std::string GetGeomFileName( int );
    void CreateGeomDataSet( std::string );
-   
+
+   ///Set the UUID of the root CADNode 
+   ///\param rootNodeId The uuid of the root CADNode in Conductor
+   void SetRootCADNodeID(std::string rootNodeId);
    ///Set the root CADNode
    ///\param node The rootCADNode
    void SetRootCADNode(VE_XML::VE_CAD::CADNode* node);
+
    ///\param CAD goes transparent when dataset vis is active
    void MakeCADRootTransparent();
 
@@ -282,6 +286,9 @@ public:
 
    ///The current graph
    VE_XML::VE_CAD::CADNode* GetRootCADNode();
+
+  ///The current graph
+   std::string GetRootCADNodeID();
 
 private:
    vpr::Thread *loadDataTh;

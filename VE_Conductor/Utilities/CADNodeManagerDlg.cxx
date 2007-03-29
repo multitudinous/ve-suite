@@ -137,6 +137,16 @@ void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
    {
       _rootNode = new CADAssembly(std::string("Model Geometry"));
    }
+
+   _commandName = std::string("SET_ROOT_CAD_NODE");
+
+   ClearInstructions();
+   VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
+   //cadNode->SetDataType(std::string("XMLOBJECT"));
+   cadNode->SetData("Root Node ID",_rootNode->GetID());
+   _dataValuePairList.push_back(cadNode);
+   _sendCommandsToXplorer();
+   ClearInstructions();
    _ensureTree();
   
 }

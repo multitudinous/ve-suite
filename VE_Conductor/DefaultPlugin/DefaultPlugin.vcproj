@@ -106,7 +106,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="dbg|Win32"
+			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/UI/win32"
 			IntermediateDirectory=".\DefaultPlugin\$(ConfigurationName)"
 			ConfigurationType="2"

@@ -263,6 +263,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CADSetRootNodeEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\CADToggleEH.cxx"
 				>
 			</File>
@@ -741,6 +745,10 @@
 			</File>
 			<File
 				RelativePath=".\CADSetNameEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CADSetRootNodeEH.h"
 				>
 			</File>
 			<File

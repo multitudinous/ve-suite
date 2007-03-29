@@ -127,7 +127,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else
       {
-         ///need to check if parent is on the graph already
+         //need to check if parent is on the graph already
          if(!_activeModel->AssemblyExists(node->GetParent()))
          {
             _activeModel->CreateAssembly(node->GetParent());
@@ -139,7 +139,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 
             //update the top level node descriptors
             SetNodeDescriptors(node->GetParent(),"Assembly","VE_XML_ID",node->GetParent());
-            ///Add the top level CAD to the VEBaseClass
+            //Add the top level CAD to the VEBaseClass
             _activeModel->GetDCS()->addChild(_activeModel->GetAssembly(node->GetParent()));
          }
       }

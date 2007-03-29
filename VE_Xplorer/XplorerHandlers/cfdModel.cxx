@@ -675,16 +675,28 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    return newStlName;
 }
 //Dynamic Loading Data End Here
-////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+void cfdModel::SetRootCADNodeID(std::string rootNodeId)
+{
+	this->rootCADNodeID = rootNodeId;
+	//May also need to check the assembly list and update _rootCADNode but
+	//I don't think that is neccessary.
+}
+//////////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetRootCADNode(VE_XML::VE_CAD::CADNode* node)
 {
    _rootCADNode = node;
-   rootCADNodeID = _rootCADNode->GetID();
+   this->rootCADNodeID = _rootCADNode->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADNode* cfdModel::GetRootCADNode()
 {
    return _rootCADNode;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdModel::GetRootCADNodeID()
+{
+   return rootCADNodeID;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateClone( std::string cloneID, std::string originalID, std::string originalType )
@@ -707,9 +719,8 @@ void cfdModel::CreateClone( std::string cloneID, std::string originalID, std::st
          _cloneList[cloneID] = new VE_SceneGraph::Clone( GetPart(originalID)->GetNode()->GetNode() );
       }
    }
-   
 }
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 void cfdModel::CreateAssembly(std::string assemblyID)
 {
    _assemblyList[assemblyID] = new VE_SceneGraph::DCS();
@@ -775,9 +786,13 @@ void cfdModel::SetActiveAttributeOnNode(std::string nodeID, std::string nodeType
 void cfdModel::MakeCADRootTransparent()
 {
    //check for the attribute
-   if ( _assemblyList.empty() )
+   /*if ( _assemblyList.empty() )
    {  
       return;
+   }*/
+   if(!AssemblyExists(rootCADNodeID))
+   {
+	   return;
    }
 #ifdef _OSG   
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
@@ -785,7 +800,7 @@ void cfdModel::MakeCADRootTransparent()
 
    try
    {
-      _assemblyList[_rootCADNode->GetID()]->setStateSet(attribute.get());
+	   _assemblyList[rootCADNodeID]->setStateSet(attribute.get());
    }
    catch(...)
    {
@@ -798,9 +813,13 @@ void cfdModel::MakeCADRootTransparent()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::MakeCADRootOpaque()
 {
-   if ( _assemblyList.empty() )
+   /*if ( _assemblyList.empty() )
    {  
       return;
+   }*/
+   if(!AssemblyExists(rootCADNodeID))
+   {
+	   return;
    }
 #ifdef _OSG
    try
