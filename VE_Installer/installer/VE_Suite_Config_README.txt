@@ -7,13 +7,14 @@ Once VE-Suite is installed, you can configure your system to:
 
 Here's how:
 
-1. Make sure the path to VE-Suite's executables is in your PATH variable. To test if it is, try running:
+1. Make sure the path to VE-Suite's executables is set in your PATH variable
+when your system starts up. To test if it is, open a new Terminal and try
+running:
    velauncher.py
-from the command line. If VE-Launcher opens, your PATH is fine. If not, you'll have to add it to PATH, with a command like:
-   setenv PATH your_path_to_vesuite_bin:${PATH} (in tcsh)
+from the command line. If VE-Launcher opens, your PATH is fine. If not, you'll have to add it to PATH in your shell's default file, with a command like:
+   setenv PATH your_path_to_vesuite_bin:${PATH} (added to ~/.cshrc)
 or
-   export PATH=your_path_to_vesuite_bin:${PATH} (in sh)
-
+   export PATH=your_path_to_vesuite_bin:${PATH} (added to ~/.profile)
 
 2. Run the vesuite config script for your desktop.
 If you have GNOME 2.8+, run:
