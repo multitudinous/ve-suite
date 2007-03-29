@@ -163,12 +163,9 @@ void cfdModelHandler::CleanUp( void )
    delete nullCommand;
    nullCommand = 0;
 
-   for( std::vector< cfdModel* >::iterator itr = _modelList.begin();
-                                           itr != _modelList.end(); itr++)
+   for( size_t i = 0; i < _modelList.size(); ++i )
    {
-      delete *itr;
-      // This code probably doesn't work
-      // Please see code in cfdExecutive dealing with maps
+      delete _modelList.at( i );
    }
    _modelList.clear();
 
@@ -279,10 +276,10 @@ void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
       if ( (*iter) == modelToBeRemoved )
       {
          //delete (*iter);
-         cfdModel* tempModel = (*iter);
+         //cfdModel* tempModel = (*iter);
          _modelList.erase( iter++ ); 
-         delete tempModel;
-         tempModel = 0;
+         delete modelToBeRemoved;
+         //tempModel = 0;
          break;     
       }
       else
