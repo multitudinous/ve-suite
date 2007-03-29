@@ -123,7 +123,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       {
          ///add the root to the VEBaseClass DCS
          node->SetParent("rootNode");
-         _activeModel->SetRootCADNode(node);
+         _activeModel->SetRootCADNodeID(node->GetID());
       }
       else
       {

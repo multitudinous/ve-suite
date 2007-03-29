@@ -102,7 +102,6 @@ cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
 #ifdef _OSG
    _activeTextureDataSet = 0;
 #endif
-   _rootCADNode = 0;
    modelID = 10000000;
    ///probably need a uuid for the VEBaseClass DCS instead of "rootNode"
    _assemblyList["rootNode"] = _worldDCS.get();
@@ -201,14 +200,6 @@ cfdModel::~cfdModel()
 
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
-   //cfdModel does not own this memory therefore should not delete it
-   //the owner class of this data should delete it
-   //if this casues as memory leak then this should be fixed else where
-   /*if(_rootCADNode)
-   {
-      delete _rootCADNode;
-      _rootCADNode = 0;
-   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::PreFrameUpdate()
@@ -675,28 +666,10 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    return newStlName;
 }
 //Dynamic Loading Data End Here
-/////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
 void cfdModel::SetRootCADNodeID(std::string rootNodeId)
 {
 	this->rootCADNodeID = rootNodeId;
-	//May also need to check the assembly list and update _rootCADNode but
-	//I don't think that is neccessary.
-}
-//////////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetRootCADNode(VE_XML::VE_CAD::CADNode* node)
-{
-   _rootCADNode = node;
-   this->rootCADNodeID = _rootCADNode->GetID();
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_CAD::CADNode* cfdModel::GetRootCADNode()
-{
-   return _rootCADNode;
-}
-////////////////////////////////////////////////////////////////////////////////
-std::string cfdModel::GetRootCADNodeID()
-{
-   return rootCADNodeID;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateClone( std::string cloneID, std::string originalID, std::string originalType )

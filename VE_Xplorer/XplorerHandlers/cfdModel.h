@@ -167,10 +167,7 @@ public:
    ///Set the UUID of the root CADNode 
    ///\param rootNodeId The uuid of the root CADNode in Conductor
    void SetRootCADNodeID(std::string rootNodeId);
-   ///Set the root CADNode
-   ///\param node The rootCADNode
-   void SetRootCADNode(VE_XML::VE_CAD::CADNode* node);
-
+   
    ///\param CAD goes transparent when dataset vis is active
    void MakeCADRootTransparent();
 
@@ -284,9 +281,6 @@ public:
    void AddVTKDataSet(vtkDataSet* );
    std::vector<vtkDataSet* >GetWaitingDataList();
 
-   ///The current graph
-   VE_XML::VE_CAD::CADNode* GetRootCADNode();
-
   ///The current graph
    std::string GetRootCADNodeID();
 
@@ -333,7 +327,6 @@ private:
    bool mMoveOldGeomDataSets;
    bool mMoveOldVTKDataSets;   
 
-   VE_XML::VE_CAD::CADNode* _rootCADNode;///<The root CADNode.
    std::string rootCADNodeID;///<ID for root CAD node id
    unsigned int modelID;
 #ifdef _OSG
