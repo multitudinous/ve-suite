@@ -119,9 +119,8 @@ void DeleteObjectFromNetworkEventHandler::Execute( VE_XML::XMLObject* xmlObject 
    }
    else
    {
-      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << foundPlugin->first 
-                              << " ]-> " << foundPlugin->second 
-                              << " not present."
+      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << id 
+                              << " ] not present."
                               << std::endl << vprDEBUG_FLUSH;
    }
    //Set active model to null so that if the previous active model is deleted
