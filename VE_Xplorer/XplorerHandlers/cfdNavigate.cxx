@@ -609,7 +609,7 @@ void cfdNavigate::updateNavigationFromGUI()
 
    //Do not allow translation below z = 0 plane
    if( subzeroFlag ){
-      if( tempArray[2] < 0 )
+      if( tempArray[2] > 0 )
       {
          tempArray[2] = 0;
       }
