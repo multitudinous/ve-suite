@@ -220,7 +220,7 @@ void cfdTeacher::RecordScene()
 #ifdef _PERFORMER
                   << this->pfb_count << ".pfb";
 #elif _OSG
-         << this->pfb_count << ".osg";
+         << this->pfb_count << ".ive";
 #endif
    std::string dirString = dirStringStream.str();
    pfb_filename = dirString.c_str();
