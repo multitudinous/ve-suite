@@ -142,5 +142,15 @@ else
    cp $Scalable_Icon_File_Location $Icon_Directory/hicolor/scalable/apps/$Menu_Icon_Destination
 fi
 
+##Make desktop shortcuts
+if [ "True" == "True" ]
+then
+   echo "Making symbolic links on desktop."
+   ln -sf $Applications_Directory/vrac-$Desktop_File $Desktop_Path/VE-Launcher-link
+   ln -sf $Applications_Directory/vrac-$Reboot_File $Desktop_Path/VE-Reboot-link
+   ln -sf $Applications_Directory/vrac-$Shutdown_File $Desktop_Path/VE-Shutdown-link
+   ln -sf $Applications_Directory/vrac-$Wake_File $Desktop_Path/VE-Shutdown-link
+fi
+
 echo "Done."
 echo "Re-login for settings to take effect."

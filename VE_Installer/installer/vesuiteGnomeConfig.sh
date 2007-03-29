@@ -35,6 +35,7 @@ export Shutdown_File_Location=$Shutdown_File
 export Wake_File_Location=$Wake_File
 export Mimetype_Icon_File_Location=installerImages/$Mimetype_Icon_File
 export Menu_Icon_File_Location=installerImages/$Menu_Icon_Source
+export Desktop_Path=~/Desktop
 #Set GlobalConfig
 #GlobalConfig determines whether a user-only or global config is made.
 export Uninstall=False
@@ -121,7 +122,7 @@ else
    desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Wake_File_Location
 fi
 
-##Install icon file
+##Install icon files
 if [ $Uninstall == "True" ]
 then
    echo "Uninstalling icon for .ves files..."
@@ -133,6 +134,23 @@ else
    mkdir -p $Icon_Directory/hicolor/32x32/apps
    cp $Mimetype_Icon_File_Location $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
    cp $Menu_Icon_File_Location $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
+fi
+
+##Make desktop shortcuts
+if [ $Uninstall == "True" ]
+then
+   echo "Removing symbolic links on desktop."
+   rm -f $Desktop_Path/VE-Launcher-link
+   rm -f $Desktop_Path/VE-Reboot-link
+   rm -f $Desktop_Path/VE-Shutdown-link
+   rm -f $Desktop_Path/VE-Wake-link   
+elif [ "True" == "True" ]
+then
+   echo "Making symbolic links on desktop."
+   ln -sf $Applications_Directory/vrac-$Desktop_File $Desktop_Path/VE-Launcher-link
+   ln -sf $Applications_Directory/vrac-$Reboot_File $Desktop_Path/VE-Reboot-link
+   ln -sf $Applications_Directory/vrac-$Shutdown_File $Desktop_Path/VE-Shutdown-link
+   ln -sf $Applications_Directory/vrac-$Wake_File $Desktop_Path/VE-Wake-link
 fi
 
 echo "Done."
