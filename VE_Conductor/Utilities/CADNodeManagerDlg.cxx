@@ -140,6 +140,11 @@ void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
    _ensureTree();
   
 }
+/////////////////////////////////////////////
+void CADNodeManagerDlg::ClearLoadedCADFiles()
+{
+   _loadedCAD.clear();
+}
 /////////////////////////////////////
 void CADNodeManagerDlg::_ensureTree()
 {
@@ -751,8 +756,20 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
        ClearInstructions();
        
        dynamic_cast<CADAssembly*>(parentCADNode)->RemoveChild(_activeCADNode->GetID());
+       
+       for(std::map<wxString,VE_XML::VE_CAD::CADNode* >::iterator deletedNode = _loadedCAD.begin();
+          deletedNode != _loadedCAD.end();
+          ++deletedNode)
+       {
+          if(deletedNode->second == _activeCADNode)
+          {
+             _loadedCAD.erase(deletedNode);
+             break;
+          }
+       }
+
        _geometryTree->Delete(_activeTreeNode->GetId()); 
-	   _ensureTree();
+	    //_ensureTree();
     }
 }
 #ifndef STAND_ALONE

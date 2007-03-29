@@ -2321,6 +2321,11 @@ void Network::New()
    {
       vistab->ResetAllDatasetDependentCheckBoxes();
    }
+
+   if(cadDialog)
+   {
+      cadDialog->ClearLoadedCADFiles();
+   }
 }
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork )

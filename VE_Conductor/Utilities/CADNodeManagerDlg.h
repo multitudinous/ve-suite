@@ -96,13 +96,16 @@ public:
    ///Clear out the current queue of instructions.
    void ClearInstructions();
 
+   ///Clear out the list of currently loaded CAD files
+   void ClearLoadedCADFiles();
+
    ///Set the root CADNode to display.
    ///\param rootNode The root CADNode to display.
    void SetRootCADNode(VE_XML::VE_CAD::CADNode* rootNode);
 
    ///Get the root CADNode
    VE_XML::VE_CAD::CADNode* GetRootCADNode();
-//protected:
+protected:
 
    ///Create the dialog
    void _buildDialog();
