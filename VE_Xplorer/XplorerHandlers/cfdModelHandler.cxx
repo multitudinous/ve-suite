@@ -299,7 +299,7 @@ cfdModel* cfdModelHandler::GetActiveModel( void )
 //////////////////////////////////////////////
 int cfdModelHandler::GetNumberOfModels( void )
 {
-   return (int)_modelList.size(); 
+   return static_cast< int >( _modelList.size() ); 
 }
 ///////////////////////////////////////////////////
 vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )

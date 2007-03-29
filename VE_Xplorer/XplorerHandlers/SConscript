@@ -60,6 +60,7 @@ sources = Split("""
    CADAddAttributeEH.cxx 
    CADSetActiveAttributeEH.cxx 
    CADSetNameEH.cxx
+   CADSetRootNodeEH.cxx
    CADToggleEH.cxx
    CADTransformEH.cxx
    Device.cxx
@@ -163,6 +164,7 @@ headers = Split("""
    CADAddAttributeEH.h 
    CADSetActiveAttributeEH.h 
    CADSetNameEH.h
+   CADSetRootNodeEH.h
    CADToggleEH.h
    CADTransformEH.h
    Device.h
