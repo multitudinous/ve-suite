@@ -491,12 +491,112 @@
     cluster's other computers before Xplorer is launched. Please read the
     comments in clusterTemplate.txt for more details.</para>
 
-    <para><emphasis role="bold">NOTE: </emphasis>There is a bug in VE-Launcher
+    <para><emphasis role="bold">NOTE:</emphasis> There is a bug in VE-Launcher
     1.0.2 where the cluster template code isn't separated from the standard
     code by a line break. Be sure to insert a line break after the last line
     of code in the template to avoid errors from a merged line.</para>
   </section>
 
+  <section id="launcher_command_line">
+    <title>VE-Launcher Command Line Arguments</title>
+    
+    <para>Once VE-Launcher is set up, you can quickly start up VE-Suite by
+    passing arguments from the command line. Some arguments pass values to
+    VE-Launcher, others bypass VE-Launcher completely and auto-launch
+    VE-Suite. (Arguments that auto-launch VE-Suite use the previously-saved
+    settings for any fields they don't change.)</para>
+    
+    <itemizedlist>
+      <listitem>
+        <para><emphasis role="bold">(file):</emphasis> Passes a .ves file or
+        shell script named (file) to VE-Launcher. Auto-launches
+        VE-Suite if Auto-Launch Passed Files has been selected in VE-Launcher,
+        else it starts VE-Launcher with the file loaded.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-q, --quick:</emphasis> Auto-launches
+        VE-Suite with its last settings.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-g (config), --config=(config):</emphasis>
+        Auto-launches VE-Suite using the VE-Launcher configuration named
+        (config).</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-d, --dev:</emphasis> Starts VE-Launcher in
+        Development mode.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-w (dir), --dir=(dir):</emphasis>
+        Auto-launches VE-Suite with the working directory set to (dir).</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-t (name), --taomachine=(name):</emphasis>
+        Auto-launches VE-Suite with TAOMACHINE set to (name).</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-p (port), --port=(port):</emphasis>
+        Auto-launches VE-Suite with PORT set to (port).</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-j (file), --jconf=(file):</emphasis>
+        Auto-launches VE-Suite using (file) as VE-Xplorer's Juggler
+        configuration.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-l (boolean), --cluster=(boolean):</emphasis>
+        If (boolean)==True, auto-launches VE-Suite in cluster mode. If
+        (boolean)==False, auto-launches VE-Suite in non-cluster mode.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">-b, --debug:</emphasis> Auto-launches
+        VE-Suite and debugs the launch.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Program Arguments:</emphasis> Program arguments
+        set certain parts of VE-Suite to run. They auto-launch VE-Suite, running the
+        programs specified. Note that only the programs specified in the arguments are
+        run; if you just pass '-x -n', for example, only Xplorer and the
+        Comp. Engine will run, even if the default settings usually run
+        Conductor as well.</para>
+        
+        <para>The program arguments are:</para>
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="bold">-n, --nameserver:</emphasis>
+            Runs the Computational Engine.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">-c, --conductor:</emphasis>
+            Runs VE-Conductor.</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">-x, --xplorer</emphasis>
+            Runs VE-Xplorer</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="bold">-s, --shell:</emphasis>
+            Runs a shell with VE-Suite's environment set.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+    
+  </section>
+    
   <section id="launcher_example">
     <title>Example</title>
 
