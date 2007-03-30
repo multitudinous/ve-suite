@@ -42,12 +42,7 @@
 #include <wx/image.h>
 #include <wx/icon.h>
 
-#include "VE_Conductor/xpm/icon1.xpm"
-#include "VE_Conductor/xpm/icon2.xpm"
-#include "VE_Conductor/xpm/icon3.xpm"
-#include "VE_Conductor/xpm/icon4.xpm"
-#include "VE_Conductor/xpm/icon5.xpm"
-
+#include "VE_Conductor/xpm/cad_tree_expanded.xpm"
 #include "VE_Conductor/xpm/cad_tree_selected.xpm"
 #include "VE_Conductor/xpm/cad_tree_unselected.xpm"
 
@@ -214,15 +209,19 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder, 
    //add the transform to the current parent
    if(treeGraph->GetWXTreeCtrl()->GetRootItem().IsOk())
    {
-      wxTreeItemId currentParentId;  
+      wxTreeItemId currentParentId;
+        
       if(node->GetNodeType() == std::string("Assembly"))
       {
          currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(node->GetNodeName().c_str(), wxConvUTF8 )
-                                                                     ,2,4,new TreeNodeData(node));
+                                                                     ,0,2,new TreeNodeData(node));
       
          //update the current parent
-         treeGraph->SetCurrentParentNode(currentParentId); 
+         treeGraph->SetCurrentParentNode(currentParentId);
+
+         treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_Expanded);
+         treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_SelectedExpanded);
       }
       else if(node->GetNodeType() == std::string("Part"))
       {
@@ -239,7 +238,11 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder, 
             {
                currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(clone->GetNodeName().c_str(), wxConvUTF8 )
-                                                                     ,2,4,new TreeNodeData(clone));
+                                                                     ,0,2,new TreeNodeData(clone));
+
+
+               treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_Expanded);
+               treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_SelectedExpanded);
             }
             else if(clone->GetOriginalNode()->GetNodeType() == std::string("Part"))
             {
@@ -254,8 +257,12 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder, 
    {
       //must be the root node
       wxTreeItemId currentParentId = treeGraph->GetWXTreeCtrl()->AddRoot(wxString(node->GetNodeName().c_str(), wxConvUTF8 ),
-                                                                  2,4,new TreeNodeData(node));
+                                                                  0,2,new TreeNodeData(node));
+
       treeGraph->SetCurrentParentNode(currentParentId);
+
+      treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_Expanded);
+      treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_SelectedExpanded);
    }
 }
 ///////////////////////////////////////////
@@ -266,12 +273,10 @@ void CADTreeBuilder::_createImageList()
 
     // should correspond to TreeCtrlIcon_xxx enum
     wxBusyCursor wait;
-    wxIcon icons[5];
-    icons[0] = wxIcon(icon1_xpm);
-    icons[1] = wxIcon(icon2_xpm);
-    icons[2] = wxIcon(cad_tree_unselected_xpm);
-    icons[3] = wxIcon(icon4_xpm);
-    icons[4] = wxIcon(cad_tree_selected_xpm);
+    wxIcon icons[3];
+    icons[0] = wxIcon(cad_tree_unselected_xpm);
+    icons[1] = wxIcon(cad_tree_selected_xpm);
+    icons[2] = wxIcon(cad_tree_expanded_xpm);
 
     int sizeOrig = icons[0].GetWidth();
     for ( size_t i = 0; i < WXSIZEOF(icons); i++ )

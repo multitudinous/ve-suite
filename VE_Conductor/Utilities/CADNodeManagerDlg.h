@@ -209,6 +209,10 @@ protected:
          return tempStr;
    }
    DECLARE_EVENT_TABLE()
+
+private:
+   void _selectOnExpandCollapse(wxTreeEvent& event);
+
 };
 }
 }

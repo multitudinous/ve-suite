@@ -58,6 +58,8 @@ using namespace VE_XML::VE_CAD;
 using namespace VE_XML;
 
 BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
+   EVT_TREE_ITEM_COLLAPSING(TREE_ID, CADNodeManagerDlg::_selectOnExpandCollapse )
+   EVT_TREE_ITEM_EXPANDING(TREE_ID, CADNodeManagerDlg::_selectOnExpandCollapse )
    EVT_TREE_END_LABEL_EDIT(TREE_ID,CADNodeManagerDlg::_editLabel)
    EVT_TREE_SEL_CHANGED(TREE_ID,CADNodeManagerDlg::_setActiveNode)
    EVT_TREE_ITEM_RIGHT_CLICK(TREE_ID, CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
@@ -78,8 +80,7 @@ using namespace VE_Conductor::GUI_Utilities;
 /////////////////////////////////////////////////////////////////////
 //Constructor                                                      //
 /////////////////////////////////////////////////////////////////////
-CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent, 
-                       wxWindowID id)
+CADNodeManagerDlg::CADNodeManagerDlg(CADNode* node, wxWindow* parent, wxWindowID id)
 :wxDialog(parent,id,_("CADTree Manager"),wxDefaultPosition,wxDefaultSize,
 (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX),_("CADTree Manager"))
 {
@@ -179,6 +180,9 @@ void CADNodeManagerDlg::_expandNode( wxTreeItemId node )
     if ( node != _geometryTree->GetRootItem() )
         _geometryTree->Expand( node );
 
+        _geometryTree->SetItemImage(node, 2, wxTreeItemIcon_Expanded);
+        _geometryTree->SetItemImage(node, 2, wxTreeItemIcon_SelectedExpanded);
+
     wxTreeItemIdValue cookie;
     wxTreeItemId child = _geometryTree->GetFirstChild(node, cookie);
 
@@ -214,6 +218,14 @@ void CADNodeManagerDlg::_buildDialog()
    mainSizer->Add(buttonRowSizer, 1, wxALIGN_CENTER);
    SetAutoLayout(true);
    SetSizer(mainSizer);
+}
+///////////////////////////////////////////////////////
+void CADNodeManagerDlg::_selectOnExpandCollapse(wxTreeEvent& event)
+{
+   if( event.GetItem().IsOk() )
+   {
+      //_geometryTree->SelectItem( event.GetItem() );
+   }
 }
 ///////////////////////////////////////////////////////
 void CADNodeManagerDlg::_editLabel(wxTreeEvent& event)
@@ -335,9 +347,15 @@ void CADNodeManagerDlg::_createNewAssembly(wxCommandEvent& WXUNUSED(event))
          newAssembly->SetVisibility(true);
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newAssembly);
  
+
+         _geometryTree->SetItemImage(_activeTreeNode->GetId(), 2, wxTreeItemIcon_Expanded);
+         _geometryTree->SetItemImage(_activeTreeNode->GetId(), 2, wxTreeItemIcon_SelectedExpanded);
+
          _geometryTree->AppendItem(_activeTreeNode->GetId(),
                                  wxString(newAssembly->GetNodeName().c_str(),wxConvUTF8),
-                                 2,4,new CADTreeBuilder::TreeNodeData(newAssembly)); 
+                                 0,2,new CADTreeBuilder::TreeNodeData(newAssembly));
+
+
          ClearInstructions();
 
          _commandName = std::string("CAD_ADD_NODE");
@@ -432,7 +450,10 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
      {
         _geometryTree->AppendItem(parentID,
                                wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
-                               ,2,4,new CADTreeBuilder::TreeNodeData(newClone));
+                               ,0,2,new CADTreeBuilder::TreeNodeData(newClone));
+
+        _geometryTree->SetItemImage(parentID, 2, wxTreeItemIcon_Expanded);
+        _geometryTree->SetItemImage(parentID, 2, wxTreeItemIcon_SelectedExpanded);
      }
      else if(newClone->GetOriginalNode()->GetNodeType() == std::string("Part"))
      {
