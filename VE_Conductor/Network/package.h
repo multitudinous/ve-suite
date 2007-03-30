@@ -103,8 +103,7 @@ protected:
    void FillIntfs( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument *doc );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* BuildFromIntfs();
 
-public:
-//private:
+private:
    std::vector<Interface> intfs; //The vector of the interfaces packed in this package.
 };
 
