@@ -182,7 +182,7 @@ opts.Add('tao', 'If true, use TAO in the build', 'yes')
 ##End added velauncher build options.
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
 opts.Add('options_file', 'Provide a file name for the options caches', '')
-opts.Add('SVN_Previous_Date', 'helptet','')
+opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from','')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')#,'ode_options','opal_options')
