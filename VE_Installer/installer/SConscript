@@ -16,6 +16,7 @@ runScripts = ['vesuiteReboot.sh',
 	      'velauncher.sh'
              ]
 launcherBundle.addFiles( runScripts )
+launcherBundle.addFiles( pyFile )
 
 linuxDClick = ves_pkg.createFileBundle( pj('share','vesuite','misc' ) )
 dclickFiles = ['vesuiteGnomeConfig.sh',
