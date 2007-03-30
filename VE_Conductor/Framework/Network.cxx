@@ -2579,7 +2579,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
       p.Load( linkresult, strlen(linkresult) );
 
       // In the new code this would pass in a datavalue pair
-      UIDialog* port_dlg = modules[mod].GetPlugin()->PortData( NULL, &(p.intfs[0]) );
+      UIDialog* port_dlg = 0;//modules[mod].GetPlugin()->PortData( NULL, &(p.intfs[0]) );
 
       if ( port_dlg != NULL )
          port_dlg->Show();
