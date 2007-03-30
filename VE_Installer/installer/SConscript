@@ -30,6 +30,11 @@ dclickFiles = ['vesuiteGnomeConfig.sh',
                 'vesuiteReboot.desktop',
                 'vesuiteShutdown.desktop',
                 'vesuiteWake.desktop',
+                'xhost.desktop',
+                'vesuiteReboot.sh',
+                'vesuiteWake.sh',
+                'vesuiteShutdown.sh',
+	        'velauncher.sh'
               ]
 linuxDClick.addFiles( dclickFiles )
 linuxDClick.addFiles( runScripts )
