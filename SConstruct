@@ -52,6 +52,7 @@ if GetPlatform() == 'linux':
 else:
    kernelVersion = pt.release()
 
+
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
 buildDir = 'build.'+buildUUID
 Export('buildDir')
@@ -315,10 +316,10 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv['libdir'] = LIBDIR
 
    distDir = pj(buildDir, 'dist')
-   Export('PREFIX', 'LIBDIR', 'distDir')##, 'LauncherExe')
+   Export('PREFIX', 'LIBDIR', 'distDir')
 
-   # Create the GMTL package
-   ves_pkg = sca_auto_dist.Package(name="VE_Suite", version = "%i.%i.%i"%VE_SUITE_VERSION,
+   # Create the VE-Suite package
+   ves_pkg = sca_auto_dist.Package(name="VE-Suite-%s"%(buildUUID), version = "%i.%i.%i"%VE_SUITE_VERSION,
                                  prefix=PREFIX, baseEnv=baseEnv)
    ##ves_pkg.addExtraDist(Split("""
    ##      AUTHORS
@@ -383,17 +384,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ##      README
    ##   """))
    ##Export('cppdom_pkg')
-   
-   if baseEnv['MakeDist'] != 'no':
-      cppdom_pkg.setDistDir( distDir )
-      if GetPlatform() == 'linux':
-         cppdom_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
-         #cppdom_pkg.addPackager( SConsAddons.AutoDist.RpmPackager('cppdom.spec'))
-      elif GetPlatform() == 'win32':
-         pass
-      else:
-         cppdom_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
-   
+      
    ## setup build log to aid in debugging remote builds
    if baseEnv[ 'buildLog' ] != '':
       sys.stdout = os.popen("tee "+ baseEnv[ 'buildLog' ], "w")
@@ -450,32 +441,21 @@ if not SConsAddons.Util.hasHelpFlag():
    for d in ves_dirs:
       SConscript( dirs = d )
 
+   ## create a tar ball of VE-Suite
+   if baseEnv['MakeDist'] != 'no':
+      ves_pkg.setDistDir( distDir )
+      if GetPlatform() == 'linux':
+         ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
+      elif GetPlatform() == 'win32':
+         pass
+      else:
+         ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
+
    ##Setup the install flag to install VE-Suite
    if 'install' in COMMAND_LINE_TARGETS:
       ves_pkg.build( install=True )
    else:
       ves_pkg.build( install=False )
-      
-   ##Compression calls.
-   ##NOTE: If VE_Suite isn't the only thing written to PREFIX,
-   ## these will compress everything in PREFIX. Could get ugly.
-   ##Tar it if set to do so.
-   if 'tar' in COMMAND_LINE_TARGETS:
-      tarFile = "vesuite.tar.gz"
-      baseEnv.Alias('tar', tarFile)
-      baseEnv.Append(TARFLAGS = '-c -z')
-      baseEnv.Tar(tarFile, PREFIX)
-   ##Zip it if set to do so.
-   ##NOTE: If zip says it's missing files & crashing,
-   ## try deleting .sconsign.dblite from the VE_Suite directory.
-   if 'zip' in COMMAND_LINE_TARGETS:
-      zipFile = "vesuite.zip"
-      baseEnv.Alias('zip', zipFile)
-      ##zipped = [pj( PREFIX, 'bin' ),
-      ##          pj( PREFIX, 'include' ),
-      ##          pj( PREFIX, 'lib' ),
-      ##          pj( PREFIX, 'share' )]
-      baseEnv.Zip(zipFile, PREFIX)
-   
+         
    Default('.')
 
