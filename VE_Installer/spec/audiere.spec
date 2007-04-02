@@ -41,16 +41,14 @@ example).
 make
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
+make PREFIX=$RPM_BUILD_ROOT%{_prefix} install
 rm -f $RPM_BUILD_ROOT%{_libdir}/libaudiere.a
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-%run_ldconfig
+%post -p /sbin/ldconfig
 
-%postun
-%run_ldconfig
+%postun -p /sbin/ldconfig
 
 %files
 %defattr(755,root,root)

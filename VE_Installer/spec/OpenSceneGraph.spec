@@ -157,7 +157,7 @@ cp openscenegraph.pc %{_prefix}/lib/pkgconfig/openscenegraph.pc
 %{_libdir}/libosgProducer.so
 
 %files devel
-%defattr(644, root, root)
+%defattr(755, root, root)
 %dir %{_includedir}/osg
 %dir %{_includedir}/osgIntrospection
 %dir %{_includedir}/osgDB
@@ -169,6 +169,7 @@ cp openscenegraph.pc %{_prefix}/lib/pkgconfig/openscenegraph.pc
 %dir %{_includedir}/osgText
 %dir %{_includedir}/osgUtil
 %dir %{_includedir}/osgTerrain
+%defattr(644, root, root)
 %{_includedir}/osg/GL
 %{_includedir}/osg/GLU
 %{_includedir}/osg/Fog

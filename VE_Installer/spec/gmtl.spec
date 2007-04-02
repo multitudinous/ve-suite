@@ -3,6 +3,7 @@
 %define version	0.4.12
 %define release	1
 
+# SuSE Build directive.
 BuildRequires:  aaa_base autoconf automake bash binutils coreutils gcc gcc-c++ glibc glibc-devel findutils libstdc++ libstdc++-devel libtool m4 make python python-devel scons
 
 Name: %{name}

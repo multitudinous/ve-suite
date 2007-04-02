@@ -42,17 +42,11 @@ BuildRequires: aaa_base acl attr audiere audiere-devel autoconf automake bash bi
 %endif
 %endif
 
-if [[ "$(whence omniidl)" != "" ]]
-then
-   %define have_omniorb 1
-else
-   %define have_omniorb 0
-fi
+%define have_omniorb 0 
 %define have_java 1 
 %define have_audiere 1 
 %define have_openal 0
 %define have_performer 0 
-%define have_not_set_tweek_config 1
 
 Name: vrjuggler
 Summary: VR Juggler is the virtual platform for VR application development
@@ -297,8 +291,8 @@ URL: http://www.vrjuggler.org/sonix/
 Group: Development/C++
 Requires: sonix = %{sonix_version}-%{sonix_release}
 Requires: openal >= 0.0.8
-Requires: freealut >= 1.0.1
-BuildRequires: freealut-devel >= 1.0.1
+#Requires: freealut >= 1.0.1
+#BuildRequires: freealut-devel >= 1.0.1
 Provides: sonix-plugin-openal = %{sonix_version}-%{sonix_release}
 
 %description -n sonix-plugin-openal
@@ -572,58 +566,58 @@ mv %{buildroot}%{_bindir}/tweek-base.sh.tmp %{buildroot}%{_bindir}/tweek-base.sh
 rm -rf %{buildroot}
 
 %post -n vpr
-%run_ldconfig
+/sbin/ldconfig
 
 %if %have_omniorb
 %post -n tweek-c++
-%run_ldconfig
+/sbin/ldconfig
 %endif
 %post -n jccl-c++
-%run_ldconfig
+/sbin/ldconfig
 
 %post -n sonix
-%run_ldconfig
+/sbin/ldconfig
 
 %post -n gadgeteer
-%run_ldconfig
+/sbin/ldconfig
 
 %post -n vrjuggler
-%run_ldconfig
+/sbin/ldconfig
 
 %post -n vrjuggler-opengl
-%run_ldconfig
+/sbin/ldconfig
 
 %if %have_performer
 %post -n vrjuggler-performer
-%run_ldconfig
+/sbin/ldconfig
 %endif
 
 %postun -n vpr
-%run_ldconfig
+/sbin/ldconfig
 
 %if %have_omniorb
 %postun -n tweek-c++
-%run_ldconfig
+/sbin/ldconfig
 %endif
 
 %postun -n jccl-c++
-%run_ldconfig
+/sbin/ldconfig
 
 %postun -n sonix
-%run_ldconfig
+/sbin/ldconfig
 
 %postun -n gadgeteer
-%run_ldconfig
+/sbin/ldconfig
 
 %postun -n vrjuggler
-%run_ldconfig
+/sbin/ldconfig
 
 %postun -n vrjuggler-opengl
-%run_ldconfig
+/sbin/ldconfig
 
 %if %have_performer
 %postun -n vrjuggler-performer
-%run_ldconfig
+/sbin/ldconfig
 %endif
 
 %files -n vpr
@@ -660,10 +654,7 @@ rm -rf %{buildroot}
 
 %files -n tweek-c++-devel
 %defattr(-, root, root)
-%if %have_not_set_tweek_config
 %{_bindir}/tweek-config
-%define have_not_set_tweek_config 0
-%endif
 %{_includedir}/tweek
 %{_libdir}/libtweek.a
 %{_libdir}/%{vj_arch}/libtweek.a
@@ -684,10 +675,7 @@ rm -rf %{buildroot}
 
 %files -n tweek-java
 %defattr(-, root, root)
-%if %have_not_set_tweek_config
 %{_bindir}/tweek-config
-%define have_not_set_tweek_config 0
-%endif
 %{_bindir}/idl
 %{_bindir}/idl.jar
 %{_bindir}/logkit-1.2.jar
