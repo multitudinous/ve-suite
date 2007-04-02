@@ -143,13 +143,20 @@ else
 fi
 
 ##Make desktop shortcuts
-if [ "True" == "True" ]
+if [ $Uninstall == "True" ]
 then
-   echo "Making symbolic links on desktop."
-   ln -sf $Applications_Directory/vrac-$Desktop_File $Desktop_Path/VE-Launcher-link
-   ln -sf $Applications_Directory/vrac-$Reboot_File $Desktop_Path/VE-Reboot-link
-   ln -sf $Applications_Directory/vrac-$Shutdown_File $Desktop_Path/VE-Shutdown-link
-   ln -sf $Applications_Directory/vrac-$Wake_File $Desktop_Path/VE-Shutdown-link
+   echo "Removing desktop files on desktop."
+   rm -f $Desktop_Path/$Desktop_File
+   rm -f $Desktop_Path/$Reboot_File
+   rm -f $Desktop_Path/$Shutdown_File
+   rm -f $Desktop_Path/$Wake_File   
+elif [ "True" == "True" ]
+then
+   echo "Making desktop links on desktop."
+   cp $Desktop_File_Location $Desktop_Path/$Desktop_File
+   cp $Reboot_File_Location $Desktop_Path/$Reboot_File
+   cp $Shutdown_File_Location $Desktop_Path/$Shutdown_File
+   cp $Wake_File_Location $Desktop_Path/$Wake_File
 fi
 
 echo "Done."
