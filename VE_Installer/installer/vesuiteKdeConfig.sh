@@ -37,6 +37,7 @@ export Wake_File_Location=$Wake_File
 export Mimetype_Icon_File_Location=installerImages/$Mimetype_Icon_File
 export Menu_Icon_File_Location=installerImages/$Menu_Icon_Source
 export Scalable_Icon_File_Location=installerImages/$Scalable_Icon_Source
+export Desktop_Path=~/Desktop
 #Set GlobalConfig
 #GlobalConfig determines whether a user-only or global config is made.
 export Uninstall=False
@@ -54,20 +55,6 @@ do
       --uninstall)
          export Uninstall=True
          ;;
-      "")
-         #Default config:
-         #Global if user can write to /usr/share/
-         #otherwise user-only.
-         if [ -z "$GlobalConfig" ]
-         then
-            if [ -w "/usr/share/" ]
-            then
-               export GlobalConfig=True
-            else
-               export GlobalConfig=False
-            fi
-         fi
-         ;;
       *)
          #Invalid arg. Spit out error message and quit.
          echo "Invalid argument passed."
@@ -77,6 +64,18 @@ do
          ;;
    esac
 done
+#Default config:
+#Global if user can write to /usr/share/
+#otherwise user-only.
+if [ -z "$GlobalConfig" ]
+then
+   if [ -w "/usr/share/" ]
+   then
+      export GlobalConfig=True
+   else
+      export GlobalConfig=False
+   fi
+fi
 
 #Set Install Directories
 if [ "$GlobalConfig" == "True" ]
@@ -97,12 +96,13 @@ if [ $Uninstall == "True" ]
 then
    echo "Uninstalling MIME-type package for VE-Suite..."
    rm -f $Mime_Directory/application/$Mime_Type_Package_File
+   #update-mime-database $Mime_Directory
 else
    echo "Installing MIME-type package for VE-Suite..."
    mkdir -p $Mime_Directory/application
    cp $Mime_Type_Package_File_Location $Mime_Directory/application/$Mime_Type_Package_File
+   #update-mime-database $Mime_Directory
 fi
-#update-mime-database $Mime_Directory
 
 ##Install Desktop package
 if [ $Uninstall == "True" ]
@@ -150,7 +150,7 @@ then
    rm -f $Desktop_Path/$Reboot_File
    rm -f $Desktop_Path/$Shutdown_File
    rm -f $Desktop_Path/$Wake_File   
-elif [ "True" == "True" ]
+elif [ "$GlobalConfig" == "False" ]
 then
    echo "Making desktop links on desktop."
    cp $Desktop_File_Location $Desktop_Path/$Desktop_File

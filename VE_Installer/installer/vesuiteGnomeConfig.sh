@@ -27,6 +27,7 @@ export Wake_File=vesuiteWake.desktop
 export Mimetype_Icon_File=gnome-mime-application-x-vesuite.png
 export Menu_Icon_Source=ve_icon32x32.png
 export Menu_Icon_Destination=ve-suite.png
+export Scalable_Icon_Source=ve_icon_scalable.png
 #Location of Files
 export Mimetype_Package_File_Location=$Mimetype_Package_File
 export Desktop_File_Location=$Desktop_File
@@ -35,6 +36,7 @@ export Shutdown_File_Location=$Shutdown_File
 export Wake_File_Location=$Wake_File
 export Mimetype_Icon_File_Location=installerImages/$Mimetype_Icon_File
 export Menu_Icon_File_Location=installerImages/$Menu_Icon_Source
+export Scalable_Icon_File_Location=installerImages/$Scalable_Icon_Source
 export Desktop_Path=~/Desktop
 #Set GlobalConfig
 #GlobalConfig determines whether a user-only or global config is made.
@@ -53,20 +55,6 @@ do
       --uninstall)
          export Uninstall=True
          ;;
-      "")
-         #Default config:
-         #Global if user can write to /usr/share/
-         #otherwise user-only.
-         if [ -z "$GlobalConfig" ]
-         then
-            if [ -w "/usr/share/" ]
-            then
-               export GlobalConfig=True
-            else
-               export GlobalConfig=False
-            fi
-         fi
-         ;;
       *)
          #Invalid arg. Spit out error message and quit.
          echo "Invalid argument passed."
@@ -76,6 +64,18 @@ do
          ;;
    esac
 done
+#Default config:
+#Global if user can write to /usr/share/
+#otherwise user-only.
+if [ -z "$GlobalConfig" ]
+then
+   if [ -w "/usr/share/" ]
+   then
+      export GlobalConfig=True
+   else
+      export GlobalConfig=False
+   fi
+fi
 
 #Set Install Directories
 if [ "$GlobalConfig" == "True" ]
@@ -127,13 +127,19 @@ if [ $Uninstall == "True" ]
 then
    echo "Uninstalling icon for .ves files..."
    rm -f $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
+   rm -f $Icon_Directory/hicolor/scalable/mimetypes/$Mimetype_Icon_File
    rm -f $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
+   rm -f $Icon_Directory/hicolor/scalable/apps/$Menu_Icon_Destination
 else
    echo "Installing icon for .ves files..."
    mkdir -p $Icon_Directory/hicolor/48x48/mimetypes
    mkdir -p $Icon_Directory/hicolor/32x32/apps
+   mkdir -p $Icon_Directory/hicolor/scalable/mimetypes
+   mkdir -p $Icon_Directory/hicolor/scalable/apps
    cp $Mimetype_Icon_File_Location $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
+   cp $Scalable_Icon_File_Location $Icon_Directory/hicolor/scalable/mimetypes/$Mimetype_Icon_File
    cp $Menu_Icon_File_Location $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
+   cp $Scalable_Icon_File_Location $Icon_Directory/hicolor/scalable/apps/$Menu_Icon_Destination
 fi
 
 ##Make desktop shortcuts
@@ -144,7 +150,7 @@ then
    rm -f $Desktop_Path/$Reboot_File
    rm -f $Desktop_Path/$Shutdown_File
    rm -f $Desktop_Path/$Wake_File   
-elif [ "True" == "True" ]
+elif [ "$GlobalConfig" == "False" ]
 then
    echo "Making desktop links on desktop."
    cp $Desktop_File_Location $Desktop_Path/$Desktop_File
