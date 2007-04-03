@@ -34,7 +34,7 @@
 #define VE_SEED_POINTS_H
 #ifdef _OSG
 #include <osg/Geode>
-#include <osg/Drawable>
+#include <osg/Geometry>
 #include "VE_Installer/include/VEConfig.h"
 
 namespace osg
@@ -123,7 +123,7 @@ public:
                      std::string minMax="Min");
 
 protected:
-   class PointsDrawable: public osg::Drawable
+   class PointsDrawable: public osg::Geometry
    {
    public:
 	   ///Constructor

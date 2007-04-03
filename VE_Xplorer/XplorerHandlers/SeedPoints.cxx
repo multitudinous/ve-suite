@@ -231,7 +231,7 @@ SeedPoints::PointsDrawable::PointsDrawable(unsigned int* dimensions, float* boun
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 SeedPoints::PointsDrawable::PointsDrawable(const SeedPoints::PointsDrawable& pointsDrawable,
 										               const osg::CopyOp& copyop)
-													   :osg::Drawable(pointsDrawable,copyop)
+													   :osg::Geometry(pointsDrawable,copyop)
 {
    _dimensions[0] = pointsDrawable. _dimensions[0];
    _dimensions[1] = pointsDrawable. _dimensions[1];
