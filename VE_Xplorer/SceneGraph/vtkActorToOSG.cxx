@@ -263,14 +263,15 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 		stateset->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
 	}
 
-	// wireframe
-	if ( actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME ) 
+	// wireframe and line strips
+	if ( ( actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME ) ||
+        ( osg::PrimitiveSet::LINE_STRIP == primType ) )
    {
       osg::ref_ptr<osg::LineWidth> lineWidth = new osg::LineWidth;
       lineWidth->setWidth( actor->GetProperty()->GetLineWidth() );
       stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
-   } 
-
+   }
+   
 	// backface culling
 	if (!actor->GetProperty()->GetBackfaceCulling())
 		stateset->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);

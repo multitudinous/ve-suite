@@ -290,7 +290,7 @@ aa Assign Normals NORMALS POINT_DATA
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
    temp->GetProperty()->SetLineWidth(lineDiameter);
-   temp->GetProperty()->SetRepresentationToWireframe();
+   //temp->GetProperty()->SetRepresentationToWireframe();
    //test to see if there is enough memory, if not, filters are deleted
    try
    {
