@@ -32,6 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Conductor/Framework/ScalarToolsDlg.h"
+#include "VE_Conductor/Framework/Frame.h"
+
+#include <wx/app.h>
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -47,8 +50,10 @@ using namespace VE_Conductor::GUI_Utilities;
 
 BEGIN_EVENT_TABLE( ScalarToolsDialog, wxDialog )
    EVT_COMBOBOX(AVAILABLE_SCALARS,ScalarToolsDialog::_updateActiveScalar)
+   EVT_COMBOBOX(AVAILABLE_SHADER_MANAGERS,ScalarToolsDialog::_updateActiveScalarShaderManager)
    EVT_BUTTON(ADVANCED_TB_ISOSURFACE,ScalarToolsDialog::_setColorByFace)
    EVT_COMMAND_SCROLL (TB_ISOSURFACE_SLIDER,ScalarToolsDialog::_onUpdateIsosurface)
+   EVT_COMMAND_SCROLL(TB_SLICE_SLIDER,ScalarToolsDialog::_onUpdateNumberOfSlicePlanes)
    EVT_CHECKBOX(ISO_ENABLE_CHECK,ScalarToolsDialog::_onEnableIsoSurface)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////
@@ -58,9 +63,10 @@ ScalarToolsDialog::ScalarToolsDialog(wxWindow* parent, int id,std::string title)
    _scalarRange = 0;
    _scalarSelection = 0;
    _buildGUI();
-   wxSize displaySize = ::wxGetDisplaySize();
+   /*wxSize displaySize = ::wxGetDisplaySize();
    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition );
+   this->SetSize( dialogPosition );*/
+   SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
 }
 ///////////////////////
 ///Destructor        //
@@ -82,7 +88,23 @@ void ScalarToolsDialog::_buildGUI()
    _scalarSelection = new wxComboBox(this,AVAILABLE_SCALARS,
                                      _(""), wxDefaultPosition, 
                                      wxSize(150,wxDefaultCoord) );
- 
+   /*
+   wxStaticBox* shaderManagerBox = new wxStaticBox(this, -1, _T("Transfer Functions"));
+   wxStaticBoxSizer* smSizer = new wxStaticBoxSizer(shaderManagerBox,wxVERTICAL);
+
+   _shaderManagerSelection = new wxComboBox(this,AVAILABLE_SHADER_MANAGERS,
+                                     _(""), wxDefaultPosition, 
+                                     wxSize(150,wxDefaultCoord) );
+   _shaderManagerSelection->Append(_T("BLUE_RED_LINEAR_SHADER"));
+      _shaderManagerSelection->Append(_T("GREY_SCALE_SHADER"));
+   smSizer->Add(_shaderManagerSelection,0,wxALIGN_CENTER|wxEXPAND);*/
+
+   wxStaticBox* numSlicesSliderBox = new wxStaticBox(this, -1, _T("Number of Slice Planes/Brick"));
+   wxStaticBoxSizer* sliceSizer = new wxStaticBoxSizer(numSlicesSliderBox,wxVERTICAL);
+
+   _numSlicesSlider = new wxSlider(this,TB_SLICE_SLIDER,100,32,400,wxDefaultPosition,wxSize(300,-1),wxSL_HORIZONTAL|wxSL_LABELS);
+   sliceSizer->Add(_numSlicesSlider,0,wxALIGN_CENTER|wxEXPAND);
+   
    wxStaticBox* isoSliderBox = new wxStaticBox(this, -1, _T("Isosurface"));
    wxStaticBoxSizer* isoSizer = new wxStaticBoxSizer(isoSliderBox,wxVERTICAL);
    
@@ -99,10 +121,14 @@ void ScalarToolsDialog::_buildGUI()
    _isoSlider = new wxSlider(this, TB_ISOSURFACE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
    _isoSlider->Enable(false);
    isoSizer->Add(_isoSlider,1,wxALIGN_CENTER|wxEXPAND);
-   
-   mainSizer->Add(_scalarSelection,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   _createDualSliders();
 
+  
+   mainSizer->Add(_scalarSelection,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //mainSizer->Add(smSizer,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   _createDualSliders();
+   
+   mainSizer->Add(sliceSizer,0,wxEXPAND|wxALIGN_CENTER);
    mainSizer->Add(isoSizer,1,wxEXPAND|wxALIGN_CENTER);
    wxBoxSizer* scalarRangeSizer = new wxBoxSizer(wxHORIZONTAL);
    scalarRangeSizer->Add(_scalarRange,1,wxALIGN_CENTER|wxEXPAND);
@@ -157,7 +183,7 @@ void ScalarToolsDialog::UpdateScalarList(wxArrayString scalarNames)
    }
    if(scalarNames.GetCount())
    {
-      //_scalarSelection->SetValue(scalarNames[0]);
+      _scalarSelection->SetValue(_activeScalar);
    }
 }
 ////////////////////////////////////////////////////////////////////
@@ -166,9 +192,9 @@ void ScalarToolsDialog::_updateActiveScalar(wxCommandEvent& command)
    ClearInstructions();
 
    _commandName = "TB_ACTIVE_SOLUTION";
-  
+  _activeScalar = _scalarSelection->GetValue();
    VE_XML::DataValuePair* name = new VE_XML::DataValuePair();
-   name->SetData("Active Dataset", ConvertUnicode( _scalarSelection->GetValue().GetData() ) );
+   name->SetData("Active Dataset", ConvertUnicode( _activeScalar.GetData() ) );
    _instructions.push_back(name);
 
    VE_XML::DataValuePair* type = new VE_XML::DataValuePair();
@@ -182,6 +208,20 @@ void ScalarToolsDialog::_updateActiveScalar(wxCommandEvent& command)
    VE_XML::DataValuePair* maxRangevalue  = new VE_XML::DataValuePair();
    maxRangevalue->SetData("Maximum Scalar Range",static_cast<double>(_scalarRange->GetMaxSliderValue())/100.0);
    _instructions.push_back(maxRangevalue );
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
+}
+/////////////////////////////////////////////////////////////////////////////////
+void ScalarToolsDialog::_updateActiveScalarShaderManager(wxCommandEvent& command)
+{
+   ClearInstructions();
+
+   _commandName = "TB_SET_ACTIVE_SHADER_MANAGER";
+  
+   VE_XML::DataValuePair* name = new VE_XML::DataValuePair();
+   name->SetData("Active Shader Manager", ConvertUnicode( _shaderManagerSelection->GetValue().GetData() ) );
+   _instructions.push_back(name);
 
    _sendCommandsToXplorer();
    ClearInstructions();
@@ -221,6 +261,19 @@ void ScalarToolsDialog::_onUpdateIsosurface(wxScrollEvent& command)
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
    colorByScalar->SetData("Color By Scalar", ConvertUnicode( _colorByScalarName.GetData() ) );
    _instructions.push_back(colorByScalar);
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////
+void ScalarToolsDialog::_onUpdateNumberOfSlicePlanes(wxScrollEvent& command)
+{
+   ClearInstructions();
+   _commandName = "TB_UPDATE_NUMBER_SLICE_PLANES";
+   
+   VE_XML::DataValuePair* nPlanesValue = new VE_XML::DataValuePair();
+   nPlanesValue->SetData("Number of Slice Planes",static_cast<unsigned int>((_numSlicesSlider->GetValue())));
+   _instructions.push_back(nPlanesValue);
 
    _sendCommandsToXplorer();
    ClearInstructions();
