@@ -106,6 +106,8 @@ sources = Split("""
    QCClearDataEH.cxx
    DataTransformEH.cxx
    Wand.cxx
+   TBSliceNumberUpdateEH.cxx
+   TBSetActiveShaderManagerEH.cxx
 """)
 
 headers = Split("""
@@ -210,6 +212,8 @@ headers = Split("""
    QCClearDataEH.h
    DataTransformEH.h
    Wand.h
+   TBSetActiveShaderManagerEH.h
+   TBSliceNumberUpdateEH.h
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 

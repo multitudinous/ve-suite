@@ -29,6 +29,7 @@ sources = Split("""
    cfdVolumeCenterCallback.cxx
    cfdVolumeVisNodeHandler.cxx
    cfdVolumeVisualization.cxx
+   GreyScaleShaderManager.cxx
 """)
 
 headers = Split("""
@@ -56,6 +57,7 @@ headers = Split("""
    cfdVolumeCenterCallback.h
    cfdVolumeVisNodeHandler.h
    cfdVolumeVisualization.h
+   GreyScaleShaderManager.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)

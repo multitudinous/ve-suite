@@ -33,6 +33,7 @@ srcs = Split("""
    UserPreferences.cxx
    Splitter.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
+   TransferFunctionDlg.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()
