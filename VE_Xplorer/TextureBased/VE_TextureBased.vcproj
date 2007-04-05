@@ -277,6 +277,10 @@
 						RelativePath=".\cfdScalarShaderManager.cxx"
 						>
 					</File>
+					<File
+						RelativePath=".\GreyScaleShaderManager.cxx"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="headers"
@@ -295,6 +299,10 @@
 					</File>
 					<File
 						RelativePath=".\cfdScalarShaderManager.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GreyScaleShaderManager.h"
 						>
 					</File>
 				</Filter>

@@ -76,6 +76,7 @@ namespace VE_TextureBased
    class cfdVolumeCenterCallback;
    class cfdVolumeBillboard;
    class cfdTextureManager;
+   class TextureBasedVolumeSlices;
 }
 
 
@@ -84,7 +85,6 @@ namespace VE_TextureBased
 
 #include "VE_Installer/include/VEConfig.h"
 #include <string>
-
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization{
@@ -115,7 +115,7 @@ namespace VE_TextureBased
       void SetState(osg::State* state);
       void Set3DTextureData(osg::Texture3D* texture);
       void SetBoundingBox(float* bbox);
-      void SetNumberofSlices(int nSlices = 100);
+      void SetNumberOfSlices(unsigned int nSlices = 100);
       void SetTextureManager(cfdTextureManager* tm);
       void SetCurrentTransientTexture(unsigned int ct);
       void DisableShaders();
@@ -165,14 +165,16 @@ namespace VE_TextureBased
       float _transRatio[3];
       float _diagonal;
       float _scale[3];
+      float* _vtkBBox;
 #ifdef _OSG
       osg::ref_ptr<osg::Switch> _volumeVizNode;
       osg::ref_ptr<osg::TexGenNode> _texGenParams;
       osg::BoundingBox* _bbox;
       osg::ref_ptr<osg::ClipNode> _clipNode;
       osg::ref_ptr<osg::StateSet> _stateSet;
-      //osg::ref_ptr<cfdVolumeBillboard> _billboard;
-      osg::ref_ptr<osg::Billboard> _billboard;
+      osg::ref_ptr<VE_TextureBased::TextureBasedVolumeSlices> _slices;
+      osg::ref_ptr<osg::Geode> _billboard;
+      //osg::ref_ptr<osg::Billboard> _billboard;
       osg::ref_ptr<osg::Group> _noShaderGroup;
       osg::ref_ptr<osg::Group> _decoratorAttachNode;
       osg::ref_ptr<osg::Texture3D> _texture;

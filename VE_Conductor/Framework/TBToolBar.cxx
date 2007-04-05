@@ -51,6 +51,7 @@
 
 #include "VE_Conductor/Utilities/ROIDialog.h"
 #include "VE_Conductor/Framework/ScalarToolsDlg.h"
+#include "VE_Conductor/Framework/TransferFunctionDlg.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 
 #include "VE_Open/XML/Command.h"
@@ -212,6 +213,7 @@ void TextureBasedToolBar::_buildGUI()
    _roiDlg = new VE_Conductor::GUI_Utilities::ROIDialog(this,-1, "Volume Clipping Bounds" );
    //_roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
    _scalarToolsDlg = new ScalarToolsDialog(this,-1, "Scalar Tools" );
+   _transferFunctionDlg = new TransferFunctionDialog(this,-1,"Transfer Functions");
    
 }
 /////////////////////////////////////////////////////////////
@@ -258,7 +260,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          {
             if(_availableScalars.GetCount())
             {
-               _scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
+               //_scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
                _scalarToolsDlg->UpdateScalarList(_availableScalars);
                _scalarToolsDlg->SetSize(_subDialogSize);
                if(_scalarToolsDlg->ShowModal() == wxID_OK)
@@ -280,12 +282,18 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                        wxOK | wxICON_INFORMATION );
          break;
       case TRANSFER_FUNCS_ID:
-         wxMessageBox( _("Transfer functions tools."), 
-                        _("Unavailable!!"), wxOK | wxICON_INFORMATION );
+         /*wxMessageBox( _("Transfer functions tools."), 
+                        _("Unavailable!!"), wxOK | wxICON_INFORMATION );*/
+		  //_transferFunctionDlg->SetVjObsPtr(_vjObsPtr);
+		  _transferFunctionDlg->SetSize(_subDialogSize);
+		  if(_transferFunctionDlg->Show(true))
+		  {
+			  ;
+		  }
          break;
       case ROI_ID:
          {
-            _roiDlg->SetVjObsPtr(_vjObsPtr);
+            //_roiDlg->SetVjObsPtr(_vjObsPtr);
             _roiDlg->SetSize(_subDialogSize);
             if(_roiDlg->ShowModal() == wxID_OK)
             {

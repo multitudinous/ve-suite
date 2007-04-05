@@ -59,7 +59,9 @@ class wxToolBar;
 class wxComboBox;
 class wxCheckBox;
 
+
 class ScalarToolsDialog;
+class TransferFunctionDialog;
 namespace VE_Conductor
 {
    namespace GUI_Utilities
@@ -112,6 +114,8 @@ protected:
    UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
    VE_Conductor::GUI_Utilities::ROIDialog* _roiDlg;///<The ROI dialog;
    ScalarToolsDialog* _scalarToolsDlg;///<The scalar tools dialog;
+   TransferFunctionDialog* _transferFunctionDlg;///<The scalar tools dialog;
+  
   
    wxArrayString _availableScalars;///<Scalar names
    wxArrayString _availableVectors;///<Vector names

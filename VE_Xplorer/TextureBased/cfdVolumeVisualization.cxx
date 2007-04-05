@@ -42,6 +42,7 @@
 #include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 #include "VE_Xplorer/TextureBased/cfdVolumeCenterCallback.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
 
 #include <osg/TexMat>
 #include <osg/BlendFunc>
@@ -83,7 +84,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _traverseDirection = FORWARD;
    _stateSet  = 0;
    _texture  = 0;
-   _nSlices = 300;
+   _nSlices = 200;
    _alpha = 0.5;
    _tUnit = 0;
    _verbose = 0;
@@ -94,6 +95,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _shaderDirectory = '\0';
    _volShaderIsActive =  false;
    _transferShaderIsActive = false;
+   _vtkBBox = 0;
 }
 /////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
@@ -115,6 +117,7 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _tm = rhs._tm;
    _image = rhs._image;
    _isCreated = rhs._isCreated;
+   _vtkBBox = rhs._vtkBBox;
 
    _noShaderGroup =  rhs._noShaderGroup;
    _shaderDirectory = rhs._shaderDirectory;
@@ -229,6 +232,8 @@ void cfdVolumeVisualization::Set3DTextureData(osg::Texture3D* texture)
 ////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 {
+   _vtkBBox = bbox;
+
    float minBBox[3];
    float maxBBox[3];
    //this is because vtk gives mnx,mxx,mny,mxy,mnz,mxz
@@ -316,9 +321,10 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
    }
 }
 ///////////////////////////////////////////////////////////
-void cfdVolumeVisualization::SetNumberofSlices(int nSlices)
+void cfdVolumeVisualization::SetNumberOfSlices(unsigned int nSlices)
 {
-   _nSlices = nSlices*3;
+   /*_nSlices = nSlices*3;*/
+	_slices->SetNumberOfSlices(nSlices);
 }
 ///////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetSliceAlpha(float alpha)
@@ -618,6 +624,12 @@ void cfdVolumeVisualization::TranslateCenterBy(float* translate)
 ///////////////////////////////////////////
 void cfdVolumeVisualization::_buildSlices()
 {
+   
+   _slices = new VE_TextureBased::TextureBasedVolumeSlices(_vtkBBox,100);
+   _slices->setUseDisplayList(false);
+   _billboard = new osg::Geode();
+   _billboard->addDrawable(_slices.get());
+   return;
     // set up the slices.
    osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
 
@@ -651,19 +663,26 @@ void cfdVolumeVisualization::_buildSlices()
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
     geom->setUseDisplayList(false);
-    _billboard = new osg::Billboard;
+    //_billboard = new osg::Billboard;
     //_billboard = new cfdVolumeBillboard();
-    _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
-    _billboard->addDrawable(geom.get());
+    //_billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
+    //_billboard->addDrawable(geom.get());
 
+    
+    
     //position the slices in the scene
-    _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
+    //_billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
 
 }
 ///////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_createVolumeSlices()
 {
-   _buildSlices();
+   std::cout<<"Creating Slices"<<std::endl;
+   _slices = new VE_TextureBased::TextureBasedVolumeSlices(_vtkBBox,100);
+   _slices->setUseDisplayList(false);
+   _billboard = new osg::Geode();
+   _billboard->addDrawable(_slices.get());
+   //_buildSlices();
 }
 //////////////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::Group> cfdVolumeVisualization::GetDecoratorAttachNode()

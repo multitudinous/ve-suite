@@ -123,8 +123,15 @@ namespace VE_TextureBased
          ///\param value The new isosurface value.
          void UpdateIsosurface(double value);
 
+		 ///Set the number of Slice planes per brick
+		 ///\param nSlices The number of slices per brick
+		 void UpdateNumberOfSlicePlanes(unsigned int nSlices);
          ///Clear the texture-based visualize
          void ClearAll();
+
+		 ///Set the active shader mananger
+		 ///\param The name of the shader mananger to set active
+		 void SetActiveShaderManager(std::string name);
 
          ///Set the current frame
          ///\param frame The current step in the transient visualization.
@@ -182,7 +189,7 @@ namespace VE_TextureBased
 			osg::ref_ptr< VE_SceneGraph::Group > _parent;
          cfdPBufferManager* _pbm;
          //osgUtil::SceneView* _sceneView;
-         cfdVolumeVisNodeHandler* activeVisNodeHdlr;
+         cfdVolumeVisNodeHandler* _activeVisNodeHdlr;
          cfdScalarVolumeVisHandler* _svvh;
          cfdVectorVolumeVisHandler* _vvvh;
       

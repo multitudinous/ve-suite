@@ -65,6 +65,9 @@ cfdScalarShaderManager::cfdScalarShaderManager()
    _useTM = true;
    _isoSurface = false;
    _percentScalarRange = 0;
+   _stepSize[0] = .001;
+   _stepSize[1] = .001;
+   _stepSize[2] = .001;
 }
 ////////////////////////////////////////
 void cfdScalarShaderManager::Init()
@@ -74,6 +77,7 @@ void cfdScalarShaderManager::Init()
    if(_tm)
    {
       SetScalarRange(_tm->dataRange(_tm->GetCurrentFrame()).range);
+      
    }
    if(!_ss.valid() && _reinit &&_property.valid()){
       _ss = new osg::StateSet();
@@ -82,9 +86,9 @@ void cfdScalarShaderManager::Init()
 
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       bf->setFunction(osg::BlendFunc::SRC_ALPHA, 
-                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+                      osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
 
-      _ss->setAttributeAndModes(bf.get());
+      _ss->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
       _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
       _ss->setTextureAttributeAndModes(0,_property.get(),
                                 osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
@@ -119,23 +123,16 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    std::cout<<"Using glsl..."<<std::endl;
    _ss->addUniform(new osg::Uniform("volumeData",0));
    _ss->addUniform(new osg::Uniform("transferFunction",1));
+   _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
    _tUnit = 0;
-   /*char* fullPath = _createShaderPathForFile("scalarAdjuster.glsl");
-   if(!fullPath)
-   {
-      return;
-   }*/
-   //osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromFile(fullPath,
-   //                                                                  true);
-   osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromInline(scalarFragSource,true);
+                                                               
+   osg::ref_ptr<osg::Shader> scalarFragShader = _createGLSLShaderFromInline(scalarFragSource,true);
+   //osg::ref_ptr<osg::Shader> scalarVertShader = _createGLSLShaderFromInline(scalarVertSource,false);
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
-   glslProgram->addShader(scalarShader.get());
+   glslProgram->addShader(scalarFragShader.get());
+   //glslProgram->addShader(scalarVertShader.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),std::string("scalarAdjuster"));
-   /*if(fullPath)
-   {
-      delete [] fullPath;
-      fullPath = 0;
-   }*/
+  
 }
 /////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
@@ -161,6 +158,7 @@ void cfdScalarShaderManager::_initTransferFunctions()
       _createTransferFunction(); 
    }
 }
+////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_updateTransferFunction()
 {
@@ -201,7 +199,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
    }
    newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
    invSRange =  1.0/(newRange[1]-newRange[0]);
-   
+   float opacity = 1.0/128;
    //make the RGBA values from the scalar range
    for(int i = 0; i < 256; i++){
       if(i < newRange[0])
@@ -215,7 +213,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
          }else{
             lutex[i*4    ] = 0;
             lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 255;
+            lutex[i*4 + 2] = 0;
             lutex[i*4 + 3] = 0;
          }
       }else if( i > newRange[1]){
@@ -226,7 +224,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
             lutex[i*4 + 2] = 0;
             lutex[i*4 + 3] = 0;
          }else{
-            lutex[i*4    ] = 255;
+            lutex[i*4    ] = 0;//255;
             lutex[i*4 + 1] = 0;
             lutex[i*4 + 2] = 0;
             lutex[i*4 + 3] = 0;
@@ -236,8 +234,8 @@ void cfdScalarShaderManager::_updateTransferFunction()
          {
             GLfloat isoRange [2];
             isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-            isoRange[0] = isoVal - 10.0;
-            isoRange[1] = isoVal + 10.0;
+            isoRange[0] = isoVal - 4.0;
+            isoRange[1] = isoVal + 4.0;
             if(i >= isoRange[0] && i <= isoRange[1]){
                alpha = (i - newRange[0])*invSRange;
                if(alpha <= .25)
@@ -288,7 +286,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
                   R = 0;
                   G = (1.0)*255,      
                   B = (2.0-4.0*alpha)*255;
-                  A = alpha*255.0*.5;
+                  A = alpha*255.0;
                }
                else if(alpha <= .75)
                {
@@ -326,6 +324,118 @@ void cfdScalarShaderManager::_updateTransferFunction()
    tFunc->dirtyTextureObject();
    
 }
+/*void cfdScalarShaderManager::_updateTransferFunction()
+{
+   GLubyte* lutex =0;
+   GLfloat R,G,B,A;
+   GLfloat newMid = 0;
+   GLfloat newRange[2];
+   ScalarRange origRange ;
+   GLfloat alpha = 0;
+   GLfloat isoVal = 0;
+   float invSRange = 0;
+   osg::ref_ptr<osg::Texture1D> tFunc = _transferFunctions.at(0);
+   if(tFunc.valid())
+   {
+      lutex = tFunc->getImage()->data();
+      if(!lutex)
+      {
+         std::cout<<"ERROR!"<<std::endl;
+         std::cout<<"Invalid data for transfer function!!"<<std::endl;
+         std::cout<<"cfdOSGGammaShader::_updateTransferFunction()"<<std::endl;
+         return;
+      }
+   }
+   origRange = _tm->dataRange(_tm->GetCurrentFrame());
+   newRange[0] = (_scalarRange[0] - origRange.range[0])/
+                (origRange.range[1]-origRange.range[0]);
+   newRange[0] *= 255.0;
+   newRange[1] = (_scalarRange[1] - origRange.range[0])/
+                (origRange.range[1]-origRange.range[0]);
+   newRange[1] *= 255.0;
+
+   newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
+   invSRange =  1.0/(newRange[1]-newRange[0]);
+   
+   //make the RGBA values from the scalar range
+   for(int i = 0; i < 256; i++){
+      if(i < newRange[0])
+      {
+         if(_isoSurface)
+         {
+            lutex[i*4    ] = 0;
+            lutex[i*4 + 1] = 0;
+            lutex[i*4 + 2] = 0;
+            lutex[i*4 + 3] = 0;
+         }else{
+            lutex[i*4    ] = 0;
+            lutex[i*4 + 1] = 0;
+            lutex[i*4 + 2] = 255;
+            lutex[i*4 + 3] = 0;
+         }
+      }else if( i > newRange[1]){
+         if(_isoSurface)
+         {
+            lutex[i*4    ] = 0;
+            lutex[i*4 + 1] = 0;
+            lutex[i*4 + 2] = 0;
+            lutex[i*4 + 3] = 0;
+         }else{
+            lutex[i*4    ] = 255;
+            lutex[i*4 + 1] = 0;
+            lutex[i*4 + 2] = 0;
+            lutex[i*4 + 3] = 127;
+         }
+      }else{
+         if(_isoSurface)
+         {
+            GLfloat isoRange [2];
+            isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
+            isoRange[0] = isoVal - 10.0;
+            isoRange[1] = isoVal + 10.0;
+            if(i >= isoRange[0] && i <= isoRange[1]){
+               alpha = (i - newRange[0])*invSRange;
+               if(alpha <= .5){
+                  R = 0;
+                  G = (2.0*alpha)*255,      
+                  B = (1.0-2.0*alpha)*255;
+                  A = alpha*255.0*.5;
+               }else{
+                  R = (2.0*alpha-1.0)*255;
+                  G = (2.0 - 2.0*alpha)*255;       
+                  B = 0.;
+                  A = alpha*255.0*.5;
+               }
+            }else{
+               R = 0;
+               G = 0;
+               B = 0;
+               A = 0;
+            }
+         }else{
+            alpha = (i - newRange[0])*invSRange;
+            if(alpha <= .5){
+               R = 0;
+               G = (2.0*alpha)*255,      
+               B = (1.0-2.0*alpha)*255;
+               A = alpha*255.0*.5;
+            }else{
+               R = (2.0*alpha-1.0)*255;
+               G = (2.0 - 2.0*alpha)*255;       
+               B = 0.;
+               A = alpha*255.0*.5;
+            }
+         }
+         lutex[i*4   ]  = (unsigned char)R;
+         lutex[i*4 + 1] = (unsigned char)G;
+         lutex[i*4 + 2] = (unsigned char)B;
+         lutex[i*4 + 3] = (unsigned char)A; 
+      }
+   }
+   tFunc->dirtyTextureParameters();
+   tFunc->dirtyTextureObject();
+   
+}*/
 ////////////////////////////////////////////////
 void cfdScalarShaderManager::EnsureScalarRange()
 {
@@ -405,9 +515,13 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _utCbk->SetIsLuminance(true);
    }
    int* res = _tm->fieldResolution();
+   _stepSize[0] = 1.0/float(res[0]);
+   _stepSize[1] = 1.0/float(res[1]);
+   _stepSize[2] = 1.0/float(res[2]);
    _utCbk->SetTextureManager(_tm);
    _utCbk->SetDelayTime(.1);
    _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
+   
       
    if(!_property.valid()){
       osg::ref_ptr<osg::Image> propertyField = new osg::Image();

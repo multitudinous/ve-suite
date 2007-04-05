@@ -58,9 +58,9 @@ public:
 
    ///Constructor
    ///\param dataBoundingBox The data bounding box
-   ///\param numberOfSlices The number of slices to use
+   ///\param minNumberOfSlices The minimum number of slices to use.\n Lowest is 32.
    TextureBasedVolumeSlices(float* dataBoundingBox, 
-                            unsigned int numberOfSlices);
+                            unsigned int minNumberOfSlices=32);
 
    ///Copy constructor
    TextureBasedVolumeSlices(const TextureBasedVolumeSlices& slices,
@@ -88,7 +88,11 @@ protected:
 
    ///Make sure the slice spacing is up to date
    void _ensureSliceDelta();
+ 
+   ///Initialize the bbox intersecting slices vertex program.
+   void _initBBoxIntersectionSlicesVertexProgram();
 
+   std::string _bboxSlicer;///<Source code for creating intersecting bbox slices vertex program.
    unsigned int _nSlices;///<The number of slices to render.
    float _deltaZ;///<The slice spacing.
    float _diagonal;///<The length of the diagonal

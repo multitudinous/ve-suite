@@ -68,7 +68,7 @@ namespace VE_TextureBased
       protected:
          virtual void _setUpDecorator();
          virtual void _applyTextureMatrix();
-         void _createTransferShader();
+         void _createDefaultShaders();
          cfdScalarShaderManager* _transferSM;
    };
 }

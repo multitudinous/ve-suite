@@ -45,5 +45,3 @@ Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignoreversi
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-[_ISTool]
-UseAbsolutePaths=true

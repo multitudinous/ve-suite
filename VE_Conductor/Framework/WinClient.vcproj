@@ -303,6 +303,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TransferFunctionDlg.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\TransformUI.cxx"
 				>
 				<FileConfiguration
@@ -429,6 +433,10 @@
 			</File>
 			<File
 				RelativePath=".\TBToolBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransferFunctionDlg.h"
 				>
 			</File>
 			<File

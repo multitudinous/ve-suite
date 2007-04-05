@@ -232,6 +232,10 @@ void cfdVolumeVisNodeHandler::_createTexGenNode()
       osg::Vec4 sPlane(1,0,0,0);
       osg::Vec4 tPlane(0,1,0,0);
       osg::Vec4 rPlane(0,0,1,0);
+
+      sPlane[3] = -_bbox.xMin(); 
+      tPlane[3] = -_bbox.yMin();
+      rPlane[3] = -_bbox.zMin();
             
       _texGenParams = new osg::TexGenNode();
       _texGenParams->setTextureUnit(0);
@@ -393,6 +397,12 @@ cfdVolumeVisNodeHandler::GetShaderManager(std::string name)
 std::string cfdVolumeVisNodeHandler::GetActiveShaderName()
 {
    return _activeShader;
+}
+//////////////////////////////////////////////////////////
+VE_TextureBased::cfdOSGShaderManager* 
+cfdVolumeVisNodeHandler::GetActiveShader()
+{
+   return GetShaderManager(_activeShader);
 }
 ///////////////////////////////////////////////////////////////////////
 //equal operator                                                     //

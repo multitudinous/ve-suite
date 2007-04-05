@@ -17,7 +17,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile
 DefaultGroupName={#MyAppName}
-AllowNoIcons=yes
+AllowNoIcons=true
 OutputBaseFilename=xerces-c_PreCompile_{#XERCESVERSION}
 Compression=lzma
 SolidCompression=yes
@@ -33,16 +33,16 @@ SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 
 
 [Languages]
-Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#XERCESHOME}\Build\Win32\VC7.1\*.dll; DestDir: {app}\Build\Win32\VC7.1\;Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#XERCESHOME}\Build\Win32\VC7.1\*.lib; DestDir: {app}\Build\Win32\VC7.1\;Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\src;  Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#XERCESHOME}\src\*.c; DestDir: {app}\src;  Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#XERCESHOME}\Build\Win32\VC7.1\*.dll; DestDir: {app}\Build\Win32\VC7.1\; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#XERCESHOME}\Build\Win32\VC7.1\*.lib; DestDir: {app}\Build\Win32\VC7.1\; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\src; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#XERCESHOME}\src\*.c; DestDir: {app}\src; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 

@@ -33,19 +33,22 @@
 
 #include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
 #include <osg/Matrixf>  
+#include <iostream>
 
 
 using namespace VE_TextureBased;
 ////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices()
-:osg::Drawable()
+:osg::Drawable(),
+_diagonal(1.0),
+_center(0,0,0),
+_eyeCenter(0,0,0),
+_nSlices(1),
+_deltaZ(1.f)
 {
    _bbox.init(); 
-   _diagonal = 1.0;
-   _center.set(0,0,0);
-   _eyeCenter.set(0,0,0);
-   _nSlices = 1;
-   _deltaZ = 1;
+
+   _initBBoxIntersectionSlicesVertexProgram();
 }
 //////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices(float* dataBoundingBox,
@@ -67,6 +70,59 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices(const TextureBasedVolumeSlice
    _diagonal = slices._diagonal;
    _nSlices = slices._nSlices;
    _deltaZ = slices._deltaZ;
+}
+/////////////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::_initBBoxIntersectionSlicesVertexProgram()
+{
+   _bboxSlicer.clear();
+   //values change per brick
+   _bboxSlicer.append("uniform vec3 center;n");
+   _bboxSlicer.append("uniform float dPlaneStart;\n");
+
+   //values change per frame
+   _bboxSlicer.append("uniform int frontBBoxVertexIndex;\n");
+   _bboxSlicer.append("uniform vec3 viewVector;\n");
+
+   //constants
+   _bboxSlicer.append("uniform float deltaPlane;\n");
+   _bboxSlicer.append("uniform int edgeSequence[64];\n");
+   _bboxSlicer.append("uniform vec3 bbox[8];\n");
+   _bboxSlicer.append("uniform int edgeBegin[24];\n");
+   _bboxSlicer.append("uniform int edgeEnd[24];\n");
+
+   _bboxSlicer.append("void main();\n");
+   _bboxSlicer.append("{\n");
+
+   //calculate our plane position
+   _bboxSlicer.append("float dPlane = dPlaneStart + gl_Vertex.y*deltaPlane;\n");
+   _bboxSlicer.append("float planePosition;\n");
+
+   //loop over the possible edges of intersection
+   _bboxSlicer.append("   for(int e = 0; e < 4; ++e)\n");
+   _bboxSlicer.append("   {\n");
+
+   //calculate the beginning and end verticies of the edge
+   _bboxSlicer.append("      int beginIndex = edgeSequence[int(frontBBoxVertexIndex*8 + edgeBegin[gl_Vertex.x*4 + e])];\n");
+   _bboxSlicer.append("      int endIndex = edgeSequence[int(frontBBoxVertexIndex*8 + edgeEnd[gl_Vertex.x*4 + e])];\n");
+   _bboxSlicer.append("      vec3 edgeOrigin = bbox[beginIndex];\n");
+   _bboxSlicer.append("      vec3 edgeEndPoint = bbox[endIndex];\n");
+   _bboxSlicer.append("      vec3 edgeStart = edgeOrigin + center;\n;");
+   _bboxSlicer.append("      vec3 edgeDirection = edgeEndPoint - edgeOrigin;\n;");
+   _bboxSlicer.append("      float denominator = dot(edgeDirection,viewVector);\n");
+   _bboxSlicer.append("      float lambda = (denom!=0.0)?(dPlane-dot(edgeStart,edgeDirection))/denominator:-1.0;\n");
+   _bboxSlicer.append("      if((lambda >= 0.0)&&(lambda <=1.0));\n");
+   _bboxSlicer.append("      {\n");
+   _bboxSlicer.append("         planePosition = edgeStart + lambda*edgeDirection;\n");
+   _bboxSlicer.append("         break;\n");
+   _bboxSlicer.append("      }\n");
+   _bboxSlicer.append("      gl_Position = gl_ModelViewMatrix*vec4(gl_Vertex,1.0);\n");
+   _bboxSlicer.append("      gl_TexCoord[0] = .05*_planePosition + .5;\n");
+   _bboxSlicer.append("      }\n");
+   
+   _bboxSlicer.append("   }\n");
+   _bboxSlicer.append("}\n");
+
+
 }
 /////////////////////////////////////////////////////////////////////  
 void TextureBasedVolumeSlices::SetDataBoundingBox(float* boundingBox)
@@ -116,7 +172,7 @@ void TextureBasedVolumeSlices::_ensureSliceDelta()
 /////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::SetNumberOfSlices(unsigned int numberOfSlices)
 {
-   _nSlices = numberOfSlices;
+   _nSlices = (numberOfSlices<32)?32:numberOfSlices;
    _ensureSliceDelta();
 }
 /////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +201,7 @@ void TextureBasedVolumeSlices::drawImplementation(osg::State& currentState) cons
 void TextureBasedVolumeSlices::_drawQuadSlice(float zPosition)const 
 {
    glBegin(GL_QUADS);
-      glColor4f(0,0,0,0);
+      glColor4f(0,0,0,1);
       glVertex3f((_eyeCenter[0]-.5*_diagonal),(_eyeCenter[1]-.5*_diagonal),zPosition);
       glVertex3f((_eyeCenter[0]+.5*_diagonal),(_eyeCenter[1]-.5*_diagonal),zPosition);
       glVertex3f((_eyeCenter[0]+.5*_diagonal),(_eyeCenter[1]+.5*_diagonal),zPosition);

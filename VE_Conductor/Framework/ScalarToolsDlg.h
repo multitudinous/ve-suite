@@ -61,8 +61,10 @@ public:
    enum SCALAR_TOOLS_IDS
    {
       AVAILABLE_SCALARS,
+	  AVAILABLE_SHADER_MANAGERS,
       ISO_ENABLE_CHECK,
       TB_ISOSURFACE_SLIDER,
+      TB_SLICE_SLIDER,
       ADVANCED_TB_ISOSURFACE
    };
 
@@ -109,15 +111,22 @@ protected:
    ///Update the active scalar
    ///\param command The wxCommandEvent
    void _updateActiveScalar(wxCommandEvent& command);
+   
+   ///Update the active scalar shader manager
+   ///\param command The wxCommandEvent
+   void _updateActiveScalarShaderManager(wxCommandEvent& command);
 
    ///Update the scalar to color the iso-surface by
    ///\param command The wxCommandEvent
    void _setColorByFace(wxCommandEvent& command);
 
    ///Update the isosurface
-   ///\param command The wxCommandEvent
+   ///\param command The wxScrollEvent
    void _onUpdateIsosurface(wxScrollEvent& command);
 
+   ///Set the number of slice planes per brick
+   ///\param command The wxScrollEvent
+   void _onUpdateNumberOfSlicePlanes(wxScrollEvent& command);
    ///Enable/Disable isosurface visualization
    ///\param command The wxCommandEvent
    void _onEnableIsoSurface(wxCommandEvent& command);
@@ -128,7 +137,9 @@ protected:
    wxButton* _advancedButton;///<The advanced iso surface button.
    wxCheckBox* _isosurfaceCheck;///<The iso surface check box.
    wxSlider* _isoSlider;///<The isosurface slider.
+   wxSlider* _numSlicesSlider;///<The number of slices slider.
    wxComboBox* _scalarSelection;///<The available scalars.
+   wxComboBox* _shaderManagerSelection;///<The available shader manager.
    VE_Conductor::GUI_Utilities::DualSlider* _scalarRange;///<DualSlider for x bounds
    
    std::string ConvertUnicode( const wxChar* data )

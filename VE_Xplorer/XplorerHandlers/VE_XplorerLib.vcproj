@@ -637,6 +637,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TBSetActiveShaderManagerEH.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\TBSliceNumberUpdateEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\TBTransientDurationUpdateEH.cxx"
 				>
 			</File>
@@ -1092,6 +1100,10 @@
 			</File>
 			<File
 				RelativePath=".\TBIsosurfaceUpdateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TBSetActiveShaderManagerEH.h"
 				>
 			</File>
 			<File

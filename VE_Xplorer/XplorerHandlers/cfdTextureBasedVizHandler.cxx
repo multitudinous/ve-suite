@@ -54,6 +54,9 @@
 #include "VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBActivateEH.h"
+#include "VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h"
+#include "VE_Xplorer/XplorerHandlers/TBSliceNumberUpdateEH.h"
+
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
@@ -99,12 +102,14 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _cleared = true;
    _pbm = 0;
    
-   activeVisNodeHdlr = 0;
+   _activeVisNodeHdlr = 0;
    _textureBaseSelected = false;
    _activeTDSet = 0;
    _svvh = 0;
    _vvvh = 0;
 
+   
+   _eventHandlers[std::string("TB_SET_ACTIVE_SHADER_MANAGER")] = new VE_EVENTS::TextureBasedSetActiveShaderManagerEventHandler();
    _eventHandlers[std::string("TB_ACTIVATE")] = new VE_EVENTS::TextureBasedActivateEventHandler();
    _eventHandlers[std::string("TB_ACTIVE_SOLUTION")] = new VE_EVENTS::TextureBasedUpdateSolutionEventHandler();
    _eventHandlers[std::string("TB_SCALAR_RANGE")] = new VE_EVENTS::TextureBasedUpdateScalarRangeEventHandler();
@@ -114,6 +119,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _eventHandlers[std::string("TB_UPDATE_ISOSURFACE")] = new VE_EVENTS::TextureBasedIsosurfaceUpdateEventHandler();
    _eventHandlers[std::string("TB_TRANSIENT_MODE_UPDATE")] = new VE_EVENTS::TextureBasedTransientModeUpdateEventHandler();
    _eventHandlers[std::string("TB_TRANSIENT_DURATION_UPDATE")] = new VE_EVENTS::TextureBasedTransientDurationUpdateEventHandler();
+   _eventHandlers[std::string("TB_UPDATE_NUMBER_SLICE_PLANES")] = new VE_EVENTS::TextureBasedSliceNumberUpdateEventHandler();
 
 }
 ///////////////////////////////////////////////
@@ -177,7 +183,7 @@ void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
 {
    if(_svvh)
    {
-      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
+	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          sShader->ActivateIsoSurface();
@@ -190,7 +196,7 @@ void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
 {
    if(_svvh)
    {
-      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
+	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          if(onOff)
@@ -266,6 +272,14 @@ void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
       std::cout<<"cfdTextureBasedVizHandler::UpdateClipPlane"<<std::endl;
    }
 }
+///////////////////////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::UpdateNumberOfSlicePlanes(unsigned int nSlices)
+{
+	if(_activeVolumeVizNode)
+	{
+		_activeVolumeVizNode->SetNumberOfSlices(nSlices);
+	}
+}
 ////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetTransientDirection(std::string direction)
 {
@@ -303,7 +317,7 @@ void cfdTextureBasedVizHandler::UpdateTransientDuration(double duration)
          ///duration calculation
          unsigned int nTimesteps = _activeTM->numberOfFields();
          _animationDelay = duration/((double)nTimesteps); 
-         cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
+		 cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
          if(sShader)
          {
             sShader->SetDelayTime(_animationDelay);
@@ -322,7 +336,7 @@ void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction
       int curFrame = _activeTM->getNextFrame();
       if(_svvh)
       {
-         cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
+		  cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
          if(sShader)
          {
             sShader->SetCurrentTransientTexture(curFrame,false);
@@ -459,7 +473,7 @@ void cfdTextureBasedVizHandler::ClearAll()
       _cleared = true;
       _pbm = 0;
    
-      activeVisNodeHdlr = 0;
+      _activeVisNodeHdlr = 0;
       _textureBaseSelected = false;
       _activeTDSet = 0;
       _svvh = 0;
@@ -474,15 +488,15 @@ void cfdTextureBasedVizHandler::SetCurrentTime(double time)
 ////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateBoundingBox(bool value)
 {
-   if(_activeVolumeVizNode && activeVisNodeHdlr)
+   if(_activeVolumeVizNode && _activeVisNodeHdlr)
    {
       if(value)
       {
-         activeVisNodeHdlr->TurnOnBBox();
+         _activeVisNodeHdlr->TurnOnBBox();
       }
       else
       {
-         activeVisNodeHdlr->TurnOffBBox();
+         _activeVisNodeHdlr->TurnOffBBox();
       }
    }
 }
@@ -592,13 +606,13 @@ void cfdTextureBasedVizHandler::UpdateScalarRange(float* range)
 {
    if(_svvh)
    {
-      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetShaderManager("SCALAR_SHADER"));
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          sShader->DeactivateIsoSurface();
          sShader->SetScalarRange(range);
       }
-      activeVisNodeHdlr = _svvh;
+      _activeVisNodeHdlr = _svvh;
    }
 }
 //////////////////////////////////////////////////
@@ -651,6 +665,17 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
       _activeTDSet = tds;
    }
 }
+////////////////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetActiveShaderManager(std::string name)
+{
+	if(_activeVisNodeHdlr)
+	{
+	   if(name != "CUSTOM")
+	   {
+          _activeVisNodeHdlr->SetActiveShader(name);
+	   }
+	}
+}
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateScalarVisHandler()
 {
@@ -666,7 +691,8 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
       _svvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _svvh->SetTextureManager(_activeTM);
       _svvh->Init();
-      _svvh->SetActiveShader("SCALAR_SHADER");
+      //_svvh->SetActiveShader("BLUE_RED_LINEAR_SHADER");
+	  _activeVisNodeHdlr = _svvh;
       if(!_svvh->IsThisActive())
       {
          _svvh->EnableDecorator();
@@ -689,6 +715,7 @@ void cfdTextureBasedVizHandler::_updateVectorVisHandler()
       _vvvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _vvvh->SetTextureManager(_activeTM);
       _vvvh->Init();
+	  _activeVisNodeHdlr = _vvvh;
       if(!_vvvh->IsThisActive())
          _vvvh->EnableDecorator();
    }

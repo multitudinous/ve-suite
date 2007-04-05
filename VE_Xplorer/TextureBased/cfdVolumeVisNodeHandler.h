@@ -96,6 +96,9 @@ namespace VE_TextureBased
          
          ///Get the active shader
          std::string GetActiveShaderName();
+
+		 ///Get a pointer to the active shader
+		 VE_TextureBased::cfdOSGShaderManager* GetActiveShader();
          
          ///Get a shader manager
          ///\param name The name of the shader

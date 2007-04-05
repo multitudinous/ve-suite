@@ -38,6 +38,7 @@
 #include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 
 #include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
+#include "VE_Xplorer/TextureBased/GreyScaleShaderManager.h"
 
 
 #include <osg/TexGen>
@@ -84,22 +85,18 @@ void cfdScalarVolumeVisHandler::_setUpDecorator()
    {
       return;
    }
-   _createTransferShader();
+   _createDefaultShaders();
 
 }
 ///////////////////////////////////////////////////////
-void cfdScalarVolumeVisHandler::_createTransferShader()
+void cfdScalarVolumeVisHandler::_createDefaultShaders()
 {
-   if(!GetShaderManager("SCALAR_SHADER") && _tm)
+   if(!GetShaderManager("BLUE_RED_LINEAR_SHADER") && _tm)
    {
       int* fieldSize = _tm->fieldResolution();
-      //_transferSM = new cfdScalarShaderManager();
-      AddShaderManager("SCALAR_SHADER",new cfdScalarShaderManager());
-      /*dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->SetUseTextureManagerForProperty(true);
-      dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->SetFieldSize(fieldSize[0],fieldSize[1],fieldSize[2]);
-      dynamic_cast<cfdScalarShaderManager*>(GetShaderManager("SCALAR_SHADER"))->InitTextureManager(_tm);
-      GetShaderManager("SCALAR_SHADER")->Init();*/
-      SetActiveShader("SCALAR_SHADER");
+      AddShaderManager("BLUE_RED_LINEAR_SHADER",new cfdScalarShaderManager());
+	  AddShaderManager("GREY_SCALE_SHADER", new GreyScaleShaderManager());
+      SetActiveShader("BLUE_RED_LINEAR_SHADER");
    }
 }
 ////////////////////////////////////////////////////////////////////////

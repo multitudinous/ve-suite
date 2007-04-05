@@ -23,60 +23,43 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Date modified: $Date: 2006-07-28 20:47:10 -0500 (Fri, 28 Jul 2006) $
+ * Version:       $Rev: 5067 $
+ * Author:        $Author: mccdo $
+ * Id:            $Id: SmokeShaderManager.h 5067 2006-07-29 01:47:10Z mccdo $
  * -----------------------------------------------------------------
  *
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_SCALAR_SHADER_MANAGER_H
-#define CFD_SCALAR_SHADER_MANAGER_H
-/*!\file cfdScalarShaderManager.h
-* cfdScalarShaderManager API
+#ifndef GREY_SCALE_SHADER_MANAGER_H
+#define GREY_SCALE_SHADER_MANAGER_H
+/*!\file GreyScaleShaderManager.h
+* GreyScaleShaderManager API
 */
 
-/*!\class VE_TextureBased::cfdScalarShaderManager
+/*!\class VE_TextureBased::GreyScaleShaderManager
 *
 */
 #ifdef VE_PATENTED
 #ifdef _OSG
-#include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
+#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 namespace VE_TextureBased
 {
    class cfdTextureManager;
 }
 namespace VE_TextureBased
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager
-      :public cfdOSGTransferShaderManager{
+   class GreyScaleShaderManager
+      :public cfdScalarShaderManager{
       public:
-         cfdScalarShaderManager();
-         virtual ~cfdScalarShaderManager(){}
-         virtual void Init();
-         virtual void UpdateTextureManager(cfdTextureManager* tm);
-         void SetScalarRange(float* range);
-         void UpdateScalarMax(float maxScalar);
-         void UpdateScalarMin(float minScalar);
-         void ActivateIsoSurface();
-         void DeactivateIsoSurface();
-         void SetIsoSurfaceValue(float percentScalarRange);
-         void SetCurrentTransientTexture(unsigned int whichTimeStep, bool makeSlave = false);
-         void SetDelayTime(double delay);
-         void EnsureScalarRange();
+         GreyScaleShaderManager(){};
+         virtual ~GreyScaleShaderManager(){}
+         
       protected:
-         void _setupStateSetForGLSL();
-         bool _isoSurface;
-         virtual void _updateTransferFunction();
-         float _scalarRange[2];
-         float _percentScalarRange;
-         float _stepSize[3];
-         void _initTransferFunctions();
-         void _initPropertyTexture();
+         void _updateTransferFunction();
    };
 }
 #endif//_OSG
 #endif
-#endif// CFD_SCALAR_SHADER_MANAGER_H
+#endif// GREY_SCALE_SHADER_MANAGER_H
