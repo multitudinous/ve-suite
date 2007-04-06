@@ -174,13 +174,13 @@ public:
 
    //Save and Load the network
    std::string Save( std::string fileName );
-   //void Save(wxString filename);
-   //void SaveS(std::string &network_pack);            // save the network to a string
-   //void Load(wxString filename);
-   //void LoadS(const char* inputs); //load the network from a string
-   void Load( std::string xmlNetwork );
+   ///Load calls new when loading the network
+   ///this also calls delete objects on xplorer but the user may not 
+   ///always want this action
+   void Load( std::string xmlNetwork, bool promptClearXplorer );
    void CreateNetwork( std::string xmlNetwork );
-   void New();
+   ///Clear the deisgn canvas and xplorer objects if desired
+   void New( bool clearXplorer = false );
    ///Acessors
    std::pair< double, double >* GetUserScale( void );
    std::pair< unsigned int, unsigned int >* GetNumPix( void );

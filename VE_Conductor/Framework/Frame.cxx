@@ -291,8 +291,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
    
    //Try and load network from server if one is already present
-   wxCommandEvent event;
-   LoadFromServer( event );
+   std::string nw_str = serviceList->GetNetwork();
+   network->Load( nw_str, true );
    //Process command line args to see if ves file needs to be loaded
    ProcessCommandLineArgs();
    
@@ -1083,14 +1083,15 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       
       //We must make this call here 
       //because we set path to null in the New call
-      wxCommandEvent event;
-      New( event );
-
-      path = vesFileName.GetFullPath();
-		path.Replace( _("\\"), _("/"), true );
-      directory = vesFileName.GetPath();
+      //wxCommandEvent event;
+      //New( event );
+      path.clear();
+      //path = vesFileName.GetFullPath();
+		//path.Replace( _("\\"), _("/"), true );
+      directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
       //change conductor working dir
       ::wxSetWorkingDirectory( directory );
+		directory.Replace( _("\\"), _("/"), true );
       path = vesFileName.GetFullName();
       std::string tempDir = ConvertUnicode( directory.c_str() );
 		
@@ -1129,8 +1130,9 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
-      SubmitToServer( event );      
-      network->Load( ConvertUnicode( path.c_str() ) );
+      //SubmitToServer( event );      
+      network->Load( ConvertUnicode( path.c_str() ), true );
+      wxCommandEvent event;
       SubmitToServer( event );      
    }
 }
@@ -1257,8 +1259,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
 	// TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
 
-	New( event );
-
+   path.clear();
 	path			= vesFileName.GetFullPath();
 	directory	= vesFileName.GetPath();
 	fname			= vesFileName.GetFullName();
@@ -1299,30 +1300,20 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	delete vec;
 
 	//Now laod the xml data now that we are in the correct directory
-	SubmitToServer( event );      
-	network->Load( ConvertUnicode( path.c_str() ) );
+	//SubmitToServer( event );      
+	network->Load( ConvertUnicode( path.c_str() ), true );
 	SubmitToServer( event );      	
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   if ( !serviceList->IsConnectedToCE() )
-   {
-      return;
-   }
+   std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
-
-   std::string nw_str;
-   nw_str = serviceList->GetNetwork();
-   network->Load( nw_str );
+   network->Load( nw_str, false );
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   if ( !serviceList->IsConnectedToCE() )
-   {
-      return;
-   }
    EnableCEGUIMenuItems();
 
    std::string nw_str;
@@ -1339,7 +1330,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    // If there is nothing on the CE
    if ( !nw_str.empty() )
    {
-      network->Load( nw_str );
+      network->Load( nw_str, true );
    }
    else
    {
@@ -1383,7 +1374,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   {
 		   if(network->modules.empty())
 		  { 
-			   network->Load( nw_str );
+			   network->Load( nw_str, true );
 			   Log("Simulation Opened.\n");
 		   }
 		   else
@@ -1511,15 +1502,11 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
    path.clear();
-   network->New();
+   network->New( true );
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-   if ( !serviceList->IsConnectedToCE() )
-   {
-      return;
-   }
    EnableCEGUIMenuItems();
    
    std::string nw_str = network->Save( std::string( "returnString" ) );
@@ -1823,26 +1810,6 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
       network->globalparam_dlg = new GlobalParamDialog( this, -1 );
       network->globalparam_dlg->Show();
    }
-}
-///////////////////////////////////////////////////////////////////
-void AppFrame::LoadBase(wxCommandEvent &WXUNUSED(event))
-{
-  network->Load("IECMBase.nt");
-}
-///////////////////////////////////////////////////////////////////
-void AppFrame::LoadSour(wxCommandEvent &WXUNUSED(event))
-{
-  network->Load("IECMSour.nt");
-}
-///////////////////////////////////////////////////////////////////
-void AppFrame::LoadREIBase(wxCommandEvent &WXUNUSED(event))
-{
-  network->Load("REIBase.nt");
-}
-///////////////////////////////////////////////////////////////////
-void AppFrame::LoadREISour(wxCommandEvent &WXUNUSED(event))
-{
-  network->Load("REISour.nt");
 }
 ///////////////////////////////////////////////////////////////////
 void AppFrame::Log(const char* msg)
@@ -2263,11 +2230,7 @@ void AppFrame::ProcessCommandLineArgs( void )
       return;
    }
 
-   // we must make this call here because
-   // new sets the path to null
-   wxCommandEvent event;
-   New( event );
-
+   path.clear();
    path = vesFileName.GetFullPath();
    path.Replace( _("\\"), _("/"), true );
    directory = vesFileName.GetPath();
@@ -2289,14 +2252,20 @@ void AppFrame::ProcessCommandLineArgs( void )
    //Now laod the xml data now that we are in the correct directory
    fname=vesFileName.GetFullName();
    // we submit after new to make sure that the ce and ge ar cleared
-   SubmitToServer( event );      
-   network->Load( ConvertUnicode( path.c_str() ) );
+   wxCommandEvent event;
+   //SubmitToServer( event );      
+   network->Load( ConvertUnicode( path.c_str() ), true );
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::EnableCEGUIMenuItems( void )
 {
+   if ( !serviceList->IsConnectedToCE() )
+   {
+      return;
+   }
+
    con_menu->Enable(v21ID_SUBMIT,true);
    con_menu->Enable(v21ID_LOAD, true);
    //frame_->con_menu->Enable(v21ID_CONNECT, false);

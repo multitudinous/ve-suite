@@ -2288,26 +2288,41 @@ std::string Network::Save( std::string fileName )
    return fileName;
 }
 ////////////////////////////////////////////////////////
-void Network::New()
+void Network::New( bool promptClearXplorer )
 {
    // Just clear the design canvas
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+   
+   int answer = wxID_NO;
+   if ( !promptClearXplorer )
+   {
+      wxMessageDialog promptDlg( this, 
+                                 _("Do you want to reset Xplorer?"), 
+                                 _("Reset Xplorer Warning"), 
+                                 wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
+                                 wxDefaultPosition);
+      answer = promptDlg.ShowModal();
+   }
+   
+   if ( ( answer == wxID_OK ) || ( promptClearXplorer ) )
+   {
+      std::map<int, Module>::iterator iter;
+      for ( iter=modules.begin(); iter!=modules.end(); ++iter )
+      {
+         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+         dataValuePair->SetDataName( "Object ID" );
+         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
+         VE_XML::Command* veCommand = new VE_XML::Command();
+         veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+         veCommand->AddDataValuePair( dataValuePair );
+         bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+         //Clean up memory
+         delete veCommand;
+      }
+   }
 
    links.clear();
 
-   std::map<int, Module>::iterator iter;
-   for ( iter=modules.begin(); iter!=modules.end(); ++iter )
-   {
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
-      dataValuePair->SetDataName( "Object ID" );
-      dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-      VE_XML::Command* veCommand = new VE_XML::Command();
-      veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
-      veCommand->AddDataValuePair( dataValuePair );
-      bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-      //Clean up memory
-      delete veCommand;
-   }
    modules.clear();
 
    tags.clear();
@@ -2328,10 +2343,10 @@ void Network::New()
    }
 }
 ////////////////////////////////////////////////////////
-void Network::Load( std::string xmlNetwork )
+void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
 {
    //Get a new canvas first to cleanup memory
-   this->New();
+   this->New( promptClearXplorer );
    //Now...lets process some files
    _fileProgress = new wxProgressDialog(_("Translation Progress"),
                   _("Load..."), 
