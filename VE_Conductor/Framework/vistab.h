@@ -231,6 +231,9 @@ public:
    wxSlider* _maxSlider;
    wxString* _none;
 
+   ///Updates the spin controllers
+   void UpdateSpinControls( void );
+
 protected:
    /*!\class ScalarRangeMinSliderCallback
     *Class that allows the user to do operations based on the min slider events

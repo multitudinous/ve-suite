@@ -816,6 +816,7 @@ void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
    _activeDataSetName = ConvertUnicode( _datasetSelection->GetValue() );
    SetActiveDataset(_activeDataSetName);
+   UpdateSpinControls();
 }
 ///////////////////////////////////////////////////
 void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
@@ -849,7 +850,7 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
 
       _minSlider->SetValue( 0 );
       _maxSlider->SetValue( 100 );
-      scalarValue = _scalarSelection->GetSelection();
+      //scalarValue = _scalarSelection->GetSelection();
       
       scalarSelect = true;
    }
@@ -866,7 +867,7 @@ void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
       return;
    }
 
-   _scalarSelection->Select(0);
+//   _scalarSelection->Select(0);
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
@@ -1361,4 +1362,84 @@ void Vistab::InitialScalarVector()
       //_scalarSelection->SetString(0);
       //std::cout<<"THIS WORKS: "<<_activeScalarName<<std::endl;
    }
+}
+////////////////////////////////////////////////////////////////
+void Vistab::UpdateSpinControls()
+{
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
+//   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+   
+   _minSpinner->SetRange( _activeScalarRange.at(0), _activeScalarRange.at(1) );
+   _maxSpinner->SetRange( _activeScalarRange.at(0), _activeScalarRange.at(1) );
+   _minSpinner->SetValue( _activeScalarRange.at(0) );
+   _maxSpinner->SetValue( _activeScalarRange.at(1) );
+
+   if( _activeScalarRange.at(1) == _activeScalarRange.at(0) )
+   {
+		_minSpinner->Enable(false);
+		_maxSpinner->Enable(false);
+		return;
+   }
+
+   _minSpinner->Enable(true);
+   _maxSpinner->Enable(true);
+   _minSlider->Enable(true);
+   _maxSlider->Enable(true);
+   _minSlider->SetValue(0);
+   _maxSlider->SetValue(100);
+   //double minValue = 0;
+   //double maxValue = 100;
+
+   if( _activeScalarName.empty() && _activeVectorName.empty() )
+   {
+      wxMessageBox( _("Select a scalar or vector"),_("Dataset Failure"), 
+                     wxOK | wxICON_INFORMATION );
+      _minSpinner->SetValue(0);
+	  _maxSpinner->SetValue(100);
+      return;
+   }
+/*
+   minValue = ( ( _minSpinner->GetValue() - _activeScalarRange.at(0) ) 
+               / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
+
+   if( minValue == 100 )
+   {  
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
+   }
+   else if( _maxSlider->GetValue() <= (int)minValue )
+   {
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
+      _maxSpinner->SetValue( _activeScalarRange.at(1) - ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
+                               * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
+   }
+   else
+   {
+      _minSlider->SetValue( (int)minValue );  
+   }
+   //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+
+   maxValue = ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) 
+               - ( _activeScalarRange.at(1) - _maxSpinner->GetValue() ) ) 
+               / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
+
+   if( maxValue == 0 )
+   {  
+      _minSlider->SetValue( (int)maxValue+1 );
+      _maxSlider->SetValue( (int)maxValue );     
+   }
+   else if( _minSlider->GetValue() >= (int)maxValue )
+   {
+      _minSlider->SetValue( (int)maxValue-1 );
+      _maxSlider->SetValue( (int)maxValue );   
+      _minSpinner->SetValue( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
+                              * (double)_minSlider->GetValue() / 100 + _activeScalarRange.at(0) );
+   } 
+   else
+   {  
+      _maxSlider->SetValue( (int)maxValue );   
+   } 
+*/
 }
