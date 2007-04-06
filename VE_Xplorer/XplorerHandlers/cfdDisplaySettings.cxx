@@ -116,24 +116,25 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
       std::vector< jccl::ConfigElementPtr > elements;
       oldCfg->getByType( "display_window", elements );
 
+      VE_XML::DataValuePair* desktopData = 
+                     veCommand->GetDataValuePair( "desktop_width" );
+      int configXValue = desktopData->GetDataValue();
+      desktopData = veCommand->GetDataValuePair( "desktop_height" );
+      int configYValue = desktopData->GetDataValue();
+
       for ( size_t i = 0; i < elements.size(); ++i )
       {
          ChangeDisplayElements( true, elements.at(i) );
-
          //Process the resolution
-         VE_XML::DataValuePair* desktopData = veCommand->GetDataValuePair( "desktop_width" );
          // 2/3 the width
-         xSize = static_cast< int >( desktopData->GetDataValue() * 0.667f ); 
+         xSize = static_cast< int >( configXValue * 0.667f ); 
          elements.at(i)->setProperty(  "size", 0, xSize );
-         desktopData = veCommand->GetDataValuePair( "desktop_height" );
          // 50 for the menu bar height
 #ifdef WIN32
-         ySize = static_cast< int >( desktopData->GetDataValue() - 160 ); 
+         ySize = static_cast< int >( configYValue - 160 ); 
 #else
-         ySize = static_cast< int >( desktopData->GetDataValue() - 195 );
+         ySize = static_cast< int >( configYValue - 195 );
 #endif
-
-			
          elements.at(i)->setProperty(  "size", 1, ySize );
          elements.at(i)->setProperty(  "origin", 0, 0 );
          elements.at(i)->setProperty(  "origin", 1, 0 );
@@ -175,7 +176,6 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 
             newZval = svPtr->getProperty< double >(  "lower_left_corner", 2 );
          }
-
          ChangeDisplayElements( false, elements.at(i) );
       }
       jccl::ConfigManager::instance()->unlockActive();
@@ -186,13 +186,63 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )
 {
-	return std::pair< int, int >( xSize, ySize );
+   //Set the default value based on config screen size if no desktop size
+   // is specified
+   if ( ( xSize == 0 ) && ( ySize == 0 ) )
+   {
+      jccl::ConfigManager::instance()->lockActive();
+      // Get current list of display elements
+      jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
+      std::vector< jccl::ConfigElementPtr > elements;
+      oldCfg->getByType( "display_window", elements );
+      
+      for ( size_t i = 0; i < elements.size(); ++i )
+      {
+            xSize = elements.at(i)->getProperty< double >(  "size", 0 );
+            ySize = elements.at(i)->getProperty< double >(  "size", 1 );
+      }
+      jccl::ConfigManager::instance()->unlockActive();
+      return std::pair< int, int >( xSize, ySize );
+   }
+   else
+   {
+      return std::pair< int, int >( xSize, ySize );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, double > cfdDisplaySettings::GetScreenCornerValues( void )
 {
+   //Set the default value based on config screen size if no desktop size
+   // is specified
+   if ( ( newXmin == 0 ) && ( newYmin == 0 ) )
+   {
+      jccl::ConfigManager::instance()->lockActive();
+      // Get current list of display elements
+      jccl::Configuration* oldCfg = jccl::ConfigManager::instance()->getActiveConfig();
+      std::vector< jccl::ConfigElementPtr > elements;
+      oldCfg->getByType( "display_window", elements );
+      
+      for ( size_t i = 0; i < elements.size(); ++i )
+      {
+         size_t numSvPtrs = elements.at(i)->getNum( "surface_viewports" );
+         for ( size_t j = 0; j < numSvPtrs; ++j )
+         {
+            jccl::ConfigElementPtr svPtr = elements.at( i )->getProperty< jccl::ConfigElementPtr >( "surface_viewports", j );
+            // process x first
+            newXmin = svPtr->getProperty< double >(  "lower_left_corner", 0 );
+            newXmax = svPtr->getProperty< double >(  "lower_right_corner", 0 );
+            // now process y
+            newYmin = svPtr->getProperty< double >(  "lower_left_corner", 1 );
+            newYmax = svPtr->getProperty< double >(  "upper_left_corner", 1 );
+            // now process z
+            newZval = svPtr->getProperty< double >(  "lower_left_corner", 2 );
+         }
+      }
+      jccl::ConfigManager::instance()->unlockActive();
+   }
+   
    std::map< std::string, double > values;
-
+   
    values[ std::string( "xmin" ) ] = newXmin;
    values[ std::string( "xmax" ) ] = newXmax;
    values[ std::string( "ymin" ) ] = newYmin;
