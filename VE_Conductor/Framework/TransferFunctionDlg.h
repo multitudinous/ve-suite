@@ -44,6 +44,7 @@
 #include "VE_Conductor/Utilities/BaseDialog.h"
 
 class wxComboBox;
+class wxCheckBox;
 
 class TransferFunctionDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
@@ -55,7 +56,8 @@ public:
    
    enum TRANSFER_FUNCTION_IDS
    {
-      AVAILABLE_SHADER_MANAGERS
+      AVAILABLE_SHADER_MANAGERS,
+      PHONG_ENABLE_CHECK
    };
 
 
@@ -67,6 +69,11 @@ protected:
    ///\param command The wxCommandEvent
    void _updateActiveScalarShaderManager(wxCommandEvent& command);
 
+   ///Enable/Disable phong lighting 
+   ///\param command The wxCommandEvent
+   void _onEnablePhongLighting(wxCommandEvent& command);
+
+   wxCheckBox* _phongShadingCheck;///<The phong shading check box.
    wxComboBox* _shaderManagerSelection;///<The available shader manager.
    
    std::string ConvertUnicode( const wxChar* data )

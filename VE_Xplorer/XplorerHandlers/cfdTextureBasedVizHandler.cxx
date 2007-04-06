@@ -56,6 +56,7 @@
 #include "VE_Xplorer/XplorerHandlers/TBActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h"
 #include "VE_Xplorer/XplorerHandlers/TBSliceNumberUpdateEH.h"
+#include "VE_Xplorer/XplorerHandlers/TBPhongShadingEnableEH.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
@@ -120,6 +121,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _eventHandlers[std::string("TB_TRANSIENT_MODE_UPDATE")] = new VE_EVENTS::TextureBasedTransientModeUpdateEventHandler();
    _eventHandlers[std::string("TB_TRANSIENT_DURATION_UPDATE")] = new VE_EVENTS::TextureBasedTransientDurationUpdateEventHandler();
    _eventHandlers[std::string("TB_UPDATE_NUMBER_SLICE_PLANES")] = new VE_EVENTS::TextureBasedSliceNumberUpdateEventHandler();
+   _eventHandlers[std::string("TB_PHONG_SHADING_ENABLE")] = new VE_EVENTS::TextureBasedPhongShadingEnableEventHandler();
 
 }
 ///////////////////////////////////////////////
@@ -208,6 +210,26 @@ void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
             sShader->DeactivateIsoSurface();
          }
          sShader->EnsureScalarRange();
+      }
+   }
+}
+//////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::EnsurePhongShading(bool onOff)
+{
+   if(_svvh)
+   {
+	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+      if(sShader)
+      {
+         //this is hard coded and will need to change--biv
+         if(onOff)
+         {
+            sShader->SetActiveShaderProgram("Phong Lit Volume Render");
+         }
+         else
+         {
+            sShader->SetActiveShaderProgram("Basic Volume Render");
+         }
       }
    }
 }

@@ -104,12 +104,10 @@ void GreyScaleShaderManager::_updateTransferFunction()
    {
       if(i < newRange[0])
       {
-		 {
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }
+         lutex[i*4    ] = 0;
+         lutex[i*4 + 1] = 0;
+         lutex[i*4 + 2] = 0;
+         lutex[i*4 + 3] = 0;
       }
 	  else if( i > newRange[1])
 	  {
@@ -128,28 +126,28 @@ void GreyScaleShaderManager::_updateTransferFunction()
             isoRange[1] = isoVal + 4.0;
 
             if(i >= isoRange[0] && i <= isoRange[1])
-			{
+			   {
                alpha = (i - newRange[0])*invSRange; 
-			   R = 
+			      R = 
                G =       
                B = 
                A = alpha*255.0f;
             }
-			else
-			{
+			   else
+            {
                R = 0;
                G = 0;
                B = 0;
                A = 0;
             }
          }
-		 else
-		 {
+		   else
+         {
             alpha = (i - newRange[0])*invSRange; 
-			R = 
+			   R = 
             G =       
             B = 
-            A = alpha*255.0f;
+            A = alpha*alpha*255.0f;
          }
          lutex[i*4   ]  = (unsigned char)R;
          lutex[i*4 + 1] = (unsigned char)G;

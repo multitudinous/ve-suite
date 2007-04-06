@@ -204,9 +204,11 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromInline(volumeTransferFragSource,true);
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(vTransfers.get());
+   AddShaderProgram("3D Texture Advection Transfer Functions",glslProgram);
+   /*
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
                         std::string("volumeTransferFunctions"));
-   /*if(fullPath)
+   if(fullPath)
    {
       delete [] fullPath;
       fullPath = 0;

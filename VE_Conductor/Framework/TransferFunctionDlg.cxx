@@ -50,6 +50,7 @@ using namespace VE_Conductor::GUI_Utilities;
 
 BEGIN_EVENT_TABLE( TransferFunctionDialog, wxDialog )
    EVT_COMBOBOX(AVAILABLE_SHADER_MANAGERS,TransferFunctionDialog::_updateActiveScalarShaderManager)
+   EVT_CHECKBOX(PHONG_ENABLE_CHECK,TransferFunctionDialog::_onEnablePhongLighting)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////
 TransferFunctionDialog::TransferFunctionDialog(wxWindow* parent, int id,std::string title)
@@ -80,6 +81,10 @@ void TransferFunctionDialog::_buildGUI()
    _shaderManagerSelection->Append(_T("CUSTOM"));
    _shaderManagerSelection->SetSelection(0);
    smSizer->Add(_shaderManagerSelection,0,wxALIGN_CENTER|wxEXPAND);
+
+   //wxBoxSizer* enablePhongSizer = new wxBoxSizer(wxHORIZONTAL);
+   _phongShadingCheck = new wxCheckBox(this,PHONG_ENABLE_CHECK,_T("Enable Phong Shading"));
+   smSizer->Add(_phongShadingCheck,0,wxALIGN_CENTER);
    
    wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
    _addOKButton(buttonRowSizer);
@@ -105,6 +110,20 @@ void TransferFunctionDialog::_updateActiveScalarShaderManager(wxCommandEvent& co
    VE_XML::DataValuePair* name = new VE_XML::DataValuePair();
    name->SetData("Active Shader Manager", ConvertUnicode( _shaderManagerSelection->GetValue().GetData() ) );
    _instructions.push_back(name);
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////
+void TransferFunctionDialog::_onEnablePhongLighting(wxCommandEvent& command)
+{
+  
+   ClearInstructions();
+   _commandName = "TB_PHONG_SHADING_ENABLE";
+   
+   VE_XML::DataValuePair* phongValue = new VE_XML::DataValuePair();
+   phongValue->SetData("Phong Shading State",(_phongShadingCheck->GetValue())?"On":"Off");
+   _instructions.push_back(phongValue);
 
    _sendCommandsToXplorer();
    ClearInstructions();

@@ -637,6 +637,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TBPhongShadingEnableEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\TBSetActiveShaderManagerEH.cxx"
 				>
 			</File>
@@ -1100,6 +1104,10 @@
 			</File>
 			<File
 				RelativePath=".\TBIsosurfaceUpdateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TBPhongShadingEnableEH.h"
 				>
 			</File>
 			<File

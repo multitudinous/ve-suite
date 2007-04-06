@@ -59,6 +59,7 @@ cfdOSGShaderManager::cfdOSGShaderManager(const cfdOSGShaderManager& sm)
    _ss = sm._ss;
    _fshader = new osg::Shader(*sm._fshader);
    _vshader = new osg::Shader(*sm._vshader);
+   _programs = sm._programs;
    SetShaderDirectory(sm._shaderDirectory);
 }
 ///////////////////////////////////////////
@@ -74,6 +75,7 @@ cfdOSGShaderManager::~cfdOSGShaderManager()
       delete [] _bounds;
       _bounds = 0;
    }
+   _programs.clear();
 }
 ///////////////////////////////////////////
 void cfdOSGShaderManager::UseCG(bool useCG)
@@ -84,14 +86,17 @@ void cfdOSGShaderManager::UseCG(bool useCG)
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline(const std::string inlineSource,
                                                            bool isFrag)
 {
-   if(isFrag){
-      _fshader = new osg::Shader(osg::Shader::FRAGMENT,inlineSource);
+   if(isFrag)
+   {
+      //_fshader = new osg::Shader(osg::Shader::FRAGMENT,inlineSource);
       //_fshader->loadShaderSourceFromFile(filename.c_str());
-      return _fshader.get();
-   }else{
-      _vshader = new osg::Shader(osg::Shader::VERTEX,inlineSource);
+      return new osg::Shader(osg::Shader::FRAGMENT,inlineSource);//_fshader.get();
+   }
+   else
+   {
+      //_vshader = new osg::Shader(osg::Shader::VERTEX,inlineSource);
       //_vshader->loadShaderSourceFromFile(filename.c_str());
-      return _vshader.get();
+      return new osg::Shader(osg::Shader::VERTEX,inlineSource);//_vshader.get();
    }
    return 0;
 }
@@ -99,33 +104,102 @@ osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline(const std::string 
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromFile(const std::string filename,
                                                            bool isFrag)
 {
-   if(isFrag){
+   if(isFrag)
+   {
       _fshader = new osg::Shader(osg::Shader::FRAGMENT);
       _fshader->loadShaderSourceFromFile(filename.c_str());
       return _fshader.get();
-   }else{
+   }
+   else
+   {
       _vshader = new osg::Shader(osg::Shader::VERTEX);
       _vshader->loadShaderSourceFromFile(filename.c_str());
       return _vshader.get();
    }
    return 0;
 }
-/////////////////////////////////////////////////////////////////////////
-void cfdOSGShaderManager::_setupGLSLShaderProgram(osg::StateSet* ss,
-                                             osg::Program* glslProgram,
-                                             const std::string pgName,bool override)
+//////////////////////////////////////////////////////////////////
+void cfdOSGShaderManager::SetActiveShaderProgram(std::string name)
 {
-   if(ss){
-      if(glslProgram){
+   //Probably don't need this memeber yet
+   //_activeShaderProgram = name;
+   if(_ss.valid())
+   {
+      if(_ss->getAttribute(osg::StateAttribute::PROGRAM))
+      {
+         _ss->removeAttribute(osg::StateAttribute::PROGRAM);
+      }
+      
+      if(_programs[name].valid())
+	   {
+         _ss->setAttributeAndModes(_programs[name].get(),osg::StateAttribute::ON);
+      }
+   }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+void cfdOSGShaderManager::AddShaderProgram(std::string name,osg::ref_ptr<osg::Program> glslProgram)
+{
+   _programs[name] = glslProgram;
+   _programs[name]->setName(name);
+   ///check here if vector vis has problems
+   SetActiveShaderProgram(name);
+   //_setupGLSLShaderProgram(_programs[name].get(),name);
+}
+/////////////////////////////////////////////////////////////////////////
+void cfdOSGShaderManager::_setupGLSLShaderProgram(osg::Program* glslProgram,
+                                                  const std::string pgName,
+                                                  bool override)
+{
+   ///This is an old function!!!!!
+   std::cout<<"Depricated function!!!"<<std::endl;
+   std::cout<<"cfdOSGShaderManager::_setupGLSLShaderProgram!!!!!"<<std::endl;
+   std::cout<<"Use cfdOSGShaderManager::SetActiveShaderProgram instead!!"<<std::endl;
+   if(_ss.valid())
+   {
+      if(_ss->getAttribute(osg::StateAttribute::PROGRAM))
+      {
+         _ss->removeAttribute(osg::StateAttribute::PROGRAM);
+      }
+      if(glslProgram)
+	   {
          glslProgram->setName(pgName.c_str());
-         if(override){
-            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-         }else{
-            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON);
+         if(override)
+         {
+            _ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+         }
+		   else
+         {
+            _ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON);
          }
       }
    }
 }
+/////////////////////////////////////////////////////////////////////////
+/*void cfdOSGShaderManager::_setupGLSLShaderProgram(osg::StateSet* ss,
+                                                  osg::Program* glslProgram,
+                                                  const std::string pgName,bool override)
+{
+   if(ss)
+   {
+      ///remove any old shader programs
+      if(ss->getAttribute(osg::StateAttribute::PROGRAM)
+	   {
+         ss->removeAttribute(osg::StateAttribute::PROGRAM);
+	   }
+      if(glslProgram)
+	   {
+         glslProgram->setName(pgName.c_str());
+         if(override)
+         {
+            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+         }
+		   else
+         {
+            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON);
+         }
+      }
+   }
+}*/
 //////////////////////////////////////////////////
 void cfdOSGShaderManager::SetBounds(float* bounds)
 {

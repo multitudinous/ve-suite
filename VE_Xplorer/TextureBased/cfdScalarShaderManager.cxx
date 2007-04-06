@@ -45,20 +45,8 @@
 #include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 using namespace VE_TextureBased;
 //the shader inline source
-static const char* scalarFragSource = {
-   //a volume rendering shader which applies a 1D transfer function
-   "uniform sampler3D volumeData;\n"
-   "uniform sampler1D transferFunction;\n"
-   "void main(void)\n"
-   "{\n"
-      "//dependent texture look up in transfer function\n"
-      "vec2 scalar = texture3D(volumeData,gl_TexCoord[0].xyz).ga;\n"
-      "gl_FragColor = /*(scalar.x==0.0)?*/texture1D(transferFunction,scalar.y);//:vec4(0,0,0,0);\n"
-
-      "//set the opacity to .2 for all fragments\n"
-      "gl_FragColor.a *= gl_Color.a;\n"
-   "}\n"
-};
+#include "VE_Xplorer/TextureBased/volumeRenderBasicShader.h"
+#include "VE_Xplorer/TextureBased/volumeRenderPhongShader.h"
 ////////////////////////////////////////////////
 cfdScalarShaderManager::cfdScalarShaderManager()
 {
@@ -122,17 +110,26 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
    std::cout<<"Using glsl..."<<std::endl;
    _ss->addUniform(new osg::Uniform("volumeData",0));
-   _ss->addUniform(new osg::Uniform("transferFunction",1));
+   _ss->addUniform(new osg::Uniform("transferFunction",1)); 
    _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
+
    _tUnit = 0;
-                                                               
-   osg::ref_ptr<osg::Shader> scalarFragShader = _createGLSLShaderFromInline(scalarFragSource,true);
-   //osg::ref_ptr<osg::Shader> scalarVertShader = _createGLSLShaderFromInline(scalarVertSource,false);
-   osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
-   glslProgram->addShader(scalarFragShader.get());
-   //glslProgram->addShader(scalarVertShader.get());
-   _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),std::string("scalarAdjuster"));
-  
+   osg::ref_ptr<osg::Shader> basicVertShader = _createGLSLShaderFromInline(vrBasicVertSource,false);                          
+   osg::ref_ptr<osg::Shader> basicFragShader = _createGLSLShaderFromInline(vrBasicFragSource,true);
+   osg::ref_ptr<osg::Program> vrBasic = new osg::Program();
+   vrBasic->addShader(basicFragShader.get());
+   vrBasic->addShader(basicVertShader.get());
+   AddShaderProgram("Basic Volume Render",vrBasic);
+
+   osg::ref_ptr<osg::Shader> vrPhongVertShader = _createGLSLShaderFromInline(vrPhongVertSource,false);
+   osg::ref_ptr<osg::Shader> vrPhongFragShader = _createGLSLShaderFromInline(vrPhongFragSource,true);
+   osg::ref_ptr<osg::Program> vrPhong = new osg::Program();
+   
+   vrPhong->addShader(vrPhongVertShader.get());
+   vrPhong->addShader(vrPhongFragShader.get());
+   AddShaderProgram("Phong Lit Volume Render",vrPhong);
+
+   SetActiveShaderProgram("Basic Volume Render");
 }
 /////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()

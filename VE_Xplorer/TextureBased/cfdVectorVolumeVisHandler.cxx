@@ -296,7 +296,7 @@ void cfdVectorVolumeVisHandler::_applyTextureMatrix()
    _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,
                                                         tMat.get(),
                                                         osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-   float trans[3] = {.5,.5,.5};
+   float trans[3] = {0,0,0};
    _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
                                                              _center,
                                                              _scale,

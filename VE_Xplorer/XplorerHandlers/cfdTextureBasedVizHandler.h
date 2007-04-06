@@ -119,6 +119,10 @@ namespace VE_TextureBased
          ///\param onOff Turn it off or on.
          void EnsureIsosurface(bool onOff);
 
+         ///Activate/deactivate phong shading.
+         ///\param onOff Turn it off or on.
+         void EnsurePhongShading(bool onOff);
+
          ///Activate the isosurface
          ///\param value The new isosurface value.
          void UpdateIsosurface(double value);

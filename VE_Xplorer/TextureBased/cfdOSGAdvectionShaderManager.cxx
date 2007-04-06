@@ -328,8 +328,10 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
 
    glslProgram->addShader(vTransfers.get());
+   AddShaderProgram("3D Texture Advection",glslProgram);
+   /*
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
-                        std::string("fragAdvect"),true);
+                        std::string("fragAdvect"),true);*/
    _ss->addUniform(dyeTrans.get());
    _ss->addUniform(dyeScale.get());
    _ss->addUniform(tCoordMult.get());

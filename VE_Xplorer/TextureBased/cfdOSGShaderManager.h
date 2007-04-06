@@ -65,6 +65,15 @@ public:
    void SetBounds(float* bounds);
    void UseCG(bool useCG = false);
 
+   ///Add a shader program to the shader manager
+   ///\param name The name of the program
+   ///\param glslProgram The glsl program
+   void AddShaderProgram(std::string name,osg::ref_ptr<osg::Program> glslProgram);
+   
+   ///Set the active shader
+   ///\param name The name of the shader to activate
+   void SetActiveShaderProgram(std::string name);
+
    osg::StateSet* GetShaderStateSet();
    unsigned int GetAutoGenTextureUnit(){return _tUnit;}
 
@@ -73,7 +82,7 @@ protected:
    //////////////////
    //GLSL interface//
    //////////////////
-   virtual void _setupGLSLShaderProgram(osg::StateSet* ss,
+   virtual void _setupGLSLShaderProgram(/*osg::StateSet* ss,*/
                                      osg::Program* glslProgram,
                                      const std::string pgName,bool override = false);
    virtual osg::Shader* _createGLSLShaderFromFile(const std::string filename,
@@ -86,6 +95,7 @@ protected:
    osg::ref_ptr<osg::Shader> _vshader;
    osg::ref_ptr<osg::Shader> _fshader;
 
+   std::map<std::string, osg::ref_ptr<osg::Program> > _programs;///<The available shader programs;
    osg::ref_ptr<osg::StateSet> _ss;
    std::string _shaderDirectory;
    unsigned int _tUnit;
