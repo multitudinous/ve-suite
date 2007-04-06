@@ -46,6 +46,18 @@ Wand API
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
+#include <osgUtil/IntersectVisitor>
+
+/*namespace osg 
+{
+   class Geode;
+   class Group;
+   class Geometry;
+   class Vec4f;
+   class Vec3f;
+   class MatrixTransform;
+}*/
+
 namespace VE_SceneGraph
 {
    class DCS;
@@ -85,6 +97,17 @@ public:
    ///Update the juggler reference frame wand position  
    void UpdateLoc( void );
 
+   void SelectObject( void );
+   void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
+   //void DrawLine(osg::Vec3f start, osg::Vec3f end);
+   void UpdateObjectHandler( void );
+   void SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint);
+   void SetWandPosition( void );
+   void TranslateObject( void ); 
+   osg::MatrixTransform* getMatrixTransform( void );
+   double* GetDirection( void );
+   float* GetObjLocation( void );
+      
 protected:
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
@@ -167,7 +190,16 @@ private:
    VE_XML::Command* command;
    // data storage for initial world dcs location
    float initialTranslate[ 3 ];
-   float initialRotate[ 3 ];   
+   float initialRotate[ 3 ]; 
+   
+   osg::ref_ptr<osg::Geode> selectedGeometry;
+   double distance;
+   std::string laserName;
+   osg::Vec3f LastWandPosition;
+   osg::Node* rootNode;
+   osg::Node* worldNode;
+   bool _active;
+   
 };
 }
 

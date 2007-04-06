@@ -34,6 +34,10 @@
 
 // --- OSG Stuff --- //
 #include <osg/LineSegment>
+#include <osg/Group>
+#include <osg/Geometry>
+#include <osg/MatrixTransform>
+#include <osg/Array>
 
 //C/C++ Libraries
 #include <iostream>
@@ -177,184 +181,6 @@ void Wand::UpdateNavigation()
       // This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50 
       this->rotationStepSize = (0.001333f) * powf( (cfdIso_value * 0.5f), 2.2f);
    }
-   else if ( !newCommand.compare( "GUI_NAV" ) )
-   {
-      if ( this->cfdIso_value == NAV_FWD ||
-           this->IHdigital[0]->getData() == gadget::Digital::ON ) 
-         //forward translate
-      { 
-         this->worldTrans[1] += translationStepSize;
-      }
-      else if ( this->cfdIso_value == NAV_BKWD ||
-                this->IHdigital[1]->getData() == gadget::Digital::ON ) 
-         //backward translate
-      { 
-         this->worldTrans[1] -= translationStepSize;
-      }
-      else if ( this->cfdIso_value == NAV_RIGHT || 
-                this->IHdigital[2]->getData() == gadget::Digital::ON ) 
-         //right translate
-      { 
-         this->worldTrans[0] += translationStepSize;
-      }
-      else if ( this->cfdIso_value == NAV_LEFT || 
-                this->IHdigital[3]->getData() == gadget::Digital::ON ) 
-         //left translate
-      { 
-         this->worldTrans[0] -= translationStepSize;
-      }
-      else if ( this->cfdIso_value == NAV_UP ||
-                this->IHdigital[4]->getData() == gadget::Digital::ON ) 
-         //upward translate
-      { 
-         this->worldTrans[2] += translationStepSize;  
-      }
-      else if ( this->cfdIso_value == NAV_DOWN ||
-                this->IHdigital[5]->getData() == gadget::Digital::ON ) 
-         //downward translate
-      { 
-         this->worldTrans[2] -= translationStepSize;  
-      } 
-      else if ( this->cfdIso_value == YAW_CCW ||
-                this->IHdigital[6]->getData() == gadget::Digital::ON )        
-         //CW rotation
-      {
-         this->worldRot[ 0 ] -= rotationStepSize;
-         
-         if ( rotationFlag )
-         {
-            vjHeadMat = head->getData();
-            // get juggler Matrix of worldDCS
-            // Note:: for pf we are in juggler land
-            //        for osg we are in z up land
-            Matrix44f worldMat;
-            worldMat = this->worldDCS->GetMat();
-            
-            gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
-            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
-#ifdef _OSG
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-            jugglerHeadPointTemp[ 2 ] = 0;
-#else
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = 0;
-            jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 2 ];
-#endif
-            
-            // translate world dcs by distance that the head
-            // is away from the origin
-            gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
-            gmtl::Matrix44f worldMatTrans = transMat * worldMat;
-            gmtl::Point3f newJugglerHeadPoint;
-            // get the position of the head in the new world space
-            // as if the head is on the origin
-            gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
-            
-            // Create rotation matrix and juggler head vector
-#ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
-#else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
-#endif
-            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
-            gmtl::Vec4f newGlobalHeadPointVec;
-            newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
-            newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
-            newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
-            // roate the head vector by the rotation increment
-            gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
-            
-            // create translation from new rotated point
-            // and add original head off set to the newly found location
-            // set world translation accordingly
-            this->worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-#ifdef _OSG
-            this->worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-#else
-            this->worldTrans[1] = (rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
-#endif
-         }
-      }
-      else if ( this->cfdIso_value == YAW_CW ||
-                this->IHdigital[7]->getData() == gadget::Digital::ON )         
-         //CCWrotation
-      {
-         this->worldRot[ 0 ] += rotationStepSize;
-         
-         if ( rotationFlag )
-         {
-            vjHeadMat = head->getData();
-            // get juggler Matrix of worldDCS
-            // Note:: for pf we are in juggler land
-            //        for osg we are in z up land
-            Matrix44f worldMat;
-            worldMat = this->worldDCS->GetMat();
-            
-            gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
-            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
-#ifdef _OSG
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-            jugglerHeadPointTemp[ 2 ] = 0;
-#else
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = 0;
-            jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 2 ];
-#endif
-            
-            // translate world dcs by distance that the head
-            // is away from the origin
-            gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
-            gmtl::Matrix44f worldMatTrans = transMat * worldMat;
-            gmtl::Point3f newJugglerHeadPoint;
-            // get the position of the head in the new world space
-            // as if the head is on the origin
-            gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
-            
-            // Create rotation matrix and juggler head vector
-#ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
-#else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
-#endif
-            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
-            gmtl::Vec4f newGlobalHeadPointVec;
-            newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
-            newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
-            newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
-            // roate the head vector by the rotation increment
-            gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
-            
-            // create translation from new rotated point
-            // and add original head off set to the newly found location
-            // set world translation accordingly
-            this->worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-#ifdef _OSG
-            this->worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-#else
-            this->worldTrans[1] = (rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
-#endif
-         }
-      }
-      else if ( this->cfdIso_value == PITCH_DOWN )         
-      {
-         this->worldRot[ 1 ] += rotationStepSize;
-      }
-      else if ( this->cfdIso_value == PITCH_UP )         
-      {
-         this->worldRot[ 1 ] -= rotationStepSize;
-      }
-      else if ( this->cfdIso_value == ROLL_CW )         
-      {
-         this->worldRot[ 2 ] -= rotationStepSize;
-      }
-      else if ( this->cfdIso_value == ROLL_CCW )         
-      {
-         this->worldRot[ 2 ] += rotationStepSize;
-      }
-   }
-   
    // navigate with buttons now
    if ( ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ) || 
         ( this->buttonData[1] == gadget::Digital::ON ) )
@@ -480,10 +306,10 @@ void Wand::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
+/*void Wand::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 {
    ;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetHeadRotationFlag( int input )
 {
@@ -518,7 +344,7 @@ void Wand::UpdateDir( void )
    dir[2] =  vjVec[1];
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateLoc( void)      
+void Wand::UpdateLoc( void )      
 {
    // get the location relative to the juggler frame
    gmtl::Vec3f loc_temp;
@@ -529,4 +355,344 @@ void Wand::UpdateLoc( void)
    loc[1] = -loc_temp[2];
    loc[2] =  loc_temp[1];
 }  
+////////////////////////////////////////////////////////////////////////////////
+void Wand::SelectObject( void )
+{
+   osg::Vec3f startPoint, endPoint;
+   this->SetupStartEndPoint(&startPoint, &endPoint);
+   
+   osg::LineSegment* beamLineSegment = new osg::LineSegment();
+   beamLineSegment->set(startPoint, endPoint);
+   
+   osgUtil::IntersectVisitor objectBeamIntersectVisitor;
+   objectBeamIntersectVisitor.addLineSegment(beamLineSegment);
+   
+   //Add the IntersectVisitor to the root Node so that all all geometry will be
+   //checked and no transforms are done to the Line segement.
+   this->rootNode->accept(objectBeamIntersectVisitor);
+   
+   osgUtil::IntersectVisitor::HitList beamHitList;
+   beamHitList = objectBeamIntersectVisitor.getHitList(beamLineSegment);
+   
+   this->ProcessHit(beamHitList);
+   this->DrawLine(startPoint, endPoint);
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
+{ 
+   osgUtil::Hit objectHit;
+   //this->selectedGeometry = NULL;
+   
+   if ( listOfHits.empty())
+   {
+      vprDEBUG(vesDBG,1) << "|\tcfdObjectHandler::ProcessHit No object selected" << std::endl 
+      << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      for (unsigned int i = 0; i <  listOfHits.size(); i ++)
+      {
+         objectHit = listOfHits[ i ];
+         if (objectHit._geode->getName() != this->laserName)
+         {
+            break;
+         }
+      }
+      
+      if (objectHit._geode.valid())
+      {
+         if (!objectHit._geode->getName().empty())
+         {
+            if ( objectHit._geode->getName() != this->laserName
+                 && objectHit._geode->getName() != "Root Node") 
+            {
+               this->selectedGeometry = objectHit._geode;
+               std::cout << objectHit._geode->getName() << std::endl;
+            }
+         }
+         else
+         {
+            this->selectedGeometry = objectHit._geode;
+            std::cout << objectHit._geode->getParents().front()->getName() 
+            << std::endl;
+         }
+      } 
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+//This function currently deletes the existing beam each time it is called and
+//add a new beam.  This should be replaced such that it is only called once
+//and then a transform is modified for the location.  
+void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
+{
+   static osg::Geode* beamGeode;
+   static osg::Geometry* beamGeometry;
+   
+   if (beamGeode != NULL)
+   {
+      this->rootNode->asGroup()->removeChild(beamGeode);
+      //biv -- this disable the drawing of the line
+      if(!_active)
+      {
+         return;
+      }
+      //beamGeode->removeDrawable(beamGeometry);
+   }
+   
+   
+   
+   beamGeode = new osg::Geode();
+   beamGeometry = new osg::Geometry();
+   beamGeode->addDrawable(beamGeometry);
+   beamGeode->setName(this->laserName);
+   
+   
+   
+   this->rootNode->asGroup()->addChild( beamGeode );
+   
+   osg::Vec3Array* beamVertices = new osg::Vec3Array;
+   beamVertices->push_back(osg::Vec3(start [ 0 ] - .1, start [ 1 ], 
+                                     start [ 2 ])); 
+   beamVertices->push_back(osg::Vec3(start [ 0 ] + .1, start [ 1 ], 
+                                     start [ 2 ])); 
+   beamVertices->push_back(osg::Vec3(end   [ 0 ] + .1, end   [ 1 ],  
+                                     end   [ 2 ])); 
+   beamVertices->push_back(osg::Vec3(end   [ 0 ] - .1, end   [ 1 ], 
+                                     end   [ 2])); 
+   beamVertices->push_back(osg::Vec3(start [ 0 ] - .1, start [ 1 ], 
+                                     start [ 2 ] + .1) ); 
+   beamVertices->push_back(osg::Vec3(start [ 0 ] + .1, start [ 1 ] , 
+                                     start [ 2 ] + .1)); 
+   beamVertices->push_back(osg::Vec3(end   [ 0 ] + .1, end   [ 1 ], 
+                                     end   [ 2 ] + .1)); 
+   beamVertices->push_back(osg::Vec3(end   [ 0 ] - .1, end   [ 1 ], 
+                                     end   [ 2 ] + .1));
+   
+   beamGeometry->setVertexArray( beamVertices );
+   
+   
+   osg::DrawElementsUInt* beamTop =
+      new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
+   beamTop->push_back(0);
+   beamTop->push_back(1);
+   beamTop->push_back(2);
+   beamTop->push_back(3);
+   beamGeometry->addPrimitiveSet(beamTop);
+   
+   osg::DrawElementsUInt* beamBottom =
+      new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
+   beamBottom->push_back(4);
+   beamBottom->push_back(5);
+   beamBottom->push_back(6);
+   beamBottom->push_back(7);
+   beamGeometry->addPrimitiveSet(beamBottom);
+   
+   osg::DrawElementsUInt* beamLeft =
+      new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
+   beamLeft->push_back(0);
+   beamLeft->push_back(3);
+   beamLeft->push_back(7);
+   beamLeft->push_back(4);
+   beamGeometry->addPrimitiveSet(beamLeft);
+   
+   osg::DrawElementsUInt* beamRight =
+      new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
+   beamRight->push_back(5);
+   beamRight->push_back(6);
+   beamRight->push_back(2);
+   beamRight->push_back(1);
+   beamGeometry->addPrimitiveSet(beamRight);
+   
+   osg::DrawElementsUInt* beamBack =
+      new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
+   beamBack->push_back(1);
+   beamBack->push_back(0);
+   beamBack->push_back(4);
+   beamBack->push_back(5);
+   beamGeometry->addPrimitiveSet(beamBack);
+   
+   osg::DrawElementsUInt* beamFront =
+      new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
+   beamFront->push_back(3);
+   beamFront->push_back(2);
+   beamFront->push_back(6);
+   beamFront->push_back(7);
+   beamGeometry->addPrimitiveSet(beamFront);
+   
+   
+   osg::Vec4Array* colors = new osg::Vec4Array;
+   colors->push_back(osg::Vec4(1.0f, 0.0f, 1.0f, 1.0f) );
+   
+   osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
+   cfdColorIndexArray->push_back(0);
+   
+   beamGeometry->setColorArray(colors);
+   beamGeometry->setColorIndices(cfdColorIndexArray.get());
+   beamGeometry->setColorBinding(osg::Geometry::BIND_OVERALL) ;
+   
+}   
+////////////////////////////////////////////////////////////////////////////////
+//The current implemention uses VJButton0 to select an object then if VJButton3
+//is pressed the object is translated with the users motion.  Later the 
+//selection method will occur from voice commands and translation will be done
+//using gestures from a glove.
+void Wand::UpdateObjectHandler( void )
+{
+   if ( _active )
+   {
+      osg::Vec3f startPoint, endPoint;
+      this->SetupStartEndPoint(&startPoint, &endPoint);
+      this->DrawLine(startPoint, endPoint);
+      
+      if (this->digital[ 0 ]->getData() == gadget::Digital::TOGGLE_ON)
+      {
+         this->SelectObject();
+      }
+      
+      int buttonData = this->digital[ 0 ]->getData();
+      if ((buttonData == gadget::Digital::ON || buttonData == gadget::Digital::TOGGLE_ON) 
+          && this->selectedGeometry != NULL)
+      {
+         if(buttonData == gadget::Digital::TOGGLE_ON)
+         {
+	         this->SetWandPosition();
+         }
+         this->TranslateObject();
+      }
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
+{
+   float * wandPosition  =  this->GetObjLocation();
+   //double * worldPosition = this->navigator->GetWorldLocation();
+   double * wandDirection  =  this->GetDirection();
+   
+   
+   for (int i = 0; i < 3; i++)
+   {
+      wandDirection [ i ] =  wandPosition [ i ] + 
+      (wandDirection [ i ] * this->distance); 
+   }
+   
+   startPoint 
+      ->set(wandPosition [ 0 ], wandPosition [ 1 ], wandPosition [ 2 ]);
+   endPoint 
+      ->set(wandDirection [ 0 ], wandDirection[ 1 ], wandDirection [ 2 ]);
+   
+   osg::Matrix osgMat;
+   
+   float * worldRotation  = worldDCS->GetRotationArray();
+   
+   osgMat.makeRotate(gmtl::Math::deg2Rad(worldRotation [ 0 ]), 
+                     osg::Vec3(0.0, 0.0, 1.0)); 
+   
+   *startPoint = osgMat.postMult(*startPoint); 
+   *endPoint   = osgMat.postMult(*endPoint);
+   
+   osgMat.set(this->worldNode->asTransform()->asMatrixTransform()->getMatrix());
+   
+   *startPoint = *startPoint *  osgMat;
+   *endPoint   = *endPoint * osgMat; 
+   
+   
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::SetWandPosition()
+{
+   float * wandPosition = this->GetObjLocation();
+   for (unsigned int i = 0; i < 3; i++)
+   {
+      this->LastWandPosition[ i ] = wandPosition[ i ];
+   }
+   vprDEBUG(vesDBG,1) << "reseting wand Position" << std::endl << vprDEBUG_FLUSH;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::TranslateObject()
+{
+   float * wandPosition = this->GetObjLocation();
+   osg::Vec3f offsetFromLastPosition;
+   
+   for (int i = 0; i < 3; i++)
+   {
+      offsetFromLastPosition [ i ]= wandPosition[ i ] - 
+      this->LastWandPosition[ i ];
+      this->LastWandPosition[ i ] = wandPosition[ i ];
+   }
+   
+   osg::Matrix osgMat;
+   
+   float * worldRotation  = worldDCS->GetRotationArray();
+   
+   osgMat.makeRotate(gmtl::Math::deg2Rad(worldRotation [ 0 ]), 
+                     osg::Vec3(0.0, 0.0, 1.0)); 
+   
+   offsetFromLastPosition = osgMat.postMult(offsetFromLastPosition); 
+   
+   osgMat.makeTranslate(offsetFromLastPosition);
+   
+   osg::MatrixTransform* myTransform = this->getMatrixTransform();
+   
+   if (myTransform != NULL)
+   {
+      myTransform->preMult(osgMat);
+   }
+   
+   this->selectedGeometry->getParents().front()->dirtyBound();
+   this->selectedGeometry->getParents().front()->getBound();
+   
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::MatrixTransform* Wand::getMatrixTransform()
+{
+   if (this->selectedGeometry->getParents().front()->asGroup() != 0)
+   {
+      if ( this->selectedGeometry->getParents().front()->getParents().front()
+           ->asTransform() != 0 &&
+           this->selectedGeometry->getParents().front()->getParents().front()
+           ->asTransform()->asMatrixTransform() != 0 &&
+           this->selectedGeometry->getParents().front()->getParents().front() !=
+           this->worldNode)
+      {
+         return this->selectedGeometry->getParents().front()->getParents().front()
+         ->asTransform()->asMatrixTransform();
+      }
+   }
+   
+   osg::Matrixd myMatrix;
+   myMatrix.makeIdentity();
+   osg::MatrixTransform* myMatrixTransform = 
+      new osg::MatrixTransform(myMatrix);
+   myMatrixTransform->addChild(selectedGeometry->getParents().front());
+   
+   selectedGeometry->getParents().front()->asGroup()
+      ->getParents().front()->asGroup()->addChild(myMatrixTransform);
+   
+   selectedGeometry->getParents().front()->asGroup()
+      ->getParents().front()->asGroup()
+      ->removeChild(selectedGeometry->getParents().front());
+   
+   return myMatrixTransform;
+}
+////////////////////////////////////////////////////////////////////////////////
+double * Wand::GetDirection( )
+{
+   // get the normalized direction relative to the juggler frame
+   vjVec.set( 0.0f, 0.0f, -1.0f );
+   vjMat = wand->getData( );
+   vjVec = gmtl::xform( vjVec,vjMat,vjVec);
+   gmtl::normalize(vjVec);
+   
+   // transform from juggler to performer...
+   dir[0] =  vjVec[0];
+   dir[1] = -vjVec[2];
+   dir[2] =  vjVec[1];
 
+   return this->dir;
+}
+////////////////////////////////////////////////////////////////////////////////
+float * Wand::GetObjLocation( )
+{
+   return this->objLoc;
+}
+////////////////////////////////////////////////////////////////////////////////
