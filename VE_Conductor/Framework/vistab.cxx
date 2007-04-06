@@ -118,9 +118,9 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    xplorerPtr = 0;
    polydata = 0;
 
-   scalarSelect = false;
-   vectorSelect = false;
-   scalarValue = 0;
+   //scalarSelect = false;
+   //vectorSelect = false;
+   //scalarValue = 0;
    _availableSolutions["MESH_SCALARS"].Add( _("") ); 
    _availableSolutions["MESH_VECTORS"].Add( _("") ); 
    _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
@@ -154,9 +154,9 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    streamline = 0;
    polydata = 0;
 
-   scalarSelect = false;
-   vectorSelect = false;
-   scalarValue = 0;
+   //scalarSelect = false;
+   //vectorSelect = false;
+   //scalarValue = 0;
    _availableSolutions["MESH_SCALARS"].Add( _("") ); 
    _availableSolutions["MESH_VECTORS"].Add( _("") ); 
    _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
@@ -512,19 +512,19 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
    }
    streamline->SetSize(_vistabPosition);
    
-   if(streamline->ShowModal() == wxID_OK)
+   if ( streamline->ShowModal() == wxID_OK )
    {
-	  VE_XML::Command* veCommand = new VE_XML::Command();
+      VE_XML::Command* veCommand = new VE_XML::Command();
       veCommand->SetCommandName( std::string("Display Seed Points") );
       VE_XML::DataValuePair* seedPointDVP = new VE_XML::DataValuePair();
       seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
       veCommand->AddDataValuePair(seedPointDVP);
-      
-	  VE_XML::DataValuePair* activeDataset = new VE_XML::DataValuePair;
-      activeDataset->SetData("Active Dataset",GetActiveDatasetName());
+
+      VE_XML::DataValuePair* activeDataset = new VE_XML::DataValuePair;
+      //activeDataset->SetData("Active Dataset",GetActiveDatasetName());
       veCommand->AddDataValuePair(activeDataset);
-	  
-	  VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
       delete veCommand;   
    }
 }
@@ -649,7 +649,7 @@ void Vistab::_updateModelInformation(VjObs::Model_var newModel)
 //////////////////////////////////////////////////
 void Vistab::_setActiveDataset(unsigned int index)
 {
-   std::cout<<"setActiveDataset"<<std::endl;
+   //std::cout<<"setActiveDataset"<<std::endl;
    //is this incorrect to assume we have a model? -- biv
    if(_activeModel)
    {
@@ -658,7 +658,7 @@ void Vistab::_setActiveDataset(unsigned int index)
       {
          _activeDataset = _activeModel->dataVector[i];
          _activeDataSetName = _activeDataset.datasetname;
-         if(_datasetSelection)
+         //if(_datasetSelection)
          {
             _datasetSelection->SetSelection(i);
          }
@@ -712,7 +712,7 @@ void Vistab::_updateAvailableScalarMeshSolutions(VjObs::Scalars newScalars)
    ///clear out the scalar ranges from before
    _originalScalarRanges.clear();
 
-   std::cout<<"updateAvailableScalarMeshSolutions"<<std::endl;
+   //std::cout<<"updateAvailableScalarMeshSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( "MESH_SCALARS" );
    if(currentSolution != _availableSolutions.end())
@@ -741,7 +741,7 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
       std::cout<<dataType<<" not available in current dataset: "<<_activeDataset.datasetname<<std::endl;
       return;
    }
-   std::cout<<"updateAvailableSolutions"<<std::endl;
+   //std::cout<<"updateAvailableSolutions"<<std::endl;
    std::map<std::string, wxArrayString >::iterator currentSolution;
    currentSolution = _availableSolutions.find( dataType );
    _none = new wxString("None",wxConvUTF8);
@@ -765,18 +765,18 @@ void Vistab::_updateAvailableSolutions(std::string dataType,
 void Vistab::_updateComboBoxNames(std::string dataType,
                                  wxArrayString listOfNames)
 {
-   std::cout<<"updateComboBoxNames"<<std::endl;
+   //std::cout<<"updateComboBoxNames"<<std::endl;
    wxListBox* activeComboBox = 0; 
    if(dataType == "MESH_SCALARS" ||
       dataType == "TEXTURE_SCALARS")
    {
-      std::cout<<"scalar combo box"<<std::endl;
+      //std::cout<<"scalar combo box"<<std::endl;
       activeComboBox = _scalarSelection;
    }
    else if(dataType == "MESH_VECTORS" ||
          dataType == "TEXTURE_VECTORS")
    {
-      std::cout<<"vector list box"<<std::endl;
+      //std::cout<<"vector list box"<<std::endl;
       activeComboBox = _vectorSelection;
    }
    else
@@ -792,19 +792,19 @@ void Vistab::_updateComboBoxNames(std::string dataType,
       }
    }
 
-   if( _activeScalarName.empty() )
+   //if( _activeScalarName.empty() )
    {
       _scalarSelection->SetSelection(0);
       _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    }
-   else
+   /*else
    {
       _scalarSelection->SetSelection(scalarValue);
       _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
-   }
+   }*/
 
-   scalarSelect = false;
-   vectorSelect = false;
+   //scalarSelect = false;
+   //vectorSelect = false;
 }
 ////////////////////////////////////////////
 DualSlider* Vistab::GetScalarRangeControls()
@@ -814,8 +814,9 @@ DualSlider* Vistab::GetScalarRangeControls()
 ////////////////////////////////////////////////////
 void Vistab::_OnSelectDataset(wxCommandEvent& WXUNUSED(event))
 {
-   _activeDataSetName = ConvertUnicode( _datasetSelection->GetValue() );
-   SetActiveDataset(_activeDataSetName);
+   //_activeDataSetName = ConvertUnicode( _datasetSelection->GetValue() );
+   // SetActiveDataset(_activeDataSetName);
+   _setActiveDataset( _datasetSelection->GetCurrentSelection() );
    UpdateSpinControls();
 }
 ///////////////////////////////////////////////////
@@ -852,7 +853,7 @@ void Vistab::_OnSelectScalar(wxCommandEvent& WXUNUSED(event))
       _maxSlider->SetValue( 100 );
       //scalarValue = _scalarSelection->GetSelection();
       
-      scalarSelect = true;
+      //scalarSelect = true;
    }
 }
 ///////////////////////////////////////////////////
@@ -862,12 +863,13 @@ void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 
    if( _scalarSelection->IsEmpty() )
    {
-      wxMessageBox( _("Scalar must be present"),_("Dataset Failure"), 
+      wxMessageBox( _("Scalar must be present"),_("Dataset Warning"), 
                      wxOK | wxICON_INFORMATION );
       return;
    }
 
-//   _scalarSelection->Select(0);
+   //not sure why we do this...
+   //_scalarSelection->Select(0);
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
@@ -896,7 +898,7 @@ void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
    _minSlider->SetValue( 0 );
    _maxSlider->SetValue( 100 );
 
-   vectorSelect = true;
+   //vectorSelect = true;
 }
 /*
 ///////////////////////////////////////////////////
@@ -1197,8 +1199,8 @@ void Vistab::_onClose( wxCommandEvent& WXUNUSED(event) )
 //   vistab->EndModal(-1);
 //   vistab->OnOK(EVT_BUTTON);
 //   vistab->Show(false);
-   scalarSelect = false;
-   vectorSelect = false;
+   //scalarSelect = false;
+   //vectorSelect = false;
 //   _activeDataSetName.erase();
 }
 ////////////////////////////////////////////////////////////////////////
@@ -1366,8 +1368,8 @@ void Vistab::InitialScalarVector()
 ////////////////////////////////////////////////////////////////
 void Vistab::UpdateSpinControls()
 {
-   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
-   _activeScalarRange = _originalScalarRanges[_activeScalarName];
+   //_activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   //_activeScalarRange = _originalScalarRanges[_activeScalarName];
 //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
    
    _minSpinner->SetRange( _activeScalarRange.at(0), _activeScalarRange.at(1) );
@@ -1399,47 +1401,4 @@ void Vistab::UpdateSpinControls()
 	  _maxSpinner->SetValue(100);
       return;
    }
-/*
-   minValue = ( ( _minSpinner->GetValue() - _activeScalarRange.at(0) ) 
-               / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
-
-   if( minValue == 100 )
-   {  
-      _minSlider->SetValue( (int)minValue );
-      _maxSlider->SetValue( (int)minValue+1 );   
-   }
-   else if( _maxSlider->GetValue() <= (int)minValue )
-   {
-      _minSlider->SetValue( (int)minValue );
-      _maxSlider->SetValue( (int)minValue+1 );   
-      _maxSpinner->SetValue( _activeScalarRange.at(1) - ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
-                               * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
-   }
-   else
-   {
-      _minSlider->SetValue( (int)minValue );  
-   }
-   //   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
-
-   maxValue = ( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) 
-               - ( _activeScalarRange.at(1) - _maxSpinner->GetValue() ) ) 
-               / ( _activeScalarRange.at(1) - _activeScalarRange.at(0) ) * 100);
-
-   if( maxValue == 0 )
-   {  
-      _minSlider->SetValue( (int)maxValue+1 );
-      _maxSlider->SetValue( (int)maxValue );     
-   }
-   else if( _minSlider->GetValue() >= (int)maxValue )
-   {
-      _minSlider->SetValue( (int)maxValue-1 );
-      _maxSlider->SetValue( (int)maxValue );   
-      _minSpinner->SetValue( ( _activeScalarRange.at(1) - _activeScalarRange.at(0) )
-                              * (double)_minSlider->GetValue() / 100 + _activeScalarRange.at(0) );
-   } 
-   else
-   {  
-      _maxSlider->SetValue( (int)maxValue );   
-   } 
-*/
 }

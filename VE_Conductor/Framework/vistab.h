@@ -422,10 +422,10 @@ protected:
    double minimumValue;
    double maximumValue;
 
-   bool scalarSelect;
-   bool vectorSelect;
+   //bool scalarSelect;
+   //bool vectorSelect;
 
-   unsigned int scalarValue;
+   //unsigned int scalarValue;
    
    std::string ConvertUnicode( const wxChar* data )
    {
