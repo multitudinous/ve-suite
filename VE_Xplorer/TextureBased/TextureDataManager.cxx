@@ -168,6 +168,7 @@ namespace VE_TextureBased
          TextureDataPtr tdp = new TextureData(*name, vds, sds, spacing, origin);
          mTextureDataMap.insert(std::make_pair(*name, tdp));
       }
+      return true;
    }
 
    template<>
