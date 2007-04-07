@@ -56,6 +56,7 @@ namespace osg
    class Vec4f;
    class Vec3f;
    class MatrixTransform;
+   class LineSegment;
 }
 
 namespace VE_SceneGraph
@@ -205,7 +206,7 @@ private:
    bool _active;
    osg::ref_ptr< osg::Geode > beamGeode;
    osg::ref_ptr< osg::Geometry > beamGeometry;
-
+   osg::ref_ptr< osg::LineSegment > beamLineSegment;
 };
 }
 

@@ -59,7 +59,7 @@ public:
    osg::Node* GetParentNode( void );
 private:
    std::string modelGUID;///<GUID to identify the VE-Open model
-   osg::Node* parentNode;///<Pointer to the found parent node
+   osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
 };
 }
 

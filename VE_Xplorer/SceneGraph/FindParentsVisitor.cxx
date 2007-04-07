@@ -18,16 +18,15 @@ FindParentsVisitor::~FindParentsVisitor()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* FindParentsVisitor::GetParentNode()
 {
-   return parentNode;
+   return parentNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FindParentsVisitor::apply( osg::Node& node )
 { 
    osg::Node::DescriptionList descriptorsList;
    descriptorsList = node.getDescriptions();
-
+   
    //Find the parent node and the id of this particular node
-   size_t guidIndex = 0;
    for ( size_t i = 0; i < descriptorsList.size(); ++i )
    {
       if ( descriptorsList.at( i ) == "VE_XML_ID" )
@@ -44,4 +43,3 @@ void FindParentsVisitor::apply( osg::Node& node )
       osg::NodeVisitor::traverse( node );
    }
 }
-////////////////////////////////////////////////////////////////////////////////

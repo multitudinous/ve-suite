@@ -32,13 +32,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/Clone.h"
 
+#include "VE_Xplorer/SceneGraph/Group.h"
 #ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/CopyOp>
+#include <osg/Geode>
 //#include "VE_SceneGraph/cfdMaterial.h"
 #elif _PERFORMER
 #elif _OPENSG
 #endif
+
+#include <typeinfo>
+#include <iostream>
 
 using namespace VE_SceneGraph;
 
@@ -63,29 +68,6 @@ Clone::~Clone()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void Clone::CloneNode( SceneNode* original )
-{
-   if ( !cloneTransform.valid() )
-   {
-		cloneTransform = new VE_SceneGraph::DCS();
-   }
-   
-	DCS* assemblyNode = dynamic_cast< VE_SceneGraph::DCS* >( original );
-   if ( assemblyNode )
-   {
-      for ( int i =0; i < assemblyNode->GetNumChildren(); i++ )
-      {
-         cloneTransform->addChild( assemblyNode->GetChild( i ) );
-      }
-
-   }
-   else
-   {
-      cloneTransform->addChild( dynamic_cast< osg::Node* >( original ) );
-  }
-}*/
-/////////////
-////////////////////////////////////////////////////////////////////////////////
 void Clone::CloneNode( osg::Node* original )
 {
    if ( !cloneTransform.valid() )
@@ -93,18 +75,32 @@ void Clone::CloneNode( osg::Node* original )
 		cloneTransform = new VE_SceneGraph::DCS();
    }
    
-	osg::PositionAttitudeTransform* assemblyNode = dynamic_cast< osg::PositionAttitudeTransform* >( original );
-   if ( assemblyNode )
+   if ( dynamic_cast< VE_SceneGraph::DCS* >( original ) )
    {
+      cloneTransform = new VE_SceneGraph::DCS( *static_cast< VE_SceneGraph::DCS* >( original ) );
+      /*osg::PositionAttitudeTransform* assemblyNode = dynamic_cast< osg::PositionAttitudeTransform* >( original );
       for ( unsigned int i =0; i < assemblyNode->getNumChildren(); i++ )
       {
          cloneTransform->addChild( assemblyNode->getChild( i ) );
-      }
-
+      }*/
+   }
+   if ( dynamic_cast< VE_SceneGraph::Group* >( original ) )
+   {
+      cloneTransform->addChild( new VE_SceneGraph::Group( *static_cast< VE_SceneGraph::Group* >( original ) ) );
+   }
+   else if (  dynamic_cast< osg::Geode* >( original ) )
+   {
+      cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ) ) );
+   }
+   else if (  dynamic_cast< osg::Group* >( original ) )
+   {
+      cloneTransform->addChild( new osg::Group( *static_cast< osg::Group* >( original ) ) );
    }
    else
    {
-      cloneTransform->addChild( original );
+      std::cout << "ERROR : Cast not present " << std::endl;
+      std::cout << typeid( *original ).name() << std::endl;
+      //cloneTransform->addChild( original );
    }
 }
 ///////////////////////////////////////////////////////////////////

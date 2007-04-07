@@ -89,7 +89,7 @@ Wand::Wand()
    
    command = 0;
    rotationFlag = 1;
-   
+   beamLineSegment = new osg::LineSegment();
    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -331,7 +331,6 @@ void Wand::SelectObject( void )
    osg::Vec3f startPoint, endPoint;
    this->SetupStartEndPoint(&startPoint, &endPoint);
 
-   osg::ref_ptr< osg::LineSegment > beamLineSegment = new osg::LineSegment();
    beamLineSegment->set(startPoint, endPoint);
    
    osgUtil::IntersectVisitor objectBeamIntersectVisitor;
@@ -358,10 +357,12 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
       << vprDEBUG_FLUSH;
       return;
    }
+
    // Search for first item that is not the laser
    for ( size_t i = 0; i <  listOfHits.size(); ++i )
    {
       objectHit = listOfHits[ i ];
+      //std::cout << i << " " <<  objectHit._geode->getName() << std::endl;
       if ( ( objectHit._geode->getName() != this->laserName ) && 
            ( objectHit._geode->getName() != "Root Node" ) ) 
       {
