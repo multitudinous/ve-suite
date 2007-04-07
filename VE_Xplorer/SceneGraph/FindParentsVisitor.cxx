@@ -6,7 +6,7 @@ using namespace VE_SceneGraph;
 FindParentsVisitor::FindParentsVisitor( osg::Node* node ):
   NodeVisitor( TRAVERSE_PARENTS )
 {
-   modelGUID = '\0';
+   modelGUID;
    parentNode = 0;
    node->accept( *this );
 }
@@ -14,6 +14,11 @@ FindParentsVisitor::FindParentsVisitor( osg::Node* node ):
 FindParentsVisitor::~FindParentsVisitor()
 {
    parentNode = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* FindParentsVisitor::GetParentNode()
+{
+   return parentNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FindParentsVisitor::apply( osg::Node& node )

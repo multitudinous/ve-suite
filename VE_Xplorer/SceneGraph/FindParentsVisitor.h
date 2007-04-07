@@ -55,6 +55,8 @@ public:
    virtual ~FindParentsVisitor();
    ///Apply function that gets called during the traversal
    virtual void apply( osg::Node& node );
+   ///Return the parent node with an ID
+   osg::Node* GetParentNode( void );
 private:
    std::string modelGUID;///<GUID to identify the VE-Open model
    osg::Node* parentNode;///<Pointer to the found parent node

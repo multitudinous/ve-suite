@@ -197,7 +197,7 @@ void CADEventHandler::SetNodeDescriptors(std::string nodeID,
    else if(nodeType == "Part")
    {
       VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(nodeID);
-      partNode->GetNode()->GetNode()->setDescriptions( descriptorsList );
+      partNode->GetDCS()->setDescriptions( descriptorsList );
    }
    else if(nodeType == "Clone")
    {
@@ -265,6 +265,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          if ( partNode->GetNode()->GetNode() )
          {
             partNode->GetNode()->SetName(newPart->GetNodeName());
+            partNode->GetDCS()->setName(newPart->GetNodeName());
             
             //set the visibility
             partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
@@ -299,7 +300,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          VE_SceneGraph::Clone* tempClone = _activeModel->GetClone(clone->GetID());
          if ( tempClone )
          {
-            tempClone->GetClonedGraph()->setName(clone->GetNodeName());
+            tempClone->GetClonedGraph()->setName( clone->GetNodeName() );
             parentAssembly->AddChild( tempClone->GetClonedGraph() );
             tempClone->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
 

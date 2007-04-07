@@ -127,8 +127,8 @@ private:
    int cfdIso_value;
    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
    
-   double worldTrans[ 3 ];
-   float worldRot[ 3 ];
+   //double worldTrans[ 3 ];
+   //float worldRot[ 3 ];
    
    /*!
       VR Juggler's wand positional interface.
@@ -152,7 +152,7 @@ private:
    /*!
       Location of the wand with respect to the virtual space.
     */
-   double loc[3];
+   //double loc[3];
    //! Wand object
    /*!
       Direction of the wand.
@@ -182,7 +182,7 @@ private:
    /*!
       Displacement of the objects in virtual space.
     */
-   float dObj;
+   //float dObj;
    
    float translationStepSize;
    float rotationStepSize;
