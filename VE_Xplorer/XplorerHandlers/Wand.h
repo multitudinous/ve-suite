@@ -48,7 +48,7 @@ Wand API
 
 #include <osgUtil/IntersectVisitor>
 
-/*namespace osg 
+namespace osg 
 {
    class Geode;
    class Group;
@@ -56,7 +56,7 @@ Wand API
    class Vec4f;
    class Vec3f;
    class MatrixTransform;
-}*/
+}
 
 namespace VE_SceneGraph
 {
@@ -203,7 +203,9 @@ private:
    osg::Node* rootNode;
    //osg::Node* worldNode;
    bool _active;
-   
+   osg::ref_ptr< osg::Geode > beamGeode;
+   osg::ref_ptr< osg::Geometry > beamGeometry;
+
 };
 }
 

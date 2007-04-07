@@ -402,13 +402,10 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
 //add a new beam.  This should be replaced such that it is only called once
 //and then a transform is modified for the location.  
 void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
-{
-   static osg::Geode* beamGeode;
-   static osg::Geometry* beamGeometry;
-   
-   if (beamGeode != NULL)
+{   
+   if ( beamGeode.valid() )
    {
-      this->rootNode->asGroup()->removeChild(beamGeode);
+      this->rootNode->asGroup()->removeChild( beamGeode.get() );
       //beamGeode->removeDrawable(beamGeometry);
    }
    
@@ -416,14 +413,14 @@ void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
    
    beamGeode = new osg::Geode();
    beamGeometry = new osg::Geometry();
-   beamGeode->addDrawable(beamGeometry);
-   beamGeode->setName(this->laserName);
+   beamGeode->addDrawable( beamGeometry.get() );
+   beamGeode->setName( this->laserName );
    
    
    
-   this->rootNode->asGroup()->addChild( beamGeode );
+   this->rootNode->asGroup()->addChild( beamGeode.get() );
    
-   osg::Vec3Array* beamVertices = new osg::Vec3Array;
+   osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
    beamVertices->push_back(osg::Vec3(start [ 0 ] - .1, start [ 1 ], 
                                      start [ 2 ])); 
    beamVertices->push_back(osg::Vec3(start [ 0 ] + .1, start [ 1 ], 
@@ -441,65 +438,65 @@ void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
    beamVertices->push_back(osg::Vec3(end   [ 0 ] - .1, end   [ 1 ], 
                                      end   [ 2 ] + .1));
    
-   beamGeometry->setVertexArray( beamVertices );
+   beamGeometry->setVertexArray( beamVertices.get() );
    
    
-   osg::DrawElementsUInt* beamTop =
+   osg::ref_ptr< osg::DrawElementsUInt > beamTop =
       new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
    beamTop->push_back(0);
    beamTop->push_back(1);
    beamTop->push_back(2);
    beamTop->push_back(3);
-   beamGeometry->addPrimitiveSet(beamTop);
+   beamGeometry->addPrimitiveSet( beamTop.get() );
    
-   osg::DrawElementsUInt* beamBottom =
+   osg::ref_ptr< osg::DrawElementsUInt > beamBottom =
       new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
    beamBottom->push_back(4);
    beamBottom->push_back(5);
    beamBottom->push_back(6);
    beamBottom->push_back(7);
-   beamGeometry->addPrimitiveSet(beamBottom);
+   beamGeometry->addPrimitiveSet( beamBottom.get() );
    
-   osg::DrawElementsUInt* beamLeft =
+   osg::ref_ptr< osg::DrawElementsUInt > beamLeft =
       new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
    beamLeft->push_back(0);
    beamLeft->push_back(3);
    beamLeft->push_back(7);
    beamLeft->push_back(4);
-   beamGeometry->addPrimitiveSet(beamLeft);
+   beamGeometry->addPrimitiveSet( beamLeft.get() );
    
-   osg::DrawElementsUInt* beamRight =
+   osg::ref_ptr< osg::DrawElementsUInt > beamRight =
       new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
    beamRight->push_back(5);
    beamRight->push_back(6);
    beamRight->push_back(2);
    beamRight->push_back(1);
-   beamGeometry->addPrimitiveSet(beamRight);
+   beamGeometry->addPrimitiveSet( beamRight.get() );
    
-   osg::DrawElementsUInt* beamBack =
+   osg::ref_ptr< osg::DrawElementsUInt > beamBack =
       new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
    beamBack->push_back(1);
    beamBack->push_back(0);
    beamBack->push_back(4);
    beamBack->push_back(5);
-   beamGeometry->addPrimitiveSet(beamBack);
+   beamGeometry->addPrimitiveSet( beamBack.get() );
    
-   osg::DrawElementsUInt* beamFront =
+   osg::ref_ptr< osg::DrawElementsUInt > beamFront =
       new osg::DrawElementsUInt(osg::PrimitiveSet::QUADS, 0);
    beamFront->push_back(3);
    beamFront->push_back(2);
    beamFront->push_back(6);
    beamFront->push_back(7);
-   beamGeometry->addPrimitiveSet(beamFront);
+   beamGeometry->addPrimitiveSet(beamFront.get() );
    
    
-   osg::Vec4Array* colors = new osg::Vec4Array;
+   osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
    colors->push_back(osg::Vec4(1.0f, 0.0f, 1.0f, 1.0f) );
    
    osg::ref_ptr< osg::UIntArray > cfdColorIndexArray = new osg::UIntArray();
    cfdColorIndexArray->push_back(0);
    
-   beamGeometry->setColorArray(colors);
+   beamGeometry->setColorArray(colors.get() );
    beamGeometry->setColorIndices(cfdColorIndexArray.get());
    beamGeometry->setColorBinding(osg::Geometry::BIND_OVERALL) ;
    
