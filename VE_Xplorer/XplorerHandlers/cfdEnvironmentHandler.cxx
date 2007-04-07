@@ -429,26 +429,26 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
       }
    }
 
-   #ifdef _OSG
-   #ifdef VE_PATENTED
-      this->objectHandler->UpdateObjectHandler();
+/*#ifdef _OSG
+#ifdef VE_PATENTED
+   this->objectHandler->UpdateObjectHandler();
 
-      if( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
+   if( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
+   {
+      if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
       {
-         if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
-         {
-            this->objectHandler->ActivateGeometryPicking();
-         }
-
-         else
-         {
-            this->objectHandler->DeactivateGeometryPicking();
-         }
+         this->objectHandler->ActivateGeometryPicking();
       }
-   #endif
-   #endif
 
-      // Need to get these values from the appropriate classes
+      else
+      {
+         this->objectHandler->DeactivateGeometryPicking();
+      }
+   }
+#endif
+#endif*/
+
+   // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
    if( cfdModelHandler::instance()->GetActiveModel() )
    {
