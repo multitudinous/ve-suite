@@ -92,21 +92,24 @@ public:
    void SetVECommand( VE_XML::Command* veCommand );
    ///accessor to set initial world position
    void SetInitialWorldPosition( float* translate, float* rotate, float* scale );
-   ///Get the current direction of the wand
-   void UpdateDir( void );
    ///Update the juggler reference frame wand position  
-   void UpdateLoc( void );
+
 
    void SelectObject( void );
    void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
    //void DrawLine(osg::Vec3f start, osg::Vec3f end);
    void UpdateObjectHandler( void );
    void SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint);
-   void SetWandPosition( void );
    void TranslateObject( void ); 
    osg::MatrixTransform* getMatrixTransform( void );
+   ///Get the current direction of the wand
    double* GetDirection( void );
-   float* GetObjLocation( void );
+   double* GetObjLocation( void );
+   void UpdateWandLocalDirection( void );
+   void UpdateWandLocalLocation( void );     
+   void UpdateWandGlobalLocation( void );
+   void UpdateDeltaWandPosition( void );
+      
       
 protected:
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
@@ -169,7 +172,7 @@ private:
    /*!
       Location with respect to data set (the actual location to interact with data).
     */
-   float objLoc[3];
+   double objLoc[3];
    //! Cursor object(s)
    /*!
       Cursor length.
@@ -191,13 +194,14 @@ private:
    // data storage for initial world dcs location
    float initialTranslate[ 3 ];
    float initialRotate[ 3 ]; 
+   double deltaTrans[ 3 ];
    
    osg::ref_ptr<osg::Geode> selectedGeometry;
    double distance;
    std::string laserName;
    osg::Vec3f LastWandPosition;
    osg::Node* rootNode;
-   osg::Node* worldNode;
+   //osg::Node* worldNode;
    bool _active;
    
 };

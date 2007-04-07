@@ -87,12 +87,16 @@ Wand::Wand()
    
    command = 0;
    rotationFlag = 1;
+   
+   Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize( void )
 {
    this->worldDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
-   this->cursorLen = 2.0f;
+   rootNode = VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
+   this->cursorLen = 1.0f;
+   this->distance = 1000;
    //this->dObj = 0.05f;
    //this->UpdateDir( );
    //this->UpdateLoc( );
@@ -270,13 +274,13 @@ void Wand::UpdateNavigation()
              this->buttonData[2] == gadget::Digital::ON )
       // Navigation based on current wand direction
    { 
-      this->UpdateDir( );
-      
+      //this->UpdateDir( );
+      double* tempWandDir = GetDirection();
       for ( int i=0; i<3; i++ )
       {
          // Update the translation movement for the objects
          // How much object should move
-         this->worldTrans[i] += this->dir[i]*this->translationStepSize;
+         this->worldTrans[i] += tempWandDir[i]*this->translationStepSize;
          
          // How much the cursor movement are needed to trace back
          // to the object after each movement of the object
@@ -296,9 +300,9 @@ void Wand::UpdateNavigation()
    //this->UpdateLoc( this->worldTrans );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateSelection()
+void Wand::UpdateSelection( void )
 {
-   ;
+   UpdateObjectHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
@@ -330,32 +334,6 @@ void Wand::SetInitialWorldPosition( float* translate, float* rotate, float* scal
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateDir( void )     
-{ 
-   // get the normalized direction relative to the juggler frame
-   vjVec.set( 0.0f, 0.0f, -1.0f );
-   vjMat = wand->getData( );
-   vjVec = gmtl::xform( vjVec,vjMat,vjVec);
-   gmtl::normalize(vjVec);
-   
-   // transform from juggler to performer...
-   dir[0] =  vjVec[0];
-   dir[1] = -vjVec[2];
-   dir[2] =  vjVec[1];
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::UpdateLoc( void )      
-{
-   // get the location relative to the juggler frame
-   gmtl::Vec3f loc_temp;
-   gmtl::setTrans(loc_temp,vjMat);
-   
-   // transform from juggler to performer...
-   loc[0] =  loc_temp[0];
-   loc[1] = -loc_temp[2];
-   loc[2] =  loc_temp[1];
-}  
-////////////////////////////////////////////////////////////////////////////////
 void Wand::SelectObject( void )
 {
    osg::Vec3f startPoint, endPoint;
@@ -375,7 +353,7 @@ void Wand::SelectObject( void )
    beamHitList = objectBeamIntersectVisitor.getHitList(beamLineSegment);
    
    this->ProcessHit(beamHitList);
-   this->DrawLine(startPoint, endPoint);
+   //this->DrawLine(startPoint, endPoint);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
@@ -399,7 +377,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
          }
       }
       
-      if (objectHit._geode.valid())
+      /*if (objectHit._geode.valid())
       {
          if (!objectHit._geode->getName().empty())
          {
@@ -416,7 +394,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
             std::cout << objectHit._geode->getParents().front()->getName() 
             << std::endl;
          }
-      } 
+      } */
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -431,11 +409,6 @@ void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
    if (beamGeode != NULL)
    {
       this->rootNode->asGroup()->removeChild(beamGeode);
-      //biv -- this disable the drawing of the line
-      if(!_active)
-      {
-         return;
-      }
       //beamGeode->removeDrawable(beamGeometry);
    }
    
@@ -538,35 +511,43 @@ void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
 //using gestures from a glove.
 void Wand::UpdateObjectHandler( void )
 {
-   if ( _active )
+   vprDEBUG(vesDBG,3) << "|\tStart Wand::UpdateObjectHandler" 
+                        << std::endl << vprDEBUG_FLUSH;
+   //Update the juggler location of the wand
+   UpdateWandLocalDirection();
+   UpdateWandLocalLocation();
+   UpdateWandGlobalLocation();
+   UpdateDeltaWandPosition();
+   
+   osg::Vec3f startPoint, endPoint;
+   this->SetupStartEndPoint(&startPoint, &endPoint);
+   this->DrawLine(startPoint, endPoint);
+   
+   if (this->digital[ 0 ]->getData() == gadget::Digital::TOGGLE_ON)
    {
-      osg::Vec3f startPoint, endPoint;
-      this->SetupStartEndPoint(&startPoint, &endPoint);
-      this->DrawLine(startPoint, endPoint);
-      
-      if (this->digital[ 0 ]->getData() == gadget::Digital::TOGGLE_ON)
-      {
-         this->SelectObject();
-      }
-      
-      int buttonData = this->digital[ 0 ]->getData();
-      if ((buttonData == gadget::Digital::ON || buttonData == gadget::Digital::TOGGLE_ON) 
-          && this->selectedGeometry != NULL)
-      {
-         if(buttonData == gadget::Digital::TOGGLE_ON)
-         {
-	         this->SetWandPosition();
-         }
-         this->TranslateObject();
-      }
+      this->SelectObject();
    }
+   
+   int buttonData = this->digital[ 0 ]->getData();
+   if ((buttonData == gadget::Digital::ON || buttonData == gadget::Digital::TOGGLE_ON) 
+       && this->selectedGeometry != NULL)
+   {
+      //if(buttonData == gadget::Digital::TOGGLE_ON)
+      {
+         //this->SetWandPosition();
+      }
+      this->TranslateObject();
+   }
+
+   vprDEBUG(vesDBG,3) << "|\tEnd Wand::UpdateObjectHandler" 
+                        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
 {
-   float * wandPosition  =  this->GetObjLocation();
+   double* wandPosition  =  this->GetObjLocation();
    //double * worldPosition = this->navigator->GetWorldLocation();
-   double * wandDirection  =  this->GetDirection();
+   double* wandDirection  =  this->GetDirection();
    
    
    for (int i = 0; i < 3; i++)
@@ -590,34 +571,23 @@ void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
    *startPoint = osgMat.postMult(*startPoint); 
    *endPoint   = osgMat.postMult(*endPoint);
    
-   osgMat.set(this->worldNode->asTransform()->asMatrixTransform()->getMatrix());
+   osgMat.setRotate( this->worldDCS->getAttitude() );
+   osgMat.setTrans( this->worldDCS->getPosition() );
    
    *startPoint = *startPoint *  osgMat;
-   *endPoint   = *endPoint * osgMat; 
-   
-   
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::SetWandPosition()
-{
-   float * wandPosition = this->GetObjLocation();
-   for (unsigned int i = 0; i < 3; i++)
-   {
-      this->LastWandPosition[ i ] = wandPosition[ i ];
-   }
-   vprDEBUG(vesDBG,1) << "reseting wand Position" << std::endl << vprDEBUG_FLUSH;
+   *endPoint   = *endPoint * osgMat;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::TranslateObject()
 {
-   float * wandPosition = this->GetObjLocation();
+   double* wandPosition = this->GetObjLocation();
    osg::Vec3f offsetFromLastPosition;
    
    for (int i = 0; i < 3; i++)
    {
-      offsetFromLastPosition [ i ]= wandPosition[ i ] - 
-      this->LastWandPosition[ i ];
-      this->LastWandPosition[ i ] = wandPosition[ i ];
+      offsetFromLastPosition [ i ] = deltaTrans[ i ];
+      //            wandPosition[ i ] - this->LastWandPosition[ i ];
+      //this->LastWandPosition[ i ] = wandPosition[ i ];
    }
    
    osg::Matrix osgMat;
@@ -652,7 +622,7 @@ osg::MatrixTransform* Wand::getMatrixTransform()
            this->selectedGeometry->getParents().front()->getParents().front()
            ->asTransform()->asMatrixTransform() != 0 &&
            this->selectedGeometry->getParents().front()->getParents().front() !=
-           this->worldNode)
+           this->worldDCS->asGroup() )
       {
          return this->selectedGeometry->getParents().front()->getParents().front()
          ->asTransform()->asMatrixTransform();
@@ -675,7 +645,7 @@ osg::MatrixTransform* Wand::getMatrixTransform()
    return myMatrixTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double * Wand::GetDirection( )
+void Wand::UpdateWandLocalDirection()
 {
    // get the normalized direction relative to the juggler frame
    vjVec.set( 0.0f, 0.0f, -1.0f );
@@ -687,12 +657,50 @@ double * Wand::GetDirection( )
    dir[0] =  vjVec[0];
    dir[1] = -vjVec[2];
    dir[2] =  vjVec[1];
-
-   return this->dir;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float * Wand::GetObjLocation( )
+void Wand::UpdateWandLocalLocation( void )      
+{
+   // get the location relative to the juggler frame
+   gmtl::Vec3f loc_temp;
+   gmtl::setTrans(loc_temp,vjMat);
+   
+   // transform from juggler to performer...
+   loc[0] =  loc_temp[0];
+   loc[1] = -loc_temp[2];
+   loc[2] =  loc_temp[1];
+}  
+////////////////////////////////////////////////////////////////////////////////
+void Wand::UpdateWandGlobalLocation( )
+{
+   //this->UpdateDir( );
+   //this->UpdateLoc( );
+   double cursorLoc[ 3 ];
+   float* worldDCSLocation = worldDCS->GetVETranslationArray();
+   
+   for ( size_t i=0; i<3; i++ )
+   {
+      this->LastWandPosition[ i ] = objLoc[ i ];
+      cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;
+      //this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+      this->objLoc[i] = cursorLoc[i] + worldDCSLocation[i];
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+double* Wand::GetObjLocation( )
 {
    return this->objLoc;
 }
 ////////////////////////////////////////////////////////////////////////////////
+double* Wand::GetDirection( )
+{
+   return this->dir;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::UpdateDeltaWandPosition()
+{
+   for ( size_t i = 0; i < 3; i++)
+   {
+      deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
+   }
+}

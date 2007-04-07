@@ -81,7 +81,6 @@ void DeviceHandler::ProcessDeviceEvents()
    {
       active_device->UpdateNavigation();
    }
-
    else if( device_mode == 1 )
    {
       active_device->UpdateSelection();
