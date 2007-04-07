@@ -24,6 +24,8 @@ test_hdrs = Split("""
    DatabaseTest.h
    ScalarDataTest.h
    SQLiteDriverTest.h
+   TextureDataTest.h
+   TextureDataManagerTest.h
    VariantTest.h
    VectorDataTest.h
 """)
@@ -34,7 +36,10 @@ srcs = Split("""
 """)
 
 orig_srcs = Split("""
+   Database.cxx
    SQLiteDriver.cxx
+   TextureDataManager.cxx
+   VectorData.cxx
 """)
 orig_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), orig_srcs)
 srcs.extend(orig_srcs)

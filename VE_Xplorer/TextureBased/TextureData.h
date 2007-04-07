@@ -1,5 +1,5 @@
-#ifndef JPG_TEXTURE_DATA_MANAGER_H_
-#define JPG_TEXTURE_DATA_MANAGER_H_
+#ifndef JPG_TEXTURE_DATA_H_
+#define JPG_TEXTURE_DATA_H_
 
 #ifdef VE_PATENTED
 
@@ -45,11 +45,16 @@ namespace VE_TextureBased
        * @param   name     the name of this data set.
        * @param   data     the vector data of this data set.
        * @param   scalars  the scalars of this data set.
+       * @param   spacing  the spacing of this data set.
+       * @param   origin   the origin of this data set (if one exists)
        */
       TextureData(const std::string& name, 
                   const VectorDataSet& data,
-                  const ScalarDataSet& scalars)
-         : mName(name), mVectorData(data), mScalarData(scalars), mOrigin(0)
+                  const ScalarDataSet& scalars,
+                  const gmtl::Vec3f& spacing,
+                  gmtl::Vec3f* origin=NULL)
+         : mName(name), mVectorData(data), mScalarData(scalars), 
+           mSpacing(spacing), mOrigin(origin)
       {}
 
       /**
@@ -85,6 +90,45 @@ namespace VE_TextureBased
       }
 
       /**
+       * Checks to see if the texture data has an origin or not.
+       *
+       * @return     true if an origin is present, false otherwise.
+       */
+      bool hasOrigin() const
+      {
+         return mOrigin != NULL;
+      }
+
+      /**
+       * Returns the origin if once exists; otherwise, this will return an
+       * empty Vector.  Use hasOrigin() to see if one exists or not.
+       *
+       * @return     the origin, or an empty vector.
+       */
+      gmtl::Vec3f getOrigin() const
+      {
+         if (mOrigin)
+         {
+            return *mOrigin;
+         }
+         return gmtl::Vec3f();
+      }
+
+      /**
+       * Sets the origin of this data set.
+       *
+       * @param   origin      the new origin of this data set.
+       */
+      void setOrigin(const gmtl::Vec3f& origin)
+      {
+         if (mOrigin)
+         {
+            delete mOrigin;
+         }
+         mOrigin = new gmtl::Vec3f(origin);
+      }
+
+      /**
        * Gets the number of timesteps in this data set.
        *
        * @return     the number of timesteps in this data set.
@@ -95,17 +139,17 @@ namespace VE_TextureBased
       }
 
       /**
-       * Returns the VectorData associated with the specified timestep.
+       * Returns the Vector Data associated with the specified timestep.
        *
-       * @param   idx      the index of the VectorData to retrieve.
+       * @param   idx      the index of the Vector Data to retrieve.
        *
        * @return     The vector data associated with the given index.
        *
        * @note    No bounds checking is performed on idx.
        */
-      VectorData getVectorData(const size_t idx) const
+      VectorMap getVectorData(const size_t idx) const
       {
-         return mVectorData[idx]
+         return mVectorData.getVector(idx);
       }
 
       /**
@@ -134,7 +178,8 @@ namespace VE_TextureBased
        */
       TimestepData getTimestepData(const size_t idx) const
       {
-         return TimestepData(mVectorData[idx], mScalarData.getScalar(idx));
+         return TimestepData(mVectorData.getVector(idx), 
+                             mScalarData.getScalar(idx));
       }
 
    private:
@@ -150,10 +195,10 @@ namespace VE_TextureBased
 
       /// The origin of this data; this is a pointer since not every dataset
       /// has an origin.
-      VectorData*                                     mOrigin;
+      gmtl::Vec3f*                                    mOrigin;
 
       /// The spacing of this data.
-      VectorData                                      mSpacing;
+      gmtl::Vec3f                                     mSpacing;
       
       
    };

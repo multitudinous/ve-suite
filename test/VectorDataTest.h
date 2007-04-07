@@ -102,6 +102,25 @@ public:
 
    }
 
+   void testGetNames()
+   {
+      VE_TextureBased::VectorDataSet vds;
+      gmtl::Vec3f v1(1.0f, 2.0f, 3.0f);
+      gmtl::Vec3f v2(4.0f, 5.0f, 6.0f);
+      gmtl::Vec3f v3(7.0f, 8.0f, 9.0f);
+      std::map<std::string, gmtl::Vec3f> tsd;
+      tsd["Foo"] = v1;
+      tsd["Bar"] = v2;
+      tsd["Baz"] = v3;
+      TS_ASSERT(vds.setVector(0, tsd));
+
+      std::vector<std::string> names = vds.getVectorNames();
+      TS_ASSERT_EQUALS(names[0], "Bar");
+      TS_ASSERT_EQUALS(names[1], "Baz");
+      TS_ASSERT_EQUALS(names[2], "Foo");
+
+   }
+
 };
 
 #endif

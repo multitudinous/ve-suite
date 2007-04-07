@@ -2,6 +2,7 @@
 #define JPG_VECTOR_DATA_H_
 
 #include <gmtl/Vec.h>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -43,8 +44,9 @@ namespace VE_TextureBased
 
       /**
        * Sets the value of the specified vector at the given index.  If
-       * either the vector name does not exist, or the index is greater than
-       * 1 + the current maximum index, this will return false.
+       * the vector name does not exist and the index is not zero,
+       * or the index is greater than 1 + the current maximum index, 
+       * this will return false.
        *
        * @param   name     the name of the vector to set a value of.
        * @param   idx      the index of the vector to set the value at.
@@ -55,7 +57,7 @@ namespace VE_TextureBased
       bool setVector(const std::string& name, const size_t idx, 
                      const gmtl::Vec3f& value)
       {
-         if (mVectorMap.find(name) == mVectorMap.end() ||
+         if ((mVectorMap.find(name) == mVectorMap.end() && idx != 0) ||
              idx > mVectorMap[name].size())
          {
             return false;
@@ -82,26 +84,7 @@ namespace VE_TextureBased
        *
        * @return     true if successful, false otherwise
        */
-      bool setVector(const size_t idx, const VectorMap& values)
-      {
-         VectorMap::const_iterator itr;
-         for (itr = values.begin(); itr != values.end(); ++itr)
-         {
-            if (idx > mVectorMap[itr->first].size())
-            {
-               return false;
-            }
-            else if (idx == mVectorMap[itr->first].size())
-            {
-               mVectorMap[itr->first].push_back(itr->second); 
-            }
-            else
-            {
-               mVectorMap[itr->first][idx] = itr->second;
-            }
-         }
-         return true;
-      }
+      bool setVector(const size_t idx, const VectorMap& values);
 
       /**
        * Gets the all the values of the specified vector.
@@ -150,19 +133,7 @@ namespace VE_TextureBased
        *
        * @return     the values of all vectors at timestep idx.
        */
-      VectorMap getVector(const size_t idx) const
-      {
-         VectorMap results;
-         std::map<std::string, std::vector<gmtl::Vec3f> >::const_iterator itr;
-         for (itr = mVectorMap.begin(); itr != mVectorMap.end(); ++itr)
-         {
-            if (idx < itr->second.size())
-            {
-               results[itr->first] = itr->second[idx];
-            }
-         }
-         return results;
-      }
+      VectorMap getVector(const size_t idx) const;
 
       /**
        * Checks to see if this VectorDataSet contains a vector with the 
@@ -176,6 +147,13 @@ namespace VE_TextureBased
       {
          return mVectorMap.find(name) != mVectorMap.end();
       }
+
+      /**
+       * Returns the names of all vectors contained in this data set.
+       *
+       * @return     a vector of strings containing the names of each vector.
+       */
+      const std::vector<std::string> getVectorNames() const;
 
       /**
        * Returns the number of values for the specified vector.
@@ -193,6 +171,19 @@ namespace VE_TextureBased
             return 0;
          }
          return itr->second.size();
+      }
+
+      /**
+       * Returns the number of values for the first vector in the map.
+       * 
+       * @note    This should be changed to something else whenever a support
+       *          for time steps without vector values is added.
+       *
+       * @return     The size of the first vector in the set.
+       */
+      const size_t size() const
+      {
+         return mVectorMap.begin()->second.size();
       }
 
    private:

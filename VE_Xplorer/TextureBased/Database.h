@@ -3,14 +3,16 @@
 
 #include "VE_Xplorer/TextureBased/Data.h"
 #include "VE_Xplorer/TextureBased/DatabaseDriver.h"
+#include "VE_Xplorer/TextureBased/SingletonDLL.h"
+#include "VE_Installer/include/VEConfig.h"
 
+#define LOKI_SINGLETON_EXPORT VE_TEXTURE_BASED_EXPORTS
 #include <loki/Function.h>
 #include <loki/Singleton.h>
 
 #include <map>
 #include <string>
-
-#include "VE_Installer/include/VEConfig.h"
+#include <vector>
 
 namespace VE_TextureBased
 {
@@ -85,6 +87,19 @@ namespace VE_TextureBased
             return mCurrentDriver->execute(statement);
          }
          return false;
+      }
+
+      /**
+       * Retrieves the results from the last query.
+       *
+       * @return     the results from the last query
+       */
+      std::vector< std::vector<DBValue> > getResults() const
+      {
+         if (mCurrentDriver)
+         {
+            return mCurrentDriver->getResults();
+         }
       }
 
       /**
@@ -176,8 +191,13 @@ namespace VE_TextureBased
       std::map<std::string, DriverCreator>            mDriverMap;
    };
 
-   /// Create the Singleton via Loki::SingletonHolder.
-   typedef Loki::SingletonHolder<Database_t> Database;
+   /// Typedef for the singleton declaration.  This is necessary to make the
+   /// singleton have one instance in a Windows DLL; the macro calls are 
+   /// based upon recommendations from the MSDN documentation.
+   VE_TEXTURE_BASED_TEMPLATE_EXPORTS template class VE_TEXTURE_BASED_EXPORTS Singleton<Database_t>;
+
+   /// Typedef for the singleton Database.
+   typedef Singleton<Database_t> Database;
 }
 
 #endif

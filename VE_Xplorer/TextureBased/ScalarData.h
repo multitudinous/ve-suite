@@ -53,7 +53,7 @@ namespace VE_TextureBased
       bool setScalar(const std::string& name, const size_t idx, 
                      const float value)
       {
-         if (mScalarMap.find(name) == mScalarMap.end() ||
+         if ( (mScalarMap.find(name) == mScalarMap.end() && idx != 0) ||
              idx >= mScalarMap[name].size())
          {
             return false;
