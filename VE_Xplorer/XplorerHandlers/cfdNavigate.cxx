@@ -252,13 +252,7 @@ void cfdNavigate::CursorTranslate( )
     this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
   }
 }
-
-void cfdNavigate::SetDataValues( int id, int iso )
-{
-   this->cfdId = id;
-   this->cfdIso_value = iso;
-}
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdNavigate::updateNavigationFromGUI()
 {
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
@@ -645,13 +639,3 @@ void cfdNavigate::SetVECommand( VE_XML::Command* veCommand )
 {
    command = veCommand;
 }
-//////////////////////////////////////////
-void cfdNavigate::SetInitialWorldPosition( float* translate, float* rotate, float* scale )
-{
-   for ( unsigned int i = 0; i < 3; ++i )
-   {
-      initialTranslate[ i ] = translate[ i ];
-      initialRotate[ i ] = rotate[ i ];
-   }
-}
-

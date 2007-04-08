@@ -61,8 +61,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
@@ -93,9 +91,6 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _appTime = 0.0;
    _paramFile = '\0';
    _cmdArray = 0;
-   //_worldDCS = 0;
-   _nav = 0;
-   _cursor  = 0;
    _activeVolumeVizNode = 0;
    _activeTM = 0;
    _parent = 0;
@@ -666,18 +661,6 @@ void cfdTextureBasedVizHandler::SetParentNode(VE_SceneGraph::Group* parent)
 {
    if(_parent != parent)
       _parent = parent;
-}
-////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetNavigate(cfdNavigate* navigate)
-{
-   if(_nav != navigate)
-      _nav = navigate;
-}
-//////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetCursor(cfdCursor* cursor)
-{
-   if(_cursor != cursor)
-      _cursor = cursor;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)

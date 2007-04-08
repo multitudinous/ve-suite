@@ -273,10 +273,10 @@ cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
    return displaySettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
+/*cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
 {
    return this->nav;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 cfdCursor* cfdEnvironmentHandler::GetCursor( void )
 {
@@ -301,23 +301,6 @@ void cfdEnvironmentHandler::InitScene( void )
    std::cout << "| ***************************************************************** |" << std::endl;
    // Needs to be set by the gui fix later
    this->nav->Initialize( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
-   this->nav->SetInitialWorldPosition( this->worldTrans, this->worldRot, this->worldScale );
-
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
-
-   for( int i = 0; i < 3; i++)
-   {
-      this->nav->worldTrans[ i ] = this->worldTrans[ i ];
-      this->nav->worldRot[ i ] = this->worldRot[ i ];
-   }
-   
-   float tempArray[ 3 ];
-   tempArray[ 0 ] = -this->nav->worldTrans[ 0 ];
-   tempArray[ 1 ] = -this->nav->worldTrans[ 1 ];
-   tempArray[ 2 ] = -this->nav->worldTrans[ 2 ];
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray( tempArray );
-
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( this->nav->worldRot );
 
    // Maybe need to fix this later
    //this->cursorId = NONE;
@@ -398,9 +381,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    //Process all events for active device
    VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
 
-   this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
-                             (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-   this->nav->updateNavigationFromGUI();
+   //this->nav->updateNavigationFromGUI();
 
    VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
@@ -450,15 +431,15 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
 
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
-   if( cfdModelHandler::instance()->GetActiveModel() )
+   /*if( cfdModelHandler::instance()->GetActiveModel() )
    {
       this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
       this->cursor->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
       this->cursor->CheckCommandId( _commandArray );
-   }
+   }*/
 
-   this->cursor->Update( this->nav->GetCursorLocation(),
-                         this->nav->GetDirection(), this->nav->worldTrans );
+   //this->cursor->Update( this->nav->GetCursorLocation(),
+   //                      this->nav->GetDirection(), this->nav->worldTrans );
 
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );

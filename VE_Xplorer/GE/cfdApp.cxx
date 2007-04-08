@@ -426,9 +426,6 @@ void cfdApp::initScene( void )
    _start_tick = _timer.tick();
 #ifdef VE_PATENTED
    _tbvHandler = cfdTextureBasedVizHandler::instance();
-   //_tbvHandler->SetParameterFile(filein_name);
-   _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-   _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    //_tbvHandler->SetSceneView(_sceneViewer.get());
    //_tbvHandler->InitVolumeVizNodes();

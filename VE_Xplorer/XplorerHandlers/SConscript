@@ -108,6 +108,9 @@ sources = Split("""
    Wand.cxx
    TBSliceNumberUpdateEH.cxx
    TBSetActiveShaderManagerEH.cxx
+   TBPhongShadingEnableEH.cxx
+   Tablet.cxx
+   NavigationDataEventHandler.cxx
 """)
 
 headers = Split("""
@@ -214,6 +217,9 @@ headers = Split("""
    Wand.h
    TBSetActiveShaderManagerEH.h
    TBSliceNumberUpdateEH.h
+   TBPhongShadingEnableEH.h
+   Tablet.h
+   NavigationDataEventHandler.h
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 

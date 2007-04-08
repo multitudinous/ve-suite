@@ -99,7 +99,7 @@ public:
    void SetBackgroundColor(std::vector<double> color);
 
    ///Accessor for cfdNavigate
-   cfdNavigate* GetNavigate( void );
+   //cfdNavigate* GetNavigate( void );
 
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );

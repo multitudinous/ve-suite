@@ -83,7 +83,6 @@ protected:
 
    ///<cfdApp side variables declared in VjObs_i.h
    VE_XML::Command* veCommand;
-
 private:
 };
 }

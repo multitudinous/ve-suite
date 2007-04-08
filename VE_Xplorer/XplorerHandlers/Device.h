@@ -40,6 +40,8 @@ Device API
 */
 #include "VE_Installer/include/VEConfig.h"
 
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
 #include <osg/ref_ptr>
 
 namespace osg 
@@ -47,9 +49,14 @@ namespace osg
   class Vec3f;
 }
 
+namespace VE_XML
+{
+   class Command;
+}
+
 namespace VE_Xplorer
 {
-class VE_XPLORER_EXPORTS Device
+class VE_XPLORER_EXPORTS Device : public cfdGlobalBase
 {
 public:
    Device();
@@ -57,7 +64,9 @@ public:
 
 	virtual void UpdateNavigation();
    virtual void UpdateSelection();
-
+   virtual void SetVECommand( VE_XML::Command* command=0){;}
+   virtual void UpdateCommand(){;}
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){;}
 protected:
    virtual void ProcessSelection();
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );

@@ -902,9 +902,9 @@ void VjObs_i::PreFrameUpdate( void )
       (*bufferCommand) = (*(*iter));
       delete commandVectorQueue.at( 0 );
       commandVectorQueue.erase( iter );
-      cfdEnvironmentHandler::instance()->GetNavigate()->SetVECommand( bufferCommand );
       cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
       cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
+      cfdModelHandler::instance()->SetXMLCommand( bufferCommand );
       if ( cfdModelHandler::instance()->GetActiveModel() )
       {
          cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );

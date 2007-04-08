@@ -23,57 +23,59 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2007-03-18 11:01:44 -0500 (Sun, 18 Mar 2007) $
+ * Version:       $Rev: 7159 $
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_EVENT_HANDLER_H
-#define VE_EVENT_HANDLER_H
-/*!\file EventHandler.h
-  EventHandler API
+#ifndef NAVIGATION_EVENT_HANDLER_H
+#define NAVIGATION_EVENT_HANDLER_H
+/*!\file NavigationDataEventHandler.h
+  NavigationDataEventHandler API
   */
-/*!\class EventHandler
- * Base class for event handling.
+/*!\class NavigationDataEventHandler
+ * Class for changing trackball properties in xplorer
  */
-/*!\namespace VE_EVENTS
- * Namespace for ve-event handlers.
- */
-#include <boost/shared_ptr.hpp>
+#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 
 namespace VE_XML
 {
    class XMLObject;
 }
+
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
 }
-#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_EVENTS
 {
-class VE_XPLORER_EXPORTS EventHandler
+class NavigationDataEventHandler:public EventHandler
 {
 public:
-   ///Constructor
-   EventHandler(){;}
+   //Constructor
+   NavigationDataEventHandler();
 
-   ///Destructor
-   virtual ~EventHandler(){;}
+   //Copy Constructor
+   NavigationDataEventHandler(const NavigationDataEventHandler& ceh);
 
-   ///The call to handle the event
-   ///\param objectToProcess The xml Object to process
-   virtual void Execute(VE_XML::XMLObject* objectToProcess=0) = 0;
+   //Destructor
+   virtual ~NavigationDataEventHandler();
 
-   ///\param baseObject The cfdGlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject=0) = 0;
+   //Set the cfdModel
+   //param model The cfdModelHandler to execute the Command on
+   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
+
+   //Exectute the event
+   //param xmlObject The current xmlObject event.
+   void Execute(VE_XML::XMLObject* command); 
+
+   //Equal operator
+   NavigationDataEventHandler& operator=(const NavigationDataEventHandler& rhs);
+
 protected:
-   ///<the variable of the global base object to operate on
-   VE_Xplorer::cfdGlobalBase* _baseObject;
 };
-typedef boost::shared_ptr< EventHandler > EventHandlerPtr;
 }
-#endif// VE_EVENT_HANDLER_H
+#endif//NAVIGATION_EVENT_HANDLER_H

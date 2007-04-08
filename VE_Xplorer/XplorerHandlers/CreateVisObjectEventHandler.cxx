@@ -776,8 +776,8 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
                         << activeDataSetDCS.get()
                         << std::endl << vprDEBUG_FLUSH;
    this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-   this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
-   this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
+   //this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
+   //this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
    this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
    activeObject->SetUpdateFlag( false );
    

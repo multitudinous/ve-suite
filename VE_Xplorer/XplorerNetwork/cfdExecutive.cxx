@@ -294,7 +294,9 @@ void cfdExecutive::GetEverything( void )
          cfdModelHandler::instance()->AddModel( tempCFDModel );
          // Give graphical plugins access to wand position, wand buttons, and gui variables
          _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
-         _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+         //Need to pass an active device in here or something
+         //This needs to be fixed
+         //_plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
          _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
          pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }

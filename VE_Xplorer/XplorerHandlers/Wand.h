@@ -79,7 +79,7 @@ class VE_XPLORER_EXPORTS Wand : public Device
 {
 public:
 	Wand();
-	~Wand();
+	virtual ~Wand();
 
    ///Initialize some variables in the class
    void Initialize( void );
@@ -91,9 +91,8 @@ public:
    void SetHeadRotationFlag( int );
    ///New function for testing the new VECommand structure
    void SetVECommand( VE_XML::Command* veCommand );
-   ///accessor to set initial world position
-   void SetInitialWorldPosition( float* translate, float* rotate, float* scale );
-   ///Update the juggler reference frame wand position  
+   ///Do not let the user go below the ground plane at 0,0,0 
+   void SetSubZeroFlag( int );
 
 
    void SelectObject( void );
@@ -179,22 +178,16 @@ private:
       Cursor length.
     */
    float cursorLen;
-   //! Wand object
-   /*!
-      Displacement of the objects in virtual space.
-    */
-   //float dObj;
    
    float translationStepSize;
    float rotationStepSize;
    
    int rotationFlag;
+   int subzeroFlag;
    
    // class used to store xml command
    VE_XML::Command* command;
    // data storage for initial world dcs location
-   float initialTranslate[ 3 ];
-   float initialRotate[ 3 ]; 
    double deltaTrans[ 3 ];
    
    osg::ref_ptr<osg::Geode> selectedGeometry;

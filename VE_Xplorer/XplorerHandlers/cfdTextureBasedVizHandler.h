@@ -56,8 +56,6 @@ namespace VE_SceneGraph
 
 namespace VE_Xplorer
 {
-   class cfdCursor;
-   class cfdNavigate;
    class cfdCommandArray;
    class cfdGraphicsObject;
 }
@@ -93,8 +91,6 @@ namespace VE_TextureBased
          void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
          void SetWorldDCS( VE_SceneGraph::DCS* dcs);
          void SetParentNode( VE_SceneGraph::Group* parent);
-         void SetNavigate( VE_Xplorer::cfdNavigate* navigate);
-         void SetCursor( VE_Xplorer::cfdCursor* cursor);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
 
          ///Update the active cfdTextureManager by pinging the cfdTextureDataSet
@@ -183,8 +179,6 @@ namespace VE_TextureBased
          std::string _paramFile;
          VE_Xplorer::cfdCommandArray* _cmdArray;
          osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-         VE_Xplorer::cfdNavigate* _nav;
-         VE_Xplorer::cfdCursor* _cursor;
          cfdTextureDataSet* _activeTDSet;
          cfdTextureManager* _activeTM;
 

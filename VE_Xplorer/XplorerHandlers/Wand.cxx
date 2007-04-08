@@ -60,7 +60,8 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Wand::Wand()
+Wand::Wand() :
+subzeroFlag( 0 )
 {
    wand.init("VJWand");
    head.init("VJHead");
@@ -170,8 +171,8 @@ void Wand::UpdateNavigation()
    {
       for ( unsigned int i = 0; i < 3; i++ )
 	   {
-         worldTrans[ i ] = initialTranslate[ i ];
-         worldRot[ i ] = initialRotate[ i ];
+         worldTrans[ i ] = 0.0f;
+         worldRot[ i ] = 0.0f;
 	   }
    }
    else if ( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
@@ -291,6 +292,15 @@ void Wand::UpdateNavigation()
    {   
       worldTrans[ i ] = -worldTrans[ i ];
    }
+
+   //Do not allow translation below z = 0 plane
+   if ( subzeroFlag )
+   {
+      if ( worldTrans[2] > 0 )
+      {
+         worldTrans[2] = 0;
+      }
+   }
    
    this->worldDCS->SetTranslationArray( worldTrans );
    this->worldDCS->SetRotationArray( worldRot );   
@@ -315,15 +325,6 @@ void Wand::SetHeadRotationFlag( int input )
 void Wand::SetVECommand( VE_XML::Command* veCommand )
 {
    command = veCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Wand::SetInitialWorldPosition( float* translate, float* rotate, float* scale )
-{
-   for ( unsigned int i = 0; i < 3; ++i )
-   {
-      initialTranslate[ i ] = translate[ i ];
-      initialRotate[ i ] = rotate[ i ];
-   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SelectObject( void )
@@ -666,4 +667,9 @@ void Wand::UpdateDeltaWandPosition()
    {
       deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Wand::SetSubZeroFlag( int input )
+{
+   subzeroFlag = input;
 }

@@ -110,7 +110,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 void cfdSteadyStateVizHandler::Initialize( std::string param )
 {
    _param = param;
-   nav = cfdEnvironmentHandler::instance()->GetNavigate();
+   //nav = cfdEnvironmentHandler::instance()->GetNavigate();
    cursor = cfdEnvironmentHandler::instance()->GetCursor();
 }
 
@@ -406,9 +406,9 @@ void cfdSteadyStateVizHandler::streamers( void )
       return;
    }
    
-   this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
-   this->_activeObject->SetNormal( this->nav->GetDirection() );
-   this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
+   //this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
+   //this->_activeObject->SetNormal( this->nav->GetDirection() );
+   //this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
    if ( this->cursor->GetCursorID() == CUBE )
    {
