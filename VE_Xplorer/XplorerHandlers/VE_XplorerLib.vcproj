@@ -621,6 +621,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Tablet.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\TBActivateEH.cxx"
 				>
 			</File>
@@ -1092,6 +1096,10 @@
 			</File>
 			<File
 				RelativePath=".\StoredSceneEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Tablet.h"
 				>
 			</File>
 			<File

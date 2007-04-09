@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FindParentsVisitor.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Geode.cxx"
 				>
 			</File>
@@ -324,6 +328,10 @@
 			</File>
 			<File
 				RelativePath=".\DCS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FindParentsVisitor.h"
 				>
 			</File>
 			<File

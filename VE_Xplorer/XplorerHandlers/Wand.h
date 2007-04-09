@@ -48,11 +48,11 @@ Wand API
 
 #include <osgUtil/IntersectVisitor>
 
+#include <osg/Geometry>
 namespace osg 
 {
    class Geode;
    class Group;
-   class Geometry;
    class Vec4f;
    class Vec3f;
    class MatrixTransform;
