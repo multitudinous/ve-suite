@@ -66,7 +66,7 @@ public:
    virtual void UpdateSelection();
    virtual void SetVECommand( VE_XML::Command* command=0){;}
    virtual void UpdateCommand(){;}
-   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){;}
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){return false;}
 protected:
    virtual void ProcessSelection();
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );

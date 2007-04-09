@@ -585,6 +585,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NavigationDataEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\QCClearDataEH.cxx"
 				>
 			</File>
@@ -1045,6 +1049,10 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NavigationDataEventHandler.h"
 				>
 			</File>
 			<File
