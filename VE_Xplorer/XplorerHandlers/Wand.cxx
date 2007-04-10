@@ -61,7 +61,13 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand() :
-subzeroFlag( 0 )
+   subzeroFlag( 0 ),
+   rotationFlag( 1 ),
+   distance( 1000 ),
+   cursorLen( 1.0f ),
+   command( 0 ),
+   translationStepSize( 0.25f ),
+   rotationStepSize( 1.0f )
 {
    wand.init("VJWand");
    head.init("VJHead");
@@ -88,8 +94,6 @@ subzeroFlag( 0 )
    flyThrough[2].init("Path_3");
    flyThrough[3].init("Path_4");
    
-   command = 0;
-   rotationFlag = 1;
    beamLineSegment = new osg::LineSegment();
    Initialize();
 }
@@ -98,20 +102,11 @@ void Wand::Initialize( void )
 {
    this->worldDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
    rootNode = VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
-   this->cursorLen = 1.0f;
-   this->distance = 1000;
-   //this->dObj = 0.05f;
-   //this->UpdateDir( );
-   //this->UpdateLoc( );
    
-   this->translationStepSize = 0.25f;
-   this->rotationStepSize = 1.0f;
-   this->worldLoc[0] = this->worldLoc[1] = this->worldLoc[2] = 0.0f;
-
    for ( int i=0; i<3; i++ )
    {
       this->cursorLoc[i] = 0;//this->loc[i] + this->dir[i]*this->cursorLen;
-      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+      this->objLoc[i] = this->cursorLoc[i];
       this->LastVec[i] = 0;
    }
 }
@@ -123,6 +118,14 @@ Wand::~Wand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateNavigation()
 {
+   ///Remove the pointer if present
+   if ( beamGeode.valid() )
+   {
+      this->rootNode->asGroup()->removeChild( beamGeode.get() );
+   }
+   ///Update the wand direction every frame
+   UpdateWandLocalDirection();
+
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
    

@@ -253,7 +253,6 @@ void cfdApp::contextInit()
    osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
 
 	// Configure the new viewer
-   //new_sv->setLightingMode( osgUtil::SceneView::NO_SCENEVIEW_LIGHT );
    this->configSceneView( new_sv.get() );             
    new_sv->getState()->setContextID( unique_context_id );
 
