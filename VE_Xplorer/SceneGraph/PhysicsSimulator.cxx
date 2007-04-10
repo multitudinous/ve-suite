@@ -1,12 +1,35 @@
-//#define PRINT_CONTACT_STATISTICS 1
-//#define SHOW_NUM_DEEP_PENETRATIONS 1
-//#define USE_KINEMATIC_GROUND 1
-//#define USER_DEFINED_FRICTION_MODEL 1
-
-#define USE_CUSTOM_NEAR_CALLBACK 1
-#define USE_SWEEP_AND_PRUNE 1
-//#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
-
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
@@ -42,6 +65,15 @@ using namespace VE_SceneGraph;
 const int maxProxies = 32766;
 
 vprSingletonImp( PhysicsSimulator );
+
+//#define PRINT_CONTACT_STATISTICS 1
+//#define SHOW_NUM_DEEP_PENETRATIONS 1
+//#define USE_KINEMATIC_GROUND 1
+//#define USER_DEFINED_FRICTION_MODEL 1
+
+#define USE_CUSTOM_NEAR_CALLBACK 1
+#define USE_SWEEP_AND_PRUNE 1
+//#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
@@ -102,31 +134,37 @@ void PhysicsSimulator::ExitPhysics()
 }
 ////////////////////////////////////////////////////////////////////////////////
 //By default, Bullet will use its own nearcallback, but you can override it using dispatcher->setNearCallback()
-void customNearCallback(btBroadphasePair& collisionPair, btCollisionDispatcher& dispatcher, btDispatcherInfo& dispatchInfo)
+void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher& dispatcher, btDispatcherInfo& dispatchInfo )
 {
-   btCollisionObject* colObj0=(btCollisionObject*)collisionPair.m_pProxy0->m_clientObject;
-	btCollisionObject* colObj1=(btCollisionObject*)collisionPair.m_pProxy1->m_clientObject;
+   btCollisionObject* colObj0 = (btCollisionObject*)collisionPair.m_pProxy0->m_clientObject;
+	btCollisionObject* colObj1 = (btCollisionObject*)collisionPair.m_pProxy1->m_clientObject;
 
-	if(dispatcher.needsCollision(colObj0,colObj1)){
+	if( dispatcher.needsCollision( colObj0, colObj1 ) )
+   {
 		//Dispatcher will keep algorithms persistent in the collision pair
-		if(!collisionPair.m_algorithm){
-			collisionPair.m_algorithm=dispatcher.findAlgorithm(colObj0,colObj1);
+		if( !collisionPair.m_algorithm )
+      {
+			collisionPair.m_algorithm = dispatcher.findAlgorithm( colObj0, colObj1 );
 		}
 
-		if(collisionPair.m_algorithm){
-			btManifoldResult contactPointResult(colObj0,colObj1);
+		if( collisionPair.m_algorithm )
+      {
+			btManifoldResult contactPointResult( colObj0, colObj1 );
 				
-			if(dispatchInfo.m_dispatchFunc==btDispatcherInfo::DISPATCH_DISCRETE){
+			if( dispatchInfo.m_dispatchFunc == btDispatcherInfo::DISPATCH_DISCRETE )
+         {
 				//Discrete collision detection query
-				collisionPair.m_algorithm->processCollision(colObj0,colObj1,dispatchInfo,&contactPointResult);
+				collisionPair.m_algorithm->processCollision( colObj0, colObj1, dispatchInfo, &contactPointResult );
 			}
             
-         else{
+         else
+         {
 			   //Continuous collision detection query, time of impact (toi)
-				float toi=collisionPair.m_algorithm->calculateTimeOfImpact(colObj0,colObj1,dispatchInfo,&contactPointResult);
+				float toi = collisionPair.m_algorithm->calculateTimeOfImpact( colObj0, colObj1, dispatchInfo, &contactPointResult );
 
-            if(dispatchInfo.m_timeOfImpact>toi){
-					dispatchInfo.m_timeOfImpact=toi;
+            if( dispatchInfo.m_timeOfImpact > toi )
+            {
+					dispatchInfo.m_timeOfImpact = toi;
             }
          }
       }
@@ -209,17 +247,20 @@ void PhysicsSimulator::ResetScene()
 	   gNumGjkChecks=0;
    #endif //SHOW_NUM_DEEP_PENETRATIONS
 
-	if(dynamics_world){
+	if(dynamics_world)
+   {
 		dynamics_world->stepSimulation(1.f/60.f,0);
 	}
 
 	int numObjects=dynamics_world->getNumCollisionObjects();
 	
-	for(int i=0;i<numObjects;i++){
+	for(int i=0;i<numObjects;i++)
+   {
 		btCollisionObject* colObj=dynamics_world->getCollisionObjectArray()[i];
 		btRigidBody* body=btRigidBody::upcast(colObj);
 
-		if(body && body->getMotionState()){
+		if(body && body->getMotionState())
+      {
 			btDefaultMotionState* myMotionState=(btDefaultMotionState*)body->getMotionState();
 			myMotionState->m_graphicsWorldTrans=myMotionState->m_startWorldTrans;
 
@@ -232,7 +273,8 @@ void PhysicsSimulator::ResetScene()
 
 			btRigidBody* body=btRigidBody::upcast(colObj);
 
-			if(body&&!body->isStaticObject()){
+			if(body&&!body->isStaticObject())
+         {
 				btRigidBody::upcast(colObj)->setLinearVelocity(btVector3(0,0,0));
 				btRigidBody::upcast(colObj)->setAngularVelocity(btVector3(0,0,0));
 			}
@@ -349,9 +391,9 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::SetPhysicsState(bool  state)
+void PhysicsSimulator::SetPhysicsState( bool state )
 {
-   idle=state;
+   idle = state;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PhysicsSimulator::GetPhysicsState()
@@ -359,9 +401,9 @@ bool PhysicsSimulator::GetPhysicsState()
    return idle;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::SetShootSpeed(float speed)
+void PhysicsSimulator::SetShootSpeed( float speed )
 {
-   shoot_speed=speed;
+   shoot_speed = speed;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* PhysicsSimulator::CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape )

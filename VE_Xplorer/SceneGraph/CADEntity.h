@@ -115,6 +115,7 @@ private:
 	float restitution;
 
 	bool physics;
+   bool concave;
 
    int mat_count;
    int color;

@@ -68,7 +68,7 @@ class btCollisionShape;
 
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS PhysicsSimulator                //: public vpr::Singleton< PhysicsSimulator >
+class VE_SCENEGRAPH_EXPORTS PhysicsSimulator             //: public vpr::Singleton< PhysicsSimulator >
 {
 public:
    void ExitPhysics();                                   //Functions as the destructor

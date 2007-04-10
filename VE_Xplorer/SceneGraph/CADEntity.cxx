@@ -61,7 +61,9 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool i
 :
 mass( 1.0f ),
 friction( 0.0f ),
-restitution( 0.0f )
+restitution( 0.0f ),
+physics( false ),
+concave( false )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -99,19 +101,29 @@ void CADEntity::Initialize( float op_val )
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetMass( float m )
 {
-	mass = m;
+   if( concave )
+   {
+      std::cout << "Static mesh cannot have an associated mass!" << std::endl;
 
-	if( collision_shape )
-	{
-		//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-		bool dynamic = ( mass != 0.0f );
+      return;
+   }
 
-		btVector3 localInertia( 0, 0, 0 );
-		if( dynamic )
-		{
-			collision_shape->calculateLocalInertia( mass, localInertia );
-		}
-	}
+   else
+   {
+	   mass = m;
+
+	   if( collision_shape )
+	   {
+		   //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
+		   bool dynamic = ( mass != 0.0f );
+
+		   btVector3 localInertia( 0, 0, 0 );
+		   if( dynamic )
+		   {
+			   collision_shape->calculateLocalInertia( mass, localInertia );
+		   }
+	   }
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetFriction( float f )
@@ -150,16 +162,27 @@ void CADEntity::SetCollisionShape( std::string type )
 
    if( type == "BoundingBox" )
    {
+      concave = false;
+
       physics_mesh->CreateBoundingBoxShape();
    }
 
    else if( type == "StaticConcave" )
    {
+      concave = true;
+
+      if( mass != 0 )
+      {
+         mass = 0;
+      }
+
       physics_mesh->CreateStaticConcaveShape();
    }
 
    else if( type == "Convex" )
    {
+      concave = false;
+
       physics_mesh->CreateConvexShape();
    }
 
