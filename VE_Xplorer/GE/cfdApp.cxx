@@ -80,6 +80,9 @@
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 #include <osg/Referenced>
+#include <osg/Light>
+#include <osg/LightModel>
+#include <osg/LightSource>
 
 #include <osgDB/WriteFile>
 
@@ -131,6 +134,21 @@ cfdApp::cfdApp( int argc, char* argv[] )
    _frameStamp->setReferenceTime(0.0);
    _frameStamp->setFrameNumber(0);
    svUpdate = false;
+
+   light_0 = new osg::Light;
+   light_source_0 = new osg::LightSource;
+
+   light_0->setLightNum( 0 );
+   light_0->setAmbient( osg::Vec4f( 0.36862f, 0.36842f, 0.36842f, 1.0f ) );
+   //light_0->setDiffuse( osg::Vec4f( 0.0f, 0.88500f, 0.0f, 1.0f ) );
+   light_0->setDiffuse( osg::Vec4f( 0.88627f, 0.88500f, 0.88500f, 1.0f ) );
+   light_0->setSpecular( osg::Vec4f( 0.49019f, 0.48872f, 0.48872f, 1.0f ) );
+   //light_0->setSpecular( osg::Vec4f( 0.0f, 1.0f, 0.0f, 1.0f ) );
+   light_0->setPosition( osg::Vec4f( 10000.0f, -10000.0f, 10000.0f, 0.0f ) );
+   light_0->setDirection( osg::Vec3f( -1, 1, -1 ) );
+
+   light_source_0->setLight( light_0.get() );
+   light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
 
 #ifdef VE_PATENTED
    _tbvHandler = 0;
@@ -235,19 +253,24 @@ void cfdApp::contextInit()
    osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
 
 	// Configure the new viewer
+   //new_sv->setLightingMode( osgUtil::SceneView::NO_SCENEVIEW_LIGHT );
    this->configSceneView( new_sv.get() );             
    new_sv->getState()->setContextID( unique_context_id );
 
-	new_sv->setLightingMode( osgUtil::SceneView::NO_SCENEVIEW_LIGHT );
-
 	(*sceneViewer) = new_sv;
+   //This is important - if this is commented out then the screen goes black
+   new_sv->getGlobalStateSet()->setAssociatedModes(light_0.get(),osg::StateAttribute::ON);
+   new_sv->getGlobalStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+   //osg::ref_ptr< osg::LightModel > lightmodel = new osg::LightModel;
+   //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+   //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
 
 	//Setup OpenGL light
 	//This should actualy be done in the simulator code
-	GLfloat light0_ambient[] = { 0.36862f, 0.36842f, 0.36842f, 1.0f };
-	GLfloat light0_diffuse[] = { 0.88627f, 0.88500f, 0.88500f, 1.0f };
-	GLfloat light0_specular[] = { 0.49019f, 0.48872f, 0.48872f, 1.0f };
-	GLfloat light0_position[] = { 10000.0f, 10000.0f, 10000.0f, 0.0f };
+	//GLfloat light0_ambient[] = { 0.36862f, 0.36842f, 0.36842f, 1.0f };
+	//GLfloat light0_diffuse[] = { 0.88627f, 0.88500f, 0.88500f, 1.0f };
+	//GLfloat light0_specular[] = { 0.49019f, 0.48872f, 0.48872f, 1.0f };
+	//GLfloat light0_position[] = { 10000.0f, 10000.0f, 10000.0f, 0.0f };
 
 	//GLfloat mat_ambient[] = { 0.7f, 0.0f, 0.0f, 1.0f };
 	//GLfloat mat_diffuse[] = { 0.8f, 0.0f, 0.0f, 1.0f };
@@ -256,10 +279,10 @@ void cfdApp::contextInit()
 	//GLfloat mat_emission[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	//GLfloat no_mat[] = { 0.0f, 0.0f, 0.0f, 1.0f};
 
-	glLightfv( GL_LIGHT0, GL_AMBIENT, light0_ambient );
-	glLightfv( GL_LIGHT0, GL_DIFFUSE, light0_diffuse );
-	glLightfv( GL_LIGHT0, GL_SPECULAR, light0_specular );
-	glLightfv( GL_LIGHT0, GL_POSITION, light0_position );
+	//glLightfv( GL_LIGHT0, GL_AMBIENT, light0_ambient );
+	//glLightfv( GL_LIGHT0, GL_DIFFUSE, light0_diffuse );
+	//glLightfv( GL_LIGHT0, GL_SPECULAR, light0_specular );
+	//glLightfv( GL_LIGHT0, GL_POSITION, light0_position );
 
 	//glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
 	//glMaterialfv( GL_FRONT, GL_DIFFUSE, mat_diffuse );
@@ -267,12 +290,12 @@ void cfdApp::contextInit()
 	//glMaterialfv( GL_FRONT, GL_SHININESS, mat_shininess );
 	//glMaterialfv( GL_FRONT, GL_EMISSION, no_mat );
 
-	glEnable( GL_DEPTH_TEST );
-	glEnable( GL_NORMALIZE );
-	glEnable( GL_LIGHTING );
-	glEnable( GL_LIGHT0 );
+	//glEnable( GL_DEPTH_TEST );
+	//glEnable( GL_NORMALIZE );
+	//glEnable( GL_LIGHTING );
+	//glEnable( GL_LIGHT0 );
 	//glEnable( GL_COLOR_MATERIAL );
-	glShadeModel( GL_SMOOTH );
+	//glShadeModel( GL_SMOOTH );
 	//**************************************************************************
 
    if ( !_pbuffer )
@@ -387,6 +410,10 @@ void cfdApp::initScene( void )
    // define the rootNode, worldDCS, and lighting
    //VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
    VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
+
+
+   this->getScene()->addChild( light_source_0.get() );
+
 #ifdef _OSG
    VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
 #endif
@@ -729,7 +756,9 @@ void cfdApp::draw()
                                     frustum[vrj::Frustum::VJ_FAR]);
 
 	//Allow trackball to grab frustum values to calculate FOVy
-	cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_TOP],
+   cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
+                                                       frustum[vrj::Frustum::VJ_RIGHT],
+                                                       frustum[vrj::Frustum::VJ_TOP],
 																		 frustum[vrj::Frustum::VJ_BOTTOM],
                                                        frustum[vrj::Frustum::VJ_NEAR],
                                                        frustum[vrj::Frustum::VJ_FAR]);

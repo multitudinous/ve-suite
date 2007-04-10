@@ -1,7 +1,40 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
 
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
@@ -18,7 +51,11 @@
 #include <osg/LineWidth>
 #include <osg/LineSegment>
 
-//C/C++ Libraries
+// --- VR Juggler Stuff --- //
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
+
+// --- C/C++ Libraries --- //
 #include <iostream>
 #include <cmath>
 
@@ -43,6 +80,11 @@ height( 1 ),
 
 aspect_ratio( 0.0f ),
 fovy( 0.0f ),
+left( 0.0f ),
+right( 0.0f ),
+top( 0.0f ),
+bottom( 0.0f ),
+near_plane( 0.0f ),
 far_plane( 0.0f ),
 
 wc_screen_xmin( 0.0f ),
@@ -84,23 +126,57 @@ void KeyboardMouse::UpdateSelection()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
 {
+   
    double wc_x_trans_ratio = ( wc_screen_xmax - wc_screen_xmin )  / width;
    double wc_y_trans_ratio = ( wc_screen_ymax - wc_screen_ymin ) / height;
 
    double transformed_x = wc_screen_xmin + ( x * wc_x_trans_ratio );
    double transformed_y = wc_screen_ymax - ( y * wc_y_trans_ratio );
 
+   transformed_x *= 3.2808399;
+   transformed_y *= 3.2808399;
+
+   gmtl::Point3f sp;
+   gmtl::Point3f ep;
+   sp.set( transformed_x, wc_screen_zval, transformed_y );
+   ep.set( transformed_x, far_plane, transformed_y );
+
    /*
-   std::cout << wc_screen_xmin << std::endl;
-   std::cout << wc_screen_xmax << std::endl;
-   std::cout << wc_screen_ymin << std::endl;
-   std::cout << wc_screen_ymax << std::endl;
-   std::cout << wc_screen_zval << std::endl;
-   std::cout << std::endl;
+   gmtl::Matrix44f worldMat;
+   worldMat = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS->GetMat();
+
+   gmtl::Point3f nsp = worldMat * sp;
+   gmtl::Point3f nep = worldMat * ep;
+
+   startPoint->set( nsp.mData[0], nsp.mData[1], nsp.mData[2] );
+   endPoint->set( nep.mData[0], nep.mData[1], nep.mData[2] );
    */
 
-   startPoint->set( transformed_x, wc_screen_zval, transformed_y );
-   endPoint->set( transformed_x, far_plane, transformed_y );
+   /*
+   osg::Matrix matrix;
+   matrix.frustum( left, right, bottom, top, near_plane, far_plane );
+
+   int window_y = ( height - y ) - height/2;
+   double norm_y = double( window_y ) / double( height / 2 );
+   int window_x = x - ( width / 2 );
+   double norm_x_pos = double( window_x ) / double( width / 2 );
+   double norm_x_neg = 
+
+   float ray_y = ( ( top - bottom ) / 2 ) * norm_y;
+   float ray_x = ( ( right - left ) / 2 ) * norm_x;
+
+   std::cout << "ray_x: " << ray_x << std::endl;
+   std::cout << "ray_y: " << ray_y << std::endl;
+
+   std::cout << "x: " << x << std::endl;
+   std::cout << "y: " << y << std::endl;
+
+   std::cout << "width: " << width << std::endl;
+   std::cout << "height: " << height << std::endl;
+
+   std::cout << std::endl;
+*/
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
@@ -128,7 +204,7 @@ void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 
    geode->addDrawable( line.get() );
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild( geode.get() );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->addChild( geode.get() );
       
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -320,15 +396,31 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
    aspect_ratio = (float)width / (float)height;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues( float t, float b, float n, float f )
+void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float n, float f )
 {
-	float topAngle = OneEightyDivPI * atan( t / n );
-   float tempDiv = fabs( b ) / n;
+   left = l;
+   right = r;
+   top = t;
+   bottom = b;
+   near_plane = n;
+   far_plane = f;
+
+	float topAngle = OneEightyDivPI * atan( top / near_plane );
+   float tempDiv = fabs( bottom ) / near_plane;
 	float bottomAngle = OneEightyDivPI * atan( tempDiv );
 
 	fovy = topAngle + bottomAngle;
 
-   far_plane = f;
+
+   /*
+   std::cout << "left: "   << left       << std::endl;
+   std::cout << "right: "  << right      << std::endl;
+   std::cout << "top: "    << top        << std::endl;
+   std::cout << "bottom: " << bottom     << std::endl;
+   std::cout << "near: "   << near_plane << std::endl;
+   std::cout << "far: "    << far_plane  << std::endl;
+   std::cout <<                             std::endl;
+   */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
@@ -351,7 +443,6 @@ void KeyboardMouse::NavKeyboard()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMouse()
 {
-
 	if( state == 1 )
 	{
 		tb_currPos[0] = (float)x / (float)width;
@@ -384,7 +475,7 @@ void KeyboardMouse::NavMotion()
       return;
    }
 
-   if( button == 49 && ( x > 0.1 * width && x < 0.9 * width ) && ( y > 0.1 * height && y < 0.9 * height ) )
+   if( button == 49 && ( x > 0.1f * width && x < 0.9f * width ) && ( y > 0.1f * height && y < 0.9f * height ) )
 	{
    	RotateView( dx, dy );
    }
@@ -469,7 +560,7 @@ void KeyboardMouse::FrameAll()
 
    else
 	{
-      y_val = bs.radius() / tan(Theta);
+      y_val = bs.radius() / tan( Theta );
    }
 
    float z_val = bs.center().z();
@@ -497,9 +588,9 @@ void KeyboardMouse::RotateView( float dx, float dy )
    identity( mat );
    float angle = tb_magnitude * 400.0f;
 
-	tb_axis[0] = mat[0][0]*dy + mat[2][0]*dx;
-	tb_axis[1] = mat[0][1]*dy + mat[2][1]*dx;
-	tb_axis[2] = mat[0][2]*dy + mat[2][2]*dx;
+	tb_axis[0] = mat[0][0] * dy + mat[2][0] * dx;
+	tb_axis[1] = mat[0][1] * dy + mat[2][1] * dx;
+	tb_axis[2] = mat[0][2] * dy + mat[2][2] * dx;
 
 	Rotate( tb_axis[0], tb_axis[1], tb_axis[2], angle );
 }
@@ -519,7 +610,7 @@ void KeyboardMouse::Twist( float dx, float dy )
 void KeyboardMouse::Zoom( float dy )
 {
 	float viewlength = fabs( tb_accuTransform[1][3] );
-	float d = (viewlength*(1/(1+dy*2))) - viewlength;
+	float d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
    //**********Temporary Fix**********//
 	if( ( tb_accuTransform[1][3] > -offset ) && ( tb_accuTransform[1][3] < offset ) )
@@ -531,12 +622,12 @@ void KeyboardMouse::Zoom( float dy )
 
 		else if( tb_accuTransform[1][3] > 0 )
       {
-			tb_transform[1][3] = -2*offset;
+			tb_transform[1][3] = -2 * offset;
       }
 
 		else if( tb_accuTransform[1][3] < 0 )
       {
-			tb_transform[1][3] = 2*offset;
+			tb_transform[1][3] = 2 * offset;
       }
 	}
 

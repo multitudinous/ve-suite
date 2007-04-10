@@ -1,3 +1,35 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
@@ -27,9 +59,9 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream )
 :
-mass(1.0f),
-friction(0.5f),
-restitution(0.0f)
+mass( 1.0f ),
+friction( 0.0f ),
+restitution( 0.0f )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -37,10 +69,10 @@ restitution(0.0f)
    dcs->SetName( "CADEntityDCS" );
    this->node=new VE_SceneGraph::CADEntityHelper();
 
-   this->node->LoadFile( geomFile.c_str(),isStream );
+   node->LoadFile( geomFile.c_str(), isStream );
    fileName.assign( geomFile );
-	this->dcs->addChild( this->node->GetNode() );
-   worldDCS->AddChild( this->dcs.get() );
+	dcs->addChild( node->GetNode() );
+   worldDCS->AddChild( dcs.get() );
 
 	rigid_body = 0;
 	physics_mesh = 0;
@@ -102,73 +134,70 @@ void CADEntity::SetRestitution( float r )
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetPhysics( bool p )
+void CADEntity::SetCollisionShape( std::string type )
 {
-	if( p && !physics_mesh )
+   if( !physics_mesh )
 	{
-		physics_mesh = new PhysicsMesh( this->node->GetNode() );
+		physics_mesh = new PhysicsMesh( node->GetNode() );
 	}
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetCollisionShape( int collision_type )
-{
-	if( rigid_body )
-	{
+
+   if( rigid_body )
+   {
       VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( rigid_body );
       
-		delete rigid_body;
-	}
-
-   if( collision_type == 0 )
-   {
-      this->physics_mesh->CreateBoundingBoxShape();
+      delete rigid_body;
    }
 
-   else if( collision_type == 1 )
+   if( type == "BoundingBox" )
    {
-      this->physics_mesh->CreateStaticConcaveShape();
+      physics_mesh->CreateBoundingBoxShape();
    }
 
-   else if( collision_type == 2 )
+   else if( type == "StaticConcave" )
    {
-      this->physics_mesh->CreateConvexShape();
+      physics_mesh->CreateStaticConcaveShape();
    }
 
-   collision_shape = this->physics_mesh->GetCollisionShape();
+   else if( type == "Convex" )
+   {
+      physics_mesh->CreateConvexShape();
+   }
 
-	btTransform transform;
+   collision_shape = physics_mesh->GetCollisionShape();
+
+   btTransform transform;
 		
-	this->rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
-	this->rigid_body->setFriction( this->friction );
-	this->rigid_body->setRestitution( this->restitution );
+   rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
+   rigid_body->setFriction( friction );
+   rigid_body->setRestitution( restitution );
 
 	dcs->SetbtRigidBody( rigid_body );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
 {
-   return this->node;
+   return node;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* CADEntity::GetDCS()
 {
-   return this->dcs.get();
+   return dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* CADEntity::GetRigidBody()
 {
-   return this->rigid_body;
+   return rigid_body;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetFilename()
 {
-   return this->fileName;
+   return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetModuleName()
 {
-   return this->_moduleName;
+   return _moduleName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::GetColorArray()

@@ -62,7 +62,7 @@ public:
 
 	void Animate( bool animate );
 	void SetWindowValues( unsigned int w, unsigned int h );
-	void SetFrustumValues( float t, float b, float n, float f );
+	void SetFrustumValues( float l, float r, float t, float b, float n, float f );
    void ResetTransforms();
    void FrameAll();
 
@@ -88,6 +88,11 @@ private:
 
    float aspect_ratio;
 	float fovy;
+   float left;
+   float right;
+   float top;
+   float bottom;
+   float near_plane;
    float far_plane;
 
    double wc_screen_xmin;

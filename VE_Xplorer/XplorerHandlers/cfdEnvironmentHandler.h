@@ -123,7 +123,7 @@ public:
    /// runtime reconfiguration of desktop windows
    void SetDesktopSize( int width, int height );
 	void SetWindowDimensions( unsigned int width, unsigned int height );
-	void SetFrustumValues( float _top, float _bottom, float _near, float _far );
+	void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
 
    unsigned int GetWindowWidth( void );
    unsigned int GetWindowHeight( void );
@@ -194,6 +194,8 @@ private:
 	int _windowWidth;
 	int _windowHeight;
 
+   float _frustumLeft;
+   float _frustumRight;
 	float _frustumTop;
 	float _frustumBottom;
 	float _frustumNear;

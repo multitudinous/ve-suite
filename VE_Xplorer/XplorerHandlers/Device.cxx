@@ -4,6 +4,7 @@
 
 // --- OSG Stuff --- //
 #include <osg/LineSegment>
+#include <osg/Material>
 
 #include <osgUtil/IntersectVisitor>
 
@@ -53,20 +54,50 @@ void Device::ProcessSelection()
    //Traversal part
    osgUtil::Hit objectHit;
 
-   if ( hit_list.empty() )
-   {
-      return;
-   }
+   osg::ref_ptr< osg::Geode > selected_geometry;
 
+   if( hit_list.empty())
+   {
+      //return;
+   }
    else
    {
-      for( unsigned int i = 0; i <  hit_list.size(); i++ )
+      for( unsigned int i = 0; i < hit_list.size(); i++ )
       {
          objectHit = hit_list[i];
-
-         //Do something
+         /*
+         if( objectHit._geode->getName() != this->laserName )
+         {
+            break;
+         }
+         */
       }
+   
+      if (objectHit._geode.valid())
+      {
+         if (!objectHit._geode->getName().empty())
+         {
+            if ( /*objectHit._geode->getName() != this->laserName
+                  && */objectHit._geode->getName() != "Root Node") 
+            {
+               selected_geometry = objectHit._geode;
+               std::cout << objectHit._geode->getName() << std::endl;
+            }
+         }
+
+         else
+         {
+            selected_geometry = objectHit._geode;
+            std::cout << objectHit._geode->getParents().front()->getName() << std::endl;
+         }
+      } 
    }
+
+   osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
+   osg::ref_ptr< osg::Material > material = new osg::Material;
+   material->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
+   stateset->setAttributeAndModes( material.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+   //selected_geometry->setStateSet( stateset.get() );
 
    this->DrawLine( start_point, end_point );
 }

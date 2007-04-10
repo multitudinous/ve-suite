@@ -33,14 +33,15 @@
 #ifndef CAD_ENTITY_H
 #define CAD_ENTITY_H
 
-#include <vector>
-#include <string>
-
 #include "VE_Installer/include/VEConfig.h"
 
 //Should not have to include these here
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/PhysicsMesh.h"
+
+// --- C/C++ Libraries --- //
+#include <vector>
+#include <string>
 
 namespace VE_SceneGraph
 {
@@ -78,8 +79,7 @@ public:
 	void SetFriction( float f );
 	void SetRestitution( float r );
 
-	void SetPhysics( bool p );
-   void SetCollisionShape( int collision_type );
+   void SetCollisionShape( std::string type );
 
    std::string GetFilename();
    std::string GetModuleName();

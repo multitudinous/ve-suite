@@ -66,6 +66,8 @@ const float SAMPLE_TIME = 1.0f;
    {  
       class Group;
       class FrameStamp;
+      class Light;
+      class LightSource;
    }
 
    namespace osgUtil 
@@ -228,6 +230,8 @@ private:
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
    osg::ref_ptr<osg::FrameStamp> frameStamp;
+      osg::ref_ptr< osg::Light > light_0;
+   osg::ref_ptr< osg::LightSource > light_source_0;
 #endif
 
 #ifdef _SGL

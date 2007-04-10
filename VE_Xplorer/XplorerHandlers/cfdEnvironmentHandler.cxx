@@ -95,6 +95,14 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    arrow = 0;
    displaySettings = 0;
 
+   _frustumLeft = 0;
+   _frustumRight = 0;
+   _frustumTop = 0;
+   _frustumBottom = 0;
+   _frustumNear = 0;
+   _frustumFar = 0;
+
+
    for( unsigned int i = 0; i < 3; i++ )
    {
       worldScale[ i ] = 1.0f;
@@ -454,8 +462,10 @@ void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
 	_windowHeight = h;
 }
 
-void cfdEnvironmentHandler::SetFrustumValues( float _top, float _bottom, float _near, float _far )
+void cfdEnvironmentHandler::SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far )
 {
+   _frustumLeft = _left;
+   _frustumRight = _right;
 	_frustumTop = _top;
 	_frustumBottom = _bottom;
 	_frustumNear = _near;
@@ -485,7 +495,7 @@ float cfdEnvironmentHandler::GetFrameRate()
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
-	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFrustumValues( _frustumTop, _frustumBottom, _frustumNear, _frustumFar );
+	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
