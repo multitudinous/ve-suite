@@ -214,7 +214,7 @@ std::map< std::string, double > cfdDisplaySettings::GetScreenCornerValues( void 
 {
    //Set the default value based on config screen size if no desktop size
    // is specified
-   if ( ( newXmin == 0 ) && ( newYmin == 0 ) )
+   if ( ( newXmin == 0 ) && ( newXmax == 0 ) )
    {
       jccl::ConfigManager::instance()->lockActive();
       // Get current list of display elements
