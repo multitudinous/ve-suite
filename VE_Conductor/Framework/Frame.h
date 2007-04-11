@@ -160,12 +160,10 @@ public:
       KEYBOARD_MOUSE,
       DEVICE_PROPERTIES,
 
-      WAND_NAVIGATION_MODE,
-      WAND_SELECTION_MODE,
-      KM_NAVIGATION_MODE,
-      KM_SELECTION_MODE,
-      SELECTION_TOOLBAR,
+      NAVIGATION_MODE,
+      SELECTION_MODE,
       NAVIGATION_TOOLBAR,
+      SELECTION_TOOLBAR,
 
       XPLORER_DISPLAY,
       FRAME_RATE,
@@ -366,7 +364,6 @@ protected:
 
    //Change the device mode in xplorer
    void ChangeDeviceMode(wxCommandEvent& event);
-   void ChangeDeviceModeTB(wxCommandEvent& event);
 
    void DisplaySelection(wxCommandEvent& event);
 

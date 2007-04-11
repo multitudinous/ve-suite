@@ -178,12 +178,10 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( WAND, AppFrame::ChangeDevice )
    EVT_MENU( KEYBOARD_MOUSE, AppFrame::ChangeDevice )
 
-   EVT_MENU( WAND_NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( WAND_SELECTION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( KM_NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( KM_SELECTION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceModeTB )
-   EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceModeTB )
+   EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceMode )
+   EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -851,11 +849,11 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES,    _("Properties") );
    //
-   wandMenu->AppendRadioItem( WAND_NAVIGATION_MODE, _("Navigation") );
-   wandMenu->AppendRadioItem( WAND_SELECTION_MODE,  _("Selection") );
+   wandMenu->Append( NAVIGATION_MODE, _("Navigation") );
+   wandMenu->Append( SELECTION_MODE,  _("Selection") );
    //
-   keyboardMouseMenu->AppendRadioItem( KM_NAVIGATION_MODE, _("Navigation") );
-   keyboardMouseMenu->AppendRadioItem( KM_SELECTION_MODE,  _("Selection") );
+   keyboardMouseMenu->Append( NAVIGATION_MODE, _("Navigation") );
+   keyboardMouseMenu->Append( SELECTION_MODE,  _("Selection") );
    //
    xplorerDisplayMenu->AppendCheckItem( FRAME_RATE,        _("Frame Rate") );
    xplorerDisplayMenu->AppendCheckItem( COORDINATE_SYSTEM, _("Coord System") );
@@ -1961,49 +1959,38 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& event )
 
    std::string mode;
 
-   if( event.GetId() == WAND_NAVIGATION_MODE || event.GetId() == KM_NAVIGATION_MODE )
+   if( event.GetId() == NAVIGATION_MODE )
    {
       mode = "Navigation";
 
       toolbar->ToggleTool( NAVIGATION_TOOLBAR, true );
    }
 
-   else if( event.GetId() == WAND_SELECTION_MODE || event.GetId() == KM_SELECTION_MODE )
+   else if( event.GetId() == SELECTION_MODE )
    {
       mode = "Selection";
 
       toolbar->ToggleTool( SELECTION_TOOLBAR, true );
    }
 
-   DVP->SetData( std::string( "Mode" ), mode );
-
-   command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
-   command->AddDataValuePair( DVP );
-
-   serviceList->SendCommandStringToXplorer( command );
-   
-   delete command;
-}
-void AppFrame::ChangeDeviceModeTB( wxCommandEvent& WXUNUSED(event) )
-{
-   //Create the command and data value pairs
-   VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
-   VE_XML::Command* command = new VE_XML::Command();
-   
-   std::string mode;
-
-   if( toolbar->GetToolState( NAVIGATION_TOOLBAR ) == true )
+   else if( event.GetId() == NAVIGATION_TOOLBAR )
    {
       mode = "Navigation";
+
+      //wandMenu->Check( NAVIGATION_MODE, true );
+      //keyboardMouseMenu->Check( NAVIGATION_MODE, true );
    }
 
-   else if( toolbar->GetToolState( SELECTION_TOOLBAR ) == true )
+   else if( event.GetId() == SELECTION_TOOLBAR )
    {
       mode = "Selection";
+
+      //wandMenu->Check( SELECTION_MODE, true );
+      //keyboardMouseMenu->Check( SELECTION_MODE, true );
    }
 
    DVP->SetData( std::string( "Mode" ), mode );
-   
+
    command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
    command->AddDataValuePair( DVP );
 
