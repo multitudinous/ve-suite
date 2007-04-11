@@ -196,6 +196,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
       wandEndPoint[ i ] = (vjVec[ i ] * distance); 
    }
    
+   std::cout << " end point " << wandEndPoint[ 0 ] << " " << wandEndPoint[ 1 ] << " " << wandEndPoint[ 2 ] << std::endl;
    endPoint->set( wandEndPoint[ 0 ], 
                   wandEndPoint[ 1 ], 
                   wandEndPoint[ 2 ] );
