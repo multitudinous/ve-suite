@@ -58,7 +58,7 @@ public:
    ///Destructor
    virtual ~UpdateIDOnChildrenVisitor();
    ///Apply function that gets called during the traversal
-   virtual void apply( VE_SceneGraph::DCS& node );
+   virtual void apply( osg::PositionAttitudeTransform& node );
 private:
    std::string modelGUID;///<GUID to identify the VE-Open model
 };

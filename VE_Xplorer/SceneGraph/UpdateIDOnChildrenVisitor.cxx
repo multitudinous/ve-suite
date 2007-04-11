@@ -21,7 +21,7 @@ UpdateIDOnChildrenVisitor::~UpdateIDOnChildrenVisitor()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateIDOnChildrenVisitor::apply( VE_SceneGraph::DCS& node )
+void UpdateIDOnChildrenVisitor::apply( osg::PositionAttitudeTransform& node )
 {
    osg::Node::DescriptionList descriptorsList;
    descriptorsList.push_back( "VE_XML_ID" );
@@ -29,6 +29,5 @@ void UpdateIDOnChildrenVisitor::apply( VE_SceneGraph::DCS& node )
    
    node.setDescriptions( descriptorsList );
    
-   std::cout << " here 1 " << std::endl;
    osg::NodeVisitor::traverse( node );
 }

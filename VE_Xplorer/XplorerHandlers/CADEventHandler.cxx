@@ -299,8 +299,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
       {
          CADClone* clone = dynamic_cast<CADClone*>(activeNode);
          _activeModel->CreateClone(clone->GetID(),clone->GetOriginalNode()->GetID(),clone->GetOriginalNode()->GetNodeType());         
-         //std::cout<<"      ---Clone---"<<std::endl;
-         //std::cout<<"      ---"<<clone->GetID()<<"---"<<std::endl;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---Clone---"<<std::endl<< vprDEBUG_FLUSH;
+         vprDEBUG( vesDBG, 1 ) <<"|\t---"<<clone->GetID()<<"---"<<std::endl<< vprDEBUG_FLUSH;
 
          //std::cout<<"   ---Setting node properties---"<<std::endl;
          _setTransformOnNode(clone);
