@@ -38,7 +38,7 @@
 
 #include <btBulletDynamicsCommon.h>
 
-//C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 
 class TriIndexFunc

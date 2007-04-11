@@ -40,6 +40,8 @@
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
 
+#include "VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h"
+
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADClone.h"
@@ -142,6 +144,8 @@ void CADEventHandler::_setAttributesOnNode(CADNode* activeNode)
                                              activeNode->GetNodeType(), 
                                              activeNode->GetActiveAttribute().GetAttributeName());
    }
+
+   
 }
 ///////////////////////////////////////////////////////
 void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
@@ -243,6 +247,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
          }
 			_activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
          SetNodeDescriptors(newAssembly->GetID(),"Assembly","VE_XML_ID",newAssembly->GetID());
+         //Set a default material on nodes that have no initial material
+         VE_SceneGraph::Utilities::MaterialInitializer material_initializer( _activeModel->GetAssembly( newAssembly->GetID() ) );
       }
       else if(activeNode->GetNodeType() == "Part")
       {
@@ -278,6 +284,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
             //set the uuid on the osg node so that we can get back to vexml
             SetNodeDescriptors(newPart->GetID(),"Part","VE_XML_ID",newPart->GetID());
+            //Set a default material on nodes that have no initial material
+            VE_SceneGraph::Utilities::MaterialInitializer material_initializer( partNode->GetDCS() );
          }
          else
          {
@@ -306,6 +314,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
             //set the uuid on the osg node so that we can get back to vexml
             SetNodeDescriptors(clone->GetID(),"Clone","VE_XML_ID",clone->GetID());
+            //Set a default material on nodes that have no initial material
+            VE_SceneGraph::Utilities::MaterialInitializer material_initializer( tempClone->GetClonedGraph() );
          }
       }
    }

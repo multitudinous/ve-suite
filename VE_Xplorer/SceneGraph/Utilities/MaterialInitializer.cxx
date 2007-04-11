@@ -32,10 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h"
 
+// --- OSG Stuff --- //
+#include <osg/Node>
 #include <osg/Geode>
-#include <osg/Geometry>
+#include <osg/Group>
+#include <osg/Material>
 
-//C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 
 using namespace VE_SceneGraph::Utilities;
@@ -46,21 +49,45 @@ MaterialInitializer::MaterialInitializer( osg::Node* osg_node )
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
 
-
 	osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MaterialInitializer::~MaterialInitializer()
 {
-
+   ;
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void MaterialInitializer::apply( osg::Geode& node )
-{ 
+{
+   osg::ref_ptr< osg::Material > sa = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
 
-	for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
-	{
-      ;
-	}
+   if( sa.valid() )
+   {
+      return;
+   }
+
+   else
+   {
+	   for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
+	   {
+         node.getDrawable( i )->getOrCreateStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON ) ;
+	   }
+   }
+}
+////////////////////////////////////////////////////////////////////////////////    
+void MaterialInitializer::apply( osg::Group& node )
+{
+   osg::ref_ptr< osg::Material > sa = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
+
+   if( sa.valid() )
+   {
+      return;
+   }
+
+   else
+   {
+      osg::NodeVisitor::apply( (osg::Node&)node );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////

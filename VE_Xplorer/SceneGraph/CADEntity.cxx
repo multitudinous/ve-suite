@@ -67,9 +67,9 @@ concave( false )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
-   this->dcs=new VE_SceneGraph::DCS();
+   this->dcs = new VE_SceneGraph::DCS();
    dcs->SetName( "CADEntityDCS" );
-   this->node=new VE_SceneGraph::CADEntityHelper();
+   this->node = new VE_SceneGraph::CADEntityHelper();
 
    node->LoadFile( geomFile.c_str(), isStream );
    fileName.assign( geomFile );

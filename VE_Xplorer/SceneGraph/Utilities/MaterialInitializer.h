@@ -43,7 +43,6 @@ MaterialInitializer API
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
-
 namespace VE_SceneGraph
 {
 namespace Utilities
@@ -53,34 +52,9 @@ class VE_SCENEGRAPH_UTILS_EXPORTS MaterialInitializer : public osg::NodeVisitor
 public:
 	MaterialInitializer( osg::Node* osg_node );
 	virtual ~MaterialInitializer();
-        
-   virtual void apply( osg::Geode& node );                     //{ apply((Node&)node); }
-   //virtual void apply( osg::Billboard& node );                 //{ apply((Geode&)node); }
-        
-   //virtual void apply( osg::Group& node );                     //{ apply((Node&)node); }
 
-   //virtual void apply( osg::ProxyNode& node );                 //{ apply((Group&)node); }
-
-   //virtual void apply( osg::Projection& node );                //{ apply((Group&)node); }
-
-   //virtual void apply( osg::CoordinateSystemNode& node );      //{ apply((Group&)node); }
-
-   //virtual void apply( osg::ClipNode& node );                  //{ apply((Group&)node); }
-   //virtual void apply( osg::TexGenNode& node );                //{ apply((Group&)node); }
-   //virtual void apply( osg::LightSource& node );               //{ apply((Group&)node); }
-
-   //virtual void apply( osg::Transform& node );                 //{ apply((Group&)node); }
-   //virtual void apply( osg::CameraNode& node );                //{ apply((Transform&)node); }
-   //virtual void apply( osg::CameraView& node );                //{ apply((Transform&)node); }
-   //virtual void apply( osg::MatrixTransform& node );           //{ apply((Transform&)node); }
-   //virtual void apply( osg::PositionAttitudeTransform& node ); //{ apply((Transform&)node); }
-
-   //virtual void apply( osg::Switch& node );                    //{ apply((Group&)node); }
-   //virtual void apply( osg::Sequence& node );                  //{ apply((Group&)node); }
-   //virtual void apply( osg::LOD& node );                       //{ apply((Group&)node); }
-   //virtual void apply( osg::PagedLOD& node );                  //{ apply((LOD&)node); }
-   //virtual void apply( osg::ClearNode& node );                 //{ apply((Group&)node); }
-   //virtual void apply( osg::OccluderNode& node );              //{ apply((Group&)node); }
+   virtual void apply( osg::Geode& node );
+   virtual void apply( osg::Group& node );
 
 private:
 
