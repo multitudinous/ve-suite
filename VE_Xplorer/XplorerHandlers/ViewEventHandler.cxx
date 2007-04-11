@@ -52,18 +52,19 @@ void ViewEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    unsigned int view;
    viewDVP->GetData(view);
 
-   if(viewDVP){
-      if(view==0)
+   if( viewDVP )
+   {
+      if( view == 0 )
 		{
-         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->FrameAll();
+         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->FrameAll();
       }
-      else if(view==1)
+      else if( view == 1 )
 		{
          
       }
-      else if(view==2)
+      else if( view == 2 )
 		{
-         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->ResetTransforms();
+         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->ResetTransforms();
       }
    }
 }

@@ -55,13 +55,13 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
-device_mode( 0 )
+device_mode( "Navigation" )
 {
    devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
    
-   active_device = devices.find( "KeyboardMouse" )->second;
+   active_device = devices[ "KeyboardMouse" ];
 
    _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
@@ -105,10 +105,10 @@ void DeviceHandler::ExecuteCommands()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( std::string device )
 {
-   active_device = devices.find( device )->second;
+   active_device = devices[ device ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetDeviceMode( unsigned int mode )
+void DeviceHandler::SetDeviceMode( std::string mode )
 {
    device_mode = mode;
 }
@@ -118,11 +118,15 @@ void DeviceHandler::ProcessDeviceEvents()
    //Update Device properties
    ExecuteCommands();
 
-   if( device_mode == 0 )
+   if( device_mode == "Navigation" )
    {
-      active_device->UpdateNavigation();
+      devices[ "Wand" ]->UpdateNavigation();
+      devices[ "KeyboardMouse" ]->UpdateNavigation();
+
+      //active_device->UpdateNavigation();
    }
-   else if( device_mode == 1 )
+
+   else if( device_mode == "Selection" )
    {
       active_device->UpdateSelection();
    }
@@ -131,13 +135,8 @@ void DeviceHandler::ProcessDeviceEvents()
    devices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Wand* DeviceHandler::GetWand()
+Device* DeviceHandler::GetDevice( std::string device )
 {
-   return static_cast< VE_Xplorer::Wand* >( devices.find( "Wand" )->second );
-}
-////////////////////////////////////////////////////////////////////////////////
-KeyboardMouse* DeviceHandler::GetKeyboardMouse()
-{
-	return static_cast< VE_Xplorer::KeyboardMouse* >( devices.find( "KeyboardMouse" )->second );
+   return devices[ device ];
 }
 ////////////////////////////////////////////////////////////////////////////////

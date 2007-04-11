@@ -60,7 +60,7 @@ using namespace VE_SceneGraph;
 CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream )
 :
 mass( 1.0f ),
-friction( 0.0f ),
+friction( 1.0f ),
 restitution( 0.0f ),
 physics( false ),
 concave( false )
@@ -205,6 +205,11 @@ VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
 VE_SceneGraph::DCS* CADEntity::GetDCS()
 {
    return dcs.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetRigidBody( btRigidBody* btRB )
+{
+   rigid_body = btRB;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* CADEntity::GetRigidBody()

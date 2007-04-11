@@ -50,7 +50,7 @@ void DeviceModeEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
    
-   unsigned int mode;
+   std::string mode;
    command->GetDataValuePair( "Mode" )->GetData( mode );
 
    VE_Xplorer::DeviceHandler::instance()->SetDeviceMode( mode );

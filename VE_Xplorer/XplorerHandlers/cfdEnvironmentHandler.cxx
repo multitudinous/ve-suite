@@ -378,8 +378,8 @@ void cfdEnvironmentHandler::InitScene( void )
    std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
 	this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
 
-   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
-   VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetWindowValues( screenDims.first, screenDims.second );
+   static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
+   static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->SetWindowValues( screenDims.first, screenDims.second );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
@@ -495,7 +495,7 @@ float cfdEnvironmentHandler::GetFrameRate()
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
-	VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, _frustumBottom, _frustumNear, _frustumFar );
+	static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()

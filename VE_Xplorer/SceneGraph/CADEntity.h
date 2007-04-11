@@ -74,6 +74,7 @@ public:
 	VE_SceneGraph::DCS* GetDCS();
    VE_SceneGraph::CADEntityHelper* GetNode();
    btRigidBody* GetRigidBody();
+   void SetRigidBody( btRigidBody* btRB );
 
 	void SetMass( float m );
 	void SetFriction( float f );

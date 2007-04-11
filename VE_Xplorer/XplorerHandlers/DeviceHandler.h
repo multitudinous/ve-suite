@@ -71,18 +71,17 @@ public:
    void ExecuteCommands();
 
    void SetActiveDevice( std::string device );
-   void SetDeviceMode( unsigned int mode );
+   void SetDeviceMode( std::string mode );
    void ProcessDeviceEvents();
 
-   VE_Xplorer::Wand* GetWand();
-   VE_Xplorer::KeyboardMouse* GetKeyboardMouse();
+   VE_Xplorer::Device* GetDevice( std::string device );
    
 private:
    std::map< std::string, VE_Xplorer::Device* > devices;
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
    VE_Xplorer::Device* active_device;
-   int device_mode;
+   std::string device_mode;
 };
 }
 

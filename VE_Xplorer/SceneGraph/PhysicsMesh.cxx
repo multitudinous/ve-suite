@@ -100,7 +100,7 @@ void PhysicsMesh::apply( osg::Geode& geode )
 
 		btVector3 v1, v2, v3;
 
-		for( unsigned int k = 0; k < TIF.triangleIndex.size()/3; k++ )
+		for( unsigned int k = 0; k < TIF.triangleIndex.size() / 3; k++ )
 		{
 			tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( k*3  ) ).x(),
 														 vertex_array->at( TIF.triangleIndex.at( k*3  ) ).y(),

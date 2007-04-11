@@ -53,14 +53,16 @@ void KeyboardMouseEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    unsigned int animate;
    animateDVP->GetData(animate);
 
-   if(animateDVP){
-      if(animate==0)
+   if( animateDVP )
+   {
+      if( animate == 0 )
 		{
-         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Animate(false);
+         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( false );
       }
-      else if(animate==1)
+
+      else if( animate == 1 )
 		{
-         VE_Xplorer::DeviceHandler::instance()->GetKeyboardMouse()->Animate(true);
+         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( true );
       }
    }
 }
