@@ -137,8 +137,8 @@ void KeyboardMouse::UpdateSelection()
 void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
 {
    //Be sure width and height are set before calling this function
-   double wc_x_trans_ratio = (( wc_screen_xmax - wc_screen_xmin ) * 3.2808399f)/ double( width );
-   double wc_y_trans_ratio = (( wc_screen_ymax - wc_screen_ymin ) * 3.2808399f) / double( height );
+   double wc_x_trans_ratio = (( wc_screen_xmax - wc_screen_xmin ))/ double( width );
+   double wc_y_trans_ratio = (( wc_screen_ymax - wc_screen_ymin )) / double( height );
    
    screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
@@ -148,15 +148,15 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
    transformedPosition[ 1 ] = wc_screen_ymax - ( y * screenRatios.second );
    transformedPosition[ 2 ] = wc_screen_zval;
 
-   //transformedPosition[ 0 ] *= 3.2808399;
-   //transformedPosition[ 1 ] *= 3.2808399;
+   transformedPosition[ 0 ] *= 3.2808399;
+   transformedPosition[ 1 ] *= 3.2808399;
    transformedPosition[ 2 ] *= 3.2808399;
 
    osgTransformedPosition[0] =  transformedPosition[0];
    osgTransformedPosition[1] = -transformedPosition[2];
    osgTransformedPosition[2] =  transformedPosition[1];
 
-   std::cout << " x location = " << x << std::endl 
+   /*std::cout << " x location = " << x << std::endl 
              << " y location = " << y << std::endl 
              << " location = " << osgTransformedPosition[0] << " " << osgTransformedPosition[1] << " " << osgTransformedPosition[2] << std::endl
              << " ratio = " << screenRatios.first << " " << screenRatios.second << std::endl
@@ -166,9 +166,9 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
    std::cout << " x " << wc_screen_xmin << " " << wc_screen_xmax 
       << " y " << wc_screen_ymin << " " << wc_screen_ymax 
       << " z " << wc_screen_zval 
-      << " width " << width << " height "<< height << std::endl;
+      << " width " << width << " height "<< height << std::endl;*/
    
-   double wandDirection[ 3 ];// = { 0, 1, 0};
+   double wandDirection[ 3 ];
    double wandEndPoint[ 3 ];
    double distance = 10000.0f;
 
@@ -178,15 +178,17 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
    //        for osg we are in z up land
    gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
    jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-   jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
+   //We have to offset negative x because the view is being drawn for the left 
+   //eye which means the the frustums are being setup for the left eye
+   jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ] - (0.034 * 3.280839);
    jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
    jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 1 ];
    
-   gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2 ] );
+   gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
    gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
-   std::cout << vjVec << " = " << mousePosition << " - " << jugglerHeadPointTemp << std::endl;
-   gmtl::normalize( vjVec );
-   std::cout << vjVec << std::endl;
+   //std::cout << vjVec << " = " << mousePosition << " - " << jugglerHeadPointTemp << std::endl;
+   //gmtl::normalize( vjVec );
+   //std::cout << vjVec << std::endl;
    
    startPoint->set( osgTransformedPosition[ 0 ],
                     osgTransformedPosition[ 1 ], 
@@ -196,7 +198,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
       wandEndPoint[ i ] = (vjVec[ i ] * distance); 
    }
    
-   std::cout << " end point " << wandEndPoint[ 0 ] << " " << wandEndPoint[ 1 ] << " " << wandEndPoint[ 2 ] << std::endl;
+   //std::cout << " end point " << wandEndPoint[ 0 ] << " " << wandEndPoint[ 1 ] << " " << wandEndPoint[ 2 ] << std::endl;
    endPoint->set( wandEndPoint[ 0 ], 
                   wandEndPoint[ 1 ], 
                   wandEndPoint[ 2 ] );
