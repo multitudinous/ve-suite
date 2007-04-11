@@ -196,6 +196,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MaterialInitializer.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhongLoader.cxx"
 				>
 			</File>
@@ -215,6 +219,10 @@
 			</File>
 			<File
 				RelativePath=".\MaterialHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialInitializer.h"
 				>
 			</File>
 			<File
