@@ -140,7 +140,8 @@ void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::DCS* worldDCS)
 
    vjm = worldDCS->GetMat();
 
-   QuatCams.push_back(new cfdQuatCam(vjm, worldPos));
+   //QuatCams.push_back(new cfdQuatCam(vjm, worldPos));
+	QuatCams.push_back(new cfdQuatCam(vjm, worldDCS->GetVETranslationArray()));
 }
 
 
@@ -244,7 +245,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 	} 
 
    char textLine [ 256 ];
-   double transpts[3];
+   float transpts[3];
    Matrix44f temp;
 
    if ( !QuatCams.empty() )
@@ -357,7 +358,8 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::DCS* worldDCS, cfdNavigate* nav
 
    if ( t == 0.0f )
    {
-      QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
+      //QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
+		QuatCams.at( cam_id )->SetCamPos( worldDCS->GetVETranslationArray(), worldDCS );
    }
    float temp = this->GetQuatCamIncrementor();
 
@@ -645,10 +647,12 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
       if ( t == 0.0f )
       {
          gmtl::Vec3f vjVecTemp;
-
+			float* veTransTemp = _worldDCS->GetVETranslationArray();
          for ( int i=0; i<3; i++ )
          {
-            vjVecTemp[i] = this->_nav->worldTrans[i];
+            //vjVecTemp[i] = this->_nav->worldTrans[i];
+				
+				vjVecTemp[i] = veTransTemp[i];
          } 
          vecDistance = getLinearDistance( vjVecTemp, QuatCams.at( cam_id )->GetTrans() );
       }

@@ -50,7 +50,7 @@ using namespace gmtl;
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
 
-cfdQuatCam::cfdQuatCam(gmtl::Matrix44f& m, double* worldTrans)
+cfdQuatCam::cfdQuatCam(gmtl::Matrix44f& m, float* worldTrans)
 {
    nextMatrix = m;
    gmtl::Vec3f scaleXVec( nextMatrix[ 0 ][ 0 ], nextMatrix[ 1 ][ 0 ], nextMatrix[ 2 ][ 0 ] );
@@ -75,7 +75,7 @@ cfdQuatCam::cfdQuatCam(gmtl::Matrix44f& m, double* worldTrans)
 
 }
 
-void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::DCS* worldDCS)
+void cfdQuatCam::SetCamPos(float* worldTrans, VE_SceneGraph::DCS* worldDCS)
 {
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
@@ -125,9 +125,12 @@ void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
    worldDCS->SetRotationMatrix( temp );
    float tempTrans[3] ;
-   tempTrans[0] = -vjVecCurrTrans[0];
+   /*tempTrans[0] = -vjVecCurrTrans[0];
    tempTrans[1] = -vjVecCurrTrans[1];
-   tempTrans[2] = -vjVecCurrTrans[2];
+   tempTrans[2] = -vjVecCurrTrans[2];*/
+	tempTrans[0] = vjVecCurrTrans[0];
+   tempTrans[1] = vjVecCurrTrans[1];
+   tempTrans[2] = vjVecCurrTrans[2];
    worldDCS->SetTranslationArray(tempTrans/*vjVecCurrTrans.getData()*/);
 }  
 

@@ -73,12 +73,12 @@ namespace VE_Xplorer
    {
       public:
          //Constructors
-         cfdQuatCam( gmtl::Matrix44f&, double* );
+         cfdQuatCam( gmtl::Matrix44f&, float* );
    
          //Destructor
          ~cfdQuatCam(){;}
 
-         void SetCamPos( double*, VE_SceneGraph::DCS* );
+         void SetCamPos( float*, VE_SceneGraph::DCS* );
 
          void MoveCam( float );
 
