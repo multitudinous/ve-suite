@@ -180,8 +180,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
    EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceMode )
-   EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -930,9 +928,9 @@ void AppFrame::CreateTB()
    toolbar->SetBackgroundColour( wxColour( 192, 192, 192 ) );
    toolbar->SetToolBitmapSize( wxSize( 32, 32 ) );
    wxBitmap navigation_bitmap( navigation32x32_xpm );
-   toolbar->AddTool( NAVIGATION_TOOLBAR, _( "" ), navigation_bitmap, _( "Navigation" ), wxITEM_RADIO );
+   toolbar->AddTool( NAVIGATION_MODE, _( "" ), navigation_bitmap, _( "Navigation" ), wxITEM_RADIO );
    wxBitmap selection_bitmap( selection32x32_xpm );
-   toolbar->AddTool( SELECTION_TOOLBAR, _( "" ), selection_bitmap, _( "Selection" ), wxITEM_RADIO );
+   toolbar->AddTool( SELECTION_MODE, _( "" ), selection_bitmap, _( "Selection" ), wxITEM_RADIO );
    toolbar->AddSeparator();
    toolbar->Realize();
 
@@ -1963,30 +1961,14 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& event )
    {
       mode = "Navigation";
 
-      toolbar->ToggleTool( NAVIGATION_TOOLBAR, true );
+      toolbar->ToggleTool( NAVIGATION_MODE, true );
    }
 
    else if( event.GetId() == SELECTION_MODE )
    {
       mode = "Selection";
 
-      toolbar->ToggleTool( SELECTION_TOOLBAR, true );
-   }
-
-   else if( event.GetId() == NAVIGATION_TOOLBAR )
-   {
-      mode = "Navigation";
-
-      //wandMenu->Check( NAVIGATION_MODE, true );
-      //keyboardMouseMenu->Check( NAVIGATION_MODE, true );
-   }
-
-   else if( event.GetId() == SELECTION_TOOLBAR )
-   {
-      mode = "Selection";
-
-      //wandMenu->Check( SELECTION_MODE, true );
-      //keyboardMouseMenu->Check( SELECTION_MODE, true );
+      toolbar->ToggleTool( SELECTION_MODE, true );
    }
 
    DVP->SetData( std::string( "Mode" ), mode );
