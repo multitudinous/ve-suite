@@ -88,12 +88,7 @@ Wand::Wand() :
    this->IHdigital[7].init("VJRotateY");  //press "left_arrow" for CCW rotation
                                           //this->IHdigital[8].init("IHVJButton8");  //press "up_arrow" for upward rotation
                                           //this->IHdigital[9].init("IHVJButton9");  //press "down_arrow" for downward rotation
-                                          // inputs for flythrough paths
-   flyThrough[0].init("Path_1");
-   flyThrough[1].init("Path_2");
-   flyThrough[2].init("Path_3");
-   flyThrough[3].init("Path_4");
-   
+                                          // inputs for flythrough paths   
    beamLineSegment = new osg::LineSegment();
    Initialize();
 }

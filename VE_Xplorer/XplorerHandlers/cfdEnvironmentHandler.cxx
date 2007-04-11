@@ -378,8 +378,12 @@ void cfdEnvironmentHandler::InitScene( void )
    std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
 	this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
 
-   static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
-   static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->SetWindowValues( screenDims.first, screenDims.second );
+   static_cast< VE_Xplorer::KeyboardMouse* >( 
+         VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+         SetWindowValues( screenDims.first, screenDims.second );
+   static_cast< VE_Xplorer::KeyboardMouse* >( 
+         VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+         SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device

@@ -35,6 +35,9 @@
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
@@ -50,10 +53,14 @@
 //#include <osg/PolygonStipple>
 #include <osg/LineWidth>
 #include <osg/LineSegment>
+#include <osg/Array>
+#include <osg/NodeVisitor>
+
 
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
+#include <gmtl/Matrix.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -95,10 +102,13 @@ wc_screen_zval( 0.0f ),
 
 tb_magnitude( 0.0f ),
 tb_sensitivity( 1.0e-06 ),
-tb_animate( false )
+tb_animate( false ),
+
+beamLineSegment( new osg::LineSegment )
 
 {
 	mKeyboard.init( "VJKeyboard" );
+   head.init("VJHead");
 
 	tb_currPos[0] = 0.0f;
 	tb_currPos[1] = 0.0f;
@@ -126,62 +136,81 @@ void KeyboardMouse::UpdateSelection()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
 {
+   //Be sure width and height are set before calling this function
+   double wc_x_trans_ratio = (( wc_screen_xmax - wc_screen_xmin ) * 3.2808399f)/ double( width );
+   double wc_y_trans_ratio = (( wc_screen_ymax - wc_screen_ymin ) * 3.2808399f) / double( height );
    
-   double wc_x_trans_ratio = ( wc_screen_xmax - wc_screen_xmin )  / width;
-   double wc_y_trans_ratio = ( wc_screen_ymax - wc_screen_ymin ) / height;
+   screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
-   double transformed_x = wc_screen_xmin + ( x * wc_x_trans_ratio );
-   double transformed_y = wc_screen_ymax - ( y * wc_y_trans_ratio );
+   double transformedPosition[ 3 ];
+   double osgTransformedPosition[ 3 ];
+   transformedPosition[ 0 ] = wc_screen_xmin + ( x * screenRatios.first );
+   transformedPosition[ 1 ] = wc_screen_ymax - ( y * screenRatios.second );
+   transformedPosition[ 2 ] = wc_screen_zval;
 
-   transformed_x *= 3.2808399;
-   transformed_y *= 3.2808399;
+   //transformedPosition[ 0 ] *= 3.2808399;
+   //transformedPosition[ 1 ] *= 3.2808399;
+   transformedPosition[ 2 ] *= 3.2808399;
 
-   gmtl::Point3f sp;
-   gmtl::Point3f ep;
-   sp.set( transformed_x, wc_screen_zval, transformed_y );
-   ep.set( transformed_x, far_plane, transformed_y );
+   osgTransformedPosition[0] =  transformedPosition[0];
+   osgTransformedPosition[1] = -transformedPosition[2];
+   osgTransformedPosition[2] =  transformedPosition[1];
 
-   /*
-   gmtl::Matrix44f worldMat;
-   worldMat = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS->GetMat();
+   std::cout << " x location = " << x << std::endl 
+             << " y location = " << y << std::endl 
+             << " location = " << osgTransformedPosition[0] << " " << osgTransformedPosition[1] << " " << osgTransformedPosition[2] << std::endl
+             << " ratio = " << screenRatios.first << " " << screenRatios.second << std::endl
+             << " screen values = " << wc_screen_xmin << " " << wc_screen_ymin << " " << wc_screen_zval << std::endl
+             << std::endl;
+   
+   std::cout << " x " << wc_screen_xmin << " " << wc_screen_xmax 
+      << " y " << wc_screen_ymin << " " << wc_screen_ymax 
+      << " z " << wc_screen_zval 
+      << " width " << width << " height "<< height << std::endl;
+   
+   double wandDirection[ 3 ];// = { 0, 1, 0};
+   double wandEndPoint[ 3 ];
+   double distance = 10000.0f;
 
-   gmtl::Point3f nsp = worldMat * sp;
-   gmtl::Point3f nep = worldMat * ep;
-
-   startPoint->set( nsp.mData[0], nsp.mData[1], nsp.mData[2] );
-   endPoint->set( nep.mData[0], nep.mData[1], nep.mData[2] );
-   */
-
-   /*
-   osg::Matrix matrix;
-   matrix.frustum( left, right, bottom, top, near_plane, far_plane );
-
-   int window_y = ( height - y ) - height/2;
-   double norm_y = double( window_y ) / double( height / 2 );
-   int window_x = x - ( width / 2 );
-   double norm_x_pos = double( window_x ) / double( width / 2 );
-   double norm_x_neg = 
-
-   float ray_y = ( ( top - bottom ) / 2 ) * norm_y;
-   float ray_x = ( ( right - left ) / 2 ) * norm_x;
-
-   std::cout << "ray_x: " << ray_x << std::endl;
-   std::cout << "ray_y: " << ray_y << std::endl;
-
-   std::cout << "x: " << x << std::endl;
-   std::cout << "y: " << y << std::endl;
-
-   std::cout << "width: " << width << std::endl;
-   std::cout << "height: " << height << std::endl;
-
-   std::cout << std::endl;
-*/
-
+   gmtl::Matrix44f vjHeadMat = head->getData();
+   // get juggler Matrix of worldDCS
+   // Note:: for pf we are in juggler land
+   //        for osg we are in z up land
+   gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
+   jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+   jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
+   jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
+   jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 1 ];
+   
+   gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2 ] );
+   gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
+   std::cout << vjVec << " = " << mousePosition << " - " << jugglerHeadPointTemp << std::endl;
+   gmtl::normalize( vjVec );
+   std::cout << vjVec << std::endl;
+   
+   startPoint->set( osgTransformedPosition[ 0 ],
+                    osgTransformedPosition[ 1 ], 
+                    osgTransformedPosition[ 2 ] );
+   for (int i = 0; i < 3; i++)
+   {
+      wandEndPoint[ i ] = (vjVec[ i ] * distance); 
+   }
+   
+   endPoint->set( wandEndPoint[ 0 ], 
+                  wandEndPoint[ 1 ], 
+                  wandEndPoint[ 2 ] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 {
-   osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+   if ( beamGeode.valid() )
+   {
+      VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->removeChild( beamGeode.get() );
+   }
+   
+   beamGeode = new osg::Geode();
+   beamGeode->setName( "Laser" );
+   
    osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
@@ -202,10 +231,9 @@ void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 
    line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
 
-   geode->addDrawable( line.get() );
+   beamGeode->addDrawable( line.get() );      
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->addChild( geode.get() );
-      
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->addChild( beamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
@@ -380,7 +408,7 @@ void KeyboardMouse::ProcessNavigationEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
 {
-   return;
+   //return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Animate( bool animate )
@@ -510,10 +538,10 @@ void KeyboardMouse::SelMouse()
 	{
 	   return;
    }
-
    else if( state == 0 && button == 49 )
 	{
-      this->ProcessSelection();
+      //this->ProcessSelection();
+      SelectObject();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -557,7 +585,6 @@ void KeyboardMouse::FrameAll()
 	{
       y_val = ( bs.radius() / tan( Theta ) ) * aspect_ratio;
    }
-
    else
 	{
       y_val = bs.radius() / tan( Theta );
@@ -697,3 +724,73 @@ void KeyboardMouse::Rotate( float x_val, float y_val, float z_val, float angle )
 	tb_transform[3][3] = 1.0f;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SelectObject( void )
+{
+   osg::Vec3f startPoint, endPoint;
+   SetStartEndPoint(&startPoint, &endPoint);
+   
+   DrawLine( startPoint, endPoint);
+   
+   beamLineSegment->set(startPoint, endPoint);
+   
+   osgUtil::IntersectVisitor objectBeamIntersectVisitor;
+   objectBeamIntersectVisitor.addLineSegment( beamLineSegment.get() );
+   
+   //Add the IntersectVisitor to the root Node so that all all geometry will be
+   //checked and no transforms are done to the Line segement.
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->accept(objectBeamIntersectVisitor);
+   
+   osgUtil::IntersectVisitor::HitList beamHitList;
+   beamHitList = objectBeamIntersectVisitor.getHitList( beamLineSegment.get() );
+   
+   this->ProcessHit(beamHitList);
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
+{ 
+   osgUtil::Hit objectHit;
+   this->selectedGeometry = 0;
+   
+   if ( listOfHits.empty())
+   {
+      vprDEBUG(vesDBG,1) << "|\tcfdObjectHandler::ProcessHit No object selected" 
+                           << std::endl << vprDEBUG_FLUSH;
+      return;
+   }
+   
+   // Search for first item that is not the laser
+   for ( size_t i = 0; i <  listOfHits.size(); ++i )
+   {
+      objectHit = listOfHits[ i ];
+      if ( ( objectHit._geode->getName() != "Laser" ) && 
+           ( objectHit._geode->getName() != "Root Node" ) ) 
+      {
+         break;
+      }
+   }
+   //make sure it is good
+   if ( !objectHit._geode.valid() )
+   {
+      return;
+   } 
+   //now find the id for the cad
+   this->selectedGeometry = objectHit._geode;
+   VE_SceneGraph::FindParentsVisitor parentVisitor( selectedGeometry.get() );
+   osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
+   if ( parentNode.valid() )
+   {
+      std::cout << "|\tObjects has name " 
+                  << parentNode->getName() << std::endl
+                  << objectHit._geode->getName() << std::endl
+                  << objectHit._geode->getParents().front()->getName() << std::endl;
+      std::cout << "|\tObjects descriptors " 
+                  << parentNode->getDescriptions().at( 1 ) << std::endl;
+   }
+   else
+   {
+      this->selectedGeometry = objectHit._geode;
+      std::cout << "|\tObject does not have name parent name " 
+                  << objectHit._geode->getParents().front()->getName() 
+                  << std::endl;
+   }
+}

@@ -42,10 +42,26 @@ KeyboardMouse API
 
 #include <boost/shared_ptr.hpp>
 #include <gadget/Type/KeyboardMouseInterface.h>
+#include <gadget/Type/PositionInterface.h>
 
 #include <gmtl/Matrix.h>
 
 #include "VE_Xplorer/XplorerHandlers/Device.h"
+
+#include <utility>
+
+#include <osgUtil/IntersectVisitor>
+
+#include <osg/Geometry>
+namespace osg 
+{
+   class Geode;
+   class Group;
+   class Vec4f;
+   class Vec3f;
+   class MatrixTransform;
+   class LineSegment;
+}
 
 namespace VE_Xplorer
 {
@@ -72,11 +88,15 @@ protected:
 
 private:
    gadget::KeyboardMouseInterface mKeyboard;
+   gadget::PositionInterface  head;
 
    void ProcessKBEvents( int mode );
    void ProcessNavigationEvents();
    void ProcessSelectionEvents();
 
+   void SelectObject( void );
+   void ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits);
+      
    int key;
 	int button;
    int state;
@@ -124,10 +144,14 @@ private:
 
    float sel_initial[2];
 
+   std::pair< double, double > screenRatios;
 	//Is of form [row][column]
 	gmtl::Matrix44f tb_transform;
 	gmtl::Matrix44f tb_accuTransform;
-
+   
+   osg::ref_ptr< osg::Geode > beamGeode;
+   osg::ref_ptr< osg::Geode > selectedGeometry;
+   osg::ref_ptr< osg::LineSegment > beamLineSegment;
 };
 }
 
