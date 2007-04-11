@@ -160,9 +160,12 @@ public:
       KEYBOARD_MOUSE,
       DEVICE_PROPERTIES,
 
-      XPLORER_DEVICE_MODE,
-      NAVIGATION_MODE,
-      SELECTION_MODE,
+      WAND_NAVIGATION_MODE,
+      WAND_SELECTION_MODE,
+      KM_NAVIGATION_MODE,
+      KM_SELECTION_MODE,
+      SELECTION_TOOLBAR,
+      NAVIGATION_TOOLBAR,
 
       XPLORER_DISPLAY,
       FRAME_RATE,
@@ -181,9 +184,6 @@ public:
       JUGGLER_STEREO,
       JUGGLER_MONO, 
       JUGGLER_SETTINGS,
-
-      SELECTION_TOOLBAR,
-      NAVIGATION_TOOLBAR,
 
       CAD_NODE_DIALOG,
       XPLORER_SCENES,
@@ -243,7 +243,8 @@ public:
    wxMenu *help_menu;
    wxMenu* xplorerMenu;
    wxMenu* xplorerDeviceMenu;
-   wxMenu* xplorerDeviceModeMenu;
+   wxMenu* wandMenu;
+   wxMenu* keyboardMouseMenu;
    wxMenu* xplorerJugglerMenu;
    wxMenu* xplorerViewMenu;
    wxMenu* xplorerDisplayMenu;

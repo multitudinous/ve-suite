@@ -178,8 +178,10 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( WAND, AppFrame::ChangeDevice )
    EVT_MENU( KEYBOARD_MOUSE, AppFrame::ChangeDevice )
 
-   EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( WAND_NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( WAND_SELECTION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( KM_NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( KM_SELECTION_MODE, AppFrame::ChangeDeviceMode )
    EVT_MENU( NAVIGATION_TOOLBAR, AppFrame::ChangeDeviceModeTB )
    EVT_MENU( SELECTION_TOOLBAR, AppFrame::ChangeDeviceModeTB )
 
@@ -202,9 +204,9 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
    EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
-//   EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
-//   EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
-//   EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
+   //  EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
+   //  EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
+   //  EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
 
    //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
    //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
@@ -836,21 +838,24 @@ void AppFrame::CreateMenu()
 
 	xplorerMenu = new wxMenu();
    xplorerDeviceMenu = new wxMenu();
-   xplorerDeviceModeMenu = new wxMenu();
+   wandMenu = new wxMenu();
+   keyboardMouseMenu = new wxMenu();
+
 	xplorerJugglerMenu = new wxMenu();
    xplorerDisplayMenu = new wxMenu();
    xplorerViewMenu = new wxMenu();
    wxMenu* xplorerView = new wxMenu();
 
-   xplorerDeviceMenu->AppendRadioItem( WAND, _("Wand") );
-   xplorerDeviceMenu->AppendRadioItem( KEYBOARD_MOUSE,  _("Keyboard Mouse") );
-   xplorerDeviceMenu->Check( KEYBOARD_MOUSE, true);
+   xplorerDeviceMenu->Append( WAND, _("Wand"), wandMenu,  _("") );
+   xplorerDeviceMenu->Append( KEYBOARD_MOUSE,  _("Keyboard Mouse"), keyboardMouseMenu,  _("") );
    xplorerDeviceMenu->AppendSeparator();
-   xplorerDeviceMenu->Append( XPLORER_DEVICE_MODE, _("Mode"), xplorerDeviceModeMenu,  _("Used to change the mode of the active device") );
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES,    _("Properties") );
    //
-   xplorerDeviceModeMenu->AppendRadioItem( NAVIGATION_MODE, _("Navigation") );
-   xplorerDeviceModeMenu->AppendRadioItem( SELECTION_MODE,  _("Selection") );
+   wandMenu->AppendRadioItem( WAND_NAVIGATION_MODE, _("Navigation") );
+   wandMenu->AppendRadioItem( WAND_SELECTION_MODE,  _("Selection") );
+   //
+   keyboardMouseMenu->AppendRadioItem( KM_NAVIGATION_MODE, _("Navigation") );
+   keyboardMouseMenu->AppendRadioItem( KM_SELECTION_MODE,  _("Selection") );
    //
    xplorerDisplayMenu->AppendCheckItem( FRAME_RATE,        _("Frame Rate") );
    xplorerDisplayMenu->AppendCheckItem( COORDINATE_SYSTEM, _("Coord System") );
@@ -874,7 +879,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
 	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( XPLORER_DEVICE,    _("Devices"),            xplorerDeviceMenu,  _("Used to change the active device") );
+   xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            xplorerDeviceMenu,  _("Used to change device properties") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
    xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
@@ -1921,7 +1926,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
    }
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::ChangeDevice( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
    //Create the command and data value pairs
    VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
@@ -1929,12 +1934,12 @@ void AppFrame::ChangeDevice( wxCommandEvent& WXUNUSED(event) )
    
    std::string device;
 
-   if( xplorerDeviceMenu->IsChecked( WAND ) )
+   if( event.GetId() == WAND )
    {
       device = "Wand";
    }
 
-   else if( xplorerDeviceMenu->IsChecked( KEYBOARD_MOUSE ) )
+   else if( event.GetId() == KEYBOARD_MOUSE )
    {
       device = "KeyboardMouse";
    }
@@ -1949,30 +1954,29 @@ void AppFrame::ChangeDevice( wxCommandEvent& WXUNUSED(event) )
    delete command;
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ChangeDeviceMode( wxCommandEvent& event )
 {
-   //Create the command and data value pairs
    VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
    VE_XML::Command* command = new VE_XML::Command();
-   
-   unsigned int mode;
 
-   if( xplorerDeviceModeMenu->IsChecked( NAVIGATION_MODE ) )
+   std::string mode;
+
+   if( event.GetId() == WAND_NAVIGATION_MODE || event.GetId() == KM_NAVIGATION_MODE )
    {
-      mode = 0;
+      mode = "Navigation";
 
       toolbar->ToggleTool( NAVIGATION_TOOLBAR, true );
    }
 
-   else if( xplorerDeviceModeMenu->IsChecked( SELECTION_MODE ) )
+   else if( event.GetId() == WAND_SELECTION_MODE || event.GetId() == KM_SELECTION_MODE )
    {
-      mode = 1;
+      mode = "Selection";
 
       toolbar->ToggleTool( SELECTION_TOOLBAR, true );
    }
 
    DVP->SetData( std::string( "Mode" ), mode );
-   
+
    command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
    command->AddDataValuePair( DVP );
 
@@ -1980,27 +1984,22 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& WXUNUSED(event) )
    
    delete command;
 }
-///////////////////////////////////////////////////////////////////
 void AppFrame::ChangeDeviceModeTB( wxCommandEvent& WXUNUSED(event) )
 {
    //Create the command and data value pairs
    VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
    VE_XML::Command* command = new VE_XML::Command();
    
-   unsigned int mode;
+   std::string mode;
 
    if( toolbar->GetToolState( NAVIGATION_TOOLBAR ) == true )
    {
-      mode = 0;
-
-      xplorerDeviceModeMenu->Check( NAVIGATION_MODE, true );
+      mode = "Navigation";
    }
 
    else if( toolbar->GetToolState( SELECTION_TOOLBAR ) == true )
    {
-      mode = 1;
-
-      xplorerDeviceModeMenu->Check( SELECTION_MODE, true );
+      mode = "Selection";
    }
 
    DVP->SetData( std::string( "Mode" ), mode );
@@ -2137,6 +2136,7 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
    }
    */
    _cadDialog->SetVjObsPtr( GetXplorerObject() );
+
    _cadDialog->Show();
 }
 ///////////////////////////////////////////////////////////////////
