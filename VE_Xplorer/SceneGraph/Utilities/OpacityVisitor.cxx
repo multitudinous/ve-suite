@@ -26,15 +26,14 @@
  * Date modified: $Date: 2007-04-10 19:18:51 -0500 (Tue, 10 Apr 2007) $
  * Version:       $Rev: 7298 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: MaterialInitializer.cxx 7298 2007-04-11 00:18:51Z jbkoch $
+ * Id:            $Id: OpacityVisitor.cxx 7298 2007-04-11 00:18:51Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h"
+#include "VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h"
 
 // --- OSG Stuff --- //
 #include <osg/Geode>
-#include <osg/Group>
 #include <osg/Material>
 
 // --- C/C++ Libraries --- //
@@ -43,7 +42,7 @@
 using namespace VE_SceneGraph::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-MaterialInitializer::MaterialInitializer( osg::Node* osg_node )
+OpacityVisitor::OpacityVisitor( osg::Node* osg_node )
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
@@ -51,42 +50,17 @@ NodeVisitor( TRAVERSE_ALL_CHILDREN )
 	osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-MaterialInitializer::~MaterialInitializer()
+OpacityVisitor::~OpacityVisitor()
 {
    ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void MaterialInitializer::apply( osg::Geode& node )
+void OpacityVisitor::apply( osg::Geode& node )
 {
-   osg::ref_ptr< osg::Material > sa = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
-
-   if( sa.valid() )
-   {
-      return;
-   }
-
-   else
-   {
-	   for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
-	   {
-         node.getDrawable( i )->getOrCreateStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON ) ;
-	   }
-   }
-}
-////////////////////////////////////////////////////////////////////////////////    
-void MaterialInitializer::apply( osg::Group& node )
-{
-   osg::ref_ptr< osg::Material > sa = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
-
-   if( sa.valid() )
-   {
-      return;
-   }
-
-   else
-   {
-      osg::NodeVisitor::apply( (osg::Node&)node );
-   }
+   for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
+	{
+      
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////

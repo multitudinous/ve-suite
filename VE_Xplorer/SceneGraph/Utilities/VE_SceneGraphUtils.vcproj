@@ -200,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\OpacityVisitor.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhongLoader.cxx"
 				>
 			</File>
@@ -223,6 +227,10 @@
 			</File>
 			<File
 				RelativePath=".\MaterialInitializer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OpacityVisitor.h"
 				>
 			</File>
 			<File
