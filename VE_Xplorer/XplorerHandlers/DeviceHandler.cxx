@@ -123,7 +123,10 @@ void DeviceHandler::ProcessDeviceEvents()
       devices[ "Wand" ]->UpdateNavigation();
       devices[ "KeyboardMouse" ]->UpdateNavigation();
 
-      //active_device->UpdateNavigation();
+      if( ( active_device != devices[ "Wand" ] ) && ( active_device != devices[ "KeyboardMouse" ] ) )
+      {
+         active_device->UpdateNavigation();
+      }
    }
 
    else if( device_mode == "Selection" )
