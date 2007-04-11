@@ -732,7 +732,7 @@ void KeyboardMouse::SelectObject( void )
    osg::Vec3f startPoint, endPoint;
    SetStartEndPoint(&startPoint, &endPoint);
    
-   DrawLine( startPoint, endPoint);
+   //DrawLine( startPoint, endPoint);
    
    beamLineSegment->set(startPoint, endPoint);
    
