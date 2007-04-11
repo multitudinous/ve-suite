@@ -53,11 +53,6 @@ Clone::Clone()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*Clone::Clone( SceneNode* original )
-{
-   CloneNode( original );
-}*/
-////////////////////////////////////////////////////////////////////////////////
 Clone::Clone( osg::Node* original )
 {
    CloneNode( original );
@@ -75,32 +70,20 @@ void Clone::CloneNode( osg::Node* original )
 		cloneTransform = new VE_SceneGraph::DCS();
    }
    
+   ///We deep copy nodes so that picking is accurate and so that physics will
+   ///work properly in the future.
    if ( dynamic_cast< VE_SceneGraph::DCS* >( original ) )
    {
-      cloneTransform = new VE_SceneGraph::DCS( *static_cast< VE_SceneGraph::DCS* >( original ) );
-      /*osg::PositionAttitudeTransform* assemblyNode = dynamic_cast< osg::PositionAttitudeTransform* >( original );
-      for ( unsigned int i =0; i < assemblyNode->getNumChildren(); i++ )
-      {
-         cloneTransform->addChild( assemblyNode->getChild( i ) );
-      }*/
-   }
-   if ( dynamic_cast< VE_SceneGraph::Group* >( original ) )
-   {
-      cloneTransform->addChild( new VE_SceneGraph::Group( *static_cast< VE_SceneGraph::Group* >( original ) ) );
+      cloneTransform = new VE_SceneGraph::DCS( *static_cast< VE_SceneGraph::DCS* >( original ), osg::CopyOp::DEEP_COPY_NODES );
    }
    else if (  dynamic_cast< osg::Geode* >( original ) )
    {
-      cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ) ) );
-   }
-   else if (  dynamic_cast< osg::Group* >( original ) )
-   {
-      cloneTransform->addChild( new osg::Group( *static_cast< osg::Group* >( original ) ) );
+      cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), osg::CopyOp::DEEP_COPY_NODES ) );
    }
    else
    {
       std::cout << "ERROR : Cast not present " << std::endl;
       std::cout << typeid( *original ).name() << std::endl;
-      //cloneTransform->addChild( original );
    }
 }
 ///////////////////////////////////////////////////////////////////

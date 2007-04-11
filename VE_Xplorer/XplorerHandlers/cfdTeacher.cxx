@@ -232,21 +232,21 @@ void cfdTeacher::RecordScene()
    // store the world DCS matrix..
    if ( _worldDCS.valid() )
    {
-     /* gmtl::Matrix44f m = this->_worldDCS->GetMat();
+      gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
       //temporarily reset the world DCS matrix to the identity
       gmtl::Matrix44f I;
 
       // Make an identity matrix
       gmtl::identity( I );
-      this->_worldDCS->SetMat( I );*/
-		VE_SceneGraph::Clone* graphToWrite = new VE_SceneGraph::Clone(_worldDCS.get());
+      this->_worldDCS->SetMat( I );
+		//VE_SceneGraph::Clone* graphToWrite = new VE_SceneGraph::Clone(_worldDCS.get());
 
-      writePFBFile( graphToWrite->GetClonedGraph() /*this->_worldDCS*/, pfb_filename );
+      writePFBFile( this->_worldDCS.get(), pfb_filename );
 
-		delete graphToWrite;
-      graphToWrite = 0;
-      //this->_worldDCS->SetMat( m );
+		//delete graphToWrite;
+      //graphToWrite = 0;
+      this->_worldDCS->SetMat( m );
    }
    else
    {

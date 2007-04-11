@@ -39,6 +39,7 @@
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
+#include "VE_Xplorer/SceneGraph/UpdateIDOnChildrenVisitor.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h"
 
@@ -207,6 +208,7 @@ void CADEventHandler::SetNodeDescriptors(std::string nodeID,
    {
       VE_SceneGraph::Clone* cloneNode = _activeModel->GetClone(nodeID);
       cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
+      VE_SceneGraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
    }
 }
 /////////////////////////////////////////////////////////////////////////

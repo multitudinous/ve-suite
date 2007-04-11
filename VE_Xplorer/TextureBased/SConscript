@@ -60,6 +60,8 @@ headers = Split("""
    cfdVolumeVisualization.h
    GreyScaleShaderManager.h
    TBVolumeSlices.h
+   volumeRenderBasicShader.h
+   volumeRenderPhongShader.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)

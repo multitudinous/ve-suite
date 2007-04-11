@@ -62,7 +62,6 @@ public:
 	Clone( osg::Node* original );
 	~Clone();
 
-   //void CloneNode( SceneNode* original );
 	void CloneNode( osg::Node* original );
    void SetTranslationArray(float* translation);
    void SetRotationArray(float* rotation);
@@ -71,7 +70,8 @@ public:
    //returns the cloned structure including the
    //transform
 	VE_SceneGraph::DCS* GetClonedGraph();
-
+   osg::Node* Clone::CloneSubNode( osg::Node* node );
+   
 protected:
 	osg::ref_ptr< VE_SceneGraph::DCS > cloneTransform;
 };

@@ -113,8 +113,8 @@ osg::PositionAttitudeTransform(dcs,copyop)
    mBtBody = 0;
    
    udcb = new TransferPhysicsDataCallback();
-   this->setUpdateCallback( udcb.get() );
    udcb->SetbtRigidBody( mBtBody );
+   this->setUpdateCallback( udcb.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS( void )
@@ -562,7 +562,7 @@ void TransferPhysicsDataCallback::SetbtRigidBody( btRigidBody* transform )
 ////////////////////////////////////////////////////////////////////////////////
 void TransferPhysicsDataCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
-   osg::ref_ptr<osg::PositionAttitudeTransform> dcs = static_cast<osg::PositionAttitudeTransform*>(node);
+   osg::ref_ptr<VE_SceneGraph::DCS> dcs = static_cast<VE_SceneGraph::DCS*>(node);
    
    if ( dcs.valid() && btBody )
    {

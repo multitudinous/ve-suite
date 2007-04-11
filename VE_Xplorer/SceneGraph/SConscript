@@ -28,6 +28,7 @@ sources = Split("""
     GeodeOSGReaderWriter.cxx
     GroupOSGReaderWriter.cxx
     SwitchOSGReaderWriter.cxx
+    UpdateIDOnChildrenVisitor.cxx
 """)
 
 
@@ -51,6 +52,7 @@ headers = Split("""
     TextTexture.h
     FindParentsVisitor.h
     PhysicsMesh.h
+    UpdateIDOnChildrenVisitor.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
