@@ -164,7 +164,6 @@ void TextureBasedVolumeSlices::SetDataBoundingBox(float* boundingBox)
 
    _center = osg::Vec4(_bbox.center()[0],_bbox.center()[1],_bbox.center()[2],1);
    _diagonal = radius*2.0;
-   
 
    _coordTransformedBBox->clear();
    _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(4),1));
@@ -176,14 +175,6 @@ void TextureBasedVolumeSlices::SetDataBoundingBox(float* boundingBox)
    _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(2),1));
    _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(3),1));
    
-   /*_coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(0),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(1),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(4),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(5),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(2),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(3),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(6),1));
-   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(7),1));*/
    _ensureSliceDelta();
 }
 //////////////////////////////////////////////////
@@ -227,11 +218,12 @@ void TextureBasedVolumeSlices::_drawViewAlignedQuadSlices()const
 }
 /////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::drawImplementation(osg::State& currentState) const
-{
+{  
+   ///transform center to current eye space
+   _eyeCenter = _center*currentState.getModelViewMatrix();
    if(_sliceRenderMethod == "VIEW_ALIGNED_QUADS")
    {
-      ///transform center to current eye space
-      _eyeCenter = _center*currentState.getModelViewMatrix();
+
       _drawViewAlignedQuadSlices();
    }
    else if(_sliceRenderMethod == "VIEW_ALIGNED_POLYGON_INTERSECT")
@@ -341,7 +333,7 @@ void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates(unsigned int
 ///////////////////////////////////////////////////////////////////////////////////
 float TextureBasedVolumeSlices::_calculateSampleDistance(osg::Matrixf iModelView) const
 {
-   /*
+   /*Patrick O'Leary
       Calculate the the minimum and maximum x-, y- or z-position of the
          rotated bounding box. Equivalent to but quicker than:
          maximumD = (maximum, 0, 0), (0, maximum, 0) or (0, 0, maximum);
@@ -363,9 +355,10 @@ float TextureBasedVolumeSlices::_calculateSampleDistance(osg::Matrixf iModelView
 
    return maximumV.length();
 } 
-//////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies()const 
 {
+   //this calculation is done in object coordinates
    float extremes[2] = {0,0};
    float poleMultiplier = 20.0;
    osg::Vec4 pole;
@@ -380,7 +373,8 @@ void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies()const
    //std::cout<<" "<<pole.x()<<" "<<pole.y()<<" "<<pole.z()<<std::endl;
    for(unsigned int i = 0; i < 8; ++i) 
    {
-      diff = (pole-_rotatedBBox->at(i)).length();
+      diff = (pole-_coordTransformedBBox->at(i)).length();
+      
       ///closest corner
       if(diff < extremes[0])
       {
