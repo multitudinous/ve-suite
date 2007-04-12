@@ -1,6 +1,6 @@
 #include "VE_Xplorer/SceneGraph/UpdateIDOnChildrenVisitor.h"
 
-#include "VE_xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 #include <osg/Node>
 
