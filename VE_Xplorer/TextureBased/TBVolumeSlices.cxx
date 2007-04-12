@@ -32,23 +32,34 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
+#include "VE_Xplorer/TextureBased/bboxEdgeConstants.h"
 #include <osg/Matrixf>  
-#include <iostream>
+// --- VR Juggler Stuff --- //
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
 
+using namespace gmtl;
+using namespace gadget;
+#include <iostream>
 
 using namespace VE_TextureBased;
 ////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices()
 :osg::Drawable(),
 _diagonal(1.0),
-_center(0,0,0),
-_eyeCenter(0,0,0),
+_center(0,0,0,1),
+_eyeCenter(0,0,0,1),
 _nSlices(1),
-_deltaZ(1.f)
+_deltaZ(1.f),
+_sliceRenderMethod("VIEW_ALIGNED_POLYGON_INTERSECT")
 {
    _bbox.init(); 
-
+   _extremaIndicies[0] = 0;
+   _extremaIndicies[1]= 7;
    _initBBoxIntersectionSlicesVertexProgram();
+   _rotatedBBox = new osg::Vec4Array();
+   _coordTransformedBBox = new osg::Vec4Array();
+  
 }
 //////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices(float* dataBoundingBox,
@@ -56,8 +67,13 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices(float* dataBoundingBox,
 :osg::Drawable()
 {
    _nSlices = numberOfSlices;	
-   SetDataBoundingBox(dataBoundingBox);
+   _sliceRenderMethod = "VIEW_ALIGNED_POLYGON_INTERSECT";
    
+   _extremaIndicies[0] = 0;
+   _extremaIndicies[1]= 7;
+   _rotatedBBox = new osg::Vec4Array();
+   _coordTransformedBBox = new osg::Vec4Array();
+   SetDataBoundingBox(dataBoundingBox);
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices(const TextureBasedVolumeSlices& slices,
@@ -65,11 +81,12 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices(const TextureBasedVolumeSlice
                                                    osg::Drawable(slices,copyop)
 {
    _bbox.expandBy(slices._bbox);
-   _center.set(slices._center);
-   _eyeCenter.set(slices._eyeCenter);
+   _center = slices._center;
+   _eyeCenter = slices._eyeCenter;
    _diagonal = slices._diagonal;
    _nSlices = slices._nSlices;
    _deltaZ = slices._deltaZ;
+   _sliceRenderMethod = slices._sliceRenderMethod;
 }
 /////////////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_initBBoxIntersectionSlicesVertexProgram()
@@ -145,28 +162,37 @@ void TextureBasedVolumeSlices::SetDataBoundingBox(float* boundingBox)
    //Update the essentials
    float radius = _bbox.radius();
 
-   _center = _bbox.center();
+   _center = osg::Vec4(_bbox.center()[0],_bbox.center()[1],_bbox.center()[2],1);
    _diagonal = radius*2.0;
+   
+
+   _coordTransformedBBox->clear();
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(4),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(5),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(0),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(1),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(6),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(7),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(2),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(3),1));
+   
+   /*_coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(0),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(1),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(4),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(5),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(2),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(3),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(6),1));
+   _coordTransformedBBox->push_back(osg::Vec4(_bbox.corner(7),1));*/
    _ensureSliceDelta();
-
-   //The new bounding box
-   minBBox[0] = _center[0] - radius;
-   minBBox[1] = _center[1] - radius;
-   minBBox[2] = _center[2] - radius;
-
-   maxBBox[0] = _center[0] + radius;
-   maxBBox[1] = _center[1] + radius;
-   maxBBox[2] = _center[2] + radius;
-
-   _bbox.set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
-              osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
 }
 //////////////////////////////////////////////////
-void TextureBasedVolumeSlices::_ensureSliceDelta()
+void TextureBasedVolumeSlices::_ensureSliceDelta()const 
 {
    if(_diagonal && _nSlices)
    {
-      _deltaZ = (_diagonal) / (float)(_nSlices-1);
+      float currentDistance = (_coordTransformedBBox->at(_extremaIndicies[1]) - _coordTransformedBBox->at(_extremaIndicies[0])).length();
+      _deltaZ = (currentDistance) / (float)(_nSlices);
    }
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -175,13 +201,15 @@ void TextureBasedVolumeSlices::SetNumberOfSlices(unsigned int numberOfSlices)
    _nSlices = (numberOfSlices<32)?32:numberOfSlices;
    _ensureSliceDelta();
 }
-/////////////////////////////////////////////////////////////////////////////////
-void TextureBasedVolumeSlices::drawImplementation(osg::State& currentState) const
+//////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::SetRenderMethod(std::string method)
 {
-   ///transform center to current eye space
-   _eyeCenter = _center*currentState.getModelViewMatrix();
+   _sliceRenderMethod = method;
+}
+////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::_drawViewAlignedQuadSlices()const
+{
    //transform the eye point in
-   _modelViewMatrix.makeIdentity();
    glMatrixMode(GL_MODELVIEW);
 
    //push the modelview matrix
@@ -197,7 +225,184 @@ void TextureBasedVolumeSlices::drawImplementation(osg::State& currentState) cons
    //pop the modelview matrix
    glPopMatrix();
 }
-//////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::drawImplementation(osg::State& currentState) const
+{
+   if(_sliceRenderMethod == "VIEW_ALIGNED_QUADS")
+   {
+      ///transform center to current eye space
+      _eyeCenter = _center*currentState.getModelViewMatrix();
+      _drawViewAlignedQuadSlices();
+   }
+   else if(_sliceRenderMethod == "VIEW_ALIGNED_POLYGON_INTERSECT")
+   {
+      //Calculate the camera position
+      osg::Matrixd inverseModelView;
+      inverseModelView.invert(currentState.getModelViewMatrix());
+      _cameraLocation = osg::Vec4(0,0,0,1)*inverseModelView;
+
+      _extremaIndicies[0] = 0;
+      _extremaIndicies[1]= 7;
+
+      _rotatedBBox->clear();
+
+      ///transform the bbox into camera space
+      _rotatedBBox->push_back(_coordTransformedBBox->at(0)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(1)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(2)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(3)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(4)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(5)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(6)*currentState.getModelViewMatrix());
+      _rotatedBBox->push_back(_coordTransformedBBox->at(7)*currentState.getModelViewMatrix());
+
+      //calculate the slice plane normal
+      _slicePlaneNormal = _cameraLocation -_center;
+      _slicePlaneNormal.normalize();
+
+      //update the min max indicies for the bbox
+      _findBBoxMinMaxIndicies();
+
+      //update the slice delta
+      _ensureSliceDelta();
+      
+      //initial slicing point 
+      osg::Vec4 initialSlicePoint(_coordTransformedBBox->at(_extremaIndicies[1]).x(),
+                                  _coordTransformedBBox->at(_extremaIndicies[1]).y(),
+                                  _coordTransformedBBox->at(_extremaIndicies[1]).z(),1);
+      
+      //Calcluate edge intersections
+      _calculateEdgeIntersections(initialSlicePoint);
+   }
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::_calculateEdgeIntersections(osg::Vec4 initialSlicePoint)const
+{
+   osg::Vec4 sliceDelta = _slicePlaneNormal*_deltaZ;
+   for(unsigned int i = 0; i <= _nSlices; ++i)
+   {
+      float verts[18]={0,0,0,
+                       0,0,0,
+                       0,0,0,
+                       0,0,0,
+                       0,0,0,
+                       0,0,0};
+
+
+      ///calculate vertex position from intersections
+      for(unsigned int j = 0; j < 6; ++j)
+      {
+         _calculateVertsAndTextureCoordinates(j,initialSlicePoint,verts);
+      }
+      //render the polygons...
+      glBegin(GL_POLYGON);
+         glVertex3f(verts[0],verts[1],verts[2]);
+         glVertex3f(verts[3],verts[4],verts[5]);
+         glVertex3f(verts[6],verts[7],verts[8]);
+         glVertex3f(verts[9],verts[10],verts[11]);
+         glVertex3f(verts[12],verts[13],verts[14]);
+         glVertex3f(verts[15],verts[16],verts[17]);
+      glEnd();
+      initialSlicePoint+= sliceDelta;
+   }
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates(unsigned int currentEdgeIndex,
+                                                                    osg::Vec4 initSlicePoint,
+                                                                    float* verts)const
+{
+   ///texture coordinates aren't calculated because we are auto generating them now
+   ///we can add the calculation of the second coordinate if we need to manually here
+   osg::Vec4 edgeInitial;
+   osg::Vec4 edgeEnd;
+   for(unsigned int i = 0; i < 4; ++i)
+   {
+      edgeInitial = _coordTransformedBBox->at(edgeSequence[_extremaIndicies[0]][edgeIndex[(currentEdgeIndex * 4) +
+                                           i][0]]);
+      edgeEnd = _coordTransformedBBox->at(edgeSequence[_extremaIndicies[0]][edgeIndex[(currentEdgeIndex * 4) +
+                                          i][1]]);
+      osg::Vec4 numerator = initSlicePoint - edgeInitial;
+      osg::Vec4 denom = edgeEnd-edgeInitial;
+      
+      float t = (denom!=(osg::Vec4(0,0,0,1)))?(_slicePlaneNormal*numerator)/(_slicePlaneNormal*denom):-1;
+      if((t >= 0) && (t <= 1)) 
+      {
+         // Compute the line intersection
+         float x = (float) (edgeInitial.x() + (t * (edgeEnd.x() - edgeInitial.x())));
+         float y = (float) (edgeInitial.y() + (t * (edgeEnd.y() - edgeInitial.y())));
+         float z = (float) (edgeInitial.z() + (t * (edgeEnd.z() - edgeInitial.z())));
+         verts[currentEdgeIndex*3    ] = x;
+         verts[currentEdgeIndex*3 + 1] = y;
+         verts[currentEdgeIndex*3 + 2] = z;
+         break;
+      }
+   }
+}
+///////////////////////////////////////////////////////////////////////////////////
+float TextureBasedVolumeSlices::_calculateSampleDistance(osg::Matrixf iModelView) const
+{
+   /*
+      Calculate the the minimum and maximum x-, y- or z-position of the
+         rotated bounding box. Equivalent to but quicker than:
+         maximumD = (maximum, 0, 0), (0, maximum, 0) or (0, 0, maximum);
+         minimumD = (minimum, 0, 0), (0, minimum, 0) or (0, 0, minimum);
+         maximumV = modelviewInverse * maximumD;
+         minimumV = modelviewInverse * minimumD;
+       */
+   osg::Vec3 maximumV;
+   osg::Vec3 minimumV;
+
+   maximumV.set(iModelView.ptr()[8]* _extremaIndicies[1],
+                iModelView.ptr()[9]* _extremaIndicies[1],
+                iModelView.ptr()[10]* _extremaIndicies[1]);
+   minimumV.set(iModelView.ptr()[8] * _extremaIndicies[0],
+                iModelView.ptr()[9] * _extremaIndicies[0],
+                iModelView.ptr()[10] * _extremaIndicies[0]);
+
+   maximumV-=minimumV;
+
+   return maximumV.length();
+} 
+//////////////////////////////////////////////////////////////////////////
+void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies()const 
+{
+   float extremes[2] = {0,0};
+   float poleMultiplier = 20.0;
+   osg::Vec4 pole;
+   pole = _center + _slicePlaneNormal*_diagonal;
+   float diff = (pole-_rotatedBBox->at(0)).length();
+
+
+   extremes[0]  = diff;
+   extremes[1]  = -diff;
+   //std::cout<<"========================================="<<std::endl;
+   //std::cout<<"Pole:"<<std::endl;
+   //std::cout<<" "<<pole.x()<<" "<<pole.y()<<" "<<pole.z()<<std::endl;
+   for(unsigned int i = 0; i < 8; ++i) 
+   {
+      diff = (pole-_rotatedBBox->at(i)).length();
+      ///closest corner
+      if(diff < extremes[0])
+      {
+         extremes[0] = diff;
+         _extremaIndicies[0] = i;
+      }
+      ///furthest corner
+      if(diff > extremes[1]) 
+      {
+         extremes[1] = diff;
+         _extremaIndicies[1] = i;
+      }
+   } 
+   //std::cout<<"BBox Extrema"<<std::endl;
+   //std::cout<<"(min,max)"<<std::endl;
+   //std::cout<<_extremaIndicies[0]<<","<<_extremaIndicies[1]<<std::endl;
+
+   //std::cout<<"Extrema coords:"<<std::endl;
+   //std::cout<<_coordTransformedBBox->at(_extremaIndicies[0]).x()<<","<<_coordTransformedBBox->at(_extremaIndicies[0]).y()<<","<<_coordTransformedBBox->at(_extremaIndicies[0]).z()<<std::endl;
+   //std::cout<<_coordTransformedBBox->at(_extremaIndicies[1]).x()<<","<<_coordTransformedBBox->at(_extremaIndicies[1]).y()<<","<<_coordTransformedBBox->at(_extremaIndicies[1]).z()<<std::endl;
+}
+///////////////////////////////////////////////////////////////////
 void TextureBasedVolumeSlices::_drawQuadSlice(float zPosition)const 
 {
    glBegin(GL_QUADS);
@@ -213,3 +418,4 @@ osg::BoundingBox TextureBasedVolumeSlices::computeBound() const
 {
   return _bbox; 
 }
+

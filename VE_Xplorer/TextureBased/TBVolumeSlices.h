@@ -43,6 +43,11 @@
 
 #include "VE_Installer/include/VEConfig.h"
 
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gadget/Type/PositionInterface.h>
+//#include <gadget/Type/DigitalInterface.h>
+
 #include <osg/Drawable>
 namespace osg
 {
@@ -73,7 +78,13 @@ public:
    void SetDataBoundingBox(float* boundingBox);
 
 
+   ///Set the number of slices
+   ///\param numberOfSlices The number of slices to render
    void SetNumberOfSlices(unsigned int numberOfSlices);
+
+   ///Set the method for rendering the slices
+   ///\param method String representing the rendering method\n "VIEW_ALIGNED_QUADS"\n "VIEW_ALIGNED_POLYGON_INTERSECT"
+   void SetRenderMethod(std::string method);
 
    // of OpenGL primitives.
    virtual void drawImplementation(osg::State& currentState) const;
@@ -87,19 +98,57 @@ protected:
    void _drawQuadSlice(float zPosition)const;
 
    ///Make sure the slice spacing is up to date
-   void _ensureSliceDelta();
+   void _ensureSliceDelta()const;
+
+   //These all need to be in a higher level class
+   ///Draw a stack of view aligned quads
+   void _drawViewAlignedQuadSlices()const;
  
    ///Initialize the bbox intersecting slices vertex program.
    void _initBBoxIntersectionSlicesVertexProgram();
 
+   ///Initialize the edge list. This should be in a higher level class( brick manager)
+   void _initEdges();
+   ///Convert edge table and sequence table from Patrick's coordinate system to ours
+   void _convertEdgeTable();
+
+   ///Calculate the bbox min and max indicies
+   void _findBBoxMinMaxIndicies()const;
+   
+   ///Calculate the sample distance
+   ///\param iModelView Inverse modelview matrix
+   float _calculateSampleDistance(osg::Matrixf iModelView) const;
+
+
+   ///Calculate the slice polygon and edge intersections
+   ///\param initalSlicePoint The coord to begin calculating slices
+   void _calculateEdgeIntersections(osg::Vec4 initialSlicePoint)const;
+
+   ///Calculate the intersection verticies and assosiated texture coordinates
+   ///\param currentEdgeIndex The current edge we are calculationg intersection with
+   ///\param initSlicePoint The initial slice location
+   ///\param verts The vertcies for the intersecting polygon
+   void _calculateVertsAndTextureCoordinates(unsigned int currentEdgeIndex,
+                                        osg::Vec4 initSlicePoint,
+                                        float* verts)const;
+
+   std::string _sliceRenderMethod;///<Method for rendering intersection polygons
    std::string _bboxSlicer;///<Source code for creating intersecting bbox slices vertex program.
    unsigned int _nSlices;///<The number of slices to render.
-   float _deltaZ;///<The slice spacing.
+   mutable float _deltaZ;///<The slice spacing.
    float _diagonal;///<The length of the diagonal
    osg::BoundingBox _bbox;///<The bbox constructed from the diagonal of the data
-   mutable osg::Matrixf _modelViewMatrix;///<The current model view matrix;
-   mutable osg::Vec3 _center;///<The center of the data
-   mutable osg::Vec3 _eyeCenter;///<The center of the data in eye space.
+   mutable osg::Vec4 _center;///<The center of the data
+   mutable osg::Vec4 _cameraLocation;///<The camera location in the world
+   mutable osg::Vec4 _eyeCenter;///<The center of the data in eye space.
+
+   ///These should be moved to a class that handles brick management
+   mutable osg::BoundingBox _eyeSpaceBBox;///<The bbox in eyespace
+   mutable osg::Vec4 _slicePlaneNormal;///<The negated view vector
+   mutable unsigned int _extremaIndicies[2];///<Holder for the closest and furthest corner of the bbox
+   mutable osg::ref_ptr<osg::Vec4Array> _rotatedBBox;///<The rotated bbox.
+   mutable osg::ref_ptr<osg::Vec4Array> _coordTransformedBBox;///<The rotated bbox.
+   mutable gadget::PositionInterface head;///<vjPosInterface Head Position from Juggler;
 };
 }
 #endif //_OSG
