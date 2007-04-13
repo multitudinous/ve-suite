@@ -165,7 +165,7 @@ namespace VE_TextureBased
          double _delay;
          bool _isSlave;
          bool _isLuminance;
-         bool _update;
+         mutable bool _update;
          unsigned int _currentFrame;
          SubloadMode _subloadMode;
          mutable GLsizei _textureWidth, _textureHeight,_textureDepth;

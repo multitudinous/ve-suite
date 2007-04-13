@@ -153,7 +153,8 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
       if(_tm){
          if(!_isSlave && _tm->getPlayMode() == cfdTextureManager::PLAY){
             //master node in the cluster
-            if(_tm->TimeToUpdate()||_update){
+            if(_tm->TimeToUpdate()||_update)
+            {
                if(_isLuminance)
                {
                   texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
@@ -177,6 +178,8 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->getCurrentField());
                }
+               ///reset the update flag so we don't subload every frame!!
+               _update = false;
             }
          }else{
             if(_isLuminance)
