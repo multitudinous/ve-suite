@@ -175,8 +175,10 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
    EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 
-   EVT_MENU( WAND, AppFrame::ChangeDevice )
-   EVT_MENU( KEYBOARD_MOUSE, AppFrame::ChangeDevice )
+   EVT_MENU( WAND_NAVIGATION, AppFrame::ChangeDevice )
+   EVT_MENU( WAND_SELECTION, AppFrame::ChangeDevice )
+   EVT_MENU( KM_NAVIGATION, AppFrame::ChangeDevice )
+   EVT_MENU( KM_SELECTION, AppFrame::ChangeDevice )
 
    EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
    EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
@@ -847,11 +849,11 @@ void AppFrame::CreateMenu()
    xplorerDeviceMenu->AppendSeparator();
    xplorerDeviceMenu->Append( DEVICE_PROPERTIES,    _("Properties") );
    //
-   wandMenu->Append( NAVIGATION_MODE, _("Navigation") );
-   wandMenu->Append( SELECTION_MODE,  _("Selection") );
+   wandMenu->Append( WAND_NAVIGATION, _("Navigation") );
+   wandMenu->Append( WAND_SELECTION,  _("Selection") );
    //
-   keyboardMouseMenu->Append( NAVIGATION_MODE, _("Navigation") );
-   keyboardMouseMenu->Append( SELECTION_MODE,  _("Selection") );
+   keyboardMouseMenu->Append( KM_NAVIGATION, _("Navigation") );
+   keyboardMouseMenu->Append( KM_SELECTION,  _("Selection") );
    //
    xplorerDisplayMenu->AppendCheckItem( FRAME_RATE,        _("Frame Rate") );
    xplorerDisplayMenu->AppendCheckItem( COORDINATE_SYSTEM, _("Coord System") );
@@ -1930,14 +1932,36 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    
    std::string device;
 
-   if( event.GetId() == WAND )
+   if( event.GetId() == WAND_NAVIGATION )
    {
       device = "Wand";
+
+      event.SetId( NAVIGATION_MODE );
+      this->ChangeDeviceMode( event );
    }
 
-   else if( event.GetId() == KEYBOARD_MOUSE )
+   else if( event.GetId() == WAND_SELECTION )
+   {
+      device = "Wand";
+
+      event.SetId( SELECTION_MODE );
+      this->ChangeDeviceMode( event );
+   }
+
+   else if( event.GetId() == KM_NAVIGATION )
    {
       device = "KeyboardMouse";
+
+      event.SetId( NAVIGATION_MODE );
+      this->ChangeDeviceMode( event );
+   }
+
+   else if( event.GetId() == KM_SELECTION )
+   {
+      device = "KeyboardMouse";
+
+      event.SetId( SELECTION_MODE );
+      this->ChangeDeviceMode( event );
    }
 
    DVP->SetData( std::string( "Device" ), device );
