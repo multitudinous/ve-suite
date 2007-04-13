@@ -152,6 +152,8 @@ private:
    osg::ref_ptr< osg::Geode > beamGeode;
    osg::ref_ptr< osg::Geode > selectedGeometry;
    osg::ref_ptr< osg::LineSegment > beamLineSegment;
+
+   gmtl::Point3f center_point;
 };
 }
 

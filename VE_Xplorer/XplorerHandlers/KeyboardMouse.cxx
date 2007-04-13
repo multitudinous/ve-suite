@@ -60,6 +60,7 @@
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -116,6 +117,8 @@ beamLineSegment( new osg::LineSegment )
 
 	gmtl::identity( tb_transform );
 	gmtl::identity( tb_accuTransform );
+
+   center_point = gmtl::Vec3f( 20.0, 100.0, 5.0 );
    
    activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
 }
@@ -206,7 +209,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 {
-   if ( beamGeode.valid() )
+   if( beamGeode.valid() )
    {
       VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->removeChild( beamGeode.get() );
    }
@@ -379,6 +382,24 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+
+   /*
+   // translate world dcs by distance that the head
+   // is away from the origin
+   gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -center_point );
+   gmtl::Matrix44f worldMatTrans = transMat * VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+   gmtl::Point3f newJugglerHeadPoint;
+   // get the position of the head in the new world space
+   // as if the head is on the origin
+   gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
+   gmtl::Vec4f newGlobalHeadPointVec;
+   newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
+   newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
+   newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
+   // roate the head vector by the rotation increment
+   gmtl::Vec4f rotateJugglerHeadVec = tb_transform * newGlobalHeadPointVec;
+   */
+
    //Split apart the current matrix into rotation and translation parts
    gmtl::Matrix44f accuRotation;
    gmtl::Matrix44f matrix;
@@ -391,6 +412,7 @@ void KeyboardMouse::ProcessNavigationEvents()
       accuRotation[i][2] = tb_accuTransform[i][2];
 
       //Get the current translation matrix
+      //matrix[i][3] = rotateJugglerHeadVec[i] + center_point[i];
       matrix[i][3] = tb_accuTransform[i][3];
    }
 
