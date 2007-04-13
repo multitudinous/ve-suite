@@ -191,7 +191,7 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete this->cursor;
    }
 
-   if(VE_Xplorer::cfdQuatCamHandler::instance())
+   //if(VE_Xplorer::cfdQuatCamHandler::instance())
    {
       VE_Xplorer::cfdQuatCamHandler::instance()->CleanUp();
    }
@@ -328,7 +328,7 @@ void cfdEnvironmentHandler::InitScene( void )
    /*std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
    this->_camHandler = new cfdQuatCamHandler( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(),
                                           , _param.c_str() );*/
-   VE_Xplorer::cfdQuatCamHandler::instance()->SetNavigation(this->nav);
+   //VE_Xplorer::cfdQuatCamHandler::instance()->SetNavigation(this->nav);
    VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS());
 
    //

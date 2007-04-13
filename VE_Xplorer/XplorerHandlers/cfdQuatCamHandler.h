@@ -203,7 +203,7 @@ private:
 
     // Required so that vpr::Singleton can instantiate this class.
    //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
-   cfdQuatCamHandler(/* VE_SceneGraph::DCS* worldDCS,cfdNavigate* nav, std::string param */);
+   cfdQuatCamHandler( void );
 
    ~cfdQuatCamHandler( void ){ ; }// Never gets called, don't implement
    vprSingletonHeader( cfdQuatCamHandler );

@@ -72,8 +72,7 @@ vprSingletonImp( VE_Xplorer::cfdQuatCamHandler );
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-cfdQuatCamHandler::cfdQuatCamHandler( /*osg::ref_ptr< VE_SceneGraph::DCS > worldDCS, 
-                                     cfdNavigate* nav, std::string param*/ )
+cfdQuatCamHandler::cfdQuatCamHandler()
 {
    flyThroughList.clear();
    thisQuatCam = NULL;
@@ -112,8 +111,6 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*osg::ref_ptr< VE_SceneGraph::DCS > world
    _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new VE_EVENTS::QuatCamLoadFileEventHandler();
    _eventHandlers[std::string("QC_CLEAR_QUAT_DATA")] = new VE_EVENTS::QuatCamClearDataEventHandler();
  
- //  LoadFromFile( this->quatCamFileName );
-
    ///more hacking to initialize the flythroughlist
    ///This forces us to only have one flythrought per ves file
    if ( flyThroughList.empty() )
@@ -339,19 +336,20 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 /////////////////////////////////////////////
 void cfdQuatCamHandler::ClearQuaternionData()
 {
-   //if ( !QuatCams.empty() )
+   for ( size_t i=0; i<QuatCams.size(); i++ )
    {
-      for ( size_t i=0; i<QuatCams.size(); i++ )
-      {
-         delete QuatCams.at(i);
-      } 
-      QuatCams.clear();
-   }
+      delete QuatCams.at(i);
+   } 
+   QuatCams.clear();
 
-   //if ( !flyThroughList.empty() )
+   flyThroughList.clear();
+   
+   ///more hacking to initialize the flythroughlist
+   ///This forces us to only have one flythrought per ves file
+   if ( flyThroughList.empty() )
    {
-      flyThroughList.clear();
-   }
+      AddNewFlythrough();
+   }   
 }
 //////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::Relocate( VE_SceneGraph::DCS* worldDCS, cfdNavigate* nav )
@@ -475,7 +473,6 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 	      AddViewPtToFlyThrough(0,QuatCams.size());
          this->LoadData( this->_nav->worldTrans, _worldDCS.get() );
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = LOAD_NEW_VIEWPT;
          return true;
