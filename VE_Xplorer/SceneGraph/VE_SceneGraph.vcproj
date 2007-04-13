@@ -271,6 +271,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UpdateIDOnChildrenVisitor.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\vtkActorToOSG.cxx"
 				>
 				<FileConfiguration
@@ -368,6 +372,10 @@
 			</File>
 			<File
 				RelativePath=".\Triangles.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UpdateIDOnChildrenVisitor.h"
 				>
 			</File>
 			<File
