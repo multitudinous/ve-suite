@@ -116,7 +116,10 @@ cfdQuatCamHandler::cfdQuatCamHandler( /*osg::ref_ptr< VE_SceneGraph::DCS > world
 
    ///more hacking to initialize the flythroughlist
    ///This forces us to only have one flythrought per ves file
-   AddNewFlythrough();
+   if ( flyThroughList.empty() )
+   {
+      AddNewFlythrough();
+   }
 }
 ///////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::SetDCS(VE_SceneGraph::DCS* worldDCS)
@@ -406,10 +409,6 @@ void cfdQuatCamHandler::RemoveFlythroughPt( unsigned int flyindex, unsigned int 
 
 void cfdQuatCamHandler::AddViewPtToFlyThrough( unsigned int flyindex, unsigned int ptindex )
 {
-	if( flyThroughList.size() == 0)
-	{
-		AddNewFlythrough();
-	}
 	flyThroughList.at( flyindex ).push_back( ptindex );
 }
 
@@ -434,7 +433,6 @@ void cfdQuatCamHandler::TurnOffMovement( void )
 void cfdQuatCamHandler::AddNewFlythrough( void )
 {
    std::vector< int > temp;
-   temp.clear();
    flyThroughList.push_back( temp );
 }
 
@@ -474,8 +472,8 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
+	      AddViewPtToFlyThrough(0,QuatCams.size());
          this->LoadData( this->_nav->worldTrans, _worldDCS.get() );
-	     AddViewPtToFlyThrough(0,QuatCams.size()-1);
          this->WriteToFile( this->quatCamFileName );
          //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
