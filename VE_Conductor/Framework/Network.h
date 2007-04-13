@@ -191,11 +191,11 @@ public:
    bool SetActiveModel( void );
    //void HighlightSelectedIcon2(unsigned int);
    void HighlightSelectedIcon( REI_Plugin* cur_module);
+   void DrawPorts( REI_Plugin* cur_module, bool flag);
 
 protected:
 
    //Draw functions
-   void DrawPorts( REI_Plugin* cur_module, bool flag);
    void DrawPorti( REI_Plugin* cur_module, int index, bool flag);
    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
@@ -269,7 +269,6 @@ protected:
    //void UnPack( std::vector<Interface> & UIs );
 
 private:
-   bool moving;
    int intfssize;
    wxProgressDialog* _fileProgress;
    bool isLoading;

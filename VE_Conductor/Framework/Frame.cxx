@@ -1487,18 +1487,21 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 	   moduleNames.push_back(network->modules[iter->first].GetClassName());
 	   moduleIDs.push_back(network->modules[iter->first].GetPlugin()->GetModel()->GetModelID());
    }
+
    fd->SetModuleList(moduleNames);
    fd->ShowModal();
+
    int selectedModulePos = fd->GetSelectedModulePos();
-   
-   //highlight the selected icon
-   network->HighlightSelectedIcon(network->modules[moduleIDs[selectedModulePos]].GetPlugin());
    
    //recenter the flowsheet around the icon
    int xPix, yPix;
    network->GetScrollPixelsPerUnit(&xPix, &yPix);
    network->Scroll(network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetX()/(xPix),
                    network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetY()/(yPix));
+   
+   //highlight the selected icon
+   network->HighlightSelectedIcon(network->modules[moduleIDs[selectedModulePos]].GetPlugin());
+   network->DrawPorts(network->modules[moduleIDs[selectedModulePos]].GetPlugin(), true);
 }
 
 ///////////////////////////////////////////////////////////////////////////
