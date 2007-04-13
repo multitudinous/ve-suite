@@ -88,15 +88,11 @@ osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline(const std::string 
 {
    if(isFrag)
    {
-      //_fshader = new osg::Shader(osg::Shader::FRAGMENT,inlineSource);
-      //_fshader->loadShaderSourceFromFile(filename.c_str());
       return new osg::Shader(osg::Shader::FRAGMENT,inlineSource);//_fshader.get();
    }
    else
    {
-      //_vshader = new osg::Shader(osg::Shader::VERTEX,inlineSource);
-      //_vshader->loadShaderSourceFromFile(filename.c_str());
-      return new osg::Shader(osg::Shader::VERTEX,inlineSource);//_vshader.get();
+      return new osg::Shader(osg::Shader::VERTEX,inlineSource);
    }
    return 0;
 }
@@ -174,32 +170,6 @@ void cfdOSGShaderManager::_setupGLSLShaderProgram(osg::Program* glslProgram,
       }
    }
 }
-/////////////////////////////////////////////////////////////////////////
-/*void cfdOSGShaderManager::_setupGLSLShaderProgram(osg::StateSet* ss,
-                                                  osg::Program* glslProgram,
-                                                  const std::string pgName,bool override)
-{
-   if(ss)
-   {
-      ///remove any old shader programs
-      if(ss->getAttribute(osg::StateAttribute::PROGRAM)
-	   {
-         ss->removeAttribute(osg::StateAttribute::PROGRAM);
-	   }
-      if(glslProgram)
-	   {
-         glslProgram->setName(pgName.c_str());
-         if(override)
-         {
-            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-         }
-		   else
-         {
-            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON);
-         }
-      }
-   }
-}*/
 //////////////////////////////////////////////////
 void cfdOSGShaderManager::SetBounds(float* bounds)
 {

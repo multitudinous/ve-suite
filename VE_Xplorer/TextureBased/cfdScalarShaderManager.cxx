@@ -35,6 +35,7 @@
 #ifdef _OSG
 #include <osg/Texture3D>
 #include <osg/Texture1D>
+#include <osg/Texture2D>
 #include <osg/BlendFunc>
 #include <osg/TexEnv>
 #include <osg/TexMat>
@@ -92,7 +93,9 @@ void cfdScalarShaderManager::Init()
       int nTransferFunctions = _transferFunctions.size();
       for(int i =0; i < nTransferFunctions; i++){
          _ss->setTextureAttributeAndModes(i+1,_transferFunctions.at(i).get(),
-                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
+                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE); 
+         /*_ss->setTextureMode(i+1,GL_TEXTURE_2D,
+                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);*/
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_S,
                         osg::StateAttribute::OFF);
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_T,
@@ -155,9 +158,9 @@ void cfdScalarShaderManager::_initTransferFunctions()
       _createTransferFunction(); 
    }
 }
-////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////
-void cfdScalarShaderManager::_updateTransferFunction()
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+void cfdScalarShaderManager::_updateTransferFunction(bool preIntegrated)
 {
    GLubyte* lutex =0;
    GLfloat R,G,B,A;
@@ -167,7 +170,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
    GLfloat alpha = 0;
    GLfloat isoVal = 0;
    float invSRange = 0;
-   osg::ref_ptr<osg::Texture1D> tFunc = _transferFunctions.at(0);
+   osg::ref_ptr<osg::Texture2D> tFunc = _transferFunctions.at(0);
    if(tFunc.valid())
    {
       lutex = tFunc->getImage()->data();
@@ -197,242 +200,132 @@ void cfdScalarShaderManager::_updateTransferFunction()
    newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
    invSRange =  1.0/(newRange[1]-newRange[0]);
    float opacity = 1.0/128;
-   //make the RGBA values from the scalar range
-   for(int i = 0; i < 256; i++){
-      if(i < newRange[0])
+   //only update the diagonal so that our transfer function mods are still fast
+   {
+      for(int i = 0; i < 256; i++)
       {
-         if(_isoSurface)
          {
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }else{
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }
-      }else if( i > newRange[1]){
-         if(_isoSurface)
-         {
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }else{
-            lutex[i*4    ] = 0;//255;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }
-      }else{
-         if(_isoSurface)
-         {
-            GLfloat isoRange [2];
-            isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-            isoRange[0] = isoVal - 4.0;
-            isoRange[1] = isoVal + 4.0;
-            if(i >= isoRange[0] && i <= isoRange[1]){
-               alpha = (i - newRange[0])*invSRange;
-               if(alpha <= .25)
+            if(i < newRange[0])
+            {
+               if(_isoSurface)
                {
-                  R = 0;
-                  G = (4.0*alpha)*255,      
-                  B = (1.0)*255;
-                  A = alpha*255.0*.5;
+                  lutex[i*(256*4) + i*4 ] = 0;
+                  lutex[i*(256*4) + i*4 + 1] = 0;
+                  lutex[i*(256*4) + i*4 + 2] = 0;
+                  lutex[i*(256*4) + i*4 + 3] = 0;
+               }else{
+                  lutex[i*(256*4) + i*4     ] = 0;
+                  lutex[i*(256*4) + i*4  + 1] = 0;
+                  lutex[i*(256*4) + i*4  + 2] = 0;
+                  lutex[i*(256*4) + i*4  + 3] = 0;
                }
-               else if(alpha <= .5)
-               {
-                  R = 0;
-                  G = (1.0)*255,      
-                  B = (2.0-4.0*alpha)*255;
-                  A = alpha*255.0*.5;
-               }
-               else if(alpha <= .75)
-               {
-                  R = (4.0*alpha-2.0)*255;
-                  G = (1.0)*255;       
-                  B = 0.;
-                  A = alpha*255.0*.5;
-               }
-               else if(alpha <= 1.0)
-               {
-                  R = (1.0)*255;
-                  G = (4.0-4.0*alpha)*255;       
-                  B = 0.;
-                  A = alpha*255.0*.5;
-               }
-            }else{
-               R = 0;
-               G = 0;
-               B = 0;
-               A = 0;
             }
-         }else{
-            alpha = (i - newRange[0])*invSRange;
-               if(alpha <= .25)
+            else if( i > newRange[1])
+            {
+               if(_isoSurface)
                {
-                  R = 0;
-                  G = (4.0*alpha)*255,      
-                  B = (1.0)*255;
-                  A = alpha*255.0*.5;
+                  lutex[i*(256*4) + i*4 ] = 0;
+                  lutex[i*(256*4) + i*4 + 1] = 0;
+                  lutex[i*(256*4) + i*4 + 2] = 0;
+                  lutex[i*(256*4) + i*4 + 3] = 0;
                }
-               else if(alpha <= .5)
+               else
                {
-                  R = 0;
-                  G = (1.0)*255,      
-                  B = (2.0-4.0*alpha)*255;
-                  A = alpha*255.0;
+                  lutex[i*(256*4) + i*4 ] = 0;//255;
+                  lutex[i*(256*4) + i*4 + 1] = 0;
+                  lutex[i*(256*4) + i*4 + 2] = 0;
+                  lutex[i*(256*4) + i*4 + 3] = 0;
                }
-               else if(alpha <= .75)
+            }
+            else
+            {
+               if(_isoSurface)
                {
-                  R = (4.0*alpha-2.0)*255;
-                  G = (1.0)*255;       
-                  B = 0.;
-                  A = alpha*255.0*.5;
+                  GLfloat isoRange [2];
+                  isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
+                  isoRange[0] = isoVal - 4.0;
+                  isoRange[1] = isoVal + 4.0;
+                  if(i >= isoRange[0] && i <= isoRange[1]){
+                     alpha = (i - newRange[0])*invSRange;
+                     if(alpha <= .25)
+                     {
+                        R = 0;
+                        G = (4.0*alpha)*255,      
+                        B = (1.0)*255;
+                        A = alpha*255.0*.5;
+                     }
+                     else if(alpha <= .5)
+                     {
+                        R = 0;
+                        G = (1.0)*255,      
+                        B = (2.0-4.0*alpha)*255;
+                        A = alpha*255.0*.5;
+                     }
+                     else if(alpha <= .75)
+                     {
+                        R = (4.0*alpha-2.0)*255;
+                        G = (1.0)*255;       
+                        B = 0.;
+                        A = alpha*255.0*.5;
+                     }
+                     else if(alpha <= 1.0)
+                     {
+                        R = (1.0)*255;
+                        G = (4.0-4.0*alpha)*255;       
+                        B = 0.;
+                        A = alpha*255.0*.5;
+                     }
+                  }else{
+                     R = 0;
+                     G = 0;
+                     B = 0;
+                     A = 0;
+                  }
                }
-               else if(alpha <= 1.0)
+               else
                {
-                  R = (1.0)*255;
-                  G = (4.0-4.0*alpha)*255;       
-                  B = 0.;
-                  A = alpha*255.0*.5;
+                  alpha = (i - newRange[0])*invSRange;
+                  if(alpha <= .25)
+                  {
+                     R = 0;
+                     G = (4.0*alpha)*255,      
+                     B = (1.0)*255;
+                     A = alpha*255.0*.5;
+                  }
+                  else if(alpha <= .5)
+                  {
+                     R = 0;
+                     G = (1.0)*255,      
+                     B = (2.0-4.0*alpha)*255;
+                     A = alpha*255.0;
+                  }
+                  else if(alpha <= .75)
+                  {
+                     R = (4.0*alpha-2.0)*255;
+                     G = (1.0)*255;       
+                     B = 0.;
+                     A = alpha*255.0*.5;
+                  }
+                  else if(alpha <= 1.0)
+                  {
+                     R = (1.0)*255;
+                     G = (4.0-4.0*alpha)*255;       
+                     B = 0.;
+                     A = alpha*255.0*.5;
+                  }
                }
-            /*if(alpha <= .5){
-               R = 0;
-               G = (2.0*alpha)*255,      
-               B = (1.0-2.0*alpha)*255;
-               A = alpha*255.0*.5;
-            }else{
-               R = (2.0*alpha-1.0)*255;
-               G = (2.0 - 2.0*alpha)*255;       
-               B = 0.;
-               A = alpha*255.0*.5;
-            }*/
+               lutex[i*(256*4) + i*4    ]  = (unsigned char)R;
+               lutex[i*(256*4) + i*4  + 1] = (unsigned char)G;
+               lutex[i*(256*4) + i*4  + 2] = (unsigned char)B;
+               lutex[i*(256*4) + i*4  + 3] = (unsigned char)A; 
+            }
          }
-         lutex[i*4   ]  = (unsigned char)R;
-         lutex[i*4 + 1] = (unsigned char)G;
-         lutex[i*4 + 2] = (unsigned char)B;
-         lutex[i*4 + 3] = (unsigned char)A; 
       }
    }
    tFunc->dirtyTextureParameters();
    tFunc->dirtyTextureObject();
    
 }
-/*void cfdScalarShaderManager::_updateTransferFunction()
-{
-   GLubyte* lutex =0;
-   GLfloat R,G,B,A;
-   GLfloat newMid = 0;
-   GLfloat newRange[2];
-   ScalarRange origRange ;
-   GLfloat alpha = 0;
-   GLfloat isoVal = 0;
-   float invSRange = 0;
-   osg::ref_ptr<osg::Texture1D> tFunc = _transferFunctions.at(0);
-   if(tFunc.valid())
-   {
-      lutex = tFunc->getImage()->data();
-      if(!lutex)
-      {
-         std::cout<<"ERROR!"<<std::endl;
-         std::cout<<"Invalid data for transfer function!!"<<std::endl;
-         std::cout<<"cfdOSGGammaShader::_updateTransferFunction()"<<std::endl;
-         return;
-      }
-   }
-   origRange = _tm->dataRange(_tm->GetCurrentFrame());
-   newRange[0] = (_scalarRange[0] - origRange.range[0])/
-                (origRange.range[1]-origRange.range[0]);
-   newRange[0] *= 255.0;
-   newRange[1] = (_scalarRange[1] - origRange.range[0])/
-                (origRange.range[1]-origRange.range[0]);
-   newRange[1] *= 255.0;
-
-   newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
-   invSRange =  1.0/(newRange[1]-newRange[0]);
-   
-   //make the RGBA values from the scalar range
-   for(int i = 0; i < 256; i++){
-      if(i < newRange[0])
-      {
-         if(_isoSurface)
-         {
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }else{
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 255;
-            lutex[i*4 + 3] = 0;
-         }
-      }else if( i > newRange[1]){
-         if(_isoSurface)
-         {
-            lutex[i*4    ] = 0;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 0;
-         }else{
-            lutex[i*4    ] = 255;
-            lutex[i*4 + 1] = 0;
-            lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 127;
-         }
-      }else{
-         if(_isoSurface)
-         {
-            GLfloat isoRange [2];
-            isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-            isoRange[0] = isoVal - 10.0;
-            isoRange[1] = isoVal + 10.0;
-            if(i >= isoRange[0] && i <= isoRange[1]){
-               alpha = (i - newRange[0])*invSRange;
-               if(alpha <= .5){
-                  R = 0;
-                  G = (2.0*alpha)*255,      
-                  B = (1.0-2.0*alpha)*255;
-                  A = alpha*255.0*.5;
-               }else{
-                  R = (2.0*alpha-1.0)*255;
-                  G = (2.0 - 2.0*alpha)*255;       
-                  B = 0.;
-                  A = alpha*255.0*.5;
-               }
-            }else{
-               R = 0;
-               G = 0;
-               B = 0;
-               A = 0;
-            }
-         }else{
-            alpha = (i - newRange[0])*invSRange;
-            if(alpha <= .5){
-               R = 0;
-               G = (2.0*alpha)*255,      
-               B = (1.0-2.0*alpha)*255;
-               A = alpha*255.0*.5;
-            }else{
-               R = (2.0*alpha-1.0)*255;
-               G = (2.0 - 2.0*alpha)*255;       
-               B = 0.;
-               A = alpha*255.0*.5;
-            }
-         }
-         lutex[i*4   ]  = (unsigned char)R;
-         lutex[i*4 + 1] = (unsigned char)G;
-         lutex[i*4 + 2] = (unsigned char)B;
-         lutex[i*4 + 3] = (unsigned char)A; 
-      }
-   }
-   tFunc->dirtyTextureParameters();
-   tFunc->dirtyTextureObject();
-   
-}*/
 ////////////////////////////////////////////////
 void cfdScalarShaderManager::EnsureScalarRange()
 {

@@ -35,6 +35,7 @@
 #ifdef _OSG
 #include <osg/Texture3D>
 #include <osg/Texture1D>
+#include <osg/Texture2D>
 #include <osg/BlendFunc>
 #include <osg/TexEnv>
 #include <osg/TexMat>
@@ -106,13 +107,10 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
 ///////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
 {
-   if(_transferFunctions.size()){
+   if(_transferFunctions.size())
+   {
       _transferFunctions.clear();
    }
-   /*if(_utCbk){
-      delete _utCbk;
-      _utCbk = 0;
-   }*/
 }
 ////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::InitTextureManager(cfdTextureManager* tm)
@@ -166,8 +164,12 @@ void cfdOSGTransferShaderManager::Init()
       for(int i =0; i < nTransferFunctions; i++){
          _ss->setTextureAttributeAndModes(i,_transferFunctions.at(i).get(),
                                       osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
-          _ss->setTextureMode(i,GL_TEXTURE_1D,
-                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+//         _ss->setTextureMode(i,GL_TEXTURE_1D,
+//                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+//          _ss->setTextureMode(i,GL_TEXTURE_2D,
+//                           osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+
+
          _ss->setTextureMode(i,GL_TEXTURE_3D,
                           osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
          _ss->setTextureMode(i,GL_TEXTURE_GEN_S,
@@ -195,24 +197,10 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("mat4Func",3));
    _ss->addUniform(new osg::Uniform("densityTexture",4));
    
-   /*char* fullPath = _createShaderPathForFile("volumeTransferFunctions.glsl");
-   if(!fullPath)
-   {
-      return;
-   }*/
-   //osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true); 
    osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromInline(volumeTransferFragSource,true);
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(vTransfers.get());
-   AddShaderProgram("3D Texture Advection Transfer Functions",glslProgram);
-   /*
-   _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
-                        std::string("volumeTransferFunctions"));
-   if(fullPath)
-   {
-      delete [] fullPath;
-      fullPath = 0;
-   }*/
+   AddShaderProgram("3D Texture Advection Transfer Functions",glslProgram); 
 }
 /////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
@@ -237,7 +225,8 @@ void cfdOSGTransferShaderManager::_initTransferFunctions()
 void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
                                                     bool clearList)
 {
-   if(clearList){
+   if(clearList)
+   {
       if(_transferFunctions.size())
       {
          _transferFunctions.clear();
@@ -245,71 +234,101 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
    }
    GLint ga[256];
    GLfloat taoA = .10;
-   for(unsigned int i = 0; i < 256; i++){
-     if(i < taoA*255){
+   for(unsigned int i = 0; i < 256; i++)
+   {
+     if(i < taoA*255)
+     {
         ga[i] = 0;
-     }else{
+     }
+     else
+     {
         ga[i] = 255.0*(i-/*255  */taoA*255)/(255.0-taoA*255);
      }
   }
-   GLubyte* lutex = new GLubyte[256*4];
+   GLubyte* lutex = new GLubyte[256*256*4];
    //gamma table
    GLubyte gTable[256];
    double gamma = 2.4;
    //double y = 0;
-   for (int i=0; i<256; i++) {       
+   for (int i=0; i<256; i++) 
+   {       
       double y = (double)(i)/255.0;   
       y = pow(y, 1.0/gamma);     
       gTable[i] = (int) floor(255.0 * y + 0.5);  
    }
-   if(useGamma){
-      for (int i = 0; i < 256; i++){
-        lutex[i*4    ] = 
-        lutex[i*4 + 1] = 
-        lutex[i*4 + 2] = 
-        lutex[i*4 + 3] = (GLubyte)gTable[i];
+
+   //diagonal is the old 1D transfer function
+   //Probably should initialize the offdiagonals better but leaving for now
+   for(unsigned int j = 0; j < 256; ++j)
+   {
+      if(useGamma)
+      {
+         for (int i = 0; i < 256; ++i)
+         {
+           if(i==j)
+           {
+              lutex[j*4*256 + i*4    ] = 
+              lutex[j*4*256 + i*4 + 1] = 
+              lutex[j*4*256 + i*4 + 2] = 
+              lutex[j*4*256 + i*4 + 3] = (GLubyte)gTable[i];
+           }
+           else
+           {
+              lutex[j*4*256 + i*4    ] = 
+              lutex[j*4*256 + i*4 + 1] = 
+              lutex[j*4*256 + i*4 + 2] = 
+              lutex[j*4*256 + i*4 + 3] = 0;
+           }
+           //std::cout<<lutex[j*4*256 + i]<<",";
+         }
+         //std::cout<<std::endl;
       }
-   }else{
-      for (int i = 0; i < 256; i++){
-         /*if(i < 75){
-           lutex[i*4    ] =
-           lutex[i*4 + 1] = 
-           lutex[i*4 + 2] = (GLubyte)0;
-         }else{*/
-           lutex[i*4    ] =
-           lutex[i*4 + 1] = 
-           lutex[i*4 + 2] = (GLubyte)gTable[i];
-         //}
-        lutex[i*4 + 3] = (GLubyte)ga[i];//i;
+      else
+      {
+         for (int i = 0; i < 256; i++)
+         {
+            if(i == j)
+            {
+               lutex[j*(256*4) + i*4    ] =
+               lutex[j*(256*4) + i*4 + 1] = 
+               lutex[j*(256*4) + i*4 + 2] = (GLubyte)gTable[i];
+               lutex[j*(256*4) + i*4 + 3] = (GLubyte)ga[i];
+            }
+            else
+            {
+               lutex[j*(256*4) + i*4    ] =
+               lutex[j*(256*4) + i*4 + 1] = 
+               lutex[j*(256*4) + i*4 + 2] = 
+               lutex[j*(256*4) + i*4 + 3] = 0;
+            }
+            //std::cout<<lutex[j*(256*4) + i*4]<<",";
+         }
+         //std::cout<<std::endl;
       }
    }
 
    osg::ref_ptr<osg::Image> imageField = new osg::Image();
-   imageField->allocateImage(256,1,1,GL_RGBA,GL_UNSIGNED_BYTE);
-   imageField->setImage(256,1,1,GL_RGBA,GL_RGBA,GL_UNSIGNED_BYTE,lutex,
-                osg::Image::USE_NEW_DELETE,1);
+   imageField->allocateImage(256,256,1,GL_RGBA,GL_UNSIGNED_BYTE);
+   imageField->setImage(256,256,1,GL_RGBA,GL_RGBA,GL_UNSIGNED_BYTE,lutex,
+                        osg::Image::USE_NEW_DELETE,1);
    imageField->setDataVariance(osg::Object::DYNAMIC);
 
-   osg::ref_ptr<osg::Texture1D> trans = new osg::Texture1D;
-   trans->setTextureWidth(256);
+   osg::ref_ptr<osg::Texture2D> trans = new osg::Texture2D;
    trans->setDataVariance(osg::Object::DYNAMIC);
-   trans->setFilter(osg::Texture1D::MIN_FILTER,
-                    osg::Texture1D::LINEAR);
+   trans->setFilter(osg::Texture2D::MIN_FILTER,
+                    osg::Texture2D::LINEAR);
 
-   trans->setFilter(osg::Texture1D::MAG_FILTER,
-                    osg::Texture1D::LINEAR);
+   trans->setFilter(osg::Texture2D::MAG_FILTER,
+                    osg::Texture2D::LINEAR);
 
-   trans->setWrap(osg::Texture1D::WRAP_S,
-                  osg::Texture1D::CLAMP);
+   trans->setWrap(osg::Texture2D::WRAP_S,
+                  osg::Texture2D::CLAMP);
+   trans->setWrap(osg::Texture2D::WRAP_T,
+                  osg::Texture2D::CLAMP);
 
    trans->setInternalFormat(GL_RGBA);
    trans->setImage(imageField.get());
 
-   /*cfdUpdateableOSGTexture1d ut;
-   ut.SetTransferFunctionType(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION);
-
-   ut.UpdateParam(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION,1.4);*/
-   //trans->setSubloadCallback(&ut);
    _transferFunctions.push_back(trans);
 }
 //////////////////////////////////////////////////////////////////////////
@@ -330,12 +349,6 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
       unsigned int j=0;
       unsigned int k = 0;
       
-      /*for(unsigned int p = 0; p < dataSize; p++){
-         data[p*4   ] = (unsigned char)0;
-         data[p*4 + 1] = (unsigned char)0;
-         data[p*4 + 2] = (unsigned char)0;
-         data[p*4 + 3] = (unsigned char)0;      
-      }*/
       osg::ref_ptr<osg::Image> propertyField = new osg::Image();
 
       propertyField->allocateImage(_fieldSize[0],
@@ -376,14 +389,16 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
-                                              float param,int whichFunction)
+                                                         float param, int whichFunction)
 {
    cfdUpdateableOSGTexture1d* temp;
-   if(!_transferFunctions.size()){
+   if(!_transferFunctions.size())
+   {
       std::cout<<"Transfer functions not initialized!!!"<<std::endl;
       return;
    }
-   switch(whichFunction){
+   switch(whichFunction)
+   {
       case 0:
          temp = dynamic_cast<cfdUpdateableOSGTexture1d*>(_transferFunctions.at(0)->getSubloadCallback());
          break;

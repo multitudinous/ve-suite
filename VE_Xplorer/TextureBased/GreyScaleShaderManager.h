@@ -57,7 +57,9 @@ namespace VE_TextureBased
          virtual ~GreyScaleShaderManager(){}
          
       protected:
-         void _updateTransferFunction();
+         ///Update the transfer function
+         ///\param preIntegrated Determines if we are updating the preintegrated table or not
+         void _updateTransferFunction(bool preIntegrated=false);
    };
 }
 #endif//_OSG

@@ -46,6 +46,7 @@
 namespace osg{
    class Texture3D;
    class Texture1D;
+   class Texture2D;
    class TexMat;
 }
 #include <vector>
@@ -92,7 +93,8 @@ namespace VE_TextureBased
          osg::ref_ptr<osg::TexMat> _texMat;
          osg::ref_ptr<osg::Texture3D> _property;
          typedef osg::ref_ptr<osg::Texture1D> TransferFunction ;
-         std::vector<TransferFunction> _transferFunctions;
+         typedef osg::ref_ptr<osg::Texture2D> TransferFunction2D;
+         std::vector<TransferFunction2D> _transferFunctions;
          bool _reinit;
          bool _useTM;
          cfdTextureManager* _tm;

@@ -47,14 +47,14 @@ static const char* vrBasicVertSource = {
    "} \n"
 };
 static const char* vrBasicFragSource = {
-   //a volume rendering shader which applies a 1D transfer function
+   //a volume rendering shader which applies a 2D transfer function
    "uniform sampler3D volumeData;\n"
-   "uniform sampler1D transferFunction;\n"
+   "uniform sampler2D transferFunction;\n"
    "void main(void)\n"
    "{\n"
       "//dependent texture look up in transfer function\n"
-      "vec2 scalar = texture3D(volumeData,gl_TexCoord[0].xyz).ga;\n"
-      "gl_FragColor = /*(scalar.x==0.0)?*/texture1D(transferFunction,scalar.y);//:vec4(0,0,0,0);\n"
+      "float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
+      "gl_FragColor =texture2D(transferFunction,vec2(scalar)); //vec4(gl_TexCoord[0].xyz,.2);\n"
 
       "//set the opacity to .2 for all fragments\n"
       "gl_FragColor.a *= gl_Color.a;\n"

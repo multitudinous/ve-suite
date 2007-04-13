@@ -49,11 +49,7 @@ static const char* vrPhongVertSource = {
        "gl_ClipVertex = gl_ModelViewMatrix*gl_Vertex;\n"
    " \n"
       "eyePos = gl_ClipVertex;\n"
-      "//vec3 tnorm = normalize(gl_NormalMatrix*gl_Normal);\n"
-      "//lightVec = normalize(gl_LightSource[0].position /*- ecPos*/).xyz;\n"
       "gl_FrontSecondaryColor.xyz = normalize(gl_LightSource[0].position).xyz;\n"
-      "//ViewVec = normalize(-ecPos).xyz;\n"
-		"//halfVector = normalize(gl_LightSource[1].halfVector.xyz);\n"
      
       "gl_TexCoord[0].s=dot(eyePos,gl_EyePlaneS[0]); \n"
       "gl_TexCoord[0].t=dot(eyePos,gl_EyePlaneT[0]); \n"
@@ -78,11 +74,12 @@ static const char* vrPhongVertSource = {
 };
 
 static const char* vrPhongFragSource = {
-   //a volume rendering shader which applies a 1D transfer function
+   //a volume rendering shader which applies a 2D transfer function
+   //and phong shading
    "//varying vec3 halfVector;\n"
    "varying vec4 eyePos;\n"
    "uniform sampler3D volumeData;\n"
-   "uniform sampler1D transferFunction;\n"
+   "uniform sampler2D transferFunction;\n"
    
    "void main(void)\n"
    "{\n"
@@ -98,7 +95,7 @@ static const char* vrPhongFragSource = {
       "backwardDiff.z = texture3D(volumeData,gl_TexCoord[3].xyz).a;\n"
       "\n"
       "vec3 normal = normalize(backwardDiff-forwardDiff  );\n"
-      "vec4 textureColor = texture1D(transferFunction,scalar);\n"
+      "vec4 textureColor = texture2D(transferFunction,vec2(scalar));\n"
       "float l = length(normal);\n"
       "bool computeShade = (l> .0001)?true:false;\n"
       "if(computeShade){\n"

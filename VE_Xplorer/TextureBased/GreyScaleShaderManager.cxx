@@ -34,7 +34,7 @@
 #include <iostream>
 #ifdef _OSG
 #include <osg/Texture3D>
-#include <osg/Texture1D>
+#include <osg/Texture2D>
 #include <osg/BlendFunc>
 #include <osg/TexEnv>
 #include <osg/TexMat>
@@ -46,7 +46,7 @@
 using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////
-void GreyScaleShaderManager::_updateTransferFunction()
+void GreyScaleShaderManager::_updateTransferFunction(bool preIntegrated)
 {
    //This in no different than the regular shader except that
    //the range is between 20->346.48;
@@ -63,12 +63,13 @@ void GreyScaleShaderManager::_updateTransferFunction()
    GLubyte gTable[256];
    double gamma = 2.4;
    //double y = 0;
-   for (int i=0; i<256; i++) {       
+   for (int i=0; i<256; i++)
+   {       
       double y = (double)(i)/255.0;   
       y = pow(y, 1.0/gamma);     
       gTable[i] = (int) floor(255.0 * y + 0.5);  
    }
-   osg::ref_ptr<osg::Texture1D> tFunc = _transferFunctions.at(0);
+   osg::ref_ptr<osg::Texture2D> tFunc = _transferFunctions.at(0);
    if(tFunc.valid())
    {
       lutex = tFunc->getImage()->data();
@@ -99,61 +100,65 @@ void GreyScaleShaderManager::_updateTransferFunction()
    newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
    invSRange =  1.0/(newRange[1]-newRange[0]);
    float opacity = 1.0/128.0;
-   //make the RGBA values from the scalar range
-   for(int i = 0; i < 256; i++)
+  //Only update the diagonal so that mods are fast
    {
-      if(i < newRange[0])
+      for(int i = 0; i < 256; i++)
       {
-         lutex[i*4    ] = 0;
-         lutex[i*4 + 1] = 0;
-         lutex[i*4 + 2] = 0;
-         lutex[i*4 + 3] = 0;
-      }
-	  else if( i > newRange[1])
-	  {
-         lutex[i*4    ] = 0;//255;
-         lutex[i*4 + 1] = 0;
-         lutex[i*4 + 2] = 0;
-         lutex[i*4 + 3] = 0;
-      }
-	  else
-	  {
-         if(_isoSurface)
          {
-            GLfloat isoRange [2];
-            isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-            isoRange[0] = isoVal - 4.0;
-            isoRange[1] = isoVal + 4.0;
-
-            if(i >= isoRange[0] && i <= isoRange[1])
-			   {
-               alpha = (i - newRange[0])*invSRange; 
-			      R = 
-               G =       
-               B = 
-               A = alpha*255.0f;
-            }
-			   else
+            if(i < newRange[0])
             {
-               R = 0;
-               G = 0;
-               B = 0;
-               A = 0;
+               lutex[i*(256*4) + i*4 ] = 0;
+               lutex[i*(256*4) + i*4 + 1] = 0;
+               lutex[i*(256*4) + i*4 + 2] = 0;
+               lutex[i*(256*4) + i*4 + 3] = 0;
+            }
+	         else if( i > newRange[1])
+	         {
+               lutex[i*(256*4) + i*4 ] = 0;//255;
+               lutex[i*(256*4) + i*4 + 1] = 0;
+               lutex[i*(256*4) + i*4 + 2] = 0;
+               lutex[i*(256*4) + i*4 + 3] = 0;
+            }
+	        else
+	        {
+               if(_isoSurface)
+               {
+                  GLfloat isoRange [2];
+                  isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
+                  isoRange[0] = isoVal - 4.0;
+                  isoRange[1] = isoVal + 4.0;
+
+                  if(i >= isoRange[0] && i <= isoRange[1])
+			         {
+                     alpha = (i - newRange[0])*invSRange; 
+			            R = 
+                     G =       
+                     B = 
+                     A = alpha*255.0f;
+                  }
+			         else
+                  {
+                     R = 0;
+                     G = 0;
+                     B = 0;
+                     A = 0;
+                  }
+               }
+		         else
+               {
+                  alpha = (i - newRange[0])*invSRange; 
+			         R = 
+                  G =       
+                  B = 
+                  A = alpha*alpha*255.0f;
+               }
+               lutex[i*(256*4) + i*4 ]  = (unsigned char)R;
+               lutex[i*(256*4) + i*4 + 1] = (unsigned char)G;
+               lutex[i*(256*4) + i*4 + 2] = (unsigned char)B;
+               lutex[i*(256*4) + i*4 + 3] = (unsigned char)A; 
             }
          }
-		   else
-         {
-            alpha = (i - newRange[0])*invSRange; 
-			   R = 
-            G =       
-            B = 
-            A = alpha*alpha*255.0f;
-         }
-         lutex[i*4   ]  = (unsigned char)R;
-         lutex[i*4 + 1] = (unsigned char)G;
-         lutex[i*4 + 2] = (unsigned char)B;
-         lutex[i*4 + 3] = (unsigned char)A; 
-	  }
+      }
    }
    tFunc->dirtyTextureParameters();
    tFunc->dirtyTextureObject();
