@@ -11,6 +11,7 @@ sources = Split("""
     ShaderHelper.cxx
     PhongLoader.cxx
     MaterialInitializer.cxx
+    OpacityVisitor.cxx
 """)
 
 headers = Split("""
@@ -19,6 +20,7 @@ headers = Split("""
     ShaderHelper.h
     PhongLoader.h
     MaterialInitializer.h
+    OpacityVisitor.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
