@@ -523,9 +523,8 @@ void Wand::UpdateObjectHandler( void )
    }
    
    //Now we can move the object if the button
-   int buttonData = this->digital[ 3 ]->getData();
-   if ( ( ( buttonData == gadget::Digital::ON ) || 
-          ( buttonData == gadget::Digital::TOGGLE_ON ) ) &&
+   int buttonData = this->digital[ 0 ]->getData();
+   if ( ( buttonData == gadget::Digital::ON ) &&
         this->selectedGeometry.valid() )
    {
       this->TranslateObject();
@@ -553,68 +552,25 @@ void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::TranslateObject()
 {
-   double* wandPosition = this->GetObjLocation();
+   //double* wandPosition = this->GetObjLocation();
    osg::Vec3f offsetFromLastPosition;
+   
+   float* tempWorldRot = activeDCS->GetRotationArray();
+   float worldRot[ 3 ];
+   worldRot[ 0 ] = tempWorldRot[ 0 ];
+   worldRot[ 1 ] = tempWorldRot[ 1 ];
+   worldRot[ 2 ] = tempWorldRot[ 2 ];
+   
+	float* tempWorldTrans = activeDCS->GetVETranslationArray();
+   float worldTrans[ 3 ];
+	worldTrans[ 0 ] = tempWorldTrans[ 0 ];
+	worldTrans[ 1 ] = tempWorldTrans[ 1 ];
+	worldTrans[ 2 ] = tempWorldTrans[ 2 ];
    
    for (int i = 0; i < 3; i++)
    {
-      offsetFromLastPosition [ i ] = deltaTrans[ i ];
-      //            wandPosition[ i ] - this->LastWandPosition[ i ];
-      //this->LastWandPosition[ i ] = wandPosition[ i ];
+      worldTrans[ i ] = deltaTrans[ i ] + worldTrans[ i ];
    }
-   
-   osg::Matrix osgMat;
-   
-   float * worldRotation  = activeDCS->GetRotationArray();
-   
-   osgMat.makeRotate(gmtl::Math::deg2Rad(worldRotation [ 0 ]), 
-                     osg::Vec3(0.0, 0.0, 1.0)); 
-   
-   offsetFromLastPosition = osgMat.postMult(offsetFromLastPosition); 
-   
-   osgMat.makeTranslate(offsetFromLastPosition);
-   
-   osg::MatrixTransform* myTransform = this->getMatrixTransform();
-   
-   if (myTransform != NULL)
-   {
-      myTransform->preMult(osgMat);
-   }
-   
-   this->selectedGeometry->getParents().front()->dirtyBound();
-   this->selectedGeometry->getParents().front()->getBound();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::MatrixTransform* Wand::getMatrixTransform()
-{
-   if (this->selectedGeometry->getParents().front()->asGroup() != 0)
-   {
-      if ( this->selectedGeometry->getParents().front()->getParents().front()
-           ->asTransform() != 0 &&
-           this->selectedGeometry->getParents().front()->getParents().front()
-           ->asTransform()->asMatrixTransform() != 0 &&
-           this->selectedGeometry->getParents().front()->getParents().front() !=
-           activeDCS->asGroup() )
-      {
-         return this->selectedGeometry->getParents().front()->getParents().front()
-         ->asTransform()->asMatrixTransform();
-      }
-   }
-   
-   osg::Matrixd myMatrix;
-   myMatrix.makeIdentity();
-   osg::MatrixTransform* myMatrixTransform = 
-      new osg::MatrixTransform(myMatrix);
-   myMatrixTransform->addChild(selectedGeometry->getParents().front());
-   
-   selectedGeometry->getParents().front()->asGroup()
-      ->getParents().front()->asGroup()->addChild(myMatrixTransform);
-   
-   selectedGeometry->getParents().front()->asGroup()
-      ->getParents().front()->asGroup()
-      ->removeChild(selectedGeometry->getParents().front());
-   
-   return myMatrixTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateWandLocalDirection()
