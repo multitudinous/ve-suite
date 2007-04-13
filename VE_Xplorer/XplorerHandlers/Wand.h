@@ -125,7 +125,6 @@ private:
    //double * currentWandDirection;
    int cfdId;
    int cfdIso_value;
-   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
    
    //double worldTrans[ 3 ];
    //float worldRot[ 3 ];

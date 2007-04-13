@@ -24,8 +24,8 @@ UpdateIDOnChildrenVisitor::~UpdateIDOnChildrenVisitor()
 void UpdateIDOnChildrenVisitor::apply( osg::PositionAttitudeTransform& node )
 {
    osg::Node::DescriptionList descriptorsList;
-   descriptorsList.push_back( "VE_XML_ID" );
-   descriptorsList.push_back( modelGUID );
+   //descriptorsList.push_back( "VE_XML_ID" );
+   //descriptorsList.push_back( modelGUID );
    
    node.setDescriptions( descriptorsList );
    

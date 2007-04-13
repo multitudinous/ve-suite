@@ -207,8 +207,8 @@ void CADEventHandler::SetNodeDescriptors(std::string nodeID,
    else if(nodeType == "Clone")
    {
       VE_SceneGraph::Clone* cloneNode = _activeModel->GetClone(nodeID);
-      cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
       VE_SceneGraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
+      cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
    }
 }
 /////////////////////////////////////////////////////////////////////////

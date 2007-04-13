@@ -95,7 +95,7 @@ Wand::Wand() :
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize( void )
 {
-   this->worldDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
    rootNode = VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
    
    for ( int i=0; i<3; i++ )
@@ -124,13 +124,13 @@ void Wand::UpdateNavigation()
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
    
-   float* tempWorldRot = this->worldDCS->GetRotationArray();
+   float* tempWorldRot = activeDCS->GetRotationArray();
    float worldRot[ 3 ];
    worldRot[ 0 ] = tempWorldRot[ 0 ];
    worldRot[ 1 ] = tempWorldRot[ 1 ];
    worldRot[ 2 ] = tempWorldRot[ 2 ];
    
-	float* tempWorldTrans = this->worldDCS->GetVETranslationArray();
+	float* tempWorldTrans = activeDCS->GetVETranslationArray();
    float worldTrans[ 3 ];
 	worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
 	worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
@@ -210,7 +210,7 @@ void Wand::UpdateNavigation()
          // Note:: for pf we are in juggler land
          //        for osg we are in z up land
          Matrix44f worldMat;
-         worldMat = this->worldDCS->GetMat();
+         worldMat = activeDCS->GetMat();
          
          gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
          jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
@@ -300,8 +300,8 @@ void Wand::UpdateNavigation()
       }
    }
    
-   this->worldDCS->SetTranslationArray( worldTrans );
-   this->worldDCS->SetRotationArray( worldRot );   
+   activeDCS->SetTranslationArray( worldTrans );
+   activeDCS->SetRotationArray( worldRot );   
    vprDEBUG(vesDBG,3) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -352,8 +352,9 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
    
    if ( listOfHits.empty())
    {
-      vprDEBUG(vesDBG,1) << "|\tcfdObjectHandler::ProcessHit No object selected" << std::endl 
+      vprDEBUG(vesDBG,1) << "|\tWand::ProcessHit No object selected" << std::endl 
       << vprDEBUG_FLUSH;
+      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
       return;
    }
 
@@ -385,6 +386,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
                   << objectHit._geode->getParents().front()->getName() << std::endl;
       std::cout << "|\tObjects descriptors " 
                   << parentNode->getDescriptions().at( 1 ) << std::endl;
+      activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
    }
    else
    {
@@ -392,6 +394,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
       std::cout << "|\tObject does not have name parent name " 
                   << objectHit._geode->getParents().front()->getName() 
                   << std::endl;
+      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -562,7 +565,7 @@ void Wand::TranslateObject()
    
    osg::Matrix osgMat;
    
-   float * worldRotation  = worldDCS->GetRotationArray();
+   float * worldRotation  = activeDCS->GetRotationArray();
    
    osgMat.makeRotate(gmtl::Math::deg2Rad(worldRotation [ 0 ]), 
                      osg::Vec3(0.0, 0.0, 1.0)); 
@@ -580,7 +583,6 @@ void Wand::TranslateObject()
    
    this->selectedGeometry->getParents().front()->dirtyBound();
    this->selectedGeometry->getParents().front()->getBound();
-   
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::MatrixTransform* Wand::getMatrixTransform()
@@ -592,7 +594,7 @@ osg::MatrixTransform* Wand::getMatrixTransform()
            this->selectedGeometry->getParents().front()->getParents().front()
            ->asTransform()->asMatrixTransform() != 0 &&
            this->selectedGeometry->getParents().front()->getParents().front() !=
-           this->worldDCS->asGroup() )
+           activeDCS->asGroup() )
       {
          return this->selectedGeometry->getParents().front()->getParents().front()
          ->asTransform()->asMatrixTransform();

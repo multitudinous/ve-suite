@@ -32,18 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
-#include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
-
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
-
-#include <LinearMath/btVector3.h>
-
 // --- OSG Stuff --- //
 #include <osg/Group>
 #include <osg/Geode>
@@ -56,6 +44,17 @@
 #include <osg/Array>
 #include <osg/NodeVisitor>
 
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+
+#include <LinearMath/btVector3.h>
 
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
@@ -117,6 +116,8 @@ beamLineSegment( new osg::LineSegment )
 
 	gmtl::identity( tb_transform );
 	gmtl::identity( tb_accuTransform );
+   
+   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -262,7 +263,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
    if( mode == 0 )
    {
 	   //Get the current matrix
-      tb_accuTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+      tb_accuTransform = activeDCS->GetMat();
    }
 
    for( i = evt_queue.begin(); i != evt_queue.end(); i++ )
@@ -399,7 +400,7 @@ void KeyboardMouse::ProcessNavigationEvents()
    matrix *= accuRotation;
 
    //Set the current matrix
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
+   activeDCS->SetMat( matrix );
 
    //If not in animation mode, reset the transform
    if( !tb_animate )
@@ -563,7 +564,7 @@ void KeyboardMouse::SelMotion()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( identity( tb_accuTransform ) );
+   activeDCS->SetMat( identity( tb_accuTransform ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
@@ -756,8 +757,9 @@ void KeyboardMouse::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
    
    if ( listOfHits.empty())
    {
-      vprDEBUG(vesDBG,1) << "|\tcfdObjectHandler::ProcessHit No object selected" 
+      vprDEBUG(vesDBG,1) << "|\tKeyboardMouse::ProcessHit No object selected" 
                            << std::endl << vprDEBUG_FLUSH;
+      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
       return;
    }
    
@@ -788,6 +790,7 @@ void KeyboardMouse::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
                   << objectHit._geode->getParents().front()->getName() << std::endl;
       std::cout << "|\tObjects descriptors " 
                   << parentNode->getDescriptions().at( 1 ) << std::endl;
+      activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
    }
    else
    {
@@ -795,5 +798,6 @@ void KeyboardMouse::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
       std::cout << "|\tObject does not have name parent name " 
                   << objectHit._geode->getParents().front()->getName() 
                   << std::endl;
+      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
    }
 }

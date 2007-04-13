@@ -42,6 +42,8 @@ Device API
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 #include <osg/ref_ptr>
 
 namespace osg 
@@ -71,6 +73,7 @@ protected:
    virtual void ProcessSelection();
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
+   osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
 };
 }
 

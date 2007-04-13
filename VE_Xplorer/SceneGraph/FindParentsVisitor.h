@@ -57,6 +57,8 @@ public:
    virtual void apply( osg::Node& node );
    ///Return the parent node with an ID
    osg::Node* GetParentNode( void );
+   ///Return the GUID for the found node
+   std::string GetNodeGUID( void );
 private:
    std::string modelGUID;///<GUID to identify the VE-Open model
    osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
