@@ -34,7 +34,10 @@
 
 // --- OSG Stuff --- //
 #include <osg/Geode>
+#include <osg/Group>
+#include <osg/Geometry>
 #include <osg/Material>
+#include <osg/Array>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -42,11 +45,11 @@
 using namespace VE_SceneGraph::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpacityVisitor::OpacityVisitor( osg::Node* osg_node )
+OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool state )
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-
+   transparent = state;
 	osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,9 +61,68 @@ OpacityVisitor::~OpacityVisitor()
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Geode& node )
 {
-   for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
+   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
+	
+   if( material.valid() )
+   {
+      if( transparent == true )
+      {
+         material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
+      }
+
+      else
+      {
+         material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
+      }
+
+      node.getOrCreateStateSet()->setAttribute( material.get(), osg::StateAttribute::ON );
+   }
+
+   for( size_t i = 0; i < node.getNumDrawables(); i++ )
 	{
       
-	}
+      osg::ref_ptr< osg::Vec4Array > color_array = static_cast< osg::Vec4Array* >( node.getDrawable( i )->asGeometry()->getColorArray() );
+      
+
+      if( color_array.valid() )
+      {
+         for( size_t j = 0; j < color_array->size(); j++ )
+         {
+            if( transparent == true )
+            {
+               color_array->at( j ).a() = 0.3f;
+            }
+
+            else
+            {
+               color_array->at( j ).a() = 1.0f;
+            }
+
+            node.getDrawable( i )->asGeometry()->setColorArray( color_array.get() );
+         }
+      }
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void OpacityVisitor::apply( osg::Group& node )
+{
+   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
+
+   if( material.valid() )
+   {
+      if( transparent == true )
+      {
+         material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
+      }
+
+      else
+      {
+         material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
+      }
+
+      node.getOrCreateStateSet()->setAttribute( material.get(), osg::StateAttribute::ON ) ;
+   }
+
+   osg::NodeVisitor::apply( (osg::Node&)node );
 }
 ////////////////////////////////////////////////////////////////////////////////

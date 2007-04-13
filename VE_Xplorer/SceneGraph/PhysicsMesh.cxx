@@ -85,32 +85,29 @@ void PhysicsMesh::apply( osg::Geode& geode )
 { 
    tri_mesh = new btTriangleMesh;
 
-	for( unsigned int i = 0; i < geode.getNumDrawables(); i++ )
+	for( size_t i = 0; i < geode.getNumDrawables(); i++ )
 	{
 		osg::TriangleIndexFunctor< TriIndexFunc > TIF;
 		osg::ref_ptr< osg::Vec3Array > vertex_array;
 
 		geode.getDrawable( i )->accept( TIF );
-		vertex_array = dynamic_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
+		vertex_array = static_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
 
-      for( unsigned int i = 0; i < geode.getNumDrawables(); i++ )
-      {
-		   bb.expandBy( geode.getDrawable( i )->getBound() );
-      }
+		bb.expandBy( geode.getDrawable( i )->getBound() );
 
 		btVector3 v1, v2, v3;
 
-		for( unsigned int k = 0; k < TIF.triangleIndex.size() / 3; k++ )
+		for( size_t j = 0; j < TIF.triangleIndex.size() / 3; j++ )
 		{
-			tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( k*3  ) ).x(),
-														 vertex_array->at( TIF.triangleIndex.at( k*3  ) ).y(),
-														 vertex_array->at( TIF.triangleIndex.at( k*3  ) ).z() ),
-										  btVector3( vertex_array->at( TIF.triangleIndex.at( k*3+1) ).x(),
-														 vertex_array->at( TIF.triangleIndex.at( k*3+1) ).y(),
-														 vertex_array->at( TIF.triangleIndex.at( k*3+1) ).z() ),
-										  btVector3( vertex_array->at( TIF.triangleIndex.at( k*3+2) ).x(),
-														 vertex_array->at( TIF.triangleIndex.at( k*3+2) ).y(),
-														 vertex_array->at( TIF.triangleIndex.at( k*3+2) ).z() ) );
+			tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( j*3  ) ).x(),
+														 vertex_array->at( TIF.triangleIndex.at( j*3  ) ).y(),
+														 vertex_array->at( TIF.triangleIndex.at( j*3  ) ).z() ),
+										  btVector3( vertex_array->at( TIF.triangleIndex.at( j*3+1) ).x(),
+														 vertex_array->at( TIF.triangleIndex.at( j*3+1) ).y(),
+														 vertex_array->at( TIF.triangleIndex.at( j*3+1) ).z() ),
+										  btVector3( vertex_array->at( TIF.triangleIndex.at( j*3+2) ).x(),
+														 vertex_array->at( TIF.triangleIndex.at( j*3+2) ).y(),
+														 vertex_array->at( TIF.triangleIndex.at( j*3+2) ).z() ) );
 		}
 	}
 }

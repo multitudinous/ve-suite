@@ -37,6 +37,8 @@
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 
+#include "VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h"
+
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 
 #include "VE_Open/XML/Command.h"
@@ -73,6 +75,8 @@ using namespace VE_TextureBased;
 #include <vtkSTLWriter.h>
 #include <vtkPolyData.h>
 #include <vtkUnstructuredGridReader.h>
+
+#include <osg/BlendFunc>
 
 #include <fstream>
 #include <sstream>
@@ -767,14 +771,30 @@ void cfdModel::MakeCADRootTransparent()
    {
 	   return;
    }
-#ifdef _OSG   
+#ifdef _OSG
+
+   osg::ref_ptr< osg::StateSet > attribute = new osg::StateSet;
+   osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
+
+   bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+   //attribute->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
+   attribute->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+   attribute->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+   attribute->setMode( GL_BLEND, osg::StateAttribute::ON );
+   attribute->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
+   
+
+   /*
    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
    attribute->CreateTransparencyStateSet();
+   */
 
    try
    {
-	   _assemblyList[rootCADNodeID]->setStateSet(attribute.get());
+      _assemblyList[rootCADNodeID]->setStateSet( attribute.get() );
+      VE_SceneGraph::Utilities::OpacityVisitor opacity_visitor( _assemblyList[rootCADNodeID], true );
    }
+
    catch(...)
    {
       vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
@@ -800,6 +820,7 @@ void cfdModel::MakeCADRootOpaque()
       if( _assemblyList[ rootCADNodeID ]->getStateSet() )
       {   
          _assemblyList[ rootCADNodeID ]->getStateSet()->clear();
+         VE_SceneGraph::Utilities::OpacityVisitor opacity_visitor( _assemblyList[rootCADNodeID], false );
       }
    }
    catch(...)

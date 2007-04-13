@@ -94,7 +94,7 @@ void DeviceHandler::ExecuteCommands()
          currentEventHandler->second->SetGlobalBaseObject( active_device );
          currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
          //Tablet is always active...
-         if ( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
+         if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
          {
             currentEventHandler->second->SetGlobalBaseObject( devices[ "Tablet" ] );
             currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
@@ -105,7 +105,11 @@ void DeviceHandler::ExecuteCommands()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( std::string device )
 {
-   active_device = devices[ device ];
+   std::map< std::string, VE_Xplorer::Device* >::iterator itr = devices.find( device );
+   if ( itr != devices.end() )
+   {
+      active_device = devices[ device ];
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetDeviceMode( std::string mode )

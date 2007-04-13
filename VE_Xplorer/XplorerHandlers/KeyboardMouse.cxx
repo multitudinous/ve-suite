@@ -169,7 +169,6 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
       << " z " << wc_screen_zval 
       << " width " << width << " height "<< height << std::endl;*/
    
-   double wandDirection[ 3 ];
    double wandEndPoint[ 3 ];
    double distance = 10000.0f;
 

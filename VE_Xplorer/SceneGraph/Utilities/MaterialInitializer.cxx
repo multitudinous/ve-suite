@@ -68,10 +68,10 @@ void MaterialInitializer::apply( osg::Geode& node )
 
    else
    {
-	   for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
-	   {
-         node.getDrawable( i )->getOrCreateStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON ) ;
-	   }
+	   //for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
+	   //{
+         node.getOrCreateStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON );
+	   //}
    }
 }
 ////////////////////////////////////////////////////////////////////////////////    
