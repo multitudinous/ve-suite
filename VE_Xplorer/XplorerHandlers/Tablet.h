@@ -98,8 +98,6 @@ private:
 
    int cfdId;
    int cfdIso_value;
-   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
-
 private:
    //! VR Juggler
    /*!

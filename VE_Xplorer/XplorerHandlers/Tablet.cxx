@@ -62,7 +62,7 @@ Tablet::~Tablet( )
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::Initialize( void )
 {
-   worldDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
 
    translationStepSize = 0.25f;
    rotationStepSize = 1.0f;
@@ -71,13 +71,13 @@ void Tablet::Initialize( void )
 void Tablet::UpdateNavigation()
 {
    float worldRot[ 3 ];
-   float* tempWorldRot = worldDCS->GetRotationArray();
+   float* tempWorldRot = activeDCS->GetRotationArray();
    worldRot[ 0 ] = tempWorldRot[ 0 ];
    worldRot[ 1 ] = tempWorldRot[ 1 ];
    worldRot[ 2 ] = tempWorldRot[ 2 ];
 
    float worldTrans[ 3 ];
-	float* tempWorldTrans = worldDCS->GetVETranslationArray();
+	float* tempWorldTrans = activeDCS->GetVETranslationArray();
 	worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
 	worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
 	worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
@@ -180,19 +180,13 @@ void Tablet::UpdateNavigation()
             // Note:: for pf we are in juggler land
             //        for osg we are in z up land
             Matrix44f worldMat;
-            worldMat = worldDCS->GetMat();
+            worldMat = activeDCS->GetMat();
 
             gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
             jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
-         #ifdef _OSG
             jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
             jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
             jugglerHeadPointTemp[ 2 ] = 0;
-         #else
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = 0;
-            jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 2 ];
-         #endif
 
             // translate world dcs by distance that the head
             // is away from the origin
@@ -204,11 +198,7 @@ void Tablet::UpdateNavigation()
             gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
 
             // Create rotation matrix and juggler head vector
-         #ifdef _OSG
             gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
-         #else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
-         #endif
             gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
             gmtl::Vec4f newGlobalHeadPointVec;
             newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
@@ -221,11 +211,7 @@ void Tablet::UpdateNavigation()
             // and add original head off set to the newly found location
             // set world translation accordingly
             worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-         #ifdef _OSG
             worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-         #else
-            worldTrans[1] = (rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
-         #endif
          }
       }
       else if ( cfdIso_value == YAW_CW  )         
@@ -240,7 +226,7 @@ void Tablet::UpdateNavigation()
             // Note:: for pf we are in juggler land
             //        for osg we are in z up land
             Matrix44f worldMat;
-            worldMat = worldDCS->GetMat();
+            worldMat = activeDCS->GetMat();
 
             gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
             jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
@@ -322,8 +308,8 @@ void Tablet::UpdateNavigation()
       }
    }
 
-   worldDCS->SetTranslationArray( worldTrans );
-   worldDCS->SetRotationArray( worldRot );   
+   activeDCS->SetTranslationArray( worldTrans );
+   activeDCS->SetRotationArray( worldRot );   
    vprDEBUG(vesDBG,3) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

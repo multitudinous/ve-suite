@@ -349,8 +349,8 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
    
    if ( listOfHits.empty())
    {
-      vprDEBUG(vesDBG,1) << "|\tWand::ProcessHit No object selected" << std::endl 
-      << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "|\tWand::ProcessHit No object selected" 
+                           << std::endl << vprDEBUG_FLUSH;
       activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
       return;
    }
@@ -377,20 +377,18 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
    osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
    if ( parentNode.valid() )
    {
-      std::cout << "|\tObjects has name " 
-                  << parentNode->getName() << std::endl
-                  << objectHit._geode->getName() << std::endl
-                  << objectHit._geode->getParents().front()->getName() << std::endl;
-      std::cout << "|\tObjects descriptors " 
-                  << parentNode->getDescriptions().at( 1 ) << std::endl;
+      vprDEBUG(vesDBG,1) << "|\tObjects has name " 
+                  << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "|\tObjects descriptors " 
+                  << parentNode->getDescriptions().at( 1 ) << std::endl << vprDEBUG_FLUSH;
       activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
    }
    else
    {
       this->selectedGeometry = objectHit._geode;
-      std::cout << "|\tObject does not have name parent name " 
+      vprDEBUG(vesDBG,1) << "|\tObject does not have name parent name " 
                   << objectHit._geode->getParents().front()->getName() 
-                  << std::endl;
+                  << std::endl << vprDEBUG_FLUSH;
       activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
    }
 }
