@@ -69,6 +69,8 @@ public:
    virtual void SetVECommand( VE_XML::Command* command=0){;}
    virtual void UpdateCommand(){;}
    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){return false;}
+   void SetActiveDCS( VE_SceneGraph::DCS* dcs );
+   VE_SceneGraph::DCS* GetActiveDCS( void );
 protected:
    virtual void ProcessSelection();
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );

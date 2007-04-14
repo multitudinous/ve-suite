@@ -45,6 +45,8 @@
 #include "VE_Xplorer/XplorerHandlers/ViewEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
 
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -68,6 +70,8 @@ device_mode( "Navigation" )
    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
    _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
+   
+   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
@@ -136,8 +140,10 @@ void DeviceHandler::ProcessDeviceEvents()
    {
       active_device->UpdateSelection();
    }
-
+   //get the active dcs from the active device
+   activeDCS = active_device->GetActiveDCS();
    //Always do this be default
+   devices[ "Tablet" ]->SetActiveDCS( activeDCS.get() );
    devices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////

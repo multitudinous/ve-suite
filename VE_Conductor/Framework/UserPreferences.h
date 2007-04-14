@@ -45,6 +45,9 @@ UserPreferences API
 
 class wxCheckListBox;
 
+#include <map>
+#include <string>
+
 /*!
  * Control identifiers
  */
@@ -85,7 +88,8 @@ public:
 
    enum
    {
-      ID_PREFERENCE_CHKBX=20001
+      ID_PREFERENCE_CHKBX=20001,
+      ID_PREFERENCE_NAV_LAUNCH
    };
 
    /// Creation
@@ -108,8 +112,12 @@ public:
    
 private:
    wxCheckListBox* prefChkBx;///<The check box list of preferences
-   bool interactiveState;
+   wxCheckListBox* xplorerPrefChkBx;///<The check box list of preferences
+   //bool interactiveState;
+   //bool autuLaunchNavPane;
 
+   std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
+   
     DECLARE_EVENT_TABLE()
 
 };

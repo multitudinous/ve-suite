@@ -42,6 +42,8 @@ DeviceHandler API
 
 #include <vpr/Util/Singleton.h>
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 //C/C++ Libraries
 #include <string>
 #include <map>
@@ -75,12 +77,12 @@ public:
    void ProcessDeviceEvents();
 
    VE_Xplorer::Device* GetDevice( std::string device );
-   
 private:
    std::map< std::string, VE_Xplorer::Device* > devices;
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
    VE_Xplorer::Device* active_device;
+   osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;
    std::string device_mode;
 };
 }

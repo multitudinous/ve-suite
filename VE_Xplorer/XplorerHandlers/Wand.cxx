@@ -194,13 +194,25 @@ void Wand::UpdateNavigation()
                            << this->dir[1] << " : "
                            << this->dir[2]
                            << std::endl << vprDEBUG_FLUSH;
-      if ( this->dir[ 0 ] > 0.0f )
+      //Get the largest direction component so that we know how to rotate
+      float direction = 0.0f;
+      size_t dirIndex = 0;
+      for ( size_t i = 0; i < 3; ++i )
       {
-         worldRot[ 0 ] -= rotationStepSize;
+         if ( direction < fabs( dir[ i ] ) )
+         {
+            direction = dir[ i ];
+            dirIndex = i;
+         }
+      }
+      
+      if ( direction > 0.0f )
+      {
+         worldRot[ dirIndex ] -= rotationStepSize;
       }
       else 
       {
-         worldRot[ 0 ] += rotationStepSize;
+         worldRot[ dirIndex ] -= rotationStepSize;
       }
       
       if ( rotationFlag )
@@ -214,16 +226,10 @@ void Wand::UpdateNavigation()
          
          gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
          jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
-#ifdef _OSG
          jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
          jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-         jugglerHeadPointTemp[ 2 ] = 0;
-#else
-         jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-         jugglerHeadPointTemp[ 1 ] = 0;
-         jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 2 ];
-#endif
-         
+         jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 1 ];
+
          // translate world dcs by distance that the head
          // is away from the origin
          gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
@@ -235,24 +241,18 @@ void Wand::UpdateNavigation()
          
          // Create rotation matrix and juggler head vector
          gmtl::Matrix44f rotMatTemp;
-         if ( this->dir[ 0 ] > 0.0f )
+         gmtl::EulerAngleXYZf worldRotVecTemp( 0, 0, 0 );
+         
+         if ( direction > 0.0f )
          {
-#ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
-#else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
-#endif
-            rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+            worldRotVecTemp[ dirIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
          }
          else 
          {
-#ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
-#else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
-#endif
-            rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+            worldRotVecTemp[ dirIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
          }
+         
+         rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
          gmtl::Vec4f newGlobalHeadPointVec;
          newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
          newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
@@ -264,11 +264,8 @@ void Wand::UpdateNavigation()
          // and add original head off set to the newly found location
          // set world translation accordingly
          worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-#ifdef _OSG
          worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-#else
-         worldTrans[1] = (rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
-#endif
+         worldTrans[1] = -(rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
       }
    }
    else if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
@@ -506,7 +503,7 @@ void Wand::UpdateObjectHandler( void )
    //Update the juggler location of the wand
    UpdateWandLocalDirection();
    UpdateWandGlobalLocation();
-   UpdateDeltaWandPosition();
+   //UpdateDeltaWandPosition();
    
    //Now draw the new line location and setup the data for the hit list pointer
    osg::Vec3f startPoint, endPoint;
@@ -519,16 +516,16 @@ void Wand::UpdateObjectHandler( void )
       SelectObject();
       //Set delta back to 0 so that it is not moved by the old delta from the 
       //previous frame
-      UpdateDeltaWandPosition();
+     // UpdateDeltaWandPosition();
    }
    
-   //Now we can move the object if the button
+   /*//Now we can move the object if the button
    int buttonData = this->digital[ 0 ]->getData();
    if ( ( buttonData == gadget::Digital::ON ) &&
         this->selectedGeometry.valid() )
    {
       this->TranslateObject();
-   }
+   }*/
 
    vprDEBUG(vesDBG,3) << "|\tEnd Wand::UpdateObjectHandler" 
                         << std::endl << vprDEBUG_FLUSH;
@@ -542,8 +539,7 @@ void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
    
    for (int i = 0; i < 3; i++)
    {
-      wandEndPoint [ i ] = 
-               wandPosition [ i ] + (wandDirection [ i ] * this->distance); 
+      wandEndPoint [ i ] = (wandDirection [ i ] * this->distance); 
    }
    
    startPoint->set( wandPosition [ 0 ], wandPosition [ 1 ], wandPosition [ 2 ] );

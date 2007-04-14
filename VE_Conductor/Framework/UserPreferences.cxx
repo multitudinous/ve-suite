@@ -60,7 +60,6 @@ UserPreferences::UserPreferences( wxWindow* parent, wxWindowID id, const wxStrin
 bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
    prefChkBx = NULL;
-   interactiveState = false;
    //SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxPropertySheetDialog::Create( parent, id, caption, pos, size, style );
 
@@ -76,7 +75,13 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    temp.SetWidth( temp.GetWidth()+1 );
    SetSize( temp );
    this->SetIcon( ve_icon32x32_xpm );
-////@end UserPreferences creation
+
+   ///Read from wxConfig
+   ///Read from ves file
+   ///Set the map
+   preferenceMap[ "Interactive_State" ] = false;
+   preferenceMap[ "AutoLaunch_Nav_Pane" ] = false;
+   ///Update the preferences pane
    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,14 +100,22 @@ void UserPreferences::CreateControls()
    choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
    prefChkBx = new wxCheckListBox( panel, ID_PREFERENCE_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
    itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
-   ////////////////////////////////////////
-
+   ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("Xplorer Settings"));
+   wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
+   panel->SetSizer(itemBoxSizer3);
+   wxString xplorerChoices[1];
+   choices[ 0 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
+   xplorerPrefChkBx = new wxCheckListBox( panel, ID_PREFERENCE_NAV_LAUNCH, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
+   itemBoxSizer3->Add( xplorerPrefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+   ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("User Mode"));
+   ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("Defaults"));
+   ///////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -118,10 +131,10 @@ wxBitmap UserPreferences::GetBitmapResource( const wxString& name )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnPreferenceCheck( wxCommandEvent& WXUNUSED(event) )
 {
-   interactiveState = prefChkBx->IsChecked( 0 );
+   preferenceMap[ "Interactive_State" ] = prefChkBx->IsChecked( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UserPreferences::GetInteractiveMode( void )
 {
-   return interactiveState;
+   return preferenceMap[ "Interactive_State" ];
 }
