@@ -96,6 +96,15 @@ protected:
    
    ///Send the Command back to VE-Xplorer.
    void _sendCommandsToXplorer();
+
+   ///Convert a char to unicode
+   ///\param data the char to convert
+   ///\return The converted string
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
 #endif
    std::string _commandName;///<The name of the Command
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.

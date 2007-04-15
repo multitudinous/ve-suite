@@ -76,11 +76,6 @@ protected:
    wxCheckBox* _phongShadingCheck;///<The phong shading check box.
    wxComboBox* _shaderManagerSelection;///<The available shader manager.
    
-   std::string ConvertUnicode( const wxChar* data )
-   {
-         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-         return tempStr;
-   }
 
    DECLARE_EVENT_TABLE()
 };

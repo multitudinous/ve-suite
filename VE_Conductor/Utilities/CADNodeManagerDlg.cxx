@@ -127,7 +127,7 @@ void CADNodeManagerDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
    _vjObsPtr = VjObs::_duplicate(xplorerCom);
 }
 #endif
-/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
 {
    if(rootNode)
