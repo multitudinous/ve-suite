@@ -1368,9 +1368,8 @@ void Vistab::InitialScalarVector()
 ////////////////////////////////////////////////////////////////
 void Vistab::UpdateSpinControls()
 {
-   //_activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
-   //_activeScalarRange = _originalScalarRanges[_activeScalarName];
-//   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
    
    _minSpinner->SetRange( _activeScalarRange.at(0), _activeScalarRange.at(1) );
    _maxSpinner->SetRange( _activeScalarRange.at(0), _activeScalarRange.at(1) );

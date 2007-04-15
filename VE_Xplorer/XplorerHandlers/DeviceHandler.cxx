@@ -97,10 +97,12 @@ void DeviceHandler::ExecuteCommands()
 		{
          currentEventHandler->second->SetGlobalBaseObject( active_device );
          currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
-         //Tablet is always active...
+         //Tablet and Wand is always active and need updated...
          if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
          {
             currentEventHandler->second->SetGlobalBaseObject( devices[ "Tablet" ] );
+            currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+            currentEventHandler->second->SetGlobalBaseObject( devices[ "Wand" ] );
             currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
          }
       }

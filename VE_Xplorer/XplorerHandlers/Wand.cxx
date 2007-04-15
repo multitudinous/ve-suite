@@ -197,18 +197,25 @@ void Wand::UpdateNavigation()
       //Get the largest direction component so that we know how to rotate
       float direction = 0.0f;
       size_t dirIndex = 0;
-      for ( size_t i = 0; i < 3; ++i )
+      size_t rotIndex = 0;
+      //If we want pitch
+      if ( fabs( dir[ 0 ] ) < fabs( dir[ 2 ] ) )
       {
-         if ( direction < fabs( dir[ i ] ) )
-         {
-            direction = dir[ i ];
-            dirIndex = i;
-         }
+         direction = dir[ 2 ];
+         dirIndex = 1;
+         rotIndex = 0;
+      }
+      //else we get yaw
+      else
+      {
+         direction = dir[ 0 ];
+         dirIndex = 0;
+         rotIndex = 2;
       }
       
       if ( direction > 0.0f )
       {
-         worldRot[ dirIndex ] -= rotationStepSize;
+         worldRot[ dirIndex ] += rotationStepSize;
       }
       else 
       {
@@ -228,7 +235,7 @@ void Wand::UpdateNavigation()
          jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
          jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
          jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-         jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 1 ];
+         jugglerHeadPointTemp[ 2 ] = 0;//jugglerHeadPoint[ 1 ];
 
          // translate world dcs by distance that the head
          // is away from the origin
@@ -245,11 +252,11 @@ void Wand::UpdateNavigation()
          
          if ( direction > 0.0f )
          {
-            worldRotVecTemp[ dirIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
+            worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(rotationStepSize);
          }
          else 
          {
-            worldRotVecTemp[ dirIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
+            worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
          }
          
          rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
@@ -265,7 +272,7 @@ void Wand::UpdateNavigation()
          // set world translation accordingly
          worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
          worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-         worldTrans[1] = -(rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
+         worldTrans[2] = -(rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
       }
    }
    else if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
