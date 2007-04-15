@@ -220,7 +220,7 @@ void cfdTeacher::RecordScene()
 #ifdef _PERFORMER
                   << this->pfb_count << ".pfb";
 #elif _OSG
-         << this->pfb_count << ".osg";
+         << this->pfb_count << ".ive";
 #endif
    std::string dirString = dirStringStream.str();
    pfb_filename = dirString.c_str();
@@ -335,89 +335,6 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          }
          return true;
       }
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RECORD_SCENE )
-   {
-	   //check if the path to STORED_FILES exists
-	   boost::filesystem::path dir_path( this->directory );
-	   try
-	   {
-	      boost::filesystem::is_directory( dir_path );
-	   }
-	   catch ( const std::exception& ex )
-	   {
-		   std::cout << ex.what() << std::endl;
-		   boost::filesystem::create_directory(dir_path);
-		   std::cout << "...so we made it for you..." << std::endl;
-	   }
-
-      // Generate a .pfb filename...
-      std::string pfb_filename;
-      std::ostringstream dirStringStream;
-      dirStringStream << this->directory << "/stored_scene_" 
-#ifdef _PERFORMER
-                        << this->pfb_count << ".pfb";
-#elif _OSG
-         << this->pfb_count << ".ive";
-#endif
-      std::string dirString = dirStringStream.str();
-      pfb_filename = dirString.c_str();
-
-      vprDEBUG(vesDBG,0) << "scene stored as " << pfb_filename
-                             << std::endl << vprDEBUG_FLUSH;
-
-      
-      // store the world DCS matrix..
-      if ( _worldDCS.valid() )
-      {
-         
-			osg::ref_ptr< VE_SceneGraph::Group > tempGroup = new VE_SceneGraph::Group();
-                  
-         //tempGroup->AddChild(cfdModelHandler::instance()->GetScalarBar()->GetDCS());
-         
-         gmtl::Matrix44f m = this->_worldDCS->GetMat();
-
-         //temporarily reset the world DCS matrix to the identity
-         gmtl::Matrix44f I;
-
-         // Make an identity matrix
-         gmtl::identity( I );
-         this->_worldDCS->SetMat( I );
-         //float scaleUnity[ 3 ];
-         //scaleUnity[ 0 ] = scaleUnity[ 1 ] = scaleUnity[ 2 ] = 1.0f;
-         //this->_worldDCS->SetScaleArray( scaleUnity );
-      
-        
-         tempGroup->AddChild( _worldDCS.get() );
-         writePFBFile( this->_worldDCS.get(), (std::string)pfb_filename.c_str() );
-
-
-         tempGroup->RemoveChild( _worldDCS.get() );
-         //tempGroup->RemoveChild(cfdModelHandler::instance()->GetScalarBar()->GetDCS());
-
-         /*float* scaleArray = this->_worldDCS->GetScaleArray();
-         float tempScale = 1.0f / scaleArray[ 0 ];
-         gmtl::Matrix44f scaleMat;
-         gmtl::setScale( scaleMat, tempScale );
-         gmtl::Matrix44f mTemp = scaleMat * m;*/
-         // restore the world DCS matrix...
-         //this->_worldDCS->SetMat( m );
-         this->_worldDCS->SetMat( m );
-         //this->_worldDCS->SetScaleArray( scaleArray ); 
-      }
-      else
-      {
-         writePFBFile( VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), pfb_filename );
-      }
-      // store the active geometry and viz objects as a pfb
-      // (but not the sun, menu, laser, or text)
-      int store_int = 0;
-
-      vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << store_int << std::endl << vprDEBUG_FLUSH;
-      
-      // increment the counter and reset the id to -1...
-      this->pfb_count++;
-      return true;
    }
 
    return false;
