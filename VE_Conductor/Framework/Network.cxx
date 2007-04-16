@@ -3334,7 +3334,7 @@ bool Network::SetActiveModel()
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
 {
-   if ( m_selMod < 0) 
+   if ( m_selMod < 0 ) 
    {
       return;
    }

@@ -129,6 +129,13 @@ public:
 
    // Build the navigation pane
    void BuildPane( void );
+   ///Update navigation data to the current state in the ves file
+   void UpdateNavigationData( void );
+   ///Set the preference data on the preference singleton
+   void SetPreferenceNavigationData( void );
+   ///Idle function
+   virtual void OnInternalIdle( void );
+
 protected:
    int _activeButton;
    wxScrolledWindow* scrollWindow;

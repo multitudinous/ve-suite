@@ -523,7 +523,7 @@ void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED(event) )
    cIso_value = subZeroChk->GetValue();
    SendCommandsToXplorer();
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SendCommandsToXplorer( void )
 {
    // Create the command and data value pairs
@@ -538,4 +538,45 @@ void NavigationPane::SendCommandsToXplorer( void )
    
    //Clean up memory
    delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationPane::OnInternalIdle( void )
+{
+   //only update the gui when it is in focus and is being used
+   //another method would be the wxTopLevelWindow::IsActive
+   //or an wxIdleEvent may need to be used here
+   //we will have to do testing to figure out the best methods
+   if ( wxWindow::FindFocus() == static_cast< wxWindow* >( this ) )
+   {
+      UpdateNavigationData();
+      UpdateWindowUI(wxUPDATE_UI_FROMIDLE);
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationPane::UpdateNavigationData( void )
+{
+   dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
+   cIso_value = translationStepSize->GetValue();
+   dataValueName = "CHANGE_ROTATION_STEP_SIZE";
+   cIso_value = rotationStepSize->GetValue();
+   dataValueName = "RESET_NAVIGATION_POSITION";
+   cIso_value = translationStepSize->GetValue();
+   dataValueName = "ROTATE_ABOUT_HEAD";
+   cIso_value = headRotationChk->GetValue();
+   dataValueName = "Z_ZERO_PLANE";
+   cIso_value = subZeroChk->GetValue();
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationPane::SetPreferenceNavigationData( void )
+{
+   dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
+   cIso_value = translationStepSize->GetValue();
+   dataValueName = "CHANGE_ROTATION_STEP_SIZE";
+   cIso_value = rotationStepSize->GetValue();
+   dataValueName = "RESET_NAVIGATION_POSITION";
+   cIso_value = translationStepSize->GetValue();
+   dataValueName = "ROTATE_ABOUT_HEAD";
+   cIso_value = headRotationChk->GetValue();
+   dataValueName = "Z_ZERO_PLANE";
+   cIso_value = subZeroChk->GetValue();
 }

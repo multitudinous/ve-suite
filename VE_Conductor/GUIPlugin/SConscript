@@ -25,6 +25,7 @@ sources = Split("""
    QueryInputsDlg.cxx
    FindDialog.cxx
    IconChooser.cxx
+   UserPreferencesDataBuffer.cxx
 """)
 
 headers = Split("""
@@ -48,6 +49,7 @@ headers = Split("""
    QueryInputsDlg.h
    FindDialog.h
    IconChooser.h
+   UserPreferencesDataBuffer.h
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
