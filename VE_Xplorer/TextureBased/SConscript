@@ -62,6 +62,7 @@ headers = Split("""
    TBVolumeSlices.h
    volumeRenderBasicShader.h
    volumeRenderPhongShader.h
+   bboxEdgeConstants.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
