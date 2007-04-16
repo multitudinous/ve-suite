@@ -496,8 +496,7 @@ void AppFrame::CreateVETab()
    //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
    //SetSizer( sizerTab );*/
 }
-
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::GetConfig(wxConfig* config)
 {
   wxConfig* cfg = config;
@@ -532,8 +531,7 @@ void AppFrame::GetConfig(wxConfig* config)
 
    if (!config) delete cfg;
 }
-
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::GetAppropriateSubDialogSize()
 {
    int displayWidth= 0;
@@ -564,6 +562,7 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
                    );
    }
 }
+////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
 {
   const int minFrameWidth = 600;
@@ -597,7 +596,7 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   
   return rect;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
 {
   // store size
@@ -611,8 +610,7 @@ void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
   
   if (!config) delete cfg;
 }
-
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig(wxConfig* config)
 {
 	//store config
@@ -626,8 +624,7 @@ void AppFrame::StoreConfig(wxConfig* config)
 
 	if (!config) delete cfg;
 }
-
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreRecentFile( wxConfig* config )
 {
 	//store recent menus in config
@@ -730,12 +727,17 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 	StoreRecentFile(NULL);
    Destroy();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
 {
    Close(true);
 }
-
+////////////////////////////////////////////////////////////////////////////////
+UserPreferences* AppFrame::GetUserPreferences( void )
+{
+   return preferences;
+}
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu() 
 {
    menubar = new wxMenuBar;
@@ -929,7 +931,7 @@ void AppFrame::CreateMenu()
 
    SetMenuBar(menubar);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateTB()
 {
    toolbar = CreateToolBar( wxTB_FLAT | wxTB_HORIZONTAL );
@@ -944,7 +946,7 @@ void AppFrame::CreateTB()
 
    this->SetToolBar( toolbar );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
 {
   //  printf("Scale = %g\n", network->m_xUserScale);

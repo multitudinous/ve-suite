@@ -206,7 +206,7 @@ public:
 
    void OnClose( wxCloseEvent& event );
    void FrameClose( wxCommandEvent& event );
-   //VE_Conductor::CORBAServiceList* GetCORBAServiceList( void );
+   UserPreferences* GetUserPreferences( void );
 
    ///Override so we can show the tree after things are initialized.  
    virtual bool Show(bool value);
@@ -225,8 +225,6 @@ public:
    wxMenuBar* menubar;
    wxToolBar* toolbar;
    wxIcon* icon;
-  
-   //wxPlatformInfo* platform;
 
    Avail_Modules* av_modules;
    Network* network;
@@ -255,36 +253,29 @@ public:
    bool f_financial;
    bool f_geometry;
    bool f_visualization;
-
+   
    void Log(const char* msg);
    void CloseVE();
-
    ///Returns pointer to xplorer corba object
    VjObs_ptr GetXplorerObject( void );
-
    ///cyang
    void GetConfig(wxConfig* config);
    void StoreConfig(wxConfig* config);
-
    ///Function to process command line args to conductor and specifically
    ///to load a ves file and set the working directory appropriatley for a
    ///particular application
    void ProcessCommandLineArgs( void );
 
 protected:
-
-
   int m_frameNr;
   wxString fname;
   wxString directory;
   wxString path;
 
-  //wxString Recent[]; 
   std::vector< wxFileName > recentFileArchive;
 	
   VjObs_var vjobs;
 
-  
 private:
    bool is_orb_init;
    bool connectToVE;
