@@ -136,7 +136,7 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-	subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
+	subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
                           "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
@@ -327,7 +327,7 @@ class Launch:
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
             self.clusterScript += "ssh $1 << EOF\n"
             ##Turn off comp's screen saver
-            self.clusterScript += "/usr/bin/X11/xset -display :0.0" + \
+            self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
             self.WriteToClusterScript("PYTHONPATH")
             self.WriteToClusterScript("DISPLAY")
