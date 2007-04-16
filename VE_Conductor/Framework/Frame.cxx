@@ -302,6 +302,12 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    xplorerColor.push_back( 1.0f );
    xplorerWxColor = new wxColourData();
    xplorerWxColor->SetChooseFull(true);
+   
+   if ( preferences->GetMode( "Auto Launch Nav Pane" ) )
+   {
+      wxCommandEvent event;
+      LaunchNavigationPane( event );
+   }
 }
 ///////////////////////////////////////
 std::string AppFrame::GetDisplayMode()

@@ -89,9 +89,11 @@ public:
    enum
    {
       ID_PREFERENCE_CHKBX=20001,
-      ID_PREFERENCE_NAV_LAUNCH
+      ID_XPLORER_CHKBX
    };
 
+   virtual ~UserPreferences();
+   
    /// Creation
    bool Create( wxWindow* parent, 
                wxWindowID id = SYMBOL_USERPREFERENCES_IDNAME, 
@@ -105,8 +107,12 @@ public:
 
    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
    void OnPreferenceCheck( wxCommandEvent& event );
+   void OnXplorerCheck( wxCommandEvent& event );
    bool GetInteractiveMode( void );
-
+   bool GetMode( std::string mode );
+   void ReadConfiguration( void );
+   void WriteConfiguration( void );
+      
    /// Should we show tooltips?
    static bool ShowToolTips();
    
@@ -115,10 +121,17 @@ private:
    wxCheckListBox* xplorerPrefChkBx;///<The check box list of preferences
    //bool interactiveState;
    //bool autuLaunchNavPane;
+   wxString xplorerChoices[1];
 
    std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
    
-    DECLARE_EVENT_TABLE()
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
+
+   DECLARE_EVENT_TABLE()
 
 };
 #endif

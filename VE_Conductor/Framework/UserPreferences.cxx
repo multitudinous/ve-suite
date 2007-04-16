@@ -39,17 +39,26 @@
 #include <wx/generic/propdlg.h>
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
+#include <wx/config.h>
+
+//#include <iostream>
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/UserPreferences.h"
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
    EVT_CHECKLISTBOX( ID_PREFERENCE_CHKBX, UserPreferences::OnPreferenceCheck )
+   EVT_CHECKLISTBOX( ID_XPLORER_CHKBX, UserPreferences::OnXplorerCheck )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
 {
    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+UserPreferences::~UserPreferences()
+{
+   WriteConfiguration();
 }
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -62,7 +71,14 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    prefChkBx = NULL;
    //SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxPropertySheetDialog::Create( parent, id, caption, pos, size, style );
-
+   ///Set the map
+   preferenceMap[ "Interactive_State" ] = false;
+   preferenceMap[ "Auto Launch Nav Pane" ] = false;
+   ///Read from wxConfig
+   ReadConfiguration();
+   ///Read from ves file
+   
+   ///Update the preferences pane
    CreateControls();
    
    GetSizer()->Fit(this);
@@ -76,12 +92,6 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    SetSize( temp );
    this->SetIcon( ve_icon32x32_xpm );
 
-   ///Read from wxConfig
-   ///Read from ves file
-   ///Set the map
-   preferenceMap[ "Interactive_State" ] = false;
-   preferenceMap[ "AutoLaunch_Nav_Pane" ] = false;
-   ///Update the preferences pane
    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,9 +115,9 @@ void UserPreferences::CreateControls()
    GetBookCtrl()->AddPage(panel, _("Xplorer Settings"));
    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
    panel->SetSizer(itemBoxSizer3);
-   wxString xplorerChoices[1];
-   choices[ 0 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
-   xplorerPrefChkBx = new wxCheckListBox( panel, ID_PREFERENCE_NAV_LAUNCH, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
+   xplorerChoices[ 0 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
+   xplorerPrefChkBx = new wxCheckListBox( panel, ID_XPLORER_CHKBX, wxDefaultPosition, wxDefaultSize, 1, xplorerChoices, 0, wxDefaultValidator, _("listBox") );
+   xplorerPrefChkBx->Check( 0, preferenceMap[ "Auto Launch Nav Pane" ] );
    itemBoxSizer3->Add( xplorerPrefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
    ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -134,7 +144,62 @@ void UserPreferences::OnPreferenceCheck( wxCommandEvent& WXUNUSED(event) )
    preferenceMap[ "Interactive_State" ] = prefChkBx->IsChecked( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool UserPreferences::GetInteractiveMode( void )
+void UserPreferences::OnXplorerCheck( wxCommandEvent& event )
 {
-   return preferenceMap[ "Interactive_State" ];
+   wxString mode = xplorerChoices[ event.GetSelection() ];
+   //std::cout << ConvertUnicode( mode.c_str() ) << " " 
+   //            << xplorerPrefChkBx->IsChecked( event.GetSelection() ) << std::endl;
+   preferenceMap[ ConvertUnicode( mode.c_str() ) ] = 
+               xplorerPrefChkBx->IsChecked( event.GetSelection() );
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UserPreferences::GetMode( std::string mode )
+{
+   std::map< std::string, bool >::iterator iter;
+   iter = preferenceMap.find( mode );
+   if ( iter != preferenceMap.end() )
+   {
+      return iter->second;
+   }
+   return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::ReadConfiguration( void )
+{
+   wxConfig* cfg = new wxConfig( _("VE-Conductor") );
+   
+   wxString key = _T("UserPreferences");
+   if ( !cfg->Exists( key ) ) 
+   {
+      return;
+   }
+   
+   std::map< std::string, bool >::iterator iter;
+   for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
+   {
+      cfg->Read( key + 
+                 _T("/") + 
+                 wxString( iter->first.c_str(), wxConvUTF8 ), 
+                 &iter->second, false);
+      //std::cout << iter->second << " " << iter->first << std::endl;
+   }
+   
+   delete cfg;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::WriteConfiguration( void )
+{
+   wxConfig* cfg = new wxConfig( _("VE-Conductor") );
+   
+   wxString key = _T("UserPreferences");
+   std::map< std::string, bool >::iterator iter;
+   for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
+   {
+      cfg->Write( key + 
+                  _T("/") + 
+                  wxString( iter->first.c_str(), wxConvUTF8 ), 
+                  iter->second );
+   }
+   
+   delete cfg;
 }
