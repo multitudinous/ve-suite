@@ -583,8 +583,8 @@ VE_XML::ParameterBlock* Model::GetInformationPacket( std::string name)
          return (*iter);
       }
    }
-   std::cout<<"Parameter Block: "<<name<<std::endl;
-   std::cout<<"not found in Model: "<<uuid<<std::endl;
+   //std::cout<<"Parameter Block: "<<name<<std::endl;
+   //std::cout<<"not found in Model: "<<uuid<<std::endl;
    return 0;
 }
 ////////////////////////////////////////////////////////////

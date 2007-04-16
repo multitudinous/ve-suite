@@ -31,6 +31,10 @@ sources = Split("""
    cfdVolumeVisualization.cxx
    GreyScaleShaderManager.cxx
    TBVolumeSlices.cxx
+   LuminanceTransferFunction.cxx
+   PreIntegrationTexture.cxx
+   RedYellowGreenCyanBlueTransferFunction.cxx
+   TransferFunction.cxx
 """)
 
 headers = Split("""
@@ -63,6 +67,10 @@ headers = Split("""
    volumeRenderBasicShader.h
    volumeRenderPhongShader.h
    bboxEdgeConstants.h
+   RedYellowGreenCyanBlueTransferFunction.h
+   TransferFunction.h
+   PreIntegrationTexture.h
+   LuminanceTransferFunction.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)

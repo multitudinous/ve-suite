@@ -93,15 +93,6 @@ public:
    #elif _OPENSG
    #endif
 
-   #ifdef _PERFORMER
-   void pfTravNodeMaterial( pfNode* );
-   void pfTravNodeFog( pfNode* Node_1, pfFog* fog );
-   #elif _OSG
-   void TravNodeMaterial( osg::Node* );
-   void TravNodeFog( osg::Node* Node_1, osg::Fog* fog );
-   #elif _OPENSG
-   #endif
-
    void SetNodeProperties( int, float, float* );
    void LoadFile( std::string,
                   #ifdef _OSG
