@@ -58,43 +58,54 @@ class wxSizer;
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
+   namespace VE_Model
+   {
+      class Model;
+   }
 }
-
 class SoundsPane : public wxDialog
 {
 public:
-   SoundsPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn );
+   SoundsPane( VE_XML::VE_Model::Model* model );
    virtual ~SoundsPane(){;}
 
    enum SOUNDS_TAB_IDS
    {
       SOUND_CBOX,
-      SOUND_UPDATE_BUTTON
+      SOUND_LOAD_BUTTON
    };
-
-   void SetCommInstance( VjObs_ptr veEngine );
-   //void SetDOMManager( VE_XML::DOMDocumentManager* domManagerIn );
    void SendCommandsToXplorer( void );
+   ///Set the active VE_XML::VE_Model::Model
+   ///\param model The active model;
+   void SetActiveModel(VE_XML::VE_Model::Model* model);
 protected:
    void _buildPage();
    
    //the controls
    wxCheckListBox* _soundCBox;
-   wxButton* _updateButton;
+   wxButton* _loadButton;
 
-   std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
-   int cId, cIso_value;
-   short num_sounds;
-   VjObs::scalar_p_var   soundNameArray;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
-   std::string dataValueName;
+   unsigned int _numSounds;///<The number of sounds
+   VE_XML::VE_Model::Model* _activeModel;///<The current model;
+   wxArrayString _loadedSounds;///<The sounds loaded already;
+
+   ///Update the current sound information from a given VE_Model
+   void _updateSoundsInformationFromModel();
+
+   ///Check if we've already loaded this sound file
+   ///\param filename The file to check
+   bool _ensureSounds(wxString filename);
+
+   ///Clear the loaded sounds
+   void _clearLoadedSounds();
+
+   ///Load the sound files in xplorer
+   ///\param soundFileName The name of the sound file to load
+   void _loadSoundsInXplorer( wxString soundFileName );
 
    //event handlers
    void _onSounds(wxCommandEvent& event);  
-   void _onUpdate(wxCommandEvent& event);  
+   void _onLoadAndUpdate(wxCommandEvent& event);  
 
    DECLARE_EVENT_TABLE()
 };

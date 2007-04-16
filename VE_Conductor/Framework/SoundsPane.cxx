@@ -33,32 +33,37 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/SoundsPane.h"
-#include "VE_Open/XML/DOMDocumentManager.h"
+#include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/ParameterBlock.h"
 
 #include <wx/button.h>
 #include <wx/checklst.h>
 #include <wx/sizer.h>
 #include <wx/msgdlg.h>
+#include <wx/filedlg.h>
+#include <wx/filename.h>
 #include <iostream>
 #include <cmath>
 
 BEGIN_EVENT_TABLE(SoundsPane, wxDialog)
    //EVT_CHECKLISTBOX(SOUND_CBOX,SoundsPane::_onSounds)
-   EVT_BUTTON(SOUND_UPDATE_BUTTON,SoundsPane::_onUpdate)
+   EVT_BUTTON(SOUND_LOAD_BUTTON,SoundsPane::_onLoadAndUpdate)
 END_EVENT_TABLE()
 
 ///////////////
 //Constructor//
 ///////////////
-SoundsPane::SoundsPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn )
+SoundsPane::SoundsPane( VE_XML::VE_Model::Model* activeModel)
 :wxDialog(NULL,-1, _("Sounds Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
    _soundCBox = 0;
-   _updateButton = 0;
+   _loadButton = 0;
+   _numSounds = 0;
+   _activeModel = activeModel;
 
    _buildPage();
 }
@@ -68,67 +73,37 @@ SoundsPane::SoundsPane( VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManag
 void SoundsPane::_buildPage()
 {
    //the check box list
-   int numSounds = num_sounds;
-   int numCheckboxes = numSounds;
-   wxString* defaultName;
-   
-   if ( numSounds > 0 )
-   {
-      defaultName = new wxString[ numSounds ];
-      for(CORBA::ULong i = 0; i < (unsigned int)numSounds; i++)
-      {
-         defaultName[ i ] = wxString( soundNameArray[ i ], wxConvUTF8);
-      }
-   }
-   else
-   {
-      // create a dummy checkbox when there are no sounds available...
-      numCheckboxes = 1;
-      defaultName = new wxString[ 1 ];
-      defaultName[ 0 ] = wxT("No Sound Files");
-   }
-
-   _soundCBox = new wxCheckListBox( this, SOUND_CBOX, wxDefaultPosition, 
-                                    wxDefaultSize, numCheckboxes, defaultName, 
-                                    0, wxDefaultValidator,
-                                    wxT("Sound Files") );
-/*
-   // Used to initialize all the checkboxes on
-   for ( int j = 0; j < numSounds; j++ )
-   {
-      _soundCBox->Check( j );
-   }
-*/
-
-   if ( numSounds == 0 )
-   {
-      _soundCBox->Enable( false );
-   }
+   _updateSoundsInformationFromModel();
 
    //the update button
-   _updateButton = new wxButton(this,SOUND_UPDATE_BUTTON,wxT("Update"));
+   _loadButton = new wxButton(this,SOUND_LOAD_BUTTON,wxT("Load"));
 
    //the panel sizer
    wxBoxSizer* soundPanelGroup = new wxBoxSizer(wxVERTICAL);
    soundPanelGroup->Add(_soundCBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   soundPanelGroup->Add(_updateButton,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   wxBoxSizer* buttonRow = new wxBoxSizer(wxHORIZONTAL);
+   buttonRow->Add(_loadButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   buttonRow->Add(new wxButton(this,wxID_OK,wxT("OK")),1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   soundPanelGroup->Add(buttonRow,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
    //assign the group to the panel
    SetSizer(soundPanelGroup);
 }
-
 //////////////////
 //event handling//
-///////////////////
-
+//////////////////
+///////////////////////////////////////////////////////////
 void SoundsPane::_onSounds(wxCommandEvent& WXUNUSED(event))
 {
+   ///turn on/off sound
+   ///send commands to xplorer
 }
-
-void SoundsPane::_onUpdate(wxCommandEvent& WXUNUSED(event))
+//////////////////////////////////////////////////////////////////
+void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
 {
+   /*
    cIso_value = 0;
    for ( int i = 0; i < num_sounds; i++ )
    {
@@ -136,55 +111,133 @@ void SoundsPane::_onUpdate(wxCommandEvent& WXUNUSED(event))
          cIso_value += (int)pow( 2.0f, (float)i );
    }
    std::cout << cIso_value << std::endl;
-   dataValueName = "UPDATE_SOUNDS";
-   SendCommandsToXplorer();
-}
-
-void SoundsPane::SetCommInstance( VjObs_ptr veEngine )
-{
-   xplorerPtr = VjObs::_duplicate( veEngine );
-}
-//////////////////////////////////////////////////
-void SoundsPane::SendCommandsToXplorer( void )
-{
-     // Now need to construct domdocument and populate it with the new vecommand
-   domManager->CreateCommandDocument("Command");
-   doc = domManager->GetCommandDocument();
-
-   // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
-   dataValuePair->SetOwnerDocument(doc);
-   dataValuePair->SetDataName( dataValueName );
-   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetOwnerDocument(doc);
-   veCommand->SetCommandName( std::string("Sound_Data") );
-   veCommand->AddDataValuePair( dataValuePair );
-   doc->getDocumentElement()->appendChild( veCommand->GetXMLData( "vecommand" ) );
-
-   // New need to destroy document and send it
-   std::string commandData = domManager->WriteAndReleaseCommandDocument();
-   char* tempDoc = new char[ commandData.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandData.c_str() );
-
-   if ( !CORBA::is_nil( xplorerPtr ) && !commandData.empty() )
+   dataValueName = "UPDATE_SOUNDS";*/
+   wxFileDialog dialog(this,
+                       _T("Open Sound File"), 
+                       _T(""), 
+                       _T(""),
+                       _T("Wave files (*.wav)|*.wav;|MP3 files (*.mp3)|*.mp3;|All Files (*.*)|*.*"),
+                       wxOPEN|wxFILE_MUST_EXIST|wxMULTIPLE,//|wxCHANGE_DIR, 
+                       wxDefaultPosition);
+   
+   if (dialog.ShowModal() == wxID_OK)
    {
-      try
+      wxArrayString fileNamesVector;
+      dialog.GetPaths( fileNamesVector );
+      
+      for ( size_t i = 0; i < fileNamesVector.GetCount(); ++i )
       {
-         // CORBA releases the allocated memory so we do not have to
-         xplorerPtr->SetCommandString( tempDoc );
+         if(_ensureSounds(fileNamesVector.Item(i)))
+         { 
+            wxFileName soundFileName( fileNamesVector.Item(i).c_str());
+            _soundCBox->Append(soundFileName.GetName());
+
+            VE_XML::ParameterBlock* modelSounds = 0;
+            modelSounds = _activeModel->GetInformationPacket("Model Sounds");
+
+            VE_XML::DataValuePair* soundProperty = modelSounds->GetProperty(-1);
+            soundProperty->SetData(std::string(soundFileName.GetName()),std::string(fileNamesVector.Item(i)));
+            //_loadSoundsInXplorer( fileNamesVector.Item( i ) );
+         }
       }
-      catch ( ... )
+   }
+}
+/////////////////////////////////////////////////
+bool SoundsPane::_ensureSounds(wxString filename)
+{
+   for(unsigned int i = 0; i < _numSounds; ++i)
+   {
+      if(filename == _loadedSounds[i])
       {
-         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
+         ///already loaded this file
+         wxMessageDialog promptDlg( this, 
+                                    _("Sound file already loaded!"), 
+                                    _("Sound Load Error"), 
+                                    wxYES_NO|wxNO_DEFAULT|wxICON_ERROR, 
+                                    wxDefaultPosition);
+         return false;
       }
+   }
+   
+   ///add the file to the list
+   _loadedSounds.push_back(filename);
+   _numSounds = _loadedSounds.size();
+   _soundCBox->Enable( true);
+   return true;
+}
+///////////////////////////////////////////////////////////////
+void SoundsPane::SetActiveModel(VE_XML::VE_Model::Model* model)
+{
+   _activeModel = model;
+   if(_activeModel)
+   {
+      _updateSoundsInformationFromModel();
+   }
+}
+////////////////////////////////////////////////////
+void SoundsPane::_updateSoundsInformationFromModel()
+{
+   if(!_activeModel)
+      return;
+
+   _clearLoadedSounds();
+   
+   int numCheckboxes = 1;
+   VE_XML::ParameterBlock* modelSounds = 0;
+   modelSounds = _activeModel->GetInformationPacket("Model Sounds");
+   ///create the model sounds
+   if(!modelSounds)
+   {
+      modelSounds = _activeModel->GetInformationPacket(-1);
+      modelSounds->SetName("Model Sounds");
+   }
+   _numSounds = modelSounds->GetNumberOfProperties();
+
+   if ( _numSounds > 0 )
+   {
+      //defaultName.push_back new wxString[ _numSounds ];
+      for(unsigned int i = 0; i < _numSounds; ++i)
+      {
+         _loadedSounds.push_back(wxString( modelSounds->GetProperty(i)->GetDataName().c_str(), wxConvUTF8));
+      }
+      numCheckboxes = _numSounds;
    }
    else
    {
-      delete [] tempDoc;
+      // create a dummy checkbox when there are no sounds available...
+      numCheckboxes = 1;
+      _loadedSounds.push_back(wxT("No Sound Files"));
    }
-   //Clean up memory
-   delete veCommand;
+   if(_soundCBox)
+   {
+      _soundCBox->Set(_loadedSounds);
+   }
+   else
+   {
+      _soundCBox = new wxCheckListBox( this, SOUND_CBOX, wxDefaultPosition, 
+                                    wxDefaultSize, _loadedSounds, 
+                                    0, wxDefaultValidator,
+                                    wxT("Sound Files") );
+      if ( _numSounds == 0 )
+      {
+         _soundCBox->Enable( false );
+      }
+   }
+}
+///////////////////////////////////////////////////////////////
+void SoundsPane::_loadSoundsInXplorer( wxString soundFileName )
+{
+   //send the load over to xplorer
+   ///SendCommandsToXplorer();
+}
+/////////////////////////////////////
+void SoundsPane::_clearLoadedSounds()
+{
+   _loadedSounds.Clear();
+   //send the command to xplorer
+}
+//////////////////////////////////////////////
+void SoundsPane::SendCommandsToXplorer( void )
+{
+
 }

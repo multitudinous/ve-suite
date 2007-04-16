@@ -34,7 +34,10 @@
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/GUIPlugin/PortDialog.h"
 #include "VE_Conductor/Network/package.h"
+
 #include "VE_Conductor/Framework/paraThread.h"
+#include "VE_Conductor/Framework/SoundsPane.h"
+
 #include "VE_Conductor/GUIPlugin/Geometry.h"
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
@@ -121,6 +124,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(VISUALIZATION, Network::OnVisualization)
    EVT_MENU(SET_UI_PLUGIN_NAME, Network::OnSetUIPluginName )
    EVT_MENU(SET_ACTIVE_MODEL, Network::OnSetActiveXplorerModel )
+   EVT_MENU( ACTIVE_MODEL_SOUNDS, Network::OnModelSounds )
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -154,6 +158,7 @@ Network::Network(wxWindow* parent, int id)
    vistab = 0;
    isDataSet = false;
    frame = dynamic_cast< AppFrame* >( parent->GetParent()->GetParent() );
+   _soundsDlg = 0;
 }
 
 Network::~Network()
@@ -169,6 +174,11 @@ Network::~Network()
    {
       vistab->Destroy();
       vistab = 0;
+   }
+   if(_soundsDlg)
+   {
+      _soundsDlg->Destroy();
+      _soundsDlg = 0;
    }
 
    /*for (iter=modules.begin(); iter!=modules.end(); iter++)
@@ -733,6 +743,11 @@ void Network::OnMRightDown(wxMouseEvent& event)
    //UI for vis variables
    pop_menu.Append(VISUALIZATION, _("Visualization") );
    pop_menu.Enable(VISUALIZATION, true);
+
+   //Sounds dialog
+   pop_menu.Append(ACTIVE_MODEL_SOUNDS,_("Model Sounds"));
+   pop_menu.Enable(ACTIVE_MODEL_SOUNDS,true);
+
    //Make a specific plusing active in xplorer
    pop_menu.Append(SET_ACTIVE_MODEL, _("Set Active Xplorer Model") );
    pop_menu.Enable(SET_ACTIVE_MODEL, true);
@@ -3338,4 +3353,19 @@ void Network::SetIDOnAllActiveModules( void )
       int moduleId = iter->first;
       serviceList->SetID( moduleId, moduleName );
    }
+}
+//////////////////////////////////////////////////
+void Network::OnModelSounds(wxCommandEvent& event)
+{
+   if ( !SetActiveModel() ) 
+   {
+      return;
+   }
+
+   if( !_soundsDlg )
+   {
+      _soundsDlg = new SoundsPane(modules[m_selMod].GetPlugin()->GetModel());
+      _soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   }
+   _soundsDlg->Show();
 }

@@ -50,7 +50,6 @@
 #include "VE_Conductor/GUIPlugin/FindDialog.h"
 #include "VE_Conductor/Framework/DeviceProperties.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Conductor/Framework/SoundsPane.h"
 //#include "VE_Conductor/Framework/StreamersPane.h"
 
 #include "VE_Conductor/Framework/vectors.h"
@@ -197,8 +196,6 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
    EVT_MENU( XPLORER_COLOR, AppFrame::SetBackgroundColor )
    EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
-   //  EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchSoundsPane )
-   EVT_MENU( XPLORER_SOUNDS, AppFrame::LaunchSoundsPane )
    EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
    EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
@@ -278,7 +275,6 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    deviceProperties = 0;
    navPane = 0;
-   soundsPane = 0;
    viewlocPane = 0;
 
    _cadDialog = 0;
@@ -710,12 +706,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       vistab = 0;
    }
 */
-   if ( soundsPane )
-   {
-      soundsPane->Destroy();
-      soundsPane = 0;
-   }
-
+  
    if( _cadDialog)
    {
       _cadDialog->Destroy();
@@ -878,7 +869,7 @@ void AppFrame::CreateMenu()
 	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
 	xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
 	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
-	xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
+	//xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
    xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            xplorerDeviceMenu,  _("Used to change device properties") );
 	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
@@ -898,7 +889,7 @@ void AppFrame::CreateMenu()
 
    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
-   xplorerMenu->Enable( XPLORER_SOUNDS, true);
+   //xplorerMenu->Enable( XPLORER_SOUNDS, true);
    xplorerMenu->Enable( XPLORER_SCENES, true);
    //xplorerMenu->Enable( XPLORER_STREAMLINE, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
@@ -2102,22 +2093,6 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    viewlocPane->Show();
 }
 
-///////////////////////////////////////////////////////////////////
-void AppFrame::LaunchSoundsPane( wxCommandEvent& WXUNUSED( event ) )
-{
-   if ( soundsPane == 0 )
-   {
-      // create pane and set appropriate vars
-      soundsPane = new SoundsPane( GetXplorerObject(), domManager );
-   }
-   else
-   {
-      // set pointer to corba object for comm
-      soundsPane->SetCommInstance( GetXplorerObject() );
-   }
-   // now show it
-   soundsPane->Show();
-}
 /////////////////////////////////////////////////////////////////
 void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 {

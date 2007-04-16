@@ -81,7 +81,6 @@ class UI_Frame;
 class Network;
 class NavigationPane;
 class DeviceProperties;
-class SoundsPane;
 class ViewLocPane;
 class StreamlinePane;
 class UI_TeacherTab;
@@ -178,7 +177,6 @@ public:
 
       XPLORER_NAVIGATION,
       XPLORER_VIEWPOINTS,
-      XPLORER_SOUNDS,
       XPLORER_STREAMLINE,
 
       JUGGLER_STEREO,
@@ -206,8 +204,6 @@ public:
 
    void OnClose( wxCloseEvent& event );
    void FrameClose( wxCommandEvent& event );
-   ///Get the user preferences class
-   UserPreferences* GetUserPreferences( void );
 
    ///Override so we can show the tree after things are initialized.  
    virtual bool Show(bool value);
@@ -349,7 +345,6 @@ protected:
    void LaunchDeviceProperties(wxCommandEvent& event);
    void LaunchNavigationPane(wxCommandEvent& event);
    void LaunchViewpointsPane(wxCommandEvent& event);
-   void LaunchSoundsPane(wxCommandEvent& event);
    void LaunchStreamlinePane(wxCommandEvent& event);
    void LaunchRecordScenes( wxCommandEvent& event );
 
@@ -378,6 +373,8 @@ protected:
    void JugglerSettings( wxCommandEvent& event );
    ///Change the visual view in xplorer 
    void ChangeXplorerViewSettings( wxCommandEvent& event );
+   ///Get the user preferences class
+   UserPreferences* GetUserPreferences( void );
    ///Create the ve tabs
    void CreateVETab();
   
@@ -402,7 +399,6 @@ private:
    void TimerEvent( wxTimerEvent& event );
    NavigationPane* navPane;
    DeviceProperties* deviceProperties;
-   SoundsPane* soundsPane;
    ViewLocPane* viewlocPane;
    UI_TeacherTab* recordScenes;
 //   wxDialog* visTabs;

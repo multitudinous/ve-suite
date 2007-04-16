@@ -70,7 +70,7 @@ namespace VE_XML
 
 class Vistab;
 class AppFrame;
-
+class SoundsPane;
 namespace VE_Conductor
 {
    namespace GUI_Utilities
@@ -113,7 +113,8 @@ public:
       DATASET,
       VISUALIZATION,
       SET_UI_PLUGIN_NAME,
-      SET_ACTIVE_MODEL
+      SET_ACTIVE_MODEL,
+      ACTIVE_MODEL_SOUNDS
    };
 
    ///Fucntion called during submit job to send the id of all active
@@ -165,6 +166,9 @@ public:
    void OnQueryInputModuleProperties(std::vector< std::string >, std::string);
    void OnQueryOutputModuleProperties(std::vector< std::string >, std::string);
    void OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName);
+
+   ///Show the sounds available for this model
+   void OnModelSounds(wxCommandEvent &event);
 
    void OnShowIconChooser(wxCommandEvent &event);
 
@@ -304,6 +308,7 @@ private:
    ///Used to operate on cad data in a plugin
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    
+   SoundsPane* _soundsDlg;///<The sounds dialog for this model;
    std::string ConvertUnicode( const wxChar* data )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
