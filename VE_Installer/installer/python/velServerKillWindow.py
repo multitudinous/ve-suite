@@ -16,7 +16,7 @@ class ServerKillWindow(wx.Frame):
         OnClose(event)"""
     def __init__(self, pids, parent = None, title = "Shutdown Name Server"):
         """Creates the Server Shutdown Window"""
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title,
+        wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.Point(0, 0),
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
         self.pids = pids
@@ -34,7 +34,7 @@ class ServerKillWindow(wx.Frame):
         Style(self)
         self.SetSizer(rowSizer)
         self.SetSize(KILL_WINDOW_SIZE)
-        self.CentreOnScreen()
+        #self.CentreOnScreen()
         self.Show()
     
     def KillNameserver(self, event):

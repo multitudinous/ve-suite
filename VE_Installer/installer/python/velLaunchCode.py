@@ -136,7 +136,7 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-        subprocess.Popen(["/usr/bin/X11/xset", "-display", ":0.0", "-dpms",
+	subprocess.Popen(["/usr/X11R6/bin/xset", "-display", ":0.0", "-dpms",
                           "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
