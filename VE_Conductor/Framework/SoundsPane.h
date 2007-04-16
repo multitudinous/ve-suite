@@ -107,6 +107,12 @@ protected:
    void _onSounds(wxCommandEvent& event);  
    void _onLoadAndUpdate(wxCommandEvent& event);  
 
+   std::string ConvertUnicode( const wxChar* data )
+   {
+      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+      return tempStr;
+   }
+   
    DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_SOUNDS_TAB_H_

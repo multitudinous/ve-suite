@@ -185,13 +185,13 @@ NavigationPane::~NavigationPane( void )
 ///////////////////////////////////////////////////
 void NavigationPane::onMouse(wxMouseEvent& mouse)
 {
-   std::cout<<"Mouse action from tab!!"<<std::endl;
+   //std::cout<<"Mouse action from tab!!"<<std::endl;
    //if left button comes up 
    //specific button we need to 
    //tell cfdApp to stop moving 
    if ( mouse.LeftUp() )
    {
-      std::cout<<"left is up from tab!"<<std::endl;
+      //std::cout<<"left is up from tab!"<<std::endl;
       //reset the active button
       setActiveButton(NONE);
       
@@ -434,7 +434,7 @@ wxWindowID id, const wxBitmap& bitmap)
 void UI_NavButton::onMouseUp(wxMouseEvent& WXUNUSED(event))
 {
    _buttonPushed = 0;
-   std::cout<<"Mouse released from button: "<<GetId()<<std::endl;
+   //std::cout<<"Mouse released from button: "<<GetId()<<std::endl;
    //if left button comes up 
    //specific button we need to 
    //tell cfdApp to stop moving 
@@ -455,7 +455,7 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
    //no button pushed yet
    if(activeId == NONE){     
       if(mouse.LeftIsDown()){
-         std::cout<<"Mouse pushed on button: "<<GetId()<<std::endl;
+         //std::cout<<"Mouse pushed on button: "<<GetId()<<std::endl;
          //set the active id to this button
          //if mouse is down
          _buttonPushed = 1;         

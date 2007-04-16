@@ -136,7 +136,7 @@ void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
             modelSounds = _activeModel->GetInformationPacket("Model Sounds");
 
             VE_XML::DataValuePair* soundProperty = modelSounds->GetProperty(-1);
-            soundProperty->SetData(std::string(soundFileName.GetName()),std::string(fileNamesVector.Item(i)));
+            soundProperty->SetData( ConvertUnicode( soundFileName.GetName().c_str() ), ConvertUnicode( fileNamesVector.Item(i).c_str() ) );
             //_loadSoundsInXplorer( fileNamesVector.Item( i ) );
          }
       }
