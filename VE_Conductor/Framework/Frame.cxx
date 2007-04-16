@@ -733,11 +733,6 @@ void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
    Close(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
-UserPreferences* AppFrame::GetUserPreferences( void )
-{
-   return preferences;
-}
-////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu() 
 {
    menubar = new wxMenuBar;

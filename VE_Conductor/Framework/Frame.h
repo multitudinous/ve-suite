@@ -206,6 +206,7 @@ public:
 
    void OnClose( wxCloseEvent& event );
    void FrameClose( wxCommandEvent& event );
+   ///Get the user preferences class
    UserPreferences* GetUserPreferences( void );
 
    ///Override so we can show the tree after things are initialized.  
@@ -377,8 +378,6 @@ protected:
    void JugglerSettings( wxCommandEvent& event );
    ///Change the visual view in xplorer 
    void ChangeXplorerViewSettings( wxCommandEvent& event );
-   ///Get the user preferences class
-   UserPreferences* GetUserPreferences( void );
    ///Create the ve tabs
    void CreateVETab();
   
