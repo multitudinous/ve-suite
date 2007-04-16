@@ -571,6 +571,22 @@ size_t Model::GetNumberOfOutputPorts( void )
 {
    return outputPorts.size();
 }*/
+//////////////////////////////////////////////////////////////////////
+VE_XML::ParameterBlock* Model::GetInformationPacket( std::string name)
+{
+
+   for(std::vector<VE_XML::ParameterBlock*>::iterator iter = informationPackets.begin();
+      iter != informationPackets.end(); ++iter)
+   {
+      if((*iter)->GetName() == name)
+      {
+         return (*iter);
+      }
+   }
+   std::cout<<"Parameter Block: "<<name<<std::endl;
+   std::cout<<"not found in Model: "<<uuid<<std::endl;
+   return 0;
+}
 ////////////////////////////////////////////////////////////
 ParameterBlock* Model::GetInformationPacket( int i )
 {

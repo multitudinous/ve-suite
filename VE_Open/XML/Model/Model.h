@@ -155,6 +155,11 @@ public:
    ///Get the i'th information packet for a model.
    ///\param i The i'th packet you are after.
    VE_XML::ParameterBlock* GetInformationPacket( int i );
+
+   ///Get the named information packet for a model.
+   ///\param name The name of the packet you are after.
+   VE_XML::ParameterBlock* GetInformationPacket( std::string name);
+
    ///Get info packets data
    size_t GetNumberOfInformationPackets( void );
    ///Get the geometry for the model.
