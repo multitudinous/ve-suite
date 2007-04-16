@@ -904,7 +904,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
    for ( iter = tags.begin(), i=0; iter != tags.end(); i++)
       if ( i == m_selTag )
       {
-         tags.erase( iter++ );
+         iter = tags.erase( iter );
          m_selTag=-1;
          break;
       }
@@ -933,7 +933,7 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
    {
       if (i==m_selLink)
       {
-         links.erase(iter++);
+         iter = links.erase( iter );
          m_selLink=-1;
          break;
       }
@@ -967,7 +967,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
    for (iter=links[m_selLink].GetPoints()->begin(), i=0; iter!=links[m_selLink].GetPoints()->end(); iter++, i++)
       if ( i == m_selLinkCon )
       {
-         links[m_selLink].GetPoints()->erase(iter++);
+         iter = links[m_selLink].GetPoints()->erase( iter );
          links[m_selLink].CalcLinkPoly();
          m_selLinkCon=-1;
          break;
@@ -995,7 +995,6 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    // Need to delete all links associated with this particular module
    // first, delete all the links connects to it
    std::vector< Link >::iterator iter3;
-
    for ( iter3=links.begin(); iter3!=links.end(); )
    {
 	   if ( 
@@ -1003,13 +1002,11 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
             (iter3->GetToModule() == m_selMod) 
          )
 	   {
-	      links.erase( iter3++ );
-
+	      iter3 = links.erase( iter3 );
 	   }
       else
       {
          ++iter3;
-
       }
    }
  
