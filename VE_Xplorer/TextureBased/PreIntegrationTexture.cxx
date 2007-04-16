@@ -1,6 +1,7 @@
-#include "PreIntegrationTexture.h"
-#include "TransferFunction.h"
+#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
+#include "VE_Xplorer/TextureBased/TransferFunction.h"
 #include <iostream>
+using namespace VE_TextureBased;
 ///////////////////////////////////////////////////////////////
 PreIntegrationTexture2D::PreIntegrationTexture2D()
 {

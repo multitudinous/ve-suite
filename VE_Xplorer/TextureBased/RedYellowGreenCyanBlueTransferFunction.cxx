@@ -1,7 +1,8 @@
 
-#include "./RedYellowGreenCyanBlueTransferFunction.h"
-#include "./TransferFunction.h"
+#include "VE_Xplorer/TextureBased/RedYellowGreenCyanBlueTransferFunction.h"
+#include "VE_Xplorer/TextureBased/TransferFunction.h"
 #include <iostream>
+using namespace VE_TextureBased;
 ////////////////////////////////////////////
 RYGCBLinearTF::RYGCBLinearTF(unsigned int s)
 :TransferFunction1D(s)

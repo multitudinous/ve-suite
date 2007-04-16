@@ -1,4 +1,5 @@
-#include "./TransferFunction.h"
+#include "VE_Xplorer/TextureBased/TransferFunction.h"
+using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////
 //Constructor                                           //
 //////////////////////////////////////////////////////////

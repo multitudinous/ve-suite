@@ -215,7 +215,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LuminanceTransferFunction.cxx"
+					>
+				</File>
+				<File
+					RelativePath=".\PreIntegrationTexture.cxx"
+					>
+				</File>
+				<File
+					RelativePath=".\RedYellowGreenCyanBlueTransferFunction.cxx"
+					>
+				</File>
+				<File
 					RelativePath=".\TBVolumeSlices.cxx"
+					>
+				</File>
+				<File
+					RelativePath=".\TransferFunction.cxx"
 					>
 				</File>
 			</Filter>
@@ -247,7 +263,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LuminanceTransferFunction.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PreIntegrationTexture.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RedYellowGreenCyanBlueTransferFunction.h"
+					>
+				</File>
+				<File
 					RelativePath=".\TBVolumeSlices.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TransferFunction.h"
 					>
 				</File>
 			</Filter>

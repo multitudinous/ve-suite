@@ -1,8 +1,9 @@
 
-#include "./LuminanceTransferFunction.h"
-#include "./TransferFunction.h"
+#include "VE_Xplorer/TextureBased/LuminanceTransferFunction.h"
+#include "VE_Xplorer/TextureBased/TransferFunction.h"
 #include <iostream>
 #include <cmath>
+using namespace VE_TextureBased;
 //////////////////////////////////////////////
 LuminanceTF::LuminanceTF(unsigned int s)
 :TransferFunction1D(s)
