@@ -88,8 +88,8 @@ VTKDataToTexture::VTKDataToTexture()
    //_maxDistFromCenter = 0;
    _nScalars = 0;
    _nVectors = 0;
-   _scalarNames = 0;
-   _vectorNames = 0;
+   //_scalarNames = 0;
+   //_vectorNames = 0;
    _dataSet = 0;
    _vFileName = 0;
    _outputDir = 0;
@@ -142,17 +142,20 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    _curScalar = v._curScalar;
    _scalarRanges = v._scalarRanges;
    _vectorRanges = v._vectorRanges;
-   for( int i=0; i<_nScalars; i++ ){
+   /*for( int i=0; i<_nScalars; i++ ){
       delete [] _scalarNames[i];
    }
    delete [] _scalarNames;
-   _scalarNames = 0;
+   _scalarNames = 0;*/
+   _scalarNames.clear();
+
    _scalarNames = getParameterNames(1,_nScalars);
-   for( int i=0; i<_nVectors; i++ ){
+   /*for( int i=0; i<_nVectors; i++ ){
       delete [] _vectorNames[i];
    }
    delete [] _vectorNames;
-   _vectorNames = 0;
+   _vectorNames = 0;*/
+   _vectorNames.clear();
    _vectorNames = getParameterNames(3,_nVectors);
 
    //_maxDistFromCenter = v._maxDistFromCenter;
@@ -193,7 +196,9 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
 /////////////////////////////////////
 VTKDataToTexture::~VTKDataToTexture()
 {
-   for( int i=0; i<_nScalars; i++ ){
+   _scalarNames.clear();
+   _vectorNames.clear();
+   /*for( int i=0; i<_nScalars; i++ ){
       delete [] _scalarNames[i];
    }
    delete [] _scalarNames;
@@ -203,7 +208,7 @@ VTKDataToTexture::~VTKDataToTexture()
    }
    delete [] _vectorNames;
    _vectorNames = 0;
-
+   */
 
    if(_vFileName){
       delete [] _vFileName;
@@ -256,16 +261,8 @@ void VTKDataToTexture::reInit()
 //////////////////////////////
 void VTKDataToTexture::reset()
 {
-   for( int i=0; i<_nScalars; i++ ){
-      delete [] _scalarNames[i];
-   }
-   delete [] _scalarNames;
-   _scalarNames = 0;
-   for( int i=0; i<_nVectors; i++ ){
-      delete [] _vectorNames[i];
-   }
-   delete [] _vectorNames;
-   _vectorNames = 0;
+   _scalarNames.clear();
+   _vectorNames.clear();
 
    if(_vFileName){
       delete [] _vFileName;
@@ -538,7 +535,7 @@ void VTKDataToTexture::createTextures()
    _vectorNames = getParameterNames(3,_nVectors);
 
    _cleanUpFileNames();
-  
+   _applyCorrectedNamesToDataArrays();
    //by default, _recreateValidityBetweenTimeSteps is false
    if(!_madeValidityStructure || _recreateValidityBetweenTimeSteps)
    {
@@ -591,7 +588,7 @@ void VTKDataToTexture::createTextures()
       _dataSet->GetBounds(bbox);
       
       FlowTexture texture;
-      msg = wxString("Scalar: ", wxConvUTF8) + wxString(_scalarNames[i], wxConvUTF8);
+      msg = wxString("Scalar: ", wxConvUTF8) + wxString(_scalarNames[i].c_str(), wxConvUTF8);
       _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
       texture.setTextureDimension(_resolution[0],_resolution[1],_resolution[2]);
@@ -615,7 +612,7 @@ void VTKDataToTexture::createTextures()
       //a bounding box
       _dataSet->GetBounds(bbox);
       FlowTexture texture;
-      wxString msg = wxString("Vector: ", wxConvUTF8) + wxString(_vectorNames[i], wxConvUTF8);
+      wxString msg = wxString("Vector: ", wxConvUTF8) + wxString(_vectorNames[i].c_str(), wxConvUTF8);
       _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
 
       texture.setTextureDimension(_resolution[0],_resolution[1],_resolution[2]);
@@ -902,75 +899,71 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    cell->Delete();
 }
 ///////////////////////////////////////////
-char* VTKDataToTexture::_cleanUpFileNames()
+void VTKDataToTexture::_cleanUpFileNames()
 {
    char* ptr = 0;
    //char replace = "_";
-   int len = 0;
-   char* tempName = 0;
+   size_t len = 0;
+   std::string tempName;// = 0;
    int index = 0;
-   for(int i = 0; i < _nScalars; i++){
-      len = strlen(_scalarNames[i]);
-      ptr = _scalarNames[i];
-      tempName = new char[len +1];
+   for(int i = 0; i < _nScalars; i++)
+   {
+      //len = strlen(_scalarNames[i]);
+      len = _scalarNames.at(i).size();
+      //ptr = _scalarNames[i];
+      tempName.clear();// = new char[len +1];
       index = 0;
-      for(int j = 0; j < len; j++){
+      for(size_t j = 0; j < len; j++)
+      {
          //skip spaces
-         if(ptr[j] == ' '){
+         if(_scalarNames.at(i)[j] == ' ')
+         {
             continue;
          }
          //replace :'s, ['s, ]'s, ''s, -> w/ _'s
-         if (  (ptr[j] ==':') || 
-               (ptr[j] =='[') || 
-               (ptr[j] ==']') || 
-               (ptr[j] =='/') || 
-               (ptr[j] =='\'') || 
-               (ptr[j] =='^')
+         if (  (_scalarNames.at(i)[j] ==':') || 
+               (_scalarNames.at(i)[j] =='[') || 
+               (_scalarNames.at(i)[j] ==']') || 
+               (_scalarNames.at(i)[j] =='/') || 
+               (_scalarNames.at(i)[j] =='\'') || 
+               (_scalarNames.at(i)[j] =='^')
             )
          {
-            ptr[j] = '_';
+            _scalarNames.at(i)[j] = '_';
          }
-         tempName[index++] = ptr[j];
+         tempName.push_back(_scalarNames.at(i)[j]);
          
       }
-      tempName[index] = '\0';
-      strcpy(_scalarNames[i],tempName);
-      if(tempName){
-         delete [] tempName;
-         tempName = 0;
-      }
+      _scalarNames.at(i) = tempName;
    }
-   for(int i = 0; i < _nVectors; i++){
-      len = strlen(_vectorNames[i]);
-      ptr = _vectorNames[i];
-      tempName = new char[len +1];
-      index = 0;
-      for(int j = 0; j < len; j++){
-         //skip spaces
-         if(ptr[j] == ' '){
-            continue;
-         }
-         //replace :'s, ['s, ]'s, ''s, -> w/ _'s
-         if (  (ptr[j] ==':') || 
-               (ptr[j] =='[') || 
-               (ptr[j] ==']') || 
-               (ptr[j] =='/') || 
-               (ptr[j] =='\'') || 
-               (ptr[j] =='^')
-            )
-         {
-            ptr[j] = '_';
-         }
-         tempName[index++] = ptr[j];
-      }
-      tempName[index] = '\0';
-      strcpy(_vectorNames[i],tempName);
-      if(tempName){
-         delete [] tempName;
-         tempName = 0;
-      }
+   for(int i = 0; i < _nVectors; i++)
+   {
+     len = _vectorNames.at(i).size();
+     tempName.clear();// = new char[len +1];
+     index = 0;
+     for(size_t j = 0; j < len; j++)
+     {
+        //skip spaces
+        if(_vectorNames.at(i)[j] == ' ')
+        {
+           continue;
+        }
+        //replace :'s, ['s, ]'s, ''s, -> w/ _'s
+        if (  (_vectorNames.at(i)[j] ==':') || 
+               (_vectorNames.at(i)[j] =='[') || 
+               (_vectorNames.at(i)[j] ==']') || 
+               (_vectorNames.at(i)[j] =='/') || 
+               (_vectorNames.at(i)[j] =='\'') || 
+               (_vectorNames.at(i)[j] =='^'))
+        {
+           _vectorNames.at(i)[j] = '_';
+        }
+        tempName.push_back(_vectorNames.at(i)[j]);
+         
+     }
+     _vectorNames.at(i) = tempName;
    }
-   return ptr;
+   return;
 }
 ///////////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_addOutSideCellDomainDataToFlowTexture(int index,
@@ -1166,10 +1159,10 @@ int VTKDataToTexture::countNumberOfParameters( const int numComponents )
    return numParameters;
 }
 /////////////////////////////////////////////////////////////////////
-char** VTKDataToTexture::getParameterNames( const int numComponents, 
-                                       const int numParameters )
+std::vector<std::string> VTKDataToTexture::getParameterNames( const int numComponents, 
+                                                              const int numParameters )
 {
-   char** name = new char * [numParameters];
+   std::vector<std::string> names;// = new char * [numParameters];
    int ii = 0;
 
    for ( int i=0; i < _nPtDataArrays; i++ )
@@ -1196,13 +1189,37 @@ char** VTKDataToTexture::getParameterNames( const int numComponents,
          array->GetRange(range,-1);
          _vectorRanges.push_back(range);
       }
-      name[ii] = new char [ strlen( array->GetName() ) + 1 ];
-      strcpy( name[ii], array->GetName() );
+      /*name[ii] = new char [ strlen( array->GetName() ) + 1 ];
+      strcpy( name[ii], array->GetName() );*/
+      names.push_back(array->GetName());
       ii++;
    }
-   return name;
+   return names;
 }
+/////////////////////////////////////////////////////////
+void VTKDataToTexture::_applyCorrectedNamesToDataArrays()
+{
+   unsigned int scalarIndex = 0;
+   unsigned int vectorIndex = 0;
+   unsigned int numComponents = 1;
+   for ( int i=0; i < _nPtDataArrays; i++ )
+   {
+      vtkDataArray * array = _dataSet->GetPointData()->GetArray(i);
+      numComponents = array->GetNumberOfComponents();
+      if ( numComponents == 1 )
+      {
+         array->SetName(_scalarNames[scalarIndex++].c_str());
+         continue;
+      }
 
+      // also, ignore arrays of normals...
+      if ( numComponents == 3 && ( strcmp( array->GetName(), "normals" ) ) )
+      {
+         array->SetName(_vectorNames[vectorIndex++].c_str());
+         continue;
+      }
+   }
+}
 ////////////////////////////////////////////////////////////
 void VTKDataToTexture::writeVelocityTexture(int whichVector)
 {

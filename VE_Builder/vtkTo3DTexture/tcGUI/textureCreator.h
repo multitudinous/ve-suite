@@ -44,6 +44,7 @@
 #include "flowTexture.h"
 #include <string>
 #include <utility>
+#include <vector>
 
 class TCFrame;
 class vtkCellDataToPointData;
@@ -126,8 +127,8 @@ public:
    //get the min and max of the velocity magnitude
    //float minVelocityMagnitude(){return _minMagVel;}
    //float maxVelocityMagnitude(){return _maxMagVel;}
-   char** getParameterNames( const int numComponents, 
-                    const int numParameters );
+   std::vector<std::string> getParameterNames( const int numComponents, 
+                                               const int numParameters );
    int countNumberOfParameters(const int numComponents);
    //equal operator
    VTKDataToTexture& operator=(const VTKDataToTexture& rhs);
@@ -160,6 +161,9 @@ protected:
 		      float* vec,
 		      float& scal);
 
+   ///After cleaning up scalar and vector names, reset them in the dataset
+   void _applyCorrectedNamesToDataArrays();
+
    void _addOutSideCellDomainDataToFlowTexture(int index,int isScalar);
    void _interpolateDataInCell(vtkGenericCell* cell,
 		                                    double* weights,
@@ -175,7 +179,7 @@ protected:
                                           int whichScalar);
    void _updateTranslationStatus(const std::string msg);
 
-   char* _cleanUpFileNames();
+   void _cleanUpFileNames();
    
    char* _vFileName;
    char* _outputDir;
@@ -189,8 +193,8 @@ protected:
    // This holds data for a valid point
    // the second pair holds the cellId and the subId for vtk
    std::vector< std::pair< bool, std::pair< int, double* > > > _validPt;
-   char** _scalarNames;
-   char** _vectorNames;
+   std::vector<std::string> _scalarNames;///<The scalar names
+   std::vector<std::string> _vectorNames;///<The vector names
 
    TCFrame* _parent;
 
