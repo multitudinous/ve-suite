@@ -578,6 +578,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\UserPreferencesDataBuffer.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -657,6 +661,10 @@
 			</File>
 			<File
 				RelativePath=".\UIDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UserPreferencesDataBuffer.h"
 				>
 			</File>
 		</Filter>
