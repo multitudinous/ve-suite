@@ -33,6 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/SoundsPane.h"
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -48,7 +49,7 @@
 #include <cmath>
 
 BEGIN_EVENT_TABLE(SoundsPane, wxDialog)
-   //EVT_CHECKLISTBOX(SOUND_CBOX,SoundsPane::_onSounds)
+   EVT_CHECKLISTBOX(SOUND_CBOX,SoundsPane::_onSounds)
    EVT_BUTTON(SOUND_LOAD_BUTTON,SoundsPane::_onLoadAndUpdate)
 END_EVENT_TABLE()
 
@@ -94,11 +95,22 @@ void SoundsPane::_buildPage()
 //////////////////
 //event handling//
 //////////////////
-///////////////////////////////////////////////////////////
-void SoundsPane::_onSounds(wxCommandEvent& WXUNUSED(event))
+/////////////////////////////////////////////////
+void SoundsPane::_onSounds(wxCommandEvent& event)
 {
+   int checkSound = event.GetSelection();
+   unsigned int onOff = (_soundCBox->IsChecked(checkSound))?1:0;
    ///turn on/off sound
    ///send commands to xplorer
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName("SOUNDS_ENABLE");
+   
+   VE_XML::DataValuePair* soundName = new VE_XML::DataValuePair();
+   soundName->SetData( ConvertUnicode( _soundCBox->GetStringSelection()), onOff );
+   veCommand->AddDataValuePair(soundName);
+   
+   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   delete veCommand; 
 }
 //////////////////////////////////////////////////////////////////
 void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
@@ -134,10 +146,15 @@ void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
 
             VE_XML::ParameterBlock* modelSounds = 0;
             modelSounds = _activeModel->GetInformationPacket("Model Sounds");
-
+            
+            VE_XML::Command* veCommand = new VE_XML::Command();
+            veCommand->SetCommandName("SOUNDS_LOAD_NEW");
+           
             VE_XML::DataValuePair* soundProperty = modelSounds->GetProperty(-1);
             soundProperty->SetData( ConvertUnicode( soundFileName.GetName().c_str() ), ConvertUnicode( fileNamesVector.Item(i).c_str() ) );
-            //_loadSoundsInXplorer( fileNamesVector.Item( i ) );
+            veCommand->AddDataValuePair(soundProperty);
+            VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+            delete veCommand; 
          }
       }
    }
@@ -153,8 +170,9 @@ bool SoundsPane::_ensureSounds(wxString filename)
          wxMessageDialog promptDlg( this, 
                                     _("Sound file already loaded!"), 
                                     _("Sound Load Error"), 
-                                    wxYES_NO|wxNO_DEFAULT|wxICON_ERROR, 
+                                    wxICON_ERROR, 
                                     wxDefaultPosition);
+         promptDlg.ShowModal();
          return false;
       }
    }
