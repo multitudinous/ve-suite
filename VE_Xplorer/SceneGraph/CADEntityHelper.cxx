@@ -33,7 +33,6 @@
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
-#include "VE_Xplorer/SceneGraph/Geode.h"
 
 #include <iostream>
 #include <sstream>

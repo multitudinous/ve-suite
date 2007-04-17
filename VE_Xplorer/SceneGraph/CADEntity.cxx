@@ -33,7 +33,6 @@
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
-#include "VE_Xplorer/SceneGraph/Geode.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 #include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
