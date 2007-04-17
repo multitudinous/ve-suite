@@ -33,6 +33,7 @@
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/GUIPlugin/PortDialog.h"
+#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 #include "VE_Conductor/Network/package.h"
 
 #include "VE_Conductor/Framework/paraThread.h"
@@ -2467,16 +2468,16 @@ std::string Network::Save( std::string fileName )
    VE_XML::User userInfo;
    userInfo.SetUserId( "jaredabo" );
    userInfo.SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
-   // Create the color state
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
-   dataValuePair->SetData(std::string("Background Color"), frame->GetXplorerBackgroundColor() );
-   VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-   veCommand->AddDataValuePair(dataValuePair);
    VE_XML::StateInfo* colorState = new VE_XML::StateInfo();
-   colorState->AddState( veCommand );
-   
+   ///Load the current preferences from the data buffer
+   std::map< std::string, VE_XML::Command > tempMap = UserPreferencesDataBuffer::instance()->GetCommandMap();
+   std::map< std::string, VE_XML::Command >::iterator prefIter;
+   for ( prefIter = tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
+   {
+      colorState->AddState( new VE_XML::Command( prefIter->second ) );
+   }
    userInfo.SetStateInfo( colorState );
+   
    nodes.push_back( 
                     std::pair< VE_XML::XMLObject*, std::string >( 
                     &userInfo, "User" ) 
@@ -2700,8 +2701,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
       VE_Conductor::GUI_Utilities::Polygon tempPoly;
       *(tempPoly.GetPolygon()) = tmpPoly;
       tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
-//std::cout << " reveiw : " << std::endl
-//      << num << " : "<< model->GetModelName() << " : " << bbox.x << " : " << bbox.y << std::endl;
    }
 
    networkWriter.ReadXMLData( xmlNetwork, "XML", "User" );
@@ -2709,13 +2708,28 @@ void Network::CreateNetwork( std::string xmlNetwork )
    if ( !objectVector.empty() )
    {
       backgroundColor.clear();
-      VE_XML::Command* colorCommand = 0;
       VE_XML::User* userColor = dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
-      colorCommand = userColor->GetUserStateInfo()->GetState( "CHANGE_BACKGROUND_COLOR" );
-      colorCommand->GetDataValuePair( "Background Color" )->GetData( backgroundColor );
+      //Set user preferences
+      std::vector< VE_XML::Command* > tempStates = userColor->GetUserStateInfo()->GetStateVector();
+      std::map< std::string, VE_XML::Command > tempMap;
+      for ( size_t i = 0; i < tempStates.size(); ++i )
+      {
+         VE_XML::Command* tempCommand = tempStates.at( i );
+         tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
+      }      
+      UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
+      UserPreferencesDataBuffer::instance()->
+                     GetCommand( "CHANGE_BACKGROUND_COLOR" ).
+                     GetDataValuePair( "Background Color" )->
+                     GetData( backgroundColor );
    }
    else
    {
+      //Set the user preferences to nothing since this 
+      //ves file does not have anything
+      std::map< std::string, VE_XML::Command > tempMap;
+      UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
+      
       backgroundColor.clear();
       backgroundColor.push_back( 0.0f );
       backgroundColor.push_back( 0.0f );

@@ -81,6 +81,8 @@ public:
    ///Get the state based on an index
    ///\param index The index to search for.
    VE_XML::Command* GetState(unsigned int index);
+   ///Get the vector of states for this user
+   std::vector< VE_XML::Command* > GetStateVector( void );
 
 protected:
    ///Internally update the XML data.

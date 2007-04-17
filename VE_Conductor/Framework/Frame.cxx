@@ -48,6 +48,7 @@
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include "VE_Conductor/GUIPlugin/FindDialog.h"
+#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 #include "VE_Conductor/Framework/DeviceProperties.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
 //#include "VE_Conductor/Framework/StreamersPane.h"
@@ -741,7 +742,7 @@ void AppFrame::CreateMenu()
 
 	InitRecentFile();
 
-	file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), openRecentMenu, _("Open recent menu") );
+	//file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), openRecentMenu, _("Open recent menu") );
    file_menu->AppendSeparator();
 
    file_menu->Append(wxID_SAVE, _("&Save\tCtrl+S"));
@@ -1251,15 +1252,22 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 {
 	int placeChosen = event.GetId();
 	wxFileName vesFileName;
-
 	vesFileName = recentFileArchive.at(placeChosen - v21ID_BASE_RECENT);
-
-	// TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
-
-   path.clear();
+   bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+   if ( !success )
+   {
+      wxMessageBox( _("Can't open a VES file on another drive."), 
+                    _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+      return;
+   }
+   
+   // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
 	path			= vesFileName.GetFullPath();
-	directory	= vesFileName.GetPath();
-	fname			= vesFileName.GetFullName();
+	//directory	= vesFileName.GetPath();
+   directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+   fname			= vesFileName.GetFullName();
+   //change conductor working dir
+   ::wxSetWorkingDirectory( directory );
 
 	SetRecentFile(vesFileName);
 
@@ -1893,7 +1901,16 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
    //this is kinda confusing...thanks wx!!!
    //wxColourData data;
    //data.SetChooseFull(true);
-
+   UserPreferencesDataBuffer::instance()->
+         GetCommand( "CHANGE_BACKGROUND_COLOR" ).
+         GetDataValuePair( "Background Color" )->
+         GetData( xplorerColor );
+   
+   xplorerWxColor->GetColour().Set( xplorerColor.at( 0 ), 
+                                     xplorerColor.at( 1 ), 
+                                     xplorerColor.at( 2 ), 
+                                     xplorerColor.at( 3 ) 
+                                    );
    wxColourDialog colorDlg(this,xplorerWxColor);
    colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
 
@@ -1916,7 +1933,8 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       veCommand->AddDataValuePair(dataValuePair);
 
       serviceList->SendCommandStringToXplorer( veCommand );
-   
+         
+      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
       delete veCommand;
    }
 }
@@ -2286,9 +2304,4 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
-std::vector< double >  AppFrame::GetXplorerBackgroundColor( void )
-{
-   return xplorerColor;
 }

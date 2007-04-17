@@ -55,16 +55,13 @@ void StateInfo::AddState(VE_XML::Command* state)
 //////////////////////////////
 void StateInfo::ClearState()
 {
-   if(_stateInfo.size())
+   for ( size_t i = 0; i < _stateInfo.size(); ++i )
    {
-      for ( size_t i = 0; i < _stateInfo.size(); ++i )
-      {
-         delete _stateInfo.at(i);
-      }
-      _stateInfo.clear();
+      delete _stateInfo.at(i);
    }
+   _stateInfo.clear();
 }
-////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void StateInfo::_updateVEElement( std::string input )
 {
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
@@ -73,7 +70,7 @@ void StateInfo::_updateVEElement( std::string input )
    //Add code here to update the specific sub elements
    _updateCommands();
 }
-///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void StateInfo::_updateCommands()
 {
    size_t nCommands = _stateInfo.size();
@@ -123,7 +120,7 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
    }
    
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command* StateInfo::GetState(std::string name)
 {
    size_t nStates = _stateInfo.size();
@@ -136,10 +133,15 @@ VE_XML::Command* StateInfo::GetState(std::string name)
    }
    return 0;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command* StateInfo::GetState(unsigned int index)
 {
    return _stateInfo.at(index);
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< VE_XML::Command* > StateInfo::GetStateVector( void )
+{
+   return _stateInfo;
 }
 ///////////////////////////////////////////////////// 
 StateInfo::StateInfo( const StateInfo& input)

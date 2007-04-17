@@ -134,8 +134,8 @@ public:
    ///Set the preference data on the preference singleton
    void SetPreferenceNavigationData( void );
    ///Idle function
-   virtual void OnInternalIdle( void );
-
+   //virtual void OnInternalIdle( void );
+   void OnIdle( wxIdleEvent& event );
 protected:
    int _activeButton;
    wxScrolledWindow* scrollWindow;

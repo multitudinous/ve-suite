@@ -36,6 +36,8 @@
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
 
+#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -77,7 +79,8 @@ BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
    EVT_BUTTON        ( RESET_NAV_POSITION, NavigationPane::OnResetNavPosition)
    EVT_CHECKBOX      ( HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
    EVT_CHECKBOX      ( SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
-  //EVT_LEFT_UP(NavigationPane::onMouse)
+   //EVT_LEFT_UP(NavigationPane::onMouse)
+   EVT_IDLE( NavigationPane::OnIdle )
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
@@ -85,6 +88,8 @@ BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
    EVT_LEFT_DOWN(UI_NavButton::onMouse)
    EVT_LEFT_UP(UI_NavButton::onMouseUp)
 END_EVENT_TABLE()
+
+using namespace VE_Conductor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////  
 NavigationPane::NavigationPane()
@@ -488,35 +493,35 @@ void NavigationPane::updateParent(int pushed, int id)
       SendCommandsToXplorer();
    }
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnTransStepSlider( wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
    cIso_value = translationStepSize->GetValue();
    SendCommandsToXplorer();
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnRotStepSlider( wxScrollEvent& WXUNUSED(event))
 {
    dataValueName = "CHANGE_ROTATION_STEP_SIZE";
    cIso_value = rotationStepSize->GetValue();
    SendCommandsToXplorer();
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnResetNavPosition( wxCommandEvent& WXUNUSED(event) )
 {
    dataValueName = "RESET_NAVIGATION_POSITION";
    cIso_value = translationStepSize->GetValue();
    SendCommandsToXplorer();
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
 {
    dataValueName = "ROTATE_ABOUT_HEAD";
    cIso_value = headRotationChk->GetValue();
    SendCommandsToXplorer();
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED(event) )
 {
    dataValueName = "Z_ZERO_PLANE";
@@ -538,15 +543,18 @@ void NavigationPane::SendCommandsToXplorer( void )
    
    //Clean up memory
    delete veCommand;
+   //Update preferences
+   SetPreferenceNavigationData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationPane::OnInternalIdle( void )
+void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
 {
    //only update the gui when it is in focus and is being used
    //another method would be the wxTopLevelWindow::IsActive
    //or an wxIdleEvent may need to be used here
    //we will have to do testing to figure out the best methods
-   if ( wxWindow::FindFocus() == static_cast< wxWindow* >( this ) )
+   //wxInternalIdle was called too often
+   if ( IsShown() )
    {
       UpdateNavigationData();
       UpdateWindowUI(wxUPDATE_UI_FROMIDLE);
@@ -555,28 +563,58 @@ void NavigationPane::OnInternalIdle( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-   dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
-   cIso_value = translationStepSize->GetValue();
-   dataValueName = "CHANGE_ROTATION_STEP_SIZE";
-   cIso_value = rotationStepSize->GetValue();
-   dataValueName = "RESET_NAVIGATION_POSITION";
-   cIso_value = translationStepSize->GetValue();
-   dataValueName = "ROTATE_ABOUT_HEAD";
-   cIso_value = headRotationChk->GetValue();
-   dataValueName = "Z_ZERO_PLANE";
-   cIso_value = subZeroChk->GetValue();
+   VE_XML::Command navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
+   if ( navPreferenceData.GetCommandName() == "NULL" )
+   {
+      return;
+   }
+
+   double tempData;
+   navPreferenceData.GetDataValuePair( "CHANGE_TRANSLATION_STEP_SIZE" )->GetData( tempData );
+   translationStepSize->SetValue( tempData );
+   navPreferenceData.GetDataValuePair( "CHANGE_ROTATION_STEP_SIZE" )->GetData( tempData );
+   rotationStepSize->SetValue( tempData );
+   navPreferenceData.GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
+   headRotationChk->SetValue( tempData );
+   navPreferenceData.GetDataValuePair( "Z_ZERO_PLANE" )->GetData( tempData );
+   subZeroChk->SetValue( tempData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
 {
+   VE_XML::Command navPreferenceData;
+   navPreferenceData.SetCommandName( std::string("Navigation_Data") );
+   
+   //////////////////////////////////////////////////////////////////
+   VE_XML::DataValuePair* dataValuePair;
+   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
+   dataValuePair->SetDataName( dataValueName );
    cIso_value = translationStepSize->GetValue();
+   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   navPreferenceData.AddDataValuePair( dataValuePair );
+   //////////////////////////////////////////////////////////////////
+   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "CHANGE_ROTATION_STEP_SIZE";
    cIso_value = rotationStepSize->GetValue();
-   dataValueName = "RESET_NAVIGATION_POSITION";
-   cIso_value = translationStepSize->GetValue();
+   dataValuePair->SetDataName( dataValueName );
+   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   navPreferenceData.AddDataValuePair( dataValuePair );
+   //////////////////////////////////////////////////////////////////
+   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "ROTATE_ABOUT_HEAD";
    cIso_value = headRotationChk->GetValue();
+   dataValuePair->SetDataName( dataValueName );
+   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   navPreferenceData.AddDataValuePair( dataValuePair );
+   //////////////////////////////////////////////////////////////////
+   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "Z_ZERO_PLANE";
    cIso_value = subZeroChk->GetValue();
+   dataValuePair->SetDataName( dataValueName );
+   dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
+   navPreferenceData.AddDataValuePair( dataValuePair );
+   //////////////////////////////////////////////////////////////////
+   
+   UserPreferencesDataBuffer::instance()->SetCommand( "Navigation_Data", navPreferenceData );
 }

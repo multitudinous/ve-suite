@@ -34,13 +34,8 @@
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
 
 #include <sstream>
-
-#include <wx/wx.h>
-#include <wx/app.h>
-#include <wx/utils.h>
 
 using namespace VE_XML;
 using namespace VE_Conductor;
@@ -50,27 +45,34 @@ vprSingletonImp( UserPreferencesDataBuffer );
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::CleanUp( void )
 {
-   ;
+   commandMap.clear();
 }
-///Get Command with key
-///The key MUST be the command name
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command UserPreferencesDataBuffer::GetCommand( std::string commandKey )
 {
-   ;
+   std::map< std::string, VE_XML::Command >::iterator iter;
+   iter = commandMap.find( commandKey );
+   if ( iter == commandMap.end() )
+   {
+      VE_XML::Command nullCommand;
+      nullCommand.SetCommandName( "NULL" );
+      return nullCommand;
+   }
+   return iter->second;
 }
-///Get Command with key
+////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::SetCommand( std::string commandKey, VE_XML::Command command )
 {
-   ;
+   commandMap[ commandKey ] = command;
 }
-///Get all the commands
+////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, VE_XML::Command > UserPreferencesDataBuffer::GetCommandMap( void )
 {
-   std::map< std::string, VE_XML::Command > temp;
-   return temp;
+   return commandMap;
 }
-///Set all the commands
-void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::Command > )
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::Command > tempMap )
 {
-   ;
+   commandMap = tempMap;
 }
+////////////////////////////////////////////////////////////////////////////////

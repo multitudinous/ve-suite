@@ -213,8 +213,6 @@ public:
    std::string GetDisplayMode();
    ///Get an appropriate size for sub dialogs
    wxRect GetAppropriateSubDialogSize();
-   ///Get the background color for xplorer
-   std::vector< double > GetXplorerBackgroundColor( void );
    
    Splitter* wx_log_splitter;
    wxSplitterWindow* wx_ve_splitter;
