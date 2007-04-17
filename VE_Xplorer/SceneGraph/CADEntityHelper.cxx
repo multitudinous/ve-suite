@@ -68,6 +68,8 @@
 #include <osg/ShadeModel>
 #include <osg/LightModel>
 #include <osgDB/ReaderWriter>
+#include <osgDB/FileUtils>
+#include <osgDB/FileNameUtils>
 #elif _OPENSG
 #endif
 
@@ -82,38 +84,16 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper()
 {
-   //biv--do we need to set type for scene node in here?
-   //this->_group = new pfNode();
-   op = 1.0f;
-   stlColor[ 1 ] = stlColor[ 1 ] = stlColor[ 0 ] = -1;
-   color = 0;
    twosidedlighting = false;
-
-#ifdef _PERFORMER
-   this->cadNode = 0;
-   this->lightModel = 0;
-#elif _OSG
-   //cadNode = 0;//new osg::Node();
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
-   #ifdef _PERFORMER
-   this->cadNode = input.cadNode;
-   #elif _OSG
+#ifdef _OSG
    if( cadNode.valid() )
    {
       cadNode = input.cadNode;
    }
-
-   op = input.op;
-   stlColor[0] = input.stlColor[0];
-   stlColor[1] = input.stlColor[1];
-   stlColor[2] = input.stlColor[2];
-   color = input.color;
-
 #elif _OPENSG
 #endif
 }
@@ -131,32 +111,10 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
       cadNode = input.cadNode;
       #elif _OPENSG
       #endif
-
-      op = input.op;
-      stlColor[0] = input.stlColor[0];
-      stlColor[1] = input.stlColor[1];
-      stlColor[2] = input.stlColor[2];
-      color = input.color;
    }
 
    return *this;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Code that can be used at a later date
-// there are issues to be reolved on wether == should be defined
-// as below 
-/*bool Node::operator== ( const Node& node1 ) const
-{
-   if ( guid == node1.guid )
-   {
-      return true;
-   }
-   else
-   {
-      return false;
-   }
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::~CADEntityHelper( void )
 {
@@ -249,15 +207,48 @@ void CADEntityHelper::LoadFile( std::string filename
    }
 
 #elif _OSG
-   if(!isStream)
+   if ( !isStream )
    {
-      cadNode = osgDB::readNodeFile(filename);
+      if ( osgDB::getLowerCaseFileExtension(filename) == "osg" )
+      {
+         osgDB::ReaderWriter *rw = osgDB::Registry::instance()->getReaderWriterForExtension( osgDB::getLowerCaseFileExtension(filename) );
+         if (!rw)
+         {
+            std::cerr << "Error: could not find a suitable reader/writer to load the specified file" << std::endl;
+            return;
+         }
+         
+         std::auto_ptr<progbuf> pb(new progbuf(osgDB::findDataFile(filename)));
+         if (!pb->is_open())
+         {
+            std::cerr << "Error: could not open file `" << filename << "'" << std::endl;
+            return;
+         }
+         
+         std::cout << "Progress: ";
+         
+         std::istream mis(pb.get());
+         osgDB::ReaderWriter::ReadResult rr = rw->readNode(mis);
+         
+         std::cout << std::endl;
+         
+         cadNode = rr.getNode();
+         if (!cadNode.valid())
+         {
+            std::cerr << "Error: could not load file `" << filename << "'" << std::endl;
+         }
+      }
+      else
+      {
+         cadNode = osgDB::readNodeFile(filename);
+      }
    }
    else
    {
       std::istringstream textNodeStream(filename);
       cadNode = osgDB::Registry::instance()->getReaderWriterForExtension("osg")->readNode(textNodeStream).getNode();
    }
+
    if ( twosidedlighting && cadNode.valid() )
    {
       lightModel = new osg::LightModel;
@@ -282,15 +273,4 @@ void CADEntityHelper::LoadFile( std::string filename
       std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " 
                   << filename << std::endl;
    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::SetNodeProperties(int color,
-                             float trans, 
-                             float* stlColor )
-{
-   this->color = color;
-   this->op = trans;
-   this->stlColor[ 0 ] = stlColor[ 0 ];
-   this->stlColor[ 1 ] = stlColor[ 1 ];
-   this->stlColor[ 2 ] = stlColor[ 2 ];
 }

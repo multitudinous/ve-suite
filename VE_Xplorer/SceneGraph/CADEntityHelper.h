@@ -39,12 +39,53 @@ CADEntityHelper API
 /*!\class VE_SceneGraph::CADEntityHelper
 *
 */
+#include <iostream>
+#include <fstream>
+#include <memory>
 
-#ifdef _PERFORMER
-class pfNode;
-class pfLightModel;
-class pfFog;
-#elif _OSG
+template<typename Elem, typename Tr = std::char_traits<Elem> >
+class progress_streambuf: public std::basic_filebuf<Elem, Tr>
+{
+public:
+	typedef std::basic_filebuf<Elem, Tr> base_type;
+	//typename std::basic_filebuf<Elem, Tr> int_type;
+   
+	explicit progress_streambuf(const std::string &filename):	
+      base_type(),
+		count_(0),
+		prev_perc_(0)
+	{
+      if ( open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
+      {
+         size_ = static_cast<int>(std::streambuf::pubseekoff(0, std::ios_base::end, std::ios_base::in));
+         std::streambuf::pubseekoff(0, std::ios_base::beg, std::ios_base::in);
+      }
+	}
+   
+protected:
+      
+   virtual typename std::basic_filebuf<Elem, Tr>::int_type uflow()
+	{
+      typename std::basic_filebuf<Elem, Tr>::int_type v = base_type::uflow();
+      count_ += std::streambuf::egptr() - std::streambuf::gptr();
+      int p = count_ * 40 / size_;
+      if (p > prev_perc_)
+      {
+         std::cout << "*";
+         prev_perc_ = p;
+      }
+      return v;
+	}
+   
+private:
+   int count_;
+	int size_;
+	int prev_perc_;
+};
+
+typedef progress_streambuf<char> progbuf;
+
+#ifdef _OSG
 #include <osg/Node>
 #include <osg/ref_ptr>
 
@@ -93,28 +134,18 @@ public:
    #elif _OPENSG
    #endif
 
-   void SetNodeProperties( int, float, float* );
    void LoadFile( std::string,
                   #ifdef _OSG
                   bool isStream=false
                   #endif
                   );
-
-   //Node* Clone( int );
-
 protected:
-   #ifdef _PERFORMER
-   pfNode* _Node;
-   pfLightModel* lightModel;
-   #elif _OSG
+   #ifdef _OSG
    osg::ref_ptr<osg::Node> cadNode;
    osg::ref_ptr<osg::LightModel> lightModel;
    #elif _OPENSG
    #endif
 
-   float op;
-   float stlColor[3];
-   int color;
    bool twosidedlighting;
 
 };
