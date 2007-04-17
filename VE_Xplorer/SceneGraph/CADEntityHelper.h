@@ -48,7 +48,6 @@ class progress_streambuf: public std::basic_filebuf<Elem, Tr>
 {
 public:
 	typedef std::basic_filebuf<Elem, Tr> base_type;
-	//typename std::basic_filebuf<Elem, Tr> int_type;
    
 	explicit progress_streambuf(const std::string &filename):	
       base_type(),
@@ -63,7 +62,6 @@ public:
 	}
    
 protected:
-      
    virtual typename std::basic_filebuf<Elem, Tr>::int_type uflow()
 	{
       typename std::basic_filebuf<Elem, Tr>::int_type v = base_type::uflow();
@@ -127,12 +125,10 @@ public:
    //\param onOff Turn on/off rendering of this CADEntityHelper\n
    void ToggleDisplay( bool onOff );
 
-   #ifdef _PERFORMER
-   virtual pfNode* GetNode( void );
-   #elif _OSG
+#ifdef _OSG
    virtual osg::Node* GetNode( void );
-   #elif _OPENSG
-   #endif
+#elif _OPENSG
+#endif
 
    void LoadFile( std::string,
                   #ifdef _OSG
@@ -140,11 +136,11 @@ public:
                   #endif
                   );
 protected:
-   #ifdef _OSG
+#ifdef _OSG
    osg::ref_ptr<osg::Node> cadNode;
    osg::ref_ptr<osg::LightModel> lightModel;
-   #elif _OPENSG
-   #endif
+#elif _OPENSG
+#endif
 
    bool twosidedlighting;
 
