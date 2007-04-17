@@ -521,7 +521,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
       veCommand->AddDataValuePair(seedPointDVP);
 
       VE_XML::DataValuePair* activeDataset = new VE_XML::DataValuePair;
-      //activeDataset->SetData("Active Dataset",GetActiveDatasetName());
+      activeDataset->SetData("Active Dataset",GetActiveDatasetName());
       veCommand->AddDataValuePair(activeDataset);
 
       VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
