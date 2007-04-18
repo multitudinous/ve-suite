@@ -121,16 +121,20 @@ protected:
 
 
    ///Calculate the slice polygon and edge intersections
+   ///\param currentState The current opengl state
    ///\param initalSlicePoint The coord to begin calculating slices
-   void _calculateEdgeIntersections(osg::Vec4 initialSlicePoint)const;
+   void _calculateEdgeIntersections(osg::State& currentState,osg::Vec4 initialSlicePoint)const;
 
    ///Calculate the intersection verticies and assosiated texture coordinates
    ///\param currentEdgeIndex The current edge we are calculationg intersection with
-   ///\param initSlicePoint The initial slice location
+   ///\param frontSlicePoint The initial slice location
+   ///\param backSlicePoint The back slice location
    ///\param verts The vertcies for the intersecting polygon
+   ///\param backTCoords The texture coordinates for the back intersecting polygon
    void _calculateVertsAndTextureCoordinates(unsigned int currentEdgeIndex,
-                                        osg::Vec4 initSlicePoint,
-                                        float* verts)const;
+                                             osg::Vec4 frontSlicePoint,
+                                             osg::Vec4 backSlicePoint,
+                                             float* verts,float* backTCoords)const;
 
    std::string _sliceRenderMethod;///<Method for rendering intersection polygons
    std::string _bboxSlicer;///<Source code for creating intersecting bbox slices vertex program.
@@ -148,6 +152,7 @@ protected:
    mutable unsigned int _extremaIndicies[2];///<Holder for the closest and furthest corner of the bbox
    mutable osg::ref_ptr<osg::Vec4Array> _rotatedBBox;///<The rotated bbox.
    mutable osg::ref_ptr<osg::Vec4Array> _coordTransformedBBox;///<The rotated bbox.
+   mutable osg::ref_ptr<osg::Vec4Array> _tcoordBBox;///<The rotated bbox.
    mutable gadget::PositionInterface head;///<vjPosInterface Head Position from Juggler;
 };
 }

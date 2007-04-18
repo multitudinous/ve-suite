@@ -69,7 +69,10 @@ static const char* vrPhongVertSource = {
       "gl_TexCoord[1].x = gl_TexCoord[0].x - stepSize.x;\n"
       "gl_TexCoord[2].y = gl_TexCoord[0].y - stepSize.y;\n"
       "gl_TexCoord[3].z = gl_TexCoord[0].z - stepSize.z;\n"
-      
+      "//Set the alphas of the extra texture coords as the back slice tcoord\n"
+      "gl_TexCoord[1].q = gl_MultiTexCoord1.r;\n"
+      "gl_TexCoord[2].q = gl_MultiTexCoord1.s;\n"
+      "gl_TexCoord[3].q = gl_MultiTexCoord1.t;\n"
    "} \n"
 };
 
@@ -78,13 +81,16 @@ static const char* vrPhongFragSource = {
    //and phong shading
    "//varying vec3 halfVector;\n"
    "varying vec4 eyePos;\n"
+   "uniform bool fastUpdate;"
    "uniform sampler3D volumeData;\n"
    "uniform sampler2D transferFunction;\n"
    
    "void main(void)\n"
    "{\n"
       "//dependent texture look up in transfer function \n"
-      "float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
+      "float frontScalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
+      "vec3 backCoord = vec3(gl_TexCoord[1].q,gl_TexCoord[2].q,gl_TexCoord[3].q);\n"
+      "float backScalar = texture3D(volumeData,backCoord.xyz).a;\n"
       "vec3 forwardDiff;\n"
       "vec3 backwardDiff;\n"
       "forwardDiff.x = texture3D(volumeData,gl_TexCoord[4].xyz).a;\n"
@@ -95,7 +101,7 @@ static const char* vrPhongFragSource = {
       "backwardDiff.z = texture3D(volumeData,gl_TexCoord[3].xyz).a;\n"
       "\n"
       "vec3 normal = normalize(backwardDiff-forwardDiff  );\n"
-      "vec4 textureColor = texture2D(transferFunction,vec2(scalar));\n"
+      "vec4 textureColor = (fastUpdate==true)?texture2D(transferFunction,vec2(frontScalar)):texture2D(transferFunction,vec2(frontScalar,backScalar));\n"
       "float l = length(normal);\n"
       "bool computeShade = (l> .0001)?true:false;\n"
       "if(computeShade){\n"

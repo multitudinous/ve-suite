@@ -185,6 +185,7 @@ void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
 	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
+         sShader->FastTransferFunctionUpdate();
          sShader->ActivateIsoSurface();
          sShader->SetIsoSurfaceValue(value);
       }
@@ -628,6 +629,7 @@ void cfdTextureBasedVizHandler::UpdateScalarRange(float* range)
       cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
+         sShader->FastTransferFunctionUpdate();
          sShader->DeactivateIsoSurface();
          sShader->SetScalarRange(range);
       }

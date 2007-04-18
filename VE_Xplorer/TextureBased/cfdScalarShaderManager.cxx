@@ -116,7 +116,9 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
    std::cout<<"Using glsl..."<<std::endl;
    _ss->addUniform(new osg::Uniform("volumeData",0));
+   _ss->addUniform(new osg::Uniform("fastUpdate",_preIntegrate));
    _ss->addUniform(new osg::Uniform("transferFunction",1)); 
+   _ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
    _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
 
    _tUnit = 0;
@@ -151,11 +153,13 @@ void cfdScalarShaderManager::FastTransferFunctionUpdate()
 void cfdScalarShaderManager::ActivateIsoSurface()
 {
    _tf->SetIsoSurface(true);
+   //_preIntegrate = true;
 }
 ///////////////////////////////////////////////////
 void cfdScalarShaderManager::DeactivateIsoSurface()
 {
    _tf->SetIsoSurface(false);
+   //_preIntegrate = true;
 }
 /////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetIsoSurfaceValue(float percentScalarRange)
@@ -165,7 +169,7 @@ void cfdScalarShaderManager::SetIsoSurfaceValue(float percentScalarRange)
    _tf->SetIsoSurfaceValue(percentScalarRange);
    _updateTransferFunction();
 }
-//////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 void cfdScalarShaderManager::_initTransferFunctions()
 {
    if(_transferFunctions.empty())
@@ -190,8 +194,7 @@ void cfdScalarShaderManager::_initTransferFunctions()
       _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());
    }
 }
-/////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_updateTransferFunction(bool fastUpdate)
 {
    if(!_tf)
@@ -199,6 +202,10 @@ void cfdScalarShaderManager::_updateTransferFunction(bool fastUpdate)
 	  std::cout<<"Transfer function not set!"<<std::endl;
 	  std::cout<<"cfdScalarShaderManager::_updateTransferFunction"<<std::endl;
       return;
+   }
+   if(_ss.valid())
+   {
+      _ss->getUniform("fastUpdate")->set(!_preIntegrate);
    }
    if(_preIntegrate)
    {
@@ -379,7 +386,7 @@ void cfdScalarShaderManager::EnsureScalarRange()
 {
    _updateTransferFunction();
 }
-/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetScalarRange(float* range)
 { 
    if(!_tm)
@@ -396,7 +403,7 @@ void cfdScalarShaderManager::SetScalarRange(float* range)
    _tf->AdjustScalarMinimum(adjustedRange[0]);
    _updateTransferFunction();
 }
-///////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateScalarMin(float minScalar)
 {
    if(!_tm)
@@ -408,7 +415,7 @@ void cfdScalarShaderManager::UpdateScalarMin(float minScalar)
    _tf->AdjustScalarMinimum(_scalarRange[0]);
    _updateTransferFunction();
 }
-///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateScalarMax(float maxScalar)
 {
    if(!_tm)

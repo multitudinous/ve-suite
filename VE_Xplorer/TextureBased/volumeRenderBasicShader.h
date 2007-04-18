@@ -33,6 +33,7 @@
 #ifndef VR_BASIC_SHADER_SOURCE_H
 #define VR_BASIC_SHADER_SOURCE_H
 static const char* vrBasicVertSource = {
+   "//#version 110\n"
    "void main() \n"
    "{ \n"
        "gl_Position=ftransform(); \n"
@@ -43,6 +44,7 @@ static const char* vrBasicVertSource = {
       "gl_TexCoord[0].p=dot(gl_ClipVertex,gl_EyePlaneR[0]); \n"
       "gl_TexCoord[0].q=dot(gl_ClipVertex,gl_EyePlaneQ[0]); \n"
       "gl_TexCoord[0] *= gl_TextureMatrix[0];\n"
+      "gl_TexCoord[1] = gl_MultiTexCoord1;\n"
       
    "} \n"
 };
@@ -50,11 +52,14 @@ static const char* vrBasicFragSource = {
    //a volume rendering shader which applies a 2D transfer function
    "uniform sampler3D volumeData;\n"
    "uniform sampler2D transferFunction;\n"
+   "uniform bool fastUpdate;\n"
    "void main(void)\n"
    "{\n"
       "//dependent texture look up in transfer function\n"
-      "float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
-      "gl_FragColor =texture2D(transferFunction,vec2(scalar)); //vec4(gl_TexCoord[0].xyz,.2);\n"
+      "float sfront = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
+      "float sback = texture3D(volumeData,gl_TexCoord[1].xyz).a;\n"
+      "//PreIntegration\n"
+      "gl_FragColor = (fastUpdate==true)?texture2D(transferFunction,vec2(sfront)):texture2D(transferFunction,vec2(sfront,sback)); \n"
 
       "//set the opacity to .2 for all fragments\n"
       "gl_FragColor.a *= gl_Color.a;\n"

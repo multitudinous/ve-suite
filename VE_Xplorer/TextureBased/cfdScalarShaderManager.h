@@ -76,8 +76,8 @@ public:
    void FastTransferFunctionUpdate();
 
 protected:
-     void _setupStateSetForGLSL();
-     bool _isoSurface;///<Activate iso surface
+    void _setupStateSetForGLSL();
+    bool _isoSurface;///<Activate iso surface
 	 bool _preIntegrate;///<Flag determining how to update Pre-Integration table
 	 ///Update the transfer function.
 	 ///\param fastUpdate If preintegration is used, do a fast update to remain interactive.

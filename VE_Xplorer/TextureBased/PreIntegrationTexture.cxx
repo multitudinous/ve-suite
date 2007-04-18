@@ -1,6 +1,7 @@
 #include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
 #include "VE_Xplorer/TextureBased/TransferFunction.h"
 #include <iostream>
+#include <fstream>
 using namespace VE_TextureBased;
 ///////////////////////////////////////////////////////////////
 PreIntegrationTexture2D::PreIntegrationTexture2D()
@@ -9,6 +10,12 @@ PreIntegrationTexture2D::PreIntegrationTexture2D()
    _sliceIntegrationValues = 0;
    _rawData = 0;
    _preIntegratedTexture = new osg::Texture2D();
+   _preIntegratedTexture->setDataVariance(osg::Object::DYNAMIC);
+   _preIntegratedTexture->setFilter(osg::Texture2D::MIN_FILTER,osg::Texture2D::LINEAR);
+   _preIntegratedTexture->setFilter(osg::Texture2D::MAG_FILTER,osg::Texture2D::LINEAR);
+   _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_R,osg::Texture2D::CLAMP);
+   _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_S,osg::Texture2D::CLAMP);
+   _preIntegratedTexture->setInternalFormat(GL_RGBA);
    _imageData = new osg::Image();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +47,11 @@ PreIntegrationTexture2D& PreIntegrationTexture2D::operator=(const PreIntegration
 	if(this != &rhs)
 	{
 		_tf = rhs._tf;
+      if(_sliceIntegrationValues)
+      {
+         delete [] _sliceIntegrationValues;
+         _sliceIntegrationValues = 0;
+      }
 	   _sliceIntegrationValues = new float[_tf->GetResolution(0)*4];
 	   for(unsigned int i = 0; i < _tf->GetResolution(0); ++i)
 	   {
@@ -48,6 +60,11 @@ PreIntegrationTexture2D& PreIntegrationTexture2D::operator=(const PreIntegration
 		   _sliceIntegrationValues[i*4+ 2] = rhs._sliceIntegrationValues[i*4 + 2];
 		   _sliceIntegrationValues[i*4+ 3] = rhs._sliceIntegrationValues[i*4 + 3];
 	   }
+      if(_rawData)
+      {
+         delete []_rawData;
+         _rawData = 0;
+      }
 	   _rawData = new unsigned char[_tf->GetResolution(0)*_tf->GetResolution(0)*4];
 	   for(unsigned int i = 0; i < _tf->GetResolution(0)*_tf->GetResolution(0); ++i)
 	   {
@@ -56,8 +73,8 @@ PreIntegrationTexture2D& PreIntegrationTexture2D::operator=(const PreIntegration
 		   _rawData[i*4+ 2] = rhs._rawData[i*4 + 2];
 		   _rawData[i*4+ 3] = rhs._rawData[i*4 + 3];
 	   }
-	   _preIntegratedTexture = new osg::Texture2D(*rhs._preIntegratedTexture.get());
-	   _imageData = new osg::Image(*rhs._imageData.get());
+	   _preIntegratedTexture = rhs._preIntegratedTexture.get();
+	   _imageData = rhs._imageData.get();
 	}
 	return *this;
 }
@@ -69,11 +86,6 @@ PreIntegrationTexture2D::~PreIntegrationTexture2D()
       delete [] _sliceIntegrationValues;
       _sliceIntegrationValues = 0;
    }
-   /*if(_rawData)
-   {
-      delete [] _rawData;
-      _rawData = 0;
-   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::SetTransferFunction(TransferFunction* tf)
@@ -92,12 +104,7 @@ void PreIntegrationTexture2D::SetTransferFunction(TransferFunction* tf)
       delete []  _sliceIntegrationValues;
       _sliceIntegrationValues = 0;
    }
-  
-   /*if(_rawData)
-   {
-      delete [] _rawData;
-	  _rawData = 0;
-   }*/
+
    _sliceIntegrationValues = new float[_tf->GetResolution(0)*4];
    _rawData = new unsigned char[_tf->GetResolution(0)*_tf->GetResolution(0)*4];
 
@@ -120,10 +127,17 @@ void PreIntegrationTexture2D::FullUpdate()
       std::cout<<"PreIntegrationTexture2D::Update()"<<std::endl;
 
    }
+   std::ofstream fout("./diagonal.txt");
    //make sure we have a texture
    if(!_preIntegratedTexture.valid())
    {
 	   _preIntegratedTexture = new osg::Texture2D;
+      _preIntegratedTexture->setDataVariance(osg::Object::DYNAMIC);
+      _preIntegratedTexture->setFilter(osg::Texture2D::MIN_FILTER,osg::Texture2D::LINEAR);
+      _preIntegratedTexture->setFilter(osg::Texture2D::MAG_FILTER,osg::Texture2D::LINEAR);
+      _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_R,osg::Texture2D::CLAMP);
+      _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_S,osg::Texture2D::CLAMP);
+      _preIntegratedTexture->setInternalFormat(GL_RGBA);    
    }
    //Initialize the slice integration table
    _initializeSliceIntegrationValues();
@@ -140,13 +154,13 @@ void PreIntegrationTexture2D::FullUpdate()
    float deltaSlice = 0;
    for(unsigned int i = 0; i < dataDims*dataDims; i++)
    {
-      col = i%dataDims;
-      row = (i%dataDims==0)?row+1:row;
-      sliceMin = col;
+     col = i%dataDims;
+     row = (i%dataDims==0)?row+1:row;
+     sliceMin = col;
 	  sliceMax = row;
-      if(row < col)
+     if(row < col)
 	  {
-         sliceMin = row;
+       sliceMin = row;
 		 sliceMax = col;
 	  }
 	  deltaSlice = 1./(float)(sliceMax - sliceMin);
@@ -165,14 +179,14 @@ void PreIntegrationTexture2D::FullUpdate()
          _rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 + 2);
          _rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 +  3);
 	  }
-	  /*if(col == row)
+	  if(col == row)
 	  {
-         fout<<"("<<(int)dependentTexture[i*4]<<","
-               <<(int)dependentTexture[i*4 + 1]<<","
-               <<(int)dependentTexture[i*4 + 2]<<","
-               <<(int)dependentTexture[i*4 + 3]<<")";
+         fout<<"("<<(unsigned int)_rawData[i*4]<<","
+               <<(unsigned int)_rawData[i*4 + 1]<<","
+               <<(unsigned int)_rawData[i*4 + 2]<<","
+               <<(unsigned int)_rawData[i*4 + 3]<<")";
          fout<<std::endl;
-	  }*/
+	  }
 		 
    }
    _preIntegratedTexture->dirtyTextureObject();
@@ -232,7 +246,7 @@ unsigned char PreIntegrationTexture2D::_calculateComponent(float ds, unsigned in
    ///Klaus. eq. 8
    //alpha
    if(component==3)
-      return static_cast<unsigned char>(255.0 * (1.0 -(exp(-ds*(backData - frontData)))));
+      return static_cast<unsigned char>(255.0 * (1.0 -exp(-ds*(backData - frontData)/255.)));
    return static_cast<unsigned char>(ds*(backData - frontData));
 }
 /////////////////////////////////////////////////////

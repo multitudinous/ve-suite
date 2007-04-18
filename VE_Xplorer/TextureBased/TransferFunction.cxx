@@ -95,7 +95,7 @@ void TransferFunction::_update()
 void TransferFunction::SetIsoSurface(bool isIsosurface)
 {
 	_isoSurface = isIsosurface;
-	_update();
+	//_update();
 }
 /////////////////////////////////////////////////////////////////////////
 void TransferFunction::SetIsoSurfaceValue(float percentage)
