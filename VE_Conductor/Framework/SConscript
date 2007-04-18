@@ -34,6 +34,7 @@ srcs = Split("""
    Splitter.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
    TransferFunctionDlg.cxx
+   advancedisosurface.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()
