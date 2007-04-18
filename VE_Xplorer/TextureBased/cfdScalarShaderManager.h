@@ -50,32 +50,44 @@ namespace VE_TextureBased
 }
 namespace VE_TextureBased
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager
-      :public cfdOSGTransferShaderManager{
-      public:
-         cfdScalarShaderManager();
-         virtual ~cfdScalarShaderManager(){}
-         virtual void Init();
-         virtual void UpdateTextureManager(cfdTextureManager* tm);
-         void SetScalarRange(float* range);
-         void UpdateScalarMax(float maxScalar);
-         void UpdateScalarMin(float minScalar);
-         void ActivateIsoSurface();
-         void DeactivateIsoSurface();
-         void SetIsoSurfaceValue(float percentScalarRange);
-         void SetCurrentTransientTexture(unsigned int whichTimeStep, bool makeSlave = false);
-         void SetDelayTime(double delay);
-         void EnsureScalarRange();
-      protected:
-         void _setupStateSetForGLSL();
-         bool _isoSurface;
-         virtual void _updateTransferFunction(bool preIntegrated=false);
-         float _scalarRange[2];
-         float _percentScalarRange;
-         float _stepSize[3];
-         void _initTransferFunctions();
-         void _initPropertyTexture();
-   };
+class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager
+  :public cfdOSGTransferShaderManager{
+public:
+   ///Construtor
+   cfdScalarShaderManager();
+   ///Destructor
+   virtual ~cfdScalarShaderManager(){}
+   virtual void Init();
+   virtual void UpdateTextureManager(cfdTextureManager* tm);
+   void SetScalarRange(float* range);
+   void UpdateScalarMax(float maxScalar);
+   void UpdateScalarMin(float minScalar);
+   void ActivateIsoSurface();
+   void DeactivateIsoSurface();
+   void SetIsoSurfaceValue(float percentScalarRange);
+   void SetCurrentTransientTexture(unsigned int whichTimeStep, bool makeSlave = false);
+   void SetDelayTime(double delay);
+   void EnsureScalarRange();
+
+   ///Update the entire transfer function...slower but better quality
+   void FullTransferFunctionUpdate();
+
+   ///Update the diagonal of the 2D tranfer function...faster but lower quality
+   void FastTransferFunctionUpdate();
+
+protected:
+     void _setupStateSetForGLSL();
+     bool _isoSurface;///<Activate iso surface
+	 bool _preIntegrate;///<Flag determining how to update Pre-Integration table
+	 ///Update the transfer function.
+	 ///\param fastUpdate If preintegration is used, do a fast update to remain interactive.
+     virtual void _updateTransferFunction(bool fastUpdate=true);
+     float _scalarRange[2];
+     float _percentScalarRange;
+     float _stepSize[3];
+     virtual void _initTransferFunctions();
+     void _initPropertyTexture();
+};
 }
 #endif//_OSG
 #endif

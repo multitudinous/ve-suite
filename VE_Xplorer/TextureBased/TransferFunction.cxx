@@ -4,9 +4,9 @@ using namespace VE_TextureBased;
 //Constructor                                           //
 //////////////////////////////////////////////////////////
 TransferFunction::TransferFunction(unsigned int dimension,
-                                   unsigned int s,
-                                   unsigned int t,
-                                   unsigned int r )
+                                           unsigned int s,
+                                           unsigned int t,
+                                           unsigned int r )
 {
    _classification = 0;
    _textureData = 0;
@@ -19,6 +19,14 @@ TransferFunction::TransferFunction(unsigned int dimension,
    _types[2] = LINEAR;
    _types[3] = LINEAR;
    _updateCallback = 0;
+
+   _originalScalarRange[0] = 0.0;
+   _originalScalarRange[1] = 1.0;
+
+   _currentScalarRange[0] = 0.0;
+   _currentScalarRange[1] = 1.0;
+   _isoSurface = false;
+   _percentIsoValue = 0.;
 }
 ///////////////////////////////////////////////////////////////
 TransferFunction::TransferFunction(const TransferFunction& rhs)
@@ -41,10 +49,18 @@ TransferFunction::TransferFunction(const TransferFunction& rhs)
       _classification[i] = rhs._classification[i];
       _textureData[i] = rhs._textureData[i];
    }
+   
+   _originalScalarRange[0] = rhs._originalScalarRange[0];
+   _originalScalarRange[1] = rhs._originalScalarRange[1];
+
+   _currentScalarRange[0] = rhs._currentScalarRange[0];
+   _currentScalarRange[1] = rhs._currentScalarRange[1];
+   _isoSurface = rhs._isoSurface;
+   _percentIsoValue = rhs._percentIsoValue;
 }
-/////////////////////////////////////
-//Destructor                       //
-/////////////////////////////////////
+/////////////////////////////////////////////
+//Destructor                            //
+/////////////////////////////////////////////
 TransferFunction::~TransferFunction()
 {
    if(_classification)
@@ -58,46 +74,82 @@ TransferFunction::~TransferFunction()
       _textureData = 0;
    }
 }
-//////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void TransferFunction::SetComponentType(ComponentType type,
-                                        unsigned int component)
+                                                      unsigned int component)
 {
    _types[component] = type;
 }
-///////////////////////////////////////////////////
-void TransferFunction::Update(unsigned int component,
-                              void* data,
-                              float rangeMin,
-			                     float rangeMax)
+/////////////////////////////////////////////////////////////////////
+/*void TransferFunction::Update(unsigned int component,
+                                      void* data,
+                                      float rangeMin,
+                                      float rangeMax)
+{
+}*/
+///////////////////////////////////////
+void TransferFunction::_update()
 {
 }
-////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
+void TransferFunction::SetIsoSurface(bool isIsosurface)
+{
+	_isoSurface = isIsosurface;
+	_update();
+}
+/////////////////////////////////////////////////////////////////////////
+void TransferFunction::SetIsoSurfaceValue(float percentage)
+{
+	_percentIsoValue = percentage;
+	_update();
+}
+/////////////////////////////////////////////////////////////////////////////////////////
+void TransferFunction::SetFullScalarRange(float minValue,float maxValue)
+{
+	_originalScalarRange[0] = minValue;
+	_originalScalarRange[1] = maxValue;
+	_update();
+}
+//////////////////////////////////////////////////////////////////////////
+void TransferFunction::AdjustScalarMinimum(float minValue)
+{
+   _currentScalarRange[0] = minValue;
+   _update();
+}
+///////////////////////////////////////////////////////////////////////////
+void TransferFunction::AdjustScalarMaximum(float maxValue)
+{
+   _currentScalarRange[1] = maxValue;
+   _update();
+}
+////////////////////////////////////////////////////////////////////////////////////
 unsigned int TransferFunction::GetResolution(unsigned int direction)
 {
    return _resolution[direction];
 }
-////////////////////////////////////////////////////////////////////////
-TransferFunction::ComponentType TransferFunction::GetComponentType(unsigned int component)
+///////////////////////////////////////////////////////////////////////////////
+TransferFunction::ComponentType 
+TransferFunction::GetComponentType(unsigned int component)
 {
    return _types[component];
 }
-/////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 unsigned int TransferFunction::GetDimension()
 {
    return _dimension;
 }
-/////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 void TransferFunction::_setResolution(unsigned int direction,
-                                      unsigned int resolution)
+                                               unsigned int resolution)
 {
    _resolution[direction] = resolution;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 void TransferFunction::_setDimension(unsigned int dimension)
 {
    _dimension = dimension;
 }
-////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 unsigned char* TransferFunction::GetDataForTexture()
 {
    if(_textureData)
@@ -106,7 +158,7 @@ unsigned char* TransferFunction::GetDataForTexture()
    }
    return 0;
 }
-///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 float* TransferFunction::EvaluateAt(unsigned int index)
 {
    if(_classification)
@@ -116,12 +168,12 @@ float* TransferFunction::EvaluateAt(unsigned int index)
    return 0;
 }
 
-/////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 void TransferFunction::SetUpdateCallback(TransferFunction::UpdateCallback* tfUpdate)
 {
    _updateCallback = tfUpdate;
 }
-/////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 TransferFunction::UpdateCallback* TransferFunction::GetUpdateCallback()
 {
    if(_updateCallback)
@@ -164,6 +216,13 @@ TransferFunction& TransferFunction::operator=(const TransferFunction& rhs)
          _classification[i] = rhs._classification[i];
          _textureData[i] = rhs._textureData[i];
       }
+	  _originalScalarRange[0] = rhs._originalScalarRange[0];
+      _originalScalarRange[1] = rhs._originalScalarRange[1];
+
+      _currentScalarRange[0] = rhs._currentScalarRange[0];
+      _currentScalarRange[1] = rhs._currentScalarRange[1];
+      _isoSurface = rhs._isoSurface;
+	  _percentIsoValue = rhs._percentIsoValue;
    }
    return *this;
 }

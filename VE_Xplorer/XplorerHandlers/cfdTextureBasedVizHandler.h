@@ -126,7 +126,11 @@ namespace VE_TextureBased
 		 ///Set the number of Slice planes per brick
 		 ///\param nSlices The number of slices per brick
 		 void UpdateNumberOfSlicePlanes(unsigned int nSlices);
-         ///Clear the texture-based visualize
+
+		 ///Flag how the PreIntegration Table is update.\n true == full update\nfalse==fast update\n
+		 void UpdatePreIntegrationTable(bool trueFalse);
+         
+		 ///Clear the texture-based visualization
          void ClearAll();
 
 		 ///Set the active shader mananger

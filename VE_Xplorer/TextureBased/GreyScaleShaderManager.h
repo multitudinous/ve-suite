@@ -50,17 +50,18 @@ namespace VE_TextureBased
 }
 namespace VE_TextureBased
 {
-   class GreyScaleShaderManager
-      :public cfdScalarShaderManager{
-      public:
-         GreyScaleShaderManager(){};
-         virtual ~GreyScaleShaderManager(){}
+class GreyScaleShaderManager: public cfdScalarShaderManager{
+public:
+   GreyScaleShaderManager(){};
+   virtual ~GreyScaleShaderManager(){}
          
-      protected:
-         ///Update the transfer function
-         ///\param preIntegrated Determines if we are updating the preintegrated table or not
-         void _updateTransferFunction(bool preIntegrated=false);
-   };
+protected:
+   ///Update the transfer function
+   ///\param fastUpdate Determines if we are updating the preintegrated table or just diagonal
+   //void _updateTransferFunction(bool preIntegrated=true);
+   ///Initialize the transfer functions
+   virtual void _initTransferFunctions();
+};
 }
 #endif//_OSG
 #endif

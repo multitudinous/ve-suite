@@ -14,11 +14,11 @@ LuminanceTF::LuminanceTF(const LuminanceTF &rhs)
 :TransferFunction(rhs)
 {
 }
-///////////////////////////////
+/////////////////////////////////////
 LuminanceTF::~LuminanceTF()
 {
 }
-/////////////////////////////////////
+////////////////////////////////////////
 void LuminanceTF::InitializeData()
 {
    if(_classification)
@@ -61,12 +61,93 @@ void LuminanceTF::InitializeData()
    gTable = 0;
 }
 /////////////////////////////////////////////////
-void LuminanceTF::Update(unsigned int component,
+/*void LuminanceTF::Update(unsigned int component,
                            void* data,
                            float rangeMin,
                            float rangeMax)
 {
 
+}*/
+///////////////////////////////////
+void LuminanceTF::_update()
+{
+   float newRange[2] = {0.,1.};
+   if((_originalScalarRange[1]-_originalScalarRange[0]) == 0.0)
+   {
+      newRange[0] = 0.0;
+      newRange[1] = 255.0;
+   }
+   else
+   {
+      newRange[0] = (_currentScalarRange[0] - _originalScalarRange[0])/
+                (_originalScalarRange[1]-_originalScalarRange[0]);
+      newRange[0] *= 255.0;
+      newRange[1] = (_currentScalarRange[1] - _originalScalarRange[0])/
+                (_originalScalarRange[1]-_originalScalarRange[0]);
+      newRange[1] *= 255.0;
+   }
+   
+   float invSRange = 0;
+   float isoRange [2]= {0,1};
+   float isoValue = 0;
+   float alpha = 0;
+   invSRange =  1.f/(newRange[1]-newRange[0]);
+   for(unsigned int i = 0; i < _resolution[0]; i++)
+   {
+      {
+         if(i < newRange[0])
+         {
+            _classification[ i*4 ] = 0;
+            _classification[i*4 + 1] = 0;
+            _classification[i*4 + 2] = 0;
+            _classification[i*4 + 3] = 0;
+		 }
+	     else if( i > newRange[1])
+         {
+           _classification[i*4 ] = 0;//255;
+           _classification[i*4 + 1] = 0;
+           _classification[i*4 + 2] = 0;
+           _classification[i*4 + 3] = 0;
+        }
+        else
+	    {
+           if(_isoSurface)
+           {
+              isoValue = newRange[0] + _percentIsoValue*(newRange[1] - newRange[0]);
+              isoRange[0] = isoValue - 4.f;
+              isoRange[1] = isoValue + 4.f;
+
+              if(i >= isoRange[0] && i <= isoRange[1])
+		      {
+                 alpha = (i - newRange[0])*invSRange; 
+				 _classification[i*4 ] = 
+                 _classification[i*4 + 1] = 
+                 _classification[i*4 + 2] = 
+                 _classification[i*4 + 3] = alpha*(_resolution[0]-1);
+              }
+		      else
+              {
+                 _classification[i*4 ] = 
+                 _classification[i*4 + 1] = 
+                 _classification[i*4 + 2] = 
+                 _classification[i*4 + 3] = 0;
+              }
+           }
+	       else
+           {
+              alpha = (i - newRange[0])*invSRange;
+			   _classification[i*4 ] = 
+               _classification[i*4 + 1] = 
+               _classification[i*4 + 2] = 
+               _classification[i*4 + 3] =alpha*alpha*(_resolution[0]-1);
+           }
+           _textureData[i*4 ]  = (unsigned char)_classification[i*4 ];
+           _textureData[i*4 + 1] = (unsigned char)_classification[i*4 + 1];
+           _textureData[i*4 + 2] = (unsigned char)_classification[i*4 + 2];
+           _textureData[i*4 + 3] = (unsigned char)_classification[i*4 + 3]; 
+        }
+	  }
+   }
 }
 /////////////////////////////////////////////////////////////////
 LuminanceTF& LuminanceTF::operator=(const LuminanceTF& rhs)

@@ -58,12 +58,19 @@ cfdTextureMatrixCallback::cfdTextureMatrixCallback(osg::TexMat* texmat,
 void cfdTextureMatrixCallback::operator()(osg::Node* node,osg::NodeVisitor* nv)
 {
    //osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
-   if (_texMat.valid()){
-      osg::Matrix translate = osg::Matrix::translate(_trans[0],_trans[1],_trans[2]);
-      osg::Matrix scale = osg::Matrix::scale(_scale[0],_scale[1],_scale[2]);
-      osg::Matrix center = osg::Matrix::translate(-_center[0],-_center[1],-_center[2]);
+   if (_texMat.valid())
+   {
+      osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
+      osg::Matrixd translation = osg::Matrixd::translate(_center[0], _center[1], _center[2]);
+      osg::Matrixd inverseTranslation = osg::Matrixd::translate(-_center[0], 
+                                                                -_center[1],
+                                                                -_center[2]);
+      scale = inverseTranslation*scale*translation;
       
-      _texMat->setMatrix(center*scale*translate);
+      osg::Matrix translate = osg::Matrix::translate(_center[0],_center[1],_center[2]);
+     
+      
+      _texMat->setMatrix(translate*scale);
    }
    traverse(node,nv);
 }

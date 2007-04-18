@@ -52,7 +52,8 @@ BEGIN_EVENT_TABLE( ScalarToolsDialog, wxDialog )
    EVT_COMBOBOX(AVAILABLE_SCALARS,ScalarToolsDialog::_updateActiveScalar)
    EVT_COMBOBOX(AVAILABLE_SHADER_MANAGERS,ScalarToolsDialog::_updateActiveScalarShaderManager)
    EVT_BUTTON(ADVANCED_TB_ISOSURFACE,ScalarToolsDialog::_setColorByFace)
-   EVT_COMMAND_SCROLL (TB_ISOSURFACE_SLIDER,ScalarToolsDialog::_onUpdateIsosurface)
+   EVT_COMMAND_SCROLL_THUMBTRACK (TB_ISOSURFACE_SLIDER,ScalarToolsDialog::_onUpdateIsosurface)
+   EVT_COMMAND_SCROLL_THUMBRELEASE(TB_ISOSURFACE_SLIDER,ScalarToolsDialog::_onPreIntegrate)
    EVT_COMMAND_SCROLL(TB_SLICE_SLIDER,ScalarToolsDialog::_onUpdateNumberOfSlicePlanes)
    EVT_CHECKBOX(ISO_ENABLE_CHECK,ScalarToolsDialog::_onEnableIsoSurface)
 END_EVENT_TABLE()
@@ -155,8 +156,9 @@ void ScalarToolsDialog::_createDualSliders()
    _scalarRange->SetMinSliderCallback( new ScalarToolsSliderCallback(this));
    _scalarRange->SetMaxSliderCallback( new ScalarToolsSliderCallback(this));
    _scalarRange->SetBothSliderUpdateCallback( new ScalarToolsSliderCallback(this));
+   _scalarRange->SetStopSliderUpdateCallback( new ScalarToolsStopSliderCallback(this));
 }
-////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
 void ScalarToolsDialog::ScalarToolsSliderCallback::SliderOperation()     
 {
    _scalarDlg->ClearInstructions();
@@ -173,7 +175,21 @@ void ScalarToolsDialog::ScalarToolsSliderCallback::SliderOperation()
    _scalarDlg->SendCommands();
    _scalarDlg->ClearInstructions();
 }
-///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+void ScalarToolsDialog::ScalarToolsStopSliderCallback::SliderOperation()     
+{
+   _scalarDlg->ClearInstructions();
+   _scalarDlg->SetCommandName("TB_FULL_PREINTEGRATE_UPDATE");
+
+   VE_XML::DataValuePair* fullUpdate = new VE_XML::DataValuePair();
+   unsigned int on = 1;
+   fullUpdate ->SetData("Recalculate Pre-Integration",on);
+   _scalarDlg->AddInstruction(fullUpdate );
+
+   _scalarDlg->SendCommands();
+   _scalarDlg->ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////////
 void ScalarToolsDialog::UpdateScalarList(wxArrayString scalarNames)
 {
    _scalarSelection->Clear();
@@ -186,7 +202,7 @@ void ScalarToolsDialog::UpdateScalarList(wxArrayString scalarNames)
       _scalarSelection->SetValue(_activeScalar);
    }
 }
-////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 void ScalarToolsDialog::_updateActiveScalar(wxCommandEvent& command)
 {
    ClearInstructions();
@@ -248,7 +264,21 @@ void ScalarToolsDialog::_setColorByFace(wxCommandEvent& command)
       _colorByScalarName = scalarSelector.GetStringSelection();
    }
 }
-////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+void ScalarToolsDialog::_onPreIntegrate(wxScrollEvent& command)
+{
+   ClearInstructions();
+   _commandName = "TB_FULL_PREINTEGRATE_UPDATE";
+   
+   unsigned int on = 1;
+   VE_XML::DataValuePair* fullUpdate = new VE_XML::DataValuePair();
+   fullUpdate ->SetData("Recalculate Pre-Integration",on);
+   AddInstruction(fullUpdate );
+
+   _sendCommandsToXplorer();
+   ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////////////
 void ScalarToolsDialog::_onUpdateIsosurface(wxScrollEvent& command)
 {
    ClearInstructions();

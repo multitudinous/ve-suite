@@ -69,11 +69,11 @@ PreIntegrationTexture2D::~PreIntegrationTexture2D()
       delete [] _sliceIntegrationValues;
       _sliceIntegrationValues = 0;
    }
-   if(_rawData)
+   /*if(_rawData)
    {
       delete [] _rawData;
       _rawData = 0;
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 void PreIntegrationTexture2D::SetTransferFunction(TransferFunction* tf)
@@ -93,11 +93,11 @@ void PreIntegrationTexture2D::SetTransferFunction(TransferFunction* tf)
       _sliceIntegrationValues = 0;
    }
   
-   if(_rawData)
+   /*if(_rawData)
    {
       delete [] _rawData;
 	  _rawData = 0;
-   }
+   }*/
    _sliceIntegrationValues = new float[_tf->GetResolution(0)*4];
    _rawData = new unsigned char[_tf->GetResolution(0)*_tf->GetResolution(0)*4];
 
@@ -110,8 +110,8 @@ void PreIntegrationTexture2D::SetTransferFunction(TransferFunction* tf)
 									osg::Image::USE_NEW_DELETE);
    _preIntegratedTexture->setImage(_imageData.get());
 }
-////////////////////////////////////////////////
-void PreIntegrationTexture2D::Update()
+/////////////////////////////////////////////////////
+void PreIntegrationTexture2D::FullUpdate()
 {
    if(!_tf)
    {
@@ -153,17 +153,17 @@ void PreIntegrationTexture2D::Update()
 
 	  if(sliceMin != sliceMax)
 	  {
-         rawData[index++] = _calculateComponent(deltaSlice,0,sliceMin,sliceMax);
-         rawData[index++] = _calculateComponent(deltaSlice,1,sliceMin,sliceMax);
-         rawData[index++] = _calculateComponent(deltaSlice,2,sliceMin,sliceMax);
-         rawData[index++] = _calculateComponent(deltaSlice,3,sliceMin,sliceMax);
+         _rawData[index++] = _calculateComponent(deltaSlice,0,sliceMin,sliceMax);
+         _rawData[index++] = _calculateComponent(deltaSlice,1,sliceMin,sliceMax);
+         _rawData[index++] = _calculateComponent(deltaSlice,2,sliceMin,sliceMax);
+         _rawData[index++] = _calculateComponent(deltaSlice,3,sliceMin,sliceMax);
 	  }
 	  else
 	  {
-         rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4     );
-         rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 + 1);
-         rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 + 2);
-         rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 +  3);
+         _rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4     );
+         _rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 + 1);
+         _rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 + 2);
+         _rawData[index++] = _tf->unsignedByteDataAt(sliceMin*4 +  3);
 	  }
 	  /*if(col == row)
 	  {
@@ -235,7 +235,32 @@ unsigned char PreIntegrationTexture2D::_calculateComponent(float ds, unsigned in
       return static_cast<unsigned char>(255.0 * (1.0 -(exp(-ds*(backData - frontData)))));
    return static_cast<unsigned char>(ds*(backData - frontData));
 }
+/////////////////////////////////////////////////////
+void PreIntegrationTexture2D::FastUpdate()
+{
+   if(!_tf)
+   {
+	   std::cout<<"Invalid transfer function!!"<<std::endl;
+	   std::cout<<"PreIntegrationTexture2D::FastUpdate"<<std::endl;
+	   return;
+   }
 
+   unsigned int row = 0;
+   unsigned col = 0;
+   ///our texture size is fixed for now at 256*256;
+   ///update the diagonal values
+   for(unsigned int i = 0; i < 256; ++i)
+   {
+      row  = i*(256*4);
+	  col = i*4;
+	  _rawData[row + col    ] = _tf->unsignedByteDataAt(i*4);
+      _rawData[row + col + 1] = _tf->unsignedByteDataAt(i*4 + 1);
+      _rawData[row + col + 2] = _tf->unsignedByteDataAt(i*4 + 2);
+      _rawData[row + col + 3] = _tf->unsignedByteDataAt(i*4 + 3);
+   }
+   _preIntegratedTexture->dirtyTextureObject();
+   _preIntegratedTexture->dirtyTextureParameters();
+}
 
 
 

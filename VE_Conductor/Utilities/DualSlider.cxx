@@ -38,10 +38,12 @@
 #include <wx/statbox.h>
 using namespace VE_Conductor::GUI_Utilities;
 BEGIN_EVENT_TABLE(DualSlider,wxPanel)
-   EVT_COMMAND_SCROLL(MIN_SLIDER,DualSlider::_onSlider)
-   EVT_COMMAND_SCROLL(MAX_SLIDER,DualSlider::_onSlider)
+   EVT_COMMAND_SCROLL_THUMBTRACK(MIN_SLIDER,DualSlider::_onSlider)
+   EVT_COMMAND_SCROLL_THUMBTRACK(MAX_SLIDER,DualSlider::_onSlider)
+   EVT_COMMAND_SCROLL_THUMBRELEASE(MIN_SLIDER,DualSlider::_onStop)
+   EVT_COMMAND_SCROLL_THUMBRELEASE(MAX_SLIDER,DualSlider::_onStop)
 END_EVENT_TABLE()
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 DualSlider::DualSlider( wxWindow* parent, wxWindowID id,
                         unsigned int buffer,
                         int minRange, int maxRange,
@@ -109,17 +111,17 @@ DualSlider::~DualSlider()
    }
    _callbacks.clear();
 }
-//////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 void DualSlider::SetMinimumSliderValue(int value)
 {
    _minSlider->SetValue(value);
 }
-//////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 void DualSlider::SetMaximumSliderValue(int value)
 {
    _maxSlider->SetValue(value);
 }
-//////////////////////////////////////////////////
+///////////////////////////////////////////////////////
 void DualSlider::SetSliderRange(int minValue, 
                              int maxValue)
 {
@@ -192,12 +194,17 @@ bool DualSlider::_ensureSliders(int activeSliderID)
    }
    return false;
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+void DualSlider::SetStopSliderUpdateCallback(SliderCallback* bothSCbk)
+{
+   _callbacks[STOP] = bothSCbk;
+}
+////////////////////////////////////////////////////////////////////////////////////////
 void DualSlider::SetBothSliderUpdateCallback(SliderCallback* bothSCbk)
 {
    _callbacks[BOTH_SLIDERS] = bothSCbk;
 }
-/////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
 void DualSlider::SetMinSliderCallback(DualSlider::SliderCallback* minCbk)
 {
    _callbacks[MIN_SLIDER] = minCbk;
@@ -207,7 +214,7 @@ void DualSlider::SetMaxSliderCallback(DualSlider::SliderCallback* maxCbk)
 {
    _callbacks[MAX_SLIDER] = maxCbk;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 void DualSlider::_onSlider(wxScrollEvent& event)
 {
    int callbackID = event.GetId();
@@ -219,6 +226,25 @@ void DualSlider::_onSlider(wxScrollEvent& event)
    {
      std::map<int,DualSlider::SliderCallback*>::iterator activeCallback;
       activeCallback = _callbacks.find(callbackID);
+      if(activeCallback != _callbacks.end())
+      {
+         activeCallback->second->SetDualSlider(this);
+         activeCallback->second->SliderOperation();   
+      }
+   }
+   catch(...)
+   {
+      std::cout<<"Callback not found: "<<callbackID<<std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+void DualSlider::_onStop(wxScrollEvent& event)
+{
+   int callbackID = event.GetId();
+   try
+   {
+      std::map<int,DualSlider::SliderCallback*>::iterator activeCallback;
+      activeCallback = _callbacks.find(STOP);
       if(activeCallback != _callbacks.end())
       {
          activeCallback->second->SetDualSlider(this);

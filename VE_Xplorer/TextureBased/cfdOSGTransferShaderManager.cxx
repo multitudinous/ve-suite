@@ -45,6 +45,8 @@
 #include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
 #include "VE_Xplorer/TextureBased/cfdSimpleTextureCallback.h"
+#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
+#include "VE_Xplorer/TextureBased/TransferFunction.h"
 using namespace VE_TextureBased;
 //the shader inline source
 static const char* volumeTransferFragSource = {
@@ -83,6 +85,8 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
    _fieldSize[1] = 0;
    _fieldSize[2] = 0;
    _tm = 0;
+   _tf = 0;
+   _preIntTexture = 0;
    //_utCbk = 0;
 }
 //////////////////////////////////////////////////////////////
@@ -103,6 +107,8 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
    _useTM = sm._useTM;
    _tm = sm._tm;
    _utCbk = sm._utCbk;
+   _tf = 0;
+   _preIntTexture = 0;
 }
 ///////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
@@ -110,6 +116,16 @@ cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
    if(_transferFunctions.size())
    {
       _transferFunctions.clear();
+   }
+   if(_tf)
+   {
+	   delete _tf;
+	   _tf = 0;
+   }
+   if(_preIntTexture)
+   {
+	   delete _preIntTexture;
+	   _preIntTexture = 0;
    }
 }
 ////////////////////////////////////////////////////////////////////////
@@ -142,7 +158,7 @@ void cfdOSGTransferShaderManager::SetPropertyTexture(osg::Texture3D* property)
 {
    //_property = property;
 }
-////////////////////////////////////////
+////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::Init()
 {
    _initTransferFunctions();
@@ -210,10 +226,11 @@ osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
    }
    return 0;
 }
-//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_initTransferFunctions()
 {
-   if(_transferFunctions.empty()){
+   if(_transferFunctions.empty())
+   {
       //create 4 transfer functions
       _createTransferFunction(); 
       _createTransferFunction(); 
@@ -221,9 +238,9 @@ void cfdOSGTransferShaderManager::_initTransferFunctions()
       _createTransferFunction(true);
    }
 }
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
-                                                    bool clearList)
+                                                                             bool clearList)
 {
    if(clearList)
    {

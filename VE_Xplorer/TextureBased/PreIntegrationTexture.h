@@ -64,7 +64,10 @@ public:
    void SetTransferFunction(TransferFunction* tf);
 
    ///Update the 2D preintegration texture
-   void Update();
+   void FullUpdate();
+
+   ///Only update the diagonal values
+   void FastUpdate();
 
    ///\return The Pre-Integrated texture
    osg::Texture2D* GetPreIntegratedTexture();

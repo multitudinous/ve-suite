@@ -54,6 +54,8 @@ namespace VE_TextureBased
 {
    class cfdTextureManager;
    class cfdUpdateTextureCallback;
+   class TransferFunction;
+   class PreIntegrationTexture2D;
 }
 
 #include "VE_Xplorer/TextureBased/cfdOSGShaderManager.h"
@@ -83,7 +85,7 @@ namespace VE_TextureBased
          virtual cfdOSGTransferShaderManager& operator=(const 
 		                               cfdOSGTransferShaderManager& sm);
       protected:
-         void _initTransferFunctions();
+         virtual void _initTransferFunctions();
          void _createTransferFunction(bool gamma = false,
                                    bool clearList = false);
          virtual void _initPropertyTexture();
@@ -99,6 +101,8 @@ namespace VE_TextureBased
          bool _useTM;
          cfdTextureManager* _tm;
          osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;
+		 VE_TextureBased::TransferFunction* _tf;///<The transfer function for preIntegration.
+		 VE_TextureBased::PreIntegrationTexture2D* _preIntTexture;///<The preIntegrated texture.
    };
 }
 #endif//_OSG

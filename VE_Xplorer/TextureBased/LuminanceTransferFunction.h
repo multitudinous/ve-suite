@@ -66,15 +66,17 @@ public:
    ///\param data A pointer for passing in user data
    ///\param rangeMin The starting value to update
    ///\param rangeMax The ending value to update
-   virtual void Update(unsigned int component,
+   /*virtual void Update(unsigned int component,
                        void* data,
                        float rangeMin=0.0,
-                       float rangeMax=1.0);
+                       float rangeMax=1.0);*/
    
    ///Equal operator
    ///\param rhs The TransferFunction to set this one to. 
    LuminanceTF& operator=(const LuminanceTF& rhs);
 protected:
+	///Update the transfer function
+   virtual void _update();
 };
 }
 #endif// LUMINANCE_TRANSFER_FUNCTION_H

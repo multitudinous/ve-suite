@@ -649,6 +649,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TBPreIntegrateEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\TBSetActiveShaderManagerEH.cxx"
 				>
 			</File>
@@ -1124,6 +1128,10 @@
 			</File>
 			<File
 				RelativePath=".\TBPhongShadingEnableEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TBPreIntegrateEH.h"
 				>
 			</File>
 			<File

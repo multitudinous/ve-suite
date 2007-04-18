@@ -126,11 +126,12 @@ void cfdScalarVolumeVisHandler::_applyTextureMatrix()
    _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,
                                                         tMat.get(),
                                                         osg::StateAttribute::ON);
-   float trans[3] = {.5,.5,.5};
+   float trans[3] = {0,0,0};
+   //_center = osg::Vec3(0,0,0);
    _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
-                                                             _center,
-                                                             _scale,
-                                                             trans));
+                                                                  _center,
+                                                                  _scale,
+                                                                  trans));
    _updateTexGenUnit(tUnit);
 }
 //////////////////////////////////////////////////////////////////////////

@@ -43,11 +43,27 @@
 #include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 #include "VE_Xplorer/TextureBased/GreyScaleShaderManager.h"
+#include "VE_Xplorer/TextureBased/LuminanceTransferFunction.h"
+#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
 using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////
-void GreyScaleShaderManager::_updateTransferFunction(bool preIntegrated)
+/*void GreyScaleShaderManager::_updateTransferFunction(bool preIntegrated)
 {
+   if(!_tf)
+   {
+	  std::cout<<"Transfer function not set!"<<std::endl;
+	  std::cout<<"cfdScalarShaderManager::_updateTransferFunction"<<std::endl;
+      return;
+   }
+   if(fastUpdate)
+   {
+      _preIntTexture->FastUpdate();
+   }
+   else
+   {
+	   _preIntTexture->FullUpdate();
+   }
    //This in no different than the regular shader except that
    //the range is between 20->346.48;
    GLubyte* lutex =0;
@@ -163,6 +179,31 @@ void GreyScaleShaderManager::_updateTransferFunction(bool preIntegrated)
    tFunc->dirtyTextureParameters();
    tFunc->dirtyTextureObject();
    
+}*/
+///////////////////////////////////////////////////////////////////
+void GreyScaleShaderManager::_initTransferFunctions()
+{
+   if(_transferFunctions.empty())
+   {
+      //create transfer functions
+      //_createTransferFunction(); 
+      if(_tf)
+	  {
+		  delete _tf;
+		  _tf = 0;
+	  }
+	  if(_preIntTexture)
+	  {
+		  delete _preIntTexture;
+		  _preIntTexture = 0;
+	  }
+	  _tf = new VE_TextureBased::LuminanceTF();
+	  _tf->InitializeData();
+	  _preIntTexture = new VE_TextureBased::PreIntegrationTexture2D();
+	  _preIntTexture->SetTransferFunction(_tf);
+	  _preIntTexture->FullUpdate();
+      _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());
+   }
 }
 #endif//_OSG
 #endif

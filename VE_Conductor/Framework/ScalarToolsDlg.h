@@ -103,6 +103,27 @@ protected:
       protected:
          ScalarToolsDialog* _scalarDlg;
    };
+
+   /*!\class ScalarToolsStopSliderCallback
+    *Class that allows the user to do operations based on the min slider events
+    */
+   class ScalarToolsStopSliderCallback:
+          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+   {
+      public:
+        ///Constructors
+        ScalarToolsStopSliderCallback(ScalarToolsDialog* parent)
+        {
+            _scalarDlg = parent;
+        }
+        ///Destructor
+        virtual ~ScalarToolsStopSliderCallback(){}
+        
+        ///The operation to do for the slider
+        virtual void SliderOperation();      
+      protected:
+         ScalarToolsDialog* _scalarDlg;
+   };
    ///Build the DualSlider s for this dialog
    void _createDualSliders();
    ///Add the controls to the dialog
@@ -130,6 +151,9 @@ protected:
    ///Enable/Disable isosurface visualization
    ///\param command The wxCommandEvent
    void _onEnableIsoSurface(wxCommandEvent& command);
+
+   ///Fully update the pre-integration table
+   void _onPreIntegrate(wxScrollEvent& command);
 
    wxString _activeScalar;///<The name of the scalar we are working on.
    wxString _colorByScalarName;///<The name of the scalar to color by.

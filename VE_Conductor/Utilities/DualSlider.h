@@ -58,7 +58,8 @@ public:
    {
       BOTH_SLIDERS,
       MAX_SLIDER,
-      MIN_SLIDER
+      MIN_SLIDER,
+	  STOP
    };
    ///Constructor
    ///\param parent The parent window.
@@ -140,11 +141,19 @@ public:
    ///Callback that allows user to react to both sliders moving
    ///\param maxSCbk The callback for the max slider
    void SetBothSliderUpdateCallback(SliderCallback* bothSCbk);
+
+   ///Callback that allows user to react to sliders stopping
+   ///\param maxSCbk The callback for the max slider
+   void SetStopSliderUpdateCallback(SliderCallback* bothSCbk);
 protected:
    ///Handle events on the sliders
    ///\param event wxScollEvent
    void _onSlider(wxScrollEvent& event);
-
+   
+   ///Handle stop events on the sliders
+   ///\param event wxScollEvent
+   void _onStop(wxScrollEvent& event);
+  
    ///Ensure that sliders don't cross over.
    ///\param activeSliderID The slider on the dial that's moving
    bool _ensureSliders(int activeSliderID);

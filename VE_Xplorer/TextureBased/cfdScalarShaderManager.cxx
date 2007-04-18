@@ -44,6 +44,8 @@
 #include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
 #include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
+#include "VE_Xplorer/TextureBased/RedYellowGreenCyanBlueTransferFunction.h"
+#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
 using namespace VE_TextureBased;
 //the shader inline source
 #include "VE_Xplorer/TextureBased/volumeRenderBasicShader.h"
@@ -53,12 +55,13 @@ cfdScalarShaderManager::cfdScalarShaderManager()
 {
    _useTM = true;
    _isoSurface = false;
+   _preIntegrate = true;
    _percentScalarRange = 0;
    _stepSize[0] = .001;
    _stepSize[1] = .001;
    _stepSize[2] = .001;
 }
-////////////////////////////////////////
+///////////////////////////////////////////
 void cfdScalarShaderManager::Init()
 {
    _initTransferFunctions();
@@ -108,7 +111,7 @@ void cfdScalarShaderManager::Init()
    }
    _reinit = false;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
    std::cout<<"Using glsl..."<<std::endl;
@@ -134,34 +137,79 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
 
    SetActiveShaderProgram("Basic Volume Render");
 }
-/////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+void cfdScalarShaderManager::FullTransferFunctionUpdate()
+{
+   _preIntegrate = true;
+}
+//////////////////////////////////////////////////////////////////////////
+void cfdScalarShaderManager::FastTransferFunctionUpdate()
+{
+   _preIntegrate = false;
+}
+//////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
 {
-   _isoSurface = true;
+   _tf->SetIsoSurface(true);
 }
 ///////////////////////////////////////////////////
 void cfdScalarShaderManager::DeactivateIsoSurface()
 {
-   _isoSurface = false;
+   _tf->SetIsoSurface(false);
 }
 /////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetIsoSurfaceValue(float percentScalarRange)
 {
    _percentScalarRange = percentScalarRange;
+   
+   _tf->SetIsoSurfaceValue(percentScalarRange);
    _updateTransferFunction();
 }
-//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::_initTransferFunctions()
 {
-   if(_transferFunctions.empty()){
+   if(_transferFunctions.empty())
+   {
       //create transfer functions
-      _createTransferFunction(); 
+      //_createTransferFunction(); 
+      if(_tf)
+	  {
+		  delete _tf;
+		  _tf = 0;
+	  }
+	  if(_preIntTexture)
+	  {
+		  delete _preIntTexture;
+		  _preIntTexture = 0;
+	  }
+	  _tf = new VE_TextureBased::RYGCBLinearTF();
+	  _tf->InitializeData();
+	  _preIntTexture = new VE_TextureBased::PreIntegrationTexture2D();
+	  _preIntTexture->SetTransferFunction(_tf);
+	  _preIntTexture->FullUpdate();
+      _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());
    }
 }
 /////////////////////////////////////////////////////
-/////////////////////////////////////////////////////
-void cfdScalarShaderManager::_updateTransferFunction(bool preIntegrated)
+//////////////////////////////////////////////////////////////////////////////////////////
+void cfdScalarShaderManager::_updateTransferFunction(bool fastUpdate)
 {
+   if(!_tf)
+   {
+	  std::cout<<"Transfer function not set!"<<std::endl;
+	  std::cout<<"cfdScalarShaderManager::_updateTransferFunction"<<std::endl;
+      return;
+   }
+   if(_preIntegrate)
+   {
+	   _preIntTexture->FullUpdate();
+	   _preIntegrate = false;
+   }
+   else
+   { 
+	   _preIntTexture->FastUpdate();
+   }
+   /*
    GLubyte* lutex =0;
    GLfloat R,G,B,A;
    GLfloat newMid = 0;
@@ -323,30 +371,32 @@ void cfdScalarShaderManager::_updateTransferFunction(bool preIntegrated)
       }
    }
    tFunc->dirtyTextureParameters();
-   tFunc->dirtyTextureObject();
+   tFunc->dirtyTextureObject();*/
    
 }
-////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::EnsureScalarRange()
 {
    _updateTransferFunction();
 }
-///////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::SetScalarRange(float* range)
-{
-   //a percentage value is passed in 
+{ 
    if(!_tm)
    {
       return;
    }
+   
    ScalarRange originalRange = _tm->dataRange(_tm->GetCurrentFrame());
-   _scalarRange[0] = originalRange.range[0] 
-                 + range[0]*(originalRange.range[1] - originalRange.range[0]);
-   _scalarRange[1]  = originalRange.range[0] 
-                 + range[1]*(originalRange.range[1] - originalRange.range[0]);
+   _tf->SetFullScalarRange(originalRange.range[0],originalRange.range[1]);
+   float adjustedRange[2] = {0.,0.};
+   adjustedRange[0] = originalRange.range[0] + range[0]*(originalRange.range[1] - originalRange.range[0]);
+   adjustedRange[1] = originalRange.range[0] + range[1]*(originalRange.range[1] - originalRange.range[0]);
+   _tf->AdjustScalarMaximum(adjustedRange[1]);
+   _tf->AdjustScalarMinimum(adjustedRange[0]);
    _updateTransferFunction();
 }
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateScalarMin(float minScalar)
 {
    if(!_tm)
@@ -355,6 +405,7 @@ void cfdScalarShaderManager::UpdateScalarMin(float minScalar)
    }
    ScalarRange originalRange = _tm->dataRange(_tm->GetCurrentFrame());
    _scalarRange[0] = originalRange.range[0]*minScalar;
+   _tf->AdjustScalarMinimum(_scalarRange[0]);
    _updateTransferFunction();
 }
 ///////////////////////////////////////////////////////////////
@@ -366,6 +417,7 @@ void cfdScalarShaderManager::UpdateScalarMax(float maxScalar)
    }
    ScalarRange originalRange = _tm->dataRange(_tm->GetCurrentFrame());
    _scalarRange[1] = originalRange.range[1]*maxScalar;
+   _tf->AdjustScalarMinimum(_scalarRange[1]);
    _updateTransferFunction();
 }
 ///////////////////////////////////////////////////////
