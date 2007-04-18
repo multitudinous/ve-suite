@@ -111,7 +111,11 @@ sources = Split("""
    TBPhongShadingEnableEH.cxx
    Tablet.cxx
    NavigationDataEventHandler.cxx
+   TBPreIntegrateEH.cxx
+
 """)
+##   DataSetFileEH.cxx
+##   DataSetPrecomputeEH.cxx
 
 headers = Split("""
    cfd1DTextInput.h 
@@ -220,7 +224,12 @@ headers = Split("""
    TBPhongShadingEnableEH.h
    Tablet.h
    NavigationDataEventHandler.h
+   TBPreIntegrateEH.h
+
 """)
+##   DataSetFileEH.h
+##   DataSetPrecomputeEH.h
+
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
