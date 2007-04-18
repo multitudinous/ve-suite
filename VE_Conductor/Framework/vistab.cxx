@@ -555,6 +555,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 //   isosurface->InitializeScalarData( _activeScalarName );
    isosurface->ShowModal();
    //_activeScalarName.erase();
+   }
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )

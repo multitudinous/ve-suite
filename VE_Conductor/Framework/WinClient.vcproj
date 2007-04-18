@@ -219,6 +219,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\advancedisosurface.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\advancedstreamlines.cxx"
 				>
 			</File>
@@ -319,6 +323,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TranslatorUI.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\UI_TeacherTab.cxx"
 				>
 			</File>
@@ -349,6 +357,10 @@
 			>
 			<File
 				RelativePath=".\advancedcontours.h"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedisosurface.h"
 				>
 			</File>
 			<File
@@ -441,6 +453,10 @@
 			</File>
 			<File
 				RelativePath=".\TransformUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TranslatorUI.h"
 				>
 			</File>
 			<File
