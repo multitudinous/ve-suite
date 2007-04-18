@@ -184,6 +184,9 @@ void Isosurfaces::SetScalarRange(std::string activeScalar, std::vector<double> s
       _isoSpinner->SetValue( _scalarRange.at(0) );
       _isoSurfaceSlider->SetValue(0);
    }
+
+   	_minValue = _scalarRange.at(0);
+	_maxValue = _scalarRange.at(1);
 } 
 ////////////////////////////////
 bool Isosurfaces::ShowToolTips()
@@ -229,7 +232,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    newCommand->AddDataValuePair(isosurfaceValue);
 
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
-   colorByScalar->SetData("Color By Scalar",_colorByScalarName);
+   colorByScalar->SetData("Color By Scalar",_activeScalar);
    newCommand->AddDataValuePair(colorByScalar);
 
    VE_XML::DataValuePair* minValue = new VE_XML::DataValuePair();
@@ -237,7 +240,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    newCommand->AddDataValuePair(minValue);
 
    VE_XML::DataValuePair* maxValue = new VE_XML::DataValuePair();
-   minValue->SetData("Maximum Scalar Value", _maxValue );
+   maxValue->SetData("Maximum Scalar Value", _maxValue );
    newCommand->AddDataValuePair(maxValue);
 
    VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
@@ -277,7 +280,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    int selectionIndex = 0;
    for(size_t i = 0; i < _scalarNames.Count(); i++)
    {
-      if(!_scalarNames[i].Cmp( wxString( _colorByScalarName.c_str(), wxConvUTF8) ) )
+      if(!_scalarNames[i].Cmp( wxString( _activeScalar.c_str(), wxConvUTF8) ) )
       {
          selectionIndex = i;
          break;
@@ -314,7 +317,7 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    {
 	  _minValue = advancediso->GetMinScalarValue();
 	  _maxValue = advancediso->GetMaxScalarValue();
-	  _colorByScalarName = advancediso->GetScalarName();
+	  _activeScalar = advancediso->GetScalarName();
    }
 }
 //////////////////////////////////////////////////////

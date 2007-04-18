@@ -356,15 +356,12 @@ void AdvancedIsosurface::SetScalarRange( )
 ////////////////////////////////////////////////////////////
 double AdvancedIsosurface::GetMinScalarValue()
 {
-	double minVal = (_colorScalarRange.at(1) - _colorScalarRange.at(0)) * (double)_minSlider->GetValue() / 100 + _colorScalarRange.at(0);//_minSpinner->GetValue();
-	return minVal;
+	return  _minSpinner->GetValue();
 }
 ////////////////////////////////////////////////////////////
 double AdvancedIsosurface::GetMaxScalarValue()
 {
-	//range * (double)_minSlider->GetValue() ) / 100 + _colorScalarRange.at(0)
-	double maxVal = _maxSpinner->GetValue();
-	return maxVal;
+	return _maxSpinner->GetValue();
 }
 ////////////////////////////////////////////////////////////
 std::string AdvancedIsosurface::GetScalarName()

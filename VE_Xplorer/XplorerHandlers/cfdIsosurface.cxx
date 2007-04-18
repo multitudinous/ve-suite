@@ -157,13 +157,14 @@ void cfdIsosurface::Update()
 
    //this->mapper->SelectColorArray(  colorByScalar.c_str() );
    double* tempRange = this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange();
-   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange() );
-//   this->mapper->SetScalarRange( minValue, maxValue );
+//   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange() );
+   this->mapper->SetScalarRange( minValue, maxValue );
 
    vtkLookupTable* lut = vtkLookupTable::New();
    lut->SetNumberOfColors( 256 );            //default is 256
    lut->SetHueRange( 2.0f/3.0f, 0.0f );      //a blue-to-red scale
-   lut->SetTableRange( tempRange );
+   lut->SetTableRange( minValue, maxValue );
+   //lut->SetTableRange( tempRange );
    lut->Build();
    
    this->mapper->SetLookupTable( lut );
@@ -250,11 +251,11 @@ void cfdIsosurface::UpdateCommand()
    activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
    activeModelDVP->GetData( colorByScalar );
 
- //  activeModelDVP = objectCommand->GetDataValuePair( "Minimum Scalar Value" );
- //  activeModelDVP->GetData( minValue );
+   activeModelDVP = objectCommand->GetDataValuePair( "Minimum Scalar Value" );
+   activeModelDVP->GetData( minValue );
 
- //  activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
- //  activeModelDVP->GetData( maxValue );
+   activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
+   activeModelDVP->GetData( maxValue );
 
    //if ( _activeModel )
    {
