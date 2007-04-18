@@ -84,6 +84,8 @@ private:
    double value;          // Current value of isosurface.
 
    std::string colorByScalar;
+   double minValue;
+   double maxValue;
 #ifdef USE_OMP
    float nData;          // Total number of data to be parallel processed
    vtkContourFilter *contour[MAX_ISOSURFACE];

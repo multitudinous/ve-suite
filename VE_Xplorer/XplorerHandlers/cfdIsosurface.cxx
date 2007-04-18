@@ -158,6 +158,7 @@ void cfdIsosurface::Update()
    //this->mapper->SelectColorArray(  colorByScalar.c_str() );
    double* tempRange = this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange();
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange() );
+//   this->mapper->SetScalarRange( minValue, maxValue );
 
    vtkLookupTable* lut = vtkLookupTable::New();
    lut->SetNumberOfColors( 256 );            //default is 256
@@ -249,6 +250,12 @@ void cfdIsosurface::UpdateCommand()
    activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
    activeModelDVP->GetData( colorByScalar );
 
+ //  activeModelDVP = objectCommand->GetDataValuePair( "Minimum Scalar Value" );
+ //  activeModelDVP->GetData( minValue );
+
+ //  activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
+ //  activeModelDVP->GetData( maxValue );
+
    //if ( _activeModel )
    {
       cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
@@ -264,4 +271,9 @@ void cfdIsosurface::UpdateCommand()
          dataSet->SetActiveScalar( activeTempScalar );
       }
    }            
+
+      vprDEBUG(vesDBG, 1) 
+      << "IN THE UPDATE COMMAND FUNCTION" 
+      << this->GetActiveDataSet()->GetDataSet()
+      << std::endl << vprDEBUG_FLUSH;
 }
