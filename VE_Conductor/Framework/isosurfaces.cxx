@@ -33,6 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Framework/advancedisosurface.h"
 #include "VE_Conductor/Framework/vistab.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Open/XML/Command.h"
@@ -52,6 +53,7 @@
 #include <wx/statbox.h>
 #include <iostream>
 #include <vector>
+#include <map>
 ///////////////////////////
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
 ////@begin Isosurfaces event table entries
@@ -78,8 +80,6 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
    int tempH = displaySize.GetHeight()-480;
    wxRect dialogPosition( displaySize.GetWidth()-427, displaySize.GetHeight()-tempH, 427, tempH );
    this->SetSize( dialogPosition );
-
-//   tempScalarName = "jared";
 }
 //////////////////////////////////////////////////////////
 bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, 
@@ -231,7 +231,14 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
-//std::cout<<"ADVANCED"<<_colorByScalarName<<std::endl;
+
+   VE_XML::DataValuePair* minValue = new VE_XML::DataValuePair();
+   minValue->SetData("Minimum Scalar Value", _minValue );
+   newCommand->AddDataValuePair(minValue);
+
+   VE_XML::DataValuePair* maxValue = new VE_XML::DataValuePair();
+   minValue->SetData("Maximum Scalar Value", _maxValue );
+   newCommand->AddDataValuePair(maxValue);
 
    VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
    nearestPrecomputed->SetDataName("Use Nearest Precomputed");
@@ -276,8 +283,16 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
          break;
       }
    }
-   wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
-                                   _scalarNames);
+
+   AdvancedIsosurface* advancediso = new AdvancedIsosurface( this, SYMBOL_ADVANCEDISOSURFACES_IDNAME,
+									SYMBOL_ADVANCEDISOSURFACES_TITLE,
+									SYMBOL_ADVANCEDISOSURFACES_POSITION,
+									SYMBOL_ADVANCEDISOSURFACES_SIZE,
+									SYMBOL_ADVANCEDISOSURFACES_STYLE );
+
+   
+   //wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
+   //                                _scalarNames);
 
    /*int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
@@ -289,13 +304,17 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    scalarSelector.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
                         width, height));*/
 
-   scalarSelector.SetSize(GetRect());
-   scalarSelector.SetSelection(selectionIndex);
-   scalarSelector.CentreOnParent();
+   advancediso->SetSize(GetRect());
+   advancediso->CentreOnParent();
+   advancediso->SetActiveScalar( _activeScalar );
+   advancediso->SetScalarList( scalarlist );
+   advancediso->PopulateList( _scalarNames );
 
-   if (scalarSelector.ShowModal() == wxID_OK)
+   if (advancediso->ShowModal() == wxID_OK)
    {
-      _colorByScalarName = ConvertUnicode( scalarSelector.GetStringSelection() );
+	  _minValue = advancediso->GetMinScalarValue();
+	  _maxValue = advancediso->GetMaxScalarValue();
+	  _colorByScalarName = advancediso->GetScalarName();
    }
 }
 //////////////////////////////////////////////////////
@@ -313,4 +332,9 @@ void Isosurfaces::InitializeScalarData( std::string activeScalar )
       _isoSpinner->SetValue( _scalarRange.at(0) );
       _isoSurfaceSlider->SetValue(0);
    }
+}
+////////////////////////////////////////////////////////////
+void Isosurfaces::SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges )
+{
+	scalarlist = colorScalarRanges;
 }

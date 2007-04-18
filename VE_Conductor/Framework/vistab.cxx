@@ -545,13 +545,13 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_POSITION,
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
-   }
 
    isosurface->SetSize(_vistabPosition);
-   isosurface->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    isosurface->SetActiveScalar(_activeScalarName);
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
    isosurface->SetScalarRange( _activeScalarName, _activeScalarRange );
+   isosurface->SetAvailableScalars( _availableSolutions["MESH_SCALARS"] );
+   isosurface->SetScalarList( _originalScalarRanges );
 //   isosurface->InitializeScalarData( _activeScalarName );
    isosurface->ShowModal();
    //_activeScalarName.erase();

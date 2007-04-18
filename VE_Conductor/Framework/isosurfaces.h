@@ -44,6 +44,7 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
+#include <map>
 XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
@@ -127,6 +128,8 @@ public:
     /// Initialize scalar data
     void InitializeScalarData(std::string activeScalarName);
 
+	void SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges );
+
 protected:
    std::string _colorByScalarName;///<The name of the scalar to color by.
    std::string _activeScalar;///The scalar that is active on the vistab
@@ -158,6 +161,10 @@ protected:
    double tempSliderScalar;///temporary value updated by slider
    double tempSpinnerScalar;///temporary value updated by spinctrl
    std::string tempScalarName;///contains current scalar name
+   double _minValue;
+   double _maxValue;
+
+   std::map<std::string,std::vector<double> > scalarlist;
 
    std::string ConvertUnicode( const wxChar* data )
    {
