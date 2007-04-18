@@ -196,6 +196,7 @@ public:
    //void HighlightSelectedIcon2(unsigned int);
    void HighlightSelectedIcon( REI_Plugin* cur_module);
    void DrawPorts( REI_Plugin* cur_module, bool flag);
+   bool IsDragging();
 
 protected:
 
@@ -277,6 +278,7 @@ private:
    wxProgressDialog* _fileProgress;
    bool isLoading;
    bool isDataSet;
+   bool dragging;
 
    Vistab* vistab;///< The visualization tab
 

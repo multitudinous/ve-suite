@@ -160,6 +160,7 @@ Network::Network(wxWindow* parent, int id)
    isDataSet = false;
    frame = dynamic_cast< AppFrame* >( parent->GetParent()->GetParent() );
    _soundsDlg = 0;
+   dragging = false;
 }
 
 Network::~Network()
@@ -447,6 +448,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
    {*/
 	if (event.Dragging())
 	{	
+		dragging = true;
 		//drag link connector
 		if (m_selLinkCon >= 0 && m_selLink >= 0)
 		{		
@@ -528,6 +530,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 /////////////////////////////////////////////////////////////////////
 void Network::OnMLeftUp(wxMouseEvent& event)
 {
+	dragging = false;
 	//release link
 	if (m_selLinkCon>=0 && m_selLink>=0)
 	{
@@ -3382,4 +3385,9 @@ void Network::OnModelSounds(wxCommandEvent& event)
       _soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
    _soundsDlg->Show();
+}
+///////////////////////////////////////////////////
+bool Network::IsDragging()
+{
+	return dragging;
 }

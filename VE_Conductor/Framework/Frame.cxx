@@ -209,8 +209,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
    //  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
    //  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
-   EVT_IDLE( AppFrame::IdleEvent )
-   EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
+   //EVT_IDLE( AppFrame::IdleEvent )
+   //EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
    EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
    EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
    EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
@@ -230,10 +230,10 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
    m_frameNr(0), 
    f_financial(true), 
    f_geometry(true), 
-   f_visualization(true),
-   timer( this, TIMER_ID )
+   f_visualization(true)//,
+   //timer( this, TIMER_ID )
 {
-   timer.Start( 1000 );
+   //timer.Start( 1000 );
    
    char** tempArray = new char*[ ::wxGetApp().argc ];
    for ( size_t i = 0; i < ::wxGetApp().argc; ++i )
@@ -2160,16 +2160,16 @@ VjObs_ptr AppFrame::GetXplorerObject( void )
    return serviceList->GetXplorerPointer();
 }
 ///////////////////////////////////////////////////////////////////
-void AppFrame::IdleEvent( wxIdleEvent& event )
-{
-   if ( serviceList )
-      serviceList->CheckORBWorkLoad();
-}
+//void AppFrame::IdleEvent( wxIdleEvent& event )
+//{
+//   if ( serviceList )
+//      serviceList->CheckORBWorkLoad();
+//}
 ///////////////////////////////////////////////////////////////////
-void AppFrame::TimerEvent( wxTimerEvent& WXUNUSED(event) )
-{
-   ::wxWakeUpIdle();
-}
+//void AppFrame::TimerEvent( wxTimerEvent& WXUNUSED(event) )
+//{
+//   ::wxWakeUpIdle();
+//}
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
@@ -2304,4 +2304,12 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
    delete veCommand;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnInternalIdle()
+{
+	//only when not dragging
+	if(!network->IsDragging())
+		if ( serviceList )
+			serviceList->CheckORBWorkLoad();
 }

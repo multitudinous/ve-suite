@@ -54,7 +54,7 @@ Frame API
 #include <wx/sizer.h>
 #include <wx/config.h> 
 #include <wx/splitter.h>
-#include <wx/timer.h>
+//#include <wx/timer.h>
 #include <wx/dialog.h>
 #include <wx/filename.h>
 
@@ -186,7 +186,7 @@ public:
       CAD_NODE_DIALOG,
       XPLORER_SCENES,
       XPLORER_EXIT,
-      TIMER_ID,
+      //TIMER_ID,
       XPLORER_COLOR,
       ID_PREFERENCES,
       CHANGE_XPLORER_VIEW,
@@ -381,6 +381,8 @@ protected:
 
    void OnDoubleClickSash( int, int );
 
+   void AppFrame::OnInternalIdle();
+
    wxBoxSizer *sizerTab;
    //revision* version;
 
@@ -394,7 +396,7 @@ private:
    void ExitXplorer( void );
    void EnableCEGUIMenuItems( void );
    void IdleEvent( wxIdleEvent& event );
-   void TimerEvent( wxTimerEvent& event );
+   //void TimerEvent( wxTimerEvent& event );
    NavigationPane* navPane;
    DeviceProperties* deviceProperties;
    ViewLocPane* viewlocPane;
@@ -402,7 +404,7 @@ private:
 //   wxDialog* visTabs;
 //   Vistab* vistab;
    wxDialog* _treeView;
-   wxTimer timer;
+   //wxTimer timer;
    std::string _displayMode;///<Desktop or Tablet.
 
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;///<The CADNode GUI.
