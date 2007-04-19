@@ -60,6 +60,8 @@
 #include "VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPBoundEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPDimensionsEH.h"
+#include "VE_Xplorer/XplorerHandlers/SoundActivateEH.h"
+#include "VE_Xplorer/XplorerHandlers/SoundAddNewEH.h"
 
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
@@ -86,7 +88,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav = 0;
    _teacher = 0;
-   _soundHandler = 0;
+   //_soundHandler = 0;
    //_camHandler = 0;
    cursor = 0;
    _param.erase();// = 0;
@@ -148,6 +150,9 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _eventHandlers[ std::string("Display Seed Points") ] = new VE_EVENTS::SeedPointActivateEventHandler();
    _eventHandlers[ std::string("Seed Points Bounds") ] = new VE_EVENTS::SeedPointBoundsEventHandler();
    _eventHandlers[ std::string("Seed Points Dimensions") ] = new VE_EVENTS::SeedPointDimensionsEventHandler();
+   _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
+   _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
@@ -196,12 +201,12 @@ void cfdEnvironmentHandler::CleanUp( void )
       VE_Xplorer::cfdQuatCamHandler::instance()->CleanUp();
    }
 
-   if ( this->_soundHandler )
+   /*if ( this->_soundHandler )
    {  
       vprDEBUG(vesDBG,2)  
         << "|       deleting this->_soundHandler" << std::endl << vprDEBUG_FLUSH;
       delete this->_soundHandler;
-   }
+   }*/
 
    if ( this->_teacher )
    {  
@@ -256,10 +261,10 @@ void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
    _updateBackgroundColor = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
+/*cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
 {
    return _soundHandler;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
 {
@@ -334,8 +339,8 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    // Initiate quatcam
    //
-   std::cout << "| 10. Initializing................................... Sound Handler |" << std::endl;
-   this->_soundHandler = new cfdSoundHandler( _param.c_str() );
+   //std::cout << "| 10. Initializing................................... Sound Handler |" << std::endl;
+   //this->_soundHandler = new cfdSoundHandler( /*_param.c_str()*/ );
 
    //
    // Initiate the Performer Stored Binary objects.
@@ -453,7 +458,7 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    //this->cursor->Update( this->nav->GetCursorLocation(),
    //                      this->nav->GetDirection(), this->nav->worldTrans );
 
-   _soundHandler->CheckCommandId( _commandArray );
+   //_soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
 	display_information->LatePreFrame();

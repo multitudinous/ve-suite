@@ -649,6 +649,20 @@ void Model::RemoveInformationPacket( unsigned int i )
       }
    }
 }
+//////////////////////////////////////////////////////
+void Model::RemoveInformationPacket(std::string name )
+{
+   for(std::vector<VE_XML::ParameterBlock*>::iterator iter = informationPackets.begin();
+      iter != informationPackets.end(); ++iter)
+   {
+      if((*iter)->GetName() == name)
+      {
+         delete *iter;
+         informationPackets.erase( ++iter );
+         return;
+      }
+   }
+}
 ////////////////////////////////////////////////////////////////////////////////
 void Model::_updateVEElement( std::string input )
 {

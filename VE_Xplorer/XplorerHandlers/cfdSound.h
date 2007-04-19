@@ -46,16 +46,25 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdSound
    { 
       public:
+         ///Constructor
          cfdSound();
-         ~cfdSound();
+         ///Copy Constructor
+         ///\param rhs The cfdSound to copy
+         cfdSound(const cfdSound& rhs);
+         ///Destructor
+         virtual ~cfdSound();
 
-         void initSound();
+         ///Equal operator
+         ///\param rhs The cfdSound to set equal to
+         cfdSound& operator=(const cfdSound& rhs);
+
+         bool initSound();
          void playSound();
          void stopSound();
          bool IsSounding();
 
-         char  fileName[ 100 ];
-         char  soundName[ 100 ];    // this is displayed on the gui
+         std::string fileName;///<Filename 
+         std::string soundName;///< This is displayed on the gui
 
          // sound is either ambient or positional.  If the sound is ambient, it is
          // attached to the listener, and its volume does not change when the

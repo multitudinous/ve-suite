@@ -112,6 +112,8 @@ sources = Split("""
    Tablet.cxx
    NavigationDataEventHandler.cxx
    TBPreIntegrateEH.cxx
+   SoundAddNewEH.cxx
+   SoundActivateEH.cxx
 
 """)
 ##   DataSetFileEH.cxx
@@ -225,6 +227,8 @@ headers = Split("""
    Tablet.h
    NavigationDataEventHandler.h
    TBPreIntegrateEH.h
+   SoundActivateEH.h
+   SoundAddNewEH.h
 
 """)
 ##   DataSetFileEH.h

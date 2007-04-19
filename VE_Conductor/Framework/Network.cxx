@@ -3384,6 +3384,7 @@ void Network::OnModelSounds(wxCommandEvent& event)
       _soundsDlg = new SoundsPane(modules[m_selMod].GetPlugin()->GetModel());
       _soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
+   _soundsDlg->SetActiveModel(modules[m_selMod].GetPlugin()->GetModel());
    _soundsDlg->Show();
 }
 ///////////////////////////////////////////////////

@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdSound.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
@@ -204,6 +205,7 @@ cfdModel::~cfdModel()
 
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
+   _availableSounds.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::PreFrameUpdate()
@@ -1065,4 +1067,43 @@ bool cfdModel::CloneExists(std::string cloneID)
 
    return false;
 }
-////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+void cfdModel::AddNewSound(std::string soundName,
+                           std::string filename)
+{
+   cfdSound newSound;
+   newSound.fileName = filename;
+   newSound.soundName = soundName;
+
+   if(newSound.initSound())
+   {
+      _availableSounds[soundName] = newSound;
+   }
+
+}
+///////////////////////////////////////////////////
+void cfdModel::ActivateSound(std::string soundName)
+{
+   try
+   {
+      _availableSounds[soundName].playSound();
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid sound: "<<soundName<<std::endl;
+      std::cout<<"cfdModel::ActivateSound"<<std::endl;
+   }
+}
+/////////////////////////////////////////////////////
+void cfdModel::DeactivateSound(std::string soundName)
+{
+   try
+   {
+      _availableSounds[soundName].stopSound();
+   }
+   catch(...)
+   {
+      std::cout<<"Invalid sound: "<<soundName<<std::endl;
+      std::cout<<"cfdModel::ActivateSound"<<std::endl;
+   }
+}

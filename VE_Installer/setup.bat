@@ -39,6 +39,7 @@ set VEXMASTER=costello
 set TAO_PORT=1239
 set SNX_BASE_DIR=%VJ_BASE_DIR%
 
+set OPENAL_LIB_DIR=C:\devEnv\VES.1.0-Deps\openal\OpenAL-Windows\OpenAL32\Debug
 REM NOTE: On Windows the juggler location must point to a Windows
 REM (local or on network) machine, otherwise user may run into runtime
 REM problems when loading config files across the network
@@ -83,3 +84,4 @@ set Path=%COIN_HOME%\bin;%Path%
 set Path=%APR_HOME%\Debug;%Path%
 set Path=%APR_UTIL_HOME%\Debug;%Path%
 set Path=%APR_ICONV_HOME%\Debug;%Path%
+set Path=%OPENAL_LIB_DIR%;%PATH%

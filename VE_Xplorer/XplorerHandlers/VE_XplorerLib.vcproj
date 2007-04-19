@@ -609,6 +609,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SoundActivateEH.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundAddNewEH.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\SPBoundEH.cxx"
 				>
 			</File>
@@ -1081,6 +1089,14 @@
 			</File>
 			<File
 				RelativePath=".\SeedPoints.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundActivateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundAddNewEH.h"
 				>
 			</File>
 			<File

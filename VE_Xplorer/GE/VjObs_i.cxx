@@ -748,7 +748,7 @@ short VjObs_i::GetNumberOfSounds()
     CORBA::SystemException
   ))
 {
-   return cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
+   return 0;//cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 }
 
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
@@ -756,10 +756,10 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
     CORBA::SystemException
   ))
 {
-   CORBA::ULong numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
+   //CORBA::ULong numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 
-   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
-                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
+    //                      << numberOfSounds << std::endl << vprDEBUG_FLUSH;
 /*
    if ( sound_names != NULL )
    {
@@ -768,7 +768,8 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
       delete sound_names;
    }
 */
-   if ( numberOfSounds > 0 )
+   ///Not building sounds like this anymore
+   /*if ( numberOfSounds > 0 )
    {
       //sound_names = new VjObs::scalar_p(50);
       this->sound_names->length( numberOfSounds );
@@ -778,7 +779,7 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
                      cfdEnvironmentHandler::instance()->GetSoundHandler()->GetSoundFilename( i ).c_str() );
       }
    }
-   else
+   else*/
       sound_names = NULL;
 
    VjObs::scalar_p_var sound_names_=new VjObs::scalar_p(sound_names);

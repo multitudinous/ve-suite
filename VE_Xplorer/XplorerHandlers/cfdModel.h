@@ -94,6 +94,7 @@ namespace VE_Xplorer
 {
    class cfdDataSet;
    class cfdCommandArray;
+   class cfdSound;
 }
 
 #ifdef _OSG
@@ -256,6 +257,19 @@ public:
    ///Get the id for this model
    unsigned int GetID( void );
 
+   ///Add a new sound to the model
+   ///\param soundName The name of the sound
+   ///\param filename The actual filename of the sound to load
+   void AddNewSound(std::string soundName,std::string filename);
+
+   ///Activate (play) the sound
+   ///\param soundName The name of the sound to play
+   void ActivateSound(std::string soundName);
+
+   ///Deactivate (stop) the sound
+   ///\param soundName The name of the sound to stop
+   void DeactivateSound(std::string soundName);
+ 
    //////////////////////////
    //texture based interface
 #ifdef _OSG
@@ -329,6 +343,9 @@ private:
 
    std::string rootCADNodeID;///<ID for root CAD node id
    unsigned int modelID;
+
+   
+   std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
 #ifdef _OSG
          std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 #endif

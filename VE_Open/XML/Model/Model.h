@@ -167,6 +167,11 @@ public:
    ///Remove the i'th information packet for a model.
    ///\param i The i'th packet you are after.
    void RemoveInformationPacket( unsigned int i );
+
+   ///Remove the named information packet from a model.
+   ///\param name The name of the packet to remove.
+   void RemoveInformationPacket(std::string name );
+
    ///Add a geometry node and return it
    /// if there is already geometry then the function will return that pointer
    VE_XML::VE_CAD::CADNode* AddGeometry( void );

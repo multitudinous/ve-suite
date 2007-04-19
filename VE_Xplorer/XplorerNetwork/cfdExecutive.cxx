@@ -297,7 +297,8 @@ void cfdExecutive::GetEverything( void )
          //Need to pass an active device in here or something
          //This needs to be fixed
          //_plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-         _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
+         //This is now handled by the active model and eventhandlers rather than cfdSoundHandler
+         //_plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
          pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }
       std::map< int, VE_XML::VE_Model::Model* >::iterator modelIter;

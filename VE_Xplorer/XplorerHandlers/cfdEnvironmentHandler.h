@@ -51,9 +51,9 @@ namespace VE_Xplorer
    class cfdCursor;
    class cfdCommandArray;
    class cfdReadParam;
-   class cfdSoundHandler;
+   //class cfdSoundHandler;
    class cfdTeacher;
-   class cfdSoundHandler;
+   //class cfdSoundHandler;
    class cfdQuatCamHandler;
    class cfdDisplaySettings;
 
@@ -105,7 +105,7 @@ public:
    cfdCursor* GetCursor( void );
 
    ///Accessor for cfdSoundHandler
-   cfdSoundHandler* GetSoundHandler( void );
+   //cfdSoundHandler* GetSoundHandler( void );
 
    ///Accessor for cfdTeacher
    cfdTeacher* GetTeacher( void );
@@ -159,7 +159,7 @@ private:
    osg::ref_ptr<VE_SceneGraph::DCS> _seedPointsDCS;///<The DCS for the seed points
    cfdNavigate* nav;
    cfdTeacher* _teacher;
-   cfdSoundHandler* _soundHandler;
+   //cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;
 
    #ifdef _OSG
