@@ -101,6 +101,10 @@ public:
 	void OnMinSlider( wxScrollEvent& WXUNUSED(event) );
 	/// Callback for the maximum scalar slider
 	void OnMaxSlider( wxScrollEvent& WXUNUSED(event) );
+	/// Callback for text on minimum spinner
+	void UpdateMinSlider( wxCommandEvent& event );
+	/// Callback for text on maximum spinner	
+	void UpdateMaxSlider( wxCommandEvent& event );
 
     wxBitmap GetBitmapResource( const wxString& name );
 

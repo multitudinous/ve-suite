@@ -89,7 +89,8 @@ public:
       ISOSURFACE_PLANE_SLIDER,
       ADD_ISOSURFACE_BUTTON,
       ADVANCED_ISOSURFACE_BUTTON,
-      ISOSURFACE_SPINCTRL
+      ISOSURFACE_SPINCTRL,
+	  SCALAR_SPINCTRL
    };
 
     void SendCommandsToXplorer( void );
@@ -157,6 +158,9 @@ protected:
 
    ///wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINNER
    void _onSpinner(wxScrollEvent& WXUNUSED(event));
+
+   ///wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINNER
+   void UpdateSlider( wxCommandEvent& event );
 
    double tempSliderScalar;///temporary value updated by slider
    double tempSpinnerScalar;///temporary value updated by spinctrl

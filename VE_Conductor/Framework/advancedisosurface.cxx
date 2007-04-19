@@ -51,6 +51,8 @@ BEGIN_EVENT_TABLE( AdvancedIsosurface, wxDialog )
    EVT_COMMAND_SCROLL( MAX_SPINCTRL,    AdvancedIsosurface::OnMaxSpinCtrl )
    EVT_COMMAND_SCROLL( MIN_SLIDER,      AdvancedIsosurface::OnMinSlider )
    EVT_COMMAND_SCROLL( MAX_SLIDER,      AdvancedIsosurface::OnMaxSlider )
+   EVT_TEXT_ENTER	 ( MIN_SPINCTRL,    AdvancedIsosurface::UpdateMinSlider )
+   EVT_TEXT_ENTER	 ( MAX_SPINCTRL,    AdvancedIsosurface::UpdateMaxSlider )
 END_EVENT_TABLE()
 
 AdvancedIsosurface::AdvancedIsosurface( )
@@ -316,6 +318,74 @@ bool AdvancedIsosurface::_ensureSliders(int activeSliderID)
       }
    }
    return false;
+}
+////////////////////////////////////////////////////////////////////////
+void AdvancedIsosurface::UpdateMinSlider( wxCommandEvent& event )
+{
+//   double range = _activeScalarRange.at(1) - _activeScalarRange.at(0);
+   double minValue = 0;
+
+   if( _colorScalarName.empty() )
+   {
+      wxMessageBox( _("Select a scalar or vector"), _("Dataset Failure"), 
+                     wxOK | wxICON_INFORMATION );
+      _minSpinner->SetValue(0);
+      return;
+   }
+
+   minValue = ( ( _minSpinner->GetValue() - _colorScalarRange.at(0) ) 
+               / ( _colorScalarRange.at(1) - _colorScalarRange.at(0) ) * 100);
+
+   if( minValue == 100 )
+   {  
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
+   }
+   else if( _maxSlider->GetValue() <= (int)minValue )
+   {
+      _minSlider->SetValue( (int)minValue );
+      _maxSlider->SetValue( (int)minValue+1 );   
+      _maxSpinner->SetValue( _colorScalarRange.at(1) - ( ( _colorScalarRange.at(1) - _colorScalarRange.at(0) )
+                               * ( 100 - (double)_maxSlider->GetValue() ) / 100 ) );
+   }
+   else
+   {
+      _minSlider->SetValue( (int)minValue );  
+   }
+} 
+////////////////////////////////////////////////////////////////////////
+void AdvancedIsosurface::UpdateMaxSlider( wxCommandEvent& event )
+{
+   double maxValue = 100;
+
+   if( _colorScalarName.empty() )
+   {
+      wxMessageBox( _("Select a scalar or vector"), _("Dataset Failure"), 
+                     wxOK | wxICON_INFORMATION );
+      _maxSpinner->SetValue(100);
+      return;
+   }
+
+   maxValue = ( ( _colorScalarRange.at(1) - _colorScalarRange.at(0) 
+               - ( _colorScalarRange.at(1) - _maxSpinner->GetValue() ) ) 
+               / ( _colorScalarRange.at(1) - _colorScalarRange.at(0) ) * 100);
+
+   if( maxValue == 0 )
+   {  
+      _minSlider->SetValue( (int)maxValue+1 );
+      _maxSlider->SetValue( (int)maxValue );     
+   }
+   else if( _minSlider->GetValue() >= (int)maxValue )
+   {
+      _minSlider->SetValue( (int)maxValue-1 );
+      _maxSlider->SetValue( (int)maxValue );   
+      _minSpinner->SetValue( ( _colorScalarRange.at(1) - _colorScalarRange.at(0) )
+                              * (double)_minSlider->GetValue() / 100 + _colorScalarRange.at(0) );
+   } 
+   else
+   {  
+      _maxSlider->SetValue( (int)maxValue );   
+   } 
 }
 //////////////////////////////////////////////////////////////////
 void AdvancedIsosurface::PopulateList( wxArrayString _scalarlist )

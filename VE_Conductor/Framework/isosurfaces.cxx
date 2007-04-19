@@ -63,6 +63,7 @@ BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
    EVT_BUTTON           (ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface)
    EVT_BUTTON           (ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced)
    EVT_COMMAND_SCROLL   (ISOSURFACE_SPINCTRL,         Isosurfaces::_onSpinner)
+   EVT_TEXT_ENTER		(ISOSURFACE_SPINCTRL,		  Isosurfaces::UpdateSlider )
 ////@end Isosurfaces event table entries
 END_EVENT_TABLE()
 Isosurfaces::Isosurfaces( )
@@ -325,6 +326,15 @@ void Isosurfaces::_onSpinner( wxScrollEvent& WXUNUSED(event) )
 {
    tempSpinnerScalar =  ( ( _isoSpinner->GetValue() - _scalarRange.at(0) ) / ( _scalarRange.at(1) - _scalarRange.at(0) ) * 100);
    _isoSurfaceSlider->SetValue( tempSpinnerScalar );
+}
+//////////////////////////////////////////////////////
+void Isosurfaces::UpdateSlider( wxCommandEvent& event )
+{
+   double spinnerValue = 0;
+
+   spinnerValue = ( ( _isoSpinner->GetValue() - _scalarRange.at(0) ) / ( _scalarRange.at(1) - _scalarRange.at(0) ) * 100);
+
+   _isoSurfaceSlider->SetValue( spinnerValue );
 }
 //////////////////////////////////////////////////////
 void Isosurfaces::InitializeScalarData( std::string activeScalar )
