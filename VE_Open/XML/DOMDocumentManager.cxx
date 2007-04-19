@@ -118,6 +118,7 @@ void DOMDocumentManager::_readInputFile(std::string xmlFile)
 {
    if ( !std::ifstream( xmlFile.c_str() ).good() )
    {
+      std::cerr << "Could not open file : " << xmlFile.c_str() << std::endl;
       return;
    }
    
@@ -206,7 +207,7 @@ void DOMDocumentManager::Load( const std::string inputCommand )
    }
    catch (...) 
    {
-      std::cout << "Unexpected Exception \n" ;
+      std::cout << "DOMDocumentManager::Load Unexpected Exception"  << std::endl;
       delete parser;
       parser = 0;
       delete errHandler;

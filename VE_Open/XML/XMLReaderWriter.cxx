@@ -145,27 +145,30 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
    //In case we use the same readerwriter more than once for a read
    _xmlObjects.clear();
 
-   if ( nXMLObjects )
+   if ( nXMLObjects == 0 )
    {
-      for ( unsigned int i = 0; i < nXMLObjects; ++i )
+      std::cerr << "XMLReaderWriter::_populateStructureFromDocument number of xml objects = " << nXMLObjects << std::endl;
+      return;
+   }
+
+   for ( unsigned int i = 0; i < nXMLObjects; ++i )
+   {
+      VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);
+      if ( newXMLobj != NULL )
       {
-         VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);
-         if ( newXMLobj != NULL )
-         {
-            _xmlObjects.push_back( newXMLobj );
-            _xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
-         }
-         /*
-         else if ( newXMLobj == include )
-         {
-            Call new creator mehtod which returns a vector of XMLObjects
-            Append vector of objects to ones already asked for
-         }
-         */
-         else
-         {
-            std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagName << std::endl;
-         }
+         _xmlObjects.push_back( newXMLobj );
+         _xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
+      }
+      /*
+      else if ( newXMLobj == include )
+      {
+         Call new creator mehtod which returns a vector of XMLObjects
+         Append vector of objects to ones already asked for
+      }
+      */
+      else
+      {
+         std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagName << std::endl;
       }
    }
 }
