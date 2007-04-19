@@ -6,10 +6,12 @@ from socket import gethostname ##Used to get hostname
 from velBase import *
 from velJconfDict import *
 from velClusterDict import *
+from velLauncherDebugWin import *
 from velModes import DEFAULT_JCONF
 from velDepsArray import *
 import string
 import subprocess
+
 
 class Launch:
     """Prepares the environment and launches the chosen programs.
@@ -34,9 +36,15 @@ class Launch:
     def __init__(self, settings):
         """Sets environmental vars and calls OS-specific launch code."""
         ##Set self's variables
-##        print settings ##TESTER
         self.settings = settings
         self.nameserverPids = []
+        self.debugOutput = []
+        self.debugFile = open("debug.txt", 'w')
+        if self.settings["Debug"]:
+            self.outputDestination = self.debugFile
+            print "Output written to %s" %self.debugFile.name
+        else:
+            self.outputDestination = None
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
         ##Used in EnvSetup and Windows/Unix.
@@ -49,6 +57,8 @@ class Launch:
             self.cluster = False
         ##Set the environmental variables
         self.EnvSetup()
+        if self.settings["Debug"]:
+            frame = LauncherDebugWin(None, self.debugOutput)
         ##Change the directory.
         os.chdir(self.settings["Directory"])
         if self.settings["Shell"]: ##Shell is activated after destroy VE-Launcher.
@@ -66,6 +76,7 @@ class Launch:
     def GetNameserverPids(self):
         return self.nameserverPids
 
+
     def Windows(self):
         """Launches the chosen programs under an Unix OS.
 
@@ -79,23 +90,22 @@ class Launch:
             sleep(1)
             print "Starting Name Server."
             pids = []
-            pids.append(subprocess.Popen(self.NameServiceCall()).pid)
+            pids.append(subprocess.Popen(self.NameServiceCall(),
+                                         stdout = self.outputDestination,
+                                         stderr = subprocess.STDOUT).pid)
             sleep(5)
-            pids.append(subprocess.Popen(self.ServerCall()).pid)
+            pids.append(subprocess.Popen(self.ServerCall(),
+                                         stdout = self.outputDestination,
+                                         stderr = subprocess.STDOUT).pid)
             sleep(5)
             self.nameserverPids = pids
         ##Cluster Xplorer section
         if self.settings["Cluster"]:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
-##            self.WriteClusterScriptPost(typeXplorer, jconf, desktopMode)
             self.ReadClusterTemplate()
-##            clusterFileName = "cluster.bat"
-##            clusterFilePath = os.path.join('C:\\WINDOWS', 'Temp', clusterFileName)
-##            print clusterFilePath ##TESTER
             ##Write cluster script
             sourceFile = file(CLUSTER_FILE_PATH, 'w')
-##            sourceFile.write(self.clusterScript)
             sourceFile.write(self.clusterTemplate)
             sourceFile.close()
             ##Master call
@@ -107,20 +117,26 @@ class Launch:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 self.ExecuteClusterScript(comp)
                 sleep(self.settings["SlaveWait"])
+            ##Delete the cluster file afterwards.
+            if not self.settings["Debug"]:
+                os.remove(CLUSTER_FILE_PATH)
         ##Xplorer section
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
-            subprocess.Popen(self.XplorerCall())
+            subprocess.Popen(self.XplorerCall(),
+                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
             ##Append argument if desktop mode selected
             if self.settings["VESFile"]:
                 sleep(10)
-            subprocess.Popen(self.ConductorCall())
+            subprocess.Popen(self.ConductorCall(),
+                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
         print "Finished sending launch commands."
         return
+
 
     def Unix(self):
         """Launches the chosen programs under an Unix OS.
@@ -143,20 +159,17 @@ class Launch:
             sleep(1)
             print "Starting Name Server."
             pids = []
-            pids.append(subprocess.Popen(self.NameServiceCall()).pid)
+            pids.append(subprocess.Popen(self.NameServiceCall(),
+                                         stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             sleep(5)
-            pids.append(subprocess.Popen(self.ServerCall()).pid)
+            pids.append(subprocess.Popen(self.ServerCall(),
+                                         stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             self.nameserverPids = pids
-##            os.system("%s &" %(self.NameServiceCall()))
-##            sleep(5)
-##            os.system("%s &" %(self.ServerCall()))
         ##Cluster mode
         if self.settings["Cluster"]:
             print "Starting Xplorer on the cluster."
             ##Finish building cluster script
             self.WriteClusterScriptPost()
-##            clusterFileName = "cluster.tsh"
-##            clusterFilePath = os.path.join(CLUSTER_PATH, clusterFileName)
             clusterFilePath = CLUSTER_FILE_PATH
             ##Write cluster script
             sourceFile = file(clusterFilePath, 'w')
@@ -166,25 +179,26 @@ class Launch:
             print "***MASTER CALL: %s***" %self.settings["ClusterMaster"] ##TESTER
             self.ExecuteClusterScriptUnix(self.settings["ClusterMaster"],
                                           clusterFilePath)
-##            os.system("source %s %s &" %(clusterFilePath,
-##                                         self.settings["ClusterMaster"]))
             sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-##                os.system("source %s %s &" %(clusterFilePath, comp))
                 self.ExecuteClusterScriptUnix(comp, clusterFilePath)
                 sleep(self.settings["SlaveWait"])
+            ##Delete the cluster file afterwards.
+            print clusterFilePath
+            if not self.settings["Debug"]:
+                os.remove(clusterFilePath)
         ##Xplorer section
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
-            subprocess.Popen(self.XplorerCall())
+            subprocess.Popen(self.XplorerCall(),
+                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
-##            if vesFile != None:
-##                sleep(5)
-            subprocess.Popen(self.ConductorCall())
+            subprocess.Popen(self.ConductorCall(),
+                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
         print "Finished sending launch commands."
         return
 
@@ -195,11 +209,12 @@ class Launch:
         taoPort = os.getenv("TAO_PORT", "None")
         return "%s:%s" %(taoMachine, taoPort)
 
+
     def ServiceArg(self):
         """Returns the 'NameService=...' statement."""
         s = "NameService=corbaloc:iiop:%s/NameService" %(self.TaoPair())
-##        s = "NameService=corbaloc:htiop:%s/NameService" %(self.TaoPair())
         return s
+
 
     def NameServiceCall(self):
         """Returns a generic Naming_Service array."""
@@ -207,8 +222,8 @@ class Launch:
         if windows:
             exe += ".exe"
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
-        ##c = [exe, "-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf", "-ORBEndPoint",  "htiop://%s" %self.TaoPair()]
         return c
+
 
     def ServerCall(self):
         """Returns a generic Server call."""
@@ -219,16 +234,10 @@ class Launch:
         else:
             exe = "Error"
         c = [exe, "-ORBInitRef", self.ServiceArg()]
-##        svc = ["-ORBSvcConf"]
-##        svcfile = ["/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf"]
-##       c[len(c):] = svc
-        ##c[len(c):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf"]
-        ##taoMachine = os.getenv("TAO_MACHINE", "None")
-        ##c[len(c):] = ["-ORBEndPoint",  "htiop://%s:8088" %(taoMachine)]
-
         if windows:
             c[len(c):] = ["-ORBDottedDecimalAddresses", "1"]
         return c
+
 
     def ConductorCall(self):
         """Returns a generic Conductor call."""
@@ -247,14 +256,12 @@ class Launch:
             desktop = []
         ##Construct the call.
         s = [exe, "-ORBInitRef", self.ServiceArg()]
-        ##taoMachine = gethostname()
-        ##s[len(s):] = ["-ORBEndPoint",  "htiop://%s:8090" %(taoMachine)]
-        ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf"]
         s[len(s):] = desktop
         s[len(s):] = ves
         if windows:
             s[len(s):] = ["-ORBDottedDecimalAddresses", "1"]
         return s
+
 
     def XplorerCall(self):
         """Returns a generic Xplorer call."""
@@ -273,12 +280,9 @@ class Launch:
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
              s += ["-VESCluster"]
-        ##taoMachine = gethostname()
-        ##s[len(s):] = ["-ORBEndPoint",  "htiop://%s:8089" %(taoMachine)]
-        ##s[len(s):] = ["-ORBSvcConf", "/nfs/scratch/NETL/HyperLab/HyperLabUnit/inside.conf",
-        ##     "%s" %self.settings["JconfPath"]]
         s[len(s):] = desktop
         return s
+
 
     def ReadClusterTemplate(self):
         """Prepares the cluster template (for Windows)."""
@@ -321,6 +325,7 @@ class Launch:
             self.clusterTemplate += "pause\n"
         return
 
+
     def WriteClusterScriptPrefix(self):
         """Writes the cluster script section before the environment setting."""
         if unix:
@@ -357,6 +362,7 @@ class Launch:
         else:
             self.clusterScript += "ERROR: OS not supported."
 
+
     def ExecuteClusterScriptUnix(self, nodeName, clusterFilePath):
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
@@ -368,6 +374,7 @@ class Launch:
                 return
         else:
             print "Error! Windows linking into Unix cluster function."
+
         
     def ExecuteClusterScript(self, nodeName):
         """Executes the ClusterScript for nodeName on Windows."""
@@ -389,7 +396,7 @@ class Launch:
                     ##Send error & 'psexec' to error call.
                     self.ErrorCall(sys.exc_info(), self.clusterCall[0])
         else:
-            print "Error!"
+            print "Error! Unix linking into Windows cluster function."
 
 
     def ErrorCall(self, errorInfo, step):
@@ -647,6 +654,7 @@ class Launch:
 
     def EnvAppend(self, var, appendages, sep):
         """Appends appendages (list) to var, using sep to separate them."""
+        originalVar = os.getenv(var, "None")
         if not self.settings["DevMode"]:
             modifiedVar = os.getenv(var, None)
             empty = (modifiedVar == None)
@@ -659,8 +667,21 @@ class Launch:
             os.environ[var] = modifiedVar
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
+        ##Debug printout.
         if self.settings["Debug"]:
-            print "%s: %s" %(var, os.getenv(var))
+##            print "%s: %s" %(var, os.getenv(var))
+            self.debugOutput.append(["%s: " %(var), "Bold"])
+            self.debugOutput.append(["%s" %os.getenv(var), None])
+            self.debugOutput.append(["\n", None])
+            self.debugOutput.append(["Original: ", "Bold"])
+            self.debugOutput.append(["%s" %originalVar, None])
+            self.debugOutput.append(["\n", None])
+            self.debugOutput.append(["Added: ", "Bold"])
+            self.debugOutput.append(["\n", None])
+            for app in appendages:
+                self.debugOutput.append([app, None])
+                self.debugOutput.append(["\n", None])
+            self.debugOutput.append(["\n", None])
 
 
     def EnvFill(self, var, default, overwrite = False):
@@ -669,10 +690,14 @@ class Launch:
         Does not overwrite a filled variable in devMode.
         Overwrites a filled variable in normal mode.
         If overwrite == True, overwrites the variable in both modes."""
-##        if self.settings["DevMode"] and not overwrite:
         ##Fix to stop errors when passing None as the default.
         if default == None:
             default = "None"
+        ##Record original var.
+        if not EnvVarEmpty(var):
+            originalVar = os.getenv(var)
+        else:
+            originalVar = "None"
         ##Write the var to the environment.
         if not overwrite and not EnvVarEmpty(var):
             os.environ[var] = os.getenv(var, default)
@@ -680,8 +705,15 @@ class Launch:
             os.environ[var] = default
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
+        ##Debug printout.
         if self.settings["Debug"]:
-            print "%s: %s" %(var, os.getenv(var))
+##            print "%s: %s" %(var, os.getenv(var))
+            self.debugOutput.append(["%s: " %(var), "Bold"])
+            self.debugOutput.append(["%s" %os.getenv(var), None])
+            self.debugOutput.append(["\n", None])
+            self.debugOutput.append(["Original: ", "Bold"])
+            self.debugOutput.append(["%s" %originalVar, None])
+            self.debugOutput.append(["\n\n", None])
 
 
     def WriteToClusterScript(self, var):
