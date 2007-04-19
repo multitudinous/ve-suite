@@ -39,9 +39,9 @@
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
 ////@end includes
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
-XERCES_CPP_NAMESPACE_USE
+
+#include <string>
 
 class wxListBox;
 class wxSpinCtrlDbl;
@@ -53,7 +53,6 @@ class wxSpinCtrlDbl;
 #define SYMBOL_ADVANCEDISOSURFACES_IDNAME ID_ADVANCEDISOSURFACES
 #define SYMBOL_ADVANCEDISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ADVANCEDISOSURFACES_POSITION wxDefaultPosition
-
 
 #ifndef wxCLOSE_BOX
 #define wxCLOSE_BOX 0x1000
@@ -108,6 +107,15 @@ public:
     wxIcon GetIconResource( const wxString& name );
 
     static bool ShowToolTips();
+    void PopulateList( wxArrayString scalarlist );
+    void SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges );
+    void SetActiveScalar( std::string activeScalar );
+    void SetScalarRange( void );
+    bool _ensureSliders( int activeSliderID );
+    double GetMinScalarValue( void );
+    double GetMaxScalarValue( void );
+    std::string GetScalarName( void );
+protected:
 
 	wxListBox* scalarSelection;
 	wxSpinCtrlDbl* _minSpinner;
@@ -121,16 +129,6 @@ public:
 	std::string _colorScalarName;///<The selected scalar
 	std::string _activeScalar;
 
-	void PopulateList( wxArrayString scalarlist );
-	void SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges );
-	void SetActiveScalar( std::string activeScalar );
-	void SetScalarRange( void );
-	bool _ensureSliders( int activeSliderID );
-	double GetMinScalarValue( void );
-	double GetMaxScalarValue( void );
-	std::string GetScalarName( void );
-
-protected:
    std::string ConvertUnicode( const wxChar* data )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

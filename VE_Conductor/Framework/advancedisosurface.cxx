@@ -324,7 +324,7 @@ void AdvancedIsosurface::PopulateList( wxArrayString _scalarlist )
 
 	for( size_t i=0; i<_scalarlist.GetCount(); i++ )
 	{
-		if( _activeScalar == _scalarlist[i] )
+		if( wxString( _activeScalar.c_str(), wxConvUTF8 ) == _scalarlist[i] )
 		{
 			scalarSelection->SetSelection(i);
 		}
