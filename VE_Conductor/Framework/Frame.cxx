@@ -2048,7 +2048,7 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
    
    delete command;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewSelection( wxCommandEvent& event )
 {
    //Create the command and data value pairs
@@ -2083,7 +2083,7 @@ void AppFrame::ViewSelection( wxCommandEvent& event )
    
    delete command;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )
 {
    if ( recordScenes == 0 )
@@ -2095,7 +2095,7 @@ void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )
    // now show it
    recordScenes->Show();
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( viewlocPane == 0 )
@@ -2111,8 +2111,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    // now show it
    viewlocPane->Show();
 }
-
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 {
    if( !_cadDialog)
@@ -2132,7 +2131,7 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
 
    _cadDialog->Show();
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& event )
 {
    // Create the command and data value pairs
@@ -2155,22 +2154,11 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
    
    delete veCommand;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VjObs_ptr AppFrame::GetXplorerObject( void )
 {
    return serviceList->GetXplorerPointer();
 }
-///////////////////////////////////////////////////////////////////
-//void AppFrame::IdleEvent( wxIdleEvent& event )
-//{
-//   if ( serviceList )
-//      serviceList->CheckORBWorkLoad();
-//}
-///////////////////////////////////////////////////////////////////
-//void AppFrame::TimerEvent( wxTimerEvent& WXUNUSED(event) )
-//{
-//   ::wxWakeUpIdle();
-//}
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
@@ -2314,10 +2302,8 @@ void AppFrame::OnInternalIdle()
    {
       if( !network->IsDragging() )
       {	
-         if ( serviceList )
-         {
-            serviceList->CheckORBWorkLoad();
-         }
+         ///Servicelist is initialized before network...
+         serviceList->CheckORBWorkLoad();
       }
    }
 }
