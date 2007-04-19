@@ -215,7 +215,7 @@ void PreIntegrationTexture2D::_initializeSliceIntegrationValues()
    for(unsigned int i = 1; i < _tf->GetResolution(0); ++i)
    {
       curRGBA = _tf->EvaluateAt(i*4);
-      prevRGBA = _tf->EvaluateAt((i*4)-1);
+      prevRGBA = _tf->EvaluateAt((i-1)*4);
 
       totalRGBA[0] = totalRGBA[0] + .5*(curRGBA[0]+prevRGBA[0]);
       totalRGBA[1] = totalRGBA[1] + .5*(curRGBA[1]+prevRGBA[1]);
