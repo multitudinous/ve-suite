@@ -248,7 +248,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
                                      SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
    xplorerMenu = 0;
    recordScenes = 0;
-
+   network = 0;
+   
    this->SetIcon( ve_icon32x32_xpm );
 
    //int displayWidth, displayHeight = 0;
@@ -2309,7 +2310,14 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 void AppFrame::OnInternalIdle()
 {
 	//only when not dragging
-	if(!network->IsDragging())
-		if ( serviceList )
-			serviceList->CheckORBWorkLoad();
+   if ( network )
+   {
+      if( !network->IsDragging() )
+      {	
+         if ( serviceList )
+         {
+            serviceList->CheckORBWorkLoad();
+         }
+      }
+   }
 }
