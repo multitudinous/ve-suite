@@ -2719,12 +2719,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
       {
          VE_XML::Command* tempCommand = tempStates.at( i );
          tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
-      }      
+      }
       UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
-      UserPreferencesDataBuffer::instance()->
-                     GetCommand( "CHANGE_BACKGROUND_COLOR" ).
-                     GetDataValuePair( "Background Color" )->
-                     GetData( backgroundColor );
    }
    else
    {
@@ -2738,15 +2734,21 @@ void Network::CreateNetwork( std::string xmlNetwork )
       backgroundColor.push_back( 0.0f );
       backgroundColor.push_back( 0.0f );
       backgroundColor.push_back( 1.0f );
+
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+      dataValuePair->SetData(std::string("Background Color"),backgroundColor);
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+      veCommand->AddDataValuePair(dataValuePair);
+      UserPreferencesDataBuffer::instance()->SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), *veCommand );
+      delete veCommand;
    }
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
-   dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-   VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-   veCommand->AddDataValuePair(dataValuePair);
 
-   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   VE_XML::Command colorCommand = UserPreferencesDataBuffer::instance()->
+                     GetCommand( "CHANGE_BACKGROUND_COLOR" );
+
+   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( &colorCommand );
    /*
    // do this for tags
    DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("veTag") );
@@ -2822,7 +2824,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////
 void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
 {
-   char* result;
+   char* result = 0;
   
    if ( m_selMod < 0 )
       return;
