@@ -337,6 +337,9 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 		if (m_selTag >= 0)
 		UnSelectTag(dc);
 
+		Refresh(true);
+		Update();
+
 		//Select Mod/Link/Tag
 		SelectMod(x, y, dc);
 		if(m_selMod >= 0)
@@ -540,7 +543,7 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 	//no longer dragging
 	dragging = false;
 
-	//release link
+	//release link connector
 	if (m_selLinkCon>=0 && m_selLink>=0)
 	{
 		wxClientDC dc(this);
@@ -552,11 +555,12 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		long y = evtpos.y;
 
 		// We will create the link connector (basically a bend point)
-		//DropLinkCon(x, y, m_selLink, m_selLinkCon, dc);
+		DropLinkCon(x, y, m_selLink, m_selLinkCon, dc);
 		m_selLinkCon = -1;
 		//m_selLink=-1;
 		Refresh(true);
 		Update();
+		links[m_selLink].DrawLinkCon( true, userScale ); 
 	}
 
 	//release tag
@@ -647,10 +651,10 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 
 		//drop a module after dragging it around
 		DropModule(x, y, m_selMod );
-		HighlightSelectedIcon( modules[m_selMod].GetPlugin());
-		DrawPorts( modules[m_selMod].GetPlugin(), true );
 		Refresh(true);
 		Update();
+		HighlightSelectedIcon( modules[m_selMod].GetPlugin());
+		DrawPorts( modules[m_selMod].GetPlugin(), true );
 	}
 }
 
@@ -1157,8 +1161,10 @@ int Network::SelectLink(int x, int y)
 void Network::UnSelectLink(wxDC &dc)
 {
    //wipe link connectors
-   links[m_selLink].DrawLinkCon( false, userScale );
+   //links[m_selLink].DrawLinkCon( false, userScale );
    m_selLink = -1;
+   Refresh(true);
+   Update();
    //ReDraw(dc);
 }
 
@@ -1282,7 +1288,7 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
   int w, h, ex, ey, sx, sy;
   bool scroll = false; 
 
-/*  GetScrollPixelsPerUnit(&xunit, &yunit);
+  GetScrollPixelsPerUnit(&xunit, &yunit);
   GetViewStart(&xpos, &ypos);
   GetVirtualSize(&sx, &sy);
   GetClientSize(&w, &h);
@@ -1299,10 +1305,10 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
   
   ex=xpos*xunit+w;
   ey=ypos*yunit+h;
-  */
+  
   cur_module = modules[mod].GetPlugin();
-    /*  
-  bbox = cur_module->GetBBox(); //Get the Boundoing box of the module
+      
+  //bbox = cur_module->GetBBox(); //Get the Boundoing box of the module
   
   if ( x > ex-bbox.width )
     xpos += 1;//userScale.first;
@@ -1327,7 +1333,7 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
       SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
       scroll = true;
    }
-*/
+
    cur_module->SetPos(wxPoint(x-relative_pt.x, y-relative_pt.y));
    //wipe off the old link connects with this module
    //Draw the links for a particular module
@@ -1362,13 +1368,13 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
   bbox.height+=(int)( 3.0/userScale.second );
 */
  //  CleanRect(bbox, dc);  
-/*   if (oldxpos!=xpos||oldypos!=ypos||scroll)
+   if (oldxpos!=xpos||oldypos!=ypos||scroll)
    {
       xpos = (int)( 1.0 * xpos * userScale.first );
       ypos = (int)( 1.0 * ypos * userScale.second );
       Scroll(xpos, ypos);
    //   ReDrawAll();
-   }*/
+   }
   // else
    //{
     // ReDraw(dc);
@@ -1679,7 +1685,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    m_selMod = -1;
    m_selFrPort = -1;
    m_selToPort = -1;
-   ReDrawAll();
+   //ReDrawAll();
 }
 /////////////////////////////////////////////////////////////////////
 bool Network::IsPortCompatible(int frmod, int frport, int tomod, int toport)
@@ -1755,8 +1761,8 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
     }
 
   //erase the original link;
-  //links[ln].DrawLink( false, userScale );
-  links[ln].DrawLinkCon( false, userScale );
+//  links[ln].DrawLink( false, userScale );
+//  links[ln].DrawLinkCon( false, userScale );
   *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
  
    if ( oldxpos!=xpos || oldypos!=ypos || scroll)
@@ -1765,11 +1771,13 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
       ypos = (int)( 1.0 * ypos * userScale.second );
 
       Scroll(xpos, ypos);
-      ReDrawAll();
+//      ReDrawAll();
    }
-   else
-      ReDraw(dc);
+//   else
+//      ReDraw(dc);
 
+   Refresh(true);
+   Update();
    links[ln].DrawLinkCon( true, userScale );
 }
 
@@ -1812,7 +1820,10 @@ void Network::DropLinkCon(int x, int y, int ln, int ln_con, wxDC &dc)
   links[ln].CalcLinkPoly();
 
   //  Scroll(vx, vy);
-  ReDraw(dc);
+  //ReDraw(dc);
+  //Refresh(true);
+  //Update();
+  //links[ln].DrawLinkCon( true, userScale );
 }
 
 //////////////////////////////////////////////////////////////////
@@ -1864,7 +1875,7 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
 
   //erase the original Tag;
   //tags[t].DrawTag( false, userScale );
-  tags[t].DrawTagCon( false, userScale );
+  //tags[t].DrawTagCon( false, userScale );
   *(tags[t].GetConnectorsPoint( t_con ))=wxPoint(x,y);
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
     {
@@ -1872,12 +1883,13 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
       ypos = (int)( 1.0 * ypos * userScale.second );
       
       Scroll(xpos, ypos);
-      ReDrawAll();
+  //    ReDrawAll();
     }
-  else
-    ReDraw(dc);
+  //else
+  //  ReDraw(dc);
   tags[t].DrawTagCon( true, userScale );
-  
+  Refresh(true);
+  Update();
 }
 
 //////////////////////////////////////////////////////////////////
@@ -1919,7 +1931,9 @@ void Network::DropTagCon(int x, int y, int t, int t_con, wxDC &dc)
   tags[t].CalcTagPoly();
 
   //  Scroll(vx, vy);
-  ReDraw(dc);
+  //ReDraw(dc);
+  Refresh(true);
+  Update();
 }
 
 ///////////////////////////////////////////////////////
@@ -1981,12 +1995,13 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
       ypos = (int)( 1.0 * ypos * userScale.second );
       
       Scroll(xpos, ypos);
-      ReDrawAll();
+  //    ReDrawAll();
     }
-  else
-    ReDraw(dc);
+  //else
+  //  ReDraw(dc);
   tags[t].DrawTagCon( true, userScale );
-  
+  Refresh(true);
+  Update();
 }
 
 /////////////////////////////////////////////////////
@@ -2028,7 +2043,9 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
   tags[t].CalcTagPoly();
 
   //  Scroll(vx, vy);
-  ReDraw(dc);
+  //ReDraw(dc);
+  Refresh(true);
+  Update();
 }
 
 //////////////////////////////////////////////////////
@@ -2063,8 +2080,10 @@ void Network::AddTag(int x, int y, wxString text)
    t.CalcTagPoly();
    tags.push_back(t);
 
+  Refresh(true);
+  Update();
+   //ReDraw(dc);
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-   ReDraw(dc);
 }
 
 //////////////////////////////////////////////////////////////
@@ -2113,7 +2132,9 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
   sbboxes.push_back(bbox);
   //  for (i=0; i<modules.size(); i++)
   
-  ReDrawAll();
+  //ReDrawAll();
+  Refresh(true);
+  Update();
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 
@@ -2299,44 +2320,26 @@ void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
 	wxPoint bport[5];
 	wxCoord xoff, yoff;
 	int num;
-	//serviceList->GetMessageLog()->SetMessage("tp\n");
 	wxPoint tempPoint  = cur_module->GetBBox().GetPosition();
 	//minus 10 because the icon size seems to be smaller than the bbox size
-	//serviceList->GetMessageLog()->SetMessage("th\n");
 	int tempHeight = cur_module->GetBBox().GetHeight() - 10;
-	//serviceList->GetMessageLog()->SetMessage("tw\n");
 	int tempWidth = cur_module->GetBBox().GetWidth() - 10;
-	//serviceList->GetMessageLog()->SetMessage("hw\n");
 	int highlightBoxWidth = tempWidth;// + 10;
-	//serviceList->GetMessageLog()->SetMessage("hh\n");
 	int highlightBoxHeight = tempHeight;// + 10;
 	
-	//serviceList->GetMessageLog()->SetMessage("dc\n");
 	wxClientDC dc(this);
-	//serviceList->GetMessageLog()->SetMessage("pre\n");
 	PrepareDC(dc);
-	//serviceList->GetMessageLog()->SetMessage("ss\n");
 	dc.SetUserScale( userScale.first, userScale.second );
-	//serviceList->GetMessageLog()->SetMessage("bport");
 	bport[0] = wxPoint(tempPoint.x, tempPoint.y);
 	bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
 	bport[2] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y + highlightBoxHeight);
 	bport[3] = wxPoint(tempPoint.x, tempPoint.y + highlightBoxHeight);
 	bport[4] = wxPoint(tempPoint.x, tempPoint.y);
-	//serviceList->GetMessageLog()->SetMessage("pen");
 	wxPen old_pen = dc.GetPen();
-	//serviceList->GetMessageLog()->SetMessage("setpen");
 	dc.SetPen(*wxRED_PEN);
-	//serviceList->GetMessageLog()->SetMessage("drawline");
 	dc.DrawLines(5, bport);
-	//serviceList->GetMessageLog()->SetMessage("oldpen");
 	dc.SetPen(old_pen);
 }
-//void Network::HighlightSelectedIcon2 (unsigned int selected)
-//{
-//	HighlightSelectedIcon( modules[selected].GetPlugin());
-//}
-
 ///////////////////////////////////////////////////////////////////////
 void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
 {
