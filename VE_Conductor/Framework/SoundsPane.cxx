@@ -119,15 +119,6 @@ void SoundsPane::_onSounds(wxCommandEvent& event)
 //////////////////////////////////////////////////////////////////
 void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
 {
-   /*
-   cIso_value = 0;
-   for ( int i = 0; i < num_sounds; i++ )
-   {
-      if ( _soundCBox->IsChecked( i ) )
-         cIso_value += (int)pow( 2.0f, (float)i );
-   }
-   std::cout << cIso_value << std::endl;
-   dataValueName = "UPDATE_SOUNDS";*/
    wxFileDialog dialog(this,
                        _T("Open Sound File"), 
                        _T(""), 
@@ -153,12 +144,16 @@ void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
             
             VE_XML::Command* veCommand = new VE_XML::Command();
             veCommand->SetCommandName("Add New Sound");
-           
-            VE_XML::DataValuePair* soundName = modelSounds->GetProperty(-1);
+
+            //Have to do this so because of our current memory scheme in XML...
+            //This will change once we switch to smart pointers
+            modelSounds->GetProperty(-1)->SetData( ConvertUnicode( soundFileName.GetName().c_str() ),fileNamesVector.Item(i).c_str() );
+
+            VE_XML::DataValuePair* soundName = new VE_XML::DataValuePair();
             soundName->SetData("Sound Name", ConvertUnicode( soundFileName.GetName().c_str() ) );
             veCommand->AddDataValuePair(soundName);
-            
-            VE_XML::DataValuePair* soundFilename = modelSounds->GetProperty(-1);
+
+            VE_XML::DataValuePair* soundFilename = new VE_XML::DataValuePair();
             soundFilename->SetData( "Sound Filename", ConvertUnicode( fileNamesVector.Item(i).c_str() ) );
             veCommand->AddDataValuePair(soundFilename);
             
