@@ -1,0 +1,19 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+cxxflags=@ves_cxxflags@
+includedir=@includedir@
+libs=@ves_libs@
+libdir=@libdir@
+version_major=@VERSION_MAJOR@
+version_minor=@VERSION_MINOR@
+version_patch=@VERSION_PATCH@
+
+Name: VESuite
+Provides: @provides@
+Version: ${version_major}.${version_minor}.${version_patch}
+Description: A virtual engineering toolkit
+URL: http://www.vesuite.org
+Requires:
+Libs: -L${libdir} ${libs}
+Cflags: -I${includedir}
+Arch: @arch@
