@@ -286,7 +286,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                         _("Unavailable!!"), wxOK | wxICON_INFORMATION );*/
 		  //_transferFunctionDlg->SetVjObsPtr(_vjObsPtr);
 		  _transferFunctionDlg->SetSize(_subDialogSize);
-		  if(_transferFunctionDlg->Show(true))
+		  if(_transferFunctionDlg->ShowModal()== wxID_OK)
 		  {
 			  ;
 		  }
