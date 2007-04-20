@@ -41,6 +41,7 @@
 */
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/advancedisosurface.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <vector>
@@ -81,6 +82,7 @@ public:
                   const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
                   const wxSize& size = SYMBOL_ISOSURFACES_SIZE, 
                   long style = SYMBOL_ISOSURFACES_STYLE);
+   virtual ~Isosurfaces();
 
    enum ISOSURFACE_IDS
    {
@@ -130,6 +132,8 @@ public:
     void InitializeScalarData(std::string activeScalarName);
 
 	void SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges );
+
+    AdvancedIsosurface* advancediso;
 
 protected:
    std::string _colorByScalarName;///<The name of the scalar to color by.

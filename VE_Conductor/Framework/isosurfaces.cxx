@@ -33,7 +33,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/isosurfaces.h"
-#include "VE_Conductor/Framework/advancedisosurface.h"
 #include "VE_Conductor/Framework/vistab.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Open/XML/Command.h"
@@ -76,11 +75,23 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
                        const wxPoint& pos, 
                        const wxSize& size, long style )
 {
+
+	advancediso = 0;
+
    Create(parent, id, caption, pos, size, style);
    wxSize displaySize = ::wxGetDisplaySize();
    int tempH = displaySize.GetHeight()-480;
    wxRect dialogPosition( displaySize.GetWidth()-427, displaySize.GetHeight()-tempH, 427, tempH );
    this->SetSize( dialogPosition );
+}
+///////////////////////////////////////////////////////////
+Isosurfaces::~Isosurfaces()
+{
+   if(advancediso)
+   {
+      advancediso->Destroy();
+      advancediso = 0;
+   }
 }
 //////////////////////////////////////////////////////////
 bool Isosurfaces::Create( wxWindow* parent, wxWindowID id, 
@@ -181,7 +192,8 @@ void Isosurfaces::SetScalarRange(std::string activeScalar, std::vector<double> s
    
    if( tempScalarName.compare(_activeScalar) )
    {
-      tempScalarName = _activeScalar;
+      tempScalarName = _activeScalar; 
+	  _isoSpinner->SetRange( _scalarRange.at(0), _scalarRange.at(1) );
       _isoSpinner->SetValue( _scalarRange.at(0) );
       _isoSurfaceSlider->SetValue(0);
    }
@@ -288,31 +300,22 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
       }
    }
 
-   AdvancedIsosurface* advancediso = new AdvancedIsosurface( this, SYMBOL_ADVANCEDISOSURFACES_IDNAME,
+   if(!advancediso)
+   {
+		advancediso = new AdvancedIsosurface( this, SYMBOL_ADVANCEDISOSURFACES_IDNAME,
 									SYMBOL_ADVANCEDISOSURFACES_TITLE,
 									SYMBOL_ADVANCEDISOSURFACES_POSITION,
 									SYMBOL_ADVANCEDISOSURFACES_SIZE,
 									SYMBOL_ADVANCEDISOSURFACES_STYLE );
 
-   
-   //wxSingleChoiceDialog scalarSelector(this, _T("Select Scalar to color isosurface by."), _T("Color by Scalar"),
-   //                                _scalarNames);
-
-   /*int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
-  
-   wxRect bbox = GetRect();
-
-   int width,height = 0;
-   GetSize(&width,&height);
-   scalarSelector.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        width, height));*/
+		advancediso->SetActiveScalar( _activeScalar );
+		advancediso->SetScalarList( scalarlist );
+		advancediso->PopulateList( _scalarNames );
+   }
 
    advancediso->SetSize(GetRect());
    advancediso->CentreOnParent();
-   advancediso->SetActiveScalar( _activeScalar );
-   advancediso->SetScalarList( scalarlist );
-   advancediso->PopulateList( _scalarNames );
+
 
    if (advancediso->ShowModal() == wxID_OK)
    {
