@@ -183,6 +183,18 @@ void DCS::SetTranslationArray( std::vector<double> array )
    this->_dcs->setTrans( this->_translation[0], this->_translation[1], this->_translation[2] );
 #elif _OSG           
    this->setPosition( osg::Vec3d( array[0], array[1], array[2]) );
+   
+   ///Do this so that the normals will not be affected by the scaling applied 
+   ///by the user - see osg post one April 19, 2007
+   if ( array[0] != 1 )
+   {
+      this->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
+   }
+   else
+   {
+      this->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::OFF );
+   }
+   
 #elif _OPENSG
 #endif
    UpdatePhysicsTransform();
