@@ -234,10 +234,10 @@ void Link::CalcLinkPoly()
 }
 
 ///////////////////////////////////////////////////////////////////
-void Link::DrawLink( bool flag, std::pair< double, double > scale )
+void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
 { 
-   wxClientDC dc( canvas );
-   canvas->PrepareDC( dc );
+   //wxClientDC dc( canvas );
+   //canvas->PrepareDC( dc );
    dc.SetUserScale( scale.first, scale.second );
 
    wxBrush old_brush = dc.GetBrush();

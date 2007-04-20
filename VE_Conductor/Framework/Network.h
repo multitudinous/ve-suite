@@ -133,6 +133,7 @@ public:
 
    //Event Handlers
    void OnPaint( wxPaintEvent &event );
+   void OnErase( wxEraseEvent &event );
    void OnMouseMove( wxMouseEvent &event );
    void OnMLeftDown( wxMouseEvent &event );
    void OnMLeftUp( wxMouseEvent &event );
@@ -217,7 +218,7 @@ protected:
    void UnSelectTag(wxDC& dc);
 
    //Move and drop functions
-   void MoveModule(int x, int y, int mod, wxDC &dc);
+   void MoveModule(int x, int y, int mod);//, wxDC &dc);
    void DropModule(int x, int y, int mod );
    void MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc);
    void DropLinkCon(int x, int y, int ln, int ln_con, wxDC& dc);

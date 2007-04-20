@@ -162,10 +162,10 @@ void Tag::DrawTagCon( bool flag, std::pair< double, double > scale )
 }
 
 /////////////////////////////////////////////////////////////
-void Tag::DrawTag( bool flag, std::pair< double, double > scale )
+void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
 {
-   wxClientDC dc( canvas );
-   canvas->PrepareDC(dc);
+   //wxClientDC dc( canvas );
+   //canvas->PrepareDC(dc);
    dc.SetUserScale( scale.first, scale.second );
   
    wxBrush old_brush = dc.GetBrush();

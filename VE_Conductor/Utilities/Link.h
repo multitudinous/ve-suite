@@ -43,6 +43,7 @@ Link API
 #include "VE_Conductor/Utilities/Polygon.h"
 
 #include <wx/gdicmn.h>
+#include <wx/dc.h>
 class wxWindow;
 
 namespace VE_Conductor
@@ -96,7 +97,7 @@ public:
    ///Helper functions
    void DrawLinkCon( bool flag, std::pair< double, double > scale );
    void CalcLinkPoly( void );
-   void DrawLink( bool flag, std::pair< double, double > scale );
+   void DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale );
 
 private:
    unsigned long Fr_mod;

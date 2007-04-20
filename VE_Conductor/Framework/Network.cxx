@@ -87,6 +87,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    // Also see wxPaintEvent
    // overriding this function allows us to handle when things on redrawn
    EVT_PAINT(Network::OnPaint)
+   EVT_ERASE_BACKGROUND(Network::OnErase)
    
    //See wxMoveEvent for info on this
    // Motion now only used for dragging
@@ -154,13 +155,14 @@ Network::Network(wxWindow* parent, int id)
    veNetwork = 0;
    isLoading = false;
    cadDialog = 0;
-   SetBackgroundColour(*wxWHITE);
    this->parent = parent;
    vistab = 0;
    isDataSet = false;
    frame = dynamic_cast< AppFrame* >( parent->GetParent()->GetParent() );
    _soundsDlg = 0;
    dragging = false;
+   SetBackgroundColour(*wxWHITE);
+   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 }
 
 Network::~Network()
@@ -198,15 +200,20 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
    while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
 
-   wxPaintDC dc(this);
-   PrepareDC(dc);
+   //wxPaintDC dc(this);
+   //PrepareDC(dc);
   
-   dc.SetUserScale( userScale.first, userScale.second );
+   wxBufferedPaintDC dc(this, wxBUFFER_VIRTUAL_AREA);
+
    dc.Clear();
+   dc.SetUserScale( userScale.first, userScale.second );
   
    ReDraw(dc); 
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+}
+void Network::OnErase(wxEraseEvent& WXUNUSED( event ) )
+{
 }
 
 /////////////////////////////////////////////////////////////
@@ -520,7 +527,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
 			long y = evtpos.y;
-			MoveModule(x, y, m_selMod, dc);
+			MoveModule(x, y, m_selMod);//, dc);
 			HighlightSelectedIcon( modules[m_selMod].GetPlugin());
 			DrawPorts( modules[m_selMod].GetPlugin(), true );
 		}
@@ -530,7 +537,9 @@ void Network::OnMouseMove(wxMouseEvent& event)
 /////////////////////////////////////////////////////////////////////
 void Network::OnMLeftUp(wxMouseEvent& event)
 {
+	//no longer dragging
 	dragging = false;
+
 	//release link
 	if (m_selLinkCon>=0 && m_selLink>=0)
 	{
@@ -538,14 +547,16 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		PrepareDC(dc);
 		dc.SetUserScale( userScale.first, userScale.second );
 
-		wxPoint evtpos = event.GetPosition();
-		long x = dc.DeviceToLogicalX( evtpos.x );
-		long y = dc.DeviceToLogicalY( evtpos.y );
+		wxPoint evtpos = event.GetLogicalPosition(dc);
+		long x = evtpos.x;
+		long y = evtpos.y;
 
 		// We will create the link connector (basically a bend point)
 		//DropLinkCon(x, y, m_selLink, m_selLinkCon, dc);
 		m_selLinkCon = -1;
 		//m_selLink=-1;
+		Refresh(true);
+		Update();
 	}
 
 	//release tag
@@ -555,13 +566,15 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		PrepareDC(dc);
 		dc.SetUserScale( userScale.first, userScale.second );
 
-		wxPoint evtpos = event.GetPosition();
-		long x = dc.DeviceToLogicalX( evtpos.x );
-		long y = dc.DeviceToLogicalY( evtpos.y );
+		wxPoint evtpos = event.GetLogicalPosition(dc);
+		long x = evtpos.x;
+		long y = evtpos.y;
 
 		// drop the tag we just created
 		DropTag(x, y, m_selTag, dc);
 		//m_selTag=-1;
+		Refresh(true);
+		Update();
 	}
 
 	//release tag connection
@@ -571,14 +584,16 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		PrepareDC(dc);
 		dc.SetUserScale( userScale.first, userScale.second );
 
-		wxPoint evtpos = event.GetPosition();
-		long x = dc.DeviceToLogicalX( evtpos.x );
-		long y = dc.DeviceToLogicalY( evtpos.y );
+		wxPoint evtpos = event.GetLogicalPosition(dc);
+		long x = evtpos.x;
+		long y = evtpos.y;
 
 		// We will create the tag connector (basically a bend point)
 		DropTagCon(x, y, m_selTag, m_selTagCon, dc);
 		//m_selTag=-1;
 		m_selTagCon=-1;
+		Refresh(true);
+		Update();
 	}
 
 	//release start point of link
@@ -588,14 +603,16 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		PrepareDC(dc);
 		dc.SetUserScale( userScale.first, userScale.second );
 
-		wxPoint evtpos = event.GetPosition();
-		long x = dc.DeviceToLogicalX( evtpos.x );
-		long y = dc.DeviceToLogicalY( evtpos.y );
+		wxPoint evtpos = event.GetLogicalPosition(dc);
+		long x = evtpos.x;
+		long y = evtpos.y;
 
 		// drop the start point of the link
 		DropLink(x, y, m_selMod, m_selFrPort, dc, true);
 		//m_selMod = -1;
 		m_selFrPort = -1;
+		Refresh(true);
+		Update();
 	}
 
 	//release end point of link
@@ -605,14 +622,16 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		PrepareDC(dc);
 		dc.SetUserScale( userScale.first, userScale.second );
 
-		wxPoint evtpos = event.GetPosition();
-		long x = dc.DeviceToLogicalX( evtpos.x );
-		long y = dc.DeviceToLogicalY( evtpos.y );
+		wxPoint evtpos = event.GetLogicalPosition(dc);
+		long x = evtpos.x;
+		long y = evtpos.y;
 
 		// drop the final point of the link
 		DropLink(x, y, m_selMod, m_selToPort, dc, false);
 		//m_selMod = -1;
 		m_selToPort = -1;
+		Refresh(true);
+		Update();
 	}
 
 	//release the module
@@ -622,15 +641,16 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		PrepareDC(dc);
 		dc.SetUserScale( userScale.first, userScale.second );
 
-		wxPoint evtpos = event.GetPosition();
-		long x = dc.DeviceToLogicalX( evtpos.x );
-		long y = dc.DeviceToLogicalY( evtpos.y );
+		wxPoint evtpos = event.GetLogicalPosition(dc);
+		long x = evtpos.x;
+		long y = evtpos.y;
 
 		//drop a module after dragging it around
 		DropModule(x, y, m_selMod );
 		HighlightSelectedIcon( modules[m_selMod].GetPlugin());
 		DrawPorts( modules[m_selMod].GetPlugin(), true );
-		//m_selMod = -1;
+		Refresh(true);
+		Update();
 	}
 }
 
@@ -826,7 +846,7 @@ void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
 {  
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   links[m_selLink].DrawLink( false, userScale );
+   //links[m_selLink].DrawLink( false, userScale );
 
    //int n = links[m_selLink].GetNumberOfPoints()+2;
    //linkline.resize(n);
@@ -1071,7 +1091,6 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 
 int Network::SelectMod( int x, int y, wxDC &dc )
 {
-	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
    // This function checks to see which module your mouse is over based
    // on the x and y location of your mouse on the design canvas
    std::map< int, Module >::iterator iter;
@@ -1111,8 +1130,7 @@ int Network::SelectMod( int x, int y, wxDC &dc )
 void Network::UnSelectMod(wxDC &dc)
 {
   //DrawPorts( modules[m_selMod].GetPlugin(), false ); // wipe the ports
-  
-  ReDraw( dc );
+  //ReDraw( dc );
   m_selMod = -1;
 }
 
@@ -1141,7 +1159,7 @@ void Network::UnSelectLink(wxDC &dc)
    //wipe link connectors
    links[m_selLink].DrawLinkCon( false, userScale );
    m_selLink = -1;
-   ReDraw(dc);
+   //ReDraw(dc);
 }
 
 //////////////////////////////////////////////////////
@@ -1169,7 +1187,7 @@ void Network::UnSelectTag(wxDC &dc)
 {
   tags[m_selTag].DrawTagCon( false, userScale );
   m_selTag = -1;
-  ReDraw(dc);
+  //ReDraw(dc);
 }
 
 /////////////////////////////////////////////////
@@ -1252,7 +1270,7 @@ wxPoint Network::GetFreePos(wxRect bbox)
 ////////////////////////////////////////////////////
 ////////// Move and Drop Functions /////////////////
 ////////////////////////////////////////////////////
-void Network::MoveModule(int x, int y, int mod, wxDC &dc)
+void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
 {
   if (mod < 0) // no module is selected
     return;   
@@ -1317,14 +1335,14 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
    {
       if ( (links.at( i ).GetFromModule() == mod) )
       {
-         links.at( i ).DrawLink( false, userScale );
+         //links.at( i ).DrawLink( false, userScale );
          wxPoint pos = GetPointForSelectedPlugin( mod, links.at( i ).GetFromPort(), "output" );
          *(links.at( i ).GetPoint( 0 )) = pos;
       }
       //if the modules are the same
       if ( (links.at( i ).GetToModule() == mod) )
       {
-         links.at( i ).DrawLink( false, userScale );
+         //links.at( i ).DrawLink( false, userScale );
          wxPoint pos = GetPointForSelectedPlugin( mod, links.at( i ).GetToPort(), "input" );
          *(links.at( i ).GetPoint( links.at( i ).GetPoints()->size()-1 )) = pos;
       }
@@ -1343,7 +1361,7 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
   bbox.width+=(int)( 3.0/userScale.first );
   bbox.height+=(int)( 3.0/userScale.second );
 */
-   CleanRect(bbox, dc);  
+ //  CleanRect(bbox, dc);  
 /*   if (oldxpos!=xpos||oldypos!=ypos||scroll)
    {
       xpos = (int)( 1.0 * xpos * userScale.first );
@@ -1355,7 +1373,9 @@ void Network::MoveModule(int x, int y, int mod, wxDC &dc)
    //{
     // ReDraw(dc);
    //}
-   ReDraw(dc);
+   //ReDraw(dc);
+   Refresh(true);
+   Update();
 }
 /////////////////////////////////////////////////////////////
 void Network::DropModule(int ix, int iy, int mod )
@@ -1735,7 +1755,7 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
     }
 
   //erase the original link;
-  links[ln].DrawLink( false, userScale );
+  //links[ln].DrawLink( false, userScale );
   links[ln].DrawLinkCon( false, userScale );
   *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
  
@@ -1843,7 +1863,7 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
     }
 
   //erase the original Tag;
-  tags[t].DrawTag( false, userScale );
+  //tags[t].DrawTag( false, userScale );
   tags[t].DrawTagCon( false, userScale );
   *(tags[t].GetConnectorsPoint( t_con ))=wxPoint(x,y);
   if (oldxpos!=xpos||oldypos!=ypos||scroll)
@@ -1949,7 +1969,7 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
     }
 
   //erase the original Tag;
-  tags[t].DrawTag( false, userScale );
+  //tags[t].DrawTag( false, userScale );
   tags[t].DrawTagCon( false, userScale );
 
   tags[t].GetBoundingBox()->x = x-tag_rpt.x;
@@ -2142,11 +2162,11 @@ void Network::ReDraw(wxDC &dc)
 
    // draw all the links
    for ( size_t i = 0; i < links.size(); ++i )
-      links[i].DrawLink( true, userScale );
+      links[i].DrawLink( true, dc, userScale );
 
    // draw all the tags
    for ( size_t i = 0; i < tags.size(); ++i )
-      tags[i].DrawTag( true, userScale );
+      tags[i].DrawTag( true, dc, userScale );
    
 }
 

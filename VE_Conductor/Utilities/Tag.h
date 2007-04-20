@@ -43,6 +43,7 @@ Tag API
 #include "VE_Installer/include/VEConfig.h"
 #include <wx/gdicmn.h>
 #include <wx/string.h>
+#include <wx/dc.h>
 class wxWindow;
 
 namespace VE_Conductor
@@ -72,7 +73,7 @@ public:
    ///
    void CalcTagPoly( void );
    void DrawTagCon( bool flag, std::pair< double, double > scale );
-   void DrawTag( bool flag, std::pair< double, double > scale );
+   void DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale );
 
 private:
    wxPoint cons[2]; ///<2 connectors for tag, end and middle
