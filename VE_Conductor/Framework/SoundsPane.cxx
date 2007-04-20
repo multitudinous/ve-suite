@@ -147,14 +147,18 @@ void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
 
             //Have to do this so because of our current memory scheme in XML...
             //This will change once we switch to smart pointers
-            modelSounds->GetProperty(-1)->SetData( ConvertUnicode( soundFileName.GetName().c_str() ),fileNamesVector.Item(i).c_str() );
+            modelSounds->GetProperty(-1)->SetData( 
+                           ConvertUnicode( soundFileName.GetName().c_str() ), 
+                           ConvertUnicode( fileNamesVector.Item(i).c_str() ) );
 
             VE_XML::DataValuePair* soundName = new VE_XML::DataValuePair();
-            soundName->SetData("Sound Name", ConvertUnicode( soundFileName.GetName().c_str() ) );
+            soundName->SetData("Sound Name", 
+                            ConvertUnicode( soundFileName.GetName().c_str() ) );
             veCommand->AddDataValuePair(soundName);
 
             VE_XML::DataValuePair* soundFilename = new VE_XML::DataValuePair();
-            soundFilename->SetData( "Sound Filename", ConvertUnicode( fileNamesVector.Item(i).c_str() ) );
+            soundFilename->SetData( "Sound Filename",
+                            ConvertUnicode( fileNamesVector.Item(i).c_str() ) );
             veCommand->AddDataValuePair(soundFilename);
             
             VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );

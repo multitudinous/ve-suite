@@ -321,12 +321,9 @@ if not SConsAddons.Util.hasHelpFlag():
    # Create the VE-Suite package
    ves_pkg = sca_auto_dist.Package(name="VE-Suite-%s"%(buildUUID), version = "%i.%i.%i"%VE_SUITE_VERSION,
                                  prefix=PREFIX, baseEnv=baseEnv)
-   ##ves_pkg.addExtraDist(Split("""
-   ##      AUTHORS
-   ##      ChangeLog
-   ##      COPYING
-   ##      README
-   ##   """))
+   configHeader = ves_pkg.createFileBundle('include' )
+   configHeader.addFiles( pj( 'VE_Installer','include','VEConfig.h' ) )
+
    Export('ves_pkg')
 
    # Build up the provides vars for the .fpc files
@@ -367,23 +364,53 @@ if not SConsAddons.Util.hasHelpFlag():
    tempName = pj(inst_paths['flagpoll'], pc_filename)
    cppdom_pc = baseEnv.ConfigBuilder(tempName, 
                            pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
+
    if 'install' in COMMAND_LINE_TARGETS:
    	installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), tempName)
      	baseEnv.Alias('install',[installed_targets,PREFIX])
-   #baseEnv.AddPostAction(cppdom_pc, Chmod('$TARGET', 0644))
-   #baseEnv.Install(inst_paths['bin'], cppdom_pc)
-   
-   # Setup package
-   ##CPPDOM_VERSION
-   ##cppdom_pkg = AutoDist.Package(name="cppdom", version = "%s.%s.%s"%CPPDOM_VERSION,
-   ##                              prefix=PREFIX, baseEnv=baseEnv)
-   ##cppdom_pkg.addExtraDist(Split("""
-   ##      AUTHORS
-   ##      ChangeLog
-   ##      COPYING
-   ##      README
-   ##   """))
-   ##Export('cppdom_pkg')
+
+   # Build up the provides vars for the .fpc files
+   provides = "ves"
+   arch = GetArch()
+   inst_paths = {}
+   inst_paths['base'] = os.path.abspath( baseEnv['prefix'] )
+   inst_paths['lib'] = pj(inst_paths['base'], baseEnv['libdir'])
+   inst_paths['flagpoll'] = pj( baseEnv['prefix'],baseEnv['libdir'], 'flagpoll')
+   #inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
+   inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
+   inst_paths['include'] = pj(inst_paths['base'], 'include')   
+   ves_version_str = '1.0.2'
+   # Build up substitution map
+   submap = {
+      '@provides@'                  : provides,
+      '@prefix@'                    : inst_paths['base'],
+      '@exec_prefix@'               : '${prefix}',
+      '@ves_cxxflags@'              : '-D_TAO -DVE_PATENTED -D_OSG -DVTK44',
+      '@includedir@'                : inst_paths['include'],
+      '@ves_extra_cxxflags@'        : '',
+      '@ves_extra_include_dirs@'    : '',
+      '@ves_libs@'                  : '-lVE_TextureBasedLib_tao_osg_vep -lDataLoaderLib -lVE_UtilLib -lGUIPluginLib -lVE_XMLLib -lGraphicalPlugin_tao_osg_vep -lTranslatorToVTKLib -lVE_CADLib -lVE_XplorerNetworkLib_tao_osg_vep -lVE_XplorerLib_tao_osg_vep -lVE_OpenModuleLib -lVE_SceneGraphLib_tao_osg_vep -lVE_SceneGraph_UtilitiesLib -lVE_ShaderLib -lVE_NURBSUtilsLib_tao_osg_vep -lVE_NURBSUtilsLib_tao_osg_vep -lVE_ModelLib',
+      '@libdir@'                    : inst_paths['lib'],
+      '@lib_subdir@'                : baseEnv['libdir'],
+      '@VERSION_MAJOR@'             : str(VE_SUITE_VERSION[0]),
+      '@VERSION_MINOR@'             : str(VE_SUITE_VERSION[1]),
+      '@VERSION_PATCH@'             : str(VE_SUITE_VERSION[2]),
+      '@arch@'                      : arch,
+      '@version@'                   : ves_version_str,
+   }
+
+   ##env.ConfigBuilder('gmtl.pc','gmtl.pc.in',submap = gmtl_pc_submap)
+   ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
+   installed_targets = []
+   name_parts = ['ves', ves_version_str, arch]
+   pc_filename = "-".join(name_parts) + ".fpc"
+   ##tempName = pj(inst_paths['flagpoll'], pc_filename)
+   ves_pc = baseEnv.ConfigBuilder(pc_filename, 
+                           pj('#','VE_Installer','fpc','ves.fpc.in'), submap = submap)
+
+   if 'install' in COMMAND_LINE_TARGETS:
+   	installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), pc_filename)
+     	baseEnv.Alias('install',[installed_targets,PREFIX])
       
    ## setup build log to aid in debugging remote builds
    if baseEnv[ 'buildLog' ] != '':
