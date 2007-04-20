@@ -55,25 +55,6 @@ MaterialInitializer::~MaterialInitializer()
 {
    ;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-void MaterialInitializer::apply( osg::Geode& node )
-{
-   osg::ref_ptr< osg::Material > sa = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
-
-   if( sa.valid() )
-   {
-      return;
-   }
-
-   else
-   {
-	   //for( unsigned int i = 0; i < node.getNumDrawables(); i++ )
-	   //{
-         node.getOrCreateStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON );
-	   //}
-   }
-}
 ////////////////////////////////////////////////////////////////////////////////    
 void MaterialInitializer::apply( osg::Group& node )
 {
@@ -86,7 +67,7 @@ void MaterialInitializer::apply( osg::Group& node )
 
    else
    {
-      osg::NodeVisitor::apply( (osg::Node&)node );
+      node.getStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -50,6 +50,7 @@ OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool state )
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
    transparent = state;
+
 	osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,7 +76,7 @@ void OpacityVisitor::apply( osg::Geode& node )
          material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
       }
 
-      node.getOrCreateStateSet()->setAttribute( material.get(), osg::StateAttribute::ON );
+      node.getStateSet()->setAttribute( material.get(), osg::StateAttribute::ON );
    }
 
    for( size_t i = 0; i < node.getNumDrawables(); i++ )
@@ -120,7 +121,7 @@ void OpacityVisitor::apply( osg::Group& node )
          material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
       }
 
-      node.getOrCreateStateSet()->setAttribute( material.get(), osg::StateAttribute::ON ) ;
+      node.getStateSet()->setAttribute( material.get(), osg::StateAttribute::ON ) ;
    }
 
    osg::NodeVisitor::apply( (osg::Node&)node );

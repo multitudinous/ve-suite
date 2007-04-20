@@ -53,7 +53,6 @@ public:
 	MaterialInitializer( osg::Node* osg_node );
 	virtual ~MaterialInitializer();
 
-   virtual void apply( osg::Geode& node );
    virtual void apply( osg::Group& node );
 
 private:
