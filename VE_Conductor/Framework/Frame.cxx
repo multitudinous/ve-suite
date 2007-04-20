@@ -659,23 +659,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    {
       ExitXplorer();
    }
-   
-   serviceList->CleanUp();
-   serviceList = 0;
-   
-   if (is_orb_init)
-   {
-      //CosNaming::Name UIname(1);
-      //UIname.length(1);
-      //if (p_ui_i!=NULL && p_ui_i->UIName_!="")
-	   //{
-	   // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
-	   //naming_context->unbind(UIname);
-	   //if ( !CORBA::is_nil( poa.in() ) )
-	   //   poa->destroy (1, 1);
-	   //}
-      //orb->destroy();
-   }
+ 
    if(_treeView)
    {
       _treeView->Destroy();
@@ -719,6 +703,10 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    StoreConfig(NULL);
 	StoreRecentFile(NULL);
    Destroy();
+
+   network = 0;
+   serviceList->CleanUp();
+   serviceList = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
