@@ -95,24 +95,10 @@ public:
    void SetClusterMode( bool clusterFlag );
    bool GetClusterMode( void );
    
-   //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
    VjObs::Models* GetModels() throw (CORBA::SystemException);
    VjObs::Model* GetModel( CORBA::Long modelID ) throw (CORBA::SystemException);
-   //yang-REI : Change the design a little here
-   //The original code's idea to set shared flag. Using that flag to wait for
-   //the excution of the cfd::get_geo() and the cfd::get_scalar() to finish
-   //the cfd::get_geo() and the cfd::get_scalar() will set the flag to be
-   //false to break the while loop here.  This is unnecessary and caused
-   //synchronization problem.  Since the corba servant and the cfdApp are 
-   //the same object, this is equivalent to call a cfdApp member function and
-   //wait for it return, which is the basic behavior of function calls.  I
-   //reimplemented it with virtual functions, which will be overided in
-   //cfdApp. So they are actually direct function calls to the cfdApp.
-   short get_teacher_num() throw (CORBA::SystemException);//{return this->get_teacher_num();}; //*
-   //short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
-   //char* get_perf() throw (CORBA::SystemException);
-
+   short get_teacher_num() throw (CORBA::SystemException);
    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
    VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
@@ -157,18 +143,7 @@ protected:
    short mNumScalars;
    short mNnumVectors;
    short mNumGeoArrays;
-   //int   mClients;
-   //int   mIso_value;
-   //int   mSc;
-   //int   mMin;
-   //int   mMax;
-   //long  mId;
-   //long  mGeo_state;
-   //short mPostdata_state;
-   //bool  mPre_state;
-   //short mTimesteps;
    short mNumTeacherArrays;
-   //short mTeacher_state;
    short mGetClientInfo;
    double mShort_data_array[ 9 ];
 
