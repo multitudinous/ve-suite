@@ -25,10 +25,13 @@ using namespace VE_SceneGraph;
 DisplayInformation::DisplayInformation()
 {
    display_switch = new VE_SceneGraph::Switch;
-	VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( display_switch.get() );
+   display_switch->SetName( "Display Information Switch Node" );
+	VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->AddChild( display_switch.get() );
 
 	framerate = new osg::CameraNode;
+   framerate->setName( "Framerate Node" );
 	wcs = new osg::CameraNode;
+   wcs->setName( "World Coordinate System Node" );
 
 	framerate_text = new osgText::Text;
 	wcs_x_text = new osgText::Text;
@@ -136,6 +139,19 @@ void DisplayInformation::InitCoordSysDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
 {
+   VE_SceneGraph::DCS* activeNodeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode();
+   VE_SceneGraph::DCS* worldDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+
+   if( activeNodeDCS != worldDCS )
+   {
+      display_switch->setNodeMask( 0 );
+   }
+
+   else
+   {
+      display_switch->setNodeMask( 1 );
+   }
+
 	if( display_switch->getChildValue( framerate.get() ) )
 	{
 		std::stringstream ss;
@@ -192,10 +208,10 @@ void DisplayInformation::SetTextColor( std::vector< double > color )
 
 	else
 	{
-		framerate_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
-		wcs_x_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
-		wcs_y_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
-		wcs_z_text->setColor( osg::Vec4( (1-color[0]), (1-color[1]), (1-color[2]), 1.0 ) );
+		framerate_text->setColor( osg::Vec4( ( 1 - color[0] ), ( 1 - color[1] ), ( 1 - color[2] ), 1.0 ) );
+		wcs_x_text->setColor( osg::Vec4( ( 1 - color[0] ), ( 1 - color[1] ), ( 1 - color[2] ), 1.0 ) );
+		wcs_y_text->setColor( osg::Vec4( ( 1 - color[0] ), ( 1 - color[1] ), ( 1 - color[2] ), 1.0 ) );
+		wcs_z_text->setColor( osg::Vec4( ( 1 - color[0] ), ( 1 - color[1] ), ( 1 - color[2] ), 1.0 ) );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -205,13 +221,13 @@ void DisplayInformation::SetDisplayPositions( unsigned int width, unsigned int h
 		framerate->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 		wcs->setProjectionMatrix( osg::Matrix::ortho2D( 0, width, 0, height ) );
 
-		framerate_text->setPosition( osg::Vec3( width-10, 5, 0 ) );
+		framerate_text->setPosition( osg::Vec3( width - 10, 5, 0 ) );
 		wcs_x_text->setPosition( osg::Vec3( 50, 0, 0 ) );
 		wcs_y_text->setPosition( osg::Vec3( 0, 0, -50 ) );
 		wcs_z_text->setPosition( osg::Vec3( 0, 50, 0 ) );
 
 		wcs_model->GetDCS()->setScale( osg::Vec3( 0.8, 0.8, 0.8 ) );
-		wcs_model->GetDCS()->setPosition( osg::Vec3( 50, height-50, 0 ) );
+		wcs_model->GetDCS()->setPosition( osg::Vec3( 50, height - 50, 0 ) );
 		
 		this->InitFrameRateDisplay();
 		this->InitCoordSysDisplay();
