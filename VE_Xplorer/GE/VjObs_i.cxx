@@ -41,7 +41,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
@@ -84,21 +83,8 @@ VjObs_i::VjObs_i()
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
    _bufferArray = new cfdCommandArray();
    _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-   //orb=CORBA::ORB_init(temp,0,"omniORB4");
-   /*for(temp=0;temp<25;temp++)
-   {
-      client_list[temp]=0;
-   }*/
-   // allocate enough space
-   //geo_name       = new VjObs::scalar_p(50);
-   //geo_name->length(50);
-   //scl_name       = new VjObs::scalar_p(50);
-   //scl_name->length(50);
+
    teacher_name   = new VjObs::scalar_p();
-   //dataset_names  = new VjObs::scalar_p(50);
-   //dataset_names->length(50);
-   sound_names    = new VjObs::scalar_p(50);
-   sound_names->length(50);
 
    //dataset_types  = new VjObs::obj_p(50);
    //dataset_types->length(50);
@@ -741,49 +727,6 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       }
 #endif
    }
-}
-
-short VjObs_i::GetNumberOfSounds()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-   return 0;//cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
-}
-
-VjObs::scalar_p* VjObs_i::GetSoundNameArray()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-   //CORBA::ULong numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
-
-   //vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
-    //                      << numberOfSounds << std::endl << vprDEBUG_FLUSH;
-/*
-   if ( sound_names != NULL )
-   {
-      vprDEBUG(vprDBG_ALL,1) << " deleting sound_names"
-                             << std::endl << vprDEBUG_FLUSH;
-      delete sound_names;
-   }
-*/
-   ///Not building sounds like this anymore
-   /*if ( numberOfSounds > 0 )
-   {
-      //sound_names = new VjObs::scalar_p(50);
-      this->sound_names->length( numberOfSounds );
-      for ( CORBA::ULong i = 0; i < numberOfSounds; i++)
-      {
-         this->sound_names[ i ] = CORBA::string_dup( 
-                     cfdEnvironmentHandler::instance()->GetSoundHandler()->GetSoundFilename( i ).c_str() );
-      }
-   }
-   else*/
-      sound_names = NULL;
-
-   VjObs::scalar_p_var sound_names_=new VjObs::scalar_p(sound_names);
-   return sound_names_._retn();
 }
 
 void VjObs_i::SetClientInfoFlag( const short value )

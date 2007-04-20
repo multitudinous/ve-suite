@@ -268,7 +268,7 @@ void SoundsPane::_updateSoundsInformationFromModel()
       
       if ( _numSounds == 0 )
       {
-         wxString noFiles("No Sound Files");
+         wxString noFiles("No Sound Files", wxConvUTF8);
          _soundCBox = new wxCheckListBox( this, SOUND_CBOX, wxDefaultPosition, 
                                     wxDefaultSize, 1,&noFiles, 
                                     0, wxDefaultValidator,

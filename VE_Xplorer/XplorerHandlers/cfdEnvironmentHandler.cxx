@@ -60,9 +60,6 @@
 #include "VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPBoundEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPDimensionsEH.h"
-#include "VE_Xplorer/XplorerHandlers/SoundActivateEH.h"
-#include "VE_Xplorer/XplorerHandlers/SoundAddNewEH.h"
-
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
@@ -150,9 +147,6 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _eventHandlers[ std::string("Display Seed Points") ] = new VE_EVENTS::SeedPointActivateEventHandler();
    _eventHandlers[ std::string("Seed Points Bounds") ] = new VE_EVENTS::SeedPointBoundsEventHandler();
    _eventHandlers[ std::string("Seed Points Dimensions") ] = new VE_EVENTS::SeedPointDimensionsEventHandler();
-   _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
-   _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )

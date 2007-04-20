@@ -113,9 +113,6 @@ public:
    //short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
    //char* get_perf() throw (CORBA::SystemException);
 
-   short GetNumberOfSounds() throw (CORBA::SystemException);
-   VjObs::scalar_p* GetSoundNameArray() throw (CORBA::SystemException);
-
    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
    VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
@@ -129,7 +126,6 @@ public:
 protected:
    void CreateCommandQueue( void );
 
-   VjObs::scalar_p_var sound_names;
    VjObs::scalar_p_var teacher_name;
    VjObs::Models* _models;
 

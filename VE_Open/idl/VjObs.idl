@@ -71,19 +71,8 @@ interface VjObs
    // Retrun the user requested model
    Model GetModel( in long modelID );
 
-   //void attach(in Observer o);
-   //void detach(in Observer o);
-   //void update();
-   //scalar_p update_scalar();
-   //scalar_p update_vector();
-   //scalar_p get_geo_name();
    scalar_p get_teacher_name();
-   //short get_sc_num();
-   //short get_geo_num();
    short get_teacher_num();
-   //short get_postdata();
-   //string get_perf();
-   //short get_timesteps();
    
    // transfer data to explorer
    void SetClientInfoFlag( in short value );
@@ -93,48 +82,18 @@ interface VjObs
    // write xerces string
    void SetCommandString( in string input );
 
-   // Used For Sound Files
-   short GetNumberOfSounds();
-   scalar_p GetSoundNameArray();
-
    // New Stuff
    // used as a generic way to pull data across
    obj_pd getDouble1D( in string input );
    double2DArray getDouble2D( in string input );
-   //void setNumGeoArrays(in short value);
-   //short getNumGeoArrays();
 
    //void setIsoValue(in long value);
    long getIsoValue();
 
    void setSc(in long value);
-   //long getSc();
 
-   //void setMin(in long value);
-   //long getMin();
-
-   //void setMax(in long value);
-   //long getMax();
-
-   //void setId(in long value);
-   //long getId();
-
-   //void setGeoState(in long value);
-   //long getGeoState();
-
-   //void setPostdataState(in short value);
    short getPostdataState();
-
-   //void setPreState(in short value);
-   //short getPreState();
 
    //void setTimesteps(in short value);
    short getTimesteps();
-
-   //void setNumTeacherArrays(in short value);
-   //short getNumTeacherArrays();
-
-   //void setTeacherState(in short value);
-   //short getTeacherState();
-   
 };

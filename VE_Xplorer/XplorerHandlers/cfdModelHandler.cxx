@@ -75,6 +75,8 @@
 #include "VE_Xplorer/XplorerHandlers/AxesLabelsEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ScalarBarEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DataTransformEH.h"
+#include "VE_Xplorer/XplorerHandlers/SoundActivateEH.h"
+#include "VE_Xplorer/XplorerHandlers/SoundAddNewEH.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -146,6 +148,8 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("Change Axes Labels") ] = new VE_EVENTS::AxesLabelsEventHandler();
    _eventHandlers[ std::string("Change Scalar Bar State") ] = new VE_EVENTS::ScalarBarEventHandler();
    _eventHandlers[ std::string("DATA_TRANSFORM_UPDATE") ] = new VE_EVENTS::DataTransformEventHandler();
+   _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
+   _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
 #ifdef _OSG
 #ifdef VE_PATENTED
    _activeTDSet = 0;
