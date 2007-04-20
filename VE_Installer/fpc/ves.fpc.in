@@ -15,5 +15,5 @@ Description: A virtual engineering toolkit
 URL: http://www.vesuite.org
 Requires:
 Libs: -L${libdir} ${libs}
-Cflags: -I${includedir}
+Cflags: -I${includedir} ${cxxflags}
 Arch: @arch@
