@@ -62,19 +62,22 @@ _sliceRenderMethod("VIEW_ALIGNED_POLYGON_INTERSECT")
    _coordTransformedBBox = new osg::Vec4Array();
    _tcoordBBox = new osg::Vec4Array();
 
-   ///these are fixed
-   _tcoordBBox->push_back(osg::Vec4(0,1,0,1));
-   _tcoordBBox->push_back(osg::Vec4(1,1,0,1));
-
-   _tcoordBBox->push_back(osg::Vec4(0,0,0,1));
-   _tcoordBBox->push_back(osg::Vec4(1,0,0,1));
-   
-   _tcoordBBox->push_back(osg::Vec4(0,1,1,1));
-   _tcoordBBox->push_back(osg::Vec4(1,1,1,1));
-   
+   ///these are fixed  
    _tcoordBBox->push_back(osg::Vec4(0,0,1,1));
    _tcoordBBox->push_back(osg::Vec4(1,0,1,1));
   
+   _tcoordBBox->push_back(osg::Vec4(0,0,0,1));
+   _tcoordBBox->push_back(osg::Vec4(1,0,0,1));
+   _tcoordBBox->push_back(osg::Vec4(0,1,1,1));
+   _tcoordBBox->push_back(osg::Vec4(1,1,1,1));
+   _tcoordBBox->push_back(osg::Vec4(0,1,0,1));
+   _tcoordBBox->push_back(osg::Vec4(1,1,0,1));
+
+   
+   
+   
+   
+
 }
 //////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices(float* dataBoundingBox,
@@ -93,17 +96,15 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices(float* dataBoundingBox,
    _tcoordBBox = new osg::Vec4Array();
 
    ///these are fixed
-   _tcoordBBox->push_back(osg::Vec4(0,1,0,1));
-   _tcoordBBox->push_back(osg::Vec4(1,1,0,1));
-
-   _tcoordBBox->push_back(osg::Vec4(0,0,0,1));
-   _tcoordBBox->push_back(osg::Vec4(1,0,0,1));
-   
-   _tcoordBBox->push_back(osg::Vec4(0,1,1,1));
-   _tcoordBBox->push_back(osg::Vec4(1,1,1,1));
-   
    _tcoordBBox->push_back(osg::Vec4(0,0,1,1));
    _tcoordBBox->push_back(osg::Vec4(1,0,1,1));
+  
+   _tcoordBBox->push_back(osg::Vec4(0,0,0,1));
+   _tcoordBBox->push_back(osg::Vec4(1,0,0,1));
+   _tcoordBBox->push_back(osg::Vec4(0,1,1,1));
+   _tcoordBBox->push_back(osg::Vec4(1,1,1,1));
+   _tcoordBBox->push_back(osg::Vec4(0,1,0,1));
+   _tcoordBBox->push_back(osg::Vec4(1,1,0,1));
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices(const TextureBasedVolumeSlices& slices,

@@ -207,6 +207,7 @@ void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
          {
             sShader->DeactivateIsoSurface();
          }
+         sShader->FullTransferFunctionUpdate();
          sShader->EnsureScalarRange();
       }
    }
@@ -228,6 +229,9 @@ void cfdTextureBasedVizHandler::EnsurePhongShading(bool onOff)
          {
             sShader->SetActiveShaderProgram("Basic Volume Render");
          }
+         sShader->FullTransferFunctionUpdate();
+         sShader->EnsureScalarRange();
+         
       }
    }
 }
@@ -337,7 +341,7 @@ void cfdTextureBasedVizHandler::UpdateTransientDuration(double duration)
          ///duration calculation
          unsigned int nTimesteps = _activeTM->numberOfFields();
          _animationDelay = duration/((double)nTimesteps); 
-		 cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+		   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
          if(sShader)
          {
             sShader->SetDelayTime(_animationDelay);

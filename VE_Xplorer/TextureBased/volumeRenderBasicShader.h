@@ -60,9 +60,10 @@ static const char* vrBasicFragSource = {
       "float sback = texture3D(volumeData,gl_TexCoord[1].xyz).a;\n"
       "//PreIntegration\n"
       "gl_FragColor = (fastUpdate==true)?texture2D(transferFunction,vec2(sfront)):texture2D(transferFunction,vec2(sfront,sback)); \n"
+      "//gl_FragColor = (fastUpdate==true)?vec4(gl_TexCoord[1].xyz,.2):vec4(gl_TexCoord[0].xyz,.2); \n"
 
       "//set the opacity to .2 for all fragments\n"
-      "gl_FragColor.a *= gl_Color.a;\n"
+      "//gl_FragColor.a *= gl_Color.a;\n"
    "}\n"
 };
 #endif// VR_BASIC_VERT_SOURCE_H
