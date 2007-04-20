@@ -194,12 +194,12 @@ void RYGCBLinearTF::_update()
                  _classification[i*4 + 2] = 0.;
                  _classification[i*4 + 3] = alpha*255.f*.5f;
               }
-		   }
-           _textureData[i*4 ]  = (unsigned char)_classification[i*4 ];
-           _textureData[i*4 + 1] = (unsigned char)_classification[i*4 + 1];
-           _textureData[i*4 + 2] = (unsigned char)_classification[i*4 + 2];
-           _textureData[i*4 + 3] = (unsigned char)_classification[i*4 + 3]; 
+           }
         }
+        _textureData[i*4 ]  = (unsigned char)_classification[i*4 ];
+        _textureData[i*4 + 1] = (unsigned char)_classification[i*4 + 1];
+        _textureData[i*4 + 2] = (unsigned char)_classification[i*4 + 2];
+        _textureData[i*4 + 3] = (unsigned char)_classification[i*4 + 3]; 
 	  }
    }
 }

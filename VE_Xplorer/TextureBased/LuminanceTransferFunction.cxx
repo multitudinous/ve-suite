@@ -101,52 +101,52 @@ void LuminanceTF::_update()
             _classification[i*4 + 1] = 0;
             _classification[i*4 + 2] = 0;
             _classification[i*4 + 3] = 0;
-		 }
-	     else if( i > newRange[1])
+         }
+	      else if( i > newRange[1])
          {
-           _classification[i*4 ] = 0;//255;
-           _classification[i*4 + 1] = 0;
-           _classification[i*4 + 2] = 0;
-           _classification[i*4 + 3] = 0;
-        }
-        else
-	    {
-           if(_isoSurface)
-           {
-              isoValue = newRange[0] + _percentIsoValue*(newRange[1] - newRange[0]);
-              isoRange[0] = isoValue - 4.f;
-              isoRange[1] = isoValue + 4.f;
+            _classification[i*4 ] = 0;//255;
+            _classification[i*4 + 1] = 0;
+            _classification[i*4 + 2] = 0;
+            _classification[i*4 + 3] = 0;
+         }
+         else
+         {
+            if(_isoSurface)
+            {
+               isoValue = newRange[0] + _percentIsoValue*(newRange[1] - newRange[0]);
+               isoRange[0] = isoValue - 4.f;
+               isoRange[1] = isoValue + 4.f;
 
-              if(i >= isoRange[0] && i <= isoRange[1])
-		      {
-                 alpha = (i - newRange[0])*invSRange; 
-				 _classification[i*4 ] = 
-                 _classification[i*4 + 1] = 
-                 _classification[i*4 + 2] = 
-                 _classification[i*4 + 3] = alpha*(_resolution[0]-1);
-              }
-		      else
-              {
-                 _classification[i*4 ] = 
-                 _classification[i*4 + 1] = 
-                 _classification[i*4 + 2] = 
-                 _classification[i*4 + 3] = 0;
-              }
-           }
-	       else
-           {
-              alpha = (i - newRange[0])*invSRange;
-			   _classification[i*4 ] = 
+               if(i >= isoRange[0] && i <= isoRange[1])
+		         {
+                  alpha = (i - newRange[0])*invSRange; 
+				      _classification[i*4 ] = 
+                  _classification[i*4 + 1] = 
+                  _classification[i*4 + 2] = 
+                  _classification[i*4 + 3] = alpha*(_resolution[0]-1);
+               }
+		         else
+               {
+                  _classification[i*4 ] = 
+                  _classification[i*4 + 1] = 
+                  _classification[i*4 + 2] = 
+                  _classification[i*4 + 3] = 0;
+               }
+            }
+	         else
+            {
+               alpha = (i - newRange[0])*invSRange;
+			      _classification[i*4 ] = 
                _classification[i*4 + 1] = 
                _classification[i*4 + 2] = 
                _classification[i*4 + 3] =alpha*alpha*(_resolution[0]-1);
-           }
-           _textureData[i*4 ]  = (unsigned char)_classification[i*4 ];
-           _textureData[i*4 + 1] = (unsigned char)_classification[i*4 + 1];
-           _textureData[i*4 + 2] = (unsigned char)_classification[i*4 + 2];
-           _textureData[i*4 + 3] = (unsigned char)_classification[i*4 + 3]; 
-        }
-	  }
+            }
+         }
+         _textureData[i*4 ]  = (unsigned char)_classification[i*4 ];
+         _textureData[i*4 + 1] = (unsigned char)_classification[i*4 + 1];
+         _textureData[i*4 + 2] = (unsigned char)_classification[i*4 + 2];
+         _textureData[i*4 + 3] = (unsigned char)_classification[i*4 + 3]; 
+      }
    }
 }
 /////////////////////////////////////////////////////////////////
