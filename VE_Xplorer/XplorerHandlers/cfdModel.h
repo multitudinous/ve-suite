@@ -66,8 +66,6 @@ it is better to treat these two dataset as two different models.
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 
-//#include "readWriteVtkThings.h"
-
 namespace VE_SceneGraph
 {
    class DCS;
@@ -318,7 +316,7 @@ private:
    std::map< std::string, VE_SceneGraph::CADEntity* > _partList;///<A list of the current parts.
    std::map< std::string, VE_SceneGraph::DCS* > _assemblyList;///A list of the current assemblies.
    std::map< std::string, VE_SceneGraph::Clone* > _cloneList;///A list of clones.
-   //std::map< btRigidBody*, VE_SceneGraph::DCS* > physicsTransformMap;
+   std::map< std::string, std::string > filenameToGUIMap;///<This map connects filenames to GUIDs so that we can figure out what CAD files should be copied
 
 #ifdef _OSG
    typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;

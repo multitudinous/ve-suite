@@ -77,24 +77,34 @@ concave( false )
 	rigid_body = 0;
 	physics_mesh = 0;
    collision_shape = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS )
+:
+mass( 1.0f ),
+friction( 1.0f ),
+restitution( 0.0f ),
+physics( false ),
+concave( false )
+{
+   //Need to fix this and move some code to Node
+   //Leave some code here no more FILEInfo
+   this->dcs = new VE_SceneGraph::DCS();
+   dcs->SetName( "CADEntityDCS" );
+   this->node = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
+   fileName = node->GetNode()->getName();
 
-   #ifdef _PERFORMER
-   fog = new pfFog();
-   #elif _OSG
-   //setup fog
-   fog = new osg::Fog();
-   #endif
+	dcs->addChild( node->GetNode() );
+   worldDCS->AddChild( dcs.get() );
+   
+	rigid_body = 0;
+	physics_mesh = 0;
+   collision_shape = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
 {
 	delete node;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::Initialize( float op_val )
-{
-   this->op = op_val;
-   setOpac( op_val );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetMass( float m )
@@ -221,112 +231,12 @@ std::string CADEntity::GetFilename()
    return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CADEntity::GetModuleName()
+bool CADEntity::GetTransparentFlag()
 {
-   return _moduleName;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::GetColorArray()
-{
-   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[0]  << " : " 
-                      <<  this->_rgba[1]  <<  " : " << this->_rgba[2]  
-                      << std::endl << vprDEBUG_FLUSH;
-}
-////////////////////////////////////////////////////////////////////////////////
-int CADEntity::GetTransparentFlag()
-{
-   return transparent;
-}
-////////////////////////////////////////////////////////////////////////////////
-int CADEntity::GetColorFlag()
-{
-   return this->_colorFlag;
-}
-////////////////////////////////////////////////////////////////////////////////
-float CADEntity::getOpacity()
-{
-   return this->op;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetFILEProperties( int color, int trans, float* stlColor )
-{
-   this->color = color;
-   this->_colorFlag = color;
-   this->transparent = trans;
-   this->stlColor[0] = stlColor[0];
-   this->stlColor[1] = stlColor[1];
-   this->stlColor[2] = stlColor[2];
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::setOpac(float op_val)
-{
-   this->op = op_val;
-   //this->node->SetNodeProperties( _colorFlag, op, stlColor );
-
-   #ifdef _PERFORMER
-      this->node->pfTravNodeMaterial( this->node->GetRawNode() );
-   #elif _OSG
-      //node->TravNodeMaterial(node->GetRawNode());
-   #endif
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::setFog( double dist )
-{
-   #ifdef _PERFORMER
-      fog->setColor( 0.6f, 0.6f, 0.6f);
-      fog->setRange(0, dist);
-      fog->setFogType(PFFOG_PIX_EXP2);
-      this->node->pfTravNodeFog( this->node->GetRawNode(), fog );
-   #elif _OSG
-      fog->setMode( osg::Fog::EXP2 );
-      fog->setDensity( 1 / ( dist / 2 ) );
-      fog->setColor( osg::Vec4( 0.5f, 0.5f, 0.5f, 0.0f ) );
-      //fog->setStart( 0.0f );
-      //fog->setStart( dist + 100 );
-      //fog->setEnd( dist + 200 );
-      //fog->setFogCoordinateSource( );
-      //this->node->TravNodeFog( this->node->GetRawNode(), fog );
-   #endif
-}
-////////////////////////////////////////////////////////////////////////////////
-/// Functions taken from module geometry for future merging
-void CADEntity::SetRGBAColorArray( double* color )
-{
-   for( int i = 0; i < 4; i++ )
-   {
-      this->_rgba[i] = color[i];
-   }
-   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
+   return _transparencyFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetTransparencyFlag( bool x )
 {
    this->_transparencyFlag = x;
 }
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetOpacity( float x )
-{
-   this->_opacityLevel = x;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetColorFlag( int x )
-{
-   this->_colorFlag = x;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetModuleName( std::string filename )
-{
-   this->_moduleName = filename;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::Update()
-{
-   std::cout << "Update Filename : " << this->_filename << std::endl
-               << "trans : " << this->_transparencyFlag << std::endl
-               << "op : " << this->_opacityLevel << std::endl
-               << "color : " << this->_colorFlag << std::endl;
-   // Fix this later to call traverser function
-   //this->_node->SetColorOfGeometry( this->_node );
-}
-////////////////////////////////////////////////////////////////////////////////
-

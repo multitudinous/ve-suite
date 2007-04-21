@@ -437,31 +437,16 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
   std::cout<<"[DBG]...After add data into waitinglist"<<std::endl;
    
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdModel::DynamicLoadingGeom(std::string surfacefilename, float* scale, 
                float* trans, float* rotate, float* stlColor, int color, int transFlag)
 {  
-   //float scale[3], trans[3], rotate[3];   // pfDCS stuff
-   //float stlColor[3];
-   //int color;
-   //int transFlag;
-
-   //hard code here and will change it later
-   //scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
-   //trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
-   //rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
-   //color =1;
-   //stlColor[0]=1; stlColor[1]=0; stlColor[2]=0;
-   //transFlag =1;
    std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
    this->CreateGeomDataSet(surfacefilename);
    std::cout<<"[DBG]...after cfdFile constructor"<<std::endl;
    this->GetGeomDataSet(-1)->GetDCS()->SetScaleArray( scale );
    this->GetGeomDataSet(-1)->GetDCS()->SetTranslationArray( trans );
    this->GetGeomDataSet(-1)->GetDCS()->SetRotationArray(rotate);
-   this->GetGeomDataSet(-1)->SetFILEProperties(color, transFlag, stlColor);
-   this->GetGeomDataSet(-1)->setOpac(1.0f);
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<vtkDataSet*> cfdModel::GetWaitingDataList()
@@ -707,7 +692,23 @@ void cfdModel::CreateAssembly(std::string assemblyID)
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreatePart( std::string fileName, std::string partID, std::string parentID )
 {
-   _partList[partID] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
+   /*std::map< std::string, std::string >::iterator iter;
+   iter = filenameToGUIMap.find( fileName );
+   if ( iter != filenameToGUIMap.end() )
+   {
+      ///If we have already loaded the parts
+      VE_SceneGraph::CADEntityHelper* tempNode = 
+                                           _partList[ iter->second ]->GetNode();
+      _partList[ partID ] = 
+              new VE_SceneGraph::CADEntity( tempNode, _assemblyList[parentID] );
+   }
+   else
+   {
+      ///If we have not loaded this part
+      filenameToGUIMap[ fileName ] = partID;
+      _partList[ iter->second ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
+   }*/
+   _partList[ partID ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
    //add key pointer to physics map for bullet rigid body
    //add data pair for transform node
 }

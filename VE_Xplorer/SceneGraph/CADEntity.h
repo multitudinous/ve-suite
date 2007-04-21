@@ -69,6 +69,10 @@ class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
 	CADEntity( std::string, VE_SceneGraph::DCS*, bool isStream = false );
+   ///Constructor that takes a CADEntityHelper and deep copies the osg
+   ///node contained in the CADEntityHelper
+	CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, 
+              VE_SceneGraph::DCS* worldDCS);
    ~CADEntity();
 
 	VE_SceneGraph::DCS* GetDCS();
@@ -83,27 +87,10 @@ public:
    void SetCollisionShape( std::string type );
 
    std::string GetFilename();
-   std::string GetModuleName();
-   void GetColorArray();
-   int GetTransparentFlag();
-   int GetColorFlag();
-   float getOpacity();
-
-   void SetFILEProperties( int, int, float* );
-   void setOpac( float op_val );
-   void setFog( double dist );
-   void SetRGBAColorArray( double* );
+   bool GetTransparentFlag();
    void SetGeometryFilename( std::string );
-   void SetModuleName( std::string );
    void SetTransparencyFlag( bool );
-   void SetColorFlag( int );
-   //void SetColorOfGeometry( VE_SceneGraph::Node* );
-   void SetOpacity( float );
-
-	void Update();
-
 private:
-	void Initialize( float );
 
 	VE_SceneGraph::CADEntityHelper* node;
 	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
@@ -118,27 +105,9 @@ private:
 	bool physics;
    bool concave;
 
-   int mat_count;
-   int color;
-   int transparent;
-   int _colorFlag;
-
-   float stlColor[3];
-   float op;
-   float _opacityLevel;
-
-   double _rgba[4];
-
    bool _transparencyFlag;
 
-   std::string fileName;		//[512];
-   std::string _filename;
-   std::string _moduleName;
-
-#ifdef _OSG
-   osg::Fog* fog;
-#endif
-
+   std::string fileName;
 };
 }
 

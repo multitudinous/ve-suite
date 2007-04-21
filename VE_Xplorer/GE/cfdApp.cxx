@@ -333,7 +333,8 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 {
 	//Override the vrj::OsgApp::configSceneView() default functionality
 	//**************************************************************************
-	newSceneViewer->setDefaults( osgUtil::SceneView::NO_SCENEVIEW_LIGHT );
+	newSceneViewer->setDefaults( osgUtil::SceneView::NO_SCENEVIEW_LIGHT | 
+                                osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT  );
 	newSceneViewer->init();
 	newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
 

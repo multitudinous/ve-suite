@@ -89,9 +89,28 @@ CADEntityHelper::CADEntityHelper()
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
 #ifdef _OSG
-   if( cadNode.valid() )
+   if( input.cadNode.valid() )
    {
-      cadNode = input.cadNode;
+      ///We deep copy nodes so that picking is accurate and so that physics will
+      ///work properly in the future.
+      if ( input.cadNode->asGroup() )
+      {
+         cadNode = new osg::Group( *input.cadNode->asGroup(), osg::CopyOp::DEEP_COPY_NODES );
+      }
+      else if ( dynamic_cast< osg::Geode* >( input.cadNode.get() ) )
+      {
+         cadNode = new osg::Geode( *static_cast< osg::Geode* >( input.cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+      }
+      else
+      {
+         std::cout << "ERROR : Cast not present " << std::endl;
+         std::cout << typeid( *input.cadNode.get() ).name() << std::endl;
+      }
+   }
+   else
+   {
+      std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node" 
+                  << std::endl;
    }
 #elif _OPENSG
 #endif
@@ -99,17 +118,17 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
 {
-   if( this != &input ){
-
-      #ifdef _PERFORMER
+   if( this != &input )
+   {
+#ifdef _PERFORMER
       pfDelete( this->cadNode );
       this->cadNode = input.cadNode;
-      #elif _OSG
+#elif _OSG
       //Recreate the node
       //cadNode->unref();
       cadNode = input.cadNode;
-      #elif _OPENSG
-      #endif
+#elif _OPENSG
+#endif
    }
 
    return *this;

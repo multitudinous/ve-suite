@@ -536,7 +536,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       }
    }
    
-   if ( commandArray == NULL )
+   /*if ( commandArray == NULL )
    {
       std::cerr << "ERROR: commandArray not set for cfdModelHandler"
                 << std::endl;
@@ -642,15 +642,6 @@ void cfdModelHandler::PreFrameUpdate( void )
             if( _modelList.at( j )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
                _modelList.at( j )->GetGeomDataSet( i )->setOpac( 1.0 );
          }
-         
-         /*for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++ )
-         {
-            if ( _modelList.at( j )->GetCfdDataSet( i )->IsPartOfTransientSeries() )
-            {
-               _modelList.at( j )->GetCfdDataSet( i )->GetAnimation()->ClearSequence();
-            }
-         }*/
-         //may need to add the handling of texture data stuff here
       } 
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
@@ -697,7 +688,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       }
    }
 #endif
-#endif
+#endif*/
    // Check and see if we need to refresh the scalar bar
    _scalarBar->CheckCommandId( commandArray );
    // May use in the future
