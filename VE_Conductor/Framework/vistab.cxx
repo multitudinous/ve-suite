@@ -147,7 +147,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
    xplorerPtr = 0;
-   isosurface =  0;
+   isosurface = 0;
    _tbTools = 0;
    scalarContour = 0;
    vectorContour = 0;
@@ -546,8 +546,10 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_ISOSURFACES_SIZE, 
                   SYMBOL_ISOSURFACES_STYLE );
 
+	  isosurface->SetActiveScalar(_activeScalarName);
+   }
+
    isosurface->SetSize(_vistabPosition);
-   isosurface->SetActiveScalar(_activeScalarName);
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
    isosurface->SetScalarRange( _activeScalarName, _activeScalarRange );
    isosurface->SetAvailableScalars( _availableSolutions["MESH_SCALARS"] );
@@ -555,7 +557,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 //   isosurface->InitializeScalarData( _activeScalarName );
    isosurface->ShowModal();
    //_activeScalarName.erase();
-   }
+   
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
