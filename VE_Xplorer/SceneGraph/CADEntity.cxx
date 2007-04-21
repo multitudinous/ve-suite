@@ -34,7 +34,6 @@
 
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
-#include "VE_Xplorer/SceneGraph/ModelOccluder.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 

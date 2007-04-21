@@ -236,7 +236,7 @@ void cfdSoundHandler::CreateObjects( void )
       else
       {
          // Skip past block
-         this->_readParam->ContinueRead( input, id );
+         //this->_readParam->ContinueRead( input, id );
       }
    }
 }

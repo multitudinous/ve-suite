@@ -37,9 +37,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
-#include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
-
-
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkDataSet.h>

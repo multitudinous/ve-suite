@@ -63,7 +63,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/CreateVisObjectEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ClearVisObjectsEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdRawNodeWriteTraverser.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

@@ -63,7 +63,6 @@ namespace VE_Xplorer
 namespace VE_SceneGraph
 {
 	class DCS;
-   class fileInfo;
 }
 
 namespace VE_Xplorer
@@ -79,8 +78,6 @@ public:
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-   // Continues to read parameter file based on the current object type
-   void ContinueRead( std::ifstream &, unsigned int );
 
    int   numGeoms;
    int   bmpFile;
@@ -113,8 +110,6 @@ public:
    bool ihccModel;
    bool changeGeometry;
 
-   std::vector< VE_SceneGraph::fileInfo * > files;
-
    void CreateNewDataSet();
    int GetNumberOfDataSets();
    VE_Xplorer::cfdDataSet * GetDataSet( int i );
@@ -137,10 +132,6 @@ public:
 
 	osg::ref_ptr< VE_SceneGraph::DCS > dashBoardDCS;
    std::string dashboardFilename;
-
-   static void read_pf_DCS_parameters( std::ifstream &inFile, float*, float*, float* );
-
-   static void SkipModuleBlock( std::ifstream &inFile, int );
 
 private:
    std::vector< VE_Xplorer::cfdDataSet * > dataSets;

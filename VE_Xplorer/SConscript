@@ -6,9 +6,6 @@ Import('baseEnv buildDir')
 xplorerSubdirs = Split("""
     Utilities  
     SceneGraph
-    SceneGraph/NURBS
-    SceneGraph/NURBS/Utilities
-    SceneGraph/Utilities
     TextureBased
     XplorerHandlers
     GraphicalPlugin
@@ -16,6 +13,9 @@ xplorerSubdirs = Split("""
     GE
 """)
 ##    DefaultGraphicalPlugin
+##    SceneGraph/NURBS
+##    SceneGraph/NURBS/Utilities
+##    SceneGraph/Utilities
 
 ##Run SConscript files in all of those folders.
 for d in xplorerSubdirs:

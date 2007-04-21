@@ -88,9 +88,6 @@ namespace VE_Xplorer
    void RefreshScalarBar( void );
    // Set the active dataset for scalar bar computations
    void SetActiveDataSet( cfdDataSet* );
-   // Read parameter file
-   void CreateObjects( void );
-
    // Set/Get the position of the scalar bar in 3D space
    void SetPosition(float x, float y, float z);
    void SetPosition(float x[3]);

@@ -307,7 +307,7 @@ void cfdImage::CreateObjects( void )
       else
       {
          // Skip past block
-         _readParam->ContinueRead( input, id );
+         //_readParam->ContinueRead( input, id );
       }
    }
 }

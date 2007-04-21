@@ -32,8 +32,7 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_XML',
-                   'VE_SceneGraph_UtilitiesLib', 
-                   'VE_SceneGraphLib%s' %(execOsgPatTag),
+                   'VE_SceneGraph%s' %(execOsgPatTag),
                    'VE_UtilLib',
                    'VE_TextureBasedLib%s' %(execOsgPatTag),
                    'VE_OpenModuleLib',
@@ -42,7 +41,6 @@ lib_env.Append(LIBS = ['VE_XML',
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
-                        pj('#', buildDir, 'VE_Xplorer','SceneGraph','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','TextureBased'),
                         pj('#', buildDir, 'VE_Xplorer','GraphicalPlugin'),
                         pj('#', buildDir, 'VE_Open','skel'),

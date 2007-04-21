@@ -194,12 +194,12 @@ void cfdAnimatedImage::CreateObjects( void )
          input >> spacing[2];
          input.getline( textLine, 256 );
 
-         this->_readParam->read_pf_DCS_parameters( input, this->imageScale, this->imageTrans, this->imageRot );
+         //this->_readParam->read_pf_DCS_parameters( input, this->imageScale, this->imageTrans, this->imageRot );
       }
       else
       {
          // Skip past block
-         _readParam->ContinueRead( input, id );
+         //_readParam->ContinueRead( input, id );
       }
    }
 }
