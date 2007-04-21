@@ -56,6 +56,8 @@
 #include <wx/wx.h>
 #include <math.h>
 
+#include <fstream>
+
 using namespace VE_XML::VE_Model;
 using namespace VE_XML;
 
