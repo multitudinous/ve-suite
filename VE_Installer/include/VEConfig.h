@@ -37,7 +37,7 @@
 #ifndef VE_SUITE_CONFIG_
 #define VE_SUITE_CONFIG_ 1
 
-#define VE_PHYSICS 0
+#define VE_PHYSICS 1
 
 #if defined(_MSC_VER)
    //#pragma warning( disable : 4244 )
@@ -113,27 +113,16 @@
 
    #  ifdef VE_XML_LIBRARY
    #    define VE_XML_EXPORTS   __declspec(dllexport)
-   #  else
-   #    define VE_XML_EXPORTS   __declspec(dllimport)
-   #  endif /* VE_XML_LIBRARY */
-
-   #  ifdef VE_CAD_LIBRARY
    #    define VE_CAD_EXPORTS   __declspec(dllexport)
-   #  else
-   #    define VE_CAD_EXPORTS   __declspec(dllimport)
-   #  endif /* VE_CAD_LIBRARY */
-
-   #  ifdef VE_SHADER_LIBRARY
    #    define VE_SHADER_EXPORTS   __declspec(dllexport)
-   #  else
-   #    define VE_SHADER_EXPORTS   __declspec(dllimport)
-   #  endif /* VE_SHADER_LIBRARY */
-
-   #  ifdef VE_MODEL_LIBRARY
    #    define VE_MODEL_EXPORTS   __declspec(dllexport)
    #  else
+   #    define VE_XML_EXPORTS   __declspec(dllimport)
+   #    define VE_CAD_EXPORTS   __declspec(dllimport)
+   #    define VE_SHADER_EXPORTS   __declspec(dllimport)
    #    define VE_MODEL_EXPORTS   __declspec(dllimport)
-   #  endif /* VE_MODEL_LIBRARY */
+   #  endif /* VE_XML_LIBRARY */
+
 
    #  ifdef VE_CONDUCTOR_UTILS_LIBRARY
    #    define VE_CONDUCTOR_UTILS_EXPORTS   __declspec(dllexport)
