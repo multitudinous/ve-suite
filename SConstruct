@@ -186,7 +186,9 @@ opts.Add('options_file', 'Provide a file name for the options caches', '')
 opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from','')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
-Export('opts', 'vtk_options', 'osg_options','xerces_options','wxwidgets_options')#,'ode_options','opal_options')
+Export('opts', 'vtk_options', 'osg_options',
+         'xerces_options','wxwidgets_options',
+         'VE_SUITE_VERSION')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
@@ -325,92 +327,6 @@ if not SConsAddons.Util.hasHelpFlag():
    configHeader.addFiles( pj( 'VE_Installer','include','VEConfig.h' ) )
 
    Export('ves_pkg')
-
-   # Build up the provides vars for the .fpc files
-   provides = "osg"
-   arch = GetArch()
-   inst_paths = {}
-   inst_paths['base'] = os.path.abspath(osg_options.getSettings()[0][1])
-   inst_paths['lib'] = pj(inst_paths['base'], baseEnv['libdir'])
-   #inst_paths['flagpoll'] = pj( baseEnv['prefix'],baseEnv['libdir'], 'flagpoll')
-   inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
-   inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
-   inst_paths['include'] = pj(inst_paths['base'], 'include')   
-   OSG_VERSION = ( int('1'), int('2'), int('0') )
-   cppdom_version_str = '1.2.0'
-   # Build up substitution map
-   submap = {
-      '@provides@'                  : provides,
-      '@prefix@'                    : inst_paths['base'],
-      '@exec_prefix@'               : '${prefix}',
-      '@cppdom_cxxflags@'           : '',
-      '@includedir@'                : inst_paths['include'],
-      '@cppdom_extra_cxxflags@'     : '',
-      '@cppdom_extra_include_dirs@' : '',
-      '@cppdom_libs@'               : '-losg -losgDB -losgGA -losgUtil -lOpenThreads -losgText -losgSim -losgProducer -lProducer',
-      '@libdir@'                    : inst_paths['lib'],
-      '@lib_subdir@'                : baseEnv['libdir'],
-      '@VERSION_MAJOR@'             : str(OSG_VERSION[0]),
-      '@VERSION_MINOR@'             : str(OSG_VERSION[1]),
-      '@VERSION_PATCH@'             : str(OSG_VERSION[2]),
-      '@arch@'                      : arch,
-      '@version@'                   : cppdom_version_str,
-   }
-   ##env.ConfigBuilder('gmtl.pc','gmtl.pc.in',submap = gmtl_pc_submap)
-   ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
-   installed_targets = []
-   name_parts = ['osg', cppdom_version_str, arch]
-   pc_filename = "-".join(name_parts) + ".fpc"
-   tempName = pj(inst_paths['flagpoll'], pc_filename)
-   cppdom_pc = baseEnv.ConfigBuilder(tempName, 
-                           pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
-
-   if 'install' in COMMAND_LINE_TARGETS:
-   	installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), tempName)
-     	baseEnv.Alias('install',[installed_targets,PREFIX])
-
-   # Build up the provides vars for the .fpc files
-   provides = "ves"
-   arch = GetArch()
-   inst_paths = {}
-   inst_paths['base'] = os.path.abspath( baseEnv['prefix'] )
-   inst_paths['lib'] = pj(inst_paths['base'], baseEnv['libdir'])
-   inst_paths['flagpoll'] = pj( baseEnv['prefix'],baseEnv['libdir'], 'flagpoll')
-   #inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
-   inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
-   inst_paths['include'] = pj(inst_paths['base'], 'include')   
-   ves_version_str = '1.0.2'
-   # Build up substitution map
-   submap = {
-      '@provides@'                  : provides,
-      '@prefix@'                    : inst_paths['base'],
-      '@exec_prefix@'               : '${prefix}',
-      '@ves_cxxflags@'              : '-D_TAO -DVE_PATENTED -D_OSG -DVTK44',
-      '@includedir@'                : inst_paths['include'],
-      '@ves_extra_cxxflags@'        : '',
-      '@ves_extra_include_dirs@'    : '',
-      '@ves_libs@'                  : '-lVE_TextureBasedLib_tao_osg_vep -lDataLoaderLib -lVE_UtilLib -lGUIPluginLib -lVE_XMLLib -lGraphicalPlugin_tao_osg_vep -lTranslatorToVTKLib -lVE_CADLib -lVE_XplorerNetworkLib_tao_osg_vep -lVE_XplorerLib_tao_osg_vep -lVE_OpenModuleLib -lVE_SceneGraphLib_tao_osg_vep -lVE_SceneGraph_UtilitiesLib -lVE_ShaderLib -lVE_NURBSUtilsLib_tao_osg_vep -lVE_NURBSUtilsLib_tao_osg_vep -lVE_ModelLib',
-      '@libdir@'                    : inst_paths['lib'],
-      '@lib_subdir@'                : baseEnv['libdir'],
-      '@VERSION_MAJOR@'             : str(VE_SUITE_VERSION[0]),
-      '@VERSION_MINOR@'             : str(VE_SUITE_VERSION[1]),
-      '@VERSION_PATCH@'             : str(VE_SUITE_VERSION[2]),
-      '@arch@'                      : arch,
-      '@version@'                   : ves_version_str,
-   }
-
-   ##env.ConfigBuilder('gmtl.pc','gmtl.pc.in',submap = gmtl_pc_submap)
-   ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
-   installed_targets = []
-   name_parts = ['ves', ves_version_str, arch]
-   pc_filename = "-".join(name_parts) + ".fpc"
-   ##tempName = pj(inst_paths['flagpoll'], pc_filename)
-   ves_pc = baseEnv.ConfigBuilder(pc_filename, 
-                           pj('#','VE_Installer','fpc','ves.fpc.in'), submap = submap)
-
-   if 'install' in COMMAND_LINE_TARGETS:
-   	installed_targets = baseEnv.Install( pj( baseEnv['prefix'], baseEnv['libdir'], 'flagpoll'), pc_filename)
-     	baseEnv.Alias('install',[installed_targets,PREFIX])
       
    ## setup build log to aid in debugging remote builds
    if baseEnv[ 'buildLog' ] != '':
@@ -429,6 +345,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ceSubdirs = pj(buildDir,'VE_CE')
    ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
+   fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    shareSubdirs = pj(buildDir,'share')
    docsSubdirs = pj ('#', 'share', 'docs')
 
@@ -452,7 +369,7 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs = [ docsSubdirs ]
       baseEnv.Alias('docs', docsSubdirs)
    else:
-      ves_dirs = [ openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs, veiSubdirs, shareSubdirs]
+      ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs, veiSubdirs, shareSubdirs, fpcSubdirs]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:
@@ -484,5 +401,6 @@ if not SConsAddons.Util.hasHelpFlag():
    else:
       ves_pkg.build( install=False )
          
+   baseEnv.Alias('install', PREFIX)
    Default('.')
 
