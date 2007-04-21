@@ -237,7 +237,7 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'XplorerHandlers', s), xplorer_srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib',
+lib_env.Append(LIBS = ['VE_XML',
                    'VE_SceneGraph_UtilitiesLib', 
                    'VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_UtilLib',
@@ -246,9 +246,7 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','SceneGraph','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','TextureBased'),
-                        pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','Model'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD')])
+                        pj('#', buildDir, 'VE_Open','XML')])
 lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --get-vrj-ogl-libs --libs --cflags'%lib_env['VRJugglerVersion'])
 lib_env.ParseConfig('flagpoll bullet --libs --cflags')
 lib_env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%lib_env['BoostVersion'])

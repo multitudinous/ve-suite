@@ -34,12 +34,10 @@
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/GUIPlugin/PortDialog.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
-#include "VE_Conductor/Network/package.h"
 
 #include "VE_Conductor/Framework/paraThread.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
 
-#include "VE_Conductor/GUIPlugin/Geometry.h"
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/Framework/Frame.h"
@@ -2832,7 +2830,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 
    if ( std::string(linkresult) !=std::string(""))
    {
-      Package p;
+     /* Package p;
       p.SetSysId("linkresult.xml");
       p.Load( linkresult, strlen(linkresult) );
 
@@ -2840,7 +2838,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
       UIDialog* port_dlg = 0;//modules[mod].GetPlugin()->PortData( NULL, &(p.intfs[0]) );
 
       if ( port_dlg != NULL )
-         port_dlg->Show();
+         port_dlg->Show();*/
    }
 }
 
@@ -2869,7 +2867,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
 
    if ( std::string(result) != "" )
    {
-      Package p;
+      /*Package p;
       p.SetSysId("linkresult.xml");
       p.Load(result, strlen(result));
 
@@ -2878,7 +2876,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
       UIDialog* hello = modules[m_selMod].GetPlugin()->Result(NULL);
       
       if ( hello != NULL )
-	      hello->Show();
+	      hello->Show();*/
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

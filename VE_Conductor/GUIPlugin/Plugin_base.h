@@ -42,8 +42,6 @@ Plugin_base API
 */
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
-
-#include "VE_Conductor/Network/interface.h"
 #include <vector>
 #include <map>
 
@@ -94,8 +92,6 @@ namespace VE_XML
    }
 }
 
-class Interface;
-
 typedef std::vector< wxPoint > POLY;
 typedef std::vector< VE_XML::VE_Model::Port > PORT;
 
@@ -129,7 +125,7 @@ public:
    ///This returns the Result dialog of the module
    virtual UIDialog* Result(wxWindow* parent);
    ///This returns the PortData dialog of the module
-   virtual UIDialog* PortData(wxWindow* parent,  Interface *intf);
+   //virtual UIDialog* PortData(wxWindow* parent,  Interface *intf);
    ///This returns the FinancialData dialog of the module
    virtual void FinancialData();
    ///This is the ID to identify the module
@@ -149,10 +145,10 @@ public:
    ///Get the geometry data buffer - this is deprecated
    GeometryDataBuffer* GetGeometryDataBuffer( void );
    ///Unpack the interface - this is deprecated
-   virtual void UnPack(Interface* intf);
+   //virtual void UnPack(Interface* intf);
    ///This is the load function of the module, 
    ///unpack the input string and fill up the UI according to this
-   virtual Interface* Pack();
+   //virtual Interface* Pack();
    //This is the load function of the module, 
    ///unpack the input string and fill up the UI according to this
    VE_XML::VE_Model::Model* GetVEModel( void );
@@ -161,7 +157,7 @@ public:
    ///Get the model constructed by the dialog
    VE_XML::VE_Model::Model* GetModel( void );
    ///This is to unpack the result from the 
-   virtual void UnPackResult(Interface * intf);
+   //virtual void UnPackResult(Interface * intf);
    ///method to start a dialog to ask the user for a plugin name so that the 
    ///name can be defined at run time
    void SetPluginNameDialog( void );
@@ -213,9 +209,8 @@ protected:
    TextResultDialog* result_dlg;
    TextResultDialog* port_dlg;
    GeometryDialog* geom_dlg;
-   GeometryDataBuffer* geometryDataBuffer;
+   unsigned int id;
 
-   Interface mod_pack;
    wxPoint pos; //The Position to draw Icon;
 
    VE_XML::VE_Model::Model* veModel;

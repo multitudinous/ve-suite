@@ -43,6 +43,7 @@ GlobalParamDialog API
 #include <wx/string.h>
 #include <wx/msgdlg.h>
 
+#include <string>
 
 class wxTextCtrl;
 class wxComboBox;
@@ -52,7 +53,6 @@ class wxStaticText;
 class wxBoxSizer;
 class wxStaticBoxSizer;
 
-#include "VE_Conductor/Network/interface.h"
 #include "VE_Installer/include/VEConfig.h"
 
 class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
@@ -112,10 +112,9 @@ class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
   void entry2double(wxTextCtrl* entry, double * value);
   virtual bool TransferDataToWindow();
   virtual bool TransferDataFromWindow();
-  Interface globalparam_intf;
  public:
-  void UnPack(Interface* intf);
-  Interface* Pack(); 
+  //void UnPack(Interface* intf);
+  //Interface* Pack(); 
   
   double plant_capacity_d;
   

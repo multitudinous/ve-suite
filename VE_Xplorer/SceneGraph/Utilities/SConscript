@@ -26,10 +26,8 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
 ##                        'Utilities', s), srcs)
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_CADLib', 'VE_ShaderLib', 'VE_XMLLib'])
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD'),
-                        pj('#', buildDir, 'VE_Open','XML','Shader')])
+lib_env.Append(LIBS = ['VE_XML'])
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')])
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":

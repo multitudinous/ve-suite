@@ -38,17 +38,13 @@ srcs = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XMLLib', 'VE_ModelLib',
-                   'VE_CADLib', 'VE_ShaderLib', 'VE_Conductor_UtilitiesLib',
+env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XML','VE_Conductor_UtilitiesLib',
                    'VE_OpenModuleLib'])
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Conductor','Utilities'),
                         pj('#', buildDir, 'VE_Conductor','GUIPlugin'),
                         pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','Model'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD'),
-                        pj('#', buildDir, 'VE_Open','XML','Shader')])
+                        pj('#', buildDir, 'VE_Open','XML')])
 
 env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \

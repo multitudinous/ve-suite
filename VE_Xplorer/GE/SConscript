@@ -14,7 +14,7 @@ srcs = Split("""
 
 env = ves_pkg.getEnv().Copy()
 env.Append(
-            LIBS = ['VE_XMLLib', 'VE_CADLib', 'VE_ModelLib', 'VE_ShaderLib',
+            LIBS = ['VE_XML',
                    'VE_SceneGraph_UtilitiesLib', 
                    'VE_SceneGraphLib%s' %(execOsgPatTag),
                    'VE_UtilLib',
@@ -32,10 +32,7 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','GraphicalPlugin'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerNetwork'),
                         pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','Model'),
-                        pj('#', buildDir, 'VE_Open','XML','Shader'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD')])
+                        pj('#', buildDir, 'VE_Open','XML')])
 vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )

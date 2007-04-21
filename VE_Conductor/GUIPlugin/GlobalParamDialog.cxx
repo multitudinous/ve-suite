@@ -29,11 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
-#include "VE_Conductor/Network/interface.h"
 
 #include <wx/textctrl.h>
 #include <wx/combobox.h>
@@ -429,7 +426,7 @@ void GlobalParamDialog::entry2double(wxTextCtrl* entry, double * value)
   txt=entry->GetValue();
   (*value) = atof( ConvertUnicode( txt.c_str() ).c_str());
 }
-
+/*
 void GlobalParamDialog::UnPack(Interface *intf)
 {
   
@@ -488,3 +485,4 @@ Interface *GlobalParamDialog::Pack()
   
   return &globalparam_intf;
 }
+*/

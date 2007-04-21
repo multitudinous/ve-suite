@@ -38,7 +38,6 @@
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/UserPreferences.h"
-#include "VE_Conductor/Network/package.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
 #include "VE_Conductor/Framework/UI_TeacherTab.h"
@@ -1620,7 +1619,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	
 	         if ( std::string(result) != "" ) 
             {
-               Package p;
+              /* Package p;
                p.SetSysId("linkresult.xml");
                p.Load(result, strlen(result));
 
@@ -1652,10 +1651,10 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
                   v_value.push_back( wxString( value.c_str(), wxConvUTF8 ) );
                }
 
-               /*result_dlg->syngas->AddSeperator(' ');
+               result_dlg->syngas->AddSeperator(' ');
                result_dlg->syngas->AddSeperator('+');
-               result_dlg->syngas->AddSeperator(' ');*/
-               result_dlg->Set2Cols(v_desc, v_value);
+               result_dlg->syngas->AddSeperator(' ');
+               result_dlg->Set2Cols(v_desc, v_value);*/
 	         }
          }
     
@@ -1663,7 +1662,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       
          if (std::string(result)!="") 
          {
-            Package p;
+           /* Package p;
             p.SetSysId("linkresult.xml");
             p.Load(result, strlen(result));
 
@@ -1679,10 +1678,10 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	            v_desc.push_back( wxString( descs[i].c_str(), wxConvUTF8 ) );
 	            v_value.push_back( wxString( (p.GetInterfaceVector()[0].getString(descs[i])).c_str(), wxConvUTF8 ) );
 	         }
-	         /*result_dlg->syngas->AddSeperator(' ');
+	         result_dlg->syngas->AddSeperator(' ');
 	         result_dlg->syngas->AddSeperator('+');
-	         result_dlg->syngas->AddSeperator(' ');*/
-	         result_dlg->Set2Cols(v_desc, v_value);
+	         result_dlg->syngas->AddSeperator(' ');
+	         result_dlg->Set2Cols(v_desc, v_value);*/
          }
       }
       catch (CORBA::Exception &) 

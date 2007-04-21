@@ -29,19 +29,21 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Network/package.h"
 
 #include <wx/dirdlg.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
 #include <wx/string.h>
 
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/util/XMLString.hpp>
+
 IMPLEMENT_APP(REIApp);
+
+XERCES_CPP_NAMESPACE_USE
 
 bool REIApp::OnInit()
 {
@@ -54,7 +56,7 @@ bool REIApp::OnInit()
       std::cerr << "Error during Xerces-c Initialization.\n"
             << "  Exception message:"
             << XMLString::transcode(toCatch.getMessage()) << std::endl;
-      return 1;
+      return false;
    }
 
    SetAppName(_("VE-Conductor"));

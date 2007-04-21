@@ -68,7 +68,7 @@ REI_Plugin::REI_Plugin()
    result_dlg  = 0;
    port_dlg    = 0;
    geom_dlg     = 0;
-   geometryDataBuffer = 0;
+   //geometryDataBuffer = 0;
    // EPRI TAG
    financial_dlg = 0;
 
@@ -96,9 +96,9 @@ REI_Plugin::REI_Plugin()
    poly[2]=wxPoint(icon_w,icon_h);
    poly[3]=wxPoint(0,icon_h);
   
-   mod_pack._type = 1 ; //Module
-   mod_pack._category = 1; // normal modules
-   mod_pack._id = -1;
+   //mod_pack._type = 1 ; //Module
+   //mod_pack._category = 1; // normal modules
+   //mod_pack._id = -1;
    veModel = new Model();
    numberOfInputPorts = 0;
    numberOfOutputPorts = 0;
@@ -153,12 +153,6 @@ REI_Plugin::~REI_Plugin()
       veModel = 0;
    }
 
-   if ( geometryDataBuffer!=NULL )
-   {
-      delete geometryDataBuffer;
-      geometryDataBuffer = 0;
-   }
-
    // EPRI TAG
    if (financial_dlg!=NULL) 
    {
@@ -188,7 +182,7 @@ REI_Plugin::~REI_Plugin()
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetID(int id)
 {
-   mod_pack._id = id;
+   this->id = id;
 }
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetName( wxString pluginName )
@@ -354,7 +348,7 @@ void REI_Plugin::DrawID(wxDC* dc)
     }
   x=x/n_pts; y = y/n_pts;
 
-  text<<mod_pack._id;
+  //text<<mod_pack._id;
   dc->GetTextExtent(text, &w, &h);
   dc->DrawText(text, (x-w/2+xoff), (y-h/2+yoff));
   
@@ -422,7 +416,7 @@ UIDialog* REI_Plugin::Result(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 unsigned int REI_Plugin::GetID()
 {
-  return mod_pack._id;
+  return id;
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString REI_Plugin::GetConductorName()
@@ -465,7 +459,7 @@ bool REI_Plugin::Has3Ddata()
 }
 
 ////////////////////////////////////////////////////////////////////
-Interface* REI_Plugin::Pack()
+/*Interface* REI_Plugin::Pack()
 {
   //string result;
   
@@ -527,7 +521,7 @@ Interface* REI_Plugin::Pack()
  
   return &mod_pack ;//wxstr;
   
-}
+}*/
 ////////////////////////////////////////////////////////////////////
 Model* REI_Plugin::GetModel( void )
 {
@@ -549,7 +543,7 @@ Model* REI_Plugin::GetVEModel( void )
    }
    
    veModel->SetModelName( ConvertUnicode( name.c_str() ) );
-   veModel->SetModelID( mod_pack._id );
+   veModel->SetModelID( id );
    veModel->SetIconFilename( iconFilename );
    veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
 
@@ -693,7 +687,7 @@ Model* REI_Plugin::GetVEModel( void )
    return veModel;
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::UnPack(Interface * intf)
+/*void REI_Plugin::UnPack(Interface * intf)
 {
   std::vector<std::string> vars;
   
@@ -798,7 +792,7 @@ void REI_Plugin::UnPack(Interface * intf)
     financial_dlg->_om02_d = mod_pack.getDouble("OM02");
     financial_dlg->_om03_d = mod_pack.getDouble("OM03");
   }
-}
+}*/
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
 {
@@ -811,7 +805,7 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
 
    //veModel->SetObjectFromXMLData( modelElement );
    name = wxString( veModel->GetModelName().c_str(),wxConvUTF8 );
-   mod_pack._id = veModel->GetModelID();
+   id = veModel->GetModelID();
    std::string tempFilename = veModel->GetIconFilename();
    pos.x = veModel->GetIconLocation()->GetPoint().first;
    pos.y = veModel->GetIconLocation()->GetPoint().second;
@@ -934,7 +928,7 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
    //
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::UnPackResult(Interface* intf)
+/*void REI_Plugin::UnPackResult(Interface* intf)
 {
    //This will be module dependent. 
    //here is the Default implementation when using the 
@@ -954,8 +948,7 @@ void REI_Plugin::UnPackResult(Interface* intf)
       v_desc.push_back ( wxString(desc.c_str(),wxConvUTF8));
       v_value.push_back( wxString(value.c_str(),wxConvUTF8));
    }
-}
-
+}*/
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, long *var)
 {
@@ -988,7 +981,7 @@ void REI_Plugin::RegistVar(std::string vname, std::vector<std::string> *var)
 }
 
 ///////////////////////////////////////////////
-UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
+/*UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
 {
   //This default implementation is for the Gas and water Interface's Data package
   //New modules can override the function to implement its own port dialog
@@ -1091,8 +1084,7 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
    port_dlg->Set2Cols(gas_desc, gas_value);
 
    return port_dlg;
-}
-
+}*/
 // EPRI TAG
 ///////////////////////////////////////////////
 void REI_Plugin::FinancialData ()

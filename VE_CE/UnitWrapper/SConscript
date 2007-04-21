@@ -17,13 +17,9 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_XMLLib', 'VE_ModelLib', 'VE_CADLib',
-                   'VE_ShaderLib', 'VE_OpenModuleLib'])
+lib_env.Append(LIBS = ['VE_XML', 'VE_OpenModuleLib'])
 lib_env.Append(LIBPATH = [ pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','Model'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD'),
-                        pj('#', buildDir, 'VE_Open','XML','Shader')])
+                        pj('#', buildDir, 'VE_Open','XML')])
 
 lib_env.ParseConfig('flagpoll TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \

@@ -1,55 +1,13 @@
 ##Builds VE_XMLLib
-import os, sys, string
+import os, sys, string 
+import SConsAddons.Util as sca_util
 ##import practice
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR xerces_options')
 
-sources = Split("""
-   CreationEventHandler.cxx 
-   Command.cxx
-   DataValuePair.cxx
-   FloatArray.cxx
-   OneDDoubleArray.cxx
-   TwoDDoubleArray.cxx
-   ThreeDDoubleArray.cxx
-   OneDIntArray.cxx
-   TwoDIntArray.cxx
-   ThreeDIntArray.cxx
-   OneDStringArray.cxx
-   ParameterBlock.cxx
-   StateInfo.cxx
-   Transform.cxx
-   User.cxx
-   XMLCreator.cxx
-   XMLObject.cxx
-   XMLObjectFactory.cxx
-   XMLReaderWriter.cxx
-   DOMDocumentManager.cxx
-""")
-
-headers = Split("""
-   CreationEventHandler.h 
-   Command.h
-   DataValuePair.h
-   FloatArray.h
-   OneDDoubleArray.h
-   TwoDDoubleArray.h
-   ThreeDDoubleArray.h
-   OneDIntArray.h
-   TwoDIntArray.h
-   ThreeDIntArray.h
-   OneDStringArray.h
-   ParameterBlock.h
-   StateInfo.h
-   Transform.h
-   User.h
-   XMLCreator.h
-   XMLObject.h
-   XMLObjectFactory.h
-   XMLReaderWriter.h
-   DOMDocumentManager.h
-""")
+sources = sca_util.getSourcesRecursive('.')
+headers = sca_util.getHeadersRecursive('.')
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
@@ -64,11 +22,11 @@ else:
 
 xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_XMLLib',
+   lib = ves_pkg.createStaticAndSharedLibrary('VE_XML',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_XMLLib', lib_env,
+   lib = ves_pkg.createStaticLibrary('VE_XML', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

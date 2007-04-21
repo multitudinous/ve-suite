@@ -9,8 +9,6 @@ sources = Split("""
    ListTable.cxx 
    Plugin_base.cxx 
    GlobalParamDialog.cxx 
-   Geometry.cxx 
-   GeometryDataManager.cxx 
    PortDialog.cxx 
    ResultPanel.cxx 
    StringParse.cxx 
@@ -33,8 +31,6 @@ headers = Split("""
    ListTable.h 
    Plugin_base.h 
    GlobalParamDialog.h 
-   Geometry.h 
-   GeometryDataManager.h 
    PortDialog.h 
    ResultPanel.h 
    StringParse.h 
@@ -53,14 +49,10 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XMLLib', 'VE_ModelLib',
-                   'VE_CADLib', 'VE_ShaderLib', 'VE_OpenModuleLib'])
+lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XML','VE_OpenModuleLib'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','Model'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD'),
-                        pj('#', buildDir, 'VE_Open','XML','Shader')])
+                        pj('#', buildDir, 'VE_Open','XML')])
 lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode vpr --libs --cflags')
