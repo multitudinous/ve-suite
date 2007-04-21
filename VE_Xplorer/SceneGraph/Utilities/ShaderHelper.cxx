@@ -209,7 +209,7 @@ void ShaderHelper::LoadGLSLProgram(VE_XML::VE_Shader::Program* glslProgram)
    _attachGLSLProgramToStateSet();
 }
 ///////////////////////////////////////////////////////////////
-void ShaderHelper::_createGLSLShader(VE_XML::VE_Shader::Shader* shader)
+void ShaderHelper::_createGLSLShader(VE_XML::VE_Shader::ShaderPtr shader)
 {
    if(shader->GetShaderSource().empty())
    {
@@ -497,7 +497,7 @@ void ShaderHelper::UpdateUniform(VE_XML::VE_Shader::Uniform* uniformData)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////
-void ShaderHelper::_extractUniformsFromShader(VE_XML::VE_Shader::Shader* shader)
+void ShaderHelper::_extractUniformsFromShader(VE_XML::VE_Shader::ShaderPtr shader)
 {
    size_t nUniforms = shader->GetNumberOfUniforms();
    VE_XML::VE_Shader::Uniform* uniformData = 0;

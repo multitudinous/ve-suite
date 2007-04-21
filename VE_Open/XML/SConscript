@@ -4,13 +4,23 @@ import SConsAddons.Util as sca_util
 ##import practice
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options')
+Import('baseEnv ves_pkg LIBDIR xerces_options RootDir')
+openDir = os.path.abspath( pj(RootDir, 'VE_Open', 'XML') )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
 
-sources = sca_util.getSourcesRecursive('.')
-headers = sca_util.getHeadersRecursive('.')
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
+loki_srcs = Split("""
+   SmallObj.cpp
+   Singleton.cpp
+   SmartPtr.cpp
+""")
+loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s), 
+                loki_srcs)
+sources.extend(loki_srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
 ##Get apr config.
 if baseEnv.has_key('AprVersion'):
    if baseEnv[ 'AprVersion' ] >= "1.0":
@@ -29,6 +39,6 @@ else:
    lib = ves_pkg.createStaticLibrary('VE_XML', lib_env,
                                                installPrefix = LIBDIR)
    
-lib.addSources(sources)
+lib.addSources( sources )
 lib.addHeaders(headers,  pj( 'VE_Open', 'XML'))
 lib.build()

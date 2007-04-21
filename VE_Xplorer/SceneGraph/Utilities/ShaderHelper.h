@@ -42,6 +42,7 @@
  * a glsl program.
  */
 #include "VE_Installer/include/VEConfig.h"
+#include "VE_Open/XML/Shader/ShaderPtr.h"
 ///\todo This class still needs to be implemented for performer
 #ifdef _OSG
 #include <osg/StateSet>
@@ -61,12 +62,6 @@ namespace VE_Shader
    class Uniform;
    class TextureImage;
 }
-}
-
-namespace VE_XML{
-   namespace VE_Shader{
-      class Shader;
-   }
 }
 #include <string>
 #include <vector>
@@ -114,7 +109,7 @@ protected:
    ///helper functions
    ///Utility function to create a shader.
    ///\param shaderData The XML shader data.
-   void _createGLSLShader(VE_XML::VE_Shader::Shader* shaderData);
+   void _createGLSLShader(VE_XML::VE_Shader::ShaderPtr shaderData);
   
    ///Attach the program to the stateset
    ///\param override Flag to override the stateset above
@@ -122,7 +117,7 @@ protected:
 
    ///Extract uniforms from the shader.
    ///\param The shader to extract uniforms from.
-   void _extractUniformsFromShader(VE_XML::VE_Shader::Shader* shader);
+   void _extractUniformsFromShader(VE_XML::VE_Shader::ShaderPtr shader);
 
    ///Extract the texture images from the shader information.
    ///\param textureImage The texture image data.

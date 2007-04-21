@@ -62,16 +62,6 @@ Program::Program()
 Program::~Program()
 {
    _name.clear();
-   if(_vertexShader)
-   {
-      delete _vertexShader;
-      _vertexShader = 0;
-   }
-   if(_fragmentShader)
-   {
-      delete _fragmentShader;
-      _fragmentShader = 0;
-   }
 }
 /////////////////////////////////////  
 //Copy constructor                 //
@@ -80,8 +70,7 @@ Program::Program(const Program& rhs)
 :XMLObject(rhs)
 {
    _name = std::string("VEProgram");
-   _vertexShader = 0;
-   _fragmentShader = 0;
+
    if(rhs._vertexShader)
    {
       _vertexShader = new Shader(*rhs._vertexShader);
@@ -93,12 +82,12 @@ Program::Program(const Program& rhs)
    _name = rhs._name;
 }
 /////////////////////////////////////////////////
-void Program::SetVertexShader(Shader* vertShader)
+void Program::SetVertexShader(ShaderPtr vertShader)
 {
    _vertexShader = vertShader;
 }
 ///////////////////////////////////////////////////
-void Program::SetFragmentShader(Shader* fragShader)
+void Program::SetFragmentShader(ShaderPtr fragShader)
 {
    _fragmentShader = fragShader;
 }
@@ -152,12 +141,12 @@ void Program::SetObjectFromXMLData(DOMNode* xmlInput)
    }
 }
 ////////////////////////////////////
-Shader* Program::GetFragmentShader()
+ShaderPtr Program::GetFragmentShader()
 {
    return _fragmentShader;
 }
 //////////////////////////////////
-Shader* Program::GetVertexShader()
+ShaderPtr Program::GetVertexShader()
 {
    return _vertexShader;
 }
@@ -195,16 +184,6 @@ Program& Program::operator=(const Program& rhs)
 
    if(this != &rhs){
       XMLObject::operator=(rhs);
-      if(_vertexShader)
-      {
-         delete _vertexShader;
-         _vertexShader = 0;
-      }
-      if(_fragmentShader)
-      {
-         delete _fragmentShader;
-         _fragmentShader = 0;
-      }
       if(rhs._vertexShader)
       {
          _vertexShader = new Shader(*rhs._vertexShader);

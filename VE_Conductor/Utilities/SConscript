@@ -65,6 +65,8 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','GUIPlugin'),
                         pj('#', buildDir, 'VE_Open','XML')])
 lib_env.ParseConfig('flagpoll TAO TAO_Messaging TAO_Valuetype  --cflags --libs')
 lib_env.ParseConfig('flagpoll vpr --cflags --libs')
+lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
+
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":

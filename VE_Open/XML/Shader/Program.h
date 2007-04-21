@@ -34,6 +34,7 @@
 #define VE_PROGRAM_H
 
 #include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/Shader/ShaderPtr.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
@@ -46,14 +47,10 @@
  * Class that stores an data and information neccessary to create a glsl Program program.
  */
 
-namespace VE_XML{
+namespace VE_XML
+{
 namespace VE_Shader
 {
-   class Shader;
-}
-}
-namespace VE_XML{
-namespace VE_Shader{
 class VE_SHADER_EXPORTS Program:public VE_XML::XMLObject{
 public:
    ///Constructor
@@ -67,12 +64,12 @@ public:
 
    ///Set the vertex shader for this program
    ///\param vertShader The vertex shader.
-   void SetVertexShader(VE_Shader::Shader* vertShader);
+   void SetVertexShader(VE_Shader::ShaderPtr vertShader);
 
    
    ///Set the fragment shader for this program
    ///\param fragShader The fragment shader.
-   void SetFragmentShader(VE_Shader::Shader* fragShader);
+   void SetFragmentShader(VE_Shader::ShaderPtr fragShader);
 
    ///Set the name of the glsl program
    ///\param name The name of the program.
@@ -83,10 +80,10 @@ public:
    void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
 
    ///Get the fragment shader.
-   VE_Shader::Shader* GetFragmentShader();
+   VE_Shader::ShaderPtr GetFragmentShader();
 
    ///Get the vertex shader.
-   VE_Shader::Shader* GetVertexShader();
+   VE_Shader::ShaderPtr GetVertexShader();
 
    ///Get the name of the program.
    std::string GetProgramName();
@@ -103,8 +100,8 @@ protected:
    void _updateProgramName();
 
    std::string _name;///< The program name.
-   VE_Shader::Shader* _vertexShader;///< The vertex shader.
-   VE_Shader::Shader* _fragmentShader;///< The fragment shader.
+   VE_Shader::ShaderPtr _vertexShader;///< The vertex shader.
+   VE_Shader::ShaderPtr _fragmentShader;///< The fragment shader.
 };
 }
 template<>

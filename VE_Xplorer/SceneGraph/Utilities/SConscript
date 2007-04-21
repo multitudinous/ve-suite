@@ -28,6 +28,7 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_XML'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')])
+lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
