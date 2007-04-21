@@ -12,11 +12,18 @@ headers = sca_util.getHeadersRecursive( openDir )
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 loki_srcs = Split("""
    SmallObj.cpp
+   Singleton.cpp
    SmartPtr.cpp
 """)
 loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s), 
                 loki_srcs)
 sources.extend(loki_srcs)
+
+loki_headers = Split("""
+   SmartPtr.h
+""")
+loki_headers = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'include', 'loki',s), 
+                loki_headers)
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
@@ -40,4 +47,5 @@ else:
    
 lib.addSources( sources )
 lib.addHeaders(headers,  pj( 'VE_Open', 'XML'))
+#lib.addHeaders( loki_headers,'' )
 lib.build()
