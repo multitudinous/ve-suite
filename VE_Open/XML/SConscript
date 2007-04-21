@@ -12,7 +12,6 @@ headers = sca_util.getHeadersRecursive( openDir )
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', s), srcs)
 loki_srcs = Split("""
    SmallObj.cpp
-   Singleton.cpp
    SmartPtr.cpp
 """)
 loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s), 
