@@ -49,7 +49,6 @@ static const char* vrPhongVertSource = {
        "gl_ClipVertex = gl_ModelViewMatrix*gl_Vertex;\n"
    " \n"
       "eyePos = gl_ClipVertex;\n"
-      "gl_FrontSecondaryColor.xyz = normalize(gl_LightSource[0].position).xyz;\n"
      
       "gl_TexCoord[0].s=dot(eyePos,gl_EyePlaneS[0]); \n"
       "gl_TexCoord[0].t=dot(eyePos,gl_EyePlaneT[0]); \n"
@@ -70,9 +69,15 @@ static const char* vrPhongVertSource = {
       "gl_TexCoord[2].y = gl_TexCoord[0].y - stepSize.y;\n"
       "gl_TexCoord[3].z = gl_TexCoord[0].z - stepSize.z;\n"
       "//Set the alphas of the extra texture coords as the back slice tcoord\n"
-      "gl_TexCoord[1].q = gl_MultiTexCoord1.s;\n"
-      "gl_TexCoord[2].q = gl_MultiTexCoord1.t;\n"
-      "gl_TexCoord[3].q = gl_MultiTexCoord1.r;\n"
+      "gl_TexCoord[1].q = gl_MultiTexCoord1.x;\n"
+      "gl_TexCoord[2].q = gl_MultiTexCoord1.y;\n"
+      "gl_TexCoord[3].q = gl_MultiTexCoord1.z;\n"
+
+      "vec3 lightVector = normalize(gl_ModelViewMatrix*gl_LightSource[0].position).xyz;\n"
+      
+      "gl_TexCoord[4].q = lightVector.x;\n"
+      "gl_TexCoord[5].q = lightVector.y;\n"
+      "gl_TexCoord[6].q = lightVector.z;\n"
    "} \n"
 };
 
@@ -101,12 +106,13 @@ static const char* vrPhongFragSource = {
       "backwardDiff.z = texture3D(volumeData,gl_TexCoord[3].xyz).a;\n"
       "\n"
       "vec3 normal = normalize(backwardDiff-forwardDiff  );\n"
-      "//vec4 textureColor = (fastUpdate==true)?texture2D(transferFunction,vec2(frontScalar)):texture2D(transferFunction,vec2(frontScalar,backScalar));\n"
-      "vec4 textureColor = (fastUpdate==true)?vec4(gl_TexCoord[0].xyz,.2):vec4(backCoord,.2);\n"
+      "vec4 textureColor = (fastUpdate==true)?texture2D(transferFunction,vec2(frontScalar)):texture2D(transferFunction,vec2(frontScalar,backScalar));\n"
+      "//vec4 textureColor = (fastUpdate==true)?vec4(gl_TexCoord[0].xyz,.2):vec4(backCoord,.2);\n"
       "float l = length(normal);\n"
       "bool computeShade = (l> .0001)?true:false;\n"
-      "/*if(computeShade){\n"
-      "   vec3 L=normalize(gl_SecondaryColor.xyz); \n"
+      "if(computeShade){\n"
+      "   vec3 lightVector = vec3(gl_TexCoord[4].q,gl_TexCoord[5].q,gl_TexCoord[6].q);\n"
+      "   vec3 L=normalize(lightVector); \n"
       "   float NDotL=max(dot(normal,L),0.0); \n"
 
       "   vec3 V=normalize(eyePos.xyz); \n"
@@ -117,7 +123,7 @@ static const char* vrPhongFragSource = {
          "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*textureColor.rgb*NDotL; \n"
          "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*pow(RDotL,50.0); \n"
          "gl_FragColor =   vec4(TotalDiffuse+TotalSpecular,textureColor.a);\n"
-      "}else*/\n"
+      "}else\n"
       "{\n"
       "   gl_FragColor = textureColor;\n"
       "}\n"

@@ -118,7 +118,7 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("volumeData",0));
    _ss->addUniform(new osg::Uniform("fastUpdate",_preIntegrate));
    _ss->addUniform(new osg::Uniform("transferFunction",1)); 
-   _ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
+   //_ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
    _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
 
    _tUnit = 0;
