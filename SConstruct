@@ -299,9 +299,9 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
-   ##-Wall -Wold-style-cast -Wundef -Wsign-compare -Wconversion -Wpointer-arith -pedantic
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
+   #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
