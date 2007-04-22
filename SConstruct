@@ -298,6 +298,8 @@ if not SConsAddons.Util.hasHelpFlag():
    ##base_bldr = base_bldr.clone()
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
+   ##possible additional flags
+   ##-Wall -Wold-style-cast -Wundef -Wsign-compare -Wconversion -Wpointer-arith -pedantic
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
    baseEnv.Append(BUILDERS = builders)
@@ -347,7 +349,8 @@ if not SConsAddons.Util.hasHelpFlag():
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    shareSubdirs = pj(buildDir,'share')
-   docsSubdirs = pj ('#', 'share', 'docs')
+   docsSubdirs = pj('#', 'share', 'docs')
+   lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
 
    ##Set the Sconscript files to build.
    if 'xplorer' in COMMAND_LINE_TARGETS:
@@ -369,7 +372,9 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs = [ docsSubdirs ]
       baseEnv.Alias('docs', docsSubdirs)
    else:
-      ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, xplorerSubdirs, ceSubdirs, veiSubdirs, shareSubdirs, fpcSubdirs]
+      ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
+                  xplorerSubdirs, ceSubdirs, veiSubdirs, 
+                  shareSubdirs, fpcSubdirs, lokiSubdirs]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:

@@ -1,0 +1,28 @@
+##Builds loki
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir')
+openDir = os.path.abspath( pj(RootDir, 'external', 'loki-0.1.6') )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src') )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'include')  )
+headers = map(lambda s: pj('include', s), 
+                headers)
+sources = map(lambda s: pj('src', s), 
+                sources)
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('loki.0.1.6',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('loki.0.1.6', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers, '..')
+lib.build()
