@@ -3,10 +3,10 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg GetArch osg_options VE_SUITE_VERSION vtk_options')
+Import('ves_pkg GetArch osg_options VE_SUITE_VERSION vtk_options xerces_options')
 
 lib_env = ves_pkg.getEnv().Copy()
-
+fpcFile = []
 # Build up the provides vars for the .fpc files
 provides = "osg"
 arch = GetArch()
@@ -41,9 +41,9 @@ submap = {
 ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
 installed_targets = []
 name_parts = ['osg', cppdom_version_str, arch]
-pc_filename = "-".join(name_parts) + ".fpc"
+osgFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
-cppdom_pc = lib_env.ConfigBuilder(pc_filename, 
+cppdom_pc = lib_env.ConfigBuilder(osgFileName, 
                      pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
 
 # Build up the provides vars for the .fpc files
@@ -80,9 +80,9 @@ submap = {
 ##installed_targets += env.Install(pj(PREFIX, 'share', 'pkgconfig'), 'gmtl.pc')
 installed_targets = []
 name_parts = ['ves', ves_version_str, arch]
-pc_filename = "-".join(name_parts) + ".fpc"
+vesFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
-ves_pc = lib_env.ConfigBuilder(pc_filename, 
+ves_pc = lib_env.ConfigBuilder(vesFileName, 
                         pj('#','VE_Installer','fpc','ves.fpc.in'), submap = submap)
 
 # Build up the provides vars for the .fpc files
@@ -106,7 +106,7 @@ submap = {
    '@includedir@'                : inst_paths['include'],
    '@ves_extra_cxxflags@'        : '',
    '@ves_extra_include_dirs@'    : '',
-   '@ves_libs@'                  : '-L${prefix}/lib -lvtkImaging -lvtkGraphics -lvtkCommon -lvtkHybrid -lvtkIO -lvtkFiltering -lvtkRendering -lvtkParallel -lvtkexpat -lvtkpng -lvtktiff -lvtksys -lvtkjpeg -lvtkexoIIc -lvtkftgl -lvtkfreetype -lvtkDICOMParser -lvtkzlib -lvtkMPEG2Encode -lvtkNetCDF',
+   '@vtk_libs@'                  : '-L${prefix}/lib -lvtkImaging -lvtkGraphics -lvtkCommon -lvtkHybrid -lvtkIO -lvtkFiltering -lvtkRendering -lvtkParallel -lvtkexpat -lvtkpng -lvtktiff -lvtksys -lvtkjpeg -lvtkexoIIc -lvtkftgl -lvtkfreetype -lvtkDICOMParser -lvtkzlib -lvtkMPEG2Encode -lvtkNetCDF',
    '@libdir@'                    : inst_paths['lib'],
    '@lib_subdir@'                : lib_env['libdir'],
    '@VERSION_MAJOR@'             : str(5),
@@ -116,11 +116,47 @@ submap = {
 }
 
 name_parts = ['vtk', vtk_version_str, arch]
-pc_filename = "-".join(name_parts) + ".fpc"
+vtkFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
-ves_pc = lib_env.ConfigBuilder(pc_filename, 
+ves_pc = lib_env.ConfigBuilder(vtkFileName, 
                         pj('#','VE_Installer','fpc','vtk.fpc.in'), submap = submap)
 
+# Build up the provides vars for the .fpc files
+provides = "xerces"
+arch = GetArch()
+inst_paths = {}
+inst_paths['base'] = os.path.abspath( xerces_options.getSettings()[0][1] )
+inst_paths['lib'] = pj(inst_paths['base'], lib_env['libdir'])
+#inst_paths['flagpoll'] = pj( lib_env['prefix'],lib_env['libdir'], 'flagpoll')
+#inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
+inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
+inst_paths['include'] = pj(inst_paths['base'], 'include')   
+xerces_version_str = '1.2.7'
+
+# Build up substitution map
+submap = {
+   '@provides@'                  : provides,
+   '@prefix@'                    : inst_paths['base'],
+   '@exec_prefix@'               : '${prefix}',
+   '@xerces_cxxflags@'              : '-I${prefix}/include',
+   '@includedir@'                : inst_paths['include'],
+   '@ves_extra_cxxflags@'        : '',
+   '@ves_extra_include_dirs@'    : '',
+   '@xerces_libs@'                  : '-L${prefix}/lib -lxerces-c',
+   '@libdir@'                    : inst_paths['lib'],
+   '@lib_subdir@'                : lib_env['libdir'],
+   '@VERSION_MAJOR@'             : str(5),
+   '@VERSION_MINOR@'             : str(1),
+   '@arch@'                      : arch,
+   '@version@'                   : vtk_version_str,
+}
+
+name_parts = ['xerces', xerces_version_str, arch]
+xercesFileName = "-".join(name_parts) + ".fpc"
+##tempName = pj(inst_paths['flagpoll'], pc_filename)
+ves_pc = lib_env.ConfigBuilder(xercesFileName, 
+                        pj('#','VE_Installer','fpc','xerces.fpc.in'), submap = submap)
+
 fpcBundle = ves_pkg.createFileBundle( pj('lib','flagpoll' )  )
-fpcFile = sca_util.getFilesRecursiveByExt( '.', ['.fpc'] )
-fpcBundle.addFiles( fpcFile )
+##fpcFile = sca_util.getFilesRecursiveByExt( '.', ['.fpc'] )
+fpcBundle.addFiles( [osgFileName, vesFileName, vtkFileName, xercesFileName] )
