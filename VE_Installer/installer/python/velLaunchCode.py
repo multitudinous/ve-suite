@@ -92,11 +92,11 @@ class Launch:
             pids = []
             pids.append(subprocess.Popen(self.NameServiceCall(),
                                          stdout = self.outputDestination,
-                                         stderr = subprocess.STDOUT).pid)
+                                         stderr = self.outputDestination).pid)
             sleep(5)
             pids.append(subprocess.Popen(self.ServerCall(),
                                          stdout = self.outputDestination,
-                                         stderr = subprocess.STDOUT).pid)
+                                         stderr = self.outputDestination).pid)
             sleep(5)
             self.nameserverPids = pids
         ##Cluster Xplorer section
@@ -125,7 +125,7 @@ class Launch:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
             subprocess.Popen(self.XplorerCall(),
-                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
+                             stdout = self.outputDestination, stderr = self.outputDestination)
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
@@ -133,7 +133,7 @@ class Launch:
             if self.settings["VESFile"]:
                 sleep(10)
             subprocess.Popen(self.ConductorCall(),
-                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
+                             stdout = self.outputDestination, stderr = self.outputDestination)
         print "Finished sending launch commands."
         return
 
