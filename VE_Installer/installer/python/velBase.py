@@ -23,7 +23,7 @@ else:
     VELAUNCHER_DIR = sys.path[0]
 
 ##Fixes directory passed for velauncher to vesuite.
-if os.path.basename(VELAUNCHER_DIR) == "velauncher":
+if os.path.basename(VELAUNCHER_DIR) == "velauncher.exe":
     VELAUNCHER_DIR = os.path.dirname(VELAUNCHER_DIR)
 DIRECTORY_DEFAULT = join(os.path.dirname(VELAUNCHER_DIR),
                          "share", "vesuite", "examples")
