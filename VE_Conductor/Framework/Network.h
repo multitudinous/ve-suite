@@ -57,6 +57,7 @@ Network API
 #include <vector>
 #include <map>
 #include <iostream>
+#include <wx/dcclient.h>
 class GlobalParamDialog;
 class wxProgressDialog;
 namespace VE_XML
@@ -194,10 +195,10 @@ public:
    
    void SetXplorerInterface( VjObs_ptr veEngine );
    bool SetActiveModel( void );
-   //void HighlightSelectedIcon2(unsigned int);
-   void HighlightSelectedIcon( REI_Plugin* cur_module);
-   void DrawPorts( REI_Plugin* cur_module, bool flag);
+   void HighlightSelectedIcon( REI_Plugin* cur_module, wxDC &dc);
+   void DrawPorts( REI_Plugin* cur_module, bool flag, wxDC &dc);
    bool IsDragging();
+   void SetSelectedModule(int mod);
 
 protected:
 
@@ -280,6 +281,7 @@ private:
    bool isLoading;
    bool isDataSet;
    bool dragging;
+   wxBitmap * bitmapBuffer;
 
    Vistab* vistab;///< The visualization tab
 

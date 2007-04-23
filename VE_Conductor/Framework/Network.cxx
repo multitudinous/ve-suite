@@ -161,6 +161,10 @@ Network::Network(wxWindow* parent, int id)
    dragging = false;
    SetBackgroundColour(*wxWHITE);
    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+
+   int virX, virY;
+   GetVirtualSize(&virX, &virY);
+   bitmapBuffer = new wxBitmap(virX, virY);
 }
 
 Network::~Network()
@@ -201,7 +205,7 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
    //wxPaintDC dc(this);
    //PrepareDC(dc);
   
-   wxBufferedPaintDC dc(this, wxBUFFER_VIRTUAL_AREA);
+   wxBufferedPaintDC dc(this, *bitmapBuffer, wxBUFFER_VIRTUAL_AREA);
 
    dc.Clear();
    dc.SetUserScale( userScale.first, userScale.second );
@@ -388,6 +392,8 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 			else
 				SelectTag(x, y); 
 		}
+	Refresh(true);
+	Update();
 	}
 }
 
@@ -503,7 +509,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 			long x = evtpos.x;
 			long y = evtpos.y;
 			TryLink(x, y, m_selMod, m_selFrPort, dc, true); // draw input ports
-			DrawPorts( modules[m_selMod].GetPlugin(), true );
+			//DrawPorts( modules[m_selMod].GetPlugin(), true );
 		}
 
 		//drag output port
@@ -516,7 +522,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 			long x = evtpos.x;
 			long y = evtpos.y;
 			TryLink(x, y, m_selMod, m_selToPort, dc, false); // draw output ports
-			DrawPorts( modules[m_selMod].GetPlugin(), true );
+			//DrawPorts( modules[m_selMod].GetPlugin(), true );
 		}
 
 		//drag module
@@ -529,8 +535,8 @@ void Network::OnMouseMove(wxMouseEvent& event)
 			long x = evtpos.x;
 			long y = evtpos.y;
 			MoveModule(x, y, m_selMod);//, dc);
-			HighlightSelectedIcon( modules[m_selMod].GetPlugin());
-			DrawPorts( modules[m_selMod].GetPlugin(), true );
+			//HighlightSelectedIcon( modules[m_selMod].GetPlugin());
+			//DrawPorts( modules[m_selMod].GetPlugin(), true );
 		}
 	}
 }
@@ -556,9 +562,9 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		DropLinkCon(x, y, m_selLink, m_selLinkCon, dc);
 		m_selLinkCon = -1;
 		//m_selLink=-1;
-		Refresh(true);
-		Update();
-		links[m_selLink].DrawLinkCon( true, userScale ); 
+		//Refresh(true);
+		//Update();
+		//links[m_selLink].DrawLinkCon( true, userScale ); 
 	}
 
 	//release tag
@@ -575,8 +581,8 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		// drop the tag we just created
 		DropTag(x, y, m_selTag, dc);
 		//m_selTag=-1;
-		Refresh(true);
-		Update();
+		//Refresh(true);
+		//Update();
 	}
 
 	//release tag connection
@@ -594,8 +600,8 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		DropTagCon(x, y, m_selTag, m_selTagCon, dc);
 		//m_selTag=-1;
 		m_selTagCon=-1;
-		Refresh(true);
-		Update();
+		//Refresh(true);
+		//Update();
 	}
 
 	//release start point of link
@@ -613,8 +619,8 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		DropLink(x, y, m_selMod, m_selFrPort, dc, true);
 		//m_selMod = -1;
 		m_selFrPort = -1;
-		Refresh(true);
-		Update();
+		//Refresh(true);
+		//Update();
 	}
 
 	//release end point of link
@@ -632,8 +638,8 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		DropLink(x, y, m_selMod, m_selToPort, dc, false);
 		//m_selMod = -1;
 		m_selToPort = -1;
-		Refresh(true);
-		Update();
+		//Refresh(true);
+		//Update();
 	}
 
 	//release the module
@@ -649,11 +655,13 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 
 		//drop a module after dragging it around
 		DropModule(x, y, m_selMod );
-		Refresh(true);
-		Update();
-		HighlightSelectedIcon( modules[m_selMod].GetPlugin());
-		DrawPorts( modules[m_selMod].GetPlugin(), true );
+		//Refresh(true);
+		//Update();
+		//HighlightSelectedIcon( modules[m_selMod].GetPlugin());
+		//DrawPorts( modules[m_selMod].GetPlugin(), true );
 	}
+	//Refresh(true);
+	//Update();
 }
 
 ////////////////////////////////////////////////////////////////
@@ -705,6 +713,8 @@ void Network::OnMRightDown(wxMouseEvent& event)
    SelectMod(x, y, dc);
    if (m_selMod < 0)
 	   SelectLink(x, y );
+   Refresh(true);
+   Update();
    /////////////////////////////////////////////////
 
    wxMenu pop_menu( _("Action"));
@@ -895,11 +905,13 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
       temp.SetPoint( *(Near.GetPoint( 0 )) );
   
   *(links[ m_selLink ].GetPolygon()) = temp;
-  links[m_selLink].DrawLinkCon( true, userScale );
-  m_selLink = -1;
+  //links[m_selLink].DrawLinkCon( true, userScale );
+  //m_selLink = -1;
   m_selLinkCon = -1;
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-  ReDrawAll();
+  //ReDrawAll();
+   Refresh(true);
+   Update();
     
 }
 /////////////////////////////////////////////////////
@@ -956,7 +968,9 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
    
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
    //  Refresh(false);
-   ReDrawAll();
+   //ReDrawAll();
+   Refresh(true);
+   Update();
 }
 
 /////////////////////////////////////////////////////
@@ -985,8 +999,9 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
    }
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-   //Refresh(false);
-   ReDrawAll();
+   //ReDrawAll();
+   Refresh(true);
+   Update();
 }
 
 /////////////////////////////////////////////////////
@@ -1003,7 +1018,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
    
-   links[m_selLink].DrawLinkCon( false, userScale );
+   //links[m_selLink].DrawLinkCon( false, userScale );
 
    for (iter=links[m_selLink].GetPoints()->begin(), i=0; iter!=links[m_selLink].GetPoints()->end(); iter++, i++)
       if ( i == m_selLinkCon )
@@ -1018,10 +1033,12 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
          ++iter;
       }
 
-   links[m_selLink].DrawLinkCon( true, userScale );
+   //links[m_selLink].DrawLinkCon( true, userScale );
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-   ReDrawAll();
+   //ReDrawAll();
+   Refresh(true);
+   Update();
 }
 
 /////////////////////////////////////////////////////
@@ -1106,20 +1123,9 @@ int Network::SelectMod( int x, int y, wxDC &dc )
       temp.y = y;
       
       if ( modules[i].GetPolygon()->inside( temp ) )
-	   {
-         // I think...this means we have already been 
-         // through here and is the same module selected -- mccdo
-	 //     if ( m_selMod == i )
-	  //    {
-            // in the future send select module command -- mccdo
-        //    return i;
-        // }
-         // lets draw some ports sense the module is selected
-	     DrawPorts( modules[i].GetPlugin(), true );
-         HighlightSelectedIcon( modules[i].GetPlugin());
-         // now we are officially selected
-	      m_selMod = i;
-
+	  {
+		  // now we are officially selected
+		  m_selMod = i;
 	      return i;
 	   }
    }
@@ -1147,11 +1153,12 @@ int Network::SelectLink(int x, int y)
       if ( links[i].GetPolygon()->inside( temp ) )
 	   {
          //draw link connectors
-	      links[i].DrawLinkCon( true, userScale ); 
+	      //links[i].DrawLinkCon( true, userScale ); 
 	      m_selLink = i;
 	      return i;
 	   }
    }
+   m_selLink = -1;
    return -1;
 }
 
@@ -1161,8 +1168,8 @@ void Network::UnSelectLink(wxDC &dc)
    //wipe link connectors
    //links[m_selLink].DrawLinkCon( false, userScale );
    m_selLink = -1;
-   Refresh(true);
-   Update();
+   //Refresh(true);
+   //Update();
    //ReDraw(dc);
 }
 
@@ -1533,8 +1540,8 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
    Update();
    //ReDraw(dc);
 
-   if ( dest_mod >=0 )
-      DrawPorts( modules[dest_mod].GetPlugin(), true); //draw the ports
+   //if ( dest_mod >=0 )
+   //   DrawPorts( modules[dest_mod].GetPlugin(), true); //draw the ports
 
    dc.SetPen(*wxBLACK_PEN);
    dc.DrawLine( offSet.x, offSet.y, x, y);
@@ -1573,7 +1580,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
 
    if (dest_mod>=0)
    {
-      DrawPorts( modules[dest_mod].GetPlugin(), false ); //Wipe off the port rect
+      //DrawPorts( modules[dest_mod].GetPlugin(), false ); //Wipe off the port rect
       bbox = modules[dest_mod].GetPlugin()->GetBBox();
 
       temp.x = x - bbox.x;
@@ -1584,7 +1591,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    wxPoint offSet;
    if ( flag )
    {
-      DrawPorts(modules[mod].GetPlugin(), false); //Wipe off the port rect
+      //DrawPorts(modules[mod].GetPlugin(), false); //Wipe off the port rect
       offSet = GetPointForSelectedPlugin( mod, pt, "input" );
 
       if (dest_mod>=0)
@@ -1610,7 +1617,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    }
    else    // If ouput port
    {
-      DrawPorts(modules[mod].GetPlugin(), false); //Wipe off the port rect
+      //DrawPorts(modules[mod].GetPlugin(), false); //Wipe off the port rect
       offSet = GetPointForSelectedPlugin( mod, pt, "output" );
 
       // check if the drop point is a out port
@@ -1683,7 +1690,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
       }
    }
 
-   m_selMod = -1;
+   //m_selMod = -1;
    m_selFrPort = -1;
    m_selToPort = -1;
    //ReDrawAll();
@@ -1779,7 +1786,7 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
 
    Refresh(true);
    Update();
-   links[ln].DrawLinkCon( true, userScale );
+   //links[ln].DrawLinkCon( true, userScale );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -2182,6 +2189,17 @@ void Network::ReDraw(wxDC &dc)
       modules[ iter->first ].GetPlugin()->DrawName(&dc);
    }
 
+   if(m_selMod >= 0)
+   {
+	   HighlightSelectedIcon( modules[m_selMod].GetPlugin(), dc);
+	   DrawPorts( modules[m_selMod].GetPlugin(), true, dc);
+   }
+
+   if(m_selLink >= 0)
+   {
+	   links[m_selLink].DrawLinkCon( true, userScale, dc ); 
+   }
+
    // draw all the links
    for ( size_t i = 0; i < links.size(); ++i )
       links[i].DrawLink( true, dc, userScale );
@@ -2193,7 +2211,7 @@ void Network::ReDraw(wxDC &dc)
 }
 
 /////////////////////////////////////////////////////////////////////
-void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
+void Network::DrawPorts( REI_Plugin* cur_module, bool flag, wxDC &dc )
 {
    // flag sets whether we we are erasing the ports or not 
    // This function draws the input and output ports on a selected module
@@ -2206,8 +2224,8 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
    wxCoord xoff, yoff;
    int num;
 
-   wxClientDC dc(this);
-   PrepareDC(dc);
+   //wxClientDC dc(this);
+   //PrepareDC(dc);
    dc.SetUserScale( userScale.first, userScale.second );
 
    bport[0]=wxPoint(0,0);
@@ -2312,7 +2330,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag )
 }
 
 /////////////////////////////////////////////////////////////////////
-void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
+void Network::HighlightSelectedIcon (REI_Plugin* cur_module, wxDC &dc)
 {
 	if (!cur_module)
 	  return;
@@ -2328,8 +2346,8 @@ void Network::HighlightSelectedIcon (REI_Plugin* cur_module)
 	int highlightBoxWidth = tempWidth;// + 10;
 	int highlightBoxHeight = tempHeight;// + 10;
 	
-	wxClientDC dc(this);
-	PrepareDC(dc);
+	//wxClientDC dc(this);
+	//PrepareDC(dc);
 	dc.SetUserScale( userScale.first, userScale.second );
 	bport[0] = wxPoint(tempPoint.x, tempPoint.y);
 	bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
@@ -3418,4 +3436,17 @@ void Network::OnModelSounds(wxCommandEvent& event)
 bool Network::IsDragging()
 {
 	return dragging;
+}
+///////////////////////////////////////////////////
+void Network::SetSelectedModule(int mod)
+{
+	m_selFrPort = -1; 
+	m_selToPort = -1; 
+	m_selLink = -1; 
+	m_selLinkCon = -1; 
+	m_selTag = -1; 
+	m_selTagCon = -1; 
+	m_selMod = mod;
+	Refresh(true);
+	Update();
 }
