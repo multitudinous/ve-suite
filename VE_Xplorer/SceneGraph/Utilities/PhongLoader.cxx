@@ -74,11 +74,11 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    //std::cout<<"Loading shader!!"<<std::endl;
    //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
    //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
-   VE_XML::VE_Shader::Shader* vertShader = new VE_XML::VE_Shader::Shader();
+   VE_XML::VE_Shader::ShaderPtr vertShader = new VE_XML::VE_Shader::Shader();
    vertShader->SetShaderType("Vertex");
    vertShader->SetShaderSource(vertexSource);
    
-   VE_XML::VE_Shader::Shader* fragShader = new VE_XML::VE_Shader::Shader();
+   VE_XML::VE_Shader::ShaderPtr fragShader = new VE_XML::VE_Shader::Shader();
    fragShader->SetShaderType("Fragment");
    fragShader->SetShaderSource(fragmentSource);
 
