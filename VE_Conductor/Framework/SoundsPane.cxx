@@ -230,7 +230,6 @@ void SoundsPane::_updateSoundsInformationFromModel()
             _numSounds = 0;
             ///Some kind of error.
             break;
-
          }
 
          VE_XML::Command* veCommand = new VE_XML::Command();
@@ -264,7 +263,6 @@ void SoundsPane::_updateSoundsInformationFromModel()
    }
    else
    {
-      
       if ( _numSounds == 0 )
       {
          wxString noFiles("No Sound Files", wxConvUTF8);
@@ -277,9 +275,9 @@ void SoundsPane::_updateSoundsInformationFromModel()
       else
       {
          _soundCBox = new wxCheckListBox( this, SOUND_CBOX, wxDefaultPosition, 
-                                    wxDefaultSize, _loadedSounds, 
-                                    0, wxDefaultValidator,
-                                    wxT("Sound Files") );
+                                          wxDefaultSize, _loadedSounds, 
+                                          0, wxDefaultValidator,
+                                          wxT("Sound Files") );
          _soundCBox->Enable( true );
       }
    }

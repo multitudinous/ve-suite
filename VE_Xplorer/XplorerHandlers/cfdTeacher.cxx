@@ -145,11 +145,11 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::DCS* worldDCS )
 
    //this->node = new VE_SceneGraph::CADEntityHelper* [ this->numFiles ];
   
-   for (int i=0; i<this->pfb_count; i++)
+   /*for (int i=0; i<this->pfb_count; i++)
    {
       this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
 	   this->node.back()->LoadFile( this->pfbFileNames[ i ] );
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::~cfdTeacher( )
@@ -172,7 +172,17 @@ cfdTeacher::~cfdTeacher( )
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
 {
-   return this->node[i];
+   //only load the current one so clear out the list
+   if(node.size() > 0)
+   {
+      this->dcs->removeChild( this->node.back()->GetNode() );
+      delete this->node.back();
+      this->node.clear();
+   }
+
+   this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
+	this->node.back()->LoadFile( this->pfbFileNames[ i ] );
+   return this->node.back();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* cfdTeacher::GetDCS()
@@ -252,8 +262,8 @@ void cfdTeacher::RecordScene()
       writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), pfb_filename);
    }
 
-   this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
-   this->node.back()->LoadFile( this->pfbFileNames.back() );
+   /*this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
+   this->node.back()->LoadFile( this->pfbFileNames.back() );*/
    // store the active geometry and viz objects as a pfb
    // (but not the sun, menu, laser, or text)
  
@@ -266,19 +276,19 @@ void cfdTeacher::RecordScene()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::LoadScene(unsigned int whichChild)
 {
-   if ( this->GetDCS()->getNumChildren() == 0 )
+   //if ( this->GetDCS()->getNumChildren() == 0 )
    {
       vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: addChild" 
                          << std::endl << vprDEBUG_FLUSH;
             
       this->GetDCS()->addChild( this->getpfNode( whichChild )->GetNode() );
    }
-   else
+   /*else
    {
       vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: replaceChild" 
                          << std::endl << vprDEBUG_FLUSH;
       this->GetDCS()->replaceChild( this->GetDCS()->GetChild( 0 ), this->getpfNode( whichChild )->GetNode() );
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::ClearStoredScenes()
