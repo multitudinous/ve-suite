@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="gadget_d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgSimd.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib xerces-c_2.lib wxbase28.lib wxmsw28_core.lib cppdom.lib"
 				ShowProgress="2"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="1"
@@ -137,7 +137,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(BULLET_HOME)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(BULLET_HOME)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VE_XPLORER_LIBRARY;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXDEBUG=1;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -168,7 +168,7 @@
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_vep_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\externals\loki-0.1.6\lib&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -400,10 +400,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdQuatCamHandler.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdRawNodeWriteTraverser.cxx"
 				>
 			</File>
 			<File
@@ -929,10 +925,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdQuatCamHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdRawNodeWriteTraverser.h"
 				>
 			</File>
 			<File

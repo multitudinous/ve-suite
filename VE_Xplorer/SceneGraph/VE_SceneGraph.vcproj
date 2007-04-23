@@ -195,15 +195,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdFileInfo.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdPfSceneManagement.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdRawNodeTraverser.cxx"
 				>
 			</File>
 			<File
@@ -315,15 +307,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdFileInfo.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdPfSceneManagement.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdRawNodeTraverser.h"
 				>
 			</File>
 			<File

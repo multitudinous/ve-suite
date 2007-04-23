@@ -48,6 +48,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;COMPRESSOR_EXPORTS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -73,9 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib taod.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib loki_D.lib"
 				OutputFile=".\Release/GUIPlugin.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
 				ProgramDatabaseFile=".\Release/GUIPlugin.pdb"
 				ImportLibrary=".\Release/GUIPlugin.lib"
 				TargetMachine="1"
@@ -138,7 +141,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_UTILS_LIBRARY;_TAO;_USRDLL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -167,11 +170,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib taod.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib"
+				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib taod.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib loki_D.lib"
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib_d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VEConductorLib_d.pdb"
 				ImportLibrary="$(OutDir)\VE_Conductor_GUI_UtilitiesLib_d.lib"
