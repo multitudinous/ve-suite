@@ -1492,6 +1492,7 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
 
    t=-1;
 
+   //This loop causes a tremendous perfomance decrease
    for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
       i = iter->first;
@@ -1507,12 +1508,12 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
 
    iter=modules.find(dest_mod);	
 
-   if (t!=dest_mod && iter!=modules.end())
-      DrawPorts(modules[dest_mod].GetPlugin(), false); //wipe the ports
+   //if (t!=dest_mod && iter!=modules.end())
+   //   DrawPorts(modules[dest_mod].GetPlugin(), false); //wipe the ports
 
    dest_mod = t;
 
-   DrawPorts(modules[mod].GetPlugin(), false); //wipe the ports
+   //DrawPorts(modules[mod].GetPlugin(), false); //wipe the ports
 
    wxPoint offSet;
    if ( flag )
@@ -1526,9 +1527,11 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
       offSet = GetPointForSelectedPlugin( mod, pt, "output" );
    }
 
-   dc.SetPen(*wxWHITE_PEN);
-   dc.DrawLine( offSet.x, offSet.y, xold, yold);
-   ReDraw(dc);
+   //dc.SetPen(*wxWHITE_PEN);
+   //dc.DrawLine( offSet.x, offSet.y, xold, yold);
+   Refresh(true);
+   Update();
+   //ReDraw(dc);
 
    if ( dest_mod >=0 )
       DrawPorts( modules[dest_mod].GetPlugin(), true); //draw the ports
@@ -2348,11 +2351,12 @@ void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
 
    if ( !cur_module )
       return;
-   wxClientDC dc(this);
+
    wxPoint bport[4];
    wxCoord xoff, yoff;
    wxRect bbox;
 
+   wxClientDC dc(this);
    PrepareDC(dc);
    dc.SetUserScale( userScale.first, userScale.second );
 
