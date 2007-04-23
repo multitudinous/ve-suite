@@ -1540,8 +1540,8 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
    Update();
    //ReDraw(dc);
 
-   //if ( dest_mod >=0 )
-   //   DrawPorts( modules[dest_mod].GetPlugin(), true); //draw the ports
+   if ( dest_mod >=0 )
+      DrawPorts( modules[dest_mod].GetPlugin(), true, dc); //draw the ports
 
    dc.SetPen(*wxBLACK_PEN);
    dc.DrawLine( offSet.x, offSet.y, x, y);
