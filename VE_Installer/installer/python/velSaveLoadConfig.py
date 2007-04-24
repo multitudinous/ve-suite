@@ -157,10 +157,11 @@ def LoadConfig(name, state, loadLastConfig = False):
     ##Return to default config
     config.SetPath('..')
     config.SetPath(DEFAULT_CONFIG)
-    ##TESTER
-    print "Overridden by environment:"
-    for var in overriddenVariables:
-        print var
+    ##TESTER; NOTE: Replace with better response later.
+    if len(overriddenVariables) > 0:
+        print "Overridden by environment:"
+        for var in overriddenVariables:
+            print var
     return
 
 def GetVPRDebug():

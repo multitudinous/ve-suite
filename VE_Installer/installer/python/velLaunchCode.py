@@ -1,5 +1,6 @@
 import os
 import wx
+from sys import stdin
 from time import sleep ##Used for delays in launch
 from platform import architecture ##Used to test if it's 32/64-bit
 from socket import gethostname ##Used to get hostname
@@ -38,12 +39,15 @@ class Launch:
         ##Set self's variables
         self.settings = settings
         self.nameserverPids = []
+        ##Debug settings.
         self.debugOutput = []
-        self.debugFile = open("debug.txt", 'w')
         if self.settings["Debug"]:
+            self.inputSource = subprocess.PIPE
+            self.debugFile = open("debug.txt", 'w')
             self.outputDestination = self.debugFile
             print "Output written to %s" %self.debugFile.name
         else:
+            self.inputSource = None
             self.outputDestination = None
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
@@ -91,10 +95,12 @@ class Launch:
             print "Starting Name Server."
             pids = []
             pids.append(subprocess.Popen(self.NameServiceCall(),
+                                         stdin = self.inputSource,
                                          stdout = self.outputDestination,
                                          stderr = self.outputDestination).pid)
             sleep(5)
             pids.append(subprocess.Popen(self.ServerCall(),
+                                         stdin = self.inputSource,
                                          stdout = self.outputDestination,
                                          stderr = self.outputDestination).pid)
             sleep(5)
@@ -125,6 +131,7 @@ class Launch:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
             subprocess.Popen(self.XplorerCall(),
+                             stdin = self.inputSource,
                              stdout = self.outputDestination, stderr = self.outputDestination)
         ##Conductor section
         if self.settings["Conductor"]:
@@ -133,6 +140,7 @@ class Launch:
             if self.settings["VESFile"]:
                 sleep(10)
             subprocess.Popen(self.ConductorCall(),
+                             stdin = self.inputSource,
                              stdout = self.outputDestination, stderr = self.outputDestination)
         print "Finished sending launch commands."
         return
@@ -508,8 +516,8 @@ class Launch:
         ##These are setup for using VE-Suite dependency install's location
         ##change only if you are using your own build
         if windows:
-##            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"))
-            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
+            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"))
+##            vjDir = os.path.join(os.getenv("VE_DEPS_DIR"), JUGGLER_FOLDER)
             self.EnvFill("VJ_BASE_DIR", vjDir)
         elif self.settings["JugglerDep"] != "None":
             vjDir = self.settings["JugglerDep"]
