@@ -381,7 +381,7 @@ protected:
 
    void OnDoubleClickSash( int, int );
 
-   void AppFrame::OnInternalIdle();
+   void OnInternalIdle();
 
    wxBoxSizer *sizerTab;
    //revision* version;

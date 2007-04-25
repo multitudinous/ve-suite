@@ -70,7 +70,7 @@ public:
    //returns the cloned structure including the
    //transform
 	VE_SceneGraph::DCS* GetClonedGraph();
-   osg::Node* Clone::CloneSubNode( osg::Node* node );
+   osg::Node* CloneSubNode( osg::Node* node );
    
 protected:
 	osg::ref_ptr< VE_SceneGraph::DCS > cloneTransform;

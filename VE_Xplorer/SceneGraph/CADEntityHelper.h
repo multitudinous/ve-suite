@@ -53,8 +53,10 @@ public:
       base_type(),
 		count_(0),
 		prev_perc_(0)
-	{
-      if ( open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
+	
+        {
+        std::fstream buff(filename.c_str(), std::ios_base::in | std::ios_base::binary); 
+      if ( buff.is_open() )
       {
          size_ = static_cast<int>(std::streambuf::pubseekoff(0, std::ios_base::end, std::ios_base::in));
          std::streambuf::pubseekoff(0, std::ios_base::beg, std::ios_base::in);
