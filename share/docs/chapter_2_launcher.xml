@@ -521,8 +521,7 @@
 
       <listitem>
         <para><emphasis role="bold">-g (config), --config=(config):</emphasis>
-        Auto-launches VE-Suite using the VE-Launcher configuration named
-        (config).</para>
+        Loads the VE-Launcher configuration named (config).</para>
       </listitem>
 
       <listitem>
