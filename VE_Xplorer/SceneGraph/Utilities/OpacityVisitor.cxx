@@ -37,6 +37,8 @@
 #include <osg/Group>
 #include <osg/Geometry>
 #include <osg/Material>
+#include <osg/Texture>
+#include <osg/TexEnv>
 #include <osg/Array>
 
 // --- C/C++ Libraries --- //
@@ -62,28 +64,30 @@ OpacityVisitor::~OpacityVisitor()
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Geode& node )
 {
-   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
-	
-   if( material.valid() )
+   osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
+   osg::ref_ptr< osg::Material > geode_material = static_cast< osg::Material* >( geode_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+
+   if( geode_material.valid() )
    {
       if( transparent == true )
       {
-         material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
+         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
       }
 
       else
       {
-         material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
+         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
       }
 
-      node.getStateSet()->setAttribute( material.get(), osg::StateAttribute::ON );
+      geode_stateset->setAttribute( geode_material.get(), osg::StateAttribute::ON );
    }
 
    for( size_t i = 0; i < node.getNumDrawables(); i++ )
-	{
-      
+	{ 
+      osg::ref_ptr< osg::StateSet > drawable_stateset = node.getDrawable( i )->getOrCreateStateSet();
+      osg::ref_ptr< osg::Material > drawable_material = static_cast< osg::Material* >( drawable_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
       osg::ref_ptr< osg::Vec4Array > color_array = static_cast< osg::Vec4Array* >( node.getDrawable( i )->asGeometry()->getColorArray() );
-      
+      osg::StateSet::TextureAttributeList drawable_tal = drawable_stateset->getTextureAttributeList();
 
       if( color_array.valid() )
       {
@@ -102,12 +106,61 @@ void OpacityVisitor::apply( osg::Geode& node )
             node.getDrawable( i )->asGeometry()->setColorArray( color_array.get() );
          }
       }
+
+      if( drawable_material.valid() )
+      {
+         if( transparent == true )
+         {
+            drawable_material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
+         }
+
+         else
+         {
+            drawable_material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
+         }
+
+         drawable_stateset->setAttribute( drawable_material.get(), osg::StateAttribute::ON );
+      }
+
+      for( size_t k = 0; k < drawable_tal.size(); k++ )
+      {
+         osg::ref_ptr< osg::TexEnv > texenv = static_cast< osg::TexEnv* >( drawable_stateset->getTextureAttribute( k, osg::StateAttribute::TEXENV ) );
+         
+         if( texenv.valid() )
+         {
+            if( transparent == true )
+            {
+               texenv->setMode( osg::TexEnv::BLEND );
+            }
+            
+            else
+            {
+               texenv->setMode( osg::TexEnv::DECAL );
+            }
+         }
+
+         else
+         {
+            if( transparent == true )
+            {
+               texenv = new osg::TexEnv( osg::TexEnv::BLEND );
+            }
+
+            else
+            {
+               texenv = new osg::TexEnv( osg::TexEnv::DECAL );
+            }
+         }
+
+         drawable_stateset->setTextureAttribute( k, texenv.get(), osg::StateAttribute::ON );
+      }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Group& node )
 {
-   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
+   osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
    if( material.valid() )
    {
@@ -121,7 +174,7 @@ void OpacityVisitor::apply( osg::Group& node )
          material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
       }
 
-      node.getStateSet()->setAttribute( material.get(), osg::StateAttribute::ON ) ;
+      stateset->setAttribute( material.get(), osg::StateAttribute::ON );
    }
 
    osg::NodeVisitor::apply( (osg::Node&)node );

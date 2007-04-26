@@ -47,7 +47,6 @@ MaterialInitializer::MaterialInitializer( osg::Node* osg_node )
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-
 	osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -58,16 +57,17 @@ MaterialInitializer::~MaterialInitializer()
 ////////////////////////////////////////////////////////////////////////////////    
 void MaterialInitializer::apply( osg::Group& node )
 {
-   osg::ref_ptr< osg::Material > sa = static_cast< osg::Material* >( node.getOrCreateStateSet()->getAttribute( osg::StateAttribute::MATERIAL ) );
+   osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
-   if( sa.valid() )
+   if( material.valid() )
    {
       return;
    }
 
    else
    {
-      node.getStateSet()->setAttribute( new osg::Material, osg::StateAttribute::ON );
+      stateset->setAttribute( new osg::Material(), osg::StateAttribute::ON );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
