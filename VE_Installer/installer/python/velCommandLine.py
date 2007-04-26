@@ -13,7 +13,10 @@ import velShell
 import velArguments
 
 class CommandLine:
-    """Launches VE Suite using arguments from the command line."""
+    """Launches VE Suite using arguments from the command line.
+
+    Returns True if auto-launched,
+    False if no launch, run GUI instead."""
     def __init__(self, opts, arguments, previousState = None):
         if previousState:
             self.state = previousState
@@ -22,15 +25,12 @@ class CommandLine:
             self.state = CoveredConfig()
             LoadConfig(DEFAULT_CONFIG, self.state, loadLastConfig = True)
         self.state.ChangeMode(MODE_LIST[self.state.GetSurface("Mode")])
-
-##        testDict = self.state.GetSurface() ##TESTER
-##        for var in testDict: ##TESTER
-##            print var, testDict[var] ##TESTER
-
         commandLineActivators = ('-c', "--conductor", '-n', "--nameserver",
                                  '-x', "--xplorer", '-s', "--shell")
         setCommandLineMode = False
         devMode = False
+        self.autoLaunch = False
+        ##Set Configuration & Dev mode.
         for opt, arg in opts:
             ##print opt, arg ##TESTER
             if opt in ('-g', "--config="):
@@ -45,14 +45,19 @@ class CommandLine:
                 self.state.DevMode()
             elif opt in commandLineActivators:
                 setCommandLineMode = True
+                self.autoLaunch = True
+            else:
+                self.autoLaunch = True
+        ##Set Files, if necessary.
+        if arguments:
+            self.state.InterpretArgument(arguments[0])
+            if self.state.GetSurface("AutoRunVes"):
+                self.autoLaunch = True
+        ##Return to GUI if not autoLaunching.
+        if not self.autoLaunch:
+            return
         if setCommandLineMode:
             self.state.CommandLineMode()
-
-
-##        print "---------" ##TESTER
-##        testDict = self.state.GetSurface() ##TESTER
-##        for var in testDict: ##TESTER
-##            print var, testDict[var] ##TESTER
 
         ##Set vars from the command line.
         for opt, arg in opts:
@@ -115,6 +120,9 @@ class CommandLine:
             velShell.Start(self.state.GetSurface("ShellScript"))
 
 
+    def AutoLaunched(self):
+        return self.autoLaunch
+    
     def xplorerType(self, inputArg):
         """Converts true/false input into a cluster/non-cluster XplorerType."""
         clusterMode = self.boolReader(inputArg)

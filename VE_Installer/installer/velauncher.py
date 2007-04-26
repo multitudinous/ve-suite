@@ -930,20 +930,25 @@ previousState = CoveredConfig()
 ##Restore config values from last time.
 LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
-##Window boot
-if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
-   (len(opts) == 0 or (len(opts) == 1 and devMode)):
-    ##Launch the application
-    app = wx.PySimpleApp()
+app = wx.PySimpleApp()
+if not CommandLine(opts, args, previousState).AutoLaunched():
     frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-    app.MainLoop()
-    ##Delete the config link to avoid memory leakage.
-    del config
-##Command line boot
-##Takes arguments passed, uses defaults for the rest, launches immediately.
-else:
-    app = wx.PySimpleApp()
-    app.MainLoop()
-    CommandLine(opts, args, previousState)
+app.MainLoop()
+##Command Line Check, then Window Boot (if necessary)
+del config
 
-
+####Window boot
+##if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
+##   (len(opts) == 0 or (len(opts) == 1 and devMode)):
+##    ##Launch the application
+##    app = wx.PySimpleApp()
+##    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+##    app.MainLoop()
+##    ##Delete the config link to avoid memory leakage.
+##    del config
+####Command line boot
+####Takes arguments passed, uses defaults for the rest, launches immediately.
+##else:
+##    app = wx.PySimpleApp()
+##    app.MainLoop()
+##    CommandLine(opts, args, previousState)
