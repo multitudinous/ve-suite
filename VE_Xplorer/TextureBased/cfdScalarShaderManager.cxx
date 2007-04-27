@@ -46,6 +46,7 @@
 #include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 #include "VE_Xplorer/TextureBased/RedYellowGreenCyanBlueTransferFunction.h"
 #include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
+#include "VE_Xplorer/TextureBased/NoiseTexture2D.h"
 using namespace VE_TextureBased;
 //the shader inline source
 #include "VE_Xplorer/TextureBased/volumeRenderBasicShader.h"
@@ -57,9 +58,9 @@ cfdScalarShaderManager::cfdScalarShaderManager()
    _isoSurface = false;
    _preIntegrate = true;
    _percentScalarRange = 0;
-   _stepSize[0] = .001;
-   _stepSize[1] = .001;
-   _stepSize[2] = .001;
+   _stepSize[0] = .0001;
+   _stepSize[1] = .0001;
+   _stepSize[2] = .0001;
 }
 ///////////////////////////////////////////
 void cfdScalarShaderManager::Init()
@@ -94,30 +95,35 @@ void cfdScalarShaderManager::Init()
                                 new osg::TexEnv(osg::TexEnv::REPLACE),
                              osg::StateAttribute::ON);
       int nTransferFunctions = _transferFunctions.size();
-      for(int i =0; i < nTransferFunctions; i++){
-         _ss->setTextureAttributeAndModes(i+1,_transferFunctions.at(i).get(),
+      //for(int i =0; i < nTransferFunctions; i++){
+         _ss->setTextureAttributeAndModes(1,_transferFunctions.at(0).get(),
                                    osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE); 
          /*_ss->setTextureMode(i+1,GL_TEXTURE_2D,
                           osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);*/
-         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_S,
+         _ss->setTextureMode(1,GL_TEXTURE_GEN_S,
                         osg::StateAttribute::OFF);
-         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_T,
+         _ss->setTextureMode(1,GL_TEXTURE_GEN_T,
                         osg::StateAttribute::OFF);
-         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_R,
+         _ss->setTextureMode(1,GL_TEXTURE_GEN_R,
                         osg::StateAttribute::OFF);
-      }
+      //}
+      _ss->setTextureAttributeAndModes(3,_jitterTexture->GetNoiseTexture(),
+                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE); 
       _tUnit = 0;
       _setupStateSetForGLSL();
    }
    _reinit = false;
 }
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
 void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
    std::cout<<"Using glsl..."<<std::endl;
    _ss->addUniform(new osg::Uniform("volumeData",0));
    _ss->addUniform(new osg::Uniform("fastUpdate",_preIntegrate));
    _ss->addUniform(new osg::Uniform("transferFunction",1)); 
+   _ss->addUniform(new osg::Uniform("jitter2D",3));
+   _ss->addUniform(new osg::Uniform("viewRay",osg::Vec3(0,1,0)));
+   _ss->addUniform(new osg::Uniform("jitterSize",osg::Vec2(_jitterTexture->GetResolutionX(),_jitterTexture->GetResolutionY())));
    //_ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
    _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
 
@@ -497,6 +503,8 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setImage(propertyField.get());
       _property->setSubloadCallback(_utCbk.get());
    } 
+
+   _jitterTexture = new VE_TextureBased::NoiseTexture2D();
 }
 #endif//_OSG
 #endif

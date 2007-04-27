@@ -13,8 +13,8 @@ PreIntegrationTexture2D::PreIntegrationTexture2D()
    _preIntegratedTexture->setDataVariance(osg::Object::DYNAMIC);
    _preIntegratedTexture->setFilter(osg::Texture2D::MIN_FILTER,osg::Texture2D::LINEAR);
    _preIntegratedTexture->setFilter(osg::Texture2D::MAG_FILTER,osg::Texture2D::LINEAR);
-   _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_R,osg::Texture2D::CLAMP);
-   _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_S,osg::Texture2D::CLAMP);
+   _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_T,osg::Texture2D::CLAMP_TO_EDGE);
+   _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_S,osg::Texture2D::CLAMP_TO_EDGE);
    _preIntegratedTexture->setInternalFormat(GL_RGBA);
    _imageData = new osg::Image();
 }
@@ -135,8 +135,8 @@ void PreIntegrationTexture2D::FullUpdate()
       _preIntegratedTexture->setDataVariance(osg::Object::DYNAMIC);
       _preIntegratedTexture->setFilter(osg::Texture2D::MIN_FILTER,osg::Texture2D::LINEAR);
       _preIntegratedTexture->setFilter(osg::Texture2D::MAG_FILTER,osg::Texture2D::LINEAR);
-      _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_R,osg::Texture2D::CLAMP);
-      _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_S,osg::Texture2D::CLAMP);
+      _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_T,osg::Texture2D::CLAMP_TO_EDGE);
+      _preIntegratedTexture->setWrap(osg::Texture2D::WRAP_S,osg::Texture2D::CLAMP_TO_EDGE);
       _preIntegratedTexture->setInternalFormat(GL_RGBA);    
    }
    //Initialize the slice integration table

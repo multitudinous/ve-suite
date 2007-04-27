@@ -45,6 +45,7 @@
 #include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
 #include "VE_Xplorer/TextureBased/cfdSimpleTextureCallback.h"
+#include "VE_Xplorer/TextureBased/NoiseTexture2D.h"
 #include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
 #include "VE_Xplorer/TextureBased/TransferFunction.h"
 using namespace VE_TextureBased;
@@ -87,6 +88,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
    _tm = 0;
    _tf = 0;
    _preIntTexture = 0;
+   _jitterTexture = 0;
    //_utCbk = 0;
 }
 //////////////////////////////////////////////////////////////
@@ -109,6 +111,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
    _utCbk = sm._utCbk;
    _tf = 0;
    _preIntTexture = 0;
+   _jitterTexture = 0;
 }
 ///////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
@@ -126,6 +129,11 @@ cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
    {
 	   delete _preIntTexture;
 	   _preIntTexture = 0;
+   }
+   if(_jitterTexture)
+   {
+	   delete _jitterTexture;
+	   _jitterTexture = 0;
    }
 }
 ////////////////////////////////////////////////////////////////////////

@@ -219,6 +219,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\NoiseTexture2D.cxx"
+					>
+				</File>
+				<File
 					RelativePath=".\PreIntegrationTexture.cxx"
 					>
 				</File>
@@ -264,6 +268,10 @@
 				</File>
 				<File
 					RelativePath=".\LuminanceTransferFunction.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NoiseTexture2D.h"
 					>
 				</File>
 				<File

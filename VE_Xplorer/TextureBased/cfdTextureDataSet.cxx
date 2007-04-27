@@ -35,6 +35,7 @@
 #include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 
@@ -173,8 +174,13 @@ unsigned int cfdTextureDataSet::NumberOfVectors()
 cfdVolumeVisualization* cfdTextureDataSet::GetVolumeVisNode()
 {
    if(_volVisNode){
-      if(_activeTM){
+      if(_activeTM)
+      {
          _volVisNode->SetBoundingBox(_activeTM->getBoundingBox());
+         if(_volVisNode->GetGeometryProxyNode())
+         {
+            _volVisNode->GetGeometryProxyNode()->SetTextureDimensions(_activeTM->fieldResolution()[0],_activeTM->fieldResolution()[1],_activeTM->fieldResolution()[2]);
+         }
       }
       return _volVisNode;
    }

@@ -86,6 +86,11 @@ public:
    ///\param method String representing the rendering method\n "VIEW_ALIGNED_QUADS"\n "VIEW_ALIGNED_POLYGON_INTERSECT"
    void SetRenderMethod(std::string method);
 
+   ///Set the texture resolution
+   ///\param x The x resolution
+   ///\param x The y resolution
+   ///\param x The z resolution
+   void SetTextureDimensions(unsigned int x,unsigned int y,unsigned int z);
    // of OpenGL primitives.
    virtual void drawImplementation(osg::State& currentState) const;
 
@@ -134,14 +139,20 @@ protected:
    void _calculateVertsAndTextureCoordinates(unsigned int currentEdgeIndex,
                                              osg::Vec4 frontSlicePoint,
                                              osg::Vec4 backSlicePoint,
-                                             float* verts,float* backTCoords)const;
+                                             float* verts,float* frontTCoords,float* backTCoords)const;
+   
+   ///Calculate the sample distance
+   ///\param minimum Minimum z distance
+   ///\param maximum Maximum z distance
+   float _calculateDelta(/*osg::Vec3 minimum,osg::Vec3 maximum*/)const;
 
    std::string _sliceRenderMethod;///<Method for rendering intersection polygons
    std::string _bboxSlicer;///<Source code for creating intersecting bbox slices vertex program.
-   unsigned int _nSlices;///<The number of slices to render.
+   mutable unsigned int _nSlices;///<The number of slices to render.
    mutable float _deltaZ;///<The slice spacing.
    float _diagonal;///<The length of the diagonal
    osg::BoundingBox _bbox;///<The bbox constructed from the diagonal of the data
+   mutable osg::Vec3 _dimensions;///<The dimensions width-X,depth-Y,height-Z
    mutable osg::Vec4 _center;///<The center of the data
    mutable osg::Vec4 _cameraLocation;///<The camera location in the world
    mutable osg::Vec4 _eyeCenter;///<The center of the data in eye space.

@@ -119,8 +119,8 @@ void RYGCBLinearTF::_update()
            if(_isoSurface)
            {
               isoValue = newRange[0] + _percentIsoValue*(newRange[1] - newRange[0]);
-              isoRange[0] = isoValue - 4.f;
-              isoRange[1] = isoValue + 4.f;
+              isoRange[0] = isoValue - 8.f;
+              isoRange[1] = isoValue + 8.f;
 
             if(i >= isoRange[0] && i <= isoRange[1])
 		      {
@@ -130,28 +130,28 @@ void RYGCBLinearTF::_update()
                     _classification[i*4 ] = 0;
                     _classification[i*4 +1] = (4.f*alpha)*255,      
                     _classification[i*4 +2] = (1.f)*255;
-                    _classification[i*4 +3] = alpha*255.f*.5f;
+                    _classification[i*4 +3] = alpha*255.f;//*.5f;
                  }
                  else if(alpha <= .5)
                  {
                     _classification[i*4 ] = 0;
                     _classification[i*4 +1] = (1.f)*255,      
                     _classification[i*4 +2] = (2.f-4.f*alpha)*255;
-                    _classification[i*4 +3] = alpha*255.f*.5f;
+                    _classification[i*4 +3] = alpha*255.f;//*.5f;
                  }
                  else if(alpha <= .75)
                  {
                     _classification[i*4 ] = (4.f*alpha-2.f)*255;
                     _classification[i*4 +1] = (1.f)*255;       
                     _classification[i*4 +2] = 0.;
-                    _classification[i*4 +3] = alpha*255.f*.5f;
+                    _classification[i*4 +3] = alpha*255.f;//*.5f;
                  }
                  else if(alpha <= 1.0)
                  {
                     _classification[i*4 ] = (1.f)*255;
                     _classification[i*4 +1] = (4.f-4.f*alpha)*255;       
                     _classification[i*4 +2] = 0.;
-                    _classification[i*4 +3] = alpha*255.f*.5f;
+                    _classification[i*4 +3] = alpha*255.f;//*.5f;
                  }
 			 
 			  }
@@ -171,28 +171,28 @@ void RYGCBLinearTF::_update()
                  _classification[i*4     ] = 0;
                  _classification[i*4 + 1] = (4.f*alpha)*255,      
                  _classification[i*4 + 2] = (1.f)*255;
-                 _classification[i*4 + 3] = alpha*255.f*.5f;
+                 _classification[i*4 + 3] = alpha*255.f;//*.5f;
               }
               else if(alpha <= .5)
               {
                  _classification[i*4     ] = 0;
                  _classification[i*4 + 1] = (1.f)*255,      
                  _classification[i*4 + 2] = (2.f-4.f*alpha)*255;
-                 _classification[i*4 + 3] = alpha*255.f*.5f;
+                 _classification[i*4 + 3] = alpha*255.f;//*.5f;
               }
               else if(alpha <= .75)
               {
                  _classification[i*4     ] = (4.f*alpha-2.f)*255;
                  _classification[i*4 + 1] = (1.f)*255;       
                  _classification[i*4 + 2] = 0.;
-                 _classification[i*4 + 3] = alpha*255.f*.5f;
+                 _classification[i*4 + 3] = alpha*255.f;//*.5f;
               }
               else if(alpha <= 1.0)
               {
                  _classification[i*4     ] = (1.f)*255;
                  _classification[i*4 + 1] = (4.f-4.f*alpha)*255;       
                  _classification[i*4 + 2] = 0.;
-                 _classification[i*4 + 3] = alpha*255.f*.5f;
+                 _classification[i*4 + 3] = alpha*255.f;//*.5f;
               }
            }
         }

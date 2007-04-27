@@ -134,6 +134,7 @@ namespace VE_TextureBased
       osg::ref_ptr<osg::Texture3D> GetTextureData();
       osg::ref_ptr<osg::Switch> GetVolumeVisNode();
       osg::ref_ptr<osg::Group> GetDecoratorAttachNode();
+      VE_TextureBased::TextureBasedVolumeSlices* GetGeometryProxyNode(){return _slices.get();}
    
       cfdVolumeVisualization& operator=(const cfdVolumeVisualization& rhs);
 #endif

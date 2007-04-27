@@ -56,6 +56,7 @@ namespace VE_TextureBased
    class cfdUpdateTextureCallback;
    class TransferFunction;
    class PreIntegrationTexture2D;
+   class NoiseTexture2D;
 }
 
 #include "VE_Xplorer/TextureBased/cfdOSGShaderManager.h"
@@ -103,6 +104,7 @@ namespace VE_TextureBased
          osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;
 		 VE_TextureBased::TransferFunction* _tf;///<The transfer function for preIntegration.
 		 VE_TextureBased::PreIntegrationTexture2D* _preIntTexture;///<The preIntegrated texture.
+       VE_TextureBased::NoiseTexture2D* _jitterTexture;///<The noise texture
    };
 }
 #endif//_OSG
