@@ -97,7 +97,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_RIGHT_DOWN(Network::OnMRightDown)
    //bring up custom ui dialog
    //currently disabled
-   //EVT_LEFT_DCLICK(Network::OnDClick)
+   EVT_LEFT_DCLICK(Network::OnDClick)
 
    // The following are rightclick menu options
    EVT_MENU(ADD_TAG, Network::OnAddTag)
