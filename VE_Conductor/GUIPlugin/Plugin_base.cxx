@@ -61,30 +61,27 @@
 using namespace VE_XML::VE_Model;
 using namespace VE_XML;
 
-IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
+BEGIN_EVENT_TABLE(REI_Plugin, wxEvtHandler)
+   EVT_LEFT_DCLICK(REI_Plugin::OnDClick)
+END_EVENT_TABLE()
+
+IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxEvtHandler )
 
 /////////////////////////////////////////////////////////////////////////////
-REI_Plugin::REI_Plugin()
+REI_Plugin::REI_Plugin() :
+   networkFrame( 0 ),
+   dlg( 0 ), 
+   result_dlg( 0 ),
+   port_dlg( 0 ),
+   geom_dlg( 0 ),
+   financial_dlg( 0 ),
+   numberOfInputPorts( 0 ),
+   numberOfOutputPorts( 0 ),
+   inputsDialog( 0 ),
+   resultsDialog( 0 ),
+   portsDialog( 0 )
 { 
-   dlg         = 0; 
-   result_dlg  = 0;
-   port_dlg    = 0;
-   geom_dlg     = 0;
-   //geometryDataBuffer = 0;
-   // EPRI TAG
-   financial_dlg = 0;
-
    pos = wxPoint(0,0); //default position
-  
-   //default shape
-   //n_pts=5;
-   //poly = new wxPoint[n_pts];
-  
-   //poly[0]=wxPoint(0,20);
-   //poly[1]=wxPoint(20,0);
-   //poly[2]=wxPoint(40,20);
-   //poly[3]=wxPoint(30, 40);
-   //poly[4]=wxPoint(10,40);
 
    wxImage my_img( square_xpm );
    icon_w = (int)my_img.GetWidth()*0.30f;
@@ -98,16 +95,7 @@ REI_Plugin::REI_Plugin()
    poly[2]=wxPoint(icon_w,icon_h);
    poly[3]=wxPoint(0,icon_h);
   
-   //mod_pack._type = 1 ; //Module
-   //mod_pack._category = 1; // normal modules
-   //mod_pack._id = -1;
    veModel = new Model();
-   numberOfInputPorts = 0;
-   numberOfOutputPorts = 0;
-
-   inputsDialog = 0;
-   resultsDialog = 0;
-   portsDialog = 0;
    
    iconFilename = "DefaultPlugin";
    
@@ -118,8 +106,7 @@ REI_Plugin::REI_Plugin()
    defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
    defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
 }
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 REI_Plugin::~REI_Plugin()
 {
    delete [] poly;
@@ -180,30 +167,32 @@ REI_Plugin::~REI_Plugin()
       portsDialog = 0;
    }
 }
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetNetworkFrame( wxScrolledWindow* networkFrame )
+{
+   this->networkFrame = networkFrame;
+}
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetID(int id)
 {
    this->id = id;
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetName( wxString pluginName )
 {
    name = pluginName;
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetPos(wxPoint pt)
 {
   pos = pt;
 }
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double REI_Plugin::GetVersion()
 {
   return 0.1;
 }
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxRect REI_Plugin::GetBBox()
 {
   wxRect result;
@@ -245,13 +234,12 @@ wxRect REI_Plugin::GetBBox()
    result.SetHeight(bottom-top+edge_size);
    return result;	
 }
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int REI_Plugin::GetNumPoly( void )
 {
 	return n_pts;
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::GetPoly( POLY& polygon )
 {
    for ( int i=0; i < n_pts; i++ )  
@@ -259,18 +247,17 @@ void REI_Plugin::GetPoly( POLY& polygon )
       polygon[i]=poly[i];
    }
 }
-
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int REI_Plugin::GetNumIports()
 {
 	return inputPort.size();
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetNumIports( int numPorts )
 {
    numberOfInputPorts = numPorts;
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::GetIPorts(PORT& iports)
 {
    for ( size_t i = 0; i <  inputPort.size(); ++i )
@@ -459,71 +446,6 @@ bool REI_Plugin::Has3Ddata()
 {
   return false;
 }
-
-////////////////////////////////////////////////////////////////////
-/*Interface* REI_Plugin::Pack()
-{
-  //string result;
-  
-  std::map<std::string, long *>::iterator iteri;
-  std::map<std::string, double *>::iterator iterd;
-  std::map<std::string, std::string *>::iterator iters;
-  std::map<std::string, std::vector<long> *>::iterator itervi;
-  std::map<std::string, std::vector<double> *>::iterator itervd;
-  std::map<std::string, std::vector<std::string> *>::iterator itervs;
-
-
-  //std::cout << "mod id : " << mod_pack._id << std::endl;
-  mod_pack.setVal("XPOS",long (pos.x));
-  mod_pack.setVal("YPOS",long (pos.y));
-  
-   for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
-      mod_pack.setVal(iteri->first, *(iteri->second));
-
-   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
-      mod_pack.setVal(iterd->first, *(iterd->second));
-
-   for(iters=_string.begin(); iters!=_string.end(); iters++)
-      mod_pack.setVal(iters->first, *(iters->second));
-
-   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
-      mod_pack.setVal(itervi->first, *(itervi->second));
-
-   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
-      mod_pack.setVal(itervd->first, *(itervd->second));
-
-   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
-   {
-      mod_pack.setVal(itervs->first, *(itervs->second));
-   }
-
-  // EPRI TAG
-  if(financial_dlg != NULL) {
-    mod_pack.setVal("USE_FINANCIAL", (long)financial_dlg->_use_data);
-
-    mod_pack.setVal("CC00", financial_dlg->_cc00_d);
-    mod_pack.setVal("CC01", financial_dlg->_cc01_d);
-    mod_pack.setVal("CC02", financial_dlg->_cc02_d);
-    mod_pack.setVal("CC03", financial_dlg->_cc03_d);
-    mod_pack.setVal("CC04", financial_dlg->_cc04_d);
-    mod_pack.setVal("CC05", financial_dlg->_cc05_d);
-    mod_pack.setVal("CC06", financial_dlg->_cc06_d);
-    mod_pack.setVal("CC07", financial_dlg->_cc07_d);
-    mod_pack.setVal("CC08", financial_dlg->_cc08_d);
-
-    mod_pack.setVal("OM00", financial_dlg->_om00_d);
-    mod_pack.setVal("OM01", financial_dlg->_om01_d);
-    mod_pack.setVal("OM02", financial_dlg->_om02_d);
-    mod_pack.setVal("OM03", financial_dlg->_om03_d);
-  }
-
-  //mod_pack.pack(result);
-  
-  //wxString wxstr = result.c_str();
- 
-  return &mod_pack ;//wxstr;
-  
-}*/
 ////////////////////////////////////////////////////////////////////
 Model* REI_Plugin::GetModel( void )
 {
@@ -689,113 +611,6 @@ Model* REI_Plugin::GetVEModel( void )
    return veModel;
 }
 /////////////////////////////////////////////////////////////////////////////
-/*void REI_Plugin::UnPack(Interface * intf)
-{
-  std::vector<std::string> vars;
-  
-  std::map<std::string, long *>::iterator iteri;
-  std::map<std::string, double *>::iterator iterd;
-  std::map<std::string, std::string *>::iterator iters;
-  std::map<std::string, std::vector<long> *>::iterator itervi;
-  std::map<std::string, std::vector<double> *>::iterator itervd;
-  std::map<std::string, std::vector<std::string> *>::iterator itervs;
-  
-  unsigned int i;
-  long temp;
-
-  mod_pack = *intf;
-  vars = mod_pack.getInts();
-  for (i=0; i<vars.size(); i++)
-    {
-      iteri =_int.find(vars[i]);
-      if (iteri!=_int.end())
-	mod_pack.getVal(vars[i], *(iteri->second));
-      else if (vars[i]=="XPOS")
-	{
-	  mod_pack.getVal("XPOS", temp);
-	  //	  std::cout << "xpos " << temp << std::endl;
-	  pos.x = temp;
-	}
-      else if (vars[i]=="YPOS")
-	{
-	  //	  std::cout << "ypos " << temp << std::endl;
-	  mod_pack.getVal("YPOS", temp);
-	  pos.y = temp;
-	}
-    }
-
-  vars = mod_pack.getDoubles();
-  for (i=0; i<vars.size(); i++)
-    {
-      iterd =_double.find(vars[i]);
-      if (iterd!=_double.end())
-	mod_pack.getVal(vars[i], *(iterd->second));
-    }  
-  
-  vars = mod_pack.getStrings();
-  for (i=0; i<vars.size(); i++)
-    {
-      iters =_string.find(vars[i]);
-      if (iters!=_string.end())
-	mod_pack.getVal(vars[i], *(iters->second));
-    }
-
-  vars = mod_pack.getInts1D();
-  for (i=0; i<vars.size(); i++)
-    {
-      itervi =_int1D.find(vars[i]);
-      if (itervi!=_int1D.end())
-	mod_pack.getVal(vars[i], *(itervi->second));
-    }
-
-  vars = mod_pack.getDoubles1D();
-  for (i=0; i<vars.size(); i++)
-    {
-      itervd =_double1D.find(vars[i]);
-      if (itervd!=_double1D.end())
-	mod_pack.getVal(vars[i], *(itervd->second));
-    }
-
-   vars = mod_pack.getStrings1D();
-   for (i=0; i<vars.size(); i++)
-   {
-      itervs =_string1D.find(vars[i]);
-      if (itervs!=_string1D.end())
-      {
-         //unsigned int testInt = (*itervs->second).size();
-         //unsigned int idint = this->GetID();
-         std::vector<std::string> tempvector = (*itervs->second);
-         mod_pack.getVal(vars[i], tempvector );
-         (*itervs->second) = tempvector;
-      }
-   }
-
-  // EPRI TAG
-  long uf = 0;
-  if(mod_pack.getVal("USE_FINANCIAL", uf)) {
-    
-    if(financial_dlg == NULL)
-      financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
-    
-    financial_dlg->_use_data = uf;
-    
-    financial_dlg->_cc00_d = mod_pack.getDouble("CC00");
-    financial_dlg->_cc01_d = mod_pack.getDouble("CC01");
-    financial_dlg->_cc02_d = mod_pack.getDouble("CC02");
-    financial_dlg->_cc03_d = mod_pack.getDouble("CC03");
-    financial_dlg->_cc04_d = mod_pack.getDouble("CC04");
-    financial_dlg->_cc05_d = mod_pack.getDouble("CC05");
-    financial_dlg->_cc06_d = mod_pack.getDouble("CC06");
-    financial_dlg->_cc07_d = mod_pack.getDouble("CC07");
-    financial_dlg->_cc08_d = mod_pack.getDouble("CC08");
-
-    financial_dlg->_om00_d = mod_pack.getDouble("OM00");
-    financial_dlg->_om01_d = mod_pack.getDouble("OM01");
-    financial_dlg->_om02_d = mod_pack.getDouble("OM02");
-    financial_dlg->_om03_d = mod_pack.getDouble("OM03");
-  }
-}*/
-/////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
 {
    if ( veModel != NULL )
@@ -930,28 +745,6 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
    //
 }
 /////////////////////////////////////////////////////////////////////////////
-/*void REI_Plugin::UnPackResult(Interface* intf)
-{
-   //This will be module dependent. 
-   //here is the Default implementation when using the 
-   //summary table to pack things up in the module end
-  
-   std::vector<std::string> descs;
-   descs = intf->getStrings();
-   v_desc.clear();
-   v_value.clear();
-   for ( unsigned int i=0; i<descs.size(); ++i )
-   {
-      std::string desc = descs[i];
-      std::string value = intf->getString(descs[i]);
-      if (desc.substr(0,3) == "***") 
-         desc = desc.substr( 9, desc.size()-9 );
-     
-      v_desc.push_back ( wxString(desc.c_str(),wxConvUTF8));
-      v_value.push_back( wxString(value.c_str(),wxConvUTF8));
-   }
-}*/
-/////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, long *var)
 {
   _int[vname]=var;
@@ -981,113 +774,6 @@ void REI_Plugin::RegistVar(std::string vname, std::vector<std::string> *var)
 {
   _string1D[vname]=var;
 }
-
-///////////////////////////////////////////////
-/*UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
-{
-  //This default implementation is for the Gas and water Interface's Data package
-  //New modules can override the function to implement its own port dialog
-  std::vector<wxString> titles;
-  titles.push_back(wxString("Description",wxConvUTF8));
-  titles.push_back(wxString("Value",wxConvUTF8));
-
-  std::vector<wxString> gas_desc;
-  std::vector<wxString> gas_value;
-  unsigned int i;
-  //first, to decide if it is water or gas
-
-   bool ok = true;
-   it->getDouble("ENTHALPY",    &ok);
-   if (!ok)
-   { //gas
-      gas_desc.push_back(wxString("COALCAL",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("COALCAL")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("ASHCAL",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("ASHCAL")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("ASHPH",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("ASHPH")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("PRESSURE_DROP",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("PRESSURE_DROP")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("TEMPERATURE",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("TEMPERATURE")).c_str(),wxConvUTF8));
-	   gas_desc.push_back(wxString("MW",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("MW")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("PRESSURE",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("PRESSURE")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("FLOWRATE",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("FLOWRATE")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("TAR",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("TAR")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("SOOT",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("SOOT")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("PT MEAN_SIZE",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("MEAN_SIZE")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("PT SIZE_VARIANCE",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("SIZE_VARIANCE")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("PARTICLE T",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("T_PARTICLE")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("PARITCLE M",wxConvUTF8));
-      gas_value.push_back(wxString(to_string(it->getDouble("M_PARTICLE")).c_str(),wxConvUTF8));
-      gas_desc.push_back(wxString("COMP NAME",wxConvUTF8));
-      gas_value.push_back(wxString("COMP CONC",wxConvUTF8));
-      
-      std::vector<std::string> comp_name = it->getString1D("COMP_NAME");
-      std::vector<double>      comp_conc = it->getDouble1D("COMP_CONC");
-      for (i=0; i<comp_name.size(); i++)
-	   {
-	      gas_desc.push_back( wxString(comp_name[i].c_str(),wxConvUTF8));
-	      gas_value.push_back( wxString(to_string(comp_conc[i]).c_str(),wxConvUTF8));
-	   }
-      
-      gas_desc.push_back( wxString("PART NAME",wxConvUTF8));
-      gas_value.push_back( wxString("PART CONC",wxConvUTF8));
-
-      std::vector<std::string> part_name = it->getString1D("PART_NAME");
-      std::vector<double>      part_conc = it->getDouble1D("PART_CONC");
-      for (i=0; i<part_name.size(); i++)
-	   {
-	      gas_desc.push_back( wxString(part_name[i].c_str(),wxConvUTF8));
-	      gas_value.push_back( wxString(to_string(part_conc[i]).c_str(),wxConvUTF8));
-	   }
-      
-      gas_desc.push_back( wxString("WIC NAME",wxConvUTF8));
-      gas_value.push_back( wxString("WIC CONC",wxConvUTF8));
-      std::vector<std::string> wic_name = it->getString1D("WIC_NAME", &ok);
-      std::vector<double>      wic_conc = it->getDouble1D("WIC_CONC", &ok);
-      for (i=0; i<wic_name.size(); i++)
-	   {
-	      gas_desc.push_back( wxString(wic_name[i].c_str(),wxConvUTF8));
-	      gas_value.push_back( wxString(to_string(wic_conc[i]).c_str(),wxConvUTF8));
-	   }
-   }
-   else
-   { //water
-      gas_desc.push_back( wxString("TEMPERATURE",wxConvUTF8) );
-      gas_value.push_back( wxString( to_string(it->getDouble("TEMPERATURE")).c_str(), wxConvUTF8) );
-      gas_desc.push_back( wxString("PRESSURE", wxConvUTF8) );
-      gas_value.push_back( wxString( to_string(it->getDouble("PRESSURE")).c_str(), wxConvUTF8) );
-      gas_desc.push_back( wxString("ENTHALPY", wxConvUTF8) );
-      gas_value.push_back( wxString( to_string(it->getDouble("ENTHALPY")).c_str(), wxConvUTF8) );
-      gas_desc.push_back(wxString("QUALITY", wxConvUTF8) );
-      gas_value.push_back( wxString( to_string(it->getDouble("QUALITY")).c_str(), wxConvUTF8 ) );
-      gas_desc.push_back( wxString("FLOWRATE", wxConvUTF8) );
-      gas_value.push_back( wxString( to_string(it->getDouble("FLOWRATE")).c_str(), wxConvUTF8 ) );
-    
-   }
-
-   if (port_dlg==NULL)
-      port_dlg = new TextResultDialog(parent);
-  
-   port_dlg->syngas->Clear();
-   port_dlg->syngas->AddRow(titles);
-   port_dlg->syngas->AddSeperator(' ');
-   port_dlg->syngas->AddSeperator('+');
-   port_dlg->syngas->AddSeperator(' ');
-   port_dlg->Set2Cols(gas_desc, gas_value);
-
-   return port_dlg;
-}*/
-// EPRI TAG
 ///////////////////////////////////////////////
 void REI_Plugin::FinancialData ()
 {
@@ -1274,4 +960,47 @@ std::cout << "icon path " << path << std::endl;
 	poly[1]=wxPoint(icon_w,0);
 	poly[2]=wxPoint(icon_w,icon_h);
 	poly[3]=wxPoint(0,icon_h);
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnDClick( wxMouseEvent &event)
+{
+   // This function opens a plugins dialog when double clicked on the design canvas
+   wxClientDC dc( networkFrame );
+   networkFrame->DoPrepareDC( dc );
+   //dc.SetUserScale( userScale.first, userScale.second );
+   wxPoint evtpos = event.GetLogicalPosition( dc );
+   if ( !SelectMod( evtpos.x, evtpos.y ) )
+   {
+      event.Skip();
+      return;
+   }
+   
+   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+   dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
+   dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
+   VE_XML::Command* veCommand = new VE_XML::Command();
+   veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
+   veCommand->AddDataValuePair( dataValuePair );
+   
+   bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+   //Clean up memory
+   delete veCommand;
+   
+   // now show the custom dialog with no parent for the wxDialog
+   UIDialog* hello = this->UI( NULL );
+   if ( hello!=NULL )
+   {
+      hello->Show();
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool REI_Plugin::SelectMod( int x, int y )
+{
+   // This function checks to see which module your mouse is over based
+   // on the x and y location of your mouse on the design canvas
+   if (  GetBBox().Contains( x, y ) )
+   {
+      return true;
+   }
+   return false;
 }

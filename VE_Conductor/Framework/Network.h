@@ -139,7 +139,7 @@ public:
    void OnMLeftDown( wxMouseEvent &event );
    void OnMLeftUp( wxMouseEvent &event );
    /// This function opens a plugins dialog when double clicked on the design canvas
-   void OnDClick( wxMouseEvent &event );
+   //void OnDClick( wxMouseEvent &event );
    void OnMRightDown( wxMouseEvent &event );
    void OnAddTag( wxCommandEvent &event );
    void OnAddLinkCon( wxCommandEvent &event );

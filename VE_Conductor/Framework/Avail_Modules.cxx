@@ -155,11 +155,13 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
    {
       REI_Plugin* object;
       object = dynamic_cast< REI_Plugin* >( info->CreateObject() );
+      object->SetNetworkFrame( network );
       network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
    }
    else
    {
       REI_Plugin* object = new DefaultPlugin();
+      object->SetNetworkFrame( network );
       network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
    }
 }

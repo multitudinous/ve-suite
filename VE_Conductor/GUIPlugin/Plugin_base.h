@@ -68,7 +68,9 @@ class wxRect;
 class wxWindow;
 class wxDialog;
 class wxImage;
+class wxScrolledWindow;
 
+#include <wx/event.h>
 #define edge_size 10
 class UIDialog;
 class TextResultDialog;
@@ -77,6 +79,7 @@ class GeometryDialog;
 class FinancialDialog;
 class GeometryDataBuffer;
 class SummaryResultDialog;
+
 namespace VE_Conductor
 {
    class CORBAServiceList;
@@ -95,7 +98,7 @@ namespace VE_XML
 typedef std::vector< wxPoint > POLY;
 typedef std::vector< VE_XML::VE_Model::Port > PORT;
 
-class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
+class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxEvtHandler//, public wxObject
 {
 public:
    ///Defualt constructor
@@ -142,13 +145,6 @@ public:
    virtual wxString GetHelp();
    ///Get geometry data
    void GeometryData();
-   ///Get the geometry data buffer - this is deprecated
-   GeometryDataBuffer* GetGeometryDataBuffer( void );
-   ///Unpack the interface - this is deprecated
-   //virtual void UnPack(Interface* intf);
-   ///This is the load function of the module, 
-   ///unpack the input string and fill up the UI according to this
-   //virtual Interface* Pack();
    //This is the load function of the module, 
    ///unpack the input string and fill up the UI according to this
    VE_XML::VE_Model::Model* GetVEModel( void );
@@ -156,12 +152,11 @@ public:
    void SetVEModel( VE_XML::VE_Model::Model* tempModel );
    ///Get the model constructed by the dialog
    VE_XML::VE_Model::Model* GetModel( void );
-   ///This is to unpack the result from the 
-   //virtual void UnPackResult(Interface * intf);
    ///method to start a dialog to ask the user for a plugin name so that the 
    ///name can be defined at run time
    void SetPluginNameDialog( void );
-
+   ///Set the network window to use for accessing dc's and setting parent windows
+   ///on subdialogs for plugins
    //allows user to set the image to be displayed on the icon
    void SetImageIcon(std::string path, float rotation = 0.0f, int mirror = 0, float scale = 1.0f);
    
@@ -186,12 +181,16 @@ public:
    virtual void ViewInputVariables( void );
    virtual void ViewResultsVariables( void );
    
-   ///Launches the geometry dialogs
-   //void ViewCADInfo( VjObs_ptr vjObjs );
-
+   ///Process left double click mouse events
+   void OnDClick( wxMouseEvent &event);
+   ///Set the network wxFrame that this plugin is associated with so that
+   ///the plugin can draw and capture the appropriate events
+   void SetNetworkFrame( wxScrolledWindow* networkFrame );
    ///Set the corba servicelist so that the plugin can talk with the graphical
    ///engine
    void SetCORBAService( VE_Conductor::CORBAServiceList* serviceList );
+   ///See if this plugin is selected
+   bool SelectMod( int x, int y );
    
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
@@ -258,7 +257,10 @@ protected:
    
    std::map< std::string, wxImage > defaultIconMap;
    
+   wxScrolledWindow* networkFrame;
+   
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
+   DECLARE_EVENT_TABLE()
 };
 
 #endif

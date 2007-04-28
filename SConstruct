@@ -186,6 +186,7 @@ opts.Add('options_file', 'Provide a file name for the options caches', '')
 opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from','')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
+
 Export('opts', 'vtk_options', 'osg_options',
          'xerces_options','wxwidgets_options',
          'VE_SUITE_VERSION')
@@ -237,9 +238,13 @@ This file will be loaded each time.  Note: Options are cached in the file
 %s
 """ % options_cache
 
+## Create Environment builder from scons addons
 base_bldr = EnvironmentBuilder()
-##base_bldr.addOptions( opts )
+## Add debug options in for vesuite from SConsAddons 
+base_bldr.addOptions( opts )
+## Now get the evironment
 baseEnv = base_bldr.buildEnvironment()
+
 baseEnv[ 'ENV' ] = os.environ
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)

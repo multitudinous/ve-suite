@@ -96,8 +96,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    //brings up the design canvas menu on a specfic module
    EVT_RIGHT_DOWN(Network::OnMRightDown)
    //bring up custom ui dialog
-   //currently disabled
-   EVT_LEFT_DCLICK(Network::OnDClick)
+   //EVT_LEFT_DCLICK(Network::OnDClick)
 
    // The following are rightclick menu options
    EVT_MENU(ADD_TAG, Network::OnAddTag)
@@ -187,10 +186,12 @@ Network::~Network()
       _soundsDlg = 0;
    }
 
-   /*for (iter=modules.begin(); iter!=modules.end(); iter++)
+   std::map< int, Module >::iterator iter;
+   for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
-      delete modules[ iter->first ];
-   }*/
+      //delete modules[ iter->first ];
+      PopEventHandler( false );
+   }
    modules.clear();
    delete globalparam_dlg;
 }
@@ -663,35 +664,8 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 	//Refresh(true);
 	//Update();
 }
-
-////////////////////////////////////////////////////////////////
-void Network::OnDClick( wxMouseEvent& event )
-{
-   // This function opens a plugins dialog when double clicked on the design canvas
-   wxClientDC dc( this );
-   PrepareDC( dc );
-   dc.SetUserScale( userScale.first, userScale.second );
-
-   wxPoint evtpos = event.GetLogicalPosition( dc );
-
-   // set the m_selMod class variable
-   SelectMod( evtpos.x, evtpos.y, dc );
-   //set the active model if connected to xplorer
-   SetActiveModel();
-   // now use it
-   if ( m_selMod >= 0 )
-   {
-      // now show the custom dialog with no parent for the wxDialog
-      UIDialog* hello = modules[m_selMod].GetPlugin()->UI( NULL );
-      if ( hello!=NULL )
-      {
-         hello->Show();
-      }
-      m_selMod = -1;
-   }
-}
-
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnMRightDown(wxMouseEvent& event)
 {
    wxClientDC dc(this);
@@ -843,9 +817,9 @@ void Network::OnMRightDown(wxMouseEvent& event)
    m_selTagCon = -1; 
    xold = yold =0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //////// Menu event handlers ////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 {
    wxTextEntryDialog dialog(this,_("Tag Editor"), _("Please enter the text for the tag : "),_("this is a tag"), wxOK);
@@ -853,8 +827,7 @@ void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
    if (dialog.ShowModal() == wxID_OK)
       AddTag(action_point.x, action_point.y, dialog.GetValue());
 }
-
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
 {  
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
@@ -914,7 +887,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
    Update();
     
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
 {
    wxClientDC dc(this);
@@ -1074,7 +1047,8 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    {
       if ( iter->first==m_selMod )
       {
-	      //delete modules[m_selMod].GetPlugin();
+	      PopEventHandler( false );
+         //delete modules[m_selMod].GetPlugin();
 	      modules.erase( iter++ );
          VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
          dataValuePair->SetDataName( "Object ID" );
@@ -1130,7 +1104,6 @@ int Network::SelectMod( int x, int y, wxDC &dc )
 	   }
    }
    m_selMod = -1;
-   //ReDraw(dc);
    return -1;
 }
 
@@ -2139,7 +2112,8 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
   //modules.push_back(mod);
   sbboxes.push_back(bbox);
   //  for (i=0; i<modules.size(); i++)
-  
+  //Setup the event handlers for the plugin
+  PushEventHandler( modules[id].GetPlugin() );
   //ReDrawAll();
   Refresh(true);
   Update();
