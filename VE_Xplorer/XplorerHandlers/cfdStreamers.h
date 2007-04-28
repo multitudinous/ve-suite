@@ -41,7 +41,6 @@ cfdStreamers API
 *   the position and direction.
 */
 
-class vtkStreamLine;
 class vtkStreamTracer;
 class vtkTubeFilter;
 class vtkPolyDataMapper;
@@ -88,16 +87,13 @@ public:
 
    void SetIntegrationStepLength( int );
 
-   void SetStepLength( int );
-   
    int cfdIso_value;
 
 private:
    ///Create seed points to be used by streamline algorithms
    void CreateSeedPoints( void );
-   
-   vtkStreamLine*     stream;
-   vtkStreamTracer* _streamTracer;
+
+   vtkStreamTracer*   streamTracer;
    vtkTubeFilter*     tubeFilter;
    vtkPolyDataMapper* mapper;
    vtkRungeKutta45*   integ;  
@@ -105,7 +101,6 @@ private:
    vtkPoints*         points;///>Seed Points raw data
    float propagationTime;
    float integrationStepLength;
-   float stepLength;
    int   integrationDirection;
    float lineDiameter;
    int   streamArrows;

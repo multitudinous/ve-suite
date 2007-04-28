@@ -1047,7 +1047,20 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
    {
       if ( iter->first==m_selMod )
       {
-	      PopEventHandler( false );
+         std::vector< wxEvtHandler* > tempEvtHandlerVector;
+         wxEvtHandler* tempEvtHandler = 0;
+         tempEvtHandler = PopEventHandler( false );
+         while ( modules[m_selMod].GetPlugin() != tempEvtHandler )
+         {
+            tempEvtHandlerVector.push_back( tempEvtHandler );
+            tempEvtHandler = PopEventHandler( false );
+         }
+        
+         for ( size_t i = 0; i < tempEvtHandlerVector.size(); ++i )
+         {
+           PopEventHandler( tempEvtHandlerVector.at( i ) );
+         }
+         
          //delete modules[m_selMod].GetPlugin();
 	      modules.erase( iter++ );
          VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
@@ -2545,6 +2558,11 @@ void Network::New( bool promptClearXplorer )
 
    links.clear();
 
+   std::map< int, Module >::iterator iter;
+   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   {
+      PopEventHandler( false );
+   }
    modules.clear();
 
    tags.clear();
@@ -2696,7 +2714,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
       {
          tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
       }
-	  tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
+      tempPlugin->SetNetworkFrame( this );
+      PushEventHandler( tempPlugin );
+      tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
+      tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
       if ( model->GetIconFilename() != "DefaultPlugin" )
       {   
          tempPlugin->SetImageIcon( model->GetIconFilename(), 

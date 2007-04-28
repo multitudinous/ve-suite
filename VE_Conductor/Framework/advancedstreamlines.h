@@ -105,7 +105,6 @@ public:
       USE_SEED_POINT_CHK,
       PROPOGATION_SLIDER,
       INTEGRATION_STEP_SLIDER,
-      STEP_SIZE_SLIDER,
       ARROWS_CHK,
       SPHERE_SIZE_SLIDER,
       LINE_DIAMETER_SLIDER,
@@ -128,11 +127,6 @@ public:
    ///Set the integration step size.
    ///\param value The size
    void SetIntegrationStepSize(double value);
-
-   ///Set the step(?) size
-   ///\param value The size
-   void SetStep(double value);
-  
    ///Set the sphere/arrow/particle(?) size
    ///\param value The size
    void SetSphereArrowParticleSize(double value);
@@ -156,8 +150,6 @@ public:
    double GetPropagationSize();
    ///Get the integration step size
    double GetIntegrationStepSize();
-   ///Get the (?)step
-   double GetStep();
    ///Get the Sphere/Arrow/Particle(?) size
    double GetSphereArrowParticleSize();
 
@@ -186,7 +178,6 @@ protected:
 
    wxSlider* _propagationSlider;  
    wxSlider* _integrationSlider; 
-   wxSlider* _stepSlider; 
    wxSlider* _sphereArrowParticleSlider; 
    wxSlider* _diameterSlider; 
    wxCheckBox* _lastSeedPtCheck;
@@ -194,7 +185,6 @@ protected:
 
    UI_TransientDialog* particleControls;
    AdvancedStreamlines* _particleParent;
-
 };
 
 #endif

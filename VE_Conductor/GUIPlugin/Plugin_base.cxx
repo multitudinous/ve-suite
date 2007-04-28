@@ -969,6 +969,7 @@ void REI_Plugin::OnDClick( wxMouseEvent &event)
    networkFrame->DoPrepareDC( dc );
    //dc.SetUserScale( userScale.first, userScale.second );
    wxPoint evtpos = event.GetLogicalPosition( dc );
+   //If this is not the plugin then move on to the next one
    if ( !SelectMod( evtpos.x, evtpos.y ) )
    {
       event.Skip();

@@ -124,24 +124,16 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
-
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
     /// Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
-////@end Streamlines member function declarations
-
     /// Should we show tooltips?
     static bool ShowToolTips();
-
-////@begin Streamlines member variables
-
     virtual ~Streamlines();
   
    wxButton*   itemButton14;
-////@end Streamlines member variables
 protected: 
    void _onCursorSelect(wxCommandEvent& event );
    void _onDirection(wxCommandEvent& event );
@@ -178,7 +170,6 @@ protected:
    double _lastPropagationSize;///<Propagation size from advanced settings.
    double _lastLineDiameter;///<Line diameter from advanced settings.
    double _lastSphereArrowParticleSize;///<Sphere arrow particles from advanced settings.
-   double _lastStep;///<Step from advanced settings.
    bool _lastSeedPtFlag;///<Seed pt flat from advanced settings.
    bool _lastStreamArrow;///<Stream arrow from advanced settings.
 

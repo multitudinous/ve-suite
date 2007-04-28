@@ -98,7 +98,6 @@ bool Streamlines::Create( wxWindow* parent, wxWindowID id,
    _lastPropagationSize = 1.0;
    _lastLineDiameter = 0.0;
    _lastSphereArrowParticleSize = 1.0;
-   _lastStep = 1.0;
    _lastSeedPtFlag = false;
    _lastStreamArrow = false;
 ////@end Streamlines member initialisation
@@ -230,10 +229,6 @@ void Streamlines::_updateAdvancedSettings()
    sphereArrowParticles->SetData("Sphere/Arrow/Particle Size",_lastSphereArrowParticleSize);
    _advancedSettings.push_back(sphereArrowParticles);
 
-   VE_XML::DataValuePair* stepSize = new VE_XML::DataValuePair();
-   stepSize->SetData("Step",_lastStep);
-   _advancedSettings.push_back(stepSize);
-
    VE_XML::DataValuePair* seedPtFlag = new VE_XML::DataValuePair();
    seedPtFlag->SetDataName("Use Last Seed Pt");
    seedPtFlag->SetDataType("UNSIGNED INT");
@@ -321,7 +316,6 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    adStreamline.SetPropagationSize(_lastPropagationSize);
    adStreamline.SetLineDiameter( _lastLineDiameter );
    adStreamline.SetSphereArrowParticleSize(_lastSphereArrowParticleSize);
-   adStreamline.SetStep(_lastStep);
    adStreamline.SetUseLastSeedPt(_lastSeedPtFlag);
    adStreamline.SetStreamArrow(_lastStreamArrow);
 
@@ -334,7 +328,6 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
        _lastPropagationSize = adStreamline.GetPropagationSize();
        _lastLineDiameter = adStreamline.GetLineDiameter();
        _lastSphereArrowParticleSize = adStreamline.GetSphereArrowParticleSize();
-       _lastStep = adStreamline.GetStep();
        _lastSeedPtFlag = adStreamline.GetUseLastSeedPoint();
        _lastStreamArrow = adStreamline.GetStreamArrow();
     }

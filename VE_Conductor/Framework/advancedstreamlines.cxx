@@ -65,7 +65,6 @@ bool AdvancedStreamlines::Create( wxWindow* parent, wxWindowID id, const wxStrin
 {
    _propagationSlider = 0;  
    _integrationSlider = 0; 
-   _stepSlider = 0; 
    _sphereArrowParticleSlider = 0; 
    _diameterSlider = 0; 
    _lastSeedPtCheck = 0;
@@ -132,21 +131,6 @@ void AdvancedStreamlines::CreateControls()
 
     wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Larger"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
     itemBoxSizer11->Add(itemStaticText13, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
-
-    wxStaticText* itemStaticText14 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Step"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add(itemStaticText14, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
-
-    _stepSlider = new wxSlider( itemDialog1, STEP_SIZE_SLIDER, 1, 1, 5000, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(_stepSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
-
-    wxBoxSizer* itemBoxSizer16 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer16, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
-
-    wxStaticText* itemStaticText17 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Finer"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-    itemBoxSizer16->Add(itemStaticText17, 0, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
-
-    wxStaticText* itemStaticText18 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Coarser"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
-    itemBoxSizer16->Add(itemStaticText18, 1, wxALIGN_TOP|wxLEFT|wxRIGHT|wxBOTTOM|wxADJUST_MINSIZE, 5);
 
     wxStaticText* itemStaticText19 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Sphere/Arrow/Particle Size(%)"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
     itemStaticBoxSizer3->Add(itemStaticText19, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
@@ -226,7 +210,7 @@ wxIcon AdvancedStreamlines::GetIconResource( const wxString& name )
     return wxNullIcon;
 ////@end AdvancedStreamlines icon retrieval
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetPropagationSize(double value)
 { 
    if(_propagationSlider)
@@ -234,7 +218,7 @@ void AdvancedStreamlines::SetPropagationSize(double value)
       _propagationSlider->SetValue(static_cast<int>(value));
    }
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetIntegrationStepSize(double value)
 {
    if(_integrationSlider)
@@ -242,15 +226,7 @@ void AdvancedStreamlines::SetIntegrationStepSize(double value)
       _integrationSlider->SetValue(static_cast<int>(value));
    }
 }
-///////////////////////////////////////////////
-void AdvancedStreamlines::SetStep(double value)
-{
-   if(_stepSlider)
-   {
-      _stepSlider->SetValue(static_cast<int>(value));
-   }
-}
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetSphereArrowParticleSize(double value)
 {
    if(_sphereArrowParticleSlider)
@@ -258,7 +234,7 @@ void AdvancedStreamlines::SetSphereArrowParticleSize(double value)
       _sphereArrowParticleSlider->SetValue(static_cast<int>(value));
    }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetLineDiameter(double value)
 {
    if(_diameterSlider)
@@ -266,7 +242,7 @@ void AdvancedStreamlines::SetLineDiameter(double value)
       _diameterSlider->SetValue(static_cast<int>(value));
    }
 }
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetStreamArrow(bool value)
 {
    if(_streamArrowCheck)
@@ -274,7 +250,7 @@ void AdvancedStreamlines::SetStreamArrow(bool value)
       _streamArrowCheck->SetValue(value);
    }
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::SetUseLastSeedPt(bool value)
 {
    if(_lastSeedPtCheck)
@@ -282,42 +258,37 @@ void AdvancedStreamlines::SetUseLastSeedPt(bool value)
       _lastSeedPtCheck->SetValue(value);
    }
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double AdvancedStreamlines::GetPropagationSize()
 {
    return  static_cast<double>(_propagationSlider->GetValue()); 
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double AdvancedStreamlines::GetIntegrationStepSize()
 { 
    return static_cast<double>(_integrationSlider->GetValue());
 }
-/////////////////////////////////////
-double AdvancedStreamlines::GetStep()
-{ 
-   return static_cast<double>(_stepSlider->GetValue()); 
-}
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double AdvancedStreamlines::GetSphereArrowParticleSize()
 {
    return static_cast<double>(_sphereArrowParticleSlider->GetValue()); 
 }
-/////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double AdvancedStreamlines::GetLineDiameter()
 {
    return static_cast<double>(_diameterSlider->GetValue()); 
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool AdvancedStreamlines::GetUseLastSeedPoint()
 {
    return _lastSeedPtCheck->GetValue();
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool AdvancedStreamlines::GetStreamArrow()
 {
    return _streamArrowCheck->GetValue();
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::_OnParticleTracking( wxCommandEvent& WXUNUSED(event) )
 {
 

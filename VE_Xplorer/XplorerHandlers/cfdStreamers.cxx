@@ -66,8 +66,7 @@ using namespace VE_SceneGraph;
 
 cfdStreamers::cfdStreamers( void )
 {
-   //this->stream = vtkStreamLine::New();
-   _streamTracer = vtkStreamTracer::New();
+   streamTracer = vtkStreamTracer::New();
    this->integ = vtkRungeKutta45::New();
 
    this->tubeFilter = vtkTubeFilter::New();
@@ -76,8 +75,6 @@ cfdStreamers::cfdStreamers( void )
    this->integrationDirection = 0;
    this->propagationTime = -1;
    this->integrationStepLength = -1;
-   this->stepLength = -1;
-//   this->lineDiameter = 0.0f;
    this->lineDiameter = 1.0f;
    arrowDiameter = 1;
    streamArrows = 0;
@@ -98,8 +95,7 @@ cfdStreamers::cfdStreamers( void )
 
 cfdStreamers::~cfdStreamers()
 {
-   //this->stream->Delete();
-   _streamTracer->Delete();
+   streamTracer->Delete();
    this->integ->Delete();
    this->tubeFilter->Delete();
    this->mapper->Delete();
@@ -118,27 +114,9 @@ void cfdStreamers::Update( void )
       << this->origin[2] << std::endl 
       << " Prop Time : " << this->propagationTime 
       << " Integration Step Length : " << this->integrationStepLength 
-      << " Step Length : " << this->stepLength 
       << " Integration Direction : " << this->integrationDirection
       << std::endl << vprDEBUG_FLUSH;
-/*
-//Create source for streamtubes
-vtkStreamTracer streamer
-streamer SetInput [reader GetOutput]
-streamer SetStartPosition 0.1 2.1 0.5
-streamer SetMaximumPropagation 0 500
-streamer SetMinimumIntegrationStep 1 0.1
-streamer SetMaximumIntegrationStep 1 1.0
-streamer SetInitialIntegrationStep 2 0.2
-streamer SetIntegrationDirection 0
-streamer SetIntegrator rk
-streamer SetRotationScale 0.5
-streamer SetMaximumError 1.0E-8
 
-vtkAssignAttribute aa
-aa SetInput [streamer GetOutput]
-aa Assign Normals NORMALS POINT_DATA
-*/
    this->tubeFilter->SetRadius( this->lineDiameter );
    this->tubeFilter->SetNumberOfSides( 3 );
    this->tubeFilter->SidesShareVerticesOn();
@@ -154,25 +132,13 @@ aa Assign Normals NORMALS POINT_DATA
       this->integrationStepLength = 0.050f;
    }
    
-   if ( stepLength == -1 )
-   {
-      this->stepLength = this->GetActiveDataSet()->GetMeanCellLength()/30.0f;
-   }
-
-   //The Block below is a test by Yang
-   //this->stream->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
-   _streamTracer->SetInput((vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
+   streamTracer->SetInput((vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
    //overall length of streamline
-   //this->stream->SetMaximumPropagationTime( this->propagationTime );
-   _streamTracer->SetMaximumPropagation(this->propagationTime);
+   streamTracer->SetMaximumPropagation(this->propagationTime);
    
    // typically < 1
-   //this->stream->SetIntegrationStepLength( this->integrationStepLength );
-   _streamTracer->SetMaximumIntegrationStep(this->integrationStepLength);
+   streamTracer->SetMaximumIntegrationStep(this->integrationStepLength);
 
-   // length of line segments < maxPropTime
-   //this->stream->SetStepLength( 0.001 );
- 
    // Stream Points Section
    vtkStreamPoints* streamPoints = 0;
    vtkConeSource* cone = 0;
@@ -185,7 +151,7 @@ aa Assign Normals NORMALS POINT_DATA
       streamPoints = vtkStreamPoints::New();
       streamPoints->SetInput( static_cast< vtkDataSet* >( this->GetActiveDataSet()->GetDataSet() ) );
       streamPoints->SetSource( seedPoints );
-      streamPoints->SetTimeIncrement( this->stepLength * 500 );
+      //streamPoints->SetTimeIncrement( this->stepLength * 500 );
       streamPoints->SetMaximumPropagationTime( this->propagationTime );
       streamPoints->SetIntegrationStepLength( this->integrationStepLength );    
       streamPoints->SetIntegrator( this->integ );
@@ -194,40 +160,30 @@ aa Assign Normals NORMALS POINT_DATA
 
    if ( this->integrationDirection == 0 )
    {
-     // this->stream->SetIntegrationDirectionToIntegrateBothDirections();
-	  _streamTracer->SetIntegrationDirectionToBoth();
+      streamTracer->SetIntegrationDirectionToBoth();
       if ( streamArrows )
          streamPoints->SetIntegrationDirectionToIntegrateBothDirections();
    }
    else if ( this->integrationDirection == 1 )
    {
-      //this->stream->SetIntegrationDirectionToForward();
-	  _streamTracer->SetIntegrationDirectionToForward();
+      streamTracer->SetIntegrationDirectionToForward();
       if ( streamArrows )
          streamPoints->SetIntegrationDirectionToForward();
    }
    else if ( this->integrationDirection == 2 )
    {
-      //this->stream->SetIntegrationDirectionToBackward();
-	  _streamTracer->SetIntegrationDirectionToBackward();
+      streamTracer->SetIntegrationDirectionToBackward();
       if ( streamArrows )
          streamPoints->SetIntegrationDirectionToBackward();
    }
-   //this->stream->SetNumberOfThreads( 1 );
-  
 
-   //this->stream->SetSource( seedPoints );
-   _streamTracer->SetSource(seedPoints);
-   //this->stream->SetIntegrator( this->integ );
-   _streamTracer->SetIntegrator(this->integ);
+   streamTracer->SetSource( seedPoints );
+   streamTracer->SetIntegrator( this->integ );
    // Good Test code to see if you are actually getting streamlines
    /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
    writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
    writer->SetFileName( "teststreamers.vtk" );
    writer->Write();*/
-
-   //this->filter = vtkGeometryFilter::New();
-//   this->filter->SetInput( this->tubeFilter->GetOutput() );  
 
    if ( streamArrows )
    {
@@ -244,8 +200,7 @@ aa Assign Normals NORMALS POINT_DATA
       //cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
-     //append->AddInput( stream->GetOutput() );
-	  append->AddInput(_streamTracer->GetOutput());
+      append->AddInput( streamTracer->GetOutput() );
       append->AddInput( cones->GetOutput() );
       append->Update();
  
@@ -262,21 +217,18 @@ aa Assign Normals NORMALS POINT_DATA
    }
    else
    {
-	   mapper->SetInput(_streamTracer->GetOutput());
-      //this->mapper->SetInput( stream->GetOutput() );
+	   mapper->SetInput( streamTracer->GetOutput() );
    }
-
 
    this->mapper->SetColorModeToMapScalars();
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
    this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
-   //this->mapper->ImmediateModeRenderingOn();
+   this->mapper->ImmediateModeRenderingOn();
  
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
    temp->GetProperty()->SetLineWidth(lineDiameter);
-   //temp->GetProperty()->SetRepresentationToWireframe();
    //test to see if there is enough memory, if not, filters are deleted
    try
    {
@@ -287,12 +239,8 @@ aa Assign Normals NORMALS POINT_DATA
    }
    catch( std::bad_alloc )
    {
-      //stream->Delete();
-	  _streamTracer->Delete();
-      //stream = vtkStreamLine::New();
-	  _streamTracer = vtkStreamTracer::New();
-	  tubeFilter->Delete();
-      tubeFilter = vtkTubeFilter::New();
+      streamTracer->Delete();
+      streamTracer = vtkStreamTracer::New();
       mapper->Delete();
       mapper = vtkPolyDataMapper::New();
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdStreamers " 
@@ -317,8 +265,7 @@ aa Assign Normals NORMALS POINT_DATA
 vtkPolyData * cfdStreamers::GetStreamersOutput( void )
 {
    // may need to gaurd this somehow
-  // return ( stream->GetOutput() );
-	return (_streamTracer->GetOutput());
+	return ( streamTracer->GetOutput());
 }
 ///////////////////////////////////////////////////////////////////
 void cfdStreamers::SetIntegrationDirection( int value )
@@ -335,13 +282,6 @@ void cfdStreamers::SetPropagationTime( double value )
 void cfdStreamers::SetIntegrationStepLength( int value )
 {
    this->integrationStepLength = (float)value * ( 0.050f )/50.0f;
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdStreamers::SetStepLength( int value )
-{
-   this->stepLength = (float)value * ((this->GetActiveDataSet()
-                                           ->GetMeanCellLength()/30.0f) /50.0f); // 
-   
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::UpdateCommand()
@@ -391,15 +331,7 @@ void cfdStreamers::UpdateCommand()
    vprDEBUG(vesDBG,0) << " STREAMLINE_ARROW\t" << opacity 
       << std::endl << vprDEBUG_FLUSH;
    streamArrows = opacity;
-   
-   /////////////////////
-   activeModelDVP = objectCommand->GetDataValuePair( "Step" );
-   double stepSizeStream = 1.0f;
-   activeModelDVP->GetData( stepSizeStream );
-   vprDEBUG(vesDBG,0) << " CHANGE_STEP_LENGTH\t" << stepSizeStream 
-      << std::endl << vprDEBUG_FLUSH;
-   this->SetStepLength( static_cast< int >( stepSizeStream ) );
-   
+      
    /////////////////////
    activeModelDVP = objectCommand->GetDataValuePair( "Integration Step Size" );
    double contourLOD;
