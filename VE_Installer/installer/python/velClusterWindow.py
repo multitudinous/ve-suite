@@ -30,6 +30,8 @@ class ClusterWindow(wx.Dialog):
         ##Build Add & Delete buttons.
         self.bAdd = wx.Button(self, -1, "Add")
         self.bAdd.SetToolTip(wx.ToolTip("Add a slave listing."))
+        self.bEdit = wx.Button(self, -1, "Rename")
+        self.bEdit.SetToolTip(wx.ToolTip("Rename a slave listing."))
         self.bDelete = wx.Button(self, -1, "Delete")
         self.bDelete.SetToolTip(wx.ToolTip("Delete a slave listing."))
         self.bExtraVars = wx.Button(self, -1, "Pass Extra Vars")
@@ -54,6 +56,7 @@ class ClusterWindow(wx.Dialog):
         self.UpdateDisplay()
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
+        self.Bind(wx.EVT_BUTTON, self.Rename, self.bEdit)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
         self.Bind(wx.EVT_BUTTON, self.ExtraVars, self.bExtraVars)
         self.Bind(wx.EVT_TEXT, self.UpdateExampleCode, self.userCtrl)
@@ -63,6 +66,7 @@ class ClusterWindow(wx.Dialog):
         ##Add/Rename/Delete buttons.
         rowSizer = wx.BoxSizer(wx.VERTICAL)
         rowSizer.AddMany([self.bAdd, VERTICAL_SPACE,
+                          self.bEdit, VERTICAL_SPACE,
                           self.bDelete, VERTICAL_SPACE,
                           self.bExtraVars])
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
@@ -119,7 +123,7 @@ class ClusterWindow(wx.Dialog):
         self.userExampleText.SetLabel("psexec slave %s -i..." %phrase)
 
     def UpdateDisplay(self, cursor = None):
-        """Updates display to match the data.."""
+        """Updates display to match the data."""
         ##Set cursor if it's blank.
         ##Master Node
         self.masterCtrl.SetValue(self.state.GetSurface("ClusterMaster"))
@@ -190,6 +194,69 @@ class ClusterWindow(wx.Dialog):
                 dlg.Destroy()
                 break
 
+
+    def Rename(self, event):
+        """Renames the selected slave entry.
+        
+        Ensures the new name:
+        -Contains no slashes.
+        -Isn't empty spaces."""
+        name = self.clustList.GetStringSelection()
+        while True:
+            n = name
+            dlg = wx.TextEntryDialog(self,
+                                     "What do you want to rename" + \
+                                     " %s to?\n\n" %(n),
+                                     "Rename %s" %(n), name)
+            if dlg.ShowModal() == wx.ID_OK:
+                name = dlg.GetValue()
+                selection = self.clustList.GetStringSelection()
+                dlg.Destroy()
+                ##Check for slashes
+                if name.count('/') > 0 or name.count('\\') > 0:
+                    dlg = wx.MessageDialog(self,
+                                           "Your new name has slashes" + \
+                                           " in it.\n" + \
+                                           "Please choose a different name.",
+                                           "ERROR: Name Contains Slashes",
+                                           wx.OK)
+                    dlg.ShowModal()
+                    dlg.Destroy()
+                    name = name.replace('/', '-')
+                    name = name.replace('\\', '-')
+                ##Check if it's empty/spaces
+                elif name.isspace() or name == '':
+                    dlg = wx.MessageDialog(self,
+                                           "Your new name is empty." + \
+                                           " Please choose a different name.",
+                                           "ERROR: Name is Empty",
+                                           wx.OK)
+                    dlg.ShowModal()
+                    dlg.Destroy()
+                    name = self.clustList.GetStringSelection()
+                ##Check if it's already in the list.
+                elif name in self.state.GetBase("ClusterDict").GetNames():
+                    dlg = wx.MessageDialog(self,
+                                           "[%s] is already in the" %(name)+
+                                           " cluster list.\n" +
+                                           "Do you want to delete" +
+                                           " [%s] instead?" %(selection),
+                                           "ERROR: Computer Already in List",
+                                           wx.YES_NO | wx.NO_DEFAULT)
+                    if dlg.ShowModal() == wx.ID_YES:
+                        self.state.GetBase("ClusterDict").Delete(selection)
+                    dlg.Destroy()
+                    self.UpdateDisplay()
+                    break                    
+                ##Else accept it.
+                else:
+                    self.state.GetBase("ClusterDict").Rename(selection, name)
+                    self.UpdateDisplay(name)
+                    break
+            else:
+                break
+
+
     def Delete(self, event):
         """Deletes the selected entry from the list.
 
@@ -219,7 +286,6 @@ class ClusterWindow(wx.Dialog):
         """Opens up the Extra Vars editing window."""
         extraVarsWindow = ExtraVarsWindow(self, self.state)
         extraVarsWindow.ShowModal()
-        
 
     def OnClose(self, event):
         """Closes ClusterWindow."""

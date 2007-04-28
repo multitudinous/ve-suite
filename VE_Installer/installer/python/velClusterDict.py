@@ -36,12 +36,26 @@ class ClusterDict(VelDict):
         config.SetPath('..')
         return entries
 
+    def Rename(self, oldName, newName):
+        """Renames the entry at oldName to newName.
+
+        Returns newName.
+        Assumes newName isn't already on the list."""
+        ##Don't do anything if newName == pos's old name
+        if newName == oldName:
+            return newName
+        ##Add the name.
+        finalName = self.Add(newName, self.dictionary[oldName])
+        self.Delete(oldName)
+        ##Return true if name had to be changed. Should never return true.
+        return finalName
+
     def GetLocations(self):
         """Returns a name list."""
         return self.GetNames()
 
     def UniqueName(self, name):
-        """Returns the name passed. No modification."""
+        """Returns True if name not in dict, False if it is."""
         return name
 
     def WriteConfig(self):
