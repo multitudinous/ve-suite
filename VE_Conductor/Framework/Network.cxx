@@ -2169,11 +2169,11 @@ void Network::ReDraw(wxDC &dc)
 
    // redraw all the active plugins
    std::map<int, Module>::iterator iter;
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   for ( iter = modules.begin(); iter != modules.end(); iter++)
    {
-      modules[ iter->first ].GetPlugin()->DrawIcon(&dc);
-      modules[ iter->first ].GetPlugin()->DrawID(&dc);
-      modules[ iter->first ].GetPlugin()->DrawName(&dc);
+      iter->second.GetPlugin()->DrawIcon(&dc);
+      iter->second.GetPlugin()->DrawID(&dc);
+      iter->second.GetPlugin()->DrawName(&dc);
    }
 
    if(m_selMod >= 0)
@@ -2453,10 +2453,10 @@ std::string Network::Save( std::string fileName )
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      modules[ iter->first ].GetPlugin()->SetID( iter->first );
+      iter->second.GetPlugin()->SetID( iter->first );
       nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( 
-                  modules[ iter->first ].GetPlugin()->GetVEModel(), "veModel" ) 
+                  iter->second.GetPlugin()->GetVEModel(), "veModel" ) 
                      );
       //dynamic_cast< VE_Model::Model* >( nodes.back().first )->SetModelName( modules[ iter->first ].GetClassName() );
    }
