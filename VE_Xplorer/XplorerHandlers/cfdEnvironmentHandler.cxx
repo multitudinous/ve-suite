@@ -137,6 +137,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    
    ///add a transform for manipulation of the seed points to sync with the active dataset
    _seedPointsDCS = new VE_SceneGraph::DCS();
+   _seedPointsDCS->SetName("Seed Points DCS");
    _seedPointsDCS->addChild(_seedPoints.get());
 
    _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();

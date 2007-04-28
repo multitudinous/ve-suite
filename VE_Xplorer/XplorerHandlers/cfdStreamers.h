@@ -42,6 +42,7 @@ cfdStreamers API
 */
 
 class vtkStreamLine;
+class vtkStreamTracer;
 class vtkTubeFilter;
 class vtkPolyDataMapper;
 class vtkPolyData;
@@ -96,6 +97,7 @@ private:
    void CreateSeedPoints( void );
    
    vtkStreamLine*     stream;
+   vtkStreamTracer* _streamTracer;
    vtkTubeFilter*     tubeFilter;
    vtkPolyDataMapper* mapper;
    vtkRungeKutta45*   integ;  
