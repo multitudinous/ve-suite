@@ -56,7 +56,7 @@ Module::~Module( void )
 ////////////////////////////////////////////////
 Module::Module( const Module& input )
 {
-   pl_mod = input.pl_mod;
+   pl_mod = 0;
    poly = input.poly; 
    cls_name = input.cls_name;
    canvas = input.canvas;
@@ -67,7 +67,7 @@ Module& Module::operator= ( const Module& input )
 {
    if ( this != &input )
    {
-      pl_mod = input.pl_mod;
+      pl_mod = 0;
       poly = input.poly; 
       cls_name = input.cls_name;
       canvas = input.canvas;

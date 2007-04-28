@@ -2566,7 +2566,9 @@ void Network::New( bool promptClearXplorer )
    modules.clear();
 
    tags.clear();
-
+   ///Reset the canvas available spaces
+   sbboxes.clear();
+   
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
    Refresh();
