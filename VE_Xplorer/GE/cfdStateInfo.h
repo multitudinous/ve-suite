@@ -93,14 +93,14 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    }
 
    //writer->writeString( clusterXMLCommands );
+ 
+   writer->writeUint64(clusterXMLCommands.length());
+ 
    vpr::BufferObjectWriter* bufwriter =
       static_cast< vpr::BufferObjectWriter* >( writer );
- 
-   bufwriter->writeUint64(clusterXMLCommands.size());
- 
    for(unsigned i = 0; i < clusterXMLCommands.length(); ++i)
    {
-     bufwriter->writeRaw((vpr::Uint8*)&(clusterXMLCommands[i]),1);
+     bufwriter->writeRaw((vpr::Uint8*) &(clusterXMLCommands[i]),1);
    }
    return vpr::ReturnStatus::Succeed;
 }
@@ -127,19 +127,17 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
       clusterMatrix[i]=reader->readFloat();
    }
 
-
-   //clusterXMLCommands      = reader->readString();
+   //clusterXMLCommands      = reader->readString(); 
+   vpr::Uint64 str_len = reader->readUint64();
+ 
    vpr::BufferObjectReader* bufreader =
       static_cast< vpr::BufferObjectReader* >( reader );
- 
-   vpr::Uint64 str_len = bufreader->readUint64();
- 
-   if ( !clusterXMLCommands.empty() ) 
-      clusterXMLCommands.clear();
- 
+   clusterXMLCommands.clear();
+   char tempChar;
    for(unsigned i = 0; i < str_len; ++i)
    {
-     clusterXMLCommands += (char)(*bufreader->readRaw(1));
+     tempChar = (char)(*bufreader->readRaw(1));
+     clusterXMLCommands += tempChar;
    }
    return vpr::ReturnStatus::Succeed;
 }
