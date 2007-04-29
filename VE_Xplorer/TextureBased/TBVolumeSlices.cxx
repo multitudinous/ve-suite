@@ -300,7 +300,7 @@ void TextureBasedVolumeSlices::drawImplementation(osg::State& currentState) cons
    if(_sliceRenderMethod == "VIEW_ALIGNED_QUADS")
    {
       ///transform center to current eye space
-	   _eyeCenter = _center*currentState.getState()->getModelViewMatrix();
+	   _eyeCenter = _center*currentState.getModelViewMatrix();
       _drawViewAlignedQuadSlices();
    }
    else if(_sliceRenderMethod == "VIEW_ALIGNED_POLYGON_INTERSECT")
