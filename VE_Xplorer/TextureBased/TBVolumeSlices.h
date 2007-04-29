@@ -149,7 +149,8 @@ protected:
    std::string _sliceRenderMethod;///<Method for rendering intersection polygons
    std::string _bboxSlicer;///<Source code for creating intersecting bbox slices vertex program.
    mutable unsigned int _nSlices;///<The number of slices to render.
-   mutable float _deltaZ;///<The slice spacing.
+   mutable float _deltaZ[2];///<The slice spacing.
+   mutable float _sliceDeltaRatio;///<The ratio of the original spacing to the new spacing base on increased slicing.
    float _diagonal;///<The length of the diagonal
    osg::BoundingBox _bbox;///<The bbox constructed from the diagonal of the data
    mutable osg::Vec3 _dimensions;///<The dimensions width-X,depth-Y,height-Z

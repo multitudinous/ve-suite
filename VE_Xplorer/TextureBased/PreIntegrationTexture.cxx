@@ -3,6 +3,10 @@
 #include <iostream>
 #include <fstream>
 using namespace VE_TextureBased;
+unsigned char clamp(unsigned char lower,unsigned char upper, unsigned char value)
+{
+	return (value<lower)?lower:(value>upper)?upper:value;
+}
 ///////////////////////////////////////////////////////////////
 PreIntegrationTexture2D::PreIntegrationTexture2D()
 {
@@ -109,12 +113,12 @@ void PreIntegrationTexture2D::SetTransferFunction(TransferFunction* tf)
    _rawData = new unsigned char[_tf->GetResolution(0)*_tf->GetResolution(0)*4];
 
    _imageData->setImage(_tf->GetResolution(0),_tf->GetResolution(0),
-									_tf->GetResolution(2),
-									GL_RGBA, 
-									GL_RGBA, 
-									GL_UNSIGNED_BYTE,
-									_rawData, 
-									osg::Image::USE_NEW_DELETE);
+								1,
+								GL_RGBA, 
+								GL_RGBA, 
+								GL_UNSIGNED_BYTE,
+								_rawData, 
+								osg::Image::USE_NEW_DELETE);
    _preIntegratedTexture->setImage(_imageData.get());
 }
 /////////////////////////////////////////////////////
@@ -167,10 +171,10 @@ void PreIntegrationTexture2D::FullUpdate()
 
 	  if(sliceMin != sliceMax)
 	  {
-         _rawData[index++] = _calculateComponent(deltaSlice,0,sliceMin,sliceMax);
-         _rawData[index++] = _calculateComponent(deltaSlice,1,sliceMin,sliceMax);
-         _rawData[index++] = _calculateComponent(deltaSlice,2,sliceMin,sliceMax);
-         _rawData[index++] = _calculateComponent(deltaSlice,3,sliceMin,sliceMax);
+         _rawData[index++] = clamp(0,255,_calculateComponent(deltaSlice,0,sliceMin,sliceMax));
+         _rawData[index++] = clamp(0,255,_calculateComponent(deltaSlice,1,sliceMin,sliceMax));
+         _rawData[index++] = clamp(0,255,_calculateComponent(deltaSlice,2,sliceMin,sliceMax));
+         _rawData[index++] = clamp(0,255,_calculateComponent(deltaSlice,3,sliceMin,sliceMax));
 	  }
 	  else
 	  {
@@ -208,10 +212,10 @@ void PreIntegrationTexture2D::_initializeSliceIntegrationValues()
    float* curRGBA = 0;//[4]={0,0,0,0};
    float* prevRGBA = 0;//[4]={0,0,0,0};
    float totalRGBA[4] = {0,0,0,0};
-   _sliceIntegrationValues[0] = _tf->EvaluateAt(0)[0];
-   _sliceIntegrationValues[1] = _tf->EvaluateAt(0)[1];
-   _sliceIntegrationValues[2] = _tf->EvaluateAt(0)[2];
-   _sliceIntegrationValues[3] = _tf->EvaluateAt(0)[3];
+   _sliceIntegrationValues[0] = 0;//_tf->EvaluateAt(0)[0];
+   _sliceIntegrationValues[1] = 0;//_tf->EvaluateAt(0)[1];
+   _sliceIntegrationValues[2] = 0;//_tf->EvaluateAt(0)[2];
+   _sliceIntegrationValues[3] = 0;//_tf->EvaluateAt(0)[3];
    for(unsigned int i = 1; i < _tf->GetResolution(0); ++i)
    {
       curRGBA = _tf->EvaluateAt(i*4);

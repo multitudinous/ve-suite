@@ -93,6 +93,7 @@ static const char* vrPhongFragSource = {
    "uniform sampler2D jitter2D;\n"
    "uniform vec3 viewRay;\n"
    "uniform vec2 jitterSize;\n"
+   "uniform float alphaRatio;\n"
    
    "void main(void)\n"
    "{\n"
@@ -134,6 +135,7 @@ static const char* vrPhongFragSource = {
       "{\n"
       "   gl_FragColor = textureColor;\n"
       "}\n"
+      "gl_FragColor.a = 1.0-pow(1.0-gl_FragColor.a,alphaRatio);\n"
    "}\n"
 };
 #endif
