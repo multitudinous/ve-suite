@@ -33,6 +33,7 @@ sources = Split("""
    TBVolumeSlices.cxx
    LuminanceTransferFunction.cxx
    PreIntegrationTexture.cxx
+   NoiseTexture2D.cxx
    RedYellowGreenCyanBlueTransferFunction.cxx
    TransferFunction.cxx
 """)
@@ -70,6 +71,7 @@ headers = Split("""
    RedYellowGreenCyanBlueTransferFunction.h
    TransferFunction.h
    PreIntegrationTexture.h
+   NoiseTexture2D.h
    LuminanceTransferFunction.h
 """)
 
