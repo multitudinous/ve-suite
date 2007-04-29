@@ -263,6 +263,8 @@ void cfdApp::contextInit()
    //osg::ref_ptr< osg::LightModel > lightmodel = new osg::LightModel;
    //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
+   // Add the tree to the scene viewer and set properties
+   new_sv->setSceneData(getScene());
 
 	//Setup OpenGL light
 	//This should actualy be done in the simulator code
@@ -724,15 +726,9 @@ void cfdApp::draw()
    unsigned x_size = unsigned( vp_sx*float( w_width) );
    unsigned y_size = unsigned( vp_sy*float( w_height) );
 
-
-
    //There is no resize event as of now
    //cfdEnvironmentHandler::instance()->SetWindowDimensions(x_size,y_size);
 
-
-
-   // Add the tree to the scene viewer and set properties
-   sv->setSceneData(getScene());
    //sv->setCalcNearFar(false);
    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
