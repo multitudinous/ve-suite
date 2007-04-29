@@ -103,7 +103,7 @@ void ScalarToolsDialog::_buildGUI()
    wxStaticBox* numSlicesSliderBox = new wxStaticBox(this, -1, _T("Number of Slice Planes/Brick"));
    wxStaticBoxSizer* sliceSizer = new wxStaticBoxSizer(numSlicesSliderBox,wxVERTICAL);
 
-   _numSlicesSlider = new wxSlider(this,TB_SLICE_SLIDER,100,32,400,wxDefaultPosition,wxSize(300,-1),wxSL_HORIZONTAL|wxSL_LABELS);
+   _numSlicesSlider = new wxSlider(this,TB_SLICE_SLIDER,100,32,1000,wxDefaultPosition,wxSize(300,-1),wxSL_HORIZONTAL|wxSL_LABELS);
    sliceSizer->Add(_numSlicesSlider,0,wxALIGN_CENTER|wxEXPAND);
    
    wxStaticBox* isoSliderBox = new wxStaticBox(this, -1, _T("Isosurface"));
