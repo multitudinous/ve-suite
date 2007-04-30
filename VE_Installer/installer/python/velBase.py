@@ -195,7 +195,7 @@ def CreateListFromText(textBlock):
     Then, splits the textBlock based on whitespace."""
     for charToReplace in SEPARATOR_CHARS:
         textBlock = textBlock.replace(charToReplace, ' ')
-        print textBlock
+        ##print textBlock ##TESTER
     return textBlock.split()
 
 

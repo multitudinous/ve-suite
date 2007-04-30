@@ -52,7 +52,7 @@ class SettingsWindow(wx.Dialog):
         self.cbDesktop.SetToolTip(wx.ToolTip("Set Desktop Mode for" +
                                              " Conductor and Xplorer"))
         ##Xplorer Type radio box.
-        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Type",
+        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Mode",
                                      wx.DefaultPosition, wx.DefaultSize,
                                      RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_COLS)
 ##                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)

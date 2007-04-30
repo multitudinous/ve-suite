@@ -26,7 +26,7 @@ class ClusterWindow(wx.Dialog):
         self.state = state
         ##Build displays.
         self.clustList = wx.ListBox(self, -1,
-                                         size=JCONF_LIST_DISPLAY_MIN_SIZE)
+                                    size=JCONF_LIST_DISPLAY_MIN_SIZE)
         ##Build Add & Delete buttons.
         self.bAdd = wx.Button(self, -1, "Add")
         self.bAdd.SetToolTip(wx.ToolTip("Add a slave listing."))
