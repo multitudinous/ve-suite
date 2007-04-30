@@ -5,8 +5,7 @@
   <section id="launcher_intro">
     <title>Introduction</title>
 
-    <para>Starting VE-Suite was simplified with the release of version 1.0.0
-    via VE-Launcher. VE-Launcher is a quick, easy way to launch any
+    <para>VE-Launcher is a quick, easy way to launch any
     configuration of VE-Suite. It helps you save your configuration, choose
     which programs to run, and launch them without entering text commands.
     Even with all of the options and configurations available, choosing the
@@ -29,15 +28,50 @@
     on the Unix-based install. In dev mode, VE-Launcher doesn't require you to set
     dependencies &amp; it looks for stereo desktop config files in their build location,
     not their install location.</para>
+    
+    <para><emphasis role="bold">Preset Environmental Variables:</emphasis> Certain values,
+    such as the VPR_DEBUG_LEVEL, can be automatically passed into VE-Launcher from the
+    environment on start. If they are set in the environment, they'll overwrite the
+    values saved from last time. These variables include:</para>
+    <itemizedlist>
+      <listitem>
+        <para>VE_DEPS_DIR (Dependencies Directory - Windows only)</para>
+      </listitem>
+      <listitem>
+        <para>VJ_BASE_DIR (VR Juggler Directory - Unix only)</para>
+      </listitem>
+      <listitem>
+        <para>VE_WORKING_DIR (Working Directory)</para>
+      </listitem>
+      <listitem>
+        <para>TAO_MACHINE (TAO Machine)</para>
+      </listitem>
+      <listitem>
+        <para>TAO_PORT (TAO Port)</para>
+      </listitem>
+      <listitem>
+        <para>VEXMASTER (Cluster Master)</para>
+      </listitem>
+      <listitem>
+        <para>OSGNOTIFYLEVEL (OSG Debug Level)</para>
+      </listitem>
+      <listitem>
+        <para>VPR_DEBUG_ENABLE (VPR Debug)</para>
+      </listitem>
+      <listitem>
+        <para>VPR_DEBUG_NFY_LEVEL (VPR Debug Level)</para>
+      </listitem>
+    </itemizedlist>
   </section>
 
   <section id="setup_launcher">
     <title>Setting the Launcher's Dependencies</title>
     
-    <para>Before you can run VE-Suite, you have to show VE-Launcher where the
-    dependencies it needs are. The method for this varies depending on whether
-    you're running VE-Suite on Windows or a Unix-based system, and is bypassed completely
-    in Dev mode.</para>
+    <para>Before you can run VE-Suite, you have to point VE-Launcher to its
+    dependencies. How you do this depends on whether
+    you're running VE-Suite on a Windows or a Unix-based system. Pointing to the dependencies
+    is bypassed completely in Dev mode; VE-Launcher assumes you already have the environmental
+    variables set.</para>
     
     <para><emphasis role="bold">Windows:</emphasis> VE-Launcher needs to find the
     VE-Suite Dependencies directory you installed along with VE-Suite. The first time
@@ -54,10 +88,12 @@
 
     <para><emphasis role="bold">Unix:</emphasis> VE-Launcher supports dependencies spread
     across multiple directories. The first time you start it, the Launcher will ask you
-    to choose its Dependencies' directories.</para>
+    to choose its Dependencies' directories. Add each dependency's directory to the list.</para>
     
-    <para>You need to specifically set the VR-Juggler directory; your other dependencies
-    should be added to the dependencies list. If you need to change your dependencies
+    <para>The only exception is VR-Juggler's dependency directory. Since it sets multiple
+    variables, you need to choose that separately from the other dependencies.</para>
+    
+    <para>If you need to change your dependencies
     later, you can do so from the Options->Choose Dependencies menu in VE-Launcher.</para>
 
     <mediaobject>
@@ -89,8 +125,8 @@
 
     <itemizedlist>
       <listitem>
-        <para>Working Directory: Ensure that the location of the directory
-        containing the files you want to load is entered.</para>
+        <para>Working Directory: Input the directory with the files
+        you want to load.</para>
       </listitem>
 
       <listitem>
@@ -100,7 +136,7 @@
 
       <listitem>
         <para>Launch Mode: Select which mode you would like to launch VE-Suite
-        in. You have six options, including custom mode:</para>
+        in. You have six options:</para>
 
         <orderedlist>
           <listitem>
@@ -125,7 +161,7 @@
           </listitem>
 
           <listitem>
-            <para>As of 1.0.2: Shell mode lets the user work in a new shell
+            <para>Shell mode lets the user work in a new shell
             with the VE-Suite environment set up. If you choose to launch in
             Shell mode, it will ask you whether you want to set up this shell
             for VE-Builder. If you do, it will add the VE-Builder directory
@@ -165,11 +201,11 @@
 
           <listitem>
             <para><emphasis role="bold">Open Recent File:</emphasis> Pick a
-            recently-launcher .ves or script shell file for launch.</para>
+            recently-launched .ves or script shell file for launch.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Close Files:</emphasis> Remove any .ves
+            <para><emphasis role="bold">Close File:</emphasis> Remove any .ves
             or script shell files from the launch.</para>
           </listitem>
 
@@ -185,17 +221,19 @@
         <itemizedlist>
           <listitem>
             <para><emphasis role="bold">Load:</emphasis> Load a
-            previously-saved configuration.</para>
+            previously-saved VE-Launcher configuration. VE-Launcher configurations
+            store info such as Mode settings, Xplorer configurations, and
+            cluster settings.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Save:</emphasis> Save the current
-            configuration.</para>
+            VE-Launcher configuration.</para>
           </listitem>
 
           <listitem>
             <para><emphasis role="bold">Delete:</emphasis> Delete a
-            previously-saved configuration.</para>
+            previously-saved VE-Launcher configuration.</para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -229,8 +267,9 @@
 
           <listitem>
             <para><emphasis role="bold">Debug Launch:</emphasis> If checked,
-            VE-Suite prints the environment variables set for launch. (Printing
-            not available on the Windows .exe.) If you're running a cluster on
+            VE-Suite prints the environment variables set for launch in a separate
+            window and writes VE-Suite's output to the 'debug.txt' file in VE-Launcher's
+            directory. If you're running a cluster on
             Windows, it also forces the cluster program consoles to stay open
             if they encounter errors.</para>
           </listitem>
@@ -245,7 +284,7 @@
           <listitem>
             <para><emphasis role="bold">Cluster Wait Times:</emphasis> Customize
             the time VE-Suite waits between starting the master node and its
-            slaves.</para>
+            slaves, and the time VE-Suite waits between starting slaves.</para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -262,10 +301,11 @@
     </mediaobject>
 
     <para>You use the Mode Settings window to view and change settings. The
-    Desktop, Tablet, and Computation modes only let you view their settings,
-    while Visualization and Custom modes let you change some of them. Choices
-    are faded out if you can't change them or if changing them wouldn't do
-    anything. (For example, you can't choose which type of Xplorer to run if
+    Desktop, Tablet, and Computation modes only let you view their settings;
+    Visualization mode lets you change the Xplorer Mode and cluster computers;
+    Custom mode lets you change every setting. Choices
+    are faded out if you can't change them, or if changing them wouldn't do
+    anything. (For example, you can't choose which Xplorer Mode to run if
     you're not running Xplorer.)</para>
 
     <para>Options you can set include:</para>
@@ -279,22 +319,19 @@
 
       <listitem>
         <para>Which programs to run. You can choose to run Name Server,
-        Conductor, and Xplorer. If you don't select any of them, VE-Suite
-        won't launch because it won't do anything without a program to
-        launch.</para>
+        Conductor, and Xplorer. You must select at least one of them or
+        VE-Suite won't launch.</para>
       </listitem>
 
       <listitem>
         <para>Whether to run Conductor and Xplorer in Desktop Mode. This
-        checkbox is disabled if you're launching neither Conductor nor
-        Xplorer.</para>
+        checkbox is disabled if you're not launching either of them.</para>
       </listitem>
 
       <listitem>
-        <para>Which type of Xplorer to run. OpenSceneGraph and OSG Patented
-        will work for most projects, while OSG Patented Cluster is made for
-        use on clustered computers. This radio list is disabled if you aren't
-        launching Xplorer.</para>
+        <para>Which mode to run Xplorer in. You can choose between non-cluster
+        mode (single computer) or cluster mode. This radio list is disabled
+        if you aren't launching Xplorer.</para>
       </listitem>
     </itemizedlist>
 
@@ -306,10 +343,10 @@
       </imageobject>
     </mediaobject>
 
-    <para>VE-Suite has over two dozen configuration files available. To help
-    you keep track of them, VE-Launcher provides you with a configuration list
-    that allows you to add, rename, and delete entries. The path to the
-    currently selected entry is listed below, so you can tell which name
+    <para>VE-Suite has multiple configuration files available. To help
+    you keep track of them, VE-Launcher lets you to keep a list of configuration
+    files you use. Here you can add, rename, and delete list entries. The path
+    to the currently selected entry is listed below, so you can tell which name
     stands for which file.</para>
 
     <para>When you add a new configuration to the list, its initial name is
@@ -320,10 +357,8 @@
   <section id="launcher_unix_clusters">
     <title>UNIX Clusters</title>
 
-    <para>VE-Launcher versions 1.0.2+ have extra features for automatically
-    starting up VE-Xplorer on other computers in a cluster.</para>
-
-    <para>To use the cluster functions of VE-Launcher on Unix, your cluster
+    <para>VE-Launcher can run VE-Suite across a cluster from one computer.
+    To use the cluster functions of VE-Launcher on Unix, your cluster
     must satisfy these requirements:</para>
 
     <orderedlist>
@@ -340,7 +375,7 @@
 
       <listitem>
         <para>The user has manually sshed into each node and authenticated its
-        name.</para>
+        host.</para>
       </listitem>
     </orderedlist>
 
@@ -353,22 +388,22 @@
     you'll use in VE-Launcher; ssh treats partially-qualified (e.g., francis)
     and fully-qualified (e.g., francis.iastate.edu) names as separate users.
     Once you authenticate the other nodes, the authentication stays in your
-    user profile permentantly.</para>
+    user profile permanently.</para>
 
     <para>Once you have authenticated all nodes, you can run the cluster from
     VE-Launcher:</para>
 
     <orderedlist>
       <listitem>
-        <para>If you're running NameServer or Conductor on a certain node,
+        <para>If you're running NameServer and Conductor on a certain node,
         open VE-Launcher from that node. (VE-Launcher runs NameServer and
         Conductor from the current computer.)</para>
       </listitem>
 
       <listitem>
-        <para>Set the settings. When you select the Xplorer type OSG Patented
-        Cluster, the <guibutton>Set Cluster Computers</guibutton> button will
-        be enabled.</para>
+        <para>Set your settings and select the Cluster Xplorer mode.
+        The <guibutton>Cluster Settings</guibutton> button will
+        then be enabled.</para>
 
         <mediaobject>
           <imageobject>
@@ -378,10 +413,16 @@
       </listitem>
 
       <listitem>
-        <para>Click <guibutton>Set Cluster Computers</guibutton>. A window
+        <para>Click <guibutton>Cluster Settings</guibutton>. A window
         will pop up showing the master and slaves listed. Put the master's
         name in, then add each slave's name to the list. Click
         <guibutton>OK</guibutton> when you're done.</para>
+
+        <para>You can also pass extra variables to the cluster computers.
+        Click on the <guibutton>Pass Extra Vars</guibutton> and list the
+        extra variables you want to pass.</para>
+
+        <para>Click <guibutton>OK</guibutton> when you're done.</para>
 
         <mediaobject>
           <imageobject>
@@ -397,8 +438,8 @@
     </orderedlist>
 
     <para><emphasis role="bold">NOTE:</emphasis> There is a slight delay
-    between each node launched because simultaneous launching caused erratic
-    behavior in the cluster. The delay can be changed through the
+    between each node launched because simultaneous launching causes erratic
+    behavior in clusters. The delay can be changed through the
     Options-&gt;Cluster Wait Times menu. If you encounter problems with sync
     or unconnected nodes using VE-Launcher, try lengthening the delays. If
     launching the cluster is taking too long, try shortening them.</para>
@@ -407,7 +448,7 @@
   <section id="launcher_windows_clusters">
     <title>Windows Clusters</title>
 
-    <para>VE-Launcher versions 1.0.2+ can start VE-Suite across a Windows
+    <para>VE-Launcher can start VE-Suite across a Windows
     cluster through <ulink
     url="http://www.sysinternals.com/Utilities/PsExec.html">PsExec</ulink>.</para>
 
@@ -431,16 +472,15 @@
 
     <orderedlist>
       <listitem>
-        <para>If you're running NameServer or Conductor on a certain computer,
+        <para>If you're running NameServer and Conductor on a certain computer,
         open VE-Launcher from that computer. (VE-Launcher runs NameServer and
         Conductor from the current computer.)</para>
       </listitem>
 
       <listitem>
-        <para>Select Custom mode and set your settings as usual. When you
-        choose which Xplorer Type to run, select OSG Patented Cluster. This
-        enables the <guibutton>Set Cluster Computers</guibutton>
-        button.</para>
+        <para>Set your settings and select the Cluster Xplorer mode.
+        The <guibutton>Cluster Settings</guibutton> button will
+        then be enabled.</para>
 
         <mediaobject>
           <imageobject>
@@ -450,7 +490,7 @@
       </listitem>
 
       <listitem>
-        <para>Click <emphasis role="bold">Set Cluster Computers</emphasis>. A
+        <para>Click <emphasis role="bold">Cluster Settings</emphasis>. A
         window will pop up showing the master and slaves listed, plus an
         optional username field. Put the master's name in, then add each
         slave's name to the list.</para>
@@ -459,8 +499,12 @@
         so, just enter your username into the User Name field. The username's
         domain may need to be included as well, depending on your cluster's
         setup. If you pass your username, you will have to manually enter your
-        password in each Psexec window when it launches; VE-Launcher doesn't
+        password in each Psexec window as it launches; VE-Launcher doesn't
         send passwords for security reasons.</para>
+        
+        <para>You can also pass extra variables to the cluster computers.
+        Click on the <guibutton>Pass Extra Vars</guibutton> and list the
+        extra variables you want to pass.</para>
 
         <para>Click <guibutton>OK</guibutton> when you're done.</para>
 
@@ -490,11 +534,6 @@
     file. Any terminal code in the clusterTemplate.txt file will run on the
     cluster's other computers before Xplorer is launched. Please read the
     comments in clusterTemplate.txt for more details.</para>
-
-    <para><emphasis role="bold">NOTE:</emphasis> There is a bug in VE-Launcher
-    1.0.2 where the cluster template code isn't separated from the standard
-    code by a line break. Be sure to insert a line break after the last line
-    of code in the template to avoid errors from a merged line.</para>
   </section>
 
   <section id="launcher_command_line">
@@ -601,8 +640,7 @@
 
     <para>John Doe wants to set up VE-Suite to look at a virtual power plant
     design. He needs to set it in Visualization mode, using the VR Juggler
-    configuration "standalone" and the Open Scene Graph Xplorer. It also has
-    to connect to computer kiwi on port 1239.</para>
+    configuration "standalone". It also has to connect to computer kiwi on port 1239.</para>
 
     <para>When he starts VE-Launcher, he sees this:</para>
 
@@ -653,10 +691,10 @@
       </imageobject>
     </mediaobject>
 
-    <para>Visualization mode sets most of the options, and Open Scene Graph is
-    already selected. That leaves changing the Xplorer configuration. However,
-    the configuration he needs isn't on the list yet. John clicks
-    <guibutton>Edit Configuration List</guibutton>.</para>
+    <para>Visualization mode sets most of the options, and the Non-Cluster
+    Xplorer mode is already selected. That leaves changing the Xplorer
+    configuration. However, the configuration he needs isn't on the
+    list yet. John clicks <guibutton>Edit Configuration List</guibutton>.</para>
 
     <mediaobject>
       <imageobject>
