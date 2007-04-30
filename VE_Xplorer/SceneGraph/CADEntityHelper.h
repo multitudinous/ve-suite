@@ -53,16 +53,14 @@ public:
       base_type(),
 		count_(0),
 		prev_perc_(0)
-	
-        {
-        std::fstream buff(filename.c_str(), std::ios_base::in | std::ios_base::binary); 
-      if ( buff.is_open() )
+   {
+      if ( base_type::open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
       {
          size_ = static_cast<int>(std::streambuf::pubseekoff(0, std::ios_base::end, std::ios_base::in));
          std::streambuf::pubseekoff(0, std::ios_base::beg, std::ios_base::in);
       }
-	}
-   
+   }
+
 protected:
    virtual typename std::basic_filebuf<Elem, Tr>::int_type uflow()
 	{

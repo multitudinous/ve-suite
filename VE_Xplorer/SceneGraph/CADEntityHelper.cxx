@@ -235,8 +235,8 @@ void CADEntityHelper::LoadFile( std::string filename
             std::cerr << "Error: could not find a suitable reader/writer to load the specified file" << std::endl;
             return;
          }
-         
-         std::auto_ptr<progbuf> pb(new progbuf(osgDB::findDataFile(filename)));
+         //osgDB::findDataFile(
+         std::auto_ptr<progbuf> pb(new progbuf(filename));
          if (!pb->is_open())
          {
             std::cerr << "Error: could not open file `" << filename << "'" << std::endl;
