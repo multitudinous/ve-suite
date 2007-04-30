@@ -203,9 +203,6 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
    while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
 
-   //wxPaintDC dc(this);
-   //PrepareDC(dc);
-  
    wxBufferedPaintDC dc(this, *bitmapBuffer, wxBUFFER_VIRTUAL_AREA);
 
    dc.Clear();
@@ -882,7 +879,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
   //m_selLink = -1;
   m_selLinkCon = -1;
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-  //ReDrawAll();
+
    Refresh(true);
    Update();
     
@@ -940,8 +937,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
       }
    
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-   //  Refresh(false);
-   //ReDrawAll();
+
    Refresh(true);
    Update();
 }
@@ -972,7 +968,7 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
    }
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-   //ReDrawAll();
+
    Refresh(true);
    Update();
 }
@@ -1009,20 +1005,20 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
    //links[m_selLink].DrawLinkCon( true, userScale );
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-   //ReDrawAll();
+
    Refresh(true);
    Update();
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
+void Network::OnDelMod(wxCommandEvent& event)
 {
    int answer=wxMessageBox(_("Do you really want to delete this module?"), _("Confirmation"), wxYES_NO);
    if (answer!=wxYES)
       return;
 
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-
+   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
+   
    // Need to delete all links associated with this particular module
    // first, delete all the links connects to it
    std::vector< Link >::iterator iter3;
@@ -1041,12 +1037,18 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
       }
    }
  
+   ///Need to clear out the vector of polygon boxes as well
+   ///XXX
+   /////////////
+   
    //Now delete the plugin from the module and then remove from the map
    std::map< int, Module >::iterator iter;
    for (iter=modules.begin(); iter!=modules.end();)
    {
-      if ( iter->first==m_selMod )
+      if ( iter->first == m_selMod )
       {
+         ///This is so that we find the right eventhandler to pop rather than
+         ///popping the last one
          std::vector< wxEvtHandler* > tempEvtHandlerVector;
          wxEvtHandler* tempEvtHandler = 0;
          tempEvtHandler = PopEventHandler( false );
@@ -1058,11 +1060,12 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
         
          for ( size_t i = 0; i < tempEvtHandlerVector.size(); ++i )
          {
-           PopEventHandler( tempEvtHandlerVector.at( i ) );
+           PushEventHandler( tempEvtHandlerVector.at( i ) );
          }
          
          //delete modules[m_selMod].GetPlugin();
-	      modules.erase( iter++ );
+	      modules.erase( iter );
+         ///Now send the erased module to xplorer to delete it as well
          VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
          dataValuePair->SetDataName( "Object ID" );
          dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
@@ -1071,9 +1074,9 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
          veCommand->AddDataValuePair( dataValuePair );
          bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
          //Clean up memory
-         delete veCommand;
-         //}         
-	      m_selLink=-1;
+         delete veCommand;       
+	      m_selLink = -1;
+         m_selMod = -1;
 	      break;
       }
       else
@@ -1082,7 +1085,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
       }
    }
 
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
    ReDrawAll();
    if(vistab)
@@ -1094,7 +1097,6 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////
 ///// Selection Functions ///////////
 /////////////////////////////////////
-
 int Network::SelectMod( int x, int y, wxDC &dc )
 {
    // This function checks to see which module your mouse is over based
@@ -1119,16 +1121,12 @@ int Network::SelectMod( int x, int y, wxDC &dc )
    m_selMod = -1;
    return -1;
 }
-
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::UnSelectMod(wxDC &dc)
 {
-  //DrawPorts( modules[m_selMod].GetPlugin(), false ); // wipe the ports
-  //ReDraw( dc );
   m_selMod = -1;
 }
-
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int Network::SelectLink(int x, int y)
 {
    wxPoint temp;
@@ -1147,19 +1145,12 @@ int Network::SelectLink(int x, int y)
    m_selLink = -1;
    return -1;
 }
-
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::UnSelectLink(wxDC &dc)
 {
-   //wipe link connectors
-   //links[m_selLink].DrawLinkCon( false, userScale );
    m_selLink = -1;
-   //Refresh(true);
-   //Update();
-   //ReDraw(dc);
 }
-
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int Network::SelectTag(int x, int y)
 {
    wxPoint temp;
@@ -1178,23 +1169,20 @@ int Network::SelectTag(int x, int y)
    }
    return -1;
 }
-
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::UnSelectTag(wxDC &dc)
 {
   tags[m_selTag].DrawTagCon( false, userScale );
   m_selTag = -1;
-  //ReDraw(dc);
 }
-
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 /////////////// Misc Functions //////////////////
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::SetXplorerInterface( VjObs_ptr veEngine )
 {
    xplorerPtr = VjObs::_duplicate( veEngine );
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::CleanRect(wxRect box, wxDC &dc)
 {
   //wxBrush oldbrush = dc.GetBrush();
@@ -1364,13 +1352,8 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
       xpos = (int)( 1.0 * xpos * userScale.first );
       ypos = (int)( 1.0 * ypos * userScale.second );
       Scroll(xpos, ypos);
-   //   ReDrawAll();
    }
-  // else
-   //{
-    // ReDraw(dc);
-   //}
-   //ReDraw(dc);
+
    Refresh(true);
    Update();
 }
@@ -1448,30 +1431,7 @@ void Network::DropModule(int ix, int iy, int mod )
       if ( (links.at( i ).GetFromModule() == mod) || (links.at( i ).GetToModule() == mod) )
          links.at( i ).CalcLinkPoly();
    }
-
-  //if ((bbox.x-3)>0)
-  //  bbox.x-=3;
-  //  else
-  //  bbox.x=0;
-  
-  //if ((bbox.y-3)>0)
-  //   bbox.y-=3;
-  //else
-  //  bbox.y=0;
-  
-  //  bbox.x =0;
-  //  bbox.y =0;
-  //  bbox.width=sx;
-  //  bbox.height=sy;
-
-  //xpos = 1.0 * xpos * userScale.first;
-  //ypos = 1.0 * ypos * userScale.second;
-      
-  //  Scroll(vx, vy);  
-  //CleanRect(bbox, dc);
-  //ReDrawAll();
 }
-
 /////////////////////////////////////////////////////////////////////////
 void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
 {
@@ -1524,7 +1484,6 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
    //dc.DrawLine( offSet.x, offSet.y, xold, yold);
    Refresh(true);
    Update();
-   //ReDraw(dc);
 
    if ( dest_mod >=0 )
       DrawPorts( modules[dest_mod].GetPlugin(), true, dc); //draw the ports
@@ -1679,7 +1638,6 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    //m_selMod = -1;
    m_selFrPort = -1;
    m_selToPort = -1;
-   //ReDrawAll();
 }
 /////////////////////////////////////////////////////////////////////
 bool Network::IsPortCompatible(int frmod, int frport, int tomod, int toport)
@@ -1765,14 +1723,10 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
       ypos = (int)( 1.0 * ypos * userScale.second );
 
       Scroll(xpos, ypos);
-//      ReDrawAll();
    }
-//   else
-//      ReDraw(dc);
 
    Refresh(true);
    Update();
-   //links[ln].DrawLinkCon( true, userScale );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1812,12 +1766,6 @@ void Network::DropLinkCon(int x, int y, int ln, int ln_con, wxDC &dc)
   *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
 
   links[ln].CalcLinkPoly();
-
-  //  Scroll(vx, vy);
-  //ReDraw(dc);
-  //Refresh(true);
-  //Update();
-  //links[ln].DrawLinkCon( true, userScale );
 }
 
 //////////////////////////////////////////////////////////////////
@@ -1877,10 +1825,8 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
       ypos = (int)( 1.0 * ypos * userScale.second );
       
       Scroll(xpos, ypos);
-  //    ReDrawAll();
     }
-  //else
-  //  ReDraw(dc);
+
   tags[t].DrawTagCon( true, userScale );
   Refresh(true);
   Update();
@@ -1924,8 +1870,6 @@ void Network::DropTagCon(int x, int y, int t, int t_con, wxDC &dc)
 
   tags[t].CalcTagPoly();
 
-  //  Scroll(vx, vy);
-  //ReDraw(dc);
   Refresh(true);
   Update();
 }
@@ -1989,10 +1933,8 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
       ypos = (int)( 1.0 * ypos * userScale.second );
       
       Scroll(xpos, ypos);
-  //    ReDrawAll();
     }
-  //else
-  //  ReDraw(dc);
+
   tags[t].DrawTagCon( true, userScale );
   Refresh(true);
   Update();
@@ -2036,8 +1978,6 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 
   tags[t].CalcTagPoly();
 
-  //  Scroll(vx, vy);
-  //ReDraw(dc);
   Refresh(true);
   Update();
 }
@@ -2076,7 +2016,7 @@ void Network::AddTag(int x, int y, wxString text)
 
   Refresh(true);
   Update();
-   //ReDraw(dc);
+
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 
@@ -2127,7 +2067,6 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
   //  for (i=0; i<modules.size(); i++)
   //Setup the event handlers for the plugin
   PushEventHandler( modules[id].GetPlugin() );
-  //ReDrawAll();
   Refresh(true);
   Update();
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
@@ -2136,25 +2075,23 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 ////////////////////////////////////////
 /////// Draw Functions /////////////////
 ////////////////////////////////////////
-
-
 void Network::ReDrawAll()
 {
-wxClientDC dc(this);
-PrepareDC(dc);
-wxRect box;  
-//  box.x = box.y=0;
-  //  box.width = dc.MaxX();
-  //  box.height = dc.MaxY();
-  //  dc.SetPen(*wxWHITE_PEN);
-  //  dc.SetBrush(*wxWHITE_BRUSH);
-  CleanRect(box, dc); 
-dc.SetUserScale(userScale.first, userScale.second);
-  //dc.SetBackground(*wxWHITE_BRUSH);
-  //dc.Clear();
-  //dc.SetPen(*wxBLACK_PEN);
-  //dc.SetBrush(*wxWHITE_BRUSH);
-ReDraw(dc);
+   wxClientDC dc(this);
+   PrepareDC(dc);
+   wxRect box;  
+   //  box.x = box.y=0;
+   //  box.width = dc.MaxX();
+   //  box.height = dc.MaxY();
+   //  dc.SetPen(*wxWHITE_PEN);
+   //  dc.SetBrush(*wxWHITE_BRUSH);
+   CleanRect(box, dc); 
+   dc.SetUserScale(userScale.first, userScale.second);
+   //dc.SetBackground(*wxWHITE_BRUSH);
+   //dc.Clear();
+   //dc.SetPen(*wxBLACK_PEN);
+   //dc.SetBrush(*wxWHITE_BRUSH);
+   ReDraw(dc);
 }
 
 /////////////////////////////////
@@ -2176,10 +2113,10 @@ void Network::ReDraw(wxDC &dc)
       iter->second.GetPlugin()->DrawName(&dc);
    }
 
-   if(m_selMod >= 0)
+   if ( modules.find( m_selMod ) != modules.end() )
    {
-	   HighlightSelectedIcon( modules[m_selMod].GetPlugin(), dc);
-	   DrawPorts( modules[m_selMod].GetPlugin(), true, dc);
+      HighlightSelectedIcon( modules[m_selMod].GetPlugin(), dc);
+      DrawPorts( modules[m_selMod].GetPlugin(), true, dc);
    }
 
    if(m_selLink >= 0)
@@ -2451,8 +2388,10 @@ std::string Network::Save( std::string fileName )
 
    //  Models
    std::map< int, Module >::iterator iter;
+   std::cout <<  "here 1 " << modules.size() << std::endl;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
+      std::cout << iter->first << std::endl;
       iter->second.GetPlugin()->SetID( iter->first );
       nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( 
