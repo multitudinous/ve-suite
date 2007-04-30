@@ -331,14 +331,14 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 
 		//Clear selections
 		if (m_selMod >= 0)
-		UnSelectMod(dc);
+         UnSelectMod(dc);
 		if (m_selLink >= 0)
-		UnSelectLink(dc);
+         UnSelectLink(dc);
 		if (m_selTag >= 0)
-		UnSelectTag(dc);
+         UnSelectTag(dc);
 
-		//Refresh(true);
-		Update();
+		Refresh(true);
+		//Update();
 
 		//Select Mod/Link/Tag
 		SelectMod(x, y, dc);
@@ -390,8 +390,8 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 			else
 				SelectTag(x, y); 
 		}
-      //Refresh(true);
-      Update();
+      Refresh(true);
+      //Update();
 	}
 }
 
@@ -684,8 +684,8 @@ void Network::OnMRightDown(wxMouseEvent& event)
    SelectMod(x, y, dc);
    if (m_selMod < 0)
 	   SelectLink(x, y );
-   //Refresh(true);
-   Update();
+   Refresh(true);
+   //Update();
    /////////////////////////////////////////////////
 
    wxMenu pop_menu( _("Action"));
@@ -880,8 +880,8 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
   m_selLinkCon = -1;
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
-   //Refresh(true);
-   Update();
+   Refresh(true);
+   //Update();
     
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1354,8 +1354,8 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
       Scroll(xpos, ypos);
    }
 
-   //Refresh(true);
-   Update();
+   Refresh(true);
+   //Update();
 }
 /////////////////////////////////////////////////////////////
 void Network::DropModule(int ix, int iy, int mod )
@@ -1482,8 +1482,8 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
 
    //dc.SetPen(*wxWHITE_PEN);
    //dc.DrawLine( offSet.x, offSet.y, xold, yold);
-   //Refresh(true);
-   Update();
+   Refresh(true);
+   //Update();
 
    if ( dest_mod >=0 )
       DrawPorts( modules[dest_mod].GetPlugin(), true, dc); //draw the ports
@@ -1725,8 +1725,8 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
       Scroll(xpos, ypos);
    }
 
-   //Refresh(true);
-   Update();
+   Refresh(true);
+   //Update();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1828,8 +1828,8 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
     }
 
   tags[t].DrawTagCon( true, userScale );
-  //Refresh(true);
-  Update();
+  Refresh(true);
+  //Update();
 }
 
 //////////////////////////////////////////////////////////////////
@@ -1870,8 +1870,8 @@ void Network::DropTagCon(int x, int y, int t, int t_con, wxDC &dc)
 
   tags[t].CalcTagPoly();
 
-  //Refresh(true);
-  Update();
+  Refresh(true);
+  //Update();
 }
 
 ///////////////////////////////////////////////////////
@@ -1936,8 +1936,8 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
     }
 
   tags[t].DrawTagCon( true, userScale );
-  //Refresh(true);
-  Update();
+  Refresh(true);
+  //Update();
 }
 
 /////////////////////////////////////////////////////
@@ -1978,8 +1978,8 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 
   tags[t].CalcTagPoly();
 
-  //Refresh(true);
-  Update();
+  Refresh(true);
+  //Update();
 }
 
 //////////////////////////////////////////////////////
@@ -3381,6 +3381,6 @@ void Network::SetSelectedModule(int mod)
 	m_selTag = -1; 
 	m_selTagCon = -1; 
 	m_selMod = mod;
-	//Refresh(true);
-	Update();
+	Refresh(true);
+	///Update();
 }
