@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE_Suite"
-#define MyAppVerName "VE_Suite 1.0.5"
+#define MyAppVerName "VE_Suite 1.0.6"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -117,6 +117,8 @@ Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; 
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; DestName: ve_logo.xpm
 Source: {#VEHOME}\share\fonts\*.ttf; DestDir: {app}\share\vesuite\fonts; Flags: recursesubdirs createallsubdirs
 Source: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; DestDir: {tmp}
+Source: {#VEHOME}\external\loki-0.1.6\include\*.h; DestDir: {app}\include; Flags: recursesubdirs createallsubdirs; Components: vebuildenv
+Source: {#VEHOME}\external\loki-0.1.6\lib\*.lib; DestDir: {app}\lib\win32; Components: vebuildenv
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

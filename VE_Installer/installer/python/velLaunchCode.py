@@ -594,6 +594,7 @@ class Launch:
             pathList = [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
+                        os.path.join(os.path.join(VELAUNCHER_DIR,"..\lib")),
                         os.path.join(VELAUNCHER_DIR)]
             ##Outdated paths.
             ##pathList += [##os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
