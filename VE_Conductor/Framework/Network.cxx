@@ -1011,7 +1011,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelMod(wxCommandEvent& event)
+void Network::OnDelMod(wxCommandEvent& WXUNUSED( event ) )
 {
    int answer=wxMessageBox(_("Do you really want to delete this module?"), _("Confirmation"), wxYES_NO);
    if (answer!=wxYES)
@@ -2388,10 +2388,8 @@ std::string Network::Save( std::string fileName )
 
    //  Models
    std::map< int, Module >::iterator iter;
-   std::cout <<  "here 1 " << modules.size() << std::endl;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      std::cout << iter->first << std::endl;
       iter->second.GetPlugin()->SetID( iter->first );
       nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( 
