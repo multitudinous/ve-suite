@@ -10,7 +10,6 @@ from velJconfDict import *
 from velClusterDict import *
 from velSaveLoadConfig import *
 import velShell
-import velArguments
 
 class CommandLine:
     """Launches VE Suite using arguments from the command line.

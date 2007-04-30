@@ -169,7 +169,6 @@ class SettingsWindow(wx.Dialog):
         ##Xplorer Type
         self.rbXplorer.SetSelection(XPLORER_TYPE_LIST.index(self.state.GetSurface("XplorerType")))
         self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") and
-                              self.state.IsEnabled("Xplorer") and
                               self.state.GetSurface("Xplorer") == True)
         ##Cluster Node button
         self.bCluster.Enable(CLUSTER_ENABLED and
