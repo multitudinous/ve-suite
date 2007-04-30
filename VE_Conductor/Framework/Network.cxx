@@ -337,7 +337,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 		if (m_selTag >= 0)
 		UnSelectTag(dc);
 
-		Refresh(true);
+		//Refresh(true);
 		Update();
 
 		//Select Mod/Link/Tag
@@ -390,8 +390,8 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 			else
 				SelectTag(x, y); 
 		}
-	Refresh(true);
-	Update();
+      //Refresh(true);
+      Update();
 	}
 }
 
@@ -684,7 +684,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
    SelectMod(x, y, dc);
    if (m_selMod < 0)
 	   SelectLink(x, y );
-   Refresh(true);
+   //Refresh(true);
    Update();
    /////////////////////////////////////////////////
 
@@ -880,7 +880,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
   m_selLinkCon = -1;
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
-   Refresh(true);
+   //Refresh(true);
    Update();
     
 }
@@ -939,7 +939,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
    Refresh(true);
-   Update();
+   //Update();
 }
 
 /////////////////////////////////////////////////////
@@ -970,7 +970,7 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
    Refresh(true);
-   Update();
+   //Update();
 }
 
 /////////////////////////////////////////////////////
@@ -1007,7 +1007,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
    Refresh(true);
-   Update();
+   //Update();
 }
 
 /////////////////////////////////////////////////////
@@ -1354,7 +1354,7 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
       Scroll(xpos, ypos);
    }
 
-   Refresh(true);
+   //Refresh(true);
    Update();
 }
 /////////////////////////////////////////////////////////////
@@ -1482,7 +1482,7 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
 
    //dc.SetPen(*wxWHITE_PEN);
    //dc.DrawLine( offSet.x, offSet.y, xold, yold);
-   Refresh(true);
+   //Refresh(true);
    Update();
 
    if ( dest_mod >=0 )
@@ -1725,7 +1725,7 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
       Scroll(xpos, ypos);
    }
 
-   Refresh(true);
+   //Refresh(true);
    Update();
 }
 
@@ -1828,7 +1828,7 @@ void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
     }
 
   tags[t].DrawTagCon( true, userScale );
-  Refresh(true);
+  //Refresh(true);
   Update();
 }
 
@@ -1870,7 +1870,7 @@ void Network::DropTagCon(int x, int y, int t, int t_con, wxDC &dc)
 
   tags[t].CalcTagPoly();
 
-  Refresh(true);
+  //Refresh(true);
   Update();
 }
 
@@ -1936,7 +1936,7 @@ void Network::MoveTag(int x, int y, int t, wxDC &dc)
     }
 
   tags[t].DrawTagCon( true, userScale );
-  Refresh(true);
+  //Refresh(true);
   Update();
 }
 
@@ -1978,7 +1978,7 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 
   tags[t].CalcTagPoly();
 
-  Refresh(true);
+  //Refresh(true);
   Update();
 }
 
@@ -2015,7 +2015,7 @@ void Network::AddTag(int x, int y, wxString text)
    tags.push_back(t);
 
   Refresh(true);
-  Update();
+  //Update();
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
@@ -2068,7 +2068,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
   //Setup the event handlers for the plugin
   PushEventHandler( modules[id].GetPlugin() );
   Refresh(true);
-  Update();
+  //Update();
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 
@@ -3381,6 +3381,6 @@ void Network::SetSelectedModule(int mod)
 	m_selTag = -1; 
 	m_selTagCon = -1; 
 	m_selMod = mod;
-	Refresh(true);
+	//Refresh(true);
 	Update();
 }
