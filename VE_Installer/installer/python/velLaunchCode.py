@@ -544,7 +544,10 @@ class Launch:
         if self.settings["OSGNotifyLevel"]:
             self.EnvFill("OSGNOTIFYLEVEL",
                          str(self.settings["OSGNotifyLevel"]),
-                         overwrite = True)        
+                         overwrite = True)
+        else:
+            self.EnvFill("OSGNOTIFYLEVEL", "[Deleted]", overwrite = True)
+            del os.environ["OSGNOTIFYLEVEL"]
         self.EnvFill("NO_PERF_PLUGIN", "TRUE")
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
         self.EnvFill("PFNFYLEVEL", "0")
