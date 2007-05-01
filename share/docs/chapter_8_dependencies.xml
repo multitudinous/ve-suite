@@ -225,4 +225,13 @@
 
     <para>*depends on the desired scenegraph management</para>
   </section>
+  
+  <section id="vesuite_other_requirements">
+    <title>Other Requirements</title>
+    
+    <para>Computers running VE-Suite must be able to run all of the
+    dependencies listed above. They must also have shader support;
+    VE-Suite will not run properly without shader support.</para>
+  </section>
+  
 </chapter>
