@@ -480,6 +480,22 @@
     Flythrough</guibutton> button.</para>
 
   </section>
+  
+  <section id="xplorer_displays">
+    <title>Xplorer Displays</title>
+    
+    <para>You can display a FPS (Frames Per Second) counter and a
+    coordinate compass in the VE-Xplorer window.</para>
+    
+    <para>To display the FPS counter, select VE-Xplorer-&gt;Display-&gt;Frame
+    Rate under the VE-Conductor menus. Xplorer will display the FPS in the
+    lower-right corner of its window.</para>
+    
+    <para>To display the coordinate compass, select
+    VE-Xplorer-&gt;Display-&gt;Coord System. Xplorer will display the coordinate
+    compass in the upper-left corner of its window.</para>
+  </section>
+  
   <section id="quitting_vesuite">
     <title>Quitting VE-Suite</title>
 
