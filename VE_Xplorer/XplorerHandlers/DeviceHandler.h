@@ -38,11 +38,15 @@ DeviceHandler API
 /*!\class VE_Xplorer::DeviceHandler
 * 
 */
+// --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
+// --- VR Juggler Stuff --- //
 #include <vpr/Util/Singleton.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <gmtl/Point.h>
 
 //C/C++ Libraries
 #include <string>
@@ -83,6 +87,7 @@ private:
 
    VE_Xplorer::Device* active_device;
    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;
+   gmtl::Point3f center_point;
    std::string device_mode;
 };
 }

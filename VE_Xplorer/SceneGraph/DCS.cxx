@@ -188,6 +188,17 @@ void DCS::SetTranslationArray( std::vector<double> array )
    UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DCS::SetQuat( osg::Quat quat )
+{
+#ifdef _PERFORMER
+#elif _OSG
+   this->setAttitude( quat );
+   //this->setPivotPoint( osg::Vec3d( 0, 0, 0) );
+#elif _OPENSG
+#endif
+   UpdatePhysicsTransform();
+}
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector<double> array)
 {
 #ifdef _PERFORMER
@@ -199,9 +210,9 @@ void DCS::SetRotationArray( std::vector<double> array)
    //rph              
    osg::Matrixd rotateMat;
    
-   rotateMat.makeRotate(osg::DegreesToRadians(array[2]),roll,
-                        osg::DegreesToRadians(array[1]),pitch,
-                        osg::DegreesToRadians(array[0]),yaw);
+   rotateMat.makeRotate( osg::DegreesToRadians( array[2] ), roll,
+                         osg::DegreesToRadians( array[1] ), pitch,
+                         osg::DegreesToRadians( array[0] ), yaw );
    osg::Quat quat;
    rotateMat.get( quat );
    this->setAttitude( quat );

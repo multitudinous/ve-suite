@@ -33,6 +33,8 @@
 #include "VE_Xplorer/XplorerHandlers/Tablet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -70,17 +72,14 @@ void Tablet::Initialize( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::UpdateNavigation()
 {
-   float worldRot[ 3 ];
-   float* tempWorldRot = activeDCS->GetRotationArray();
-   worldRot[ 0 ] = tempWorldRot[ 0 ];
-   worldRot[ 1 ] = tempWorldRot[ 1 ];
-   worldRot[ 2 ] = tempWorldRot[ 2 ];
+   osg::Quat rot_quat;
+   osg::Quat world_quat = activeDCS->getAttitude();
 
-   float worldTrans[ 3 ];
+   float worldTrans[3];
 	float* tempWorldTrans = activeDCS->GetVETranslationArray();
-	worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
-	worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
-	worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
+	worldTrans[0] = -tempWorldTrans[0];
+	worldTrans[1] = -tempWorldTrans[1];
+	worldTrans[2] = -tempWorldTrans[2];
    
    // This is NOT how we should do things
    // Command should allowed to be null but because we always
@@ -119,9 +118,13 @@ void Tablet::UpdateNavigation()
    {
       for ( unsigned int i = 0; i < 3; i++ )
 	   {
-         worldTrans[ i ] = 0.0f;
-         worldRot[ i ] = 0.0f;
+         worldTrans[i] = 0.0f;
+         world_quat.set( 0, 0, 0, 1 );
+         center_point->mData[i] = 0.0f;
 	   }
+
+      center_point->mData[1] = worldTrans[1] =
+      static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->GetCPThreshold();
    }
    else if ( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
    {
@@ -142,36 +145,42 @@ void Tablet::UpdateNavigation()
       //forward translate
       { 
          worldTrans[1] += translationStepSize;
+         center_point->mData[1] -= translationStepSize;
       }
       else if ( cfdIso_value == NAV_BKWD ) 
       //backward translate
       { 
          worldTrans[1] -= translationStepSize;
+         center_point->mData[1] += translationStepSize;
       }
       else if ( cfdIso_value == NAV_RIGHT ) 
       //right translate
       { 
-           worldTrans[0] += translationStepSize;
+         worldTrans[0] += translationStepSize;
+         center_point->mData[0] -= translationStepSize;
       }
       else if ( cfdIso_value == NAV_LEFT ) 
       //left translate
       { 
-           worldTrans[0] -= translationStepSize;
+         worldTrans[0] -= translationStepSize;
+         center_point->mData[0] += translationStepSize;
       }
       else if ( cfdIso_value == NAV_UP ) 
       //upward translate
       { 
-         worldTrans[2] += translationStepSize;  
+         worldTrans[2] += translationStepSize;
+         center_point->mData[2] -= translationStepSize;
       }
       else if ( cfdIso_value == NAV_DOWN ) 
       //downward translate
       { 
-         worldTrans[2] -= translationStepSize;  
+         worldTrans[2] -= translationStepSize;
+         center_point->mData[2] += translationStepSize;
       } 
       else if ( cfdIso_value == YAW_CCW )        
       //CW rotation
       {
-         worldRot[ 0 ] -= rotationStepSize;
+         rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3f( 0, 0, 1 ) );
 
          if ( rotationFlag )
          {
@@ -184,9 +193,9 @@ void Tablet::UpdateNavigation()
 
             gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
             jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-            jugglerHeadPointTemp[ 2 ] = 0;
+            jugglerHeadPointTemp[0] = jugglerHeadPoint[0];
+            jugglerHeadPointTemp[1] = -jugglerHeadPoint[2];
+            jugglerHeadPointTemp[2] = 0;
 
             // translate world dcs by distance that the head
             // is away from the origin
@@ -198,26 +207,30 @@ void Tablet::UpdateNavigation()
             gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
 
             // Create rotation matrix and juggler head vector
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
-            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+            gmtl::EulerAngleXYZf worldRotVecTemp( 0, 0, gmtl::Math::deg2Rad( rotationStepSize ) );
+            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >( worldRotVecTemp );
             gmtl::Vec4f newGlobalHeadPointVec;
-            newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
-            newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
-            newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
+            newGlobalHeadPointVec[0] = newGlobalHeadPointTemp[0];
+            newGlobalHeadPointVec[1] = newGlobalHeadPointTemp[1];
+            newGlobalHeadPointVec[2] = newGlobalHeadPointTemp[2];
             // roate the head vector by the rotation increment
             gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
 
             // create translation from new rotated point
             // and add original head off set to the newly found location
             // set world translation accordingly
-            worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-            worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
+
+            worldTrans[0] = -(rotateJugglerHeadVec[0] + jugglerHeadPointTemp[0] );
+            worldTrans[1] = -(rotateJugglerHeadVec[1] + jugglerHeadPointTemp[1] );
+
+            center_point->mData[0] = -worldTrans[0];
+            center_point->mData[1] = -worldTrans[1];
          }
       }
       else if ( cfdIso_value == YAW_CW  )         
       //CCWrotation
       {
-         worldRot[ 0 ] += rotationStepSize;
+         rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3f( 0, 0, 1 ) );
 
          if ( rotationFlag )
          {
@@ -231,13 +244,13 @@ void Tablet::UpdateNavigation()
             gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
             jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
          #ifdef _OSG
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-            jugglerHeadPointTemp[ 2 ] = 0;
+            jugglerHeadPointTemp[0] = jugglerHeadPoint[0];
+            jugglerHeadPointTemp[1] = -jugglerHeadPoint[2];
+            jugglerHeadPointTemp[2] = 0;
          #else
-            jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-            jugglerHeadPointTemp[ 1 ] = 0;
-            jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 2 ];
+            jugglerHeadPointTemp[0] = jugglerHeadPoint[0];
+            jugglerHeadPointTemp[1] = 0;
+            jugglerHeadPointTemp[2] = jugglerHeadPoint[2];
          #endif
 
             // translate world dcs by distance that the head
@@ -251,44 +264,49 @@ void Tablet::UpdateNavigation()
 
             // Create rotation matrix and juggler head vector
          #ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
+            gmtl::EulerAngleXYZf worldRotVecTemp( 0, 0, gmtl::Math::deg2Rad( -rotationStepSize ) );
          #else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
+            gmtl::EulerAngleXYZf worldRotVecTemp( 0, gmtl::Math::deg2Rad( -rotationStepSize ), 0 );
          #endif
-            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >( worldRotVecTemp );
             gmtl::Vec4f newGlobalHeadPointVec;
-            newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
-            newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
-            newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
+            newGlobalHeadPointVec[0] = newGlobalHeadPointTemp[0];
+            newGlobalHeadPointVec[1] = newGlobalHeadPointTemp[1];
+            newGlobalHeadPointVec[2] = newGlobalHeadPointTemp[2];
             // roate the head vector by the rotation increment
             gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
 
             // create translation from new rotated point
             // and add original head off set to the newly found location
             // set world translation accordingly
-            worldTrans[0] = -(rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
+            worldTrans[0] = -(rotateJugglerHeadVec[0] + jugglerHeadPointTemp[0] );
          #ifdef _OSG
-            worldTrans[1] = -(rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
+            worldTrans[1] = -(rotateJugglerHeadVec[1] + jugglerHeadPointTemp[1] );
          #else
-            worldTrans[1] = (rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
+            worldTrans[1] = (rotateJugglerHeadVec[2] + jugglerHeadPointTemp[2] );
          #endif
+
+            center_point->mData[0] = -worldTrans[0];
+            center_point->mData[1] = -worldTrans[1];
          }
       }
+
+      //yes
       else if ( cfdIso_value == PITCH_DOWN )         
       {
-            worldRot[ 1 ] += rotationStepSize;
+         rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3f( 1, 0, 0 ) );
       }
       else if ( cfdIso_value == PITCH_UP )         
       {
-            worldRot[ 1 ] -= rotationStepSize;
+         rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3f( 1, 0, 0 ) );
       }
       else if ( cfdIso_value == ROLL_CW )         
       {
-            worldRot[ 2 ] -= rotationStepSize;
+         rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3f( 0, 1, 0 ) );
       }
       else if ( cfdIso_value == ROLL_CCW )         
       {
-            worldRot[ 2 ] += rotationStepSize;
+         rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3f( 0, 1, 0 ) );
       }
    }
 
@@ -309,7 +327,10 @@ void Tablet::UpdateNavigation()
    }
 
    activeDCS->SetTranslationArray( worldTrans );
-   activeDCS->SetRotationArray( worldRot );   
+
+   world_quat *= rot_quat;
+   activeDCS->SetQuat( world_quat );
+
    vprDEBUG(vesDBG,3) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

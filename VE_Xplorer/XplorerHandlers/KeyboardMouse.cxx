@@ -30,7 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Stuff --- //
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
+
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
+#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include "VE_Xplorer/SceneGraph/Group.h"
+
+// --- Bullet Stuff --- //
+#include <LinearMath/btVector3.h>
+
+// --- VR Juggler Stuff --- //
+#include <gadget/Type/KeyboardMouse/KeyEvent.h>
+#include <gadget/Type/KeyboardMouse/MouseEvent.h>
+
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
 
 // --- OSG Stuff --- //
 #include <osg/Group>
@@ -44,24 +64,6 @@
 #include <osg/Array>
 #include <osg/NodeVisitor>
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
-#include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
-
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-
-#include <gadget/Type/KeyboardMouse/KeyEvent.h>
-#include <gadget/Type/KeyboardMouse/MouseEvent.h>
-
-#include <LinearMath/btVector3.h>
-
-// --- VR Juggler Stuff --- //
-#include <gmtl/Xforms.h>
-#include <gmtl/Generate.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <cmath>
@@ -70,12 +72,10 @@ using namespace VE_Xplorer;
 
 const double OneEightyDivPI = 57.29577951;
 const double PIDivOneEighty = .0174532925;
-const float offset = 0.5f;
 
 ////////////////////////////////////////////////////////////////////////////////
-KeyboardMouse::KeyboardMouse()
+KeyboardMouse::KeyboardMouse( void )
 :
-
 key( -1 ),
 button( -1 ),
 state( -1 ),
@@ -102,10 +102,13 @@ wc_screen_zval( 0.0f ),
 
 tb_magnitude( 0.0f ),
 tb_sensitivity( 1.0e-06 ),
+tb_threshold( 0.5f ),
+tb_jump( 1.0f ),
+
 tb_animate( false ),
+tb_mode( false ),
 
 beamLineSegment( new osg::LineSegment )
-
 {
 	mKeyboard.init( "VJKeyboard" );
    head.init("VJHead");
@@ -116,45 +119,49 @@ beamLineSegment( new osg::LineSegment )
 	tb_prevPos[1] = 0.0f;
 
 	gmtl::identity( tb_transform );
-	gmtl::identity( tb_accuTransform );
-
-   center_point = gmtl::Vec3f( 20.0, 100.0, 5.0 );
+	gmtl::identity( tb_currTransform );
+   gmtl::identity( tb_worldTransform );
    
    activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
-KeyboardMouse::~KeyboardMouse()
+KeyboardMouse::~KeyboardMouse( void )
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateNavigation()
+void KeyboardMouse::UpdateNavigation( void )
 {
    this->ProcessKBEvents( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::UpdateSelection()
+void KeyboardMouse::UpdateSelection( void )
 {
    this->ProcessKBEvents( 1 );
+}
+////////////////////////////////////////////////////////////////////////////////
+float KeyboardMouse::GetCPThreshold( void )
+{
+   return tb_threshold;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
 {
    //Be sure width and height are set before calling this function
-   double wc_x_trans_ratio = (( wc_screen_xmax - wc_screen_xmin ))/ double( width );
-   double wc_y_trans_ratio = (( wc_screen_ymax - wc_screen_ymin )) / double( height );
+   double wc_x_trans_ratio = ( ( wc_screen_xmax - wc_screen_xmin ) ) / double( width );
+   double wc_y_trans_ratio = ( ( wc_screen_ymax - wc_screen_ymin ) ) / double( height );
    
    screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
-   double transformedPosition[ 3 ];
-   double osgTransformedPosition[ 3 ];
-   transformedPosition[ 0 ] = wc_screen_xmin + ( x * screenRatios.first );
-   transformedPosition[ 1 ] = wc_screen_ymax - ( y * screenRatios.second );
-   transformedPosition[ 2 ] = wc_screen_zval;
+   double transformedPosition[3];
+   double osgTransformedPosition[3];
+   transformedPosition[0] = wc_screen_xmin + ( x * screenRatios.first );
+   transformedPosition[1] = wc_screen_ymax - ( y * screenRatios.second );
+   transformedPosition[2] = wc_screen_zval;
 
-   transformedPosition[ 0 ] *= 3.2808399;
-   transformedPosition[ 1 ] *= 3.2808399;
-   transformedPosition[ 2 ] *= 3.2808399;
+   transformedPosition[0] *= 3.2808399;
+   transformedPosition[1] *= 3.2808399;
+   transformedPosition[2] *= 3.2808399;
 
    osgTransformedPosition[0] =  transformedPosition[0];
    osgTransformedPosition[1] = -transformedPosition[2];
@@ -168,11 +175,11 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
              << std::endl;
    
    std::cout << " x " << wc_screen_xmin << " " << wc_screen_xmax 
-      << " y " << wc_screen_ymin << " " << wc_screen_ymax 
-      << " z " << wc_screen_zval 
-      << " width " << width << " height "<< height << std::endl;*/
+             << " y " << wc_screen_ymin << " " << wc_screen_ymax 
+             << " z " << wc_screen_zval 
+             << " width " << width << " height "<< height << std::endl;*/
    
-   double wandEndPoint[ 3 ];
+   double wandEndPoint[3];
    double distance = 10000.0f;
 
    gmtl::Matrix44f vjHeadMat = head->getData();
@@ -183,9 +190,9 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
    jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
    //We have to offset negative x because the view is being drawn for the left 
    //eye which means the the frustums are being setup for the left eye
-   jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ] - (0.034 * 3.280839);
-   jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
-   jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 1 ];
+   jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[0] - ( 0.034 * 3.280839 );
+   jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[2];
+   jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[1];
    
    gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
    gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
@@ -193,18 +200,15 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
    //gmtl::normalize( vjVec );
    //std::cout << vjVec << std::endl;
    
-   startPoint->set( osgTransformedPosition[ 0 ],
-                    osgTransformedPosition[ 1 ], 
-                    osgTransformedPosition[ 2 ] );
-   for (int i = 0; i < 3; i++)
+   startPoint->set( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
+
+   for( int i = 0; i < 3; i++ )
    {
-      wandEndPoint[ i ] = (vjVec[ i ] * distance); 
+      wandEndPoint[i] = ( vjVec[i] * distance ); 
    }
    
-   //std::cout << " end point " << wandEndPoint[ 0 ] << " " << wandEndPoint[ 1 ] << " " << wandEndPoint[ 2 ] << std::endl;
-   endPoint->set( wandEndPoint[ 0 ], 
-                  wandEndPoint[ 1 ], 
-                  wandEndPoint[ 2 ] );
+   //std::cout << " end point " << wandEndPoint[0] << " " << wandEndPoint[1] << " " << wandEndPoint[2] << std::endl;
+   endPoint->set( wandEndPoint[0], wandEndPoint[1], wandEndPoint[2] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
@@ -261,20 +265,13 @@ void KeyboardMouse::ProcessKBEvents( int mode )
       return;
    }
 
-   //Navigation mode
-   if( mode == 0 )
-   {
-	   //Get the current matrix
-      tb_accuTransform = activeDCS->GetMat();
-   }
-
    for( i = evt_queue.begin(); i != evt_queue.end(); i++ )
 	{
-		const gadget::EventType type = (*i)->type();
+		const gadget::EventType type = ( *i )->type();
 
 		if( type == gadget::KeyPressEvent )
 		{
-         gadget::KeyEventPtr key_evt = boost::dynamic_pointer_cast< gadget::KeyEvent >(*i);
+         gadget::KeyEventPtr key_evt = boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
          key = key_evt->getKey();
 			
          //Navigation mode
@@ -366,39 +363,24 @@ void KeyboardMouse::ProcessKBEvents( int mode )
          }
 		}
 	}
-
-   //Navigation mode
-   if( mode == 0 )
-   {
-      this->ProcessNavigationEvents();
-   }
-
-   //Selection mode
-   else if( mode == 1 )
-   {
-      this->ProcessSelectionEvents();
-   }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessNavigationEvents()
+void KeyboardMouse::ProcessNavigationEvents( void )
 {
+   //Translate world dcs by distance that the head is away from the origin
+   gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -*center_point );
+   gmtl::Matrix44f worldMatTrans = transMat * tb_worldTransform;
 
-   /*
-   // translate world dcs by distance that the head
-   // is away from the origin
-   gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -center_point );
-   gmtl::Matrix44f worldMatTrans = transMat * VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+   //Get the position of the head in the new world space as if the head is on the origin
    gmtl::Point3f newJugglerHeadPoint;
-   // get the position of the head in the new world space
-   // as if the head is on the origin
    gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
    gmtl::Vec4f newGlobalHeadPointVec;
-   newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
-   newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
-   newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
-   // roate the head vector by the rotation increment
+   newGlobalHeadPointVec[0] = newGlobalHeadPointTemp[0];
+   newGlobalHeadPointVec[1] = newGlobalHeadPointTemp[1];
+   newGlobalHeadPointVec[2] = newGlobalHeadPointTemp[2];
+
+   //Rotate the head vector by the rotation increment
    gmtl::Vec4f rotateJugglerHeadVec = tb_transform * newGlobalHeadPointVec;
-   */
 
    //Split apart the current matrix into rotation and translation parts
    gmtl::Matrix44f accuRotation;
@@ -407,18 +389,20 @@ void KeyboardMouse::ProcessNavigationEvents()
    for( int i = 0; i < 3; i++ )
 	{
       //Get the current rotation matrix
-      accuRotation[i][0] = tb_accuTransform[i][0];
-      accuRotation[i][1] = tb_accuTransform[i][1];
-      accuRotation[i][2] = tb_accuTransform[i][2];
+      accuRotation[i][0] = tb_currTransform[i][0];
+      accuRotation[i][1] = tb_currTransform[i][1];
+      accuRotation[i][2] = tb_currTransform[i][2];
 
       //Get the current translation matrix
-      //matrix[i][3] = rotateJugglerHeadVec[i] + center_point[i];
-      matrix[i][3] = tb_accuTransform[i][3];
+      matrix[i][3] = rotateJugglerHeadVec[i] + center_point->mData[i];
    }
 
    //Multiply by the transform and then by the rotation
    matrix *= tb_transform;
    matrix *= accuRotation;
+
+   std::cout<< matrix[1][3] <<std::endl;
+   std::cout<< center_point->mData[1] <<std::endl << std::endl;
 
    //Set the current matrix
    activeDCS->SetMat( matrix );
@@ -429,11 +413,6 @@ void KeyboardMouse::ProcessNavigationEvents()
       gmtl::identity( tb_transform );
       tb_transform[0][3] = tb_transform[1][3] = tb_transform[2][3] = 0.0f;
    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessSelectionEvents()
-{
-   //return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Animate( bool animate )
@@ -458,13 +437,6 @@ void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float 
    near_plane = n;
    far_plane = f;
 
-	float topAngle = OneEightyDivPI * atan( top / near_plane );
-   float tempDiv = fabs( bottom ) / near_plane;
-	float bottomAngle = OneEightyDivPI * atan( tempDiv );
-
-	fovy = topAngle + bottomAngle;
-
-
    /*
    std::cout << "left: "   << left       << std::endl;
    std::cout << "right: "  << right      << std::endl;
@@ -474,9 +446,15 @@ void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float 
    std::cout << "far: "    << far_plane  << std::endl;
    std::cout <<                             std::endl;
    */
+
+	float topAngle = OneEightyDivPI * atan( top / near_plane );
+   float tempDiv = fabs( bottom ) / near_plane;
+	float bottomAngle = OneEightyDivPI * atan( tempDiv );
+
+	fovy = topAngle + bottomAngle;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavKeyboard()
+void KeyboardMouse::NavKeyboard( void )
 {
    //If "r" is pressed
    if( key == 35 )
@@ -494,28 +472,32 @@ void KeyboardMouse::NavKeyboard()
    key = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavMouse()
+void KeyboardMouse::NavMouse( void )
 {
-	if( state == 1 )
+   if( state == 0 )
+   {
+      return;
+   }
+	
+   else if( state == 1 )
 	{
 		tb_currPos[0] = (float)x / (float)width;
 		tb_currPos[1] = (float)y / (float)height;
 		tb_prevPos[0] = (float)x / (float)width;
 		tb_prevPos[1] = (float)y / (float)height;
    }
-
-   else if( state == 0 )
-	{
-		return;
-   }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavMotion()
+void KeyboardMouse::NavMotion( void )
 {
    if( state == 0 )
 	{
 		return;
    }
+   
+   //Get the current matrix and world matrix
+   tb_currTransform = activeDCS->GetMat();
+   tb_worldTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
 
 	tb_currPos[0] = (float)x / (float)width;
 	tb_currPos[1] = (float)y / (float)height;
@@ -550,27 +532,29 @@ void KeyboardMouse::NavMotion()
 
 	tb_prevPos[0] = tb_currPos[0];
 	tb_prevPos[1] = tb_currPos[1];
+
+   this->ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelKeyboard()
+void KeyboardMouse::SelKeyboard( void )
 {
    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelMouse()
+void KeyboardMouse::SelMouse( void )
 {
    if( state == 1 )
 	{
 	   return;
    }
+
    else if( state == 0 && button == 49 )
 	{
-      //this->ProcessSelection();
-      SelectObject();
+      ProcessSelectionEvents();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelMotion()
+void KeyboardMouse::SelMotion( void )
 {
    if( !state )
 	{
@@ -583,17 +567,20 @@ void KeyboardMouse::SelMotion()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ResetTransforms()
+void KeyboardMouse::ResetTransforms( void )
 {
-   activeDCS->SetMat( identity( tb_accuTransform ) );
+   gmtl::Matrix44f matrix;
+   center_point->mData[1] = matrix[1][2] = tb_threshold;
+
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::FrameAll()
+void KeyboardMouse::FrameAll( void )
 {
    osg::ref_ptr< osg::Group > root = new osg::Group;
    root->addChild( VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode() );
 
-   tb_accuTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->GetMat();
+   tb_worldTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->GetMat();
 
    //Get the selected objects and expand by their bounding box
    osg::BoundingSphere bs;
@@ -619,17 +606,17 @@ void KeyboardMouse::FrameAll()
 
    if( bs.center().x() != 0 )
 	{
-      tb_accuTransform[0][3] -= x_val;
+      tb_worldTransform[0][3] -= x_val;
    }
    
-   tb_accuTransform[1][3] = y_val;
+   tb_currTransform[1][3] = y_val;
     
    if( bs.center().z() != 0 )
 	{
-      tb_accuTransform[2][3] -= z_val;
+      tb_worldTransform[2][3] -= z_val;
    }
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->SetMat( tb_accuTransform );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->SetMat( tb_worldTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( float dx, float dy )
@@ -652,82 +639,50 @@ void KeyboardMouse::Twist( float dx, float dy )
    gmtl::Matrix44f mat;
 	identity( mat );
 
-	float Theta = atan2f( tb_prevPos[0]-0.5, tb_prevPos[1]-0.5 );
-	float newTheta = atan2f( tb_currPos[0]-0.5, tb_currPos[1]-0.5 );
-	float angle = (OneEightyDivPI)*(Theta-newTheta);
+	float Theta = atan2f( tb_prevPos[0] - 0.5, tb_prevPos[1] - 0.5 );
+	float newTheta = atan2f( tb_currPos[0] - 0.5, tb_currPos[1] - 0.5 );
+	float angle = ( OneEightyDivPI ) * ( Theta - newTheta );
 
 	Rotate( mat[1][0], mat[1][1], mat[1][2], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( float dy )
 {
-	float viewlength = fabs( tb_accuTransform[1][3] );
+	float viewlength = center_point->mData[1];
 	float d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
-   //**********Temporary Fix**********//
-	if( ( tb_accuTransform[1][3] > -offset ) && ( tb_accuTransform[1][3] < offset ) )
-	{
-		if( tb_accuTransform[1][3] == 0 )
-      {
-			tb_transform[1][3] = offset;
-      }
+   tb_transform[1][3] = d;
+   
+   center_point->mData[1] += d;
 
-		else if( tb_accuTransform[1][3] > 0 )
-      {
-			tb_transform[1][3] = -2 * offset;
-      }
-
-		else if( tb_accuTransform[1][3] < 0 )
-      {
-			tb_transform[1][3] = 2 * offset;
-      }
-	}
-
-	else
-	{
-		tb_transform[1][3] = d;
-	}
-   //*********************************//
-
+   if( center_point->mData[1] < tb_threshold )
+   {
+      //center_point->mData[1] = tb_jump;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Pan( float dx, float dy )
 {
-   //**********Temporary Fix**********//
-   if( ( tb_accuTransform[1][3] > -offset ) && ( tb_accuTransform[1][3] < offset ) )
-	{
-		if( tb_accuTransform[1][3] == 0 )
-      {
-			tb_transform[1][3] = offset;
-      }
+   float d = tb_worldTransform[1][3];
+	float theta = ( fovy * 0.5f ) * ( PIDivOneEighty );
+	float b = 2 * d * tan( theta );
+	float dwx = dx * b * aspect_ratio;
+	float dwy = -dy * b;
 
-		else if( tb_accuTransform[1][3] > 0 )
-      {
-			tb_transform[1][3] = -2*offset;
-      }
-
-		else if( tb_accuTransform[1][3] < 0 )
-      {
-			tb_transform[1][3] = 2*offset;
-      }
-	}
-   //*********************************//
-	
-   float d = tb_accuTransform[1][3];
-	float Theta = (fovy*0.5f)*(PIDivOneEighty);
-	float b = 2*d*tan(Theta);
-	float dwx = dx*b*aspect_ratio;
-	float dwy = -dy*b;
 	tb_transform[0][3] = dwx;
 	tb_transform[2][3] = dwy;
+
+   center_point->mData[0] += dwx;
+   center_point->mData[2] += dwy;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Rotate( float x_val, float y_val, float z_val, float angle )
 {
-	float rad = (float)( angle*PIDivOneEighty );
+	float rad = (float)( angle * PIDivOneEighty );
 	float cosAng = (float)( cos( rad ) );
 	float sinAng = (float)( sin( rad ) );
-	float denom = sqrtf( x_val*x_val + y_val*y_val + z_val*z_val );
+	float denom = sqrtf( x_val * x_val + y_val * y_val + z_val * z_val );
+
 	if( denom != 0.0f )
 	{
 		x_val /= denom;
@@ -737,22 +692,22 @@ void KeyboardMouse::Rotate( float x_val, float y_val, float z_val, float angle )
 
 	zero( tb_transform );
 
-	tb_transform[0][0] = (x_val*x_val) + (cosAng*(1-(x_val*x_val)));
-	tb_transform[1][0] = (y_val*x_val) - (cosAng*   (y_val*x_val)) + (sinAng*z_val);
-	tb_transform[2][0] = (z_val*x_val) - (cosAng*   (z_val*x_val)) - (sinAng*y_val);
-	tb_transform[0][1] = (x_val*y_val) - (cosAng*   (x_val*y_val)) - (sinAng*z_val);
-	tb_transform[1][1] = (y_val*y_val) + (cosAng*(1-(y_val*y_val)));
-	tb_transform[2][1] = (z_val*y_val) - (cosAng*   (z_val*y_val)) + (sinAng*x_val);
-	tb_transform[0][2] = (x_val*z_val) - (cosAng*   (x_val*z_val)) + (sinAng*y_val);
-	tb_transform[1][2] = (y_val*z_val) - (cosAng*   (y_val*z_val)) - (sinAng*x_val);
-	tb_transform[2][2] = (z_val*z_val) + (cosAng*(1-(z_val*z_val)));
+	tb_transform[0][0] = ( x_val * x_val ) + ( cosAng * ( 1 - ( x_val * x_val ) ) );
+	tb_transform[1][0] = ( y_val * x_val ) - ( cosAng *       ( y_val * x_val ) ) + ( sinAng * z_val );
+	tb_transform[2][0] = ( z_val * x_val ) - ( cosAng *       ( z_val * x_val ) ) - ( sinAng * y_val );
+	tb_transform[0][1] = ( x_val * y_val ) - ( cosAng *       ( x_val * y_val ) ) - ( sinAng * z_val );
+	tb_transform[1][1] = ( y_val * y_val ) + ( cosAng * ( 1 - ( y_val * y_val ) ) );
+	tb_transform[2][1] = ( z_val * y_val ) - ( cosAng *       ( z_val * y_val ) ) + ( sinAng * x_val );
+	tb_transform[0][2] = ( x_val * z_val ) - ( cosAng *       ( x_val * z_val ) ) + ( sinAng * y_val );
+	tb_transform[1][2] = ( y_val * z_val ) - ( cosAng *       ( y_val * z_val ) ) - ( sinAng * x_val );
+	tb_transform[2][2] = ( z_val * z_val ) + ( cosAng * ( 1 - ( z_val * z_val ) ) );
 	tb_transform[3][3] = 1.0f;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelectObject( void )
+void KeyboardMouse::ProcessSelectionEvents( void )
 {
    osg::Vec3f startPoint, endPoint;
-   SetStartEndPoint(&startPoint, &endPoint);
+   SetStartEndPoint( &startPoint, &endPoint );
    
    //DrawLine( startPoint, endPoint);
    
@@ -763,62 +718,64 @@ void KeyboardMouse::SelectObject( void )
    
    //Add the IntersectVisitor to the root Node so that all all geometry will be
    //checked and no transforms are done to the Line segement.
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->accept(objectBeamIntersectVisitor);
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
    
    osgUtil::IntersectVisitor::HitList beamHitList;
    beamHitList = objectBeamIntersectVisitor.getHitList( beamLineSegment.get() );
    
-   this->ProcessHit(beamHitList);
+   this->ProcessHit( beamHitList );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
+void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 { 
    osgUtil::Hit objectHit;
    this->selectedGeometry = 0;
    
-   if ( listOfHits.empty())
+   if( listOfHits.empty() )
    {
       vprDEBUG(vesDBG,1) << "|\tKeyboardMouse::ProcessHit No object selected" 
-                           << std::endl << vprDEBUG_FLUSH;
+                         << std::endl << vprDEBUG_FLUSH;
       activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
       return;
    }
    
-   // Search for first item that is not the laser
-   for ( size_t i = 0; i <  listOfHits.size(); ++i )
+   //Search for first item that is not the laser
+   for( size_t i = 0; i <  listOfHits.size(); ++i )
    {
       objectHit = listOfHits[ i ];
-      if ( ( objectHit._geode->getName() != "Laser" ) && 
-           ( objectHit._geode->getName() != "Root Node" ) ) 
+      if( ( objectHit._geode->getName() != "Laser" ) && ( objectHit._geode->getName() != "Root Node" ) ) 
       {
          break;
       }
    }
-   //make sure it is good
-   if ( !objectHit._geode.valid() )
+
+   //Make sure it is good
+   if( !objectHit._geode.valid() )
    {
       return;
    } 
-   //now find the id for the cad
+
+   //Now find the id for the cad
    this->selectedGeometry = objectHit._geode;
    VE_SceneGraph::FindParentsVisitor parentVisitor( selectedGeometry.get() );
    osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
-   if ( parentNode.valid() )
+   if( parentNode.valid() )
    {
       vprDEBUG(vesDBG,1) << "|\tObjects has name " 
-                        << parentNode->getName() << std::endl 
-                        << vprDEBUG_FLUSH;
+                         << parentNode->getName() << std::endl 
+                         << vprDEBUG_FLUSH;
       vprDEBUG(vesDBG,1) << "|\tObjects descriptors " 
-                        << parentNode->getDescriptions().at( 1 ) << std::endl 
-                        << vprDEBUG_FLUSH;
+                         << parentNode->getDescriptions().at( 1 ) << std::endl 
+                         << vprDEBUG_FLUSH;
       activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
    }
+
    else
    {
       this->selectedGeometry = objectHit._geode;
       vprDEBUG(vesDBG,1) << "|\tObject does not have name parent name " 
-                        << objectHit._geode->getParents().front()->getName() 
-                        << std::endl << vprDEBUG_FLUSH;
+                         << objectHit._geode->getParents().front()->getName() 
+                         << std::endl << vprDEBUG_FLUSH;
       activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
    }
 }

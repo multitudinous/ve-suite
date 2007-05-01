@@ -38,12 +38,17 @@ Device API
 /*!\class VE_XPlorer::Device
 * 
 */
+// --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
+// --- VR Juggler Stuff --- //
+#include <gmtl/Point.h>
+
+// --- OSG Stuff --- //
 #include <osg/ref_ptr>
 
 namespace osg 
@@ -71,11 +76,14 @@ public:
    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){return false;}
    void SetActiveDCS( VE_SceneGraph::DCS* dcs );
    VE_SceneGraph::DCS* GetActiveDCS( void );
+   void SetCenterPoint( gmtl::Point3f* cp );
+   gmtl::Point3f* GetCenterPoint( void );
 protected:
    virtual void ProcessSelection();
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
+   gmtl::Point3f* center_point;///<The point about which rotation occurs
 };
 }
 

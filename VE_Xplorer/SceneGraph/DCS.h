@@ -107,6 +107,8 @@ public:
    void SetTranslationArray( std::vector<double> array );
    ///Set the translation array
    void SetTranslationArray( float* trans );
+   ///Set the attitude with a quat
+   void SetQuat( osg::Quat quat );
    ///set the rotation array with a vector
    void SetRotationArray( std::vector<double> array);
    ///Set the rotation array with a pointer

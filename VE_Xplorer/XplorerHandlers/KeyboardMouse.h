@@ -38,28 +38,33 @@ KeyboardMouse API
 /*!\class VE_XPlorer::KeyboardMouse
 * 
 */
+// --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
-
-#include <boost/shared_ptr.hpp>
-#include <gadget/Type/KeyboardMouseInterface.h>
-#include <gadget/Type/PositionInterface.h>
-
-#include <gmtl/Matrix.h>
 
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
-#include <utility>
+// --- VR Juggler Stuff --- //
+#include <gadget/Type/KeyboardMouseInterface.h>
+#include <gadget/Type/PositionInterface.h>
+
+#include <boost/shared_ptr.hpp>
+
+#include <gmtl/Matrix.h>
+
+// --- OSG Stuff --- //
+#include <osg/Geometry>
 
 #include <osgUtil/IntersectVisitor>
 
-#include <osg/Geometry>
+// --- C/C++ Libraries --- //
+#include <utility>
+
 namespace osg 
 {
    class Geode;
    class Group;
    class Vec4f;
    class Vec3f;
-   class MatrixTransform;
    class LineSegment;
 }
 
@@ -68,43 +73,58 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS KeyboardMouse : public Device
 {
 public:
-	KeyboardMouse();
-	~KeyboardMouse();
+	KeyboardMouse( void );
+	~KeyboardMouse( void );
 
-	virtual void UpdateNavigation();
-	virtual void UpdateSelection();
+	virtual void UpdateNavigation( void );
+	virtual void UpdateSelection( void );
+
+   float GetCPThreshold( void );
 
    void SetScreenCornerValues( std::map< std::string, double > values );
 
 	void Animate( bool animate );
 	void SetWindowValues( unsigned int w, unsigned int h );
 	void SetFrustumValues( float l, float r, float t, float b, float n, float f );
-   void ResetTransforms();
-   void FrameAll();
+   void ResetTransforms( void );
+   void FrameAll( void );
 
 protected:
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 
 private:
-   gadget::KeyboardMouseInterface mKeyboard;
-   gadget::PositionInterface  head;
-
    void ProcessKBEvents( int mode );
-   void ProcessNavigationEvents();
-   void ProcessSelectionEvents();
+   void ProcessNavigationEvents( void );
+   void ProcessSelectionEvents( void );
 
-   void SelectObject( void );
-   void ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits);
+   void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
+
+   void NavKeyboard( void );
+	void NavMouse( void );
+	void NavMotion( void );
+
+   void SelKeyboard( void );
+	void SelMouse( void );
+	void SelMotion( void );
+
+   void RotateView( float dx, float dy );
+	void Twist( float dx, float dy );
+	void Zoom( float dy );
+	void Pan( float dx, float dy );
+	void Rotate( float x_val, float y_val, float z_val, float angle );
+
+   bool tb_animate;
+   bool tb_mode;
+
+   unsigned int width;
+	unsigned int height;
       
    int key;
 	int button;
    int state;
    int x;
    int y;
-
-   unsigned int width;
-	unsigned int height;
 
    float aspect_ratio;
 	float fovy;
@@ -114,6 +134,12 @@ private:
    float bottom;
    float near_plane;
    float far_plane;
+   float tb_currPos[2];
+	float tb_prevPos[2];
+	float tb_magnitude;
+	float tb_sensitivity;
+   float tb_threshold;
+   float tb_jump;
 
    double wc_screen_xmin;
    double wc_screen_xmax;
@@ -121,39 +147,19 @@ private:
    double wc_screen_ymax;
    double wc_screen_zval;
 
-   void NavKeyboard();
-	void NavMouse();
-	void NavMotion();
-
-   void SelKeyboard();
-	void SelMouse();
-	void SelMotion();
-
-   void RotateView( float dx, float dy );
-	void Twist( float dx, float dy );
-	void Zoom( float dy );
-	void Pan( float dx, float dy );
-	void Rotate( float x_val, float y_val, float z_val, float angle );
-
-	float tb_currPos[2];
-	float tb_prevPos[2];
-	float tb_magnitude;
-	float tb_sensitivity;
-
-   bool tb_animate;
-
-   float sel_initial[2];
-
    std::pair< double, double > screenRatios;
+
 	//Is of form [row][column]
 	gmtl::Matrix44f tb_transform;
-	gmtl::Matrix44f tb_accuTransform;
+	gmtl::Matrix44f tb_currTransform;
+   gmtl::Matrix44f tb_worldTransform;
    
    osg::ref_ptr< osg::Geode > beamGeode;
    osg::ref_ptr< osg::Geode > selectedGeometry;
    osg::ref_ptr< osg::LineSegment > beamLineSegment;
 
-   gmtl::Point3f center_point;
+   gadget::KeyboardMouseInterface mKeyboard;
+   gadget::PositionInterface  head;
 };
 }
 

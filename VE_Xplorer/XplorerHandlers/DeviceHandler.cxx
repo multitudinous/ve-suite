@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Stuff --- //
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -60,8 +61,11 @@ DeviceHandler::DeviceHandler()
 device_mode( "Navigation" )
 {
    devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
+   devices[ std::string( "Tablet" ) ]->SetCenterPoint( &center_point );
    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
+   devices[ std::string( "Wand" ) ]->SetCenterPoint( &center_point );
    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
+   devices[ std::string( "KeyboardMouse" ) ]->SetCenterPoint( &center_point );
    
    active_device = devices[ "KeyboardMouse" ];
 
@@ -72,6 +76,8 @@ device_mode( "Navigation" )
    _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
    
    activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+
+   center_point.mData[1] = activeDCS->GetMat().mData[6] = static_cast< VE_Xplorer::KeyboardMouse* >( active_device )->GetCPThreshold();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
@@ -126,7 +132,7 @@ void DeviceHandler::SetDeviceMode( std::string mode )
 void DeviceHandler::ProcessDeviceEvents()
 {
    //Update Device properties
-   ExecuteCommands();
+   this->ExecuteCommands();
 
    if ( device_mode == "Navigation" )
    {
@@ -149,7 +155,7 @@ void DeviceHandler::ProcessDeviceEvents()
    devices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Device* DeviceHandler::GetDevice( std::string device )
+VE_Xplorer::Device* DeviceHandler::GetDevice( std::string device )
 {
    return devices[ device ];
 }
