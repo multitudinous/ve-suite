@@ -55,13 +55,12 @@ class SettingsWindow(wx.Dialog):
         self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Mode",
                                      wx.DefaultPosition, wx.DefaultSize,
                                      RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_COLS)
-##                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_ROWS)
         self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
                                              " want to launch?"))
         ##Cluster button.
-        self.bCluster = wx.Button(self, -1, "Set Cluster Computers")
-        self.bCluster.SetToolTip(wx.ToolTip("Set the computers in" +
-                                            " the cluster."))
+        self.bCluster = wx.Button(self, -1, "Cluster Settings")
+        self.bCluster.SetToolTip(wx.ToolTip("Set the computers and extra" +
+                                            " variables in the cluster."))
         if not CLUSTER_ENABLED:
             self.bCluster.Hide()
         ##Set up OK button.

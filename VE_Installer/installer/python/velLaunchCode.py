@@ -503,9 +503,6 @@ class Launch:
         PYTHONPATH (Windows systems only)
         PATH
         LD_LIBRARY_PATH or LD_LIBRARYN32_PATH (Unix systems only)"""
-        ##Set where VE-Suite's installed
-        ##self.EnvFill("VE_SUITE_HOME", VELAUNCHER_DIR)
-        ##self.EnvFill("VE_INSTALL_DIR", os.getenv("VE_SUITE_HOME"))
         ##Set where VE-Suite pre-complied dependencies are installed
         ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_DEPS_DIR", str(self.settings["DependenciesDir"]))
@@ -547,7 +544,6 @@ class Launch:
                          overwrite = True)
         else:
             self.EnvFill("OSGNOTIFYLEVEL", "[Deleted]", overwrite = True)
-            del os.environ["OSGNOTIFYLEVEL"]
         self.EnvFill("NO_PERF_PLUGIN", "TRUE")
         self.EnvFill("NO_RTRC_PLUGIN", "TRUE")
         self.EnvFill("PFNFYLEVEL", "0")
@@ -574,23 +570,6 @@ class Launch:
             self.EnvFill("VEXMASTER",
                          str(self.settings["ClusterMaster"]).split('.')[0],
                          True)
-        ##Python build environment variables
-        ##if windows:
-        ##    ##?self.EnvAppend("PYTHONPATH", [os.path.join(VELAUNCHER_DIR, "bin")], ';')
-        ##    ##self.EnvAppend("PYTHONPATH", [os.path.join(os.getenv("VJ_DEPS_DIR"),
-        ##    ##                                           "lib", "python")], ';')
-        ##    ##os.environ["PYTHONPATH"] = os.path.join(os.getenv("VJ_DEPS_DIR"),
-        ##    ##                                        "lib", "python")
-        ##elif unix:
-        ##    if os.getenv("OSG_HOME", "None") != "None":
-        ##        self.EnvAppend("PATH", [os.path.join(str(os.getenv("OSG_HOME")),
-        ##                                             "share", "OpenSceneGraph",
-        ##                                             "bin")], ":")
-        ##        ##os.environ["PATH"] = os.path.join(str(os.getenv("OSG_HOME")),
-        ##        ##                                  "share", "OpenSceneGraph",
-        ##        ##                                  "bin") + ":" + \
-        ##        ##                     str(os.getenv("PATH"))
-
 
         ##Update PATH (and the Library Path for Unix)
         if windows:
@@ -711,12 +690,17 @@ class Launch:
         else:
             originalVar = "None"
         ##Write the var to the environment.
-        if not overwrite and not EnvVarEmpty(var):
+        if default == "[Deleted]":
+            if os.environ.has_key(var):
+                del os.environ[var]
+        elif not overwrite and not EnvVarEmpty(var):
             os.environ[var] = os.getenv(var, default)
+            ##Put var in clusterScript
+            self.WriteToClusterScript(var)
         else:
             os.environ[var] = default
-        ##Put var in clusterScript
-        self.WriteToClusterScript(var)
+            ##Put var in clusterScript
+            self.WriteToClusterScript(var)
         ##Debug printout.
         if self.settings["Debug"]:
 ##            print "%s: %s" %(var, os.getenv(var))
