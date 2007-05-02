@@ -435,6 +435,21 @@
         </listitem>
       </itemizedlist>
     </section>
+    
+    <section id="wand_navigation">
+      <title>RemotePoint Wand</title>
+      
+      <para>With the proper Juggler configuration, the Remotepoint RF wand
+      can be used to navigate VE-Suite. Once the wand's set up, holding Up
+      will move the camera in the direction the wand's pointing. Holding the
+      Left Shoulder button will rotate the camera to its left.</para>
+      
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="veimages/remotediagram.jpg" />
+        </imageobject>
+      </mediaobject>      
+    </section>
   </section>
 
   <section id="viewpoints_pane">
