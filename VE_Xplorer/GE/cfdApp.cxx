@@ -264,7 +264,6 @@ void cfdApp::contextInit()
    //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
    // Add the tree to the scene viewer and set properties
-   new_sv->setSceneData(getScene());
 
 	//Setup OpenGL light
 	//This should actualy be done in the simulator code
@@ -347,6 +346,7 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
 	newSceneViewer->setFrameStamp( _frameStamp.get() );
+   newSceneViewer->setSceneData(getScene());
 
    //newSceneViewer->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
@@ -673,7 +673,7 @@ void cfdApp::contextPreDraw( void )
          sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
       }
    }
-   glClearColor( clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0);
+   //glClearColor( clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::draw()
