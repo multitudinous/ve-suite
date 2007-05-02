@@ -264,6 +264,7 @@ void cfdApp::contextInit()
    //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
    // Add the tree to the scene viewer and set properties
+   new_sv->setSceneData(getScene());
 
 	//Setup OpenGL light
 	//This should actualy be done in the simulator code
@@ -346,11 +347,12 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
 	newSceneViewer->setFrameStamp( _frameStamp.get() );
-   newSceneViewer->setSceneData(getScene());
 
    //newSceneViewer->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
+///Remember that this is called in parrallel in a multiple context situation
+///so setting variables should not be done here
 void cfdApp::bufferPreDraw()
 {
    //glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -559,8 +561,12 @@ void cfdApp::latePreFrame( void )
 	previous_time = current_time;
 #endif
 	//**********************************************************************
-
-
+   ///We must do this here because this must be serial not parallel in
+   ///multiple contexts
+   if ( svUpdate )
+   {
+      clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
+   }
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
    this->update();
@@ -661,21 +667,26 @@ void cfdApp::writeImageFileForWeb(void*)
 #endif   //_WEB_INTERFACE
 
 #ifdef _OSG
+////////////////////////////////////////////////////////////////////////////////
+///Remember that this is called in parrallel in a multiple context situation
+///so setting variables should not be done here
 void cfdApp::contextPreDraw( void )
 {
    if ( svUpdate )
    {
       osg::ref_ptr<osgUtil::SceneView> sv;
       sv = (*sceneViewer);    // Get context specific scene viewer
-      if(sv.valid())
+      if ( sv.valid() )
       {
-         clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
-         sv->setClearColor(osg::Vec4(clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0));
+         sv->setClearColor( osg::Vec4( clearColor.at(0),
+                                       clearColor.at(1),
+                                       clearColor.at(2), 1.0 ) );
       }
    }
-   //glClearColor( clearColor.at(0),clearColor.at(1),clearColor.at(2),1.0);
 }
 ////////////////////////////////////////////////////////////////////////////////
+///Remember that this is called in parrallel in a multiple context situation
+///so setting variables should not be done here
 void cfdApp::draw()
 {
 #ifndef _SGL
@@ -705,10 +716,6 @@ void cfdApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
 
-   /*if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_LOD_SCALE )
-   {
-      sv->setLODScale( (float)_vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_SC ));
-   }*/
    vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = vrj::GlDrawManager::instance();
 

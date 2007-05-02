@@ -132,35 +132,36 @@ public:
 #elif _OSG
    virtual osg::Group* getScene( void );
    ///This gets called when??
+   ///Note: Remember that this is called in parrallel in a multiple context 
+   ///      situation so setting variables should not be done here
    virtual void bufferPreDraw( void );
    ///This is our gl draw function
+   ///Note: Remember that this is called in parrallel in a multiple context 
+   ///      situation so setting variables should not be done here
    virtual void draw();
    ///Configure the scene view on a per context basis
    virtual void configSceneView( osgUtil::SceneView* newSceneViewer );
    ///after the preframe calls but still have a vaild context
+   ///Note: Remember that this is called in parrallel in a multiple context 
+   ///      situation so setting variables should not be done here
    virtual void contextPreDraw( void );
-
+   ///after the draw call but still have a vaild context
+   ///Note: Remember that this is called in parrallel in a multiple context 
+   ///      situation so setting variables should not be done here
+   virtual void contextPostDraw();
+   
    ///Signal to change the background color
    void ChangeBackgroundColor();
 
-   #ifdef VE_PATENTED
-      virtual void contextInit( void );
-      virtual void contextClose( void );
-      VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
-      virtual void contextPostDraw();
-   #endif //VE_PATENTED
+   virtual void contextInit( void );
+   virtual void contextClose( void );
+   VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
 #elif _OPENSG
 #endif //_PERFORMER _OSG _OPENSG
   
 #ifdef _WEB_INTERFACE
    void writeImageFileForWeb(void*);
 #endif //_WEB_INTERFACE
-
-   // Function called by the DEFAULT drawChan function 
-   // before clearing the channel
-   // and drawing the next frame (pfFrame( ))
-   //virtual void preDrawChan(pfChannel* chan, void* chandata);
-
 
    // Function called after pfSync and before pfDraw
    virtual void preFrame( void );
