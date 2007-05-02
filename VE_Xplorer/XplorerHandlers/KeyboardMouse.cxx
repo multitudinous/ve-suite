@@ -401,9 +401,6 @@ void KeyboardMouse::ProcessNavigationEvents( void )
    matrix *= tb_transform;
    matrix *= accuRotation;
 
-   std::cout<< matrix[1][3] <<std::endl;
-   std::cout<< center_point->mData[1] <<std::endl << std::endl;
-
    //Set the current matrix
    activeDCS->SetMat( matrix );
 
