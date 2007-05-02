@@ -51,15 +51,18 @@ namespace VE_Xplorer
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 
-#ifdef _PERFORMER
-   class pfGroup;
-   #include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
-   // Declare my application class
-#elif _OSG
+#ifdef _OSG
+
+   #include <osg/Version>
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2))
    #include <osg/ref_ptr>
    #include <osg/Timer>
+#endif
 
+   #include <vrj/vrjParam.h>
+#if __VJ_version >= 2000003
    #include <vrj/Draw/OSG/OsgApp.h>
+#endif
    #include <vpr/Sync/Mutex.h>
 
    namespace osg
