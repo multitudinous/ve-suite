@@ -8,8 +8,7 @@
   page.</para>
 
   <para><ulink url="http://www.openscenegraph.org/">OpenSceneGraph
-  (OSG)</ulink> can be used to manage the scenegraph instead of OpenGL
-  Performer. (version 1.2+)</para>
+  (OSG)</ulink> is used to manage the scenegraph. (version 1.2+)</para>
 
   <para><ulink url="http://vtk.org/get-software.php#interim">VTK</ulink> is
   used to render the visualization objects. (version 5.0+)</para>
@@ -151,7 +150,7 @@
     for specific details to allow VE-Suite to build/run correctly.</para>
 
     <para>VE-Suite and its dependencies are currently built and tested using
-    Visual Studio 7.1(2003).</para>
+    Visual Studio 8.0(2005).</para>
 
     <para>You can find the development libraries at <ulink
     url="www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32">www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32</ulink>.</para>
@@ -202,7 +201,7 @@
       <tgroup cols="2">
         <tbody>
           <row>
-            <entry>Name/Service</entry>
+            <entry>Computational Engine</entry>
 
             <entry>ACE/TAO, xerces-c</entry>
           </row>
@@ -216,14 +215,12 @@
           <row>
             <entry>VE-Xplorer</entry>
 
-            <entry>ACE/TAO, OpenSceneGraph* or Performer*, VTK,
+            <entry>ACE/TAO, OpenSceneGraph, VTK,
             VRJuggler</entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
-
-    <para>*depends on the desired scenegraph management</para>
   </section>
   
   <section id="vesuite_other_requirements">
