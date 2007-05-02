@@ -551,8 +551,8 @@ void NURBSTessellatedSurface::_tessellateSurface()const
    unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
    unsigned int nVPoints = _nurbsObject->NumInterpolatedPoints("V");
 
-   std::cout<<"Num u interpolated points:"<<nUPoints<<std::endl;
-   std::cout<<"Num v interpolated points:"<<nVPoints<<std::endl;
+   //std::cout<<"Num u interpolated points:"<<nUPoints<<std::endl;
+   //std::cout<<"Num v interpolated points:"<<nVPoints<<std::endl;
 
    for(unsigned int v = 0; v </*2;*/ nVPoints - 1;v++)
    {

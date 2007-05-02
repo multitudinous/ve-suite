@@ -77,8 +77,8 @@ void NURBSCurve::_interpolateWithinRange(double umin,double umax,
    unsigned int uIndexMin = _findNearestParameterIndex("U",umin);
    unsigned int uIndexMax = _findNearestParameterIndex("U",umax);
 
-   std::cout<<"umin: "<<uIndexMin<<std::endl;
-   std::cout<<"umax: "<<uIndexMax<<std::endl;
+   //std::cout<<"umin: "<<uIndexMin<<std::endl;
+   //std::cout<<"umax: "<<uIndexMax<<std::endl;
    std::vector<NURBS::ControlPoint> curveInfo;
 
    for(unsigned int u = uIndexMin; u <= uIndexMax; u++)
