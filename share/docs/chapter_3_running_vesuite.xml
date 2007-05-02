@@ -348,7 +348,7 @@
 
     <para>There are two ways to manipulate VE-Suite's view using just the
     mouse: dragging in the Xplorer window itself or using the Navigation
-    Pane.</para>
+    Pane. You can also use a RemotePoint RF wand to navigate VE-Suite.</para>
 
     <section id="xplorerwindow">
       <title>Xplorer Window</title>
