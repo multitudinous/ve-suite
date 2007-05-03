@@ -49,6 +49,11 @@
 //#include <gadget/Type/DigitalInterface.h>
 
 #include <osg/Drawable>
+
+#include <osg/Version>
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#include <osg/RenderInfo>
+#endif
 namespace osg
 {
    class Matrixf;  
@@ -92,7 +97,11 @@ public:
    ///\param x The z resolution
    void SetTextureDimensions(unsigned int x,unsigned int y,unsigned int z);
    // of OpenGL primitives.
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   virtual void drawImplementation(osg::RenderInfo& currentState) const;
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    virtual void drawImplementation(osg::State& currentState) const;
+#endif
 
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
@@ -103,7 +112,12 @@ protected:
    void _drawQuadSlice(float zPosition)const;
 
    ///Make sure the slice spacing is up to date
-   void _ensureSliceDelta()const;
+   ///\param extremaIndicies The indicies of the closest and furthest bbox corner
+   ///\param delta The slice distance
+   ///\param deltaRatio The ratio of the current slice distance to the original slice distance
+   void _ensureSliceDelta(unsigned int extremaIndicies[],
+                          float& delta,
+                          float& deltaRatio)const;
 
    //These all need to be in a higher level class
    ///Draw a stack of view aligned quads
@@ -118,17 +132,30 @@ protected:
    void _convertEdgeTable();
 
    ///Calculate the bbox min and max indicies
-   void _findBBoxMinMaxIndicies()const;
+   ///\param rotatedBBox The transformed bbox
+   ///\param slicePlaneNormal The normal to the slices
+   ///\param extremeIndicies The indicies of the closest and furthest bbox corner
+   void _findBBoxMinMaxIndicies(osg::ref_ptr<osg::Vec4Array> rotatedBBox,
+                                osg::Vec4 slicePlaneNormal,
+                                unsigned int extremeIndicies[])const;
    
    ///Calculate the sample distance
    ///\param iModelView Inverse modelview matrix
    float _calculateSampleDistance(osg::Matrixf iModelView) const;
 
-
    ///Calculate the slice polygon and edge intersections
    ///\param currentState The current opengl state
    ///\param initalSlicePoint The coord to begin calculating slices
-   void _calculateEdgeIntersections(osg::State& currentState,osg::Vec4 initialSlicePoint)const;
+   ///\param slicePlaneNormal The normal for each of the planes
+   ///\param extremaIndicies The indicies of the closest and furthest bbox corner
+   ///\param currentDelta The current slice distance
+   ///\param deltaRatio The ratio of the current slice distance to the original slice distance
+   void _calculateEdgeIntersections(osg::State& currentState,
+                                    osg::Vec4 initialSlicePoint,
+                                    osg::Vec4 slicePlaneNormal,
+                                    unsigned int extremaIndicies[],
+                                    float currentDelta,
+                                    float deltaRatio)const;
 
    ///Calculate the intersection verticies and assosiated texture coordinates
    ///\param currentEdgeIndex The current edge we are calculationg intersection with
@@ -136,10 +163,16 @@ protected:
    ///\param backSlicePoint The back slice location
    ///\param verts The vertcies for the intersecting polygon
    ///\param backTCoords The texture coordinates for the back intersecting polygon
+   ///\param slicePlaneNormal Slice plane normal
+   ///\param extremaIndicies The indicies of the closest and furthest bbox corner
    void _calculateVertsAndTextureCoordinates(unsigned int currentEdgeIndex,
                                              osg::Vec4 frontSlicePoint,
                                              osg::Vec4 backSlicePoint,
-                                             float* verts,float* frontTCoords,float* backTCoords)const;
+                                             osg::Vec4 slicePlaneNormal,
+                                             unsigned int extremaIndicies[],
+                                             float* verts,
+                                             float* frontTCoords,
+                                             float* backTCoords)const;
    
    ///Calculate the sample distance
    ///\param minimum Minimum z distance
