@@ -156,9 +156,7 @@ case "$CFDHOSTTYPE" in
 ;;
 esac
 
-export TWEEK_BASE_DIR=${VJ_BASE_DIR}
 export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
-export SNX_BASE_DIR=${VJ_BASE_DIR}
 export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/test_two/bin:${PATH}
 #export PATH=${WX_HOME}/bin:${PATH}
 
