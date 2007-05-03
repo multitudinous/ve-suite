@@ -52,9 +52,20 @@ if GetPlatform() == 'linux':
 else:
    kernelVersion = pt.release()
 
-
+## setup the uuid for the build directory
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
-buildDir = 'build.'+buildUUID
+
+if ARGUMENTS.has_key("build_dir"):
+   buildDir = ARGUMENTS["build_dir"]
+   ##if os.path.exists(opt_file):
+   ##   print "Reading options from: %s" % str(opt_file)
+   ##   options_cache = opt_file
+   ##else:
+   ##   print "Options file '%s' not found.. will continue with default '%s'" % \
+   ##   (opt_file, options_cache)
+else:
+   buildDir = 'build.'+buildUUID
+
 Export('buildDir')
 
 ########### Some utility functions
@@ -183,6 +194,7 @@ opts.Add('tao', 'If true, use TAO in the build', 'yes')
 ##End added velauncher build options.
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
 opts.Add('options_file', 'Provide a file name for the options caches', '')
+opts.Add('build_dir', 'Provide an alternate build directory for variants', '')
 opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from','')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)

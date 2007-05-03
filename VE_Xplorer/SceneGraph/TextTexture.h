@@ -40,10 +40,17 @@
 /*!\class VE_SceneGraph::TextTexture
 *
 */
+#include <osg/Version>
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#include <osg/CameraNode>
+#endif
+
 namespace osg
 {
    class Texture2D;
+#if ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    class CameraNode;
+#endif
 }
 namespace osgText
 {

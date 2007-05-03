@@ -8,6 +8,8 @@
 #include <osg/Material>
 #include <osg/GLU>
 #include <osg/Matrixd>
+#include <osg/Version>
+
 #include <iostream>
 
 using namespace NURBS;
@@ -113,6 +115,12 @@ public:
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
    virtual osg::BoundingBox computeBound() const;
+   
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   virtual void drawImplementation(osg::RenderInfo& temp) const {
+      ;
+   }
+#endif
    
 protected:
    ///Destructor
@@ -485,6 +493,12 @@ public:
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
    virtual osg::BoundingBox computeBound() const;
+
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   virtual void drawImplementation(osg::RenderInfo& temp) const {
+      ;
+   }
+#endif
    
 protected:
    ///Destructor
