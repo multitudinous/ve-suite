@@ -113,7 +113,6 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
          _texture->apply(state);
 #endif
-
       }
         ///check here for changes if vectors don't work
       /*if(!_fs.valid()){
