@@ -41,9 +41,9 @@
 /*!\class VE_TextureBased::cfdPBufferQuad
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/Drawable>
+#include <osg/Version>
 
 namespace osg
 {
@@ -79,30 +79,32 @@ namespace VE_TextureBased
             protected:
                osg::ref_ptr<cfdPBufferQuad> _pbq;
          };
-   //osg::BoundingBox computeBound() const;
-   /*bool computeBound() const;*/
-      protected:
-         void _drawAutoTexCoords()const;
-         void _drawHardCodedTCoords(osg::State& state)const;
-         virtual ~cfdPBufferQuad();
-         bool _useAutoTexCoords;
-         bool _bbSet;
-         bool _sliceCountSet;
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+         virtual void drawImplementation(osg::RenderInfo& temp) const {
+            ;
+         }
+#endif
+protected:
+   void _drawAutoTexCoords()const;
+   void _drawHardCodedTCoords(osg::State& state)const;
+   virtual ~cfdPBufferQuad();
+   bool _useAutoTexCoords;
+   bool _bbSet;
+   bool _sliceCountSet;
 
-         unsigned int _nSlices;
-         unsigned int _curSlice;
-         unsigned int _w;
-         unsigned int _h;
-         unsigned int _d;
-         float* _nearFarSlices;
-         float* _slices;
-         float _bounds[6];
-         float _eye[3];
-         float _lookAt[3];
-         float _deltaZ;
-         osg::ref_ptr<osg::Texture3D> _texture;
-   };
+   unsigned int _nSlices;
+   unsigned int _curSlice;
+   unsigned int _w;
+   unsigned int _h;
+   unsigned int _d;
+   float* _nearFarSlices;
+   float* _slices;
+   float _bounds[6];
+   float _eye[3];
+   float _lookAt[3];
+   float _deltaZ;
+   osg::ref_ptr<osg::Texture3D> _texture;
+};
 }
 #endif// _OSG
-#endif
 #endif// CFD_PBUFFER_QUAD_H

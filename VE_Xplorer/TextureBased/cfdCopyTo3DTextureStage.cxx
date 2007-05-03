@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/FrameStamp>
+#include <osg/Version>
 #include <cassert>
 #include "VE_Xplorer/TextureBased/cfdCopyTo3DTextureStage.h"
 using namespace VE_TextureBased;
@@ -102,8 +102,13 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _fs->setFrameNumber(state.getFrameStamp()->getFrameNumber());
       
       _localState->setFrameStamp(_fs.get());
-      for(unsigned int i = 1; i < _nSlices-1; i++){
+      for(unsigned int i = 1; i < _nSlices-1; i++)
+      {
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+         //RenderStage::draw(*_localState.get(),previous);
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
          RenderStage::draw(*_localState.get(),previous);
+#endif
          _texture->copyTexSubImage3D(state,
                                   1,1,i,
                                   1,1,_width-1,_height-1);
@@ -115,5 +120,4 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _pbuffer->deactivate();
    }
 }
-#endif
 #endif
