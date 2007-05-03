@@ -197,6 +197,7 @@ void CADEntity::SetCollisionShape( std::string type )
    collision_shape = physics_mesh->GetCollisionShape();
 
    btTransform transform;
+   transform.setIdentity();
 		
    rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
    rigid_body->setFriction( friction );
