@@ -38,7 +38,6 @@
 #include "temp/bkpparser.h"
 #include <osgDB/ReadFile>
 #include <osgUtil/Optimizer>
-#include <osgProducer/Viewer>
 #include <osg/CoordinateSystemNode>
 #include <osg/MatrixTransform>
 #include <osgText/Text>
