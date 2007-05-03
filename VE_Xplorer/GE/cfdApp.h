@@ -57,6 +57,7 @@ const float SAMPLE_TIME = 1.0f;
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2))
    #include <osg/ref_ptr>
    #include <osg/Timer>
+   #include <osg/LightModel>
 #endif
 
    #include <vrj/vrjParam.h>
@@ -234,8 +235,9 @@ private:
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
    osg::ref_ptr<osg::FrameStamp> frameStamp;
-      osg::ref_ptr< osg::Light > light_0;
+   osg::ref_ptr< osg::Light > light_0;
    osg::ref_ptr< osg::LightSource > light_source_0;
+   osg::ref_ptr< osg::LightModel > light_model_0;
 #endif
 
 #ifdef _SGL

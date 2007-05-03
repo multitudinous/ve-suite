@@ -67,7 +67,10 @@ void MaterialInitializer::apply( osg::Group& node )
 
    else
    {
-      stateset->setAttribute( new osg::Material(), osg::StateAttribute::ON );
+      material = new osg::Material();
+      material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
+
+      stateset->setAttribute( material.get(), osg::StateAttribute::ON );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

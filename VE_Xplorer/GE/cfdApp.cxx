@@ -81,7 +81,6 @@
 #include <osg/Matrix>
 #include <osg/Referenced>
 #include <osg/Light>
-#include <osg/LightModel>
 #include <osg/LightSource>
 
 #include <osgDB/WriteFile>
@@ -137,18 +136,19 @@ cfdApp::cfdApp( int argc, char* argv[] )
 
    light_0 = new osg::Light;
    light_source_0 = new osg::LightSource;
+   light_model_0 = new osg::LightModel;
 
    light_0->setLightNum( 0 );
    light_0->setAmbient( osg::Vec4f( 0.36862f, 0.36842f, 0.36842f, 1.0f ) );
-   //light_0->setDiffuse( osg::Vec4f( 0.0f, 0.88500f, 0.0f, 1.0f ) );
    light_0->setDiffuse( osg::Vec4f( 0.88627f, 0.88500f, 0.88500f, 1.0f ) );
    light_0->setSpecular( osg::Vec4f( 0.49019f, 0.48872f, 0.48872f, 1.0f ) );
-   //light_0->setSpecular( osg::Vec4f( 0.0f, 1.0f, 0.0f, 1.0f ) );
    light_0->setPosition( osg::Vec4f( 10000.0f, -10000.0f, 10000.0f, 0.0f ) );
    light_0->setDirection( osg::Vec3f( -1, 1, -1 ) );
 
    light_source_0->setLight( light_0.get() );
    light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
+
+   light_model_0->setAmbientIntensity( osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
 
 #ifdef VE_PATENTED
    _tbvHandler = 0;
@@ -158,6 +158,7 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
    this->argc = argc;
    this->argv = argv;
+
    //Set the deafult clear color of black
    clearColor.push_back( 0.0f );
    clearColor.push_back( 0.0f );
@@ -258,8 +259,9 @@ void cfdApp::contextInit()
 
 	(*sceneViewer) = new_sv;
    //This is important - if this is commented out then the screen goes black
-   new_sv->getGlobalStateSet()->setAssociatedModes(light_0.get(),osg::StateAttribute::ON);
-   new_sv->getGlobalStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::ON);
+   new_sv->getGlobalStateSet()->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
+   new_sv->getGlobalStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::ON );
+   new_sv->getGlobalStateSet()->setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
    //osg::ref_ptr< osg::LightModel > lightmodel = new osg::LightModel;
    //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
