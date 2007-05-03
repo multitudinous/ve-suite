@@ -106,8 +106,14 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
 	  const unsigned int  contextID = state.getContextID();
 #endif
       osg::Texture::TextureObject* textureObject = _texture->getTextureObject(contextID);
-      if (textureObject == 0){
+      if (textureObject == 0)
+      {
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
          _texture->apply(*renderInfo.getState()/*state*/);
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+         _texture->apply(state);
+#endif
+
       }
         ///check here for changes if vectors don't work
       /*if(!_fs.valid()){
