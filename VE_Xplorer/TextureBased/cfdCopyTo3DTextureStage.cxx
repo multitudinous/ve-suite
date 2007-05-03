@@ -99,8 +99,12 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
    if(_pbuffer->isCreated()){
       _texture->getTextureSize(_width,_height,_nSlices);
       _pbuffer->activate();
-      
-      const unsigned int contextID = renderInfo.getContextID();//state.getContextID();
+      //const unsigned int contextID = 0;
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+      const unsigned int  contextID = renderInfo.getContextID();
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+	  const unsigned int  contextID = state.getContextID();
+#endif
       osg::Texture::TextureObject* textureObject = _texture->getTextureObject(contextID);
       if (textureObject == 0){
          _texture->apply(*renderInfo.getState()/*state*/);
