@@ -30,8 +30,6 @@ setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
 #setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/opt/local/lib
 setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/home/users/mccdo/svn_VE_Suite/VE_Suite/test_two/lib
 
-setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
-setenv SNX_BASE_DIR ${VJ_BASE_DIR}
 setenv OSG_FILE_PATH ${OSG_HOME}/share/OpenSceneGraph-Data
 setenv PATH ${TAO_HOME}/bin:${PATH}
 setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}

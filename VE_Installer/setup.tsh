@@ -261,9 +261,7 @@ else
    echo "       OMNI_HOME, etc. are undefined"
 endif
 
-setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
 setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
-setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
 setenv PATH ${PATH}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${PATH}
