@@ -49,6 +49,8 @@
 #include <osg/StateSet>
 #include <osgUtil/RenderStage>
 #include <osg/FrameStamp>
+
+#include <osg/Version>
 #include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_TextureBased
@@ -83,7 +85,13 @@ namespace VE_TextureBased
          void SetShaderStateSet(osg::StateSet* ss);
          osg::Texture3D* getTexture() { return _texture.get(); }
 
-         virtual void draw(osg::State& state,osgUtil::RenderLeaf*& previous);
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   void cfdCopyTo3DTextureStage::draw(osg::RenderInfo& renderInfo,
+                                   osgUtil::RenderLeaf*& previous);
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+   void cfdCopyTo3DTextureStage::draw(osg::State& state, 
+                               osgUtil::RenderLeaf*& previous);
+#endif
 
       protected:   
   

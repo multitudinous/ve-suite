@@ -32,7 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
 #include <osg/FrameStamp>
-#include <osg/Version>
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#include <osg/RenderInfo>
+#endif
+#include <osg/State>
 #include <cassert>
 #include "VE_Xplorer/TextureBased/cfdCopyTo3DTextureStage.h"
 using namespace VE_TextureBased;
@@ -81,8 +84,15 @@ void cfdCopyTo3DTextureStage::reset()
     }
 }
 //////////////////////////////////////////////////////////////////
+/*void cfdCopyTo3DTextureStage::draw(osg::State& state, 
+                               osgUtil::RenderLeaf*& previous)*/
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+void cfdCopyTo3DTextureStage::draw(osg::RenderInfo& renderInfo,
+                                   osgUtil::RenderLeaf*& previous)
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 void cfdCopyTo3DTextureStage::draw(osg::State& state, 
                                osgUtil::RenderLeaf*& previous)
+#endif
 {
    if (_stageDrawnThisFrame) return;
 
@@ -90,28 +100,34 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _texture->getTextureSize(_width,_height,_nSlices);
       _pbuffer->activate();
       
-      const unsigned int contextID = state.getContextID();
+      const unsigned int contextID = renderInfo.getContextID();//state.getContextID();
       osg::Texture::TextureObject* textureObject = _texture->getTextureObject(contextID);
       if (textureObject == 0){
-         _texture->apply(state);
+         _texture->apply(*renderInfo.getState()/*state*/);
       }
-      if(!_fs.valid()){
+        ///check here for changes if vectors don't work
+      /*if(!_fs.valid()){
          _fs = new osg::FrameStamp();
       }
       _fs->setReferenceTime(state.getFrameStamp()->getReferenceTime());
       _fs->setFrameNumber(state.getFrameStamp()->getFrameNumber());
       
-      _localState->setFrameStamp(_fs.get());
+      _localState->setFrameStamp(_fs.get());*/
       for(unsigned int i = 1; i < _nSlices-1; i++)
       {
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
-         //RenderStage::draw(*_localState.get(),previous);
+          RenderStage::draw(renderInfo,previous);
+         _texture->copyTexSubImage3D(*renderInfo.getState()/*state*/,
+                                  1,1,i,
+                                  1,1,_width-1,_height-1);
+
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
          RenderStage::draw(*_localState.get(),previous);
-#endif
          _texture->copyTexSubImage3D(state,
                                   1,1,i,
                                   1,1,_width-1,_height-1);
+#endif
+
 
          //need this to draw multiple slices
          _stageDrawnThisFrame = false;
