@@ -72,15 +72,6 @@ void Tablet::Initialize( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::UpdateNavigation()
 {
-   osg::Quat rot_quat;
-   osg::Quat world_quat = activeDCS->getAttitude();
-
-   float worldTrans[3];
-	float* tempWorldTrans = activeDCS->GetVETranslationArray();
-	worldTrans[0] = -tempWorldTrans[0];
-	worldTrans[1] = -tempWorldTrans[1];
-	worldTrans[2] = -tempWorldTrans[2];
-   
    // This is NOT how we should do things
    // Command should allowed to be null but because we always
    // have to have a command due to our command structure
@@ -105,7 +96,20 @@ void Tablet::UpdateNavigation()
       cfdIso_value = commandData->GetDataValue();
       newCommand = commandData->GetDataName();
    }
+   else
+   {
+      return;
+   }
 
+   osg::Quat rot_quat;
+   osg::Quat world_quat = activeDCS->getAttitude();
+   
+   float worldTrans[3];
+	float* tempWorldTrans = activeDCS->GetVETranslationArray();
+	worldTrans[0] = -tempWorldTrans[0];
+	worldTrans[1] = -tempWorldTrans[1];
+	worldTrans[2] = -tempWorldTrans[2];
+   
    if ( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )         
    {
       SetHeadRotationFlag( cfdIso_value );

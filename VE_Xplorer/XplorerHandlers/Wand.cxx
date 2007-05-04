@@ -118,6 +118,13 @@ void Wand::UpdateNavigation()
    {
       this->rootNode->asGroup()->removeChild( beamGeode.get() );
    }
+   
+   ////If the wand does not exist
+   if ( wand->isStupefied() )
+   {
+      return;
+   }
+   
    ///Update the wand direction every frame
    UpdateWandLocalDirection();
 
@@ -300,25 +307,32 @@ void Wand::UpdateNavigation()
       }
    }
    
-   // Set the DCS postion based off of previous 
-   // manipulation of the worldTrans array
-   for ( unsigned int i = 0; i < 3; i++ )
-   {   
-      worldTrans[ i ] = -worldTrans[ i ];
-   }
-
-   //Do not allow translation below z = 0 plane
-   if ( subzeroFlag )
+   ///If we actually pushed a button then move things
+   if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
+        this->buttonData[2] == gadget::Digital::ON || 
+        this->buttonData[1] == gadget::Digital::TOGGLE_ON ||
+        this->buttonData[1] == gadget::Digital::ON )
    {
-      if ( worldTrans[2] > 0 )
-      {
-         worldTrans[2] = 0;
+      // Set the DCS postion based off of previous 
+      // manipulation of the worldTrans array
+      for ( unsigned int i = 0; i < 3; i++ )
+      {   
+         worldTrans[ i ] = -worldTrans[ i ];
       }
+      
+      //Do not allow translation below z = 0 plane
+      if ( subzeroFlag )
+      {
+         if ( worldTrans[2] > 0 )
+         {
+            worldTrans[2] = 0;
+         }
+      }
+      
+      activeDCS->SetTranslationArray( worldTrans );
+      world_quat *= rot_quat;
+      activeDCS->SetQuat( world_quat );
    }
-   
-   activeDCS->SetTranslationArray( worldTrans );
-   world_quat *= rot_quat;
-   activeDCS->SetQuat( world_quat );
    vprDEBUG(vesDBG,3) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
