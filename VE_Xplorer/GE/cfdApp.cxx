@@ -676,13 +676,19 @@ void cfdApp::contextPreDraw( void )
 {
    if ( svUpdate )
    {
-      osg::ref_ptr<osgUtil::SceneView> sv;
-      sv = (*sceneViewer);    // Get context specific scene viewer
-      if ( sv.valid() )
+      //osg::ref_ptr<osgUtil::SceneView> sv;
+      //sv = (*sceneViewer);    // Get context specific scene viewer
+      //if ( sv.valid() )
       {
-         sv->setClearColor( osg::Vec4( clearColor.at(0),
-                                       clearColor.at(1),
-                                       clearColor.at(2), 1.0 ) );
+         ///This does not seem to affect the background color
+         ///not sure why
+         //sv->setClearColor( osg::Vec4( clearColor.at(0),
+         //                              clearColor.at(1),
+         //                              clearColor.at(2), 1.0 ) );
+         ///This does change the background color
+         glClearColor( clearColor.at(0),
+                       clearColor.at(1),
+                       clearColor.at(2), 1.0 );
       }
    }
 }
