@@ -100,8 +100,11 @@ public:
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   virtual void drawImplementation(osg::RenderInfo& currentState) const;
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    virtual void drawImplementation(osg::State& currentState) const;
-
+#endif
    ///Are we in selection mode?
    bool IsSelecting();
 
@@ -115,12 +118,6 @@ public:
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
    virtual osg::BoundingBox computeBound() const;
-   
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
-   virtual void drawImplementation(osg::RenderInfo& temp) const {
-      ;
-   }
-#endif
    
 protected:
    ///Destructor
@@ -363,9 +360,17 @@ bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
    return false;
 }
 ////////////////////////////////////////////////////////////////////////
-void NURBSControlMesh::drawImplementation(osg::State& currentState)const
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+void NURBSControlMesh::drawImplementation(osg::RenderInfo& renderState) const
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+void NURBSControlMesh::drawImplementation(osg::State& renderState) const
+#endif
 {
-   
+ #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2)) 
+   osg::State& currentState = *(renderState.getState());
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+   osg::State& currentState = renderState;
+#endif
    if(_selection)
    {
       _projectionMatrix = const_cast<double*>(currentState.getProjectionMatrix().ptr());
@@ -488,17 +493,15 @@ public:
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
-   virtual void drawImplementation(osg::State&) const;
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   virtual void drawImplementation(osg::RenderInfo& currentState) const;
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+   virtual void drawImplementation(osg::State& currentState) const;
+#endif
 
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
    virtual osg::BoundingBox computeBound() const;
-
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
-   virtual void drawImplementation(osg::RenderInfo& temp) const {
-      ;
-   }
-#endif
    
 protected:
    ///Destructor
@@ -524,7 +527,11 @@ NURBS::NURBSObject* NURBSTessellatedSurface::GetNURBSData()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void NURBSTessellatedSurface::drawImplementation(osg::State& currentState)const
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+void NURBSTessellatedSurface::drawImplementation(osg::RenderInfo& renderState) const
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+void NURBSTessellatedSurface::drawImplementation(osg::State& renderState) const
+#endif
 {
    if(_nurbsObject->GetType() == NURBSObject::Surface)
    {
