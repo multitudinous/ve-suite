@@ -110,7 +110,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    //Look for custom plugin path
    std::string path("Plugins/GE/");
    std::string modelPath;
-   const bool result = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
+   vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    std::string libDir = path + modelPath;
 
    //std::string modelPath;
@@ -181,11 +181,21 @@ void cfdVEPluginLoader::ScanAndLoad( void )
 
    for ( size_t i = 0; i < libs.size(); ++i )
    {
-      status = libs.at( i )->load();
-      vprDEBUG(vesDBG,1)  << " Loaded lib successfully : " 
-                           << status.success() 
-                           << std::endl 
-                           << vprDEBUG_FLUSH;
+      try
+      {
+         libs.at( i )->load();
+         vprDEBUG(vesDBG,1)  << " Loaded lib successfully : " 
+                              //<< status.success() 
+                              << std::endl 
+                              << vprDEBUG_FLUSH;
+      }
+      catch (...)
+      {
+         vprDEBUG(vesDBG,1)  << " Loaded lib failed : " 
+                              //<< status.success() 
+                              << std::endl 
+                              << vprDEBUG_FLUSH;
+      }
    }
    
    LoadPlugins();
