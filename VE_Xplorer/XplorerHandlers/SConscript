@@ -243,9 +243,8 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','TextureBased'),
                         pj('#', buildDir, 'VE_Open','XML')])
-lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --get-vrj-ogl-libs --libs --cflags'%lib_env['VRJugglerVersion'])
-lib_env.ParseConfig('flagpoll bullet --libs --cflags')
-lib_env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%lib_env['BoostVersion'])
+lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-vrj-ogl-libs --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll bullet --libs --cflags Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )

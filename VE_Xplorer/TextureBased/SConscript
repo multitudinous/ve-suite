@@ -80,9 +80,9 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = 'VE_UtilLib')
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%lib_env['BoostVersion'])
+lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 lib_env.Append(LIBS = ['GLU','GL'])
-lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs --libs --cflags --require-Version=%s'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs --libs --cflags --atleast-version=%s'%lib_env['VRJugglerVersion'])
 osg_options.apply( lib_env )
 vtk_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":

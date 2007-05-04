@@ -39,8 +39,8 @@ env.ParseConfig('flagpoll TAO \
                           TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
-env.ParseConfig('flagpoll vrjuggler --require-Version=%s --get-vrj-ogl-libs --libs --cflags'%env['VRJugglerVersion'])
-env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%env['BoostVersion'])
+env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-vrj-ogl-libs --libs --cflags'%env['VRJugglerVersion'])
+env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 env.ParseConfig('flagpoll bullet --libs --cflags')
 #opal_options.apply( env )
 #ode_options.apply( env )
