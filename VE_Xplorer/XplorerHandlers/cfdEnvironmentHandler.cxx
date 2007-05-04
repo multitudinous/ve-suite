@@ -312,7 +312,7 @@ void cfdEnvironmentHandler::InitScene( void )
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
                                  VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
 
-   this->objectHandler->Initialize( NULL );
+   //this->objectHandler->Initialize( NULL );
 
    if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
    {
