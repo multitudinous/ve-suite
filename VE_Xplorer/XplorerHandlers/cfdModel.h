@@ -66,6 +66,8 @@ it is better to treat these two dataset as two different models.
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 
+#include <vrj/vrjParam.h>
+
 namespace VE_SceneGraph
 {
    class DCS;
@@ -286,7 +288,11 @@ public:
 //Dynamically load data from unit
 public:   
    void ActiveLoadingThread();
+#if __VJ_version > 2000003
+   void GetDataFromUnit(void);
+#elif __VJ_version == 2000003
    void GetDataFromUnit(void* unused);
+#endif
    const std::string MakeSurfaceFile(vtkDataSet*,int);
    void DynamicLoadingData(vtkUnstructuredGrid*, int, float*, float*, float*);
    void DynamicLoadingGeom(std::string, float*, float*, float*, float*, int, int);

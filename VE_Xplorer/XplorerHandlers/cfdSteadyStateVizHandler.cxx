@@ -68,8 +68,11 @@
 #include "VE_Open/XML/DataValuePair.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+
+#include <boost/bind.hpp>
 
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
@@ -189,10 +192,11 @@ void cfdSteadyStateVizHandler::InitScene( void )
    // This set of thread stuff needs to be in ssvizhandler and transvizhandler
    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
    this->runIntraParallelThread = true;
-   this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread ) );
-
-   //std::cout << "|  9. Initializing..................................... Text Output |" << std::endl;
-   //this->textOutput = new cfdTextOutput();
+#if __VJ_version > 2000003
+   this->vjTh[0] = new vpr::Thread( boost::bind( &cfdSteadyStateVizHandler::CreateActorThread, this ) );
+#elif __VJ_version == 2000003
+   this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler >( this, &cfdSteadyStateVizHandler::CreateActorThread ) );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
@@ -309,7 +313,11 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if __VJ_version > 2000003
+void cfdSteadyStateVizHandler::CreateActorThread( void )
+#elif __VJ_version == 2000003
 void cfdSteadyStateVizHandler::CreateActorThread( void * )
+#endif
 {
    // DO NOT put scene graph manipulation code in this function
    // This thread is purely for creation of geodes

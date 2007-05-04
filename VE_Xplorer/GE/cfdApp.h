@@ -60,11 +60,11 @@ const float SAMPLE_TIME = 1.0f;
    #include <osg/LightModel>
 #endif
 
-   #include <vrj/vrjParam.h>
-#if __VJ_version >= 2000003
-   #include <vrj/Draw/OSG/OsgApp.h>
-#endif
-   #include <vpr/Sync/Mutex.h>
+//#include <vrj/vrjParam.h>
+//#if __VJ_version >= 2000003
+#include <vrj/Draw/OSG/OsgApp.h>
+//#endif
+#include <vpr/Sync/Mutex.h>
 
    namespace osg
    {  

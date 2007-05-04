@@ -110,7 +110,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    //Look for custom plugin path
    std::string path("Plugins/GE/");
    std::string modelPath;
-   vpr::ReturnStatus status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
+   const bool result = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    std::string libDir = path + modelPath;
 
    //std::string modelPath;

@@ -124,11 +124,8 @@ void Wand::UpdateNavigation()
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
    
-   float* tempWorldRot = activeDCS->GetRotationArray();
-   float worldRot[ 3 ];
-   worldRot[ 0 ] = tempWorldRot[ 0 ];
-   worldRot[ 1 ] = tempWorldRot[ 1 ];
-   worldRot[ 2 ] = tempWorldRot[ 2 ];
+   osg::Quat rot_quat;
+   osg::Quat world_quat = activeDCS->getAttitude();
    
 	float* tempWorldTrans = activeDCS->GetVETranslationArray();
    float worldTrans[ 3 ];
@@ -170,8 +167,9 @@ void Wand::UpdateNavigation()
       for ( unsigned int i = 0; i < 3; i++ )
 	   {
          worldTrans[ i ] = 0.0f;
-         worldRot[ i ] = 0.0f;
+         world_quat[ i ] = 0.0f;
 	   }
+      world_quat[ 3 ] = 1.0f;
    }
    else if ( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
    {
@@ -196,30 +194,36 @@ void Wand::UpdateNavigation()
                            << std::endl << vprDEBUG_FLUSH;
       //Get the largest direction component so that we know how to rotate
       float direction = 0.0f;
-      size_t dirIndex = 0;
+      //size_t dirIndex = 0;
       size_t rotIndex = 0;
       //If we want pitch
       if ( fabs( dir[ 0 ] ) < fabs( dir[ 2 ] ) )
       {
          direction = dir[ 2 ];
-         dirIndex = 1;
+         //dirIndex = 1;
          rotIndex = 0;
       }
       //else we get yaw
       else
       {
          direction = dir[ 0 ];
-         dirIndex = 0;
+         //dirIndex = 0;
          rotIndex = 2;
       }
       
       if ( direction > 0.0f )
       {
-         worldRot[ dirIndex ] += rotationStepSize;
+         ///worldRot[ dirIndex ] += rotationStepSize;
+         osg::Vec3f tempVec( 0, 0, 0 );
+         tempVec[ rotIndex ] = 1;
+         rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
       }
       else 
       {
-         worldRot[ dirIndex ] -= rotationStepSize;
+         //worldRot[ dirIndex ] -= rotationStepSize;
+         osg::Vec3f tempVec( 0, 0, 0 );
+         tempVec[ rotIndex ] = 1;
+         rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
       }
       
       if ( rotationFlag )
@@ -248,18 +252,26 @@ void Wand::UpdateNavigation()
          
          // Create rotation matrix and juggler head vector
          gmtl::Matrix44f rotMatTemp;
-         gmtl::EulerAngleXYZf worldRotVecTemp( 0, 0, 0 );
          
          if ( direction > 0.0f )
          {
-            worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(rotationStepSize);
+            //worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(rotationStepSize);
+            osg::Vec3f tempVec( 0, 0, 0 );
+            tempVec[ rotIndex ] = 1;
+            rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
          }
          else 
          {
-            worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
+            //worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
+            osg::Vec3f tempVec( 0, 0, 0 );
+            tempVec[ rotIndex ] = 1;
+            rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
          }
          
-         rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+         rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >( gmtl::Quat< float >( rot_quat[0], 
+                                                                    rot_quat[1], 
+                                                                    rot_quat[2], 
+                                                                    rot_quat[3] ) );
          gmtl::Vec4f newGlobalHeadPointVec;
          newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
          newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
@@ -305,7 +317,8 @@ void Wand::UpdateNavigation()
    }
    
    activeDCS->SetTranslationArray( worldTrans );
-   activeDCS->SetRotationArray( worldRot );   
+   world_quat *= rot_quat;
+   activeDCS->SetQuat( world_quat );
    vprDEBUG(vesDBG,3) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

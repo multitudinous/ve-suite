@@ -37,7 +37,10 @@
 #include "VE_Xplorer/GE/cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
+
 #include <vpr/System.h>
+
+#include <boost/bind.hpp>
 
 #include <iostream>
 
@@ -49,7 +52,11 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
    this->argv = argv;
    _thread = new cfdThread();
    _vjObsWrapper = input;
-   _thread->new_thread=new vpr::Thread(new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init ) );
+#if __VJ_version > 2000003
+   _thread->new_thread=new vpr::Thread( boost::bind(&cfdAppWrapper::init, this) );
+#elif __VJ_version == 2000003
+   _thread->new_thread=new vpr::Thread( new vpr::ThreadMemberFunctor< cfdAppWrapper >( this, &cfdAppWrapper::init ) );
+#endif
    jugglerIsRunning = true;
 }
 
@@ -67,7 +74,11 @@ bool cfdAppWrapper::JugglerIsRunning( void )
    return jugglerIsRunning;
 }
 
-void cfdAppWrapper::init( void * )
+#if __VJ_version > 2000003
+void cfdAppWrapper::init( void )
+#elif __VJ_version == 2000003
+void cfdAppWrapper::init( void* )
+#endif
 {
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
    _cfdApp = new cfdApp( argc, argv );  // Delcare an instance of my application

@@ -35,7 +35,7 @@
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
+//#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
@@ -83,7 +83,6 @@ using namespace VE_Util;
 ////////////////////////////////////////////////////////////////////////////////
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
-   nav = 0;
    _teacher = 0;
    //_soundHandler = 0;
    //_camHandler = 0;
@@ -108,8 +107,6 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
       worldTrans[ i ] = 0.0f;
       worldRot[ i ] = 0.0f;
    }
-
-   this->nav = 0;
 
    #ifdef _OSG
       display_information = 0;
@@ -155,28 +152,13 @@ void cfdEnvironmentHandler::Initialize( void )
    //vprDEBUG(vesDBG,1) << "|\tcfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
-   this->nav = new cfdNavigate();
-   //_readParam = new cfdReadParam();
+
    this->arrow = cfdModelHandler::instance()->GetArrow();
-   
-   //CreateObjects();
-   
-   #ifdef _OSG
-   #ifdef VE_PATENTED
-      this->objectHandler = new cfdObjectHandler();
-   #endif //VE_PATENTED
-   #endif //_OSG
+   this->objectHandler = cfdObjectHandler::instance();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::CleanUp( void )
 {
-   if ( this->nav )
-   {  
-		  vprDEBUG(vesDBG,2)  
-        << "|       deleting this->nav" << std::endl << vprDEBUG_FLUSH;
-      delete nav;
-   }
-
    if ( this->_readParam )
    {  
       vprDEBUG(vesDBG,2)  
@@ -281,11 +263,6 @@ cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
    return displaySettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
-{
-   return this->nav;
-}*/
-////////////////////////////////////////////////////////////////////////////////
 cfdCursor* cfdEnvironmentHandler::GetCursor( void )
 {
    return this->cursor;
@@ -307,12 +284,6 @@ void cfdEnvironmentHandler::SetDesktopSize( int width, int height )
 void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
-   // Needs to be set by the gui fix later
-   this->nav->Initialize( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
-
-   // Maybe need to fix this later
-   //this->cursorId = NONE;
-
    //
    // Initiate cursors.
    //
@@ -320,15 +291,12 @@ void cfdEnvironmentHandler::InitScene( void )
    this->cursor = new cfdCursor( this->arrow, 
                              VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), 
                              VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
-   this->cursor->Initialize( this->nav->GetCursorLocation(), this->nav->GetDirection() );
+   //this->cursor->Initialize( NULL, NULL );
 
    //
    // Initiate quatcam
    //
-   /*std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
-   this->_camHandler = new cfdQuatCamHandler( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(),
-                                          , _param.c_str() );*/
-   //VE_Xplorer::cfdQuatCamHandler::instance()->SetNavigation(this->nav);
+   std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
    VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS());
 
    //
@@ -344,11 +312,7 @@ void cfdEnvironmentHandler::InitScene( void )
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
                                  VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
 
-   #ifdef _OSG
-   #ifdef VE_PATENTED
-      this->objectHandler->Initialize(this->nav);
-   #endif //VE_PATENTED
-   #endif //_OSG
+   this->objectHandler->Initialize( NULL );
 
    if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
    {
@@ -392,8 +356,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
    //Process all events for active device
    VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
-
-   //this->nav->updateNavigationFromGUI();
 
    VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
@@ -450,10 +412,6 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
       this->cursor->CheckCommandId( _commandArray );
    }*/
 
-   //this->cursor->Update( this->nav->GetCursorLocation(),
-   //                      this->nav->GetDirection(), this->nav->worldTrans );
-
-   //_soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
 	display_information->LatePreFrame();

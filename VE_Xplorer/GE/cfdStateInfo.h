@@ -35,6 +35,9 @@
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
+
+#include <vrj/vrjParam.h>
+
 #include <string>
 /*!\file cfdStateInfo.h
 StateVariables API
@@ -71,7 +74,11 @@ struct StateVariables
 namespace vpr
 {
 template<>
-inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
+#if __VJ_version <= 2000003
+   inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
+#elif __VJ_version > 2000003
+   inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
+#endif
 { 
    writer->writeDouble( clusterIso_value );  
    writer->writeDouble( clusterSc );  
@@ -102,11 +109,18 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    {
      bufwriter->writeRaw((vpr::Uint8*) &(clusterXMLCommands[i]),1);
    }
+#if __VJ_version <= 2000003
    return vpr::ReturnStatus::Succeed;
+#elif __VJ_version > 2000003
+#endif
 }
 
 template<>
+#if __VJ_version <= 2000003
 inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject(vpr::ObjectReader* reader)
+#elif __VJ_version > 2000003
+inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject(vpr::ObjectReader* reader)
+#endif
 {
    clusterIso_value        = reader->readDouble();  
    clusterSc               = reader->readDouble();  
@@ -139,6 +153,9 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
      tempChar = (char)(*bufreader->readRaw(1));
      clusterXMLCommands += tempChar;
    }
+#if __VJ_version <= 2000003
    return vpr::ReturnStatus::Succeed;
+#elif __VJ_version > 2000003
+#endif
 }
 }

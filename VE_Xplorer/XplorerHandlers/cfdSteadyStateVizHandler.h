@@ -48,6 +48,8 @@ cfdSteadyStateVizHandler API
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
 
+#include <vrj/vrjParam.h>
+
 #ifdef _OSG
 #include <osg/ref_ptr>
 #elif _PERFORMER
@@ -121,7 +123,11 @@ public:
    ///The standard preframe function
    void PreFrameUpdate( void );
    ///The thread function used to create geodes and actors
+#if __VJ_version > 2000003
+   void CreateActorThread( void );
+#elif __VJ_version == 2000003
    void CreateActorThread( void * );
+#endif
    ///The function used to create streamlines
    void streamers( void );
    ///Set the active vis object - to be used by the addvis eh

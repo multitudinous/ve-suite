@@ -68,11 +68,11 @@ namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS DeviceHandler
 {
-public:
+private:
 	DeviceHandler();
    ~DeviceHandler(){;}
    vprSingletonHeader( DeviceHandler );
-
+public:
    void CleanUp();
    void ExecuteCommands();
 

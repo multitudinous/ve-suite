@@ -45,6 +45,9 @@ cfdEnvironmentHandler API
 #include <map>
 #include <vector>
 #include <osg/ref_ptr>
+
+#include <vrj/vrjParam.h>
+
 namespace VE_Xplorer
 {
 	class cfdNavigate;
@@ -59,11 +62,7 @@ namespace VE_Xplorer
 
    class DisplayInformation;
 
-   #ifdef VE_PATENTED
-   #ifdef _OSG
-      class cfdObjectHandler;
-   #endif //_OSG
-   #endif //VE_PATENTED
+   class cfdObjectHandler;
 }
 namespace VE_EVENTS
 {
@@ -97,10 +96,6 @@ public:
    ///Update the background color
    ///\param color The background color
    void SetBackgroundColor(std::vector<double> color);
-
-   ///Accessor for cfdNavigate
-   //cfdNavigate* GetNavigate( void );
-
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
 
@@ -157,7 +152,6 @@ public:
 private:
    osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
    osg::ref_ptr<VE_SceneGraph::DCS> _seedPointsDCS;///<The DCS for the seed points
-   cfdNavigate* nav;
    cfdTeacher* _teacher;
    //cfdSoundHandler* _soundHandler;
    cfdQuatCamHandler* _camHandler;

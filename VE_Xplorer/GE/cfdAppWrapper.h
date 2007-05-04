@@ -41,6 +41,7 @@ cfdAppWrapper API
 /*!\class VE_Xplorer::cfdAppWrapper
 *
 */
+#include <vrj/vrjParam.h>
 
 namespace VE_Xplorer
 {
@@ -57,7 +58,11 @@ public:
    cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
    ~cfdAppWrapper( void );
    bool JugglerIsRunning( void );
-   void init( void *);
+#if __VJ_version > 2000003
+   void init( void );
+#elif __VJ_version == 2000003
+   void init( void * );
+#endif
    cfdThread* _thread;
 private:
    cfdApp* _cfdApp;

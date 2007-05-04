@@ -82,6 +82,8 @@ using namespace VE_TextureBased;
 #include <fstream>
 #include <sstream>
 
+#include <boost/bind.hpp>
+
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -454,7 +456,11 @@ std::vector<vtkDataSet*> cfdModel::GetWaitingDataList()
    return this->waitingdatalist;
 }
 ////////////////////////////////////////////////////////////////////////////////
+#if __VJ_version > 2000003
+void cfdModel::GetDataFromUnit(void)
+#elif __VJ_version == 2000003
 void cfdModel::GetDataFromUnit(void* unused)
+#endif
 {
 
  //std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
@@ -476,33 +482,37 @@ void cfdModel::GetDataFromUnit(void* unused)
 
    server.accept(connection);
    i++;
-   vpr::ReturnStatus status;
 
    // Get the length of the uncompressed data.
    mValueLock.acquire();
    {
-      status = connection.recvn( (void*)(&data_length), sizeof(data_length), bytes_read);
+      try
+      {
+         //connection.recvn( (void*)(&data_length), sizeof(data_length), bytes_read);
+      }
+      catch (...)
+      {
+         std::cerr << "[ERR] Unable to receive data length "
+         << __FILE__ << ":" << __LINE__ << std::endl;
+      }
    }
    mValueLock.release();
-   if(status != vpr::ReturnStatus::Succeed)
-   {
-     std::cerr << "[ERR] Unable to receive data length "
-               << __FILE__ << ":" << __LINE__ << std::endl;
-     //return 1;
-   }
    // Get the length of the compressed data
    mValueLock.acquire();
    {
-      status = connection.recvn( (void*)(&compressed_data_length), 
-                                  sizeof(compressed_data_length), bytes_read);
+      try
+      {
+         //connection.recvn( (void*)(&compressed_data_length), 
+         //                         sizeof(compressed_data_length), bytes_read);
+      }
+      catch (...)
+      {
+         std::cerr << "[ERR] Unable to receive compressed data length "
+         << __FILE__ << ":" << __LINE__ << std::endl;
+         //return 1;
+      }
    }
    mValueLock.release();
-   if(status != vpr::ReturnStatus::Succeed)
-   {
-     std::cerr << "[ERR] Unable to receive compressed data length "
-               << __FILE__ << ":" << __LINE__ << std::endl;
-     //return 1;
-   }
    
    ///Set the byte-order
    data_length = vpr::System::Ntohl(data_length);
@@ -510,13 +520,13 @@ void cfdModel::GetDataFromUnit(void* unused)
    vpr::Uint8* compressed_data = new vpr::Uint8[compressed_data_length];
    mValueLock.acquire();
    {
-      status = connection.recvn( (void*)compressed_data, 
-                                 compressed_data_length, 
-                                 bytes_read );
+      //connection.recvn( (void*)compressed_data, 
+      //                           compressed_data_length, 
+      //                           bytes_read );
    }
    mValueLock.release();
    
-   if(status != vpr::ReturnStatus::Succeed)
+   /*if(status != vpr::ReturnStatus::Succeed)
    {
       std::cout << "[ERR] Error receiving data; read " << bytes_read << " of "
                 << data_length << " bytes." << std::endl;
@@ -545,7 +555,7 @@ void cfdModel::GetDataFromUnit(void* unused)
          std::cout << "[ERR] Unknown Result." << std::endl;
       }
       //return 1;
-    }
+    }*/
     std::cout << "[DBG] Read " << data_length << " of " 
               << compressed_data_length << " bytes."
               << std::endl;
@@ -608,9 +618,13 @@ void cfdModel::GetDataFromUnit(void* unused)
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::ActiveLoadingThread()
 {
-   vpr::ThreadMemberFunctor<cfdModel> *loadDataFunc;
-   loadDataFunc = new vpr::ThreadMemberFunctor<cfdModel> (this, &cfdModel::GetDataFromUnit);
-   this->loadDataTh = new vpr::Thread( loadDataFunc );
+#if __VJ_version > 2000003
+   this->loadDataTh = new vpr::Thread( boost::bind( &cfdModel::GetDataFromUnit, this ) );
+#elif __VJ_version == 2000003
+   this->loadDataTh = new vpr::Thread( 
+                        new vpr::ThreadMemberFunctor< cfdModel >( 
+                                 this, &cfdModel::GetDataFromUnit) );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)

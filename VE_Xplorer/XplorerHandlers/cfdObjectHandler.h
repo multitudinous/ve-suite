@@ -91,39 +91,39 @@ namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS cfdObjectHandler
 {
-   public:
-      cfdObjectHandler( );
-      ~cfdObjectHandler( );
-      vprSingletonHeader( cfdObjectHandler );   
+private:
+   cfdObjectHandler( );
+   ~cfdObjectHandler( );
+   vprSingletonHeader( cfdObjectHandler );   
+public:
+   void Initialize(cfdNavigate* );
+   void SetDataValues( int, int );
+   void UpdateObjectHandler();
+   void DrawLine(osg::Vec3f, osg::Vec3f);
+   void ChangeColor(osg::Vec3f);
+   void ProcessHit(osgUtil::IntersectVisitor::HitList);
+   void ActivateGeometryPicking();
+   void DeactivateGeometryPicking();
+   cfdNavigate* navigator;
 
-      void Initialize(cfdNavigate* );
-      void SetDataValues( int, int );
-      void UpdateObjectHandler();
-      void DrawLine(osg::Vec3f, osg::Vec3f);
-      void ChangeColor(osg::Vec3f);
-      void ProcessHit(osgUtil::IntersectVisitor::HitList);
-      void ActivateGeometryPicking();
-      void DeactivateGeometryPicking();
-      cfdNavigate* navigator;
-   
-   private:
+private:
 
-      void SelectObject();
-      void ChangeColor (osg::Vec4f);
-      void ChangeColor (osg::Geometry *, osg::Vec4f); 
-      gadget::DigitalInterface digital;
-      osg::ref_ptr<osg::Geode> selectedGeometry;
-      double distance;
-      std::string laserName;
-      osg::Vec3f LastWandPosition;
-      osg::MatrixTransform* getMatrixTransform();
-      void TranslateObject();
-      gadget::DigitalInterface translateDigital;
-      osg::Node* rootNode;
-      osg::Node* worldNode;
-      void SetupStartEndPoint(osg::Vec3f *, osg::Vec3f *);
-      void SetWandPosition();
-      bool _active;
+   void SelectObject();
+   void ChangeColor (osg::Vec4f);
+   void ChangeColor (osg::Geometry *, osg::Vec4f); 
+   gadget::DigitalInterface digital;
+   osg::ref_ptr<osg::Geode> selectedGeometry;
+   double distance;
+   std::string laserName;
+   osg::Vec3f LastWandPosition;
+   osg::MatrixTransform* getMatrixTransform();
+   void TranslateObject();
+   gadget::DigitalInterface translateDigital;
+   osg::Node* rootNode;
+   osg::Node* worldNode;
+   void SetupStartEndPoint(osg::Vec3f *, osg::Vec3f *);
+   void SetWandPosition();
+   bool _active;
 };
 
 }
