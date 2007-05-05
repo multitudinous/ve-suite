@@ -665,6 +665,55 @@ void cfdApp::writeImageFileForWeb(void*)
          writingWebImageNow = false;
       }
    }
+   
+   
+   osg::ref_ptr< osg::Image > shot = new osg::Image();
+   //This is wxWidgets-Stuff to get the image ratio:
+   int w = 0; int  h = 0;
+   w = 1280;
+   h = 1024;
+   //GetClientSize(&w, &h);
+   int newSize = 5000;
+   float ratio = (float)w/(float)h;
+   w = newSize;
+   h = (int)((float)w/ratio);
+   shot->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+   osg::ref_ptr<osg::Node> subgraph = getScene();
+   osg::ref_ptr<osg::Camera> camera = new osg::Camera;
+   osg::ref_ptr<osg::Camera> oldcamera;// = sceneView->getCamera();
+   //Copy the settings from sceneView-camera to get exactly the view the user sees at the moment:
+   camera->setClearColor(oldcamera->getClearColor() );
+   camera->setClearMask(oldcamera->getClearMask() );
+   camera->setColorMask(oldcamera->getColorMask() );
+   camera->setTransformOrder(oldcamera->getTransformOrder() );
+   camera->setProjectionMatrix(oldcamera->getProjectionMatrix() );
+   camera->setViewMatrix(oldcamera->getViewMatrix() );
+   // set view
+   camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
+
+   // set viewport
+   camera->setViewport(0,0,w,h);
+
+   // set the camera to render before after the main camera.
+   camera->setRenderOrder(osg::Camera::POST_RENDER);
+
+   // tell the camera to use OpenGL frame buffer object where supported.
+   camera->setRenderTargetImplementation(osg::Camera::FRAME_BUFFER_OBJECT);
+
+   camera->attach(osg::Camera::COLOR_BUFFER, shot.get());
+
+   // add subgraph to render
+   camera->addChild(subgraph.get());
+   //Need to mage it part of the scene :
+   //sceneView->setSceneData(camera.get());
+   //Make it frame:
+   //sceneView->update();
+   //sceneView->cull();
+   //sceneView->draw();
+   //Reset the old data to the sceneView, so it doesn«t always render to image:
+   //sceneView->setSceneData(subgraph.get() );
+   //This would work, too:
+   osgDB::writeImageFile(shot, "test.jpg" );
 }
 #endif   //_WEB_INTERFACE
 

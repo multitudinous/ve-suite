@@ -37,6 +37,7 @@ export PFNFYLEVEL=2
 export NO_RTRC_PLUGIN=TRUE
 export NO_PERF_PLUGIN=TRUE
 export OSG_THREAD_SAFE_REF_UNREF=1
+export OSG_FILE_PATH=/Volumes/data/VE_Suite_Tools/OpenSceneGraph-Data
 #export OSGNOTIFYLEVEL=DEBUG_INFO
 #export OSGNOTIFYLEVEL=
 #export PFSHAREDSIZE=534773700
@@ -140,6 +141,7 @@ case "$CFDHOSTTYPE" in
 
    export DYLD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ImageIO.framework/Versions/A/Resources
+   export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:/Volumes/data/VE_Suite_Tools/Producer/lib/Darwin32
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    #export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
    export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/test_two/lib
@@ -162,7 +164,7 @@ export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/test_two/bin:${PATH}
 
 if [ $OSG_HOME ]; then
    export PATH=${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
-   export OSG_FILE_PATH=${OSG_HOME}/share/OpenSceneGraph-Data
+   #export OSG_FILE_PATH=${OSG_HOME}/share/OpenSceneGraph-Data
 fi
 
 #echo ""
