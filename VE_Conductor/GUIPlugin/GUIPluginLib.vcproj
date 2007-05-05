@@ -15,8 +15,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory=".\GUIPluginLib\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -48,9 +48,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;COMPRESSOR_EXPORTS"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;WXUSINGDLL;VE_GUIPLUGINS_LIBRARY;_TAO"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/GUIPlugin.pch"
@@ -73,9 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/GUIPlugin.dll"
-				LinkIncremental="1"
+				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_BiDirGIOP.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib xerces-c_2.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib vpr.lib"
+				OutputFile="$(OutDir)\GUIPlugin.dll"
+				LinkIncremental="2"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				ProgramDatabaseFile=".\Release/GUIPlugin.pdb"
 				ImportLibrary=".\Release/GUIPlugin.lib"
 				TargetMachine="1"

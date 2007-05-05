@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
+			IntermediateDirectory="./VE_Conductor/$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -49,9 +49,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/WinClient.pch"
@@ -74,9 +75,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/WinClient.exe"
+				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib xerces-c_2.lib"
+				OutputFile="$(OutDir)/WinClient.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				ProgramDatabaseFile=".\Release/WinClient.pdb"
 				SubSystem="2"
 				TargetMachine="1"
