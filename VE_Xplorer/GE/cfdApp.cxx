@@ -255,7 +255,6 @@ void cfdApp::contextInit()
 
 	// Configure the new viewer
    this->configSceneView( new_sv.get() );             
-   new_sv->getState()->setContextID( unique_context_id );
 
 	(*sceneViewer) = new_sv;
    //This is important - if this is commented out then the screen goes black
@@ -267,38 +266,9 @@ void cfdApp::contextInit()
    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
    // Add the tree to the scene viewer and set properties
    new_sv->setSceneData(getScene());
+   new_sv->getState()->setContextID( unique_context_id );
+	new_sv->setFrameStamp( _frameStamp.get() );
 
-	//Setup OpenGL light
-	//This should actualy be done in the simulator code
-	//GLfloat light0_ambient[] = { 0.36862f, 0.36842f, 0.36842f, 1.0f };
-	//GLfloat light0_diffuse[] = { 0.88627f, 0.88500f, 0.88500f, 1.0f };
-	//GLfloat light0_specular[] = { 0.49019f, 0.48872f, 0.48872f, 1.0f };
-	//GLfloat light0_position[] = { 10000.0f, 10000.0f, 10000.0f, 0.0f };
-
-	//GLfloat mat_ambient[] = { 0.7f, 0.0f, 0.0f, 1.0f };
-	//GLfloat mat_diffuse[] = { 0.8f, 0.0f, 0.0f, 1.0f };
-	//GLfloat mat_specular[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-	//GLfloat mat_shininess[] = { 20.0f };
-	//GLfloat mat_emission[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	//GLfloat no_mat[] = { 0.0f, 0.0f, 0.0f, 1.0f};
-
-	//glLightfv( GL_LIGHT0, GL_AMBIENT, light0_ambient );
-	//glLightfv( GL_LIGHT0, GL_DIFFUSE, light0_diffuse );
-	//glLightfv( GL_LIGHT0, GL_SPECULAR, light0_specular );
-	//glLightfv( GL_LIGHT0, GL_POSITION, light0_position );
-
-	//glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-	//glMaterialfv( GL_FRONT, GL_DIFFUSE, mat_diffuse );
-	//glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-	//glMaterialfv( GL_FRONT, GL_SHININESS, mat_shininess );
-	//glMaterialfv( GL_FRONT, GL_EMISSION, no_mat );
-
-	//glEnable( GL_DEPTH_TEST );
-	//glEnable( GL_NORMALIZE );
-	//glEnable( GL_LIGHTING );
-	//glEnable( GL_LIGHT0 );
-	//glEnable( GL_COLOR_MATERIAL );
-	//glShadeModel( GL_SMOOTH );
 	//**************************************************************************
 
    if ( !_pbuffer )
@@ -347,8 +317,6 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	//**************************************************************************
 
 	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
-
-	newSceneViewer->setFrameStamp( _frameStamp.get() );
 
    //newSceneViewer->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
@@ -476,6 +444,7 @@ void cfdApp::initScene( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
 {
+   vprDEBUG(vesDBG,3)<<"cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
    //Sets the worldDCS before it is synced
    cfdEnvironmentHandler::instance()->PreFrameUpdate();
 }
@@ -496,21 +465,21 @@ void cfdApp::latePreFrame( void )
 #ifdef _OSG
    //This is order dependent
    //don't move above function call
-   if( _frameStamp.valid() )
+   _frameStamp->setFrameNumber( _frameNumber );
+   _frameStamp->setReferenceTime( current_time );
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+   _frameStamp->setSimulationTime( current_time );
+#endif
+   //This is a frame rate calculation
+   float deltaTime = current_time - lastTime;
+   if( deltaTime >= 1.0f )
    {
-      _frameStamp->setFrameNumber( _frameNumber++ );
-      _frameStamp->setReferenceTime( current_time );
-      //This is a frame rate calculation
-      float deltaTime = current_time - lastTime;
-      if( deltaTime >= 1.0f )
-      {
-         float framerate;
-         framerate = _frameNumber - lastFrame;
-			VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
+      float framerate;
+      framerate = _frameNumber - lastFrame;
+      VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
 
-         lastTime = current_time;
-         lastFrame = _frameNumber;
-      }
+      lastTime = current_time;
+      lastFrame = _frameNumber;
    }
 #endif
          
@@ -573,6 +542,8 @@ void cfdApp::latePreFrame( void )
 #ifdef _OSG
    this->update();
 #endif
+   ///Increment framenumber now that we are done using it everywhere
+   _frameNumber += 1;
 }
 
 void cfdApp::intraFrame()
