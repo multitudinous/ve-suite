@@ -124,7 +124,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_BUILDER_LIBRARY;WINVER=0x400;VTK44"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_USER_BUILDER_LIBRARY;WINVER=0x400;VTK44;FLUENT_MFIX"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
