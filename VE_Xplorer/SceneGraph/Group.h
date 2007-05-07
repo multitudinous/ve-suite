@@ -61,9 +61,9 @@ class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
 {
 public:
    ///Default constructor
-   Group();
+   Group( void );
 
-   ///Copy constructor using CopyOp to manage deep vs shallow copy.
+   ///Copy constructor using CopyOp to manage deep vs shallow copy
    Group( const Group&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
    
    META_Node( VE_SceneGraph, Group );

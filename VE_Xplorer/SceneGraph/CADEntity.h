@@ -33,60 +33,63 @@
 #ifndef CAD_ENTITY_H
 #define CAD_ENTITY_H
 
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
 
 //Should not have to include these here
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Utilities/PhysicsMesh.h"
+#include "VE_Xplorer/SceneGraph/Utilities/PhysicsRigidBody.h"
 
 namespace VE_SceneGraph
 {
 	class DCS;
 	class CADEntityHelper;
-   class Utilities::PhysicsMesh;
+   class Utilities::PhysicsRigidBody;
 }
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/ref_ptr>
+#include <osg/Fog>
+
 namespace osg
 {
    class Fog;
 }
-#include <osg/Fog>
 #endif
 
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
 
-// --- Bullet Stuff --- //
-class btRigidBody;
-class btCollisionShape;
-
 namespace VE_SceneGraph
 {
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
+   ///
 	CADEntity( std::string, VE_SceneGraph::DCS*, bool isStream = false );
-   ///Constructor that takes a CADEntityHelper and deep copies the osg
-   ///node contained in the CADEntityHelper
-	CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, 
-              VE_SceneGraph::DCS* worldDCS);
+
+   ///Constructor that takes a CADEntityHelper and deep copies the osg node contained in the CADEntityHelper
+	CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS );
+
+   ///Destructor
    ~CADEntity();
 
-	VE_SceneGraph::DCS* GetDCS();
-   VE_SceneGraph::CADEntityHelper* GetNode();
-   btRigidBody* GetRigidBody();
-   void SetRigidBody( btRigidBody* btRB );
+   ///
+	VE_SceneGraph::DCS* GetDCS( void );
+
+   ///
+   VE_SceneGraph::CADEntityHelper* GetNode( void );
+
+   ///
+   btRigidBody* GetRigidBody( void );
 
 	void SetMass( float m );
-	void SetFriction( float f );
-	void SetRestitution( float r );
+	void SetFriction( float friction );
+	void SetRestitution( float restitution );
 
-   void SetCollisionShape( std::string type );
+   void SetRigidBody( std::string type );
 
    std::string GetFilename();
    bool GetTransparentFlag();
@@ -96,16 +99,7 @@ public:
 private:
 	VE_SceneGraph::CADEntityHelper* node;
 	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
-   btRigidBody* rigid_body;
-   osg::ref_ptr< VE_SceneGraph::Utilities::PhysicsMesh > physics_mesh;
-   btCollisionShape* collision_shape;
-
-	float mass;
-	float friction;
-	float restitution;
-
-	bool physics;
-   bool concave;
+   osg::ref_ptr< VE_SceneGraph::Utilities::PhysicsRigidBody > rigid_body;
 
    bool _transparencyFlag;
 

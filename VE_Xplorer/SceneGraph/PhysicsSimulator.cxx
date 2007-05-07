@@ -77,7 +77,7 @@ vprSingletonImp( PhysicsSimulator );
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulator::PhysicsSimulator()
+PhysicsSimulator::PhysicsSimulator( void )
 :
 idle( true ),
 shoot_speed( 50.0f )
@@ -87,7 +87,7 @@ shoot_speed( 50.0f )
    this->InitPhysics();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::ExitPhysics()
+void PhysicsSimulator::ExitPhysics( void )
 {
    if( this->dynamics_world )
 	{
@@ -172,7 +172,7 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::InitPhysics()
+void PhysicsSimulator::InitPhysics( void )
 {
    dispatcher = new btCollisionDispatcher();
 
@@ -244,7 +244,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::StepSimulation()
+void PhysicsSimulator::StepSimulation( void )
 {
    if( idle )
    {
@@ -254,7 +254,7 @@ void PhysicsSimulator::StepSimulation()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::ResetScene()
+void PhysicsSimulator::ResetScene( void )
 {
    #ifdef SHOW_NUM_DEEP_PENETRATIONS
 	   gNumDeepPenetrationChecks=0;

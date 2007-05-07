@@ -32,17 +32,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_GEODE_H
 #define VE_GEODE_H
+
 /*!\file Geode.h
-* Geode API
 */
 
 /*!\class VE_SceneGraph::Geode
+*A leaf node on the scene graph
+*/
+
+/*!\namespace VE_SceneGraph
 *
 */
+
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 
-#ifdef _PERFORMER
-#elif _OSG
+// --- OSG Includes --- //
+#ifdef _OSG
 #include <osg/Geode>
 #include <osg/ref_ptr>
 #elif _OPENSG
@@ -54,30 +60,37 @@ namespace VE_SceneGraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
-#elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS Geode : public pfGeode, public SceneNode
 #endif
 {
 public:
    ///Constructor
    Geode( void );
+
 protected:
+   ///Destructor
    virtual ~Geode( void );
+
 public:
-   ///Copy constructors for osg
+   ///Copy constructor using CopyOp to manage deep vs shallow copy
    Geode( const Geode& geode, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
    
    META_Node( VE_SceneGraph, Geode );
+
    ///Turn vtkActorToXX on and off
+   ///\param onOff
    void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
+
    ///This function implements the respective translate vtkActorToGeode
+   ///\param actor
    void TranslateToGeode( vtkActor* actor );
-	///
-	///\param
+
+	///Generic get parent function
+	///\param position
 	osg::Group* GetParent( unsigned int position );
 
 protected:
-   int _vtkDebugLevel;
+   int _vtkDebugLevel;///<The VTK debug level
+
 };
 }
 

@@ -70,7 +70,6 @@ class btCollisionDispatcher;
 class btOverlappingPairCache;
 class btSequentialImpulseConstraintSolver;
 class btRigidBody;
-class btCollisionShape;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -81,17 +80,17 @@ class VE_SCENEGRAPH_EXPORTS PhysicsSimulator    //: public vpr::Singleton< Physi
 {
 public:
    ///Acts as the destructor
-   void ExitPhysics();
+   void ExitPhysics( void );
 
    ///Update the physics simulation by dt
    ///\param dt The time passed since last calculations
    void UpdatePhysics( float dt );
 
    ///Update the physics simulation by one time step ( 1/60 for now )
-   void StepSimulation();
+   void StepSimulation( void );
 
    ///Reset the physics simulation
-   void ResetScene();
+   void ResetScene( void );
 
    ///
    ///\param destination 
@@ -112,20 +111,20 @@ public:
    btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
 
    ///Returns the dynamics world
-   btDynamicsWorld* GetDynamicsWorld();
+   btDynamicsWorld* GetDynamicsWorld( void );
 
 private:
    ///Base constructor
-   PhysicsSimulator();
+   PhysicsSimulator( void );
 
    ///Destructor - never gets called, don't implement
-   ~PhysicsSimulator(){;}
+   ~PhysicsSimulator( void ){;}
 
    ///VPR singleton header
    vprSingletonHeader( PhysicsSimulator );
 
    ///Sets up the dynamics, collision algorithms, and solvers
-   void InitPhysics();
+   void InitPhysics( void );
 
    bool idle;///<Determines whether physics is idle or not
    float shoot_speed;///<

@@ -26,18 +26,24 @@
  * Date modified: $Date: 2007-03-23 12:23:48 -0500 (Fri, 23 Mar 2007) $
  * Version:       $Rev: 7205 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: PhysicsMesh.h 7205 2007-03-23 17:23:48Z jbkoch $
+ * Id:            $Id: PhysicsRigidBody.h 7205 2007-03-23 17:23:48Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PHYSICS_MESH_H
-#define PHYSICS_MESH_H
-/*!\file PhysicsMesh.h
-PhysicsMesh API
+#ifndef PHYSICS_RIGID_BODY_H
+#define PHYSICS_RIGID_BODY_H
+
+/*!\file PhysicsRigidBody.h
 */
-/*!\class PhysicsMesh
+
+/*!\class VE_SceneGraph::Utilities::PhysicsRigidBody
 * 
 */
+
+/*!\namespace VE_SceneGraph::Utilities
+*
+*/
+
 // --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
 
@@ -47,6 +53,8 @@ PhysicsMesh API
 #include <osg/BoundingBox>
 
 // --- Bullet Stuff --- //
+#include <BulletDynamics/Dynamics/btRigidBody.h>
+
 class btTriangleMesh;
 class btCollisionShape;
 
@@ -54,31 +62,40 @@ namespace VE_SceneGraph
 {
 namespace Utilities
 {
-class VE_SCENEGRAPH_UTILS_EXPORTS PhysicsMesh : public osg::NodeVisitor
+class VE_SCENEGRAPH_UTILS_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::NodeVisitor
 {
 public:
-	PhysicsMesh( osg::Node* osg_node );
-	virtual ~PhysicsMesh();
+   ///Base Constructor
+   ///\param node
+	PhysicsRigidBody( osg::Node* node );
 
+   ///Destructor
+	virtual ~PhysicsRigidBody();
+
+   ///Override NodeVisitor apply function for geode
+   ///\param geode 
 	virtual void apply( osg::Geode& geode );
 
-   //A box shape created from the osg::BoundingBox of the mesh shape
+   ///
+   ///\param mass
+   void setMass( float mass );
+
+   ///Creates a box shape from the osg::BoundingBox of the mesh shape
 	void CreateBoundingBoxShape();
-   //A concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
+
+   ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
    void CreateStaticConcaveShape();
-   //Create a convex hull shape from a triangle mesh, mesh can be concave or convex
+
+   ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
    void CreateConvexShape();
 
-   //Return the collision shape
-	btCollisionShape* GetCollisionShape();
-
 private:
-	osg::BoundingBox bb;
+	osg::BoundingBox bb;///<Bounding box of the osg node
 
-	btTriangleMesh* tri_mesh;
-	btCollisionShape* collision_shape;
+	btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
+	btCollisionShape* collision_shape;///<The collision shape for the osg node
 };
 }
 }
 
-#endif //PHYSICS_MESH_H
+#endif //PHYSICS_RIGID_BODY_H

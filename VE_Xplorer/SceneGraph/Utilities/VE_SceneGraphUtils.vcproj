@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PhysicsMesh.cxx"
+				RelativePath=".\PhysicsRigidBody.cxx"
 				>
 			</File>
 			<File
@@ -253,7 +253,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PhysicsMesh.h"
+				RelativePath=".\PhysicsRigidBody.h"
 				>
 			</File>
 			<File

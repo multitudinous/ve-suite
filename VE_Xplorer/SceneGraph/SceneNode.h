@@ -37,7 +37,7 @@
 */
 
 /*!\class VE_SceneGraph::SceneNode
-*Base class for all scenegraph nodes
+*Base class for all scene graph nodes
 *Do not understand why we need this class
 */
 

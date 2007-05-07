@@ -56,12 +56,6 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream )
-:
-mass( 1.0f ),
-friction( 1.0f ),
-restitution( 0.0f ),
-physics( false ),
-concave( false )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -74,18 +68,10 @@ concave( false )
 	dcs->addChild( node->GetNode() );
    worldDCS->AddChild( dcs.get() );
 
-	rigid_body = 0;
-	physics_mesh = 0;
-   collision_shape = 0;
+   rigid_body = new VE_SceneGraph::Utilities::PhysicsRigidBody( node->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS )
-:
-mass( 1.0f ),
-friction( 1.0f ),
-restitution( 0.0f ),
-physics( false ),
-concave( false )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -96,10 +82,8 @@ concave( false )
 
 	dcs->addChild( node->GetNode() );
    worldDCS->AddChild( dcs.get() );
-   
-	rigid_body = 0;
-	physics_mesh = 0;
-   collision_shape = 0;
+
+   rigid_body = new VE_SceneGraph::Utilities::PhysicsRigidBody( node->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
@@ -107,103 +91,64 @@ CADEntity::~CADEntity()
 	delete node;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetMass( float m )
+void CADEntity::SetMass( float mass )
 {
-   if( concave )
+   if( rigid_body.valid() )
    {
-      std::cout << "Static mesh cannot have an associated mass!" << std::endl;
-
-      return;
-   }
-
-   else
-   {
-	   mass = m;
-
-	   if( collision_shape )
-	   {
-		   //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-		   bool dynamic = ( mass != 0.0f );
-
-		   btVector3 localInertia( 0, 0, 0 );
-		   if( dynamic )
-		   {
-			   collision_shape->calculateLocalInertia( mass, localInertia );
-		   }
-	   }
+      rigid_body->setMass( mass );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetFriction( float f )
+void CADEntity::SetFriction( float friction )
 {
-	friction = f;
-
-	if( rigid_body )
+	if( rigid_body.valid() )
 	{
 		rigid_body->setFriction( friction );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetRestitution( float r )
+void CADEntity::SetRestitution( float restitution )
 {
-	restitution = r;
-
-	if( rigid_body )
+	if( rigid_body.valid() )
 	{
 		rigid_body->setRestitution( restitution );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetCollisionShape( std::string type )
+void CADEntity::SetRigidBody( std::string type )
 {
-   if( !physics_mesh )
-	{
-      physics_mesh = new VE_SceneGraph::Utilities::PhysicsMesh( node->GetNode() );
-	}
-
-   if( rigid_body )
+   if( rigid_body.valid() )
    {
-      VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( rigid_body );
-      
-      delete rigid_body;
+      VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( rigid_body.get() );
    }
 
    if( type == "BoundingBox" )
    {
-      concave = false;
-
-      physics_mesh->CreateBoundingBoxShape();
+      rigid_body->CreateBoundingBoxShape();
    }
 
    else if( type == "StaticConcave" )
    {
-      concave = true;
+      rigid_body->setMass( 0.0f );
 
-      if( mass != 0 )
-      {
-         mass = 0;
-      }
-
-      physics_mesh->CreateStaticConcaveShape();
+      rigid_body->CreateStaticConcaveShape();
    }
 
    else if( type == "Convex" )
    {
-      concave = false;
-
-      physics_mesh->CreateConvexShape();
+      rigid_body->CreateConvexShape();
    }
-
-   collision_shape = physics_mesh->GetCollisionShape();
 
    btTransform transform;
    transform.setIdentity();
-		
-   rigid_body = VE_SceneGraph::PhysicsSimulator::instance()->CreateRigidBody( mass, transform, collision_shape );
-   rigid_body->setFriction( friction );
-   rigid_body->setRestitution( restitution );
 
-	dcs->SetbtRigidBody( rigid_body );
+	//Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
+	btDefaultMotionState* motion_state = new btDefaultMotionState( transform );
+   rigid_body->setMotionState( motion_state );
+   
+   VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( rigid_body.get() );
+
+	dcs->SetbtRigidBody( rigid_body.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
@@ -216,14 +161,9 @@ VE_SceneGraph::DCS* CADEntity::GetDCS()
    return dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetRigidBody( btRigidBody* btRB )
-{
-   rigid_body = btRB;
-}
-////////////////////////////////////////////////////////////////////////////////
 btRigidBody* CADEntity::GetRigidBody()
 {
-   return rigid_body;
+   return rigid_body.get();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
