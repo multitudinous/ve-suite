@@ -30,9 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 
-//C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 
 using namespace VE_SceneGraph;
@@ -40,32 +41,6 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::SceneNode( void )
 {
-   //this->_nt = VE_OTHER;
-}
-////////////////////////////////////////////////////////////////////////////////
-/*SceneNode::SceneNode( NodeType nt )
-{
-   this->_nt = nt;
-}
-////////////////////////////////////////////////////////////////////////////////
-SceneNode::~SceneNode( void )
-{
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-SceneNode::SceneNode( const SceneNode& input )
-{
-   _nt = input._nt;
-}
-////////////////////////////////////////////////////////////////////////////////
-SceneNode& SceneNode::operator=( const SceneNode& input )
-{
-   if( this != &input )
-   {
-      _nt = input._nt;
-   }
-
-   return *this;
-}
-////////////////////////////////////////////////////////////////////////////////
-*/

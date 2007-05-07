@@ -34,7 +34,6 @@
 #define VE_PHYSICS_SIMULATOR_H
 
 /*!\file PhysicsSimulator.h
-PhysicsSimulator API
 */
 /*!\class VE_SceneGraph::PhysicsSimulator
 * 
@@ -43,7 +42,7 @@ PhysicsSimulator API
 *
 */
 
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_SceneGraph
@@ -51,15 +50,15 @@ namespace VE_SceneGraph
 	class CADEntity;
 }
 
-// --- VR Juggler Stuff --- //
+// --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
 #include <gadget/Type/PositionInterface.h>
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
 
-// --- Bullet Stuff --- //
+// --- Bullet Includes --- //
 #include <LinearMath/btTransform.h>
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>

@@ -30,19 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
-#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
-
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
-//#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
-//#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
-//#include "BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h"
-
+// --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ShapeDrawable>
@@ -53,6 +47,16 @@
 #include <osgDB/Registry>
 #include <osgDB/FileUtils>
 
+// --- Bullet Includes --- //
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
+#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
+
+//#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
+//#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
+//#include "BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h"
+
+// --- C/C++ Libraries --- //
 #include <sstream>
 #include <ostream>
 #include <string>

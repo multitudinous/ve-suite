@@ -32,14 +32,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef SCENENODE_H
 #define SCENENODE_H
-/*!\file SceneNode.h
-This is the base calss for all scenegraph nodes so that they
-can be passed around vesuite generically
-*/
 
+/*!\file SceneNode.h
+*/
 /*!\class VE_SceneGraph::SceneNode
+*Base class for all scenegraph nodes
+*Do not understand why we need this class
+*/
+/*!\namespace VE_SceneGraph
 *
 */
+
+// --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_SceneGraph
@@ -47,35 +51,15 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS SceneNode
 {
 public:
-   enum NodeType
-   {
-      VE_NODE,
-      VE_GROUP,
-      VE_DCS,
-      VE_GEODE,
-      VE_SEQUENCE,
-      VE_SWITCH,
-      VE_OTHER
-   };
-
+   ///Base Constructor
    SceneNode();
-   //SceneNode( NodeType nt );
-   //SceneNode( const SceneNode& );
 
-   virtual ~SceneNode( void ){;}
-   //SceneNode& operator=( const SceneNode& );
-
-   //Get the internal node type
-   //virtual NodeType GetVENodeType( void ){ return _nt; }
-
-   //Set internal node type
-   //virtual void SetVENodeType( NodeType nt ){ _nt = nt; }
+   ///Destructor
+   virtual ~SceneNode(){;}
 
 protected:
-   //)ur scene graph specific nodes
-   //int _numParents;
-   //NodeType _nt;
 
 };
 }
-#endif
+
+#endif //SCENENODE_H
