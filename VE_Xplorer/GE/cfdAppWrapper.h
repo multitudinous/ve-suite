@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
@@ -55,21 +53,25 @@ namespace VE_Xplorer
 class cfdAppWrapper
 {
 public:
+   ///Contructor
    cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
+   ///destructor
    ~cfdAppWrapper( void );
+   ///Is juggler running
    bool JugglerIsRunning( void );
+   ///Initilize things in a seperate thread
 #if __VJ_version > 2000003
    void init( void );
 #elif __VJ_version == 2000003
    void init( void * );
 #endif
-   cfdThread* _thread;
+   cfdThread* _thread;///< the thread to run things in
 private:
-   cfdApp* _cfdApp;
-   bool jugglerIsRunning;
-   cfdVjObsWrapper* _vjObsWrapper;
-   int argc;
-   char** argv;
+   cfdApp* _cfdApp;///< the app that is running
+   bool jugglerIsRunning;///< is juggler running
+   cfdVjObsWrapper* _vjObsWrapper;///< points to the wrapper to send to cfdapp
+   int argc;///<command line args
+   char** argv;///<command line args
 }; 
 }
 #endif

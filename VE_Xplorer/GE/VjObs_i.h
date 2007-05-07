@@ -80,84 +80,109 @@ class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
 {
 public:
-   
+   ///Constructor
    VjObs_i();
+   ///Destructor
    virtual ~VjObs_i(){;}
-   
+   ///Creates the geom info transfered to conductor
+   ///may not be needed anymore
    void CreateGeometryInfo( void );
+   ///Create the dataset info transferred to conductor
+   ///May not be needed anymore
    void CreateDatasetInfo( void );
+   ///Create the treacher info for conductor
+   ///May not be needed anymore
    void CreateTeacherInfo( void );
-
+   ///Called everyframe to update parameters
    void PreFrameUpdate( void );
+   ///Initialize cluster stuff depending on cluster mode
    void InitCluster( void );
+   ///Called in post frame to get variables
    void GetUpdateClusterStateVariables( void );
-
-   // Frame sync variables used by osg only at this point
+   /// Frame sync variables used by osg only at this point
    float GetSetAppTime( float );
+   ///Get/Set the frame number
    long GetSetFrameNumber( long );
    ///Set the cluster mode flag
    void SetClusterMode( bool clusterFlag );
+   ///Determine if we are in cluster mode or not
    bool GetClusterMode( void );
-   
+   ///Get the teacher name files
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
+   ///Get the models in IDL format
    VjObs::Models* GetModels() throw (CORBA::SystemException);
+   ///Get the model with a specific id
+   ///\param modelID the model id to get
    VjObs::Model* GetModel( CORBA::Long modelID ) throw (CORBA::SystemException);
+   ///Get the number of teacher files
    short get_teacher_num() throw (CORBA::SystemException);
+   ///Set the client info flag
+   ///\param flag the client info flags
    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
+   ///Set the client info data
+   ///\param value the client info data
    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
+   ///Get the client info data
    VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
-
+   ///Called in latepreframe to sync state variables
    void GetCfdStateVariables( void );
-   cfdCommandArray* _cfdArray;
-   VE_XML::Command* bufferCommand;
-   double cfdShort_data_array[ 9 ];
+   cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
+   VE_XML::Command* bufferCommand;///< Data to hold command data
+   double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
    
-   std::vector< cfdCommandArray* > commandQueue;
+   std::vector< cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
 protected:
+   ///Create command queue for transient vis
+   ///Should be removed once non texture pipelines are created
    void CreateCommandQueue( void );
 
-   VjObs::scalar_p_var teacher_name;
-   VjObs::Models* _models;
+   VjObs::scalar_p_var teacher_name; ///< hold the list of teacher file names
+   VjObs::Models* _models;///< fold the list of IDL models
 
-   VjObs::obj_pd_var clientInfoObserverDataArray;
-   int numOfClientInfo;
+   VjObs::obj_pd_var clientInfoObserverDataArray; ///< hold the list of double arrays may not be needed
+   int numOfClientInfo;///< number of teacher files
    //bool _unusedNewData;
-   float time_since_start;
-   float quatCamIncrement;
-   long frameNumber;
+   float time_since_start;///< start time
+   float quatCamIncrement;///< should be removed
+   long frameNumber;///< frame number
 
+   ///Get 2d double array for a given input
+   ///\param input the given input
    VjObs::obj_pd* getDouble1D( const char* input ) throw (CORBA::SystemException);
-
+   ///Get 2d double array for a given input
+   ///\param input the given input to get
    VjObs::double2DArray* getDouble2D( const char* input ) throw (CORBA::SystemException);
-
+   ///Set the command string from conductor
+   ///\param value the command
    void SetCommandString( const char* value) throw (CORBA::SystemException);
-
-   //virtual void setIsoValue( CORBA::Long value) throw (CORBA::SystemException);
+   ///The iso value to get from xplorer
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
-
+   ///Set sc
+   ///\param value the sc
    void setSc( CORBA::Long value) throw (CORBA::SystemException);
-
+   ///get post data
+   ///This should be removed
    short getPostdataState( void ) throw (CORBA::SystemException);
-
+   ///Get the time step info
    short getTimesteps( void ) throw (CORBA::SystemException);
 
-   vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
+   vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
 
-   // Buffer variables...always right
-   short mNumScalars;
-   short mNnumVectors;
-   short mNumGeoArrays;
-   short mNumTeacherArrays;
-   short mGetClientInfo;
-   double mShort_data_array[ 9 ];
+   /// Buffer variables...always right
+   short mNumScalars;///< scalar number
+   short mNnumVectors;///< vector number
+   short mNumGeoArrays;///< geo numerber
+   short mNumTeacherArrays;///< teacher number
+   short mGetClientInfo;///< client info number
+   double mShort_data_array[ 9 ];///< buffer data
 
-   VE_XML::DOMDocumentManager* domManager;
-   std::vector< VE_XML::Command* > commandVectorQueue;
-   std::vector< std::string > commandStringQueue;
-   cfdCommandArray* _bufferArray;
+   VE_XML::DOMDocumentManager* domManager; ///< dom manger should be removed
+   std::vector< VE_XML::Command* > commandVectorQueue;///< command vector may be a duplicate
+   std::vector< std::string > commandStringQueue;///< command queue with raw string data
+   cfdCommandArray* _bufferArray;///< command data
    // Cluster Stuff for the above state variables
    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
-   bool isCluster;
+   bool isCluster;///<cluster mode
 };
 }
 #endif

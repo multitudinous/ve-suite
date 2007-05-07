@@ -107,30 +107,17 @@ class cfdApp : public vrj::OsgApp
 #endif //_PERFORMER _OSG _OPENSG
 {
 public:
+   ///Contructor
    cfdApp( int argc, char* argv[] );
+   ///destructor
    virtual ~cfdApp( void ) { ; }
-  
-   // Initialize the scene graph
+   /// Initialize the scene graph
    virtual void initScene( void );
-
-   // Juggler calls before exiting
+   /// Juggler calls before exiting
    virtual void exit( void );
 
-#ifdef _PERFORMER
-   virtual void apiInit( void );
-
-   // Called After pfInit()
-   virtual void preForkInit( void );
-   // Called Before pfConfig()
-
-   virtual void appChanFunc( pfChannel* chan );
-
-   // Return the current scene graph
-   virtual pfGroup* getScene( void );
-
-   // Function called before pfSync
-   virtual void preSync( void );
-#elif _OSG
+#ifdef _OSG
+   ///Get the raw group node
    virtual osg::Group* getScene( void );
    ///This gets called when??
    ///Note: Remember that this is called in parrallel in a multiple context 
@@ -150,12 +137,14 @@ public:
    ///Note: Remember that this is called in parrallel in a multiple context 
    ///      situation so setting variables should not be done here
    virtual void contextPostDraw();
-   
    ///Signal to change the background color
    void ChangeBackgroundColor();
-
+   ///Initialize a context 
    virtual void contextInit( void );
+   ///close a context
    virtual void contextClose( void );
+   ///Get the pbuffer
+   ///should remove this since pbuffer is a singleton
    VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
 #elif _OPENSG
 #endif //_PERFORMER _OSG _OPENSG
@@ -164,84 +153,79 @@ public:
    void writeImageFileForWeb(void*);
 #endif //_WEB_INTERFACE
 
-   // Function called after pfSync and before pfDraw
+   /// Function called after pfSync and before pfDraw
    virtual void preFrame( void );
-
-   // Function called after pfSync and before pfDraw
-   //Function called after preFrame() and application-specific data syncronization (in a cluster configuration) but before the start of a new frame.
+   /// Function called after pfSync and before pfDraw
+   /// Function called after preFrame() and application-specific data 
+   ///syncronization (in a cluster configuration) but before the start of a new frame.
    virtual void latePreFrame( void );
-
-   // Function called after pfDraw
+   /// Function called after pfDraw
    virtual void intraFrame( void );
-
-   // Function called after intraFrame
+   /// Function called after intraFrame
    virtual void postFrame( void );
-
-   // Used to override getFrameBufferAttrs()
-   // Should be able to set multi sampling in the config
-   // Look for a fix in future juggler releases
-   //std::vector< int > getFrameBufferAttrs( void );
-
+   /// Used to override getFrameBufferAttrs()
+   /// Should be able to set multi sampling in the config
+   /// Look for a fix in future juggler releases
+   ///std::vector< int > getFrameBufferAttrs( void );
+   ///Push data to state info shoudl be removed 
    void pushDataToStateInfo( void );
-
+   ///Set the wrapper for vjobs so that we can change things
    void SetWrapper( cfdVjObsWrapper* );
-   //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
 #ifdef _OSG
-   bool svUpdate;
-   //osg::ref_ptr<osgUtil::SceneView> tempSvVector;
-#ifdef VE_PATENTED
-   VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;
+   bool svUpdate; ///< update sceneview
+   VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;///< should be removed since this is a singleton
    //biv --may convert this to a singleton later
-   VE_TextureBased::cfdPBufferManager* _pbuffer;
+   VE_TextureBased::cfdPBufferManager* _pbuffer;///< should be removed since this is a singleton
+   osg::ref_ptr< osg::FrameStamp > _frameStamp;///<The framestamp to control animations
+   osg::Timer _timer;///<The timer for framestamp
+   osg::Timer_t _start_tick;///< The timer for framestamp
+   unsigned int _frameNumber;///< the current frame number
 #endif
-   osg::ref_ptr< osg::FrameStamp > _frameStamp;
-   osg::Timer _timer;
-   osg::Timer_t _start_tick;
-   unsigned int _frameNumber;
-#endif
-   cfdVjObsWrapper*              _vjobsWrapper;
+   cfdVjObsWrapper*              _vjobsWrapper;///< the vjobs wrapper
 
    // Only used in preframe for transient stuff
-   int   lastFrame;
-   void update();
+   int   lastFrame;///The last frame
+   void update();///< update the framestamp and traverse the scenegraph
 private:
-   bool isCluster;
+   bool isCluster;///< are we in cluster mode
    
-   vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
-   std::string filein_name;
-	double time_since_start;
-   int argc;
-   char** argv;
+   vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
+   std::string filein_name;///< file name for something should be removed
+	double time_since_start;///< time to start
+   int argc;///< command line args
+   char** argv;///< command line args
    std::vector<float> _clearColor;///<The clear color
    //web interface stuff for writing the image file
    //to be viewed over the web
 #ifdef _WEB_INTERFACE
-	bool runWebImageSaveThread;
-	bool readyToWriteWebImage;
-	bool writingWebImageNow;
-	bool captureNextFrameForWeb;
-	int webImageWidth;
-	int webImageHeight;
-	vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
-	std::string webImagePixelArray;
+	bool runWebImageSaveThread;///< not sure what this is for
+	bool readyToWriteWebImage;///< not sure what this is for
+	bool writingWebImageNow;///< not sure what this is for
+	bool captureNextFrameForWeb;///< not sure what this is for
+	int webImageWidth;///< not sure what this is for
+	int webImageHeight;///< not sure what this is for
+	vpr::Thread* writeWebImageFileThread;///<thread in which we write to the file
+	std::string webImagePixelArray;///< not sure what this is for
+   /// not sure what this is for
 	void writeWebImageFile(void*);
+   /// not sure what this is for
 	void captureWebImage();
-	double timeOfLastCapture;
+	double timeOfLastCapture;///< not sure what this is for
 #endif 
 
-   std::vector<float> clearColor; //<Container for clear color
+   std::vector<float> clearColor; ///<Container for clear color
 
 #ifdef _OSG
-   osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;
-   osg::ref_ptr<osg::FrameStamp> frameStamp;
-   osg::ref_ptr< osg::Light > light_0;
-   osg::ref_ptr< osg::LightSource > light_source_0;
-   osg::ref_ptr< osg::LightModel > light_model_0;
+   osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;///<update visitor
+   osg::ref_ptr<osg::FrameStamp> frameStamp;///<framestamp
+   osg::ref_ptr< osg::Light > light_0;///< ligth for the scene
+   osg::ref_ptr< osg::LightSource > light_source_0;///< light source for the scene
+   osg::ref_ptr< osg::LightModel > light_model_0;///< light model for the scene
 #endif
 
 #ifdef _SGL
-   CSGLContext SGLContext;
+   CSGLContext SGLContext;///< for sharp stereo - should be removed in the future and may be replaced with stereo from sceneview
 #endif
 };
 }

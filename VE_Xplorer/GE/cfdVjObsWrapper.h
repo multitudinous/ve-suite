@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VJOBSWRAPPER_H
 #define CFD_VJOBSWRAPPER_H
@@ -66,39 +64,44 @@ namespace VE_Xplorer
 class cfdVjObsWrapper
 {
 public:
+   ///Constructor
    cfdVjObsWrapper( void );
+   ///Destructor
    ~cfdVjObsWrapper( void );
-#ifdef _TAO
+   ///init function to pass corba pointers arounf for registration purposes
    void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
-#else
-   void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
-#endif
+   ///get command array
+   ///shoudl be removed
    cfdCommandArray* GetCommandArray( void );
+   ///get xml command data
    VE_XML::Command* GetXMLCommand( void );
+   ///Get short array
+   ///shoudl be removed
    double GetShortArray( int );
+   ///get cfd state variables to be called by cfd app
    void GetCfdStateVariables( void );
+   ///Called every frame
    void PreFrameUpdate( void );
-
+   ///parse some command line input not sure what for
    int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
-   //cfdCosNaming* GetCosNaming( void );
+   ///Initialize the cluster data
    void InitCluster( void );
+   ///Get the clsuter data in preframe
    void GetUpdateClusterStateVariables( void );
+   ///Get/set the app time
    float GetSetAppTime( float );
+   ///Set the frame number for the app
    long GetSetFrameNumber( long );
    ///This should be removed as soon as the quat cam code is fixed
    bool IsMaster( void );
-#ifdef _TAO
-   CosNaming::NamingContext* naming_context;
-   PortableServer::POA* child_poa;
-   PortableServer::POA* poa;
-#else
-   CosNaming::NamingContext_ptr naming_context;
-   CORBA::ORB_ptr _orbPtr;
-#endif
-   VjObs_i* _vjObs;
+
+   CosNaming::NamingContext* naming_context;///< holds the naming context for tao
+   PortableServer::POA* child_poa;///< holds the poa server for tao
+   PortableServer::POA* poa;///< holds the poa server for tao
+   VjObs_i* _vjObs;///< holds the vjobs pointer for tao
 private:
-   CORBA::ORB* _orbPtr;
-   bool isMaster;
+   CORBA::ORB* _orbPtr;///<holds the orb pointer for tao
+   bool isMaster;///is the master should be removed
 };
 }
 #endif
