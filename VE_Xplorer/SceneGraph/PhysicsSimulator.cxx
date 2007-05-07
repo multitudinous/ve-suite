@@ -204,40 +204,53 @@ void PhysicsSimulator::InitPhysics()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
-	dynamics_world->stepSimulation( dt );
-	/*
-	printf( "dt = %f: ", dt );
+   if( !idle )
+   {
+	   dynamics_world->stepSimulation( dt );
+	   /*
+	   printf( "dt = %f: ", dt );
 
-   if ( dynamics_world )
-	{
-		//during idle mode, just run 1 simulation step maximum
-		int maxSimSubSteps = idle ? 1 : 1;
-		if( idle )
-		{
-			dt = 1.0/420.f;
-		}
+      if ( dynamics_world )
+	   {
+		   //during idle mode, just run 1 simulation step maximum
+		   int maxSimSubSteps = idle ? 1 : 1;
+		   if( idle )
+		   {
+			   dt = 1.0/420.f;
+		   }
 
-		int numSimSteps = dynamics_world->stepSimulation( dt, maxSimSubSteps );
-		if( !numSimSteps )
-		{
-				printf( "Interpolated transforms\n" );
-		}
+		   int numSimSteps = dynamics_world->stepSimulation( dt, maxSimSubSteps );
+		   if( !numSimSteps )
+		   {
+				   printf( "Interpolated transforms\n" );
+		   }
 
-		else
-		{
-			if( numSimSteps > maxSimSubSteps )
-			{
-				//detect dropping frames
-				printf( "Dropped (%i) simulation steps out of %i\n", numSimSteps - maxSimSubSteps, numSimSteps );
-			}
+		   else
+		   {
+			   if( numSimSteps > maxSimSubSteps )
+			   {
+				   //detect dropping frames
+				   printf( "Dropped (%i) simulation steps out of %i\n", numSimSteps - maxSimSubSteps, numSimSteps );
+			   }
 
-			else
-			{
-				printf( "Simulated (%i) steps\n", numSimSteps );
-			}
-		}
-	}
-	*/
+			   else
+			   {
+				   printf( "Simulated (%i) steps\n", numSimSteps );
+			   }
+		   }
+	   }
+	   */
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::StepSimulation()
+{
+   if( idle )
+   {
+      float dt = 1.0f / 420.f;
+
+      dynamics_world->stepSimulation( dt );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ResetScene()
@@ -396,10 +409,12 @@ void PhysicsSimulator::SetPhysicsState( bool state )
    idle = state;
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 bool PhysicsSimulator::GetPhysicsState()
 {
    return idle;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetShootSpeed( float speed )
 {

@@ -74,12 +74,13 @@ public:
    void ExitPhysics();                                   //Functions as the destructor
 
    void UpdatePhysics( float dt );
+   void StepSimulation();
    void ResetScene();
 
    void ShootBox( const btVector3& destination );
 
    void SetPhysicsState( bool state );
-   bool GetPhysicsState();
+   //bool GetPhysicsState();
 
    void SetShootSpeed( float speed );
 
