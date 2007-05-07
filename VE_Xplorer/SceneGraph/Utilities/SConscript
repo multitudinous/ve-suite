@@ -13,6 +13,7 @@ sources = Split("""
     MaterialInitializer.cxx
     OpacityVisitor.cxx
     PhysicsMesh.cxx
+    PhysicsConstraint.cxx
 """)
 
 headers = Split("""
@@ -23,6 +24,7 @@ headers = Split("""
     MaterialInitializer.h
     OpacityVisitor.h
     PhysicsMesh.h
+    PhysicsConstraint.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',

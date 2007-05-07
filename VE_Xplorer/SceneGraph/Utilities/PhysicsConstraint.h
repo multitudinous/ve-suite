@@ -26,16 +26,16 @@
  * Date modified: $Date: 2007-03-23 12:23:48 -0500 (Fri, 23 Mar 2007) $
  * Version:       $Rev: 7205 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: PhysicsMesh.h 7205 2007-03-23 17:23:48Z jbkoch $
+ * Id:            $Id: PhysicsConstraint.h 7205 2007-03-23 17:23:48Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PHYSICS_MESH_H
-#define PHYSICS_MESH_H
-/*!\file PhysicsMesh.h
-PhysicsMesh API
+#ifndef PHYSICS_CONSTRAINT_H
+#define PHYSICS_CONSTRAINT_H
+/*!\file PhysicsConstraint.h
+PhysicsConstraint API
 */
-/*!\class PhysicsMesh
+/*!\class PhysicsConstraint
 * 
 */
 // --- VE-Suite Stuff --- //
@@ -43,40 +43,22 @@ PhysicsMesh API
 
 // --- OSG Stuff --- //
 #include <osg/ref_ptr>
-#include <osg/NodeVisitor>
-#include <osg/BoundingBox>
 
 // --- Bullet Stuff --- //
-class btTriangleMesh;
-class btCollisionShape;
 
 namespace VE_SceneGraph
 {
 namespace Utilities
 {
-class VE_SCENEGRAPH_UTILS_EXPORTS PhysicsMesh : public osg::NodeVisitor
+class VE_SCENEGRAPH_UTILS_EXPORTS PhysicsConstraint
 {
 public:
-	PhysicsMesh( osg::Node* osg_node );
-	virtual ~PhysicsMesh();
+	PhysicsConstraint();
+	~PhysicsConstraint();
 
-	virtual void apply( osg::Geode& geode );
-
-   //A box shape created from the osg::BoundingBox of the mesh shape
-	void CreateBoundingBoxShape();
-   //A concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
-   void CreateStaticConcaveShape();
-   //Create a convex hull shape from a triangle mesh, mesh can be concave or convex
-   void CreateConvexShape();
-
-   //Return the collision shape
-	btCollisionShape* GetCollisionShape();
 
 private:
-	osg::BoundingBox bb;
 
-	btTriangleMesh* tri_mesh;
-	btCollisionShape* collision_shape;
 };
 }
 }

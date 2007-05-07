@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PhysicsConstraint.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhysicsMesh.cxx"
 				>
 			</File>
@@ -242,6 +246,10 @@
 			</File>
 			<File
 				RelativePath=".\PhongLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PhysicsConstraint.h"
 				>
 			</File>
 			<File
