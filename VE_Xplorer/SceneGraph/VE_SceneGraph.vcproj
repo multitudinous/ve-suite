@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib osgTextd.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib osgTextd.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib VE_SceneGraphUtils_osg_vep_d.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_osg_vep_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
@@ -231,10 +231,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PhysicsMesh.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\PhysicsSimulator.cxx"
 				>
 			</File>
@@ -328,10 +324,6 @@
 			</File>
 			<File
 				RelativePath=".\Group.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PhysicsMesh.h"
 				>
 			</File>
 			<File

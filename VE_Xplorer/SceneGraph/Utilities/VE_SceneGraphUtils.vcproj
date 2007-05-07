@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_PATENTED;VE_SCENEGRAPH_UTILS_LIBRARY;_OSG"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -62,10 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib loki_D.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib loki_D.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_osg_vep_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(PRODUCER_HOME)\lib\win32&quot;;&quot;$(OPENTHREADS_HOME)\lib\win32&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(PRODUCER_HOME)\lib\win32&quot;;&quot;$(OPENTHREADS_HOME)\lib\win32&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraphUtils.pdb"
 				SubSystem="2"
@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PhysicsMesh.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ShaderHelper.cxx"
 				>
 			</File>
@@ -238,6 +242,10 @@
 			</File>
 			<File
 				RelativePath=".\PhongLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PhysicsMesh.h"
 				>
 			</File>
 			<File

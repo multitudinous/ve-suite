@@ -158,7 +158,7 @@ void CADEntity::SetCollisionShape( std::string type )
 {
    if( !physics_mesh )
 	{
-		physics_mesh = new PhysicsMesh( node->GetNode() );
+      physics_mesh = new VE_SceneGraph::Utilities::PhysicsMesh( node->GetNode() );
 	}
 
    if( rigid_body )

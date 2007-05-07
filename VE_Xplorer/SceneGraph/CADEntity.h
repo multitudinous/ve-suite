@@ -33,22 +33,21 @@
 #ifndef CAD_ENTITY_H
 #define CAD_ENTITY_H
 
+// --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
 
 //Should not have to include these here
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/PhysicsMesh.h"
-
-// --- C/C++ Libraries --- //
-#include <vector>
-#include <string>
+#include "VE_Xplorer/SceneGraph/Utilities/PhysicsMesh.h"
 
 namespace VE_SceneGraph
 {
 	class DCS;
 	class CADEntityHelper;
+   class Utilities::PhysicsMesh;
 }
 
+// --- OSG Stuff --- //
 #ifdef _OSG
 #include <osg/ref_ptr>
 namespace osg
@@ -58,8 +57,11 @@ namespace osg
 #include <osg/Fog>
 #endif
 
-class PhysicsMesh;
+// --- C/C++ Libraries --- //
+#include <vector>
+#include <string>
 
+// --- Bullet Stuff --- //
 class btRigidBody;
 class btCollisionShape;
 
@@ -90,12 +92,12 @@ public:
    bool GetTransparentFlag();
    void SetGeometryFilename( std::string );
    void SetTransparencyFlag( bool );
-private:
 
+private:
 	VE_SceneGraph::CADEntityHelper* node;
 	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
    btRigidBody* rigid_body;
-	osg::ref_ptr< PhysicsMesh > physics_mesh;
+   osg::ref_ptr< VE_SceneGraph::Utilities::PhysicsMesh > physics_mesh;
    btCollisionShape* collision_shape;
 
 	float mass;
