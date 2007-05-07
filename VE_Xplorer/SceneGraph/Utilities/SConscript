@@ -12,7 +12,7 @@ sources = Split("""
     PhongLoader.cxx
     MaterialInitializer.cxx
     OpacityVisitor.cxx
-    PhysicsMesh.cxx
+    PhysicsRigidBody.cxx
     PhysicsConstraint.cxx
 """)
 
@@ -23,7 +23,7 @@ headers = Split("""
     PhongLoader.h
     MaterialInitializer.h
     OpacityVisitor.h
-    PhysicsMesh.h
+    PhysicsRigidBody.h
     PhysicsConstraint.h
 """)
 
