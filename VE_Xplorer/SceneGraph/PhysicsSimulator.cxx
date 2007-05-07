@@ -36,9 +36,6 @@
 #include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
-//PhysicsSimulator only supports OpenSceneGraph
-#ifdef _OSG
-
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
@@ -247,7 +244,7 @@ void PhysicsSimulator::StepSimulation()
 {
    if( idle )
    {
-      float dt = 1.0f / 420.f;
+      float dt = 1.0f / 60.f;
 
       dynamics_world->stepSimulation( dt );
    }
@@ -404,17 +401,10 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::SetPhysicsState( bool state )
+void PhysicsSimulator::SetIdle( bool state )
 {
    idle = state;
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-bool PhysicsSimulator::GetPhysicsState()
-{
-   return idle;
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetShootSpeed( float speed )
 {
@@ -446,5 +436,3 @@ btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
    return dynamics_world;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-#endif //_OSG

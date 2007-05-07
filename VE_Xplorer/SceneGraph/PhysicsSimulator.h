@@ -32,32 +32,37 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_PHYSICS_SIMULATOR_H
 #define VE_PHYSICS_SIMULATOR_H
+
 /*!\file PhysicsSimulator.h
 PhysicsSimulator API
 */
 /*!\class VE_SceneGraph::PhysicsSimulator
 * 
 */
-#include <vpr/Util/Singleton.h>
+/*!\namespace VE_SceneGraph
+*
+*/
+
+// --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
-
-//PhysicsSimulator only supports OpenSceneGraph
-#ifdef _OSG
-#include <osg/ref_ptr>
-
-#include <gadget/Type/PositionInterface.h>
-
-#include <LinearMath/btTransform.h>
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
-
-//C/C++ Libraries
-#include <vector>
 
 namespace VE_SceneGraph
 {
 	class CADEntity;
 }
+
+// --- VR Juggler Stuff --- //
+#include <vpr/Util/Singleton.h>
+
+#include <gadget/Type/PositionInterface.h>
+
+// --- OSG Stuff --- //
+#include <osg/ref_ptr>
+
+// --- Bullet Stuff --- //
+#include <LinearMath/btTransform.h>
+#include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
 
 class	btDynamicsWorld;
 class btCollisionDispatcher;
@@ -66,54 +71,75 @@ class btSequentialImpulseConstraintSolver;
 class btRigidBody;
 class btCollisionShape;
 
+// --- C/C++ Libraries --- //
+#include <vector>
+
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS PhysicsSimulator             //: public vpr::Singleton< PhysicsSimulator >
+class VE_SCENEGRAPH_EXPORTS PhysicsSimulator    //: public vpr::Singleton< PhysicsSimulator >
 {
 public:
-   void ExitPhysics();                                   //Functions as the destructor
+   ///Acts as the destructor
+   void ExitPhysics();
 
+   ///Update the physics simulation by dt
+   ///\param dt The time passed since last calculations
    void UpdatePhysics( float dt );
+
+   ///Update the physics simulation by one time step ( 1/60 for now )
    void StepSimulation();
+
+   ///Reset the physics simulation
    void ResetScene();
 
+   ///
+   ///\param destination 
    void ShootBox( const btVector3& destination );
 
-   void SetPhysicsState( bool state );
-   //bool GetPhysicsState();
+   ///Set whether physics is idle or not
+   ///\param state State on or idle
+   void SetIdle( bool state );
 
+   ///
+   ///\param speed
    void SetShootSpeed( float speed );
 
+   ///Adds a rigid body to the physics simulator
+   ///\param mass The mass of the rigid body
+   ///\param startTransform The initial transform of the rigid body
+   ///\param shape The collision shape of the rigid body
    btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
 
+   ///Returns the dynamics world
    btDynamicsWorld* GetDynamicsWorld();
 
 private:
+   ///Base constructor
    PhysicsSimulator();
-   ~PhysicsSimulator(){;}                                //Never gets called, don't implement
+
+   ///Destructor - never gets called, don't implement
+   ~PhysicsSimulator(){;}
+
+   ///VPR singleton header
    vprSingletonHeader( PhysicsSimulator );
 
+   ///Sets up the dynamics, collision algorithms, and solvers
    void InitPhysics();
 
-   bool idle;
-   float shoot_speed;
+   bool idle;///<Determines whether physics is idle or not
+   float shoot_speed;///<
 
-   gadget::PositionInterface head;
+   gadget::PositionInterface head;///<The head in vr juggler
 
-	std::vector< VE_SceneGraph::CADEntity* > box_vector;
+	std::vector< VE_SceneGraph::CADEntity* > box_vector;///<
 
-   //Manages physics objects and constraints and implements update of all objects each frame
-   //******************************************//
-	btDynamicsWorld* dynamics_world;
+	btDynamicsWorld* dynamics_world;///<Implements dynamics - basic, discrete, parallel, and continuous
 
-   btCollisionDispatcher* dispatcher;
-   btOverlappingPairCache* broadphase;
-   btSequentialImpulseConstraintSolver* solver;
-   //******************************************//
+   btCollisionDispatcher* dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
+   btOverlappingPairCache* broadphase;///<Maintains objects with overlapping AABB
+   btSequentialImpulseConstraintSolver* solver;///<A physics solver which sequentially applies impulses
 };
 }
-
-#endif //_OSG
 
 #endif //PHYSICS_SIMULATOR_H
 
