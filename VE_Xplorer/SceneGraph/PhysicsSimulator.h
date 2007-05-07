@@ -35,9 +35,11 @@
 
 /*!\file PhysicsSimulator.h
 */
+
 /*!\class VE_SceneGraph::PhysicsSimulator
 * 
 */
+
 /*!\namespace VE_SceneGraph
 *
 */

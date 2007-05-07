@@ -35,10 +35,12 @@
 
 /*!\file SceneNode.h
 */
+
 /*!\class VE_SceneGraph::SceneNode
 *Base class for all scenegraph nodes
 *Do not understand why we need this class
 */
+
 /*!\namespace VE_SceneGraph
 *
 */

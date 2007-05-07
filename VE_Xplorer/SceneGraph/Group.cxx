@@ -30,26 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/Group.h"
 
-#ifdef _PERFORMER
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pf/pfNode.h>
-#elif _OSG
+// --- OSG Includes --- //
+#ifdef _OSG
 #include <osg/Group>
 #include <osg/Node>
 #elif _OPENSG
 #endif
 
-//C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 #include <algorithm>
 #include <string>
 
 using namespace VE_SceneGraph;
+
 ////////////////////////////////////////////////////////////////////////////////
-Group::Group(const Group& group,const osg::CopyOp& copyop):
-osg::Group(group,copyop)
+Group::Group( const Group& group, const osg::CopyOp& copyop )
+:
+osg::Group( group, copyop )
 {
    ;
 }
@@ -66,134 +67,124 @@ Group::~Group( void )
 ////////////////////////////////////////////////////////////////////////////////
 int Group::RemoveChild( SceneNode* child )
 {
-#ifdef _OPENSG
+#ifdef _OSG
+	return this->removeChild( dynamic_cast< osg::Node* >( child ));
+#elif _OPENSG
    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSG
-	return this->removeChild( dynamic_cast< osg::Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Group::AddChild( SceneNode* child )
 {
-#ifdef _OPENSG
+#ifdef _OSG
+   return this->addChild( dynamic_cast< Node* >( child ));
+#elif _OPENSG
    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSG
-   return this->addChild( dynamic_cast< Node* >( child ));
 #endif
-   
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::InsertChild( int position, SceneNode* child )
 {
-#ifdef _OPENSG
+#ifdef _OSG
+   this->insertChild( position, dynamic_cast< Node* >( child ));
+#elif _OPENSG
    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSG
-   this->insertChild( position, dynamic_cast< Node* >( child ));
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Group::GetNumChildren( void )
 {
-#ifdef _OPENSG
+#ifdef _OSG
+   return this->getNumChildren();
+#elif _OPENSG
    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSG
-   return this->getNumChildren();
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string Group::GetName( void )
 {
-#ifdef _OPENSG
-   return 0;
-#endif
-#ifdef _PERFORMER
-   return _Group->getName();
-#elif _OSG
+#ifdef _OSG
    return this->getName().data();
+#elif _OPENSG
+   return 0;
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::SetName( std::string name )
 {
-#ifdef _OPENSG
+#ifdef _OSG
+   this->setName( name );
+#elif _OPENSG
    std::cerr << " ERROR: Group::SetName is NOT implemented " << std::endl;
    exit( 1 );
-#endif
-#ifdef _PERFORMER
-   _Group->setName( name.c_str() );
-#elif _OSG
-   this->setName( name );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
-#ifdef _OPENSG
+#ifdef _OSG
+   return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
+#elif _OPENSG
    cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
-#elif _OSG
-   return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Group::SearchChild( VE_SceneGraph::SceneNode* searchChild )
 {
-#ifdef _OPENSG
-	
-#elif _OSG
+#ifdef _OSG
 	return this->containsNode( dynamic_cast< osg::Node* >(searchChild) );
+#elif _OPENSG
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* Group::GetParent( unsigned int position )
 {
-#ifdef _OPENSG
-   
-#elif _OSG
+#ifdef _OSG
 	return this->getParent( position );
+#elif _OPENSG
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* Group::GetChild( unsigned int position )
 {
-#ifdef _OPENSG
-   
-#elif _OSG
+#ifdef _OSG
 	return this->getChild( position );
+#elif _OPENSG
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Group::ToggleDisplay(bool onOff)
+void Group::ToggleDisplay( bool onOff )
 {
    std::string value = (onOff==true)?"ON":"OFF";
-   ToggleDisplay(value);
+
+   ToggleDisplay( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Group::ToggleDisplay(std::string onOff)
+void Group::ToggleDisplay( std::string onOff )
 {
-   if(onOff == "ON")
+   if( onOff == "ON" )
    {
 #ifdef _OSG
-      this->setNodeMask(1);
+      this->setNodeMask( 1 );
 #elif _OPENSG
-#elif _PERFORMER
 #endif
    }
-   else if(onOff == "OFF")
+
+   else if( onOff == "OFF" )
    {
 #ifdef _OSG
-      this->setNodeMask(0);
+      this->setNodeMask( 0 );
 #elif _OPENSG
-#elif _PERFORMER
 #endif
    }
 }

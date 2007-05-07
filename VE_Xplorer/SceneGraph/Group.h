@@ -32,18 +32,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_GROUP_H
 #define VE_GROUP_H
+
 /*!\file Group.h
-Group API
 */
 
 /*!\class VE_SceneGraph::Group
+*General group node which maintains a list of children
+*/
+
+/*!\namespace VE_SceneGraph
 *
 */
+
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 
-#ifdef _PERFORMER
-#include <pf/pfGroup.h>;
-#elif _OSG
+// --- OSG Includes --- //
+#ifdef _OSG
 #include <osg/Group>
 #elif _OPENSG
 #endif
@@ -52,57 +57,70 @@ namespace VE_SceneGraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
-#elif _PERFORMER
-class VE_SCENEGRAPH_EXPORTS Group : public pfGroup
 #endif
 {
 public:
    ///Default constructor
    Group();
-   ///Copy constructor
-   /// Copy constructor using CopyOp to manage deep vs shallow copy.
+
+   ///Copy constructor using CopyOp to manage deep vs shallow copy.
    Group( const Group&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
    
    META_Node( VE_SceneGraph, Group );
 
 protected:
+   ///Destructor
    virtual ~Group( void );
    
 public:
    ///Generic set name function
-   ///\param
+   ///\param name The name of the node
    void SetName( std::string name );
+
    ///Generic remove child function
-	///\param
+	///\param child The child that is removed
    int RemoveChild( SceneNode* child );
+
    ///Generic add child function
-	///\param
+	///\param child The child that is added
    int AddChild( SceneNode* child );
+
    ///Generic insert child function
-	///\param
+	///\param position The specific location within the group
+   ///\param child The child that is inserted
    void InsertChild( int position, SceneNode* child );
+
    ///Generic replace child function
-	///\param
+	///\param childToBeReplaced The child to be replaced
+   ///\param newChild The new child
    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
+
 	///Generic search child function
 	///\param searchChild SceneNode* of child to be found
 	bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+
 	///Generic find parent function
-	///\param position the position of the parent to be returned
+	///\param position The position of the parent to be returned
 	osg::Group* GetParent( unsigned int position );
+
 	///Generic get child function
-	///\param position the position of the child to be returned
+	///\param position The position of the child to be returned
 	osg::Node* GetChild( unsigned int position );
+
    ///Generic get number of children
    int GetNumChildren( void );
-   ///Set the name of the node
+
+   ///Get the name of the node
    const std::string GetName( void );
-	///
-	///\param
+
+	///Set the node mask on or off
+	///\param onOff Node mask state
 	void ToggleDisplay( std::string onOff );
-	///
-	///\param
+
+	///Set the node mask on or off
+	///\param onOff Node mask state
 	void ToggleDisplay( bool onOff );
+
 };
 }
 
