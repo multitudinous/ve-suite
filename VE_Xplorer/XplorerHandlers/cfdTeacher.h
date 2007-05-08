@@ -68,19 +68,29 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
    {
       public:
+		  ///Constructor
          cfdTeacher( std::string, VE_SceneGraph::DCS* );
 
-         ~cfdTeacher( );
+         ///Destructor
+		 ~cfdTeacher( );
 
          // compare VjObs_i commandArray with its child's value
          virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
          // in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand();
-			void writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName);
 
-         VE_SceneGraph::DCS* GetDCS( );
+		 ///Write out a performer bindary file
+		 ///\param SceneNode* and file name
+		 void writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName);
+
+		 ///Get DCS 
+		 VE_SceneGraph::DCS* GetDCS( );
+		 ///Get a performer node output
+		 ///\param node ID
          VE_SceneGraph::CADEntityHelper* getpfNode( int );
+		 ///Set/Get number of fles
+		 ///\param i file name ID
          int getNumberOfFiles();
          std::string getFileName( int i );
 

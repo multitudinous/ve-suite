@@ -56,15 +56,18 @@ class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
 {
 public:
    // Initialize the multiple vector plots for a particular plane direction
+	///Constructor
    cfdVectors( const int xyz );
 
+   ///Destructor
    ~cfdVectors();
 
+   ///Virtual update function
    virtual void Update( void );
 
 private:
    int xyz;
-         cfdPlanes* planes;
+   cfdPlanes* planes;
 };
 }
 #endif

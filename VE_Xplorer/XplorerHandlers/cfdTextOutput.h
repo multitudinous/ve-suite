@@ -60,8 +60,12 @@ namespace VE_Xplorer
    class cfdTextOutput
    {
       public:
+		  ///Constructor
          cfdTextOutput();   //constructor
+		 ///Destructor
          ~cfdTextOutput();  //destructor
+		 ///Add text to DCS
+		 ///\param text_input the text input to be displayed
 			VE_SceneGraph::DCS* add_text(std::string text_input);
     
       private:

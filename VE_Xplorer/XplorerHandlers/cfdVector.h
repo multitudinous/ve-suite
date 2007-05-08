@@ -60,8 +60,9 @@ namespace VE_Xplorer
    {
       public:
          // Initialize the VTK objects and pipeline.
+		  ///Constructor
          cfdVector( );
-
+		 ///Destructor
          ~cfdVector( );
   
          /* Update the position, x, and normal direction to cut.

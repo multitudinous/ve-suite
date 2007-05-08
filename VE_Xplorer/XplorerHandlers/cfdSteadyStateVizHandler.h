@@ -107,10 +107,13 @@ class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfd
 private:
    // Required so that vpr::Singleton can instantiate this class.
    //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
+	///Constructor
    cfdSteadyStateVizHandler( void );
    //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
    //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
+   ///Destructor
    ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
+   ///????
    vprSingletonHeader( cfdSteadyStateVizHandler );   
 
 public:
@@ -218,8 +221,8 @@ private:
    bool transientBusy;
    bool transientActors;
 
-   // multi map to hold graphics objects
-   // the key is the viz type and the value is cfdGraphicsObject
+   /// multi map to hold graphics objects
+   /// the key is the viz type and the value is cfdGraphicsObject
    std::multimap< int, cfdGraphicsObject* > graphicsObjects;
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 };

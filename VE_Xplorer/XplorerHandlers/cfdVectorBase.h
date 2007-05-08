@@ -62,34 +62,45 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdVectorBase : public cfdObjects
 {
 public:
+	///Constructor
    cfdVectorBase();
 
+   ///Destructor
    virtual ~cfdVectorBase();
 
    // pure virtual int functions to be specified in concrete implementations
 
-   // compare VjObs_i commandArray with its child's value
+   /// compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
 
-   // update the actor
+   ///Update the actor
    virtual void Update() = 0;
 
+   ///Set threshold
+   ///\params minThresh and maxThresh, min and max percentage values for threshold
    void SetThreshHoldPercentages( int minThresh, int maxThresh );
 
+   ///Set/Get threshold values
+   ///\param ????
    void SetThreshHoldValues( double * );
    double* GetThreshHoldValues( void );
 
+   ///Update function
    void UpdateThreshHoldValues();
 
+   
+   ///Set/Get vector ratio factor
    void SetVectorRatioFactor( int );
    int GetVectorRatioFactor();
 
+   ///Set/Get scale by factor
    void SetScaleByVectorFlag( int );
    int GetScaleByVectorFlag( void );
 
+   ///Set/Get vector scales
    void SetVectorScale( float );
    float GetVectorScale();
 

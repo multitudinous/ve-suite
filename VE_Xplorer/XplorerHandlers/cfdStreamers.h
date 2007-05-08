@@ -67,8 +67,10 @@ class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects
 public:
    /* Initialize the VTK objects and pipeline.
    Glyph(s) are from cfdPlanes's multiple points plane cursor.  */
+	///Constructor
    cfdStreamers( void );
 
+   ///Destructor
    ~cfdStreamers();
 
    // compare VjObs_i commandArray with its child's value
@@ -76,15 +78,19 @@ public:
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-
+	///Update function to update cfdStreamers
    virtual void Update( void );
 
+   ///Get polydata output
    vtkPolyData* GetStreamersOutput( void );
 
+   ///Set the inttegration direction for the streamlines, 0=Both, 1=Forward, 2=Backward
    void SetIntegrationDirection( int );
 
+   ///Set upper limit for time-step integration
    void SetPropagationTime( double value );
 
+   ///Set integration setp length
    void SetIntegrationStepLength( int );
 
    int cfdIso_value;

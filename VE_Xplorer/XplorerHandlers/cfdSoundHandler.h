@@ -78,7 +78,7 @@ public:
 private:
    std::string _param;
    cfdReadParam* _readParam;
-   std::vector< cfdSound* > sounds;
+   std::vector< cfdSound* > sounds;///<The vector of sounds.
    //cfdCommandArray* commandArray;
 };
 }
