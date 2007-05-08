@@ -106,6 +106,7 @@ protected:
    void _setAttributesOnNode(VE_XML::VE_CAD::CADNode* node);
  
    ///Internal method to extract transform from CADNodes.
+   ///\param node CADNode to extract transform from.
    void _setTransformOnNode(VE_XML::VE_CAD::CADNode* node);
    
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;

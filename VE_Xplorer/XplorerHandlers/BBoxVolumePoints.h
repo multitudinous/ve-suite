@@ -32,7 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef BBOXVOLUMEPOINTS_H
 #define BBOXVOLUMEPOINTS_H
-
+/*!\file BBoxVolumePoints.h
+  BBoxVolumePoints API
+  */
+/*!\class BBoxVolumePoints
+ * Class for handling volume points in a volume box.
+ */
 namespace VE_SceneGraph
 {
    
@@ -73,7 +78,9 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS BBoxVolumePoints : public cfdGlobalBase
 {
 public:
+   ///Constructor
    BBoxVolumePoints( void );
+   ///Destructor
    ~BBoxVolumePoints( void );
 
 private:

@@ -32,7 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef BBOX_EVENT_HANDLER_H
 #define BBOX_EVENT_HANDLER_H
-
+/*!\file BBoxEventHandler.h
+  BBoxEventEventHandler API
+  */
+/*!\class BBoxEventHandler
+ * Class for handling Bounding Box.
+ */
 #include <map>
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
@@ -77,7 +82,7 @@ public:
    void Execute( VE_XML::XMLObject* command); 
 
 private:
-   VE_Xplorer::cfdModel* _activeModel;
+   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
 };
 }
 #endif// BBOX_EVENT_HANDLER_H

@@ -86,7 +86,7 @@ protected:
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
 
-   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
+   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
    VE_XML::VE_CAD::CADAttribute* _activeAttribute;///<The CADNode.
 };
 }
