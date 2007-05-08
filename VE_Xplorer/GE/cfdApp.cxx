@@ -41,7 +41,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
@@ -168,7 +168,7 @@ cfdApp::cfdApp( int argc, char* argv[] )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::exit()
 {
-   VE_SceneGraph::cfdPfSceneManagement::instance()->CleanUp();
+   VE_SceneGraph::SceneManager::instance()->CleanUp();
    cfdModelHandler::instance()->CleanUp();
    cfdEnvironmentHandler::instance()->CleanUp();
    cfdSteadyStateVizHandler::instance()->CleanUp();
@@ -234,9 +234,9 @@ osg::Group* cfdApp::getScene()
    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
    //   "C:/test.osg");
 #ifdef _PERFORMER
-   return (pfGroup*)(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
+   return (pfGroup*)(VE_SceneGraph::SceneManager::instance()->GetRootNode()->GetRawNode());
 #elif _OSG
-   return (osg::Group*)VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
+   return (osg::Group*)VE_SceneGraph::SceneManager::instance()->GetRootNode();
 #endif
 }
 
@@ -382,14 +382,14 @@ void cfdApp::initScene( void )
 #endif   //_WEB_INTERFACE
 
    // define the rootNode, worldDCS, and lighting
-   //VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
-   VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
+   //VE_SceneGraph::SceneManager::instance()->Initialize( this->filein_name );
+   VE_SceneGraph::SceneManager::instance()->InitScene();
 
 
    this->getScene()->addChild( light_source_0.get() );
 
 #ifdef _OSG
-   VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(true);
+   VE_SceneGraph::SceneManager::instance()->ViewLogo(true);
 #endif
 
    // modelHandler stores the arrow and holds all data and geometry
@@ -483,7 +483,7 @@ void cfdApp::latePreFrame( void )
    }
 #endif
          
-   VE_SceneGraph::cfdPfSceneManagement::instance()->PreFrameUpdate();
+   VE_SceneGraph::SceneManager::instance()->PreFrameUpdate();
    ///////////////////////
    cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////

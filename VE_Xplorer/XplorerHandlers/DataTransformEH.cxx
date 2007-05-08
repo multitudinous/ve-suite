@@ -35,7 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/XplorerHandlers/SeedPoints.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"

@@ -38,7 +38,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
@@ -259,7 +259,7 @@ void cfdTeacher::RecordScene()
    }
    else
    {
-      writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(), pfb_filename);
+      writePFBFile(VE_SceneGraph::SceneManager::instance()->GetRootNode(), pfb_filename);
    }
 
    /*this->node.push_back( new VE_SceneGraph::CADEntityHelper() );

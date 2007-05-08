@@ -74,7 +74,7 @@
 
 #include <boost/bind.hpp>
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 //This is WAY down here to fix compile errors on IRIX
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
@@ -244,7 +244,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+            temp->SetWorldNode( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
             temp->SetGeodes( _activeObject->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
@@ -290,7 +290,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          if ( !computeActorsAndGeodes && !alreadyRemoved )
          {
             alreadyRemoved = true;
-            //cfdPfSceneManagement::instance()->GetRootNode()->RemoveChild( textOutput->add_text( "executing..." ) );
+            //SceneManager::instance()->GetRootNode()->RemoveChild( textOutput->add_text( "executing..." ) );
          }
       }
    }

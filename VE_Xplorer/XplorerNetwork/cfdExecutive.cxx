@@ -47,7 +47,7 @@
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
 #include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
@@ -97,7 +97,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
    this->_masterNode = new VE_SceneGraph::Group();
    this->_masterNode->SetName( "cfdExecutive_Node" );
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
+   VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
 
    av_modules = new cfdVEAvail_Modules();
 
@@ -287,7 +287,7 @@ void cfdExecutive::GetEverything( void )
 
          _plugins[ iter->first ] = temp;
          // When we create the _plugin map here we will do the following
-         _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+         _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
          _plugins[ iter->first ]->AddSelfToSG();
          cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
          tempCFDModel->SetID( iter->first );
@@ -464,7 +464,7 @@ void cfdExecutive::LoadDataFromCE( void )
    {
       // Get Network and parse it
       GetEverything();
-      VE_SceneGraph::cfdPfSceneManagement::instance()->ViewLogo(false);
+      VE_SceneGraph::SceneManager::instance()->ViewLogo(false);
    }
    
    // store the statusString in order to perform multiple operations on it...

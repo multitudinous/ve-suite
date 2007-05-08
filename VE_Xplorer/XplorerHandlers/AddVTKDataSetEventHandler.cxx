@@ -36,7 +36,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -218,7 +218,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                _activeModel->GetCfdDataSet( i )->SetArrow( VE_Xplorer::cfdModelHandler::instance()->GetArrow() );
                if ( _activeModel->GetCfdDataSet( i )->GetParent() == _activeModel->GetCfdDataSet( i ) )
                {
-                  VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->
+                  VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->
                         AddChild( _activeModel->GetCfdDataSet( i )->GetDCS() );
                   _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( i ) );
                }

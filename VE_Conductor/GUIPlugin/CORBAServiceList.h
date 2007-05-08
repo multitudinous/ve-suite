@@ -67,9 +67,9 @@ class VE_GUIPLUGINS_EXPORTS CORBAServiceList //: public wxObject
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdPfSceneManagement >;
-   //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
-   //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
+   //friend class vpr::Singleton< SceneManager >;
+   //SceneManager(const SceneManager& o) { ; }
+   //SceneManager& operator=(const SceneManager& o) { ; }
    CORBAServiceList( void ){ ; }
    ~CORBAServiceList(){ ; } // Never gets called, don't implement
    vprSingletonHeader( CORBAServiceList );

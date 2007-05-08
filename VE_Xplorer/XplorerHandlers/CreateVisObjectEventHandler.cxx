@@ -61,7 +61,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdTextOutput.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -767,7 +767,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
                         << " to _activeObject"
                         << std::endl << vprDEBUG_FLUSH;
 
-   //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
+   //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
 	osg::ref_ptr< VE_SceneGraph::DCS > activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 

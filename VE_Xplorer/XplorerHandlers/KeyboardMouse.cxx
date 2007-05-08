@@ -35,7 +35,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
@@ -122,7 +122,7 @@ beamLineSegment( new osg::LineSegment )
 	gmtl::identity( tb_currTransform );
    gmtl::identity( tb_worldTransform );
    
-   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+   activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse( void )
@@ -215,7 +215,7 @@ void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 {
    if( beamGeode.valid() )
    {
-      VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->removeChild( beamGeode.get() );
+      VE_SceneGraph::SceneManager::instance()->GetRootNode()->removeChild( beamGeode.get() );
    }
    
    beamGeode = new osg::Geode();
@@ -243,7 +243,7 @@ void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 
    beamGeode->addDrawable( line.get() );      
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->addChild( beamGeode.get() );
+   VE_SceneGraph::SceneManager::instance()->GetRootNode()->addChild( beamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
@@ -500,7 +500,7 @@ void KeyboardMouse::NavMotion( void )
    
    //Get the current matrix and world matrix
    tb_currTransform = activeDCS->GetMat();
-   tb_worldTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetMat();
+   tb_worldTransform = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat();
 
 	tb_currPos[0] = (float)x / (float)width;
 	tb_currPos[1] = (float)y / (float)height;
@@ -575,15 +575,15 @@ void KeyboardMouse::ResetTransforms( void )
    gmtl::Matrix44f matrix;
    center_point->mData[1] = matrix[1][2] = tb_threshold;
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetMat( matrix );
+   VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll( void )
 {
    osg::ref_ptr< osg::Group > root = new osg::Group;
-   root->addChild( VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode() );
+   root->addChild( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode() );
 
-   tb_worldTransform = VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->GetMat();
+   tb_worldTransform = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->GetMat();
 
    //Get the selected objects and expand by their bounding box
    osg::BoundingSphere bs;
@@ -619,7 +619,7 @@ void KeyboardMouse::FrameAll( void )
       tb_worldTransform[2][3] -= z_val;
    }
 
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode()->SetMat( tb_worldTransform );
+   VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( tb_worldTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( float dx, float dy )
@@ -721,7 +721,7 @@ void KeyboardMouse::ProcessSelectionEvents( void )
    
    //Add the IntersectVisitor to the root Node so that all all geometry will be
    //checked and no transforms are done to the Line segement.
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
+   VE_SceneGraph::SceneManager::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
    
    osgUtil::IntersectVisitor::HitList beamHitList;
    beamHitList = objectBeamIntersectVisitor.getHitList( beamLineSegment.get() );
@@ -738,7 +738,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
    {
       vprDEBUG(vesDBG,1) << "|\tKeyboardMouse::ProcessHit No object selected" 
                          << std::endl << vprDEBUG_FLUSH;
-      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+      activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
       return;
    }
    
@@ -779,6 +779,6 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
       vprDEBUG(vesDBG,1) << "|\tObject does not have name parent name " 
                          << objectHit._geode->getParents().front()->getName() 
                          << std::endl << vprDEBUG_FLUSH;
-      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+      activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
    }
 }

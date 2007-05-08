@@ -198,10 +198,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdPfSceneManagement.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\Clone.cxx"
 				>
 			</File>
@@ -243,6 +239,10 @@
 			</File>
 			<File
 				RelativePath=".\PhysicsSimulator.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneManager.cxx"
 				>
 			</File>
 			<File
@@ -314,10 +314,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdPfSceneManagement.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Clone.h"
 				>
 			</File>
@@ -347,6 +343,10 @@
 			</File>
 			<File
 				RelativePath=".\PhysicsSimulator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneManager.h"
 				>
 			</File>
 			<File

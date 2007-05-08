@@ -61,7 +61,7 @@
 #include "VE_Xplorer/XplorerHandlers/SPBoundEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPDimensionsEH.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -289,15 +289,15 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
    this->cursor = new cfdCursor( this->arrow, 
-                             VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), 
-                             VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
+                             VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), 
+                             VE_SceneGraph::SceneManager::instance()->GetRootNode() );
    //this->cursor->Initialize( NULL, NULL );
 
    //
    // Initiate quatcam
    //
    std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
-   VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS());
+   VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(VE_SceneGraph::SceneManager::instance()->GetWorldDCS());
 
    //
    // Initiate quatcam
@@ -310,7 +310,7 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
-                                 VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+                                 VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
 
    //this->objectHandler->Initialize( NULL );
 

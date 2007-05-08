@@ -43,7 +43,7 @@
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
@@ -470,7 +470,7 @@ void cfdModelHandler::InitScene( void )
          _modelList.at( j )->GetCfdDataSet( i )->LoadData();
          _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
          if ( _modelList.at( j )->GetCfdDataSet( i )->GetParent() == _modelList.at( j )->GetCfdDataSet( i ) )
-            VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->
+            VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->
                AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
       }
 
@@ -511,7 +511,7 @@ void cfdModelHandler::InitScene( void )
    // Create Scalar bar
 	//This code is broken due to the get parent call
 	_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< VE_SceneGraph::Group* >
-												 VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
+												 VE_SceneGraph::SceneManager::instance()->GetRootNode() );
    // Assumes active dataset isn't null
    _scalarBar->RefreshScalarBar();
 }
@@ -581,7 +581,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             }
             else
             {
-               parent = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+               parent = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
             }
 
             vprDEBUG(vesDBG,2)

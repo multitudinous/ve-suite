@@ -36,7 +36,7 @@
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -105,8 +105,8 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    activeModelDVP->GetData( viewData );
    if ( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
    {
-      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 2 );
-      VE_SceneGraph::DCS  * tempDCS = cfdPfSceneManagement::instance()->GetNetworkDCS();
+      SceneManager::instance()->SetActiveSwitchNode( 2 );
+      VE_SceneGraph::DCS  * tempDCS = SceneManager::instance()->GetNetworkDCS();
 
       NetworkSystemView networkLayout( cfdExecutive::instance()->veNetwork );
       if ( tempDCS->GetNumChildren() >= 1 )
@@ -117,16 +117,16 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    }
    else if ( viewData == "CHANGE_XPLORER_VIEW_CAD" )
    {
-      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 0 );
+      SceneManager::instance()->SetActiveSwitchNode( 0 );
    }
 
    else if ( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
    {
-      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 1 );
+      SceneManager::instance()->SetActiveSwitchNode( 1 );
    }
 	
    else
    {
-      cfdPfSceneManagement::instance()->SetActiveSwitchNode( 0 );
+      SceneManager::instance()->SetActiveSwitchNode( 0 );
    }
 }

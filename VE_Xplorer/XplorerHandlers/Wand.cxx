@@ -45,7 +45,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -95,8 +95,8 @@ Wand::Wand() :
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize( void )
 {
-   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
-   rootNode = VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
+   activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+   rootNode = VE_SceneGraph::SceneManager::instance()->GetRootNode();
    
    for ( int i=0; i<3; i++ )
    {
@@ -385,7 +385,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
    {
       vprDEBUG(vesDBG,1) << "|\tWand::ProcessHit No object selected" 
                            << std::endl << vprDEBUG_FLUSH;
-      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+      activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
       return;
    }
 
@@ -423,7 +423,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
       vprDEBUG(vesDBG,1) << "|\tObject does not have name parent name " 
                   << objectHit._geode->getParents().front()->getName() 
                   << std::endl << vprDEBUG_FLUSH;
-      activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+      activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

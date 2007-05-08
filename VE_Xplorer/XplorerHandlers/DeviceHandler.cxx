@@ -46,7 +46,7 @@
 #include "VE_Xplorer/XplorerHandlers/ViewEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -75,7 +75,7 @@ device_mode( "Navigation" )
    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
    _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
    
-   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+   activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
    center_point.mData[1] = activeDCS->GetMat().mData[6] = static_cast< VE_Xplorer::KeyboardMouse* >( active_device )->GetCPThreshold();
 }

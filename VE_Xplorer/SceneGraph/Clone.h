@@ -32,21 +32,28 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CLONE_H
 #define CLONE_H
+
 /*!\file Clone.h
-Clone API
 */
 
 /*!\class VE_SceneGraph::Clone
 *
 */
+
+/*!\namespace VE_SceneGraph
+*
+*/
+
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
 namespace VE_SceneGraph
 {
-	class DCS;
+   class DCS;
    class SceneNode;
 }
 
+// --- OSG Includes --- //
 namespace osg
 {
    class Node;
@@ -57,23 +64,43 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS Clone
 {
 public:
-   Clone();
-   //Clone( SceneNode* original );
-	Clone( osg::Node* original );
-	~Clone();
+   ///Base Constructor
+   Clone( void );
 
-	void CloneNode( osg::Node* original );
-   void SetTranslationArray(float* translation);
-   void SetRotationArray(float* rotation);
-   void SetScaleArray(float* scale);
+   ///Constructor
+   ///\param original The original node to be cloned
+   Clone( osg::Node* original );
 
-   //returns the cloned structure including the
-   //transform
-	VE_SceneGraph::DCS* GetClonedGraph();
+   //Destructor
+   ~Clone( void );
+
+   ///Clones a scenegraph node
+   ///\param original The original node to be cloned
+   void CloneNode( osg::Node* original );
+
+   ///Set the translation array of the clone
+   ///\param translation The translation array pointer
+   void SetTranslationArray( float* translation );
+
+   ///Set the rotation array of the clone
+   ///\param rotation The rotation array pointer
+   void SetRotationArray( float* rotation );
+
+   ///Set the scale array of the clone
+   ///\param scale The scale array pointer
+   void SetScaleArray( float* scale );
+
+   ///Return the cloned structure including the transform
+   VE_SceneGraph::DCS* GetClonedGraph( void );
+
+   ///
+   ///\param node
    osg::Node* CloneSubNode( osg::Node* node );
    
 protected:
-	osg::ref_ptr< VE_SceneGraph::DCS > cloneTransform;
+   osg::ref_ptr< VE_SceneGraph::DCS > cloneTransform;///<The cloned structure including the transform
+
 };
 }
+
 #endif //CLONE_H

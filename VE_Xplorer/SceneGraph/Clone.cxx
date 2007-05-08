@@ -37,7 +37,7 @@
 #include <osg/MatrixTransform>
 #include <osg/CopyOp>
 #include <osg/Geode>
-//#include "VE_SceneGraph/cfdMaterial.h"
+
 #elif _PERFORMER
 #elif _OPENSG
 #endif
@@ -67,7 +67,7 @@ void Clone::CloneNode( osg::Node* original )
 {
    if ( !cloneTransform.valid() )
    {
-		cloneTransform = new VE_SceneGraph::DCS();
+	   cloneTransform = new VE_SceneGraph::DCS();
    }
    
    ///We deep copy nodes so that picking is accurate and so that physics will
@@ -86,7 +86,7 @@ void Clone::CloneNode( osg::Node* original )
       std::cout << typeid( *original ).name() << std::endl;
    }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Clone::SetTranslationArray( float* translation )
 {
    if ( cloneTransform.valid() )
@@ -113,10 +113,11 @@ void Clone::SetScaleArray(float* scale)
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* Clone::GetClonedGraph()
 {
-   if ( cloneTransform.valid() )
+   if( cloneTransform.valid() )
    {
       return cloneTransform.get();
    }
+
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

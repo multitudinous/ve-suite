@@ -32,13 +32,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_PFSCENEMANAGEMENT_H
-#define CFD_PFSCENEMANAGEMENT_H
+#ifndef SCENE_MANAGER_H
+#define SCENE_MANAGER_H
 
-/*!\file cfdPfSceneManagement.h
+/*!\file SceneManager.h
 */
 
-/*!\class VE_SceneGraph::cfdPfSceneManagement
+/*!\class VE_SceneGraph::SceneManager
 *
 */
 
@@ -71,7 +71,7 @@ namespace VE_SceneGraph
 
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
+class VE_SCENEGRAPH_EXPORTS SceneManager //: public vpr::Singleton< SceneManager >
 {
 public:
    ///
@@ -109,18 +109,18 @@ public:
 
 private:
    //Required so that vpr::Singleton can instantiate this class
-   //Friend class vpr::Singleton< cfdPfSceneManagement >;
-   //cfdPfSceneManagement(const cfdPfSceneManagement& o){;}
-   //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o){;}
+   //Friend class vpr::Singleton< SceneManager >;
+   //SceneManager(const SceneManager& o){;}
+   //SceneManager& operator=(const SceneManager& o){;}
 
    ///Base Constructor
-   cfdPfSceneManagement( void );
+   SceneManager( void );
 
    ///Destructor
    ///Never gets called, don't implement
-   ~cfdPfSceneManagement( void ){;}
+   ~SceneManager( void ){;}
 
-   vprSingletonHeader( cfdPfSceneManagement );
+   vprSingletonHeader( SceneManager );
 
    std::string _param;///<
    osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<
@@ -140,4 +140,4 @@ protected:
 };
 }
 
-#endif //CFD_PFSCENEMANAGEMENT_H
+#endif //SCENE_MANAGER_H

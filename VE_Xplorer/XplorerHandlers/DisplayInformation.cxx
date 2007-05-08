@@ -2,7 +2,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 
@@ -26,7 +26,7 @@ DisplayInformation::DisplayInformation()
 {
    display_switch = new VE_SceneGraph::Switch;
    display_switch->SetName( "Display Information Switch Node" );
-	VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->AddChild( display_switch.get() );
+	VE_SceneGraph::SceneManager::instance()->GetRootNode()->AddChild( display_switch.get() );
 
 	framerate = new osg::CameraNode;
    framerate->setName( "Framerate Node" );
@@ -139,8 +139,8 @@ void DisplayInformation::InitCoordSysDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
 {
-   VE_SceneGraph::DCS* activeNodeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetActiveSwitchNode();
-   VE_SceneGraph::DCS* worldDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+   VE_SceneGraph::DCS* activeNodeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+   VE_SceneGraph::DCS* worldDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
    if( activeNodeDCS != worldDCS )
    {
@@ -163,7 +163,7 @@ void DisplayInformation::LatePreFrame()
 
 	if( display_switch->getChildValue( wcs.get() ) )
 	{
-		osg::Quat temp = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->getAttitude();
+		osg::Quat temp = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
 		osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
 
 		wcs_model->GetDCS()->setAttitude( quat );

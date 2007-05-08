@@ -38,7 +38,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/SeedPoints.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -107,9 +107,9 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 		   std::string datasetname;
 		   activeDataset->GetData(datasetname);
 		   //check to see if the seed points exist
-		   if(!VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
+		   if(!VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
 		   {
-            VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
+            VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
 		   }
 		 
          //this seems to be a bad sequence of calls but we need to set the

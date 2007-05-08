@@ -35,7 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
@@ -64,7 +64,7 @@ Tablet::~Tablet( )
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::Initialize( void )
 {
-   activeDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
+   activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
    translationStepSize = 0.25f;
    rotationStepSize = 1.0f;

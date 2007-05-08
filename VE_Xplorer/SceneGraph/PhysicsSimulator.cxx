@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
@@ -379,7 +379,7 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
 
 	   osgDB::Registry::instance()->getReaderWriterForExtension("osg")->writeNode( *geode, box_ss );
 
-	   box_vector.push_back( new VE_SceneGraph::CADEntity( "C:/Users/JK/Desktop/Models/box.osg", VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), false ) );
+	   box_vector.push_back( new VE_SceneGraph::CADEntity( "C:/Users/JK/Desktop/Models/box.osg", VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), false ) );
 	   //box_vector.back()->SetPhysics( true );
 
 	   float mass = 1.0f;

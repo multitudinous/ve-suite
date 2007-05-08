@@ -38,7 +38,7 @@
 #endif
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Xplorer/SceneGraph/Text.h"
 #include "VE_Xplorer/SceneGraph/Triangles.h"
@@ -64,9 +64,9 @@
 
 using namespace VE_SceneGraph;
 
-vprSingletonImp( cfdPfSceneManagement );
+vprSingletonImp( SceneManager );
 
-cfdPfSceneManagement::cfdPfSceneManagement( void )
+SceneManager::SceneManager( void )
 {
    this->_param.erase();
 
@@ -74,12 +74,12 @@ cfdPfSceneManagement::cfdPfSceneManagement( void )
    _movingPyramidsAssembly = 0;
 }
 //////////////////////////////////////////////////////////
-void cfdPfSceneManagement::Initialize( std::string param )
+void SceneManager::Initialize( std::string param )
 {
    _param = param;
 }
 ///////////////////////////////////////////////////
-void cfdPfSceneManagement::CleanUp( void )
+void SceneManager::CleanUp( void )
 {
    //Do nothing right now
    if( _textPart )
@@ -95,7 +95,7 @@ void cfdPfSceneManagement::CleanUp( void )
    }
 }
 
-void cfdPfSceneManagement::InitScene( void )
+void SceneManager::InitScene( void )
 {
    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
 
@@ -121,22 +121,22 @@ void cfdPfSceneManagement::InitScene( void )
    rootNode->AddChild( _logoSwitch.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Group* cfdPfSceneManagement::GetRootNode( void )
+VE_SceneGraph::Group* SceneManager::GetRootNode( void )
 {
    return this->rootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdPfSceneManagement::GetWorldDCS( void )
+VE_SceneGraph::DCS* SceneManager::GetWorldDCS( void )
 {
    return this->worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdPfSceneManagement::GetNetworkDCS( void )
+VE_SceneGraph::DCS* SceneManager::GetNetworkDCS( void )
 {
    return networkDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdPfSceneManagement::ViewLogo( bool trueFalse )
+void SceneManager::ViewLogo( bool trueFalse )
 {
    if( trueFalse )
    {
@@ -149,7 +149,7 @@ void cfdPfSceneManagement::ViewLogo( bool trueFalse )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdPfSceneManagement::_createLogo()
+void SceneManager::_createLogo()
 {
 #ifdef _OSG
    if( !_logoSwitch )
@@ -173,18 +173,18 @@ void cfdPfSceneManagement::_createLogo()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdPfSceneManagement::SetActiveSwitchNode( int activeNode )
+void SceneManager::SetActiveSwitchNode( int activeNode )
 {
    _logoSwitch->SetVal( activeNode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdPfSceneManagement::PreFrameUpdate( void )
+void SceneManager::PreFrameUpdate( void )
 {
    networkDCS->SetTranslationArray( worldDCS->GetVETranslationArray() );
    networkDCS->SetRotationArray( worldDCS->GetRotationArray() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdPfSceneManagement::GetActiveSwitchNode( void )
+VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode( void )
 {
    osg::Switch::ValueList boolList = _logoSwitch->getValueList();
    

@@ -33,7 +33,7 @@
 // --- VE-Suite Stuff --- //
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 // --- OSG Stuff --- //
 #include <osg/LineSegment>
@@ -99,7 +99,7 @@ void Device::ProcessSelection()
    intersect_visitor.addLineSegment( line_segment.get() );
 
    //Add IntersectVisitor to RootNode so that all geometry is checked and no transforms are applied to LineSegment
-   VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->accept( intersect_visitor );
+   VE_SceneGraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
 
    osgUtil::IntersectVisitor::HitList hit_list;
    hit_list = intersect_visitor.getHitList( line_segment.get() );

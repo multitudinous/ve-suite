@@ -35,7 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include <vpr/Util/Singleton.h>
-#include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <osg/Group>
@@ -51,7 +51,7 @@
 #include <osgUtil/IntersectVisitor>
 #include <osg/Matrix>
 
-#include <VE_SceneGraph/cfdPfSceneManagement.h>
+#include <VE_SceneGraph/SceneManager.h>
 */
 
 
@@ -84,7 +84,7 @@ void cfdObjectHandler::Initialize( cfdNavigate * navigatorReference )
       this->LastWandPosition[ i ] = 0;
    }
 
-   this->rootNode = VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode();
+   this->rootNode = VE_SceneGraph::SceneManager::instance()->GetRootNode();
  
    this->worldNode = this->navigator->worldDCS.get();
 
