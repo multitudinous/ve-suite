@@ -54,22 +54,26 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdSoundHandler : public cfdGlobalBase
 {
 public:
+   ///Constructor
    cfdSoundHandler( std::string );
+   ///Destructor
    ~cfdSoundHandler();
 
-   // Used to read parameter file and configure objects
+   ///Used to read parameter file and configure objects
    void CreateObjects( void );
 
-   // compare VjObs_i commandArray with its child's value
+   ///Compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
 
-   // in future, multi-threaded apps will make a copy of 
-   // VjObs_i commandArray
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
 
+   ///Get number of sounds
    int GetNumberOfSounds( void );
+   ///Set the sound file name
    std::string GetSoundFilename( int );
+   ///Get a vector of sounds
    std::vector< cfdSound* > GetSounds( void );
 private:
    std::string _param;

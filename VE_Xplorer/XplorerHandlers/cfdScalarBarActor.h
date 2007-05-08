@@ -75,60 +75,62 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdScalarBarActor : public cfdGlobalBase
    {
       public:
+         ///Constructor
          cfdScalarBarActor( std::string, VE_SceneGraph::Group* );
+         ///Destructor
          ~cfdScalarBarActor();
 
-   // compare VjObs_i commandArray with its child's value
+   ///Compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   ///In future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
 
-   // Create the scalar bar
+   ///Create the scalar bar
    void RefreshScalarBar( void );
-   // Set the active dataset for scalar bar computations
+   ///Set the active dataset for scalar bar computations
    void SetActiveDataSet( cfdDataSet* );
-   // Set/Get the position of the scalar bar in 3D space
+   ///Set/Get the position of the scalar bar in 3D space
    void SetPosition(float x, float y, float z);
    void SetPosition(float x[3]);
    void GetPosition(float x[3]);
    void GetPosition(float &x, float &y, float &z);
-
    void SetZRotation( float );
 
-   // Set/Get the width of the scalar bar
+   ///Set/Get the width of the scalar bar
    void SetWidth(float w);
    float GetWidth() const;
 
-   // Set/Get the height of the scalar bar
+   ///Set/Get the height of the scalar bar
    void SetHeight(float h);
    float GetHeight() const;
 
-   // Set/Get the number of colors for the scalar bar
+   ///Set/Get the number of colors for the scalar bar
    void SetMaximumNumberOfColors(int nC);
    int GetMaximumNumberOfColors() const;
 
-   // Set/Get the range of the scalar bar
+   ///Set/Get the range of the scalar bar
    void SetRange(double r0, double r1);
    void SetRange(double r[2]);
    void GetRange(double r[2]);
    void GetRange(double &r0, double &r1);
 
-   // Set/Get the lookup table of the scalar bar
+   ///Set/Get the lookup table of the scalar bar
    void SetLookupTable( vtkLookupTable * );
    vtkLookupTable * GetLookupTable();
 
-   // Set/Get the scale of the title text
+   ///Set/Get the scale of the title text
    void SetTitleTextScale(float scale);
    float GetTitleTextScale() const;
 
-   // Set/Get the text for the scalar bar
+   ///Set/Get the text for the scalar bar
    void SetVtkVectorText(char text[]);
 
-   // Create the scalar bar and convert it into pfGeode
+   ///Create the scalar bar and convert it into pfGeode
    void Execute();
 
-	VE_SceneGraph::DCS* GetDCS( void);
+	///Get a pointer to a DCS
+   VE_SceneGraph::DCS* GetDCS( void);
 
 private:
    float itsX[3];
@@ -144,7 +146,7 @@ private:
 	osg::ref_ptr< VE_SceneGraph::Geode > pfaPolyActor;
    osg::ref_ptr< VE_SceneGraph::Geode > pftitleActor;
    osg::ref_ptr< VE_SceneGraph::Geode > pfLabelActor[5];
-   int numTextLabels;   // number of numerical labels on the scalar bar legend
+   int numTextLabels;   /// number of numerical labels on the scalar bar legend
    osg::ref_ptr< VE_SceneGraph::Geode > cubeAxesGeode;
 
    osg::ref_ptr< VE_SceneGraph::DCS >  scalarBar;
