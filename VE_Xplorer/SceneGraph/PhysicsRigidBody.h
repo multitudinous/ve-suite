@@ -65,21 +65,21 @@ class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::N
 public:
    ///Base Constructor
    ///\param node
-	PhysicsRigidBody( osg::Node* node );
+   PhysicsRigidBody( osg::Node* node );
 
    ///Destructor
-	virtual ~PhysicsRigidBody();
+   virtual ~PhysicsRigidBody();
 
    ///Override NodeVisitor apply function for geode
    ///\param geode 
-	virtual void apply( osg::Geode& geode );
+   virtual void apply( osg::Geode& geode );
 
    ///
    ///\param mass
    void setMass( float mass );
 
    ///Creates a box shape from the osg::BoundingBox of the mesh shape
-	void CreateBoundingBoxShape();
+   void CreateBoundingBoxShape();
 
    ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
    void CreateStaticConcaveShape();
@@ -88,10 +88,10 @@ public:
    void CreateConvexShape();
 
 private:
-	osg::BoundingBox bb;///<Bounding box of the osg node
+   osg::BoundingBox bb;///<Bounding box of the osg node
 
-	btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
-	btCollisionShape* collision_shape;///<The collision shape for the osg node
+   btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
+   btCollisionShape* collision_shape;///<The collision shape for the osg node
 };
 }
 

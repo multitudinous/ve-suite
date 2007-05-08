@@ -49,7 +49,7 @@
 
 namespace VE_SceneGraph
 {
-	class CADEntity;
+   class CADEntity;
 }
 
 // --- VR Juggler Includes --- //
@@ -131,9 +131,9 @@ private:
 
    gadget::PositionInterface head;///<The head in vr juggler
 
-	std::vector< VE_SceneGraph::CADEntity* > box_vector;///<
+   std::vector< VE_SceneGraph::CADEntity* > box_vector;///<
 
-	btDynamicsWorld* dynamics_world;///<Implements dynamics - basic, discrete, parallel, and continuous
+   btDynamicsWorld* dynamics_world;///<Implements dynamics - basic, discrete, parallel, and continuous
 
    btCollisionDispatcher* dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
    btOverlappingPairCache* broadphase;///<Maintains objects with overlapping AABB

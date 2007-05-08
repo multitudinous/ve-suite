@@ -57,8 +57,8 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS PhysicsConstraint
 {
 public:
-	PhysicsConstraint();
-	~PhysicsConstraint();
+   PhysicsConstraint();
+   ~PhysicsConstraint();
 
 
 private:
@@ -66,4 +66,4 @@ private:
 };
 }
 
-#endif //PHYSICS_MESH_H
+#endif //PHYSICS_CONSTRAINT_H

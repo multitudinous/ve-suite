@@ -32,57 +32,70 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CADEntityHelper_H
 #define CADEntityHelper_H
+
 /*!\file CADEntityHelper.h
-CADEntityHelper API
 */
 
 /*!\class VE_SceneGraph::CADEntityHelper
+*Class to assist CADEntity
+*/
+
+/*!\namespace VE_SceneGraph
 *
 */
+
+// --- C/C++ Libraries --- //
 #include <iostream>
 #include <fstream>
 #include <memory>
 
-template<typename Elem, typename Tr = std::char_traits<Elem> >
-class progress_streambuf: public std::basic_filebuf<Elem, Tr>
+template< typename Elem, typename Tr = std::char_traits< Elem > >
+
+class progress_streambuf: public std::basic_filebuf< Elem, Tr >
 {
 public:
-	typedef std::basic_filebuf<Elem, Tr> base_type;
+   typedef std::basic_filebuf< Elem, Tr > base_type;
    
-	explicit progress_streambuf(const std::string &filename):	
-      base_type(),
-		count_(0),
-		prev_perc_(0)
+   explicit progress_streambuf( const std::string &filename )
+   :	
+   base_type(),
+   count_(0),
+   prev_perc_(0)
    {
-      if ( base_type::open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
+      if( base_type::open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
       {
-         size_ = static_cast<int>(std::streambuf::pubseekoff(0, std::ios_base::end, std::ios_base::in));
-         std::streambuf::pubseekoff(0, std::ios_base::beg, std::ios_base::in);
+         size_ = static_cast< int >( std::streambuf::pubseekoff( 0, std::ios_base::end, std::ios_base::in ) );
+         std::streambuf::pubseekoff( 0, std::ios_base::beg, std::ios_base::in );
       }
    }
 
 protected:
-   virtual typename std::basic_filebuf<Elem, Tr>::int_type uflow()
-	{
-      typename std::basic_filebuf<Elem, Tr>::int_type v = base_type::uflow();
+   virtual typename std::basic_filebuf< Elem, Tr >::int_type uflow()
+   {
+      typename std::basic_filebuf< Elem, Tr >::int_type v = base_type::uflow();
       count_ += std::streambuf::egptr() - std::streambuf::gptr();
       int p = count_ * 40 / size_;
-      if (p > prev_perc_)
+      if( p > prev_perc_ )
       {
          std::cout << "*";
          prev_perc_ = p;
       }
+
       return v;
-	}
+   }
    
 private:
    int count_;
-	int size_;
-	int prev_perc_;
+   int size_;
+   int prev_perc_;
 };
 
-typedef progress_streambuf<char> progbuf;
+typedef progress_streambuf< char > progbuf;
 
+// --- VE-Suite Includes --- //
+#include "VE_Installer/include/VEConfig.h"
+
+// --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Node>
 #include <osg/ref_ptr>
@@ -95,56 +108,63 @@ namespace osg
 #elif _OPENSG
 #endif
 
-#include "VE_Installer/include/VEConfig.h"
-
 namespace VE_SceneGraph
 {
 class VE_SCENEGRAPH_EXPORTS CADEntityHelper
 {
-public:   
+public:
+   ///Base Constructor
    CADEntityHelper();
-   //Copy constructor
+
+   ///Copy constructor
+   ///\param CADEntityHelper
    CADEntityHelper( const CADEntityHelper& );
 
+   ///Destructor
    virtual ~CADEntityHelper( void );
 
-   //Equal operator
-   CADEntityHelper& operator= ( const CADEntityHelper& );
+   ///Equal operator
+   CADEntityHelper& operator=( const CADEntityHelper& );
 
-   //Set the name of the CADEntityHelper
+   ///Set the name of the CADEntityHelper
+   ///\param name The name of CADEntityHelper
    void SetName( std::string name );
 
-   //Toggle the display of this CADEntityHelper on/off
-   //\param onOff Turn on/off rendering of this CADEntityHelper\n
-   //Valid values are:\n
-   //ON == display this CADEntityHelper\n
-   //OFF == hide this CADEntityHelper\n
+   ///Toggle the display of this CADEntityHelper on/off
+   ///Valid values are:
+   ///ON == display this CADEntityHelper
+   ///OFF == hide this CADEntityHelper
+   ///\param onOff Turn on/off rendering of this CADEntityHelper
    void ToggleDisplay( std::string onOff );
 
-   //Toggle the display of this CADEntityHelper on/off
-   //\param onOff Turn on/off rendering of this CADEntityHelper\n
+   ///Toggle the display of this CADEntityHelper on/off
+   ///\param onOff Turn on/off rendering of this CADEntityHelper
    void ToggleDisplay( bool onOff );
-
+   
+   ///Return the node of CADEntityHelper
 #ifdef _OSG
    virtual osg::Node* GetNode( void );
 #elif _OPENSG
 #endif
 
-   void LoadFile( std::string,
+   ///Load a geometry file
+   ///\param filename The name of the file to be loaded
+   ///\param isStream
+   void LoadFile( std::string filename,
                   #ifdef _OSG
-                  bool isStream=false
+                  bool isStream = false
                   #endif
                   );
 protected:
 #ifdef _OSG
-   osg::ref_ptr<osg::Node> cadNode;
-   osg::ref_ptr<osg::LightModel> lightModel;
+   osg::ref_ptr< osg::Node > cadNode;///<Node representing the loaded in geometry file
+   osg::ref_ptr< osg::LightModel > lightModel;///<The light model of CADEntityHelper
 #elif _OPENSG
 #endif
 
-   bool twosidedlighting;
+   bool twosidedlighting;///<The current state of two sided lighting for the node
 
 };
 }
 
-#endif  //CADEntityHelper_H
+#endif //CADEntityHelper_H

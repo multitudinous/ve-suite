@@ -66,7 +66,7 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool i
    node->LoadFile( geomFile.c_str(), isStream );
    fileName.assign( geomFile );
    dcs->SetName( "CADEntityDCS" );
-	dcs->addChild( node->GetNode() );
+   dcs->addChild( node->GetNode() );
    worldDCS->AddChild( dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,20 +79,20 @@ CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph:
 
    fileName = node->GetNode()->getName();
    dcs->SetName( "CADEntityDCS" );
-	dcs->addChild( node->GetNode() );
+   dcs->addChild( node->GetNode() );
    worldDCS->AddChild( dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
 {
-	delete node;
+   delete node;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics( void )
 {
    rigid_body = new VE_SceneGraph::PhysicsRigidBody( node->GetNode() );
 
-	dcs->SetbtRigidBody( rigid_body.get() );
+   dcs->SetbtRigidBody( rigid_body.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()

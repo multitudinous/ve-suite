@@ -72,72 +72,74 @@ btRigidBody( btScalar( 1.0f ),                                          //mass
              btVector3( 0.0f, 0.0f, 0.0f ),                             //localInertia
              btScalar( 0.0f ),                                          //linearDamping
              btScalar( 0.0f ),                                          //angularDamping
-             btScalar( 0.5f ),                                          //friction
+             btScalar( 1.0f ),                                          //friction
              btScalar( 0.0f ) ),                                        //restitution
 
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-	tri_mesh = 0;
+   tri_mesh = 0;
    collision_shape = 0;
 
-	node->accept( *this );
+   node->accept( *this );
 
-   this->CreateBoundingBoxShape();
+   //this->CreateBoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()
 {
    if( tri_mesh )
-	{
-		delete tri_mesh;
-	}
+   {
+	   delete tri_mesh;
+   }
 
-	if( collision_shape )
-	{
-		delete collision_shape;
-	}
+   if( collision_shape )
+   {
+	   delete collision_shape;
+   }
+
+   //VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::apply( osg::Geode& geode )
 { 
    tri_mesh = new btTriangleMesh;
 
-	for( size_t i = 0; i < geode.getNumDrawables(); i++ )
-	{
-		osg::TriangleIndexFunctor< TriIndexFunc > TIF;
-		osg::ref_ptr< osg::Vec3Array > vertex_array;
+   for( size_t i = 0; i < geode.getNumDrawables(); i++ )
+   {
+	   osg::TriangleIndexFunctor< TriIndexFunc > TIF;
+	   osg::ref_ptr< osg::Vec3Array > vertex_array;
 
-		geode.getDrawable( i )->accept( TIF );
-		vertex_array = static_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
+	   geode.getDrawable( i )->accept( TIF );
+	   vertex_array = static_cast< osg::Vec3Array* >( geode.getDrawable( i )->asGeometry()->getVertexArray() );
 
-		bb.expandBy( geode.getDrawable( i )->getBound() );
+	   bb.expandBy( geode.getDrawable( i )->getBound() );
 
-		btVector3 v1, v2, v3;
+	   btVector3 v1, v2, v3;
 
-		for( size_t j = 0; j < TIF.triangleIndex.size() / 3; j++ )
-		{
-			tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( j*3  ) ).x(),
-														 vertex_array->at( TIF.triangleIndex.at( j*3  ) ).y(),
-														 vertex_array->at( TIF.triangleIndex.at( j*3  ) ).z() ),
-										  btVector3( vertex_array->at( TIF.triangleIndex.at( j*3+1) ).x(),
-														 vertex_array->at( TIF.triangleIndex.at( j*3+1) ).y(),
-														 vertex_array->at( TIF.triangleIndex.at( j*3+1) ).z() ),
-										  btVector3( vertex_array->at( TIF.triangleIndex.at( j*3+2) ).x(),
-														 vertex_array->at( TIF.triangleIndex.at( j*3+2) ).y(),
-														 vertex_array->at( TIF.triangleIndex.at( j*3+2) ).z() ) );
-		}
-	}
+	   for( size_t j = 0; j < TIF.triangleIndex.size() / 3; j++ )
+	   {
+		   tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( j*3  ) ).x(),
+													    vertex_array->at( TIF.triangleIndex.at( j*3  ) ).y(),
+													    vertex_array->at( TIF.triangleIndex.at( j*3  ) ).z() ),
+									     btVector3( vertex_array->at( TIF.triangleIndex.at( j*3+1) ).x(),
+													    vertex_array->at( TIF.triangleIndex.at( j*3+1) ).y(),
+													    vertex_array->at( TIF.triangleIndex.at( j*3+1) ).z() ),
+									     btVector3( vertex_array->at( TIF.triangleIndex.at( j*3+2) ).x(),
+													    vertex_array->at( TIF.triangleIndex.at( j*3+2) ).y(),
+													    vertex_array->at( TIF.triangleIndex.at( j*3+2) ).z() ) );
+	   }
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::setMass( float mass )
 {
-	//btRigidBody* is dynamic if and only if mass is non zero, otherwise static
+   //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
    bool dynamic = ( mass != 0.0f );
 
    btVector3 localInertia( 0, 0, 0 );
    if( dynamic )
    {
-	   collision_shape->calculateLocalInertia( mass, localInertia );
+      collision_shape->calculateLocalInertia( mass, localInertia );
    }
 
    this->setMassProps( mass, localInertia );
@@ -155,9 +157,9 @@ void PhysicsRigidBody::CreateBoundingBoxShape()
       delete collision_shape;
    }
 
-	collision_shape = new btBoxShape( btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
-															   ( bb.yMax() - bb.yMin() ) * 0.5f,
-																( bb.zMax() - bb.zMin() ) * 0.5f ) );
+   collision_shape = new btBoxShape( btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
+														      ( bb.yMax() - bb.yMin() ) * 0.5f,
+															   ( bb.zMax() - bb.zMin() ) * 0.5f ) );
 
    this->setCollisionShape( collision_shape );
 
@@ -176,7 +178,7 @@ void PhysicsRigidBody::CreateStaticConcaveShape()
       delete collision_shape;
    }
 
-	collision_shape = new btBvhTriangleMeshShape( tri_mesh, false );
+   collision_shape = new btBvhTriangleMeshShape( tri_mesh, false );
 
    this->setMass( 0.0f );
 
@@ -197,7 +199,7 @@ void PhysicsRigidBody::CreateConvexShape()
       delete collision_shape;
    }
 
-	collision_shape = new btConvexTriangleMeshShape( tri_mesh );
+   collision_shape = new btConvexTriangleMeshShape( tri_mesh );
 
    this->setCollisionShape( collision_shape );
 

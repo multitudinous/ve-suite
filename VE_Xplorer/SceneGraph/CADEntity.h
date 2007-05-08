@@ -53,8 +53,8 @@
 
 namespace VE_SceneGraph
 {
-	class DCS;
-	class CADEntityHelper;
+   class DCS;
+   class CADEntityHelper;
    class PhysicsRigidBody;
 }
 
@@ -82,12 +82,12 @@ public:
    ///\param geomFile
    ///\param worldDCS
    ///\param isStream
-	CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream = false );
+   CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream = false );
 
    ///Constructor that takes a CADEntityHelper and deep copies the osg node contained in the CADEntityHelper
    ///\param nodeToCopy
    ///\param worldDCS
-	CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS );
+   CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS );
 
    ///Destructor
    ~CADEntity();
@@ -97,7 +97,7 @@ public:
    void InitPhysics( void );
 
    ///Returns the DCS of CADEntity
-	VE_SceneGraph::DCS* GetDCS( void );
+   VE_SceneGraph::DCS* GetDCS( void );
 
    ///Returns the node of CADEntity
    VE_SceneGraph::CADEntityHelper* GetNode( void );
@@ -120,8 +120,8 @@ public:
    void SetTransparencyFlag( bool );
 
 private:
-	VE_SceneGraph::CADEntityHelper* node;///<
-	osg::ref_ptr< VE_SceneGraph::DCS > dcs;///<The DCS of 
+   VE_SceneGraph::CADEntityHelper* node;///<
+   osg::ref_ptr< VE_SceneGraph::DCS > dcs;///<The DCS of 
    osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > rigid_body;///<The physics representation of the node read in
 
    bool _transparencyFlag;///<The current state of transparency
