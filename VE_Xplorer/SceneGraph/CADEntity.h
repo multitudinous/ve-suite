@@ -90,7 +90,7 @@ public:
    CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS );
 
    ///Destructor
-   ~CADEntity();
+   ~CADEntity( void );
 
    ///This will initialize physics for CADEntity
    ///Unless this is called, physics will not work
@@ -108,20 +108,16 @@ public:
    ///Returns the filename of CADEntity
    std::string GetFilename( void );
 
-   ///Returns the transparency state of CADEntity
+   ///Returns the transparency state of the node
    bool GetTransparentFlag( void );
 
-   ///
-   ///\param
-   void SetGeometryFilename( std::string );
-
-   ///
-   ///\param
-   void SetTransparencyFlag( bool );
+   ///Set the transparency state of the node
+   ///\param x The transparency state
+   void SetTransparencyFlag( bool x );
 
 private:
-   VE_SceneGraph::CADEntityHelper* node;///<
-   osg::ref_ptr< VE_SceneGraph::DCS > dcs;///<The DCS of 
+   VE_SceneGraph::CADEntityHelper* cad_helper;///<
+   osg::ref_ptr< VE_SceneGraph::DCS > dcs;///<The DCS of CADEntity
    osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > rigid_body;///<The physics representation of the node read in
 
    bool _transparencyFlag;///<The current state of transparency

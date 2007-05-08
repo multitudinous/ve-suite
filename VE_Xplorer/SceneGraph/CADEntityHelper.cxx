@@ -74,7 +74,7 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-CADEntityHelper::CADEntityHelper()
+CADEntityHelper::CADEntityHelper( void )
 {
    twosidedlighting = false;
 }
@@ -135,7 +135,7 @@ CADEntityHelper::~CADEntityHelper( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-osg::Node* CADEntityHelper::GetNode(void)
+osg::Node* CADEntityHelper::GetNode( void )
 #elif _OPENSG
 #endif
 {
@@ -145,7 +145,7 @@ osg::Node* CADEntityHelper::GetNode(void)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::SetName(std::string name)
+void CADEntityHelper::SetName( std::string name )
 {
    if( GetNode() )
    {
@@ -255,6 +255,7 @@ void CADEntityHelper::LoadFile( std::string filename,
    std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );
 #endif
+
 #ifdef _OSG
    if( cadNode.valid() )
    {

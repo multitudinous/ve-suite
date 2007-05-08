@@ -61,12 +61,12 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool i
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
    this->dcs = new VE_SceneGraph::DCS();
-   this->node = new VE_SceneGraph::CADEntityHelper();
+   this->cad_helper = new VE_SceneGraph::CADEntityHelper();
 
-   node->LoadFile( geomFile.c_str(), isStream );
+   cad_helper->LoadFile( geomFile.c_str(), isStream );
    fileName.assign( geomFile );
    dcs->SetName( "CADEntityDCS" );
-   dcs->addChild( node->GetNode() );
+   dcs->addChild( cad_helper->GetNode() );
    worldDCS->AddChild( dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,47 +75,47 @@ CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph:
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
    this->dcs = new VE_SceneGraph::DCS();
-   this->node = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
+   this->cad_helper = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
 
-   fileName = node->GetNode()->getName();
+   fileName = cad_helper->GetNode()->getName();
    dcs->SetName( "CADEntityDCS" );
-   dcs->addChild( node->GetNode() );
+   dcs->addChild( cad_helper->GetNode() );
    worldDCS->AddChild( dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::~CADEntity()
+CADEntity::~CADEntity( void )
 {
-   delete node;
+   delete cad_helper;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics( void )
 {
-   rigid_body = new VE_SceneGraph::PhysicsRigidBody( node->GetNode() );
+   rigid_body = new VE_SceneGraph::PhysicsRigidBody( cad_helper->GetNode() );
 
    dcs->SetbtRigidBody( rigid_body.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
+VE_SceneGraph::CADEntityHelper* CADEntity::GetNode( void )
 {
-   return node;
+   return cad_helper;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* CADEntity::GetDCS()
+VE_SceneGraph::DCS* CADEntity::GetDCS( void )
 {
    return dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::PhysicsRigidBody* CADEntity::GetRigidBody()
+VE_SceneGraph::PhysicsRigidBody* CADEntity::GetRigidBody( void )
 {
    return rigid_body.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CADEntity::GetFilename()
+std::string CADEntity::GetFilename( void )
 {
    return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CADEntity::GetTransparentFlag()
+bool CADEntity::GetTransparentFlag( void )
 {
    return _transparencyFlag;
 }

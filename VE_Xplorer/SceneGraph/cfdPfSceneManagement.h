@@ -34,89 +34,110 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PFSCENEMANAGEMENT_H
 #define CFD_PFSCENEMANAGEMENT_H
+
 /*!\file cfdPfSceneManagement.h
-cfdPfSceneManagement API
 */
 
 /*!\class VE_SceneGraph::cfdPfSceneManagement
 *
 */
-#include <vpr/Util/Singleton.h>
+
+/*!\namespace VE_SceneGraph
+*
+*/
+
+// --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
+
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 
-#ifdef _PERFORMER
-class pfLightModel;
-class pfLightSource;
-#elif _OSG
-#include <osg/ref_ptr>
-#endif
-
 namespace VE_SceneGraph
 {
-	class DCS;
+   class DCS;
    class Group;
    class Switch;
-	class CADEntity;
+   class CADEntity;
 }
+
+// --- VR Juggler Includes --- //
+#include <vpr/Util/Singleton.h>
+
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/ref_ptr>
+#endif
 
 namespace VE_SceneGraph
 {
 class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
 {
 public:
-   void Initialize( std::string );
+   ///
+   ///\param param
+   void Initialize( std::string param );
+
+   ///
    void CleanUp( void );
+
+   ///
    void InitScene( void );
 
-	VE_SceneGraph::Group* GetRootNode( void );
-	VE_SceneGraph::DCS* GetWorldDCS( void );
-	VE_SceneGraph::DCS* GetNetworkDCS( void );
-	VE_SceneGraph::DCS* GetActiveSwitchNode( void );
+   ///Return the root node of the scenegraph
+   VE_SceneGraph::Group* GetRootNode( void );
+
+   ///Return the world DCS of the scenegraph
+   VE_SceneGraph::DCS* GetWorldDCS( void );
+
+   ///Return the network DCS of the scenegraph
+   VE_SceneGraph::DCS* GetNetworkDCS( void );
+
+   ///Return the active switch node of the scenegraph
+   VE_SceneGraph::DCS* GetActiveSwitchNode( void );
 
    ///Set the node on the switch node that is active
-   ///\param activeNode node to activate
+   ///\param activeNode The node to activate
    void SetActiveSwitchNode( int activeNode );
 
    ///Switch the logo on and off
-   ///\param trueFalse Turn the logo on and off.
-   void ViewLogo(bool trueFalse);
+   ///\param trueFalse Turn the logo on and off
+   void ViewLogo( bool trueFalse );
 
-   ///PreFrameUpdate call to sync dcs information across cluster
+   ///PreFrameUpdate call to sync DCS information across cluster
    void PreFrameUpdate( void );
 
 private:
-   // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdPfSceneManagement >;
-   //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
-   //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
+   //Required so that vpr::Singleton can instantiate this class
+   //Friend class vpr::Singleton< cfdPfSceneManagement >;
+   //cfdPfSceneManagement(const cfdPfSceneManagement& o){;}
+   //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o){;}
+
+   ///Base Constructor
    cfdPfSceneManagement( void );
-   ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
+
+   ///Destructor
+   ///Never gets called, don't implement
+   ~cfdPfSceneManagement( void ){;}
+
    vprSingletonHeader( cfdPfSceneManagement );
 
-   //std::string    param;
-   std::string _param;
-   osg::ref_ptr< VE_SceneGraph::Group > rootNode;
-   osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;
+   std::string _param;///<
+   osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<
+   osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;///<
    osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
-	osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
+   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
    osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
    VE_SceneGraph::CADEntity* _movingPyramidsAssembly;///<Logo Animated pyramids
    VE_SceneGraph::CADEntity* _textPart;///<Logo Text
 
-   #ifdef _PERFORMER
-      pfLightModel*  sunModel;
-      pfLightSource* sun;
-      pfLightSource* lit;
+protected:
+   ///Create the model for the logo
+   #ifdef _OSG
+      void _createLogo( void );
    #endif
 
-protected:
-   ///create the model for the logo.
-   #ifdef _OSG
-      void _createLogo();
-   #endif
 };
 }
-#endif
+
+#endif //CFD_PFSCENEMANAGEMENT_H

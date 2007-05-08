@@ -114,7 +114,7 @@ class VE_SCENEGRAPH_EXPORTS CADEntityHelper
 {
 public:
    ///Base Constructor
-   CADEntityHelper();
+   CADEntityHelper( void );
 
    ///Copy constructor
    ///\param CADEntityHelper
