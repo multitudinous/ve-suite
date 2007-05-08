@@ -203,14 +203,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\cfdVolumeBillboard.cxx"
-					>
-				</File>
-				<File
-					RelativePath=".\cfdVolumeCenterCallback.cxx"
-					>
-				</File>
-				<File
 					RelativePath=".\cfdVolumeVisualization.cxx"
 					>
 				</File>
@@ -252,14 +244,6 @@
 				</File>
 				<File
 					RelativePath=".\cfdTextureMatrixCallback.h"
-					>
-				</File>
-				<File
-					RelativePath=".\cfdVolumeBillboard.h"
-					>
-				</File>
-				<File
-					RelativePath=".\cfdVolumeCenterCallback.h"
 					>
 				</File>
 				<File

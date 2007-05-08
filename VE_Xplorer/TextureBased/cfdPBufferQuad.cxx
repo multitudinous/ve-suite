@@ -306,8 +306,17 @@ void cfdPBufferQuad::_drawHardCodedTCoords(osg::State& state)const
 
 }
 ///////////////////////////////////////////////////////////////
-void cfdPBufferQuad::drawImplementation(osg::State& state)const
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+void cfdPBufferQuad::drawImplementation(osg::RenderInfo& renderState)const
+#elif ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR<=2))
+void cfdPBufferQuad::drawImplementation(osg::State& renderState)const
+#endif
 {
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2)) 
+   osg::State& state = *(renderState.getState());
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+   osg::State& state = renderState;
+#endif
    if(!_bbSet){
       std::cout<<"BBox not set for cfdPBufferQuad!!"<<std::endl;
       return;
@@ -334,7 +343,7 @@ void cfdPBufferQuad::drawImplementation(osg::State& state)const
       glDisable(GL_TEXTURE_GEN_T);
       glDisable(GL_TEXTURE_GEN_R);
       
-      _drawHardCodedTCoords(state);
+	  _drawHardCodedTCoords(state);
    }
    curSlice++;
 }

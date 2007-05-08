@@ -34,8 +34,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_TEXTURE_DATA_SET_H
 #define CFD_TEXTURE_DATA_SET_H
-/*!\file TextureDataInfo.h
-* TextureDataInfo API
+/*!\file TextureDataSet.h
+* TextureData API
 */
 
 /*!\class VE_TextureBased::TextureDataInfo
@@ -72,49 +72,90 @@ protected:
    cfdTextureManager* _tm;
 };
 
+
+/*!\class VE_TextureBased::cfdTextureDataSet
+*
+*/
 class VE_TEXTURE_BASED_EXPORTS cfdTextureDataSet
 {
 public:
+   ///Constructor
    cfdTextureDataSet();
+   ///Destructor
    virtual ~cfdTextureDataSet();
 
    enum DataType {SCALAR,VECTOR};
 
+   ///Set the active scalar by name
+   ///\param name The name of the desired active scalar
    void SetActiveScalar(std::string name);
+   
+   ///Set the active vector by name
+   ///\param name The name of the desired active vector
    void SetActiveVector(std::string name);
+   
+   ///DERPICATED.\nSet the name of the text file describing the texture data
+   ///\param name Full path to the text file describing the texture data
    void SetFileName(std::string name);
-   void CreateTextureManager(std::string textureDescriptionFile);
-   void AddScalarTextureManager( cfdTextureManager* );
-   void AddVectorTextureManager( cfdTextureManager* );
 
+   ///Create a cfdTextureManager from data in the given directory
+   ///\param textureDataDirectory The directory containing the texture data
+   void CreateTextureManager(std::string textureDataDirectory);
+   
+   ///Add cfdTextureManager data to the scalar list
+   ///\param scalarrData cfdTextureManager containing scalar data
+   void AddScalarTextureManager( cfdTextureManager* scalarData);
+   
+   ///Add cfdTextureManager data to the vector list
+   ///\param vectorData cfdTextureManager containing vector data
+   void AddVectorTextureManager( cfdTextureManager* vectorData);
+
+   ///Find a vector by name. Return -1 if not found.
+   ///\param name The name of the vector to search for.r
    int FindVector(std::string name);
+   
+   ///Find a scalar by name. Return -1 if not found.
+   ///\param name The name of the scalar to search for.
    int FindScalar(std::string name);
 
+   ///Get the number of scalars in this texture dataset
    unsigned int NumberOfScalars();
+   
+   ///Get the number of vectors
    unsigned int NumberOfVectors();
 
+   ///Return the name of the scalar data referenced at index
+   ///\param index The position within  the scalar data
    std::string ScalarName(unsigned int index);
+   
+   ///Return the name of the vector data referenced at index
+   ///\param index The position within  the vector data
    std::string VectorName(unsigned int index);
 
+   ///Get the active data type
    DataType ActiveDataType();
 
+   ///Get the active cfdTextureManager
    cfdTextureManager* GetActiveTextureManager();
+   
+   ///Get the cfdVolumeVisualizationNode
    cfdVolumeVisualization* GetVolumeVisNode();
 protected:
-   DataType _activeDataType;
-   unsigned int _nScalars;
-   unsigned int _nVectors;
-   std::string _fileName;
-   cfdVolumeVisualization* _volVisNode;
-   cfdTextureManager* _activeTM;
+
+   DataType _activeDataType;///<The active data type
+   unsigned int _nScalars;///<The number of scalars
+   unsigned int _nVectors;///<The number of vectors
+   std::string _fileName;///<DEPRICATED: The name of the file describing the texture data.
+   cfdVolumeVisualization* _volVisNode;///<The volume visualization rendering node
+   cfdTextureManager* _activeTM;///<The active cfdTextureManager
 
    typedef std::vector<TextureDataInfo*> TextureDataList;
 
-   std::vector<std::string> _scalarNames;
-   std::vector<std::string> _vectorNames;
+   std::vector<std::string> _scalarNames;///<Names of the available scalars
+   std::vector<std::string> _vectorNames;///<Names of the available vectors
 
-   TextureDataList _scalars;
-   TextureDataList _vectors;
+   TextureDataList _scalars;///<The list of TextureDataInfo for each available scalar
+   TextureDataList _vectors;///<The list of TextureDataInfo for each available vector
 };
 }
 #endif

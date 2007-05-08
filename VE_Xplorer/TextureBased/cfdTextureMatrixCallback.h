@@ -59,15 +59,23 @@ namespace VE_TextureBased
    class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback : public osg::NodeCallback
    {
       public:
+         ///Callback that updates the texture matrix
+         ///\param texmat The osg::TexMat to update
+         ///\param center The center of the data
+         ///\param scale The scale of the data (compared to unit cube)
+         ///\param trans The translation for the texture matrix
          cfdTextureMatrixCallback(osg::TexMat* texmat,osg::Vec3f center,
                        float* scale,float* trans);
+         ///Update the texture matrix
+         ///\param node The osg::Node to update
+         ///\param nv The osg::NodeVisitor
          virtual void operator()(osg::Node* node,osg::NodeVisitor* nv);
     
       protected:
-         float _trans[3];
-         float _scale[3];
-         osg::Vec3f _center;
-        mutable osg::ref_ptr<osg::TexMat> _texMat;
+         float _trans[3];///<Translation vector
+         float _scale[3];///<The scale vector
+         osg::Vec3f _center;///<The center
+        mutable osg::ref_ptr<osg::TexMat> _texMat;///<The texture matrix
    };
 }
 #endif //_OSG

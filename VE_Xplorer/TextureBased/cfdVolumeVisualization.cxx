@@ -40,7 +40,6 @@
 
 #include "VE_Xplorer/TextureBased/cfdAdvectionSubGraph.h"
 #include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
-#include "VE_Xplorer/TextureBased/cfdVolumeCenterCallback.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 #include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
 
