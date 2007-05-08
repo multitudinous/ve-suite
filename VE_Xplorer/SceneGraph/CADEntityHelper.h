@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CADEntityHelper_H
-#define CADEntityHelper_H
+#ifndef CAD_ENTITY_HELPER_H
+#define CAD_ENTITY_HELPER_H
 
 /*!\file CADEntityHelper.h
 */
@@ -157,14 +157,14 @@ public:
                   );
 protected:
 #ifdef _OSG
-   osg::ref_ptr< osg::Node > cadNode;///<Node representing the loaded in geometry file
-   osg::ref_ptr< osg::LightModel > lightModel;///<The light model of CADEntityHelper
+   osg::ref_ptr< osg::Node > m_cadNode;///<Node representing the loaded in geometry file
+   osg::ref_ptr< osg::LightModel > m_lightModel;///<The light model of CADEntityHelper
 #elif _OPENSG
 #endif
 
-   bool twosidedlighting;///<The current state of two sided lighting for the node
+   bool m_twoSidedLighting;///<The current state of two sided lighting for the node
 
 };
 }
 
-#endif //CADEntityHelper_H
+#endif //CAD_ENTITY_HELPER_H

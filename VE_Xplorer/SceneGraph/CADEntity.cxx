@@ -56,7 +56,7 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream )
+CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool isStream )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -67,10 +67,10 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool i
    m_fileName.assign( geomFile );
    m_dcs->SetName( "CADEntityDCS" );
    m_dcs->addChild( m_cadEntityHelper->GetNode() );
-   worldDCS->AddChild( m_dcs.get() );
+   parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS )
+CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS )
 {
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
@@ -80,7 +80,7 @@ CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph:
    m_fileName = m_cadEntityHelper->GetNode()->getName();
    m_dcs->SetName( "CADEntityDCS" );
    m_dcs->addChild( m_cadEntityHelper->GetNode() );
-   worldDCS->AddChild( m_dcs.get() );
+   parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity( void )

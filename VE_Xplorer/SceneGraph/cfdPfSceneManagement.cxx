@@ -30,13 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#ifndef WIN32
+#include <sys/types.h>
+//biv--check here if build/run problems occur
+#else
+//#include <windows.h>
+#endif
+
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Xplorer/SceneGraph/Text.h"
 #include "VE_Xplorer/SceneGraph/Triangles.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
-/// Performer libraries
+// --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Group>
 #include <osg/Node>
@@ -48,14 +56,7 @@
 #include <osg/Switch>
 #endif
 
-#ifndef WIN32
-#include <sys/types.h>
-//biv--check here if build/run problems occur
-#else
-//#include <windows.h>
-#endif
-
-//C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 #include <string>
 #include <istream>
@@ -63,7 +64,7 @@
 
 using namespace VE_SceneGraph;
 
-vprSingletonImp(cfdPfSceneManagement );
+vprSingletonImp( cfdPfSceneManagement );
 
 cfdPfSceneManagement::cfdPfSceneManagement( void )
 {
@@ -115,7 +116,7 @@ void cfdPfSceneManagement::InitScene( void )
    _logoSwitch->AddChild( networkDCS.get() );
 
    //Now lets put it on the main group node
-   //remember that the logo switch is right below the group node 
+   //Remember that the logo switch is right below the group node 
    //NOT the world dcs
    rootNode->AddChild( _logoSwitch.get() );
 }

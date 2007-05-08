@@ -76,29 +76,29 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( void )
 {
-   twosidedlighting = false;
+   m_twoSidedLighting = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
 #ifdef _OSG
-   if( input.cadNode.valid() )
+   if( input.m_cadNode.valid() )
    {
       ///We deep copy nodes so that picking is accurate and so that physics will work properly in the future
-      if( input.cadNode->asGroup() )
+      if( input.m_cadNode->asGroup() )
       {
-         cadNode = new osg::Group( *input.cadNode->asGroup(), osg::CopyOp::DEEP_COPY_NODES );
+         m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), osg::CopyOp::DEEP_COPY_NODES );
       }
 
-      else if( dynamic_cast< osg::Geode* >( input.cadNode.get() ) )
+      else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
       {
-         cadNode = new osg::Geode( *static_cast< osg::Geode* >( input.cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+         m_cadNode = new osg::Geode( *static_cast< osg::Geode* >( input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
       }
 
       else
       {
          std::cout << "ERROR : Cast not present " << std::endl;
-         std::cout << typeid( *input.cadNode.get() ).name() << std::endl;
+         std::cout << typeid( *input.m_cadNode.get() ).name() << std::endl;
       }
    }
 
@@ -116,8 +116,8 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
    {
 #ifdef _OSG
       //Recreate the node
-      //cadNode->unref();
-      cadNode = input.cadNode;
+      //m_cadNode->unref();
+      m_cadNode = input.m_cadNode;
 #elif _OPENSG
 #endif
    }
@@ -129,7 +129,7 @@ CADEntityHelper::~CADEntityHelper( void )
 {
    //If neccesary
 #ifdef _OSG
-   //cadNode->unref();
+   //m_cadNode->unref();
 #elif _OPENSG
 #endif
 }
@@ -140,7 +140,7 @@ osg::Node* CADEntityHelper::GetNode( void )
 #endif
 {
 #ifdef _OSG
-   return cadNode.get();
+   return m_cadNode.get();
 #elif _OPENSG
 #endif
 }
@@ -195,7 +195,7 @@ void CADEntityHelper::LoadFile( std::string filename,
    //if ( strstr( filestring.str().c_str(), ".stl") || strstr( filestring.str().c_str(), ".stla" ) )
    if( strstr( filename.c_str(), ".stl" ) || strstr( filename.c_str(), ".stla" ) )
    {
-      twosidedlighting = true;
+      m_twoSidedLighting = true;
    }
 
 #ifdef _OSG
@@ -225,8 +225,8 @@ void CADEntityHelper::LoadFile( std::string filename,
          
          std::cout << std::endl;
          
-         cadNode = rr.getNode();
-         if( !cadNode.valid() )
+         m_cadNode = rr.getNode();
+         if( !m_cadNode.valid() )
          {
             std::cerr << "Error: could not load file `" << filename << "'" << std::endl;
          }
@@ -234,21 +234,21 @@ void CADEntityHelper::LoadFile( std::string filename,
 
       else
       {
-         cadNode = osgDB::readNodeFile( filename );
+         m_cadNode = osgDB::readNodeFile( filename );
       }
    }
 
    else
    {
       std::istringstream textNodeStream( filename );
-      cadNode = osgDB::Registry::instance()->getReaderWriterForExtension( "osg" )->readNode( textNodeStream ).getNode();
+      m_cadNode = osgDB::Registry::instance()->getReaderWriterForExtension( "osg" )->readNode( textNodeStream ).getNode();
    }
 
-   if ( twosidedlighting && cadNode.valid() )
+   if ( m_twoSidedLighting && m_cadNode.valid() )
    {
-      lightModel = new osg::LightModel;
-      lightModel->setTwoSided( true );
-      cadNode->getOrCreateStateSet()->setAttributeAndModes( lightModel.get(), osg::StateAttribute::ON );
+      m_lightModel = new osg::LightModel;
+      m_lightModel->setTwoSided( true );
+      m_cadNode->getOrCreateStateSet()->setAttributeAndModes( m_lightModel.get(), osg::StateAttribute::ON );
    }  
       
 #elif _OPENSG
@@ -257,10 +257,10 @@ void CADEntityHelper::LoadFile( std::string filename,
 #endif
 
 #ifdef _OSG
-   if( cadNode.valid() )
+   if( m_cadNode.valid() )
    {
 #endif
-      cadNode->setName( filename.c_str() );
+      m_cadNode->setName( filename.c_str() );
    }
    else
    {
