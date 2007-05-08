@@ -92,13 +92,9 @@ public:
 
    ///Return the cloned structure including the transform
    VE_SceneGraph::DCS* GetClonedGraph( void );
-
-   ///
-   ///\param node
-   osg::Node* CloneSubNode( osg::Node* node );
    
 protected:
-   osg::ref_ptr< VE_SceneGraph::DCS > cloneTransform;///<The cloned structure including the transform
+   osg::ref_ptr< VE_SceneGraph::DCS > m_cloneTransform;///<The cloned structure including the transform
 
 };
 }

@@ -30,25 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/Clone.h"
-
 #include "VE_Xplorer/SceneGraph/Group.h"
-#ifdef _OSG
-#include <osg/MatrixTransform>
-#include <osg/CopyOp>
-#include <osg/Geode>
 
-#elif _PERFORMER
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/Geode>
+#include <osg/CopyOp>
+#include <osg/MatrixTransform>
 #elif _OPENSG
 #endif
 
+// --- C/C++ Libraries --- //
 #include <typeinfo>
 #include <iostream>
 
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Clone::Clone()
+Clone::Clone( void )
 {
    ;
 }
@@ -58,27 +59,26 @@ Clone::Clone( osg::Node* original )
    CloneNode( original );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Clone::~Clone()
+Clone::~Clone( void )
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::CloneNode( osg::Node* original )
 {
-   if ( !cloneTransform.valid() )
+   if( !m_cloneTransform.valid() )
    {
-	   cloneTransform = new VE_SceneGraph::DCS();
+	   m_cloneTransform = new VE_SceneGraph::DCS();
    }
    
-   ///We deep copy nodes so that picking is accurate and so that physics will
-   ///work properly in the future.
-   if ( dynamic_cast< VE_SceneGraph::DCS* >( original ) )
+   //Deep copy nodes so that picking is accurate and so that physics will work properly in the future
+   if( dynamic_cast< VE_SceneGraph::DCS* >( original ) )
    {
-      cloneTransform = new VE_SceneGraph::DCS( *static_cast< VE_SceneGraph::DCS* >( original ), osg::CopyOp::DEEP_COPY_NODES );
+      m_cloneTransform = new VE_SceneGraph::DCS( *static_cast< VE_SceneGraph::DCS* >( original ), osg::CopyOp::DEEP_COPY_NODES );
    }
-   else if (  dynamic_cast< osg::Geode* >( original ) )
+   else if( dynamic_cast< osg::Geode* >( original ) )
    {
-      cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), osg::CopyOp::DEEP_COPY_NODES ) );
+      m_cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), osg::CopyOp::DEEP_COPY_NODES ) );
    }
    else
    {
@@ -89,33 +89,33 @@ void Clone::CloneNode( osg::Node* original )
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::SetTranslationArray( float* translation )
 {
-   if ( cloneTransform.valid() )
+   if( m_cloneTransform.valid() )
    {
-      cloneTransform->SetTranslationArray( translation );
+      m_cloneTransform->SetTranslationArray( translation );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::SetRotationArray( float* rotation )
 {
-   if ( cloneTransform.valid() )
+   if( m_cloneTransform.valid() )
    {
-      cloneTransform->SetRotationArray(rotation);
+      m_cloneTransform->SetRotationArray( rotation );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Clone::SetScaleArray(float* scale)
+void Clone::SetScaleArray( float* scale )
 {
-   if ( cloneTransform.valid() )
+   if( m_cloneTransform.valid() )
    {
-      cloneTransform->SetScaleArray( scale );
+      m_cloneTransform->SetScaleArray( scale );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* Clone::GetClonedGraph()
+VE_SceneGraph::DCS* Clone::GetClonedGraph( void )
 {
-   if( cloneTransform.valid() )
+   if( m_cloneTransform.valid() )
    {
-      return cloneTransform.get();
+      return m_cloneTransform.get();
    }
 
    return 0;
