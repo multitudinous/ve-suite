@@ -53,16 +53,16 @@
 #include <gmtl/Vec.h>
 
 // --- OSG Stuff --- //
+#include <osg/Array>
 #include <osg/Group>
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/BoundingSphere>
-#include <osg/BoundingBox>
-//#include <osg/PolygonStipple>
 #include <osg/LineWidth>
 #include <osg/LineSegment>
-#include <osg/Array>
 #include <osg/NodeVisitor>
+#include <osg/BoundingBox>
+#include <osg/BoundingSphere>
+//#include <osg/PolygonStipple>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -248,11 +248,11 @@ void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
 {
-   wc_screen_xmin = values.find( "xmin" )->second;
-   wc_screen_xmax = values.find( "xmax" )->second;
-   wc_screen_ymin = values.find( "ymin" )->second;
-   wc_screen_ymax = values.find( "ymax" )->second;
-   wc_screen_zval = values.find( "zval" )->second;
+   wc_screen_xmin = values["xmin"];
+   wc_screen_xmax = values["xmax"];
+   wc_screen_ymin = values["ymin"];
+   wc_screen_ymax = values["ymax"];
+   wc_screen_zval = values["zval"];
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessKBEvents( int mode )
@@ -455,7 +455,7 @@ void KeyboardMouse::NavKeyboard( void )
 {
    //If "r" is pressed
    if( key == 35 )
-	{
+	{  
       ResetTransforms();
    }
 
@@ -463,6 +463,12 @@ void KeyboardMouse::NavKeyboard( void )
    else if( key == 23 )
 	{
       FrameAll();
+   }
+
+   //If "s" is pressed
+   else if( key == 36 )
+   {
+      VE_SceneGraph::PhysicsSimulator::instance()->StepSimulation();
    }
    
    //Reset key

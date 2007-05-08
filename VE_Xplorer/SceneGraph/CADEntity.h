@@ -33,18 +33,29 @@
 #ifndef CAD_ENTITY_H
 #define CAD_ENTITY_H
 
+/*!\file CADEntity.h
+*/
+
+/*!\class VE_SceneGraph::CADEntity
+* 
+*/
+
+/*!\namespace VE_SceneGraph
+*
+*/
+
 // --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
 
 //Should not have to include these here
 #include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Utilities/PhysicsRigidBody.h"
+#include "VE_Xplorer/SceneGraph/PhysicsRigidBody.h"
 
 namespace VE_SceneGraph
 {
 	class DCS;
 	class CADEntityHelper;
-   class Utilities::PhysicsRigidBody;
+   class PhysicsRigidBody;
 }
 
 // --- OSG Includes --- //
@@ -67,43 +78,56 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
-   ///
-	CADEntity( std::string, VE_SceneGraph::DCS*, bool isStream = false );
+   ///Base Constructor
+   ///\param geomFile
+   ///\param worldDCS
+   ///\param isStream
+	CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool isStream = false );
 
    ///Constructor that takes a CADEntityHelper and deep copies the osg node contained in the CADEntityHelper
+   ///\param nodeToCopy
+   ///\param worldDCS
 	CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS );
 
    ///Destructor
    ~CADEntity();
 
-   ///
+   ///This will initialize physics for CADEntity
+   ///Unless this is called, physics will not work
+   void InitPhysics( void );
+
+   ///Returns the DCS of CADEntity
 	VE_SceneGraph::DCS* GetDCS( void );
 
-   ///
+   ///Returns the node of CADEntity
    VE_SceneGraph::CADEntityHelper* GetNode( void );
 
+   ///Returns the rigid body of CADEntity
+   VE_SceneGraph::PhysicsRigidBody* GetRigidBody( void );
+
+   ///Returns the filename of CADEntity
+   std::string GetFilename( void );
+
+   ///Returns the transparency state of CADEntity
+   bool GetTransparentFlag( void );
+
    ///
-   btRigidBody* GetRigidBody( void );
-
-	void SetMass( float m );
-	void SetFriction( float friction );
-	void SetRestitution( float restitution );
-
-   void SetRigidBody( std::string type );
-
-   std::string GetFilename();
-   bool GetTransparentFlag();
+   ///\param
    void SetGeometryFilename( std::string );
+
+   ///
+   ///\param
    void SetTransparencyFlag( bool );
 
 private:
-	VE_SceneGraph::CADEntityHelper* node;
-	osg::ref_ptr< VE_SceneGraph::DCS > dcs;
-   osg::ref_ptr< VE_SceneGraph::Utilities::PhysicsRigidBody > rigid_body;
+	VE_SceneGraph::CADEntityHelper* node;///<
+	osg::ref_ptr< VE_SceneGraph::DCS > dcs;///<The DCS of 
+   osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > rigid_body;///<The physics representation of the node read in
 
-   bool _transparencyFlag;
+   bool _transparencyFlag;///<The current state of transparency
 
-   std::string fileName;
+   std::string fileName;///<The name of the geometry file loaded
+
 };
 }
 

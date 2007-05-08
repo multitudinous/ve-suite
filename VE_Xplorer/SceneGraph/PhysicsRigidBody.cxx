@@ -31,7 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/Utilities/PhysicsRigidBody.h"
+#include "VE_Xplorer/SceneGraph/PhysicsRigidBody.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -60,19 +61,19 @@ public:
    std::vector< unsigned int > triangleIndex;
 };
 
-using namespace VE_SceneGraph::Utilities;
+using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node )
 :
-btRigidBody( btScalar( 1.0f ),                     //mass
-             NULL,                                 //motionState
-             NULL,                                 //collisionShape
-             btVector3( 0.0f, 0.0f, 0.0f ),        //localInertia
-             btScalar( 0.0f ),                     //linearDamping
-             btScalar( 0.0f ),                     //angularDamping
-             btScalar( 0.5f ),                     //friction
-             btScalar( 0.0f ) ),                   //restitution
+btRigidBody( btScalar( 1.0f ),                                          //mass
+             new btDefaultMotionState( btTransform::getIdentity() ),    //motionState
+             collision_shape,                                           //collisionShape
+             btVector3( 0.0f, 0.0f, 0.0f ),                             //localInertia
+             btScalar( 0.0f ),                                          //linearDamping
+             btScalar( 0.0f ),                                          //angularDamping
+             btScalar( 0.5f ),                                          //friction
+             btScalar( 0.0f ) ),                                        //restitution
 
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
@@ -144,6 +145,11 @@ void PhysicsRigidBody::setMass( float mass )
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CreateBoundingBoxShape()
 {
+   if( this )
+   {
+      VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
+   }
+
    if( collision_shape )
    {
       delete collision_shape;
@@ -154,10 +160,17 @@ void PhysicsRigidBody::CreateBoundingBoxShape()
 																( bb.zMax() - bb.zMin() ) * 0.5f ) );
 
    this->setCollisionShape( collision_shape );
+
+   VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CreateStaticConcaveShape()
 {
+   if( this )
+   {
+      VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
+   }
+
    if( collision_shape )
    {
       delete collision_shape;
@@ -165,11 +178,20 @@ void PhysicsRigidBody::CreateStaticConcaveShape()
 
 	collision_shape = new btBvhTriangleMeshShape( tri_mesh, false );
 
+   this->setMass( 0.0f );
+
    this->setCollisionShape( collision_shape );
+
+   VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::CreateConvexShape()
 {
+   if( this )
+   {
+      VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
+   }
+
    if( collision_shape )
    {
       delete collision_shape;
@@ -178,5 +200,7 @@ void PhysicsRigidBody::CreateConvexShape()
 	collision_shape = new btConvexTriangleMeshShape( tri_mesh );
 
    this->setCollisionShape( collision_shape );
+
+   VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////

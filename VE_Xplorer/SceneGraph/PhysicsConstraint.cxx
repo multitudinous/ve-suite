@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Utilities/PhysicsConstraint.h"
+#include "VE_Xplorer/SceneGraph/PhysicsConstraint.h"
 
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -41,7 +41,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph::Utilities;
+using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsConstraint::PhysicsConstraint()

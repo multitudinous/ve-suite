@@ -30,26 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
-#ifdef _PERFORMER
-#include <Performer/pr/pfFog.h>
-#elif _OSG
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-#include <btBulletDynamicsCommon.h>
-
+// --- OSG Includes --- //
+#ifdef _OSG
 #include <osg/Fog>
 #include <osg/Node>
 #include <osg/Group>
 #include <osg/MatrixTransform>
 #endif
 
-//C/C++ libraries
+// --- Bullet Includes --- //
+#include <btBulletDynamicsCommon.h>
+
+// --- C/C++ Libraries --- //
 #include <cassert>
 
 using namespace VE_SceneGraph;
@@ -60,15 +61,13 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* worldDCS, bool i
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
    this->dcs = new VE_SceneGraph::DCS();
-   dcs->SetName( "CADEntityDCS" );
    this->node = new VE_SceneGraph::CADEntityHelper();
 
    node->LoadFile( geomFile.c_str(), isStream );
    fileName.assign( geomFile );
+   dcs->SetName( "CADEntityDCS" );
 	dcs->addChild( node->GetNode() );
    worldDCS->AddChild( dcs.get() );
-
-   rigid_body = new VE_SceneGraph::Utilities::PhysicsRigidBody( node->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* worldDCS )
@@ -76,14 +75,12 @@ CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph:
    //Need to fix this and move some code to Node
    //Leave some code here no more FILEInfo
    this->dcs = new VE_SceneGraph::DCS();
-   dcs->SetName( "CADEntityDCS" );
    this->node = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
-   fileName = node->GetNode()->getName();
 
+   fileName = node->GetNode()->getName();
+   dcs->SetName( "CADEntityDCS" );
 	dcs->addChild( node->GetNode() );
    worldDCS->AddChild( dcs.get() );
-
-   rigid_body = new VE_SceneGraph::Utilities::PhysicsRigidBody( node->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
@@ -91,62 +88,9 @@ CADEntity::~CADEntity()
 	delete node;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetMass( float mass )
+void CADEntity::InitPhysics( void )
 {
-   if( rigid_body.valid() )
-   {
-      rigid_body->setMass( mass );
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetFriction( float friction )
-{
-	if( rigid_body.valid() )
-	{
-		rigid_body->setFriction( friction );
-	}
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetRestitution( float restitution )
-{
-	if( rigid_body.valid() )
-	{
-		rigid_body->setRestitution( restitution );
-	}
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntity::SetRigidBody( std::string type )
-{
-   if( rigid_body.valid() )
-   {
-      VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( rigid_body.get() );
-   }
-
-   if( type == "BoundingBox" )
-   {
-      rigid_body->CreateBoundingBoxShape();
-   }
-
-   else if( type == "StaticConcave" )
-   {
-      rigid_body->setMass( 0.0f );
-
-      rigid_body->CreateStaticConcaveShape();
-   }
-
-   else if( type == "Convex" )
-   {
-      rigid_body->CreateConvexShape();
-   }
-
-   btTransform transform;
-   transform.setIdentity();
-
-	//Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* motion_state = new btDefaultMotionState( transform );
-   rigid_body->setMotionState( motion_state );
-   
-   VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( rigid_body.get() );
+   rigid_body = new VE_SceneGraph::PhysicsRigidBody( node->GetNode() );
 
 	dcs->SetbtRigidBody( rigid_body.get() );
 }
@@ -161,11 +105,10 @@ VE_SceneGraph::DCS* CADEntity::GetDCS()
    return dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-btRigidBody* CADEntity::GetRigidBody()
+VE_SceneGraph::PhysicsRigidBody* CADEntity::GetRigidBody()
 {
    return rigid_body.get();
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetFilename()
 {
@@ -181,3 +124,4 @@ void CADEntity::SetTransparencyFlag( bool x )
 {
    this->_transparencyFlag = x;
 }
+////////////////////////////////////////////////////////////////////////////////

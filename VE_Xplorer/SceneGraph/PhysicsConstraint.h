@@ -32,12 +32,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PHYSICS_CONSTRAINT_H
 #define PHYSICS_CONSTRAINT_H
+
 /*!\file PhysicsConstraint.h
-PhysicsConstraint API
 */
-/*!\class PhysicsConstraint
+
+/*!\class VE_SceneGraph::PhysicsConstraint
 * 
 */
+
+/*!\namespace VE_SceneGraph
+*
+*/
+
 // --- VE-Suite Stuff --- //
 #include "VE_Installer/include/VEConfig.h"
 
@@ -48,9 +54,7 @@ PhysicsConstraint API
 
 namespace VE_SceneGraph
 {
-namespace Utilities
-{
-class VE_SCENEGRAPH_UTILS_EXPORTS PhysicsConstraint
+class VE_SCENEGRAPH_EXPORTS PhysicsConstraint
 {
 public:
 	PhysicsConstraint();
@@ -60,7 +64,6 @@ public:
 private:
 
 };
-}
 }
 
 #endif //PHYSICS_MESH_H

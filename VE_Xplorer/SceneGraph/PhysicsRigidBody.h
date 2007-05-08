@@ -36,11 +36,11 @@
 /*!\file PhysicsRigidBody.h
 */
 
-/*!\class VE_SceneGraph::Utilities::PhysicsRigidBody
+/*!\class VE_SceneGraph::PhysicsRigidBody
 * 
 */
 
-/*!\namespace VE_SceneGraph::Utilities
+/*!\namespace VE_SceneGraph
 *
 */
 
@@ -60,9 +60,7 @@ class btCollisionShape;
 
 namespace VE_SceneGraph
 {
-namespace Utilities
-{
-class VE_SCENEGRAPH_UTILS_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::NodeVisitor
+class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::NodeVisitor
 {
 public:
    ///Base Constructor
@@ -95,7 +93,6 @@ private:
 	btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
 	btCollisionShape* collision_shape;///<The collision shape for the osg node
 };
-}
 }
 
 #endif //PHYSICS_RIGID_BODY_H
