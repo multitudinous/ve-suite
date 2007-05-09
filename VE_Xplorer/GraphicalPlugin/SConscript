@@ -24,14 +24,13 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','TextureBased'),
                         pj('#', buildDir, 'VE_Open','XML')])
-lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --libs --cflags bullet --libs --cflags'%lib_env['VRJugglerVersion'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
-#ode_options.apply( lib_env )
-#opal_options.apply( lib_env )
+
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('GraphicalPlugin%s' %(execOsgPatTag),
                                                         lib_env,
