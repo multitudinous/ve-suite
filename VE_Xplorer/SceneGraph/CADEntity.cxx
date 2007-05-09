@@ -45,7 +45,7 @@
 #include <osg/Node>
 #include <osg/Group>
 #include <osg/MatrixTransform>
-#endif
+#endif //_OSG
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
@@ -58,70 +58,70 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool isStream )
 {
-   //Need to fix this and move some code to Node
-   //Leave some code here no more FILEInfo
-   m_dcs = new VE_SceneGraph::DCS();
-   m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper();
+    //Need to fix this and move some code to Node
+    //Leave some code here no more FILEInfo
+    m_dcs = new VE_SceneGraph::DCS();
+    m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper();
 
-   m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream );
-   m_fileName.assign( geomFile );
-   m_dcs->SetName( "CADEntityDCS" );
-   m_dcs->addChild( m_cadEntityHelper->GetNode() );
-   parentDCS->AddChild( m_dcs.get() );
+    m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream );
+    m_fileName.assign( geomFile );
+    m_dcs->SetName( "CADEntityDCS" );
+    m_dcs->addChild( m_cadEntityHelper->GetNode() );
+    parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS )
 {
-   //Need to fix this and move some code to Node
-   //Leave some code here no more FILEInfo
-   m_dcs = new VE_SceneGraph::DCS();
-   m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
+    //Need to fix this and move some code to Node
+    //Leave some code here no more FILEInfo
+    m_dcs = new VE_SceneGraph::DCS();
+    m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
 
-   m_fileName = m_cadEntityHelper->GetNode()->getName();
-   m_dcs->SetName( "CADEntityDCS" );
-   m_dcs->addChild( m_cadEntityHelper->GetNode() );
-   parentDCS->AddChild( m_dcs.get() );
+    m_fileName = m_cadEntityHelper->GetNode()->getName();
+    m_dcs->SetName( "CADEntityDCS" );
+    m_dcs->addChild( m_cadEntityHelper->GetNode() );
+    parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity( void )
 {
-   delete m_cadEntityHelper;
+    delete m_cadEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics( void )
 {
-   m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( m_cadEntityHelper->GetNode() );
+    m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( m_cadEntityHelper->GetNode() );
 
-   m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
+    m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode( void )
 {
-   return m_cadEntityHelper;
+    return m_cadEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* CADEntity::GetDCS( void )
 {
-   return m_dcs.get();
+    return m_dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody( void )
 {
-   return m_physicsRigidBody.get();
+    return m_physicsRigidBody.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetFilename( void )
 {
-   return m_fileName;
+    return m_fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CADEntity::GetTransparentFlag( void )
 {
-   return m_transparencyFlag;
+    return m_transparencyFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetTransparencyFlag( bool flag )
 {
-   m_transparencyFlag = flag;
+    m_transparencyFlag = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
