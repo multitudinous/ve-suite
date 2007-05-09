@@ -57,22 +57,21 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
    {
       public:
-         /* 
-         Initialize the multiple momentum profiles, based on the input
-         from the vtkPolyData generated from cfdPlanes.  
-         */
+         ///Initialize the multiple momentum profiles, based on the input 
+         ///from the vtkPolyData generated from cfdPlanes.  
+         ///\param xyz
          cfdMomentums( const int xyz );
-
+         ///Destructor
          ~cfdMomentums( void );
 
-         // Output an updated pfGeoSet.
+         ///Output an updated pfGeoSet.
          virtual void Update( void );
 
       private:
-         int xyz;
+         int xyz;///<relative locatio
   
-         vtkWarpVector * warper;
-         cfdPlanes* planes;
+         vtkWarpVector * warper;///<warper used by vtk
+         cfdPlanes* planes;///<planes
    };
 }
 #endif

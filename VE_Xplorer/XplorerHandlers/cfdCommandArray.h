@@ -35,7 +35,7 @@
 /*!\file cfdCommandArray.h
 cfdCommandArray API
 */
-/*!\class VE_XPlorer::cfdCommandArray
+/*!\class VE_Xplorer::cfdCommandArray
 * 
 */
 // cfdApp side variables declared in VjObs_i.h
@@ -46,13 +46,23 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdCommandArray
    {
       public:
+         ///Base constructor
          cfdCommandArray();
+         ///destructor
          ~cfdCommandArray(){}
+         ///copy constructor
          cfdCommandArray( const cfdCommandArray& );
+         ///equal operator
          cfdCommandArray& operator=( const cfdCommandArray& );
-
-         double GetCommandValue( int );
-         void SetCommandValue( int, double );
+         
+         ///Get the Command Value 
+         ///\param commandValue
+         double GetCommandValue( int commandValue);
+      
+         ///Set the Command Value
+         ///\param commandValue
+         ///\param outputValue
+         void SetCommandValue( int commandValue, double outputValue);
 
          enum commandArrayValue 
          { 
@@ -70,16 +80,16 @@ namespace VE_Xplorer
 
       private:
 
-         double   cfdIso_value;
-         double   cfdSc;
-         double   cfdMin;
-         double   cfdMax;
-         double   cfdId;
-         double   cfdGeo_state;
-         double   cfdPostdata_state;
-         double   cfdPre_state;
-         double   cfdTimesteps; 
-         double   cfdTeacher_state; 
+         double   cfdIso_value;///<The isosurface value.
+         double   cfdSc;///<The scale value.
+         double   cfdMin;///<The minimum value.
+         double   cfdMax;///<The maximum value.
+         double   cfdId;///<The ID.
+         double   cfdGeo_state;///<The geometry state.
+         double   cfdPostdata_state;///<The postdata state.
+         double   cfdPre_state;///<The precomputed surface value.
+         double   cfdTimesteps; ///<The timestep value.
+         double   cfdTeacher_state; ///<The teacher state.
 
    };
 }

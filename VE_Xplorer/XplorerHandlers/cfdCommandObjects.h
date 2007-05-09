@@ -37,7 +37,7 @@
 /*!\file cfdCommandObjects.h
 cfdCommandObjects API
 */
-/*!\class VE_XPlorer::cfdCommandObjects
+/*!\class VE_Xplorer::cfdCommandObjects
 * 
 */
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
@@ -51,15 +51,18 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdCommandObjects : public cfdGlobalBase
    {
       public:
+         ///Base Constructor
          cfdCommandObjects ();
+         ///Destructor
          ~cfdCommandObjects ();
 
          // pure virtual int functions to be specified in concrete implementations
 
-         // compare VjObs_i commandArray with its child's value
+         ///compare VjObs_i commandArray with its child's value
+         ///\param _cfdCommandArray
          virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ) = 0;
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand() = 0;
 
       protected:

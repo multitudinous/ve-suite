@@ -78,11 +78,11 @@ public:
    VE_XML::Command* GetVECommand();
 protected:
 
-   ///<cfdApp side variables declared in VjObs_i.h
-   VE_Xplorer::cfdCommandArray* _cfdCommandArray;
 
-   ///<cfdApp side variables declared in VjObs_i.h
-   VE_XML::Command* veCommand;
+   VE_Xplorer::cfdCommandArray* _cfdCommandArray;///<cfdApp side variables declared in VjObs_i.h
+
+   VE_XML::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
+
 private:
 };
 }

@@ -55,20 +55,21 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
    {
       public:
-         // Initialize the VTK objects and pipeline.
-         // (and set the number of isosurface increments for blue menu)
+         ///Initialize the VTK objects and pipeline, (and set the number of isosurface increments for blue menu)
+         ///\param xyz
+         ///\param numSteps
          cfdPresetVector( const int xyz, const int numSteps = 10 );
-
+         ///Destructor
          ~cfdPresetVector();
-
+         ///Update the preset vectors
          virtual void Update( void );
 
       private:
-         int xyz;
-         int numSteps;
-         vtkCutter *cutter;
+         int xyz;///<value of location
+         int numSteps;///<number of steps
+         vtkCutter *cutter;///<cutter
 
-         cfdCuttingPlane * cuttingPlane;
+         cfdCuttingPlane * cuttingPlane;///<cutting plane
    };
 }
 #endif

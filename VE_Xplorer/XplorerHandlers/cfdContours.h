@@ -35,7 +35,7 @@
 /*!\file cfdContours.h
 cfdContours API
 */
-/*!\class VE_XPlorer::cfdContours
+/*!\class VE_Xplorer::cfdContours
 * 
 */
 #include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
@@ -53,14 +53,15 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
    {
       public:
+         ///Constructor
          cfdContours( const int xyz );
-
+         ///Destructor
          ~cfdContours();
-
+         ///Update the event
          virtual void Update( void );
          
       private:
-         int xyz;
+         int xyz;///<The value of the contour to display.
    };
 }
 #endif

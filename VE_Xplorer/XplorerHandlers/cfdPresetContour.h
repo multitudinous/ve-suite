@@ -56,12 +56,13 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase
    {
       public:
-         // Initialize the pipeline.
-         // (and set the number of cutting plane increments for blue menu)
+         ///Initialize the pipeline, (and set the number of cutting plane increments for blue menu)
+         ///\param xyx
+         ///\param numSteps
          cfdPresetContour( const int xyz, const int numSteps = 10 );
-
+         ///Destructor
          virtual ~cfdPresetContour();
-
+         ///Update
          virtual void Update( void );
 
       private:

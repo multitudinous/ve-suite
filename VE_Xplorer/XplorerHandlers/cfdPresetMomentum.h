@@ -56,21 +56,20 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdPresetMomentum : public cfdContourBase
    {
       public:
-         // Initialize the pipeline.
-         // (and set the number of cutting plane increments for blue menu)
+         ///Initialize the pipeline.
+         ///(and set the number of cutting plane increments for blue menu)
+         ///\param xyz
+         ///\param numSteps
          cfdPresetMomentum( const int xyz, int numSteps = 10 );
-
+         ///Destructor
          ~cfdPresetMomentum( void );
 
-         /* 
-         Update the position, x, and normal direction to cut.
-         Output a updated pfGeoSet.  
-         */
+         ///Update the position, x, and normal direction to cut. Output a updated pfGeoSet.  
          virtual void Update( void );
 //         void CreatePlane( void );
 
       private:
-         vtkWarpVector   * warper;
+         vtkWarpVector   * warper;///<warper.
    };
 }
 #endif

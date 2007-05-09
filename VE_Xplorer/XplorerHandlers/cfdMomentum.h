@@ -58,28 +58,26 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdMomentum : public cfdContourBase
    {
       public:
-         // Initialize the VTK objects and pipeline.
+         ///Initialize the VTK objects and pipeline.
          cfdMomentum( void );
-
+         ///Destructor
          ~cfdMomentum( void );
 
-         /* 
-         Update the position, x, and normal direction to cut.
-         Output a updated pfGeoSet.  
-         */
+         ///Update the position, x, and normal direction to cut.
+         ///Output a updated pfGeoSet. 
          virtual void Update( void );
 
       private:  
       #ifdef USE_OMP
-         vtkPlane *plane[MAX_MOMENTUM];
-         vtkCutter *cutter[MAX_MOMENTUM];
-         vtkAppendPolyData *append;
-         float nData;
+         vtkPlane *plane[MAX_MOMENTUM];///<Momenutum plane
+         vtkCutter *cutter[MAX_MOMENTUM];///<Momenutum plane cutter
+         vtkAppendPolyData *append;///<append to polydata
+         float nData;///<number of datasets
       #else
-         vtkPlane *plane;
-         vtkCutter *cutter;
+         vtkPlane *plane;///<plane for vtk
+         vtkCutter *cutter;///<cutter for vtk
       #endif
-         vtkWarpVector *warper;
+         vtkWarpVector *warper;///<warper for vtk
    };
 }
 #endif
