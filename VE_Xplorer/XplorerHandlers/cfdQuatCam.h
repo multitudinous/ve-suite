@@ -72,45 +72,63 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdQuatCam
    {
       public:
-         //Constructors
-         cfdQuatCam( gmtl::Matrix44f&, float* );
+         ///Constructors   
+         ///\param &m Matrix.
+         ///\param worldTrans Translation of world.
+         cfdQuatCam( gmtl::Matrix44f& m, float* worldTrans );
    
-         //Destructor
+         ///Destructor
          ~cfdQuatCam(){;}
 
-         void SetCamPos( float*, VE_SceneGraph::DCS* );
+         ///Set camera position
+         ///\param worldTrans
+         ///\param worldDCS
+         void SetCamPos( float* worldTrans, VE_SceneGraph::DCS* worldDCS);
 
-         void MoveCam( float );
+         ///Move camera position, both translation and rotation slerp.
+         ///\param t 
+         void MoveCam( float t);
 
-         void RotSlerp( float );
+         ///Rotation slerp.
+         ///\param t 
+         void RotSlerp( float t);
 
-         void TransLerp( float );
+         ///Translation slerp.
+         ///\param t 
+         void TransLerp( float t);
 
-         void UpdateTrans( cfdNavigate* );
+         ///Update translation
+         ///\param nav
+         void UpdateTrans( cfdNavigate* nav);
 
-         void UpdateRotation( VE_SceneGraph::DCS* );
+         ///Update rotation
+         ///param worldDCS
+         void UpdateRotation( VE_SceneGraph::DCS* worldDCS);
 
+         ///Returns matrix for gmtl.
          gmtl::Matrix44f GetMatrix( void );
 
+         ///Returns next tranlation vector.
          gmtl::Vec3f GetTrans( void );
 
+         ///Returns last tranlation vector.
          gmtl::Vec3f GetLastTrans( void );
 
-         gmtl::Vec3f  vjVecCurrTrans;
+         gmtl::Vec3f  vjVecCurrTrans;///VRJuggler current translation vector.
 
-         float rotPoints[4];
+         float rotPoints[4];///<rotation points.
 
-         float angle;
+         float angle;///<angle (nay not be in use).
 
       private:
-         gmtl::Quatf LastPosQuat;
-         gmtl::Quatf NextPosQuat;
-         gmtl::Quatf CurPosQuat;
-         gmtl::Vec3f vjVecNextTrans;
-         gmtl::Vec3f vjVecLastTrans;
-         gmtl::Matrix44f nextMatrix;
+         gmtl::Quatf LastPosQuat;///<gmtl last quaternion position.
+         gmtl::Quatf NextPosQuat;///<gmtl next quaternion position.
+         gmtl::Quatf CurPosQuat;///<gmtl current quaternion position.
+         gmtl::Vec3f vjVecNextTrans;///<gmtl next translation.
+         gmtl::Vec3f vjVecLastTrans;///<gmtl last translation.
+         gmtl::Matrix44f nextMatrix;///<gmtl next matrix.
 
-         float rotvec[3];
+         float rotvec[3];///<rotation vector (may not be in use).
    };
 }
 #endif

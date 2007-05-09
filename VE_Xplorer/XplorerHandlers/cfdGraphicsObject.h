@@ -68,59 +68,65 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdGraphicsObject
 {
 public:
-   // constructor
+   ///constructor
    cfdGraphicsObject( void );
 
-   // destructor
+   ///destructor
    ~cfdGraphicsObject( void );
 
-   // copy constructor
-   cfdGraphicsObject( const cfdGraphicsObject& );
+   ///copy constructor
+   ///\param &input
+   cfdGraphicsObject( const cfdGraphicsObject& input );
 
-   // equal operator
-   cfdGraphicsObject& operator=( const cfdGraphicsObject& );
+   ///equal operator
+   ///\param &input
+   cfdGraphicsObject& operator=( const cfdGraphicsObject& input );
 
-   // types of viz objects possible to add to scene
-   enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};
 
-   // Set parent node to add "graphics node" to
-   void SetParentNode( VE_SceneGraph::DCS* );
+   enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};///<types of viz objects possible to add to scene
 
-   // node the parent node will be added to
-   void SetWorldNode( VE_SceneGraph::DCS* );
+   ///Set parent node to add "graphics node" to
+   ///\param input
+   void SetParentNode( VE_SceneGraph::DCS* input );
 
-   // set model pointer to be able to grab
-   // transient info and the switch node
-   void SetActiveModel( cfdModel* );
+   ///node the parent node will be added to
+   ///\param input
+   void SetWorldNode( VE_SceneGraph::DCS* input );
 
-   // add "child node" to scene graph
+   ///set model pointer to be able to grab
+   ///transient info and the switch node
+   ///\param input
+   void SetActiveModel( cfdModel* input );
+
+   ///add "child node" to scene graph
    void AddGraphicsObjectToSceneGraph( void );
 
-   // set type of viz: trans, classic, texture
+   ///Set type of viz: trans, classic, texture
+   ///\param VizType
    void SetTypeOfViz( VizType );
 
-   // set geodes for classic and trans viz objects
+   ///Set geodes for classic and trans viz objects
    void SetGeodes( std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > );
 
-   // Return parent node for a this object
+   ///Return parent node for a this object
    VE_SceneGraph::DCS* GetParentNode( void );
 
-   // clear geodes vector and geode from memory and the graph
+   ///Clear geodes vector and geode from memory and the graph
    void RemoveGeodeFromDCS( void );
 
    // Return the animation so that we can change the speed of the animation
    //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
 
 protected:
-	std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;
-	VE_SceneGraph::DCS* parentNode;
-   VE_SceneGraph::DCS* worldNode;
-   VizType type;
+	std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;///<SceneGraph Geode.
+	VE_SceneGraph::DCS* parentNode;///<SceneGraph parent node.
+   VE_SceneGraph::DCS* worldNode;///<SceneGraph world node.
+   VizType type;///<Type of viz: trans, classic, texture.
 
    // used for animated particles and other ss 
    // animated features
    //VE_SceneGraph::cfdTempAnimation* animation;
-   VE_Xplorer::cfdModel* model;
+   VE_Xplorer::cfdModel* model;///<Xplorer cfd model.
 };
 }
 #endif

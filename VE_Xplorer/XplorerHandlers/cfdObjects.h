@@ -68,52 +68,114 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdObjects : public cfdGlobalBase
    {
       public:
+
+         ///copy constructor.
+         ///\param &src
          cfdObjects( const cfdObjects& src );
+
+         ///Constructor.
          cfdObjects( void );
+
+         ///Destructor.
          virtual ~cfdObjects( void );
 
          // pure virtual functions to be specified in concrete implementations
 
-         // compare VjObs_i commandArray with its child's value
+         ///compare VjObs_i commandArray with its child's value
+         ///\param commandArray
          virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
          ///Process the VECommand from Conductor
          virtual void UpdateCommand( void );
 
-         // update the actor
+         ///update the actor
          virtual void Update() = 0;
 
+         ///Returnd geodes.
          std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > GetGeodes( void );
+
+         ///Clear the geodes.
          void ClearGeodes( void );
 
-         void SetObjectType( int );
+         ///Sets the object type.
+         ///\param type
+         void SetObjectType( int type );
+
+         ///Returns object type.
          int GetObjectType( void ) { return this->objectType; }
-         void SetOrigin( float [3] );
+
+         ///Set the origin.
+         ///\param o
+         void SetOrigin( float o[3] );
+
+         ///returns the origin.
          double * GetOrigin();
-         void GetOrigin( double [3] );
-         void SetNormal( double [3] );
-         void SetBoxSize( double [6] );
+
+         ///Gets the origin values.
+         ///\param o
+         void GetOrigin( double o[3] );
+
+         ///Sets the normals.
+         ///\param n
+         void SetNormal( double n[3] );
+   
+         ///Sets the size of the box.
+         ///\param b
+         void SetBoxSize( double b[6] );
+
+
+         ///Sets and stores the requested value.
+         ///\param x
          void SetRequestedValue( int x ) { this->requestedValue = x; }
+
+         ///Sets and stores the cursor type.
+         ///\param x
          void SetCursorType( int x ) { this->cursorType = x; }
+
+         ///Sets the use for the precalculated data.
+         ///\param x
          void SetPreCalcFlag( int x ) { this->usePreCalcData = x; }
+
+         ///Sets the update flag.
+         ///\param x
          void SetUpdateFlag( bool x ) { this->updateFlag = x; }
+
+         ///Gets the update flag.
+         ///\param x
          bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
+
+         ///Deletes the geode.
          void DeleteGeode( void );
 
          //void SetSequence( cfdTempAnimation* );
          //cfdTempAnimation* GetSequence( void );
       
-         void SetSourcePoints( vtkPolyData * );
+         ///Sets the source points.
+         ///\param pointSource
+         void SetSourcePoints( vtkPolyData * pointSource );
 
+
+         ///Adds another geode to the sequence.
          void AddGeodesToSequence(void);
 
+         ///Sets a flag for the geode.
+         ///\param x
          void SetGeodeFlag( bool x );
+
+         ///Flag for the geode flag.
          bool GetGeodeFlag( void );
 
+         ///Flag for transient geode.
          bool GetTransientGeodeFlag(void);
+
+         ///Sets flag for transient geode
          void SetTransientGeodeFlag(bool x);
 
+         ///Selects the active dataset.
+         ///\param dataset
          void SetActiveDataSet( cfdDataSet * dataset );
+
+         ///Gets the active dataset.
          cfdDataSet * GetActiveDataSet( void );
 
          //void ClearTransientVector( void );
@@ -121,25 +183,25 @@ namespace VE_Xplorer
          //static float GetVectorScale();
       
       protected:
-         cfdDataSet* activeDataSet;
+         cfdDataSet* activeDataSet;///<active dataset.
 
          // used by vectors and intended for warped contours
          //static float vectorScale;
 
-         std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;
-         vtkPolyData* pointSource;
+         std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;///<geode vector.
+         vtkPolyData* pointSource;///<point source for vtk polydata.
 
-         bool updateFlag;
-         int vtkToPFDebug;
-         int objectType;
-         int requestedValue;
-         int cursorType;
-         int usePreCalcData;
-         double origin[ 3 ];
-         double center[ 3 ];
-         double normal[ 3 ];
-         double box_size[ 6 ];
-         float scale;
+         bool updateFlag;///<flag for updating.
+         int vtkToPFDebug;///<debugging for performer (may not be needed).
+         int objectType;///<sets object type.
+         int requestedValue;///flag for requested value.
+         int cursorType;///<flag for cursor type.
+         int usePreCalcData;///<flag for using the precalculated data.
+         double origin[ 3 ];///<stores origin values.
+         double center[ 3 ];///<stores center values.
+         double normal[ 3 ];///<stores normal values.
+         double box_size[ 6 ];///<stores size of box.
+         float scale;///<store scale factor.
       private:
    };
 }
