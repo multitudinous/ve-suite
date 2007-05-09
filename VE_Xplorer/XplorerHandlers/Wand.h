@@ -78,127 +78,127 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS Wand : public Device
 {
 public:
+	///Constructor
 	Wand();
+	///Destructor
 	virtual ~Wand();
 
    ///Initialize some variables in the class
    void Initialize( void );
 
-	virtual void UpdateNavigation();
-	virtual void UpdateSelection();
+   ///Update the position in scene
+   virtual void UpdateNavigation();
+
+   ///Update the current object selected
+   virtual void UpdateSelection();
 
    ///bool to set the rotation method
-   void SetHeadRotationFlag( int );
-   ///New function for testing the new VECommand structure
+   ///\param flag Indicates if rotation method is needed
+   void SetHeadRotationFlag( int flag );
+
+   ///New function for new VECommand structure
+   ///\param veCommand Sets the Command used for navigation
    void SetVECommand( VE_XML::Command* veCommand );
+
    ///Do not let the user go below the ground plane at 0,0,0 
-   void SetSubZeroFlag( int );
+   ///\param zero Flag to insure translation does not go below zero plane
+   void SetSubZeroFlag( int zero );
 
-
+   ///Identifies selection chosen by wand
    void SelectObject( void );
+
+   ///Process if selection is valid
+   ///\param listOfHits A vector containing CAD hit in selection process
    void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
+
    //void DrawLine(osg::Vec3f start, osg::Vec3f end);
+
+   ///Update the events done by wand
    void UpdateObjectHandler( void );
+
+   ///Set the start and end position 
+   ///\param startPoint The start position
+   ///\param endPoint The end position
    void SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint);
+
+   ///Performs translation through scene
    void TranslateObject( void ); 
-   osg::MatrixTransform* getMatrixTransform( void );
+
+   //osg::MatrixTransform* getMatrixTransform( void );
+
    ///Get the current direction of the wand
    double* GetDirection( void );
+
+   ///Get the current object location
    double* GetObjLocation( void );
+
+   ///Transform direction from VRJuggler to OSG
    void UpdateWandLocalDirection( void );
-   void UpdateWandLocalLocation( void );     
+
+   //void UpdateWandLocalLocation( void ); 
+
+   ///Transform wand point into global space
    void UpdateWandGlobalLocation( void );
+
+   ///Find translation difference from last position to current
    void UpdateDeltaWandPosition( void );
       
-      
 protected:
+   ///Set the start and end point
+   ///\param startPoint The start point
+   ///\param endPoint The end point
    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+
+   ///Draws a beam from the wand to object
+   ///\param startPoint The start position
+   ///\param endPoint The end position
    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
       
 private:
-   gadget::DigitalInterface digital[6];
-   gadget::DigitalInterface IHdigital[10];
-   gadget::DigitalInterface flyThrough[4];
-   int buttonData[ 6 ];
+   gadget::DigitalInterface digital[6]; ///Array handling button controls on wand
+   gadget::DigitalInterface IHdigital[10]; ///<do not know what this does
+   gadget::DigitalInterface flyThrough[4]; ///<do not know what this does
+   int buttonData[ 6 ]; ///<do not know what this does
    // x, y, and z translation of objects in world coordinates.
    // Variables only used in preFrame
-   //double * currentWandDirection;
-   int cfdId;
-   int cfdIso_value;
-   
-   //double worldTrans[ 3 ];
-   //float worldRot[ 3 ];
-   
-   /*!
-      VR Juggler's wand positional interface.
-    */
+
+   int cfdIso_value; ///<Value to translate
+
    //vjPosInterface wand;
-   gadget::PositionInterface  wand;
-   gadget::PositionInterface  head;
-   //! VR Juggler
-   /*!
-   VR Juggler's vector math function.
-   */
-   gmtl::Vec3f  vjVec;
-   gmtl::Vec3f  LastVec;
-   //! VR Juggler
-   /*!
-      VR Juggler's matrix math function.
-    */
-   gmtl::Matrix44f vjMat;
-   gmtl::Matrix44f vjHeadMat;
-   //! Wand object
-   /*!
-      Location of the wand with respect to the virtual space.
-    */
-   //double loc[3];
-   //! Wand object
-   /*!
-      Direction of the wand.
-    */
-   double dir[3];
-   //! Virtual environment object(s)
-   /*!
-      Location of the objects with respect to the virtual space.
-    */
-   double worldLoc[3];
-   //! Cursor object(s)
-   /*!
-      Location of the cursor with respect to the virtual space.
-    */
-   double cursorLoc[3];
-   //! Data set object(s)
-   /*!
-      Location with respect to data set (the actual location to interact with data).
-    */
-   double objLoc[3];
-   //! Cursor object(s)
-   /*!
-      Cursor length.
-    */
-   float cursorLen;
+   gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
+   gadget::PositionInterface head; ///<VRJuggler's head positional interface
+
+   gmtl::Vec3f  vjVec; ///<VRJuggler's vector position
+   gmtl::Vec3f  LastVec; ///<VRJuggler's last vector position
+
+   gmtl::Matrix44f vjMat; ///<Contains current translation matrix
+   gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix
+
+   double dir[3]; ///<Direction of the wand
+   double worldLoc[3]; ///<Location of the objects with respect to the virtual space
+   double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
+   double objLoc[3]; ///<Location with respect to data set (the actual location to interact with data
+   float cursorLen; ///<Cursor length
    
-   float translationStepSize;
-   float rotationStepSize;
+   float translationStepSize; ///<Size of translation step
+   float rotationStepSize; ///<Size of rotation step
    
-   int rotationFlag;
-   int subzeroFlag;
-   
-   // class used to store xml command
-   VE_XML::Command* command;
+   int rotationFlag; ///<Rotation flag
+   int subzeroFlag; ///<Zero plane flag
+
+   VE_XML::Command* command; ///<Stores xml command
    // data storage for initial world dcs location
-   double deltaTrans[ 3 ];
+   double deltaTrans[ 3 ]; ///<Stores difference in translation from last position to to current
    
-   osg::ref_ptr<osg::Geode> selectedGeometry;
-   double distance;
-   std::string laserName;
-   osg::Vec3f LastWandPosition;
-   osg::Node* rootNode;
-   //osg::Node* worldNode;
-   bool _active;
-   osg::ref_ptr< osg::Geode > beamGeode;
-   osg::ref_ptr< osg::Geometry > beamGeometry;
-   osg::ref_ptr< osg::LineSegment > beamLineSegment;
+   osg::ref_ptr<osg::Geode> selectedGeometry; ///<Geometry currently selected
+   double distance; ///<Used for scaling
+   std::string laserName; ///<do not know what this does
+   osg::Vec3f LastWandPosition; ///<Stores last wand position
+   osg::Node* rootNode; ///<do not know what this does
+
+   osg::ref_ptr< osg::Geode > beamGeode;///<do not know what this does
+   osg::ref_ptr< osg::Geometry > beamGeometry;///<do not know what this does
+   osg::ref_ptr< osg::LineSegment > beamLineSegment;///<do not know what this does
 };
 }
 

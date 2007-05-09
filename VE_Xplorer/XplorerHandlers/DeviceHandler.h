@@ -69,26 +69,44 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS DeviceHandler
 {
 private:
+	///Constructor
 	DeviceHandler();
+
+	///Destructor
    ~DeviceHandler(){;}
+
+   ///Do not know what this is
+   ///\param DeviceHandler 
    vprSingletonHeader( DeviceHandler );
 public:
+   ///Delete existing devices
    void CleanUp();
+
+   ///Execute navigation commands from active device
    void ExecuteCommands();
 
+   ///Set the active device
+   ///\param device The active device
    void SetActiveDevice( std::string device );
+
+   ///Set the device mode
+   ///\param mode Do not know what this does
    void SetDeviceMode( std::string mode );
+
+   ///Process navigation and selection commands
    void ProcessDeviceEvents();
 
+   ///Get the current device
+   ///\param device The current active device
    VE_Xplorer::Device* GetDevice( std::string device );
 private:
-   std::map< std::string, VE_Xplorer::Device* > devices;
+   std::map< std::string, VE_Xplorer::Device* > devices; ///<
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
-   VE_Xplorer::Device* active_device;
-   osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;
-   gmtl::Point3f center_point;
-   std::string device_mode;
+   VE_Xplorer::Device* active_device; ///<The active device
+   osg::ref_ptr< VE_SceneGraph::DCS > activeDCS; ///<The active coordinate system
+   gmtl::Point3f center_point; ///<Do not know what this is
+   std::string device_mode; ///<Tells whether navigation or selection is active
 };
 }
 

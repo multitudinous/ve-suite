@@ -72,7 +72,7 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS DataSetScalarBar : public cfdGlobalBase
 {
 public:
-   ///Default Constructor
+   ///Constructor
    DataSetScalarBar( void );
    ///Destructor
    virtual ~DataSetScalarBar( void );
@@ -132,8 +132,8 @@ public:
    };
 
 private:
-   osg::ref_ptr< VE_SceneGraph::DCS > scalarBarDCS;
-   double bbox[ 6 ];
+   osg::ref_ptr< VE_SceneGraph::DCS > scalarBarDCS; ///<Scalar bar coordinate system
+   double bbox[ 6 ]; ///<Bounding box
 };
 }
 #endif //DATASET_SCALARBAR_H

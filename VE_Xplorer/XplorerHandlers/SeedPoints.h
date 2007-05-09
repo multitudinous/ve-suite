@@ -57,14 +57,14 @@ class VE_XPLORER_EXPORTS SeedPoints: public osg::Geode
 public:
 	///Constructor
 	///\param numX The number in X.
-   ///\param numY The number in Y.
-   ///\param numZ The number in Z.
+    ///\param numY The number in Y.
+    ///\param numZ The number in Z.
 	///\param xMin Minimum x
-   ///\param yMin Minimum y
-   ///\param zMin Minimum z
-   ///\param xMax Maximum x
-   ///\param yMax Maximum y
-   ///\param zMax Maximum z
+    ///\param yMin Minimum y
+    ///\param zMin Minimum z
+    ///\param xMax Maximum x
+    ///\param yMax Maximum y
+    ///\param zMax Maximum z
 	SeedPoints(unsigned int nX = 1,
 		           unsigned int nY = 1,
 				   unsigned int nZ =1,
@@ -75,10 +75,9 @@ public:
 				   float zmin = 0.f,
 				   float zmax = 1.f);
 	///Copy Constructor
-   SeedPoints(const SeedPoints& seedPoints,
-              const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
-              
-   
+    SeedPoints(const SeedPoints& seedPoints,
+               const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
+
    META_Object(VE_Xplorer,SeedPoints)
    ///Set the bounds
    ///\param xMin Minimum x

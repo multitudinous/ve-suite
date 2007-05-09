@@ -70,88 +70,51 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS Tablet : public Device
 {
 public:
-   //! Constructor
-   /*!
-   Constructs VR Juggler objects.
-   */
+   ///Constructor
    Tablet( void );
-   //! Destructor
+   ///Destructor
    virtual ~Tablet();
-   //! Wand object
-   /*!
-   Initialization of navigation objects: VR Juggler, wand, cursor, data set
-   */
+
+   ///Initialize some variables in the class
    void Initialize( void );
+
+   ///Update the position in scene
    void UpdateNavigation( void );
 
-   void SetHeadRotationFlag( int );
-   void SetSubZeroFlag( int );
-   // New function for testing the new VECommand structure
+   ///bool to set the rotation method
+   ///\param flag Indicates if rotation method is needed
+   void SetHeadRotationFlag( int flag );
+
+   ///Do not let the user go below the ground plane at 0,0,0 
+   ///\param zero Flag to insure translation does not go below zero plane
+   void SetSubZeroFlag( int zero );
+
+   ///New function for new VECommand structure
+   ///\param veCommand Sets the Command used for navigation
    void SetVECommand( VE_XML::Command* veCommand );
 private:
-   //! VR Juggler
-   /*!
-   VR Juggler's wand positional interface.
-   */
-   //vjPosInterface wand;
-   gadget::PositionInterface  head;
+   gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
-   int cfdId;
-   int cfdIso_value;
+   int cfdIso_value; ///<variable used for keeping track of movement
 private:
-   //! VR Juggler
-   /*!
-   VR Juggler's matrix math function.
-   */
-   gmtl::Matrix44f vjMat;
-   gmtl::Matrix44f vjHeadMat;
-   //! Wand object
-   /*!
-   Location of the wand with respect to the virtual space.
-   */
-   double loc[3];
-   //! Wand object
-   /*!
-   Direction of the wand.
-   */
-   double dir[3];
-   //! Virtual environment object(s)
-   /*!
-   Location of the objects with respect to the virtual space.
-   */
-   double worldLoc[3];
-   //! Cursor object(s)
-   /*!
-   Location of the cursor with respect to the virtual space.
-   */
-   double cursorLoc[3];
-   //! Data set object(s)
-   /*!
-   Location with respect to data set (the actual location to interact with data).
-   */
-   float objLoc[3];
-   //! Cursor object(s)
-   /*!
-   Cursor length.
-   */
-   float cursorLen;
-   //! Wand object
-   /*!
-   Displacement of the objects in virtual space.
-   */
-   float dObj;
+   gmtl::Matrix44f vjMat; ///<Contains current translation matrix
+   gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix
 
-   float translationStepSize;
-   float rotationStepSize;
+   double loc[3]; ///<Location of the wand with respect to the virtual space
+   double dir[3]; ///<Direction of the wand
+   double worldLoc[3]; ///<Location of the objects with respect to the virtual space
+   double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
+   float objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
+   float cursorLen; ///<Cursor length
+   float dObj; ///<Displacement of the objects in virtual space
 
-   int rotationFlag;
-   int subzeroFlag;
+   float translationStepSize; ///<Size of translation step
+   float rotationStepSize; ///<Size of rotation step
 
-   // class used to store xml command
-   VE_XML::Command* command;
-   // data storage for initial world dcs location
-   float initialTranslate[ 3 ];
-   float initialRotate[ 3 ];
+   int rotationFlag; ///<Rotation flag
+   int subzeroFlag; ///<Zero plane flag
+
+   VE_XML::Command* command; ///<Stores xml command
 };
 }
 #endif

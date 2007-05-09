@@ -64,7 +64,7 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS DataSetAxis : public cfdGlobalBase
 {
 public:
-   ///Default Constructor
+   ///Constructor
    DataSetAxis( void );
    ///Destructor
    virtual ~DataSetAxis( void );
@@ -90,11 +90,11 @@ public:
    osg::ref_ptr< osg::Geode > CreateAxisLines( void );
 
 private:
-   double bbox[ 6 ];
-   std::string xAxisLabel;
-   std::string yAxisLabel;
-   std::string zAxisLabel;
-	osg::ref_ptr< VE_SceneGraph::Group > axisGroup;
+   double bbox[ 6 ]; ///<Bounding box
+   std::string xAxisLabel; ///<X axis label
+   std::string yAxisLabel; ///<Y axis label
+   std::string zAxisLabel; ///<Z axis label
+   osg::ref_ptr< VE_SceneGraph::Group > axisGroup; ///<Do not know what this is
 };
 }
 #endif

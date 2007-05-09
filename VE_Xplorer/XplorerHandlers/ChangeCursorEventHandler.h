@@ -83,7 +83,7 @@ public:
    void Execute( VE_XML::XMLObject* command); 
 
 private:
-   VE_Xplorer::cfdModel* _activeModel;
+   VE_Xplorer::cfdModel* _activeModel; ///<The active model
 };
 }
 #endif// CHANGE_CURSOR_EVENT_HANDLER_H
