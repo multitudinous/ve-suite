@@ -59,6 +59,7 @@ class wxListBox;
 class wxListEvent;
 class wxListCtrl;
 class wxArrayString;
+class wxCheckBox;
 
 namespace VE_XML
 {
@@ -90,7 +91,8 @@ public:
       ANIMATION_PANEL_ID,///<The animation panel ID.
       EDIT_ANIMATION,///<The edit attribute ID.
       REMOVE_ANIMATION,///<The remove attribute ID.
-      ADD_ANIMATION///<The add attribute button ID.
+      ADD_ANIMATION,///<The add attribute button ID.
+	  UNIFORM_SCALE///<The scale uniformly checkbox ID.
    };
    ///Constructor
    ///\param parent The parent window.
@@ -145,6 +147,10 @@ protected:
    ///Update the transform of a node
    ///\param event The wxCommand event.
    void _updateTransform(wxSpinEvent& event);
+
+   ///Update whether uniform scaling is used
+   ///\param event The wxCommand event
+   void UpdateUniformScale( wxCommandEvent& event );
 
    ///Update the attribute type and available attributes.
    ///\param event The wxCommand event.
@@ -243,6 +249,7 @@ protected:
    wxSpinCtrlDbl* _xScaleCtrl;///<X scale control
    wxSpinCtrlDbl* _yScaleCtrl;///<Y scale control
    wxSpinCtrlDbl* _zScaleCtrl;///<Z scale control
+   wxCheckBox* m_uniformScale;///<Uniform scaling checkbox
 
    ///Attribute panel controls
    wxComboBox* _attributeType;///<The attribute type selection box.
@@ -264,6 +271,10 @@ protected:
    unsigned int _nMaterials;///<The number of materials.
    unsigned int _nShaders;///<The number of shaders.
    std::string _commandName;///<The command name.
+
+   double tempX;///<The x scale value.
+   double tempY;///<The y scale value.
+   double tempZ;///<The z scale value.
 
    VE_XML::VE_CAD::CADNode* _cadNode;///<The current CADNode.
 

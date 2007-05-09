@@ -53,6 +53,7 @@
 #include <wx/choicdlg.h>
 #include <wx/intl.h>
 #include <wx/filename.h>
+#include <wx/checkbox.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -93,6 +94,7 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_MENU(CADMaterialEditMenu::FACE_ID,CADNodePropertiesDlg::_showFaceSelectDialog)
    EVT_MENU(CADMaterialEditMenu::COLOR_MODE_ID,CADNodePropertiesDlg::_showColorModeSelectDialog)
    EVT_MENU(CADMaterialEditMenu::OPACITY_ID,CADNodePropertiesDlg::_showOpacityDialog)
+   EVT_CHECKBOX(UNIFORM_SCALE, CADNodePropertiesDlg::UpdateUniformScale)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -128,10 +130,13 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _nShaders = 0;
    _nMaterials = 0;
 
+   tempX = 1.0;
+   tempY = 1.0;
+   tempZ = 1.0;
+
    _buildGUI();
    
    CentreOnParent();
-
 }
 
 /////////////////////////////////////////////////////
@@ -284,8 +289,10 @@ void CADNodePropertiesDlg::_buildTransformPanel()
    transformPropSizer->Add(rotationSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //scale
+   wxBoxSizer* scaleInfo = new wxBoxSizer(wxVERTICAL);
    wxStaticBox* scale = new wxStaticBox(_transformPanel, -1, wxT("Scale "));
    wxStaticBoxSizer* scaleSizer = new wxStaticBoxSizer(scale, wxHORIZONTAL);
+
    _xScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _yScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
    _zScaleCtrl =  new wxSpinCtrlDbl(_transformPanel, TRANSFORM_PANEL_ID);
@@ -324,7 +331,13 @@ void CADNodePropertiesDlg::_buildTransformPanel()
       _zRotationCtrl->SetValue(_cadNode->GetTransform()->GetRotationArray()->GetElement(2));
    }
    
-   transformPropSizer->Add(scaleSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   m_uniformScale = new wxCheckBox(_transformPanel, UNIFORM_SCALE, wxT("Uniform Scaling"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   m_uniformScale->SetValue( true );
+
+   scaleInfo->Add(scaleSizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   scaleInfo->Add(m_uniformScale, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   transformPropSizer->Add(scaleInfo,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    transformPanelSizer->Add(transformPropSizer,1,wxEXPAND|wxALIGN_CENTER);
    _transformPanel->SetAutoLayout(true);
@@ -873,10 +886,45 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 
       temp.clear();
 
-      temp.push_back(_xScaleCtrl->GetValue());
-      temp.push_back(_yScaleCtrl->GetValue());
-      temp.push_back(_zScaleCtrl->GetValue());
+	  double xScale = _xScaleCtrl->GetValue();
+	  double yScale = _yScaleCtrl->GetValue();
+	  double zScale = _zScaleCtrl->GetValue();
+
+	  if( m_uniformScale->IsChecked() == true )
+	  {
+		 if( tempX != xScale )
+		 {
+			double scaleBy = _xScaleCtrl->GetValue();
+			_yScaleCtrl->SetValue(scaleBy);
+			_zScaleCtrl->SetValue(scaleBy);
+		 }
+		 else if( tempY != yScale )
+		 {
+			double scaleBy = _yScaleCtrl->GetValue();
+			_xScaleCtrl->SetValue(scaleBy);
+			_zScaleCtrl->SetValue(scaleBy);
+		 }
+		 else if( tempZ != zScale )
+		 {
+			double scaleBy = _zScaleCtrl->GetValue();
+			_xScaleCtrl->SetValue(scaleBy);
+			_yScaleCtrl->SetValue(scaleBy);
+		 }
+	     temp.push_back(_xScaleCtrl->GetValue());
+         temp.push_back(_yScaleCtrl->GetValue());
+         temp.push_back(_zScaleCtrl->GetValue());
+	  }
+	  else
+	  {
+	     temp.push_back(_xScaleCtrl->GetValue());
+         temp.push_back(_yScaleCtrl->GetValue());
+         temp.push_back(_zScaleCtrl->GetValue());	  
+	  }
       _cadNode->GetTransform()->GetScaleArray()->SetArray(temp);
+
+	  tempX = _xScaleCtrl->GetValue();
+	  tempY = _yScaleCtrl->GetValue();
+	  tempZ = _zScaleCtrl->GetValue();
 
       temp.clear();
 
@@ -909,12 +957,17 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
       _sendCommandsToXplorer();
    }
 }
-////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::UpdateUniformScale( wxCommandEvent& WXUNUSED(event) )
+{
+
+}
+///////////////////////////////////////////////////////////////////////////////
 unsigned char CADNodePropertiesDlg::_convertToUnsignedCharColor(double value)
 {
    return (unsigned char)(255.0 - 255.0*(1.0-value));
 }
-//////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 double CADNodePropertiesDlg::_convertToDoubleColor(unsigned char value)
 {
    return ((double)(value))/255.0;
