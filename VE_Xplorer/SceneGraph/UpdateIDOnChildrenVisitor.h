@@ -32,35 +32,52 @@
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef UPDATE_ID_ON_CHILDREN_VISITOR_H
 #define UPDATE_ID_ON_CHILDREN_VISITOR_H
+
 /*!\file UpdateIDOnChildrenVisitor.h
-UpdateIDOnChildrenVisitor API
 */
 
 /*!\class VE_SceneGraph::UpdateIDOnChildrenVisitor
 *
 */
 
+/*!\namespace VE_SceneGraph
+*
+*/
+
+// --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
-
-#include <osg/NodeVisitor>
-
-#include <string>
 
 namespace VE_SceneGraph
 {
 class DCS;
+}
 
+// --- OSG Includes --- //
+#include <osg/NodeVisitor>
+
+// --- C/C++ Libraries
+#include <string>
+
+namespace VE_SceneGraph
+{
 class VE_SCENEGRAPH_EXPORTS UpdateIDOnChildrenVisitor : public osg::NodeVisitor
 {
 public:
-   ///Constructor
-	UpdateIDOnChildrenVisitor( VE_SceneGraph::DCS* node, std::string ID );
-   ///Destructor
-   virtual ~UpdateIDOnChildrenVisitor();
-   ///Apply function that gets called during the traversal
-   virtual void apply( osg::PositionAttitudeTransform& node );
+    ///Constructor
+    ///\param node The node to be traversed
+    ///\param id The model's GUID
+	UpdateIDOnChildrenVisitor( VE_SceneGraph::DCS* node, std::string id );
+
+    ///Destructor
+    virtual ~UpdateIDOnChildrenVisitor( void );
+
+    ///Apply function that gets called during the traversal
+    ///\param node A child osg::PositionAttitudeTransform w/in the traversed node
+    virtual void apply( osg::PositionAttitudeTransform& node );
+
 private:
-   std::string modelGUID;///<GUID to identify the VE-Open model
+    std::string modelGUID;///<GUID to identify the VE-Open model
+
 };
 }
 
