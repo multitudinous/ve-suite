@@ -125,7 +125,7 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntityHelper::~CADEntityHelper( void )
+CADEntityHelper::~CADEntityHelper()
 {
     //If neccesary
 #ifdef _OSG
@@ -135,7 +135,18 @@ CADEntityHelper::~CADEntityHelper( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-osg::Node* CADEntityHelper::GetNode( void )
+void CADEntityHelper::SetNode( osg::Node* node )
+#elif _OPENSG
+#endif
+{
+#ifdef _OSG
+    m_cadNode = node;
+#elif _OPENSG
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
+#ifdef _OSG
+osg::Node* CADEntityHelper::GetNode()
 #elif _OPENSG
 #endif
 {

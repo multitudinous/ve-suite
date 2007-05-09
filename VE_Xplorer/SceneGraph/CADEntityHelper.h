@@ -120,7 +120,7 @@ public:
     CADEntityHelper( const CADEntityHelper& );
 
     ///Destructor
-    virtual ~CADEntityHelper();
+    ~CADEntityHelper();
 
     ///Equal operator
     CADEntityHelper& operator=( const CADEntityHelper& );
@@ -140,9 +140,13 @@ public:
     ///\param onOff Turn on/off rendering of this CADEntityHelper
     void ToggleDisplay( bool onOff );
     
-    ///Return the node of CADEntityHelper
 #ifdef _OSG
-    virtual osg::Node* GetNode();
+    ///Set the node of CADEntityHelper
+    ///\param node An osg::Node pointer
+    void SetNode( osg::Node* node );
+
+    ///Return the node of CADEntityHelper
+    osg::Node* GetNode();
 #elif _OPENSG
 #endif
 
@@ -154,7 +158,7 @@ public:
                    bool isStream = false
                    #endif
                    );
-protected:
+private:
 #ifdef _OSG
     osg::ref_ptr< osg::Node > m_cadNode;///<Node representing the loaded in geometry file
     osg::ref_ptr< osg::LightModel > m_lightModel;///<The light model of CADEntityHelper

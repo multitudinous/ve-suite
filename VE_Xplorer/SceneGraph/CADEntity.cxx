@@ -70,6 +70,20 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool 
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+CADEntity::CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS )
+{
+    //Need to fix this and move some code to Node
+    //Leave some code here no more FILEInfo
+    m_dcs = new VE_SceneGraph::DCS();
+    m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper();
+
+    m_cadEntityHelper->SetNode( node );
+    m_fileName.assign( "" );
+    m_dcs->SetName( "CADEntityDCS" );
+    m_dcs->addChild( m_cadEntityHelper->GetNode() );
+    parentDCS->AddChild( m_dcs.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS )
 {
     //Need to fix this and move some code to Node

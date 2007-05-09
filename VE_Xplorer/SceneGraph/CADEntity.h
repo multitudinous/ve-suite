@@ -84,6 +84,11 @@ public:
     ///\param isStream Is the file a stream
     CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool isStream = false );
 
+    ///Constructor that takes an osg::Node*
+    ///\param node
+    ///\param parentDCS
+    CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS );
+
     ///Constructor that takes a CADEntityHelper and deep copies the osg node contained in the CADEntityHelper
     ///\param nodeToCopy The node to copy
     ///\param parentDCS The parent DCS that CADEntity is added to
