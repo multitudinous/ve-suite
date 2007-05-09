@@ -92,17 +92,17 @@ public:
    ///Update the current object selected
    virtual void UpdateSelection();
 
-   ///bool to set the rotation method
-   ///\param flag Indicates if rotation method is needed
-   void SetHeadRotationFlag( int flag );
+   ///Set the rotation method
+   ///\param input Indicates which rotation method is needed
+   void SetHeadRotationFlag( int input );
 
    ///New function for new VECommand structure
    ///\param veCommand Sets the Command used for navigation
    void SetVECommand( VE_XML::Command* veCommand );
 
-   ///Do not let the user go below the ground plane at 0,0,0 
-   ///\param zero Flag to insure translation does not go below zero plane
-   void SetSubZeroFlag( int zero );
+   ///Does not let the user go below the ground plane at 0,0,0 
+   ///\param input Flag to insure translation does not go below zero plane
+   void SetSubZeroFlag( int input );
 
    ///Identifies selection chosen by wand
    void SelectObject( void );
@@ -159,12 +159,9 @@ private:
    gadget::DigitalInterface IHdigital[10]; ///<do not know what this does
    gadget::DigitalInterface flyThrough[4]; ///<do not know what this does
    int buttonData[ 6 ]; ///<do not know what this does
-   // x, y, and z translation of objects in world coordinates.
-   // Variables only used in preFrame
 
    int cfdIso_value; ///<Value to translate
 
-   //vjPosInterface wand;
    gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
    gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
@@ -187,7 +184,7 @@ private:
    int subzeroFlag; ///<Zero plane flag
 
    VE_XML::Command* command; ///<Stores xml command
-   // data storage for initial world dcs location
+
    double deltaTrans[ 3 ]; ///<Stores difference in translation from last position to to current
    
    osg::ref_ptr<osg::Geode> selectedGeometry; ///<Geometry currently selected

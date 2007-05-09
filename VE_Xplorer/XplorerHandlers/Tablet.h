@@ -81,12 +81,12 @@ public:
    ///Update the position in scene
    void UpdateNavigation( void );
 
-   ///bool to set the rotation method
-   ///\param flag Indicates if rotation method is needed
-   void SetHeadRotationFlag( int flag );
+   ///Set the rotation method
+   ///\param input Indicates which rotation method is needed
+   void SetHeadRotationFlag( int input );
 
-   ///Do not let the user go below the ground plane at 0,0,0 
-   ///\param zero Flag to insure translation does not go below zero plane
+   ///Does not let the user go below the ground plane at 0,0,0 
+   ///\param input Flag to insure translation does not go below zero plane
    void SetSubZeroFlag( int zero );
 
    ///New function for new VECommand structure
@@ -95,7 +95,7 @@ public:
 private:
    gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
-   int cfdIso_value; ///<variable used for keeping track of movement
+   int cfdIso_value; ///<Variable used for keeping track of type of movement
 private:
    gmtl::Matrix44f vjMat; ///<Contains current translation matrix
    gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix

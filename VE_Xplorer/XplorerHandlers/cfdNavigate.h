@@ -68,167 +68,140 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdNavigate
 {
 public:
-   //! Constructor
-   /*!
-   Constructs VR Juggler objects.
-   */
+   /// Constructor
    cfdNavigate( );
-   //! Destructor
+
+   /// Destructor
    ~cfdNavigate( );
-   //! Wand object
-   /*!
-   Initialization of navigation objects: VR Juggler, wand, cursor, data set
-   */
-   void Initialize( VE_SceneGraph::DCS* );
+
+   ///Initialization of navigation objects
+   ///\param worldDCS The world coordinate system
+   void Initialize( VE_SceneGraph::DCS* worldDCS);
+
+   ///Update nagvigation commands
    void updateNavigationFromGUI( void );
-   //! Wand object
-   /*!
-   Get wand direction.
-   */
-   double * GetDirection( );
-   //! Wand object
-   /*!
-   Get wand location.
-   */
-   double * GetLocation( );
+
+   ///Get wand direction
+   double* GetDirection( );
+
+   ///Get wand location
+   double* GetLocation( );
+
+   ///Get the object location
+   ///\param xyzO An array of floats containing the object position
    void GetObjLocation( float xyzO[3] );
+
+   ///Get the object location
+   ///\param &x0 The x position
+   ///\param &y0 The y position
+   ///\param &z0 The z position
    void GetObjLocation( float &xO, float &yO, float &zO );
-   //! Data set object(s)
-   /*!
-   Get actual cursor location with respect to the data set.
-   */
-   float * GetObjLocation( );
-   float * GetCurObjLocation( );  //added
-   //!  Cursor object(s)
-   /*!
-   Get cursor location with respect to the virtual space.
-   */
-   double * GetCursorLocation( );
-   //! Virtual environment object(s)
-   /*!
-   Get location of objects with respect to virtual space.
-   */
-   double * GetWorldLocation( );
+
+   ///Get the object location
+   float* GetObjLocation( );
+
+   ///Get the cursor location with respect to the data set
+   float* GetCurObjLocation( ); 
+
+   ///Get cursor location with respect to the virtual space
+   double* GetCursorLocation( );
+
+   ///Get the world location
+   double* GetWorldLocation( );
+
+   ///Get the world location
+   ///\param xyzW An array of doubles containing the world coordinates
    void GetWorldLocation( double xyzW[3] );
+
+   ///Get the world location
+   ///\param &xW The x world coordinate
+   ///\param &yW The y world coordinate
+   ///\param &zW The z world coordinate
    void GetWorldLocation( double &xW, double &yW, double &zW );
+
+   ///Set the world coordinates
+   ///\param xyzW An array of doubles containing the world coordinates
    void SetWorldLocation( double xyzW[ 3 ] );
-   //! Wand object
-   /*!
-   Forward translation.
-   */
+
+   ///Forward translation
    void FwdTranslate( );
-   //! Wand object
-   /*!
-   Aft translation.
-   */
+
+   ///Aft translation
    void AftTranslate( );
-   //! Cursor object
-   /*!
-   Cursor tracker.
-   */
+
+   ///Cursor tracker
    void CursorTranslate( );
 
-   void UpdateLoc( double* );
+   ///Update the world coordinates
+   ///\param tempTrans An array of doubles with new coordinate position
+   void UpdateLoc( double* tempTrans );
 
+   ///Transfer VRJuggler coordinates to OSG
    void UpdateDir( );
 
+   ///Get the current world coordinate translation
    double* GetWorldTranslation();
+
+   ///Get the current world coordinate rotation
    float* GetWorldRotation();
 
-   void SetHeadRotationFlag( int );
-   void SetSubZeroFlag( int );
+   ///Set the rotation method
+   ///\param input Indicates which rotation method is needed
+   void SetHeadRotationFlag( int input );
 
-   // New function for testing the new VECommand structure
+   ///Does not let the user go below the ground plane at 0,0,0 
+   ///\param zero Flag to insure translation does not go below zero plane
+   void SetSubZeroFlag( int input );
+
+   ///New function for testing the new VECommand structure
+   ///\param veCommand Sets the Command used for navigation
    void SetVECommand( VE_XML::Command* veCommand );
 private:
-   /*!
-   Update wand location.
-   */
+   ///Update wand location
    void UpdateLoc( );
-   //! VR Juggler
-   /*!
-   VR Juggler's wand positional interface.
-   */
-   //vjPosInterface wand;
-   gadget::PositionInterface  wand;
-   gadget::PositionInterface  head;
+
+   gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
+   gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
    // VR Juggler's wand digital interface.
 public:
-   gadget::DigitalInterface digital[6];
-   gadget::DigitalInterface IHdigital[10];
-   gadget::DigitalInterface flyThrough[4];
-   int buttonData[ 6 ];
-   // x, y, and z translation of objects in world coordinates.
-   // Variables only used in preFrame
-   double * currentWandDirection;
-   int cfdId;
-   int cfdIso_value;
-   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
+   gadget::DigitalInterface digital[6]; ///Array handling button controls on wand
+   gadget::DigitalInterface IHdigital[10]; ///<do not know what this does
+   gadget::DigitalInterface flyThrough[4]; ///<do not know what this does
+   int buttonData[ 6 ]; ///<do not know what this does
 
-   double worldTrans[ 3 ];
-   float worldRot[ 3 ];
+   double* currentWandDirection; ///<Current wand direction
+   int cfdIso_value; ///<Variable used for keeping track of type of movement
+   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS; ///<The world coordinate system
+
+   double worldTrans[ 3 ]; ///<World coordinate translation
+   float worldRot[ 3 ]; ///<World coordinate rotation
 
 private:
-   //! VR Juggler
-   /*!
-   VR Juggler's vector math function.
-   */
-   gmtl::Vec3f  vjVec;
-   gmtl::Vec3f  LastVec;
-   //! VR Juggler
-   /*!
-   VR Juggler's matrix math function.
-   */
-   gmtl::Matrix44f vjMat;
-   gmtl::Matrix44f vjHeadMat;
-   //! Wand object
-   /*!
-   Location of the wand with respect to the virtual space.
-   */
-   double loc[3];
-   //! Wand object
-   /*!
-   Direction of the wand.
-   */
-   double dir[3];
-   //! Virtual environment object(s)
-   /*!
-   Location of the objects with respect to the virtual space.
-   */
-   double worldLoc[3];
-   //! Cursor object(s)
-   /*!
-   Location of the cursor with respect to the virtual space.
-   */
-   double cursorLoc[3];
-   //! Data set object(s)
-   /*!
-   Location with respect to data set (the actual location to interact with data).
-   */
-   float objLoc[3];
-   //! Cursor object(s)
-   /*!
-   Cursor length.
-   */
-   float cursorLen;
-   //! Wand object
-   /*!
-   Displacement of the objects in virtual space.
-   */
-   float dObj;
+   gmtl::Vec3f  vjVec; ///<VRJuggler's vector position
+   gmtl::Vec3f  LastVec; ///<VRJuggler's last vector position
 
-   float translationStepSize;
-   float rotationStepSize;
+   gmtl::Matrix44f vjMat; ///<Contains current translation matrix
+   gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix
 
-   int rotationFlag;
-   int subzeroFlag;
+   double loc[3]; ///<Location of the wand with respect to the virtual space
+   double dir[3]; ///<Direction of the wand
+   double worldLoc[3]; ///<Location of the objects with respect to the virtual space
+   double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
+   float objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
+   float cursorLen; ///<Cursor length
+   float dObj; ///<Displacement of the objects in virtual space
 
-   // class used to store xml command
-   VE_XML::Command* command;
-   // data storage for initial world dcs location
-   float initialTranslate[ 3 ];
-   float initialRotate[ 3 ];
+   float translationStepSize; ///<Size of translation step
+   float rotationStepSize; ///<Size of rotation step
+
+   int rotationFlag; ///<Rotation flag
+   int subzeroFlag; ///<Zero plane flag
+ 
+   VE_XML::Command* command; ///<Store xml command
+
+   float initialTranslate[ 3 ]; ///<Initial world coordinate translation
+   float initialRotate[ 3 ]; ///<Initial world coordinate rotation
 };
 }
 #endif
