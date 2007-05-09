@@ -85,17 +85,17 @@ class VE_SCENEGRAPH_EXPORTS DCS : public osg::PositionAttitudeTransform, public 
 {
 public:
    ///Constructor
-   DCS( void );
+   DCS();
 
 protected:
    ///Destructor
-   virtual ~DCS( void );
+   virtual ~DCS();
 
 public:
    ///Constructor to set user defined transform values
-   ///\param scale
-   ///\param trans
-   ///\param rot
+   ///\param scale The scale array pointer
+   ///\param trans The translation array pointer
+   ///\param rot The rotation array pointer
    DCS( float* scale, float* trans, float* rot );
 
    ///Copy constructor using CopyOp to manage deep vs shallow copy
@@ -104,43 +104,43 @@ public:
    META_Node( VE_SceneGraph, DCS );
 
    ///Get translation array pointer
-   float* GetVETranslationArray( void );
+   float* GetVETranslationArray();
 
    ///Get rotation array pointer
-   float* GetRotationArray( void );
+   float* GetRotationArray();
 
    ///Get scale array pointer
-   float* GetScaleArray( void );
+   float* GetScaleArray();
 
    ///Get the transform in 4x4 matrix form
-   gmtl::Matrix44f GetMat( void );
+   gmtl::Matrix44f GetMat();
 
    ///Set the translation array with a vector
-   ///\param transArray
+   ///\param transArray A vector to set the translation array values
    void SetTranslationArray( std::vector< double > transArray );
 
    ///Set the translation array
-   ///\param trans The translation array pointer
+   ///\param trans A pointer to set the translation array values
    void SetTranslationArray( float* trans );
 
    ///Set the attitude with a quat
-   ///\param quat
+   ///\param quat A quat to set the attitude
    void SetQuat( osg::Quat quat );
 
    ///Set the rotation array with a vector
-   ///\param rotArray
+   ///\param rotArray A vector to set the rotation array values
    void SetRotationArray( std::vector< double > rotArray );
 
    ///Set the rotation array with a pointer
-   ///\param rot
+   ///\param rot A pointer to set the rotation array values
    void SetRotationArray( float* rot );
 
    ///Set the scale array with a vector
-   ///\param scaleArray
+   ///\param scaleArray A vector to set the scale array values
    void SetScaleArray( std::vector< double > scaleArray );
 
    ///Set the scale array with a pointer
-   ///\param scale
+   ///\param scale A pointer to set the scale array values
    void SetScaleArray( float* scale );
 
    ///Set the matrix for this transform
@@ -152,25 +152,25 @@ public:
    void SetRotationMatrix( gmtl::Matrix44f& input );
 
    ///Generic set name function
-   ///\param name
+   ///\param name The name
    void SetName( std::string name );
 
    ///Generic remove child function
-   ///\param child
+   ///\param child The child to be removed
    int RemoveChild( SceneNode* child );
 
    ///Generic add child function
-   ///\param child
+   ///\param child The child to be added
    int AddChild( SceneNode* child );
 
    ///Generic insert child function
-   ///\param position
-   ///\param child
+   ///\param position The position of the child to be inserted
+   ///\param child The child that is inserted
    void InsertChild( int position, SceneNode* child );
 
    ///Generic replace child function
-   ///\param childToBeReplaced
-   ///\param newChild
+   ///\param childToBeReplaced The child to be replaced
+   ///\param newChild The new child
    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
 
    ///Generic search child function
@@ -186,10 +186,10 @@ public:
    osg::Node* GetChild( unsigned int position );
 
    ///Generic get number of children
-   int GetNumChildren( void );
+   int GetNumChildren();
 
    ///Set the name of the node
-   const std::string GetName( void );
+   const std::string GetName();
 
    ///Toggle the display of this node
    ///\param onOff Toggle the display of this node
@@ -200,7 +200,7 @@ public:
    void ToggleDisplay( bool onOff );
 
    ///Set the Bullet rigid body for this node, typically is set from CADEntity
-   ///\param rigidBody
+   ///\param rigidBody The btRigidBody*
    void SetbtRigidBody( btRigidBody* rigidBody );
    
 protected:
@@ -213,7 +213,7 @@ protected:
 private:
    ///Update the bullet matrix with the matrix from the osg node
    ///The osg node gets set first and is then updated by the bullet physics simulator
-   void UpdatePhysicsTransform( void );
+   void UpdatePhysicsTransform();
    
    osg::ref_ptr< TransferPhysicsDataCallback > m_udcb;///<The callback to update the sg node with physics data
 
@@ -225,10 +225,10 @@ class TransferPhysicsDataCallback : public osg::NodeCallback
 {
 public:
    ///Constructor
-   TransferPhysicsDataCallback( void );
+   TransferPhysicsDataCallback();
 
    ///Destructor
-   virtual ~TransferPhysicsDataCallback( void ){;}
+   virtual ~TransferPhysicsDataCallback(){;}
 
    ///Copy constructor
    TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );

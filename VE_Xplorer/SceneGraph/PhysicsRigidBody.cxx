@@ -82,7 +82,7 @@ NodeVisitor( TRAVERSE_ALL_CHILDREN )
 
    node->accept( *this );
 
-   //this->CreateBoundingBoxShape();
+   this->CreateBoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()

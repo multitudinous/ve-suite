@@ -32,14 +32,24 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXT_TEXTURE_H
 #define TEXT_TEXTURE_H
-#ifdef _OSG
+
 /*!\file TextTexture.h
-* Text Texture API that renders text offscreen to a texture
+*Text Texture API that renders text offscreen to a texture
 */
 
 /*!\class VE_SceneGraph::TextTexture
 *
 */
+
+/*!\namespace VE_SceneGraph
+*
+*/
+
+// --- VE-Suite Includes --- //
+#include "VE_Xplorer/SceneGraph/Geode.h"
+
+// --- OSG Includes --- //
+#ifdef _OSG
 #include <osg/Version>
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
 #include <osg/CameraNode>
@@ -52,12 +62,12 @@ namespace osg
    class CameraNode;
 #endif
 }
+
 namespace osgText
 {
    class Font;
    class Text;
 }
-#include "VE_Xplorer/SceneGraph/Geode.h"
 
 namespace VE_SceneGraph
 {
@@ -68,23 +78,27 @@ public:
    ///\param textureResolutionX The X resolution of the output texture in pixels
    ///\param textureResolutionY The Y resolution of the output texture in pixels
    ///\param fontFile The file to load fonts from. See osgText/Font for usage.
-   TextTexture(unsigned int textureResolutionX=1024,
-               unsigned int textureResolutionY=1024,
-               std::string fontFile="fonts/arial.ttf");
+   TextTexture(unsigned int textureResolutionX = 1024,
+               unsigned int textureResolutionY = 1024,
+               std::string fontFile = "fonts/arial.ttf" );
+
    ///Copy constructors for osg
    TextTexture( const TextTexture& ttexture, 
-                const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
+                const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
    
    META_Node( VE_SceneGraph, TextTexture );
-   ///set the color of the text
+
+   ///Set the color of the text
    ///\param color Text color
-   void SetTextColor(float color[4]);
+   void SetTextColor( float color[4] );
 
-   ///Set font
+   ///Set the font
    ///\param fontFile The file containing the font to use 
-   void SetFont(std::string fontFile);
+   void SetFont( std::string fontFile );
 
-   void UpdateText(std::string newText);
+   ///Update the text
+   ///\param newText The new text
+   void UpdateText( std::string newText );
 
    ///Get the texture with the text
    osg::Texture2D* GetTexture();
@@ -100,14 +114,17 @@ protected:
    void _initializeFBO();
 
    bool _fboInitialized;///<Flag for camera node state
-   float _textColor[4];///<The color of the text. Default is black;
+   float _textColor[4];///<The color of the text, default is black
    unsigned int _textureResolution[2];///<The texture resolution
    std::string _font;///<The font file
    osg::ref_ptr<osgText::Text> _text;///<The text
    osg::ref_ptr<osg::Texture2D> _texture;///<The texture we create
    osg::ref_ptr<osg::CameraNode> _fbo;///<The off screen rendering node
    //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
+
 };
 }
+
 #endif//_OSG
+
 #endif //TEXT_TEXTURE_H

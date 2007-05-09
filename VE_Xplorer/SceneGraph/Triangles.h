@@ -1,8 +1,9 @@
-#ifndef GETVESUITE_Triangles_H
-#define GETVESUITE_Triangles_H
+#ifndef TRIANGLES_H
+#define TRIANGLES_H
 
+// --- C/C++ Libraries --- //
 #include <string>
 
-std::string GetVESuite_Triangles( void );
-#endif
+std::string GetVESuite_Triangles();
 
+#endif //TRIANGLES_H

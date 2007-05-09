@@ -78,23 +78,23 @@ public:
    ///\param param
    void Initialize( std::string param );
 
-   ///
-   void CleanUp( void );
+   ///Acts as the destructor
+   void CleanUp();
 
-   ///
-   void InitScene( void );
+   ///Initialize the scene
+   void InitScene();
 
    ///Return the root node of the scenegraph
-   VE_SceneGraph::Group* GetRootNode( void );
+   VE_SceneGraph::Group* GetRootNode();
 
    ///Return the world DCS of the scenegraph
-   VE_SceneGraph::DCS* GetWorldDCS( void );
+   VE_SceneGraph::DCS* GetWorldDCS();
 
    ///Return the network DCS of the scenegraph
-   VE_SceneGraph::DCS* GetNetworkDCS( void );
+   VE_SceneGraph::DCS* GetNetworkDCS();
 
    ///Return the active switch node of the scenegraph
-   VE_SceneGraph::DCS* GetActiveSwitchNode( void );
+   VE_SceneGraph::DCS* GetActiveSwitchNode();
 
    ///Set the node on the switch node that is active
    ///\param activeNode The node to activate
@@ -105,7 +105,7 @@ public:
    void ViewLogo( bool trueFalse );
 
    ///PreFrameUpdate call to sync DCS information across cluster
-   void PreFrameUpdate( void );
+   void PreFrameUpdate();
 
 private:
    //Required so that vpr::Singleton can instantiate this class
@@ -114,17 +114,17 @@ private:
    //SceneManager& operator=(const SceneManager& o){;}
 
    ///Base Constructor
-   SceneManager( void );
+   SceneManager();
 
    ///Destructor
    ///Never gets called, don't implement
-   ~SceneManager( void ){;}
+   ~SceneManager(){;}
 
    vprSingletonHeader( SceneManager );
 
    std::string _param;///<
-   osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<
-   osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;///<
+   osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<The root node of our scenegraph
+   osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;///<The node which contains our logo
    osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
    osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
@@ -134,7 +134,7 @@ private:
 protected:
    ///Create the model for the logo
    #ifdef _OSG
-      void _createLogo( void );
+      void _createLogo();
    #endif
 
 };

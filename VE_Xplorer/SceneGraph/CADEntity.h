@@ -90,26 +90,26 @@ public:
     CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS );
 
     ///Destructor
-    ~CADEntity( void );
+    ~CADEntity();
 
     ///Initializes physics for CADEntity
     //Unless this is called, physics will not work
-    void InitPhysics( void );
+    void InitPhysics();
 
     ///Returns the DCS of CADEntity
-    VE_SceneGraph::DCS* GetDCS( void );
+    VE_SceneGraph::DCS* GetDCS();
 
     ///Returns the node of CADEntity
-    VE_SceneGraph::CADEntityHelper* GetNode( void );
+    VE_SceneGraph::CADEntityHelper* GetNode();
 
     ///Returns the physics rigid body of CADEntity
-    VE_SceneGraph::PhysicsRigidBody* GetPhysicsRigidBody( void );
+    VE_SceneGraph::PhysicsRigidBody* GetPhysicsRigidBody();
 
     ///Returns the filename of CADEntity
-    std::string GetFilename( void );
+    std::string GetFilename();
 
     ///Returns the transparency state of the node
-    bool GetTransparentFlag( void );
+    bool GetTransparentFlag();
 
     ///Set the transparency state of the node
     ///\param flag The transparency state

@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_GROUP_H
-#define VE_GROUP_H
+#ifndef GROUP_H
+#define GROUP_H
 
 /*!\file Group.h
 */
@@ -60,68 +60,68 @@ class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
 #endif
 {
 public:
-   ///Default constructor
-   Group( void );
+    ///Default constructor
+    Group();
 
-   ///Copy constructor using CopyOp to manage deep vs shallow copy
-   Group( const Group&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    Group( const Group&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
    
-   META_Node( VE_SceneGraph, Group );
+    META_Node( VE_SceneGraph, Group );
 
 protected:
-   ///Destructor
-   virtual ~Group( void );
+    ///Destructor
+    virtual ~Group();
    
 public:
-   ///Generic set name function
-   ///\param name The name of the node
-   void SetName( std::string name );
+    ///Generic set name function
+    ///\param name The name of the node
+    void SetName( std::string name );
 
-   ///Generic remove child function
-	///\param child The child that is removed
-   int RemoveChild( SceneNode* child );
+    ///Generic remove child function
+    ///\param child The child that is removed
+    int RemoveChild( SceneNode* child );
 
-   ///Generic add child function
-	///\param child The child that is added
-   int AddChild( SceneNode* child );
+    ///Generic add child function
+    ///\param child The child that is added
+    int AddChild( SceneNode* child );
 
-   ///Generic insert child function
-	///\param position The specific location within the group
-   ///\param child The child that is inserted
-   void InsertChild( int position, SceneNode* child );
+    ///Generic insert child function
+    ///\param position The specific location within the group
+    ///\param child The child that is inserted
+    void InsertChild( int position, SceneNode* child );
 
-   ///Generic replace child function
-	///\param childToBeReplaced The child to be replaced
-   ///\param newChild The new child
-   int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
+    ///Generic replace child function
+    ///\param childToBeReplaced The child to be replaced
+    ///\param newChild The new child
+    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
 
-	///Generic search child function
-	///\param searchChild SceneNode* of child to be found
-	bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+    ///Generic search child function
+    ///\param searchChild SceneNode* of child to be found
+    bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
 
-	///Generic find parent function
-	///\param position The position of the parent to be returned
-	osg::Group* GetParent( unsigned int position );
+    ///Generic find parent function
+    ///\param position The position of the parent to be returned
+    osg::Group* GetParent( unsigned int position );
 
-	///Generic get child function
-	///\param position The position of the child to be returned
-	osg::Node* GetChild( unsigned int position );
+    ///Generic get child function
+    ///\param position The position of the child to be returned
+    osg::Node* GetChild( unsigned int position );
 
-   ///Generic get number of children
-   int GetNumChildren( void );
+    ///Generic get number of children
+    int GetNumChildren();
 
-   ///Get the name of the node
-   const std::string GetName( void );
+    ///Get the name of the node
+    const std::string GetName();
 
-	///Set the node mask on or off
-	///\param onOff Node mask state
-	void ToggleDisplay( std::string onOff );
+    ///Set the node mask on or off
+    ///\param onOff Node mask state
+    void ToggleDisplay( std::string onOff );
 
-	///Set the node mask on or off
-	///\param onOff Node mask state
-	void ToggleDisplay( bool onOff );
+    ///Set the node mask on or off
+    ///\param onOff Node mask state
+    void ToggleDisplay( bool onOff );
 
 };
 }
 
-#endif //VE_GROUP_H
+#endif //GROUP_H

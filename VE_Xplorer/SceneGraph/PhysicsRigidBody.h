@@ -64,18 +64,18 @@ class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::N
 {
 public:
    ///Base Constructor
-   ///\param node
+   ///\param node The node to create a physics mesh from
    PhysicsRigidBody( osg::Node* node );
 
    ///Destructor
    virtual ~PhysicsRigidBody();
 
    ///Override NodeVisitor apply function for geode
-   ///\param geode 
+   ///\param geode A child geode w/in the node being traversed
    virtual void apply( osg::Geode& geode );
 
-   ///
-   ///\param mass
+   ///Set the mass for the rigid body
+   ///\param mass The mass value
    void setMass( float mass );
 
    ///Creates a box shape from the osg::BoundingBox of the mesh shape
@@ -92,6 +92,7 @@ private:
 
    btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
    btCollisionShape* collision_shape;///<The collision shape for the osg node
+
 };
 }
 

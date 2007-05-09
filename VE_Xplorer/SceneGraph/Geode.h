@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_GEODE_H
-#define VE_GEODE_H
+#ifndef GEODE_H
+#define GEODE_H
 
 /*!\file Geode.h
 */
@@ -54,6 +54,7 @@
 #elif _OPENSG
 #endif
 
+// --- VTK Includes --- //
 class vtkActor;
 
 namespace VE_SceneGraph
@@ -63,35 +64,37 @@ class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
 #endif
 {
 public:
-   ///Constructor
-   Geode( void );
+    ///Constructor
+    Geode();
 
 protected:
-   ///Destructor
-   virtual ~Geode( void );
+    ///Destructor
+    virtual ~Geode();
 
 public:
-   ///Copy constructor using CopyOp to manage deep vs shallow copy
-   Geode( const Geode& geode, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    ///\param geode
+    ///\param copyop
+    Geode( const Geode& geode, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
    
-   META_Node( VE_SceneGraph, Geode );
+    META_Node( VE_SceneGraph, Geode );
 
-   ///Turn vtkActorToXX on and off
-   ///\param onOff
-   void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
+    ///Turn vtkActorToXX on and off
+    ///\param onOff The VTK debug level
+    void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
 
-   ///This function implements the respective translate vtkActorToGeode
-   ///\param actor
-   void TranslateToGeode( vtkActor* actor );
+    ///This function implements the respective translate vtkActorToGeode
+    ///\param actor The VTK actor to be translated to a geode
+    void TranslateToGeode( vtkActor* actor );
 
-	///Generic get parent function
-	///\param position
-	osg::Group* GetParent( unsigned int position );
+    ///Generic get parent function
+    ///\param position The position of the parent to be returned
+    osg::Group* GetParent( unsigned int position );
 
 protected:
-   int _vtkDebugLevel;///<The VTK debug level
+    int _vtkDebugLevel;///<The VTK debug level
 
 };
 }
 
-#endif //VE_GEODE_H
+#endif //GEODE_H

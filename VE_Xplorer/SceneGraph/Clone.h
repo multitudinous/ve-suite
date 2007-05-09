@@ -65,14 +65,14 @@ class VE_SCENEGRAPH_EXPORTS Clone
 {
 public:
    ///Base Constructor
-   Clone( void );
+   Clone();
 
    ///Constructor
    ///\param original The original node to be cloned
    Clone( osg::Node* original );
 
    //Destructor
-   ~Clone( void );
+   ~Clone();
 
    ///Clones a scenegraph node
    ///\param original The original node to be cloned
@@ -91,7 +91,7 @@ public:
    void SetScaleArray( float* scale );
 
    ///Return the cloned structure including the transform
-   VE_SceneGraph::DCS* GetClonedGraph( void );
+   VE_SceneGraph::DCS* GetClonedGraph();
    
 protected:
    osg::ref_ptr< VE_SceneGraph::DCS > m_cloneTransform;///<The cloned structure including the transform

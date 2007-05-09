@@ -66,7 +66,7 @@ public:
     ///Constructor
     ///\param node The node to be traversed
     ///\param id The model's GUID
-	UpdateIDOnChildrenVisitor( VE_SceneGraph::DCS* node, std::string id );
+    UpdateIDOnChildrenVisitor( VE_SceneGraph::DCS* node, std::string id );
 
     ///Destructor
     virtual ~UpdateIDOnChildrenVisitor( void );

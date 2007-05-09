@@ -3,9 +3,9 @@
  * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
  *
  * Original Development Team:
- *   - ISU's Thermal Systems Virtual Engineering Group,
- *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
- *   - Reaction Engineering International, www.reaction-eng.com
+ *    - ISU's Thermal Systems Virtual Engineering Group,
+ *      Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *    - Reaction Engineering International, www.reaction-eng.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -24,9 +24,9 @@
  *
  * -----------------------------------------------------------------
  * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Version:         $Rev$
+ * Author:          $Author$
+ * Id:                $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -54,40 +54,40 @@ template< typename Elem, typename Tr = std::char_traits< Elem > >
 class progress_streambuf: public std::basic_filebuf< Elem, Tr >
 {
 public:
-   typedef std::basic_filebuf< Elem, Tr > base_type;
-   
-   explicit progress_streambuf( const std::string &filename )
-   :	
-   base_type(),
-   count_(0),
-   prev_perc_(0)
-   {
-      if( base_type::open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
-      {
-         size_ = static_cast< int >( std::streambuf::pubseekoff( 0, std::ios_base::end, std::ios_base::in ) );
-         std::streambuf::pubseekoff( 0, std::ios_base::beg, std::ios_base::in );
-      }
-   }
+    typedef std::basic_filebuf< Elem, Tr > base_type;
+    
+    explicit progress_streambuf( const std::string &filename )
+    :	
+    base_type(),
+    count_( 0 ),
+    prev_perc_( 0 )
+    {
+        if( base_type::open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
+        {
+            size_ = static_cast< int >( std::streambuf::pubseekoff( 0, std::ios_base::end, std::ios_base::in ) );
+            std::streambuf::pubseekoff( 0, std::ios_base::beg, std::ios_base::in );
+        }
+    }
 
 protected:
-   virtual typename std::basic_filebuf< Elem, Tr >::int_type uflow()
-   {
-      typename std::basic_filebuf< Elem, Tr >::int_type v = base_type::uflow();
-      count_ += std::streambuf::egptr() - std::streambuf::gptr();
-      int p = count_ * 40 / size_;
-      if( p > prev_perc_ )
-      {
-         std::cout << "*";
-         prev_perc_ = p;
-      }
+    virtual typename std::basic_filebuf< Elem, Tr >::int_type uflow()
+    {
+        typename std::basic_filebuf< Elem, Tr >::int_type v = base_type::uflow();
+        count_ += std::streambuf::egptr() - std::streambuf::gptr();
+        int p = count_ * 40 / size_;
+        if( p > prev_perc_ )
+        {
+            std::cout << "*";
+            prev_perc_ = p;
+        }
 
-      return v;
-   }
-   
+        return v;
+    }
+    
 private:
-   int count_;
-   int size_;
-   int prev_perc_;
+    int count_;
+    int size_;
+    int prev_perc_;
 };
 
 typedef progress_streambuf< char > progbuf;
@@ -102,8 +102,8 @@ typedef progress_streambuf< char > progbuf;
 
 namespace osg 
 { 
-   class Fog; 
-   class LightModel;
+class Fog; 
+class LightModel;
 }
 #elif _OPENSG
 #endif
@@ -113,56 +113,55 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS CADEntityHelper
 {
 public:
-   ///Base Constructor
-   CADEntityHelper( void );
+    ///Base Constructor
+    CADEntityHelper();
 
-   ///Copy constructor
-   ///\param CADEntityHelper
-   CADEntityHelper( const CADEntityHelper& );
+    ///Copy constructor
+    CADEntityHelper( const CADEntityHelper& );
 
-   ///Destructor
-   virtual ~CADEntityHelper( void );
+    ///Destructor
+    virtual ~CADEntityHelper();
 
-   ///Equal operator
-   CADEntityHelper& operator=( const CADEntityHelper& );
+    ///Equal operator
+    CADEntityHelper& operator=( const CADEntityHelper& );
 
-   ///Set the name of the CADEntityHelper
-   ///\param name The name of CADEntityHelper
-   void SetName( std::string name );
+    ///Set the name of the CADEntityHelper
+    ///\param name The name of CADEntityHelper
+    void SetName( std::string name );
 
-   ///Toggle the display of this CADEntityHelper on/off
-   ///Valid values are:
-   ///ON == display this CADEntityHelper
-   ///OFF == hide this CADEntityHelper
-   ///\param onOff Turn on/off rendering of this CADEntityHelper
-   void ToggleDisplay( std::string onOff );
+    ///Toggle the display of this CADEntityHelper on/off
+    ///Valid values are:
+    ///ON == display this CADEntityHelper
+    ///OFF == hide this CADEntityHelper
+    ///\param onOff Turn on/off rendering of this CADEntityHelper
+    void ToggleDisplay( std::string onOff );
 
-   ///Toggle the display of this CADEntityHelper on/off
-   ///\param onOff Turn on/off rendering of this CADEntityHelper
-   void ToggleDisplay( bool onOff );
-   
-   ///Return the node of CADEntityHelper
+    ///Toggle the display of this CADEntityHelper on/off
+    ///\param onOff Turn on/off rendering of this CADEntityHelper
+    void ToggleDisplay( bool onOff );
+    
+    ///Return the node of CADEntityHelper
 #ifdef _OSG
-   virtual osg::Node* GetNode( void );
+    virtual osg::Node* GetNode();
 #elif _OPENSG
 #endif
 
-   ///Load a geometry file
-   ///\param filename The name of the file to be loaded
-   ///\param isStream
-   void LoadFile( std::string filename,
-                  #ifdef _OSG
-                  bool isStream = false
-                  #endif
-                  );
+    ///Load a geometry file
+    ///\param filename The name of the file to be loaded
+    ///\param isStream Is the file a stream
+    void LoadFile( std::string filename,
+                   #ifdef _OSG
+                   bool isStream = false
+                   #endif
+                   );
 protected:
 #ifdef _OSG
-   osg::ref_ptr< osg::Node > m_cadNode;///<Node representing the loaded in geometry file
-   osg::ref_ptr< osg::LightModel > m_lightModel;///<The light model of CADEntityHelper
+    osg::ref_ptr< osg::Node > m_cadNode;///<Node representing the loaded in geometry file
+    osg::ref_ptr< osg::LightModel > m_lightModel;///<The light model of CADEntityHelper
 #elif _OPENSG
 #endif
 
-   bool m_twoSidedLighting;///<The current state of two sided lighting for the node
+    bool m_twoSidedLighting;///<The current state of two sided lighting for the node
 
 };
 }

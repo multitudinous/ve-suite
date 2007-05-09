@@ -65,7 +65,7 @@ namespace VE_SceneGraph
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
 
-class	btDynamicsWorld;
+class btDynamicsWorld;
 class btCollisionDispatcher;
 class btOverlappingPairCache;
 class btSequentialImpulseConstraintSolver;
@@ -80,17 +80,17 @@ class VE_SCENEGRAPH_EXPORTS PhysicsSimulator    //: public vpr::Singleton< Physi
 {
 public:
    ///Acts as the destructor
-   void ExitPhysics( void );
+   void ExitPhysics();
 
    ///Update the physics simulation by dt
    ///\param dt The time passed since last calculations
    void UpdatePhysics( float dt );
 
    ///Update the physics simulation by one time step ( 1/60 for now )
-   void StepSimulation( void );
+   void StepSimulation();
 
    ///Reset the physics simulation
-   void ResetScene( void );
+   void ResetScene();
 
    ///
    ///\param destination 
@@ -111,20 +111,20 @@ public:
    btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
 
    ///Returns the dynamics world
-   btDynamicsWorld* GetDynamicsWorld( void );
+   btDynamicsWorld* GetDynamicsWorld();
 
 private:
    ///Base constructor
-   PhysicsSimulator( void );
+   PhysicsSimulator();
 
    ///Destructor - never gets called, don't implement
-   ~PhysicsSimulator( void ){;}
+   ~PhysicsSimulator(){;}
 
    ///VPR singleton header
    vprSingletonHeader( PhysicsSimulator );
 
    ///Sets up the dynamics, collision algorithms, and solvers
-   void InitPhysics( void );
+   void InitPhysics();
 
    bool idle;///<Determines whether physics is idle or not
    float shoot_speed;///<
