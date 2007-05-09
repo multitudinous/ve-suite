@@ -35,7 +35,7 @@
 /*!\file cfdAnimatedStreamlineCone.h
 cfdAnimatedStreamlineCone API
 */
-/*!\class VE_XPlorer::cfdAnimatedStreamlineCone
+/*!\class VE_Xplorer::cfdAnimatedStreamlineCone
 * 
 */
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
@@ -54,31 +54,38 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
 {
 public:
+   ///Base constructor
    cfdAnimatedStreamlineCone( void );
+   ///Destructor
    ~cfdAnimatedStreamlineCone();
 
    //void Initialize();
    //void SetDirection( float [3]);
    //void SetCenter( float [3]);
    //void CleanUpSequence( void );
-   void SetPolyDataSource( vtkPolyData * );
 
-   // compare VjObs_i commandArray with its child's value
+   ///Set the Polydata Source
+   ///\param polySource
+   void SetPolyDataSource( vtkPolyData * polySource);
+
+   ///compare VjObs_i commandArray with its child's value
+   ///\param _cfdCommandArray
    virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
 
+   ///Update
    virtual void Update( void );
 
 private:
-   vtkPolyDataMapper *mapper;
-   vtkPolyData *polyData;
-   vtkPolyData *polydata;
-   vtkGlyph3D *glyph;
-   vtkSphereSource *sphere;
+   vtkPolyDataMapper *mapper;///<Mapper for vtk polydata
+   vtkPolyData *polyData;///<polyData
+   vtkPolyData *polydata;///<polydata
+   vtkGlyph3D *glyph;///<glyph
+   vtkSphereSource *sphere;///<sphere source
 
-   float particleDiameter;
+   float particleDiameter;///<Diameter of particle
    enum STREAM_DIRECTION
    {
       FORWARD,
@@ -86,7 +93,7 @@ private:
       BOTH
    };
 
-   STREAM_DIRECTION streamDir;
+   STREAM_DIRECTION streamDir;///<Stream direction
    //int nPts, nStr, iPts;
    //float ptData[3], direction[3], center[3];   
 };

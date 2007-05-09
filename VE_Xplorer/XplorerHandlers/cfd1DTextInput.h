@@ -35,7 +35,7 @@
 /*!\file cfd1DTextInput.h
 cfd1DTextInput API
 */
-/*!\class VE_XPlorer::cfd1DTextInput
+/*!\class VE_Xplorer::cfd1DTextInput
 * 
 */
 #include <string>
@@ -60,27 +60,34 @@ namespace VE_Xplorer
    class cfd1DTextInput : public VE_SceneGraph::DCS
    {
       public:
-
+         ///Constructor
          cfd1DTextInput( void );
-
+         ///Destructor
          ~cfd1DTextInput( void );
-
+         ///get the Performer DCS (may need to remove)
          VE_SceneGraph::DCS* getpfDCS( void );
-
-         void SetTransforms( float [ 3 ], float [ 3 ], float [ 3 ] );
-
-         void SetFilename( std::string );
-
+         ///set transform values.
+         ///\param scale The scale value.
+         ///\param trans The translation value.
+         ///\param rot The rotation value.
+         void SetTransforms( float scale[ 3 ] , float trans[ 3 ] , float rot[ 3 ]  );
+         ///Set the Filename of the dataset
+         ///\param fileName
+         void SetFilename( std::string fileName);
+         ///update the text
          void Update( void );
-   
-         void UpdateTextColor( double , double , double );
+         ///Update the colors
+         ///\param red The red value.
+         ///\param green The green value.
+         ///\param blue The blue value.
+         void UpdateTextColor( double red, double green, double blue );
 
       private:
    
-         std::string text;
-         vtkActor*   actor;
+         std::string text;///<The string to hold the text.
+         vtkActor*   actor;///<The VTKactor.
          //DCS*      dcs;
-			osg::ref_ptr< VE_SceneGraph::Geode > geode;  
+			osg::ref_ptr< VE_SceneGraph::Geode > geode;///<The geode.  
    };
 }
 #endif

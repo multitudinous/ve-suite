@@ -63,41 +63,45 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
 {
 public:
-   //Initialize pipeline
-   //(and set the number of isosurface increments for blue menu)
+   ///Initialize pipeline
+   ///(and set the number of isosurface increments for blue menu)
+   ///\param step set to 10
    cfdIsosurface( int step = 10 );
 
+   ///Destructor.
    ~cfdIsosurface( );
 
+   ///Update the isosurface.
    virtual void Update( void );
 
    ///Get the current isosurface value.
    double GetValue();
+
    ///Override the cfdObjects function
    virtual void UpdateCommand( void );
 
 private:
    double convertPercentage( const int percentage );
 
-   int totalId;          // Total number of steps through the isosurface range.
+   int totalId;///<Total number of steps through the isosurface range.
 
-   double value;          // Current value of isosurface.
+   double value;///<Current value of isosurface.
 
-   std::string colorByScalar;
-   double minValue;
-   double maxValue;
+   std::string colorByScalar;///<Color the isosurface by a different color.
+   double minValue;///<Minimum scalar value displayed.
+   double maxValue;///<Maximum scalar value displayed.
 #ifdef USE_OMP
-   float nData;          // Total number of data to be parallel processed
-   vtkContourFilter *contour[MAX_ISOSURFACE];
-   vtkPolyDataNormals *normals[MAX_ISOSURFACE];
-   vtkAppendPolyData *append;
+   float nData;///<Total number of data to be parallel processed.
+   vtkContourFilter *contour[MAX_ISOSURFACE];///<Contour filter for vtk.
+   vtkPolyDataNormals *normals[MAX_ISOSURFACE];///<Normal for polydata in vtk.
+   vtkAppendPolyData *append;///<Append to dataset.
 #else
-   vtkContourFilter *contour;
-   vtkPolyDataNormals *normals;
+   vtkContourFilter *contour;///<Contour filter for vtk.
+   vtkPolyDataNormals *normals;///<Normals for vtk.
 #endif
 
-   vtkGeometryFilter *filter;
-   vtkPolyDataMapper *mapper;
+   vtkGeometryFilter *filter;///<Filter for vtk.
+   vtkPolyDataMapper *mapper;///<Mapper for vtk.
 };
 }
 #endif

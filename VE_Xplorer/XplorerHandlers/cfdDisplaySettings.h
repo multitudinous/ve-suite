@@ -55,22 +55,24 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdDisplaySettings : public cfdGlobalBase
 {
 public:
-   ///Base constructor
+   ///Base constructor.
    cfdDisplaySettings( void );
    ///Copy Construstor
    //cfdDisplaySettings( const cfdDisplaySettings& input ) { ; }
-   ///Destructor
+   ///Destructor.
    virtual ~cfdDisplaySettings( void ) { ; }
    ///equal operator
    //cfdDisplaySettings& operator= ( const cfdDisplaySettings& ) { ; }
 
-   ///command array virtual function overriden from globalbase
+   ///command array virtual function overriden from globalbase.
    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray );
 
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray.
    virtual void UpdateCommand() { ; }
 
+   ///Obtains the screen resolution.
 	std::pair< int, int > GetScreenResolution( void );
+   ///Sets screen corner values.
    std::map< std::string, double > GetScreenCornerValues( void );
    
 private:
@@ -80,17 +82,17 @@ private:
    ///\param elements vector of elements to add/remove from an active configuration
    void ChangeDisplayElements( bool remove, jccl::ConfigElementPtr elements );
    
-   ///<A vector that contains current configurations
-   jccl::Configuration* configuration;
 
-	int xSize;
-	int ySize;
+   jccl::Configuration* configuration;///<A vector that contains current configurations.
 
-   double newXmin;
-   double newXmax;
-   double newYmin;
-   double newYmax;
-   double newZval;
+	int xSize;///<Screen size in pixels for x direction.
+	int ySize;///<Screen size in pixels for y direction.
+
+   double newXmin;///<Sets new x min value for screen corner.
+   double newXmax;///<Sets new x max value for screen corner.
+   double newYmin;///<Sets new y min value for screen corner.
+   double newYmax;///<Sets new y max value for screen corner.
+   double newZval;///<Sets new z value for screen.
 };
 }
 #endif

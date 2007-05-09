@@ -35,7 +35,7 @@
 /*!\file cfdAnimatedImage.h
 cfdAnimatedImage API
 */
-/*!\class VE_XPlorer::cfdAnimatedImage
+/*!\class VE_Xplorer::cfdAnimatedImage
 * 
 */
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
@@ -69,41 +69,52 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdAnimatedImage : public cfdObjects
    {
       public:
+         ///Fix needed to add the new style read param to this class
+         ///takes code out of cfdReadParam to this function
+         ///\param basename
+         ///\param frames
+         ///\param ex_x
+         ///\param ex_y
+         ///\param dim
+         ///\param origin
+         ///\param spacing
          cfdAnimatedImage( std::string basename, int frames,
                     int ex_x, int ex_y, int dim, 
                     double *origin, double *spacing );
-
-         cfdAnimatedImage( std::string );
-  
+         ///Reads in parameters for animated image
+         ///\param param
+         cfdAnimatedImage( std::string param);
+         ///Destructor
          ~cfdAnimatedImage();
   
-         // compare VjObs_i commandArray with its child's value
+         ///compare VjObs_i commandArray with its child's value
+         ///\param commandArray
          virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
          virtual void UpdateCommand();
 
-         // update the actor
+         ///Update the actor
          virtual void Update( void );
-  
+         ///Create objects
          void CreateObjects( void );
 
-         std::vector< cfdImage* > _images;
+         std::vector< cfdImage* > _images;///<The vector of images.
 
       private:
-			osg::ref_ptr< VE_SceneGraph::DCS > _dcs;
-         char basename[256];
-         int frames;
-         int ex_x, ex_y;
-         int dim;
-         double origin[3];
-         double spacing[3];
-         float imageScale[ 3 ];
-         float imageTrans[ 3 ];
-         float imageRot[ 3 ];
-         std::string _param;
+			osg::ref_ptr< VE_SceneGraph::DCS > _dcs;///<reference pointer to the dcs
+         char basename[256];///<Holds basename input.
+         int frames;///<Number of frames.
+         int ex_x, ex_y;///<ex_x and ex_y.
+         int dim;///<dimension.
+         double origin[3];///<Defines origin.
+         double spacing[3];///<Spacing.
+         float imageScale[ 3 ];///<Scaling of Image
+         float imageTrans[ 3 ];///<Translation of image.
+         float imageRot[ 3 ];///<Rotation of image.
+         std::string _param;///<The string storing parameters.
          //std::string _param
-         cfdReadParam* _readParam;
+         cfdReadParam* _readParam;///<Read out parameters.
          //int _which_frame;
    };
 }

@@ -58,38 +58,50 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
    {
       public:
-
+         ///Constructor.
+         ///\param op_val Set to 1.0.
          cfdPolyData( float op_val = 1.0 );
 
+         ///Destructor.
          ~cfdPolyData();
 
+         ///Update.
          virtual void Update( void );
 
-         // compare VjObs_i commandArray with its child's value
+         ///Compare VjObs_i commandArray with its child's value.
+         ///\param _cfdCommandArray
          virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
          virtual void UpdateCommand();
+   
+         ///Assigns particle option.
+         ///\param option
+         void SetParticleOption( unsigned int option);
 
-         void SetParticleOption( unsigned int );
+         ///Gets particle option.
          unsigned int GetParticleOption();
 
-         void SetParticleScale( float );
+         ///Sets particle scale.
+         ///\param x
+         void SetParticleScale( float x);
+
+         ///Gets particle scale.
          float GetParticleScale();
 
       private:
-         float GetSphereScaleFactor();
+         float GetSphereScaleFactor();///Sphere scaling.
 
-         std::string colorByScalar;
+         std::string colorByScalar;///<String to hold color by scalar.
 
-         vtkPolyDataMapper *map;
-         vtkWarpVector* warper;
+         vtkPolyDataMapper *map;///<Map for vtk.
+         vtkWarpVector* warper;///<Warper for vtk.
 	      //cfdCommandArray* commandArray;
-         bool warpSurface;
-         double warpedContourScale;
+         bool warpSurface;///Test for warped surface.
+         double warpedContourScale;///<warped contour scale value
 
-         unsigned int  _particleOption;   // point cloud or variably sized spheres
-         float _particleScale;
+         unsigned int  _particleOption;///<point cloud or variably sized spheres.
+         float _particleScale;///<particle scale.
    };
 }
 #endif

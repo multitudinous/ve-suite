@@ -35,7 +35,7 @@
 /*!\file cfdContourBase.h
 cfdContourBase API
 */
-/*!\class VE_XPlorer::cfdContourBase
+/*!\class VE_Xplorer::cfdContourBase
 * 
 */
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
@@ -63,44 +63,52 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
 {
 public:
+   ///Constructor
    cfdContourBase();
-
+   ///Destructor
    virtual ~cfdContourBase();
 
-   // update the actor
+   ///update the actor
    virtual void Update( void ) = 0;
 
-   // compare VjObs_i commandArray with its child's value
+   ///compare VjObs_i commandArray with its child's value
+   ///\param _cfdCommandArray
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
 
+   ///Sets the Mapper Input
+   ///\param polydata
    void SetMapperInput( vtkPolyData* polydata );
 
-   void SetFillType( const int );
+   ///Sets the Fill Type
+   ///\param fillType
+   void SetFillType( const int fillType);
+
+   ///Create the Plane
    void CreatePlane();
 
 protected:
    //vtkPolyDataMapper*   mapper;
-   vtkMultiGroupPolyDataMapper* mapper;
+   vtkMultiGroupPolyDataMapper* mapper;///<mapper.
    //vtkGeometryFilter*   filter;
-   vtkContourFilter*    cfilter;
-   vtkBandedPolyDataContourFilter* bfilter;
-   vtkDecimatePro*      deci;
-   vtkTriangleFilter*   tris;
-   vtkStripper*         strip;
-   vtkPolyDataNormals*  normals;
-   vtkCutter*           cutter;
+   vtkContourFilter*    cfilter;///<Contour filter.
+   vtkBandedPolyDataContourFilter* bfilter;///<banded contour filter.
+   vtkDecimatePro*      deci;///<decimator.
+   vtkTriangleFilter*   tris;///<trangle filter for vtk.
+   vtkStripper*         strip;///<strip.
+   vtkPolyDataNormals*  normals;///<polydata normals.
+   vtkCutter*           cutter;///<cutter for vtk.
 
-   cfdCuttingPlane* cuttingPlane;
+   cfdCuttingPlane* cuttingPlane;///<cutting plane
 
-   int fillType;
-   double warpedContourScale;
-   double contourOpacity;
-   int contourLOD; 
-   int xyz;
-   int numSteps;
+   int fillType;///<Representation of contour line.
+   double warpedContourScale;///<Scale of warped contour
+   double contourOpacity;///<Level of Opacity.
+   int contourLOD;///<Level of Detail.
+   int xyz;///<Value of surface.
+   int numSteps;///<Number of timesteps.
 };
 }
 #endif

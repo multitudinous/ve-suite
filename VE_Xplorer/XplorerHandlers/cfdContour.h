@@ -35,7 +35,7 @@
 /*!\file cfdContour.h
 cfdContour API
 */
-/*!\class VE_XPlorer::cfdContour
+/*!\class VE_Xplorer::cfdContour
 *   A class to takes input data set(s) and generates on 
 *   cutting planes based on the position and direction
 *   selected. Update member function will be update
@@ -56,23 +56,24 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdContour : public cfdContourBase
    {
       public:
-         // Initialize the VTK objects and pipeline.
+         ///Initialize the VTK objects and pipeline.
          cfdContour( );
+         ///Destructor
          virtual ~cfdContour( );
 
-         // Update the position, x, and normal direction to cut.
+         ///Update the position, x, and normal direction to cut.
          virtual void Update( void );
 
       private:
 
       #ifdef USE_OMP
-         vtkPlane *plane[MAX_CONTOUR];
-         vtkCutter *cutter[MAX_CONTOUR];
-         vtkAppendPolyData *append;
-         float nData;
+         vtkPlane *plane[MAX_CONTOUR];///<Contour cutting plane.
+         vtkCutter *cutter[MAX_CONTOUR];///<Used for the cutter code.
+         vtkAppendPolyData *append;///<Appends to the dataset for number of processors.
+         float nData;///<Total number of data to be parallel processed.
       #else
-         vtkPlane *plane;
-         vtkCutter *cutter;
+         vtkPlane *plane;///<Plane for vtk.
+         vtkCutter *cutter;///<Cutter for vtk.
       #endif
    };
 }
