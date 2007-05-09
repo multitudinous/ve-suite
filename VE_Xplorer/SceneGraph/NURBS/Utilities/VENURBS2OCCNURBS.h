@@ -63,7 +63,7 @@ public:
    ///Destructor
    ~VENURBS2OCCNURBS(){ ; }
 
-   ///Get a VE NURBS patch and return an OCC BSpline Surface
+   ///\brief Get a VE NURBS patch and return an OCC BSpline Surface
    ///\param veNURBSSurface NURBS surface to be converted
    Geom_BSplineSurface* GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface )
    {

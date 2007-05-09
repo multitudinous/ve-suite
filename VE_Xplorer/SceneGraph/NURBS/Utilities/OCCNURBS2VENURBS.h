@@ -60,7 +60,7 @@ public:
    ///Destructor
    ~OCCNURBS2VENURBS(){ ; }
 
-   ///Get a OCC NURBS patch and return an VE NURBS Surface
+   ///\brief Get a OCC NURBS patch and return an VE NURBS Surface
    ///\param occNURBSSurface NURBS surface to be converted
    NURBS::NURBSSurface* GetVENURBSSurface( Handle_Geom_BSplineSurface occNURBSSurface )
    {

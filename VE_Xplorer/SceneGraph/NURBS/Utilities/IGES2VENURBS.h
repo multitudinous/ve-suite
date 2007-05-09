@@ -70,7 +70,7 @@ public:
    ///Destructor
    ~IGES2VENURBS(){ ; }
 
-   ///Get a filename for and IGES file and return a vector of VE NURBS Surfaces
+   ///\brief Get a filename for an IGES file and return a vector of VE NURBS Surfaces
    ///\param igesFileName IGES filename to be converted
    std::vector< NURBS::NURBSSurface* > GetVectorOfVENURBSSurface( std::string igesFileName )
    {
