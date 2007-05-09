@@ -30,18 +30,24 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_FIND_PARENTS_VISITOR_H
-#define VE_FIND_PARENTS_VISITOR_H
+#ifndef FIND_PARENTS_VISITOR_H
+#define FIND_PARENTS_VISITOR_H
+
 /*!\file FindParentsVisitor.h
-FindParentsVisitor API
 */
 
 /*!\class VE_SceneGraph::FindParentsVisitor
 *
 */
 
+/*!\namespace VE_SceneGraph
+*
+*/
+
+// --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
 
+// --- OSG Includes --- //
 #include <osg/NodeVisitor>
 
 namespace VE_SceneGraph
@@ -49,20 +55,28 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS FindParentsVisitor : public osg::NodeVisitor
 {
 public:
-   ///Constructor
-	FindParentsVisitor( osg::Node* node );
-   ///Destructor
-   virtual ~FindParentsVisitor();
-   ///Apply function that gets called during the traversal
-   virtual void apply( osg::Node& node );
-   ///Return the parent node with an ID
-   osg::Node* GetParentNode( void );
-   ///Return the GUID for the found node
-   std::string GetNodeGUID( void );
+    ///Constructor
+    ///\param node The node to be traversed
+    FindParentsVisitor( osg::Node* node );
+
+    ///Destructor
+    virtual ~FindParentsVisitor();
+
+    ///Apply function that gets called during the traversal
+    ///\param node A parent node of the node being traversed
+    virtual void apply( osg::Node& node );
+
+    ///Return the parent node with an ID
+    osg::Node* GetParentNode();
+
+    ///Return the GUID for the found node
+    std::string GetNodeGUID();
+
 private:
-   std::string modelGUID;///<GUID to identify the VE-Open model
-   osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
+    std::string modelGUID;///<GUID to identify the VE-Open model
+    osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
+
 };
 }
 
-#endif //VE_FIND_PARENTS_VISITOR_H
+#endif //FIND_PARENTS_VISITOR_H
