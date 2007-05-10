@@ -32,6 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GRID_2_SURFACE_H
 #define CFD_GRID_2_SURFACE_H
+/*!\file cfdGrid2Surface.h
+*Grid to surface converting API
+*/
 
 class vtkDataSet;
 class vtkPolyData;
@@ -41,6 +44,7 @@ class vtkPolyData;
 namespace VE_Util
 {
 // function declarations
+   ///Reads in a grid (vtkDataSet) and returns it as a surface (vtkPolyData).
 VE_UTIL_EXPORTS vtkPolyData * cfdGrid2Surface( vtkDataSet *dataSet, float deciVal );
 }
 #endif

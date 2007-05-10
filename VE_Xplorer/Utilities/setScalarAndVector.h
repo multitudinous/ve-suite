@@ -34,14 +34,20 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef setScalarAndVector_H
 #define setScalarAndVector_H
-
+/*!\file setScalarAndVector.h
+setScalarAndVector API
+*/
 #include "VE_Installer/include/VEConfig.h"
 
 // class declarations
 class vtkDataSet;
 
 // function declarations
+///Select a scalar and make it active
+///\param dataSet the dataset containing the scalar of interest.
 VE_UTIL_EXPORTS void activateScalar( vtkDataSet* dataSet );
+///Select a vector and make it active
+///\param dataSet the dataset containing the vector of interest.
 VE_UTIL_EXPORTS void activateVector( vtkDataSet* dataSet );
 #endif //setScalarAndVector_H
 

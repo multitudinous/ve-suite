@@ -34,19 +34,29 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef OPENVTKTHING_H
 #define OPENVTKTHING_H
-
+/*!\file readWriteVtkThings.h
+readWriteVtkThings API
+*/
 class vtkDataSet;
 class vtkDataObject;
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Util
 {
+   ///Prints out (cout) the class of the object passed in.
+   ///\param readerOutput The data set printWhatItIs identifies.
    VE_UTIL_EXPORTS void printWhatItIs( vtkDataObject* readerOutput );
-
+   ///Reads in a VTK data file and has the option to print what the data file is.
+   ///\param vtkFilename The name of the VTK file to be read in.
+   ///\param printFlag Flag to print class type. Default (0) is to not print, 1 is to pring.
    VE_UTIL_EXPORTS vtkDataObject* readVtkThing( std::string vtkFilename, int printFlag = 0 );  //default is not to print information
-
+   ///(????) Writes vtkThing out as vtkFilename.  Default is to print ASCII, binary is an option.
+   ///\param vtkThing Dataset to be printed.
+   ///\param vtkFilename The name of the file to be generated.
+   ///\param binaryFlag Toggle between binary (1) and ASCII (0) output modes.
    VE_UTIL_EXPORTS bool writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag = 0 );// default is to print ascii file
-
+   ///Outputs the cartesian bounds of the data object passed in.
+   ///\param dataObject The data set whose bounds are to be identified.
    VE_UTIL_EXPORTS void printBounds( vtkDataObject* dataObject);//double bounds[6] );
 }
 #endif

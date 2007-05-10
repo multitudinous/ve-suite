@@ -36,7 +36,7 @@
 #define CFD_ACCESSORY_FUNCTIONS_H
 
 /*!file cfdAccessoryFunctions.h
-*Accessory functions for CFD datasets
+cfdAccessoryFunctions API 
 */
 /*!class VE_Util::cfdAccessoryFunctions
 *This class returns information on an input vector.
