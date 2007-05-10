@@ -80,22 +80,40 @@ private:
    //friend class vpr::Singleton< cfdEnvironmentHandler >;
    //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
    //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
+
+   ///Constructor
    cfdEnvironmentHandler( void );
+
+   ///Destructor
    ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
    vprSingletonHeader( cfdEnvironmentHandler );   
 
 public:
+   ///Initialize environment.
    void Initialize();
+
+   ///Clean up environment.
    void CleanUp( void );
+
+   ///Initialize scene.
    void InitScene( void );
+
+   ///Pre frame update.
    void PreFrameUpdate( void );
+
+   ///Late pre-frame update ???
    void LatePreFrameUpdate( void );
-   void SetCommandArray( cfdCommandArray* );
+
+   ///Set the command array ?
+   ///\param input
+   void SetCommandArray( cfdCommandArray* input );
 
    //void CreateObjects( void );
+
    ///Update the background color
    ///\param color The background color
    void SetBackgroundColor(std::vector<double> color);
+
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
 
@@ -116,17 +134,38 @@ public:
 
    ///Accessor to set desktop size information for
    /// runtime reconfiguration of desktop windows
+   ///\param width The desktop width
+   ///\param height The desktop height
    void SetDesktopSize( int width, int height );
-	void SetWindowDimensions( unsigned int width, unsigned int height );
-	void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
 
+   ///Set the window dimension
+   ///\param width The window width
+   ///\param height The window height
+   void SetWindowDimensions( unsigned int width, unsigned int height );
+ 
+   ///Set up the frustum values
+   ///\param _left
+   ///\param _right
+   ///\param _top
+   ///\param _bottom
+   ///\param _near
+   ///\param _far
+   void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
+  
+   ///Get the window width 
    unsigned int GetWindowWidth( void );
+
+   ///Get the window height
    unsigned int GetWindowHeight( void );
 
-	void SetFrameRate( float value );
-	float GetFrameRate();
+   ///Set the frame rate 	
+   void SetFrameRate( float value );
 
-	void PostFrameUpdate();
+   ///Get the frame rate 
+   float GetFrameRate();
+
+   ///Post frame update (look this up)
+   void PostFrameUpdate();
 
    ///Check if the background color has changed
    bool BackgroundColorChanged();
@@ -139,10 +178,14 @@ public:
    DisplayInformation* GetDisplayInformation( void );
 
    #ifdef VE_PATENTED 
+   ///Activate geometry picking functionality.
    void ActivateGeometryPicking( void );
+
+   ///Deactivate geoometry picking functionality.
    void DeactivateGeometryPicking( void );
    #endif //VE_PATENTED
    #endif //_OSG 
+
    ///Get the seed points drawable
    SeedPoints* GetSeedPoints();
 
@@ -152,52 +195,54 @@ public:
 private:
    osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
    osg::ref_ptr<VE_SceneGraph::DCS> _seedPointsDCS;///<The DCS for the seed points
-   cfdTeacher* _teacher;
-   //cfdSoundHandler* _soundHandler;
-   cfdQuatCamHandler* _camHandler;
+   cfdTeacher* _teacher;///<Handle teacher functionality.
+   //cfdSoundHandler* _soundHandler;///<Handle the sound.
+   cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
    #ifdef _OSG
-   DisplayInformation* display_information;
+   DisplayInformation* display_information;///<???
 
    #ifdef VE_PATENTED 
-   cfdObjectHandler* objectHandler;
+   cfdObjectHandler* objectHandler;///<Handle objects.
+
+   ///Flag for active geometry picking.
    bool _activeGeomPicking;
    #endif // VE_PATENTED
    #endif //_OSG
 
    std::vector<float> _clearColor;///<The background color;
-   cfdCursor* cursor;
-   std::string _param;
-   cfdCommandArray* _commandArray;
-   cfdReadParam* _readParam;
+   cfdCursor* cursor;///<The cursor.
+   std::string _param;///<Store parameters.
+   cfdCommandArray* _commandArray;///<Command array.
+   cfdReadParam* _readParam;///<Read parameters.
 
    // cur_box will eventually be used to define bounding box
    // for data interagation
-   double cur_box[6];
-   vtkPolyData * arrow;
-   float worldScale[ 3 ];
-   float worldTrans[ 3 ];
-   float worldRot[ 3 ];
+   double cur_box[6];///<???
+   vtkPolyData * arrow;///<???
+   float worldScale[ 3 ];///<World scale.
+   float worldTrans[ 3 ];///<World translation
+   float worldRot[ 3 ];///<World rotation.
 
    ///<The class used to change juggler configuration settings during runtime
    cfdDisplaySettings* displaySettings;
 
-   int desktopWidth;                   ///<Desktop width
-   int desktopHeight;                  ///<Desktop height
+   int desktopWidth;///<Desktop width.
+   int desktopHeight;///<Desktop height.
 
-	int _windowWidth;
-	int _windowHeight;
+   int _windowWidth;///<Window width.
+   int _windowHeight;///<Window height.
 
-   float _frustumLeft;
-   float _frustumRight;
-	float _frustumTop;
-	float _frustumBottom;
-	float _frustumNear;
-   float _frustumFar;
+   float _frustumLeft;///<Left frustum.
+   float _frustumRight;///<Right frustum.
+   float _frustumTop;///<Top frustum.
+   float _frustumBottom;///<Bottom frustum.
+   float _frustumNear;///<Near frustum.
+   float _frustumFar;///<Far frustum.
 
-	float framerate;
+   float framerate;///<Frame rate.
 
-   bool _updateBackgroundColor;        ///<The flag for updating the background color in xplorer
+   bool _updateBackgroundColor;///<The flag for updating the background color in xplorer.
    
    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;///<The event handler for commands.
 };

@@ -92,37 +92,85 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdObjectHandler
 {
 private:
+
+   ///Constructor.
    cfdObjectHandler( );
+
+   ///Destructor.
    ~cfdObjectHandler( );
+
+   ///Not sure what this does
    vprSingletonHeader( cfdObjectHandler );   
 public:
-   void Initialize(cfdNavigate* );
-   void SetDataValues( int, int );
+
+   ///Initializes the reference point for the navigation.
+   ///\param navigationReference
+   void Initialize(cfdNavigate* navigationReference );
+
+   ///Setting up the data values.
+   ///\param ValueToSet
+   ///\param Value
+   void SetDataValues( int ValueToSet, int Value );
+
+   ///Used to select an object and translate with user motion with wand.
    void UpdateObjectHandler();
-   void DrawLine(osg::Vec3f, osg::Vec3f);
+
+   ///Deletes existing beam aand adds new one.
+   ///\param start
+   ///\param end
+   void DrawLine(osg::Vec3f start , osg::Vec3f end);
+
+   ///not sure if this is needed?
    void ChangeColor(osg::Vec3f);
-   void ProcessHit(osgUtil::IntersectVisitor::HitList);
+
+   ///Process whether an object is hit?
+   ///\param listOfHits
+   void ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits);
+
+   ///Activate geometry to allow picking.
    void ActivateGeometryPicking();
+
+   ///Deactivate geometry to not allow picking.
    void DeactivateGeometryPicking();
-   cfdNavigate* navigator;
+
+   cfdNavigate* navigator;///<navigator reference 
 
 private:
 
+   ///Select object.
    void SelectObject();
+   
+   ///Not sure if used?
    void ChangeColor (osg::Vec4f);
+
+   ///Not sure if used?
    void ChangeColor (osg::Geometry *, osg::Vec4f); 
-   gadget::DigitalInterface digital;
-   osg::ref_ptr<osg::Geode> selectedGeometry;
-   double distance;
-   std::string laserName;
-   osg::Vec3f LastWandPosition;
+
+   gadget::DigitalInterface digital;///<gadgeteer digital interface.
+   osg::ref_ptr<osg::Geode> selectedGeometry;///<select geometry.
+   double distance;///<Distance which is initialized.
+   std::string laserName;///<name of laser.
+   osg::Vec3f LastWandPosition;///<wand position vector.
+
+   ///performs matrix tranformation.
    osg::MatrixTransform* getMatrixTransform();
+
+   ///Performs translation of object.
    void TranslateObject();
-   gadget::DigitalInterface translateDigital;
-   osg::Node* rootNode;
-   osg::Node* worldNode;
-   void SetupStartEndPoint(osg::Vec3f *, osg::Vec3f *);
+
+   gadget::DigitalInterface translateDigital;///<gadgeteer translation??
+   osg::Node* rootNode;///<root node for osg.
+   osg::Node* worldNode;///<world node for osg.
+
+   ///Assigns start and ending points of wand.
+   ///\param *startPoint
+   ///\param *endPoint
+   void SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint );
+
+   ///Resets wand position.
    void SetWandPosition();
+
+   ///active flag
    bool _active;
 };
 
