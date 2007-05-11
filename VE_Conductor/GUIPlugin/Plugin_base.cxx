@@ -84,8 +84,8 @@ REI_Plugin::REI_Plugin() :
    pos = wxPoint(0,0); //default position
 
    wxImage my_img( square_xpm );
-   icon_w = (int)my_img.GetWidth()*0.30f;
-   icon_h = (int)my_img.GetHeight()*0.30f;
+   icon_w = static_cast< int >( my_img.GetWidth()*0.30f );
+   icon_h = static_cast< int >( my_img.GetHeight()*0.30f );
    my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
    
    n_pts = 4;
@@ -944,8 +944,8 @@ std::cout << "icon path " << path << std::endl;
 	}
 
 	//now scale it up or down according to the specified scale
-	icon_w = icon_w * scale;
-	icon_h = icon_h * scale;
+	icon_w = static_cast< int >( icon_w * scale );
+	icon_h = static_cast< int >( icon_h * scale );
 	
 	//int icon_h = 40;
 	//int icon_w = 40;
