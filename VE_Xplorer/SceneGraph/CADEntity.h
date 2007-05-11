@@ -95,7 +95,7 @@ public:
     CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS );
 
     ///Destructor
-    ~CADEntity();
+    virtual ~CADEntity();
 
     ///Initializes physics for CADEntity
     //Unless this is called, physics will not work
