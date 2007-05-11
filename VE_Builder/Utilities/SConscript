@@ -80,7 +80,7 @@ env = ves_pkg.getEnv().Copy()
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
             LIBS = ['VE_UtilLib'])
 vtk_options.apply( env )
-env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%env['BoostVersion'])
+env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 
 norm2poly = ves_pkg.createProgram('addNormals2Poly', env, 'bin')
 norm2poly.addSources( addNormals2Poly )

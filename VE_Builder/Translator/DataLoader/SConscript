@@ -44,7 +44,7 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities'),
                           pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK') ],
                LIBS = ['VE_UtilLib', 'TranslatorToVTKLib'])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%lib_env['BoostVersion'])
+lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 
 vtk_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":

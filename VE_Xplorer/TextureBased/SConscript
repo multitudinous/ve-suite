@@ -69,6 +69,7 @@ headers = Split("""
    PreIntegrationTexture.h
    NoiseTexture2D.h
    LuminanceTransferFunction.h
+   NoiseTexture2D.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
