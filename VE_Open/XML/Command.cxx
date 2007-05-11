@@ -39,10 +39,10 @@ using namespace VE_XML;
 //Constructor       //
 //////////////////////
 Command::Command()
-:XMLObject()
+:XMLObject(),
+_nDataValuePairs( 0 )
 {
-   _cmdName =  '\0';
-   _nDataValuePairs = 0;
+   _cmdName.empty();
    _dataValuePairs.clear();
    SetObjectType("Command");
 }

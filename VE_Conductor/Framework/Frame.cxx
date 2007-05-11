@@ -1890,10 +1890,12 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
    //this is kinda confusing...thanks wx!!!
    //wxColourData data;
    //data.SetChooseFull(true);
-   UserPreferencesDataBuffer::instance()->
-         GetCommand( "CHANGE_BACKGROUND_COLOR" ).
-         GetDataValuePair( "Background Color" )->
-         GetData( xplorerColor );
+   VE_XML::Command bkColor( UserPreferencesDataBuffer::instance()->
+                                       GetCommand( "CHANGE_BACKGROUND_COLOR" ) );
+   if ( bkColor.GetCommandName() != "NULL" )
+   {
+      bkColor.GetDataValuePair( "Background Color" )->GetData( xplorerColor );
+   }
    
    xplorerWxColor->GetColour().Set( xplorerColor.at( 0 ), 
                                      xplorerColor.at( 1 ), 
@@ -1915,7 +1917,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       xplorerColor.push_back(1.0);
 
       // Create the command and data value pairs
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
       VE_XML::Command* veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));

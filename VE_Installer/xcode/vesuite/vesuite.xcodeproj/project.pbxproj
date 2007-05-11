@@ -6,23 +6,6 @@
 	objectVersion = 42;
 	objects = {
 
-/* Begin PBXBuildStyle section */
-		251E91FA0AFE4C0600B2A2DC /* Development */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-			};
-			name = Development;
-		};
-		251E91FB0AFE4C0600B2A2DC /* Deployment */ = {
-			isa = PBXBuildStyle;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-			};
-			name = Deployment;
-		};
-/* End PBXBuildStyle section */
-
 /* Begin PBXFileReference section */
 		25B300010AFD25C900601DFF /* classvtkutil_1_1VTKStoragePolicy-members.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = "classvtkutil_1_1VTKStoragePolicy-members.html"; sourceTree = "<group>"; };
 		25B300030AFD25C900601DFF /* classNURBS__Utilities_1_1VENURBS2OCCNURBS.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = classNURBS__Utilities_1_1VENURBS2OCCNURBS.html; sourceTree = "<group>"; };
@@ -3476,7 +3459,7 @@
 		25B3ED860AFD25C700601DFF /* multiTranslateStar.sh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.sh; path = multiTranslateStar.sh; sourceTree = "<group>"; };
 		25B3ED870AFD25C700601DFF /* omninamesStart.bat */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = omninamesStart.bat; sourceTree = "<group>"; };
 		25B3ED8B0AFD25C700601DFF /* DefaultGraphicalPlugin_tao_osg_vep.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = DefaultGraphicalPlugin_tao_osg_vep.dylib; sourceTree = "<group>"; };
-		25B3ED8E0AFD25C700601DFF /* DefaultPlugin.bundle */ = {isa = PBXFileReference; lastKnownFileType = file; path = DefaultPlugin.bundle; sourceTree = "<group>"; };
+		25B3ED8E0AFD25C700601DFF /* DefaultPlugin.bundle */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.bundle"; path = DefaultPlugin.bundle; sourceTree = "<group>"; };
 		25B3ED8F0AFD25C700601DFF /* libGUIPluginLib.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libGUIPluginLib.dylib; sourceTree = "<group>"; };
 		25B3ED900AFD25C700601DFF /* ReformatAllVtkFlowdataFiles.sh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.sh; path = ReformatAllVtkFlowdataFiles.sh; sourceTree = "<group>"; };
 		25B3ED910AFD25C700601DFF /* run.bat */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = run.bat; sourceTree = "<group>"; };
@@ -76968,12 +76951,6 @@
 		25B3ED690AFD25AB00601DFF /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = 25B3ED6A0AFD25AB00601DFF /* Build configuration list for PBXProject "vesuite" */;
-			buildSettings = {
-			};
-			buildStyles = (
-				251E91FA0AFE4C0600B2A2DC /* Development */,
-				251E91FB0AFE4C0600B2A2DC /* Deployment */,
-			);
 			hasScannedForEncodings = 0;
 			mainGroup = 25B3ED670AFD25AB00601DFF;
 			projectDirPath = "";

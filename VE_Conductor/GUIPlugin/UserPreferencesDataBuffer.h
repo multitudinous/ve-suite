@@ -60,7 +60,7 @@ class VE_GUIPLUGINS_EXPORTS UserPreferencesDataBuffer
 private:
    // Required so that vpr::Singleton can instantiate this class.
    // friend class vpr::Singleton< UserPreferenceDataBuffer >;
-   UserPreferencesDataBuffer( void ){ ; }
+   UserPreferencesDataBuffer( void );
    ~UserPreferencesDataBuffer(){ ; } // Never gets called, don't implement
    vprSingletonHeader( UserPreferencesDataBuffer );
 public:
@@ -69,13 +69,13 @@ public:
    void CleanUp( void );
    ///Get Command with key
    ///The key MUST be the command name
-   VE_XML::Command GetCommand( std::string commandKey );
+   VE_XML::Command& GetCommand( std::string commandKey );
    ///set Command with key
-   void SetCommand( std::string commandKey, VE_XML::Command command );
+   void SetCommand( std::string commandKey, VE_XML::Command& command );
    ///Get all the commands
-   std::map< std::string, VE_XML::Command > GetCommandMap( void );
+   std::map< std::string, VE_XML::Command >& GetCommandMap( void );
    ///Set all the commands
-   void SetCommandMap( std::map< std::string, VE_XML::Command > );
+   void SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap );
 private:
    std::map< std::string, VE_XML::Command > commandMap;
 };
