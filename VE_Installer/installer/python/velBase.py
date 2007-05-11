@@ -1,7 +1,6 @@
 """Contains constant variables and basic shared functions for VE-Launcher."""
-from os import getenv, name, getuid ##Used for getting system values
+from os import getenv, name ##Used for getting system values
 import os.path ##Used for building paths.
-from pwd import getpwuid ##Used for grabbing user id
 import wx ##Used for GUI
 import sys
 join = os.path.join
@@ -40,8 +39,11 @@ if windows:
     ##Change this if cluster.bat can't write to its directory.
     CLUSTER_FILE_PATH = "C:\\" + join("WINDOWS", "Temp", "cluster.bat")
 else:
+    from os import getuid ##Used for grabbing user id
+    from pwd import getpwuid ##Used for grabbing user id
     userName = getpwuid(os.getuid())[0]
     CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.%s.tsh" %(userName))
+    print CLUSTER_FILE_PATH ##TESTER
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
 
 ##Config settings.
