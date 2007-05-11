@@ -55,15 +55,23 @@ namespace VE_TextureBased
 class VE_TEXTURE_BASED_EXPORTS cfdOSGShaderManager
 {
 public:
+   ///Construtor
    cfdOSGShaderManager();
+   ///Copy Constructor
+   ///\param sm cfdOSGShaderManager to copy
    cfdOSGShaderManager(const cfdOSGShaderManager& sm);
+   ///Destructor
    virtual ~cfdOSGShaderManager();
 
+   ///Initialize parameters
    virtual void Init() = 0;
 
+   ///DEPRICATED: Set the shader directory
+   ///\param dir The directory containg the shader to load
    void SetShaderDirectory(std::string dir);
+   ///Set the boundary of the data
+   ///\param bounds The bounds of the data
    void SetBounds(float* bounds);
-   void UseCG(bool useCG = false);
 
    ///Add a shader program to the shader manager
    ///\param name The name of the program
@@ -74,33 +82,48 @@ public:
    ///\param name The name of the shader to activate
    void SetActiveShaderProgram(std::string name);
 
+   ///Get the shader state set
    osg::StateSet* GetShaderStateSet();
+   ///Get the texture unit for auto generating texture coordinates
    unsigned int GetAutoGenTextureUnit(){return _tUnit;}
 
 protected:
+   ///Equal operator
+   ///\param sm The cfdOSGShaderManager to set this equal to
    virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
-   //////////////////
-   //GLSL interface//
-   //////////////////
-   virtual void _setupGLSLShaderProgram(/*osg::StateSet* ss,*/
-                                     osg::Program* glslProgram,
-                                     const std::string pgName,bool override = false);
+
+   ///Set up the shader
+   ///\param glslProgram The osg::Program
+   ///\param pgName The name of the program
+   ///\param override Flag that determines if this stateeset attribute should override 
+   virtual void _setupGLSLShaderProgram(osg::Program* glslProgram,
+                                                    const std::string pgName,
+                                                    bool override = false);
+   ///Create a shader from a file
+   ///\param filename The file containing the shader code
+   ///\param isFrag Fragment or Vertex shader
    virtual osg::Shader* _createGLSLShaderFromFile(const std::string filename,
-                                                        bool isFrag);
+                                                               bool isFrag);
+
+
+   ///Create a shader from a string
+   ///\param inlineSource The string containing the shader code
+   ///\param isFrag Fragment or Vertex shader
    virtual osg::Shader*  _createGLSLShaderFromInline(const std::string inlineSource,
-                                                        bool isFrag);
+                                                                   bool isFrag);
   
+   ///Set up the shader and the osg::StateSet
    virtual void _setupStateSetForGLSL()=0;
 
-   osg::ref_ptr<osg::Shader> _vshader;
-   osg::ref_ptr<osg::Shader> _fshader;
+   osg::ref_ptr<osg::Shader> _vshader;///<Vertex shader
+   osg::ref_ptr<osg::Shader> _fshader;///<Fragment shader
 
    std::map<std::string, osg::ref_ptr<osg::Program> > _programs;///<The available shader programs;
-   osg::ref_ptr<osg::StateSet> _ss;
-   std::string _shaderDirectory;
-   unsigned int _tUnit;
-   float* _bounds;
-   bool _useGLSL;
+   osg::ref_ptr<osg::StateSet> _ss;///<osg::StateSet
+   std::string _shaderDirectory;///<Directory containg the shaders
+   unsigned int _tUnit;///<The texture unit
+   float* _bounds;///<The data boundary
+   bool _useGLSL;///<Use GLSL instead of CG
 };
 }
 #endif //_OSG

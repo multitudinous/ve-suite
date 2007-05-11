@@ -57,16 +57,34 @@ public:
    cfdScalarShaderManager();
    ///Destructor
    virtual ~cfdScalarShaderManager(){}
+   ///Initialize parameters
    virtual void Init();
+   ///Update the cfdTextureManager
+   ///\param tm cfdTextureManager pointer
    virtual void UpdateTextureManager(cfdTextureManager* tm);
+   ///Set the entire scalar range
+   ///\param range The scalar range
    void SetScalarRange(float* range);
+   ///Set the scalar maximum The maximum scalar value
    void UpdateScalarMax(float maxScalar);
+   ///Set the scalar minimum
+   ///\param minScalar The minimum scalar value
    void UpdateScalarMin(float minScalar);
+   ///Activate the iso-surface shader
    void ActivateIsoSurface();
+   ///Deactivate the iso-surface shader
    void DeactivateIsoSurface();
+   ///Set the iso-surface value
+   ///\param percentScalarRange The percentage of the scalar range to create an iso-surface
    void SetIsoSurfaceValue(float percentScalarRange);
+   ///Set the current timestep
+   ///\param whichTimeStep The current time steap
+   ///\param makeSlave Cluster information
    void SetCurrentTransientTexture(unsigned int whichTimeStep, bool makeSlave = false);
+   ///Set the delay between timesteps for transient data
+   ///\param delay Delay time in seconds
    void SetDelayTime(double delay);
+   ///Make sure the scalar range is current
    void EnsureScalarRange();
 
    ///Update the entire transfer function...slower but better quality
@@ -82,10 +100,12 @@ protected:
 	 ///Update the transfer function.
 	 ///\param fastUpdate If preintegration is used, do a fast update to remain interactive.
      virtual void _updateTransferFunction(bool fastUpdate=true);
-     float _scalarRange[2];
-     float _percentScalarRange;
-     float _stepSize[3];
+     float _scalarRange[2];///<Scalar range
+     float _percentScalarRange;///<Percentage of scalar range
+     float _stepSize[3];///<Step size
+     ///Initialize transfer functions
      virtual void _initTransferFunctions();
+     ///Initialize property texture
      void _initPropertyTexture();
 };
 }

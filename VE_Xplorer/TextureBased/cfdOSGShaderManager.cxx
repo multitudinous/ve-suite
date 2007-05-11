@@ -77,11 +77,6 @@ cfdOSGShaderManager::~cfdOSGShaderManager()
    }
    _programs.clear();
 }
-///////////////////////////////////////////
-void cfdOSGShaderManager::UseCG(bool useCG)
-{
-   _useGLSL = (useCG)?false:true;
-}
 ////////////////////////////////////////////////////////////////////////////////////////////
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline(const std::string inlineSource,
                                                            bool isFrag)

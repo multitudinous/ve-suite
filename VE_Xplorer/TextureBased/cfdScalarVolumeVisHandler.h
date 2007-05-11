@@ -55,21 +55,33 @@ namespace VE_TextureBased
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler 
-      : public cfdVolumeVisNodeHandler{
+      : public cfdVolumeVisNodeHandler
+   {
       public:
+         ///Constructor
          cfdScalarVolumeVisHandler();
+         ///Copy Constructor
+         ///\param vvnh cfdScalarVolumeVisHandler to copy
          cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHandler& vvnh);
+         ///Destructor
          virtual ~cfdScalarVolumeVisHandler();
+         ///Initialize parameters
          virtual void Init();
+         ///Set the current cfdTextureManager
+         ///\param tm cfdTextureManager pointer
          virtual void SetTextureManager(cfdTextureManager* tm);
-         //cfdScalarShaderManager* GetScalarShaderManager();
+         ///Equal operator
+         ///\param vvnh cfdScalarVolumeVisHandler to set this equal to.
          cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
 
       protected:
+         ///Set up the decorator node 
          virtual void _setUpDecorator();
+         ///Apply the texture matrix
          virtual void _applyTextureMatrix();
+         ///Create the default set of shaders
          void _createDefaultShaders();
-         cfdScalarShaderManager* _transferSM;
+         cfdScalarShaderManager* _transferSM;///<cfdScalarShaderManager
    };
 }
 #endif //_OSG

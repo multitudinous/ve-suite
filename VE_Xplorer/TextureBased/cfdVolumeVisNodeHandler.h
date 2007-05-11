@@ -64,27 +64,55 @@ namespace VE_TextureBased
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisNodeHandler
    {
       public:
+         ///Constructor
          cfdVolumeVisNodeHandler();
+         ///Copy Constructor
+         ///\param vvnh cfdVolumeVisNodeHandler to copy
          cfdVolumeVisNodeHandler(const cfdVolumeVisNodeHandler& vvnh);
+         ///Destructor
          virtual ~cfdVolumeVisNodeHandler();
 
+         ///Set the top level switch node from cfdVolumeVisualization
+         ///\param vvn osg::Switch
          void SetSwitchNode(osg::Switch* vvn);
+         
+         ///Set the attachement node from cfdVolumeVisualization
+         ///\param attachNode osg::Group from cfdVolumeVisualization
          void SetAttachNode(osg::Group* attachNode);
+         ///Set the center of the data
+         ///\param center The center of the data
          void SetCenter(osg::Vec3f center);
+         ///Set the scale
+         ///\param scale The scale of the texture
+         ///\param isInverted Is the scale inverted
          void SetTextureScale(float* scale,bool isInverted = true);
+
+         ///Set the current cfdTextureManager
+         ///\param tm cfdTextureManager pointer
          void SetTextureManager(cfdTextureManager* tm);
+         ///Set the bounding box of the data
+         ///\param bbox The bounds of the data
          void SetBoundingBox(float* bbox);
+         ///Set the bounding box name for the graph
+         ///\param name Name for the bbox node
          void SetBoundingBoxName(std::string name);
+         ///Set the dectorator node name
+         ///\param name Name for the decorator name
          void SetDecoratorName(std::string name);
          ///Update which scalar shader is active
          ///\param name The shader name
          void SetActiveShader(std::string name);
+         ///Is this algorithm active
          bool IsThisActive();
+         ///Initialize parameters
          virtual void Init();
    
+         ///Turn on the visual bounding box
          void TurnOnBBox();
+         ///Turn off the visual bbox
          void TurnOffBBox();
 
+         ///Enable the active shader algorithm
          void EnableDecorator();
    
          ///Add new shader manager.
@@ -106,25 +134,30 @@ namespace VE_TextureBased
 
          cfdVolumeVisNodeHandler& operator=(const cfdVolumeVisNodeHandler& vvnh);
       protected:
+         ///Set up the geometry for the bounding box
          void _createVisualBBox();
-         //set up the stateset for the decorator
+         ///Set up the stateset for the decorator
          virtual void _setUpDecorator()=0;
+         ///Apply the texture matrix
          virtual void _applyTextureMatrix()=0;
+         ///Update the auto-gen texture unit
+         ///\param unit The texture unit
          virtual void _updateTexGenUnit(unsigned int unit=0);
+         ///Create the auto texture generation node
          void _createTexGenNode();
-         unsigned int _whichChildIsThis;
-         unsigned int _whichTexture;
-         bool _autoTexGen;
-         cfdTextureManager* _tm;
-         osg::ref_ptr<osg::Switch>_bboxSwitch;
-         osg::ref_ptr<osg::Group> _visualBoundingBox;
-         osg::ref_ptr<osg::Switch> _vvN;
-         osg::ref_ptr<osg::Group> _decoratorGroup;
-         osg::ref_ptr<osg::Group> _byPassNode;
-         osg::ref_ptr<osg::TexGenNode> _texGenParams;
-         osg::BoundingBox _bbox;
-         osg::Vec3f _center;
-         float _scale[3];
+         unsigned int _whichChildIsThis;///<Index of the child in the shader switch
+         unsigned int _whichTexture;///<Index of the current timestep
+         bool _autoTexGen;///<Use auto texture coordinate generation 
+         cfdTextureManager* _tm;///<Current cfdTextureManager
+         osg::ref_ptr<osg::Switch>_bboxSwitch;///<Bounding box switch node
+         osg::ref_ptr<osg::Group> _visualBoundingBox;///<Geometry for the visual bounding box
+         osg::ref_ptr<osg::Switch> _vvN;///<The top-level node of cfdVolumeVisualization
+         osg::ref_ptr<osg::Group> _decoratorGroup;///<Decorator group for attaching appropriate shader state
+         osg::ref_ptr<osg::Group> _byPassNode;///<By-pass node for setting appropriate shader state
+         osg::ref_ptr<osg::TexGenNode> _texGenParams;///<Texture coordinate generation
+         osg::BoundingBox _bbox;///<Bounding box
+         osg::Vec3f _center;///<Bounding box center
+         float _scale[3];///<Scale of the texture
 
          std::string _activeShader;///<The active shader
          std::map<std::string,VE_TextureBased::cfdOSGShaderManager*> _shaderManagers;///<The shaders.

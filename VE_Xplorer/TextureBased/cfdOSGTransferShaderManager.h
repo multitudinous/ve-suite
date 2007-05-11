@@ -68,40 +68,72 @@ namespace VE_TextureBased
    class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager
       : public cfdOSGShaderManager{
       public:
+         ///Constructor
          cfdOSGTransferShaderManager();
+         ///Copy Constructor
+         ///\param sm cfdOSGTransferShaderManager to copy
          cfdOSGTransferShaderManager(const cfdOSGTransferShaderManager& sm);
+         ///Destructor
          virtual ~cfdOSGTransferShaderManager();
+         ///Set the property texture by the current cfdTextureManager
          void SetUseTextureManagerForProperty(bool trueFalse);
+         ///Initialize parameters
          virtual void Init();
+         ///Set the texture dimensions
+         ///\param x The texture dimesion in the s direction
+         ///\param y The texture dimesion in the t direction
+         ///\param z The texture dimesion in the r direction
          void SetFieldSize(unsigned int x,unsigned int y,unsigned int z);
+         ///Update a transfer function
+         ///\param type The transfer function type
+         ///\param param New value
+         ///\param whichFunction The index of the transfer function to update
          void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
                                               float param,int whichFunction);
+         ///Set the property texture 
+         ///\param property The 3D property
          void SetPropertyTexture(osg::Texture3D* property);
+         ///Set the texture matrix
+         ///\param tmat The current texture matrix
          void SetTextureMatrix(osg::TexMat* tmat);
+         ///Set the texture manager
+         ///\param tm cfdTextureManager pointer
          void InitTextureManager(cfdTextureManager* tm);
+
+         ///Update the cfdTextureManager
+         ///\param tm cfdTextureManager pointer
          void UpdateTextureManager(cfdTextureManager* tm);
    
+         ///Get the property texture
          osg::Texture3D* GetPropertyTexture();
 
+         ///Equal operator
+         ///\param sm cfdOSGTransferShaderManager to set this equal to
          virtual cfdOSGTransferShaderManager& operator=(const 
 		                               cfdOSGTransferShaderManager& sm);
       protected:
+         ///Initialize the list of transfer functions
          virtual void _initTransferFunctions();
+         ///Create and add a transfer function to the list
+         ///\param gamma Use gamma correction
+         ///\param clearList Clear the current list of transfer functions before adding a new one
          void _createTransferFunction(bool gamma = false,
                                    bool clearList = false);
+         ///Initialize the property texture
          virtual void _initPropertyTexture();
+         ///Set the osg::StateSet f
          void _setupStateSetForGLSL();
-         unsigned int _fieldSize[3];
+         unsigned int _fieldSize[3];///The texture dimension
    
-         osg::ref_ptr<osg::TexMat> _texMat;
-         osg::ref_ptr<osg::Texture3D> _property;
+         osg::ref_ptr<osg::TexMat> _texMat;///<The current texture matrix
+         osg::ref_ptr<osg::Texture3D> _property;///<The property texture
          typedef osg::ref_ptr<osg::Texture1D> TransferFunction ;
          typedef osg::ref_ptr<osg::Texture2D> TransferFunction2D;
-         std::vector<TransferFunction2D> _transferFunctions;
-         bool _reinit;
-         bool _useTM;
-         cfdTextureManager* _tm;
-         osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;
+         std::vector<TransferFunction2D> _transferFunctions;///<The transfer functions
+         bool _reinit;///<Reinit the parameters
+         bool _useTM;///<Use the cfdTextureManager for texture data
+         cfdTextureManager* _tm;///<cfdTextureManager
+         osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;///<The update callback for the texture
 		 VE_TextureBased::TransferFunction* _tf;///<The transfer function for preIntegration.
 		 VE_TextureBased::PreIntegrationTexture2D* _preIntTexture;///<The preIntegrated texture.
        VE_TextureBased::NoiseTexture2D* _jitterTexture;///<The noise texture

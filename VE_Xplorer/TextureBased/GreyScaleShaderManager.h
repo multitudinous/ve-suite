@@ -52,7 +52,9 @@ namespace VE_TextureBased
 {
 class GreyScaleShaderManager: public cfdScalarShaderManager{
 public:
+   ///Constructor
    GreyScaleShaderManager(){};
+   ///Destructor
    virtual ~GreyScaleShaderManager(){}
          
 protected:
