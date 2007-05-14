@@ -18,26 +18,12 @@
 
 #NOTE: This script only works with Gnome 2.8+ desktop.
 
-#Files
-export Mime_Type_Package_File=ves.desktop
-export Desktop_File=vesuite.desktop
-export Reboot_File=vesuiteReboot.desktop
-export Shutdown_File=vesuiteShutdown.desktop
-export Wake_File=vesuiteWake.desktop
-export Mimetype_Icon_File=gnome-mime-application-x-vesuite.png
-export Menu_Icon_Source=ve_icon32x32.png
-export Menu_Icon_Destination=ve-suite.png
-export Scalable_Icon_Source=ve_icon_scalable.png
-#Location of Files
-export Mime_Type_Package_File_Location=$Mime_Type_Package_File
-export Desktop_File_Location=$Desktop_File
-export Reboot_File_Location=$Reboot_File
-export Shutdown_File_Location=$Shutdown_File
-export Wake_File_Location=$Wake_File
-export Mimetype_Icon_File_Location=installerImages/$Mimetype_Icon_File
-export Menu_Icon_File_Location=installerImages/$Menu_Icon_Source
-export Scalable_Icon_File_Location=installerImages/$Scalable_Icon_Source
+export Base_Directory=`pwd`
+export Desktop_Base_Directory=${Base_Directory}/LinuxConfig/desktops
+export Icon_Base_Directory=${Base_Directory}/LinuxConfig/icons
+export Mimetype_Base_Directory=${Base_Directory}/LinuxConfig/mimetypes
 export Desktop_Path=~/Desktop
+export Vendor=vrac
 #Set GlobalConfig
 #GlobalConfig determines whether a user-only or global config is made.
 export Uninstall=False
@@ -95,69 +81,64 @@ fi
 if [ $Uninstall == "True" ]
 then
    echo "Uninstalling MIME-type package for VE-Suite..."
-   rm -f $Mime_Directory/application/$Mime_Type_Package_File
-   #update-mime-database $Mime_Directory
+   cd $Mimetype_Base_Directory
+   export Mimetype_File_List=`find . -name "*.desktop"`
+   cd $Mime_Directory/application
+   rm -fv $Mimetype_File_List
 else
    echo "Installing MIME-type package for VE-Suite..."
    mkdir -p $Mime_Directory/application
-   cp $Mime_Type_Package_File_Location $Mime_Directory/application/$Mime_Type_Package_File
-   #update-mime-database $Mime_Directory
+   cd $Mimetype_Base_Directory
+   find . -name "*.desktop" -print -exec cp --parents {} $Mime_Directory/application/ \;
 fi
+cd $Base_Directory
 
 ##Install Desktop package
 if [ $Uninstall == "True" ]
 then
    echo "Uninstalling .desktop file for VE-Suite..."
-   rm -f $Applications_Directory/vrac-$Desktop_File
-   rm -f $Applications_Directory/vrac-$Reboot_File
-   rm -f $Applications_Directory/vrac-$Shutdown_File
-   rm -f $Applications_Directory/vrac-$Wake_File
+   cd $Desktop_Base_Directory
+   export Desktop_File_List=`find . -name "*.desktop" -printf ${Vendor}-%f\\\\n`
+   cd $Applications_Directory
+   rm -fv $Desktop_File_List
    update-desktop-database $Applications_Directory
 else
    echo "Installing .desktop file for VE-Suite..."
-   mkdir -p $Applications_Directory
-   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Desktop_File_Location
-   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Reboot_File_Location
-   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Shutdown_File_Location
-   desktop-file-install --vendor=vrac --dir=$Applications_Directory --rebuild-mime-info-cache $Wake_File_Location
+   cd $Desktop_Base_Directory
+   find . -name "*.desktop" -print -exec desktop-file-install --vendor=$Vendor --dir=$Applications_Directory --rebuild-mime-info-cache {} \;
 fi
+cd $Base_Directory
 
-##Install icon file
+##Install icon files
 if [ $Uninstall == "True" ]
 then
    echo "Uninstalling icon for .ves files..."
-   rm -f $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
-   rm -f $Icon_Directory/hicolor/scalable/mimetypes/$Mimetype_Icon_File
-   rm -f $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
-   rm -f $Icon_Directory/hicolor/scalable/apps/$Menu_Icon_Destination
+   cd $Icon_Base_Directory
+   export Icon_File_List=`find . -name "*.png"`
+   cd $Icon_Directory
+   rm -fv $Icon_File_List
 else
    echo "Installing icon for .ves files..."
-   mkdir -p $Icon_Directory/hicolor/48x48/mimetypes
-   mkdir -p $Icon_Directory/hicolor/32x32/apps
-   mkdir -p $Icon_Directory/hicolor/scalable/mimetypes
-   mkdir -p $Icon_Directory/hicolor/scalable/apps
-   cp $Mimetype_Icon_File_Location $Icon_Directory/hicolor/48x48/mimetypes/$Mimetype_Icon_File
-   cp $Scalable_Icon_File_Location $Icon_Directory/hicolor/scalable/mimetypes/$Mimetype_Icon_File
-   cp $Menu_Icon_File_Location $Icon_Directory/hicolor/32x32/apps/$Menu_Icon_Destination
-   cp $Scalable_Icon_File_Location $Icon_Directory/hicolor/scalable/apps/$Menu_Icon_Destination
+   cd $Icon_Base_Directory
+   find . -name "*.png" -print -exec cp --parents {} $Icon_Directory \;
 fi
+cd $Base_Directory
 
 ##Make desktop shortcuts
 if [ $Uninstall == "True" ]
 then
    echo "Removing desktop files on desktop."
-   rm -f $Desktop_Path/$Desktop_File
-   rm -f $Desktop_Path/$Reboot_File
-   rm -f $Desktop_Path/$Shutdown_File
-   rm -f $Desktop_Path/$Wake_File   
+   cd $Desktop_Base_Directory
+   export Desktop_File_List=`find . -name "*.desktop"`
+   cd $Desktop_Path
+   rm -fv $Desktop_File_List
 elif [ "$GlobalConfig" == "False" ]
 then
    echo "Making desktop links on desktop."
-   cp $Desktop_File_Location $Desktop_Path/$Desktop_File
-   cp $Reboot_File_Location $Desktop_Path/$Reboot_File
-   cp $Shutdown_File_Location $Desktop_Path/$Shutdown_File
-   cp $Wake_File_Location $Desktop_Path/$Wake_File
+   cd $Desktop_Base_Directory
+   find . -name "*.desktop" -print -exec cp {} $Desktop_Path \;
 fi
+cd $Base_Directory
 
 echo "Done."
 echo "Re-login for settings to take effect."
