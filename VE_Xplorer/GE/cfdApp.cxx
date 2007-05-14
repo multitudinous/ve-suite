@@ -174,14 +174,10 @@ void cfdApp::exit()
    cfdSteadyStateVizHandler::instance()->CleanUp();
 
 #ifdef _OSG
-#ifdef VE_PATENTED
    cfdTextureBasedVizHandler::instance()->CleanUp();
 #endif
-#endif
 
-#ifdef _TAO
    cfdExecutive::instance()->CleanUp();
-#endif // _TAO
 
 #ifdef _WEB_INTERFACE
    runWebImageSaveThread=false;
@@ -510,12 +506,6 @@ void cfdApp::latePreFrame( void )
 #endif
 #endif
 
-   if ( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
-   {
-      // exit cfdApp was selected
-      vrj::Kernel::instance()->stop(); // Stopping kernel 
-   }
-
    cfdExecutive::instance()->PreFrameUpdate();
    this->_vjobsWrapper->PreFrameUpdate();
 
@@ -544,6 +534,12 @@ void cfdApp::latePreFrame( void )
 #endif
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
+
+   if ( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
+   {
+      // exit cfdApp was selected
+      vrj::Kernel::instance()->stop(); // Stopping kernel 
+   }
 }
 
 void cfdApp::intraFrame()
