@@ -124,4 +124,42 @@
     also reset the Dependencies directory by clicking the Change Dependencies
     Folder button in VE-Launcher.</para>
   </section>
+  
+  <section id="setting_linux_menus">
+    <title>Setting Menus, Icons, Filetypes on Linux</title>
+    
+    <para>VE-Suite comes with a vesuiteConfig.sh script you can use to set
+    up menus, icons, and filetypes for VE-Suite on Linux desktop systems. The
+    script works for Gnome 2.8+ and KDE.</para>
+    <para>To run it, enter its directory and type in
+    '<code>./vesuiteConfig.sh</code>', followed by the arguments. The script
+    accepts these arguments:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><emphasis role="bold">--gnome or --kde:</emphasis> Sets Gnome or
+        KDE as the primary desktop. If neither argument is passed, Gnome is
+        chosen as the default primary desktop.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">--both:</emphasis> Installs on both Gnome
+        and KDE. --gnome or --kde still need to be passed to set the primary
+        desktop, because on most dual-desktop systems, one desktop inherits some
+        preferences from the other.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">--user or --global:</emphasis> Sets the
+        installations to either user-only or all-users. If neither argument is
+        passed, all-users is chosen if you have root access; other user-only
+        is chosen.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">--uninstall:</emphasis> Uninstalls the setup
+        passed. Goes with any other passed arguments. Example: '--gnome --global
+        --uninstall' would uninstall the setup created by passing '--gnome
+        --global'.</para>
+      </listitem>
+    </orderedlist>
+
+  </section>
 </chapter>
