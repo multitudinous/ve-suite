@@ -70,9 +70,9 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
     }
 
     std::string nodeName = node.getName();
-    //if ( nodeName.empty() )
+    if ( nodeName.empty() )
     {
-        nodeName = node.className();
+        nodeName = std::string( "Class" ) + node.className();
     }
     
     std::string childName;
@@ -80,11 +80,16 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
     {
         osg::ref_ptr< osg::Node > childNode = tempGroup->getChild( i );
         childName = childNode->getName();
-        //if ( childName.empty() )
+        if ( childName.empty() )
         {
-            childName = childNode->className();
+            childName = std::string( "Class" ) + childNode->className();
         }
-        dotFile << nodeName << tempGroup.get() << " -> " << childName << childNode.get() << ";" << std::endl; 
+
+        dotFile << tempGroup.get() << " -> " << childNode.get() << ";" << std::endl; 
+        dotFile << tempGroup.get() << " " << "[label=\"" 
+                << nodeName << "\"];" << std::endl;
+        dotFile << childNode.get() << " " << "[label=\"" 
+                << childName << "\"];" << std::endl;
     }
 
     osg::NodeVisitor::traverse( node );

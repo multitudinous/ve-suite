@@ -267,13 +267,19 @@ void CADEntityHelper::LoadFile( std::string filename,
     exit( 1 );
 #endif
 
-#ifdef _OSG
-    if( m_cadNode.valid() )
+    if( m_cadNode.valid() && !isStream )
     {
-#endif
         m_cadNode->setName( filename.c_str() );
     }
-    else
+    else if( m_cadNode.valid() && isStream )
+    {
+        std::string nodeName = m_cadNode->getName();
+        if ( nodeName.empty() )
+        {
+            m_cadNode->setName( "NULL_FILENAME" );
+        }
+    }
+    else 
     {
         std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " << filename << std::endl;
     }
