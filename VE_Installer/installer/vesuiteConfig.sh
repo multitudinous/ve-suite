@@ -66,10 +66,11 @@ do
          #Install both GNOME & KDE.
          export Gnome=True
          export Kde=True
-         ;;        
+         ;;
       *)
          #Invalid arg. Spit out error message and quit.
-         echo "Invalid argument passed."
+         echo ""
+         echo "$InputArgument is not a valid argument."
          echo "Specify your main desktop with --gnome or --kde."
          echo "If you want it set up to run on both, pass '--both' as well." 
          echo "Try '--user' or '--global' to choose the configuration's scope."
@@ -78,6 +79,7 @@ do
          echo "    using GNOME as your primary, for all users."
          echo "EX: Pass '--gnome --both --global --uninstall' to uninstall the"
          echo "    above installation."
+         echo ""
          exit 0
          ;;
    esac
