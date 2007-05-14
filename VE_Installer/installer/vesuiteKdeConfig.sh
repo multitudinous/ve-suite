@@ -9,6 +9,7 @@
 #Valid Arguments:
 # --user: User-only configuration
 # --global: Global configuration
+# --uninstall: Uninstalls the files this configuration installed.
 # (Nothing): Default configuration
 #           (Global if write-access to /usr/share/, else user-only.)
 
@@ -16,7 +17,7 @@
 #set in PATH in your ~/.cshrc file.
 #After you're finished setting it up, re-login to put the changes into effect.
 
-#NOTE: This script only works with Gnome 2.8+ desktop.
+#NOTE: This script only works with KDE desktops.
 
 export Base_Directory=`pwd`
 export Desktop_Base_Directory=${Base_Directory}/LinuxConfig/desktops
