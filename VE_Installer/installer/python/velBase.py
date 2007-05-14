@@ -43,7 +43,6 @@ else:
     from pwd import getpwuid ##Used for grabbing user id
     userName = getpwuid(os.getuid())[0]
     CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.%s.tsh" %(userName))
-    print CLUSTER_FILE_PATH ##TESTER
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
 
 ##Config settings.
@@ -199,7 +198,6 @@ def CreateListFromText(textBlock):
     Then, splits the textBlock based on whitespace."""
     for charToReplace in SEPARATOR_CHARS:
         textBlock = textBlock.replace(charToReplace, ' ')
-        ##print textBlock ##TESTER
     return textBlock.split()
 
 
@@ -207,21 +205,30 @@ def usage():
     """Prints a list of acceptable arguments for command line velauncher.py."""
     print """
 LEGAL OPTIONS FOR VELAUNCHER:
+
 <none>: Start the velauncher GUI.
+
 <file>: Passes a .ves or shell file to velauncher. Will automatically run it
         if the Auto-Run Passes File menu choice is checked.
+
 -d, --dev: If passed alone, starts the velauncher GUI in developer mode.
            If passed with other options, sets the launch environment to
            developer mode.
+
 -q, --quick: Immediately runs VE-Suite with its last settings.
+
 -g <config>, --config=<config>: Immediately runs VE-Suite using the named
                                 VE-Launcher configuration.
 
 -w <dir>, --dir=<dir>: Set the Working directory to <dir>.
+
 -t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.
+
 -p <port>, --port=<port>: Set TAOPORT to <port>.
+
 -j <filepath>, --jconf=<filepath>: Use <filepath> as VE Xplorer's
                                    Juggler configuration.
+
 -b, --debug: Debug VE-Launcher's launch sequence.
 
 -l <boolean>, --cluster=<boolean>: Set whether VE-Suite runs
@@ -231,10 +238,19 @@ PROGRAM-LAUNCHING OPTIONS:
 If any of these are used, only the VE-Suite programs specified with options
 will launch, despite previous settings.
 (Example: If you pass "-c -x", only Conductor and Xplorer will launch.)
+
 -c, --conductor: Launch VE Conductor.
+
 -n, --nameserver: Launch VE NameServer.
+
 -x, --xplorer: Launch VE Xplorer.
+
 -s, --shell: Launches a subshell with the VE-Suite environmental
              variables set, including the VE-Builder directory.
 """
+    return
+
+def version():
+    """Prints VE-Suite's version."""
+    print """VE-Suite v1.0.6"""
     return

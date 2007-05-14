@@ -897,7 +897,8 @@ VALID_ARGUMENTS = {'c' : "conductor",
                    's' : "shell",
                    'q' : "quick",
                    'b' : "debug",
-                   'g:' : "config="}
+                   'g:' : "config=",
+                   'v' : "version"}
 shortArgs = ""
 longArgs = []
 for arg in VALID_ARGUMENTS:

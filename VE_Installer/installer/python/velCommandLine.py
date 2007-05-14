@@ -84,6 +84,9 @@ class CommandLine:
 ##                self.state.Cover("ClusterMaster", arg, layer = COMMAND_LINE_LAYER)
             elif opt in ('-b', "--debug"):
                 self.state.Cover("Debug", True, layer = COMMAND_LINE_LAYER)
+            elif opt in ('-v', "--version"):
+                version()
+                sys.exit()
         ##Grab the first argument passed as the file to load.
         if len(arguments) > 0:
             self.state.InterpretArgument(arguments[0])
