@@ -23,20 +23,20 @@
 * Boston, MA 02111-1307, USA.
 *
 * -----------------------------------------------------------------
-* Date modified: $Date$
-* Version:       $Rev$
+* Date modified: $Date: 2007-05-09 08:48:57 -0500 (Wed, 09 May 2007) $
+* Version:       $Rev: 7573 $
 * Author:        $Author$
 * Id:            $Id$
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef FIND_PARENTS_VISITOR_H
-#define FIND_PARENTS_VISITOR_H
+#ifndef CREATE_GRAPH_DOT_VISITOR_H
+#define CREATE_GRAPH_DOT_VISITOR_H
 
-/*!\file FindParentsVisitor.h
+/*!\file CreateGraphDOTVisitor.h
 */
 
-/*!\class VE_SceneGraph::FindParentsVisitor
+/*!\class VE_SceneGraph::CreateGraphDOTVisitor
 *
 */
 
@@ -50,32 +50,28 @@
 // --- OSG Includes --- //
 #include <osg/NodeVisitor>
 
+#include <string>
+#include <fstream>
+
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS FindParentsVisitor : public osg::NodeVisitor
+class VE_SCENEGRAPH_EXPORTS CreateGraphDOTVisitor : public osg::NodeVisitor
 {
 public:
     ///Constructor
     ///\param node The node to be traversed
-    FindParentsVisitor( osg::Node* node );
+    CreateGraphDOTVisitor( osg::Node* node, std::string& inputStream );
 
     ///Destructor
-    virtual ~FindParentsVisitor();
+    virtual ~CreateGraphDOTVisitor();
 
     ///Apply function that gets called during the traversal
     ///\param node A parent node of the node being traversed
     virtual void apply( osg::Node& node );
 
-    ///Return the parent node with an ID
-    osg::Node* GetParentNode();
-
-    ///Return the GUID for the found node
-    std::string GetNodeGUID();
-
 private:
-    std::string modelGUID;///<GUID to identify the VE-Open model
-    osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
+    std::ofstream dotFile;///<DOT file strem to be written to
 };
 }
 
-#endif //FIND_PARENTS_VISITOR_H
+#endif //CREATE_GRAPH_DOT_VISITOR_H

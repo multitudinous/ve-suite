@@ -42,6 +42,7 @@
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/CreateGraphDOTVisitor.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
@@ -266,7 +267,17 @@ void cfdTeacher::RecordScene()
    this->node.back()->LoadFile( this->pfbFileNames.back() );*/
    // store the active geometry and viz objects as a pfb
    // (but not the sun, menu, laser, or text)
- 
+   
+   /*{
+       std::string tempName( "dot.dot" );
+       std::ofstream dotFile( "dot.dot", std::ios::out );
+       dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
+       dotFile.close();
+       VE_SceneGraph::CreateGraphDOTVisitor dotCreator( 
+                        VE_SceneGraph::SceneManager::instance()->GetRootNode(), 
+                        tempName );
+   }*/
+   
    vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << pfb_count
                              << std::endl << vprDEBUG_FLUSH;
       
