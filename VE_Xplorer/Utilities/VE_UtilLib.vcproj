@@ -73,7 +73,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib comctl32.lib ws2_32.lib"
-				ShowProgress="2"
+				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_UtilLib.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

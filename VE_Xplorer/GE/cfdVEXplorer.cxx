@@ -31,8 +31,10 @@
  *
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include "VE_Xplorer/GE/cfdAppWrapper.h"
 #include "VE_Xplorer/GE/cfdVjObsWrapper.h"
+
 #ifdef _TAO
    #include "VE_CE/Executive_i.h"
    #include <orbsvcs/CosNamingC.h>
@@ -40,6 +42,7 @@
 #else
    #include <omniORB4/CORBA.h>
 #endif
+
 #include <iostream>
 #include <vpr/System.h>
 

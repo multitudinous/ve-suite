@@ -16,9 +16,9 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
-			ConfigurationType="1"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory="./XplorerNetworkLib/$(ConfigurationName)"
+			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -72,8 +72,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr.lib vrj.lib vrj_ogl.lib osg.lib osgUtil.lib osgDB.lib osgText.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib xerces-c_2.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib wxbase28.lib wxmsw28_core.lib"
-				ShowProgress="2"
+				AdditionalDependencies="vrj.lib vrj_ogl.lib osg.lib osgUtil.lib osgDB.lib osgText.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib xerces-c_2.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib libnspr4.lib"
+				ShowProgress="0"
 				OutputFile="$(OutDir)/XplorerNetworkLib_tao_osg_vep.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib wxbase28d.lib wxmsw28d_core.lib"
+				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/XplorerNetworkLib_tao_osg_vep_d.dll"
 				LinkIncremental="2"

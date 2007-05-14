@@ -72,8 +72,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgSimd.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib xerces-c_2.lib wxbase28.lib wxmsw28_core.lib cppdom.lib"
-				ShowProgress="2"
+				AdditionalDependencies="vpr.lib vrj.lib vrj_ogl.lib osg.lib osgUtil.lib osgSim.lib osgDB.lib osgText.lib libnspr4.lib jccl.lib sonix.lib gadget.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib xerces-c_2.lib wxbase28.lib wxmsw28_core.lib cppdom.lib"
+				ShowProgress="0"
 				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_vep.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
