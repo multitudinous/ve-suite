@@ -85,10 +85,11 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
             childName = std::string( "Class" ) + childNode->className();
         }
 
-        dotFile << tempGroup.get() << " -> " << childNode.get() << ";" << std::endl; 
-        dotFile << tempGroup.get() << " " << "[label=\"" 
+        dotFile << "\"" << tempGroup.get() << "\" -> \"" 
+                << childNode.get() << "\";" << std::endl; 
+        dotFile << "\"" << tempGroup.get() << "\" " << "[label=\"" 
                 << nodeName << "\"];" << std::endl;
-        dotFile << childNode.get() << " " << "[label=\"" 
+        dotFile << "\"" << childNode.get() << "\" " << "[label=\"" 
                 << childName << "\"];" << std::endl;
     }
 
