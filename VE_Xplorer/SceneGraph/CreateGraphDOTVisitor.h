@@ -60,6 +60,7 @@ class VE_SCENEGRAPH_EXPORTS CreateGraphDOTVisitor : public osg::NodeVisitor
 public:
     ///Constructor
     ///\param node The node to be traversed
+    ///\param inputStream The filename to be written out by the visitor
     CreateGraphDOTVisitor( osg::Node* node, std::string& inputStream );
 
     ///Destructor
@@ -70,7 +71,7 @@ public:
     virtual void apply( osg::Node& node );
 
 private:
-    std::ofstream dotFile;///<DOT file strem to be written to
+    std::ofstream m_dotFile;///<DOT file strem to be written to
 };
 }
 

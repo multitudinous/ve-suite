@@ -47,15 +47,15 @@ CreateGraphDOTVisitor::CreateGraphDOTVisitor( osg::Node* node,
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-    dotFile.open( inputStream.c_str(), std::ios::out );
-    dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
+    m_dotFile.open( inputStream.c_str(), std::ios::out );
+    m_dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
     node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CreateGraphDOTVisitor::~CreateGraphDOTVisitor()
 {
-    dotFile << "}" << std::endl;
-    dotFile.close();
+    m_dotFile << "}" << std::endl;
+    m_dotFile.close();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CreateGraphDOTVisitor::apply( osg::Node& node )
@@ -63,13 +63,13 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
     //If it is not a group then it is a low level node which is already recorded
     //in the dot file
     osg::ref_ptr< osg::Group > tempGroup = node.asGroup();
-    if ( !tempGroup.valid() )
+    if( !tempGroup.valid() )
     {
         return;
     }
 
     std::string nodeName = node.getName();
-    if ( nodeName.empty() )
+    if( nodeName.empty() )
     {
         nodeName = std::string( "Class" ) + node.className();
     }
@@ -79,17 +79,17 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
     {
         osg::ref_ptr< osg::Node > childNode = tempGroup->getChild( i );
         childName = childNode->getName();
-        if ( childName.empty() )
+        if( childName.empty() )
         {
             childName = std::string( "Class" ) + childNode->className();
         }
 
-        dotFile << "\"" << tempGroup.get() << "\" -> \"" 
-                << childNode.get() << "\";" << std::endl; 
-        dotFile << "\"" << tempGroup.get() << "\" " << "[label=\"" 
-                << nodeName << "\"];" << std::endl;
-        dotFile << "\"" << childNode.get() << "\" " << "[label=\"" 
-                << childName << "\"];" << std::endl;
+        m_dotFile << "\"" << tempGroup.get() << "\" -> \"" 
+                    << childNode.get() << "\";" << std::endl; 
+        m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\"" 
+                    << nodeName << "\"];" << std::endl;
+        m_dotFile << "\"" << childNode.get() << "\" " << "[label=\"" 
+                    << childName << "\"];" << std::endl;
     }
 
     osg::NodeVisitor::traverse( node );
