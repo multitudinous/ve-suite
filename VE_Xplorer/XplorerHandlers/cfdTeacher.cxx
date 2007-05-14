@@ -270,9 +270,6 @@ void cfdTeacher::RecordScene()
    
    /*{
        std::string tempName( "dot.dot" );
-       std::ofstream dotFile( "dot.dot", std::ios::out );
-       dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
-       dotFile.close();
        VE_SceneGraph::CreateGraphDOTVisitor dotCreator( 
                         VE_SceneGraph::SceneManager::instance()->GetRootNode(), 
                         tempName );

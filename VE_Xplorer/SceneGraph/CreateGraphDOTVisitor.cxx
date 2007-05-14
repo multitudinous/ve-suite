@@ -47,9 +47,8 @@ CreateGraphDOTVisitor::CreateGraphDOTVisitor( osg::Node* node,
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-    ///We assume the file stream is already open and ready to 
-    ///start appending to
-    dotFile.open( inputStream.c_str(), std::ios::out | std::ios::app );
+    dotFile.open( inputStream.c_str(), std::ios::out );
+    dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
     node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
