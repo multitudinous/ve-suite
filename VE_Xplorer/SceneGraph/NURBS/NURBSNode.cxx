@@ -70,7 +70,6 @@ public:
       _numVControlPoints = numV;
       _isSurface = isSurface;
       _selection = false;
-     
    }
 
    ///Turn on/off selection of control points
@@ -111,12 +110,12 @@ public:
    ///Get the indexed control point
    NURBS::ControlPoint& GetControlPoint(unsigned int index);
 
-   
    ///Get the indexed control point
    NURBS::ControlPoint& GetSelectedControlPoint();
 
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
+   ///???
    virtual osg::BoundingBox computeBound() const;
    
 protected:
@@ -140,7 +139,7 @@ protected:
    mutable osg::Matrixf _inverseModelViewMatrix;///<The current inverse modelview matrix
    mutable osg::Matrixf _inverseProjectionMatrix;///<The current inverse modelview matrix
    mutable int _selectedControlPointIndex;///<The currently selected control point
-   GLfloat _mouse[2];//<The mouse position.
+   GLfloat _mouse[2];///<The mouse position.
    GLuint _selectionBuffer[512];///<Set Up A Selection Buffer
    GLint _hits;///<Selected primitives	
    unsigned int _numUControlPoints;///<The number of control points in U direction.
@@ -292,16 +291,16 @@ void NURBSControlMesh::Selection()const
       _selectedControlPointIndex = selectionBuffer[3];									
       int depth = selectionBuffer[1];									
 
-       for (int loop = 1; loop < hits; loop++)					
-       {
-          // If This Object Is Closer To Us Than The One We Have Selected
-          if (selectionBuffer[loop*4+1] < GLuint(depth))
-          {
-             _selectedControlPointIndex = selectionBuffer[loop*4+3];						
-             depth = selectionBuffer[loop*4+1];						
-          }       
+      for (int loop = 1; loop < hits; loop++)					
+      {
+         // If This Object Is Closer To Us Than The One We Have Selected
+         if (selectionBuffer[loop*4+1] < GLuint(depth))
+         {
+            _selectedControlPointIndex = selectionBuffer[loop*4+3];						
+            depth = selectionBuffer[loop*4+1];						
+         }       
       }
-   } 
+   }
    //restoring the original projection matrix
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();
@@ -411,13 +410,15 @@ osg::BoundingBox NURBSControlMesh::computeBound()const
    }
    return bbox;
 }
-///////////////////////////////////////////////
+/////////////////////////////////////////////////////////////
 namespace NURBS
 {
+///???
 class TestControlPointCallback : public osg::NodeCallback 
 {
     public:
     
+        ///???
         TestControlPointCallback(double period):
             _firstCall(true),
             _startTime(0.0),
@@ -425,6 +426,7 @@ class TestControlPointCallback : public osg::NodeCallback
             _period(period)
             {}
     
+        ///???
         virtual void operator()(osg::Node* node,osg::NodeVisitor* nv)
         {
 
@@ -453,14 +455,14 @@ class TestControlPointCallback : public osg::NodeCallback
            }
         }
         
-        bool    _firstCall;
+        bool    _firstCall;///<???
 
-        double  _startTime;
-        double  _time;
+        double  _startTime;///<???
+        double  _time;///<???
         
-        double  _period;
-        double  _xphase;
-        float   _amplitude;       
+        double  _period;///<???
+        double  _xphase;///<???
+        float   _amplitude;///<???
 };
    }
 namespace NURBS
@@ -501,6 +503,7 @@ public:
 
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
+   ///???
    virtual osg::BoundingBox computeBound() const;
    
 protected:
@@ -513,8 +516,9 @@ protected:
    ///Tessellate the curve
    void _tessellateCurve() const;
 
-   //Calculate the normal on the surface at point
-   //Should this be in the NURBS::NURBSSurface class?
+   ///Calculate the normal on the surface at point.
+   ///Should this be in the NURBS::NURBSSurface class?
+   ///\param index ???
    osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index)const;
 
    NURBS::NURBSObject* _nurbsObject;///The NURBS representation

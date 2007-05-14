@@ -34,15 +34,17 @@
 #define VE_POINT_H
 
 /*!\file ControlPoint.h
-  ControlPoint API
+  Point and ControlPoint API
+  */
+/*!\file ControlPoint.cxx
+  Point and ControlPoint code
   */
 /*!\class NURBS::ControlPoint
  * Class defining a Control Point for NURBS object.
  */
 /*!\class NURBS::Point
- * Class defining a Control Point for NURBS object.
+ * Class defining a Point for NURBS object.
  */
-
 /*!\namespace NURBS
  * NURBS API namespace.
  */
@@ -51,6 +53,7 @@
 #include <ostream>
 namespace NURBS
 {
+///???
 class VE_NURBS_EXPORTS Point
 {
 public:
@@ -63,18 +66,21 @@ public:
    Point(double x,double y, double z);
 
    ///Copy constructor
+   ///\param rhs The point to copy this one from. 
    Point(const Point& rhs);
 
    ///Destructor
    virtual ~Point();
 
-   ///Equal operator
+   ///Equal operator.
    ///\param rhs The point to set this one to. 
    virtual Point& operator=(const Point& rhs);
 
    ///Translate the point by a delta
-   ///\param inverseModelViewMatrix The inverse modelview matrix
-   void Translate(double dx,double dy, double dz);
+   ///\param dx Change to point's x-position.
+   ///\param dy Change to point's y-position.
+   ///\param dz Change to point's z-position.
+   void Translate(double dx, double dy, double dz);
 
    ///Set the point coordinates
    ///\param pt The new point values
@@ -92,7 +98,9 @@ public:
    ///\param z The new value.
    void SetZ(double z);
 
-   ///Set the (Row,Column) position of this control point int the mesh
+   ///Set the (Row,Column) position of this control point in the mesh
+   ///\param row Control point's new row.
+   ///\param col Control point's new column.
    void SetRowColumnIndex(unsigned int row, unsigned int col);
 
    ///Set the selection status of this point
@@ -117,20 +125,24 @@ public:
    ///Query selection status
    bool IsSelected();
 
-   ///Dot product
+   ///Dot product.
+   ///\param rhs ???
    inline double operator*(const Point& rhs) const
    {
       return _x*rhs._x + _y*rhs._x + _z*rhs._z;
    }
 
    ///Cross product. 
+   ///\param rhs ???
    inline const Point operator ^ (const Point& rhs) const
    {
       return Point(_y*rhs._z - _z*rhs._y,
                    _z*rhs._x - _x*rhs._z,
                    _x*rhs._y - _y*rhs._x);
    }
-   ///override ostream operator
+   ///Override ostream operator.
+   ///\param os ???
+   ///\param fpd ???
    inline friend std::ostream& operator<<(std::ostream& os,
                                           const Point& fpd)
    {
@@ -138,7 +150,9 @@ public:
       return os;
    }
 
-   ///override ">" operator
+   ///Override ">" operator.
+   ///\param lhs ???
+   ///\param rhs ???
    friend bool operator>(const Point& lhs,const Point& rhs)
    {
       if(lhs._x > rhs._x ||
@@ -149,7 +163,8 @@ public:
       }
       return false;
    };
-   ///addition operator
+   ///Addition operator
+   ///\param lhs ???
    Point operator+(const Point& lhs)
    {
       Point newPoint(lhs._x + _x,
@@ -160,7 +175,7 @@ public:
 
    };
 
-   ///multiplicaiton with a scalar operator
+   ///Multiplication with a scalar operator.
    Point operator*(const double& lhs)
    {
       Point newPoint(lhs*_x,
@@ -180,6 +195,7 @@ protected:
    unsigned int _row;///<The row of this control point in the overall mesh
    unsigned int _column;///<The column of this control point in the overall mesh
 };
+///???
 class VE_NURBS_EXPORTS ControlPoint : public NURBS::Point
 {
 public:
@@ -206,7 +222,7 @@ public:
    ///\param weight The weight of this control point
    void SetWeight(double weight);
 
-   ///Set the translation values to be performed in eye space
+   ///Set the translation values to be performed in eye space.
    ///\param deltaPt The translation in eye space
    void SetEyeSpaceTranslation(double* deltaPt);
 
@@ -245,7 +261,7 @@ public:
       os<<fpd._x<<" "<<fpd._y<<" "<<fpd._z<<" "<<fpd._weight<<" ";
       return os;
    }
-    ///override "<<"operator
+   ///override "<<"operator
    inline friend std::ostream& operator<<(std::ostream& os,
                                           const ControlPoint* fpd)
    {
@@ -253,9 +269,10 @@ public:
       return os;
    }
 
-  ControlPoint operator+(const ControlPoint& lhs);
+   ///Addition with a ControlPoint.
+   ControlPoint operator+(const ControlPoint& lhs);
 
-   /// multiplication with a scalar
+   ///Multiplication with a scalar.
    ControlPoint operator*(const double& lhs);
    
 protected:

@@ -57,7 +57,7 @@ Point::Point(double x,double y, double z)
    _isSelected = false;
 }
 ///////////////////////////////////////////////////
-///Copy constructor                              //
+//Copy constructor                               //
 ///////////////////////////////////////////////////
 Point::Point(const Point& rhs)
 { 
@@ -75,7 +75,7 @@ Point::~Point()
 {
 }
 //////////////////////////////////////////////////////////////
-///Equal operator                                           //
+//Equal operator                                            //
 //////////////////////////////////////////////////////////////
 Point& Point::operator=(const Point& rhs)
 {
@@ -103,24 +103,24 @@ void Point::SetCoordinates(double* pt)
    _z = pt[2];
 }
 /////////////////////////////////
-///Set the x coord of          //
-/// this control point.        //
+//Set the x coord of           //
+// this control point.         //
 /////////////////////////////////
 void Point::SetX(double x)
 {
    _x = x;
 }
 /////////////////////////////////
-///Set the y coord of          //
-/// this control point.        //
+//Set the y coord of           //
+// this control point.         //
 /////////////////////////////////
 void Point::SetY(double y)
 {
    _y = y;
 }
 /////////////////////////////////
-///Set the z coord of          //
-/// this control point.        //
+//Set the z coord of           //
+// this control point.         //
 /////////////////////////////////
 void Point::SetZ(double z)
 {
@@ -167,7 +167,7 @@ double Point::Y()
    return _y;
 }
 //////////////////////////////////
-///Get the value of the         //
+//Get the value of the         //
 // third directional coordinate.//
 //////////////////////////////////
 double Point::Z()
@@ -243,21 +243,21 @@ ControlPoint ControlPoint::GetWeightedPoint()
    return NURBS::ControlPoint(_xW,_yW,_zW,_weight);
 }
 ////////////////////////////////
-///Weighted component X       //
+//Weighted component X        //
 ////////////////////////////////
 double ControlPoint::WeightedX()
 {
    return _x*_weight;
 }
 ////////////////////////////////
-///Weighted component Y       //
+//Weighted component Y        //
 ////////////////////////////////
 double ControlPoint::WeightedY()
 {
    return _y*_weight;
 }
 ////////////////////////////////
-///Weighted component Z       //
+//Weighted component Z        //
 ////////////////////////////////
 double ControlPoint::WeightedZ()
 {
@@ -275,7 +275,7 @@ ControlPoint ControlPoint::operator*(const double& lhs)
       return newPoint;
 }
 ////////////////////////////////////////////////////////////
-///override "+" operator                                  //
+//override "+" operator                                   //
 ////////////////////////////////////////////////////////////
 ControlPoint ControlPoint::operator+(const ControlPoint& lhs)
 {

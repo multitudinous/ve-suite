@@ -55,6 +55,7 @@ namespace NURBS
 {
 namespace Utilities
 {
+///???
 class VE_NURBS_UTILS_EXPORTS VENURBS2OCCNURBS
 {
 public:
@@ -63,7 +64,7 @@ public:
    ///Destructor
    ~VENURBS2OCCNURBS(){ ; }
 
-   ///\brief Get a VE NURBS patch and return an OCC BSpline Surface
+   ///Get a VE NURBS patch and return an OCC BSpline Surface
    ///\param veNURBSSurface NURBS surface to be converted
    Geom_BSplineSurface* GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface )
    {

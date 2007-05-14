@@ -37,9 +37,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-/*!\file OCCNURBSFileReader.cxx
- * OCCNURBSFileReader Code
- */
 using namespace NURBS::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 //Constructor                         //

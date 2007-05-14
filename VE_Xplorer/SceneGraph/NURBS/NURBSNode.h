@@ -44,7 +44,9 @@
 /*!\file NURBSNode.h
   NURBS Object OSG Renderer API
   */
-
+/*!\file NURBSNode.cxx
+  NURBS Object OSG Renderer code
+  */
 /*!\class NURBS::NURBSNode
  * Class defining the interface between NURBS object and osg::Geometry.
  */
@@ -52,7 +54,7 @@ namespace NURBS
 {
    class NURBSControlMesh;
    class NURBSTessellatedSurface;
-
+///???
 class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
@@ -82,7 +84,10 @@ public:
    ///\param yPosition The y mouse position
    void SetMousePosition(float xPosition,float yPosition);
 
-   ///
+   ///???
+   ///\param dx ???
+   ///\param dy ???
+   ///\param dz ???
    void MoveSelectedControlPoint(float dx,
                                  float dy,
                                  float dz);

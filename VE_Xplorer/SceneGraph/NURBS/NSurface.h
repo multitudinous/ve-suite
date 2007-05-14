@@ -36,6 +36,9 @@
 /*!\file NSurface.h
   NURBS Surface API
   */
+/*!\file NSurface.cxx
+  NURBS Surface code
+  */
 /*!\class NURBS::NURBSSurface
  * Class defining a NURBSSurface. 
  */
@@ -49,6 +52,7 @@ namespace NURBS
 class Point;
 class ControlPoint;
 
+///???
 class VE_NURBS_EXPORTS NURBSSurface : public NURBSObject
 {
 public:
@@ -68,6 +72,7 @@ public:
    ///Interpolate the surface.
    virtual void Interpolate();
 
+   ///???
    std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > GetSurfaceDerivatives();
 
    ///Write the surface out in the VE-NURBS format

@@ -36,6 +36,9 @@
 /*!\file KnotVector.h
   KnotVector API
   */
+/*!\file KnotVector.cxx
+  KnotVector code
+  */
 /*!\class NURBS::KnotVector
  * Class defining a KnotVector for NURBS object.
  */
@@ -47,6 +50,7 @@
 #include <iostream>
 namespace NURBS
 {
+///???
 class VE_NURBS_EXPORTS KnotVector
 {
 public:
@@ -60,10 +64,10 @@ public:
    virtual ~KnotVector();
 
    ///Equal operator
-   ///\param rhs The point to set this one to. 
+   ///\param rhs The point to set this one to.
    KnotVector& operator=(const KnotVector& rhs);
 
-   ///Set the knot spacing of knot vector
+   ///Set the knot spacing of KnotVector
    ///\param type The knot vector type\n
    ///Valid values are:\n
    ///Uniform == uniform spacing.
@@ -78,8 +82,8 @@ public:
    ///Get the KnotVector spacing.
    std::string KnotSpacing();
 
-   ///Find the span that a parameter lies in within the knot vector
-   ///\param parameterValue The value to search the span for
+   ///Find the span that a parameter lies in within the KnotVector
+   ///\param parameterValue The value to search the span for.
    std::map< double, unsigned int >::iterator FindSpan(double parameterValue);
 
    ///Find the span that a parameter lies in within the knot vector
@@ -100,15 +104,14 @@ public:
    ///Get the number of knots currently in the vector.
    size_t NumberOfKnots();
 
-   ///Get a vector containing multiplicity for each unique knot
+   ///Get a vector containing multiplicity for each unique knot.
    std::vector< unsigned int > GetMultiplicityVector( void );
-   ///Get a vector with all knot values (including multiplicty)
-   ///as a single 1D array
+   //Get vector with all knot values (with multiplicity) as 1D array
    //std::vector< double > GetKnotVector( void );
-   /// Get knot vector WITHOUT multiplicity
+   ///Get knot vector WITHOUT multiplicity.
    std::vector< double > GetDistinctKnotVector( void );
 
-   ///write out the knot vector
+   ///Write out the knot vector.
    inline friend std::ostream& operator<<(std::ostream& os,NURBS::KnotVector& knotVector)
    {
       unsigned int nKnots = knotVector.NumberOfKnots();

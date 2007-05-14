@@ -36,6 +36,9 @@
 /*!\file NURBSObject.h
   NURBS Surface API
   */
+/*!\file NURBSObject.cxx
+  NURBS Surface code
+  */
 /*!\class NURBS::NURBSObject
  * Base class defining a NURBS representation. 
  */
@@ -49,7 +52,7 @@ namespace NURBS
 {
 class Point;
 class ControlPoint;
-
+///???
 class VE_NURBS_EXPORTS NURBSObject
 {
 public:

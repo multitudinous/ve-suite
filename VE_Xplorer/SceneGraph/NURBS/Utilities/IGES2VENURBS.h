@@ -62,6 +62,7 @@ namespace NURBS
 {
 namespace Utilities
 {
+///???
 class VE_NURBS_UTILS_EXPORTS IGES2VENURBS
 {
 public:
@@ -70,7 +71,7 @@ public:
    ///Destructor
    ~IGES2VENURBS(){ ; }
 
-   ///\brief Get a filename for an IGES file and return a vector of VE NURBS Surfaces
+   ///Get a filename for an IGES file and return a vector of VE NURBS Surfaces
    ///\param igesFileName IGES filename to be converted
    std::vector< NURBS::NURBSSurface* > GetVectorOfVENURBSSurface( std::string igesFileName )
    {

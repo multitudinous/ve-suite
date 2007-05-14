@@ -35,6 +35,12 @@
 /*!\file OCCNURBSFileReader.h
  * OCCNURBSFileReader API
  */
+/*!\file OCCNURBSFileReader.cxx
+ * OCCNURBSFileReader Code
+ */
+/*!\namespace NURBS::Utilities
+ * NURBS Utilities API namespace
+ */
 /*!\class NURBS::Utilities::OCCNURBSFileReader
  * Class that reads a NURBS patch file 
  * Created by the Star-2-OCC utility
@@ -49,6 +55,7 @@ namespace NURBS
 {
 namespace Utilities
 {
+///???
 class VE_NURBS_UTILS_EXPORTS OCCNURBSFileReader
 {
 public:
@@ -58,10 +65,11 @@ public:
    ///Destructor
    virtual ~OCCNURBSFileReader();
 
-   /// \brief Read in a NURBS patch created by the NURBSPointCreator utility.
+   ///Read in a NURBS patch created by the NURBSPointCreator utility.
    ///
    ///The user is responsible for cleaning up the memory associated with
    ///the returned NURBS::NURBSSurface.
+   ///\param star2occFile ???
    NURBS::NURBSSurface* ReadPatchFile(std::string star2occFile);
 
 protected:

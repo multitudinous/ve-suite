@@ -36,6 +36,9 @@
 /*!\file NCurve.h
   NURBS Curve API
   */
+/*!\file NCurve.cxx
+  NURBS Curve Code
+  */
 /*!\class NURBS::NURBSCurve
  * Class defining a NURBSCurve. 
  */
@@ -49,6 +52,7 @@ namespace NURBS
 class Point;
 class ControlPoint;
 
+///???
 class VE_NURBS_EXPORTS NURBSCurve : public NURBSObject
 {
 public:
