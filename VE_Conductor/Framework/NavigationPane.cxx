@@ -33,8 +33,6 @@
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/App.h"
 
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 
@@ -59,7 +57,7 @@
 
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include <wx/app.h>
+
 #include <wx/checkbox.h>
 #include <wx/slider.h>
 #include <wx/button.h>
@@ -101,8 +99,6 @@ NavigationPane::NavigationPane()
    
    wxSize displaySize = ::wxGetDisplaySize();
 
- //  wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
-
    wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    /*wxRect dialogPosition( 2*displaySize.GetWidth()/3, bbox.GetBottomRight().y, 
                         displaySize.GetWidth()/3, 
@@ -114,9 +110,6 @@ NavigationPane::NavigationPane()
    mainSizer->Add( scrollWindow,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
    this->SetIcon( ve_icon32x32_xpm );
    SetSizer( mainSizer );
-
-   //xplorerPtr = VjObs::_duplicate( veEngine );
-   //domManager = domManagerIn;
    
    // Update VE-Xplorer data
    dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";

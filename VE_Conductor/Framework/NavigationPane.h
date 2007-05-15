@@ -62,7 +62,6 @@ class wxScrolledWindow;
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 //override the buttons
