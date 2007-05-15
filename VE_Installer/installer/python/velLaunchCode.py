@@ -235,7 +235,7 @@ class Launch:
         """Returns a generic Naming_Service array."""
         exe = "Naming_Service"
         if windows:
-            exe += self.windowsSuffix
+            exe += ".exe"
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
         return c
 
