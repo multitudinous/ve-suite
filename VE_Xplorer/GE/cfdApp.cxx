@@ -421,12 +421,8 @@ void cfdApp::initScene( void )
    //create the volume viz handler
 #ifdef _OSG
    _start_tick = _timer.tick();
-#ifdef VE_PATENTED
    _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   //_tbvHandler->SetSceneView(_sceneViewer.get());
-   //_tbvHandler->InitVolumeVizNodes();
-#endif
 #endif
 
 #ifdef _TAO
@@ -548,7 +544,6 @@ void cfdApp::intraFrame()
    // Do nothing here
    // Usually slows things down
 }
-#ifdef VE_PATENTED
 #ifdef _OSG
 void cfdApp::contextPostDraw()
 {
@@ -556,37 +551,36 @@ void cfdApp::contextPostDraw()
      _tbvHandler->PingPongTextures();
 }
 #endif//_OSG
-#endif//VE_PATENTED
 
 void cfdApp::postFrame()
 {
-   vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
-   svUpdate = false;
-   cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
-   time_since_start = _timer.delta_s(_start_tick,_timer.tick());
+    svUpdate = false;
+    cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
+    time_since_start = _timer.delta_s(_start_tick,_timer.tick());
 #ifdef _WEB_INTERfACE
-   if(time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
-   {
-      if(!readyToWriteWebImage)
-      {
-         captureNextFrameForWeb = true
-         timeOfLastCapture = time_since_start;
-      }
-   }
+    if( time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
+    {
+       if( !readyToWriteWebImage )
+       {
+           captureNextFrameForWeb = true
+           timeOfLastCapture = time_since_start;
+        }
+    }
 #endif  //_WEB_INTERFACE
 #endif  //_OSG
 
 
 #ifdef _OSG
-   this->_vjobsWrapper->GetSetAppTime( time_since_start );
-	cfdEnvironmentHandler::instance()->PostFrameUpdate();
-   //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
+    this->_vjobsWrapper->GetSetAppTime( time_since_start );
+    cfdEnvironmentHandler::instance()->PostFrameUpdate();
+    //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 #endif   //_OSG
-	cfdExecutive::instance()->PostFrameUpdate();
-   this->_vjobsWrapper->GetCfdStateVariables();
-   vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
+    cfdExecutive::instance()->PostFrameUpdate();
+    this->_vjobsWrapper->GetCfdStateVariables();
+    vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 //web interface thread for writing the file

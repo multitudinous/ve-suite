@@ -162,9 +162,17 @@ std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::CleanUp( void )
 {
+    vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
+                        << std::endl << vprDEBUG_FLUSH;
    this->runGetEverythingThread = false;
    delete av_modules;
 
+   _plugins.clear();
+   _id_map.clear();
+   idToModel.clear();
+   pluginEHMap.clear();
+   _eventHandlers.clear();
+   
    try
    {
       if(ui_i)
@@ -179,6 +187,8 @@ void cfdExecutive::CleanUp( void )
 
    delete ui_i;
    ui_i = 0;
+   vprDEBUG(vesDBG,2) << "|\tEnd Executive Destructor " 
+       << std::endl << vprDEBUG_FLUSH;
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::UnbindORB()

@@ -66,17 +66,17 @@ using namespace VE_SceneGraph;
 using namespace VE_Util;
 //////////////////////////////////////////////////////////////////      
 // Constructor
-cfdVEBaseClass::cfdVEBaseClass( void ) 
+cfdVEBaseClass::cfdVEBaseClass( void ):
+xmlModel( 0 ),
+_onSceneGraph( false )
 {
-   xmlModel = 0;
-   _onSceneGraph = false;
    _network.empty();
 }
 //////////////////////////////////////////////////////////////////      
 // Destructor
 cfdVEBaseClass::~cfdVEBaseClass( void )
 {
-   //delete this->dataRepresentation;
+    std::cout << "cfdVEBaseClass deleted" <<std::endl;
    if ( xmlModel )
    {
       delete xmlModel;

@@ -37,24 +37,19 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-
+////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : cfdVEBaseClass()
 {
-	SetObjectName( std::string( "DefaultGraphicalPlugin" ) );
-   //_onSceneGraph = false;
-   //_param = '\0';
+	SetObjectName( std::string( "DefaultPlugin" ) );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
 {
-   ;
+   std::cout << "DefaultGraphicalPlugin is deleted" << std::endl;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DefaultGraphicalPlugin::InitializeNode( VE_SceneGraph::DCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   //this->_param = "Plugins/hummer.param";
-   //std::cout << _param << std::endl;
-   //CreateObjects();
 }
-
+////////////////////////////////////////////////////////////////////////////////

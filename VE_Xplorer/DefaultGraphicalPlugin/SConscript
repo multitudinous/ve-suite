@@ -13,11 +13,11 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_SceneGraphLib%s' %(execOsgPatTag),
+lib_env.Append(LIBS = ['VE_SceneGraph%s' %(execOsgPatTag),
                    'VE_XplorerLib%s' %(execOsgPatTag),
                    'GraphicalPlugin%s' %(execOsgPatTag),
                    'VE_TextureBasedLib%s' %(execOsgPatTag),
-                   'VE_UtilLib', 'VE_ModelLib', 'VE_XMLLib', 'VE_CADLib'])
+                   'VE_UtilLib', 'VE_XML'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
@@ -39,10 +39,7 @@ if GetPlatform() == 'darwin':
 
 lib = ves_pkg.createSharedLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag),
                                                         lib_env,
-                                                        installPrefix = pj('bin','Plugins','GE'))
-##else:
-##   lib = ves_pkg.createStaticLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag), lib_env,
-##                                               installPrefix = pj('bin','Plugins','GE'))
+                                                        installPrefix = pj('share','vesuite','examples','simple','Plugins','GE','Darwin'))
    
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'VE_Xplorer', 'DefaultGraphicalPlugin'))

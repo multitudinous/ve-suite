@@ -63,17 +63,18 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
    std::map< int, cfdVEBaseClass* >::iterator iter;
    for ( iter = plugins.begin(); iter != plugins.end(); ++iter)
    {
+      std::cout << "Plugin id deleted " << iter->first << std::endl;
       delete iter->second;
    }
+   plugins.clear();
 
    for ( size_t i=0; i<libs.size(); i++)
    {
       if ( libs.at(i)->isLoaded() )
-         libs.at(i)->unload();
-      //delete libs.at(i);
+      {   
+          libs.at(i)->unload();
+      }
    }
-   plugins.clear();
-   //plugin_cls.clear();
    libs.clear();
 }
 //////////////////////////////////////////////////////////////////
@@ -218,11 +219,17 @@ void cfdVEPluginLoader::LoadPlugins( void )
          std::cout << "|\tLoaded and created plugin " 
                      << test_obj->GetName() << std::endl;
       }
+      else
+      {
+          std::cout << "|\tCould not load plugin " 
+                    << i << std::endl;
+      }
    }
 }
 //////////////////////////////////////////////////////////////////
 cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
 {
+    //std::cout << " CreateNewPlugin plugin " << input << std::endl;
    void* (*creator)();
    cfdVEBaseClass* test_obj( NULL );
 
