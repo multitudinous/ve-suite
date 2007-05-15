@@ -427,52 +427,54 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float n, float f )
 {
-   left = l;
-   right = r;
-   top = t;
-   bottom = b;
-   near_plane = n;
-   far_plane = f;
+    /*
+    std::cout << "left: "   << left       << std::endl;
+    std::cout << "right: "  << right      << std::endl;
+    std::cout << "top: "    << top        << std::endl;
+    std::cout << "bottom: " << bottom     << std::endl;
+    std::cout << "near: "   << near_plane << std::endl;
+    std::cout << "far: "    << far_plane  << std::endl;
+    std::cout <<                             std::endl;
+    */
 
-   /*
-   std::cout << "left: "   << left       << std::endl;
-   std::cout << "right: "  << right      << std::endl;
-   std::cout << "top: "    << top        << std::endl;
-   std::cout << "bottom: " << bottom     << std::endl;
-   std::cout << "near: "   << near_plane << std::endl;
-   std::cout << "far: "    << far_plane  << std::endl;
-   std::cout <<                             std::endl;
-   */
+    left = l;
+    right = r;
+    top = t;
+    bottom = b;
+    near_plane = n;
+    far_plane = f;
 
-	float topAngle = OneEightyDivPI * atan( top / near_plane );
-   float tempDiv = fabs( bottom ) / near_plane;
-	float bottomAngle = OneEightyDivPI * atan( tempDiv );
+    float topAngle = OneEightyDivPI * atan( top / near_plane );
+    float tempDiv = fabs( bottom ) / near_plane;
+    float bottomAngle = OneEightyDivPI * atan( tempDiv );
 
-	fovy = topAngle + bottomAngle;
+    fovy = topAngle + bottomAngle;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard( void )
 {
-   //If "r" is pressed
-   if( key == 35 )
-	{  
-      ResetTransforms();
-   }
+    if( key == gadget::KEY_R )
+    {  
+        ResetTransforms();
+    }
 
-   //If "f" is pressed
-   else if( key == 23 )
-	{
-      FrameAll();
-   }
+    else if( key == gadget::KEY_F )
+    {
+        FrameAll();
+    }
 
-   //If "s" is pressed
-   else if( key == 36 )
-   {
-      VE_SceneGraph::PhysicsSimulator::instance()->StepSimulation();
-   }
-   
-   //Reset key
-   key = -1;
+    else if( key == gadget::KEY_S )
+    {
+        VE_SceneGraph::PhysicsSimulator::instance()->StepSimulation();
+    }
+
+    else if( key == gadget::KEY_SPACE )
+    {
+        VE_SceneGraph::PhysicsSimulator::instance()->ResetScene();
+    }
+
+    //Reset key
+    key = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMouse( void )
@@ -507,28 +509,32 @@ void KeyboardMouse::NavMotion( void )
 	float dx = tb_currPos[0] - tb_prevPos[0];
 	float dy = tb_currPos[1] - tb_prevPos[1];
 
-	tb_magnitude = sqrtf( dx * dx + dy * dy );
-   if( tb_magnitude < tb_sensitivity )
-	{
-      return;
-   }
+    tb_magnitude = sqrtf( dx * dx + dy * dy );
+    if( tb_magnitude < tb_sensitivity )
+    {
+        return;
+    }
 
-   if( button == 49 && ( x > 0.1f * width && x < 0.9f * width ) && ( y > 0.1f * height && y < 0.9f * height ) )
-	{
-   	RotateView( dx, dy );
-   }
+    if( button == gadget::MBUTTON1 
+        && ( x > 0.1f * width )
+        && ( x < 0.9f * width )
+        && ( y > 0.1f * height )
+        && ( y < 0.9f * height ) )
+    {
+        RotateView( dx, dy );
+    }
 
-   else if( button == 51 )
-	{
-		Zoom( dy );
-   }
+    else if( button == gadget::MBUTTON3 )
+    {
+        Zoom( dy );
+    }
 
-   else if( button == 50 )
+   else if( button == gadget::MBUTTON2 )
 	{
       Pan( dx, dy );
    }
 
-   else if( button == 49 )
+   else if( button == gadget::MBUTTON1 )
 	{
 		Twist( dx, dy );
    }
@@ -551,7 +557,7 @@ void KeyboardMouse::SelMouse( void )
 	   return;
    }
 
-   else if( state == 0 && button == 49 )
+   else if( state == 0 && button == gadget::MBUTTON1 )
 	{
       ProcessSelectionEvents();
    }
@@ -564,7 +570,7 @@ void KeyboardMouse::SelMotion( void )
 		return;
    }
 
-   if( button == 49 )
+   if( button == gadget::MBUTTON1 )
    {
       //osg::ref_ptr< osg::Geometry > selection_rectangle = new osg::Geometry;
    }
