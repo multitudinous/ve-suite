@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CreateGraphDOTVisitor.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\DCS.cxx"
 				>
 			</File>
@@ -316,6 +320,10 @@
 			</File>
 			<File
 				RelativePath=".\Clone.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CreateGraphDOTVisitor.h"
 				>
 			</File>
 			<File

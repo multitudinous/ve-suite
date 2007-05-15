@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib"
-				OutputFile="$(OutDir)/Preprocessor.exe"
+				OutputFile="$(OutDir)/Preprocessor_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
@@ -97,7 +97,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
 			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"

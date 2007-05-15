@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkCommon_d.lib vtkRendering_d.lib vtkGraphics_d.lib vtkIO_d.lib vtkFiltering_d.lib vtkHybrid_d.lib"
-				OutputFile="$(OutDir)/addNormals2Polyd.exe"
+				OutputFile="$(OutDir)/addNormals2Poly_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
