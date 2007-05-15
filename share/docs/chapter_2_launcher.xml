@@ -261,8 +261,23 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">VE-Suite Debug Level:</emphasis> Choose
-            the VPR and OSG debug levels passed to VE-Suite.</para>
+            <para><emphasis role="bold">Debug Settings:</emphasis> Sets the
+            debug levels for VE-Launcher and VE-Suite. From here, you can set
+            VPR and OSG debug levels. You can also choose to debug the launch
+            and run the Debug build of VE-Suite.</para>
+            
+            <para>You can chooose to debug the launch by selecting
+            <code>Debug Launch</code>. If you do so, VE-Suite prints the
+            environment variables set for
+            launch in a separate window and writes VE-Suite's output to the
+            'debug.txt' file in VE-Launcher's directory. If you're running a
+            cluster on Windows, it also forces the cluster program consoles
+            to stay open if they encounter errors.</para>
+
+            <para>On Windows, you can choose to run the Debug build of VE-Suite
+            instead of the Opt build by selecting <code>Run VE-Suite, Debug
+            Build</code>. The Debug build is larger, but prints
+            more information to the command line.</para>
           </listitem>
 
           <listitem>
