@@ -49,7 +49,7 @@
 
 namespace VE_SceneGraph
 {
-   class TransferPhysicsDataCallback;
+class TransferPhysicsDataCallback;
 }
 
 // --- OSG Includes --- //
@@ -59,7 +59,7 @@ namespace VE_SceneGraph
 
 namespace osg
 {
-   class NodeVisitor;
+class NodeVisitor;
 }
 #elif _OPENSG
 #endif
@@ -84,138 +84,138 @@ class VE_SCENEGRAPH_EXPORTS DCS : public osg::PositionAttitudeTransform, public 
 #endif
 {
 public:
-   ///Constructor
-   DCS();
+    ///Constructor
+    DCS();
 
 protected:
-   ///Destructor
-   virtual ~DCS();
+    ///Destructor
+    virtual ~DCS();
 
 public:
-   ///Constructor to set user defined transform values
-   ///\param scale The scale array pointer
-   ///\param trans The translation array pointer
-   ///\param rot The rotation array pointer
-   DCS( float* scale, float* trans, float* rot );
+    ///Constructor to set user defined transform values
+    ///\param scale The scale array pointer
+    ///\param trans The translation array pointer
+    ///\param rot The rotation array pointer
+    DCS( float* scale, float* trans, float* rot );
 
-   ///Copy constructor using CopyOp to manage deep vs shallow copy
-   DCS( const DCS&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    DCS( const DCS&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-   META_Node( VE_SceneGraph, DCS );
+    META_Node( VE_SceneGraph, DCS );
 
-   ///Get translation array pointer
-   float* GetVETranslationArray();
+    ///Get translation array pointer
+    float* GetVETranslationArray();
 
-   ///Get rotation array pointer
-   float* GetRotationArray();
+    ///Get rotation array pointer
+    float* GetRotationArray();
 
-   ///Get scale array pointer
-   float* GetScaleArray();
+    ///Get scale array pointer
+    float* GetScaleArray();
 
-   ///Get the transform in 4x4 matrix form
-   gmtl::Matrix44f GetMat();
+    ///Get the transform in 4x4 matrix form
+    gmtl::Matrix44f GetMat();
 
-   ///Set the translation array with a vector
-   ///\param transArray A vector to set the translation array values
-   void SetTranslationArray( std::vector< double > transArray );
+    ///Set the translation array with a vector
+    ///\param transArray A vector to set the translation array values
+    void SetTranslationArray( std::vector< double > transArray );
 
-   ///Set the translation array
-   ///\param trans A pointer to set the translation array values
-   void SetTranslationArray( float* trans );
+    ///Set the translation array
+    ///\param trans A pointer to set the translation array values
+    void SetTranslationArray( float* trans );
 
-   ///Set the attitude with a quat
-   ///\param quat A quat to set the attitude
-   void SetQuat( osg::Quat quat );
+    ///Set the attitude with a quat
+    ///\param quat A quat to set the attitude
+    void SetQuat( osg::Quat quat );
 
-   ///Set the rotation array with a vector
-   ///\param rotArray A vector to set the rotation array values
-   void SetRotationArray( std::vector< double > rotArray );
+    ///Set the rotation array with a vector
+    ///\param rotArray A vector to set the rotation array values
+    void SetRotationArray( std::vector< double > rotArray );
 
-   ///Set the rotation array with a pointer
-   ///\param rot A pointer to set the rotation array values
-   void SetRotationArray( float* rot );
+    ///Set the rotation array with a pointer
+    ///\param rot A pointer to set the rotation array values
+    void SetRotationArray( float* rot );
 
-   ///Set the scale array with a vector
-   ///\param scaleArray A vector to set the scale array values
-   void SetScaleArray( std::vector< double > scaleArray );
+    ///Set the scale array with a vector
+    ///\param scaleArray A vector to set the scale array values
+    void SetScaleArray( std::vector< double > scaleArray );
 
-   ///Set the scale array with a pointer
-   ///\param scale A pointer to set the scale array values
-   void SetScaleArray( float* scale );
+    ///Set the scale array with a pointer
+    ///\param scale A pointer to set the scale array values
+    void SetScaleArray( float* scale );
 
-   ///Set the matrix for this transform
-   ///\param input Matrix with all transform information
-   void SetMat( gmtl::Matrix44f& input );
+    ///Set the matrix for this transform
+    ///\param input Matrix with all transform information
+    void SetMat( gmtl::Matrix44f& input );
 
-   ///Set just the roation portion of this transform with the 4x4 matrix
-   ///\param input Matrix with pure rotations
-   void SetRotationMatrix( gmtl::Matrix44f& input );
+    ///Set just the roation portion of this transform with the 4x4 matrix
+    ///\param input Matrix with pure rotations
+    void SetRotationMatrix( gmtl::Matrix44f& input );
 
-   ///Generic set name function
-   ///\param name The name
-   void SetName( std::string name );
+    ///Generic set name function
+    ///\param name The name
+    void SetName( std::string name );
 
-   ///Generic remove child function
-   ///\param child The child to be removed
-   int RemoveChild( SceneNode* child );
+    ///Generic remove child function
+    ///\param child The child to be removed
+    int RemoveChild( SceneNode* child );
 
-   ///Generic add child function
-   ///\param child The child to be added
-   int AddChild( SceneNode* child );
+    ///Generic add child function
+    ///\param child The child to be added
+    int AddChild( SceneNode* child );
 
-   ///Generic insert child function
-   ///\param position The position of the child to be inserted
-   ///\param child The child that is inserted
-   void InsertChild( int position, SceneNode* child );
+    ///Generic insert child function
+    ///\param position The position of the child to be inserted
+    ///\param child The child that is inserted
+    void InsertChild( int position, SceneNode* child );
 
-   ///Generic replace child function
-   ///\param childToBeReplaced The child to be replaced
-   ///\param newChild The new child
-   int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
+    ///Generic replace child function
+    ///\param childToBeReplaced The child to be replaced
+    ///\param newChild The new child
+    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
 
-   ///Generic search child function
-   ///\param searchChild SceneNode* of child to be found
-   bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+    ///Generic search child function
+    ///\param searchChild SceneNode* of child to be found
+    bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
 
-   ///Generic find parent function
-   ///\param position The position of the parent to be returned
-   osg::Group* GetParent( unsigned int position );
+    ///Generic find parent function
+    ///\param position The position of the parent to be returned
+    osg::Group* GetParent( unsigned int position );
 
-   ///Generic get child function
-   ///\param position The position of the child to be returned
-   osg::Node* GetChild( unsigned int position );
+    ///Generic get child function
+    ///\param position The position of the child to be returned
+    osg::Node* GetChild( unsigned int position );
 
-   ///Generic get number of children
-   int GetNumChildren();
+    ///Generic get number of children
+    int GetNumChildren();
 
-   ///Set the name of the node
-   const std::string GetName();
+    ///Set the name of the node
+    const std::string GetName();
 
-   ///Toggle the display of this node
-   ///\param onOff Toggle the display of this node
-   void ToggleDisplay( std::string onOff );
+    ///Toggle the display of this node
+    ///\param onOff Toggle the display of this node
+    void ToggleDisplay( std::string onOff );
 
-   ///Toggle the display of this node
-   ///\param onOff Toggle the display of this node
-   void ToggleDisplay( bool onOff );
+    ///Toggle the display of this node
+    ///\param onOff Toggle the display of this node
+    void ToggleDisplay( bool onOff );
 
-   ///Set the Bullet rigid body for this node, typically is set from CADEntity
-   ///\param rigidBody The btRigidBody*
-   void SetbtRigidBody( btRigidBody* rigidBody );
+    ///Set the Bullet rigid body for this node, typically is set from CADEntity
+    ///\param rigidBody The btRigidBody*
+    void SetbtRigidBody( btRigidBody* rigidBody );
    
 protected:
-   float m_Rotation[3];///<The rotation array
-   float m_Translation[3];///<The translation array
-   float m_Scale[3];///<The scale array
+    float m_Rotation[3];///<The rotation array
+    float m_Translation[3];///<The translation array
+    float m_Scale[3];///<The scale array
 
-   btRigidBody* m_btBody;///<The rigid body to access the respective btTransform
+    btRigidBody* m_btBody;///<The rigid body to access the respective btTransform
 
 private:
-   ///Update the bullet matrix with the matrix from the osg node
-   ///The osg node gets set first and is then updated by the bullet physics simulator
-   void UpdatePhysicsTransform();
-   
-   osg::ref_ptr< TransferPhysicsDataCallback > m_udcb;///<The callback to update the sg node with physics data
+    ///Update the bullet matrix with the matrix from the osg node
+    ///The osg node gets set first and is then updated by the bullet physics simulator
+    void UpdatePhysicsTransform();
+
+    osg::ref_ptr< TransferPhysicsDataCallback > m_udcb;///<The callback to update the sg node with physics data
 
 };
 
@@ -224,24 +224,24 @@ private:
 class TransferPhysicsDataCallback : public osg::NodeCallback
 {
 public:
-   ///Constructor
-   TransferPhysicsDataCallback();
+    ///Constructor
+    TransferPhysicsDataCallback();
 
-   ///Destructor
-   virtual ~TransferPhysicsDataCallback(){;}
+    ///Destructor
+    virtual ~TransferPhysicsDataCallback(){;}
 
-   ///Copy constructor
-   TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );
+    ///Copy constructor
+    TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );
 
-   ///Set the bullet rigid for this callback
-   ///\param transform bullet rigid body
-   void SetbtRigidBody( btRigidBody* transform );
+    ///Set the bullet rigid for this callback
+    ///\param transform bullet rigid body
+    void SetbtRigidBody( btRigidBody* transform );
 
-   ///Operator required by osg
-   virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+    ///Operator required by osg
+    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
 protected:
-   btRigidBody* btBody;///<Pointer to the bullet body
+    btRigidBody* btBody;///<Pointer to the bullet body
 
 };
 #elif _OPENSG

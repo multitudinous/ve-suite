@@ -47,9 +47,6 @@
 #include <osg/MatrixTransform>
 #endif //_OSG
 
-// --- Bullet Includes --- //
-#include <btBulletDynamicsCommon.h>
-
 // --- C/C++ Libraries --- //
 #include <cassert>
 
@@ -97,39 +94,39 @@ CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph:
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::~CADEntity( void )
+CADEntity::~CADEntity()
 {
     delete m_cadEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntity::InitPhysics( void )
+void CADEntity::InitPhysics()
 {
     m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( m_cadEntityHelper->GetNode() );
 
     m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntityHelper* CADEntity::GetNode( void )
+VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
 {
     return m_cadEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* CADEntity::GetDCS( void )
+VE_SceneGraph::DCS* CADEntity::GetDCS()
 {
     return m_dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody( void )
+VE_SceneGraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
     return m_physicsRigidBody.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CADEntity::GetFilename( void )
+std::string CADEntity::GetFilename()
 {
     return m_fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CADEntity::GetTransparentFlag( void )
+bool CADEntity::GetTransparentFlag()
 {
     return m_transparencyFlag;
 }

@@ -63,35 +63,35 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::NodeVisitor
 {
 public:
-   ///Base Constructor
-   ///\param node The node to create a physics mesh from
-   PhysicsRigidBody( osg::Node* node );
+    ///Constructor
+    ///\param node The node to create a physics mesh from
+    PhysicsRigidBody( osg::Node* node, const btTransform& startTransform = btTransform::getIdentity() );
 
-   ///Destructor
-   virtual ~PhysicsRigidBody();
+    ///Destructor
+    virtual ~PhysicsRigidBody();
 
-   ///Override NodeVisitor apply function for geode
-   ///\param geode A child geode w/in the node being traversed
-   virtual void apply( osg::Geode& geode );
+    ///Override NodeVisitor apply function for geode
+    ///\param geode A child geode w/in the node being traversed
+    virtual void apply( osg::Geode& geode );
 
-   ///Set the mass for the rigid body
-   ///\param mass The mass value
-   void setMass( float mass );
+    ///Set the mass for the rigid body
+    ///\param mass The mass value
+    void setMass( float mass );
 
-   ///Creates a box shape from the osg::BoundingBox of the mesh shape
-   void CreateBoundingBoxShape();
+    ///Creates a box shape from the osg::BoundingBox of the mesh shape
+    void CreateBoundingBoxShape();
 
-   ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
-   void CreateStaticConcaveShape();
+    ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
+    void CreateStaticConcaveShape();
 
-   ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
-   void CreateConvexShape();
+    ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
+    void CreateConvexShape();
 
 private:
-   osg::BoundingBox bb;///<Bounding box of the osg node
+    osg::BoundingBox bb;///<Bounding box of the osg node
 
-   btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
-   btCollisionShape* collision_shape;///<The collision shape for the osg node
+    btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
+    btCollisionShape* collision_shape;///<The collision shape for the osg node
 
 };
 }

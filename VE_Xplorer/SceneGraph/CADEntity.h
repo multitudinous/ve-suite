@@ -67,7 +67,7 @@ namespace osg
 {
 class Fog;
 }
-#endif //_OSG
+#endif
 
 // --- C/C++ Libraries --- //
 #include <vector>

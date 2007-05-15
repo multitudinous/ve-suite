@@ -49,14 +49,14 @@
 
 namespace VE_SceneGraph
 {
-   class DCS;
-   class SceneNode;
+class DCS;
+class SceneNode;
 }
 
 // --- OSG Includes --- //
 namespace osg
 {
-   class Node;
+class Node;
 }
 
 namespace VE_SceneGraph
@@ -64,37 +64,37 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS Clone
 {
 public:
-   ///Base Constructor
-   Clone();
+    ///Base Constructor
+    Clone();
 
-   ///Constructor
-   ///\param original The original node to be cloned
-   Clone( osg::Node* original );
+    ///Constructor
+    ///\param original The original node to be cloned
+    Clone( osg::Node* original );
 
-   //Destructor
-   ~Clone();
+    //Destructor
+    ~Clone();
 
-   ///Clones a scenegraph node
-   ///\param original The original node to be cloned
-   void CloneNode( osg::Node* original );
+    ///Clones a scenegraph node
+    ///\param original The original node to be cloned
+    void CloneNode( osg::Node* original );
 
-   ///Set the translation array of the clone
-   ///\param translation The translation array pointer
-   void SetTranslationArray( float* translation );
+    ///Set the translation array of the clone
+    ///\param translation The translation array pointer
+    void SetTranslationArray( float* translation );
 
-   ///Set the rotation array of the clone
-   ///\param rotation The rotation array pointer
-   void SetRotationArray( float* rotation );
+    ///Set the rotation array of the clone
+    ///\param rotation The rotation array pointer
+    void SetRotationArray( float* rotation );
 
-   ///Set the scale array of the clone
-   ///\param scale The scale array pointer
-   void SetScaleArray( float* scale );
+    ///Set the scale array of the clone
+    ///\param scale The scale array pointer
+    void SetScaleArray( float* scale );
 
-   ///Return the cloned structure including the transform
-   VE_SceneGraph::DCS* GetClonedGraph();
+    ///Return the cloned structure including the transform
+    VE_SceneGraph::DCS* GetClonedGraph();
    
 protected:
-   osg::ref_ptr< VE_SceneGraph::DCS > m_cloneTransform;///<The cloned structure including the transform
+    osg::ref_ptr< VE_SceneGraph::DCS > m_cloneTransform;///<The cloned structure including the transform
 
 };
 }
