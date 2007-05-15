@@ -4,10 +4,11 @@
    <elements>
       <cluster_node name="Node(abbott)" version="1">
          <display_system>
-            <display_system name="Display System" version="1">
+            <display_system name="Display System" version="2">
                <number_of_pipes>1</number_of_pipes>
                <x11_pipes>-1</x11_pipes>
                <x11_pipes>:0.0</x11_pipes>
+               <use_swap_group>false</use_swap_group>
             </display_system>
          </display_system>
          <display_windows>
@@ -18,21 +19,22 @@
                <size>768</size>
                <pipe>0</pipe>
                <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
-               <visual_id>-1</visual_id>
-               <red_size>8</red_size>
-               <green_size>8</green_size>
-               <blue_size>8</blue_size>
-               <alpha_size>8</alpha_size>
-               <auxiliary_buffer_count>0</auxiliary_buffer_count>
-               <depth_buffer_size>16</depth_buffer_size>
-               <stencil_buffer_size>1</stencil_buffer_size>
-               <accum_red_size>1</accum_red_size>
-               <accum_green_size>1</accum_green_size>
-               <accum_blue_size>1</accum_blue_size>
-               <accum_alpha_size>1</accum_alpha_size>
-               <fsaa_enable>false</fsaa_enable>
-            </opengl_frame_buffer_config>
+                  <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+                     <visual_id>-1</visual_id>
+                     <red_size>8</red_size>
+                     <green_size>8</green_size>
+                     <blue_size>8</blue_size>
+                     <alpha_size>8</alpha_size>
+                     <auxiliary_buffer_count>0</auxiliary_buffer_count>
+                     <depth_buffer_size>16</depth_buffer_size>
+                     <stencil_buffer_size>1</stencil_buffer_size>
+                     <accum_red_size>1</accum_red_size>
+                     <accum_green_size>1</accum_green_size>
+                     <accum_blue_size>1</accum_blue_size>
+                     <accum_alpha_size>1</accum_alpha_size>
+                     <num_sample_buffers>0</num_sample_buffers>
+                     <num_samples>0</num_samples>
+                  </opengl_frame_buffer_config>
                </frame_buffer_config>
                <stereo>false</stereo>
                <border>false</border>
@@ -45,31 +47,18 @@
                      <size>1.0</size>
                      <size>1.0</size>
                      <view>Left Eye</view>
-               <lower_left_corner>-1.2192</lower_left_corner>
-               <lower_left_corner>0.1524</lower_left_corner>
-               <lower_left_corner>-1.8288</lower_left_corner>
-               <lower_right_corner>1.2192</lower_right_corner>
-               <lower_right_corner>0.1524</lower_right_corner>
-               <lower_right_corner>-1.8288</lower_right_corner>
-               <upper_right_corner>1.2192</upper_right_corner>
-               <upper_right_corner>1.9812</upper_right_corner>
-               <upper_right_corner>-1.8288</upper_right_corner>
-               <upper_left_corner>-1.2192</upper_left_corner>
-               <upper_left_corner>1.9812</upper_left_corner>
-               <upper_left_corner>-1.8288</upper_left_corner>
-
-                     <!--<lower_left_corner>-1.2192</lower_left_corner>
-                     <lower_left_corner>0.6096</lower_left_corner>
+                     <lower_left_corner>-1.2192</lower_left_corner>
+                     <lower_left_corner>0.1524</lower_left_corner>
                      <lower_left_corner>-1.8288</lower_left_corner>
                      <lower_right_corner>1.2192</lower_right_corner>
-                     <lower_right_corner>0.6096</lower_right_corner>
+                     <lower_right_corner>0.1524</lower_right_corner>
                      <lower_right_corner>-1.8288</lower_right_corner>
                      <upper_right_corner>1.2192</upper_right_corner>
-                     <upper_right_corner>2.5908</upper_right_corner>
+                     <upper_right_corner>1.9812</upper_right_corner>
                      <upper_right_corner>-1.8288</upper_right_corner>
                      <upper_left_corner>-1.2192</upper_left_corner>
-                     <upper_left_corner>2.5908</upper_left_corner>
-                     <upper_left_corner>-1.8288</upper_left_corner>-->
+                     <upper_left_corner>1.9812</upper_left_corner>
+                     <upper_left_corner>-1.8288</upper_left_corner>
                      <user>User1</user>
                      <active>true</active>
                      <tracked>false</tracked>

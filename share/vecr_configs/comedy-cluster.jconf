@@ -6,7 +6,6 @@
          <plugin_path>${VJ_BASE_DIR}/lib/gadgeteer/plugins/</plugin_path>
          <plugin>ApplicationDataManager</plugin>
          <plugin>RIMPlugin</plugin>
-         <!--plugin>StartBarrierPlugin</plugin-->
          <plugin>SwapLockTCPPlugin</plugin>
          <cluster_node>Node(abbott)</cluster_node>
          <cluster_node>Node(costello)</cluster_node>
@@ -15,12 +14,9 @@
          <guid>15c09c99-ed6d-4994-bbac-83587d4400d1</guid>
          <hostname>doug-mccorkles-computer.local</hostname>
       </application_data>
-      <!--start_barrier_plugin name="StartBarrierPlugin" version="1">
-         <start_master>Node(abbott)</start_master>
-      </start_barrier_plugin-->
       <swap_lock_tcp_plugin name="SwapLockTCPPlugin" version="1">
          <sync_server>Node(abbott)</sync_server>
-         <listen_port>6204</listen_port>
+         <listen_port>6203</listen_port>
       </swap_lock_tcp_plugin>
    </elements>
 </configuration>

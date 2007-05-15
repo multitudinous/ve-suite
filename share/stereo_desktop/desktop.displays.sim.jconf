@@ -2,10 +2,11 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_system name="Display System" version="1">
+      <display_system name="Display System" version="2">
          <number_of_pipes>1</number_of_pipes>
          <x11_pipes>-1</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
+         <use_swap_group>false</use_swap_group>
       </display_system>
       <display_window name="Welcome To Your Virtual Workspace / www.vesuite.org" version="4">
          <origin>0</origin>
@@ -14,7 +15,7 @@
          <size>1024</size>
          <pipe>0</pipe>
          <frame_buffer_config>
-            <opengl_frame_buffer_config name="GL Frame Buffer" version="2">
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
                <visual_id>-1</visual_id>
                <red_size>8</red_size>
                <green_size>8</green_size>
@@ -27,7 +28,8 @@
                <accum_green_size>1</accum_green_size>
                <accum_blue_size>1</accum_blue_size>
                <accum_alpha_size>1</accum_alpha_size>
-               <fsaa_enable>true</fsaa_enable>
+               <num_sample_buffers>1</num_sample_buffers>
+               <num_samples>1</num_samples>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
@@ -62,7 +64,7 @@
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
-         <sleep_time>25</sleep_time>
+         <sleep_time>23</sleep_time>
       </display_window>
    </elements>
 </configuration>
