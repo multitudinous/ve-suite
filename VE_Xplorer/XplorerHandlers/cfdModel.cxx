@@ -706,7 +706,7 @@ void cfdModel::CreateAssembly(std::string assemblyID)
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreatePart( std::string fileName, std::string partID, std::string parentID )
 {
-   /*std::map< std::string, std::string >::iterator iter;
+   std::map< std::string, std::string >::iterator iter;
    iter = filenameToGUIMap.find( fileName );
    if ( iter != filenameToGUIMap.end() )
    {
@@ -721,8 +721,8 @@ void cfdModel::CreatePart( std::string fileName, std::string partID, std::string
       ///If we have not loaded this part
       filenameToGUIMap[ fileName ] = partID;
       _partList[ iter->second ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
-   }*/
-   _partList[ partID ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
+   }
+   //_partList[ partID ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
    //add key pointer to physics map for bullet rigid body
    //add data pair for transform node
 }

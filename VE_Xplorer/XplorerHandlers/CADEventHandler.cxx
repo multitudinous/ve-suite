@@ -295,31 +295,6 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
                         << correctedPath.native_file_string() << std::endl;
          }
       }
-      else if(activeNode->GetNodeType() == "Clone")
-      {
-         CADClone* clone = dynamic_cast<CADClone*>(activeNode);
-         _activeModel->CreateClone(clone->GetID(),clone->GetOriginalNode()->GetID(),clone->GetOriginalNode()->GetNodeType());         
-         vprDEBUG( vesDBG, 1 ) <<"|\t---Clone---"<<std::endl<< vprDEBUG_FLUSH;
-         vprDEBUG( vesDBG, 1 ) <<"|\t---"<<clone->GetID()<<"---"<<std::endl<< vprDEBUG_FLUSH;
-
-         //std::cout<<"   ---Setting node properties---"<<std::endl;
-         _setTransformOnNode(clone);
-         //std::cout<<"      ---Set transform---"<<std::endl;
-         _setAttributesOnNode(clone);
-         //std::cout<<"      ---Set Attributes---"<<std::endl;
-         VE_SceneGraph::Clone* tempClone = _activeModel->GetClone(clone->GetID());
-         if ( tempClone )
-         {
-            tempClone->GetClonedGraph()->setName( clone->GetNodeName() );
-            parentAssembly->AddChild( tempClone->GetClonedGraph() );
-            tempClone->GetClonedGraph()->ToggleDisplay(clone->GetVisibility());
-
-            //set the uuid on the osg node so that we can get back to vexml
-            SetNodeDescriptors(clone->GetID(),"Clone","VE_XML_ID",clone->GetID());
-            //Set a default material on nodes that have no initial material
-            VE_SceneGraph::Utilities::MaterialInitializer material_initializer( tempClone->GetClonedGraph() );
-         }
-      }
    }
    else
    {
