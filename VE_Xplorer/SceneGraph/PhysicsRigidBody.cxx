@@ -40,7 +40,7 @@
 #include <osg/TriangleIndexFunctor>
 
 // --- Bullet Includes --- //
-//#include <btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>

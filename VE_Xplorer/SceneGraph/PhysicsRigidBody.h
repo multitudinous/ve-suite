@@ -65,6 +65,7 @@ class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::N
 public:
     ///Constructor
     ///\param node The node to create a physics mesh from
+    ///\param startTransform The beginning transform for the rigid body
     PhysicsRigidBody( osg::Node* node, const btTransform& startTransform = btTransform::getIdentity() );
 
     ///Destructor

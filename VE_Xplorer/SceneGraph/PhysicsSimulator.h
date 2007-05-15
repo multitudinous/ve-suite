@@ -62,14 +62,13 @@ namespace VE_SceneGraph
 
 // --- Bullet Includes --- //
 #include <LinearMath/btTransform.h>
-#include <btBulletDynamicsCommon.h>
-#include <btBulletCollisionCommon.h>
 
 class btDynamicsWorld;
 class btCollisionDispatcher;
 class btOverlappingPairCache;
 class btSequentialImpulseConstraintSolver;
 class btRigidBody;
+class btCollisionShape;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -79,65 +78,65 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS PhysicsSimulator    //: public vpr::Singleton< PhysicsSimulator >
 {
 public:
-   ///Acts as the destructor
-   void ExitPhysics();
+    ///Acts as the destructor
+    void ExitPhysics();
 
-   ///Update the physics simulation by dt
-   ///\param dt The time passed since last calculations
-   void UpdatePhysics( float dt );
+    ///Update the physics simulation by dt
+    ///\param dt The time passed since last calculations
+    void UpdatePhysics( float dt );
 
-   ///Update the physics simulation by one time step ( 1/60 for now )
-   void StepSimulation();
+    ///Update the physics simulation by one time step ( 1/60 for now )
+    void StepSimulation();
 
-   ///Reset the physics simulation
-   void ResetScene();
+    ///Reset the physics simulation
+    void ResetScene();
 
-   ///
-   ///\param destination 
-   void ShootBox( const btVector3& destination );
+    ///Shoot a box from the head position
+    ///\param destination 
+    void ShootBox( const btVector3& destination );
 
-   ///Set whether physics is idle or not
-   ///\param state State on or idle
-   void SetIdle( bool state );
+    ///Set whether physics is idle or not
+    ///\param state State on or idle
+    void SetIdle( bool state );
 
-   ///
-   ///\param speed
-   void SetShootSpeed( float speed );
+    ///Set the shoot speed
+    ///\param speed
+    void SetShootSpeed( float speed );
 
-   ///Adds a rigid body to the physics simulator
-   ///\param mass The mass of the rigid body
-   ///\param startTransform The initial transform of the rigid body
-   ///\param shape The collision shape of the rigid body
-   btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
+    ///Adds a rigid body to the physics simulator
+    ///\param mass The mass of the rigid body
+    ///\param startTransform The initial transform of the rigid body
+    ///\param shape The collision shape of the rigid body
+    btRigidBody* CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape );
 
-   ///Returns the dynamics world
-   btDynamicsWorld* GetDynamicsWorld();
+    ///Returns the dynamics world
+    btDynamicsWorld* GetDynamicsWorld();
 
 private:
-   ///Base constructor
-   PhysicsSimulator();
+    ///Base constructor
+    PhysicsSimulator();
 
-   ///Destructor - never gets called, don't implement
-   ~PhysicsSimulator(){;}
+    ///Destructor - never gets called, don't implement
+    ~PhysicsSimulator(){;}
 
-   ///VPR singleton header
-   vprSingletonHeader( PhysicsSimulator );
+    ///VPR singleton header
+    vprSingletonHeader( PhysicsSimulator );
 
-   ///Sets up the dynamics, collision algorithms, and solvers
-   void InitPhysics();
+    ///Sets up the dynamics, collision algorithms, and solvers
+    void InitPhysics();
 
-   bool idle;///<Determines whether physics is idle or not
-   float shoot_speed;///<
+    bool m_idle;///<Determines whether physics is idle or not
+    float shoot_speed;///<
 
-   gadget::PositionInterface head;///<The head in vr juggler
+    gadget::PositionInterface head;///<The head in vr juggler
 
-   std::vector< VE_SceneGraph::CADEntity* > box_vector;///<
+    std::vector< VE_SceneGraph::CADEntity* > box_vector;///<
 
-   btDynamicsWorld* dynamics_world;///<Implements dynamics - basic, discrete, parallel, and continuous
+    btDynamicsWorld* m_dynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
 
-   btCollisionDispatcher* dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
-   btOverlappingPairCache* broadphase;///<Maintains objects with overlapping AABB
-   btSequentialImpulseConstraintSolver* solver;///<A physics solver which sequentially applies impulses
+    btCollisionDispatcher* m_dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
+    btOverlappingPairCache* m_broadphase;///<Maintains objects with overlapping AABB
+    btSequentialImpulseConstraintSolver* m_solver;///<A physics solver which sequentially applies impulses
 };
 }
 
