@@ -44,6 +44,8 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 
 #include <ctime>
+
+#include <apr_uuid.h>
 using namespace VE_XML::VE_CAD;
 using namespace VE_XML::VE_Shader;
 using namespace VE_XML;
@@ -59,7 +61,6 @@ CADNode::CADNode(std::string name)
    m_transform = new Transform(); 
    m_type = std::string("Node");
    m_visibility = true;
-   m_associatedDataset = "NONE";
    //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
    m_activeAttributeName = std::string("");
    SetObjectType("CADNode");
@@ -141,21 +142,6 @@ void CADNode::SetActiveAttribute(std::string attributeName)
 {
    m_activeAttributeName = attributeName;
 }
-///////////////////////////////////////////////////////////////////////////////////////
-void CADNode::SetAssociatedDataset(std::string parameterBlockUUID)
-{
-   m_associatedDataset = parameterBlockUUID;
-}
-////////////////////////////////////////////////////////////////////////////////////////
-bool CADNode::GetAssociatedDataset(std::string& parameterBlockUUID)
-{
-   if(m_associatedDataset != "NONE")
-   {
-      parameterBlockUUID = m_associatedDataset;
-      return true;
-   }
-   return false;
-}
 ////////////////////////////
 bool CADNode::HasAnimation()
 {
@@ -181,7 +167,7 @@ VE_XML::Transform* CADNode::GetTransform()
 {
    return m_transform;
 }
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
 {
    try
@@ -197,7 +183,7 @@ VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
    }
    return m_attributeList.at(0);;
 }
-////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
 {
    size_t nAttributes = m_attributeList.size();
@@ -209,7 +195,7 @@ VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
       }
    }
 }
-///////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
 {
    return GetAttribute(m_activeAttributeName);
@@ -225,10 +211,8 @@ void CADNode::_updateVEElement(std::string input)
    _updateNodeType();
    _updateNodeName();
 
-   //SetSubElement(std::string("nodeID"),_uID);
    SetAttribute("id",uuid);
    SetAttribute("visibility",m_visibility);
-   SetAttribute("associatedDataset",m_associatedDataset);
    SetSubElement(std::string("parent"),m_parent);
 
    if(!m_transform)
@@ -292,16 +276,6 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          if(currentElement->hasChildNodes())
          {
-             if(currentElement->getAttributeNode(xercesString("associatedDataset")))
-            {
-               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
-                                                                                      "associatedDataset",
-                                                                                       m_associatedDataset);
-            }
-            else
-            {
-               m_associatedDataset = "NONE";
-            }
             if(currentElement->getAttributeNode(xercesString("visibility")))
             {
                dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
@@ -442,8 +416,8 @@ size_t CADNode::GetNumberOfAnimations()
 {
    return m_animations.size();
 }
-/////////////////////////////////////
-CADNode::CADNode(const CADNode& rhs)
+///////////////////////////////////////////////
+CADNode::CADNode(const CADNode& rhs,bool clone)
 :VE_XML::XMLObject(rhs)
 {
    m_parent = "";
@@ -475,9 +449,17 @@ CADNode::CADNode(const CADNode& rhs)
    m_name = rhs.m_name;
    m_type = rhs.m_type;
    m_visibility = rhs.m_visibility;
-   m_associatedDataset = rhs.m_associatedDataset;
-   //_uID = rhs._uID;
-   
+
+   //maintain a unique ID
+   if(clone)
+   {   
+      apr_uuid_t tempUUID;
+      apr_uuid_get( &tempUUID );
+      char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
+      apr_uuid_format( buffer, &tempUUID );
+      uuid.assign( buffer );
+      delete [] buffer;
+   }
 }
 ////////////////////////////////////////////////
 CADNode& CADNode::operator=(const CADNode& rhs)
@@ -517,7 +499,6 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       //_uID = rhs._uID;
       m_parent = rhs.m_parent;
       m_name = rhs.m_name;
-      m_associatedDataset = rhs.m_associatedDataset;
    }
    return *this;
 }

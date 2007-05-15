@@ -102,9 +102,9 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
       }
    }
 }
-/////////////////////////////////////
-CADPart::CADPart(const CADPart& rhs)
-:VE_XML::VE_CAD::CADNode(rhs)
+////////////////////////////////////////////////
+CADPart::CADPart(const CADPart& rhs, bool clone)
+:VE_XML::VE_CAD::CADNode(rhs,clone)
 {
    m_cadFileName = rhs.m_cadFileName;
 }

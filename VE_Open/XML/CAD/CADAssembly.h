@@ -70,6 +70,15 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( DOMNode* xmlNode);
 
+   ///Set the associated dataset (a ParameterBlock) to this CADNode
+   ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock
+   void SetAssociatedDataset(std::string parameterBlockUUID);
+
+   ///Get the associated dataset
+   ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock if it exists
+   ///\return True/False if there is an associated dataset
+   bool GetAssociatedDataset(std::string& parameterBlockUUID);
+
    ///\param node The pointer of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails
    ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
@@ -90,7 +99,9 @@ public:
    VE_XML::VE_CAD::CADNode* GetChild(std::string name);
    
    ///Copy constructor
-   CADAssembly(const CADAssembly& rhs);
+   //\param rhs The CADPart to copy
+   ///\param clone Create a clone of this node
+   CADAssembly(const CADAssembly& rhs, bool clone = false);
 
    ///Equal operator
    CADAssembly& operator=(const CADAssembly& rhs);
@@ -109,6 +120,7 @@ protected:
    /// A vector of VE_XML::VE_CAD::CADNode s
    typedef std::vector<VE_XML::VE_CAD::CADNode*> ChildList; 
    ChildList m_children; ///<A list of the children
+   std::string m_associatedDataset;///<The dataset associated with this CADNode
 };
 }
 template<>

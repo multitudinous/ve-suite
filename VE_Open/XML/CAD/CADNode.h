@@ -113,20 +113,11 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode);
 
-   ///Set the associated dataset (a ParameterBlock) to this CADNode
-   ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock
-   void SetAssociatedDataset(std::string parameterBlockUUID);
-
    ///Determine if the node is visible or not
    bool GetVisibility();
-
-   ///Get the associated dataset
-   ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock if it exists
-   ///\return True/False if there is an associated dataset
-   bool GetAssociatedDataset(std::string& parameterBlockUUID);
  
    ///Get the active attribute
-  VE_XML::VE_CAD::CADAttribute& GetActiveAttribute();
+   VE_XML::VE_CAD::CADAttribute& GetActiveAttribute();
 
    ///Get the node type. 
    ///Valid types currently are Node,Assembly,Part and Clone
@@ -170,7 +161,9 @@ public:
    std::vector<CADAttribute> GetAttributeList();
 
    ///Copy constructor
-   CADNode(const CADNode& rhs);
+   ///\param rhs The CADNode to copy
+   ///\param clone Create a clone of this node
+   CADNode(const CADNode& rhs, bool clone=false);
 
    ///Equal operator
    CADNode& operator=(const CADNode& rhs);
@@ -195,7 +188,6 @@ protected:
    std::vector<VE_CAD::CADNodeAnimation> m_animations;//<A list of animation path files for this node.
    std::string m_name;///< The name of this node.
    std::string m_type;///< The type of node;
-   std::string m_associatedDataset;///<The dataset associated with this CADNode
    bool m_visibility;///<Node visibilty.
 };
 }

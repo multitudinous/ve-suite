@@ -15,7 +15,6 @@
           <xs:element name="animation" type="CADNodeAnimation" />
         </xs:sequence>
         <xs:attribute name="visiblility" type="xs:boolean" />
-        <xs:attribute name="associatedDataset" type="xs:string" use="required" />
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
@@ -26,6 +25,7 @@
           <xs:element name="children" type="CADChildList" maxOccurs="unbounded" />
           <xs:element name="numChildren" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" default="0" />
         </xs:sequence>
+        <xs:attribute name="associatedDataset" type="xs:string" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

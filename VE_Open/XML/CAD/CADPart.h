@@ -68,7 +68,9 @@ public:
    std::string GetCADFileName();
 
    ///Copy constructor
-   CADPart(const CADPart& rhs);
+   //\param rhs The CADPart to copy
+   ///\param clone Create a clone of this node
+   CADPart(const CADPart& rhs, bool clone = false);
 
    ///Equal operator
    CADPart& operator=(const CADPart& rhs);
