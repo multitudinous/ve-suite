@@ -49,6 +49,13 @@ class Launch:
         else:
             self.inputSource = None
             self.outputDestination = None
+        ##Set debug suffix.
+        if self.settings["RunDebugPrograms"]:
+            debugSuffix = "_d"
+        else:
+            debugSuffix = ""
+        ##Set Windows suffix.
+        windowsSuffix = debugSuffix + ".exe"
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
         ##Used in EnvSetup and Windows/Unix.
@@ -228,7 +235,7 @@ class Launch:
         """Returns a generic Naming_Service array."""
         exe = "Naming_Service"
         if windows:
-            exe += ".exe"
+            exe += windowsSuffix
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
         return c
 
@@ -238,7 +245,7 @@ class Launch:
         if unix:
             exe = "Exe_server"
         elif windows:
-            exe = "Winserverd.exe"
+            exe = "Winserver" + windowsSuffix
         else:
             exe = "Error"
         c = [exe, "-ORBInitRef", self.ServiceArg()]
@@ -251,7 +258,7 @@ class Launch:
         """Returns a generic Conductor call."""
         exe = "WinClient"
         if windows:
-            exe += "d.exe"
+            exe += windowsSuffix
         ##Append ves arguments if needed.
         if self.settings["VESFile"]:
             ves = ["-VESFile", self.settings["VESFile"]]
@@ -283,7 +290,7 @@ class Launch:
         exe = "project_tao_osg_vep"
         ##Tack on the Windows suffix.
         if windows:
-            exe += "_d.exe"
+            exe += windowsSuffix
         ##Construct the call
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection

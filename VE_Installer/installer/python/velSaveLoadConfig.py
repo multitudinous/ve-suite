@@ -32,7 +32,8 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "OSGNotifyLevel",
                  "User",
                  "FileDir",
-                 "ExtraVariables"]
+                 "ExtraVariables",
+                 "RunDebugPrograms"]
     if saveLastConfig:
         ##Variables that only the main config stores.
         strWrites.append("Directory")
@@ -96,7 +97,8 @@ def LoadConfig(name, state, loadLastConfig = False):
     boolReads = {"NameServer": None,
                  "Conductor": None,
                  "Xplorer": None,
-                 "DesktopMode": None}
+                 "DesktopMode": None,
+                 "RunDebugPrograms": None}
     ##Load these if it's loading the initial configuration.
     if loadLastConfig:
         strReads["Directory"] = os.getenv("VE_WORKING_DIR")

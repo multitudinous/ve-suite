@@ -35,6 +35,14 @@ class DebugWindow(wx.Dialog):
         self.osgMenu = wx.Choice(self, -1, choices = OSG_LIST)
         self.osgMenu.SetToolTip(wx.ToolTip("Choose the OSG debug level" +
                                            " for VE-Suite."))
+        ##Build Launch Debug checkbox.
+        self.cbLauncherDebug = wx.CheckBox(self, -1, "Debug Launch")
+        self.cbLauncherDebug.SetToolTip(wx.ToolTip("Debug VE-Suite's launch."))
+        ##Build VE-Suite Debug checkbox.
+        self.cbRunDebugPrograms = wx.CheckBox(self, -1,
+                                              "Run VE-Suite, Debug Build")
+        self.cbRunDebugPrograms.SetToolTip(wx.ToolTip("Launch debug build of" +
+                                           " VE-Suite instead of opt build."))
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Launcher."))
@@ -58,6 +66,10 @@ class DebugWindow(wx.Dialog):
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
+        mainSizer.Add(self.cbLauncherDebug, 0, wx.EXPAND)
+        mainSizer.Add(self.cbRunDebugPrograms, 0, wx.EXPAND)
+        if not windows:
+            self.cbRunDebugPrograms.Hide()
         mainSizer.Add(bOk, 0, wx.EXPAND)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
@@ -76,6 +88,11 @@ class DebugWindow(wx.Dialog):
             self.state.Edit("VPRDebug", self.VPRDebug(WRITE))
         if self.osgMenu.IsEnabled():
             self.state.Edit("OSGNotifyLevel", self.osgMenu.GetStringSelection())
+        if self.cbLauncherDebug.IsEnabled():
+            self.state.Edit("Debug", self.cbLauncherDebug.GetValue())
+        if self.cbRunDebugPrograms.IsEnabled():
+            self.state.Edit("RunDebugPrograms",
+                            self.cbRunDebugPrograms.GetValue())
 
     def UpdateDisplay(self):
         ##VPR Menu
@@ -84,6 +101,11 @@ class DebugWindow(wx.Dialog):
         ##OSG Field
         self.osgMenu.SetStringSelection(self.state.GetSurface("OSGNotifyLevel"))
         self.osgMenu.Enable(self.state.IsEnabled("OSGNotifyLevel"))
+        ##Checkboxes
+        self.cbLauncherDebug.SetValue(self.state.GetSurface("Debug"))
+        self.cbLauncherDebug.Enable(self.state.IsEnabled("Debug"))
+        self.cbRunDebugPrograms.SetValue(self.state.GetSurface("RunDebugPrograms"))
+        self.cbRunDebugPrograms.Enable(self.state.IsEnabled("RunDebugPrograms"))
 
     def OnClose(self, event = None):
         self.UpdateData()

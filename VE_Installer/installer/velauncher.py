@@ -179,12 +179,9 @@ class LauncherWindow(wx.Frame):
         menu.Append(520, "Choose De&pendencies\tCtrl+P")
         if not unix:
             menu.Append(521, "Choose &Builder Folder")
-        menu.Append(522, "VE-Suite Debu&g Level\tCtrl+G")
-        self.menuDebugLaunch = wx.MenuItem(menu, 524, "D&ebug Launch",
-                                           kind = wx.ITEM_CHECK)
+        menu.Append(522, "Set Debug& Levels\tCtrl+G")
         self.autoRunVes = wx.MenuItem(menu, 525, "&Auto-Launch Passed Files",
                                       kind = wx.ITEM_CHECK)
-        menu.AppendItem(self.menuDebugLaunch)
         menu.AppendItem(self.autoRunVes)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
         menuBar.Append(menu, "&Options")
@@ -434,9 +431,6 @@ class LauncherWindow(wx.Frame):
             if modeChosen != self.state.GetBase("Mode"):
                 self.state.Edit("Mode", modeChosen)
                 react = True
-        ##Launch Debug Mode
-        if self.menuDebugLaunch.IsEnabled():
-            self.state.Edit("Debug", self.menuDebugLaunch.IsChecked())
         ##Auto-Run Ves Files Mode
         if self.autoRunVes.IsEnabled():
             self.state.Edit("AutoRunVes", self.autoRunVes.IsChecked())
@@ -505,9 +499,6 @@ class LauncherWindow(wx.Frame):
                      self.state.GetSurface("ShellScript")
         ##Remove Files menu.
         self.GetMenuBar().Enable(501, bool(fileLoaded))
-        ##Debug Launch menu.
-        self.menuDebugLaunch.Enable(self.state.IsEnabled("Debug"))
-        self.menuDebugLaunch.Check(self.state.GetSurface("Debug"))
         ##AutoRun Ves menu.
         self.autoRunVes.Enable(self.state.IsEnabled("AutoRunVes"))
         self.autoRunVes.Check(self.state.GetSurface("AutoRunVes"))

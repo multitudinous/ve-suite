@@ -181,7 +181,7 @@ def Style(window):
 
 def EnvVarEmpty(var):
     """Returns whether var is empty or not.
-    
+
     True if var == None, var's length is 0, or var is all whitespace.
     Otherwise False."""
     if os.getenv(var) == None or len(str(os.getenv(var))) == 0 \
