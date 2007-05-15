@@ -424,8 +424,20 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 {
    if(_activeCADNode)
    {
-      CADClone* newClone = new CADClone(_activeCADNode->GetNodeName()+std::string("_cloned"),
-                                        _activeCADNode);
+      CADNode* newClone = 0;
+      if(_activeCADNode->GetNodeType()== "Part")
+      {
+         newClone = new CADPart(*dynamic_cast<CADPart*>(_activeCADNode),true);
+      }
+      else if(_activeCADNode->GetNodeType()== "Assembly")
+      {
+         newClone = new CADAssembly(*dynamic_cast<CADAssembly*>(_activeCADNode),true);
+      }
+      else
+      {
+         return;
+      }
+      newClone->SetNodeName(_activeCADNode->GetNodeName()+std::string("_cloned"));
 
       wxTreeItemId parentID;
       if(_activeTreeNode->GetId() == _geometryTree->GetRootItem())
@@ -446,7 +458,7 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
      dynamic_cast<CADAssembly*>(parentCADNode->GetNode())->AddChild(newClone);
 
-     if(newClone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
+     if(newClone->GetNodeType() == std::string("Assembly"))
      {
         _geometryTree->AppendItem(parentID,
                                wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
@@ -454,8 +466,9 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
 
         _geometryTree->SetItemImage(parentID, 2, wxTreeItemIcon_Expanded);
         _geometryTree->SetItemImage(parentID, 2, wxTreeItemIcon_SelectedExpanded);
+        _ensureTree();
      }
-     else if(newClone->GetOriginalNode()->GetNodeType() == std::string("Part"))
+     else if(newClone->GetNodeType() == std::string("Part"))
      {
         _geometryTree->AppendItem(parentID,
                                wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
@@ -530,7 +543,7 @@ bool CADNodeManagerDlg::_ensureClones(wxString filename)
    }
    return false;
 }
-////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
 {
    VE_XML::XMLReaderWriter cadReader;
