@@ -270,6 +270,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MainToolBar.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\NavigationPane.cxx"
 				>
 			</File>
@@ -404,6 +408,10 @@
 			</File>
 			<File
 				RelativePath=".\isosurfaces.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MainToolBar.h"
 				>
 			</File>
 			<File

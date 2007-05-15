@@ -77,6 +77,8 @@
 #include "VE_Conductor/Utilities/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"
 
+#include "VE_Conductor/Framework/MainToolBar.h"
+
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/splash.h>
@@ -88,8 +90,6 @@
 #include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include "VE_Conductor/xpm/selection32x32.xpm"
-#include "VE_Conductor/xpm/navigation32x32.xpm"
 #include <sstream>
 #include <iomanip>
 
@@ -179,8 +179,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
    EVT_MENU( KM_NAVIGATION, AppFrame::ChangeDevice )
    EVT_MENU( KM_SELECTION, AppFrame::ChangeDevice )
 
-   EVT_MENU( NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
-   EVT_MENU( SELECTION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( MainToolBar::NAVIGATION_MODE, AppFrame::ChangeDeviceMode )
+   EVT_MENU( MainToolBar::SELECTION_MODE, AppFrame::ChangeDeviceMode )
 
    EVT_MENU( DEVICE_PROPERTIES, AppFrame::LaunchDeviceProperties )
 
@@ -224,6 +224,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 
 END_EVENT_TABLE()
 
+////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title), 
    m_frameNr(0), 
@@ -269,8 +270,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
    GetConfig(NULL);
 
-	CreateMenu();
-   CreateTB();
+    CreateMenu();
    CreateStatusBar();
    SetStatusText( _("VE-Conductor Status") );
 
@@ -306,12 +306,12 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
       LaunchNavigationPane( event );
    }
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
 {
    return _displayMode;
 }
-//////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplay()
 {
    for ( int i = 1; i < wxTheApp->argc ; ++i )
@@ -324,7 +324,7 @@ void AppFrame::_detectDisplay()
    }
    //return _displayMode;
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 {
    if( GetDisplayMode() == "Tablet")
@@ -353,7 +353,7 @@ void AppFrame::_createTreeAndLogWindow(wxWindow* parent)
 
    wx_nw_splitter->SplitVertically(av_modules, network, 140);
 }
-//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureDesktop()
 {
    SetTitle( _("VE-Suite: www.vesuite.org") );
@@ -386,13 +386,13 @@ void AppFrame::_configureDesktop()
    //   SetSize(DetermineFrameSize(NULL));
    //}
 }
-/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureTablet()
 {
    _createTreeAndLogWindow(this);
    SetSize(DetermineFrameSize(NULL));
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplayAndCreate()
 { 
    _detectDisplay();
@@ -413,7 +413,7 @@ void AppFrame::_detectDisplayAndCreate()
       _exit(1);
    }
 }
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool AppFrame::Show(bool value)
 {
    bool status = false;
@@ -437,7 +437,7 @@ bool AppFrame::Show(bool value)
    }
    return status;
 }
-////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateVETab()
 {
   //create the image list for the tabs first
@@ -651,7 +651,7 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 	if (!config) delete cfg;
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
    if ( GetDisplayMode() == "Desktop" )
@@ -904,22 +904,7 @@ void AppFrame::CreateMenu()
    //if (f_visualization)
 
 
-   SetMenuBar(menubar);
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CreateTB()
-{
-   toolbar = CreateToolBar( wxTB_FLAT | wxTB_HORIZONTAL );
-   toolbar->SetBackgroundColour( wxColour( 192, 192, 192 ) );
-   toolbar->SetToolBitmapSize( wxSize( 32, 32 ) );
-   wxBitmap navigation_bitmap( navigation32x32_xpm );
-   toolbar->AddTool( NAVIGATION_MODE, _( "" ), navigation_bitmap, _( "Navigation" ), wxITEM_RADIO );
-   wxBitmap selection_bitmap( selection32x32_xpm );
-   toolbar->AddTool( SELECTION_MODE, _( "" ), selection_bitmap, _( "Selection" ), wxITEM_RADIO );
-   toolbar->AddSeparator();
-   toolbar->Realize();
-
-   this->SetToolBar( toolbar );
+   SetMenuBar( menubar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
@@ -978,7 +963,7 @@ void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
   network->Scroll(xpos, ypos);
   network->ReDrawAll();
 }
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )
 {
    //First time call save will be the same as SaveAs
@@ -994,7 +979,7 @@ void AppFrame::Save( wxCommandEvent& event )
    }
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 {
    wxFileName vesFileName;
@@ -1043,7 +1028,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
    }
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 {
    wxFileDialog dialog
@@ -1123,7 +1108,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
    }
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::InitRecentFile()
 {
 	int i;
@@ -1144,7 +1129,7 @@ void AppFrame::InitRecentFile()
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DeleteRecentFile(wxFileName vesFileName)
 {
 	// PROMPT BOX look at SaveAs() -- box that states fill has been moved or deleted, and ask them with radio buttons
@@ -1172,7 +1157,7 @@ void AppFrame::DeleteRecentFile(wxFileName vesFileName)
 	SetRecentMenu();
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile(wxFileName vesFileName)
 {
 	std::vector< wxFileName > dummyList;
@@ -1205,7 +1190,7 @@ void AppFrame::SetRecentFile(wxFileName vesFileName)
 	SetRecentMenu();
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentMenu()
 {
 	int i;
@@ -1235,7 +1220,7 @@ void AppFrame::SetRecentMenu()
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
 	int placeChosen = event.GetId();
@@ -1297,14 +1282,14 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	network->Load( ConvertUnicode( path.c_str() ), true );
 	SubmitToServer( event );      	
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
    std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
    network->Load( nw_str, false );
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 {
    EnableCEGUIMenuItems();
@@ -1330,7 +1315,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
       Log("No ves network available\n");
    }
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 {
    Log("Opening Simulation...\n");
@@ -1381,7 +1366,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
    }
 }
 
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {
    Log("Show Simulation.\n");
@@ -1423,7 +1408,7 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    Log(nw_str.c_str());
 }
 
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {
    Log("Close Simulation.\n");
@@ -1444,7 +1429,7 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
    Log(nw_str.c_str());
 }
 
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
 {
    Log("Run Simulation.\n");
@@ -1464,7 +1449,7 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
    serviceList->Query( status );
 }
 
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 {
    Log("Find Block.\n");
@@ -1495,13 +1480,13 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
    network->SetSelectedModule(moduleIDs[selectedModulePos]);
 }
 
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
    path.clear();
    network->New( true );
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
    EnableCEGUIMenuItems();
@@ -1523,7 +1508,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
       Log("no exec found!\n");
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
 {
    try	
@@ -1536,7 +1521,7 @@ void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
       Log("no exec found!\n");
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StopCalc(wxCommandEvent& WXUNUSED(event) )
 {
    try
@@ -1548,7 +1533,7 @@ void AppFrame::StopCalc(wxCommandEvent& WXUNUSED(event) )
       Log("no exec found!\n");
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::PauseCalc(wxCommandEvent& WXUNUSED(event) )
 {
    try
@@ -1560,7 +1545,7 @@ void AppFrame::PauseCalc(wxCommandEvent& WXUNUSED(event) )
       Log("no exec found!\n");
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 {
    try
@@ -1572,7 +1557,7 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
       Log("no exec found!\n");
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
    serviceList->IsConnectedToCE();
@@ -1795,7 +1780,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 
    result_dlg->Show();
 }
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 {
    if ( network->globalparam_dlg != NULL )
@@ -1808,12 +1793,12 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
       network->globalparam_dlg->Show();
    }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Log(const char* msg)
 {
    serviceList->GetMessageLog()->SetMessage( msg );
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
 {
    serviceList->DisconnectFromCE();
@@ -1824,45 +1809,45 @@ void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
    con_menu->Enable(v21ID_DISCONNECT, false);
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 {
    serviceList->DisconnectFromXplorer();
    con_menu->Enable(v21ID_DISCONNECT_VE, false);
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
    ::wxLaunchDefaultBrowser( wxString( "http://www.vrac.iastate.edu/%7Ebiv/vesuite_installs/docs/releases/1.0.3/vesuite/vesuite.html", wxConvUTF8 ) );
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
 {
    ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org", wxConvUTF8 ) );
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewRevision(wxCommandEvent& WXUNUSED(event))
 {
    wxMessageBox( _("Current Revision: 6491"),_("Revision"), 
                  wxOK | wxICON_INFORMATION );
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewContacts(wxCommandEvent& WXUNUSED(event))
 {
    ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewPlatformInfo(wxCommandEvent& WXUNUSED(event))
 {
    wxMessageBox( ::wxGetOsDescription(),_("Platform Info"), 
                  wxOK | wxICON_INFORMATION );
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CloseVE()
 {
    ;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
 {
    if ( deviceProperties == 0 )
@@ -1873,7 +1858,7 @@ void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
    // now show it
    deviceProperties->Show();
 }
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 {
    if ( navPane == 0 )
@@ -1884,7 +1869,7 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    // now show it
    navPane->Show();
 }
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 {
    //this is kinda confusing...thanks wx!!!
@@ -1929,7 +1914,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       delete veCommand;
    }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
    //Create the command and data value pairs
@@ -1942,7 +1927,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    {
       device = "Wand";
 
-      event.SetId( NAVIGATION_MODE );
+      event.SetId( MainToolBar::NAVIGATION_MODE );
       this->ChangeDeviceMode( event );
    }
 
@@ -1950,7 +1935,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    {
       device = "Wand";
 
-      event.SetId( SELECTION_MODE );
+      event.SetId( MainToolBar::SELECTION_MODE );
       this->ChangeDeviceMode( event );
    }
 
@@ -1958,7 +1943,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    {
       device = "KeyboardMouse";
 
-      event.SetId( NAVIGATION_MODE );
+      event.SetId( MainToolBar::NAVIGATION_MODE );
       this->ChangeDeviceMode( event );
    }
 
@@ -1966,7 +1951,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    {
       device = "KeyboardMouse";
 
-      event.SetId( SELECTION_MODE );
+      event.SetId( MainToolBar::SELECTION_MODE );
       this->ChangeDeviceMode( event );
    }
 
@@ -1979,7 +1964,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    
    delete command;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeDeviceMode( wxCommandEvent& event )
 {
    VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
@@ -1987,18 +1972,18 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& event )
 
    std::string mode;
 
-   if( event.GetId() == NAVIGATION_MODE )
+   if( event.GetId() == MainToolBar::NAVIGATION_MODE )
    {
       mode = "Navigation";
 
-      toolbar->ToggleTool( NAVIGATION_MODE, true );
+      //toolbar->ToggleTool( MainToolBar::NAVIGATION_MODE, true );
    }
 
-   else if( event.GetId() == SELECTION_MODE )
+   else if( event.GetId() == MainToolBar::SELECTION_MODE )
    {
       mode = "Selection";
 
-      toolbar->ToggleTool( SELECTION_MODE, true );
+      //toolbar->ToggleTool( SELECTION_MODE, true );
    }
 
    DVP->SetData( std::string( "Mode" ), mode );
@@ -2010,7 +1995,7 @@ void AppFrame::ChangeDeviceMode( wxCommandEvent& event )
    
    delete command;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisplaySelection( wxCommandEvent& event )
 {
    //Create the command and data value pairs
@@ -2297,3 +2282,4 @@ void AppFrame::OnInternalIdle()
       }
    }
 }
+////////////////////////////////////////////////////////////////////////////////
