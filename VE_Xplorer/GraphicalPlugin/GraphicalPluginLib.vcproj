@@ -73,7 +73,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="osg.lib osgUtil.lib osgDB.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib xerces-c_2.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib wxbase28.lib wxmsw28_core.lib"
-				ShowProgress="2"
+				ShowProgress="0"
 				OutputFile="$(OutDir)/GraphicalPlugin_tao_osg_vep.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
