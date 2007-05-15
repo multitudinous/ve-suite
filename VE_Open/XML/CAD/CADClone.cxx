@@ -48,7 +48,7 @@ CADClone::CADClone(std::string name,CADNode* originalNode)
       SetOriginalNode(originalNode);
    }
 
-   _type = std::string("Clone");
+   m_type = std::string("Clone");
    SetObjectType("CADClone");
 }
 /////////////////////

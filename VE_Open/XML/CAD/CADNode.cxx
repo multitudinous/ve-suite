@@ -54,13 +54,14 @@ using namespace VE_XML;
 CADNode::CADNode(std::string name)
 :VE_XML::XMLObject()
 {
-   _name = name;
-   _parent = "";
-   _transform = new Transform(); 
-   _type = std::string("Node");
-   _visibility = true;
+   m_name = name;
+   m_parent = "";
+   m_transform = new Transform(); 
+   m_type = std::string("Node");
+   m_visibility = true;
+   m_associatedDataset = "NONE";
    //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
-   _activeAttributeName = std::string("");
+   m_activeAttributeName = std::string("");
    SetObjectType("CADNode");
    SetObjectNamespace("CAD");
    //This may need to be somewhere else
@@ -80,22 +81,13 @@ CADNode::CADNode(std::string name)
 ///////////////////
 CADNode::~CADNode()
 {
-   if(_transform){
-      delete _transform;
-      _transform = 0;
-   }
-   
-   /*if(_attributeList.size())
+   if(m_transform)
    {
-     size_t nAttributes =  _attributeList.size();
-       for(size_t i = 0; i < nAttributes; i++)
-      {
-         delete _attributeList.at(i);
-      }
-     
-   }*/
-   _attributeList.clear();
-   _animations.clear();
+      delete m_transform;
+      m_transform = 0;
+   }
+   m_attributeList.clear();
+   m_animations.clear();
 }
 //////////////////////////////////////////////////////////////////////////
 void CADNode::AddAnimation(std::string name,std::string animationFileName)
@@ -103,43 +95,43 @@ void CADNode::AddAnimation(std::string name,std::string animationFileName)
    CADNodeAnimation newAnimation;
    newAnimation.SetAnimationFileName(animationFileName);
    newAnimation.SetAnimationName(name);
-   _animations.push_back(newAnimation);
+   m_animations.push_back(newAnimation);
 }
 ///////////////////////////////////////////
 void CADNode::SetNodeName(std::string name)
 {
-   _name = name;
+   m_name = name;
 }
 ////////////////////////////////////////////////////
 void CADNode::SetParent(std::string parent)
 {
-   _parent = parent;
+   m_parent = parent;
 }
 ///////////////////////////////////////////////////////
 void CADNode::SetTransform(VE_XML::Transform* transform)
 {
-   if(_transform)
+   if(m_transform)
    {
-      delete _transform;
-      _transform = 0;
+      delete m_transform;
+      m_transform = 0;
    }
-   _transform = new VE_XML::Transform(*transform);
+   m_transform = new VE_XML::Transform(*transform);
 }
 ///////////////////////////////////////////////////////////
 void CADNode::AddAttribute(VE_XML::VE_CAD::CADAttribute attribute)
 {
-   _attributeList.push_back(attribute);
+   m_attributeList.push_back(attribute);
 }
 ////////////////////////////////////////////////////////
 void CADNode::RemoveAttribute(std::string attributeName)
 {
-   for ( std::vector<CADAttribute>::iterator itr = _attributeList.begin();
-                                    itr != _attributeList.end();
+   for ( std::vector<CADAttribute>::iterator itr = m_attributeList.begin();
+                                    itr != m_attributeList.end();
                                     itr++ )
    {
       if((*itr).GetAttributeName() == attributeName)
       {
-         _attributeList.erase(itr);
+         m_attributeList.erase(itr);
          break;
       }
    }
@@ -147,65 +139,80 @@ void CADNode::RemoveAttribute(std::string attributeName)
 ///////////////////////////////////////////////////////////
 void CADNode::SetActiveAttribute(std::string attributeName)
 {
-   _activeAttributeName = attributeName;
+   m_activeAttributeName = attributeName;
+}
+///////////////////////////////////////////////////////////////////////////////////////
+void CADNode::SetAssociatedDataset(std::string parameterBlockUUID)
+{
+   m_associatedDataset = parameterBlockUUID;
+}
+////////////////////////////////////////////////////////////////////////////////////////
+bool CADNode::GetAssociatedDataset(std::string& parameterBlockUUID)
+{
+   if(m_associatedDataset != "NONE")
+   {
+      parameterBlockUUID = m_associatedDataset;
+      return true;
+   }
+   return false;
 }
 ////////////////////////////
 bool CADNode::HasAnimation()
 {
-   return (!_animations.empty());
+   return (!m_animations.empty());
 }
 //////////////////////////////////
 std::string CADNode::GetNodeType()
 {
-   return _type;
+   return m_type;
 }
 //////////////////////////////////
 std::string CADNode::GetNodeName()
 {
-   return _name;
+   return m_name;
 }
 /////////////////////////////////////////
 std::string CADNode::GetParent()
 {
-   return _parent;
+   return m_parent;
 }
 //////////////////////////////////////////
 VE_XML::Transform* CADNode::GetTransform()
 {
-   return _transform;
+   return m_transform;
 }
 ///////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
 {
    try
    {
-      return _attributeList.at(index);
+      return m_attributeList.at(index);
    }
    catch(...)
    {
       std::cout<<"ERROR!!!!!"<<std::endl;
       std::cout<<"Invalid index!!!"<<std::endl;
       std::cout<<"CADNode::GetAttribute(): "<<index<<std::endl;
-      return _attributeList.at(0);;
+      return m_attributeList.at(0);;
    }
-   return _attributeList.at(0);;
+   return m_attributeList.at(0);;
 }
 ////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
 {
-   size_t nAttributes = _attributeList.size();
+   size_t nAttributes = m_attributeList.size();
    for(size_t i = 0; i < nAttributes; i++)
    {
-      if(_attributeList.at(i).GetAttributeName() == name)
+      if(m_attributeList.at(i).GetAttributeName() == name)
       {
-         return _attributeList.at(i);
+         return m_attributeList.at(i);
       }
    }
 }
 ///////////////////////////////////////////////////
 VE_XML::VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
 {
-   return GetAttribute(_activeAttributeName);
+   return GetAttribute(m_activeAttributeName);
 }
 /////////////////////////////
 /*unsigned int CADNode::GetID()
@@ -220,34 +227,35 @@ void CADNode::_updateVEElement(std::string input)
 
    //SetSubElement(std::string("nodeID"),_uID);
    SetAttribute("id",uuid);
-   SetAttribute("visibility",_visibility);
-   SetSubElement(std::string("parent"),_parent);
+   SetAttribute("visibility",m_visibility);
+   SetAttribute("associatedDataset",m_associatedDataset);
+   SetSubElement(std::string("parent"),m_parent);
 
-   if(!_transform)
+   if(!m_transform)
    {
-      _transform = new Transform();
+      m_transform = new Transform();
    }
-   _transform->SetOwnerDocument(_rootDocument);
-   _veElement->appendChild( _transform->GetXMLData("transform") );
+   m_transform->SetOwnerDocument(_rootDocument);
+   _veElement->appendChild( m_transform->GetXMLData("transform") );
 
-   if(_attributeList.size())
+   if(m_attributeList.size())
    {
-      size_t nAttributes = _attributeList.size();
+      size_t nAttributes = m_attributeList.size();
       for(size_t i = 0; i < nAttributes; i++)
       {
-         _attributeList.at(i).SetOwnerDocument(_rootDocument);
-         _veElement->appendChild( _attributeList.at(i).GetXMLData("attribute") );
+         m_attributeList.at(i).SetOwnerDocument(_rootDocument);
+         _veElement->appendChild( m_attributeList.at(i).GetXMLData("attribute") );
       }
-      SetSubElement(std::string("activeAttributeName"),_activeAttributeName);
+      SetSubElement(std::string("activeAttributeName"),m_activeAttributeName);
    }
 
-   if(_animations.size())
+   if(m_animations.size())
    {
-      size_t nAnimations = _animations.size();
+      size_t nAnimations = m_animations.size();
       for(size_t i = 0; i < nAnimations; i++)
       {
-         _animations.at(i).SetOwnerDocument(_rootDocument);
-         _veElement->appendChild( _animations.at(i).GetXMLData("animation") );
+         m_animations.at(i).SetOwnerDocument(_rootDocument);
+         _veElement->appendChild( m_animations.at(i).GetXMLData("animation") );
       }
    }
 }
@@ -255,15 +263,15 @@ void CADNode::_updateVEElement(std::string input)
 void CADNode::_updateNodeName()
 {
    DOMElement* nodeNameElement = _rootDocument->createElement(xercesString("name"));
-   DOMText* nodeName = _rootDocument->createTextNode(xercesString(_name.c_str()));
+   DOMText* nodeName = _rootDocument->createTextNode(xercesString(m_name.c_str()));
    nodeNameElement->appendChild(nodeName);
    _veElement->appendChild(nodeNameElement);
 }
-///////////////////////////////
+////////////////////////////////////////////
 void CADNode::_updateNodeType()
 {
    DOMElement* nodeTypeElement = _rootDocument->createElement(xercesString("type"));
-   DOMText* nodeType = _rootDocument->createTextNode(xercesString(_type));
+   DOMText* nodeType = _rootDocument->createTextNode(xercesString(m_type));
    nodeTypeElement->appendChild(nodeType);
    _veElement->appendChild(nodeTypeElement);
 }
@@ -284,19 +292,31 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
       {
          if(currentElement->hasChildNodes())
          {
-            if(currentElement->getAttributeNode(xercesString("visibility")))
+             if(currentElement->getAttributeNode(xercesString("associatedDataset")))
             {
-               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,"visibility",_visibility);
+               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
+                                                                                      "associatedDataset",
+                                                                                       m_associatedDataset);
             }
             else
             {
-               _visibility = true;
+               m_associatedDataset = "NONE";
+            }
+            if(currentElement->getAttributeNode(xercesString("visibility")))
+            {
+               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
+                                                                                      "visibility",
+                                                                                      m_visibility);
+            }
+            else
+            {
+               m_visibility = true;
             }
             //Is there a better way to do this
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
             {
-              _name = ExtractFromSimpleElement< std::string >( nameNode );
+              m_name = ExtractFromSimpleElement< std::string >( nameNode );
             }
             
             DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
@@ -311,21 +331,17 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
             {
-              _type = ExtractFromSimpleElement< std::string >( typeNode );
+              m_type = ExtractFromSimpleElement< std::string >( typeNode );
             }
             DOMElement* parentNode = GetSubElement(currentElement,std::string("parent"),0);
             if(parentNode)
             {
-               _parent = ExtractFromSimpleElement< std::string >(parentNode);
+               m_parent = ExtractFromSimpleElement< std::string >(parentNode);
             }
-            size_t nOldAttributes = _attributeList.size();
+            size_t nOldAttributes = m_attributeList.size();
             if(nOldAttributes > 0)
             {
-               /*for(size_t i = nOldAttributes -1; i >= 0; i--)
-               {
-                  delete _attributeList.at(i);
-               }*/
-               _attributeList.clear();
+               m_attributeList.clear();
             }
             DOMNodeList* attributeNodes = currentElement->getElementsByTagName(xercesString("attribute"));
             XMLSize_t nNewAttributes = attributeNodes->getLength();
@@ -339,11 +355,11 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                   //CADAttribute* newAttribute = new CADAttribute();
                   CADAttribute newAttribute;
                   newAttribute.SetObjectFromXMLData(attributeNode);
-                  _attributeList.push_back(newAttribute);
+                  m_attributeList.push_back(newAttribute);
                }
             }
 
-            _animations.clear();
+            m_animations.clear();
             DOMNodeList* animationNodes = currentElement->getElementsByTagName(xercesString("animation"));
             XMLSize_t nNewAnimations = animationNodes->getLength();
             for(XMLSize_t  i = 0; i < nNewAnimations ; i++)
@@ -354,7 +370,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
                {
                   CADNodeAnimation newAnimation;
                   newAnimation.SetObjectFromXMLData(animationNode);
-                  _animations.push_back(newAnimation);
+                  m_animations.push_back(newAnimation);
                }
             }
 
@@ -362,19 +378,19 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* activeAttribNode = GetSubElement(currentElement,std::string("activeAttributeName"),0);
             if(activeAttribNode)
             {
-               _activeAttributeName = ExtractFromSimpleElement< std::string >(activeAttribNode);
-               SetActiveAttribute(_activeAttributeName);
+               m_activeAttributeName = ExtractFromSimpleElement< std::string >(activeAttribNode);
+               SetActiveAttribute(m_activeAttributeName);
             }
 
             
             DOMElement* transformNode = GetSubElement(currentElement,std::string("transform"),0);
             if(transformNode)
             {
-               if(!_transform)
+               if(!m_transform)
                {
-                  _transform = new Transform();
+                  m_transform = new Transform();
                }
-               _transform->SetObjectFromXMLData(transformNode);
+               m_transform->SetObjectFromXMLData(transformNode);
             }
             
          }
@@ -384,24 +400,24 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 ///////////////////////////////////////
 void CADNode::SetVisibility(bool onOff)
 {
-   _visibility = onOff;
+   m_visibility = onOff;
 }
 /////////////////////////////
 bool CADNode::GetVisibility()
 {
-   return _visibility;
+   return m_visibility;
 }
 /////////////////////////////////////////////////////
 std::vector<CADAttribute> CADNode::GetAttributeList()
 {
-   return _attributeList;
+   return m_attributeList;
 }
 ///////////////////////////////////////////////////////////////////
 VE_XML::VE_CAD::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
 {
    try
    {
-      return _animations.at(index);
+      return m_animations.at(index);
    }
    catch(...)
    {
@@ -412,53 +428,54 @@ VE_XML::VE_CAD::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
 /////////////////////////////////////////////////////////
 CADNodeAnimation& CADNode::GetAnimation(std::string name)
 {
-   size_t nAnimations = _animations.size();
+   size_t nAnimations = m_animations.size();
    for(size_t i = 0; i < nAnimations; i++)
    {
-      if(_animations.at(i).GetAnimationName() == name)
+      if(m_animations.at(i).GetAnimationName() == name)
       {
-         return _animations.at(i);
+         return m_animations.at(i);
       }
    }
 }
 ///////////////////////////////////////
 size_t CADNode::GetNumberOfAnimations()
 {
-   return _animations.size();
+   return m_animations.size();
 }
 /////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs)
 :VE_XML::XMLObject(rhs)
 {
-   _parent = "";
-   _transform = 0;;
+   m_parent = "";
+   m_transform = 0;;
 
-   if(rhs._transform)
+   if(rhs.m_transform)
    {
-      _transform = new VE_XML::Transform(*rhs._transform);
+      m_transform = new VE_XML::Transform(*rhs.m_transform);
    }
    else
    {
-      _transform = new Transform();
+      m_transform = new Transform();
    }
 
-   if(_attributeList.size())
+   if(m_attributeList.size())
    {
-      _attributeList.clear();
+      m_attributeList.clear();
    }
-   for(size_t i = 0; i < rhs._attributeList.size(); i++)
+   for(size_t i = 0; i < rhs.m_attributeList.size(); i++)
    {
-      _attributeList.push_back(rhs._attributeList.at(i));
+      m_attributeList.push_back(rhs.m_attributeList.at(i));
    }
-   for(size_t i = 0; i < rhs._animations.size(); i++)
+   for(size_t i = 0; i < rhs.m_animations.size(); i++)
    {
-      _animations.push_back(rhs._animations.at(i));
+      m_animations.push_back(rhs.m_animations.at(i));
    }
-   _activeAttributeName = rhs._activeAttributeName;
-   _parent = rhs._parent;
-   _name = rhs._name;
-   _type = rhs._type;
-   _visibility = rhs._visibility;
+   m_activeAttributeName = rhs.m_activeAttributeName;
+   m_parent = rhs.m_parent;
+   m_name = rhs.m_name;
+   m_type = rhs.m_type;
+   m_visibility = rhs.m_visibility;
+   m_associatedDataset = rhs.m_associatedDataset;
    //_uID = rhs._uID;
    
 }
@@ -470,36 +487,37 @@ CADNode& CADNode::operator=(const CADNode& rhs)
    if ( this != &rhs )
    {
       XMLObject::operator =(rhs);
-      if(_attributeList.size())
+      if(m_attributeList.size())
       {
-         _attributeList.clear();
+         m_attributeList.clear();
       }
 
-      for(size_t i = 0; i < rhs._attributeList.size(); i++)
+      for(size_t i = 0; i < rhs.m_attributeList.size(); i++)
       {
-         _attributeList.push_back(rhs._attributeList.at(i));
+         m_attributeList.push_back(rhs.m_attributeList.at(i));
       }
 
-      if(_animations.size())
+      if(m_animations.size())
       {
-         _animations.clear();
+         m_animations.clear();
       }
-      for(size_t i = 0; i < rhs._animations.size(); i++)
+      for(size_t i = 0; i < rhs.m_animations.size(); i++)
       {
-         _animations.push_back(rhs._animations.at(i));
+         m_animations.push_back(rhs.m_animations.at(i));
       }
      
-      if(_transform)
+      if(m_transform)
       {
-         delete _transform;
-         _transform = 0;
+         delete m_transform;
+         m_transform = 0;
       }
-      _transform = new Transform(*rhs._transform);
-      _activeAttributeName = rhs._activeAttributeName;
-      _visibility = rhs._visibility;
+      m_transform = new Transform(*rhs.m_transform);
+      m_activeAttributeName = rhs.m_activeAttributeName;
+      m_visibility = rhs.m_visibility;
       //_uID = rhs._uID;
-      _parent = rhs._parent;
-      _name = rhs._name;
+      m_parent = rhs.m_parent;
+      m_name = rhs.m_name;
+      m_associatedDataset = rhs.m_associatedDataset;
    }
    return *this;
 }

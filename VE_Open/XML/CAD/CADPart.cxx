@@ -39,8 +39,8 @@ using namespace VE_XML::VE_CAD;
 CADPart::CADPart(std::string name)
 :VE_XML::VE_CAD::CADNode(name)
 {
-   _cadFileName = std::string("CADFile");
-   _type = std::string("Part");
+   m_cadFileName = std::string("CADFile");
+   m_type = std::string("Part");
   SetObjectType("CADPart");
 }
 ///////////////////
@@ -52,12 +52,12 @@ CADPart::~CADPart()
 /////////////////////////////////////////////////////
 void CADPart::SetCADFileName(std::string cadFileName)
 {
-   _cadFileName = cadFileName;
+   m_cadFileName = cadFileName;
 }
 /////////////////////////////////////
 std::string CADPart::GetCADFileName()
 {
-   return _cadFileName;
+   return m_cadFileName;
 }
 //////////////////////////////////
 void CADPart::_updateCADFileName()
@@ -65,7 +65,7 @@ void CADPart::_updateCADFileName()
    DOMElement* nameElement  = _rootDocument->createElement( xercesString("fileName") );
    _veElement->appendChild( nameElement );      
    
-   DOMText* fileName = _rootDocument->createTextNode( xercesString( _cadFileName ) );
+   DOMText* fileName = _rootDocument->createTextNode( xercesString( m_cadFileName ) );
    nameElement->appendChild( fileName  );
 }
 /////////////////////////////////////////////////
@@ -97,7 +97,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
          if(currentElement->hasChildNodes())
          {
             DOMElement* fileNameElement = GetSubElement(currentElement,std::string("fileName"),0);
-            _cadFileName = ExtractFromSimpleElement< std::string >(fileNameElement);
+            m_cadFileName = ExtractFromSimpleElement< std::string >(fileNameElement);
          }
       }
    }
@@ -106,7 +106,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
 CADPart::CADPart(const CADPart& rhs)
 :VE_XML::VE_CAD::CADNode(rhs)
 {
-   _cadFileName = rhs._cadFileName;
+   m_cadFileName = rhs.m_cadFileName;
 }
 ////////////////////////////////////////////////
 CADPart& CADPart::operator=(const CADPart& rhs)
@@ -114,7 +114,7 @@ CADPart& CADPart::operator=(const CADPart& rhs)
    if ( this != &rhs )
    {
       VE_XML::VE_CAD::CADNode::operator =(rhs);
-      _cadFileName = rhs._cadFileName;
+      m_cadFileName = rhs.m_cadFileName;
    }
    return *this;
 }

@@ -82,7 +82,7 @@ protected:
    ///Internally update the XML data for the CAD filename that this part represents.
    void _updateCADFileName();
    
-   std::string _cadFileName; ///<The name of the CAD file on disk
+   std::string m_cadFileName; ///<The name of the CAD file on disk
 };
 }
 template<>

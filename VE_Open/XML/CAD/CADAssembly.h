@@ -104,11 +104,11 @@ protected:
    ///Update the child nodes of this assembly
    void _updateChildren();
   
-   unsigned int _numChildren; ///<number of children in this assembly
+   unsigned int m_numChildren; ///<number of children in this assembly
    ///\typedef ChildList
    /// A vector of VE_XML::VE_CAD::CADNode s
    typedef std::vector<VE_XML::VE_CAD::CADNode*> ChildList; 
-   ChildList _children; ///<A list of the children
+   ChildList m_children; ///<A list of the children
 };
 }
 template<>

@@ -113,9 +113,18 @@ public:
    ///\param xmlNode Node to set this object from
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode);
 
+   ///Set the associated dataset (a ParameterBlock) to this CADNode
+   ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock
+   void SetAssociatedDataset(std::string parameterBlockUUID);
+
    ///Determine if the node is visible or not
    bool GetVisibility();
 
+   ///Get the associated dataset
+   ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock if it exists
+   ///\return True/False if there is an associated dataset
+   bool GetAssociatedDataset(std::string& parameterBlockUUID);
+ 
    ///Get the active attribute
   VE_XML::VE_CAD::CADAttribute& GetActiveAttribute();
 
@@ -178,15 +187,16 @@ protected:
    ///Internally update the type of the node in XML.
    void _updateNodeType();
 
-   std::string _activeAttributeName;///<The name of the active attribute.
+   std::string m_activeAttributeName;///<The name of the active attribute.
    //unsigned int _uID;///<A "unique" id for the node.
-   std::string  _parent;  ///< Parent node ID.
-   VE_XML::Transform* _transform; ///< Transform for the node.
-   std::vector<VE_CAD::CADAttribute> _attributeList;///<A list of attributes for this node
-   std::vector<VE_CAD::CADNodeAnimation> _animations;//<A list of animation path files for this node.
-   std::string _name;///< The name of this node.
-   std::string _type;///< The type of node;
-   bool _visibility;///<Node visibilty.
+   std::string  m_parent;  ///< Parent node ID.
+   VE_XML::Transform* m_transform; ///< Transform for the node.
+   std::vector<VE_CAD::CADAttribute> m_attributeList;///<A list of attributes for this node
+   std::vector<VE_CAD::CADNodeAnimation> m_animations;//<A list of animation path files for this node.
+   std::string m_name;///< The name of this node.
+   std::string m_type;///< The type of node;
+   std::string m_associatedDataset;///<The dataset associated with this CADNode
+   bool m_visibility;///<Node visibilty.
 };
 }
 template<>
