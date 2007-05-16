@@ -50,7 +50,7 @@ namespace VE_CAD
 {
    class CADNode;
    /// Typedef for a SmartPtr type for the CADNode.
-   typedef Loki::SmartPtrDef<Program>::type CADNodePtr;
+   typedef Loki::SmartPtrDef<CADNode>::type CADPartPtr;
 }
 }
 #endif//VE_CAD_PART_PTR_H
