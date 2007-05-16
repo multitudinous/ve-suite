@@ -219,62 +219,66 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
    vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent---" << parentID 
                            << std::endl << vprDEBUG_FLUSH;
-   if( parentAssembly )
+   if( !parentAssembly )
    {
-      if(activeNode->GetNodeType() == "Assembly")
-      {
-         CADAssembly* newAssembly = dynamic_cast<CADAssembly*>(activeNode);
-         //std::cout<<"---Assembly---"<<std::endl;
-         //std::cout<<"   ---"<<newAssembly->GetID()<<"---"<<std::endl;
-         //std::cout<<"   ---"<<newAssembly->GetNodeName()<<"---"<<std::endl;
-         //std::cout<<"   --- ("<<newAssembly->GetNumberOfChildren()<<") child nodes---"<<std::endl;
+       std::cout<<"|---No parent found---id "<< parentID << std::endl;
+       return;
+   }
+   
+   if( activeNode->GetNodeType() == "Assembly" )
+   {
+        CADAssembly* newAssembly = dynamic_cast<CADAssembly*>(activeNode);
+        //std::cout<<"---Assembly---"<<std::endl;
+        //std::cout<<"   ---"<<newAssembly->GetID()<<"---"<<std::endl;
+        //std::cout<<"   ---"<<newAssembly->GetNodeName()<<"---"<<std::endl;
+        //std::cout<<"   --- ("<<newAssembly->GetNumberOfChildren()<<") child nodes---"<<std::endl;
 
-         _activeModel->CreateAssembly(newAssembly->GetID());
-         _activeModel->GetAssembly(newAssembly->GetID())->SetName(newAssembly->GetNodeName());
+        _activeModel->CreateAssembly(newAssembly->GetID());
+        _activeModel->GetAssembly(newAssembly->GetID())->SetName(newAssembly->GetNodeName());
 
-         //std::cout<<"   ---Setting node properties---"<<std::endl;
+        //std::cout<<"   ---Setting node properties---"<<std::endl;
 
-         _setTransformOnNode(newAssembly);
-         //std::cout<<"      ---Set transform---"<<std::endl;
+        _setTransformOnNode(newAssembly);
+        //std::cout<<"      ---Set transform---"<<std::endl;
 
-         _setAttributesOnNode(newAssembly);
-         //std::cout<<"      ---Set Attributes---"<<std::endl;
-         parentAssembly->AddChild(_activeModel->GetAssembly(newAssembly->GetID()));
+        _setAttributesOnNode(newAssembly);
+        //std::cout<<"      ---Set Attributes---"<<std::endl;
+        parentAssembly->AddChild(_activeModel->GetAssembly(newAssembly->GetID()));
 
-         unsigned int nChildren = newAssembly->GetNumberOfChildren();
-         for(unsigned int i = 0; i < nChildren; i++)
-         {
+        unsigned int nChildren = newAssembly->GetNumberOfChildren();
+        for(unsigned int i = 0; i < nChildren; i++)
+        {
             //std::cout<<"      Adding child: "<<newAssembly->GetChild(i)->GetNodeName()<<std::endl;
             _addNodeToNode(newAssembly->GetID(), newAssembly->GetChild(i));
-         }
-			_activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
-         SetNodeDescriptors(newAssembly->GetID(),"Assembly","VE_XML_ID",newAssembly->GetID());
-         //Set a default material on nodes that have no initial material
-         VE_SceneGraph::Utilities::MaterialInitializer material_initializer( _activeModel->GetAssembly( newAssembly->GetID() ) );
-      }
-      else if(activeNode->GetNodeType() == "Part")
-      {
-         CADPart* newPart = dynamic_cast<CADPart*>(activeNode);
-         vprDEBUG( vesDBG, 1 ) <<"|\t---Part---"
-                                 << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG( vesDBG, 1 ) <<"|\t---"<<newPart->GetID()
-                                 <<"---"<< std::endl << vprDEBUG_FLUSH;
-         std::string tempFilename = newPart->GetCADFileName();
-         boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
-         vprDEBUG( vesDBG, 1 ) <<"|\t---" << tempFilename << "---" 
-                                 << correctedPath.native_file_string() 
-                                 << std::endl << vprDEBUG_FLUSH;
-          _activeModel->CreatePart( correctedPath.native_file_string(),
-                                    newPart->GetID(),
-                                    parentID
-                                  );
+        }
+        _activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
+        SetNodeDescriptors(newAssembly->GetID(),"Assembly","VE_XML_ID",newAssembly->GetID());
+        //Set a default material on nodes that have no initial material
+        VE_SceneGraph::Utilities::MaterialInitializer material_initializer( _activeModel->GetAssembly( newAssembly->GetID() ) );
+    }
+    else if(activeNode->GetNodeType() == "Part")
+    {
+        CADPart* newPart = dynamic_cast<CADPart*>(activeNode);
+        vprDEBUG( vesDBG, 1 ) <<"|\t---Part---"
+                             << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) <<"|\t---"<<newPart->GetID()
+                             <<"---"<< std::endl << vprDEBUG_FLUSH;
+        std::string tempFilename = newPart->GetCADFileName();
+        boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
+        vprDEBUG( vesDBG, 1 ) <<"|\t---" << tempFilename << "---" 
+                             << correctedPath.native_file_string() 
+                             << std::endl << vprDEBUG_FLUSH;
+        _activeModel->CreatePart( correctedPath.native_file_string(),
+                                newPart->GetID(),
+                                parentID
+                              );
 
-         VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(newPart->GetID());
-         if ( partNode->GetNode()->GetNode() )
-         {
+        VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(newPart->GetID());
+        if ( partNode->GetNode()->GetNode() )
+        {
             partNode->GetNode()->SetName(newPart->GetNodeName());
             partNode->GetDCS()->setName(newPart->GetNodeName());
-            
+
             //set the visibility
             partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
 
@@ -288,16 +292,11 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             SetNodeDescriptors(newPart->GetID(),"Part","VE_XML_ID",newPart->GetID());
             //Set a default material on nodes that have no initial material
             VE_SceneGraph::Utilities::MaterialInitializer material_initializer( partNode->GetDCS() );
-         }
-         else
-         {
+        }
+        else
+        {
             std::cerr << "|\t---ERROR: (CADEventHandler::_addNodeToNode) Unable to load file name: " 
                         << correctedPath.native_file_string() << std::endl;
-         }
-      }
-   }
-   else
-   {
-      std::cout<<"|---No parent found---id "<< parentID << std::endl;
-   }
+        }
+    }
 }

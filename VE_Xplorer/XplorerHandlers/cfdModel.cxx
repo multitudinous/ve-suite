@@ -715,14 +715,16 @@ void cfdModel::CreatePart( std::string fileName, std::string partID, std::string
                                            _partList[ iter->second ]->GetNode();
       _partList[ partID ] = 
               new VE_SceneGraph::CADEntity( tempNode, _assemblyList[parentID] );
+      vprDEBUG(vesDBG,1) <<"|\t--Cloned new part--"<<std::endl<< vprDEBUG_FLUSH;
    }
    else
    {
       ///If we have not loaded this part
       filenameToGUIMap[ fileName ] = partID;
-      _partList[ iter->second ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
+       _partList[ partID ] = 
+           new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
+       vprDEBUG(vesDBG,1) <<"|\t--Loaded new part--"<<std::endl<< vprDEBUG_FLUSH;
    }
-   //_partList[ partID ] = new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
    //add key pointer to physics map for bullet rigid body
    //add data pair for transform node
 }
