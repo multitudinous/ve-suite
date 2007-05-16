@@ -263,7 +263,8 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 	   modules[m_selMod].GetPlugin()->GetOPorts( ports );
       for ( unsigned int i=0; i<ports.size(); i++)
 	   {
-         wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+         wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, 
+                            ports[i].GetPortLocation()->GetPoint().second );
          if ( computenorm( temp, tempPoint )<=10)
 	      {
 	         m_selToPort = i;
@@ -2569,7 +2570,13 @@ void Network::CreateNetwork( std::string xmlNetwork )
       networkWriter.ReadFromString();
    }
    _fileProgress->Update( 15, _("start loading") );
-   networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
+   //networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
+   std::vector< std::pair< std::string, std::string > > dataToObtain;
+   std::vector< std::pair< std::string, std::string > >::iterator dataIter;
+   dataToObtain.push_back( std::make_pair( "Model", "veNetwork" ) );
+   dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
+   dataToObtain.push_back( std::make_pair( "XML", "User" ) );
+   networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    _fileProgress->Update( 25, _("start loading") );
 
@@ -2577,16 +2584,17 @@ void Network::CreateNetwork( std::string xmlNetwork )
    if ( veNetwork )
       delete veNetwork;
    
-   // we are expecting that a network will be found
-   if ( !objectVector.empty() )
-   {
-      veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
-   }
-   else
-   {
-      wxMessageBox( _("Improperly formated ves file."), 
+    // we are expecting that a network will be found
+    if( !objectVector.empty() )
+    {
+        veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+        objectVector.erase( objectVector.begin() );
+    }
+    else
+    {
+        wxMessageBox( _("Improperly formated ves file."), 
                         _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-   }
+    }
 
    _fileProgress->Update( 30, _("start loading") );
    long int tempScaleInfo;
@@ -2631,73 +2639,76 @@ void Network::CreateNetwork( std::string xmlNetwork )
    }
    _fileProgress->Update( 50, _("create models") );
    // do this for models
-   networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
-   objectVector = networkWriter.GetLoadedXMLObjects();
+   //networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
+   //objectVector = networkWriter.GetLoadedXMLObjects();
 
    _fileProgress->Update( 75, _("done create models") );
    // now lets create a list of them
    int timeCalc = 25/objectVector.size();
-   for ( size_t i = 0; i < objectVector.size(); ++i )
-   {
-      _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
-      VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
+    for ( size_t i = 0; i < objectVector.size(); ++i )
+    {
+        _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
+        VE_XML::VE_Model::Model* model = 
+                dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
+        objectVector.erase( objectVector.begin() );
 
-      wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
-      // If the class has not had a custom module been created
-      REI_Plugin* tempPlugin = 0;
-      if ( cls == 0 )
-      {
+        wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
+        // If the class has not had a custom module been created
+        REI_Plugin* tempPlugin = 0;
+        if ( cls == 0 )
+        {
          tempPlugin = new DefaultPlugin();
-      }
-      else
-      {
+        }
+        else
+        {
          tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
-      }
-      tempPlugin->SetNetworkFrame( this );
-      PushEventHandler( tempPlugin );
-      tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
-      tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
-      if ( model->GetIconFilename() != "DefaultPlugin" )
-      {   
+        }
+        tempPlugin->SetNetworkFrame( this );
+        PushEventHandler( tempPlugin );
+        tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
+        tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+        if ( model->GetIconFilename() != "DefaultPlugin" )
+        {   
          tempPlugin->SetImageIcon( model->GetIconFilename(), 
                                    model->GetIconRotation(), 
                                    model->GetIconMirror(), 
                                    model->GetIconScale() );
-      }
-      
-      Module temp_mod;
-      unsigned int num = model->GetModelID();
-	   modules[ num ] = temp_mod;
-	   modules[ num ].SetPlugin( tempPlugin );
-      modules[ num ].GetPlugin()->SetID( num );
-	   modules[ num ].SetClassName( model->GetModelName() );
-      modules[ num ].GetPlugin()->SetVEModel( model );
-      //Second, calculate the polyes
-      wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
-      int polynum = modules[ num ].GetPlugin()->GetNumPoly();
-      POLY tmpPoly;
-      tmpPoly.resize( polynum );
-      modules[ num ].GetPlugin()->GetPoly(tmpPoly);
-      VE_Conductor::GUI_Utilities::Polygon tempPoly;
-      *(tempPoly.GetPolygon()) = tmpPoly;
-      tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
-   }
+        }
 
-   networkWriter.ReadXMLData( xmlNetwork, "XML", "User" );
-   objectVector = networkWriter.GetLoadedXMLObjects();
-   if ( !objectVector.empty() )
-   {
-      backgroundColor.clear();
-      VE_XML::User* userColor = dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
-      //Set user preferences
-      std::vector< VE_XML::Command* > tempStates = userColor->GetUserStateInfo()->GetStateVector();
-      std::map< std::string, VE_XML::Command > tempMap;
-      for ( size_t i = 0; i < tempStates.size(); ++i )
-      {
-         VE_XML::Command* tempCommand = tempStates.at( i );
-         tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
-      }
-      UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
+        Module temp_mod;
+        unsigned int num = model->GetModelID();
+        modules[ num ] = temp_mod;
+        modules[ num ].SetPlugin( tempPlugin );
+        modules[ num ].GetPlugin()->SetID( num );
+        modules[ num ].SetClassName( model->GetModelName() );
+        modules[ num ].GetPlugin()->SetVEModel( model );
+        //Second, calculate the polyes
+        wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
+        int polynum = modules[ num ].GetPlugin()->GetNumPoly();
+        POLY tmpPoly;
+        tmpPoly.resize( polynum );
+        modules[ num ].GetPlugin()->GetPoly(tmpPoly);
+        VE_Conductor::GUI_Utilities::Polygon tempPoly;
+        *(tempPoly.GetPolygon()) = tmpPoly;
+        tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
+    }
+
+   //networkWriter.ReadXMLData( xmlNetwork, "XML", "User" );
+   //objectVector = networkWriter.GetLoadedXMLObjects();
+    if ( !objectVector.empty() )
+    {
+        backgroundColor.clear();
+        VE_XML::User* userColor = dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
+        objectVector.erase( objectVector.begin() );
+        //Set user preferences
+        std::vector< VE_XML::Command* > tempStates = userColor->GetUserStateInfo()->GetStateVector();
+        std::map< std::string, VE_XML::Command > tempMap;
+        for ( size_t i = 0; i < tempStates.size(); ++i )
+        {
+            VE_XML::Command* tempCommand = tempStates.at( i );
+            tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
+        }
+        UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
    }
    else
    {
@@ -2758,6 +2769,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    xold = yold =0;
    _fileProgress->Update( 100, _("Done") );
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
+   objectVector.clear();
    Refresh();
 }
 
