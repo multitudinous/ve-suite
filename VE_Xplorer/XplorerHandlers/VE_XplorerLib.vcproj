@@ -586,6 +586,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PhysicsSimulationEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\QCClearDataEH.cxx"
 				>
 			</File>
@@ -1062,6 +1066,10 @@
 			</File>
 			<File
 				RelativePath=".\NavigationDataEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PhysicsSimulationEventHandler.h"
 				>
 			</File>
 			<File

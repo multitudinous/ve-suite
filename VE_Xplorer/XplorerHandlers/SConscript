@@ -113,7 +113,7 @@ sources = Split("""
    TBPreIntegrateEH.cxx
    SoundAddNewEH.cxx
    SoundActivateEH.cxx
-
+   PhysicsSimulationEventHandler.cxx
 """)
 ##   DataSetFileEH.cxx
 ##   DataSetPrecomputeEH.cxx
@@ -227,7 +227,7 @@ headers = Split("""
    TBPreIntegrateEH.h
    SoundActivateEH.h
    SoundAddNewEH.h
-
+   PhysicsSimulationEventHandler.h
 """)
 ##   DataSetFileEH.h
 ##   DataSetPrecomputeEH.h

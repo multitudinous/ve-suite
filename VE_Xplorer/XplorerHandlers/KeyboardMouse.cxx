@@ -788,3 +788,4 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
       activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
    }
 }
+////////////////////////////////////////////////////////////////////////////////
