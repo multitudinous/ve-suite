@@ -23,8 +23,11 @@ WRITE = False
 class DebugWindow(wx.Dialog):
     """Subwindow for changing debug settings for VE-Suite."""
     def __init__(self, parent, state):
-        wx.Dialog.__init__(self, parent, wx.ID_ANY, "Debug Settings",
-                           style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+        wx.Dialog.__init__( self, parent, wx.ID_ANY, "Debug Settings",
+                            style = ( wx.DEFAULT_FRAME_STYLE |
+                                      wx.TAB_TRAVERSAL ) &
+                                    ~ ( wx.RESIZE_BORDER | wx.RESIZE_BOX |
+                                        wx.MAXIMIZE_BOX ) )
         ##Data storage.
         self.state = state
         ##Build VPR menu.
