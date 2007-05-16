@@ -71,8 +71,6 @@ class DebugWindow(wx.Dialog):
                       BORDER)
         mainSizer.Add(self.cbRunDebugPrograms, 0, wx.TOP | wx.LEFT |
                       wx.RIGHT | wx.EXPAND, BORDER)
-        if not windows:
-            self.cbRunDebugPrograms.Hide()
         mainSizer.Add(bOk, 0, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)

@@ -243,7 +243,7 @@ class Launch:
     def ServerCall(self):
         """Returns a generic Server call."""
         if unix:
-            exe = "Exe_server"
+            exe = "Exe_server" + self.debugSuffix
         elif windows:
             exe = "Winserver" + self.windowsSuffix
         else:
@@ -257,7 +257,9 @@ class Launch:
     def ConductorCall(self):
         """Returns a generic Conductor call."""
         exe = "WinClient"
-        if windows:
+        if unix:
+            exe += self.debugSuffix
+        elif windows:
             exe += self.windowsSuffix
         ##Append ves arguments if needed.
         if self.settings["VESFile"]:
@@ -289,7 +291,9 @@ class Launch:
         ##Set Xplorer's type
         exe = "project_tao_osg_vep"
         ##Tack on the Windows suffix.
-        if windows:
+        if unix:
+            exe += self.debugSuffix
+        elif windows:
             exe += self.windowsSuffix
         ##Construct the call
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
