@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_CAD_PTR_H_
-#define _VE_CAD_PTR_H_
+#ifndef VE_CAD_PTR_H
+#define VE_CAD_PTR_H
 
 #include <loki/SmartPtr.h>
 

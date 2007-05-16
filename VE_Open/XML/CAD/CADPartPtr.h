@@ -48,9 +48,9 @@ namespace VE_XML
 {
 namespace VE_CAD
 {
-   class CADNode;
+   class CADPart;
    /// Typedef for a SmartPtr type for the CADNode.
-   typedef Loki::SmartPtrDef<CADNode>::type CADPartPtr;
+   typedef Loki::SmartPtrDef<CADPart>::type CADPartPtr;
 }
 }
 #endif//VE_CAD_PART_PTR_H
