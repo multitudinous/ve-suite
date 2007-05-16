@@ -164,11 +164,6 @@ public:
         KEYBOARD_MOUSE,
         DEVICE_PROPERTIES,
 
-        WAND_NAVIGATION,
-        WAND_SELECTION,
-        KM_NAVIGATION,
-        KM_SELECTION,
-
         XPLORER_DISPLAY,
         FRAME_RATE,
         COORDINATE_SYSTEM,
@@ -223,6 +218,7 @@ public:
     Splitter* wx_nw_splitter;
     wxMenuBar* menubar;
     wxIcon* icon;
+    MainToolBar* mainToolBar;///<The main toolbar
 
     Avail_Modules* av_modules;
     Network* network;
@@ -239,8 +235,6 @@ public:
     wxMenu* help_menu;
     wxMenu* xplorerMenu;
     wxMenu* xplorerDeviceMenu;
-    wxMenu* wandMenu;
-    wxMenu* keyboardMouseMenu;
     wxMenu* xplorerJugglerMenu;
     wxMenu* xplorerViewMenu;
     wxMenu* xplorerDisplayMenu;
@@ -308,7 +302,10 @@ protected:
     void ClearRecentFile( wxCommandEvent& WXUNUSED( event ) );
     void OpenRecentFile( wxCommandEvent& event );
 
+public:
     void SubmitToServer( wxCommandEvent &event );
+
+protected:
     void LoadFromServer( wxCommandEvent &event );
    
     void QueryFromServer( wxCommandEvent& event );
@@ -349,12 +346,6 @@ protected:
     void LaunchStreamlinePane( wxCommandEvent& event );
     void LaunchRecordScenes( wxCommandEvent& event );
 
-    //Change the active device in xplorer
-    void ChangeDevice( wxCommandEvent& event );
-
-    //Change the device mode in xplorer
-    void ChangeDeviceMode( wxCommandEvent& event );
-
     void DisplaySelection( wxCommandEvent& event );
 
     void ViewSelection( wxCommandEvent& event );
@@ -373,10 +364,13 @@ protected:
 
     ///Process Juggler settings
     void JugglerSettings( wxCommandEvent& event );
+
     ///Change the visual view in xplorer 
     void ChangeXplorerViewSettings( wxCommandEvent& event );
+
     ///Get the user preferences class
     UserPreferences* GetUserPreferences();
+
     ///Create the ve tabs
     void CreateVETab();
   
@@ -395,6 +389,10 @@ protected:
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
+
+    ///Change the active device in xplorer
+    ///\param event The wxCommand event
+    void ChangeDevice( wxCommandEvent& event );
          
 private:
     void ExitXplorer();

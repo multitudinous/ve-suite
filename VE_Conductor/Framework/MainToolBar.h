@@ -40,25 +40,61 @@
 * 
 */
 
+// --- VE-Suite Includes --- //
+namespace VE_Conductor
+{
+    class CORBAServiceList;
+}
+
 // --- wxWidgets Includes --- //
 #include <wx/toolbar.h>
 
 class MainToolBar : public wxToolBar
 {
 public:
+    ///Constructor
+    ///\param parent The parent of the toolbar
     MainToolBar( wxWindow* parent );
+
+    ///Destructor
     ~MainToolBar();
 
+    ///\enum The enums for MainToolBar
     enum 
     {
-        SELECTION_MODE,
-        NAVIGATION_MODE
+        TOOLBAR_SELECTION,///<ID for cursor tool
+        TOOLBAR_NAVIGATION,///<ID for navigation tool
+
+        TOOLBAR_OBJECT_TRANSLATE,///<ID for object translation tool
+        TOOLBAR_OBJECT_ROTATE,///<ID for object rotation tool
+        TOOLBAR_OBJECT_SCALE,///<ID for object scale tool
+
+        TOOLBAR_PHYSICS,///<ID for physics simulation tool
+        TOOLBAR_RESET,///<ID for reset simulation tool
+        TOOLBAR_PAUSE,///<ID for pause simulation tool
+        TOOLBAR_PLAY,///<ID for start simulation tool
+        TOOLBAR_STEP,///<ID for step simulation tool
+
+        TOOLBAR_SUMMIT_JOB///<ID for summit job tool
     };
 
+    ///Adds the tools to the toolbar
     void CreateMainToolBar();
 
 private:
+    ///Handles events for changing xplorer device mode
+    ///\param event The wxCommand event
+    void OnChangeDeviceMode( wxCommandEvent& event );
 
+    ///Handles events for the physics simulation
+    ///\param event The wxCommand event
+    void OnPhysicsSimulation( wxCommandEvent& event );
+
+    ///Handles event for summit job
+    ///\param event The wxCommand event
+    void OnSummitJob( wxCommandEvent& event );
+
+    DECLARE_EVENT_TABLE()
 };
 
 #endif //MAIN_TOOL_BAR_H
