@@ -76,18 +76,25 @@ public:
    ///\param xmlData The input XML string or file.
    ///\param objectNamespace The namespace of the object to extract.
    ///\param tagName The tagname of the element to extract.
-   virtual void ReadXMLData(std::string xmlData,
-                            std::string objectNamespace,
-                            std::string tagName);
+   virtual void ReadXMLData( std::string xmlData,
+                             std::string objectNamespace,
+                             std::string tagName );
 
+   ///Get all the element types in the document passed in
+   ///based on user input
+   ///\param xmlData The input XML string or file.
+   ///\param elementTypes Vector of pairs of data types requested.
+   virtual void ReadXMLData( std::string xmlData,
+            std::vector< std::pair< std::string, std::string > > elementTypes );
+                                     
    ///Write the current XML document
    ///\param xmlFile The XML document to write to.
    ///\param nodes The XML node to write. If writing to string set this to "returnString" and it
    ///will be populated w/ the return string.
    ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
-   virtual void WriteXMLDocument(std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
-                                 std::string& xmlFile,
-                                 std::string documentType );
+   virtual void WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+                                  std::string& xmlFile,
+                                  std::string documentType );
 
    ///Write the current XML document out to multiple documents
    ///This will allow future extension to parallel reading of domcouments
@@ -134,7 +141,10 @@ protected:
                                                 std::string objectNamespace,
                                                 std::string tagName );
 
-   std::vector<VE_XML::XMLObject*> _xmlObjects;///<The XMLObjects read in from a document file.
+    ///The XMLObjects read in from a document file.
+    std::vector<VE_XML::XMLObject*> m_internalXmlObjects;
+    ///The XMLObjects read in from a document file.
+    std::vector<VE_XML::XMLObject*> m_xmlObjects;
 
    VE_XML::DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };

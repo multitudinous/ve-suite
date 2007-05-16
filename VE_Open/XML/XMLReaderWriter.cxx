@@ -58,7 +58,7 @@ XMLReaderWriter::~XMLReaderWriter()
          _domDocumentManager = 0;
       }
    }
-   _xmlObjects.clear();
+   m_xmlObjects.clear();
 }
 /////////////////////////////////////////////////
 void XMLReaderWriter::UseStandaloneDOMDocumentManager()
@@ -112,20 +112,43 @@ VE_XML::DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
 {
    return _domDocumentManager;
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::ReadXMLData(std::string xmlData,
                                   std::string objectNamespace,
                                   std::string tagname)
 {
    _domDocumentManager->Load( xmlData );
    //override this in derived classes
-   _populateStructureFromDocument(_domDocumentManager->GetCommandDocument(),objectNamespace,tagname);
+   _populateStructureFromDocument( _domDocumentManager->GetCommandDocument(),
+                                   objectNamespace,
+                                   tagname );
    _domDocumentManager->UnLoadParser();
+   m_xmlObjects = m_internalXmlObjects;
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void XMLReaderWriter::ReadXMLData( std::string xmlData,
+            std::vector< std::pair< std::string, std::string > > elementTypes )
+{
+    _domDocumentManager->Load( xmlData );
+    //override this in derived classes
+    m_xmlObjects.clear();
+    for ( size_t i = 0; i < elementTypes.size(); ++i )
+    {
+        _populateStructureFromDocument( _domDocumentManager->GetCommandDocument(),
+                                        elementTypes.at(i).first,
+                                        elementTypes.at(i).second );
+        std::copy( m_internalXmlObjects.begin(), 
+                   m_internalXmlObjects.end(), 
+                   std::back_inserter( m_xmlObjects ) );
+        m_internalXmlObjects.clear();
+    }
+
+    _domDocumentManager->UnLoadParser();
+}
+////////////////////////////////////////////////////////////////////////////////
 std::vector< VE_XML::XMLObject* > XMLReaderWriter::GetLoadedXMLObjects()
 {
-   return _xmlObjects;
+   return m_xmlObjects;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
@@ -143,21 +166,23 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 
    unsigned int nXMLObjects = xmlObjects->getLength();
    //In case we use the same readerwriter more than once for a read
-   _xmlObjects.clear();
+   m_internalXmlObjects.clear();
 
    if ( nXMLObjects == 0 )
    {
-      std::cerr << "XMLReaderWriter::_populateStructureFromDocument number of xml objects = " << nXMLObjects << std::endl;
+      std::cerr << "XMLReaderWriter::_populateStructureFromDocument "
+                << "number of xml objects = " << nXMLObjects << std::endl;
       return;
    }
 
    for ( unsigned int i = 0; i < nXMLObjects; ++i )
    {
-      VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->CreateXMLObject(tagName,objectNamespace);
+      VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->
+                                        CreateXMLObject(tagName,objectNamespace);
       if ( newXMLobj != NULL )
       {
-         _xmlObjects.push_back( newXMLobj );
-         _xmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
+         m_internalXmlObjects.push_back( newXMLobj );
+         m_internalXmlObjects[i]->SetObjectFromXMLData( xmlObjects->item(i) );
       }
       /*
       else if ( newXMLobj == include )
@@ -168,13 +193,15 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
       */
       else
       {
-         std::cerr << "VE-Open XMLReaderWriter Error : No creator method for tagname = " << tagName << std::endl;
+         std::cerr << "VE-Open XMLReaderWriter Error : No creator " 
+                    << "method for tagname = " << tagName << std::endl;
       }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
-                                                 std::string& xmlData )
+void XMLReaderWriter::WriteMultipleXMLDocuments( 
+            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+                                                        std::string& xmlData )
 {
    /*
    if ( !_domDocumentManager )
@@ -191,7 +218,8 @@ void XMLReaderWriter::WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML:
       for ( size_t i = 0; i < nodes.size(); ++i )
       {   
          nodes.at( i ).first->SetOwnerDocument( doc );
-         doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
+         doc->getDocumentElement()->appendChild( nodes.at( i ).first->
+                                        GetXMLData( nodes.at( i ).second ) );  
       }
       
       if( !xmlData.compare("returnString") )
