@@ -704,11 +704,13 @@ void cfdModel::CreateAssembly(std::string assemblyID)
    _assemblyList[assemblyID] = new VE_SceneGraph::DCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::CreatePart( std::string fileName, std::string partID, std::string parentID )
+void cfdModel::CreatePart( std::string fileName, 
+                           std::string partID, 
+                           std::string parentID )
 {
     VE_SceneGraph::CADEntity* tempCAD = 
         cfdModelHandler::instance()->IsCADFileLoaded( fileName );
-    if ( tempCAD )
+    if( tempCAD )
     {
         ///If we have already loaded the parts
         VE_SceneGraph::CADEntityHelper* tempNode = tempCAD->GetNode();
