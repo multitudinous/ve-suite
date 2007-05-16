@@ -219,181 +219,88 @@ void Network::OnErase(wxEraseEvent& WXUNUSED( event ) )
 /////////////////////////////////////////////////////////////
 void Network::OnMLeftDown(wxMouseEvent& event)
 {
- 
- /*  //First, check if any module is selected
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      int i;
-      i=iter->first;
-      temp.x = evtpos.x;
-      temp.y = evtpos.y;
-      if ( modules[i].GetPolygon()->inside( temp ) )
-	   {
-	      m_selMod = i;
-	      bbox = modules[i].GetPlugin()->GetBBox();
-	      relative_pt.x = temp.x - bbox.x;
-	      relative_pt.y = temp.y - bbox.y;
-	      break;
-	   }
-   }
-
-   //Second, check if selected module's Iports or Oports is selected
-   if (m_selMod>=0)
-   {
-      bbox = modules[m_selMod].GetPlugin()->GetBBox();
-      pos.x = bbox.x;
-      pos.y = bbox.y;
-      
-      temp.x = evtpos.x - pos.x;
-      temp.y = evtpos.y - pos.y;
-
-      ports.resize( modules[m_selMod].GetPlugin()->GetNumIports() );
-      modules[m_selMod].GetPlugin()->GetIPorts( ports );
-      for ( unsigned int i=0; i<ports.size(); i++)
-      {
-         wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
-	      if (computenorm(temp, tempPoint)<=10)
-	      {
-	         m_selFrPort = i;
-	         break;
-	      }
-      }
-
-      ports.resize( modules[m_selMod].GetPlugin()->GetNumOports() );
-	   modules[m_selMod].GetPlugin()->GetOPorts( ports );
-      for ( unsigned int i=0; i<ports.size(); i++)
-	   {
-         wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, 
-                            ports[i].GetPortLocation()->GetPoint().second );
-         if ( computenorm( temp, tempPoint )<=10)
-	      {
-	         m_selToPort = i;
-	         break;
-	      }
-      }
-   }
-   //Third, check if any link connector is selected
-
-   if (m_selLink>=0)
-   {
-      for (unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
-	      if (computenorm( evtpos, *(links[m_selLink].GetPoint( i )) )<=3)
-	      {
-	         m_selLinkCon=i;
-	         break;
-	      }
-   }
-
-   //Forth, check if any tag is selected
-   for ( unsigned int i=0; i<tags.size(); i++)
-   {
-      if ( tags[i].GetBoundingBox()->Contains(evtpos) )
-	   {
-	      m_selTag=i;
-	      tag_rpt.x = evtpos.x - tags[i].GetBoundingBox()->x;
-	      tag_rpt.y = evtpos.y - tags[i].GetBoundingBox()->y;
-	      break;
-	   }
-   }
-
-   //At last, check if any tag connector is selected
-   for (unsigned int i=0; i<tags.size(); i++)
-   {
-      if (computenorm( evtpos, *(tags[i].GetConnectorsPoint( 0 )) )<=3)
-	   {
-	      m_selTag=i;
-	      m_selTagCon=0;
-	      break;
-	   }
-      if (computenorm(evtpos, *(tags[i].GetConnectorsPoint( 1 )) ) <=3)
-	   {
-	      m_selTag=i;
-	      m_selTagCon=1;
-	      break;
-	   }
-   }*/
-
-  
-	if(!event.Dragging())
+ 	if(event.Dragging())
 	{
-		wxRect bbox;
-		wxPoint pos, temp;
-		std::map< int, Module >::iterator iter;
-		PORT ports;
-
-		wxClientDC dc(this);
-		PrepareDC(dc);
-		dc.SetUserScale( userScale.first, userScale.second );
-
-		wxPoint evtpos = event.GetLogicalPosition(dc);
-
-		long x = evtpos.x;
-		long y = evtpos.y;
-
-		//Clear selections
-		if (m_selMod >= 0)
-         UnSelectMod(dc);
-		if (m_selLink >= 0)
-         UnSelectLink(dc);
-		if (m_selTag >= 0)
-         UnSelectTag(dc);
-
-		Refresh(true);
-		//Update();
-
-		//Select Mod/Link/Tag
-		SelectMod(x, y, dc);
-		if(m_selMod >= 0)
-		{
-			bbox = modules[m_selMod].GetPlugin()->GetBBox();
-			temp.x = x - bbox.x;
-			temp.y = y - bbox.y;
-
-			relative_pt = temp;
-
-			ports.resize( modules[m_selMod].GetPlugin()->GetNumIports() );
-			modules[m_selMod].GetPlugin()->GetIPorts( ports );
-
-			for ( unsigned int i=0; i<ports.size(); i++)
-			{
-				wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
-				if (computenorm(temp, tempPoint)<=10)
-				{
-					m_selFrPort = i;
-					break;
-				}
-			}
-
-			ports.resize( modules[m_selMod].GetPlugin()->GetNumOports() );
-			modules[m_selMod].GetPlugin()->GetOPorts( ports );
-			for ( unsigned int i=0; i<ports.size(); i++)
-			{
-				wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
-				if ( computenorm( temp, tempPoint )<=10)
-				{
-					m_selToPort = i;
-					break;
-				}
-			}
-		}
-		else
-		{
-			SelectLink(x, y );
-			if (m_selLink>=0)
-			{
-				for (unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
-				if (computenorm( evtpos, *(links[m_selLink].GetPoint( i )) )<=3)
-				{
-					m_selLinkCon=i;
-					break;
-				}
-			}
-			else
-				SelectTag(x, y); 
-		}
-      Refresh(true);
-      //Update();
+        return;
 	}
+
+    wxRect bbox;
+    wxPoint pos, temp;
+    std::map< int, Module >::iterator iter;
+    PORT ports;
+
+    wxClientDC dc(this);
+    PrepareDC(dc);
+    dc.SetUserScale( userScale.first, userScale.second );
+
+    wxPoint evtpos = event.GetLogicalPosition(dc);
+
+    long x = evtpos.x;
+    long y = evtpos.y;
+
+    //Clear selections
+    if (m_selMod >= 0)
+     UnSelectMod(dc);
+    if (m_selLink >= 0)
+     UnSelectLink(dc);
+    if (m_selTag >= 0)
+     UnSelectTag(dc);
+
+    Refresh(true);
+    //Update();
+
+    //Select Mod/Link/Tag
+    SelectMod(x, y, dc);
+    if(m_selMod >= 0)
+    {
+        bbox = modules[m_selMod].GetPlugin()->GetBBox();
+        temp.x = x - bbox.x;
+        temp.y = y - bbox.y;
+
+        relative_pt = temp;
+
+        ports.resize( modules[m_selMod].GetPlugin()->GetNumIports() );
+        modules[m_selMod].GetPlugin()->GetIPorts( ports );
+
+        for ( unsigned int i=0; i<ports.size(); i++)
+        {
+            wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+            if (computenorm(temp, tempPoint)<=10)
+            {
+                m_selFrPort = i;
+                break;
+            }
+        }
+
+        ports.resize( modules[m_selMod].GetPlugin()->GetNumOports() );
+        modules[m_selMod].GetPlugin()->GetOPorts( ports );
+        for ( unsigned int i=0; i<ports.size(); i++)
+        {
+            wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+            if ( computenorm( temp, tempPoint )<=10)
+            {
+                m_selToPort = i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        SelectLink(x, y );
+        if (m_selLink>=0)
+        {
+            for (unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
+            if (computenorm( evtpos, *(links[m_selLink].GetPoint( i )) )<=3)
+            {
+                m_selLinkCon=i;
+                break;
+            }
+        }
+        else
+            SelectTag(x, y); 
+    }
+    Refresh(true);
+    //Update();
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -2577,6 +2484,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
    dataToObtain.push_back( std::make_pair( "XML", "User" ) );
    networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
+   std::vector< VE_XML::XMLObject* >::iterator objectIter;
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    _fileProgress->Update( 25, _("start loading") );
 
@@ -2645,12 +2553,21 @@ void Network::CreateNetwork( std::string xmlNetwork )
    _fileProgress->Update( 75, _("done create models") );
    // now lets create a list of them
    int timeCalc = 25/objectVector.size();
-    for ( size_t i = 0; i < objectVector.size(); ++i )
+   size_t i = 0;
+    for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
     {
         _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
+        ++i;
         VE_XML::VE_Model::Model* model = 
-                dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
-        objectVector.erase( objectVector.begin() );
+                dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
+        if( !model )
+        {
+            //if this object is not a model continue
+            ++objectIter;
+            continue;
+        }
+        
+        objectIter = objectVector.erase( objectIter );
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created
