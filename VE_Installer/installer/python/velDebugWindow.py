@@ -66,11 +66,14 @@ class DebugWindow(wx.Dialog):
         rowSizer.Add(columnSizer, 0, wx.EXPAND)
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
-        mainSizer.Add(self.cbLauncherDebug, 0, wx.EXPAND)
-        mainSizer.Add(self.cbRunDebugPrograms, 0, wx.EXPAND)
+        mainSizer.Add(VERTICAL_SPACE)
+        mainSizer.Add(self.cbLauncherDebug, 0, wx.LEFT | wx.RIGHT | wx.EXPAND,
+                      BORDER)
+        mainSizer.Add(self.cbRunDebugPrograms, 0, wx.TOP | wx.LEFT |
+                      wx.RIGHT | wx.EXPAND, BORDER)
         if not windows:
             self.cbRunDebugPrograms.Hide()
-        mainSizer.Add(bOk, 0, wx.EXPAND)
+        mainSizer.Add(bOk, 0, wx.ALL | wx.EXPAND, BORDER)
         mainSizer.SetSizeHints(self)
         self.SetSizer(mainSizer)
         self.CenterOnParent(wx.BOTH)
