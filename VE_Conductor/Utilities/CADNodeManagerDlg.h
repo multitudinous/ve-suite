@@ -164,7 +164,7 @@ protected:
    void _toggleNode(wxCommandEvent& event);
 
    ///Ensure that we haven't loaded this file already.
-   ///If we have, create a CADClone.
+   ///If we have, create a clone.
    ///\param filename The filename to check
    bool _ensureClones(wxString filename);
 #ifndef STAND_ALONE

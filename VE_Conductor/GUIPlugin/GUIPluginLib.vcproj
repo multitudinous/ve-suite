@@ -541,6 +541,10 @@
 				RelativePath=".\UserPreferencesDataBuffer.cxx"
 				>
 			</File>
+			<File
+				RelativePath=".\XMLDataBufferEngine.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -616,6 +620,10 @@
 			</File>
 			<File
 				RelativePath=".\UserPreferencesDataBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\XMLDataBufferEngine.h"
 				>
 			</File>
 		</Filter>
