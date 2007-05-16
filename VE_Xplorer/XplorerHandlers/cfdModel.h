@@ -53,6 +53,7 @@ it is better to treat these two dataset as two different models.
 */
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
@@ -322,7 +323,6 @@ private:
    std::map< std::string, VE_SceneGraph::CADEntity* > _partList;///<A list of the current parts.
    std::map< std::string, VE_SceneGraph::DCS* > _assemblyList;///A list of the current assemblies.
    std::map< std::string, VE_SceneGraph::Clone* > _cloneList;///A list of clones.
-   std::map< std::string, std::string > filenameToGUIMap;///<This map connects filenames to GUIDs so that we can figure out what CAD files should be copied
 
 #ifdef _OSG
    typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;

@@ -706,27 +706,29 @@ void cfdModel::CreateAssembly(std::string assemblyID)
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreatePart( std::string fileName, std::string partID, std::string parentID )
 {
-   std::map< std::string, std::string >::iterator iter;
-   iter = filenameToGUIMap.find( fileName );
-   if ( iter != filenameToGUIMap.end() )
-   {
-      ///If we have already loaded the parts
-      VE_SceneGraph::CADEntityHelper* tempNode = 
-                                           _partList[ iter->second ]->GetNode();
-      _partList[ partID ] = 
-              new VE_SceneGraph::CADEntity( tempNode, _assemblyList[parentID] );
-      vprDEBUG(vesDBG,1) <<"|\t--Cloned new part--"<<std::endl<< vprDEBUG_FLUSH;
-   }
-   else
-   {
-      ///If we have not loaded this part
-      filenameToGUIMap[ fileName ] = partID;
-       _partList[ partID ] = 
-           new VE_SceneGraph::CADEntity( fileName, _assemblyList[parentID] );
-       vprDEBUG(vesDBG,1) <<"|\t--Loaded new part--"<<std::endl<< vprDEBUG_FLUSH;
-   }
-   //add key pointer to physics map for bullet rigid body
-   //add data pair for transform node
+    VE_SceneGraph::CADEntity* tempCAD = 
+        cfdModelHandler::instance()->IsCADFileLoaded( fileName );
+    if ( tempCAD )
+    {
+        ///If we have already loaded the parts
+        VE_SceneGraph::CADEntityHelper* tempNode = tempCAD->GetNode();
+        _partList[ partID ] = 
+            new VE_SceneGraph::CADEntity( tempNode, 
+                                          _assemblyList[ parentID ] );
+        vprDEBUG(vesDBG,1) << "|\t--Cloned new part--"
+                            << std::endl << vprDEBUG_FLUSH;
+    }
+    else
+    {
+        ///If we have not loaded this part
+        _partList[ partID ] = 
+            new VE_SceneGraph::CADEntity( fileName, _assemblyList[ parentID ] );
+        cfdModelHandler::instance()->RegisterCADFile( _partList[ partID ] );
+        vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
+                            << std::endl << vprDEBUG_FLUSH;
+    }
+    //add key pointer to physics map for bullet rigid body
+    //add data pair for transform node
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::SetActiveAttributeOnNode(std::string nodeID, std::string nodeType, std::string attributeName )

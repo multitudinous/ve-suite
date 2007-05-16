@@ -173,7 +173,7 @@
           <fileName>Surface0.75.stl</fileName>
         </child>
         <child id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef">
-          <type>Clone</type>
+          <type>Part</type>
           <name>Surface0.75_cloned</name>
           <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
           <transform>
@@ -193,29 +193,7 @@
               <value>0</value>
             </rotation>
           </transform>
-          <originalNode id="6382ac8c-ebe1-5543-85b8-2f511424db9d">
-            <type>Part</type>
-            <name>Surface0.75</name>
-            <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
-            <transform>
-              <translation>
-                <value>0</value>
-                <value>0</value>
-                <value>0</value>
-              </translation>
-              <scale>
-                <value>1</value>
-                <value>1</value>
-                <value>1</value>
-              </scale>
-              <rotation>
-                <value>0</value>
-                <value>0</value>
-                <value>0</value>
-              </rotation>
-            </transform>
-            <fileName>Surface0.75.stl</fileName>
-          </originalNode>
+          <fileName>Surface0.75.stl</fileName>
         </child>
       </children>
     </geometry>

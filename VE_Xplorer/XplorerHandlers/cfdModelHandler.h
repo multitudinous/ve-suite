@@ -45,16 +45,21 @@ cfdModelHandler API
 
 namespace VE_XML
 {
-   class Command;
+    class Command;
 }
 
 namespace VE_Xplorer
 {
-   class cfdDataSet;
-   class cfdModel;
-   class cfdCommandArray;
-   class cfdReadParam;
-   class cfdScalarBarActor;
+    class cfdDataSet;
+    class cfdModel;
+    class cfdCommandArray;
+    class cfdReadParam;
+    class cfdScalarBarActor;
+}
+
+namespace VE_SceneGraph
+{
+	class CADEntity;
 }
 
 namespace VE_EVENTS
@@ -63,12 +68,10 @@ namespace VE_EVENTS
 }
 
 #ifdef _OSG
-#ifdef VE_PATENTED
 namespace VE_TextureBased
 {
-   class cfdTextureDataSet;
+    class cfdTextureDataSet;
 }
-#endif
 #endif
 class vtkPolyData;
 
@@ -111,15 +114,16 @@ public:
 
    void ReadNNumberOfDataSets(  std::string, std::string );
 
+   ///Get the scalar bar - may not be needed anymore
    cfdScalarBarActor* GetScalarBar(void);
-   //void ReadNNumberOfDataSets(  char*, char* );
-
-
-   //texture manager access
+   ///Register CAD file with so that other models can copy files if needed
+   void RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity );
+   ///Check and see if this cad file is already loaded
+   VE_SceneGraph::CADEntity* IsCADFileLoaded( std::string filename );
 #ifdef _OSG
-#ifdef VE_PATENTED
+   //texture manager access
+   ///Should this call be in the texture manager singleton not modelhandler
    VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet( void );
-#endif
 #endif
    bool GetVisOption();
 protected:
@@ -145,7 +149,11 @@ private:
    // Used to store data for multi-dataset functions
    std::string oldDatasetName;//[256];
 
-   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+    ///The event handler for commands.
+    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;
+    ///This map connects filenames to GUIDs so that we can 
+    ///figure out what CAD files should be copied
+    std::map< std::string, VE_SceneGraph::CADEntity* > m_filenameToCADMap;
 };
 }
 #endif
