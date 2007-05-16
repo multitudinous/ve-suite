@@ -194,7 +194,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CAD\CADAssemblyPtr.h"
+					>
+				</File>
+				<File
 					RelativePath=".\CAD\CADAttribute.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CAD\CADAttributePtr.h"
 					>
 				</File>
 				<File
@@ -210,6 +218,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CAD\CADMaterialPtr.h"
+					>
+				</File>
+				<File
 					RelativePath=".\CAD\CADNode.h"
 					>
 				</File>
@@ -218,11 +230,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\CAD\CADNodeAnimationPtr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CAD\CADNodePtr.h"
+					>
+				</File>
+				<File
 					RelativePath=".\CAD\CADNodeTraverser.h"
 					>
 				</File>
 				<File
 					RelativePath=".\CAD\CADPart.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CAD\CADPartPtr.h"
 					>
 				</File>
 			</Filter>
@@ -552,6 +576,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Shader\ProgramPtr.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Shader\Shader.h"
 					>
 				</File>
@@ -560,11 +588,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Shader\ShaderPtr.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Shader\TextureImage.h"
 					>
 				</File>
 				<File
+					RelativePath=".\Shader\TextureImagePtr.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Shader\Uniform.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Shader\UniformPtr.h"
 					>
 				</File>
 			</Filter>
