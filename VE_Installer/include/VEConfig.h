@@ -138,6 +138,12 @@
    #    define VE_CE_UTILS_EXPORTS   __declspec(dllimport)
    #  endif /* VE_SCENEGRAPH_UTILS_LIBRARY */
 
+   #  ifdef VE_CE_UNIT_WRAPPER_LIBRARY
+   #    define VE_CE_UNIT_WRAPPER_EXPORTS   __declspec(dllexport)
+   #  else
+   #    define VE_CE_UNIT_WRAPPER_EXPORTS   __declspec(dllimport)
+   #  endif /* VE_SCENEGRAPH_UTILS_LIBRARY */
+
    #  ifdef VE_OPEN_MODULE_LIBRARY
    #    define VE_OPEN_MODULE_EXPORTS __declspec(dllexport)
    #  else
@@ -179,6 +185,7 @@
    #  define VE_CONDUCTOR_UTILS_EXPORTS
    #  define VE_SCENEGRAPH_UTILS_EXPORTS
    #  define VE_CE_UTILS_EXPORTS
+   #  define VE_CE_UNIT_WRAPPER_EXPORTS
    #  define VE_OPEN_MODULE_EXPORTS
    #  define VE_XPLORER_NETWORK_EXPORTS
    #  define VE_NURBS_EXPORTS
