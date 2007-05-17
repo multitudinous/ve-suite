@@ -39,8 +39,6 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 
-#include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
-
 #include <iostream>
 #include <string>
 #include <sstream>

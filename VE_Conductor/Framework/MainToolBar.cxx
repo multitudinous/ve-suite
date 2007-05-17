@@ -87,7 +87,7 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 MainToolBar::MainToolBar( wxWindow* parent )
 :
-wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxTB_FLAT | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar" ) )
+wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxTB_FLAT | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar", wxConvUTF8 ) )
 {
     CreateMainToolBar();
 }

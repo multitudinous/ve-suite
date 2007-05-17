@@ -35,6 +35,7 @@ srcs = Split("""
    ../DefaultPlugin/DefaultPlugin.cxx
    TransferFunctionDlg.cxx
    advancedisosurface.cxx
+   MainToolBar.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()

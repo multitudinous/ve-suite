@@ -2572,7 +2572,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created
         REI_Plugin* tempPlugin = 0;
-        if ( cls == 0 )
+        if( cls == 0 )
         {
          tempPlugin = new DefaultPlugin();
         }

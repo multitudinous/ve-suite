@@ -91,7 +91,6 @@
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
 
-#include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 
