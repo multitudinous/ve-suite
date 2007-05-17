@@ -6,7 +6,7 @@
 
 #include <VE_Open/XML/Command.h>
 #include <VE_Open/XML/Model/Model.h>
-
+#include "VE_Installer/include/VEConfig.h"
 #include <vector>
 
 namespace VE_CE
@@ -15,7 +15,7 @@ namespace VE_CE
 }
 
 ///??
-class  UnitWrapper : public virtual POA_Body::Unit
+class  VE_CE_UNIT_WRAPPER_EXPORTS UnitWrapper : public virtual POA_Body::Unit
 {
 public:
    ///Constructor 

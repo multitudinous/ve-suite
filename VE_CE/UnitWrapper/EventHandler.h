@@ -45,13 +45,13 @@ namespace VE_XML
 {
    class XMLObject;
 }
-//#include "VE_Installer/include/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 #include <string>
 #include <vector>
 
 namespace VE_CE
 {
-class EventHandler
+class VE_CE_UNIT_WRAPPER_EXPORTS EventHandler
 {
 public:
    ///Constructor

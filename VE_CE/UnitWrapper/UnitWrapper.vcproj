@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(VE_SUITE_HOME)\lib\win32"
+			IntermediateDirectory=".\UnitWrapper\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_CE_UNIT_WRAPPER_LIBRARY"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,13 +61,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				IgnoreImportLibrary="false"
 				AdditionalDependencies="aced.lib TAOd.lib TAO_BiDirGIOPd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2d.lib"
+				ShowProgress="0"
 				OutputFile="$(OutDir)\UnitWrapperLib_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
-				ImportLibrary="$(OutDir)\UnitWrapperLib_d.lib"
+				SubSystem="0"
+				ImportLibrary="$(OutDir)\UnitWrapper_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -98,7 +100,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory="$(ConfigurationName)"
+			IntermediateDirectory=".\UnitWrapper\$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -120,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_CE_UNIT_WRAPPER_LIBRARY"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -144,10 +146,10 @@
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="2"
+				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)\UnitWrapperLib.lib"
+				ImportLibrary="$(OutDir)\UnitWrapper.lib"
 				TargetMachine="1"
 			/>
 			<Tool

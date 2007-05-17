@@ -47,11 +47,11 @@ namespace VE_XML
       class Model;
    }
 }
-//#include "VE_Installer/include/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_CE
 {
-class SetInputsEventHandler : public EventHandler
+class VE_CE_UNIT_WRAPPER_EXPORTS SetInputsEventHandler : public EventHandler
 {
 public:
    ///Constructor
