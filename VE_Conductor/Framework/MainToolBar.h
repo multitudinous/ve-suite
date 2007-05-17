@@ -117,7 +117,7 @@ private:
     ///\param event The wxCommand event
     void OnSummitJob( wxCommandEvent& event );
 
-    std::map< std::string, wxBitmap > m_toolbarBitmaps;
+    std::map< std::string, wxBitmap > m_toolbarBitmaps;///<A map that holds the bitmaps for this toolbar
 
     DECLARE_EVENT_TABLE()
 };

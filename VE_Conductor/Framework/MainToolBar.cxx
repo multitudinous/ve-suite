@@ -173,8 +173,8 @@ void MainToolBar::CreateMainToolBar()
 
     AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
     AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], m_toolbarBitmaps[ "resetDisabledBitmap" ], wxITEM_NORMAL, _( "Reset Simulation" ) );
-    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], m_toolbarBitmaps[ "pauseDisabledBitmap" ], wxITEM_RADIO, _( "Pause Simulation" ) );
-    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], m_toolbarBitmaps[ "playDisabledBitmap" ], wxITEM_RADIO, _( "Start Simulation" ) );
+    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], m_toolbarBitmaps[ "pauseDisabledBitmap" ], wxITEM_CHECK, _( "Pause Simulation" ) );
+    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], m_toolbarBitmaps[ "playDisabledBitmap" ], wxITEM_CHECK, _( "Start Simulation" ) );
     AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], m_toolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL, _( "Step Simulation" ) );
     AddSeparator();
 
@@ -278,6 +278,9 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
         {
             value = "PhysicsOff";
 
+            ToggleTool( TOOLBAR_PAUSE, false );
+            ToggleTool( TOOLBAR_PLAY, false );
+
             SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsBitmap" ] );
             SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
             SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
@@ -294,12 +297,19 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     {
         value = "";
 
+        ToggleTool( TOOLBAR_PAUSE, true );
+        ToggleTool( TOOLBAR_PLAY, false );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+
         dvp->SetData( std::string( "ResetPhysicsSimulation" ), value );
     }
     else if( event.GetId() == TOOLBAR_PAUSE )
     {
         value = "";
 
+        ToggleTool( TOOLBAR_PAUSE, true );
+        ToggleTool( TOOLBAR_PLAY, false );
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
         SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
 
@@ -309,6 +319,8 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     {
         value = "";
 
+        ToggleTool( TOOLBAR_PLAY, true );
+        ToggleTool( TOOLBAR_PAUSE, false );
         SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playSelectBitmap" ] );
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
 
@@ -317,6 +329,11 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     else if( event.GetId() == TOOLBAR_STEP )
     {
         value = "";
+
+        ToggleTool( TOOLBAR_PAUSE, true );
+        ToggleTool( TOOLBAR_PLAY, false );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
 
         dvp->SetData( std::string( "StepPhysicsSimulation" ), value );
     }
