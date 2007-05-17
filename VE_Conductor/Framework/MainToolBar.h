@@ -40,14 +40,18 @@
 * 
 */
 
+// --- wxWidgets Includes --- //
+#include <wx/toolbar.h>
+
 // --- VE-Suite Includes --- //
 namespace VE_Conductor
 {
     class CORBAServiceList;
 }
 
-// --- wxWidgets Includes --- //
-#include <wx/toolbar.h>
+// --- C/C++ Libraries --- //
+#include <map>
+#include <string>
 
 class MainToolBar : public wxToolBar
 {
@@ -62,6 +66,10 @@ public:
     ///\enum The enums for MainToolBar
     enum 
     {
+        TOOLBAR_NEW,///<ID for new tool
+        TOOLBAR_OPEN,///<ID for open tool
+        TOOLBAR_SAVE,///<ID for save tool
+
         TOOLBAR_SELECTION,///<ID for cursor tool
         TOOLBAR_NAVIGATION,///<ID for navigation tool
 
@@ -82,6 +90,21 @@ public:
     void CreateMainToolBar();
 
 private:
+    ///Loads and stores the xpm images into a std::map for this toolbar
+    void LoadToolBarBitmaps();
+
+    ///Handles event for new
+    ///\param event The wxCommand event
+    void OnNew( wxCommandEvent& event );
+
+    ///Handles event for open
+    ///\param event The wxCommand event
+    void OnOpen( wxCommandEvent& event );
+
+    ///Handles event for save
+    ///\param event The wxCommand event
+    void OnSave( wxCommandEvent& event );
+
     ///Handles events for changing xplorer device mode
     ///\param event The wxCommand event
     void OnChangeDeviceMode( wxCommandEvent& event );
@@ -93,6 +116,8 @@ private:
     ///Handles event for summit job
     ///\param event The wxCommand event
     void OnSummitJob( wxCommandEvent& event );
+
+    std::map< std::string, wxBitmap > m_toolbarBitmaps;
 
     DECLARE_EVENT_TABLE()
 };

@@ -288,11 +288,8 @@ protected:
     void CreateMenu();
     void ZoomIn( wxCommandEvent &event );
     void ZoomOut( wxCommandEvent &event );
-    void Save( wxCommandEvent &event );
     void SaveAs( wxCommandEvent &event );
     void OnPreferences( wxCommandEvent &event );
-
-    void Open(wxCommandEvent &event);
 	
     //TODO -- cleanup
     void InitRecentFile();
@@ -303,6 +300,9 @@ protected:
     void OpenRecentFile( wxCommandEvent& event );
 
 public:
+    void New( wxCommandEvent &event );
+    void Open( wxCommandEvent &event );
+    void Save( wxCommandEvent &event );
     void SubmitToServer( wxCommandEvent &event );
 
 protected:
@@ -336,7 +336,6 @@ protected:
     void LoadSour( wxCommandEvent &event );
     void LoadREIBase( wxCommandEvent &event );
     void LoadREISour( wxCommandEvent &event );
-    void New( wxCommandEvent &event );
 
     //Controls for VE-Xplorer
     //These are the callbacks for the pull down menu
