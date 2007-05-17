@@ -279,8 +279,8 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
             value = "PhysicsOff";
 
             SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsBitmap" ] );
-            //SetToolDisabledBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
-            //SetToolDisabledBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
+            SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
+            SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
 
             EnableTool( TOOLBAR_RESET, false );
             EnableTool( TOOLBAR_PAUSE, false );
