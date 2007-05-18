@@ -35,9 +35,13 @@
 
 #include <osg/Group>
 #include <osg/Node>
+#include <osg/Material>
+#include <osg/Texture>
+#include <osg/StateSet>
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 
 using namespace VE_SceneGraph;
 
@@ -74,37 +78,10 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
         nodeName = std::string( "Class" ) + node.className();
     }
     
-    /*Get the properties
+    //Get the properties
     ///Material
-    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
-    osg::ref_ptr< osg::Material > material = 
-                 static_cast< osg::Material* >
-                 ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
-    osg::ref_ptr< osg::Texture > texture =
-                 static_cast< osg::Texture* >
-                 ( stateset->getAttribute( osg::StateAttribute::TEXTURE ) );
-
-    if(material.valid())
-    {
-       osg::Vec4 ambient =  material.getAmbient(osg::Material::FRONT);
-       osg::Vec4 diffuse = material.getDiffuse(osg::Material::FRONT);
-       osg::Vec4 specular = material.getSpecular(osg::Material::FRONTF);
-       osg::Vec4 emission =  material.getEmission(osg::Material::FRONT);
-       float shininess =  material.getShininess(osg::Material::FRONT);
-    }
-
-    if(texture.valid())
-    {
-      //Just do the dimensions for now
-      //and that will tell if it is 1,2 or 3 D
-      int s = texture.getTextureWidth();
-      int t = texture.getTextureHeight();
-      int s = texture.getTextureDepth();
-    }
-
-   
-    */
     std::string childName;
+    std::string childTextureData, childMaterialData;
     for( size_t i = 0; i < tempGroup->getNumChildren(); ++i )
     {
         osg::ref_ptr< osg::Node > childNode = tempGroup->getChild( i );
@@ -114,14 +91,88 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
             childName = std::string( "Class" ) + childNode->className();
         }
 
+        //Write the link
         m_dotFile << "\"" << tempGroup.get() << "\" -> \"" 
-                    << childNode.get() << "\";" << std::endl; 
-        m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\"" 
-                    << nodeName << "\"];" << std::endl;
-        m_dotFile << "\"" << childNode.get() << "\" " << "[label=\"" 
-                    << childName << "\"];" << std::endl;
+            << childNode.get() << "\";" << std::endl; 
+        if ( !childNode->asGroup() )
+        {
+            //Write the child node label
+            m_dotFile << "\"" << childNode.get() << "\" " << "[label=\"" 
+                << childName << "\\n"
+                << GetMaterialDataString( childNode.get() ) << "\\n" 
+                << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
+        }
     }
 
+    //Write the label info for the parent
+    m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\"" 
+        << nodeName << "\\n" 
+        << GetMaterialDataString( tempGroup.get() ) << "\\n" 
+        << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
+    
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
+{
+    std::ostringstream materialData;
+    
+    osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
+    osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >
+        ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+
+    if( material.valid() )
+    {
+        osg::Vec4 ambient =  material->getAmbient(osg::Material::FRONT);
+        osg::Vec4 diffuse = material->getDiffuse(osg::Material::FRONT);
+        osg::Vec4 specular = material->getSpecular(osg::Material::FRONT);
+        osg::Vec4 emission =  material->getEmission(osg::Material::FRONT);
+        float shininess =  material->getShininess(osg::Material::FRONT);
+        materialData << "Material Properties" << "\\n"
+            << "Ambient = " << ambient[ 0 ] << ", " 
+            << ambient[ 1 ] << ", " 
+            << ambient[ 2 ] << ", " 
+            << ambient[ 3 ] << "\\n"
+            << "Diffuse = " << diffuse[ 0 ] << ", " 
+            << diffuse[ 1 ] << ", " 
+            << diffuse[ 2 ] << ", " 
+            << diffuse[ 3 ] << "\\n"
+            << "Specular = " << specular[ 0 ] << ", " 
+            << specular[ 1 ] << ", " 
+            << specular[ 2 ] << ", " 
+            << specular[ 3 ] << "\\n"
+            << "Shininess = " << shininess;
+    }
+    else
+    {
+        materialData << "No Material Data";
+    }
+    return materialData.str();
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
+{
+    std::ostringstream textureData;
+    
+    osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
+    osg::ref_ptr< osg::Texture > texture = static_cast< osg::Texture* >
+        ( stateset->getAttribute( osg::StateAttribute::TEXTURE ) );
+    
+    if( texture.valid() )
+    {
+        //Just do the dimensions for now
+        //and that will tell if it is 1,2 or 3 D
+        int w = texture->getTextureWidth();
+        int h = texture->getTextureHeight();
+        int d = texture->getTextureDepth();
+        textureData << "Texture Properties" << "\\n"
+            << "Width = " << w << "\\n" 
+            << "Height = " << h << "\\n"
+            << "Depth = " << d;
+    }
+    else
+    {
+        textureData << "No Texture Data";
+    }
+    return textureData.str();
+}

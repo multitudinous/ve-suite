@@ -69,8 +69,16 @@ public:
     ///Apply function that gets called during the traversal
     ///\param node A parent node of the node being traversed
     virtual void apply( osg::Node& node );
-
+    
 private:
+    ///Get the material string to write out
+    ///\param node Node to look at
+    ///\return Node data in a string
+    std::string GetMaterialDataString( osg::Node* node );
+    ///Get the texture string to write out
+    ///\param node Node to look at
+    ///\return Node data in a string
+    std::string GetTextureDataString( osg::Node* node );
     std::ofstream m_dotFile;///<DOT file strem to be written to
 };
 }
