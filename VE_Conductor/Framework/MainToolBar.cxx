@@ -60,12 +60,9 @@
 #include "VE_Conductor/xpm/ToolBar/PlayButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/PlayButtonDisabled.xpm"
 #include "VE_Conductor/xpm/ToolBar/ResetButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/ResetButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/ResetButtonDisabled.xpm"
 #include "VE_Conductor/xpm/ToolBar/SendJobButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/SendJobButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/StepButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/StepButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/StepButtonDisabled.xpm"
 #include "VE_Conductor/xpm/ToolBar/StopButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/StopButtonSelect.xpm"
@@ -92,7 +89,8 @@ BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_OBJECT_ROTATE, MainToolBar::OnChangeDeviceMode )
     EVT_MENU( TOOLBAR_OBJECT_SCALE, MainToolBar::OnChangeDeviceMode )
 
-    EVT_MENU( TOOLBAR_PHYSICS, MainToolBar::OnPhysicsSimulation )
+    EVT_MENU( TOOLBAR_PHYSICS, MainToolBar::OnPhysicsState )
+
     EVT_MENU( TOOLBAR_RESET, MainToolBar::OnPhysicsSimulation )
     EVT_MENU( TOOLBAR_PAUSE, MainToolBar::OnPhysicsSimulation )
     EVT_MENU( TOOLBAR_PLAY, MainToolBar::OnPhysicsSimulation )
@@ -137,8 +135,8 @@ void MainToolBar::LoadToolBarBitmaps()
 
     m_toolbarBitmaps[ std::string( "physicsBitmap" ) ] = wxBitmap( PhysicsButton_xpm );
     m_toolbarBitmaps[ std::string( "physicsSelectBitmap" ) ] = wxBitmap( PhysicsButtonSelect_xpm );
+
     m_toolbarBitmaps[ std::string( "resetBitmap" ) ] = wxBitmap( ResetButton_xpm );
-    //m_toolbarBitmaps[ std::string( "resetSelectBitmap" ) ] = wxBitmap( ResetButtonSelect_xpm );
     m_toolbarBitmaps[ std::string( "resetDisabledBitmap" ) ] = wxBitmap( ResetButtonDisabled_xpm );
     m_toolbarBitmaps[ std::string( "pauseBitmap" ) ] = wxBitmap( PauseButton_xpm );
     m_toolbarBitmaps[ std::string( "pauseSelectBitmap" ) ] = wxBitmap( PauseButtonSelect_xpm );
@@ -147,11 +145,9 @@ void MainToolBar::LoadToolBarBitmaps()
     m_toolbarBitmaps[ std::string( "playSelectBitmap" ) ] = wxBitmap( PlayButtonSelect_xpm );
     m_toolbarBitmaps[ std::string( "playDisabledBitmap" ) ] = wxBitmap( PlayButtonDisabled_xpm );
     m_toolbarBitmaps[ std::string( "stepBitmap" ) ] = wxBitmap( StepButton_xpm );
-    //m_toolbarBitmaps[ std::string( "stepSelectBitmap" ) ] = wxBitmap( StepButtonSelect_xpm );
     m_toolbarBitmaps[ std::string( "stepDisabledBitmap" ) ] = wxBitmap( StepButtonDisabled_xpm );
 
     m_toolbarBitmaps[ std::string( "sendJobBitmap" ) ] = wxBitmap( SendJobButton_xpm );
-    //m_toolbarBitmaps[ std::string( "sendJobSelectBitmap" ) ] = wxBitmap( SendJobButtonSelect_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::CreateMainToolBar()
@@ -254,50 +250,58 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void MainToolBar::OnPhysicsState( wxCommandEvent& event )
+{
+    if( GetToolState( TOOLBAR_PHYSICS ) )
+    {
+        SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+
+        EnableTool( TOOLBAR_RESET, true );
+        EnableTool( TOOLBAR_PAUSE, true );
+        EnableTool( TOOLBAR_PLAY, true );
+        EnableTool( TOOLBAR_STEP, true );
+    }
+    else
+    {
+        ToggleTool( TOOLBAR_PAUSE, false );
+        ToggleTool( TOOLBAR_PLAY, false );
+
+        SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
+
+        EnableTool( TOOLBAR_RESET, false );
+        EnableTool( TOOLBAR_PAUSE, false );
+        EnableTool( TOOLBAR_PLAY, false );
+        EnableTool( TOOLBAR_STEP, false );
+
+        VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
+        VE_XML::Command* command = new VE_XML::Command();
+
+        std::string value;
+
+        dvp->SetData( std::string( "PausePhysicsSimulation" ), value );
+
+        command->SetCommandName( std::string( "PHYSICS_SIMULATION" ) );
+        command->AddDataValuePair( dvp );
+
+        VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+
+        delete command;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 {
     VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
     VE_XML::Command* command = new VE_XML::Command();
 
     std::string value;
-    if( event.GetId() == TOOLBAR_PHYSICS )
+
+    if( event.GetId() == TOOLBAR_RESET )
     {
-        if( GetToolState( TOOLBAR_PHYSICS ) )
-        {
-            value = "PhysicsOn";
-
-            SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsSelectBitmap" ] );
-            SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
-            SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
-
-            EnableTool( TOOLBAR_RESET, true );
-            EnableTool( TOOLBAR_PAUSE, true );
-            EnableTool( TOOLBAR_PLAY, true );
-            EnableTool( TOOLBAR_STEP, true );
-        }
-        else
-        {
-            value = "PhysicsOff";
-
-            ToggleTool( TOOLBAR_PAUSE, false );
-            ToggleTool( TOOLBAR_PLAY, false );
-
-            SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsBitmap" ] );
-            SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
-            SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
-
-            EnableTool( TOOLBAR_RESET, false );
-            EnableTool( TOOLBAR_PAUSE, false );
-            EnableTool( TOOLBAR_PLAY, false );
-            EnableTool( TOOLBAR_STEP, false );
-        }
-
-        dvp->SetData( std::string( "PhysicsOnOff" ), value );
-    }
-    else if( event.GetId() == TOOLBAR_RESET )
-    {
-        value = "";
-
         ToggleTool( TOOLBAR_PAUSE, true );
         ToggleTool( TOOLBAR_PLAY, false );
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
@@ -307,8 +311,6 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     }
     else if( event.GetId() == TOOLBAR_PAUSE )
     {
-        value = "";
-
         ToggleTool( TOOLBAR_PAUSE, true );
         ToggleTool( TOOLBAR_PLAY, false );
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
@@ -318,8 +320,6 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     }
     else if( event.GetId() == TOOLBAR_PLAY )
     {
-        value = "";
-
         ToggleTool( TOOLBAR_PLAY, true );
         ToggleTool( TOOLBAR_PAUSE, false );
         SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playSelectBitmap" ] );
@@ -329,8 +329,6 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     }
     else if( event.GetId() == TOOLBAR_STEP )
     {
-        value = "";
-
         ToggleTool( TOOLBAR_PAUSE, true );
         ToggleTool( TOOLBAR_PLAY, false );
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );

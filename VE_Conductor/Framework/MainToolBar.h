@@ -109,6 +109,10 @@ private:
     ///\param event The wxCommand event
     void OnChangeDeviceMode( wxCommandEvent& event );
 
+    ///Handles event for physics state
+    ///\param event The wxCommand event
+    void OnPhysicsState( wxCommandEvent& event );
+
     ///Handles events for the physics simulation
     ///\param event The wxCommand event
     void OnPhysicsSimulation( wxCommandEvent& event );
