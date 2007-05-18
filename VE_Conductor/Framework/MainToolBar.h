@@ -61,7 +61,7 @@ public:
     MainToolBar( wxWindow* parent );
 
     ///Destructor
-    ~MainToolBar();
+    virtual ~MainToolBar();
 
     ///\enum The enums for MainToolBar
     enum 
@@ -86,12 +86,12 @@ public:
         TOOLBAR_SUMMIT_JOB///<ID for summit job tool
     };
 
-    ///Adds the tools to the toolbar
-    void CreateMainToolBar();
-
 private:
     ///Loads and stores the xpm images into a std::map for this toolbar
     void LoadToolBarBitmaps();
+
+    ///Adds the tools to the toolbar
+    void CreateMainToolBar();
 
     ///Handles event for new
     ///\param event The wxCommand event

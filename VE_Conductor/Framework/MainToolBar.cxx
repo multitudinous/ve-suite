@@ -63,7 +63,7 @@
 //#include "VE_Conductor/xpm/ToolBar/ResetButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/ResetButtonDisabled.xpm"
 #include "VE_Conductor/xpm/ToolBar/SendJobButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/SendJobButtonSelect.xpm"
+//#include "VE_Conductor/xpm/ToolBar/SendJobButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/StepButton.xpm"
 //#include "VE_Conductor/xpm/ToolBar/StepButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/StepButtonDisabled.xpm"
@@ -76,6 +76,9 @@
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+
+// --- wxWidgets Includes --- //
+#include <wx/dc.h>
 
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
@@ -96,14 +99,12 @@ BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_STEP, MainToolBar::OnPhysicsSimulation )
 
     EVT_MENU( TOOLBAR_SUMMIT_JOB, MainToolBar::OnSummitJob )
-
-    //EVT_TOOL_ENTER
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 MainToolBar::MainToolBar( wxWindow* parent )
 :
-wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxTB_FLAT | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar" ) )
+wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxCLIP_CHILDREN | wxSUNKEN_BORDER | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar" ) )
 {
     LoadToolBarBitmaps();
     CreateMainToolBar();

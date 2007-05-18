@@ -228,7 +228,7 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 :
-wxFrame( parent, id, title ), 
+wxFrame( parent, id, title, wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxCLIP_CHILDREN ) ), 
 m_frameNr( 0 ), 
 f_financial( true ), 
 f_geometry( true ), 
