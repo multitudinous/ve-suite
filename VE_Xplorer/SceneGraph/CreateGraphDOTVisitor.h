@@ -79,7 +79,8 @@ private:
     ///\param node Node to look at
     ///\return Node data in a string
     std::string GetTextureDataString( osg::Node* node );
-    std::ofstream m_dotFile;///<DOT file strem to be written to
+    ///DOT file stream to be written to
+    std::ofstream m_dotFile;
 };
 }
 
