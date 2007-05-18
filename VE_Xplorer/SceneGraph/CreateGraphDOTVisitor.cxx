@@ -74,6 +74,36 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
         nodeName = std::string( "Class" ) + node.className();
     }
     
+    /*Get the properties
+    ///Material
+    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+    osg::ref_ptr< osg::Material > material = 
+                 static_cast< osg::Material* >
+                 ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+    osg::ref_ptr< osg::Texture > texture =
+                 static_cast< osg::Texture* >
+                 ( stateset->getAttribute( osg::StateAttribute::TEXTURE ) );
+
+    if(material.valid())
+    {
+       osg::Vec4 ambient =  material.getAmbient(osg::Material::FRONT);
+       osg::Vec4 diffuse = material.getDiffuse(osg::Material::FRONT);
+       osg::Vec4 specular = material.getSpecular(osg::Material::FRONTF);
+       osg::Vec4 emission =  material.getEmission(osg::Material::FRONT);
+       float shininess =  material.getShininess(osg::Material::FRONT);
+    }
+
+    if(texture.valid())
+    {
+      //Just do the dimensions for now
+      //and that will tell if it is 1,2 or 3 D
+      int s = texture.getTextureWidth();
+      int t = texture.getTextureHeight();
+      int s = texture.getTextureDepth();
+    }
+
+   
+    */
     std::string childName;
     for( size_t i = 0; i < tempGroup->getNumChildren(); ++i )
     {
