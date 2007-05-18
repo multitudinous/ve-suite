@@ -85,7 +85,7 @@ shoot_speed( 50.0f )
 {
     head.init( "VJHead" );
 
-    this->InitPhysics();
+    this->InitializePhysicsSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics( void )
@@ -174,7 +174,7 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::InitPhysics( void )
+void PhysicsSimulator::InitializePhysicsSimulation( void )
 {
     m_dispatcher = new btCollisionDispatcher();
 

@@ -125,6 +125,7 @@ private:
     osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;///<The DCS of CADEntity
     osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > m_physicsRigidBody;///<The physics rigid body representation of CADEntity
 
+    bool m_physicsFlag;///<The current state of physics for CADEntity
     bool m_transparencyFlag;///<The current state of transparency
 
     std::string m_fileName;///<The name of the geometry file loaded

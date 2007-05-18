@@ -34,6 +34,8 @@
 #include "VE_Xplorer/XplorerHandlers/PhysicsSimulationEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
+#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -91,10 +93,24 @@ void PhysicsSimulationEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBa
 void PhysicsSimulationEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
 {
     VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-
-    //std::string device;
-    //command->GetDataValuePair( "Device" )->GetData( device );
-
-    //VE_Xplorer::DeviceHandler::instance()->SetActiveDevice( device );
+  
+    if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
+    {
+        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( true );
+        VE_SceneGraph::PhysicsSimulator::instance()->ResetScene();
+    }
+    else if( command->GetDataValuePair( "PausePhysicsSimulation" ) )
+    {
+        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( true );
+    }
+    else if( command->GetDataValuePair( "StartPhysicsSimulation" ) )
+    {
+        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( false );
+    }
+    else if( command->GetDataValuePair( "StepPhysicsSimulation" ) )
+    {
+        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( true );
+        VE_SceneGraph::PhysicsSimulator::instance()->StepSimulation();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

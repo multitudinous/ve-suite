@@ -123,9 +123,9 @@ private:
     vprSingletonHeader( PhysicsSimulator );
 
     ///Sets up the dynamics, collision algorithms, and solvers
-    void InitPhysics();
+    void InitializePhysicsSimulation();
 
-    bool m_idle;///<Determines whether physics is idle or not
+    bool m_idle;///<Determines whether the physics simulation is idle or not
     float shoot_speed;///<
 
     gadget::PositionInterface head;///<The head in vr juggler

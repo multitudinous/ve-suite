@@ -54,6 +54,10 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool isStream )
+:
+m_physicsRigidBody( 0 ),
+m_physicsFlag( false ),
+m_transparencyFlag( false )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -68,6 +72,10 @@ CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool 
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS )
+:
+m_physicsRigidBody( 0 ),
+m_physicsFlag( false ),
+m_transparencyFlag( false )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -82,6 +90,10 @@ CADEntity::CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS )
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS )
+:
+m_physicsRigidBody( 0 ),
+m_physicsFlag( false ),
+m_transparencyFlag( false )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo

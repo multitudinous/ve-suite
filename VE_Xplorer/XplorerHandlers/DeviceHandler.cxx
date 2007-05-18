@@ -43,7 +43,6 @@
 #include "VE_Xplorer/XplorerHandlers/DeviceEH.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceModeEH.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h"
-#include "VE_Xplorer/XplorerHandlers/ViewEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
@@ -69,7 +68,6 @@ device_mode( "Navigation" )
    
    active_device = devices[ "KeyboardMouse" ];
 
-   _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();

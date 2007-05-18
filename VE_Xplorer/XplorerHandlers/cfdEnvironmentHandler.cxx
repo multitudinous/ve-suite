@@ -55,6 +55,8 @@
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 #include "VE_Xplorer/XplorerHandlers/DisplayEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ViewEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/PhysicsSimulationEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 #include "VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h"
@@ -137,14 +139,16 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _seedPointsDCS->SetName("Seed Points DCS");
    _seedPointsDCS->addChild(_seedPoints.get());
 
-   _eventHandlers[ std::string("VISUALIZATION_SETTINGS") ] = new VE_EVENTS::ChangeCursorEventHandler();
-   _eventHandlers[ std::string("Stored Scenes") ] = new VE_EVENTS::StoredSceneEventHandler();
-   _eventHandlers[ std::string("Change Working Directory") ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
-   _eventHandlers[ std::string("CHANGE_BACKGROUND_COLOR") ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
-   _eventHandlers[ std::string("DISPLAY_SELECTION") ] = new VE_EVENTS::DisplayEventHandler();
-   _eventHandlers[ std::string("Display Seed Points") ] = new VE_EVENTS::SeedPointActivateEventHandler();
-   _eventHandlers[ std::string("Seed Points Bounds") ] = new VE_EVENTS::SeedPointBoundsEventHandler();
-   _eventHandlers[ std::string("Seed Points Dimensions") ] = new VE_EVENTS::SeedPointDimensionsEventHandler();
+   _eventHandlers[ std::string( "PHYSICS_SIMULATION" ) ] = new VE_EVENTS::PhysicsSimulationEventHandler();
+   _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
+   _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] = new VE_EVENTS::ChangeCursorEventHandler();
+   _eventHandlers[ std::string( "Stored Scenes" ) ] = new VE_EVENTS::StoredSceneEventHandler();
+   _eventHandlers[ std::string( "Change Working Directory" ) ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
+   _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" ) ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
+   _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] = new VE_EVENTS::DisplayEventHandler();
+   _eventHandlers[ std::string( "Display Seed Points" ) ] = new VE_EVENTS::SeedPointActivateEventHandler();
+   _eventHandlers[ std::string( "Seed Points Bounds" ) ] = new VE_EVENTS::SeedPointBoundsEventHandler();
+   _eventHandlers[ std::string( "Seed Points Dimensions" ) ] = new VE_EVENTS::SeedPointDimensionsEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
