@@ -74,16 +74,11 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-<<<<<<< .mine
-BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
-    EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
-=======
 // --- wxWidgets Includes --- //
 #include <wx/dc.h>
 
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
->>>>>>> .r7700
     EVT_MENU( TOOLBAR_OPEN, MainToolBar::OnOpen )
     EVT_MENU( TOOLBAR_SAVE, MainToolBar::OnSave )
 
@@ -107,7 +102,11 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 MainToolBar::MainToolBar( wxWindow* parent )
 :
-wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxCLIP_CHILDREN | wxSUNKEN_BORDER | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar", wxConvUTF8 ) )
+wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), 
+           wxSize( wxDefaultSize ), 
+           long( wxCLIP_CHILDREN | wxSUNKEN_BORDER | 
+           wxTB_HORIZONTAL | wxNO_BORDER ), 
+           wxString( "toolBar", wxConvUTF8 ) )
 {
     LoadToolBarBitmaps();
     CreateMainToolBar();
@@ -120,39 +119,68 @@ MainToolBar::~MainToolBar()
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::LoadToolBarBitmaps()
 {
-    m_toolbarBitmaps[ std::string( "newBitmap" ) ] = wxBitmap( NewDocumentButton_xpm );
-    m_toolbarBitmaps[ std::string( "openBitmap" ) ] = wxBitmap( OpenButton_xpm );
-    m_toolbarBitmaps[ std::string( "saveBitmap" ) ] = wxBitmap( SaveButton_xpm );
+    m_toolbarBitmaps[ std::string( "newBitmap" ) ] = 
+        wxBitmap( NewDocumentButton_xpm );
+    m_toolbarBitmaps[ std::string( "openBitmap" ) ] = 
+        wxBitmap( OpenButton_xpm );
+    m_toolbarBitmaps[ std::string( "saveBitmap" ) ] = 
+        wxBitmap( SaveButton_xpm );
 
-    m_toolbarBitmaps[ std::string( "cursorBitmap" ) ] = wxBitmap( CursorButton_xpm );
-    m_toolbarBitmaps[ std::string( "cursorSelectBitmap" ) ] = wxBitmap( CursorButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "worldCoBitmap" ) ] = wxBitmap( WorldCoButton_xpm );
-    m_toolbarBitmaps[ std::string( "worldCoSelectBitmap" ) ] = wxBitmap( WorldCoButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "objectTranslateBitmap" ) ] = wxBitmap( ObjectTranslateButton_xpm );
-    m_toolbarBitmaps[ std::string( "objectTranslateSelectBitmap" ) ] = wxBitmap( ObjectTranslateButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "objectTranslateDisabledBitmap" ) ] = wxBitmap( ObjectTranslateButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "objectRotateBitmap" ) ] = wxBitmap( ObjectRotateButton_xpm );
-    m_toolbarBitmaps[ std::string( "objectRotateSelectBitmap" ) ] = wxBitmap( ObjectRotateButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "objectRotateDisabledBitmap" ) ] = wxBitmap( ObjectRotateButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "objectScaleBitmap" ) ] = wxBitmap( ObjectScaleButton_xpm );
-    m_toolbarBitmaps[ std::string( "objectScaleSelectBitmap" ) ] = wxBitmap( ObjectScaleButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "objectScaleDisabledBitmap" ) ] = wxBitmap( ObjectScaleButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "cursorBitmap" ) ] = 
+        wxBitmap( CursorButton_xpm );
+    m_toolbarBitmaps[ std::string( "cursorSelectBitmap" ) ] = 
+        wxBitmap( CursorButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "worldCoBitmap" ) ] = 
+        wxBitmap( WorldCoButton_xpm );
+    m_toolbarBitmaps[ std::string( "worldCoSelectBitmap" ) ] = 
+        wxBitmap( WorldCoButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "objectTranslateBitmap" ) ] = 
+        wxBitmap( ObjectTranslateButton_xpm );
+    m_toolbarBitmaps[ std::string( "objectTranslateSelectBitmap" ) ] = 
+        wxBitmap( ObjectTranslateButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "objectTranslateDisabledBitmap" ) ] = 
+        wxBitmap( ObjectTranslateButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "objectRotateBitmap" ) ] = 
+        wxBitmap( ObjectRotateButton_xpm );
+    m_toolbarBitmaps[ std::string( "objectRotateSelectBitmap" ) ] = 
+        wxBitmap( ObjectRotateButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "objectRotateDisabledBitmap" ) ] = 
+        wxBitmap( ObjectRotateButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "objectScaleBitmap" ) ] = 
+        wxBitmap( ObjectScaleButton_xpm );
+    m_toolbarBitmaps[ std::string( "objectScaleSelectBitmap" ) ] = 
+        wxBitmap( ObjectScaleButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "objectScaleDisabledBitmap" ) ] = 
+        wxBitmap( ObjectScaleButtonDisabled_xpm );
 
-    m_toolbarBitmaps[ std::string( "physicsBitmap" ) ] = wxBitmap( PhysicsButton_xpm );
-    m_toolbarBitmaps[ std::string( "physicsSelectBitmap" ) ] = wxBitmap( PhysicsButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "physicsBitmap" ) ] = 
+        wxBitmap( PhysicsButton_xpm );
+    m_toolbarBitmaps[ std::string( "physicsSelectBitmap" ) ] = 
+        wxBitmap( PhysicsButtonSelect_xpm );
 
-    m_toolbarBitmaps[ std::string( "resetBitmap" ) ] = wxBitmap( ResetButton_xpm );
-    m_toolbarBitmaps[ std::string( "resetDisabledBitmap" ) ] = wxBitmap( ResetButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "pauseBitmap" ) ] = wxBitmap( PauseButton_xpm );
-    m_toolbarBitmaps[ std::string( "pauseSelectBitmap" ) ] = wxBitmap( PauseButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "pauseDisabledBitmap" ) ] = wxBitmap( PauseButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "playBitmap" ) ] = wxBitmap( PlayButton_xpm );
-    m_toolbarBitmaps[ std::string( "playSelectBitmap" ) ] = wxBitmap( PlayButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "playDisabledBitmap" ) ] = wxBitmap( PlayButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "stepBitmap" ) ] = wxBitmap( StepButton_xpm );
-    m_toolbarBitmaps[ std::string( "stepDisabledBitmap" ) ] = wxBitmap( StepButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "resetBitmap" ) ] = 
+        wxBitmap( ResetButton_xpm );
+    m_toolbarBitmaps[ std::string( "resetDisabledBitmap" ) ] = 
+        wxBitmap( ResetButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "pauseBitmap" ) ] = 
+        wxBitmap( PauseButton_xpm );
+    m_toolbarBitmaps[ std::string( "pauseSelectBitmap" ) ] = 
+        wxBitmap( PauseButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "pauseDisabledBitmap" ) ] = 
+        wxBitmap( PauseButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "playBitmap" ) ] = 
+        wxBitmap( PlayButton_xpm );
+    m_toolbarBitmaps[ std::string( "playSelectBitmap" ) ] = 
+        wxBitmap( PlayButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "playDisabledBitmap" ) ] = 
+        wxBitmap( PlayButtonDisabled_xpm );
+    m_toolbarBitmaps[ std::string( "stepBitmap" ) ] = 
+        wxBitmap( StepButton_xpm );
+    m_toolbarBitmaps[ std::string( "stepDisabledBitmap" ) ] = 
+        wxBitmap( StepButtonDisabled_xpm );
 
-    m_toolbarBitmaps[ std::string( "sendJobBitmap" ) ] = wxBitmap( SendJobButton_xpm );
+    m_toolbarBitmaps[ std::string( "sendJobBitmap" ) ] = 
+        wxBitmap( SendJobButton_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::CreateMainToolBar()
