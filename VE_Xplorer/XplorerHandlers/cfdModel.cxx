@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSound.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
@@ -100,6 +101,7 @@ cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
    // Will fix this later so that each model has a dcs
    //mModelDCS = new VE_SceneGraph::DCS();
    _worldDCS = worldDCS;
+   m_cadHandler = new VE_Xplorer::ModelCADHandler( _worldDCS.get() );
    //mirrorNode = 0;
    //mirrorGroupNode = 0;
 
@@ -110,8 +112,7 @@ cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
    _activeTextureDataSet = 0;
 #endif
    modelID = 10000000;
-   ///probably need a uuid for the VEBaseClass DCS instead of "rootNode"
-   _assemblyList["rootNode"] = _worldDCS.get();
+   
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdModel::~cfdModel()
@@ -119,27 +120,7 @@ cfdModel::~cfdModel()
    vprDEBUG(vesDBG,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
-   for ( std::map<std::string,VE_SceneGraph::CADEntity*>::iterator itr = _partList.begin();
-                                       itr != _partList.end(); itr++ )
-   {
-      delete itr->second;
-   }
-   _partList.clear();
-
-	/*
-   for ( std::map< std::string, VE_SceneGraph::DCS* >::iterator itr = _assemblyList.begin();
-                                       itr != _assemblyList.end(); itr++ )
-   {
-      //delete itr->second;
-   }
-	*/
-   _assemblyList.clear();
-
-   for ( std::map< std::string, VE_SceneGraph::Clone* >::iterator itr = _cloneList.begin(); itr != _cloneList.end(); itr++ )
-   {
-      delete itr->second;
-   }
-   _cloneList.clear();
+ 
   /* for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
                                        itr != _eventHandlers.end(); itr++ )
    {
@@ -208,6 +189,17 @@ cfdModel::~cfdModel()
    vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
    _availableSounds.clear();
+
+   if( m_cadHandler)
+   {
+       delete m_cadHandler;
+       m_cadHandler = 0;
+   }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
+VE_Xplorer::ModelCADHandler* cfdModel::GetModelCADHandler()
+{
+    return m_cadHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::PreFrameUpdate()
@@ -671,423 +663,6 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    return newStlName;
 }
 //Dynamic Loading Data End Here
-///////////////////////////////////////////////////////
-void cfdModel::SetRootCADNodeID(std::string rootNodeId)
-{
-	this->rootCADNodeID = rootNodeId;
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::CreateClone( std::string cloneID, std::string originalID, std::string originalType )
-{
-   if(originalType == std::string("Assembly"))
-   {
-      //This is a hack to handle the case where an orginial assembly is deleted
-      //but the clone is not changed
-      if ( GetAssembly(originalID) )
-      {
-         _cloneList[cloneID] = new VE_SceneGraph::Clone(GetAssembly(originalID));
-      }
-   }
-   else if(originalType == std::string("Part"))
-   {
-      //This is a hack to handle the case where an orginial assembly is deleted
-      //but the clone is not changed
-      if ( GetPart(originalID) )
-      {
-         _cloneList[cloneID] = new VE_SceneGraph::Clone( GetPart(originalID)->GetNode()->GetNode() );
-      }
-   }
-}
-////////////////////////////////////////////////////////////////////
-void cfdModel::CreateAssembly(std::string assemblyID)
-{
-   _assemblyList[assemblyID] = new VE_SceneGraph::DCS();
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::CreatePart( std::string fileName, 
-                           std::string partID, 
-                           std::string parentID )
-{
-    VE_SceneGraph::CADEntity* tempCAD = 
-        cfdModelHandler::instance()->IsCADFileLoaded( fileName );
-    if( tempCAD )
-    {
-        ///If we have already loaded the parts
-        VE_SceneGraph::CADEntityHelper* tempNode = tempCAD->GetNode();
-        _partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( tempNode, 
-                                          _assemblyList[ parentID ] );
-        vprDEBUG(vesDBG,1) << "|\t--Cloned new part--"
-                            << std::endl << vprDEBUG_FLUSH;
-    }
-    else
-    {
-        ///If we have not loaded this part
-        _partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( fileName, _assemblyList[ parentID ] );
-        cfdModelHandler::instance()->RegisterCADFile( _partList[ partID ] );
-        vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
-                            << std::endl << vprDEBUG_FLUSH;
-    }
-    //add key pointer to physics map for bullet rigid body
-    //add data pair for transform node
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetActiveAttributeOnNode(std::string nodeID, std::string nodeType, std::string attributeName )
-{
-#ifdef _OSG
-   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-   attributeList = _nodeAttributes.find(nodeID);
-   
-   if(attributeList != _nodeAttributes.end())
-   {
-
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
-      namesAndAttributes = attributeList->second;
-      for(foundAttribute = namesAndAttributes.begin();
-             foundAttribute != namesAndAttributes.end();
-             foundAttribute++)
-      {
-         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-         if(foundAttribute->first == attributeName)
-         {
-            if(nodeType == "Assembly")
-            {
-               vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetAssembly(nodeID)->setStateSet(foundAttribute->second.get());
-               return;
-            }
-            else if(nodeType == "Part")
-            {
-               vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetPart(nodeID)->GetDCS()->setStateSet(foundAttribute->second.get());
-               vprDEBUG(vesDBG,1) <<"|\tvalid: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               return;
-            }
-            else if(nodeType == "Clone")
-            {
-               vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetClone(nodeID)->GetClonedGraph()->setStateSet(foundAttribute->second.get());
-               return;
-            }
-         }
-      }
-   }
-   else
-   {
-      vprDEBUG(vesDBG,1) <<"|\tAttribute not found on node: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
-   }
-#elif _PERFORMER               
-   std::cout<<"cfdModel::SetActiveAttributeOnNode not implemented for Performer yet!!!"<<std::endl;
-#endif
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::MakeCADRootTransparent()
-{
-   //check for the attribute
-   /*if ( _assemblyList.empty() )
-   {  
-      return;
-   }*/
-   if(!AssemblyExists(rootCADNodeID))
-   {
-	   return;
-   }
-#ifdef _OSG
-
-   osg::ref_ptr< osg::StateSet > attribute = new osg::StateSet;
-   osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
-
-   bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-   //attribute->setMode( GL_DEPTH_TEST, osg::StateAttribute::OFF );
-   attribute->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-   attribute->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
-   attribute->setMode( GL_BLEND, osg::StateAttribute::ON );
-   attribute->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
-   
-
-   /*
-   osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
-   attribute->CreateTransparencyStateSet();
-   */
-
-   try
-   {
-      _assemblyList[rootCADNodeID]->setStateSet( attribute.get() );
-      VE_SceneGraph::Utilities::OpacityVisitor opacity_visitor( _assemblyList[rootCADNodeID], true );
-   }
-
-   catch(...)
-   {
-      vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
-      vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootTransparent()---"<<std::endl<< vprDEBUG_FLUSH;
-   }
-#endif
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::MakeCADRootOpaque()
-{
-   /*if ( _assemblyList.empty() )
-   {  
-      return;
-   }*/
-   if(!AssemblyExists(rootCADNodeID))
-   {
-	   return;
-   }
-#ifdef _OSG
-   try
-   {
-      if( _assemblyList[ rootCADNodeID ]->getStateSet() )
-      {   
-         _assemblyList[ rootCADNodeID ]->getStateSet()->clear();
-         VE_SceneGraph::Utilities::OpacityVisitor opacity_visitor( _assemblyList[rootCADNodeID], false );
-      }
-   }
-   catch(...)
-   {
-      vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"<<std::endl<< vprDEBUG_FLUSH;
-      vprDEBUG(vesDBG,1) <<"|\tcfdModel::MakeCADRootOpaque()---"<<std::endl<< vprDEBUG_FLUSH;
-   }
-#endif
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::RemoveAttributeFromNode(std::string nodeID,std::string nodeType,
-                                       std::string attributeName)
-{
-#ifdef _OSG
-	std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-   attributeList = _nodeAttributes.find(nodeID);
-   
-   if(attributeList != _nodeAttributes.end())
-   {
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
-      namesAndAttributes = attributeList->second;
-      for(foundAttribute = namesAndAttributes.begin();
-          foundAttribute != namesAndAttributes.end();
-          )
-      {
-         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-         if(foundAttribute->first == attributeName)
-         {
-            namesAndAttributes.erase(foundAttribute);
-			   
-            if(nodeType == "Assembly")
-            {
-               //vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetAssembly(nodeID)->getStateSet()->clear();
-            }
-            else if(nodeType == "Part")
-            {
-               GetPart(nodeID)->GetDCS()->getStateSet()->clear();
-            }
-            else if(nodeType == "Clone")
-            {
-               //vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-               GetClone(nodeID)->GetClonedGraph()->getStateSet()->clear();
-            }
-            break;
-         }
-         foundAttribute++;
-      }
-   }
-   else
-   {
-      vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
-   }
-
-#endif
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::AddAttributeToNode(std::string nodeID,
-                              VE_XML::VE_CAD::CADAttribute* newAttribute)
-{
-#ifdef _OSG
-   vprDEBUG(vesDBG,1) <<"|\tcfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
-   osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
-   attribute->CreateStateSetFromAttribute(newAttribute);
-
-   std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
-   attributeInfo.first = newAttribute->GetAttributeName();
-   attributeInfo.second = attribute.get();
-   
-   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-   attributeList = _nodeAttributes.find(nodeID);
-   
-   if(attributeList != _nodeAttributes.end())
-   {
-      vprDEBUG(vesDBG,1) <<"|\tAdding attribute: "<<attributeList->first<<std::endl<< vprDEBUG_FLUSH;
-      attributeList->second.push_back(attributeInfo);
-   }
-   else
-   { 
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > temp;
-      temp.push_back(attributeInfo);
-      _nodeAttributes[nodeID] = temp;
-      
-      //create the empty state set to restore defaults
-      std::pair<std::string,osg::ref_ptr< osg::StateSet > >defaultAttributeInfo;
-      defaultAttributeInfo.first = "Default Attribute";
-      defaultAttributeInfo.second = new osg::StateSet();
-      _nodeAttributes[nodeID].push_back(defaultAttributeInfo);
-   }
-#elif _PERFORMER
-   vprDEBUG(vesDBG,1)<<"Not implemented for Performer yet!!!"<<std::endl<< vprDEBUG_FLUSH;
-#endif
-   vprDEBUG(vesDBG,1) <<"|\tend cfdModel::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::UpdateMaterialMode(std::string nodeID,std::string attributeName,std::string type,std::string mode)
-{
-#ifdef _OSG
-   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-   attributeList = _nodeAttributes.find(nodeID);
-   
-   if(attributeList != _nodeAttributes.end())
-   {
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
-      namesAndAttributes = attributeList->second;
-      for(foundAttribute = namesAndAttributes.begin();
-          foundAttribute != namesAndAttributes.end();
-          foundAttribute++)
-      {
-         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-         if(foundAttribute->first == attributeName)
-         {
-            ///update the material component
-            osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = 
-                              dynamic_cast<VE_SceneGraph::Utilities::Attribute*>(foundAttribute->second.get());
-            if(attribute.valid())
-            {
-               attribute->UpdateMaterialMode(type,mode);
-            }
-            else
-            {
-               vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
-            }
-         }
-      }
-   }
-#endif
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdModel::UpdateMaterialComponent(std::string nodeID, std::string attributeName,
-                                       std::string component,std::string face,std::vector<double> values)
-{
-#ifdef _OSG
-   std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-   attributeList = _nodeAttributes.find(nodeID);
-   
-   if(attributeList != _nodeAttributes.end())
-   {
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-      std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
-      namesAndAttributes = attributeList->second;
-      for(foundAttribute = namesAndAttributes.begin();
-          foundAttribute != namesAndAttributes.end();
-          foundAttribute++)
-      {
-         vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-         if(foundAttribute->first == attributeName)
-         {
-            ///update the material component
-            osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = 
-                              dynamic_cast<VE_SceneGraph::Utilities::Attribute*>(foundAttribute->second.get());
-            if(attribute.valid())
-            {
-               attribute->UpdateMaterial(component,face,values);
-            }
-            else
-            {
-               vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
-            }
-         }
-      }
-   }
-   else
-   {
-      vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
-   }
-#endif
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntity* cfdModel::GetPart(std::string partID)
-{
-   std::map< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
-   iter = _partList.find( partID );
-   
-   if ( iter == _partList.end() )
-   {
-      for ( iter = _partList.begin(); iter != _partList.end(); ++iter )
-      {
-         std::cout << "Parts that are available: " << iter->first 
-                     << " " << iter->second->GetFilename() << std::endl;
-      }
-      return 0;
-   }
-
-   return _partList[partID];
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdModel::GetAssembly(std::string assemblyID)
-{
-   return _assemblyList[assemblyID];
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Clone* cfdModel::GetClone(std::string cloneID)
-{
-   std::map< std::string, VE_SceneGraph::Clone* >::iterator iter;
-   iter = _cloneList.find( cloneID );
-   
-   if ( iter == _cloneList.end() )
-   {
-      std::cout << "Clone not available: " << cloneID << std::endl;
-      return 0;
-   }
-   return _cloneList[cloneID];
-}
-////////////////////////////////////////////////////////////////////////////////
-bool cfdModel::PartExists(std::string partID)
-{
-   std::map<std::string,VE_SceneGraph::CADEntity*>::iterator foundPart;
-   foundPart = _partList.find(partID);
-
-   if(foundPart != _partList.end())
-   {
-      return true;
-   }
-   return false;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool cfdModel::AssemblyExists(std::string assemblyID)
-{
-   std::map< std::string, VE_SceneGraph::DCS* >::iterator foundAssembly;
-   foundAssembly = _assemblyList.find(assemblyID);
-
-   if(foundAssembly != _assemblyList.end())
-   {
-      return true;
-   }
-   return false;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool cfdModel::CloneExists(std::string cloneID)
-{
-   std::map< std::string, VE_SceneGraph::Clone* >::iterator foundClone;
-   foundClone = _cloneList.find( cloneID );
-
-   if( foundClone != _cloneList.end() )
-   {
-      return true;
-   }
-
-   return false;
-}
 /////////////////////////////////////////////////
 void cfdModel::AddNewSound(std::string soundName,
                            std::string filename)

@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADRemoveAttributeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 
 #include "VE_Open/XML/XMLObject.h"
@@ -84,7 +85,7 @@ void CADRemoveAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject
       VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
       VE_XML::DataValuePair* activeAttribute = command->GetDataValuePair("Attribute Name");
 
-      _activeModel->RemoveAttributeFromNode(nodeID->GetDataString(),
+      m_cadHandler->RemoveAttributeFromNode(nodeID->GetDataString(),
                                             nodeType->GetDataString(),
                                             activeAttribute->GetDataString());
    }

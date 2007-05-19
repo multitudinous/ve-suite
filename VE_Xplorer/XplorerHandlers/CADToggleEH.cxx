@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADToggleEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
@@ -87,18 +88,18 @@ void CADToggleEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         _activeModel->GetAssembly(nodeID->GetDataString())->ToggleDisplay(toggleValue->GetDataString());
+         m_cadHandler->GetAssembly(nodeID->GetDataString())->ToggleDisplay(toggleValue->GetDataString());
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
          std::cout<<"---Toggle part---"<<std::endl;
          std::cout<<"---"<<toggleValue->GetDataString()<<"---"<<std::endl;
-         _activeModel->GetPart(nodeID->GetDataString())->GetDCS()->ToggleDisplay(toggleValue->GetDataString());
+         m_cadHandler->GetPart(nodeID->GetDataString())->GetDCS()->ToggleDisplay(toggleValue->GetDataString());
          std::cout<<"---Toggled part---"<<std::endl;
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph()->ToggleDisplay(toggleValue->GetDataString());
+         m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph()->ToggleDisplay(toggleValue->GetDataString());
       }
    }
    catch(...)

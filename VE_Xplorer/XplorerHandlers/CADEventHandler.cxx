@@ -35,6 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
@@ -45,7 +46,6 @@
 
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/XMLObject.h"
@@ -69,15 +69,17 @@ using namespace VE_SceneGraph;
 CADEventHandler::CADEventHandler()
 :VE_EVENTS::EventHandler()
 {
-   _cadNode = 0;
-   _activeModel = 0;
+    m_cadNode = 0;
+    m_activeModel = 0;
+    m_cadHandler = 0;
 }
 ////////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler(const CADEventHandler& rhs)
 :VE_EVENTS::EventHandler()
 {
-   _cadNode = rhs._cadNode;
-   _activeModel = rhs._activeModel;
+    m_cadNode = rhs.m_cadNode;
+    m_activeModel = rhs.m_activeModel;
+    m_cadHandler = rhs.m_cadHandler;
 }
 ////////////////////////////////////
 ///Destructor                     //
@@ -88,100 +90,103 @@ CADEventHandler::~CADEventHandler()
 ///////////////////////////////////////////////////////////////////////////
 void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
-   try
-   {
-      if(model)
-      {
-         _activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(model);
-      }
-      else
-      {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to CADEventHandler!"<<std::endl;
-   }
+    try
+    {
+        if(model)
+        {
+            m_activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(model);
+        }
+        else
+        {
+            m_activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+        }
+        m_cadHandler = m_activeModel->GetModelCADHandler();
+    }
+    catch(...)
+    {
+        m_activeModel = 0;
+        m_cadHandler = 0;
+        std::cout<<"Invalid object passed to CADEventHandler!"<<std::endl;
+    }
 }
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
 void CADEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
-   if(_activeModel)
-   {
-      //this is overridden in derived classes
-      _operateOnNode(veXMLObject);
-   }
+    if(m_cadHandler)
+    {
+        //this is overridden in derived classes
+        _operateOnNode(veXMLObject);
+    }
  }
 ///////////////////////////////////////////////////////////////////////
 CADEventHandler& CADEventHandler::operator=(const CADEventHandler& rhs)
 {
-   if(this != &rhs)
-   {
-      _cadNode = rhs._cadNode;
-      _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if(this != &rhs)
+    {
+        m_cadNode = rhs.m_cadNode;
+        m_activeModel = rhs.m_activeModel;
+        m_cadHandler = rhs.m_cadHandler;
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////
 void CADEventHandler::_setAttributesOnNode(CADNode* activeNode)
 {
-   //std::cout<<"Setting Attributes!!"<<std::endl;
-   //set attributes
-   size_t nAttributes = 0;
-   nAttributes = activeNode->GetAttributeList().size();
-   for(size_t i = 0;  i < nAttributes; i++)
-   {
+    //std::cout<<"Setting Attributes!!"<<std::endl;
+    //set attributes
+    size_t nAttributes = 0;
+    nAttributes = activeNode->GetAttributeList().size();
+    for(size_t i = 0;  i < nAttributes; i++)
+    {
       CADAttribute currentAttribute = activeNode->GetAttribute(i);
     //  std::cout<<"Adding attribute: "<<currentAttribute.GetAttributeName()<<std::endl;
-      _activeModel->AddAttributeToNode(activeNode->GetID(),&currentAttribute);
-   }
-   if(nAttributes)
-   {
-      _activeModel->SetActiveAttributeOnNode(activeNode->GetID(),
+      m_cadHandler->AddAttributeToNode(activeNode->GetID(),&currentAttribute);
+    }
+    if(nAttributes)
+    {
+      m_cadHandler->SetActiveAttributeOnNode(activeNode->GetID(),
                                              activeNode->GetNodeType(), 
                                              activeNode->GetActiveAttribute().GetAttributeName());
-   }
+    }
 
-   
-}
-///////////////////////////////////////////////////////
-void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
-{
-   //set the transform
-   VE_SceneGraph::DCS* transform = 0;
-   std::string nodeID = activeNode->GetID();
-   if(activeNode->GetNodeType() == "Assembly")
-   {
-      //std::cout<<"Setting transform on Assembly: "<<nodeID<<std::endl;
-      transform = _activeModel->GetAssembly(nodeID);
-   }
-   else if(activeNode->GetNodeType() == "Part")
-   {
-      //std::cout<<"Setting transform on Part: "<<nodeID<<std::endl;
-      transform = _activeModel->GetPart(nodeID)->GetDCS();
-   }
-   else if(activeNode->GetNodeType() == "Clone")
-   {
-      //std::cout<<"Setting transform on Clone: "<<nodeID<<std::endl;
-      if ( _activeModel->GetClone(nodeID) )
-      {
-         transform = _activeModel->GetClone(nodeID)->GetClonedGraph();
-      }
-   }
-   if( transform )
-   {
-      transform->SetTranslationArray(activeNode->GetTransform()->GetTranslationArray()->GetArray() );
-      transform->SetRotationArray(activeNode->GetTransform()->GetRotationArray()->GetArray() );
-      transform->SetScaleArray(activeNode->GetTransform()->GetScaleArray()->GetArray() );
-   }
-   else
-   {
-      std::cout<<"No transform found!!"<<std::endl;
-   }
+
+    }
+    ///////////////////////////////////////////////////////
+    void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
+    {
+    //set the transform
+    VE_SceneGraph::DCS* transform = 0;
+    std::string nodeID = activeNode->GetID();
+    if(activeNode->GetNodeType() == "Assembly")
+    {
+        //std::cout<<"Setting transform on Assembly: "<<nodeID<<std::endl;
+        transform = m_cadHandler->GetAssembly(nodeID);
+    }
+    else if(activeNode->GetNodeType() == "Part")
+    {
+        //std::cout<<"Setting transform on Part: "<<nodeID<<std::endl;
+        transform = m_cadHandler->GetPart(nodeID)->GetDCS();
+    }
+    else if(activeNode->GetNodeType() == "Clone")
+    {
+        //std::cout<<"Setting transform on Clone: "<<nodeID<<std::endl;
+        if ( m_cadHandler->GetClone(nodeID) )
+        {
+            transform = m_cadHandler->GetClone(nodeID)->GetClonedGraph();
+        }
+    }
+    if( transform )
+    {
+        transform->SetTranslationArray(activeNode->GetTransform()->GetTranslationArray()->GetArray() );
+        transform->SetRotationArray(activeNode->GetTransform()->GetRotationArray()->GetArray() );
+        transform->SetScaleArray(activeNode->GetTransform()->GetScaleArray()->GetArray() );
+    }
+    else
+    {
+        std::cout<<"No transform found!!"<<std::endl;
+    }
 }
 ///////////////////////////////////////////////////////////////////////
 void CADEventHandler::SetNodeDescriptors(std::string nodeID,
@@ -189,41 +194,41 @@ void CADEventHandler::SetNodeDescriptors(std::string nodeID,
                                          std::string descriptorName,
                                          std::string descriptorValue)
 {
-   //set the uuid on the osg node so that we can get back to vexml
-   osg::Node::DescriptionList descriptorsList;
-   descriptorsList.push_back( descriptorName );
-   descriptorsList.push_back( descriptorValue );
-   
-   if(nodeType == "Assembly")
-   {
-      VE_SceneGraph::DCS* assemblyNode = _activeModel->GetAssembly(nodeID);
-      assemblyNode->setDescriptions( descriptorsList );
-   }
-   else if(nodeType == "Part")
-   {
-      VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(nodeID);
-      partNode->GetDCS()->setDescriptions( descriptorsList );
-   }
-   else if(nodeType == "Clone")
-   {
-      VE_SceneGraph::Clone* cloneNode = _activeModel->GetClone(nodeID);
-      VE_SceneGraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
-      cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
-   }
+    //set the uuid on the osg node so that we can get back to vexml
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( descriptorName );
+    descriptorsList.push_back( descriptorValue );
+
+    if(nodeType == "Assembly")
+    {
+        VE_SceneGraph::DCS* assemblyNode = m_cadHandler->GetAssembly(nodeID);
+        assemblyNode->setDescriptions( descriptorsList );
+    }
+    else if(nodeType == "Part")
+    {
+        VE_SceneGraph::CADEntity* partNode = m_cadHandler->GetPart(nodeID);
+        partNode->GetDCS()->setDescriptions( descriptorsList );
+    }
+    else if(nodeType == "Clone")
+    {
+        VE_SceneGraph::Clone* cloneNode = m_cadHandler->GetClone(nodeID);
+        VE_SceneGraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
+        cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
+    }
 }
 /////////////////////////////////////////////////////////////////////////
 void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 {
-   VE_SceneGraph::DCS* parentAssembly = 0;
-   parentAssembly = _activeModel->GetAssembly(parentID);
+    VE_SceneGraph::DCS* parentAssembly = 0;
+    parentAssembly = m_cadHandler->GetAssembly(parentID);
 
-   vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent---" << parentID 
+    vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent---" << parentID 
                            << std::endl << vprDEBUG_FLUSH;
-   if( !parentAssembly )
-   {
+    if( !parentAssembly )
+    {
        std::cout<<"|---No parent found---id "<< parentID << std::endl;
        return;
-   }
+    }
    
    if( activeNode->GetNodeType() == "Assembly" )
    {
@@ -233,8 +238,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
         //std::cout<<"   ---"<<newAssembly->GetNodeName()<<"---"<<std::endl;
         //std::cout<<"   --- ("<<newAssembly->GetNumberOfChildren()<<") child nodes---"<<std::endl;
 
-        _activeModel->CreateAssembly(newAssembly->GetID());
-        _activeModel->GetAssembly(newAssembly->GetID())->SetName(newAssembly->GetNodeName());
+        m_cadHandler->CreateAssembly(newAssembly->GetID());
+        m_cadHandler->GetAssembly(newAssembly->GetID())->SetName(newAssembly->GetNodeName());
 
         //std::cout<<"   ---Setting node properties---"<<std::endl;
 
@@ -243,7 +248,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 
         _setAttributesOnNode(newAssembly);
         //std::cout<<"      ---Set Attributes---"<<std::endl;
-        parentAssembly->AddChild(_activeModel->GetAssembly(newAssembly->GetID()));
+        parentAssembly->AddChild(m_cadHandler->GetAssembly(newAssembly->GetID()));
 
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
         for(unsigned int i = 0; i < nChildren; i++)
@@ -251,10 +256,10 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             //std::cout<<"      Adding child: "<<newAssembly->GetChild(i)->GetNodeName()<<std::endl;
             _addNodeToNode(newAssembly->GetID(), newAssembly->GetChild(i));
         }
-        _activeModel->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
+        m_cadHandler->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
         SetNodeDescriptors(newAssembly->GetID(),"Assembly","VE_XML_ID",newAssembly->GetID());
         //Set a default material on nodes that have no initial material
-        VE_SceneGraph::Utilities::MaterialInitializer material_initializer( _activeModel->GetAssembly( newAssembly->GetID() ) );
+        VE_SceneGraph::Utilities::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
     }
     else if(activeNode->GetNodeType() == "Part")
     {
@@ -268,12 +273,12 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
         vprDEBUG( vesDBG, 1 ) <<"|\t---" << tempFilename << "---" 
                              << correctedPath.native_file_string() 
                              << std::endl << vprDEBUG_FLUSH;
-        _activeModel->CreatePart( correctedPath.native_file_string(),
+        m_cadHandler->CreatePart( correctedPath.native_file_string(),
                                 newPart->GetID(),
                                 parentID
                               );
 
-        VE_SceneGraph::CADEntity* partNode = _activeModel->GetPart(newPart->GetID());
+        VE_SceneGraph::CADEntity* partNode = m_cadHandler->GetPart(newPart->GetID());
         if ( partNode->GetNode()->GetNode() )
         {
             partNode->GetNode()->SetName(newPart->GetNodeName());

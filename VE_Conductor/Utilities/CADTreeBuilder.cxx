@@ -35,7 +35,6 @@
 #include "VE_Open/XML/CAD/CADNode.h" 
 #include "VE_Open/XML/CAD/CADPart.h" 
 #include "VE_Open/XML/CAD/CADAssembly.h" 
-#include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/CAD/CADNodeTraverser.h"
 
 #include <wx/imaglist.h>
@@ -228,29 +227,6 @@ void CADTreeBuilder::TreeGraphPreCallback::Apply(CADNodeTraverser* treeBuilder, 
          currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
                                                                      wxString(node->GetNodeName().c_str(), wxConvUTF8 )
                                                                      ,0,1,new TreeNodeData(node));
-      }
-      else if(node->GetNodeType() == std::string("Clone"))
-      {
-         CADClone* clone = dynamic_cast<CADClone*>(node);
-         if(clone)
-         {
-            if(clone->GetOriginalNode()->GetNodeType() == std::string("Assembly"))
-            {
-               currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
-                                                                     wxString(clone->GetNodeName().c_str(), wxConvUTF8 )
-                                                                     ,0,2,new TreeNodeData(clone));
-
-
-               treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_Expanded);
-               treeGraph->GetWXTreeCtrl()->SetItemImage(currentParentId, 2, wxTreeItemIcon_SelectedExpanded);
-            }
-            else if(clone->GetOriginalNode()->GetNodeType() == std::string("Part"))
-            {
-                currentParentId = treeGraph->GetWXTreeCtrl()->AppendItem(treeGraph->GetCurrentParentNode(),
-                                                                     wxString(clone->GetNodeName().c_str(), wxConvUTF8)
-                                                                     ,0,1,new TreeNodeData(clone));
-            }
-         }
       }
    }
    else

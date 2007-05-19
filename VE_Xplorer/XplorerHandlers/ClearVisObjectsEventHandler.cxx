@@ -34,6 +34,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
@@ -101,7 +102,7 @@ void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 #endif
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
-      cfdModelHandler::instance()->GetActiveModel()->MakeCADRootOpaque();
+      cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
 
       unsigned int state = 0;
       cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();

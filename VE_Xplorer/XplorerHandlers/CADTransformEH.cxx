@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADTransformEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
@@ -89,23 +90,23 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 		VE_SceneGraph::DCS* transform = 0;
       if(nodeType->GetDataString() == std::string("Part"))
       {
-         if(_activeModel->PartExists(nodeID->GetDataString()))
+         if(m_cadHandler->PartExists(nodeID->GetDataString()))
          {
-            transform = _activeModel->GetPart(nodeID->GetDataString())->GetDCS();
+            transform = m_cadHandler->GetPart(nodeID->GetDataString())->GetDCS();
          }
       }
       else if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         if(_activeModel->AssemblyExists(nodeID->GetDataString()))
+         if(m_cadHandler->AssemblyExists(nodeID->GetDataString()))
          {
-            transform = _activeModel->GetAssembly(nodeID->GetDataString());
+            transform = m_cadHandler->GetAssembly(nodeID->GetDataString());
          }
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         if(_activeModel->CloneExists(nodeID->GetDataString()))
+         if(m_cadHandler->CloneExists(nodeID->GetDataString()))
          {
-            transform = _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph();
+            transform = m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph();
          }
       }
       if( transform )

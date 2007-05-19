@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADAddNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -41,7 +42,7 @@
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADClone.h"
+//#include "VE_Open/XML/CAD/CADClone.h"
 #include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_XML::VE_CAD;
@@ -86,7 +87,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::VE_CAD::CADNode* node = 0;
       VE_XML::VE_CAD::CADAssembly* assembly = 0; 
       VE_XML::VE_CAD::CADPart* part = 0;
-      VE_XML::VE_CAD::CADClone* clone = 0;
+      //VE_XML::VE_CAD::CADClone* clone = 0;
 
 		VE_SceneGraph::DCS* parentAssembly = 0;
 
@@ -95,7 +96,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
          
          assembly = dynamic_cast<VE_XML::VE_CAD::CADAssembly*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(assembly);
-         if(_activeModel->AssemblyExists(node->GetID()))
+         if(m_cadHandler->AssemblyExists(node->GetID()))
          {
             throw("Assembly already exists");
          }
@@ -104,7 +105,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       {
          part = dynamic_cast<VE_XML::VE_CAD::CADPart*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(part);
-         if(_activeModel->PartExists(node->GetID()))
+         if(m_cadHandler->PartExists(node->GetID()))
          {
             throw("Part already exists");
          }
@@ -115,24 +116,24 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       {
          ///add the root to the VEBaseClass DCS
          node->SetParent("rootNode");
-         _activeModel->SetRootCADNodeID(node->GetID());
+         m_cadHandler->SetRootCADNodeID(node->GetID());
       }
       else
       {
          //need to check if parent is on the graph already
-         if(!_activeModel->AssemblyExists(node->GetParent()))
+         if(!m_cadHandler->AssemblyExists(node->GetParent()))
          {
-            _activeModel->CreateAssembly(node->GetParent());
+            m_cadHandler->CreateAssembly(node->GetParent());
             //We have to initialize some properties on the root node since
             //we are not creating it from xml data.
             //From intial creation, the top level node is called Model_Geometry in the GUI.
             //After that, CADSetNameEH handles the name appropriately.
-            _activeModel->GetAssembly(node->GetParent())->setName("Model_Geometry");
+            m_cadHandler->GetAssembly(node->GetParent())->setName("Model_Geometry");
 
             //update the top level node descriptors
             SetNodeDescriptors(node->GetParent(),"Assembly","VE_XML_ID",node->GetParent());
             //Add the top level CAD to the VEBaseClass
-            _activeModel->GetDCS()->addChild(_activeModel->GetAssembly(node->GetParent()));
+            m_activeModel->GetDCS()->addChild(m_cadHandler->GetAssembly(node->GetParent()));
          }
       }
       

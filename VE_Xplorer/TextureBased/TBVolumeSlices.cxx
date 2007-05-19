@@ -404,11 +404,11 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(osg::State& currentSt
    for(unsigned int i = 0; i <= _nSlices; ++i)
    {
       float verts[18]={0,0,0,
-                       0,0,0,
-                       0,0,0,
-                       0,0,0,
-                       0,0,0,
-                       0,0,0};
+                          0,0,0,
+                          0,0,0,
+                          0,0,0,
+                          0,0,0,
+                          0,0,0};
       float backTcoords[18]={0,0,0,
                              0,0,0,
                              0,0,0,
@@ -423,6 +423,30 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(osg::State& currentSt
                              0,0,0};
 
       float* tempCoords = 0;
+      verts[0] = initialSlicePoint.x();
+      verts[1] = initialSlicePoint.y();
+      verts[2] = initialSlicePoint.z();
+      
+      verts[3] = initialSlicePoint.x();
+      verts[4] = initialSlicePoint.y();
+      verts[5] = initialSlicePoint.z();
+
+      verts[6] = initialSlicePoint.x();
+      verts[7] = initialSlicePoint.y();
+      verts[8] = initialSlicePoint.z();
+
+      verts[9] = initialSlicePoint.x();
+      verts[10] = initialSlicePoint.y();
+      verts[11] = initialSlicePoint.z();
+
+      verts[12] = initialSlicePoint.x();
+      verts[13] = initialSlicePoint.y();
+      verts[14] = initialSlicePoint.z();
+
+     verts[15] = initialSlicePoint.x();
+     verts[16] = initialSlicePoint.y();
+     verts[17] = initialSlicePoint.z();
+
       ///calculate vertex position from intersections
       for(unsigned int j = 0; j < 6; ++j)
       {
@@ -478,8 +502,6 @@ void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates(unsigned int
                                                                     float* frontTCoords,
                                                                     float* backTCoords)const
 {
-   ///texture coordinates aren't calculated because we are auto generating them now
-   ///we can add the calculation of the second coordinate if we need to manually here
    osg::Vec4 edgeInitial;
    osg::Vec4 edgeEnd;
    for(unsigned int i = 0; i < 4; ++i)
@@ -508,7 +530,7 @@ void TextureBasedVolumeSlices::_calculateVertsAndTextureCoordinates(unsigned int
          verts[currentEdgeIndex*3    ] = x;
          verts[currentEdgeIndex*3 + 1] = y;
          verts[currentEdgeIndex*3 + 2] = z;
-         // Compute the back texture coords
+         // Compute the front texture coords
          x = (float) (tInitial.x() + (tFront * (tEnd.x() - tInitial.x())));
          y = (float) (tInitial.y() + (tFront * (tEnd.y() - tInitial.y())));
          z = (float) (tInitial.z() + (tFront* (tEnd.z() - tInitial.z())));

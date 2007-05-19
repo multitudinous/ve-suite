@@ -35,6 +35,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/SeedPoints.h"
 
@@ -99,7 +100,7 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       if(_activeModel)
       {
          //make the CAD transparent
-         _activeModel->MakeCADRootTransparent();
+         _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
          ///what happens if texture is somehow added first? Is that possible?
          VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
          VE_XML::DataValuePair* seedPointsFlag = command->GetDataValuePair( "OnOff" );

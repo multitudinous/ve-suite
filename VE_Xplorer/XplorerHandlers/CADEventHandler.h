@@ -54,6 +54,7 @@ namespace VE_Xplorer
 {
    class cfdGlobalBase;
    class cfdModel;
+   class ModelCADHandler;
 }
 #include "VE_Installer/include/VEConfig.h"
 #include <string>
@@ -109,8 +110,9 @@ protected:
    ///\param node CADNode to extract transform from.
    void _setTransformOnNode(VE_XML::VE_CAD::CADNode* node);
    
-   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
-   VE_XML::VE_CAD::CADNode* _cadNode;///<The CADNode.
+   VE_Xplorer::cfdModel* m_activeModel;///<The active cfdModel;
+   VE_Xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
+   VE_XML::VE_CAD::CADNode* m_cadNode;///<The CADNode.
 };
 }
 #endif// VE_EVENT_HANDLER_H

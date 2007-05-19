@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CreateVisObjectEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
 #include "VE_Xplorer/Utilities/fileIO.h"
@@ -759,7 +760,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
       activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
       activeObject->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
       activeObject->UpdateCommand();
-      cfdModelHandler::instance()->GetActiveModel()->MakeCADRootTransparent();
+      cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
    }
    
    // get the active vis object

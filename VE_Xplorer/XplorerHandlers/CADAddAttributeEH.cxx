@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADAddAttributeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
 
 #include "VE_Open/XML/XMLObject.h"
@@ -88,7 +89,7 @@ void CADAddAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"Node:"<<nodeID->GetDataString()<<std::endl;
       std::cout<<"Attribute:"<<rawAttribute->GetAttributeName()<<std::endl;
-      _activeModel->AddAttributeToNode(nodeID->GetDataString(),rawAttribute);
+      m_cadHandler->AddAttributeToNode(nodeID->GetDataString(),rawAttribute);
    }
    catch(...)
    {

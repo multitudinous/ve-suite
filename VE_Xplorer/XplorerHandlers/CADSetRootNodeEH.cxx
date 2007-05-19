@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADSetRootNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -77,7 +78,7 @@ void CADSetRootNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 
       std::string rootNodeID;
       newRootNode->GetData(rootNodeID);       
-      _activeModel->SetRootCADNodeID(rootNodeID);
+      m_cadHandler->SetRootCADNodeID(rootNodeID);
    }
    catch(std::string str)
    {

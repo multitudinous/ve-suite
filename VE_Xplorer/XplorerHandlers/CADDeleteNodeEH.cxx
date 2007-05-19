@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/CADDeleteNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
@@ -87,20 +88,20 @@ void CADDeleteNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Deleting node---"<<std::endl;
       VE_SceneGraph::DCS* parentAssembly = 0;
-      parentAssembly = _activeModel->GetAssembly(parentID->GetDataString());
+      parentAssembly = m_cadHandler->GetAssembly(parentID->GetDataString());
 
       //This assumes the part/assembly isn't there already
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         parentAssembly->RemoveChild(_activeModel->GetAssembly(nodeID->GetDataString()));
+         parentAssembly->RemoveChild(m_cadHandler->GetAssembly(nodeID->GetDataString()));
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
-         parentAssembly->RemoveChild(_activeModel->GetPart(nodeID->GetDataString())->GetDCS());
+         parentAssembly->RemoveChild(m_cadHandler->GetPart(nodeID->GetDataString())->GetDCS());
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         parentAssembly->RemoveChild(_activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph());
+         parentAssembly->RemoveChild(m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph());
       }
    }
    catch(...)

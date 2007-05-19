@@ -44,7 +44,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -134,7 +134,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

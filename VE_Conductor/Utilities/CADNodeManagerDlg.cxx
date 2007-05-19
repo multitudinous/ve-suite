@@ -38,7 +38,6 @@
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include "VE_Open/XML/Command.h"

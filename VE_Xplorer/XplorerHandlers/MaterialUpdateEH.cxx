@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/MaterialUpdateEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -104,9 +105,11 @@ void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
       }
 
        values.push_back(rawMaterial->GetOpacity());
-      _activeModel->UpdateMaterialComponent(nodeId->GetDataString(),rawMaterial->GetMaterialName(),
-                                            rawComponent,
-                                            rawMaterial->GetFace(),values);
+      _activeModel->GetModelCADHandler()->
+                                                UpdateMaterialComponent(nodeId->GetDataString(),
+                                                                                  rawMaterial->GetMaterialName(),
+                                                                                  rawComponent,
+                                                                                  rawMaterial->GetFace(),values);
       
    }
    catch(...)

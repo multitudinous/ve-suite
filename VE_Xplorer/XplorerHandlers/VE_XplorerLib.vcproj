@@ -582,6 +582,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ModelCADHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\NavigationDataEventHandler.cxx"
 				>
 			</File>
@@ -1062,6 +1066,10 @@
 			</File>
 			<File
 				RelativePath=".\MaterialUpdateEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelCADHandler.h"
 				>
 			</File>
 			<File

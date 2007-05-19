@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -89,7 +89,7 @@ void MaterialModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObje
       {
          value = rawMaterial->GetColorMode();
       }
-      _activeModel->UpdateMaterialMode(nodeId->GetDataString(),
+      _activeModel->GetModelCADHandler()->UpdateMaterialMode(nodeId->GetDataString(),
                                        rawMaterial->GetMaterialName(),
                                        newMode,value);
       

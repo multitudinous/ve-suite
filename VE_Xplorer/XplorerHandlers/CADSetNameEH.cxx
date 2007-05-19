@@ -36,6 +36,7 @@
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Clone.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -88,10 +89,10 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))
       {
-         if(_activeModel->AssemblyExists(nodeID->GetDataString()))
+         if(m_cadHandler->AssemblyExists(nodeID->GetDataString()))
          {
             std::cout<<"Setting name: "<<newName->GetDataString()<<std::endl;
-            _activeModel->GetAssembly(nodeID->GetDataString())->SetName(newName->GetDataString());
+            m_cadHandler->GetAssembly(nodeID->GetDataString())->SetName(newName->GetDataString());
          }
          else
          {
@@ -101,9 +102,9 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType->GetDataString() == std::string("Part"))
       {
-         if(_activeModel->PartExists(nodeID->GetDataString()))
+         if(m_cadHandler->PartExists(nodeID->GetDataString()))
          {
-            _activeModel->GetPart(nodeID->GetDataString())->GetNode()->SetName(newName->GetDataString());
+            m_cadHandler->GetPart(nodeID->GetDataString())->GetNode()->SetName(newName->GetDataString());
          }
          else
          {
@@ -113,9 +114,9 @@ void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType->GetDataString() == std::string("Clone"))
       {
-         if(_activeModel->CloneExists(nodeID->GetDataString()))
+         if(m_cadHandler->CloneExists(nodeID->GetDataString()))
          {
-            _activeModel->GetClone(nodeID->GetDataString())->GetClonedGraph()->SetName(newName->GetDataString());
+            m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph()->SetName(newName->GetDataString());
          }
          else
          {

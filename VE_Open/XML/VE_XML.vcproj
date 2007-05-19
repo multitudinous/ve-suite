@@ -206,10 +206,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\CAD\CADClone.h"
-					>
-				</File>
-				<File
 					RelativePath=".\CAD\CADCreator.h"
 					>
 				</File>
@@ -259,10 +255,6 @@
 				</File>
 				<File
 					RelativePath=".\CAD\CADAttribute.cxx"
-					>
-				</File>
-				<File
-					RelativePath=".\CAD\CADClone.cxx"
 					>
 				</File>
 				<File
