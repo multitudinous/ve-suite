@@ -206,11 +206,11 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       }
       if(!parser.Found(_("ms"),&minStep))
       {
-        return false;
+        minStep = 0;
       }
       if(!parser.Found(_("tgp"),&transientGridProp))
       {
-        return false;
+        transientGridProp = 0;
       }
       if(parser.Found(_("h")))
       {
