@@ -141,6 +141,17 @@ void Body_UI_i::Raise (
     }
   }
   
+void Body_UI_i::SetXplorerData (
+    const char * xplorerData
+  )
+  ACE_THROW_SPEC ((
+    ::CORBA::SystemException,
+    ::Error::EUnknown
+  ))
+{
+    throw CORBA::NO_IMPLEMENT();
+}
+
 void Body_UI_i::SetLogWindow( PEThread* logWindow )
 { 
 	  this->logWindow = logWindow;

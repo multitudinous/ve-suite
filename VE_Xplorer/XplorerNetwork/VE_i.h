@@ -120,6 +120,14 @@ protected:
     CORBA::SystemException
     , Error::EUnknown
    ));
+  virtual
+  void SetXplorerData (
+      const char * xplorerData
+    )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    )) { ; } 
 };
 }
 #endif

@@ -28,33 +28,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-module Types{
-  // Array type def
-  
-  typedef sequence<long>      ArrayLong;
-  typedef sequence<double>    ArrayDouble;
-  typedef sequence<string>    ArrayString;
-  typedef sequence<boolean>   ArrayBoolean;
-  typedef sequence<any>       ArrayAny;
-  
-  typedef sequence<ArrayLong>      ArrayLong2D;
-  typedef sequence<ArrayDouble>    ArrayDouble2D;
-  typedef sequence<ArrayString>    ArrayString2D;
-  typedef sequence<ArrayBoolean>   ArrayBoolean2D;
-  typedef sequence<ArrayAny>       ArrayAny2D;
+module Types
+{
+   // Array type def
 
-  typedef sequence<ArrayLong2D>      ArrayLong3D;
-  typedef sequence<ArrayDouble2D>    ArrayDouble3D;
-  typedef sequence<ArrayString2D>    ArrayString3D;
-  typedef sequence<ArrayBoolean2D>   ArrayBoolean3D;
-  typedef sequence<ArrayAny2D>       ArrayAny3D;
+   typedef sequence<long>      ArrayLong;
+   typedef sequence<double>    ArrayDouble;
+   typedef sequence<string>    ArrayString;
+   typedef sequence<boolean>   ArrayBoolean;
+   typedef sequence<any>       ArrayAny;
 
-  typedef sequence<ArrayDouble3D>    ArrayDouble4D;
-  
-  struct Profile {
-    ArrayString   profile_vars;
-    ArrayDouble2D profile_vals;
-  };
+   typedef sequence<ArrayLong>      ArrayLong2D;
+   typedef sequence<ArrayDouble>    ArrayDouble2D;
+   typedef sequence<ArrayString>    ArrayString2D;
+   typedef sequence<ArrayBoolean>   ArrayBoolean2D;
+   typedef sequence<ArrayAny>       ArrayAny2D;
+
+   typedef sequence<ArrayLong2D>      ArrayLong3D;
+   typedef sequence<ArrayDouble2D>    ArrayDouble3D;
+   typedef sequence<ArrayString2D>    ArrayString3D;
+   typedef sequence<ArrayBoolean2D>   ArrayBoolean3D;
+   typedef sequence<ArrayAny2D>       ArrayAny3D;
+
+   typedef sequence<ArrayDouble3D>    ArrayDouble4D;
+
+   struct Profile 
+   {
+      ArrayString   profile_vars;
+      ArrayDouble2D profile_vals;
+   };
 };
 
 
@@ -118,22 +120,22 @@ module Body{
     
   };
 
- interface UI { //This is the UI;
-    
-    //This is to update the network, called by the Executive
-    void UpdateNetwork(in string network) raises(Error::EUnknown);
-
-    //This is to update the module UI, called by the Executive
-    void UpdateModuleUI(in long module_id, in string msg) raises(Error::EUnknown);
-    
-    //This is to update the Result UI, called by the Executive
-    void UpdateModuleResult(in long module_id, in string msg) raises(Error::EUnknown);
-
-    //This is to update the Link content UI, called by the Executive
-    void UpdateLinkContent(in long id, in string msg) raises(Error::EUnknown);
-    //This is to Raise the Notification or waring or error message
-    void Raise(in string notification) raises(Error::EUnknown);
-  };
+   interface UI //This is the UI (Conductor)
+   { 
+      //This is to update the network, called by the Executive
+      void UpdateNetwork(in string network) raises(Error::EUnknown);
+      //This is to update the module UI, called by the Executive
+      void UpdateModuleUI(in long module_id, in string msg) raises(Error::EUnknown);
+      //This is to update the Result UI, called by the Executive
+      void UpdateModuleResult(in long module_id, in string msg) raises(Error::EUnknown);
+      //This is to update the Link content UI, called by the Executive
+      void UpdateLinkContent(in long id, in string msg) raises(Error::EUnknown);
+      //This is to Raise the Notification or waring or error message
+      void Raise(in string notification) raises(Error::EUnknown);
+      //This is to update the graphics relevant data in conductor
+      //such as CAD data, dataset info, and navigation information
+      void SetXplorerData( in string xplorerData ) raises( Error::EUnknown );
+   };
 
   interface Executive { // This is the Excutive Engine;
     
@@ -219,26 +221,29 @@ module Body{
 
   };
 
-   interface VEEngine
+   interface VEXplorer
    {	// this is the visualization Engine
     
       //This is for querying the status of the module
-      string GetStatusMessage() raises(Error::EUnknown);
-    
+      string GetStatusMessage() raises( Error::EUnknown );
       //This is to Set the Module up
-      void SetParams(in string param) raises(Error::EUnknown);
-    
+      void SetParams(in string param) raises( Error::EUnknown );
       //This is to Set the ID
-      void SetID(in long id) raises(Error::EUnknown);
-    
+      void SetID(in long id) raises( Error::EUnknown );
       //This is to Get the ID
-      long GetID() raises(Error::EUnknown);
-    
+      long GetID() raises( Error::EUnknown );
       //This is to Set the name
-      void SetName(in string name) raises(Error::EUnknown);
-    
+      void SetName(in string name) raises( Error::EUnknown );
       //This is to Get the name
-      string GetName() raises(Error::EUnknown);
+      string GetName() raises( Error::EUnknown );
+      //Set the network to be used by this engine
+      void SetNetwork( in string network ) raises( Error::EUnknown );
+      //Set the command to be executed by Xplorer
+      void SetCommand( in string command ) raises( Error::EUnknown );
+      //This is to Register a UI to Xplorer, make it is aware that this UI is connected in
+      void RegisterUI( in string UIName, in Body::UI ui ) raises( Error::EUnknown );
+      //This is to disconnect the UI from Xplorer,
+      void UnRegisterUI( in string UIName ) raises( Error::EUnknown );
    };
 
    interface VEExecutive
@@ -254,7 +259,7 @@ module Body{
       void UnRegisterVE(in string UnitName) raises(Error::EUnknown);
 
       //This is to Register a Unit to the Executive, flag=0 is normal module, flag=1 will be the global module
-      void RegisterVE(in string UnitName, in Body::VEEngine unit, in long flag) raises(Error::EUnknown);
+      void RegisterVE(in string UnitName, in Body::VEXplorer unit, in long flag) raises(Error::EUnknown);
       
       //This is the set the network, called by the UI
       void SetNetwork(in string network) raises(Error::EUnknown);

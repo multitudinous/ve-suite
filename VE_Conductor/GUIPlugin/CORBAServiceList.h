@@ -141,7 +141,7 @@ private:
    CosNaming::NamingContext_var naming_context;
    VjObs_var vjobs;
    //Body::Executive_var module;
-   Body::VEEngine_var veXplorer;
+   Body::VEXplorer_var veXplorer;
    Body::Executive_var veCE;
    Body_UI_i* p_ui_i;
    PEThread* pelog;
