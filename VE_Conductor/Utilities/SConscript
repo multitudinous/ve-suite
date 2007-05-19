@@ -19,6 +19,8 @@ utils_srcs = Split("""
    ROIDialog.cxx
    BaseDialog.cxx
    WPDialog.cxx
+   NetworkDataBuffer.cxx
+   ../DefaultPlugin/DefaultPlugin.cxx
 """)
 
 gui_srcs = Split("""
@@ -40,6 +42,7 @@ utils_h = Split("""
    ROIDialog.h
    BaseDialog.h
    WPDialog.h
+   NetworkDataBuffer.h
 """)
 
 gui_h = Split("""

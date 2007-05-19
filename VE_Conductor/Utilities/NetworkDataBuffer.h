@@ -23,22 +23,26 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-02-06 16:35:58 -0600 (Tue, 06 Feb 2007) $
- * Version:       $Rev: 6788 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef XML_DATA_BUFFER_ENGINE_H
-#define XML_DATA_BUFFER_ENGINE_H
-/*!\file XMLDataBufferEngine.h
-XMLDataBufferEngine API
+#ifndef NETWORK_DATA_BUFFER_H
+#define NETWORK_DATA_BUFFER_H
+/*!\file NetworkDatabuffer.h
+NetworkDatabuffer API
 */
-/*!\class VE_Conductor::XMLDataBufferEngine
+/*!\class VE_Conductor::NetworkDatabuffer
 * 
 */
 #include "VE_Open/XML/Command.h"
+
+#include "VE_Conductor/Utilities/Link.h"
+#include "VE_Conductor/Utilities/Module.h"
+#include "VE_Conductor/Utilities/Tag.h"
 
 //do this to remove compile warnings from linux platforms
 #undef _REENTRANT
@@ -48,35 +52,27 @@ XMLDataBufferEngine API
 #include <map>
 #include <string>
 
-#include <VE_Open/XML/Model/Model.h>
-#include <VE_Open/XML/Model/Network.h>
-#include <VE_Open/XML/Model/Tag.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/User.h>
-
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
 {
-class VE_GUIPLUGINS_EXPORTS XMLDataBufferEngine
+class VE_CONDUCTOR_UTILS_EXPORTS NetworkDatabuffer
 {
-private:
-   /// Required so that vpr::Singleton can instantiate this class.
-   /// friend class vpr::Singleton< UserPreferenceDataBuffer >;
-   XMLDataBufferEngine( void );
-   ~XMLDataBufferEngine(){ ; } //Never gets called, don't implement until vrj2.2
-   vprSingletonHeader( XMLDataBufferEngine );
 public:
-    ///Desctructor call until vrj 2.2 is released
-    void CleanUp( void );
+    ///Constructor
+    NetworkDatabuffer( void );
+    ///Destructor
+    ~NetworkDatabuffer();
     ///Get Command with key
     ///The key MUST be the command name
     ///\param commandKey command desired by the user
+    ///\return Return command selected byt the user
     VE_XML::Command& GetCommand( std::string commandKey );
     ///set Command with key
     ///\param commandKey key of the command desired
     ///\param command command to be stored
     void SetCommand( std::string commandKey, VE_XML::Command& command );
     ///Get all the commands
+    ///\return Returns the m_commandMap
     std::map< std::string, VE_XML::Command >& GetCommandMap( void );
     ///Set all the commands
     ///\param tempMap the the map of commands when initialized by the user
@@ -89,24 +85,19 @@ public:
     std::string SaveVESData( std::string fileName );
     ///New 
     void NewVESData( bool promptClearXplorer );
-    ///Get data
-    VE_XML::VE_Model::Network& GetXMLNetworkDataObject( std::string dataNumber );
-    ///Get data
-    std::vector< VE_XML::VE_Model::Model >& GetXMLModelDataObject( std::string dataNumber );
+    ///Set Window
+    void SetRenderWindow( wxWindow* renderWindow );
     
 private:
     ///Map to store the command name and command for easy lookup by the user
     std::map< std::string, VE_XML::Command > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
-    ///Map
-    std::map< std::string, VE_XML::VE_Model::Network > m_networkMap;
-    ///Map
-    std::map< std::string, VE_XML::VE_Model::Model > m_modelMap;
-    ///Map
-    std::map< std::string, VE_XML::VE_Model::Tag > m_tagMap;
-    ///Map
-    std::map< std::string, VE_XML::User > m_userMap;
+    //Three main list of network objs
+    std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
+    std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
+    std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
+    wxWindow* renderWindow;
 };
 }
-#endif //XML_DATA_BUFFER_ENGINE_H
+#endif //NETWORK_DATA_BUFFER_H

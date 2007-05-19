@@ -233,4 +233,15 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     //Erase all the maps
 }
 ////////////////////////////////////////////////////////////////////////////////
+VE_XML::VE_Model::Network& XMLDataBufferEngine::GetXMLNetworkDataObject( std::string dataNumber )
+{
+    return m_networkMap[ dataNumber ];
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< VE_XML::VE_Model::Model >& XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
+{
+    std::vector< VE_XML::VE_Model::Model > modelVector;
+    return modelVector;
+}
+
 
