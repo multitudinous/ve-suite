@@ -74,11 +74,16 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+<<<<<<< .mine
+BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
+    EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
+=======
 // --- wxWidgets Includes --- //
 #include <wx/dc.h>
 
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
+>>>>>>> .r7700
     EVT_MENU( TOOLBAR_OPEN, MainToolBar::OnOpen )
     EVT_MENU( TOOLBAR_SAVE, MainToolBar::OnSave )
 
@@ -102,7 +107,7 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 MainToolBar::MainToolBar( wxWindow* parent )
 :
-wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxCLIP_CHILDREN | wxSUNKEN_BORDER | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar" ) )
+wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxCLIP_CHILDREN | wxSUNKEN_BORDER | wxTB_HORIZONTAL | wxNO_BORDER ), wxString( "toolBar", wxConvUTF8 ) )
 {
     LoadToolBarBitmaps();
     CreateMainToolBar();
