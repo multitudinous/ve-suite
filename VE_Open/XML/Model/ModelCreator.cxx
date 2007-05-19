@@ -126,11 +126,14 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObjectCopy(std::string objectType,
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectCopySmart(std::string objectType,
-                                                        VE_XML::XMLObjectPtr objectToCopy)
+VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectCopySmart(
+    std::string objectType,
+    VE_XML::XMLObjectPtr objectToCopy )
 {
     if ( objectType == "Tag" )
     {
+        ///This is a hack and will be corrected 
+        //with the proper use of a factory
         return new Tag( *dynamic_cast< Tag* >( &*objectToCopy ) );
     }
     return 0;
