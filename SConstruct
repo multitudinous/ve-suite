@@ -314,6 +314,9 @@ if not SConsAddons.Util.hasHelpFlag():
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
+   baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
+   baseEnv.Append( LIBS = ['loki.0.1.6'] )
+   baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir

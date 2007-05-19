@@ -142,22 +142,19 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
    {
       //get variables by tags
       DOMElement* dataValueStringName = 0;
-
-      {
-         dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
-         tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
-      }
+       dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
+       tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
       // for Tag points
-      {
-         unsigned int numberOfPoints = currentElement->getElementsByTagName( xercesString("linkPoints") )->getLength();
+     unsigned int numberOfPoints = 
+      currentElement->getElementsByTagName( 
+      xercesString("linkPoints") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfPoints; ++i )
-         {
-            dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-            tagPoints.push_back( new Point(  ) );
-            tagPoints.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
+     for ( unsigned int i = 0; i < numberOfPoints; ++i )
+     {
+        dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
+        tagPoints.push_back( new Point(  ) );
+        tagPoints.back()->SetObjectFromXMLData( dataValueStringName );
+     }
    }   
 }
    

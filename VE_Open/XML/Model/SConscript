@@ -21,7 +21,8 @@ headers = Split("""
    Network.h
    Model.h
    Tag.h
-   ModelCreator.h 
+   ModelCreator.h
+   TagPtr.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'XML', 'Model', s), srcs)

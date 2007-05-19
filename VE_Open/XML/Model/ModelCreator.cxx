@@ -37,10 +37,11 @@
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Port.h"
+#include "VE_Open/XML/Model/TagPtr.h"
 #include "VE_Open/XML/Model/Tag.h"
 
 using namespace VE_XML::VE_Model;
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
 {
    if ( objectType == "Link" )
@@ -77,7 +78,16 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
    }
    return 0;
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectSmart(std::string objectType)
+{
+    if ( objectType == "Tag" )
+    {
+        return new Tag();
+    }
+    return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ModelCreator::CreateNewXMLObjectCopy(std::string objectType,
                                                      VE_XML::XMLObject* objectToCopy)
 {
@@ -114,4 +124,14 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObjectCopy(std::string objectType,
       return new Tag(*dynamic_cast<Tag*>(objectToCopy));
    }
    return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectCopySmart(std::string objectType,
+                                                        VE_XML::XMLObjectPtr objectToCopy)
+{
+    if ( objectType == "Tag" )
+    {
+        return new Tag( *dynamic_cast< Tag* >( &*objectToCopy ) );
+    }
+    return 0;
 }

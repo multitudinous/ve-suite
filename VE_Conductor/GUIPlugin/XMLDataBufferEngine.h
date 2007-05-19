@@ -48,6 +48,12 @@ XMLDataBufferEngine API
 #include <map>
 #include <string>
 
+#include <VE_Open/XML/Model/Model.h>
+#include <VE_Open/XML/Model/Network.h>
+#include <VE_Open/XML/Model/Tag.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/User.h>
+
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
 {
@@ -77,13 +83,26 @@ public:
     void SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap );
     ///Set data from CORBA receiver thread
     void SetXplorerData(){ ; }
-    ///
+    ///Load data 
+    void LoadVESData( std::string vesNetwork );
+    ///Save data 
+    std::string SaveVESData( std::string fileName );
+    ///New 
+    void NewVESData( bool promptClearXplorer );
     
 private:
     ///Map to store the command name and command for easy lookup by the user
     std::map< std::string, VE_XML::Command > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
+    ///Map
+    std::map< std::string, VE_XML::VE_Model::Network > m_networkMap;
+    ///Map
+    std::map< std::string, VE_XML::VE_Model::Model > m_modelMap;
+    ///Map
+    std::map< std::string, VE_XML::VE_Model::Tag > m_tagMap;
+    ///Map
+    std::map< std::string, VE_XML::User > m_userMap;
 };
 }
 #endif //XML_DATA_BUFFER_ENGINE_H

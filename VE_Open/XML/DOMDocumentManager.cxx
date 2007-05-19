@@ -167,7 +167,6 @@ void DOMDocumentManager::Load( const std::string inputCommand )
 
    try 
    {
-      //parser->parse(inpsrc);
       if(parseXMLFile)
       {
          _readInputFile(inputCommand);  

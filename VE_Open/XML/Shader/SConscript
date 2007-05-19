@@ -17,6 +17,10 @@ headers = Split("""
    Uniform.h
    Program.h
    Shader.h 
+   TextureImagePtr.h
+   UniformPtr.h
+   ProgramPtr.h
+   ShaderPtr.h 
    ShaderCreator.h 
 """)
 

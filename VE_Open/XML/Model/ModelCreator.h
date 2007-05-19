@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef MODEL_CREATOR_H
 #define MODEL_CREATOR_H
@@ -46,6 +44,7 @@ namespace VE_XML
    class XMLObject;
 }
 #include "VE_Open/XML/CreationEventHandler.h"
+#include "VE_Open/XML/XMLObjectPtr.h"
 
 namespace VE_XML
 {
@@ -62,12 +61,19 @@ public:
 
    ///Create a new XMLObject.
    ///\param objectType The type of object to create.
-   virtual VE_XML::XMLObject* CreateNewXMLObject(std::string objectType);
-   
+   virtual VE_XML::XMLObject* CreateNewXMLObject( std::string objectType );
+    ///Create a new XMLObject.
+    ///\param objectType The type of object to create.
+    virtual VE_XML::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
+    
    ///Create a copy of a new CAD object
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy.
    virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
+   ///Create a copy of a new CAD object
+   ///\param objectType The type of object to create.
+   ///\param objectToCopy The object to copy.
+   virtual VE_XML::XMLObjectPtr CreateNewXMLObjectCopySmart( std::string objectType, VE_XML::XMLObjectPtr objectToCopy);
 protected:
 };
 }
