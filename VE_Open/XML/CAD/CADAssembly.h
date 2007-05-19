@@ -42,7 +42,7 @@
 
 /*! \class VE_XML::VE_CAD::CADAssembly
  * Class to represent a CAD assembly.
- * It's children can be CADAssemblies, CADParts or CADClones.
+ * It's children can be CADAssemblies, CADParts.
  * There isn't an actual geometry that is represented here but instead
  * this is more of an organization node.
  */

@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
@@ -88,12 +87,6 @@ void CADAssembly::AddChild(VE_XML::VE_CAD::CADNode* node)
    else if(node->GetNodeType() == "Part")
    {
       CADPart temp(*dynamic_cast<CADPart*>(node));
-      temp.SetParent(_uID);
-      m_children.push_back(temp);
-   }
-   else if(node->GetNodeType() == "Clone")
-   {
-      CADClone temp(*dynamic_cast<CADClone*>(node));
       temp.SetParent(_uID);
       m_children.push_back(temp);
    }*/
@@ -272,15 +265,6 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode)
                   newPart->SetObjectFromXMLData(cadNode);
                   newPart->SetParent(uuid);
                   m_children.push_back(newPart);
-               }
-               else if(ExtractFromSimpleElement< std::string >(nodeType) == std::string("Clone"))
-               {
-                  //this is a Clone
-                  VE_XML::VE_CAD::CADClone* newClone = new VE_XML::VE_CAD::CADClone();
-                  //VE_XML::VE_CAD::CADClone newClone;// = new VE_XML::VE_CAD::CADClone();
-                  newClone->SetObjectFromXMLData(cadNode);
-                  newClone->SetParent(uuid);
-                  m_children.push_back(newClone);
                }
                else
                {

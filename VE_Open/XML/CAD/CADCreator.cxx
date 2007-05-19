@@ -34,7 +34,6 @@
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/CAD/CADClone.h"
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/CAD/CADNodeAnimation.h"
@@ -51,10 +50,6 @@ VE_XML::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
    {
       return new CADPart();
    } 
-   else if(objectType == "CADClone")
-   {
-      return new CADClone();
-   }
    else if(objectType == "CADAttribute")
    {
       return new CADAttribute();
@@ -80,10 +75,6 @@ VE_XML::XMLObject* CADCreator::CreateNewXMLObjectCopy(std::string objectType,
    else if(objectType == "CADPart")
    {
       return new CADPart(*dynamic_cast<CADPart*>(objectToCopy));
-   }
-   else if(objectType == "CADClone")
-   {
-      return new CADClone(*dynamic_cast<CADClone*>(objectToCopy));
    }
    else if(objectType == "CADAttribute")
    {

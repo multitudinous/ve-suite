@@ -35,7 +35,6 @@
 #include "VE_Open/XML/CAD/CADAssembly.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/CAD/CADClone.h"
 #include <iostream>
 
 using namespace VE_XML::VE_CAD;
