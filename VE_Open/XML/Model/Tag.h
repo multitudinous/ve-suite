@@ -77,7 +77,8 @@ public:
    void SetTagText( std::string text );
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+   virtual void SetObjectFromXMLData( 
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Get the i'th point for a Tag.
    ///\param i The i'th point you are after.
@@ -97,10 +98,12 @@ private:
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Tag* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
+    const std::string subElementTagName, VE_Model::Tag* val)
 {
    val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( 
+    subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
 }

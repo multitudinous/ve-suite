@@ -79,7 +79,8 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectSmart(std::string objectType)
+VE_XML::XMLObjectPtr 
+ModelCreator::CreateNewXMLObjectSmart( std::string objectType )
 {
     if ( objectType == "Tag" )
     {
@@ -88,8 +89,9 @@ VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectSmart(std::string objectTyp
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* ModelCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                     VE_XML::XMLObject* objectToCopy)
+VE_XML::XMLObject* 
+ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
+    VE_XML::XMLObject* objectToCopy )
 {
    if ( objectType == "Link" )
    {
@@ -126,8 +128,8 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObjectCopy(std::string objectType,
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObjectPtr ModelCreator::CreateNewXMLObjectCopySmart(
-    std::string objectType,
+VE_XML::XMLObjectPtr 
+ModelCreator::CreateNewXMLObjectCopySmart( std::string objectType,
     VE_XML::XMLObjectPtr objectToCopy )
 {
     if ( objectType == "Tag" )
