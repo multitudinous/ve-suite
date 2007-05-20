@@ -629,7 +629,9 @@ vtkPolyData* cfdModelHandler::GetArrow( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModelHandler::RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity )
 {
-    m_filenameToCADMap[ tempEntity->GetFilename() ] = tempEntity;
+    m_filenameToCADMap.insert( 
+        std::pair< std::string, VE_SceneGraph::CADEntity* >( 
+        tempEntity->GetFilename(), tempEntity ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename )
@@ -641,5 +643,18 @@ VE_SceneGraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename
         return iter->second;
     }
     return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdModelHandler::UnregisterCADFile( VE_SceneGraph::CADEntity* tempEntity )
+{
+    std::map< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+    for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
+    {
+        if( iter->second == tempEntity )
+        {
+            m_filenameToCADMap.erase( iter );
+            break;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

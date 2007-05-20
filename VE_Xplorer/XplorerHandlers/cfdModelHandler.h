@@ -117,9 +117,15 @@ public:
    ///Get the scalar bar - may not be needed anymore
    cfdScalarBarActor* GetScalarBar(void);
    ///Register CAD file with so that other models can copy files if needed
+   ///\param tempEntity File to be registered
    void RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity );
    ///Check and see if this cad file is already loaded
+   ///\return The found cad file otherwise null
+   ///\param filename The file name to grab
    VE_SceneGraph::CADEntity* IsCADFileLoaded( std::string filename );
+   ///Reset the map holding cad references
+   ///\param tempEntity CAD file to try and remove from the map
+   void UnregisterCADFile( VE_SceneGraph::CADEntity* tempEntity );
 #ifdef _OSG
    //texture manager access
    ///Should this call be in the texture manager singleton not modelhandler
@@ -153,7 +159,7 @@ private:
     std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;
     ///This map connects filenames to GUIDs so that we can 
     ///figure out what CAD files should be copied
-    std::map< std::string, VE_SceneGraph::CADEntity* > m_filenameToCADMap;
+    std::multimap< std::string, VE_SceneGraph::CADEntity* > m_filenameToCADMap;
 };
 }
 #endif

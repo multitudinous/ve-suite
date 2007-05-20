@@ -67,20 +67,20 @@ ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::~ModelCADHandler()
 {
-    for (std::map<std::string,
-          VE_SceneGraph::CADEntity*>::iterator itr = m_partList.begin();
-                                       itr != m_partList.end(); itr++ )
+    std::map<std::string, VE_SceneGraph::CADEntity*>::iterator iter;
+    for ( iter = m_partList.begin(); iter != m_partList.end(); iter++ )
     {
-        delete itr->second;
+        cfdModelHandler::instance()->UnregisterCADFile( iter->second );
+        delete iter->second;
     }
     m_partList.clear();
 
     /*
-   for ( std::map< std::string, VE_SceneGraph::DCS* >::iterator itr = m_assemblyList.begin();
+    for ( std::map< std::string, VE_SceneGraph::DCS* >::iterator itr = m_assemblyList.begin();
                                        itr != m_assemblyList.end(); itr++ )
-   {
-      //delete itr->second;
-   }
+    {
+        //delete itr->second;
+    }
     */
     m_assemblyList.clear();
 
@@ -161,12 +161,11 @@ void ModelCADHandler::CreatePart( std::string fileName,
     {
         ///If we have not loaded this part
         m_partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( fileName, 
-                                                    m_assemblyList[ parentID ] );
-        cfdModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
+            new VE_SceneGraph::CADEntity( fileName, m_assemblyList[ parentID ] );
         vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
                             << std::endl << vprDEBUG_FLUSH;
     }
+    cfdModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
 }

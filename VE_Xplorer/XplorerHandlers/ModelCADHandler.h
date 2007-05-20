@@ -31,14 +31,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef MODEL_CAD_HANDLER_H
-#define MODEL_CAD_HANDLERH
+#define MODEL_CAD_HANDLER_H
 /*!\file ModelCADHandler.h
 Mananger for the CAD associated with a cfdModel
 */
 /*!\class VE_Xplorer::ModelCADHandler
 * 
 */
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+
 #include "VE_Installer/include/VEConfig.h"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -52,132 +55,137 @@ namespace VE_SceneGraph
 }
 namespace VE_XML
 {
-    namespace VE_CAD
-    {
-        class CADNode;
-        class CADAttribute;
-    }
+namespace VE_CAD
+{
+    class CADNode;
+    class CADAttribute;
+}
 }
 #include <osg/StateSet>
 
 namespace VE_Xplorer
 {
-    class VE_XPLORER_EXPORTS ModelCADHandler
-    {
-    public:
-        ///Constructor
-        ///\param rootCADNode The top-level CAD
-        ModelCADHandler(VE_SceneGraph::DCS* rootCADNode);
-        ///Copy Construtor
-        ///\param rhs The ModelCADHandler we are copying.
-        ModelCADHandler(const ModelCADHandler& rhs);
-        
-        ///Destructor
-        virtual ~ModelCADHandler();
+class VE_XPLORER_EXPORTS ModelCADHandler : public cfdGlobalBase
+{
+public:
+    ///Constructor
+    ///\param rootCADNode The top-level CAD
+    ModelCADHandler(VE_SceneGraph::DCS* rootCADNode);
+    ///Copy Construtor
+    ///\param rhs The ModelCADHandler we are copying.
+    ModelCADHandler(const ModelCADHandler& rhs);
+    
+    ///Destructor
+    virtual ~ModelCADHandler();
 
-        ///Set the UUID of the root CADNode 
-        ///\param rootNodeId The uuid of the root CADNode in Conductor
-        void SetRootCADNodeID(std::string rootNodeId);
+    ///Set the UUID of the root CADNode 
+    ///\param rootNodeId The uuid of the root CADNode in Conductor
+    void SetRootCADNodeID(std::string rootNodeId);
+
+    ///\param CAD goes transparent when dataset vis is active
+    void MakeCADRootTransparent();
+
+    ///\param CAD return to default state on clear all
+    void MakeCADRootOpaque();
+
+    ///Add a new attribute to a node
+    ///\param nodeID The ID of the node to add Attribute to.
+    ///\param nodeType The node type.
+    ///\param The CADAttribute to add to the node.
+    void AddAttributeToNode(std::string nodeID,
+                                      VE_XML::VE_CAD::CADAttribute* newAttribute);
+    ///Add a new attribute to a node
+    ///\param nodeID The ID of the node to add Attribute to.
+    ///\param nodeType The node type.
+    ///\param neAttribute The name of the CADAttribute to remove from the node.
+    void RemoveAttributeFromNode(std::string nodeID,
+                                             std::string nodeType,
+                                             std::string newAttribute);
+    ///Add a new attribute to a node
+    ///\param nodeID The ID of the node to add Attribute to.
+    ///\param nodeType The node type.
+    ///\param attributeName The name of the CADAttribute to activate on the CADNode.
+    void SetActiveAttributeOnNode(std::string nodeID,
+                                 std::string nodeType,
+                                 std::string attributeName);
+    ///Create a new assembly
+    void CreateAssembly(std::string assemblyID);
    
-        ///\param CAD goes transparent when dataset vis is active
-        void MakeCADRootTransparent();
+    ///Create a new clone
+    void CreateClone(std::string cloneID,
+                    std::string originalID,
+                    std::string orignalType);
 
-        ///\param CAD return to default state on clear all
-        void MakeCADRootOpaque();
+    ///Create a new part
+    void CreatePart(std::string fileName,
+                   std::string partID,
+                   std::string parentID);
 
-        ///Add a new attribute to a node
-        ///\param nodeID The ID of the node to add Attribute to.
-        ///\param nodeType The node type.
-        ///\param The CADAttribute to add to the node.
-        void AddAttributeToNode(std::string nodeID,
-                                          VE_XML::VE_CAD::CADAttribute* newAttribute);
-        ///Add a new attribute to a node
-        ///\param nodeID The ID of the node to add Attribute to.
-        ///\param nodeType The node type.
-        ///\param neAttribute The name of the CADAttribute to remove from the node.
-        void RemoveAttributeFromNode(std::string nodeID,
-                                                 std::string nodeType,
-                                                 std::string newAttribute);
-        ///Add a new attribute to a node
-        ///\param nodeID The ID of the node to add Attribute to.
-        ///\param nodeType The node type.
-        ///\param attributeName The name of the CADAttribute to activate on the CADNode.
-        void SetActiveAttributeOnNode(std::string nodeID,
-                                     std::string nodeType,
-                                     std::string attributeName);
-        ///Create a new assembly
-        void CreateAssembly(std::string assemblyID);
-       
-        ///Create a new clone
-        void CreateClone(std::string cloneID,
-                        std::string originalID,
-                        std::string orignalType);
+    ///Get a specified CADAttribute for a specified CADNode
+    ///\param nodeID The CADNode  
+    ///\param attributeName The name of the CADAttribute to find.
+    ///\param component The name of the CADMaterial component to update.
+    ///\param face The face to apply the update to.
+    ///\param values The new values.
+    void UpdateMaterialComponent(std::string nodeID,
+                                             std::string attributeName,std::string component,
+                                             std::string face,
+                                             std::vector<double> values);
 
-        ///Create a new part
-        void CreatePart(std::string fileName,
-                       std::string partID,
-                       std::string parentID);
+    ///Get a specified CADAttribute for a specified CADNode
+    ///\param nodeID The CADNode  
+    ///\param attributeName The name of the CADAttribute to find.
+    ///\param type The type of mode to update.
+    ///\param mode The new mode.
+    void UpdateMaterialMode(std::string nodeID,
+                                      std::string attributeName,
+                                      std::string type,
+                                      std::string mode);
 
-        ///Get a specified CADAttribute for a specified CADNode
-        ///\param nodeID The CADNode  
-        ///\param attributeName The name of the CADAttribute to find.
-        ///\param component The name of the CADMaterial component to update.
-        ///\param face The face to apply the update to.
-        ///\param values The new values.
-        void UpdateMaterialComponent(std::string nodeID,
-                                                 std::string attributeName,std::string component,
-                                                 std::string face,
-                                                 std::vector<double> values);
+    ///Get a specific part. 
+    ///\param partID The ID of the part to search form
+    VE_SceneGraph::CADEntity* GetPart(std::string partID);
 
-        ///Get a specified CADAttribute for a specified CADNode
-        ///\param nodeID The CADNode  
-        ///\param attributeName The name of the CADAttribute to find.
-        ///\param type The type of mode to update.
-        ///\param mode The new mode.
-        void UpdateMaterialMode(std::string nodeID,
-                                          std::string attributeName,
-                                          std::string type,
-                                          std::string mode);
+    ///Get a specific assembly. 
+    ///\param assemblyID The ID of the assembly to search form
+    VE_SceneGraph::DCS* GetAssembly(std::string assemblyID);
 
-        ///Get a specific part. 
-        ///\param partID The ID of the part to search form
-        VE_SceneGraph::CADEntity* GetPart(std::string partID);
+    ///Get a specific assembly. 
+    ///\param assemblyID The ID of the assembly to search form
+    VE_SceneGraph::Clone* GetClone(std::string cloneID);
 
-        ///Get a specific assembly. 
-        ///\param assemblyID The ID of the assembly to search form
-        VE_SceneGraph::DCS* GetAssembly(std::string assemblyID);
+    ///\param cloneID The part ID to search for.
+    bool CloneExists(std::string clone);
 
-        ///Get a specific assembly. 
-        ///\param assemblyID The ID of the assembly to search form
-        VE_SceneGraph::Clone* GetClone(std::string cloneID);
+    ///\param partID The part ID to search for.
+    bool PartExists(std::string partID);
 
-        ///\param cloneID The part ID to search for.
-        bool CloneExists(std::string clone);
+    ///\param assemblyID The assembly ID to search for.
+    bool AssemblyExists(std::string assemblyID);
+    ///The current graph
+    std::string GetRootCADNodeID();
+    
+    ///Equal operator
+    ///\param rhs The ModelCADHandler we are setting this one equal to.
+    ModelCADHandler& operator=(const ModelCADHandler& rhs);
 
-        ///\param partID The part ID to search for.
-        bool PartExists(std::string partID);
+    ///Not used
+    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){ return false; }
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand(){ ; }
 
-        ///\param assemblyID The assembly ID to search for.
-        bool AssemblyExists(std::string assemblyID);
-        ///The current graph
-        std::string GetRootCADNodeID();
-        
-        ///Equal operator
-        ///\param rhs The ModelCADHandler we are setting this one equal to.
-        ModelCADHandler& operator=(const ModelCADHandler& rhs);
-    protected:
-        
-       std::map< std::string, 
-                   VE_SceneGraph::CADEntity* > m_partList;///<A list of the current parts.
-       std::map< std::string, 
-                    VE_SceneGraph::DCS* > m_assemblyList;///A list of the current assemblies.
-       std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;///A list of clones.
-       std::string m_rootCADNodeID;///<ID for root CAD node id
+protected:
+   std::map< std::string, 
+               VE_SceneGraph::CADEntity* > m_partList;///<A list of the current parts.
+   std::map< std::string, 
+                VE_SceneGraph::DCS* > m_assemblyList;///A list of the current assemblies.
+   std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;///A list of clones.
+   std::string m_rootCADNodeID;///<ID for root CAD node id
 #ifdef _OSG
-         std::map< std::string, 
-                      std::vector< std::pair< std::string,
-                      osg::ref_ptr< osg::StateSet > > > > m_nodeAttributes;///<The map of node attributes.
+     std::map< std::string, 
+                  std::vector< std::pair< std::string,
+                  osg::ref_ptr< osg::StateSet > > > > m_nodeAttributes;///<The map of node attributes.
 #endif
-    };
+};
 }
-#endif // MODEL_CAD_HAnDLER_H
+#endif // MODEL_CAD_HANDLER_H
