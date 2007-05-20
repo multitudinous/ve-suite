@@ -32,24 +32,26 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
+
 #include "VE_Conductor/GUIPlugin/PortDialog.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+#include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
 
 #include "VE_Conductor/Framework/paraThread.h"
 #include "VE_Conductor/Framework/SoundsPane.h"
 
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
 #include "VE_Conductor/GUIPlugin/IconChooser.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
+
+#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
-#include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -149,7 +151,6 @@ Network::Network(wxWindow* parent, int id)
    xold = yold =0;
    paraview = false;
    globalparam_dlg = new GlobalParamDialog(NULL, -1);
-   veNetwork = 0;
    isLoading = false;
    cadDialog = 0;
    this->parent = parent;
@@ -168,23 +169,28 @@ Network::Network(wxWindow* parent, int id)
 
 Network::~Network()
 {
+    //std::cout << "Deleting Links" << std::endl;
    links.clear();
 
+   //std::cout << "Deleting CAD Dialogs " << std::endl;
    if( cadDialog)
    {
       cadDialog->Destroy();
       cadDialog = 0;
    }
+   //std::cout << "Deleting VisTab" << std::endl;
    if(vistab)
    {
       vistab->Destroy();
       vistab = 0;
    }
+   //std::cout << "Deleting Sound Dialog" << std::endl;
    if(_soundsDlg)
    {
       _soundsDlg->Destroy();
       _soundsDlg = 0;
    }
+   //std::cout << "Deleting Modules" << std::endl;
 
    std::map< int, Module >::iterator iter;
    for (iter=modules.begin(); iter!=modules.end(); iter++)
@@ -192,8 +198,10 @@ Network::~Network()
       //delete modules[ iter->first ];
       PopEventHandler( false );
    }
+   //std::cout << "Deleting Plugins" << std::endl;
    modules.clear();
    delete globalparam_dlg;
+   //std::cout << "Ending Cleanup" << std::endl;
 }
 /////////////////////////////////////////////
 ///////// Event Handlers ////////////////////
@@ -2262,22 +2270,18 @@ std::string Network::Save( std::string fileName )
    // Here we wshould loop over all of the following
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    //  Newtork
-   if ( veNetwork )
-      delete veNetwork;
-   
-   veNetwork = new VE_XML::VE_Model::Network();
-   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &veNetwork, "veNetwork" ) );
 
-   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
-   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+   veNetwork.GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
+   veNetwork.GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
+   veNetwork.GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
+   veNetwork.GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
+   veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+   veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
    for ( size_t i = 0; i < links.size(); ++i )
    {
-      VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+      VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
       //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
       //xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].pl_mod->GetModelName(), links[i].GetToPort() );
       xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
@@ -2465,35 +2469,15 @@ void Network::CreateNetwork( std::string xmlNetwork )
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
    _fileProgress->Update( 10, _("start loading") );
-   VE_XML::XMLReaderWriter networkWriter;
-   networkWriter.UseStandaloneDOMDocumentManager();
-
-   if ( xmlNetwork.size() < 512 )
-   {
-      networkWriter.ReadFromFile();
-   }
-   else
-   {
-      networkWriter.ReadFromString();
-   }
+    VE_Conductor::XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
    _fileProgress->Update( 15, _("start loading") );
-   //networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
-   std::vector< std::pair< std::string, std::string > > dataToObtain;
-   std::vector< std::pair< std::string, std::string > >::iterator dataIter;
-   dataToObtain.push_back( std::make_pair( "Model", "veNetwork" ) );
-   dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
-   dataToObtain.push_back( std::make_pair( "XML", "User" ) );
-   networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
-   std::vector< VE_XML::XMLObject* >::iterator objectIter;
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    _fileProgress->Update( 25, _("start loading") );
 
    // do this for network
-   if ( veNetwork )
-      delete veNetwork;
+   veNetwork = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLNetworkDataObject( "Network" );
    
     // we are expecting that a network will be found
-    if( !objectVector.empty() )
+    /*if( !objectVector.empty() )
     {
         veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
         objectVector.erase( objectVector.begin() );
@@ -2502,41 +2486,41 @@ void Network::CreateNetwork( std::string xmlNetwork )
     {
         wxMessageBox( _("Improperly formated ves file."), 
                         _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-    }
+    }*/
 
    _fileProgress->Update( 30, _("start loading") );
    long int tempScaleInfo;
-   veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
-   veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
-   veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
+   veNetwork.GetDataValuePair( 0 )->GetData( (userScale.first)  );
+   veNetwork.GetDataValuePair( 1 )->GetData( (userScale.second) );
+   veNetwork.GetDataValuePair( 2 )->GetData( tempScaleInfo );
    numPix.first = tempScaleInfo;
-   veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
+   veNetwork.GetDataValuePair( 3 )->GetData( tempScaleInfo );
    numPix.second = tempScaleInfo;
-   veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
+   veNetwork.GetDataValuePair( 4 )->GetData( tempScaleInfo );
    numUnit.first = tempScaleInfo;
-   veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
+   veNetwork.GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
 
    links.clear();
    _fileProgress->Update( 35, _("start loading") );
 
-   for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
+   for ( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
    {
 	   links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
 
-      links.at( i ).SetFromPort( *(veNetwork->GetLink( i )->GetFromPort()) );
-      links.at( i ).SetToPort( *(veNetwork->GetLink( i )->GetToPort()) );
+      links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
+      links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
 
       long moduleID;
-      veNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
+      veNetwork.GetLink( i )->GetFromModule()->GetData( moduleID );
       links.at( i ).SetFromModule( moduleID );
-      veNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
+      veNetwork.GetLink( i )->GetToModule()->GetData( moduleID );
       links.at( i ).SetToModule( moduleID );
 
-      size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
+      size_t numberOfPoints = veNetwork.GetLink( i )->GetNumberOfLinkPoints();
       for ( size_t j = 0; j < numberOfPoints; ++j )
       {
-         std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
+         std::pair< unsigned int, unsigned int > rawPoint = veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
          wxPoint point;
          point.x = rawPoint.first;
          point.y = rawPoint.second;
@@ -2546,28 +2530,20 @@ void Network::CreateNetwork( std::string xmlNetwork )
       links.at( i ).CalcLinkPoly();
    }
    _fileProgress->Update( 50, _("create models") );
-   // do this for models
-   //networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
-   //objectVector = networkWriter.GetLoadedXMLObjects();
-
    _fileProgress->Update( 75, _("done create models") );
    // now lets create a list of them
-   int timeCalc = 25/objectVector.size();
+   std::vector< std::string > networkModelVector;
+   std::vector< std::string >::iterator stringIter;
+   networkModelVector = VE_Conductor::XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
+   int timeCalc = 25/networkModelVector.size();
    size_t i = 0;
-    for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
+    for( stringIter = networkModelVector.begin(); stringIter != networkModelVector.end(); ++stringIter )
     {
         _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
         ++i;
-        VE_XML::VE_Model::Model* model = 
-                dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
-        if( !model )
-        {
-            //if this object is not a model continue
-            ++objectIter;
-            continue;
-        }
-        
-        objectIter = objectVector.erase( objectIter );
+        VE_XML::VE_Model::Model* model = new VE_XML::VE_Model::Model( 
+            VE_Conductor::XMLDataBufferEngine::instance()->
+            GetXMLModelDataObject( *stringIter ) );
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created
@@ -2581,6 +2557,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
          tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
         }
         tempPlugin->SetNetworkFrame( this );
+        ///Add event handler for the plugins
         PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
@@ -2610,15 +2587,12 @@ void Network::CreateNetwork( std::string xmlNetwork )
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
 
-   //networkWriter.ReadXMLData( xmlNetwork, "XML", "User" );
-   //objectVector = networkWriter.GetLoadedXMLObjects();
-    if ( !objectVector.empty() )
+    VE_XML::User userInfo = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLUserDataObject( "Network" );
+    if ( userInfo.GetUserStateInfo() )
     {
         backgroundColor.clear();
-        VE_XML::User* userColor = dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
-        objectVector.erase( objectVector.begin() );
         //Set user preferences
-        std::vector< VE_XML::Command* > tempStates = userColor->GetUserStateInfo()->GetStateVector();
+        std::vector< VE_XML::Command* > tempStates = userInfo.GetUserStateInfo()->GetStateVector();
         std::map< std::string, VE_XML::Command > tempMap;
         for ( size_t i = 0; i < tempStates.size(); ++i )
         {
@@ -2686,7 +2660,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
    xold = yold =0;
    _fileProgress->Update( 100, _("Done") );
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
-   objectVector.clear();
    Refresh();
 }
 

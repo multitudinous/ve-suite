@@ -59,11 +59,6 @@ namespace VE_Conductor
     class CORBAServiceList;
 }
 
-namespace VE_XML
-{
-    class DOMDocumentManager;
-}
-
 class UI_Tabs;
 class UI_Frame;
 class Splitter;
@@ -415,7 +410,6 @@ private:
 
     StreamlinePane* streamlinePane;
     VE_Conductor::CORBAServiceList* serviceList;
-    VE_XML::DOMDocumentManager* domManager;
     UserPreferences* preferences;
     std::vector< double > xplorerColor;
     wxColourData* xplorerWxColor;

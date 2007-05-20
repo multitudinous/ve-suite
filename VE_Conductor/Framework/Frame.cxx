@@ -228,15 +228,24 @@ END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 :
-wxFrame( parent, id, title, wxPoint( wxDefaultPosition ), wxSize( wxDefaultSize ), long( wxCLIP_CHILDREN ) ), 
+wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize ), 
 m_frameNr( 0 ), 
 f_financial( true ), 
 f_geometry( true ), 
-f_visualization( true )
-//timer( this, TIMER_ID )
+f_visualization( true ),
+xplorerMenu( 0 ),
+recordScenes( 0 ),
+network( 0 ),
+m_frame( 0 ),
+is_orb_init( false ),
+connectToVE( false ),
+connectToCE( false ),
+_treeView( 0 ),
+deviceProperties( 0 ),
+navPane( 0 ),
+viewlocPane( 0 ),
+_cadDialog( 0 )
 {
-    //timer.Start( 1000 );
-
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( size_t i = 0; i < ::wxGetApp().argc; ++i )
     {
@@ -248,20 +257,14 @@ f_visualization( true )
     preferences = new UserPreferences( this, ::wxNewId(), 
                                        SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
                                        SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
-    xplorerMenu = 0;
-    recordScenes = 0;
-    network = 0;
 
     this->SetIcon( ve_icon32x32_xpm );
+    CreateMenu();
+    mainToolBar = new MainToolBar( this );
+    this->SetToolBar( mainToolBar );
+    CreateStatusBar();
+    SetStatusText( _( "VE-Conductor Status" ) );
 
-    //int displayWidth, displayHeight = 0;
-    //::wxDisplaySize(&displayWidth,&displayHeight);
-
-    m_frame = 0;
-    is_orb_init= false;
-    connectToVE = false;
-    connectToCE = false;
-    _treeView = 0;
     _displayMode = "Tablet";
     _detectDisplayAndCreate();
 
@@ -270,20 +273,6 @@ f_visualization( true )
     fname = _( "" );
 
     GetConfig( NULL );
-
-    CreateMenu();
-    mainToolBar = new MainToolBar( this );
-    this->SetToolBar( mainToolBar );
-    CreateStatusBar();
-    SetStatusText( _( "VE-Conductor Status" ) );
-
-    deviceProperties = 0;
-    navPane = 0;
-    viewlocPane = 0;
-
-    _cadDialog = 0;
-
-    domManager = new VE_XML::DOMDocumentManager();
 
     ///Initialize VE-Open
     VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new VE_XML::XMLCreator() );
@@ -661,43 +650,35 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
+    //std::cout << "Conductor Exiting Xplorer" << std::endl;
    if ( GetDisplayMode() == "Desktop" )
    {
       ExitXplorer();
    }
- 
+   //std::cout << "Deleting TreeView" << std::endl;
    if(_treeView)
    {
       _treeView->Destroy();
    }
-
-   delete domManager;
-   domManager = 0;
-
+   //std::cout << "Deleting Device Properties" << std::endl;
    if ( deviceProperties )
    {
       deviceProperties->Destroy();
       deviceProperties = 0;
    }
-   
+   //std::cout << "Deleting Nav Pane" << std::endl;
    if ( navPane )
    {
       navPane->Destroy();
       navPane = 0;
    }
-
+   //std::cout << "Deleting View Pane" << std::endl;
    if ( viewlocPane )
    {
       viewlocPane->Destroy();
       viewlocPane = 0;
    }
-/*
-   if ( vistab )
-   {
-      vistab->Destroy();
-      vistab = 0;
-   }
-*/
+   //std::cout << "Deleting CAD Dialog" << std::endl;
   
    if( _cadDialog)
    {
@@ -705,14 +686,18 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       _cadDialog = 0;
    }
 
+   //std::cout << "Deleting Frame" << std::endl;
    StoreFrameSize(GetRect(), NULL);
    StoreConfig(NULL);
 	StoreRecentFile(NULL);
    Destroy();
+   //std::cout << "Shuting Down CORBA" << std::endl;
 
+   network->Destroy();
    network = 0;
    serviceList->CleanUp();
    serviceList = 0;
+   //std::cout << "End Cleanup" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )

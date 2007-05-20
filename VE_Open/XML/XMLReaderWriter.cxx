@@ -170,8 +170,10 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 
    if ( nXMLObjects == 0 )
    {
-      std::cerr << "XMLReaderWriter::_populateStructureFromDocument "
-                << "number of xml objects = " << nXMLObjects << std::endl;
+       std::cerr << "XMLReaderWriter::_populateStructureFromDocument "
+            << "number of xml objects = " << nXMLObjects << std::endl;
+       std::cerr << "XMLReaderWriter::_populateStructureFromDocument "
+            << "for " << objectNamespace << " " << tagName << std::endl;
       return;
    }
 

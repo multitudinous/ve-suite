@@ -888,7 +888,7 @@ void REI_Plugin::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, float scale)
 {
-std::cout << "icon path " << path << std::endl;
+    //std::cout << "|\tREI_Plugin::SetImageIcon icon path = " << path << std::endl;
    //Try and find default icons if needed
    std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
    if ( iter != defaultIconMap.end() )

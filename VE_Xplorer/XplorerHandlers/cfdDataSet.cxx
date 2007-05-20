@@ -626,14 +626,14 @@ void cfdDataSet::LoadData()
 {
    if ( this->dataSet != NULL )
    {
-      vprDEBUG(vesDBG,1) <<" Already have loaded the data for " 
+      vprDEBUG(vesDBG,1) <<"|\tAlready have loaded the data for " 
                              << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
       return;
    }
    else
    {
-      vprDEBUG(vesDBG,1) <<" LoadData: filename = " << this->fileName
+      vprDEBUG(vesDBG,1) <<"|\tLoadData: filename = " << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -646,20 +646,17 @@ void cfdDataSet::LoadData()
    this->dataSet = dynamic_cast<vtkDataSet*>(_vtkFHndlr->GetDataSetFromFile(fileName));
    this->numPtDataArrays = this->dataSet->GetPointData()
                                         ->GetNumberOfArrays();
-   vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
+   vprDEBUG(vesDBG,1) << "|\tnumPtDataArrays = " << this->numPtDataArrays
                           << std::endl << vprDEBUG_FLUSH;
 
    int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
-   vprDEBUG(vesDBG,1) << "\tnumCellArrays = " << numCellArrays
+   vprDEBUG(vesDBG,1) << "|\tnumCellArrays = " << numCellArrays
                           << std::endl << vprDEBUG_FLUSH;
-   //std::cout<<"[DBG]...Inside LoadData()"<<std::endl;
-   std::cout<<"[DBG]...numPtDataArrays = "<<this->numPtDataArrays<<std::endl;
-   std::cout<<"[DBG]...numCellArrays = "<<numCellArrays<<std::endl;
 
    if ( numCellArrays > 0 && this->numPtDataArrays == 0 )
    {
-      std::cout <<"\nThe dataset has no point data -- "
-         << "will try to convert cell data to point data\n" << std::endl;
+      std::cout <<"|\tThe dataset has no point data -- "
+         << "will try to convert cell data to point data" << std::endl;
 
       vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
       //converter->DebugOn();
@@ -909,11 +906,13 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    // If not provided in the dataset field, compute :
    if ( this->meanCellBBLength == 0.0 )
    {
-      std::cout<<"[DBG]...meanCellBBLength = 0.0"<<std::endl;
+       vprDEBUG(vesDBG,0) << "|\t Computing meanCellBBLength = " 
+            << this->meanCellBBLength
+            << std::endl << vprDEBUG_FLUSH;
       this->meanCellBBLength = cfdAccessoryFunctions::
                                ComputeMeanCellBBLength( this->GetDataSet() );
    }
-   vprDEBUG(vesDBG,0) << "\tmeanCellBBLength = " << this->meanCellBBLength
+   vprDEBUG(vesDBG,0) << "|\tmeanCellBBLength = " << this->meanCellBBLength
                           << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////

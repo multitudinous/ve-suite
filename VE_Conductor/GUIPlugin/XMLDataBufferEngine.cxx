@@ -54,7 +54,10 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::CleanUp( void )
 {
-   m_commandMap.clear();
+    m_commandMap.clear();
+    m_networkMap.clear();
+    m_modelMap.clear();
+    m_networkModelMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command& XMLDataBufferEngine::GetCommand( std::string commandKey )
@@ -98,14 +101,13 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     }
     
     // Just clear the design canvas
-    //while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) { ; }
     // Start the busy cursor
     // Load from the nt file loaded through wx
     // Get a list of all the command elements   
     //_fileProgress->Update( 10, _("start loading") );
     VE_XML::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
-    
+
     if ( xmlNetwork.size() < 512 )
     {
         networkWriter.ReadFromFile();
@@ -161,17 +163,15 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
             networkModelVector.push_back( toID.str() );
         }
+        std::cout << toID.str() << " " << fromID.str() << std::endl;
         fromID.str("");
         toID.str("");
     }
-    m_networkModelMap[ "Network" ] = networkModelVector;
-    
+        
     // now lets create a list of them
-    size_t i = 0;
     std::ostringstream modelID;
     for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
     {
-        ++i;
         VE_XML::VE_Model::Model* model = 
             dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
         if( !model )
@@ -186,10 +186,20 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         modelID.str("");
     }
     
+    if( m_networkMap[ "Network" ].GetNumberOfLinks() == 0 )
+    {
+        VE_XML::VE_Model::Model* model = 
+            dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
+        modelID << model->GetModelID();
+        networkModelVector.push_back( modelID.str() );
+    }
+    m_networkModelMap[ "Network" ] = networkModelVector;
+    
     if ( !objectVector.empty() )
     {
         VE_XML::User* userColor = 
             dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
+        m_userMap[ "Network" ] = *userColor;
         //Set user preferences
         std::vector< VE_XML::Command* > tempStates = 
             userColor->GetUserStateInfo()->GetStateVector();
@@ -201,6 +211,11 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         }
         //UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
     }
+    else
+    {
+        m_userMap[ "Network" ] = VE_XML::User();
+    }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
@@ -267,6 +282,9 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
 {
     //Erase all the maps
+    m_networkMap.clear();
+    m_modelMap.clear();
+    m_networkModelMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_Model::Network& XMLDataBufferEngine::GetXMLNetworkDataObject( std::string dataNumber )
@@ -274,8 +292,20 @@ VE_XML::VE_Model::Network& XMLDataBufferEngine::GetXMLNetworkDataObject( std::st
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string >& XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
+VE_XML::VE_Model::Model& XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
 {
+    return m_modelMap[ dataNumber ];
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::User& XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
+{
+    return m_userMap[ dataNumber ];
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< std::string >& XMLDataBufferEngine::GetNetworkModelVector( std::string dataNumber )
+{
+    //std::vector< std::string > temp = m_networkModelMap[ dataNumber ];
+    //std::cout << " size " << temp.size() << std::endl;
     return m_networkModelMap[ dataNumber ];
 }
 
