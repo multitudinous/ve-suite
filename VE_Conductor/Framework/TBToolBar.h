@@ -39,10 +39,6 @@ TextureBasedToolBar API
 /*!\class TextureBasedToolBar
 * 
 */
-#ifndef STAND_ALONE
-#include "VE_Open/skel/VjObsC.h"
-#endif
-
 namespace VE_XML 
 {
    class DataValuePair;

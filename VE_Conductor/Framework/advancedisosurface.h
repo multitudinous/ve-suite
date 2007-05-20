@@ -43,6 +43,8 @@
 
 #include <string>
 
+#include <wx/dialog.h>
+
 class wxListBox;
 class wxSpinCtrlDbl;
 

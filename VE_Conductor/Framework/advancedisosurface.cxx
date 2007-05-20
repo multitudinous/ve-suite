@@ -30,8 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #include "wx/wx.h"
 
 #include <wx/listbox.h>

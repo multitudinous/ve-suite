@@ -38,10 +38,7 @@
 /*!\class contours
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedcontours.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
 ////@end includes
 
@@ -50,11 +47,9 @@
  */
 
 ////@begin forward declarations
-XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
    class DataValuePair;
 }
 

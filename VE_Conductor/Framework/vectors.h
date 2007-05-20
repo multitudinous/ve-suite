@@ -40,10 +40,8 @@
 /*!\class Vectors
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedvectors.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
 ////@end includes
 
@@ -52,11 +50,9 @@
  */
 
 ////@begin forward declarations
-XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 class wxRadioBox;
@@ -107,7 +103,6 @@ public:
 
 //    Vectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_VECTORS_IDNAME, const wxString& caption = SYMBOL_VECTORS_TITLE, const wxPoint& pos = SYMBOL_VECTORS_POSITION, const wxSize& size = SYMBOL_VECTORS_SIZE, long style = SYMBOL_VECTORS_STYLE );
 
@@ -164,11 +159,8 @@ public:
 ////@end Vectors member variables
 protected:
    std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
    int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
 
    AdvancedVectors* adVector;
 

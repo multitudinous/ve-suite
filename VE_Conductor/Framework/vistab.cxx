@@ -115,7 +115,6 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    vectorContour = 0;
    isosurface = 0;
    streamline = 0;
-   xplorerPtr = 0;
    polydata = 0;
 
    //scalarSelect = false;
@@ -146,7 +145,6 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _vectorSelection = 0;    
    _nDatasetsInActiveModel = 0;
    _datasetSelection = 0;
-   xplorerPtr = 0;
    isosurface = 0;
    _tbTools = 0;
    scalarContour = 0;
@@ -422,11 +420,6 @@ wxIcon Vistab::GetIconResource( const wxString& name )
     //wxUnusedVar(name);
     return wxNullIcon;
 }
-//////////////////////////////////////////////////
-void Vistab::SetCommInstance( VjObs_ptr veEngine )
-{
-   xplorerPtr = VjObs::_duplicate( veEngine );
-}
 /////////////////////////////////////////////////
 void Vistab::ResetAllDatasetDependentCheckBoxes()
 {
@@ -569,7 +562,6 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 
    _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
    _tbTools->SetSubDialogSize(_vistabPosition);
-   _tbTools->SetVjObsPtr(xplorerPtr);
    _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
    _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
 

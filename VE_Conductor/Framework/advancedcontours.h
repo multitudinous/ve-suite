@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _ADVANCEDCONTOURS_H_
@@ -41,10 +39,11 @@
 /*!\class AdvancedContours
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
+#include <string>
+
+#include <wx/dialog.h>
+
 ////@end includes
 
 /*!
@@ -52,11 +51,9 @@
  */
 
 ////@begin forward declarations
-XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 class wxSlider;
@@ -101,7 +98,6 @@ public:
    };
 
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent, 
        wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME,

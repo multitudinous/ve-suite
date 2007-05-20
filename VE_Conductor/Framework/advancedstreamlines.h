@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _ADVANCEDSTREAMLINES_H_
@@ -41,10 +39,9 @@
 /*!\class AdvancedStreamlines
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
+#include <wx/dialog.h>
+
 ////@end includes
 
 /*!
@@ -52,11 +49,9 @@
  */
 
 ////@begin forward declarations
-XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 //namespace VE_UI
@@ -113,7 +108,6 @@ public:
    };
 
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
 

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _ADVANCEDVECTORS_H_
@@ -41,17 +39,14 @@
 /*!\class AdvancedVectors
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
 
-XERCES_CPP_NAMESPACE_USE
+#include <wx/dialog.h>
+
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 class wxSlider;

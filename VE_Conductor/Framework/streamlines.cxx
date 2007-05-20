@@ -37,6 +37,7 @@
 
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
+#include "VE_Conductor/Framework/advancedstreamlines.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include <wx/sizer.h>

@@ -3051,7 +3051,6 @@ void Network::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
       vistab->SetActiveModel(activeCORBAModel);
    }
    
-   vistab->SetCommInstance(xplorerPtr);
    size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
    if ( nInformationPackets == 0 )
    {

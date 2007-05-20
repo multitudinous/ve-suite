@@ -39,18 +39,13 @@
 /*!\class isosurfaces
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/advancedisosurface.h"
 
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
 #include <map>
-XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 class wxRadioButton;
@@ -96,7 +91,6 @@ public:
    };
 
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent,
                  wxWindowID id = SYMBOL_ISOSURFACES_IDNAME,

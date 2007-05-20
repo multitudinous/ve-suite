@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef _STREAMLINES_H_
@@ -41,11 +39,11 @@
 /*!\class Streamlines
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
-#include "VE_Conductor/Framework/advancedstreamlines.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
+#include <string>
+
+#include <wx/dialog.h>
+
 ////@end includes
 
 /*!
@@ -53,11 +51,9 @@
  */
 
 ////@begin forward declarations
-XERCES_CPP_NAMESPACE_USE
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
    class DataValuePair;
 }
 
@@ -117,7 +113,6 @@ public:
    };
 
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent, wxWindowID id = SYMBOL_STREAMLINES_IDNAME, const wxString& caption = SYMBOL_STREAMLINES_TITLE, const wxPoint& pos = SYMBOL_STREAMLINES_POSITION, const wxSize& size = SYMBOL_STREAMLINES_SIZE, long style = SYMBOL_STREAMLINES_STYLE );
 
@@ -175,8 +170,6 @@ protected:
 
    int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
 
    VE_Conductor::GUI_Utilities::WPDialog* seedPointDialog;
    std::string ConvertUnicode( const wxChar* data )

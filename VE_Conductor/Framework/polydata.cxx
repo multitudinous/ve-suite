@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Framework/polydata.h"
 #include "VE_Conductor/Framework/vistab.h"

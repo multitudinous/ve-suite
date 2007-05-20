@@ -40,15 +40,12 @@ SoundsPane API
 /*!\class SoundsPane
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
 
 #include <wx/panel.h>
 #include <wx/dialog.h>
 
-#include <xercesc/dom/DOM.hpp>
-XERCES_CPP_NAMESPACE_USE
-
 #include <vector>
+#include <string>
 
 class wxNotebook;
 class wxButton;

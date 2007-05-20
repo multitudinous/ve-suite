@@ -38,7 +38,7 @@
 /*!\class Vistab
 * 
 */
-#include "wx/toolbar.h"
+#include <wx/toolbar.h>
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Framework/UI_TransientDialog.h"
 #include "VE_Conductor/Framework/vectors.h"
@@ -48,28 +48,15 @@
 #include "VE_Conductor/Framework/polydata.h"
 #include "VE_Conductor/Utilities/DualSlider.h"
 
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
-XERCES_CPP_NAMESPACE_USE
-
-
-//class DualSlider;
-
-
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
    class DataValuePair;
 }
 namespace VE_Model
 {
    class Model;
-}
-
-namespace VE_Xplorer
-{
-   class cfdApp;
 }
 
 class TextureBasedToolBar;
@@ -154,7 +141,6 @@ public:
    };
 
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent,
                  wxWindowID id = SYMBOL_VISTAB_IDNAME,
@@ -413,10 +399,10 @@ protected:
    std::string _commandName;///<The name of the command to send back
 
    std::vector< VE_XML::Command* > commands;
-   VjObs_ptr xplorerPtr;
+   //VjObs_ptr xplorerPtr;
    std::vector< long > commandInputs;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
+   //DOMDocument* doc;
+   //VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;
 
    double minimumValue;

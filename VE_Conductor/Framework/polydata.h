@@ -39,15 +39,14 @@
 /*!\class Polydata
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
-#include <xercesc/dom/DOM.hpp>
 #include <vector>
-XERCES_CPP_NAMESPACE_USE
+#include <string>
+
+#include <wx/dialog.h>
+
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
 }
 
 class wxRadioButton;
@@ -88,7 +87,6 @@ public:
    };
 
     void SendCommandsToXplorer( void );
-    void SetCommInstance( VjObs_ptr veEngine );
     /// Creation
     bool Create( wxWindow* parent,
                  wxWindowID id = SYMBOL_POLYDATA_IDNAME,
