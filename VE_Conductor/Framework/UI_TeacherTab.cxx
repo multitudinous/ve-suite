@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
-#include "VE_Open/skel/VjObsS.h"
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/radiobut.h>
