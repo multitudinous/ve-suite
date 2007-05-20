@@ -38,7 +38,6 @@ Network API
 /*!\class Network
 * 
 */
-#include "VE_Open/skel/moduleC.h"
 #include "VE_Open/skel/VjObsC.h"
 
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
@@ -46,8 +45,6 @@ Network API
 #include "VE_Conductor/Utilities/Tag.h"
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Module.h"
-
-#include <xercesc/dom/DOM.hpp>
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>
@@ -76,10 +73,10 @@ class AppFrame;
 class SoundsPane;
 namespace VE_Conductor
 {
-   namespace GUI_Utilities
-   {
-      class CADNodeManagerDlg;
-   }
+namespace GUI_Utilities
+{
+  class CADNodeManagerDlg;
+}
 }
 
 class Network : public wxScrolledWindow, public wxThreadHelper
