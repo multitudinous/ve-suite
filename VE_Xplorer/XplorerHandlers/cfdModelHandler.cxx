@@ -169,6 +169,8 @@ void cfdModelHandler::CleanUp( void )
    delete nullCommand;
    nullCommand = 0;
 
+   m_filenameToCADMap.clear();
+   
    for( size_t i = 0; i < _modelList.size(); ++i )
    {
       delete _modelList.at( i );
