@@ -237,9 +237,6 @@ xplorerMenu( 0 ),
 recordScenes( 0 ),
 network( 0 ),
 m_frame( 0 ),
-is_orb_init( false ),
-connectToVE( false ),
-connectToCE( false ),
 _treeView( 0 ),
 deviceProperties( 0 ),
 navPane( 0 ),
@@ -432,62 +429,6 @@ bool AppFrame::Show(bool value)
       status = _treeView->Show();
    }
    return status;
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CreateVETab()
-{
-  //create the image list for the tabs first
-  // create a dummy image list with a few icons
-
-/*  wxSize imageSize(32, 32);
-  
-  m_imageList = new wxImageList( imageSize.GetWidth(), imageSize.GetHeight() );
-  
-  m_imageList->Add(wxArtProvider::GetIcon(wxART_INFORMATION, wxART_OTHER, imageSize));
-  
-  m_imageList->Add(wxArtProvider::GetIcon(wxART_QUESTION, wxART_OTHER, imageSize));
-  
-  m_imageList->Add(wxArtProvider::GetIcon(wxART_WARNING, wxART_OTHER, imageSize));
-  
-  m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
-  */
-/*   visTabs = new wxDialog(NULL,-1, wxString("Vis Tabs"), 
-		  wxDefaultPosition, wxDefaultSize, 
-		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP);
-   // Set the default location and size for the vis panel
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
-   visTabs->SetSize( dialogPosition );
-   //Create panel for vis pane
-   m_frame = new UI_Frame(vjobs.in(), visTabs, wxID_HIGHEST);
-   // Create the notebook's panels
-   //m_tabs->AssignImageList(m_imageList);
-   //m_frame->_tabs->AssignImageList(m_imageList);
-   //m_tabs->createTabPages();
-   //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
-   //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
-   //sizerTab = new wxBoxSizer(wxVERTICAL);
-   //sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
-   //sizerTab->Layout();
- 
-   //wx_ve_splitter->SetSizer(sizerTab);
-   //wx_ve_splitter->SetAutoLayout(TRUE);
-
-   //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_tabs, 0);
-   //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_frame, 0);
-
-   //trying to get the tabs to show up on initialization!!!!!
-   //wxSize windowSize = m_tabs->GetSize();
-   //m_tabs->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
-   //m_tabs->Refresh();
-
-   //wxSize windowSize = m_frame->GetSize();
-   //m_frame->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
-   //m_frame->Refresh();
-
-
-   //this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-   //SetSizer( sizerTab );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::GetConfig(wxConfig* config)
@@ -2012,7 +1953,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    else
    {
       // set pointer to corba object for comm
-      viewlocPane->SetCommInstance( GetXplorerObject() );
+      viewlocPane->SetCommInstance( serviceList->GetXplorerPointer() );
    }
    // now show it
    viewlocPane->Show();
@@ -2033,7 +1974,7 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
       //_cadDialog->SetRootCADNode(_activeModel->GetGeometry());
    }
    */
-   _cadDialog->SetVjObsPtr( GetXplorerObject() );
+   _cadDialog->SetVjObsPtr( serviceList->GetXplorerPointer() );
 
    _cadDialog->Show();
 }
@@ -2059,11 +2000,6 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
    serviceList->SendCommandStringToXplorer( veCommand );
    
    delete veCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
-VjObs_ptr AppFrame::GetXplorerObject( void )
-{
-   return serviceList->GetXplorerPointer();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )

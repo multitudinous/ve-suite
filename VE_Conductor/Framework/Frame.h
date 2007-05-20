@@ -41,10 +41,6 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Conductor/GUIPlugin/UI_i.h"
-
-#include "VE_Open/skel/moduleC.h"
-#include "VE_Open/skel/VjObsC.h"
 
 namespace VE_Conductor
 {
@@ -59,7 +55,6 @@ namespace VE_Conductor
     class CORBAServiceList;
 }
 
-class UI_Tabs;
 class UI_Frame;
 class Splitter;
 class Network;
@@ -72,12 +67,8 @@ class StreamlinePane;
 class UserPreferences;
 class DeviceProperties;
 
-// --- TAO Includes --- //
-#include <orbsvcs/CosNamingC.h>
-
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
-#include <wx/icon.h>
 #include <wx/textctrl.h>
 #include <wx/image.h>
 #include <wx/sizer.h>
@@ -92,6 +83,7 @@ class wxColourData;
 
 // --- C/C++ Includes --- //
 #include <vector>
+#include <string>
 
 //Frame size
 const wxString LOCATION = _T( "Framesize" );
@@ -212,13 +204,11 @@ public:
     wxSplitterWindow* wx_ve_splitter;
     Splitter* wx_nw_splitter;
     wxMenuBar* menubar;
-    wxIcon* icon;
     MainToolBar* mainToolBar;///<The main toolbar
 
     Avail_Modules* av_modules;
     Network* network;
 
-    UI_Tabs* m_tabs; 
     UI_Frame* m_frame;
 
     wxImageList* m_imageList;
@@ -244,9 +234,6 @@ public:
     void Log( const char* msg );
     void CloseVE();
 
-    ///Returns pointer to xplorer corba object
-    VjObs_ptr GetXplorerObject();
-
     void GetConfig(wxConfig* config);
     void StoreConfig(wxConfig* config);
 
@@ -262,13 +249,6 @@ protected:
     wxString path;
 
     std::vector< wxFileName > recentFileArchive;
-
-    VjObs_var vjobs;
-
-private:
-    bool is_orb_init;
-    bool connectToVE;
-    bool connectToCE;
 
 protected:
     void _createTreeAndLogWindow( wxWindow* parent );
@@ -365,18 +345,12 @@ protected:
     ///Get the user preferences class
     UserPreferences* GetUserPreferences();
 
-    ///Create the ve tabs
-    void CreateVETab();
-  
     ///Pop up window for build info
     void RevisionInfo( wxCommandEvent& event );
 
     void OnDoubleClickSash( int, int );
 
     void OnInternalIdle();
-
-    wxBoxSizer *sizerTab;
-    //revision* version;
 
     std::string ConvertUnicode( const wxChar* data )
     {
