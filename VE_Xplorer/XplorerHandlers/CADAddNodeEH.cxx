@@ -42,7 +42,7 @@
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADPart.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
-//#include "VE_Open/XML/CAD/CADClone.h"
+
 #include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_XML::VE_CAD;
@@ -87,9 +87,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       VE_XML::VE_CAD::CADNode* node = 0;
       VE_XML::VE_CAD::CADAssembly* assembly = 0; 
       VE_XML::VE_CAD::CADPart* part = 0;
-      //VE_XML::VE_CAD::CADClone* clone = 0;
-
-		VE_SceneGraph::DCS* parentAssembly = 0;
+       VE_SceneGraph::DCS* parentAssembly = 0;
 
       if(nodeType == "Assembly")
       {
