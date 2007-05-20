@@ -140,7 +140,7 @@ void NetworkDatabuffer::LoadVESData( std::string xmlNetwork )
     std::vector< VE_XML::VE_Model::Model > objectVector;
     std::vector< VE_XML::VE_Model::Model >::iterator objectIter;
     
-    objectVector = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModelDataObject( "Model" );
+    //objectVector = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModelDataObject( "Model" );
     size_t i = 0;
     for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
     {

@@ -92,7 +92,7 @@ public:
     ///Get data
     VE_XML::VE_Model::Network& GetXMLNetworkDataObject( std::string dataNumber );
     ///Get data
-    std::vector< VE_XML::VE_Model::Model >& GetXMLModelDataObject( std::string dataNumber );
+    std::vector< std::string >& GetXMLModelDataObject( std::string dataNumber );
     
 private:
     ///Map to store the command name and command for easy lookup by the user
@@ -101,6 +101,8 @@ private:
     vpr::Mutex m_commandMapLock;
     ///Map
     std::map< std::string, VE_XML::VE_Model::Network > m_networkMap;
+    //Map of model ids for the given network
+    std::map< std::string, std::vector< std::string > > m_networkModelMap;
     ///Map
     std::map< std::string, VE_XML::VE_Model::Model > m_modelMap;
     ///Map

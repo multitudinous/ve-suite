@@ -36,6 +36,8 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/StateInfo.h"
 
+#include "VE_Open/XML/Model/Link.h"
+
 #include <sstream>
 
 using namespace VE_XML;
@@ -135,8 +137,38 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
                     << "VES File Read Error" << std::endl;
     }
         
+
+    std::vector< std::string > networkModelVector;
+    std::vector< std::string >::iterator stringIter;
+    long moduleID = 0;
+    std::ostringstream fromID;
+    std::ostringstream toID;
+    for( size_t i = 0; i < m_networkMap[ "Network" ].GetNumberOfLinks(); ++i )
+    {
+        m_networkMap[ "Network" ].GetLink( i )->GetFromModule()->GetData( moduleID );
+        fromID << moduleID;
+        m_networkMap[ "Network" ].GetLink( i )->GetToModule()->GetData( moduleID );
+        toID << moduleID;
+        
+        stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), fromID.str() );
+        if( stringIter == networkModelVector.end() )
+        {
+            networkModelVector.push_back( fromID.str() );
+        }
+        
+        stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), toID.str() );
+        if( stringIter == networkModelVector.end() )
+        {
+            networkModelVector.push_back( toID.str() );
+        }
+        fromID.str("");
+        toID.str("");
+    }
+    m_networkModelMap[ "Network" ] = networkModelVector;
+    
     // now lets create a list of them
     size_t i = 0;
+    std::ostringstream modelID;
     for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
     {
         ++i;
@@ -148,6 +180,10 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             ++objectIter;
             continue;
         }
+        objectIter = objectVector.erase( objectIter );
+        modelID << model->GetModelID();
+        m_modelMap[ modelID.str() ] = *model;
+        modelID.str("");
     }
     
     if ( !objectVector.empty() )
@@ -238,10 +274,9 @@ VE_XML::VE_Model::Network& XMLDataBufferEngine::GetXMLNetworkDataObject( std::st
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::VE_Model::Model >& XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
+std::vector< std::string >& XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
 {
-    std::vector< VE_XML::VE_Model::Model > modelVector;
-    return modelVector;
+    return m_networkModelMap[ dataNumber ];
 }
 
 
