@@ -27,8 +27,8 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Open','XML','Model'),
                         pj('#', buildDir, 'VE_Open','XML','CAD'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
-lib_env.ParseConfig('flagpoll vrjuggler --require-Version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --require-Version=%s --libs --cflags'%lib_env['BoostVersion'])
+lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
@@ -39,8 +39,8 @@ if GetPlatform() == 'darwin':
 
 lib = ves_pkg.createSharedLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag),
                                                         lib_env,
-                                                        installPrefix = pj('share','vesuite','examples','simple','Plugins','GE','Darwin'))
-   
+                                                        installPrefix = pj('share','vesuite','examples','simple','Plugins','GE','RHEL_4_i686'))
+##  RHEL_4_i686 
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'VE_Xplorer', 'DefaultGraphicalPlugin'))
 lib.build()
