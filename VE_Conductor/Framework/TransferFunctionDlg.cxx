@@ -46,6 +46,7 @@
 #include <wx/button.h>
 #include <wx/slider.h>
 #include <wx/choicdlg.h>
+#include <wx/filename.h>
 using namespace VE_Conductor::GUI_Utilities;
 
 BEGIN_EVENT_TABLE( TransferFunctionDialog, wxDialog )

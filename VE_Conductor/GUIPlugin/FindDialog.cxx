@@ -34,7 +34,8 @@
 #include <wx/stattext.h>
 #include <wx/choice.h>
 #include <wx/button.h>
-
+#include <wx/dialog.h>
+#include "VE_Conductor/GUIPlugin/FindDialog.h"
 BEGIN_EVENT_TABLE(FindDialog,wxDialog)
 	EVT_CLOSE(FindDialog::OnClose)
 	EVT_BUTTON(ID_CANCELBUTTON,FindDialog::CancelButtonClick)

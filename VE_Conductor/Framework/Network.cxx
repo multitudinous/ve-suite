@@ -73,6 +73,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/utils.h>
 #include <wx/progdlg.h>
+#include <wx/filename.h>
 
 #include <sstream>
 #include <iomanip>

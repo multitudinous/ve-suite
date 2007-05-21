@@ -76,6 +76,7 @@
 
 // --- wxWidgets Includes --- //
 #include <wx/dc.h>
+#include <wx/filename.h>
 
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )

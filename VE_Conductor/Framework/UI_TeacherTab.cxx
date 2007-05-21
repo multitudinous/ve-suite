@@ -37,6 +37,7 @@
 #include <wx/sizer.h>
 #include <wx/radiobox.h>
 #include <wx/msgdlg.h>
+#include <wx/filename.h>
 
 #include "VE_Conductor/Framework/UI_TeacherTab.h"
 #include "VE_Conductor/Framework/App.h"
