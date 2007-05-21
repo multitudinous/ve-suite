@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=MimeType
 MimeType=application/x-vesuite
-Icon=vesuite
+Icon=gnome-mime-application-x-vesuite
 Comment=VES File
 Patterns=*.ves;
 X-KDE-AutoEmbed=false

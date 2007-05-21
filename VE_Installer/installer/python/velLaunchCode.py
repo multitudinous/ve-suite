@@ -193,12 +193,12 @@ class Launch:
             ##Master call
             print "***MASTER CALL: %s***" %self.settings["ClusterMaster"] ##TESTER
             self.ExecuteClusterScriptUnix(self.settings["ClusterMaster"],
-                                          clusterFilePath)
+                                          clusterFilePath, "Master")
             sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                self.ExecuteClusterScriptUnix(comp, clusterFilePath)
+                self.ExecuteClusterScriptUnix(comp, clusterFilePath, "Slave")
                 sleep(self.settings["SlaveWait"])
             ##Delete the cluster file afterwards.
             print clusterFilePath
@@ -280,7 +280,7 @@ class Launch:
         return s
 
 
-    def XplorerCall(self):
+    def XplorerCall(self, computerType = "None"):
         """Returns a generic Xplorer call."""
         ##Append argument if desktop mode selected
         if self.settings["DesktopMode"]:
@@ -298,8 +298,15 @@ class Launch:
         ##Construct the call
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
-             s += ["-VESCluster"]
+            s += ["-VESCluster"]
         s[len(s):] = desktop
+        ##Special arguments added for master, slave, and solo computer Xplorer calls.
+        if computerType.lower() == "master":
+            s += []
+        elif computerType.lower() == "slave":
+            s += []
+        else:
+            s += []
         return s
 
 
@@ -363,33 +370,41 @@ class Launch:
     def WriteClusterScriptPost(self):
         """Writes the cluster script section after the environment setting."""
         if unix:
-            command = "%s &" %(string.join(self.XplorerCall()))
+            slaveCommand = "%s &" %(string.join(self.XplorerCall("slave")))
+            masterCommand = "%s &" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
-            self.clusterScript += "%s\n" %(command)
+            self.clusterScript += 'if ( $2 == "slave" ) then\n'
+            self.clusterScript += "    %s\n" %(slaveCommand)
+            self.clusterScript += "else\n"
+            self.clusterScript += "    %s\n" %(masterCommand)
+            self.clusterScript += "endif\n"
             self.clusterScript += "EOF\n"
-        elif windows:
-            commandList = self.XplorerCall()
-            command = ""
-            for word in commandList:
-                command += "%s " %str(word)
-            command += "\n"
-            workingDir = os.getenv("VE_WORKING_DIR","None")
-            workingDrive = "%s:" %workingDir.split(':')[0]
-            self.clusterScript += "%s\n" %workingDrive
-            self.clusterScript += 'cd "%s"\n' %workingDir
-            self.clusterScript += "%s\n" %(command)
+##        elif windows:
+##            commandList = self.XplorerCall()
+##            command = ""
+##            for word in commandList:
+##                command += "%s " %str(word)
+##            command += "\n"
+##            workingDir = os.getenv("VE_WORKING_DIR","None")
+##            workingDrive = "%s:" %workingDir.split(':')[0]
+##            self.clusterScript += "%s\n" %workingDrive
+##            self.clusterScript += 'cd "%s"\n' %workingDir
+##            self.clusterScript += "%s\n" %(command)
         else:
             self.clusterScript += "ERROR: OS not supported."
 
 
-    def ExecuteClusterScriptUnix(self, nodeName, clusterFilePath):
+    def ExecuteClusterScriptUnix(self, nodeName,
+                                 clusterFilePath, nodeStatus = "Slave"):
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
                 subprocess.Popen(self.XplorerCall())
                 return
             else:
-                os.system("source %s %s &" %(clusterFilePath, nodeName))
+                os.system("source %s %s %s &" %(clusterFilePath,
+                                                nodeName,
+                                                nodeStatus))
                 return
         else:
             print "Error! Windows linking into Unix cluster function."
