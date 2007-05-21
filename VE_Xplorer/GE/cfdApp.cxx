@@ -765,7 +765,12 @@ void cfdApp::draw()
    vrj::GlUserData* userData = drawMan->currentUserData();
 
    // get the current projection
+#if __VJ_version <= 2000003
    vrj::Projection* project = userData->getProjection();
+#elif __VJ_version > 2000003
+   vrj::ProjectionPtr project = userData->getProjection();
+#endif
+
 
    //Get the frustrum
    vrj::Frustum frustum = project->getFrustum();

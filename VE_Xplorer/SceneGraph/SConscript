@@ -20,9 +20,9 @@ lib_env.Append(LIBS = ['GLU','GL'])
 
 lib_env.Append(LIBS = ['VE_XML'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')])
-xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
 #lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 
 if baseEnv['StaticOnly'] == "no":
