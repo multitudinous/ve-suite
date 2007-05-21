@@ -3,7 +3,7 @@ import os, sys, string
 import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options vtk_options RootDir buildDir')
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options vtk_options RootDir buildDir xerces_options')
 openDir = os.path.abspath( pj(RootDir, 'VE_Xplorer', 'SceneGraph') )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -20,7 +20,7 @@ lib_env.Append(LIBS = ['GLU','GL'])
 
 lib_env.Append(LIBS = ['VE_XML'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')])
-lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
+xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 #lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
