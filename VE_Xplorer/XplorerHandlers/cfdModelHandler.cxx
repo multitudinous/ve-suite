@@ -638,7 +638,7 @@ void cfdModelHandler::RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity )
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename )
 {
-    std::map< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+    std::multimap< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
     iter = m_filenameToCADMap.find( filename );
     if ( iter != m_filenameToCADMap.end() )
     {
@@ -649,7 +649,7 @@ VE_SceneGraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModelHandler::UnregisterCADFile( VE_SceneGraph::CADEntity* tempEntity )
 {
-    std::map< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+    std::multimap< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
     for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
     {
         if( iter->second == tempEntity )
