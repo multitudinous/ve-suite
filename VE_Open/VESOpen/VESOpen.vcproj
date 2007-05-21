@@ -24,6 +24,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="IDL Compiler"
+				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -104,7 +106,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
+				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -143,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib"
 				OutputFile="$(OutDir)/VE_OpenModule_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;"
