@@ -545,6 +545,10 @@
 				RelativePath=".\XMLDataBufferEngine.cxx"
 				>
 			</File>
+			<File
+				RelativePath=".\Xplorer_i.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -624,6 +628,10 @@
 			</File>
 			<File
 				RelativePath=".\XMLDataBufferEngine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Xplorer_i.h"
 				>
 			</File>
 		</Filter>
