@@ -330,10 +330,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TranslatorUI.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\UI_TeacherTab.cxx"
 				>
 			</File>
@@ -464,10 +460,6 @@
 			</File>
 			<File
 				RelativePath=".\TransformUI.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TranslatorUI.h"
 				>
 			</File>
 			<File

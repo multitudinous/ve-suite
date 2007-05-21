@@ -48,8 +48,6 @@
 #include <wx/statbmp.h>
 #include <wx/scrolwin.h>
 
-#include <xercesc/dom/DOM.hpp>
-XERCES_CPP_NAMESPACE_USE
 
 #include <vector>
 
@@ -69,7 +67,6 @@ class wxStaticBoxSizer;*/
 namespace VE_XML
 {
    class Command;
-   class DOMDocumentManager;
    class DataValuePair;
 }
 
@@ -153,8 +150,6 @@ protected:
    std::vector< VE_XML::Command* > commands;
    //VjObs_ptr xplorerPtr;
    int cId, cIso_value, cSc, cMin;
-   DOMDocument* doc;
-   VE_XML::DOMDocumentManager* domManager;
    std::string dataValueName;
 
    std::vector< long > commandInputs;

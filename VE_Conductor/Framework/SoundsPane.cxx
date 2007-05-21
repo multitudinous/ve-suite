@@ -30,32 +30,39 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/SoundsPane.h"
+// --- VE-Suite Includes --- //
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
+#include "VE_Conductor/Framework/SoundsPane.h"
+
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/ParameterBlock.h"
 
+// --- wxWidgets Includes --- //
+#include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/checklst.h>
-#include <wx/sizer.h>
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include <wx/filename.h>
+
+// -- C/C++ Libraries --- //
 #include <iostream>
 #include <cmath>
 
-BEGIN_EVENT_TABLE(SoundsPane, wxDialog)
-   EVT_CHECKLISTBOX(SOUND_CBOX,SoundsPane::_onSounds)
-   EVT_BUTTON(SOUND_LOAD_BUTTON,SoundsPane::_onLoadAndUpdate)
+BEGIN_EVENT_TABLE( SoundsPane, wxDialog )
+    EVT_CHECKLISTBOX( SOUND_CBOX, SoundsPane::_onSounds )
+    EVT_BUTTON( SOUND_LOAD_BUTTON, SoundsPane::_onLoadAndUpdate )
 END_EVENT_TABLE()
 
 ///////////////
 //Constructor//
 ///////////////
-SoundsPane::SoundsPane( VE_XML::VE_Model::Model* activeModel)
-:wxDialog(NULL,-1, _("Sounds Pane"), 
+SoundsPane::SoundsPane( VE_XML::VE_Model::Model* activeModel )
+:
+wxDialog(NULL,-1, _("Sounds Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
@@ -66,9 +73,7 @@ SoundsPane::SoundsPane( VE_XML::VE_Model::Model* activeModel)
 
    _buildPage();
 }
-//////////////////////////////
-//build the sound tab       //
-//////////////////////////////
+/////////////////////////////////////////////////
 void SoundsPane::_buildPage()
 {
    //the check box list
@@ -90,11 +95,8 @@ void SoundsPane::_buildPage()
    //assign the group to the panel
    SetSizer(soundPanelGroup);
 }
-//////////////////
-//event handling//
-//////////////////
 /////////////////////////////////////////////////
-void SoundsPane::_onSounds(wxCommandEvent& event)
+void SoundsPane::_onSounds( wxCommandEvent& event )
 {
    int checkSound = event.GetSelection();
    unsigned int onOff = (_soundCBox->IsChecked(checkSound))?1:0;

@@ -38,7 +38,8 @@
 /*!\class contours
 * 
 */
-#include "VE_Conductor/Framework/advancedcontours.h"
+#include <wx/dialog.h>
+
 #include <vector>
 ////@end includes
 

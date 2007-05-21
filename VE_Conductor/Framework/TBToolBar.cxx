@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
+
 #include "VE_Conductor/Framework/TBToolBar.h"
 
 #include <wx/sizer.h>
@@ -52,7 +54,6 @@
 #include "VE_Conductor/Utilities/ROIDialog.h"
 #include "VE_Conductor/Framework/ScalarToolsDlg.h"
 #include "VE_Conductor/Framework/TransferFunctionDlg.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

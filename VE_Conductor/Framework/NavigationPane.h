@@ -46,9 +46,6 @@ NavigationPane API
 #include <wx/statbmp.h>
 #include <wx/scrolwin.h>
 
-#include <xercesc/dom/DOM.hpp>
-XERCES_CPP_NAMESPACE_USE
-
 #include <vector>
 #include <string>
 

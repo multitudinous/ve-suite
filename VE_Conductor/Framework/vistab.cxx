@@ -34,6 +34,13 @@
 #include "VE_Conductor/Framework/TBToolBar.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/UI_TransientDialog.h"
+#include "VE_Conductor/Framework/vectors.h"
+#include "VE_Conductor/Framework/contours.h"
+#include "VE_Conductor/Framework/streamlines.h"
+#include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Framework/polydata.h"
+
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"

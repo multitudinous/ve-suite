@@ -29,12 +29,12 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/isosurfaces.h"
 #include "VE_Conductor/Framework/vistab.h"
 #include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/isosurfaces.h"
+#include "VE_Conductor/Framework/advancedisosurface.h"
+
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"

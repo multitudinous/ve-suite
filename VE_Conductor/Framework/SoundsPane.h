@@ -29,87 +29,90 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_UI_SOUNDS_TAB_H_
-#define _VE_UI_SOUNDS_TAB_H_
+#ifndef SOUNDS_PANE_H
+#define SOUNDS_PANE_H
+
 /*!\file SoundsPane.h
-SoundsPane API
 */
+
 /*!\class SoundsPane
 * 
 */
 
-#include <wx/panel.h>
+// --- wxWidgets Includes --- //
 #include <wx/dialog.h>
 
+class wxCheckListBox;
+class wxButton;
+
+// --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
 
-class wxNotebook;
-class wxButton;
-class wxCheckListBox;
-class wxSizer;
-
 namespace VE_XML
 {
-   class Command;
-   namespace VE_Model
-   {
-      class Model;
-   }
+class Command;
+
+namespace VE_Model
+{
+    class Model;
 }
+}
+
 class SoundsPane : public wxDialog
 {
 public:
-   SoundsPane( VE_XML::VE_Model::Model* model );
-   virtual ~SoundsPane(){;}
+    SoundsPane( VE_XML::VE_Model::Model* model );
+    virtual ~SoundsPane(){;}
 
-   enum SOUNDS_TAB_IDS
-   {
-      SOUND_CBOX,
-      SOUND_LOAD_BUTTON
-   };
-   void SendCommandsToXplorer( void );
-   ///Set the active VE_XML::VE_Model::Model
-   ///\param model The active model;
-   void SetActiveModel(VE_XML::VE_Model::Model* model);
+    enum SOUNDS_TAB_IDS
+    {
+        SOUND_CBOX,
+        SOUND_LOAD_BUTTON
+    };
+
+    void SendCommandsToXplorer();
+
+    ///Set the active VE_XML::VE_Model::Model
+    ///\param model The active model;
+    void SetActiveModel(VE_XML::VE_Model::Model* model);
+
 protected:
-   void _buildPage();
-   
-   //the controls
-   wxCheckListBox* _soundCBox;
-   wxButton* _loadButton;
+    void _buildPage();
 
-   unsigned int _numSounds;///<The number of sounds
-   VE_XML::VE_Model::Model* _activeModel;///<The current model;
-   wxArrayString _loadedSounds;///<The sounds loaded already;
+    //the controls
+    wxCheckListBox* _soundCBox;
+    wxButton* _loadButton;
 
-   ///Update the current sound information from a given VE_Model
-   void _updateSoundsInformationFromModel();
+    unsigned int _numSounds;///<The number of sounds
+    VE_XML::VE_Model::Model* _activeModel;///<The current model;
+    wxArrayString _loadedSounds;///<The sounds loaded already;
 
-   ///Check if we've already loaded this sound file
-   ///\param filename The file to check
-   bool _ensureSounds(wxString filename);
+    ///Update the current sound information from a given VE_Model
+    void _updateSoundsInformationFromModel();
 
-   ///Clear the loaded sounds
-   void _clearLoadedSounds();
+    ///Check if we've already loaded this sound file
+    ///\param filename The file to check
+    bool _ensureSounds( wxString filename );
 
-   ///Load the sound files in xplorer
-   ///\param soundFileName The name of the sound file to load
-   void _loadSoundsInXplorer( wxString soundFileName );
+    ///Clear the loaded sounds
+    void _clearLoadedSounds();
 
-   //event handlers
-   void _onSounds(wxCommandEvent& event);  
-   void _onLoadAndUpdate(wxCommandEvent& event);  
+    ///Load the sound files in xplorer
+    ///\param soundFileName The name of the sound file to load
+    void _loadSoundsInXplorer( wxString soundFileName );
 
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
-   
-   DECLARE_EVENT_TABLE()
+    //event handlers
+    void _onSounds( wxCommandEvent& event );  
+    void _onLoadAndUpdate( wxCommandEvent& event );  
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+    DECLARE_EVENT_TABLE()
 };
-#endif //_VE_UI_SOUNDS_TAB_H_
+#endif //SOUNDS_PANE_H

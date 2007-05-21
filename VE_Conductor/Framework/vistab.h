@@ -38,17 +38,17 @@
 /*!\class Vistab
 * 
 */
-#include <wx/toolbar.h>
 #include "VE_Open/skel/VjObsC.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
-#include "VE_Conductor/Framework/vectors.h"
-#include "VE_Conductor/Framework/contours.h"
-#include "VE_Conductor/Framework/streamlines.h"
-#include "VE_Conductor/Framework/isosurfaces.h"
-#include "VE_Conductor/Framework/polydata.h"
+
+#include <wx/toolbar.h>
+#include <wx/dialog.h>
+
 #include "VE_Conductor/Utilities/DualSlider.h"
 
 #include <vector>
+#include <map>
+#include <string>
+
 namespace VE_XML
 {
    class Command;
@@ -59,12 +59,18 @@ namespace VE_Model
    class Model;
 }
 
+class Contours;
+class Streamlines;
+class Isosurfaces;
 class TextureBasedToolBar;
+class Polydata;
+
 class wxComboBox;
 class wxListBox;
 class wxSpinCtrlDbl;
 class wxCheckBox;
 class wxTextCtrl;
+class wxButton;
 
 #define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -91,7 +97,6 @@ class wxTextCtrl;
 #ifndef wxCLOSE_BOX
 #define wxCLOSE_BOX 0x1000
 #endif
-
 
 
 class Vistab: public wxDialog

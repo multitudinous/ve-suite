@@ -39,7 +39,7 @@
 /*!\class isosurfaces
 * 
 */
-#include "VE_Conductor/Framework/advancedisosurface.h"
+#include <wx/dialog.h>
 
 #include <vector>
 #include <map>
@@ -47,6 +47,7 @@ namespace VE_XML
 {
    class Command;
 }
+class AdvancedIsosurface;
 
 class wxRadioButton;
 class wxCheckBox;

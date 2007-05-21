@@ -30,10 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/polydata.h"
 #include "VE_Conductor/Framework/vistab.h"
+#include "VE_Conductor/Framework/polydata.h"
+
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>

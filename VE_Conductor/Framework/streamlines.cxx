@@ -30,14 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
+#include "VE_Conductor/Framework/advancedstreamlines.h"
 
 #include "VE_Conductor/Framework/streamlines.h"
 #include "VE_Conductor/Framework/vistab.h"
 #include "VE_Conductor/Utilities/WPDialog.h"
 
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
-#include "VE_Conductor/Framework/advancedstreamlines.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include <wx/sizer.h>
