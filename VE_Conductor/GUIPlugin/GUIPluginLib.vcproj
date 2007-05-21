@@ -559,6 +559,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FindDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GlobalParamDialog.h"
 				>
 			</File>

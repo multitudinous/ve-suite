@@ -33,17 +33,15 @@
 #ifndef FINDDIALOG_H
 #define FINDDIALOG_H
 
-#include <wx/wx.h>
-#include <wx/dialog.h>
-#include <wx/stattext.h>
-#include <wx/choice.h>
-#include <wx/button.h>
+//#include <wx/wx.h>
 #include "VE_Installer/include/VEConfig.h"
 #include <vector>
 #include <string>
 
+#include <wx/dialog.h>
 class wxWindow;
-class wxDialog;
+//class wxDialog;
+class wxStaticText;
 class wxButton;
 class wxString;
 class wxSize;
@@ -86,7 +84,7 @@ class VE_GUIPLUGINS_EXPORTS FindDialog : public wxDialog
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
 
-		DECLARE_EVENT_TABLE();
+		DECLARE_EVENT_TABLE()
 };
 
 #endif

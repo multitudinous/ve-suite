@@ -69,17 +69,18 @@ class DeviceProperties;
 
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
-#include <wx/textctrl.h>
-#include <wx/image.h>
-#include <wx/sizer.h>
-#include <wx/config.h> 
-#include <wx/splitter.h>
-#include <wx/dialog.h>
-#include <wx/filename.h>
+#include <wx/config.h>
 
+
+class wxTextCtrl;
+class wxImage; 
+class wxSplitterWindow;
+class wxDialog;
+class wxFileName;
 class wxImageList;
 class wxSplitterWindow;
 class wxColourData;
+class wxMenu;
 
 // --- C/C++ Includes --- //
 #include <vector>

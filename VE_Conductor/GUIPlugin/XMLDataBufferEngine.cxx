@@ -39,6 +39,7 @@
 #include "VE_Open/XML/Model/Link.h"
 
 #include <sstream>
+#include <algorithm>
 
 #include <algorithm>
 

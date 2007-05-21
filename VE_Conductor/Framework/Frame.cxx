@@ -31,11 +31,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
+#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
 #include "VE_Conductor/Framework/Frame.h"
 
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
 #include <wx/msgdlg.h>
+#include <wx/textctrl.h>
+#include <wx/image.h>
+#include <wx/sizer.h>
+#include <wx/splitter.h>
+#include <wx/dialog.h>
+#include <wx/filename.h>
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
@@ -78,9 +86,6 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
 #include "VE_Open/XML/Model/Model.h"
-
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
-
 
 // --- wxWidgets Includes --- //
 #include <wx/image.h>

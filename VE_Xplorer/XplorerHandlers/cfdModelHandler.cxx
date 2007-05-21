@@ -90,6 +90,7 @@ using namespace VE_TextureBased;
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
