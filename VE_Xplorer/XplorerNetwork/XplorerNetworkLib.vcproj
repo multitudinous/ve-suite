@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib"
+				AdditionalDependencies="vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)/XplorerNetworkLib_tao_osg_vep_d.dll"
 				LinkIncremental="2"

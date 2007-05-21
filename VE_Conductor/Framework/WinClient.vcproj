@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_BiDirGIOP.lib TAO_AnyTypeCode.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib xerces-c_2.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib xerces-c_2.lib"
 				OutputFile="$(OutDir)/WinClient.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -174,7 +174,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib xerces-c_2D.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib xerces-c_2D.lib"
 				OutputFile="$(OutDir)/WinClient_d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -328,14 +328,10 @@
 			<File
 				RelativePath=".\TransformUI.cxx"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ShowIncludes="false"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TranslatorUI.cxx"
+				>
 			</File>
 			<File
 				RelativePath=".\UI_TeacherTab.cxx"
@@ -468,6 +464,10 @@
 			</File>
 			<File
 				RelativePath=".\TransformUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TranslatorUI.h"
 				>
 			</File>
 			<File

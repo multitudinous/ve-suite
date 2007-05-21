@@ -60,7 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib "
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib"
 				OutputFile="$(OutDir)/VE_OpenModule.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;"

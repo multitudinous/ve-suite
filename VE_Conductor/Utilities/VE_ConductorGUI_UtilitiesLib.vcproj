@@ -170,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib taod.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib TAO_AnyTypeCoded.lib loki_D.lib"
+				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib loki_D.lib"
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib_d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
