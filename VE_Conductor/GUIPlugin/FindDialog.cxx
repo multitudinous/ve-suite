@@ -30,6 +30,7 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/GUIPlugin/FindDialog.h"
 
 #include <wx/stattext.h>
 #include <wx/choice.h>
@@ -58,7 +59,6 @@ void FindDialog::CreateGUIControls()
 	SetIcon(wxNullIcon);
 	SetSize(8,8,261,144);
 	Center();
-	
 
 	UnitLabel = new wxStaticText(this, ID_UNITLABEL, wxT("Unit Operations"), wxPoint(4,22), wxDefaultSize, 0, wxT("UnitLabel"));
 	UnitLabel->SetFont(wxFont(10, wxSWISS, wxNORMAL,wxBOLD, FALSE, wxT("Times New Roman")));
