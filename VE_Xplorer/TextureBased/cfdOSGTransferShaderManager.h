@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_OSG_TRANSFER_SHADER_MANAGER_H
 #define CFD_OSG_TRANSFER_SHADER_MANAGER_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::cfdOSGTransferShaderManager
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 namespace osg{
    class Texture3D;
@@ -140,5 +137,4 @@ namespace VE_TextureBased
    };
 }
 #endif//_OSG
-#endif
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

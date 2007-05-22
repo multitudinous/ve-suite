@@ -173,18 +173,16 @@ public:
    ///Reset the background changed color flag
    void ResetBackgroundColorUpdateFlag();
   
-   #ifdef _OSG
+#ifdef _OSG
    ///Accessor for DisplayInformation
    DisplayInformation* GetDisplayInformation( void );
 
-   #ifdef VE_PATENTED 
    ///Activate geometry picking functionality.
    void ActivateGeometryPicking( void );
 
    ///Deactivate geoometry picking functionality.
    void DeactivateGeometryPicking( void );
-   #endif //VE_PATENTED
-   #endif //_OSG 
+#endif //_OSG 
 
    ///Get the seed points drawable
    SeedPoints* GetSeedPoints();
@@ -202,12 +200,10 @@ private:
    #ifdef _OSG
    DisplayInformation* display_information;///<???
 
-   #ifdef VE_PATENTED 
    cfdObjectHandler* objectHandler;///<Handle objects.
 
    ///Flag for active geometry picking.
    bool _activeGeomPicking;
-   #endif // VE_PATENTED
    #endif //_OSG
 
    std::vector<float> _clearColor;///<The background color;

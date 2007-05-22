@@ -40,7 +40,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler::TextureBasedActivateEventHandler()
 {
@@ -100,4 +99,3 @@ void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLOb
     }
 
 }
-#endif

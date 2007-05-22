@@ -43,7 +43,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedUpdateScalarRangeEventHandler::TextureBasedUpdateScalarRangeEventHandler()
 {
@@ -96,4 +95,3 @@ void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode(VE_XML::XMLObject
       std::cout<<"TextureBasedUpdateScalarRangeEventHandler::_operateOnNode()"<<std::endl;
    }
 }
-#endif

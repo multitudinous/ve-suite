@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SCALAR_VOLUME_VIS_HANDLER_H
 #define CFD_SCALAR_VOLUME_VIS_HANDLER_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::cfdScalarVolumeVisHandler
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 namespace osg { class Group; }
 
@@ -85,5 +82,4 @@ namespace VE_TextureBased
    };
 }
 #endif //_OSG
-#endif
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H

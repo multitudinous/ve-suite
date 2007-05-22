@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 //class to update the texture matrix appropriately
 #ifndef CFD_TEXTURE_MATRIX_CALLBACK_H 
@@ -42,7 +40,6 @@
 /*!\class VE_TextureBased::cfdTextureMatrixCallback
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 
 namespace osg
@@ -79,5 +76,4 @@ namespace VE_TextureBased
    };
 }
 #endif //_OSG
-#endif
 #endif// CFD_TEXTURE_MATRIX_CALLBACK_H 

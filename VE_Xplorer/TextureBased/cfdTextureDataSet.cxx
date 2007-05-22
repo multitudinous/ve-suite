@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
@@ -289,5 +288,4 @@ int cfdTextureDataSet::FindVector(std::string name)
    }
    return -1;
 }
-#endif
 #endif

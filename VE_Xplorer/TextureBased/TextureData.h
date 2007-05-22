@@ -1,8 +1,6 @@
 #ifndef JPG_TEXTURE_DATA_H_
 #define JPG_TEXTURE_DATA_H_
 
-#ifdef VE_PATENTED
-
 #ifdef _WIN32
 #include <windows.h>
 #define WIN32_LEAN_AND_MEAN
@@ -206,6 +204,4 @@ namespace VE_TextureBased
    /// Typedef for a SmartPtr type for the TextureData.
    typedef Loki::SmartPtrDef<TextureData>::type TextureDataPtr;
 }
-
-#endif
 #endif

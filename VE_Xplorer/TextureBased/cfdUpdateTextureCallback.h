@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_UPDATE_TEXTURE_CALLBACK_H
 #define CFD_UPDATE_TEXTURE_CALLBACK_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::cfdUpdateTextureCallback
 *
 */
-#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
@@ -176,4 +173,3 @@ namespace VE_TextureBased
 }
 #endif //OSG
 #endif //CFD_UPDATE_TEXTURE_CALLBACK_H
-#endif

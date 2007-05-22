@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _BIV_TEXTURE_MANAGER_H_
@@ -42,7 +40,6 @@
 /*!\class VE_TextureBased::cfdTextureManager
 *
 */
-#ifdef VE_PATENTED
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -181,5 +178,4 @@ protected:
    std::string dataName;///<Name of this data solution.
 };
 }
-#endif
 #endif //_BIV_TEXTURE_MANAGER_H_

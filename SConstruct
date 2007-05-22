@@ -369,6 +369,7 @@ if not SConsAddons.Util.hasHelpFlag():
    shareSubdirs = pj(buildDir,'share')
    docsSubdirs = pj('#', 'share', 'docs')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
+   osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
 
    ##Set the Sconscript files to build.
    if 'xplorer' in COMMAND_LINE_TARGETS:
@@ -392,7 +393,7 @@ if not SConsAddons.Util.hasHelpFlag():
    else:
       ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
                   xplorerSubdirs, ceSubdirs, veiSubdirs, 
-                  shareSubdirs, fpcSubdirs, lokiSubdirs]
+                  shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:

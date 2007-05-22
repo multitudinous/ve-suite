@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/TextureBased/cfd3DTextureCullCallback.h"
 #include "VE_Xplorer/TextureBased/cfdCopyTo3DTextureStage.h"
@@ -212,5 +211,4 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    }
    _count++;
 }
-#endif
 #endif

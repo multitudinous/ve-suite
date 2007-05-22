@@ -55,10 +55,8 @@
 
 #ifdef _OSG
 #include <osg/StateSet>
-#ifdef VE_PATENTED
 #include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
 using namespace VE_TextureBased;
-#endif
 #endif
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
@@ -147,7 +145,6 @@ cfdModel::~cfdModel()
 
    //texture data cleanup
 #ifdef _OSG
-#ifdef VE_PATENTED
    /*TextureDataSetList::iterator tDataSet;
    for ( tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
    {
@@ -160,7 +157,6 @@ cfdModel::~cfdModel()
    mTextureDataSets.clear();
    vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
       << std::endl << vprDEBUG_FLUSH;
-#endif
 #endif
  
    //std::map<int,cfdDataSet*>::iterator foundPlugin;
@@ -251,7 +247,6 @@ void cfdModel::SetActiveDataSet( cfdDataSet* input )
    activeDataSet = input;
 }
 #ifdef _OSG
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateTextureDataSet()
 {
@@ -263,7 +258,6 @@ void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
 {
    mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
 }
-#endif
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateGeomDataSet( std::string filename )

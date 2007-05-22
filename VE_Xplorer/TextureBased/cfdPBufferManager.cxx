@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <cmath>
 #include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
@@ -389,7 +388,6 @@ void cfdPBufferManager::deactivate()
       } 
    }
 }
-#endif
 #endif
 #endif
 

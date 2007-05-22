@@ -43,7 +43,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedSliceNumberUpdateEventHandler::TextureBasedSliceNumberUpdateEventHandler()
 {
@@ -84,4 +83,3 @@ void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode(VE_XML::XMLObject
       std::cout<<"TextureBasedSliceNumberUpdateEventHandler::_operateOnNode()"<<std::endl;
    }
 }
-#endif

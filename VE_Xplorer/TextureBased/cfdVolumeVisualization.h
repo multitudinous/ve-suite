@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VOLUME_VISUALIZATION_H
 #define CFD_VOLUME_VISUALIZATION_H
@@ -41,8 +39,6 @@
 /*!\class VE_TextureBased::cfdVolumeVisualization
 *
 */
-#ifdef VE_PATENTED
-
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
@@ -254,4 +250,3 @@ namespace VE_TextureBased
 }
 #endif//OSG
 #endif// CFD_VOLUME_VISUALIZATION_H
-#endif

@@ -43,7 +43,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler::TextureBasedTransientModeUpdateEventHandler()
 {
@@ -99,4 +98,3 @@ void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObje
       std::cout<<"TextureBasedTransientModeUpdateEventHandler::_operateOnNode()"<<std::endl;
    }
 }
-#endif

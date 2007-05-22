@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #include <iostream>
 #ifdef _OSG
 #include <osg/Texture3D>
@@ -469,4 +468,3 @@ cfdOSGTransferShaderManager& cfdOSGTransferShaderManager::operator=(const cfdOSG
    return *this;
 }
 #endif//_OSG
-#endif

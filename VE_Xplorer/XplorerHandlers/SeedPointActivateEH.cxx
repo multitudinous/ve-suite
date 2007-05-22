@@ -45,7 +45,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler::SeedPointActivateEventHandler()
 {
@@ -133,4 +132,3 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    }
 
 }
-#endif

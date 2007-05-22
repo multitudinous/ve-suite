@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_OSG_PING_PONG_TEXTURE_3D_H
 #define CFD_OSG_PING_PONG_TEXTURE_3D_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::cfdOSGPingPongTexture3D
 *
 */
-#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG
 #include <osg/Node>
@@ -72,5 +69,4 @@ namespace VE_TextureBased
    };
 }
 #endif //_OSG
-#endif
 #endif // CFD_OSG_PING_PONG_TEXTURE_3D_H

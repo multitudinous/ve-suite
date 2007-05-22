@@ -84,10 +84,7 @@
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-#ifdef VE_PATENTED
 using namespace VE_TextureBased;
-#endif
-
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -804,13 +801,11 @@ void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject 
    activeDataset->SetActiveVector( activeVector );
    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 #ifdef _OSG
-#ifdef VE_PATENTED
    /*cfdTextureDataSet* activeTDSet = activeModel->GetActiveTextureDataSet();
    if ( activeTDSet )
    {
       activeTDSet->SetActiveVector( activeVector );
    }*/
-#endif
 #endif
 }
 //////////////////////////////////////////////////////////////////////////////////////
@@ -835,16 +830,6 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
       << std::endl << vprDEBUG_FLUSH;
    cfdDataSet* activeDataset = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
    //update active scalar texture if it exists
-#ifdef _OSG
-#ifdef VE_PATENTED
-   ///These don't necessarily match do they?
-   /*cfdTextureDataSet* activeTDSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveTextureDataSet();
-   if( activeTDSet )
-   {
-      activeTDSet->SetActiveScalar( activeScalarName );
-   }*/
-#endif
-#endif
    
    activeDataset->SetActiveScalar( activeScalarName );
    activeDataset->GetParent()->SetActiveScalar( activeScalarName );
@@ -868,14 +853,12 @@ void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject
          << std::endl << vprDEBUG_FLUSH;
    //update active texture dataset if it exists
 #ifdef _OSG
-#ifdef VE_PATENTED
    unsigned int nTextureDataSets = activeModel->GetNumberOfTextureDataSets();
    if( (nTextureDataSets) && ( i < nTextureDataSets ) )
    {
       cfdTextureDataSet* activeTDSet = activeModel->GetTextureDataSet( i );
       activeModel->SetActiveTextureDataSet( activeTDSet );
    }
-#endif
 #endif
    if ( ( i < activeModel->GetNumberOfCfdDataSets() ) )
    {

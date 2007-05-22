@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/Texture3D>
 #include <osg/Texture1D>
@@ -930,4 +929,3 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=(const
    return *this;
 }
 #endif//_OSG
-#endif

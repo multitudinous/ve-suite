@@ -42,7 +42,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_TextureBased;
-#ifdef VE_PATENTED
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
@@ -159,4 +158,3 @@ void TextureBasedEventHandler::_setActiveTextureDataset()
 
    }
 }
-#endif

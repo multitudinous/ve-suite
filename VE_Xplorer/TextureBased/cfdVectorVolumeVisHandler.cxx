@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/TexEnv>
 #include <osg/Geode>
@@ -345,6 +344,4 @@ cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
    }
    return *this;
 }
-//#endif //CFD_USE_SHADERS
 #endif //_OSG
-#endif

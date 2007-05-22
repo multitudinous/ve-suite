@@ -38,7 +38,6 @@ cfdTextureBasedVizHandler API
 /*!\class VE_TextureBased::cfdTextureBasedVizHandler
 * 
 */
-#ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
 #include "VE_Installer/include/VEConfig.h"
 
@@ -212,5 +211,4 @@ namespace VE_TextureBased
    };
 }
 #endif //OSG
-#endif //
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

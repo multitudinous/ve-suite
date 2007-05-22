@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
 
 #ifdef _PERFORMER
@@ -797,7 +796,4 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
    }
    return *this;
 }
-
-
-#endif
 #endif

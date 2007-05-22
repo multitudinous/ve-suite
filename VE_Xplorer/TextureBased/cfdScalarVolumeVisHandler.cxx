@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
@@ -145,4 +144,3 @@ cfdScalarVolumeVisHandler::operator=(const cfdScalarVolumeVisHandler& vvnh)
    return *this;
 }
 #endif //_OSG
-#endif

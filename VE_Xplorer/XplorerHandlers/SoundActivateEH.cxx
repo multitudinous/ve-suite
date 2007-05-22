@@ -40,7 +40,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 SoundActivateEventHandler::SoundActivateEventHandler()
 {
@@ -112,4 +111,3 @@ void SoundActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    }
 
 }
-#endif

@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <cmath>
 #include "VE_Xplorer/TextureBased/cfdAdvectionSubGraph.h"
@@ -114,4 +113,3 @@ osg::ref_ptr<osg::Group> VE_TextureBased::CreateAdvectionSubGraph(cfdTextureMana
    return group;
 }
 #endif// _OSG
-#endif

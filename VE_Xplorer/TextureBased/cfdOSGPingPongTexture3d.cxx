@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG
 #include "VE_Xplorer/TextureBased/cfdOSGPingPongTexture3d.h"
@@ -113,4 +112,3 @@ cfdOSGPingPongTexture3D::operator=(const cfdOSGPingPongTexture3D& pp)
    return *this;
 }
 #endif //_OSG
-#endif

@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
-#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
@@ -771,6 +770,5 @@ void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
 {
    _textureBaseSelected = trueFalse;
 }
-#endif// VE_PATENTED
 #endif
 

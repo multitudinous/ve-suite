@@ -41,7 +41,6 @@
 /*!\class VE_TextureBased::cfdScalarShaderManager
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
 namespace VE_TextureBased
@@ -110,5 +109,4 @@ protected:
 };
 }
 #endif//_OSG
-#endif
 #endif// CFD_SCALAR_SHADER_MANAGER_H

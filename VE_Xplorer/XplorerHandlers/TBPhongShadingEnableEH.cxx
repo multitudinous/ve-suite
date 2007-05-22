@@ -43,7 +43,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedPhongShadingEnableEventHandler::TextureBasedPhongShadingEnableEventHandler()
 {
@@ -84,4 +83,3 @@ void TextureBasedPhongShadingEnableEventHandler::_operateOnNode(VE_XML::XMLObjec
       std::cout<<"TextureBasedPhongShadingEnableEventHandler::_operateOnNode()"<<std::endl;
    }
 }
-#endif

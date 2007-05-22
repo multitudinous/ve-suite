@@ -40,7 +40,6 @@
 #include "VE_Open/XML/DataValuePair.h"
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler::TextureBasedSetActiveShaderManagerEventHandler()
 {
@@ -82,4 +81,3 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(VE_XML::XMLO
    }
 
 }
-#endif

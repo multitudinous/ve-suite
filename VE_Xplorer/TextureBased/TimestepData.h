@@ -1,8 +1,6 @@
 #ifndef JPG_TIMESTEP_DATA_H_
 #define JPG_TIMESTEP_DATA_H_
 
-#ifdef VE_PATENTED
-
 #include "VE_Xplorer/TextureBased/ScalarData.h"
 #include "VE_Xplorer/TextureBased/VectorData.h"
 
@@ -35,6 +33,4 @@ namespace VE_TextureBased
 
    };
 }
-
-#endif
 #endif

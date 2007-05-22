@@ -29,8 +29,6 @@
  * Id:            $Id: SmokeShaderManager.h 5067 2006-07-29 01:47:10Z mccdo $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GREY_SCALE_SHADER_MANAGER_H
 #define GREY_SCALE_SHADER_MANAGER_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::GreyScaleShaderManager
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
 namespace VE_TextureBased
@@ -66,5 +63,4 @@ protected:
 };
 }
 #endif//_OSG
-#endif
 #endif// GREY_SCALE_SHADER_MANAGER_H

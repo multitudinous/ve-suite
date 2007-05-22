@@ -81,11 +81,9 @@
 #include "VE_Open/XML/Command.h"
 
 #ifdef _OSG
-#ifdef VE_PATENTED
 #include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 using namespace VE_TextureBased;
-#endif
 #endif
 #include <fstream>
 #include <string>
@@ -152,9 +150,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
    _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
 #ifdef _OSG
-#ifdef VE_PATENTED
    _activeTDSet = 0;
-#endif
 #endif
 }
 
@@ -233,12 +229,10 @@ VE_XML::Command* cfdModelHandler::GetXMLCommand( void )
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 #ifdef _OSG
-#ifdef VE_PATENTED
 cfdTextureDataSet* cfdModelHandler::GetActiveTextureDataSet()
 {
    return _activeTDSet;
 }
-#endif
 #endif
 /////////////////////////////////////////////////////
 cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
@@ -487,13 +481,11 @@ void cfdModelHandler::InitScene( void )
          _activeModel->SetActiveDataSet( activeDataset );
       }
 #ifdef _OSG
-#ifdef VE_PATENTED
       if(_modelList.at(0)->GetNumberOfTextureDataSets()>0)
       {
          _activeTDSet = _modelList.at(0)->GetTextureDataSet(0);
          _activeModel->SetActiveTextureDataSet(_activeTDSet);
       }
-#endif
 #endif
    }
 

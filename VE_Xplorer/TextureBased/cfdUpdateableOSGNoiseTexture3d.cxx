@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #include <iostream>
 #ifdef _PERFORMER
 #elif _OPENSG
@@ -231,4 +230,3 @@ cfdUpdateableOSGNoiseTexture3d::operator=(const cfdUpdateableOSGNoiseTexture3d& 
    return *this;
 }
 #endif 
-#endif

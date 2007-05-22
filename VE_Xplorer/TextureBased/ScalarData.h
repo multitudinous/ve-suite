@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-#ifdef VE_PATENTED
-
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_TextureBased
@@ -171,5 +169,4 @@ namespace VE_TextureBased
    };
 
 }
-#endif
 #endif

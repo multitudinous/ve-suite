@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #include "VE_Xplorer/TextureBased/cfdSimpleTextureCallback.h"
 #ifdef _PERFORMER
 #elif _OPENSG
@@ -77,5 +76,4 @@ void cfdSimpleTextureCallback::subload(const osg::Texture3D& texture,osg::State&
         
        
 }
-#endif
 #endif

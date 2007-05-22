@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #include <iostream>
 #ifdef _OSG
 #include <osg/Texture3D>
@@ -508,4 +507,3 @@ void cfdScalarShaderManager::_initPropertyTexture()
    _jitterTexture = new VE_TextureBased::NoiseTexture2D();
 }
 #endif//_OSG
-#endif

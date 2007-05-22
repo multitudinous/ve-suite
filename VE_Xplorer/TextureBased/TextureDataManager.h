@@ -1,8 +1,6 @@
 #ifndef JPG_TEXTURE_DATA_MANAGER_H_
 #define JPG_TEXTURE_DATA_MANAGER_H_
 
-#ifdef VE_PATENTED
-
 #include "VE_Xplorer/TextureBased/SingletonDLL.h"
 #include "VE_Xplorer/TextureBased/TextureData.h"
 #include "VE_Installer/include/VEConfig.h"
@@ -79,6 +77,4 @@ namespace VE_TextureBased
    /// Typedef for the singleton TextureDataManager.
    typedef Singleton<TextureDataManager_t> TextureDataManager;
 }
-
-#endif
 #endif

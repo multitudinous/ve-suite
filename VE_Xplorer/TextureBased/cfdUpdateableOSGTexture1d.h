@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
 #define CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::cfdUpdateableOSGTexture1d
 *
 */
-#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG
 #include <osg/Texture1D>
@@ -82,4 +79,3 @@ namespace VE_TextureBased
 }
 #endif //_OSG
 #endif //CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
-#endif

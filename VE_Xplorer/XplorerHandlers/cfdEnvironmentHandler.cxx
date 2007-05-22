@@ -112,11 +112,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 
    #ifdef _OSG
       display_information = 0;
-
-      #ifdef VE_PATENTED
-         this->objectHandler = 0;
+               this->objectHandler = 0;
          _activeGeomPicking = false;
-      #endif //VE_PATENTED
    #endif //_OSG
 
    _readParam = 0;
@@ -387,34 +384,6 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
          currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
       }
    }
-
-/*#ifdef _OSG
-#ifdef VE_PATENTED
-   this->objectHandler->UpdateObjectHandler();
-
-   if( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
-   {
-      if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
-      {
-         this->objectHandler->ActivateGeometryPicking();
-      }
-
-      else
-      {
-         this->objectHandler->DeactivateGeometryPicking();
-      }
-   }
-#endif
-#endif*/
-
-   // Need to get these values from the appropriate classes
-   // the cursor will be active (based on the cursor id)
-   /*if( cfdModelHandler::instance()->GetActiveModel() )
-   {
-      this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-      this->cursor->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
-      this->cursor->CheckCommandId( _commandArray );
-   }*/
 
    _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );

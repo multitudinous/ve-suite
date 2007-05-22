@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_AVDECTION_SUBGRAPH_H
 #define CFD_AVDECTION_SUBGRAPH_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::CreateAdvectionSubGraph
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 namespace VE_TextureBased
 {
@@ -67,5 +64,4 @@ namespace VE_TextureBased
 
 }
 #endif// _OSG
-#endif
 #endif //CFD_AVDECTION_SUBGRAPH_H

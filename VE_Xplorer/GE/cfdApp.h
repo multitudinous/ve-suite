@@ -84,13 +84,11 @@ const float SAMPLE_TIME = 1.0f;
       #include <vpr/Thread/Thread.h>
    #endif //_WEB_INTERFACE
 
-   #ifdef VE_PATENTED
       namespace VE_TextureBased
       {
          class cfdPBufferManager;
          class cfdTextureBasedVizHandler;
       }
-   #endif //VE_PATENTED
 #endif //_PERFORMER _OSG
 
 #ifdef _SGL

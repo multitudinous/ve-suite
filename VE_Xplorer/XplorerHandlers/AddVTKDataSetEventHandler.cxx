@@ -189,7 +189,6 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
             if ( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
             {
 #ifdef _OSG
-#ifdef VE_PATENTED
                vprDEBUG(vesDBG,0) << "|\tCreating texture dataset." << std::endl << vprDEBUG_FLUSH;
                _activeModel->CreateTextureDataSet();
                size_t numProperties = tempInfoPacket->GetNumberOfProperties();
@@ -204,7 +203,6 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                      _activeModel->GetCfdDataSet( -1 )->SetUUID( textId.str(), tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
                   }
                }
-#endif
 #endif
             }
             //Now load up the dataset
@@ -304,9 +302,5 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
 ////////////////////////////////////////////////////////////////////////////////   
 void AddVTKDataSetEventHandler::Load3DTextureDirectories( std::string dirToLoad )
 {
-#ifdef _OSG
-#ifdef VE_PATENTED
-#endif
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////

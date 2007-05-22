@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
@@ -424,4 +423,3 @@ osg::MatrixTransform* cfdObjectHandler::getMatrixTransform()
 }
 
 #endif //_OSG
-#endif //VE_PATENTED

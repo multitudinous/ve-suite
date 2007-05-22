@@ -29,10 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 
 #ifndef CFD_OBJECTHANDLER_H
@@ -177,4 +174,3 @@ private:
 }
 #endif //CFD_OJECTHANDLER_H
 #endif // _OSG
-#endif // VE_PATENTED

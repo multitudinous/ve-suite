@@ -43,7 +43,6 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-#ifdef VE_PATENTED
 ////////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler::TextureBasedPreIntegrateEnableEventHandler()
 {
@@ -84,4 +83,3 @@ void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(VE_XML::XMLObjec
       std::cout<<"TextureBasedPreIntegrateEnableEventHandler::_operateOnNode()"<<std::endl;
    }
 }
-#endif

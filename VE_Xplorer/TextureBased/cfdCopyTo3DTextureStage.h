@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_COPY_TO_3DTEXTURE_STAGE_H
 #define CFD_COPY_TO_3DTEXTURE_STAGE_H
@@ -41,7 +39,6 @@
 /*!\class VE_TextureBased::cfdCopyTo3DTextureStage
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 
 #include <osg/Texture3D>
@@ -107,6 +104,5 @@ namespace VE_TextureBased
    };
 }
 #endif //OSG
-#endif
 #endif// CFD_COPY_TO_3DTEXTURE_STAGE_H
 

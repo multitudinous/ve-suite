@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_TEXTURE_DATA_SET_H
 #define CFD_TEXTURE_DATA_SET_H
@@ -42,7 +40,6 @@
 *
 */
 #ifdef _OSG
-#ifdef VE_PATENTED
 namespace VE_TextureBased
 {
    class cfdVolumeVisualization;
@@ -158,6 +155,5 @@ protected:
    TextureDataList _vectors;///<The list of TextureDataInfo for each available vector
 };
 }
-#endif
 #endif
 #endif// CFD_TEXTURE_DATA_SET_H

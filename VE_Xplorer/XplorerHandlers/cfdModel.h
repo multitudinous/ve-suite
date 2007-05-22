@@ -202,11 +202,9 @@ public:
    //texture based interface
 #ifdef _OSG
    void SetActiveTextureDataSet( VE_TextureBased::cfdTextureDataSet* tDS);
-#ifdef VE_PATENTED
   void CreateTextureDataSet();
    void AddDataSetToTextureDataSet(unsigned int index,
                          std::string textureDescriptionFile);
-#endif
    unsigned int GetNumberOfTextureDataSets();
    VE_TextureBased::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
    VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet();

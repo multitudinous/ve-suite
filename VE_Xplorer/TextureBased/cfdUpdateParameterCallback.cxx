@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 
 #include <iostream>
@@ -113,4 +112,3 @@ void cfdUpdateParameterCallback::updateParameter(float* v)
    };
 }
 #endif //_OSG
-#endif

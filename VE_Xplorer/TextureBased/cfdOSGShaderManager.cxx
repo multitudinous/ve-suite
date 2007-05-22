@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>
@@ -206,4 +205,3 @@ cfdOSGShaderManager& cfdOSGShaderManager::operator=(const
    return *this;
 }
 #endif //_OSG
-#endif

@@ -145,9 +145,7 @@ private:
    cfdModel* _activeModel;
 
 #ifdef _OSG
-#ifdef VE_PATENTED
    VE_TextureBased::cfdTextureDataSet* _activeTDSet;
-#endif
 #endif
    bool tbased;
    vtkPolyData* arrow;

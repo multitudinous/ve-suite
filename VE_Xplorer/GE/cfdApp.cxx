@@ -33,9 +33,7 @@
 #include "VE_Xplorer/GE/cfdApp.h"
 
 #ifdef _OSG
-#ifdef VE_PATENTED
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
-#endif
 #endif
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
@@ -93,12 +91,8 @@
 #endif
 
 #ifdef _OSG
-#ifdef VE_PATENTED
-//#ifdef CFD_USE_SHADERS
 #include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
 using namespace VE_TextureBased;
-//#endif
-#endif
 #endif
 
 /// C/C++ libraries
@@ -150,10 +144,8 @@ cfdApp::cfdApp( int argc, char* argv[] )
 
    light_model_0->setAmbientIntensity( osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
 
-#ifdef VE_PATENTED
    _tbvHandler = 0;
    _pbuffer = 0;
-#endif
    _frameNumber = 0;
 #endif
    this->argc = argc;
@@ -237,8 +229,6 @@ osg::Group* cfdApp::getScene()
 }
 
 #ifdef _OSG
-#ifdef VE_PATENTED
-//#ifdef CFD_USE_SHADERS
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextInit()
 {
@@ -296,8 +286,6 @@ cfdPBufferManager* cfdApp::GetPBuffer()
    }
    return 0;
 }
-//#endif
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 {
@@ -485,9 +473,6 @@ void cfdApp::latePreFrame( void )
    ///////////////////////
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
 	
-
-#ifdef _OSG
-#ifdef VE_PATENTED
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
       if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
@@ -499,8 +484,6 @@ void cfdApp::latePreFrame( void )
          _tbvHandler->PreFrameUpdate();
       }
    }
-#endif
-#endif
 
    cfdExecutive::instance()->PreFrameUpdate();
    this->_vjobsWrapper->PreFrameUpdate();
@@ -508,7 +491,6 @@ void cfdApp::latePreFrame( void )
 
 	//Update physics objects with time passed from last frame
 	//**********************************************************************
-#ifdef _OSG
 	//Used for physics_simulator to grab real dt per frame as floats
 	static float previous_time = 0.0f;
 
@@ -516,7 +498,6 @@ void cfdApp::latePreFrame( void )
 	//std::cout<<dt<<std::endl;
 	VE_SceneGraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
 	previous_time = current_time;
-#endif
 	//**********************************************************************
    ///We must do this here because this must be serial not parallel in
    ///multiple contexts

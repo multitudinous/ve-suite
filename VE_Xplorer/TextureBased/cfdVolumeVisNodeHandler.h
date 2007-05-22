@@ -41,7 +41,6 @@
 /*!\class VE_TextureBased::cfdVolumeVisNodeHandler
 *
 */
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/BoundingBox>
 #include <osg/ref_ptr>
@@ -165,4 +164,3 @@ namespace VE_TextureBased
 }
 #endif //_OSG
 #endif// CFD_VOLUME_VIZ_NODE_HANDLER_H
-#endif

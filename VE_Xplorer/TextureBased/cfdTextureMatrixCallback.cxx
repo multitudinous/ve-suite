@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 //class to update the texture matrix appropriately
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
 #include <osg/TexMat>
@@ -75,4 +74,3 @@ void cfdTextureMatrixCallback::operator()(osg::Node* node,osg::NodeVisitor* nv)
    traverse(node,nv);
 }
 #endif //_OSG
-#endif

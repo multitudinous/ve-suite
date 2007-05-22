@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #ifdef _OSG
 #include <iostream>
 #include <osg/BoundingBox>
@@ -446,4 +445,3 @@ osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(const osg::Drawable&
 
 }
 #endif// _OSG
-#endif

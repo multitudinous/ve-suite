@@ -41,7 +41,6 @@
 /*!\class VE_TextureBased::cfdUpdateableOSGNoiseTexture3d
 *
 */
-#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
@@ -83,5 +82,4 @@ namespace VE_TextureBased
    };
 }
 #endif //_OSG
-#endif
 #endif// CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H

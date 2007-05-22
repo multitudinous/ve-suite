@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef VE_PATENTED
 #include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
 
 #ifdef _PERFORMER
@@ -208,5 +207,4 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
       }   
    }
 }
-#endif
 #endif
