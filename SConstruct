@@ -178,7 +178,7 @@ opts.Add('prefix', 'Installation prefix', '/usr/local')
 opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If true, make the distribution packages as part of the build', 'no')
 opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'yes')
-opts.Add('tao', 'If true, use TAO in the build', 'yes')
+opts.Add('tao', 'If true, use TAO in the build', 'no')
 ##Added options for velauncher build.
 ##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
 ##opts.Add('CxPath', "Set CXPATH to find 
@@ -306,6 +306,9 @@ if not SConsAddons.Util.hasHelpFlag():
    if baseEnv['build_dir'] != '':
       buildDir = baseEnv['build_dir']
 
+   if baseEnv['tao'] == 'yes':
+      baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
+
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
    ##base_bldr = base_bldr.clone()
@@ -313,7 +316,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
-   baseEnv.Append( CPPDEFINES = ['_TAO','VE_PATENTED','_OSG','VTK44'] )
+   baseEnv.Append( CPPDEFINES = ['_TAO','_OSG','VTK44'] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
