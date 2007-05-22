@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib xerces-c_2.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)\VE_CE_UtilitiesLib.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
