@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib xerces-c_2.lib"
+				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib xerces-c_2.lib"
 				OutputFile="$(OutDir)/WinClient.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

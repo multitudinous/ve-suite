@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vrj.lib vrj_ogl.lib osg.lib osgUtil.lib osgDB.lib osgText.lib libnspr4.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vrj.lib vrj_ogl.lib osg.lib osgUtil.lib osgDB.lib osgText.lib libnspr4.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib xerces-c_2.lib opengl32.lib glu32.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_tao_osg_vep.exe"
 				LinkIncremental="1"

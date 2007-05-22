@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib xerces-c_2.lib odbc32.lib odbccp32.lib TAO_BiDirGIOP.lib"
+				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_BiDirGIOP.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_ValueType.lib TAO_Messaging.lib xerces-c_2.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)/WinServer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
