@@ -746,7 +746,7 @@ void cfdApp::draw()
    vrj::GlUserData* userData = drawMan->currentUserData();
 
    // get the current projection
-#if __VJ_version <= 2000003
+#if __VJ_version < 2003000
    vrj::Projection* project = userData->getProjection();
 #elif __VJ_version >= 2003008
    vrj::ProjectionPtr project = userData->getProjection();
