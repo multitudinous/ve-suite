@@ -218,6 +218,8 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     //EVT_IDLE( AppFrame::IdleEvent )
     //EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
     EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
+   EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
+   EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
     EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
     EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
     EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
@@ -701,6 +703,8 @@ void AppFrame::CreateMenu()
    aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
    aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run Simulation" ) );
    aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
+   aspenMenu->Append( SAVE_SIMULATION, _("Save Simulation") );
+   aspenMenu->Append( SAVEAS_SIMULATION, _("SaveAs Simulation") );
    con_menu->Append( ASPEN_CONNECTION_MENU,   _( "Aspen" ), aspenMenu, _("Aspen connection") );
 
 	//file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), aspenMenu, _("NOTHING") );
@@ -1411,6 +1415,61 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+void AppFrame::SaveSimulation(wxCommandEvent& WXUNUSED(event))
+{
+   Log("Saving Simulation...\n");
+   VE_XML::Command returnState;
+   returnState.SetCommandName("saveSimulation");
+   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "saveSimulation" );
+
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   serviceList->Query( status );
+   //std::string nw_str = serviceList->Query( status ) + "\n";
+   //Log(nw_str.c_str());
+   Log("Simulation Saved.\n");
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
+{
+   wxFileName saveFileName;
+   wxTextEntryDialog newDataSetName(this, 
+	   wxString("Enter filename (.apw):", wxConvUTF8),
+	   wxString("Save Flowsheet", wxConvUTF8),
+	   wxString("", wxConvUTF8),wxOK|wxCANCEL);
+   if ( newDataSetName.ShowModal() == wxID_OK )
+   {
+	   Log("Saving Simulation...\n");
+	   saveFileName.ClearExt();
+	   saveFileName.SetName( newDataSetName.GetValue() ); 
+	   //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
+
+	   VE_XML::Command returnState;
+	   returnState.SetCommandName("saveAsSimulation");
+	   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	   data->SetData("NetworkQuery", "saveAsSimulation" );
+	   data = returnState.GetDataValuePair(-1);
+	   data->SetData("SaveFileName",  ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+
+	   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	   VE_XML::XMLReaderWriter commandWriter;
+	   std::string status="returnString";
+	   commandWriter.UseStandaloneDOMDocumentManager();
+	   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	   //Get results
+	   std::string nw_str = serviceList->Query( status );
+	   Log("Simulation Saved.\n");
+   }
+}
+///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
    path.clear();

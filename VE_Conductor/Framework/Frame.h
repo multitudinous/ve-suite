@@ -106,39 +106,41 @@ public:
     AppFrame( wxWindow* parent, wxWindowID id, const wxString& title );
     virtual ~AppFrame(){;}
 
-    enum 
-    {
-        v21ID_CONNECT,
-        v21ID_CONNECT_VE,
-        v21ID_SUBMIT,
-        v21ID_LOAD, 
-        QUERY_FROM_SERVER, 
-        QUERY_NETWORK,  
-        RUN_ASPEN_NETWORK,
-        ASPEN_CONNECTION_MENU,
-        SHOW_ASPEN_SIMULATION,
-        HIDE_ASPEN_SIMULATION,
-        CLOSE_ASPEN_SIMULATION,
-        CONDUCTOR_FIND,
-        v21ID_DISCONNECT,
-        v21ID_DISCONNECT_VE, 
-        v21ID_UNDO, 
-        v21ID_REDO, 
-        v21ID_ZOOMIN, 
-        v21ID_ZOOMOUT,
-        v21ID_START_CALC, 
-        v21ID_STOP_CALC,
-        v21ID_PAUSE_CALC,
-        v21ID_RESUME_CALC, 
-        v21ID_VIEW_RESULT,
-        v21ID_GLOBAL_PARAM,
-        v21ID_BASE,
-        v21ID_SOUR,
-        v21ID_REI_BASE,
-        v21ID_REI_SOUR,
-        v21ID_SWEET,
-        v21ID_CO_DISPOSAL,
-        MYLOG,
+   enum 
+   {
+      v21ID_CONNECT,
+      v21ID_CONNECT_VE,
+      v21ID_SUBMIT,
+      v21ID_LOAD, 
+      QUERY_FROM_SERVER, 
+      QUERY_NETWORK,  
+      RUN_ASPEN_NETWORK,
+      ASPEN_CONNECTION_MENU,
+      SHOW_ASPEN_SIMULATION,
+      HIDE_ASPEN_SIMULATION,
+      CLOSE_ASPEN_SIMULATION,
+      CONDUCTOR_FIND,
+      SAVE_SIMULATION,  
+      SAVEAS_SIMULATION,  
+      v21ID_DISCONNECT,
+      v21ID_DISCONNECT_VE, 
+      v21ID_UNDO, 
+      v21ID_REDO, 
+      v21ID_ZOOMIN, 
+      v21ID_ZOOMOUT,
+      v21ID_START_CALC, 
+      v21ID_STOP_CALC,
+      v21ID_PAUSE_CALC,
+      v21ID_RESUME_CALC, 
+      v21ID_VIEW_RESULT,
+      v21ID_GLOBAL_PARAM,
+      v21ID_BASE,
+      v21ID_SOUR,
+      v21ID_REI_BASE,
+      v21ID_REI_SOUR,
+      v21ID_SWEET,
+      v21ID_CO_DISPOSAL,
+      MYLOG,
 
         v21ID_HELP,
         v21ID_ABOUT,
@@ -282,18 +284,20 @@ public:
 
 protected:
     void LoadFromServer( wxCommandEvent &event );
-   
-    void QueryFromServer( wxCommandEvent& event );
-    void QueryNetwork( wxCommandEvent& event );
-    void RunAspenNetwork( wxCommandEvent& event );
-    void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
-    void StartCalc( wxCommandEvent &event );	
-    void StopCalc( wxCommandEvent &event );	
-    void PauseCalc( wxCommandEvent &event );	
-    void ResumeCalc( wxCommandEvent &event );	
+
+   void QueryFromServer( wxCommandEvent& event );
+   void QueryNetwork( wxCommandEvent& event );
+   void RunAspenNetwork( wxCommandEvent& event );
+   void ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) );
+   void HideAspenSimulation( wxCommandEvent& WXUNUSED(event) );
+   void CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) );
+   void FindBlocks( wxCommandEvent& WXUNUSED(event) );
+   void SaveSimulation( wxCommandEvent& WXUNUSED(event) );
+   void SaveAsSimulation( wxCommandEvent& WXUNUSED(event) );
+   void StartCalc(wxCommandEvent &event);	
+   void StopCalc(wxCommandEvent &event);	
+   void PauseCalc(wxCommandEvent &event);	
+   void ResumeCalc(wxCommandEvent &event);	
    
     void ViewResult( wxCommandEvent &event );
 
