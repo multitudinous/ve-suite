@@ -41,8 +41,6 @@
 #include <sstream>
 #include <algorithm>
 
-#include <algorithm>
-
 using namespace VE_XML;
 using namespace VE_Conductor;
 
