@@ -105,8 +105,7 @@ MainToolBar::MainToolBar( wxWindow* parent )
 :
 wxToolBar( parent, wxWindowID( -1 ), wxPoint( wxDefaultPosition ), 
            wxSize( wxDefaultSize ), 
-           long( wxCLIP_CHILDREN | wxSUNKEN_BORDER | 
-           wxTB_HORIZONTAL | wxNO_BORDER ), 
+           long( wxCLIP_CHILDREN | wxTB_HORIZONTAL | wxSUNKEN_BORDER ), 
            wxString( "toolBar", wxConvUTF8 ) )
 {
     LoadToolBarBitmaps();
@@ -197,32 +196,31 @@ void MainToolBar::CreateMainToolBar()
 
     AddTool( TOOLBAR_SELECTION, _( "" ), m_toolbarBitmaps[ "cursorBitmap" ], _( "Selection" ), wxITEM_RADIO );
     AddTool( TOOLBAR_NAVIGATION, _( "" ), m_toolbarBitmaps[ "worldCoSelectBitmap" ], _( "Navigation" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_OBJECT_TRANSLATE, _( "" ), m_toolbarBitmaps[ "objectTranslateBitmap" ], _( "Translate Object" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_OBJECT_ROTATE, _( "" ), m_toolbarBitmaps[ "objectRotateBitmap" ], _( "Rotate Object" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_OBJECT_SCALE, _( "" ), m_toolbarBitmaps[ "objectScaleBitmap" ], _( "Scale Object" ),  wxITEM_RADIO );
-    AddSeparator();
-
-/*
+#ifdef WIN32
     AddTool( TOOLBAR_OBJECT_TRANSLATE, _( "" ), m_toolbarBitmaps[ "objectTranslateBitmap" ], m_toolbarBitmaps[ "objectTranslateDisabledBitmap" ], wxITEM_RADIO, _( "Translate Object" ) );
     AddTool( TOOLBAR_OBJECT_ROTATE, _( "" ), m_toolbarBitmaps[ "objectRotateBitmap" ], m_toolbarBitmaps[ "objectRotateDisabledBitmap" ], wxITEM_RADIO, _( "Rotate Object" ) );
     AddTool( TOOLBAR_OBJECT_SCALE, _( "" ), m_toolbarBitmaps[ "objectScaleBitmap" ], m_toolbarBitmaps[ "objectScaleDisabledBitmap" ], wxITEM_RADIO, _( "Scale Object" ) );
+#else
+    AddTool( TOOLBAR_OBJECT_TRANSLATE, _( "" ), m_toolbarBitmaps[ "objectTranslateBitmap" ], _( "Translate Object" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_OBJECT_ROTATE, _( "" ), m_toolbarBitmaps[ "objectRotateBitmap" ], _( "Rotate Object" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_OBJECT_SCALE, _( "" ), m_toolbarBitmaps[ "objectScaleBitmap" ], _( "Scale Object" ),  wxITEM_RADIO );
+#endif
     AddSeparator();
-*/
+
 
     AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], _( "Reset Simulation" ), wxITEM_NORMAL );
-    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], _( "Pause Simulation" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], _( "Start Simulation" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], _( "Step Simulation" ), wxITEM_NORMAL );
-    AddSeparator();
-
-/*
+#ifdef WIN32
     AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], m_toolbarBitmaps[ "resetDisabledBitmap" ], wxITEM_NORMAL, _( "Reset Simulation" ) );
     AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], m_toolbarBitmaps[ "pauseDisabledBitmap" ], wxITEM_CHECK, _( "Pause Simulation" ) );
     AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], m_toolbarBitmaps[ "playDisabledBitmap" ], wxITEM_CHECK, _( "Start Simulation" ) );
     AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], m_toolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL, _( "Step Simulation" ) );
+#else
+    AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], _( "Reset Simulation" ), wxITEM_NORMAL );
+    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], _( "Pause Simulation" ), wxITEM_CHECK );
+    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], _( "Start Simulation" ), wxITEM_CHECK );
+    AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], _( "Step Simulation" ), wxITEM_NORMAL );
+#endif
     AddSeparator();
-*/
 
     AddTool( TOOLBAR_SUMMIT_JOB, _( "" ), m_toolbarBitmaps[ "sendJobBitmap" ], _( "Submit Job" ), wxITEM_NORMAL );
 
@@ -230,7 +228,9 @@ void MainToolBar::CreateMainToolBar()
 
     ToggleTool( TOOLBAR_NAVIGATION, true );
     SetToolNormalBitmap( TOOLBAR_NAVIGATION, m_toolbarBitmaps[ "worldCoSelectBitmap" ] );
-    //SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
+#ifdef WIN32
+    SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
+#endif
 
     //These disabled just for now until implemented
     //***********************************************//
@@ -305,7 +305,7 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
     {
         SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsSelectBitmap" ] );
 
-#ifdef WIN_32
+#ifdef WIN32
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
         SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
 #endif
@@ -321,8 +321,7 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         ToggleTool( TOOLBAR_PLAY, false );
 
         SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsBitmap" ] );
-
-#ifdef WIN_32
+#ifdef WIN32
         SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
         SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
 #else
