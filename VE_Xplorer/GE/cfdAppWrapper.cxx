@@ -83,7 +83,7 @@ void cfdAppWrapper::init( void* )
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
    _cfdApp = new cfdApp( argc, argv );  // Delcare an instance of my application
    _cfdApp->SetWrapper( _vjObsWrapper );
-#if __VJ_version > 2000003
+#if __VJ_version >= 2003000
    kernel->init(argc, argv);
 #elif __VJ_version == 2000003
 #endif
