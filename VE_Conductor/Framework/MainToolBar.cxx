@@ -74,9 +74,6 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-// --- wxWidgets Includes --- //
-//#include <wx/filename.h>
-
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
     EVT_MENU( TOOLBAR_OPEN, MainToolBar::OnOpen )
