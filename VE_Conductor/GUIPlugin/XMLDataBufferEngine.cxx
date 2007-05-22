@@ -132,7 +132,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     {
         m_networkMap[ "Network" ] = 
             *dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
-        objectVector.erase( objectVector.begin() );
+        objectIter = objectVector.erase( objectVector.begin() );
     }
     else
     {
@@ -186,13 +186,19 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         m_modelMap[ modelID.str() ] = *model;
         modelID.str("");
     }
-    
+    //For the case where there are no links between models
+    //Just grab all the models in the ves file
+    //this is somewhat of a hack but the schema does not support anything else
     if( m_networkMap[ "Network" ].GetNumberOfLinks() == 0 )
     {
-        VE_XML::VE_Model::Model* model = 
-            dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
-        modelID << model->GetModelID();
-        networkModelVector.push_back( modelID.str() );
+        std::map< std::string, VE_XML::VE_Model::Model >::iterator modelIter;
+        for( modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
+             ++modelIter )
+        {
+            modelID << modelIter->second.GetModelID();
+            networkModelVector.push_back( modelID.str() );
+            modelID.str("");
+        }
     }
     m_networkModelMap[ "Network" ] = networkModelVector;
     
