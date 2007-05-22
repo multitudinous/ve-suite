@@ -748,7 +748,7 @@ void cfdApp::draw()
    // get the current projection
 #if __VJ_version <= 2000003
    vrj::Projection* project = userData->getProjection();
-#elif __VJ_version > 2003008
+#elif __VJ_version >= 2003008
    vrj::ProjectionPtr project = userData->getProjection();
 #endif
 
