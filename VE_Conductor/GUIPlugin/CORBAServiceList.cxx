@@ -44,7 +44,7 @@
 
 #include <sstream>
 
-#include <wx/wx.h>
+//#include <wx/wx.h>
 #include <wx/app.h>
 #include <wx/utils.h>
 

@@ -5,13 +5,7 @@
 //	#pragma hdrstop
 //#endif
 
-//#ifndef WX_PRECOMP
-	#include <wx/wx.h>
-	#include <wx/dialog.h>
-//#else
-//	#include <wx/wxprec.h>
-//#endif
-
+#include <wx/dialog.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/listbox.h>

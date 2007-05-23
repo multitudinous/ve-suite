@@ -3,7 +3,7 @@
 
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Installer/include/VEConfig.h"
-#include <wx/wx.h>
+//#include <wx/wx.h>
 #include <wx/frame.h>
 #include <wx/dirdlg.h>
 #include <wx/menu.h>
@@ -11,6 +11,7 @@
 #include <wx/textctrl.h>
 #include <wx/notebook.h>
 #include <wx/panel.h>
+#include <wx/bmpbuttn.h>
 #include <map>
 
 #undef IconChooser_STYLE

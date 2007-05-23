@@ -33,7 +33,6 @@
 #ifndef FINDDIALOG_H
 #define FINDDIALOG_H
 
-//#include <wx/wx.h>
 #include "VE_Installer/include/VEConfig.h"
 #include <vector>
 #include <string>

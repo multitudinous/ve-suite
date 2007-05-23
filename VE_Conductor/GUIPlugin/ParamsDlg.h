@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <wx/wx.h>
+//#include <wx/wx.h>
 #include <wx/dialog.h>
 #include <wx/button.h>
 #include <wx/statbox.h>
