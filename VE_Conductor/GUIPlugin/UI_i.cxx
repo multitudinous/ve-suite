@@ -35,7 +35,12 @@
 #include "VE_Conductor/GUIPlugin/UI_i.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"
 
+#include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/Model/Model.h"
   
+using namespace VE_XML;
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : UIName_(name), executive_(Body::Executive::_duplicate(exec))
@@ -149,10 +154,22 @@ void Body_UI_i::SetXplorerData (
     ::Error::EUnknown
   ))
 {
-    throw CORBA::NO_IMPLEMENT();
-}
+	//Receive the data from Xplorer
+	std::string tempString( const_cast<char*>(xplorerData) );
+    VE_XML::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+	networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
+	m_xmlObjects = networkReader.GetLoadedXMLObjects();
+}
+////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetLogWindow( PEThread* logWindow )
 { 
 	  this->logWindow = logWindow;
+}
+///////////////////////////////////////////////////////////////////////////////
+std::vector<VE_XML::XMLObject*> Body_UI_i::GetXplorerData()
+{
+	return m_xmlObjects;
 }

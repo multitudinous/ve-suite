@@ -41,9 +41,20 @@ Body_UI_i API
 #include "VE_Open/skel/moduleS.h"
 #include <iostream>
 #include <string>
+#include <vector>
+#include <map>
 
 class PEThread;
 //class Network;
+
+namespace VE_XML
+{
+	class XMLObject;
+	namespace VE_Model
+	{
+		class Model;
+	}
+}
 
 //Class Body_UI_i
 #include "VE_Installer/include/VEConfig.h"
@@ -64,6 +75,9 @@ class VE_GUIPLUGINS_EXPORTS Body_UI_i : public virtual POA_Body::UI
  public:
 
      void SetLogWindow( PEThread* logWindow );
+
+	 ///Returns vector containing XMLObjects
+	 std::vector<VE_XML::XMLObject*> GetXplorerData();
      
 virtual void UpdateNetwork (
     const char * network
@@ -116,6 +130,10 @@ virtual void Raise (
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
+
+  std::vector<VE_XML::XMLObject*> m_xmlObjects;
+  std::map<int,std::string> m_idToModelName;
+  std::map<std::string, VE_XML::XMLObject*> m_objectToModel;
 };
 
 
