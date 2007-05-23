@@ -31,6 +31,10 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerNetwork'),
                         pj('#', buildDir, 'VE_Open','skel'),
                         pj('#', buildDir, 'VE_Open','XML')])
+#disable profiling by default
+if env['VPRProfile'] == 'no':
+   env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
+
 vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )

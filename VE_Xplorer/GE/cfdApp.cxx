@@ -97,9 +97,9 @@ using namespace VE_TextureBased;
 
 /// C/C++ libraries
 #include <iostream>
-//#include <omp.h>
 
 #include <vrj/Kernel/Kernel.h>
+#include <vpr/Perf/ProfileManager.h>
 
 //web interface stuff
 #ifdef _WEB_INTERFACE
@@ -178,6 +178,8 @@ void cfdApp::exit()
    if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
       delete[] webImagePixelArray;   //delete the pixel array
 #endif  //_WEB_INTERFACE
+   //Profiling guard used by vrjuggler
+   VPR_PROFILE_RESULTS();
 }
 
 #ifdef _PERFORMER
@@ -424,6 +426,7 @@ void cfdApp::initScene( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
 {
+    VPR_PROFILE_GUARD("cfdApp::preFrame");
    vprDEBUG(vesDBG,3)<<"cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
    //Sets the worldDCS before it is synced
    cfdEnvironmentHandler::instance()->PreFrameUpdate();
@@ -431,6 +434,7 @@ void cfdApp::preFrame( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
 {
+    VPR_PROFILE_GUARD("cfdApp::latePreFrame");
    static long lastFrame=0;
 	//Used for framerate calculation as integers only
    static float lastTime=0.0f;
@@ -528,6 +532,7 @@ void cfdApp::intraFrame()
 #ifdef _OSG
 void cfdApp::contextPostDraw()
 {
+    VPR_PROFILE_GUARD("cfdApp::contextPostDraw");
    //if(_tbvHandler)
      _tbvHandler->PingPongTextures();
 }
@@ -535,6 +540,7 @@ void cfdApp::contextPostDraw()
 
 void cfdApp::postFrame()
 {
+    VPR_PROFILE_GUARD("cfdApp::postFrame");
     vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
@@ -665,6 +671,7 @@ void cfdApp::writeImageFileForWeb(void*)
 ///so setting variables should not be done here
 void cfdApp::contextPreDraw( void )
 {
+    VPR_PROFILE_GUARD("cfdApp::contextPreDraw");
    if ( svUpdate )
    {
       //osg::ref_ptr<osgUtil::SceneView> sv;
@@ -688,6 +695,7 @@ void cfdApp::contextPreDraw( void )
 ///so setting variables should not be done here
 void cfdApp::draw()
 {
+    VPR_PROFILE_GUARD("cfdApp::draw");
 #ifndef _SGL
    glClear(GL_DEPTH_BUFFER_BIT);
 #endif
