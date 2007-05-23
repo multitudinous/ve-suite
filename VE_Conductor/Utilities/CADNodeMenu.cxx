@@ -90,6 +90,13 @@ CADNodeMenu::CADNodeMenu()
    Enable(GEOM_DELETE, false);
    InsertSeparator(3);
 
+   Append(GEOM_INITIALIZE_PHYSICS,
+          _T("Initialize Physics"),
+          _T(""),
+          wxITEM_NORMAL);
+   Enable(GEOM_INITIALIZE_PHYSICS, true);
+   InsertSeparator(5);
+
    wxMenu* toggleNodeSubMenu = new wxMenu();
    toggleNodeSubMenu->AppendRadioItem(GEOM_TOGGLE_ON,
                                       _T("ON"),
@@ -101,7 +108,7 @@ CADNodeMenu::CADNodeMenu()
           _T("Toggle Node"),
           toggleNodeSubMenu);
    Enable(GEOM_DISPLAY_TOGGLE, true);
-   InsertSeparator(5);
+   InsertSeparator(7);
    
    Append(GEOM_PROPERTIES,
           _T("Properties..."),
@@ -208,4 +215,9 @@ void CADNodeMenu::SetToggleNodeValue(bool onOff)
       Check(GEOM_TOGGLE_OFF, true);
    }
 }
-
+////////////////////////////////////////////////
+void CADNodeMenu::DisableInitializePhysics()
+{
+    Enable(GEOM_INITIALIZE_PHYSICS,false);
+}
+////////////////////////////////////////////////

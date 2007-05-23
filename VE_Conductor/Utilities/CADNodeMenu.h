@@ -62,6 +62,7 @@ public:
       GEOM_VEG_FILE_CREATE,///<Create a new tree from a file,menu ID.
       GEOM_ASSEMBLY_CREATE,///<Create a new CADAssembly,menu ID.
       GEOM_CAD_FILE_CREATE,///<Create a new tree from a file,menu ID.
+      GEOM_INITIALIZE_PHYSICS,///<Initialize physics for the node,menu ID.
       GEOM_TOGGLE_ON,///<Toggle node on, menu ID.
       GEOM_TOGGLE_OFF,///<Toggle node off, menu ID.
       GEOM_DISPLAY_TOGGLE///<Toggle menu ID.
@@ -100,6 +101,8 @@ public:
    ///Set the displayed value on the toggle sub menu .
    ///\param onOff Toggle on/off the node toggle menu.
    void SetToggleNodeValue(bool onOff);
+
+   void DisableInitializePhysics();
 
 protected:
 };

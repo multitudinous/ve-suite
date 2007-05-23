@@ -54,6 +54,7 @@
 #include <wx/intl.h>
 #include <wx/filename.h>
 #include <wx/checkbox.h>
+#include <wx/radiobox.h>
 
 #include <iostream>
 #include "VE_Builder/Utilities/gui/spinctld.h"
@@ -117,6 +118,7 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
    _propertyTabs = 0;
    _transformPanel = 0;
    _attributePanel = 0;
+   _physicsPanel = 0;
    _animationPanel = 0;
 
    _attributeType = 0;
@@ -182,6 +184,7 @@ void CADNodePropertiesDlg::_buildTabs()
 
    _propertyTabs->AddPage(GetTransformPanel(),_T("Transform"), true);
    _propertyTabs->AddPage(GetAttributePanel(),_T("Attributes"), false);
+   _propertyTabs->AddPage(GetPhysicsPanel(),_T("Physics"),false);
    //_propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
 }
 //////////////////////////////////////////////////
@@ -201,6 +204,15 @@ wxPanel* CADNodePropertiesDlg::GetAttributePanel()
       _buildAttributePanel();
    }
    return _attributePanel;
+}
+//////////////////////////////////////////////////
+wxPanel* CADNodePropertiesDlg::GetPhysicsPanel()
+{
+   if(!_physicsPanel)
+   {
+      _buildPhysicsPanel();
+   }
+   return _physicsPanel;
 }
 //////////////////////////////////////////////////
 wxPanel* CADNodePropertiesDlg::GetAnimationPanel()
@@ -406,6 +418,59 @@ void CADNodePropertiesDlg::_buildAttributePanel()
 
    _attributePanel->SetAutoLayout(true);
    _attributePanel->SetSizer(attributePanelSizer);
+}
+//////////////////////////////////////////////////
+void CADNodePropertiesDlg::_buildPhysicsPanel()
+{
+   _physicsPanel = new wxPanel( _propertyTabs, PHYSICS_PANEL_ID );
+
+   wxBoxSizer* physicsPanelSizer = new wxBoxSizer( wxVERTICAL );
+
+   wxStaticBox* physicsProperties = new wxStaticBox( _physicsPanel, -1, wxT( "Physics Properties" ) );
+   wxStaticBoxSizer* physicsPropSizer = new wxStaticBoxSizer( physicsProperties, wxHORIZONTAL );
+
+   wxStaticBox* mass = new wxStaticBox( _physicsPanel, -1, wxT( "Mass" ) );
+   wxStaticBoxSizer* massSizer = new wxStaticBoxSizer( mass, wxVERTICAL );
+   _physicsMassCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_PANEL_ID );
+   _physicsMassCtrl->SetValue( 1.0 );
+   _physicsMassCtrl->SetRange( 0.0, 100.0 );
+   _physicsMassCtrl->SetIncrement( 1.0 );
+   _physicsMassCtrl->Raise();
+
+   wxStaticBox* friction = new wxStaticBox( _physicsPanel, -1, wxT( "Friction" ) );
+   wxStaticBoxSizer* frictionSizer = new wxStaticBoxSizer( friction, wxVERTICAL );
+   _physicsFrictionCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_PANEL_ID );
+   _physicsFrictionCtrl->SetValue( 1.0 );
+   _physicsFrictionCtrl->SetRange( 0.0, 1.0 );
+   _physicsFrictionCtrl->SetIncrement( 0.1 );
+   _physicsFrictionCtrl->Raise();
+
+   wxStaticBox* restitution = new wxStaticBox( _physicsPanel, -1, wxT( "Restitution" ) );
+   wxStaticBoxSizer* restitutionSizer = new wxStaticBoxSizer( restitution, wxVERTICAL );
+   _physicsRestitutionCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_PANEL_ID );
+   _physicsRestitutionCtrl->SetValue( 0.0 );
+   _physicsRestitutionCtrl->SetRange( 0.0, 1.0 );
+   _physicsRestitutionCtrl->SetIncrement( 0.1 );
+   _physicsRestitutionCtrl->Raise();
+
+   massSizer->Add( _physicsMassCtrl, 1, wxALIGN_CENTER );
+   frictionSizer->Add( _physicsFrictionCtrl, 1, wxALIGN_CENTER );
+   restitutionSizer->Add( _physicsRestitutionCtrl, 1, wxALIGN_CENTER );
+   
+   physicsPropSizer->Add( massSizer, 1, wxALIGN_CENTER_HORIZONTAL );
+   physicsPropSizer->Add( frictionSizer, 1, wxALIGN_CENTER_HORIZONTAL );
+   physicsPropSizer->Add( restitutionSizer, 1, wxALIGN_CENTER_HORIZONTAL );
+
+   wxString meshStrings[] = { _T( "Bounding Box" ), _T( "Convex" ), _T( "Static Concave" ) };
+   wxRadioBox* meshProperties = new wxRadioBox( _physicsPanel, -1, wxT( "Physics Mesh Type" ), 
+                                                wxDefaultPosition, wxDefaultSize, 3,
+                                                meshStrings, 0, wxRA_SPECIFY_ROWS );
+   
+   physicsPanelSizer->Add( physicsPropSizer, 1, wxEXPAND|wxALIGN_CENTER );
+   physicsPanelSizer->Add( meshProperties, 1, wxEXPAND|wxALIGN_CENTER );
+
+   _physicsPanel->SetAutoLayout( true );
+   _physicsPanel->SetSizer( physicsPanelSizer );
 }
 //////////////////////////////////////////////////
 void CADNodePropertiesDlg::_buildAnimationPanel()

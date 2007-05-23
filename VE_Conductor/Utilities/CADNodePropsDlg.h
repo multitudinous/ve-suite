@@ -83,6 +83,7 @@ public:
       ATTRIBUTE_PANEL_ID,///<The attribute panel ID.
       ATTRIBUTE_TYPE,///<The attribute type ID.
       TRANSFORM_PANEL_ID,///<The transform panel ID.
+      PHYSICS_PANEL_ID,///<The physics panel ID.
       EDIT_ATTRIBUTE,///<The edit attribute ID.
       REMOVE_ATTRIBUTE,///<The remove attribute ID.
       RESTORE_DEFAULT_ATTRIBUTE,///<The restore attribute ID.
@@ -126,6 +127,9 @@ public:
    ///Return the attribute panel.
    wxPanel* GetAttributePanel();
 
+   ///Return the physics panel.
+   wxPanel* GetPhysicsPanel();
+
    ///Return the Animation Panel
    wxPanel* GetAnimationPanel();
 protected:
@@ -140,6 +144,9 @@ protected:
    
    ///Build the transform panel.
    void _buildAttributePanel();
+
+   ///Build the physics panel.
+   void _buildPhysicsPanel();
    
    ///Build the animation panel.
    void _buildAnimationPanel();
@@ -235,6 +242,7 @@ protected:
    wxNotebook* _propertyTabs;///<The tabs for modifying the node properties.
    wxPanel* _transformPanel;///<The transform panel.
    wxPanel* _attributePanel;///<The attribute panel.
+   wxPanel* _physicsPanel;///<The physics panel.
    wxPanel* _animationPanel;///<The animation panel.
 
    ///Transform panel controls
@@ -260,6 +268,13 @@ protected:
    wxButton* _editAttributeButton;///<The button for removing attributes.
    wxArrayString _availableShaders;///<The shader names.
    wxArrayString _availableMaterials;///<The material names.
+
+   ///Physics panel controls
+   wxSpinCtrlDbl* _physicsMassCtrl;///<Mass control
+   wxSpinCtrlDbl* _physicsFrictionCtrl;///<Friction control
+   wxSpinCtrlDbl* _physicsRestitutionCtrl;///<Restitution control
+
+
 
    ///Animation panel controls
    wxArrayString _animationFiles;///<The animation file names.
