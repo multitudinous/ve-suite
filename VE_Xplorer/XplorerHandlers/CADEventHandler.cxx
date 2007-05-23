@@ -88,11 +88,11 @@ CADEventHandler::~CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////
-void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void CADEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* model)
 {
     try
     {
-        if(model)
+        if( model )
         {
             m_activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(model);
         }
@@ -100,9 +100,12 @@ void CADEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
         {
             m_activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
         }
-        m_cadHandler = m_activeModel->GetModelCADHandler();
+        if( m_activeModel )
+        {
+           m_cadHandler = m_activeModel->GetModelCADHandler();
+        }
     }
-    catch(...)
+    catch( ... )
     {
         m_activeModel = 0;
         m_cadHandler = 0;
