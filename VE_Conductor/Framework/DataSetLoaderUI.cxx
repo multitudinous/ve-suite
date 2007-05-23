@@ -48,8 +48,6 @@
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/string.h>
-#include <wx/wx.h>
-
 ////@end includes
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
