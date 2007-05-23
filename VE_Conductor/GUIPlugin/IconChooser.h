@@ -3,7 +3,7 @@
 
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Installer/include/VEConfig.h"
-//#include <wx/wx.h>
+
 #include <wx/frame.h>
 #include <wx/dirdlg.h>
 #include <wx/menu.h>
