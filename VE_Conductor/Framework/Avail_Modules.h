@@ -38,7 +38,6 @@ Avail_Modules API
 /*!\class Avail_Modules
 * 
 */
-#include <wx/wx.h>
 #include <vector>
 #include <wx/image.h>
 #include <wx/imaglist.h>

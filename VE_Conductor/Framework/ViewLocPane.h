@@ -39,7 +39,6 @@
  * This class builds the user interface panel which contains all of
  * the controls for the view points and flythrough functionality
  */
-#include <wx/wx.h>
 #include <wx/image.h>
 #include <wx/dialog.h>
 #include <wx/bmpbuttn.h>
@@ -48,21 +47,25 @@
 #include <wx/statbmp.h>
 #include <wx/scrolwin.h>
 
+#include <wx/arrstr.h>
+#include <wx/utils.h>
+#include <wx/button.h>
+#include <wx/combobox.h>
+#include <wx/listbox.h>
+#include <wx/textctrl.h>
+#include <wx/slider.h>
+#include <wx/string.h>
+#include <wx/notebook.h>
+#include <wx/sizer.h>
+#include <wx/app.h>
+#include <wx/filename.h>
+#include <wx/choicdlg.h>
+
+#include <wx/filedlg.h>
+#include <wx/textdlg.h>
+#include <wx/msgdlg.h>
 
 #include <vector>
-
-/*class wxButton;
-class wxComboBox;
-class wxListBox;
-class wxTextCtrl;
-class wxSlider;
-class wxString;
-class wxNotebook;
-class wxStaticText;
-class wxStaticBox;
-class wxSizer;
-class wxBoxSizer;
-class wxStaticBoxSizer;*/
 
 namespace VE_XML
 {

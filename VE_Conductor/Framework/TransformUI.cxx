@@ -44,9 +44,6 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/Model/Model.h"
 
-#include <wx/sizer.h>
-#include <wx/statbox.h>
-
 #include <vector>
 
 using namespace VE_Conductor::GUI_Utilities;

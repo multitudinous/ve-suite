@@ -41,7 +41,9 @@ TransformUI API
 #include <wx/panel.h>
 #include <wx/spinctrl.h>
 #include <vector>
-#include <wx/wx.h>
+#include <wx/textctrl.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
 
 #include <string>
 class DataSetLoaderUI;

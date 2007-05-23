@@ -30,14 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "wx/wx.h"
-
 #include <wx/listbox.h>
 #include <wx/slider.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/button.h>
+#include <wx/icon.h>
+#include <wx/bitmap.h>
+#include <wx/statbox.h>
+#include <wx/msgdlg.h>
 
 #include "advancedisosurface.h"
 
