@@ -33,11 +33,11 @@
 #ifndef CAD_INITIALIZE_PHYSICS_EVENT_HANDLER_H
 #define CAD_INITIALIZE_PHYSICS_EVENT_HANDLER_H
 
-/*!\file CADToggleEventHandler.h
+/*!\file CADInitializePhysicsEventHandler.h
 */
 
 /*!\class CADInitializePhysicsEventHandler
-*Class to initialize phyics for a CADNode
+*Class to initialize phyics for a CADEntities
 */
 
 namespace VE_XML
@@ -74,7 +74,7 @@ public:
 protected:
     ///Toggle a CADNode on/off.
     ///\param command The Command containing the CADNode to toggle.
-    void _operateOnNode(VE_XML::XMLObject* command);
+    void _operateOnNode( VE_XML::XMLObject* command );
 
 };
 }

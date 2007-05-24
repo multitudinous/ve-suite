@@ -256,6 +256,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CADPhysicsMeshEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\CADPhysicsPropertiesEventHandler.cxx"
 				>
 			</File>
@@ -782,6 +786,10 @@
 			</File>
 			<File
 				RelativePath=".\CADInitializePhysicsEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CADPhysicsMeshEventHandler.h"
 				>
 			</File>
 			<File

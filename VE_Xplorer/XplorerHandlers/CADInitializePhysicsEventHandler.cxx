@@ -35,7 +35,6 @@
 #include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
-#include "VE_Xplorer/SceneGraph/Clone.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -45,7 +44,6 @@
 #include <iostream>
 
 using namespace VE_EVENTS;
-using namespace VE_CAD;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADInitializePhysicsEventHandler::CADInitializePhysicsEventHandler()
@@ -88,9 +86,8 @@ void CADInitializePhysicsEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObj
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
             std::cout << "---Initialized Physics---" << std::endl;
-            std::cout<<"---"<< nodeID->GetDataString() <<"---"<<std::endl;
+            std::cout<< nodeID->GetDataString() <<std::endl;
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
-            std::cout << "-------------------------" << std::endl;
         }
     }
     catch(...)
