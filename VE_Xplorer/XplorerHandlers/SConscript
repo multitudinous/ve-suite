@@ -115,6 +115,9 @@ sources = Split("""
    SoundAddNewEH.cxx
    SoundActivateEH.cxx
    PhysicsSimulationEventHandler.cxx
+   CADInitializePhysicsEventHandler.cxx
+   CADPhysicsMeshEventHandler.cxx
+   CADPhysicsPropertiesEventHandler.cxx
 """)
 ##   DataSetFileEH.cxx
 ##   DataSetPrecomputeEH.cxx
@@ -230,6 +233,9 @@ headers = Split("""
    SoundActivateEH.h
    SoundAddNewEH.h
    PhysicsSimulationEventHandler.h
+   CADInitializePhysicsEventHandler.h
+   CADPhysicsMeshEventHandler.h
+   CADPhysicsPropertiesEventHandler.h
 """)
 ##   DataSetFileEH.h
 ##   DataSetPrecomputeEH.h
