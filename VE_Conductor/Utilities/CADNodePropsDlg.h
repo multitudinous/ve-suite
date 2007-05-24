@@ -60,6 +60,7 @@ class wxListEvent;
 class wxListCtrl;
 class wxArrayString;
 class wxCheckBox;
+class wxRadioBox;
 
 namespace VE_XML
 {
