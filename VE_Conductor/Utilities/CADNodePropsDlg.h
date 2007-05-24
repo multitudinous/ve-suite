@@ -85,6 +85,10 @@ public:
       ATTRIBUTE_TYPE,///<The attribute type ID.
       TRANSFORM_PANEL_ID,///<The transform panel ID.
       PHYSICS_PANEL_ID,///<The physics panel ID.
+      PHYSICS_MASS_ID,///<The physics mass property ID.
+      PHYSICS_FRICTION_ID,///<The physics friction property ID.
+      PHYSICS_RESTITUTION_ID,///<The physics restitution property ID.
+      PHYSICS_MESH_ID,///<The physics mesh ID.
       EDIT_ATTRIBUTE,///<The edit attribute ID.
       REMOVE_ATTRIBUTE,///<The remove attribute ID.
       RESTORE_DEFAULT_ATTRIBUTE,///<The restore attribute ID.
@@ -155,6 +159,14 @@ protected:
    ///Update the transform of a node
    ///\param event The wxCommand event.
    void _updateTransform(wxSpinEvent& event);
+
+   ///Update the physics properties of a node
+   ///\param event The wxCommand event.
+   void _updatePhysicsProperties( wxSpinEvent& event );
+
+   ///Update the physics mesh of a node
+   ///\param event The wxCommand event.
+   void _updatePhysicsMesh( wxCommandEvent& event );
 
    ///Update whether uniform scaling is used
    ///\param event The wxCommand event

@@ -84,6 +84,10 @@ BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(RESTORE_DEFAULT_ATTRIBUTE,CADNodePropertiesDlg::_restoreDefaultAttribute)
    EVT_BUTTON(REMOVE_ATTRIBUTE,CADNodePropertiesDlg::_removeAttribute)
    EVT_SPINCTRL(TRANSFORM_PANEL_ID,CADNodePropertiesDlg::_updateTransform)
+   EVT_SPINCTRL( PHYSICS_MASS_ID, CADNodePropertiesDlg::_updatePhysicsProperties )
+   EVT_SPINCTRL( PHYSICS_FRICTION_ID, CADNodePropertiesDlg::_updatePhysicsProperties )
+   EVT_SPINCTRL( PHYSICS_RESTITUTION_ID, CADNodePropertiesDlg::_updatePhysicsProperties )
+   EVT_RADIOBOX( PHYSICS_MESH_ID, CADNodePropertiesDlg::_updatePhysicsMesh )
    EVT_COMBOBOX(ATTRIBUTE_TYPE,CADNodePropertiesDlg::_updateAttributeType)
    EVT_LIST_ITEM_SELECTED(ACTIVE_ATTRIBUTE,CADNodePropertiesDlg::_setActiveAttribute)
    EVT_LIST_ITEM_RIGHT_CLICK(ACTIVE_ATTRIBUTE, CADNodePropertiesDlg::_editAttribute)
@@ -435,7 +439,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
 
    wxStaticBox* mass = new wxStaticBox( _physicsPanel, -1, wxT( "Mass" ) );
    wxStaticBoxSizer* massSizer = new wxStaticBoxSizer( mass, wxVERTICAL );
-   _physicsMassCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_PANEL_ID );
+   _physicsMassCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_MASS_ID );
    _physicsMassCtrl->SetValue( 1.0 );
    _physicsMassCtrl->SetRange( 0.0, 100.0 );
    _physicsMassCtrl->SetIncrement( 1.0 );
@@ -443,7 +447,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
 
    wxStaticBox* friction = new wxStaticBox( _physicsPanel, -1, wxT( "Friction" ) );
    wxStaticBoxSizer* frictionSizer = new wxStaticBoxSizer( friction, wxVERTICAL );
-   _physicsFrictionCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_PANEL_ID );
+   _physicsFrictionCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_FRICTION_ID );
    _physicsFrictionCtrl->SetValue( 1.0 );
    _physicsFrictionCtrl->SetRange( 0.0, 1.0 );
    _physicsFrictionCtrl->SetIncrement( 0.1 );
@@ -451,7 +455,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
 
    wxStaticBox* restitution = new wxStaticBox( _physicsPanel, -1, wxT( "Restitution" ) );
    wxStaticBoxSizer* restitutionSizer = new wxStaticBoxSizer( restitution, wxVERTICAL );
-   _physicsRestitutionCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_PANEL_ID );
+   _physicsRestitutionCtrl =  new wxSpinCtrlDbl( _physicsPanel, PHYSICS_RESTITUTION_ID );
    _physicsRestitutionCtrl->SetValue( 0.0 );
    _physicsRestitutionCtrl->SetRange( 0.0, 1.0 );
    _physicsRestitutionCtrl->SetIncrement( 0.1 );
@@ -466,7 +470,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
    physicsPropSizer->Add( restitutionSizer, 1, wxALIGN_CENTER_HORIZONTAL );
 
    wxString meshStrings[] = { _T( "Bounding Box" ), _T( "Convex" ), _T( "Static Concave" ) };
-   meshProperties = new wxRadioBox( _physicsPanel, -1, wxT( "Physics Mesh Type" ), 
+   meshProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Physics Mesh Type" ), 
                                     wxDefaultPosition, wxDefaultSize, 3,
                                     meshStrings, 0, wxRA_SPECIFY_ROWS );
    
@@ -1025,6 +1029,74 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 
       _sendCommandsToXplorer();
    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_updatePhysicsProperties( wxSpinEvent& event )
+{
+    if( _cadNode )
+    {
+        _commandName = std::string( "PHYSICS_PROPERTIES" );
+
+        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+        nodeID->SetDataType( "STRING" );
+        nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
+        _instructions.push_back( nodeID );
+
+        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+        nodeType->SetDataType( "STRING" );
+        nodeType->SetDataName(std::string( "Node Type" ) );
+        nodeType->SetDataString( _cadNode->GetNodeType() );
+        _instructions.push_back( nodeType );
+
+        VE_XML::DataValuePair* physicsPropertyValue = new VE_XML::DataValuePair();
+        physicsPropertyValue->SetDataType( "DOUBLE" );
+
+        if( event.GetId() == PHYSICS_MASS_ID )
+        {
+            physicsPropertyValue->SetData( "Mass", _physicsMassCtrl->GetValue() ); 
+        }
+        else if( event.GetId() == PHYSICS_FRICTION_ID )
+        {
+            physicsPropertyValue->SetData( "Friction", _physicsFrictionCtrl->GetValue() );
+        }
+        else if( event.GetId() == PHYSICS_RESTITUTION_ID )
+        {
+            physicsPropertyValue->SetData( "Restitution", _physicsRestitutionCtrl->GetValue() );
+        }
+
+        _instructions.push_back( physicsPropertyValue );
+
+        _sendCommandsToXplorer();
+        ClearInstructions();
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
+{
+    if( _cadNode )
+    {
+        _commandName = std::string( "PHYSICS_MESH" );
+
+        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+        nodeID->SetDataType( "STRING" );
+        nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
+        _instructions.push_back( nodeID );
+
+        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+        nodeType->SetDataType( "STRING" );
+        nodeType->SetDataName(std::string( "Node Type" ) );
+        nodeType->SetDataString( _cadNode->GetNodeType() );
+        _instructions.push_back( nodeType );
+
+        VE_XML::DataValuePair* meshType = new VE_XML::DataValuePair();
+        meshType->SetDataType( "STRING" );
+        meshType->SetDataName( std::string( "Mesh Type" ) );
+        meshType->SetDataString( meshProperties->GetStringSelection().c_str() );
+        _instructions.push_back( meshType );
+
+        _sendCommandsToXplorer();
+        ClearInstructions();
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void CADNodePropertiesDlg::UpdateUniformScale( wxCommandEvent& WXUNUSED(event) )
