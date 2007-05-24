@@ -439,11 +439,6 @@ void CADNodeManagerDlg::_initializePhysics( wxCommandEvent& event )
         nodeType->SetData(std::string( "Node Type" ), _activeCADNode->GetNodeType() );
         _dataValuePairList.push_back( nodeType );
 
-        if( event.GetId() == CADNodeMenu::GEOM_INITIALIZE_PHYSICS )
-        {
-            
-        }
-
         _sendCommandsToXplorer();
         ClearInstructions();
     }
