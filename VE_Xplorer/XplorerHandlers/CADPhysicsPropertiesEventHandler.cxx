@@ -85,16 +85,30 @@ void CADPhysicsPropertiesEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObj
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            std::cout << "---Changed Physics Property---" << std::endl;
-            std::cout<< nodeID->GetDataString() <<std::endl;
+            double physicsPropertyValue = 0;
 
-            //m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
+            if( command->GetDataValuePair( "Mass" ) )
+            {
+                command->GetDataValuePair( "Mass" )->GetData( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->SetMass( physicsPropertyValue );
+            }
+            else if( command->GetDataValuePair( "Friction" ) )
+            {
+                command->GetDataValuePair( "Friction" )->GetData( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->setFriction( physicsPropertyValue );
+            }
+            else if( command->GetDataValuePair( "Restitution" ) )
+            {
+                command->GetDataValuePair( "Restitution" )->GetData( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->setRestitution( physicsPropertyValue );
+            }
+
+            std::cout << "Changed Physics Property: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
         }
     }
     catch(...)
     {
         std::cout << "Error!!" << std::endl;
-        std::cout << "----------------------------" << std::endl;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////

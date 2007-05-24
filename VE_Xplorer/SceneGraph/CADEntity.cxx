@@ -113,9 +113,12 @@ CADEntity::~CADEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
-    m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( m_cadEntityHelper->GetNode() );
+    if( !m_physicsRigidBody.valid() )
+    {
+        m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( m_cadEntityHelper->GetNode() );
 
-    m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
+        m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()

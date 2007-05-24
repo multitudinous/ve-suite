@@ -85,15 +85,13 @@ void CADInitializePhysicsEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObj
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            std::cout << "---Initialized Physics---" << std::endl;
-            std::cout<< nodeID->GetDataString() <<std::endl;
+            std::cout << "Initialized Physics: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
         }
     }
     catch(...)
     {
         std::cout << "Error!!" << std::endl;
-        std::cout << "---Invalid node specified!---" << std::endl;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////

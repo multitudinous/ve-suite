@@ -82,19 +82,29 @@ void CADPhysicsMeshEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObject )
         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >(xmlObject);
         VE_XML::DataValuePair* nodeID = command->GetDataValuePair( "Node ID" );
         VE_XML::DataValuePair* nodeType = command->GetDataValuePair( "Node Type" );
+        VE_XML::DataValuePair* meshType = command->GetDataValuePair( "Mesh Type" );
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
-            std::cout << "---Changed Physics Mesh---" << std::endl;
-            std::cout<< nodeID->GetDataString() <<std::endl;
+            if( meshType->GetDataString() == std::string( "Bounding Box" ) )
+            {
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->BoundingBoxShape();
+            }
+            else if( meshType->GetDataString() == std::string( "Convex" ) )
+            {
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->ConvexShape();
+            }
+            else if( meshType->GetDataString() == std::string( "Static Concave" ) )
+            {
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->StaticConcaveShape();
+            }
 
-            //m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
+            std::cout << "Changed Physics Mesh: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
         }
     }
     catch(...)
     {
         std::cout << "Error!!" << std::endl;
-        std::cout << "----------------------------" << std::endl;
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////

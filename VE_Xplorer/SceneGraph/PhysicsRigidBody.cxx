@@ -76,9 +76,9 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, const btTransform& startTra
 :
 m_mass( 1.0f ),
 tri_mesh( 0 ),
-btRigidBody( btScalar( m_mass ),                                          //m_mass
+btRigidBody( btScalar( m_mass ),                                        //mass
              new btDefaultMotionState( startTransform ),                //motionState
-             0,                                           //collisionShape
+             0,                                                         //collisionShape
              btVector3( 0.0f, 0.0f, 0.0f ),                             //localInertia
              btScalar( 0.0f ),                                          //linearDamping
              btScalar( 0.0f ),                                          //angularDamping
@@ -88,6 +88,8 @@ btRigidBody( btScalar( m_mass ),                                          //m_ma
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     node->accept( *this );
+
+    BoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()
@@ -137,7 +139,11 @@ void PhysicsRigidBody::apply( osg::Geode& geode )
 void PhysicsRigidBody::SetMass( float mass )
 {
     m_mass = mass;
-    SetMassProps();
+
+    if( this && m_collisionShape )
+    {
+        SetMassProps();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps()
