@@ -290,6 +290,11 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             //set the visibility
             partNode->GetDCS()->ToggleDisplay(newPart->GetVisibility());
 
+            if( newPart->HasPhysics() )
+            {
+                partNode->InitPhysics();
+            }
+
             vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
             _setTransformOnNode(newPart);
             vprDEBUG( vesDBG, 1 ) <<"|\t---Set transform---"<< std::endl << vprDEBUG_FLUSH;
