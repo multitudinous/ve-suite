@@ -15,6 +15,7 @@
           <xs:element name="animation" type="CADNodeAnimation" />
         </xs:sequence>
         <xs:attribute name="visiblility" type="xs:boolean" />
+        <xs:attribute name="physics" type="xs:boolean" />
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
