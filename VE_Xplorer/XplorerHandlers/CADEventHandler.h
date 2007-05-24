@@ -58,8 +58,10 @@ namespace VE_Xplorer
 }
 #include "VE_Installer/include/VEConfig.h"
 #include <string>
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler{
+namespace VE_EVENTS
+{
+class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler
+{
 public:
    ///Constructor
    CADEventHandler();

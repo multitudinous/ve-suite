@@ -50,7 +50,8 @@ namespace VE_CAD
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_EVENTS
 {
-class VE_XPLORER_EXPORTS CADToggleEventHandler: public CADEventHandler{
+class VE_XPLORER_EXPORTS CADToggleEventHandler : public CADEventHandler
+{
 public:
    ///Constructor
    CADToggleEventHandler();

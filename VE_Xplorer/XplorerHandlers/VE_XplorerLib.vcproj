@@ -252,6 +252,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CADInitializePhysicsEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\CADRemoveAttributeEH.cxx"
 				>
 			</File>
@@ -770,6 +774,10 @@
 			</File>
 			<File
 				RelativePath=".\CADEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CADInitializePhysicsEventHandler.h"
 				>
 			</File>
 			<File

@@ -94,6 +94,8 @@ public:
     ///Shoot a box from the head position
     ///\param destination 
     void ShootBox( const btVector3& destination );
+	
+    void SetDebugMode( int mode );
 
     ///Set whether physics is idle or not
     ///\param state State on or idle
@@ -102,6 +104,8 @@ public:
     ///Set the shoot speed
     ///\param speed
     void SetShootSpeed( float speed );
+
+    int GetDebugMode();
 
     ///Adds a rigid body to the physics simulator
     ///\param mass The mass of the rigid body
@@ -125,7 +129,10 @@ private:
     ///Sets up the dynamics, collision algorithms, and solvers
     void InitializePhysicsSimulation();
 
+    int m_debugMode;///<The debug level for bullet physics
+
     bool m_idle;///<Determines whether the physics simulation is idle or not
+
     float shoot_speed;///<
 
     gadget::PositionInterface head;///<The head in vr juggler

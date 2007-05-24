@@ -77,6 +77,7 @@
 #include "VE_Xplorer/XplorerHandlers/DataTransformEH.h"
 #include "VE_Xplorer/XplorerHandlers/SoundActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/SoundAddNewEH.h"
+#include "VE_Xplorer/XplorerHandlers/CADInitializePhysicsEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -149,6 +150,8 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("DATA_TRANSFORM_UPDATE") ] = new VE_EVENTS::DataTransformEventHandler();
    _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
    _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
+   _eventHandlers[ std::string("INITIALIZE_PHYSICS") ] = new VE_EVENTS::CADInitializePhysicsEventHandler();
+
 #ifdef _OSG
    _activeTDSet = 0;
 #endif

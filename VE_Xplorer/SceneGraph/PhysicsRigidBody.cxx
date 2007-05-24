@@ -40,7 +40,15 @@
 #include <osg/TriangleIndexFunctor>
 
 // --- Bullet Includes --- //
-#include <btBulletDynamicsCommon.h>
+#include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
+
+#include <BulletCollision/CollisionShapes/btCollisionShape.h>
+#include <BulletCollision/CollisionShapes/btBoxShape.h>
+#include <BulletCollision/CollisionShapes/btTriangleMesh.h>
+#include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
+#include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
+
+#include <LinearMath/btDefaultMotionState.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -66,9 +74,11 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, const btTransform& startTransform )
 :
-btRigidBody( btScalar( 1.0f ),                                          //mass
+m_mass( 1.0f ),
+tri_mesh( 0 ),
+btRigidBody( btScalar( m_mass ),                                          //m_mass
              new btDefaultMotionState( startTransform ),                //motionState
-             collision_shape,                                           //collisionShape
+             0,                                           //collisionShape
              btVector3( 0.0f, 0.0f, 0.0f ),                             //localInertia
              btScalar( 0.0f ),                                          //linearDamping
              btScalar( 0.0f ),                                          //angularDamping
@@ -77,12 +87,7 @@ btRigidBody( btScalar( 1.0f ),                                          //mass
 
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-    tri_mesh = 0;
-    collision_shape = 0;
-
     node->accept( *this );
-
-    this->CreateBoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()
@@ -92,12 +97,10 @@ PhysicsRigidBody::~PhysicsRigidBody()
        delete tri_mesh;
     }
 
-    if( collision_shape )
+    if( m_collisionShape )
     {
-       delete collision_shape;
+       delete m_collisionShape;
     }
-
-    //VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::apply( osg::Geode& geode )
@@ -131,77 +134,90 @@ void PhysicsRigidBody::apply( osg::Geode& geode )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::setMass( float mass )
+void PhysicsRigidBody::SetMass( float mass )
 {
-    //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-    bool dynamic = ( mass != 0.0f );
-
-    btVector3 localInertia( 0, 0, 0 );
-    if( dynamic )
-    {
-        collision_shape->calculateLocalInertia( mass, localInertia );
-    }
-
-    this->setMassProps( mass, localInertia );
+    m_mass = mass;
+    SetMassProps();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::CreateBoundingBoxShape()
+void PhysicsRigidBody::SetMassProps()
+{
+    if( m_collisionShape )
+    {
+        //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
+        bool dynamic = ( m_mass != 0.0f );
+
+        btVector3 localInertia( 0, 0, 0 );
+        if( dynamic )
+        {
+            m_collisionShape->calculateLocalInertia( m_mass, localInertia );
+        }
+
+        this->setMassProps( m_mass, localInertia );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsRigidBody::BoundingBoxShape()
 {
     if( this )
     {
         VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
     }
 
-    if( collision_shape )
+    if( m_collisionShape )
     {
-        delete collision_shape;
+        delete m_collisionShape;
+
+        m_collisionShape = 0;
     }
 
-    collision_shape = new btBoxShape( btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
-                                                 ( bb.yMax() - bb.yMin() ) * 0.5f,
-                                                 ( bb.zMax() - bb.zMin() ) * 0.5f ) );
+    m_collisionShape = new btBoxShape( btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
+                                                  ( bb.yMax() - bb.yMin() ) * 0.5f,
+                                                  ( bb.zMax() - bb.zMin() ) * 0.5f ) );
 
-    this->setCollisionShape( collision_shape );
+    SetMassProps();
 
     VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::CreateStaticConcaveShape()
+void PhysicsRigidBody::StaticConcaveShape()
 {
     if( this )
     {
         VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
     }
 
-    if( collision_shape )
+    if( m_collisionShape )
     {
-        delete collision_shape;
+        delete m_collisionShape;
+
+        m_collisionShape = 0;
     }
 
-    collision_shape = new btBvhTriangleMeshShape( tri_mesh, false );
+    m_collisionShape = new btBvhTriangleMeshShape( tri_mesh, false );
 
-    this->setMass( 0.0f );
-
-    this->setCollisionShape( collision_shape );
+    SetMass( 0 );
 
     VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::CreateConvexShape()
+void PhysicsRigidBody::ConvexShape()
 {
     if( this )
     {
         VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
     }
 
-    if( collision_shape )
+    if( m_collisionShape )
     {
-        delete collision_shape;
+        delete m_collisionShape;
+
+        m_collisionShape = 0;
     }
 
-    collision_shape = new btConvexTriangleMeshShape( tri_mesh );
+    m_collisionShape = new btConvexTriangleMeshShape( tri_mesh );
 
-    this->setCollisionShape( collision_shape );
+    SetMassProps();
 
     VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }

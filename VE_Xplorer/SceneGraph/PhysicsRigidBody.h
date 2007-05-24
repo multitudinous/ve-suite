@@ -77,22 +77,25 @@ public:
 
     ///Set the mass for the rigid body
     ///\param mass The mass value
-    void setMass( float mass );
+    void SetMass( float mass );
 
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
-    void CreateBoundingBoxShape();
+    void BoundingBoxShape();
 
     ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
-    void CreateStaticConcaveShape();
+    void StaticConcaveShape();
 
     ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
-    void CreateConvexShape();
+    void ConvexShape();
 
 private:
+    void SetMassProps();
+
+    float m_mass;///<The mass of the rigid body
+
     osg::BoundingBox bb;///<Bounding box of the osg node
 
     btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
-    btCollisionShape* collision_shape;///<The collision shape for the osg node
 
 };
 }

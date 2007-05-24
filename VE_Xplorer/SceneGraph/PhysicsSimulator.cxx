@@ -50,7 +50,7 @@
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
-#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
+//#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
 
 //#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h"
 //#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h"
@@ -80,6 +80,10 @@ vprSingletonImp( PhysicsSimulator );
 PhysicsSimulator::PhysicsSimulator( void )
 :
 m_dynamicsWorld( 0 ),
+m_dispatcher( 0 ),
+m_broadphase( 0 ),
+m_solver( 0 ),
+m_debugMode( 0 ),
 m_idle( true ),
 shoot_speed( 50.0f )
 {
@@ -95,8 +99,8 @@ void PhysicsSimulator::ExitPhysics( void )
         //Remove the rigidbodies from the dynamics world and delete them
         for( int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); i++ )
         {
-            btCollisionObject* obj=m_dynamicsWorld->getCollisionObjectArray()[i];
-            m_dynamicsWorld->removeCollisionObject(obj);
+            btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
+            m_dynamicsWorld->removeCollisionObject( obj );
 
             delete obj;
         }
@@ -178,26 +182,25 @@ void PhysicsSimulator::InitializePhysicsSimulation( void )
 {
     m_dispatcher = new btCollisionDispatcher();
 
-    #ifdef USE_CUSTOM_NEAR_CALLBACK
-    //This is optional
+#ifdef USE_CUSTOM_NEAR_CALLBACK
     m_dispatcher->setNearCallback( customNearCallback );
-    #endif //USE_CUSTOM_NEAR_CALLBACK
+#else
+#endif
 
-    #ifdef USE_SWEEP_AND_PRUNE
+#ifdef USE_SWEEP_AND_PRUNE
     btVector3 worldAabbMin( -10000, -10000, -10000 );
     btVector3 worldAabbMax( 10000, 10000, 10000 );
 
     m_broadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
-    #else
+#else
     m_broadphase=new btSimpleBroadphase;
-    #endif //USE_SWEEP_AND_PRUNE
+#endif
 
-    #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
-    //This is optional
-    #else
+#ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
+#else
     //Default constraint m_solver
     m_solver = new btSequentialImpulseConstraintSolver;
-    #endif //REGISTER_CUSTOM_COLLISION_ALGORITHM
+#endif
 
     m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver );
     m_dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
@@ -256,12 +259,14 @@ void PhysicsSimulator::StepSimulation( void )
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ResetScene( void )
 {
-    #ifdef SHOW_NUM_DEEP_PENETRATIONS
+    /*
+#ifdef SHOW_NUM_DEEP_PENETRATIONS
     gNumDeepPenetrationChecks=0;
     gNumGjkChecks=0;
-    #endif //SHOW_NUM_DEEP_PENETRATIONS
+#endif
+    */
 
-    if(m_dynamicsWorld)
+    if( m_dynamicsWorld )
     {
         m_dynamicsWorld->stepSimulation( 1.f / 60.f, 0 );
     }
@@ -404,6 +409,11 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::SetDebugMode( int mode )
+{
+    m_debugMode = mode;
+}
+////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetIdle( bool state )
 {
     m_idle = state;
@@ -412,6 +422,11 @@ void PhysicsSimulator::SetIdle( bool state )
 void PhysicsSimulator::SetShootSpeed( float speed )
 {
     shoot_speed = speed;
+}
+////////////////////////////////////////////////////////////////////////////////
+int PhysicsSimulator::GetDebugMode()
+{
+    return m_debugMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btRigidBody* PhysicsSimulator::CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape )
