@@ -75,11 +75,7 @@ ModelCADHandler::~ModelCADHandler()
     }
     m_partList.clear();
 
-    for ( std::map< std::string, VE_SceneGraph::DCS* >::iterator itr = m_assemblyList.begin();
-                                       itr != m_assemblyList.end(); itr++ )
-    {
-        delete itr->second;
-    }
+    ///Assembly list is map of dcs's which are osg smart pointers
     m_assemblyList.clear();
 
     for (std::map< std::string, 

@@ -175,12 +175,16 @@ public:
     virtual void UpdateCommand(){ ; }
 
 protected:
+    ///A list of the current parts.
    std::map< std::string, 
-               VE_SceneGraph::CADEntity* > m_partList;///<A list of the current parts.
+               VE_SceneGraph::CADEntity* > m_partList;
+    ///A list of the current assemblies.
    std::map< std::string, 
-                VE_SceneGraph::DCS* > m_assemblyList;///A list of the current assemblies.
-   std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;///A list of clones.
-   std::string m_rootCADNodeID;///<ID for root CAD node id
+                osg::ref_ptr< VE_SceneGraph::DCS* > > m_assemblyList;
+    ///A list of clones.
+   std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;
+   ///ID for root CAD node id
+   std::string m_rootCADNodeID;
 #ifdef _OSG
      std::map< std::string, 
                   std::vector< std::pair< std::string,
