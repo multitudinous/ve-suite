@@ -163,6 +163,8 @@ protected:
    ///\param event The command event.
    void _toggleNode(wxCommandEvent& event);
 
+   void _initializePhysics(wxCommandEvent& event);
+
    ///Ensure that we haven't loaded this file already.
    ///If we have, create a clone.
    ///\param filename The filename to check

@@ -72,6 +72,7 @@ BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_MENU(CADNodeMenu::GEOM_CLONE_ADD,CADNodeManagerDlg::_cloneNode)
    EVT_MENU(CADNodeMenu::GEOM_TOGGLE_ON,CADNodeManagerDlg::_toggleNode)
    EVT_MENU(CADNodeMenu::GEOM_TOGGLE_OFF,CADNodeManagerDlg::_toggleNode)
+   EVT_MENU(CADNodeMenu::GEOM_INITIALIZE_PHYSICS,CADNodeManagerDlg::_initializePhysics)
 END_EVENT_TABLE()
 
 using namespace VE_Conductor::GUI_Utilities;
@@ -294,6 +295,9 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
          {
             cadNodeMenu->EnableGlobalMenus(true);
             cadNodeMenu->EnablePartMenus(true);
+
+            cadNodeMenu->Insert( 4, CADNodeMenu::GEOM_INITIALIZE_PHYSICS, _T( "Initialize Physics" ), _T( "" ), wxITEM_NORMAL );
+            cadNodeMenu->InsertSeparator( 5 );
          }
          else if(cadNode->GetNode()->GetNodeType() == std::string("Clone"))
          {
@@ -417,6 +421,32 @@ void CADNodeManagerDlg::_toggleNode(wxCommandEvent& event)
       _sendCommandsToXplorer();
       ClearInstructions();
    }
+}
+/////////////////////////////////////////////////////////
+void CADNodeManagerDlg::_initializePhysics( wxCommandEvent& event )
+{
+    if( _activeCADNode )
+    {
+        _commandName = "INITIALIZE_PHYSICS";
+
+        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+        nodeID->SetDataType( "STRING" );
+        nodeID->SetData(std::string( "Node ID" ), _activeCADNode->GetID() );
+        _dataValuePairList.push_back( nodeID );
+
+        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+        nodeType->SetDataType( "STRING" );
+        nodeType->SetData(std::string( "Node Type" ), _activeCADNode->GetNodeType() );
+        _dataValuePairList.push_back( nodeType );
+
+        if( event.GetId() == CADNodeMenu::GEOM_INITIALIZE_PHYSICS )
+        {
+            
+        }
+
+        _sendCommandsToXplorer();
+        ClearInstructions();
+    }
 }
 /////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))

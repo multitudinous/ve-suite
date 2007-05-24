@@ -184,7 +184,11 @@ void CADNodePropertiesDlg::_buildTabs()
 
    _propertyTabs->AddPage(GetTransformPanel(),_T("Transform"), true);
    _propertyTabs->AddPage(GetAttributePanel(),_T("Attributes"), false);
-   _propertyTabs->AddPage(GetPhysicsPanel(),_T("Physics"),false);
+   if( _cadNode->GetNodeType() == "Part" )
+   {
+       _propertyTabs->AddPage( GetPhysicsPanel(), _T( "Physics" ), false );
+   }
+   
    //_propertyTabs->AddPage(GetAnimationPanel(),_T("Animation"), false);
 }
 //////////////////////////////////////////////////
@@ -462,9 +466,9 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
    physicsPropSizer->Add( restitutionSizer, 1, wxALIGN_CENTER_HORIZONTAL );
 
    wxString meshStrings[] = { _T( "Bounding Box" ), _T( "Convex" ), _T( "Static Concave" ) };
-   wxRadioBox* meshProperties = new wxRadioBox( _physicsPanel, -1, wxT( "Physics Mesh Type" ), 
-                                                wxDefaultPosition, wxDefaultSize, 3,
-                                                meshStrings, 0, wxRA_SPECIFY_ROWS );
+   meshProperties = new wxRadioBox( _physicsPanel, -1, wxT( "Physics Mesh Type" ), 
+                                    wxDefaultPosition, wxDefaultSize, 3,
+                                    meshStrings, 0, wxRA_SPECIFY_ROWS );
    
    physicsPanelSizer->Add( physicsPropSizer, 1, wxEXPAND|wxALIGN_CENTER );
    physicsPanelSizer->Add( meshProperties, 1, wxEXPAND|wxALIGN_CENTER );

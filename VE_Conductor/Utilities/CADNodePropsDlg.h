@@ -273,8 +273,7 @@ protected:
    wxSpinCtrlDbl* _physicsMassCtrl;///<Mass control
    wxSpinCtrlDbl* _physicsFrictionCtrl;///<Friction control
    wxSpinCtrlDbl* _physicsRestitutionCtrl;///<Restitution control
-
-
+   wxRadioBox* meshProperties;///<Mesh type control
 
    ///Animation panel controls
    wxArrayString _animationFiles;///<The animation file names.
