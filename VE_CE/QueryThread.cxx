@@ -64,10 +64,12 @@ int QueryThread::svc( void )
          _mod->SetCurID( moduleId );
          queryData.assign( _mod->Query( CORBA::string_dup( queryCommand.c_str() ) ) );
       } 
-      catch (CORBA::Exception &) 
+      catch (CORBA::Exception &ex ) 
       {
 		  std::cout<< "Module Query Messed up." << std::endl;
-		  queryData.erase();
+          std::cerr << "CORBA exception raised! : " <<ex._name()<< std::endl;
+          std::cerr << ex._info().c_str()<<std::endl;		  
+		  queryData = "NULL";
       }
       _mutex.release();
       isComplete = true;

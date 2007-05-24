@@ -884,7 +884,7 @@ char *  Body_Executive_i::Query (  const char * command
 	   //queryString.assign( iter->second->Query( CORBA::string_dup( status.c_str() ) ) );
 	   //while ( queryIter->second->GettingData() )
 	   std::string returnString;
-	   while(returnString.empty())
+	   while( ( returnString != "NULL" ) && returnString.empty() )
 	   {
 		   ACE_OS::sleep( 1 );
 		   returnString = queryIter->second->GetQueryData();
