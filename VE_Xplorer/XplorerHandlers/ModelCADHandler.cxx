@@ -147,7 +147,7 @@ void ModelCADHandler::CreatePart( std::string fileName,
         VE_SceneGraph::CADEntityHelper* tempNode = tempCAD->GetNode();
         m_partList[ partID ] = 
             new VE_SceneGraph::CADEntity( tempNode, 
-                                          m_assemblyList[ parentID ] );
+                                          m_assemblyList[ parentID ].get() );
         vprDEBUG(vesDBG,1) << "|\t--Cloned new part--"
                             << std::endl << vprDEBUG_FLUSH;
     }
@@ -155,7 +155,7 @@ void ModelCADHandler::CreatePart( std::string fileName,
     {
         ///If we have not loaded this part
         m_partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( fileName, m_assemblyList[ parentID ] );
+            new VE_SceneGraph::CADEntity( fileName, m_assemblyList[ parentID ].get() );
         vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
                             << std::endl << vprDEBUG_FLUSH;
     }
@@ -253,7 +253,7 @@ void ModelCADHandler::MakeCADRootTransparent()
    {
       m_assemblyList[m_rootCADNodeID]->setStateSet( attribute.get() );
       VE_SceneGraph::Utilities::OpacityVisitor 
-          opacity_visitor( m_assemblyList[m_rootCADNodeID], true );
+          opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true );
    }
 
    catch(...)
@@ -280,7 +280,7 @@ void ModelCADHandler::MakeCADRootOpaque()
       {   
          m_assemblyList[ m_rootCADNodeID ]->getStateSet()->clear();
          VE_SceneGraph::Utilities::OpacityVisitor 
-             opacity_visitor( m_assemblyList[ m_rootCADNodeID ], false );
+             opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false );
       }
    }
    catch(...)
@@ -491,7 +491,7 @@ VE_SceneGraph::CADEntity* ModelCADHandler::GetPart(std::string partID)
 /////////////////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* ModelCADHandler::GetAssembly(std::string assemblyID)
 {
-    return m_assemblyList[ assemblyID ];
+    return m_assemblyList[ assemblyID ].get();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Clone* ModelCADHandler::GetClone(std::string cloneID)
@@ -521,7 +521,8 @@ bool ModelCADHandler::PartExists(std::string partID)
 /////////////////////////////////////////////////////////////////////////////////////////////
 bool ModelCADHandler::AssemblyExists(std::string assemblyID)
 {
-    std::map< std::string, VE_SceneGraph::DCS* >::iterator foundAssembly;
+    std::map< std::string, osg::ref_ptr< VE_SceneGraph::DCS > >::iterator 
+        foundAssembly;
     foundAssembly = m_assemblyList.find (assemblyID) ;
 
     if( foundAssembly != m_assemblyList.end() )

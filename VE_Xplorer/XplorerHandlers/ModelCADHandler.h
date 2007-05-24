@@ -176,19 +176,18 @@ public:
 
 protected:
     ///A list of the current parts.
-   std::map< std::string, 
-               VE_SceneGraph::CADEntity* > m_partList;
+    std::map< std::string, VE_SceneGraph::CADEntity* > m_partList;
     ///A list of the current assemblies.
-   std::map< std::string, 
-                osg::ref_ptr< VE_SceneGraph::DCS* > > m_assemblyList;
+    std::map< std::string, osg::ref_ptr< VE_SceneGraph::DCS > > m_assemblyList;
     ///A list of clones.
-   std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;
-   ///ID for root CAD node id
-   std::string m_rootCADNodeID;
+    std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;
+    ///ID for root CAD node id
+    std::string m_rootCADNodeID;
 #ifdef _OSG
-     std::map< std::string, 
-                  std::vector< std::pair< std::string,
-                  osg::ref_ptr< osg::StateSet > > > > m_nodeAttributes;///<The map of node attributes.
+    ///The map of node attributes.
+    std::map< std::string, std::vector< 
+        std::pair< std::string, osg::ref_ptr< osg::StateSet > > > 
+        > m_nodeAttributes;
 #endif
 };
 }
