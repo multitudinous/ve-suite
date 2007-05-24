@@ -78,6 +78,8 @@
 #include "VE_Xplorer/XplorerHandlers/SoundActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/SoundAddNewEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADInitializePhysicsEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/CADPhysicsMeshEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/CADPhysicsPropertiesEventHandler.h"
 
 #include "VE_Open/XML/Command.h"
 
@@ -151,6 +153,8 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
    _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
    _eventHandlers[ std::string("INITIALIZE_PHYSICS") ] = new VE_EVENTS::CADInitializePhysicsEventHandler();
+   _eventHandlers[ std::string("PHYSICS_MESH") ] = new VE_EVENTS::CADPhysicsMeshEventHandler();
+   _eventHandlers[ std::string("PHYSICS_PROPERTIES") ] = new VE_EVENTS::CADPhysicsPropertiesEventHandler();
 
 #ifdef _OSG
    _activeTDSet = 0;
