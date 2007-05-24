@@ -54,13 +54,15 @@ using namespace VE_XML;
 ///Constructor                  //
 //////////////////////////////////
 CADNode::CADNode(std::string name)
-:VE_XML::XMLObject()
+:
+VE_XML::XMLObject()
 {
    m_name = name;
    m_parent = "";
    m_transform = new Transform(); 
    m_type = std::string("Node");
    m_visibility = true;
+   m_physics = false;
    //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
    m_activeAttributeName = std::string("");
    SetObjectType("CADNode");
@@ -148,6 +150,16 @@ bool CADNode::HasAnimation()
    return (!m_animations.empty());
 }
 //////////////////////////////////
+bool CADNode::HasPhysics()
+{
+   return m_physics;
+}
+//////////////////////////////////
+void CADNode::EnablePhysics()
+{
+   m_physics = true;
+}
+//////////////////////////////////
 std::string CADNode::GetNodeType()
 {
    return m_type;
@@ -213,6 +225,7 @@ void CADNode::_updateVEElement(std::string input)
 
    SetAttribute("id",uuid);
    SetAttribute("visibility",m_visibility);
+   SetAttribute("physics",m_physics);
    SetSubElement(std::string("parent"),m_parent);
 
    if(!m_transform)
@@ -285,6 +298,16 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             else
             {
                m_visibility = true;
+            }
+            if(currentElement->getAttributeNode(xercesString("physics")))
+            {
+               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
+                                                                                      "physics",
+                                                                                      m_physics);
+            }
+            else
+            {
+               m_physics = false;
             }
             //Is there a better way to do this
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
@@ -449,6 +472,7 @@ CADNode::CADNode(const CADNode& rhs,bool clone)
    m_name = rhs.m_name;
    m_type = rhs.m_type;
    m_visibility = rhs.m_visibility;
+   m_physics = rhs.m_physics;
 
    //maintain a unique ID
    if(clone)
@@ -496,6 +520,7 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       m_transform = new Transform(*rhs.m_transform);
       m_activeAttributeName = rhs.m_activeAttributeName;
       m_visibility = rhs.m_visibility;
+      m_physics = rhs.m_physics;
       //_uID = rhs._uID;
       m_parent = rhs.m_parent;
       m_name = rhs.m_name;

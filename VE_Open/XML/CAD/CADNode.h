@@ -134,6 +134,12 @@ public:
 
    ///Check if this CADNode has any animation information.
    bool HasAnimation();
+   
+   ///Check if this CADNode has physics enabled.
+   bool HasPhysics();
+
+   ///Enable physics for the CADNode.
+   void EnablePhysics();
 
    ///Get the transform of this CAD node.
    VE_XML::Transform* GetTransform();
@@ -189,6 +195,7 @@ protected:
    std::string m_name;///< The name of this node.
    std::string m_type;///< The type of node;
    bool m_visibility;///<Node visibilty.
+   bool m_physics;///<Node physics.
 };
 }
 template<>
