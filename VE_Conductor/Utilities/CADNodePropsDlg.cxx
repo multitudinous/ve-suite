@@ -184,7 +184,7 @@ void CADNodePropertiesDlg::_buildTabs()
 
    _propertyTabs->AddPage(GetTransformPanel(),_T("Transform"), true);
    _propertyTabs->AddPage(GetAttributePanel(),_T("Attributes"), false);
-   if( _cadNode->GetNodeType() == "Part" )
+   if( ( _cadNode->GetNodeType() == "Part" ) && ( _cadNode->HasPhysics() ) )
    {
        _propertyTabs->AddPage( GetPhysicsPanel(), _T( "Physics" ), false );
    }

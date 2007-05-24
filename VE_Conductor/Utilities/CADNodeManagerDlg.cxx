@@ -296,8 +296,11 @@ void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
             cadNodeMenu->EnableGlobalMenus(true);
             cadNodeMenu->EnablePartMenus(true);
 
-            cadNodeMenu->Insert( 4, CADNodeMenu::GEOM_INITIALIZE_PHYSICS, _T( "Initialize Physics" ), _T( "" ), wxITEM_NORMAL );
-            cadNodeMenu->InsertSeparator( 5 );
+            if( !cadNode->GetNode()->HasPhysics() )
+            {
+                cadNodeMenu->Insert( 4, CADNodeMenu::GEOM_INITIALIZE_PHYSICS, _T( "Initialize Physics" ), _T( "" ), wxITEM_NORMAL );
+                cadNodeMenu->InsertSeparator( 5 );
+            }
          }
          else if(cadNode->GetNode()->GetNodeType() == std::string("Clone"))
          {
@@ -438,6 +441,8 @@ void CADNodeManagerDlg::_initializePhysics( wxCommandEvent& event )
         nodeType->SetDataType( "STRING" );
         nodeType->SetData(std::string( "Node Type" ), _activeCADNode->GetNodeType() );
         _dataValuePairList.push_back( nodeType );
+
+        _activeCADNode->EnablePhysics();
 
         _sendCommandsToXplorer();
         ClearInstructions();
