@@ -304,6 +304,12 @@ protected:
    
    wxScrolledWindow* networkFrame;
    
+   int m_selFrPort; 
+   int m_selToPort; 
+   int m_selLink; 
+   int m_selLinkCon; 
+   int m_selTag; 
+   int m_selTagCon; 
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
    DECLARE_EVENT_TABLE()
 };

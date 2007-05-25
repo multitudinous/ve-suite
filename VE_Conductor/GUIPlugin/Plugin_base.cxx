@@ -33,7 +33,7 @@
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+
 #include <iostream>
 #include "VE_Conductor/Network/string_ops.h"
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
@@ -47,7 +47,9 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
-
+#include "VE_Open/XML/ParameterBlock.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
+		
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
@@ -60,6 +62,7 @@
 
 using namespace VE_XML::VE_Model;
 using namespace VE_XML;
+using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE(REI_Plugin, wxEvtHandler )
    EVT_LEFT_DCLICK( REI_Plugin::OnDClick )
@@ -1050,8 +1053,8 @@ void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
       p.Load(result, strlen(result));
 
       // In the new code this would pass in a datavalue pair
-      modules[ id ].GetPlugin()->UnPackResult( &p.GetInterfaceVector()[0] );
-      UIDialog* hello = modules[id].GetPlugin()->Result(NULL);
+      UnPackResult( &p.GetInterfaceVector()[0] );
+      UIDialog* hello = Result(NULL);
       
       if ( hello != NULL )
 	      hello->Show();*/
@@ -1060,12 +1063,12 @@ void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 {
-   modules[ id ].GetPlugin()->FinancialData();
+   FinancialData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 {  
-	VE_XML::VE_Model::Model* veModel = modules[ id ].GetPlugin()->GetModel();
+	VE_XML::VE_Model::Model* veModel = GetModel();
 	wxString title;
 	title << wxT("Aspen Name");
 	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
@@ -1074,9 +1077,9 @@ void  REI_Plugin::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 {
-	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	VE_Conductor::CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
-	REI_Plugin* tempPlugin = modules[ id ].GetPlugin();
+	REI_Plugin* tempPlugin = this;
     IconChooser* chooser = new IconChooser(this);//, "2DIcons");
 	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
@@ -1086,8 +1089,8 @@ void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 {  
-	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	std::string compName = modules[ id ].GetPlugin()->GetModel()->GetModelName();
+	VE_Conductor::CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getInputModuleParamList");
@@ -1144,7 +1147,7 @@ void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 {  
 	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	std::string compName = modules[ id ].GetPlugin()->GetModel()->GetModelName();
+	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getOutputModuleParamList");
@@ -1196,7 +1199,7 @@ void REI_Plugin::OnShowDesc(wxCommandEvent& WXUNUSED(event))
  
    title << wxT("Description");
   
-   desc = modules[ id ].GetPlugin()->GetDesc();
+   desc = GetDesc();
   
    wxMessageDialog(this, desc, title).ShowModal();
 }
@@ -1219,13 +1222,13 @@ void REI_Plugin::OnParaView(wxCommandEvent& WXUNUSED(event))
 void REI_Plugin::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
 {
    // Here we launch a dialog for a specific plugins input values
-   modules[ id ].GetPlugin()->ViewInputVariables();
+   ViewInputVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
 {
    // Here we launch a dialog for a specific plugins input values
-   modules[ id ].GetPlugin()->ViewResultsVariables();
+   ViewResultsVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
@@ -1236,7 +1239,7 @@ void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
    }
 
    // Here we launch a dialog for a specific plugins input values
-   VE_XML::VE_Model::Model* veModel = modules[ id ].GetPlugin()->GetModel();
+   VE_XML::VE_Model::Model* veModel = GetModel();
 
    if( !cadDialog )
    {
@@ -1268,7 +1271,7 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    }
    
    // Here we launch a dialog for a specific plugins input values
-   VE_XML::VE_Model::Model* veModel = modules[ id ].GetPlugin()->GetModel();
+   VE_XML::VE_Model::Model* veModel = GetModel();
    //DataSetLoaderUI* dataSetLoaderDlg = 0;
    /*if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
@@ -1317,7 +1320,7 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    }
   
    //Get the active model ID from the xml data
-   VE_XML::VE_Model::Model* activeXMLModel = modules[ id ].GetPlugin()->GetModel();
+   VE_XML::VE_Model::Model* activeXMLModel = GetModel();
    unsigned int modelID = activeXMLModel->GetModelID();
 
    //Get the active model from the CORBA side
@@ -1430,7 +1433,7 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
 void REI_Plugin::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
 {
    // Here we launch a dialog for a specific plugins input values
-   modules[ id ].GetPlugin()->SetPluginNameDialog();   
+   SetPluginNameDialog();   
 }
 //////////////////////////////////////////////////
 void REI_Plugin::OnModelSounds(wxCommandEvent& event)
@@ -1442,15 +1445,15 @@ void REI_Plugin::OnModelSounds(wxCommandEvent& event)
 
    if( !_soundsDlg )
    {
-      _soundsDlg = new SoundsPane(modules[ id ].GetPlugin()->GetModel());
+      _soundsDlg = new SoundsPane( GetModel());
       _soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
-   _soundsDlg->SetActiveModel(modules[ id ].GetPlugin()->GetModel());
+   _soundsDlg->SetActiveModel( GetModel());
    _soundsDlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-void Network::OnMRightDown(wxMouseEvent& event)
+void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 {
    wxClientDC dc(this);
    PrepareDC(dc);
@@ -1580,7 +1583,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
 
       pop_menu.Enable(DEL_MOD, true);
       pop_menu.Enable(SHOW_RESULT, true);
-      if (modules[ id ].GetPlugin()->Has3Ddata())
+      if ( Has3Ddata())
          pop_menu.Enable(PARAVIEW, true);
      pop_menu.Enable(ASPEN_MENU, true);
      pop_menu.Enable(ICON_MENU, true);
@@ -1594,7 +1597,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
    m_selLinkCon = -1; 
    m_selTag = -1; 
    m_selTagCon = -1; 
-   xold = yold =0;
+   //xold = yold =0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
