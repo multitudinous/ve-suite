@@ -38,7 +38,6 @@
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
 
 #include "VE_Conductor/Framework/paraThread.h"
-#include "VE_Conductor/Framework/SoundsPane.h"
 
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
@@ -64,10 +63,6 @@
 #include "VE_Open/XML/StateInfo.h"
 
 #include "VE_Open/XML/CAD/CADAssembly.h"
-
-#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-#include "VE_Conductor/Framework/DataSetLoaderUI.h"
-#include "VE_Conductor/Framework/vistab.h"
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
@@ -133,15 +128,11 @@ Network::Network(wxWindow* parent, int id)
    m_selTag = -1; 
    m_selTagCon = -1; 
    xold = yold =0;
-   paraview = false;
    globalparam_dlg = new GlobalParamDialog(NULL, -1);
    isLoading = false;
-   cadDialog = 0;
    this->parent = parent;
-   vistab = 0;
    isDataSet = false;
    frame = dynamic_cast< AppFrame* >( parent->GetParent()->GetParent() );
-   _soundsDlg = 0;
    dragging = false;
    SetBackgroundColour(*wxWHITE);
    SetBackgroundStyle(wxBG_STYLE_CUSTOM);

@@ -7,7 +7,6 @@ Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_opt
 srcs = Split("""
    App.cxx 
    Avail_Modules.cxx
-   DataSetLoaderUI.cxx
    Frame.cxx 
    Network.cxx 
    DeviceProperties.cxx 

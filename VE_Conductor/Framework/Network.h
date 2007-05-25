@@ -68,16 +68,7 @@ namespace VE_Model
 }
 }
 
-class Vistab;
 class AppFrame;
-class SoundsPane;
-namespace VE_Conductor
-{
-namespace GUI_Utilities
-{
-  class CADNodeManagerDlg;
-}
-}
 
 class Network : public wxScrolledWindow, public wxThreadHelper
 {
@@ -107,8 +98,6 @@ public:
    wxMutex s_mutexProtect;
 
    GlobalParamDialog * globalparam_dlg;
-
-   bool paraview;
 
    void ReDrawAll();
 
@@ -238,8 +227,6 @@ private:
    bool dragging;
    wxBitmap * bitmapBuffer;
 
-   Vistab* vistab;///< The visualization tab
-
    std::string tempXMLNetworkData;
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
@@ -265,10 +252,7 @@ private:
    std::vector<double> backgroundColor;
    ///ptr to send data back to explorer
    VjObs_var xplorerPtr;
-   ///Used to operate on cad data in a plugin
-   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    
-   SoundsPane* _soundsDlg;///<The sounds dialog for this model;
    std::string ConvertUnicode( const wxChar* data )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
