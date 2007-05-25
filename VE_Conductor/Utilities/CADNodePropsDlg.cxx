@@ -473,6 +473,15 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
    meshProperties = new wxRadioBox( _physicsPanel, PHYSICS_MESH_ID, wxT( "Physics Mesh Type" ), 
                                     wxDefaultPosition, wxDefaultSize, 3,
                                     meshStrings, 0, wxRA_SPECIFY_ROWS );
+
+   if( _cadNode )
+   {
+      _physicsMassCtrl->SetValue( _cadNode->GetMass() );
+      _physicsFrictionCtrl->SetValue( _cadNode->GetFriction() );
+      _physicsRestitutionCtrl->SetValue( _cadNode->GetRestitution() );
+
+      meshProperties->SetStringSelection( _cadNode->GetPhysicsMesh() );
+   }
    
    physicsPanelSizer->Add( physicsPropSizer, 1, wxEXPAND|wxALIGN_CENTER );
    physicsPanelSizer->Add( meshProperties, 1, wxEXPAND|wxALIGN_CENTER );
@@ -1053,15 +1062,18 @@ void CADNodePropertiesDlg::_updatePhysicsProperties( wxSpinEvent& event )
 
         if( event.GetId() == PHYSICS_MASS_ID )
         {
-            physicsPropertyValue->SetData( "Mass", _physicsMassCtrl->GetValue() ); 
+            physicsPropertyValue->SetData( "Mass", _physicsMassCtrl->GetValue() );
+            _cadNode->SetMass( _physicsMassCtrl->GetValue() );
         }
         else if( event.GetId() == PHYSICS_FRICTION_ID )
         {
             physicsPropertyValue->SetData( "Friction", _physicsFrictionCtrl->GetValue() );
+            _cadNode->SetFriction( _physicsFrictionCtrl->GetValue() );
         }
         else if( event.GetId() == PHYSICS_RESTITUTION_ID )
         {
             physicsPropertyValue->SetData( "Restitution", _physicsRestitutionCtrl->GetValue() );
+            _cadNode->SetRestitution( _physicsRestitutionCtrl->GetValue() );
         }
 
         _instructions.push_back( physicsPropertyValue );
@@ -1091,8 +1103,8 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
         VE_XML::DataValuePair* meshType = new VE_XML::DataValuePair();
         meshType->SetDataType( "STRING" );
         meshType->SetDataName( std::string( "Mesh Type" ) );
-        meshType->SetDataString( 
-            ConvertUnicode( meshProperties->GetStringSelection() ) );
+        meshType->SetDataString( ConvertUnicode( meshProperties->GetStringSelection() ) );
+        _cadNode->SetPhysicsMesh( ConvertUnicode( meshProperties->GetStringSelection() ) );
         _instructions.push_back( meshType );
 
         _sendCommandsToXplorer();
