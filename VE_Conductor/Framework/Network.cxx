@@ -146,25 +146,6 @@ Network::~Network()
 {
     //std::cout << "Deleting Links" << std::endl;
    links.clear();
-
-   //std::cout << "Deleting CAD Dialogs " << std::endl;
-   if( cadDialog)
-   {
-      cadDialog->Destroy();
-      cadDialog = 0;
-   }
-   //std::cout << "Deleting VisTab" << std::endl;
-   if(vistab)
-   {
-      vistab->Destroy();
-      vistab = 0;
-   }
-   //std::cout << "Deleting Sound Dialog" << std::endl;
-   if(_soundsDlg)
-   {
-      _soundsDlg->Destroy();
-      _soundsDlg = 0;
-   }
    //std::cout << "Deleting Modules" << std::endl;
 
    std::map< int, Module >::iterator iter;
@@ -908,10 +889,10 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED( event ) )
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
    ReDrawAll();
-   if(vistab)
+   /*if(vistab)
    {
       vistab->ResetAllDatasetDependentCheckBoxes();
-   }
+   }*/
 }
 
 /////////////////////////////////////
@@ -2327,7 +2308,7 @@ void Network::New( bool promptClearXplorer )
    Refresh();
    
    //reset the state of dataset check boxes on a new network load
-   if(vistab)
+   /*if(vistab)
    {
       vistab->ResetAllDatasetDependentCheckBoxes();
    }
@@ -2335,7 +2316,7 @@ void Network::New( bool promptClearXplorer )
    if(cadDialog)
    {
       cadDialog->ClearLoadedCADFiles();
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
