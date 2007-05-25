@@ -37,8 +37,6 @@
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
 
-#include "VE_Conductor/Framework/paraThread.h"
-
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/GUIPlugin/OrbThread.h"

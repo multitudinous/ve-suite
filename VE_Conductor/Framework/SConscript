@@ -11,7 +11,6 @@ srcs = Split("""
    Network.cxx 
    DeviceProperties.cxx 
    NavigationPane.cxx 
-   paraThread.cxx 
    PluginLoader.cxx 
    ViewLocPane.cxx
    UserPreferences.cxx
