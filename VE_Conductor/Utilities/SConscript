@@ -4,7 +4,7 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options')
 
-utils_srcs = Split("""
+sources = Split("""
    Link.cxx
    Module.cxx
    Polygon.cxx
@@ -18,11 +18,7 @@ utils_srcs = Split("""
    ../DefaultPlugin/DefaultPlugin.cxx
 """)
 
-gui_srcs = Split("""
-    spinctld.cxx
-""")
-
-utils_h = Split("""
+headers = Split("""
    Link.h
    Module.h
    Polygon.h
@@ -35,19 +31,7 @@ utils_h = Split("""
    NetworkDataBuffer.h
 """)
 
-gui_h = Split("""
-    spinctld.h
-""")
 ##frameworkutil_srcs = map(lambda s: pj('#', 'VE_Conductor', 'Utilities', s), frameworkutil_srcs)
-gui_srcs = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_srcs)
-sources = list()
-sources.extend(utils_srcs)
-sources.extend(gui_srcs)
-
-##gui_h = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_h)
-headers = list()
-headers.extend(utils_h)
-##headers.extend(gui_h)
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(CPPPATH = pj('#', 'VE_Builder', 'Utilities', 'gui'))

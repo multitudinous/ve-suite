@@ -6,8 +6,25 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir')
 
 srcDir = os.path.abspath( pj(RootDir, 'VE_Conductor', 'GUIPlugin') )
-sources = sca_util.getSourcesRecursive( srcDir )
-headers = sca_util.getHeadersRecursive( srcDir )
+rootsources = sca_util.getSourcesRecursive( srcDir )
+rootheaders = sca_util.getHeadersRecursive( srcDir )
+
+gui_srcs = Split("""
+    spinctld.cxx
+""")
+
+gui_h = Split("""
+    spinctld.h
+""")
+gui_srcs = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_srcs)
+sources = list()
+sources.extend(rootsources)
+sources.extend(gui_srcs)
+
+##gui_h = map(lambda s: pj('..','..','VE_Builder', 'Utilities', 'gui', s), gui_h)
+headers = list()
+headers.extend(rootheaders)
+##headers.extend(gui_h)
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XML','VE_OpenModuleLib'])
