@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLUGIN_BASE_H
 #define PLUGIN_BASE_H
@@ -113,7 +111,7 @@ public:
       QUERY_OUTPUTS,
       ASPEN_ICON,
       ICON_MENU,
-	  SHOW_ICON_CHOOSER,
+      SHOW_ICON_CHOOSER,
       GEOMETRY,
       MODEL_INPUTS,
       MODEL_RESULTS,

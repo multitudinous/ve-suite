@@ -29,11 +29,10 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/vectors.h"
-#include "VE_Conductor/Framework/advancedvectors.h"
+#include "VE_Conductor/GUIPlugin/vectors.h"
+#include "VE_Conductor/GUIPlugin/advancedvectors.h"
+
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
