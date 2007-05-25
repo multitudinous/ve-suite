@@ -51,7 +51,7 @@
 #include "VE_Conductor/xpm/vectortb.xpm"
 #include "VE_Conductor/xpm/scalartb_bw.xpm"
 
-#include "VE_Conductor/Utilities/ROIDialog.h"
+#include "VE_Conductor/GUIPlugin/ROIDialog.h"
 #include "VE_Conductor/GUIPlugin/ScalarToolsDlg.h"
 #include "VE_Conductor/GUIPlugin/TransferFunctionDlg.h"
 

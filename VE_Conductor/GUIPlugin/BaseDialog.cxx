@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Utilities/BaseDialog.h"
+#include "VE_Conductor/GUIPlugin/BaseDialog.h"
 
 #include <iostream>
 

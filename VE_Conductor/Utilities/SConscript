@@ -14,7 +14,6 @@ utils_srcs = Split("""
    CADNodeMenu.cxx 
    CADNodePropsDlg.cxx
    CADOpacitySliderDlg.cxx
-   ROIDialog.cxx
    NetworkDataBuffer.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
 """)
@@ -33,7 +32,6 @@ utils_h = Split("""
    CADNodeMenu.h 
    CADNodePropsDlg.h
    CADOpacitySliderDlg.h
-   ROIDialog.h
    NetworkDataBuffer.h
 """)
 
