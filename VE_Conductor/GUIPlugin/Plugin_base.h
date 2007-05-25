@@ -101,6 +101,28 @@ typedef std::vector< VE_XML::VE_Model::Port > PORT;
 class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxEvtHandler//, public wxObject
 {
 public:
+   enum
+   {
+      SHOW_RESULT,
+      SHOW_DESC,
+      PARAVIEW,
+      SHOW_FINANCIAL, /* EPRI TAG */
+      ASPEN_MENU,
+      SHOW_ASPEN_NAME,
+      QUERY_INPUTS,
+      QUERY_OUTPUTS,
+      ASPEN_ICON,
+      ICON_MENU,
+	  SHOW_ICON_CHOOSER,
+      GEOMETRY,
+      MODEL_INPUTS,
+      MODEL_RESULTS,
+      DATASET,
+      VISUALIZATION,
+      SET_UI_PLUGIN_NAME,
+      SET_ACTIVE_MODEL,
+      ACTIVE_MODEL_SOUNDS
+   };
    ///Defualt constructor
    REI_Plugin();
    ///Defualt destructor for plugins
@@ -191,7 +213,32 @@ public:
    void SetCORBAService( VE_Conductor::CORBAServiceList* serviceList );
    ///See if this plugin is selected
    bool SelectMod( int x, int y );
-   
+
+   void OnMRightDown( wxMouseEvent &event );
+   ///Still need to be documented
+   void OnShowResult( wxCommandEvent& event );
+   void OnParaView( wxCommandEvent& event );
+   void OnShowDesc( wxCommandEvent& event );
+   void OnGeometry( wxCommandEvent& event );
+   void OnDataSet( wxCommandEvent& event );
+   void OnInputsWindow( wxCommandEvent& event );
+   void OnResultsWindow( wxCommandEvent& event );
+   void OnVisualization( wxCommandEvent& event );
+   void OnSetUIPluginName( wxCommandEvent& event );
+   void OnSetActiveXplorerModel( wxCommandEvent& event );
+   // EPRI TAG
+   void OnShowFinancial(wxCommandEvent &event);
+   void OnShowAspenName(wxCommandEvent &event);
+   void OnQueryInputs(wxCommandEvent &event);
+   void OnQueryOutputs(wxCommandEvent &event);
+   void OnSetInput(wxCommandEvent &event);
+   void OnQueryInputModuleProperties(std::vector< std::string >, std::string);
+   void OnQueryOutputModuleProperties(std::vector< std::string >, std::string);
+   void OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName);
+   ///Show the sounds available for this model
+   void OnModelSounds(wxCommandEvent &event);
+   void OnShowIconChooser(wxCommandEvent &event);
+
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 

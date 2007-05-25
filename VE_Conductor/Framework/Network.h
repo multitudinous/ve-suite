@@ -95,26 +95,7 @@ public:
       DEL_LINK,
       DEL_LINK_CON,
       DEL_MOD,
-      SHOW_LINK_CONT,
-      SHOW_RESULT,
-      SHOW_DESC,
-      PARAVIEW,
-      SHOW_FINANCIAL, /* EPRI TAG */
-      ASPEN_MENU,
-      SHOW_ASPEN_NAME,
-      QUERY_INPUTS,
-      QUERY_OUTPUTS,
-      ASPEN_ICON,
-      ICON_MENU,
-	  SHOW_ICON_CHOOSER,
-      GEOMETRY,
-      MODEL_INPUTS,
-      MODEL_RESULTS,
-      DATASET,
-      VISUALIZATION,
-      SET_UI_PLUGIN_NAME,
-      SET_ACTIVE_MODEL,
-      ACTIVE_MODEL_SOUNDS
+      SHOW_LINK_CONT
    };
 
    ///Fucntion called during submit job to send the id of all active
@@ -137,8 +118,7 @@ public:
    void OnMouseMove( wxMouseEvent &event );
    void OnMLeftDown( wxMouseEvent &event );
    void OnMLeftUp( wxMouseEvent &event );
-   /// This function opens a plugins dialog when double clicked on the design canvas
-   //void OnDClick( wxMouseEvent &event );
+
    void OnMRightDown( wxMouseEvent &event );
    void OnAddTag( wxCommandEvent &event );
    void OnAddLinkCon( wxCommandEvent &event );
@@ -148,31 +128,7 @@ public:
    void OnDelLinkCon( wxCommandEvent &event );
    void OnDelMod( wxCommandEvent &event );
    void OnShowLinkContent( wxCommandEvent& event );
-   void OnShowResult( wxCommandEvent& event );
-   void OnParaView( wxCommandEvent& event );
-   void OnShowDesc( wxCommandEvent& event );
-   void OnGeometry( wxCommandEvent& event );
-   void OnDataSet( wxCommandEvent& event );
-   void OnInputsWindow( wxCommandEvent& event );
-   void OnResultsWindow( wxCommandEvent& event );
-   void OnVisualization( wxCommandEvent& event );
-   void OnSetUIPluginName( wxCommandEvent& event );
-   void OnSetActiveXplorerModel( wxCommandEvent& event );
-   // EPRI TAG
-   void OnShowFinancial(wxCommandEvent &event);
-   void OnShowAspenName(wxCommandEvent &event);
-   void OnQueryInputs(wxCommandEvent &event);
-   void OnQueryOutputs(wxCommandEvent &event);
-   void OnSetInput(wxCommandEvent &event);
-   void OnQueryInputModuleProperties(std::vector< std::string >, std::string);
-   void OnQueryOutputModuleProperties(std::vector< std::string >, std::string);
-   void OnQueryModuleProperties(std::vector< std::string > requestedInputs, std::string compName);
-
-   ///Show the sounds available for this model
-   void OnModelSounds(wxCommandEvent &event);
-
-   void OnShowIconChooser(wxCommandEvent &event);
-
+   
    //Add to network fuctions
    void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);
    void AddTag(int x, int y, wxString text);

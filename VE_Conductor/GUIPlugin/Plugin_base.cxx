@@ -61,8 +61,26 @@
 using namespace VE_XML::VE_Model;
 using namespace VE_XML;
 
-BEGIN_EVENT_TABLE(REI_Plugin, wxEvtHandler)
-   EVT_LEFT_DCLICK(REI_Plugin::OnDClick)
+BEGIN_EVENT_TABLE(REI_Plugin, wxEvtHandler )
+   EVT_LEFT_DCLICK( REI_Plugin::OnDClick )
+   EVT_RIGHT_DOWN( REI_Plugin::OnMRightDown)
+   EVT_MENU( SHOW_RESULT, Plugin::OnShowResult )
+   EVT_MENU( PARAVIEW, Plugin::OnParaView )
+   EVT_MENU( SHOW_DESC, Plugin::OnShowDesc )
+   EVT_MENU( MODEL_INPUTS, Plugin::OnInputsWindow ) /* EPRI TAG */
+   EVT_MENU( SHOW_FINANCIAL, Plugin::OnShowFinancial ) /* EPRI TAG */
+   EVT_MENU( SHOW_ASPEN_NAME, Plugin::OnShowAspenName )
+   EVT_MENU( QUERY_INPUTS, Plugin::OnQueryInputs )
+   EVT_MENU( QUERY_OUTPUTS, Plugin::OnQueryOutputs )
+   EVT_MENU( SHOW_ICON_CHOOSER, Plugin::OnShowIconChooser )
+   EVT_MENU( GEOMETRY, Plugin::OnGeometry )
+   EVT_MENU( DATASET, Plugin::OnDataSet )
+   EVT_MENU( MODEL_INPUTS, Plugin::OnInputsWindow ) /* EPRI TAG */
+   EVT_MENU( MODEL_RESULTS, Plugin::OnResultsWindow ) /* EPRI TAG */
+   EVT_MENU( VISUALIZATION, Plugin::OnVisualization )
+   EVT_MENU( SET_UI_PLUGIN_NAME, Plugin::OnSetUIPluginName )
+   EVT_MENU( SET_ACTIVE_MODEL, Plugin::OnSetActiveXplorerModel )
+   EVT_MENU( ACTIVE_MODEL_SOUNDS, Plugin::OnModelSounds )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxEvtHandler )
@@ -1004,4 +1022,603 @@ bool REI_Plugin::SelectMod( int x, int y )
       return true;
    }
    return false;
+}
+//////////////////////////////////////////////////////
+void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
+{
+   char* result = 0;
+  
+   if ( m_selMod < 0 )
+      return;
+
+   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToCE() )
+   {
+      return;
+   }
+  
+   try 
+   {
+      //result = exec->GetModuleResult( m_selMod );
+   }
+   catch (CORBA::Exception &) 
+   {
+		frame->Log( "Maybe Computational Engine is down\n" );
+      return;
+   }
+
+   if ( std::string(result) != "" )
+   {
+      /*Package p;
+      p.SetSysId("linkresult.xml");
+      p.Load(result, strlen(result));
+
+      // In the new code this would pass in a datavalue pair
+      modules[ m_selMod ].GetPlugin()->UnPackResult( &p.GetInterfaceVector()[0] );
+      UIDialog* hello = modules[m_selMod].GetPlugin()->Result(NULL);
+      
+      if ( hello != NULL )
+	      hello->Show();*/
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void  REI_Plugin::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
+{
+   if (m_selMod<0) 
+      return;
+   modules[m_selMod].GetPlugin()->FinancialData();
+}
+////////////////////////////////////////////////////////////////////////////////
+void  REI_Plugin::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
+{  
+	VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+	wxString title;
+	title << wxT("Aspen Name");
+	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
+	wxMessageDialog(this, desc, title).ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
+{
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
+	REI_Plugin* tempPlugin = modules[m_selMod].GetPlugin();
+    IconChooser* chooser = new IconChooser(this);//, "2DIcons");
+	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
+	chooser->SetPlugin(tempPlugin);
+	chooser->Show();
+   //delete chooser;
+}
+////////////////////////////////////////////////////////////////////////////////
+void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
+{  
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
+
+	VE_XML::Command returnState;
+	returnState.SetCommandName("getInputModuleParamList");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	
+	//Get results
+	std::string nw_str = serviceList->Query( status );
+	wxString title( compName.c_str(),wxConvUTF8);
+	//TextResultDialog * results = new TextResultDialog(this, title);
+	//QueryInputsDlg * results = new QueryInputsDlg(this);
+	ParamsDlg * params = new ParamsDlg(this);
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	//serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	//std::ostringstream output;
+	//output << objectVector.size()<<std::endl;
+	//serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	std::vector< std::string > temp_vector;
+	pair->GetData(temp_vector);
+
+	params->SetCompName(compName.c_str());
+	params->SetServiceList(serviceList);
+	params->SetDialogType("input");
+	for (int i=0; i < temp_vector.size(); i++) 
+		params->AppendList(temp_vector[i].c_str());
+	params->ShowModal();
+	
+	//serviceList->GetMessageLog()->SetMessage("gather");
+	//gather requested inputs
+	//std::vector< std::string > temp_vector2;
+	//for(int testing = 0; testing < results->GetDataSize(); testing++)
+	//	temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+	
+	//serviceList->GetMessageLog()->SetMessage("submit or not");
+	//if it is submit launch request
+	//if(results->IsSubmit())
+	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
+}
+////////////////////////////////////////////////////////////////////////////////
+void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
+{  
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	std::string compName = modules[m_selMod].GetPlugin()->GetModel()->GetModelName();
+
+	VE_XML::Command returnState;
+	returnState.SetCommandName("getOutputModuleParamList");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	
+	//Get results
+	std::string nw_str = serviceList->Query( status );
+	wxString title( compName.c_str(),wxConvUTF8);
+	//QueryInputsDlg * results = new QueryInputsDlg(this);
+	ParamsDlg * params = new ParamsDlg(this);
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	std::vector< std::string > temp_vector;
+	pair->GetData(temp_vector);
+
+	params->SetCompName(compName.c_str());
+	params->SetServiceList(serviceList);
+	params->SetDialogType("output");
+	for (int i=0; i < temp_vector.size(); i++) 
+		params->AppendList(temp_vector[i].c_str());
+	params->ShowModal();
+	
+	//std::vector< std::string > temp_vector2;
+	//for(int testing = 0; testing < results->GetDataSize(); testing++)
+	//	temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+
+	//if(results->IsSubmit())
+	//	this->OnQueryOutputModuleProperties(temp_vector2, compName);
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnShowDesc(wxCommandEvent& WXUNUSED(event))
+{
+   wxString desc;
+   wxString title;
+ 
+   title << wxT("Description");
+  
+   if (m_selMod<0)
+      return;
+  
+   desc = modules[m_selMod].GetPlugin()->GetDesc();
+  
+   wxMessageDialog(this, desc, title).ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnParaView(wxCommandEvent& WXUNUSED(event))
+{
+   //wxArrayString output;
+   // ::wxExecute("paraview", wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+   //::wxShell("paraview");
+#ifndef WIN32
+   paraThread* para_t=new paraThread(this);
+   para_t->Create();
+   para_t->Run();
+#else
+   ::wxExecute("paraview", wxEXEC_ASYNC);
+#endif
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
+{
+   if (m_selMod<0) 
+      return;
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->ViewInputVariables();
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
+{
+   if (m_selMod<0) 
+      return;
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->ViewResultsVariables();
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
+{
+   if ( !SetActiveModel() ) 
+   {
+      return;
+   }
+
+   // Here we launch a dialog for a specific plugins input values
+   VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+
+   if( !cadDialog )
+   {
+      cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
+                                                               this, ::wxNewId() );
+
+      cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   }
+   cadDialog->SetVjObsPtr( VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer() );
+   cadDialog->SetRootCADNode(veModel->GetGeometry());
+   cadDialog->ShowModal();
+   // Get cadnode back
+   if(cadDialog->GetRootCADNode())
+   {
+      if(!veModel->GetGeometry())
+      {
+         veModel->AddGeometry();
+      }
+      *( dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
+      *( dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
+   }
+}
+///////////////////////////////////////////
+void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
+{
+   if ( !SetActiveModel() ) 
+   {
+      return;
+   }
+   
+   // Here we launch a dialog for a specific plugins input values
+   VE_XML::VE_Model::Model* veModel = modules[m_selMod].GetPlugin()->GetModel();
+   //DataSetLoaderUI* dataSetLoaderDlg = 0;
+   /*if ( CORBA::is_nil( xplorerPtr.in() ) )
+   {
+      ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
+      SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
+      if ( CORBA::is_nil( xplorerPtr.in() ) )
+         return;
+   }*/
+   /*dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
+               SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
+               SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );*/
+   DataSetLoaderUI dataSetLoaderDlg( this, ::wxNewId(), 
+               SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
+               SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
+   dataSetLoaderDlg.SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   //cadDialog->SetVjObsPtr( xplorerPtr.in() );
+   if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
+   {
+      //Now send the data to xplorer
+      VE_XML::XMLReaderWriter netowrkWriter;
+      netowrkWriter.UseStandaloneDOMDocumentManager();
+
+      // Create the command and data value pairs
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      dataValuePair->SetData( "CREATE_NEW_DATASETS", veModel );
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
+      veCommand->AddDataValuePair( dataValuePair );
+
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+
+      //Clean up memory
+      delete veCommand;
+      veCommand = 0;
+   }
+
+  // delete dataSetLoaderDlg;
+   //dataSetLoaderDlg = 0;
+}
+///////////////////////////////////////////
+void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
+{
+   if ( !SetActiveModel() ) 
+   {
+      return;
+   }
+  
+   //Get the active model ID from the xml data
+   VE_XML::VE_Model::Model* activeXMLModel = modules[m_selMod].GetPlugin()->GetModel();
+   unsigned int modelID = activeXMLModel->GetModelID();
+
+   //Get the active model from the CORBA side
+   ///Should this be a member variable?
+  // VjObs::Model_var activeCORBAModel; 
+   VjObs::Model* activeCORBAModel; 
+
+   //Does this need to be wrapped in something else?
+   if ( CORBA::is_nil( xplorerPtr.in() ) )
+   {
+      frame->Log( "Not connected to VE-Server\n" );//<< std::endl;
+      return;
+   }
+   
+   try
+   {
+      activeCORBAModel = xplorerPtr->GetModel(modelID);
+   }
+   catch ( CORBA::Exception& )
+   {
+         frame->Log( "Couldn't find model\n" );//<< modelID<<std::endl;
+         return;
+   }
+      
+   if ( activeCORBAModel->dataVector.length() == 0 )
+   {
+      frame->Log( "Model contains no datasets\n" );//<< modelID<<std::endl;
+      return;
+   }
+
+   if(!vistab)
+   {
+      vistab = new Vistab (activeCORBAModel,this,
+                       SYMBOL_VISTAB_IDNAME,
+                       wxString(activeXMLModel->GetModelName().c_str(),wxConvUTF8),
+                       SYMBOL_VISTAB_POSITION,
+                       SYMBOL_VISTAB_SIZE,
+                       SYMBOL_VISTAB_STYLE );
+   }
+   else
+   {
+      vistab->SetActiveModel(activeCORBAModel);
+   }
+   
+   size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
+   if ( nInformationPackets == 0 )
+   {
+      return;
+   }
+   
+   wxArrayString scalarTextureDatasets;
+   wxArrayString vectorTextureDatasets;
+   bool hasScalarTextures = false;
+   bool hasVectorTextures = false;
+
+   for(size_t i = 0; i < nInformationPackets; i++)
+   {
+      VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
+      size_t numProperties = paramBlock->GetNumberOfProperties();
+                           
+      for ( size_t i = 0; i < numProperties; ++i )
+      {
+         VE_XML::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
+         if ( dataValuePair->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
+         {
+            
+            size_t textureDataType = dataValuePair->GetDataString().find("scalars");
+            if(textureDataType < dataValuePair->GetDataString().size())
+            {
+               scalarTextureDatasets.Add( wxString(dataValuePair->GetDataString().c_str(), wxConvUTF8) );
+               hasScalarTextures = true;
+            }
+            else 
+            {
+               textureDataType = dataValuePair->GetDataString().find("vectors");
+               if(textureDataType < dataValuePair->GetDataString().size())
+               {
+                   vectorTextureDatasets.Add( wxString(dataValuePair->GetDataString().c_str(),wxConvUTF8) );
+                   hasVectorTextures = true;
+               }
+            }
+         }
+         isDataSet = true;
+      }
+   }
+
+   if(hasScalarTextures)
+   {
+      //std::cout<<"Found scalar texture directory"<<std::endl;
+      vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
+   }
+   if(hasVectorTextures)
+   {
+      //std::cout<<"Found vector texture directory"<<std::endl;
+      vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
+   }
+
+
+   if(isDataSet)
+   {
+      int error = vistab->ShowModal(); 
+   }
+   else
+   {
+      wxMessageBox( _("Open a dataset"),_("Dataset Failure"), 
+                     wxOK | wxICON_INFORMATION );
+   }
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
+{
+   if ( m_selMod < 0 ) 
+   {
+      return;
+   }
+   // Here we launch a dialog for a specific plugins input values
+   modules[m_selMod].GetPlugin()->SetPluginNameDialog();   
+}
+//////////////////////////////////////////////////
+void REI_Plugin::OnModelSounds(wxCommandEvent& event)
+{
+   if ( !SetActiveModel() ) 
+   {
+      return;
+   }
+
+   if( !_soundsDlg )
+   {
+      _soundsDlg = new SoundsPane(modules[m_selMod].GetPlugin()->GetModel());
+      _soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   }
+   _soundsDlg->SetActiveModel(modules[m_selMod].GetPlugin()->GetModel());
+   _soundsDlg->Show();
+}
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnMRightDown(wxMouseEvent& event)
+{
+   wxClientDC dc(this);
+   PrepareDC(dc);
+   dc.SetUserScale( userScale.first, userScale.second );
+   
+   /////////////////////////////////////////////////
+   wxPoint evtpos = event.GetLogicalPosition( dc );
+   long x = evtpos.x;
+   long y = evtpos.y;
+   
+   //Clear selections
+   if (m_selMod >= 0)
+	   UnSelectMod(dc);
+   if (m_selLink >= 0)
+	   UnSelectLink(dc);
+   
+   //Select Mod/Link
+   SelectMod(x, y, dc);
+   if (m_selMod < 0)
+	   SelectLink(x, y );
+   Refresh(true);
+   //Update();
+   /////////////////////////////////////////////////
+
+   wxMenu pop_menu( _("Action"));
+
+   pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
+
+   pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
+   pop_menu.Append(EDIT_TAG, _("Edit Tag") );
+   pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
+   pop_menu.Append(DEL_LINK, _("Delete Link") );
+   pop_menu.Append(DEL_TAG, _("Delete Tag") );
+   pop_menu.Append(DEL_MOD, _("Del Module") );
+
+   pop_menu.Append(SHOW_DESC, _("Show Module Description") );	
+   pop_menu.Append(SHOW_RESULT, _("Show Module Result") );
+   pop_menu.Append(PARAVIEW, _("ParaView 3D Result") );
+
+   pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
+
+   // EPRI TAG
+   AppFrame* p_frame;
+   p_frame = ((AppFrame*)(parent->GetParent()->GetParent()));
+   if (p_frame->f_financial)
+   {
+	pop_menu.Append(SHOW_FINANCIAL, _("Financial Data") );
+	pop_menu.Enable(SHOW_FINANCIAL, true);
+   }
+   
+   //Aspen Menu
+   wxMenu * aspen_menu = new wxMenu();
+   aspen_menu->Append(SHOW_ASPEN_NAME, _("Aspen Name") );
+   aspen_menu->Enable(SHOW_ASPEN_NAME, true);
+   aspen_menu->Append(QUERY_INPUTS, _("Query Inputs") );
+   aspen_menu->Enable(QUERY_INPUTS, true);
+   aspen_menu->Append(QUERY_OUTPUTS, _("Query Outputs") );
+   aspen_menu->Enable(QUERY_OUTPUTS, true);
+   pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
+
+   //Icon Menu
+   wxMenu * icon_menu = new wxMenu();
+   icon_menu->Append(SHOW_ICON_CHOOSER, _("Icon Chooser") );
+   icon_menu->Enable(SHOW_ICON_CHOOSER, true);
+   pop_menu.Append( ICON_MENU,   _("Icon"), icon_menu, _("Controls for icon images") );
+
+   //if (p_frame->f_geometry)
+   {
+	// GUI to configure geometry for graphical env
+	pop_menu.Append(GEOMETRY, _("Geometry Config") );
+	pop_menu.Enable(GEOMETRY, true);
+   // GUI to configure dataset for graphical env
+   pop_menu.Append(DATASET, _("Data Set Config") );
+   pop_menu.Enable(DATASET, true);
+
+	// GUI to configure geometry for graphical env
+   }
+	//UI for input variables
+   pop_menu.Append(MODEL_INPUTS, _("Input Variables") );
+   pop_menu.Enable(MODEL_INPUTS, true);
+   //UI for results variables
+   pop_menu.Append(MODEL_RESULTS, _("Result Variables") );
+   pop_menu.Enable(MODEL_RESULTS, true);
+   //UI for vis variables
+   pop_menu.Append(VISUALIZATION, _("Visualization") );
+   pop_menu.Enable(VISUALIZATION, true);
+
+   //Sounds dialog
+   pop_menu.Append(ACTIVE_MODEL_SOUNDS,_("Model Sounds"));
+   pop_menu.Enable(ACTIVE_MODEL_SOUNDS,true);
+
+   //Make a specific plusing active in xplorer
+   pop_menu.Append(SET_ACTIVE_MODEL, _("Set Active Xplorer Model") );
+   pop_menu.Enable(SET_ACTIVE_MODEL, true);
+   //Set the plugin name for a model
+   pop_menu.Append(SET_UI_PLUGIN_NAME, _("Set UI Plugin Name") );
+   pop_menu.Enable(SET_UI_PLUGIN_NAME, true);
+
+   pop_menu.Enable(ADD_LINK_CON, false);
+   pop_menu.Enable(EDIT_TAG, false);
+   pop_menu.Enable(DEL_LINK_CON, false);
+   pop_menu.Enable(DEL_LINK, false);
+   pop_menu.Enable(DEL_TAG, false);
+   pop_menu.Enable(DEL_MOD, false);
+   pop_menu.Enable(SHOW_RESULT, false);
+   pop_menu.Enable(PARAVIEW, false);
+   pop_menu.Enable(ASPEN_MENU, false);
+   pop_menu.Enable(ICON_MENU, false);
+
+   pop_menu.Enable(SHOW_LINK_CONT, false);
+
+   if (m_selLink>=0)
+   {
+      pop_menu.Enable(DEL_LINK, true);
+      pop_menu.Enable(SHOW_LINK_CONT, true);
+      if (m_selLinkCon>=0) 
+         pop_menu.Enable(DEL_LINK_CON, true);
+      else
+         pop_menu.Enable(ADD_LINK_CON, true);
+   }
+
+   if (m_selTag>=0 )
+   {
+      pop_menu.Enable(EDIT_TAG, true);
+      pop_menu.Enable(DEL_TAG, true);
+   }
+
+   if (m_selMod>=0)
+   {
+      pop_menu.Enable(DEL_MOD, true);
+      pop_menu.Enable(SHOW_RESULT, true);
+      if (modules[m_selMod].GetPlugin()->Has3Ddata())
+         pop_menu.Enable(PARAVIEW, true);
+	  pop_menu.Enable(ASPEN_MENU, true);
+	  pop_menu.Enable(ICON_MENU, true);
+   }
+
+   action_point = event.GetLogicalPosition(dc);
+   PopupMenu(&pop_menu, event.GetPosition());
+
+
+   m_selMod = -1;
+   m_selFrPort = -1; 
+   m_selToPort = -1; 
+   m_selLink = -1; 
+   m_selLinkCon = -1; 
+   m_selTag = -1; 
+   m_selTagCon = -1; 
+   xold = yold =0;
+}
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
+{
+   SetActiveModel();
 }
