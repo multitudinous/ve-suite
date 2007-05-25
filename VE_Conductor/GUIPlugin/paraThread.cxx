@@ -32,13 +32,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/Network.h"
-#include "VE_Conductor/Framework/paraThread.h"
+//#include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/GUIPlugin/paraThread.h"
 
+#include <wx/arrstr.h>
+#include <wx/utils.h>
+#include <wx/intl.h>
 
 paraThread::paraThread(Network* network) : wxThread(wxTHREAD_JOINABLE)
 {
-  nw = network;
+//  nw = network;
 }
 paraThread::~paraThread()
 {
@@ -46,16 +49,16 @@ paraThread::~paraThread()
 
 bool paraThread::Do()
 {
-  if (nw->paraview == true)
-    return false;
+  //if (nw->paraview == true)
+  //  return false;
   //std::cout<<"starting paraview"<<std::endl;
-  nw->paraview = true;
+  //nw->paraview = true;
   //system("paraview");
   //::wxShell("paraview");
   wxArrayString output;
   ::wxExecute( _("paraview"), output);
 
-  nw->paraview = false;
+  //nw->paraview = false;
   return true;
 }
   

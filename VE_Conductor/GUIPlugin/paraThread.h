@@ -52,7 +52,7 @@ public:
 	virtual ExitCode Entry() { return (ExitCode) this->Do(); };
 
  protected:
-	Network* nw;
+	//Network* nw;
 };
 
 #endif

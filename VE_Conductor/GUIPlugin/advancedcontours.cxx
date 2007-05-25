@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Framework/advancedcontours.h"
+#include "VE_Conductor/GUIPlugin/advancedcontours.h"
 
 #include <wx/sizer.h>
 #include <wx/slider.h>
