@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
-#include "VE_Conductor/Framework/TransformUI.h"
-#include "VE_Conductor/Framework/DataSetLoaderUI.h"
+#include "VE_Conductor/GUIPlugin/TransformUI.h"
+#include "VE_Conductor/GUIPlugin/DataSetLoaderUI.h"
 
 #include "VE_Builder/Utilities/gui/spinctld.h"
 

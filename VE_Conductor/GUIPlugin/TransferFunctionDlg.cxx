@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Framework/TransferFunctionDlg.h"
+#include "VE_Conductor/GUIPlugin/TransferFunctionDlg.h"
 #include "VE_Conductor/Framework/Frame.h"
 
 #include <wx/app.h>

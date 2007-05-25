@@ -31,16 +31,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
-#include "VE_Conductor/Framework/TBToolBar.h"
+#include "VE_Conductor/GUIPlugin/TBToolBar.h"
 #include "VE_Conductor/Framework/App.h"
 #include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/UI_TransientDialog.h"
-#include "VE_Conductor/Framework/vectors.h"
-#include "VE_Conductor/Framework/contours.h"
-#include "VE_Conductor/Framework/streamlines.h"
-#include "VE_Conductor/Framework/isosurfaces.h"
-#include "VE_Conductor/Framework/polydata.h"
-
+#include "VE_Conductor/GUIPlugin/UI_TransientDialog.h"
+#include "VE_Conductor/GUIPlugin/vectors.h"
+#include "VE_Conductor/GUIPlugin/contours.h"
+#include "VE_Conductor/GUIPlugin/streamlines.h"
+#include "VE_Conductor/GUIPlugin/isosurfaces.h"
+#include "VE_Conductor/GUIPlugin/polydata.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -49,9 +48,8 @@
 #include "VE_Open/XML/DataValuePair.h"
 
 #include "VE_Builder/Utilities/gui/spinctld.h"
-////@end includes
 
-#include "VE_Conductor/Framework/vistab.h"
+#include "VE_Conductor/GUIPlugin/vistab.h"
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
