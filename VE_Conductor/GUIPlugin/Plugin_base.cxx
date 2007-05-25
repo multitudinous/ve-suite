@@ -40,6 +40,13 @@
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/TexTable.h"
+#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/GUIPlugin/IconChooser.h"
+#include "VE_Conductor/GUIPlugin/ParamsDlg.h"
+#include "VE_Conductor/GUIPlugin/paraThread.h"
+#include "VE_Conductor/GUIPlugin/DataSetLoaderUI.h"
+#include "VE_Conductor/GUIPlugin/vistab.h"
+
 // EPRI TAG
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -57,6 +64,7 @@
 #include <wx/image.h>
 #include <wx/wx.h>
 #include <math.h>
+#include <wx/msgdlg.h>
 
 #include <fstream>
 
@@ -758,7 +766,7 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
       }
       else
       {
-         wxMessageDialog( NULL, _("Improperly formated ves file."), 
+         wxMessageDialog( networkFrame, _("Improperly formated ves file."), 
                   _("VES File Read Error"), wxOK | wxICON_ERROR, wxDefaultPosition );
       }
    }
@@ -1031,7 +1039,7 @@ void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
 {
    char* result = 0;
 
-   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToCE() )
+   if ( !serviceList->IsConnectedToCE() )
    {
       return;
    }
@@ -1042,7 +1050,7 @@ void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
    }
    catch (CORBA::Exception &) 
    {
-		frame->Log( "Maybe Computational Engine is down\n" );
+       serviceList->GetMessageLog()->SetMessage( "Maybe Computational Engine is down\n" );
       return;
    }
 
@@ -1072,15 +1080,14 @@ void  REI_Plugin::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 	wxString title;
 	title << wxT("Aspen Name");
 	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
-	wxMessageDialog(this, desc, title).ShowModal();
+	wxMessageDialog( networkFrame, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 {
-	VE_Conductor::CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	REI_Plugin* tempPlugin = this;
-    IconChooser* chooser = new IconChooser(this);//, "2DIcons");
+    IconChooser* chooser = new IconChooser( networkFrame );//, "2DIcons");
 	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
 	chooser->Show();
@@ -1089,7 +1096,6 @@ void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 {  
-	VE_Conductor::CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -1110,7 +1116,7 @@ void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	wxString title( compName.c_str(),wxConvUTF8);
 	//TextResultDialog * results = new TextResultDialog(this, title);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg * params = new ParamsDlg(this);
+	ParamsDlg * params = new ParamsDlg(networkFrame);
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -1146,7 +1152,6 @@ void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 {  
-	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -1166,7 +1171,7 @@ void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	std::string nw_str = serviceList->Query( status );
 	wxString title( compName.c_str(),wxConvUTF8);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg * params = new ParamsDlg(this);
+	ParamsDlg * params = new ParamsDlg(networkFrame);
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -1201,7 +1206,7 @@ void REI_Plugin::OnShowDesc(wxCommandEvent& WXUNUSED(event))
   
    desc = GetDesc();
   
-   wxMessageDialog(this, desc, title).ShowModal();
+   wxMessageDialog( networkFrame, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::OnParaView(wxCommandEvent& WXUNUSED(event))
@@ -1210,7 +1215,7 @@ void REI_Plugin::OnParaView(wxCommandEvent& WXUNUSED(event))
    // ::wxExecute("paraview", wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
    //::wxShell("paraview");
 #ifndef WIN32
-   paraThread* para_t=new paraThread(this);
+   paraThread* para_t=new paraThread(NULL);
    para_t->Create();
    para_t->Run();
 #else
@@ -1244,11 +1249,11 @@ void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
    if( !cadDialog )
    {
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
-                                                               this, ::wxNewId() );
+                                                               networkFrame, ::wxNewId() );
 
       cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
-   cadDialog->SetVjObsPtr( VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer() );
+   cadDialog->SetVjObsPtr( serviceList->GetXplorerPointer() );
    cadDialog->SetRootCADNode(veModel->GetGeometry());
    cadDialog->ShowModal();
    // Get cadnode back
@@ -1283,7 +1288,7 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    /*dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );*/
-   DataSetLoaderUI dataSetLoaderDlg( this, ::wxNewId(), 
+   DataSetLoaderUI dataSetLoaderDlg( networkFrame, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
    dataSetLoaderDlg.SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
@@ -1301,7 +1306,7 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
       veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
       veCommand->AddDataValuePair( dataValuePair );
 
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+      serviceList->SendCommandStringToXplorer( veCommand );
 
       //Clean up memory
       delete veCommand;
@@ -1331,7 +1336,7 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    //Does this need to be wrapped in something else?
    if ( CORBA::is_nil( xplorerPtr.in() ) )
    {
-      frame->Log( "Not connected to VE-Server\n" );//<< std::endl;
+      serviceList->GetMessageLog()->SetMessage( "Not connected to VE-Server\n" );//<< std::endl;
       return;
    }
    
@@ -1341,19 +1346,19 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    }
    catch ( CORBA::Exception& )
    {
-         frame->Log( "Couldn't find model\n" );//<< modelID<<std::endl;
+         serviceList->GetMessageLog()->SetMessage( "Couldn't find model\n" );//<< modelID<<std::endl;
          return;
    }
       
    if ( activeCORBAModel->dataVector.length() == 0 )
    {
-      frame->Log( "Model contains no datasets\n" );//<< modelID<<std::endl;
+      serviceList->GetMessageLog()->SetMessage( "Model contains no datasets\n" );//<< modelID<<std::endl;
       return;
    }
 
    if(!vistab)
    {
-      vistab = new Vistab (activeCORBAModel,this,
+      vistab = new Vistab (activeCORBAModel,networkFrame,
                        SYMBOL_VISTAB_IDNAME,
                        wxString(activeXMLModel->GetModelName().c_str(),wxConvUTF8),
                        SYMBOL_VISTAB_POSITION,
@@ -1455,8 +1460,8 @@ void REI_Plugin::OnModelSounds(wxCommandEvent& event)
 ////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 {
-   wxClientDC dc(this);
-   PrepareDC(dc);
+   wxClientDC dc(networkFrame);
+   networkFrame->PrepareDC(dc);
    dc.SetUserScale( userScale.first, userScale.second );
    
    /////////////////////////////////////////////////
@@ -1471,7 +1476,7 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 //	   UnSelectLink(dc);
    
    //Select Mod/Link
-   SelectMod(x, y, dc);
+   SelectMod(x, y );
    //if (m_selMod < 0)
 //	   SelectLink(x, y );
    Refresh(true);
@@ -1480,25 +1485,25 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 
    wxMenu pop_menu( _("Action"));
 
-   pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
+   //pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
 
-   pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
-   pop_menu.Append(EDIT_TAG, _("Edit Tag") );
-   pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
-   pop_menu.Append(DEL_LINK, _("Delete Link") );
-   pop_menu.Append(DEL_TAG, _("Delete Tag") );
-   pop_menu.Append(DEL_MOD, _("Del Module") );
+   //pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
+   //pop_menu.Append(EDIT_TAG, _("Edit Tag") );
+   //pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
+   //pop_menu.Append(DEL_LINK, _("Delete Link") );
+   //pop_menu.Append(DEL_TAG, _("Delete Tag") );
+   //pop_menu.Append(DEL_MOD, _("Del Module") );
 
    pop_menu.Append(SHOW_DESC, _("Show Module Description") );	
    pop_menu.Append(SHOW_RESULT, _("Show Module Result") );
    pop_menu.Append(PARAVIEW, _("ParaView 3D Result") );
 
-   pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
+   //pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
 
    // EPRI TAG
-   AppFrame* p_frame;
-   p_frame = ((AppFrame*)(parent->GetParent()->GetParent()));
-   if (p_frame->f_financial)
+   //AppFrame* p_frame;
+   //p_frame = ((AppFrame*)(parent->GetParent()->GetParent()));
+   //if (p_frame->f_financial)
    {
 	pop_menu.Append(SHOW_FINANCIAL, _("Financial Data") );
 	pop_menu.Enable(SHOW_FINANCIAL, true);
@@ -1552,20 +1557,20 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
    pop_menu.Append(SET_UI_PLUGIN_NAME, _("Set UI Plugin Name") );
    pop_menu.Enable(SET_UI_PLUGIN_NAME, true);
 
-   pop_menu.Enable(ADD_LINK_CON, false);
-   pop_menu.Enable(EDIT_TAG, false);
-   pop_menu.Enable(DEL_LINK_CON, false);
-   pop_menu.Enable(DEL_LINK, false);
-   pop_menu.Enable(DEL_TAG, false);
-   pop_menu.Enable(DEL_MOD, false);
+   //pop_menu.Enable(ADD_LINK_CON, false);
+   //pop_menu.Enable(EDIT_TAG, false);
+   //pop_menu.Enable(DEL_LINK_CON, false);
+  // pop_menu.Enable(DEL_LINK, false);
+   //pop_menu.Enable(DEL_TAG, false);
+   //pop_menu.Enable(DEL_MOD, false);
    pop_menu.Enable(SHOW_RESULT, false);
    pop_menu.Enable(PARAVIEW, false);
    pop_menu.Enable(ASPEN_MENU, false);
    pop_menu.Enable(ICON_MENU, false);
 
-   pop_menu.Enable(SHOW_LINK_CONT, false);
+   //pop_menu.Enable(SHOW_LINK_CONT, false);
 
-   if (m_selLink>=0)
+   /*if (m_selLink>=0)
    {
       pop_menu.Enable(DEL_LINK, true);
       pop_menu.Enable(SHOW_LINK_CONT, true);
@@ -1579,9 +1584,9 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
    {
       pop_menu.Enable(EDIT_TAG, true);
       pop_menu.Enable(DEL_TAG, true);
-   }
+   }*/
 
-      pop_menu.Enable(DEL_MOD, true);
+     // pop_menu.Enable(DEL_MOD, true);
       pop_menu.Enable(SHOW_RESULT, true);
       if ( Has3Ddata())
          pop_menu.Enable(PARAVIEW, true);
