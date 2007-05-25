@@ -62,7 +62,13 @@ VE_XML::XMLObject()
    m_transform = new Transform(); 
    m_type = std::string("Node");
    m_visibility = true;
+
    m_physics = false;
+   m_mass = 1.0f;
+   m_friction = 1.0f;
+   m_restitution = 0.0f;
+   m_physicsMesh = "Bounding Box";
+
    //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
    m_activeAttributeName = std::string("");
    SetObjectType("CADNode");
@@ -160,6 +166,46 @@ void CADNode::EnablePhysics()
    m_physics = true;
 }
 //////////////////////////////////
+void CADNode::SetMass( double mass )
+{
+    m_mass = mass;
+}
+//////////////////////////////////
+double CADNode::GetMass()
+{
+   return m_mass;
+}
+//////////////////////////////////
+void CADNode::SetFriction( double friction )
+{
+    m_friction = friction;
+}
+//////////////////////////////////
+double CADNode::GetFriction()
+{
+   return m_friction;
+}
+//////////////////////////////////
+void CADNode::SetRestitution( double restitution )
+{
+    m_restitution = restitution;
+}
+//////////////////////////////////
+double CADNode::GetRestitution()
+{
+   return m_restitution;
+}
+//////////////////////////////////
+void CADNode::SetPhysicsMesh( std::string physicsMesh )
+{
+    m_physicsMesh = physicsMesh;
+}
+//////////////////////////////////
+std::string CADNode::GetPhysicsMesh()
+{
+   return m_physicsMesh;
+}
+//////////////////////////////////
 std::string CADNode::GetNodeType()
 {
    return m_type;
@@ -225,7 +271,13 @@ void CADNode::_updateVEElement(std::string input)
 
    SetAttribute("id",uuid);
    SetAttribute("visibility",m_visibility);
-   SetAttribute("physics",m_physics);
+
+   SetAttribute( "physics", m_physics );
+   SetAttribute( "mass", m_mass );
+   SetAttribute( "friction", m_friction );
+   SetAttribute( "restitution", m_restitution );
+   //SetAttribute( "physics mesh", wxString( m_physicsMesh ) );
+
    SetSubElement(std::string("parent"),m_parent);
 
    if(!m_transform)
@@ -291,24 +343,58 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
          {
             if(currentElement->getAttributeNode(xercesString("visibility")))
             {
-               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
-                                                                                      "visibility",
-                                                                                      m_visibility);
+               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,"visibility",m_visibility);
             }
             else
             {
                m_visibility = true;
             }
-            if(currentElement->getAttributeNode(xercesString("physics")))
+
+            if( currentElement->getAttributeNode( xercesString( "physics" ) ) )
             {
-               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,
-                                                                                      "physics",
-                                                                                      m_physics);
+               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "physics", m_physics );
             }
             else
             {
                m_physics = false;
             }
+
+            if( currentElement->getAttributeNode( xercesString( "mass" ) ) )
+            {
+               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "mass", m_mass );
+            }
+            else
+            {
+               m_mass = 1.0f;
+            }
+
+            if( currentElement->getAttributeNode( xercesString( "friction" ) ) )
+            {
+               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "friction", m_friction );
+            }
+            else
+            {
+               m_friction = 1.0f;
+            }
+
+            if( currentElement->getAttributeNode( xercesString( "restitution" ) ) )
+            {
+               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "restitution", m_restitution );
+            }
+            else
+            {
+               m_restitution = 0.0f;
+            }
+
+            if( currentElement->getAttributeNode( xercesString( "physics mesh" ) ) )
+            {
+               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "physics mesh", m_physicsMesh );
+            }
+            else
+            {
+               m_physicsMesh = "Bounding Box";
+            }
+
             //Is there a better way to do this
             DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
             if(nameNode)
@@ -472,7 +558,12 @@ CADNode::CADNode(const CADNode& rhs,bool clone)
    m_name = rhs.m_name;
    m_type = rhs.m_type;
    m_visibility = rhs.m_visibility;
+
    m_physics = rhs.m_physics;
+   m_mass = rhs.m_mass;
+   m_friction = rhs.m_friction;
+   m_restitution = rhs.m_restitution;
+   m_physicsMesh = rhs.m_physicsMesh;
 
    //maintain a unique ID
    if(clone)
@@ -520,7 +611,13 @@ CADNode& CADNode::operator=(const CADNode& rhs)
       m_transform = new Transform(*rhs.m_transform);
       m_activeAttributeName = rhs.m_activeAttributeName;
       m_visibility = rhs.m_visibility;
+
       m_physics = rhs.m_physics;
+      m_mass = rhs.m_mass;
+      m_friction = rhs.m_friction;
+      m_restitution = rhs.m_restitution;
+      m_physicsMesh = rhs.m_physicsMesh; 
+
       //_uID = rhs._uID;
       m_parent = rhs.m_parent;
       m_name = rhs.m_name;

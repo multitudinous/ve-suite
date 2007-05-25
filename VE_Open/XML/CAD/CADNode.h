@@ -141,6 +141,30 @@ public:
    ///Enable physics for the CADNode.
    void EnablePhysics();
 
+   ///Set the mass of this CAD node.
+   void SetMass( double mass );
+
+   ///Get the mass of this CAD node.
+   double GetMass();
+
+   ///Set the friction of this CAD node.
+   void SetFriction( double friction );
+
+   ///Get the friction of this CAD node.
+   double GetFriction();
+
+   ///Set the restitution of this CAD node.
+   void SetRestitution( double restitution );
+
+   ///Get the restitution of this CAD node.
+   double GetRestitution();
+
+   ///Set the physics mesh of this CAD node.
+   void SetPhysicsMesh( std::string physicsMesh );
+
+   ///Get the physics mesh of this CAD node.
+   std::string GetPhysicsMesh();
+
    ///Get the transform of this CAD node.
    VE_XML::Transform* GetTransform();
 
@@ -195,7 +219,12 @@ protected:
    std::string m_name;///< The name of this node.
    std::string m_type;///< The type of node;
    bool m_visibility;///<Node visibilty.
+
    bool m_physics;///<Node physics.
+   double m_mass;///<Node mass.
+   double m_friction;///<Node friction.
+   double m_restitution;///<Node restitution.
+   std::string m_physicsMesh;///<Node physics mesh.
 };
 }
 template<>
