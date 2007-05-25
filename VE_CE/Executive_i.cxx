@@ -877,7 +877,10 @@ char *  Body_Executive_i::Query (  const char * command
    
    std::map< std::string, QueryThread* >::iterator queryIter;
    queryIter = queryThreads.find( iter->first );
-   //try 
+   queryIter->second->QueryData( status, moduleId );
+
+   std::string returnString;
+   while( (returnString != "NULL") && returnString.empty() )
    {
 	   queryIter->second->QueryData( status, moduleId );
 	   //iter->second->SetCurID( moduleId );
@@ -892,12 +895,8 @@ char *  Body_Executive_i::Query (  const char * command
 	   //queryString.assign( queryIter->second->GetQueryData() );
 	   queryString.assign(returnString);
    }
-   //catch (CORBA::Exception &) 
-   {
-      //_mutex.release();
-      //UnRegisterUnit( moduleName.c_str() );
-      //_mod_units.erase( iter );
-   }
+   queryString.assign(returnString);
+
    _mutex.release();
    
    return CORBA::string_dup( queryString.c_str() );

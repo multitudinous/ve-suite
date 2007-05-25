@@ -98,6 +98,7 @@
 
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
+#include "VE_Installer/include/VEConfig.h"
 
 // --- C/C++ Libraries --- //
 #include <sstream>
@@ -250,14 +251,16 @@ navPane( 0 ),
 viewlocPane( 0 ),
 _cadDialog( 0 )
 {
+    serviceList = VE_Conductor::CORBAServiceList::instance();
+
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( size_t i = 0; i < ::wxGetApp().argc; ++i )
     {
         tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
-    serviceList = VE_Conductor::CORBAServiceList::instance();
     serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
+
     preferences = new UserPreferences( this, ::wxNewId(), 
                                        SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
                                        SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
@@ -1817,8 +1820,16 @@ void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewRevision(wxCommandEvent& WXUNUSED(event))
 {
-   wxMessageBox( _("Current Revision: 6491"),_("Revision"), 
-                 wxOK | wxICON_INFORMATION );
+    std::ostringstream revNum;
+    revNum << VES_MAJOR_VERSION << "." 
+        << VES_MINOR_VERSION << "." 
+        << VES_PATCH_VERSION << "." 
+        << SVN_VES_REVISION;
+        
+    wxString tempNum = wxString("Current Revision: ", wxConvUTF8 ) + 
+        wxString(revNum.str().c_str(), wxConvUTF8 );
+    
+    wxMessageBox( tempNum, _("Revision"), wxOK | wxICON_INFORMATION );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewContacts(wxCommandEvent& WXUNUSED(event))

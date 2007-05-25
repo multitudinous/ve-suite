@@ -50,31 +50,31 @@ QueryThread::~QueryThread ()
 ////////////////////////////////////////////////////////////////////////////////
 int QueryThread::svc( void )
 {		  
-   while ( !shutdown ) 
-   {
-      while ( isComplete ) 
-      {
-         ACE_OS::sleep(1); 	    
-      }
-      
-      _mutex.acquire();
-      try 
-      {
-         _mod->_non_existent();
-         _mod->SetCurID( moduleId );
-         queryData.assign( _mod->Query( CORBA::string_dup( queryCommand.c_str() ) ) );
-      } 
-      catch (CORBA::Exception &ex ) 
-      {
-		  std::cout<< "Module Query Messed up." << std::endl;
-          std::cerr << "CORBA exception raised! : " <<ex._name()<< std::endl;
-          std::cerr << ex._info().c_str()<<std::endl;		  
-		  queryData = "NULL";
-      }
-      _mutex.release();
-      isComplete = true;
-   }
-   return 1;
+    while( !shutdown ) 
+    {
+        while( isComplete ) 
+        {
+            ACE_OS::sleep(1); 	    
+        }
+
+        _mutex.acquire();
+        try 
+        {
+            _mod->_non_existent();
+            _mod->SetCurID( moduleId );
+            queryData.assign( _mod->Query( CORBA::string_dup( queryCommand.c_str() ) ) );
+        } 
+        catch( CORBA::Exception &ex ) 
+        {
+            std::cout << "Module Query Messed up." << std::endl;
+            std::cerr << "CORBA exception raised! : " << ex._name() << std::endl;
+            std::cerr << ex._info().c_str() << std::endl;
+            queryData = "NULL";
+        }
+        _mutex.release();
+        isComplete = true;
+    }
+    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void QueryThread::QueryData( std::string command, CORBA::Long modId )

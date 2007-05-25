@@ -1091,7 +1091,8 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
         VE_XML::DataValuePair* meshType = new VE_XML::DataValuePair();
         meshType->SetDataType( "STRING" );
         meshType->SetDataName( std::string( "Mesh Type" ) );
-        meshType->SetDataString( meshProperties->GetStringSelection().c_str() );
+        meshType->SetDataString( 
+            ConvertUnicode( meshProperties->GetStringSelection() ) );
         _instructions.push_back( meshType );
 
         _sendCommandsToXplorer();

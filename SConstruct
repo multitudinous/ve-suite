@@ -23,6 +23,13 @@ os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'
 if not os.environ.has_key('FLAGPOLL_PATH'):
    os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
 
+cmd_call = os.popen('svnversion')
+svn_str = cmd_call.read().strip()
+if None != cmd_call.close():
+    print "Unable to determine local subversion revision number %s"%svn_str
+else:
+    print "Subversion revision number %s"%svn_str
+
 import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
@@ -318,6 +325,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','_OSG','VTK44'] )
+   baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
