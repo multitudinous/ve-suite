@@ -30,121 +30,192 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef BODY_AMI_UI_HANDLER_I_H
-#define BODY_AMI_UI_HANDLER_I_H
-/*!\file Body_AMI_UIHandler_i.h
-*Interface for sending information from Xplorer Asynchronously to Condutor 
+#ifndef BODY_AMI_VEXPLORER_HANDLER_I_H
+#define BODY_AMI_VEXPLORER_HANDLER_I_H
+/*!\file Body_AMI_VEXplorerHandler_i.h
+*Interface for sending information from Xplorer Asynchronously  
 */
 
-/*!\class Body_AMI_UIHandler_i
+/*!\class Body_AMI_VEXplorerHandler_i
 *
 */
 
 #include "VE_Open/skel/moduleS.h"
 
-class Body_AMI_UIHandler_i: public virtual POA_Body::AMI_UIHandler
+class VE_OPEN_MODULE_EXPORTS Body_AMI_VEXplorerHandler_i
+  : public virtual POA_Body::AMI_VEXplorerHandler
 {
 public:
-    ///Constructor
-    Body_AMI_UIHandler_i( void );
-
-    ///Destructor
-    virtual ~Body_AMI_UIHandler_i( void );
-
-    ///Update the Network from Xplorer
+    ///Constructor 
+    Body_AMI_VEXplorerHandler_i(void);
+  
+    ///Destructor 
+    virtual ~Body_AMI_VEXplorerHandler_i(void);
+  
+    ///Get the status message
     virtual
-    void UpdateNetwork()
+    void GetStatusMessage( const char * ami_return_val )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-
-    ///Update the Network from Xplorer
+  
+    ///Get the status message
     virtual
-    void UpdateNetwork_excep(
+    void GetStatusMessage_excep(
       ::Messaging::ExceptionHolder * excep_holder
     )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException
     ));
-
-    ///???
+  
+    ///Set the params 
     virtual
-    void UpdateModuleUI( )
+    void SetParams( )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-
-    ///???
+  
+    ///Set the params 
     virtual
-    void UpdateModuleUI_excep(
+    void SetParams_excep(
       ::Messaging::ExceptionHolder * excep_holder
     )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException
     ));
-
-    ///???
+  
+    ///Set the ID
     virtual
-    void UpdateModuleResult( )
+    void SetID( )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-
-    ///???
+  
+    ///Set the ID
     virtual
-    void UpdateModuleResult_excep(
+    void SetID_excep(
       ::Messaging::ExceptionHolder * excep_holder
     )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException
     ));
-
-    ///???
+  
+    ///Get the ID
     virtual
-    void UpdateLinkContent( )
+    void GetID( ::CORBA::Long ami_return_val )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-
-    ///???
+  
+    ///Get the ID
     virtual
-    void UpdateLinkContent_excep(
+    void GetID_excep(
       ::Messaging::ExceptionHolder * excep_holder
     )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException
     ));
-
-    ///???
+  
+    ///Set the name
     virtual
-    void Raise( )
+    void SetName( )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-
-    ///???
+  
+    ///Set the name
     virtual
-    void Raise_excep(
+    void SetName_excep(
       ::Messaging::ExceptionHolder * excep_holder
     )
     ACE_THROW_SPEC ((
       ::CORBA::SystemException
     ));
-    ///Set the Xplorer data for Conductor to retrieve
+  
+    ///Get the name
     virtual
-    void SetXplorerData( )
+    void GetName ( const char * ami_return_val)
     ACE_THROW_SPEC ((
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-    ///Set the Xplorer data for Conductor to retrieve
+  
+    ///Get the name
     virtual
-    void SetXplorerData_excep(
+    void GetName_excep(
+      ::Messaging::ExceptionHolder * excep_holder
+    )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException
+    ));
+  
+    ///Set the network
+    virtual
+    void SetNetwork( )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    ));
+  
+    ///Set the network
+    virtual
+    void SetNetwork_excep(
+      ::Messaging::ExceptionHolder * excep_holder
+    )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException
+    ));
+  
+    ///Set the command
+    virtual
+    void SetCommand( )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    ));
+  
+    ///Set the command
+    virtual
+    void SetCommand_excep(
+      ::Messaging::ExceptionHolder * excep_holder
+    )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException
+    ));
+  
+    ///Register the UI
+    virtual
+    void RegisterUI( )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    ));
+  
+    ///Register the UI
+    virtual
+    void RegisterUI_excep (
+      ::Messaging::ExceptionHolder * excep_holder
+    )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException
+    ));
+  
+    ///UnRegister the UI
+    virtual
+    void UnRegisterUI( )
+    ACE_THROW_SPEC ((
+      ::CORBA::SystemException,
+      ::Error::EUnknown
+    ));
+  
+    ///UnRegister the UI
+    virtual
+    void UnRegisterUI_excep (
       ::Messaging::ExceptionHolder * excep_holder
     )
     ACE_THROW_SPEC ((
