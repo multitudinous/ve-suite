@@ -14,27 +14,10 @@ srcs = Split("""
    NavigationPane.cxx 
    paraThread.cxx 
    PluginLoader.cxx 
-   SoundsPane.cxx 
    ViewLocPane.cxx
-   TBToolBar.cxx
-   TransformUI.cxx
-   vistab.cxx
-   vectors.cxx
-   advancedvectors.cxx
-   contours.cxx
-   advancedcontours.cxx
-   streamlines.cxx
-   advancedstreamlines.cxx
-   isosurfaces.cxx
-   polydata.cxx
-   ScalarToolsDlg.cxx
-   UI_TeacherTab.cxx
-   UI_TransientDialog.cxx
    UserPreferences.cxx
    Splitter.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
-   TransferFunctionDlg.cxx
-   advancedisosurface.cxx
    MainToolBar.cxx
 """)
 
