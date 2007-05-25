@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
+#include "VE_Conductor/GUIPlugin/CADNodeManagerDlg.h"
 #include "VE_Conductor/Utilities/CADNodeMenu.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
 #include "VE_Conductor/Utilities/CADNodePropsDlg.h"

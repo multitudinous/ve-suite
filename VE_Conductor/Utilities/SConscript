@@ -10,15 +10,11 @@ utils_srcs = Split("""
    Polygon.cxx
    Tag.cxx
    CADTreeBuilder.cxx
-   CADNodeManagerDlg.cxx
    CADMaterialEditMenu.cxx
    CADNodeMenu.cxx 
    CADNodePropsDlg.cxx
    CADOpacitySliderDlg.cxx
-   DualSlider.cxx
    ROIDialog.cxx
-   BaseDialog.cxx
-   WPDialog.cxx
    NetworkDataBuffer.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
 """)
@@ -33,15 +29,11 @@ utils_h = Split("""
    Polygon.h
    Tag.h
    CADTreeBuilder.h
-   CADNodeManagerDlg.h
    CADMaterialEditMenu.h
    CADNodeMenu.h 
    CADNodePropsDlg.h
    CADOpacitySliderDlg.h
-   DualSlider.h
    ROIDialog.h
-   BaseDialog.h
-   WPDialog.h
    NetworkDataBuffer.h
 """)
 
