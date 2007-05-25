@@ -61,7 +61,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 		
-#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
+#include "VE_Conductor/GUIPlugin/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>
