@@ -77,6 +77,8 @@ class GeometryDialog;
 class FinancialDialog;
 class GeometryDataBuffer;
 class SummaryResultDialog;
+class SoundsPane;
+class Vistab;
 
 namespace VE_Conductor
 {
@@ -85,12 +87,20 @@ namespace VE_Conductor
 
 namespace VE_XML
 {
-   class Command;
-   namespace VE_Model
-   {
-      class Model;
-      class Port;
-   }
+    class Command;
+namespace VE_Model
+{
+    class Model;
+    class Port;
+}
+}
+
+namespace VE_Conductor
+{
+namespace GUI_Utilities
+{
+    class CADNodeManagerDlg;
+}
 }
 
 typedef std::vector< wxPoint > POLY;
@@ -213,6 +223,7 @@ public:
    bool SelectMod( int x, int y );
 
    void OnMRightDown( wxMouseEvent &event );
+   bool SetActiveModel( void );
    ///Still need to be documented
    void OnShowResult( wxCommandEvent& event );
    void OnParaView( wxCommandEvent& event );
@@ -303,7 +314,9 @@ protected:
    std::map< std::string, wxImage > defaultIconMap;
    
    wxScrolledWindow* networkFrame;
-   
+   SoundsPane* _soundsDlg;
+   Vistab* vistab;
+   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    int m_selFrPort; 
    int m_selToPort; 
    int m_selLink; 

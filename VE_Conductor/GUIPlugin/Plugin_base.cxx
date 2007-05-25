@@ -32,6 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
+//set user dialog size
+//
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 
 #include <iostream>
@@ -46,6 +48,7 @@
 #include "VE_Conductor/GUIPlugin/paraThread.h"
 #include "VE_Conductor/GUIPlugin/DataSetLoaderUI.h"
 #include "VE_Conductor/GUIPlugin/vistab.h"
+#include "VE_Conductor/GUIPlugin/SoundsPane.h"
 
 // EPRI TAG
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
@@ -56,6 +59,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/CAD/CADAssembly.h"
 		
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 
@@ -1251,7 +1255,7 @@ void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                networkFrame, ::wxNewId() );
 
-      cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+      //cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
    cadDialog->SetVjObsPtr( serviceList->GetXplorerPointer() );
    cadDialog->SetRootCADNode(veModel->GetGeometry());
@@ -1291,7 +1295,7 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    DataSetLoaderUI dataSetLoaderDlg( networkFrame, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
-   dataSetLoaderDlg.SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   //dataSetLoaderDlg.SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    //cadDialog->SetVjObsPtr( xplorerPtr.in() );
    if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
    {
@@ -1334,7 +1338,7 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    VjObs::Model* activeCORBAModel; 
 
    //Does this need to be wrapped in something else?
-   if ( CORBA::is_nil( xplorerPtr.in() ) )
+   if ( serviceList->IsConnectedToXplorer() )
    {
       serviceList->GetMessageLog()->SetMessage( "Not connected to VE-Server\n" );//<< std::endl;
       return;
@@ -1342,7 +1346,7 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    
    try
    {
-      activeCORBAModel = xplorerPtr->GetModel(modelID);
+      activeCORBAModel = serviceList->GetXplorerPointer()->GetModel(modelID);
    }
    catch ( CORBA::Exception& )
    {
@@ -1380,7 +1384,8 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    wxArrayString vectorTextureDatasets;
    bool hasScalarTextures = false;
    bool hasVectorTextures = false;
-
+   bool isDataSet = false;
+   
    for(size_t i = 0; i < nInformationPackets; i++)
    {
       VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
@@ -1451,7 +1456,7 @@ void REI_Plugin::OnModelSounds(wxCommandEvent& event)
    if( !_soundsDlg )
    {
       _soundsDlg = new SoundsPane( GetModel());
-      _soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+      //_soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
    }
    _soundsDlg->SetActiveModel( GetModel());
    _soundsDlg->Show();
@@ -1462,7 +1467,7 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 {
    wxClientDC dc(networkFrame);
    networkFrame->PrepareDC(dc);
-   dc.SetUserScale( userScale.first, userScale.second );
+   //dc.SetUserScale( userScale.first, userScale.second );
    
    /////////////////////////////////////////////////
    wxPoint evtpos = event.GetLogicalPosition( dc );
@@ -1479,7 +1484,7 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
    SelectMod(x, y );
    //if (m_selMod < 0)
 //	   SelectLink(x, y );
-   Refresh(true);
+   //Refresh(true);
    //Update();
    /////////////////////////////////////////////////
 
@@ -1593,8 +1598,8 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
      pop_menu.Enable(ASPEN_MENU, true);
      pop_menu.Enable(ICON_MENU, true);
 
-   action_point = event.GetLogicalPosition(dc);
-   PopupMenu(&pop_menu, event.GetPosition());
+   wxPoint action_point = event.GetLogicalPosition(dc);
+   networkFrame->PopupMenu(&pop_menu, event.GetPosition());
 
    m_selFrPort = -1; 
    m_selToPort = -1; 
@@ -1608,4 +1613,21 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 void REI_Plugin::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
 {
    SetActiveModel();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool REI_Plugin::SetActiveModel()
+{
+    // Create the command and data value pairs
+    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+    dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
+    dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
+    VE_XML::Command* veCommand = new VE_XML::Command();
+    veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
+    veCommand->AddDataValuePair( dataValuePair );
+    
+    bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+    
+    //Clean up memory
+    delete veCommand;
+    return connected;
 }
