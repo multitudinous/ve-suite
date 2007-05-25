@@ -183,7 +183,7 @@ void PhysicsSimulator::InitializePhysicsSimulation( void )
     m_dispatcher = new btCollisionDispatcher();
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
-    m_dispatcher->setNearCallback( customNearCallback );
+    //m_dispatcher->setNearCallback( customNearCallback );
 #else
 #endif
 

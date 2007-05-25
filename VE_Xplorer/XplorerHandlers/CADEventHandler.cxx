@@ -293,6 +293,24 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             if( newPart->HasPhysics() )
             {
                 partNode->InitPhysics();
+
+                partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
+                partNode->GetPhysicsRigidBody()->setFriction( newPart->GetFriction() );
+                partNode->GetPhysicsRigidBody()->setRestitution( newPart->GetRestitution() );
+                
+                std::string physicsMesh = newPart->GetPhysicsMesh();
+                if( physicsMesh == "Bounding Box" )
+                {
+                    partNode->GetPhysicsRigidBody()->BoundingBoxShape();
+                }
+                else if( physicsMesh == "Convex" )
+                {
+                    partNode->GetPhysicsRigidBody()->ConvexShape();
+                }
+                else if( physicsMesh == "Static Concave" )
+                {
+                    partNode->GetPhysicsRigidBody()->StaticConcaveShape();
+                }
             }
 
             vprDEBUG( vesDBG, 1 ) <<"|\t---Setting node properties---"<< std::endl << vprDEBUG_FLUSH;
