@@ -29,6 +29,7 @@ if None != cmd_call.close():
     print "Unable to determine local subversion revision number %s"%svn_str
 else:
     print "Subversion revision number %s"%svn_str
+vesSVNRevision = 'SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str
 
 import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
@@ -201,7 +202,7 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from','')
 
 Export('opts', 'vtk_options', 'osg_options',
          'xerces_options','wxwidgets_options',
-         'VE_SUITE_VERSION')
+         'VE_SUITE_VERSION', 'vesSVNRevision')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
@@ -325,7 +326,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
    baseEnv.Append( CPPDEFINES = ['_TAO','_OSG','VTK44'] )
-   baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
+   #baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )

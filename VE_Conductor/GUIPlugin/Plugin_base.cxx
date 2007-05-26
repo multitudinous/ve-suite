@@ -1631,3 +1631,8 @@ bool REI_Plugin::SetActiveModel()
     delete veCommand;
     return connected;
 }
+////////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::SetDialogSize( wxRect dialogSize )
+{
+    this->dialogSize = dialogSize;
+}

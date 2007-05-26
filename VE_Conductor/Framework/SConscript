@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX')
+Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX vesSVNRevision')
 
 srcs = Split("""
    App.cxx 
@@ -21,6 +21,7 @@ srcs = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
+env.Append( CPPDEFINES = [vesSVNRevision] )
 env.Append(LIBS = ['VE_ConductorLib', 'GUIPlugin', 'VE_XML','VE_Conductor_Utilities',
                    'VE_OpenModuleLib'])
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),

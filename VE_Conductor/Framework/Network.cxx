@@ -1861,6 +1861,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 
   modules[id].GetPlugin()->SetID(id);
   modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+  modules[id].GetPlugin()->SetDialogSize( frame->GetAppropriateSubDialogSize() );
   //modules.push_back(mod);
   sbboxes.push_back(bbox);
   //  for (i=0; i<modules.size(); i++)
@@ -2444,6 +2445,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+        tempPlugin->SetDialogSize( frame->GetAppropriateSubDialogSize() );
         if ( model->GetIconFilename() != "DefaultPlugin" )
         {   
          tempPlugin->SetImageIcon( model->GetIconFilename(), 

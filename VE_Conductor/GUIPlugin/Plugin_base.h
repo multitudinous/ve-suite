@@ -248,6 +248,7 @@ public:
    void OnModelSounds(wxCommandEvent &event);
    void OnShowIconChooser(wxCommandEvent &event);
 
+   void SetDialogSize( wxRect dialogSize );
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 
@@ -323,6 +324,7 @@ protected:
    int m_selLinkCon; 
    int m_selTag; 
    int m_selTagCon; 
+   wxRect dialogSize;
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
    DECLARE_EVENT_TABLE()
 };
