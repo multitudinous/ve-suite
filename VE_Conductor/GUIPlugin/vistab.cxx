@@ -32,8 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Utilities/TBToolBar.h"
-//#include "VE_Conductor/Framework/App.h"
-//#include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Utilities/UI_TransientDialog.h"
 #include "VE_Conductor/GUIPlugin/vectors.h"
 #include "VE_Conductor/GUIPlugin/contours.h"
@@ -174,10 +172,6 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    {
       _setActiveDataset(0);
    }
-   //_vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
-   SetSize( _vistabPosition.x,_vistabPosition.y,
-            _vistabPosition.width,wxDefaultCoord,
-            wxSIZE_AUTO );
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
@@ -466,7 +460,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_STYLE );
    }
 
-   scalarContour->SetSize(_vistabPosition);
+   scalarContour->SetSize( this->GetRect() );
    scalarContour->ShowModal();
 }
 /////////////////////////////////////////////////////////
@@ -488,7 +482,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_CONTOURS_STYLE,"VECTOR" );
    }
 
-   vectorContour->SetSize(_vistabPosition);
+   vectorContour->SetSize( this->GetRect() );
    vectorContour->ShowModal();
 }
 ////////////////////////////////////////////////////////////
@@ -509,7 +503,7 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_STREAMLINES_SIZE, 
                   SYMBOL_STREAMLINES_STYLE );
    }
-   streamline->SetSize(_vistabPosition);
+   streamline->SetSize( this->GetRect() );
    
    if ( streamline->ShowModal() == wxID_OK )
    {
@@ -548,7 +542,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
 	  isosurface->SetActiveScalar(_activeScalarName);
    }
 
-   isosurface->SetSize(_vistabPosition);
+   isosurface->SetSize( this->GetRect() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
    isosurface->SetScalarRange( _activeScalarName, _activeScalarRange );
    isosurface->SetAvailableScalars( _availableSolutions["MESH_SCALARS"] );
@@ -566,8 +560,8 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
       _tbTools = new TextureBasedToolBar (this,-1);
    }
 
-   _tbTools->SetSize(_vistabPosition.x, _vistabPosition.y, -1, -1, wxSIZE_USE_EXISTING);
-   _tbTools->SetSubDialogSize(_vistabPosition);
+   _tbTools->SetSize(this->GetSize().x, this->GetSize().y, -1, -1, wxSIZE_USE_EXISTING);
+   _tbTools->SetSubDialogSize( this->GetSize() );
    _tbTools->SetVectors(_availableSolutions["TEXTURE_VECTORS"]);
    _tbTools->SetScalars(_availableSolutions["TEXTURE_SCALARS"]);
 
@@ -594,7 +588,7 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_POLYDATA_SIZE, 
                   SYMBOL_POLYDATA_STYLE );
    } 
-   polydata->SetSize(_vistabPosition);
+   polydata->SetSize(this->GetRect());
    polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    polydata->SetActiveScalar(_activeScalarName);
    polydata->ShowModal();

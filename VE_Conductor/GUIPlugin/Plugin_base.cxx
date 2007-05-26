@@ -112,7 +112,17 @@ REI_Plugin::REI_Plugin() :
    numberOfOutputPorts( 0 ),
    inputsDialog( 0 ),
    resultsDialog( 0 ),
-   portsDialog( 0 )
+   portsDialog( 0 ),
+   vistab( 0 ),
+   iconFilename( "DefaultPlugin" ),
+    _soundsDlg( 0 ),
+    cadDialog( 0 ),
+    m_selFrPort( 0 ),
+    m_selToPort( 0 ),
+    m_selLink( 0 ),
+    m_selLinkCon( 0 ),
+    m_selTag( 0 ),
+    m_selTagCon( 0 )
 { 
    pos = wxPoint(0,0); //default position
 
@@ -129,9 +139,6 @@ REI_Plugin::REI_Plugin() :
    poly[3]=wxPoint(0,icon_h);
   
    veModel = new Model();
-   
-   iconFilename = "DefaultPlugin";
-   
    defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
    defaultIconMap[ "isosurface.xpm" ] = wxImage( isosurface_xpm );
    defaultIconMap[ "ROItb.xpm" ] = wxImage( ROItb_xpm );
@@ -777,37 +784,37 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
 
    //
 }
-/////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, long *var)
 {
   _int[vname]=var;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, double *var)
 {
   _double[vname]=var;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, std::string *var)
 {
   _string[vname]=var;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, std::vector<long> *var)
 {
   _int1D[vname]=var;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, std::vector<double> *var)
 {
   _double1D[vname]=var;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::RegistVar(std::string vname, std::vector<std::string> *var)
 {
   _string1D[vname]=var;
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::FinancialData ()
 {
   if(financial_dlg == NULL)
@@ -815,13 +822,19 @@ void REI_Plugin::FinancialData ()
   
   financial_dlg->Show();
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::ViewInputVariables( void )
 {
-   if ( inputsDialog )
+   if( inputsDialog )
    {
       inputsDialog->Destroy();
       inputsDialog = 0;
+   }
+   
+   if( veModel->GetNumberOfInputs() == 0 )
+   {
+       serviceList->GetMessageLog()->SetMessage( "Model contains no input variables\n" );
+       return;
    }
 
    inputsDialog = new SummaryResultDialog(NULL, wxT("Input Variables"), wxSize(560, 400));
@@ -842,13 +855,19 @@ void REI_Plugin::ViewInputVariables( void )
 ///////////////////////////////////////////////
 void REI_Plugin::ViewResultsVariables( void )
 {
-   if ( resultsDialog )
+   if( resultsDialog )
    {
       resultsDialog->Destroy();
       resultsDialog = 0;
    }
    
-   resultsDialog = new SummaryResultDialog(NULL, wxT("Results Variables"), wxSize(560, 400));
+    if( veModel->GetNumberOfResults() == 0 )
+    {
+        serviceList->GetMessageLog()->SetMessage( "Model contains no results variables\n" );
+        return;
+    }
+
+    resultsDialog = new SummaryResultDialog(NULL, wxT("Results Variables"), wxSize(560, 400));
    // Get all the inputs form the model
    for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
    {
@@ -1091,9 +1110,10 @@ void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 {
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	REI_Plugin* tempPlugin = this;
-    IconChooser* chooser = new IconChooser( networkFrame );//, "2DIcons");
+    IconChooser* chooser = new IconChooser( networkFrame );
 	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
+    chooser->SetSize( dialogSize );
 	chooser->Show();
    //delete chooser;
 }
@@ -1120,7 +1140,8 @@ void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	wxString title( compName.c_str(),wxConvUTF8);
 	//TextResultDialog * results = new TextResultDialog(this, title);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg * params = new ParamsDlg(networkFrame);
+	ParamsDlg* params = new ParamsDlg(networkFrame);
+    params->SetSize( dialogSize );
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -1176,6 +1197,7 @@ void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	wxString title( compName.c_str(),wxConvUTF8);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
 	ParamsDlg * params = new ParamsDlg(networkFrame);
+    params->SetSize( dialogSize );
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -1255,7 +1277,7 @@ void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                networkFrame, ::wxNewId() );
 
-      //cadDialog->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+      cadDialog->SetSize( dialogSize );
    }
    cadDialog->SetVjObsPtr( serviceList->GetXplorerPointer() );
    cadDialog->SetRootCADNode(veModel->GetGeometry());
@@ -1281,22 +1303,11 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    
    // Here we launch a dialog for a specific plugins input values
    VE_XML::VE_Model::Model* veModel = GetModel();
-   //DataSetLoaderUI* dataSetLoaderDlg = 0;
-   /*if ( CORBA::is_nil( xplorerPtr.in() ) )
-   {
-      ((AppFrame*)(parent->GetParent()->GetParent()))->ConVEServer();
-      SetXplorerInterface( ((AppFrame*)(parent->GetParent()->GetParent()))->GetXplorerObject() );
-      if ( CORBA::is_nil( xplorerPtr.in() ) )
-         return;
-   }*/
-   /*dataSetLoaderDlg = new DataSetLoaderUI( this, ::wxNewId(), 
-               SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
-               SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );*/
    DataSetLoaderUI dataSetLoaderDlg( networkFrame, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
-   //dataSetLoaderDlg.SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
-   //cadDialog->SetVjObsPtr( xplorerPtr.in() );
+   dataSetLoaderDlg.SetSize( dialogSize );
+
    if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
    {
       //Now send the data to xplorer
@@ -1316,9 +1327,6 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
       delete veCommand;
       veCommand = 0;
    }
-
-  // delete dataSetLoaderDlg;
-   //dataSetLoaderDlg = 0;
 }
 ///////////////////////////////////////////
 void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
@@ -1334,16 +1342,8 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
 
    //Get the active model from the CORBA side
    ///Should this be a member variable?
-  // VjObs::Model_var activeCORBAModel; 
    VjObs::Model* activeCORBAModel; 
 
-   //Does this need to be wrapped in something else?
-   if ( serviceList->IsConnectedToXplorer() )
-   {
-      serviceList->GetMessageLog()->SetMessage( "Not connected to VE-Server\n" );//<< std::endl;
-      return;
-   }
-   
    try
    {
       activeCORBAModel = serviceList->GetXplorerPointer()->GetModel(modelID);
@@ -1368,10 +1368,15 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
                        SYMBOL_VISTAB_POSITION,
                        SYMBOL_VISTAB_SIZE,
                        SYMBOL_VISTAB_STYLE );
+       vistab->SetSize( dialogSize );
+       vistab->SetSize( dialogSize.x,dialogSize.y, dialogSize.width,
+            wxDefaultCoord, wxSIZE_AUTO );
    }
    else
    {
       vistab->SetActiveModel(activeCORBAModel);
+       vistab->SetSize( dialogSize.x,dialogSize.y, dialogSize.width,
+            wxDefaultCoord, wxSIZE_AUTO );
    }
    
    size_t nInformationPackets = activeXMLModel->GetNumberOfInformationPackets();
@@ -1419,12 +1424,11 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
 
    if(hasScalarTextures)
    {
-      //std::cout<<"Found scalar texture directory"<<std::endl;
       vistab->SetTextureData(scalarTextureDatasets,"TEXTURE_SCALARS");
    }
+   
    if(hasVectorTextures)
    {
-      //std::cout<<"Found vector texture directory"<<std::endl;
       vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
    }
 
@@ -1456,39 +1460,28 @@ void REI_Plugin::OnModelSounds(wxCommandEvent& event)
    if( !_soundsDlg )
    {
       _soundsDlg = new SoundsPane( GetModel());
-      //_soundsDlg->SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+      _soundsDlg->SetSize( dialogSize );
    }
    _soundsDlg->SetActiveModel( GetModel());
    _soundsDlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::OnMRightDown(wxMouseEvent& event)
 {
-   wxClientDC dc(networkFrame);
-   networkFrame->PrepareDC(dc);
+   // This function opens a plugins dialog when double clicked on the design canvas
+   wxClientDC dc( networkFrame );
+   networkFrame->DoPrepareDC( dc );
    //dc.SetUserScale( userScale.first, userScale.second );
-   
-   /////////////////////////////////////////////////
    wxPoint evtpos = event.GetLogicalPosition( dc );
-   long x = evtpos.x;
-   long y = evtpos.y;
+   //If this is not the plugin then move on to the next one
+   if ( !SelectMod( evtpos.x, evtpos.y ) )
+   {
+       event.Skip();
+       return;
+   }
    
-   //Clear selections
-   //if (m_selMod >= 0)
-//	   UnSelectMod(dc);
-   //if (m_selLink >= 0)
-//	   UnSelectLink(dc);
-   
-   //Select Mod/Link
-   SelectMod(x, y );
-   //if (m_selMod < 0)
-//	   SelectLink(x, y );
-   //Refresh(true);
-   //Update();
-   /////////////////////////////////////////////////
-
-   wxMenu pop_menu( _("Action"));
+   wxString menuName = name + wxString( " Menu", wxConvUTF8 );
+   wxMenu pop_menu( menuName );
 
    //pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
 
