@@ -69,7 +69,7 @@
 #include "VE_Conductor/xpm/ToolBar/WorldCoButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/WorldCoButtonSelect.xpm"
 
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

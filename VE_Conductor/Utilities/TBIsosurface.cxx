@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/TBIsosurface.h"
-#include "VE_Conductor/GUIPlugin/vistab.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include <wx/sizer.h>
@@ -45,6 +44,8 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/msgdlg.h>
+#include <wx/button.h>
+
 #include <iostream>
 BEGIN_EVENT_TABLE( TextureBasedIsosurfaceDlg, wxDialog )
    EVT_SLIDER(TBISOSURFACE_PLANE_SLIDER, TextureBasedIsosurfaceDlg::_onUpdateIsoSurface)
@@ -162,7 +163,7 @@ void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED(ev
    catch(...)
    {
       {
-         wxMessageBox( "Invalid Parent","Communication Failure", 
+         wxMessageBox( _("Invalid Parent"),_("Communication Failure"), 
             wxOK | wxICON_INFORMATION );
          if(newCommand)
          {
@@ -178,7 +179,7 @@ void TextureBasedIsosurfaceDlg::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    int selectionIndex = 0;
    for(size_t i = 0; i < _scalarNames.Count(); i++)
    {
-      if(!_scalarNames[i].Cmp(_colorByScalarName.c_str()) )
+      if(!_scalarNames[i].Cmp( wxString( _colorByScalarName.c_str(), wxConvUTF8 ) ) )
       {
          selectionIndex = i;
          break;
@@ -198,7 +199,7 @@ void TextureBasedIsosurfaceDlg::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
    scalarSelector.SetSelection(selectionIndex);
    if (scalarSelector.ShowModal() == wxID_OK)
    {
-      _colorByScalarName = scalarSelector.GetStringSelection();
+      _colorByScalarName = ConvertUnicode( scalarSelector.GetStringSelection() );
    }
 }
 

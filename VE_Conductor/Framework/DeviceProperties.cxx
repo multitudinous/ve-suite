@@ -1,4 +1,4 @@
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Conductor/Framework/DeviceProperties.h"
 #include "VE_Conductor/Framework/App.h"

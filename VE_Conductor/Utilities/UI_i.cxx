@@ -29,11 +29,9 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/UI_i.h"
-#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/Utilities/UI_i.h"
+#include "VE_Conductor/Utilities/OrbThread.h"
 
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/DataValuePair.h"

@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Conductor/Framework/Frame.h"
 
@@ -46,7 +46,7 @@
 #include <wx/filename.h>
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
-#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/Utilities/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/TexTable.h"

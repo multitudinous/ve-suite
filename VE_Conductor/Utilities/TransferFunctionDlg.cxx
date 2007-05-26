@@ -31,9 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/TransferFunctionDlg.h"
-#include "VE_Conductor/Framework/Frame.h"
-
-#include <wx/app.h>
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -57,7 +54,7 @@ TransferFunctionDialog::TransferFunctionDialog(wxWindow* parent, int id,std::str
 :BaseDialog(parent,id,title)
 {
    _buildGUI();
-   SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   //SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
 }
 ///////////////////////
 ///Destructor        //

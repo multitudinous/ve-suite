@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 //set user dialog size
 //
@@ -42,7 +42,7 @@
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/TexTable.h"
-#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/Utilities/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/IconChooser.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
 #include "VE_Conductor/GUIPlugin/paraThread.h"

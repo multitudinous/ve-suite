@@ -42,7 +42,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 using namespace VE_Conductor::GUI_Utilities;

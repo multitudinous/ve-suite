@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
 
 #include "VE_Conductor/GUIPlugin/PortDialog.h"
@@ -39,7 +39,7 @@
 
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
-#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/Utilities/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/TextResultDialog.h"
 #include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
 #include "VE_Conductor/GUIPlugin/IconChooser.h"

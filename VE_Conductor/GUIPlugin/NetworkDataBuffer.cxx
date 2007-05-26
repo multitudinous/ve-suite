@@ -36,7 +36,7 @@
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 

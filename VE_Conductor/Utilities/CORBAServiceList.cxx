@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
-#include "VE_Conductor/GUIPlugin/OrbThread.h"
+#include "VE_Conductor/Utilities/OrbThread.h"
 
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <ace/SString.h>
