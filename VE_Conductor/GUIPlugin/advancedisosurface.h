@@ -30,12 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef _ADVANCEDISOSURFACES_H_
 #define _ADVANCEDISOSURFACES_H_
 
-#include "VE_Conductor/GUIPlugin/DualSlider.h"
+#include "VE_Conductor/Utilities/DualSlider.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
 ////@end includes

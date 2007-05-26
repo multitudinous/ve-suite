@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
-#include "VE_Conductor/GUIPlugin/TBToolBar.h"
-#include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/GUIPlugin/UI_TransientDialog.h"
+#include "VE_Conductor/Utilities/TBToolBar.h"
+//#include "VE_Conductor/Framework/App.h"
+//#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Utilities/UI_TransientDialog.h"
 #include "VE_Conductor/GUIPlugin/vectors.h"
 #include "VE_Conductor/GUIPlugin/contours.h"
 #include "VE_Conductor/GUIPlugin/streamlines.h"
@@ -136,7 +136,7 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
    
-   _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
+   //_vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
 }
 ///////////////////////////////////////////////////////////////////
 //Constructor                                                    //
@@ -174,7 +174,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    {
       _setActiveDataset(0);
    }
-   _vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
+   //_vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
    SetSize( _vistabPosition.x,_vistabPosition.y,
             _vistabPosition.width,wxDefaultCoord,
             wxSIZE_AUTO );

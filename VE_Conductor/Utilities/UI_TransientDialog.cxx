@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/UI_TransientDialog.h"
+#include "VE_Conductor/Utilities/UI_TransientDialog.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include "VE_Conductor/xpm/transientIcons/play.xpm"

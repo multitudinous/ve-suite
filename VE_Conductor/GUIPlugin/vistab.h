@@ -43,7 +43,7 @@
 #include <wx/toolbar.h>
 #include <wx/dialog.h>
 
-#include "VE_Conductor/GUIPlugin/DualSlider.h"
+#include "VE_Conductor/Utilities/DualSlider.h"
 
 #include <vector>
 #include <map>

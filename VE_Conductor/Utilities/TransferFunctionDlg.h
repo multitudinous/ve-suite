@@ -41,7 +41,7 @@
 
 #include <string>
 #include "VE_Installer/include/VEConfig.h"
-#include "VE_Conductor/GUIPlugin/BaseDialog.h"
+#include "VE_Conductor/Utilities/BaseDialog.h"
 
 class wxComboBox;
 class wxCheckBox;

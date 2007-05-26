@@ -61,7 +61,7 @@
 
 #include "VE_Conductor/Utilities/CADMaterialEditMenu.h"
 #include "VE_Conductor/Utilities/CADOpacitySliderDlg.h"
-#include "VE_Conductor/Framework/TransformUI.h"
+#include "VE_Conductor/Utilities/TransformUI.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
@@ -480,7 +480,7 @@ void CADNodePropertiesDlg::_buildPhysicsPanel()
       _physicsFrictionCtrl->SetValue( _cadNode->GetFriction() );
       _physicsRestitutionCtrl->SetValue( _cadNode->GetRestitution() );
 
-      meshProperties->SetStringSelection( _cadNode->GetPhysicsMesh() );
+      meshProperties->SetStringSelection( wxString( _cadNode->GetPhysicsMesh().c_str(), wxConvUTF8 ) );
    }
    
    physicsPanelSizer->Add( physicsPropSizer, 1, wxEXPAND|wxALIGN_CENTER );

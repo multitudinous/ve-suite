@@ -66,8 +66,8 @@
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/Framework/MainToolBar.h"
 
-#include "VE_Conductor/GUIPlugin/CADNodeManagerDlg.h"
-#include "VE_Conductor/Utilities/Module.h"
+#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
+#include "VE_Conductor/GUIPlugin/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"
 
 //#include "VE_Conductor/VE_UI/UI_Tabs.h"

@@ -44,7 +44,7 @@ Network API
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/Utilities/Tag.h"
 #include "VE_Conductor/Utilities/Polygon.h"
-#include "VE_Conductor/Utilities/Module.h"
+#include "VE_Conductor/GUIPlugin/Module.h"
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>

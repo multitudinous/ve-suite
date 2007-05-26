@@ -46,9 +46,9 @@
 #include "VE_Conductor/GUIPlugin/IconChooser.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
 #include "VE_Conductor/GUIPlugin/paraThread.h"
-#include "VE_Conductor/GUIPlugin/DataSetLoaderUI.h"
+#include "VE_Conductor/Utilities/DataSetLoaderUI.h"
 #include "VE_Conductor/GUIPlugin/vistab.h"
-#include "VE_Conductor/GUIPlugin/SoundsPane.h"
+#include "VE_Conductor/Utilities/SoundsPane.h"
 
 // EPRI TAG
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
@@ -61,7 +61,7 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
 		
-#include "VE_Conductor/GUIPlugin/CADNodeManagerDlg.h"
+#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
 #include <wx/msgdlg.h>

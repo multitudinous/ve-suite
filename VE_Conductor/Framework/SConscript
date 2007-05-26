@@ -20,7 +20,7 @@ srcs = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBS = ['VE_ConductorLib', 'GUIPluginLib', 'VE_XML','VE_Conductor_UtilitiesLib',
+env.Append(LIBS = ['VE_ConductorLib', 'GUIPlugin', 'VE_XML','VE_Conductor_Utilities',
                    'VE_OpenModuleLib'])
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
                         pj('#', buildDir, 'VE_Conductor','Utilities'),

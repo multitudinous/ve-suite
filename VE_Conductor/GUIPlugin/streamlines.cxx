@@ -36,7 +36,7 @@
 
 #include "VE_Conductor/GUIPlugin/streamlines.h"
 #include "VE_Conductor/GUIPlugin/vistab.h"
-#include "VE_Conductor/GUIPlugin/WPDialog.h"
+#include "VE_Conductor/Utilities/WPDialog.h"
 
 
 #include "VE_Open/XML/DataValuePair.h"

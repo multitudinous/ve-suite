@@ -41,7 +41,7 @@ NetworkDatabuffer API
 #include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/Utilities/Link.h"
-#include "VE_Conductor/Utilities/Module.h"
+#include "VE_Conductor/GUIPlugin/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"
 
 //do this to remove compile warnings from linux platforms

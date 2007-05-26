@@ -30,8 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include "VE_Conductor/GUIPlugin/ROIDialog.h"
+#include "VE_Conductor/Utilities/ROIDialog.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

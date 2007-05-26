@@ -39,7 +39,7 @@
 /*!\class AdvancedVectors
 * 
 */
-#include "VE_Conductor/GUIPlugin/DualSlider.h"
+#include "VE_Conductor/Utilities/DualSlider.h"
 #include <vector>
 
 #include <wx/dialog.h>

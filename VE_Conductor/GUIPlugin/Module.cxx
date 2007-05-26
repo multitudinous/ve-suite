@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/Module.h"
+#include "VE_Conductor/GUIPlugin/Module.h"
 
 #include "VE_Conductor/GUIPlugin/Plugin_base.h"
 

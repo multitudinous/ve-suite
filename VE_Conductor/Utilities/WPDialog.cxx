@@ -1,4 +1,4 @@
-#include "VE_Conductor/GUIPlugin/WPDialog.h"
+#include "VE_Conductor/Utilities/WPDialog.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"

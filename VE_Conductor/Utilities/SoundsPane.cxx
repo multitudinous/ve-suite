@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include "VE_Conductor/GUIPlugin/CORBAServiceList.h"
 
-#include "VE_Conductor/GUIPlugin/SoundsPane.h"
+#include "VE_Conductor/Utilities/SoundsPane.h"
 
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/DataValuePair.h"

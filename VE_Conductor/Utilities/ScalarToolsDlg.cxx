@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/ScalarToolsDlg.h"
-#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Utilities/ScalarToolsDlg.h"
+//#include "VE_Conductor/Framework/Frame.h"
 
 #include <wx/app.h>
 
@@ -67,7 +67,7 @@ ScalarToolsDialog::ScalarToolsDialog(wxWindow* parent, int id,std::string title)
    /*wxSize displaySize = ::wxGetDisplaySize();
    wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
    this->SetSize( dialogPosition );*/
-   SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
+   //SetSize(dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize());
 }
 ///////////////////////
 ///Destructor        //

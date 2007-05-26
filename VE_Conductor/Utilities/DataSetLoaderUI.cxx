@@ -51,8 +51,8 @@
 ////@end includes
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include "VE_Conductor/GUIPlugin/DataSetLoaderUI.h"
-#include "VE_Conductor/GUIPlugin/TransformUI.h"
+#include "VE_Conductor/Utilities/DataSetLoaderUI.h"
+#include "VE_Conductor/Utilities/TransformUI.h"
 
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/DataValuePair.h"

@@ -48,7 +48,7 @@ namespace VE_XML
 #include <vector>
 #include <string>
 
-#include "VE_Conductor/GUIPlugin/BaseDialog.h"
+#include "VE_Conductor/Utilities/BaseDialog.h"
 class UI_TransientDialog;
 class wxArrayString;
 class wxToolBar;
