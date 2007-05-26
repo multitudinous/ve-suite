@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CADNODE_MANAGER_DIALOG_H
 #define CADNODE_MANAGER_DIALOG_H
