@@ -17,6 +17,7 @@ srcs = Split("""
    Splitter.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
    MainToolBar.cxx
+   UI_TeacherTab.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()
