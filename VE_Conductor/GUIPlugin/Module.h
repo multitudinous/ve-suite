@@ -46,7 +46,7 @@ Module API
 #include "VE_Conductor/Utilities/Link.h"
 
 class wxWindow;
-class REI_Plugin;
+class UIPluginBase;
 
 namespace VE_Conductor
 {
@@ -74,13 +74,13 @@ public:
    std::string GetClassName( void );
    void SetClassName( std::string newClassname );
    Polygon* GetPolygon( void );
-   REI_Plugin* GetPlugin( void );
-   void SetPlugin( REI_Plugin* newPlugin );
+   UIPluginBase* GetPlugin( void );
+   void SetPlugin( UIPluginBase* newPlugin );
 protected:
 	std::string cls_name;
 
 private:
-   REI_Plugin* pl_mod;
+   UIPluginBase* pl_mod;
    Polygon poly; //Poly is the current poly on the canvas
    //std::vector< Link > links; //links connected with me
    wxWindow* canvas;

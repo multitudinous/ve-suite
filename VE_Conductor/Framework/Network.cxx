@@ -1059,7 +1059,7 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
   if (mod < 0) // no module is selected
     return;   
   
-  REI_Plugin *cur_module;
+  UIPluginBase *cur_module;
   wxRect bbox;
   int xunit, yunit;
   int xpos, ypos, oldxpos, oldypos;
@@ -1164,7 +1164,7 @@ void Network::DropModule(int ix, int iy, int mod )
   double r;
   int vx, vy;
   int x, y;
-  REI_Plugin * cur_module;
+  UIPluginBase * cur_module;
   bool scroll = false; 
 
   //In drag mode
@@ -1820,7 +1820,7 @@ void Network::AddTag(int x, int y, wxString text)
 }
 
 //////////////////////////////////////////////////////////////
-void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
+void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
 {
   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
   POLY tmpPoly;
@@ -1935,7 +1935,7 @@ void Network::ReDraw(wxDC &dc)
 }
 
 /////////////////////////////////////////////////////////////////////
-void Network::DrawPorts( REI_Plugin* cur_module, bool flag, wxDC &dc )
+void Network::DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc )
 {
    // flag sets whether we we are erasing the ports or not 
    // This function draws the input and output ports on a selected module
@@ -2054,7 +2054,7 @@ void Network::DrawPorts( REI_Plugin* cur_module, bool flag, wxDC &dc )
 }
 
 /////////////////////////////////////////////////////////////////////
-void Network::HighlightSelectedIcon (REI_Plugin* cur_module, wxDC &dc)
+void Network::HighlightSelectedIcon (UIPluginBase* cur_module, wxDC &dc)
 {
 	if (!cur_module)
 	  return;
@@ -2084,7 +2084,7 @@ void Network::HighlightSelectedIcon (REI_Plugin* cur_module, wxDC &dc)
 	dc.SetPen(old_pen);
 }
 ///////////////////////////////////////////////////////////////////////
-void Network::DrawPorti(REI_Plugin * cur_module, int index, bool flag)
+void Network::DrawPorti(UIPluginBase * cur_module, int index, bool flag)
 {
    // used by trylink only which redraws things only if we are draggin a module
    // draw either the input or output ports for an specific port index in the module
@@ -2431,14 +2431,14 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created
-        REI_Plugin* tempPlugin = 0;
+        UIPluginBase* tempPlugin = 0;
         if( cls == 0 )
         {
          tempPlugin = new DefaultPlugin();
         }
         else
         {
-         tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+         tempPlugin = dynamic_cast< UIPluginBase* >( cls->CreateObject() );
         }
         tempPlugin->SetNetworkFrame( this );
         ///Add event handler for the plugins

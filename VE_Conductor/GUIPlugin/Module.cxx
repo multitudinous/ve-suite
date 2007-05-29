@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/Module.h"
 
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 
 #include <wx/window.h>
 
@@ -127,12 +127,12 @@ void Module::SetClassName( std::string newClassname )
    cls_name = newClassname;
 }
 ////////////////////////////////////////////////
-void Module::SetPlugin( REI_Plugin* newPlugin )
+void Module::SetPlugin( UIPluginBase* newPlugin )
 {
    pl_mod = newPlugin;
 }
 ////////////////////////////////////////////////
-REI_Plugin* Module::GetPlugin( void )
+UIPluginBase* Module::GetPlugin( void )
 {
    return pl_mod;
 }

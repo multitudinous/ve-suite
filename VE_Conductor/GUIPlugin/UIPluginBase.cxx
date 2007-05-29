@@ -32,9 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
-//set user dialog size
-//
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 
 #include <iostream>
 #include "VE_Conductor/Network/string_ops.h"
@@ -76,32 +74,32 @@ using namespace VE_XML::VE_Model;
 using namespace VE_XML;
 using namespace VE_Conductor;
 
-BEGIN_EVENT_TABLE(REI_Plugin, wxEvtHandler )
-   EVT_LEFT_DCLICK( REI_Plugin::OnDClick )
-   EVT_RIGHT_DOWN( REI_Plugin::OnMRightDown)
-   EVT_MENU( SHOW_RESULT, REI_Plugin::OnShowResult )
-   EVT_MENU( PARAVIEW, REI_Plugin::OnParaView )
-   EVT_MENU( SHOW_DESC, REI_Plugin::OnShowDesc )
-   EVT_MENU( MODEL_INPUTS, REI_Plugin::OnInputsWindow ) /* EPRI TAG */
-   EVT_MENU( SHOW_FINANCIAL, REI_Plugin::OnShowFinancial ) /* EPRI TAG */
-   EVT_MENU( SHOW_ASPEN_NAME, REI_Plugin::OnShowAspenName )
-   EVT_MENU( QUERY_INPUTS, REI_Plugin::OnQueryInputs )
-   EVT_MENU( QUERY_OUTPUTS, REI_Plugin::OnQueryOutputs )
-   EVT_MENU( SHOW_ICON_CHOOSER, REI_Plugin::OnShowIconChooser )
-   EVT_MENU( GEOMETRY, REI_Plugin::OnGeometry )
-   EVT_MENU( DATASET, REI_Plugin::OnDataSet )
-   EVT_MENU( MODEL_INPUTS, REI_Plugin::OnInputsWindow ) /* EPRI TAG */
-   EVT_MENU( MODEL_RESULTS, REI_Plugin::OnResultsWindow ) /* EPRI TAG */
-   EVT_MENU( VISUALIZATION, REI_Plugin::OnVisualization )
-   EVT_MENU( SET_UI_PLUGIN_NAME, REI_Plugin::OnSetUIPluginName )
-   EVT_MENU( SET_ACTIVE_MODEL, REI_Plugin::OnSetActiveXplorerModel )
-   EVT_MENU( ACTIVE_MODEL_SOUNDS, REI_Plugin::OnModelSounds )
+BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
+   EVT_LEFT_DCLICK( UIPluginBase::OnDClick )
+   EVT_RIGHT_DOWN( UIPluginBase::OnMRightDown)
+   EVT_MENU( SHOW_RESULT, UIPluginBase::OnShowResult )
+   EVT_MENU( PARAVIEW, UIPluginBase::OnParaView )
+   EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
+   EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
+   EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
+   EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
+   EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
+   EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
+   EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
+   EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
+   EVT_MENU( DATASET, UIPluginBase::OnDataSet )
+   EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
+   EVT_MENU( MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
+   EVT_MENU( VISUALIZATION, UIPluginBase::OnVisualization )
+   EVT_MENU( SET_UI_PLUGIN_NAME, UIPluginBase::OnSetUIPluginName )
+   EVT_MENU( SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
+   EVT_MENU( ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
 END_EVENT_TABLE()
 
-IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxEvtHandler )
+IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
 
 /////////////////////////////////////////////////////////////////////////////
-REI_Plugin::REI_Plugin() :
+UIPluginBase::UIPluginBase() :
    networkFrame( 0 ),
    dlg( 0 ), 
    result_dlg( 0 ),
@@ -147,7 +145,7 @@ REI_Plugin::REI_Plugin() :
    defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
-REI_Plugin::~REI_Plugin()
+UIPluginBase::~UIPluginBase()
 {
    delete [] poly;
    poly = 0;
@@ -208,32 +206,32 @@ REI_Plugin::~REI_Plugin()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetNetworkFrame( wxScrolledWindow* networkFrame )
+void UIPluginBase::SetNetworkFrame( wxScrolledWindow* networkFrame )
 {
    this->networkFrame = networkFrame;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetID(int id)
+void UIPluginBase::SetID(int id)
 {
    this->id = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetName( wxString pluginName )
+void UIPluginBase::SetName( wxString pluginName )
 {
    name = pluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetPos(wxPoint pt)
+void UIPluginBase::SetPos(wxPoint pt)
 {
   pos = pt;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double REI_Plugin::GetVersion()
+double UIPluginBase::GetVersion()
 {
   return 0.1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxRect REI_Plugin::GetBBox()
+wxRect UIPluginBase::GetBBox()
 {
   wxRect result;
   //int left, right, top, bottom;
@@ -275,12 +273,12 @@ wxRect REI_Plugin::GetBBox()
    return result;	
 }
 ////////////////////////////////////////////////////////////////////////////////
-int REI_Plugin::GetNumPoly( void )
+int UIPluginBase::GetNumPoly( void )
 {
 	return n_pts;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::GetPoly( POLY& polygon )
+void UIPluginBase::GetPoly( POLY& polygon )
 {
    for ( int i=0; i < n_pts; i++ )  
    {
@@ -288,17 +286,17 @@ void REI_Plugin::GetPoly( POLY& polygon )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-int REI_Plugin::GetNumIports()
+int UIPluginBase::GetNumIports()
 {
 	return inputPort.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetNumIports( int numPorts )
+void UIPluginBase::SetNumIports( int numPorts )
 {
    numberOfInputPorts = numPorts;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::GetIPorts(PORT& iports)
+void UIPluginBase::GetIPorts(PORT& iports)
 {
    for ( size_t i = 0; i <  inputPort.size(); ++i )
    {
@@ -319,17 +317,17 @@ void REI_Plugin::GetIPorts(PORT& iports)
    }
 }
 /////////////////////////////////////////////////////////////////////////////
-int REI_Plugin::GetNumOports()
+int UIPluginBase::GetNumOports()
 {
 	return outputPort.size();
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetNumOports( int numPorts )
+void UIPluginBase::SetNumOports( int numPorts )
 {
    numberOfOutputPorts = numPorts;
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::GetOPorts(PORT& oports)
+void UIPluginBase::GetOPorts(PORT& oports)
 {
    for ( size_t i = 0; i < outputPort.size(); ++i )
    {
@@ -348,7 +346,7 @@ void REI_Plugin::GetOPorts(PORT& oports)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::DrawIcon(wxDC* dc)
+void UIPluginBase::DrawIcon(wxDC* dc)
 {
   //wxCoord xoff = pos.x;
   //wxCoord yoff = pos.y;
@@ -357,7 +355,7 @@ void REI_Plugin::DrawIcon(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::DrawID(wxDC* dc)
+void UIPluginBase::DrawID(wxDC* dc)
 {
   return; // no module id
   int i;
@@ -384,7 +382,7 @@ void REI_Plugin::DrawID(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::DrawName(wxDC* dc)
+void UIPluginBase::DrawName(wxDC* dc)
 {
   int i;
   int x, y;
@@ -407,7 +405,7 @@ void REI_Plugin::DrawName(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* REI_Plugin::UI(wxWindow* parent)
+UIDialog* UIPluginBase::UI(wxWindow* parent)
 {
   if (dlg!=NULL)
     return dlg;
@@ -422,7 +420,7 @@ UIDialog* REI_Plugin::UI(wxWindow* parent)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* REI_Plugin::Result(wxWindow* parent)
+UIDialog* UIPluginBase::Result(wxWindow* parent)
 {
    std::vector<wxString> titles;
    //std::vector<std::string> descs;
@@ -443,17 +441,17 @@ UIDialog* REI_Plugin::Result(wxWindow* parent)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-unsigned int REI_Plugin::GetID()
+unsigned int UIPluginBase::GetID()
 {
   return id;
 }
 /////////////////////////////////////////////////////////////////////////////
-wxString REI_Plugin::GetConductorName()
+wxString UIPluginBase::GetConductorName()
 {
    return wxString( "PleaseDefineConductorName",wxConvUTF8);
 }
 /////////////////////////////////////////////////////////////////////////////
-wxString REI_Plugin::GetName()
+wxString UIPluginBase::GetName()
 {
    if ( name.IsEmpty() )
    {
@@ -463,36 +461,36 @@ wxString REI_Plugin::GetName()
    return name;
 }
 /////////////////////////////////////////////////////////////////////////////
-wxString REI_Plugin::GetHelp()
+wxString UIPluginBase::GetHelp()
 {
   return _T("www.vesuite.org");  
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString REI_Plugin::GetDesc()
+wxString UIPluginBase::GetDesc()
 {
   return _T("This is a default module");
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::Lock(bool lock)
+void UIPluginBase::Lock(bool lock)
 {
   if (dlg!=NULL)
     dlg->Lock(lock);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-bool REI_Plugin::Has3Ddata()
+bool UIPluginBase::Has3Ddata()
 {
   return false;
 }
 ////////////////////////////////////////////////////////////////////
-Model* REI_Plugin::GetModel( void )
+Model* UIPluginBase::GetModel( void )
 {
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////
-Model* REI_Plugin::GetVEModel( void )
+Model* UIPluginBase::GetVEModel( void )
 {
    /*if ( veModel != NULL )
    {
@@ -651,7 +649,7 @@ Model* REI_Plugin::GetVEModel( void )
    return veModel;
 }
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
+void UIPluginBase::SetVEModel( VE_XML::VE_Model::Model* tempModel )
 {
    if ( veModel != NULL )
    {
@@ -785,37 +783,37 @@ void REI_Plugin::SetVEModel( VE_XML::VE_Model::Model* tempModel )
    //
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(std::string vname, long *var)
+void UIPluginBase::RegistVar(std::string vname, long *var)
 {
   _int[vname]=var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(std::string vname, double *var)
+void UIPluginBase::RegistVar(std::string vname, double *var)
 {
   _double[vname]=var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(std::string vname, std::string *var)
+void UIPluginBase::RegistVar(std::string vname, std::string *var)
 {
   _string[vname]=var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(std::string vname, std::vector<long> *var)
+void UIPluginBase::RegistVar(std::string vname, std::vector<long> *var)
 {
   _int1D[vname]=var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(std::string vname, std::vector<double> *var)
+void UIPluginBase::RegistVar(std::string vname, std::vector<double> *var)
 {
   _double1D[vname]=var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(std::string vname, std::vector<std::string> *var)
+void UIPluginBase::RegistVar(std::string vname, std::vector<std::string> *var)
 {
   _string1D[vname]=var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::FinancialData ()
+void UIPluginBase::FinancialData ()
 {
   if(financial_dlg == NULL)
     financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
@@ -823,7 +821,7 @@ void REI_Plugin::FinancialData ()
   financial_dlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::ViewInputVariables( void )
+void UIPluginBase::ViewInputVariables( void )
 {
    if( inputsDialog )
    {
@@ -853,7 +851,7 @@ void REI_Plugin::ViewInputVariables( void )
    inputsDialog->Show();
 }
 ///////////////////////////////////////////////
-void REI_Plugin::ViewResultsVariables( void )
+void UIPluginBase::ViewResultsVariables( void )
 {
    if( resultsDialog )
    {
@@ -882,7 +880,7 @@ void REI_Plugin::ViewResultsVariables( void )
    resultsDialog->Show();
 }
 ///////////////////////////////////////////////
-void REI_Plugin::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
+void UIPluginBase::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
 {
    for ( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
    {
@@ -919,7 +917,7 @@ void REI_Plugin::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxSt
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetPluginNameDialog( void )
+void UIPluginBase::SetPluginNameDialog( void )
 {
    wxTextEntryDialog newPluginName( 0, 
                                     _("Enter the name for your UI plugin:"),
@@ -932,15 +930,15 @@ void REI_Plugin::SetPluginNameDialog( void )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
+void UIPluginBase::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
 {
    this->serviceList = serviceList;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, float scale)
+void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, float scale)
 {
-    //std::cout << "|\tREI_Plugin::SetImageIcon icon path = " << path << std::endl;
+    //std::cout << "|\tUIPluginBase::SetImageIcon icon path = " << path << std::endl;
    //Try and find default icons if needed
    std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
    if ( iter != defaultIconMap.end() )
@@ -1014,7 +1012,7 @@ void REI_Plugin::SetImageIcon(std::string path, float rotation, int mirror, floa
 	poly[3]=wxPoint(0,icon_h);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnDClick( wxMouseEvent &event)
+void UIPluginBase::OnDClick( wxMouseEvent &event)
 {
    // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
@@ -1047,7 +1045,7 @@ void REI_Plugin::OnDClick( wxMouseEvent &event)
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool REI_Plugin::SelectMod( int x, int y )
+bool UIPluginBase::SelectMod( int x, int y )
 {
    // This function checks to see which module your mouse is over based
    // on the x and y location of your mouse on the design canvas
@@ -1058,7 +1056,7 @@ bool REI_Plugin::SelectMod( int x, int y )
    return false;
 }
 //////////////////////////////////////////////////////
-void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowResult(wxCommandEvent& WXUNUSED(event))
 {
    char* result = 0;
 
@@ -1092,12 +1090,12 @@ void  REI_Plugin::OnShowResult(wxCommandEvent& WXUNUSED(event))
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  REI_Plugin::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 {
    FinancialData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  REI_Plugin::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 {  
 	VE_XML::VE_Model::Model* veModel = GetModel();
 	wxString title;
@@ -1106,10 +1104,10 @@ void  REI_Plugin::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 	wxMessageDialog( networkFrame, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
 {
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
-	REI_Plugin* tempPlugin = this;
+	UIPluginBase* tempPlugin = this;
     IconChooser* chooser = new IconChooser( networkFrame );
 	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
@@ -1118,7 +1116,7 @@ void  REI_Plugin::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
    //delete chooser;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 {  
 	std::string compName = GetModel()->GetModelName();
 
@@ -1175,7 +1173,7 @@ void  REI_Plugin::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 {  
 	std::string compName = GetModel()->GetModelName();
 
@@ -1223,7 +1221,7 @@ void  REI_Plugin::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	//	this->OnQueryOutputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnShowDesc(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnShowDesc(wxCommandEvent& WXUNUSED(event))
 {
    wxString desc;
    wxString title;
@@ -1235,7 +1233,7 @@ void REI_Plugin::OnShowDesc(wxCommandEvent& WXUNUSED(event))
    wxMessageDialog( networkFrame, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnParaView(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnParaView(wxCommandEvent& WXUNUSED(event))
 {
    //wxArrayString output;
    // ::wxExecute("paraview", wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
@@ -1250,19 +1248,19 @@ void REI_Plugin::OnParaView(wxCommandEvent& WXUNUSED(event))
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
 {
    // Here we launch a dialog for a specific plugins input values
    ViewInputVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
 {
    // Here we launch a dialog for a specific plugins input values
    ViewResultsVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
    {
@@ -1294,7 +1292,7 @@ void REI_Plugin::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
    }
 }
 ///////////////////////////////////////////
-void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
    {
@@ -1329,7 +1327,7 @@ void REI_Plugin::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    }
 }
 ///////////////////////////////////////////
-void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
 {
    if ( !SetActiveModel() ) 
    {
@@ -1444,13 +1442,13 @@ void REI_Plugin::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
 {
    // Here we launch a dialog for a specific plugins input values
    SetPluginNameDialog();   
 }
 //////////////////////////////////////////////////
-void REI_Plugin::OnModelSounds(wxCommandEvent& event)
+void UIPluginBase::OnModelSounds(wxCommandEvent& event)
 {
    if ( !SetActiveModel() ) 
    {
@@ -1466,7 +1464,7 @@ void REI_Plugin::OnModelSounds(wxCommandEvent& event)
    _soundsDlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnMRightDown(wxMouseEvent& event)
+void UIPluginBase::OnMRightDown(wxMouseEvent& event)
 {
    // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
@@ -1603,12 +1601,12 @@ void REI_Plugin::OnMRightDown(wxMouseEvent& event)
    //xold = yold =0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
 {
    SetActiveModel();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool REI_Plugin::SetActiveModel()
+bool UIPluginBase::SetActiveModel()
 {
     // Create the command and data value pairs
     VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
@@ -1625,7 +1623,7 @@ bool REI_Plugin::SetActiveModel()
     return connected;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::SetDialogSize( wxRect dialogSize )
+void UIPluginBase::SetDialogSize( wxRect dialogSize )
 {
     this->dialogSize = dialogSize;
 }

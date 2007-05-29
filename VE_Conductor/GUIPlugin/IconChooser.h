@@ -1,7 +1,6 @@
 #ifndef ICONCHOOSER_H
 #define ICONCHOOSER_H
 
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
 #include "VE_Installer/include/VEConfig.h"
 
 #include <wx/frame.h>
@@ -13,9 +12,12 @@
 #include <wx/panel.h>
 #include <wx/bmpbuttn.h>
 #include <map>
+#include <string>
 
 #undef IconChooser_STYLE
 #define IconChooser_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
+
+class UIPluginBase;
 
 class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 {
@@ -30,13 +32,13 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 		void cancelButtonClick(wxCommandEvent& event);
 		void IconDirectoryClick(wxCommandEvent& event);
 		//void AppendList(const char * input);
-		void SetPlugin( REI_Plugin * plugin);
+		void SetPlugin( UIPluginBase * plugin);
 		void AddIconsDir(wxString directory);
 		
 	private:		
 		std::map< int, std::string > iconPaths;
-		wxTextCtrl * WxEdit;
-		REI_Plugin * thePlugin;
+		wxTextCtrl* WxEdit;
+		UIPluginBase* thePlugin;
 		//wxString directory;
 		wxButton * okButton;
 		wxButton * cancelButton;

@@ -44,7 +44,7 @@ Avail_Modules API
 #include <wx/treectrl.h>
 
 class Network;
-class REI_Plugin;
+class UIPluginBase;
 class PluginLoader;
 
 class Avail_Modules : public wxTreeCtrl
@@ -74,7 +74,7 @@ class Avail_Modules : public wxTreeCtrl
   void OnSelChanged(wxTreeEvent& event);
   void ShowMenu(wxTreeItemId id, const wxPoint &pt);
   void CreateImageList(int size=16);
-  void AddModule(REI_Plugin* plugin,wxClassInfo* clsi );
+  void AddModule(UIPluginBase* plugin,wxClassInfo* clsi );
   void ShowDesc(wxCommandEvent& event);
   void ShowHelp(wxCommandEvent& event);
   void Instantiate(wxTreeEvent& event);
@@ -100,10 +100,10 @@ class Avail_Modules : public wxTreeCtrl
 class ReiTreeItemData : public wxTreeItemData
 {
  public:
-  REI_Plugin* plugin;
+  UIPluginBase* plugin;
   wxClassInfo* pl_clsi;
 
-  ReiTreeItemData(REI_Plugin* pl,  wxClassInfo* clsi  ) { plugin = pl; pl_clsi = clsi; };
+  ReiTreeItemData(UIPluginBase* pl,  wxClassInfo* clsi  ) { plugin = pl; pl_clsi = clsi; };
 
 };
 

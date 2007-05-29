@@ -1,6 +1,8 @@
-#include "IconChooser.h"
+#include "VE_Conductor/GUIPlugin/IconChooser.h"
 #include <wx/dir.h>
 #include <wx/image.h>
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
+
 
 BEGIN_EVENT_TABLE(IconChooser,wxFrame)	
 	EVT_CLOSE(IconChooser::OnClose)
@@ -117,7 +119,7 @@ void IconChooser::WxButtonClick(wxCommandEvent& event)
 //	WxChoice->Append(wxString(input,wxConvUTF8));
 //}
 ////////////////////////////////////////////////////////////////////////////////
-void IconChooser::SetPlugin( REI_Plugin * plugin)
+void IconChooser::SetPlugin( UIPluginBase * plugin)
 {
 	thePlugin = plugin;
 }

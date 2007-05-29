@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PLUGIN_BASE_H
-#define PLUGIN_BASE_H
-/*!\file Plugin_base.h
-Plugin_base API
+#ifndef UI_PLUGIN_BASE_H
+#define UI_PLUGIN_BASE_H
+/*!\file UIPluginBase.h
+UIPluginBase API
 */
-/*!\class Plugin_base
+/*!\class UIPluginBase
 * 
 */
 #include "VE_Installer/include/VEConfig.h"
@@ -106,7 +106,7 @@ namespace GUI_Utilities
 typedef std::vector< wxPoint > POLY;
 typedef std::vector< VE_XML::VE_Model::Port > PORT;
 
-class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxEvtHandler//, public wxObject
+class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler//, public wxObject
 {
 public:
    enum
@@ -132,9 +132,9 @@ public:
       ACTIVE_MODEL_SOUNDS
    };
    ///Defualt constructor
-   REI_Plugin();
+   UIPluginBase();
    ///Defualt destructor for plugins
-   virtual ~REI_Plugin();
+   virtual ~UIPluginBase();
    ///Return the version number of the module
    virtual double GetVersion();
    ///This call return a window to be displayed on the framework
@@ -325,7 +325,7 @@ protected:
    int m_selTag; 
    int m_selTagCon; 
    wxRect dialogSize;
-   DECLARE_DYNAMIC_CLASS( REI_Plugin )
+   DECLARE_DYNAMIC_CLASS( UIPluginBase )
    DECLARE_EVENT_TABLE()
 };
 

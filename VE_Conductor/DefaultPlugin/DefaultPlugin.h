@@ -29,16 +29,14 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DefaultPlugin_H
 #define DefaultPlugin_H
 
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include <wx/image.h>
 
-class DefaultPlugin : public REI_Plugin
+class DefaultPlugin : public UIPluginBase
 {
    DECLARE_DYNAMIC_CLASS( DefaultPlugin )
 

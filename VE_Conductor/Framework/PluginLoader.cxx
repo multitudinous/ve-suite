@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
@@ -141,7 +141,7 @@ void PluginLoader::RegisterPlugins()
    {
       wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
 
-      if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "REI_Plugin", wxConvUTF8 ) )
+      if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "UIPluginBase", wxConvUTF8 ) )
       {   
          RegisterPlugin(classInfo);
          wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
@@ -154,7 +154,7 @@ void PluginLoader::RegisterPlugin(wxClassInfo* info)
 {
    if (info)
    {
-       REI_Plugin* object = (REI_Plugin*)(info->CreateObject());
+       UIPluginBase* object = (UIPluginBase*)(info->CreateObject());
        plugins.push_back(object);
        plugin_cls.push_back(info);
    }

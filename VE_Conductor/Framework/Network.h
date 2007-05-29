@@ -40,7 +40,7 @@ Network API
 */
 #include "VE_Open/skel/VjObsC.h"
 
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/Utilities/Tag.h"
 #include "VE_Conductor/Utilities/Polygon.h"
@@ -119,7 +119,7 @@ public:
    void OnShowLinkContent( wxCommandEvent& event );
    
    //Add to network fuctions
-   void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);
+   void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
    void AddTag(int x, int y, wxString text);
 
    //Save and Load the network
@@ -139,15 +139,15 @@ public:
    
    void SetXplorerInterface( VjObs_ptr veEngine );
    bool SetActiveModel( void );
-   void HighlightSelectedIcon( REI_Plugin* cur_module, wxDC &dc);
-   void DrawPorts( REI_Plugin* cur_module, bool flag, wxDC &dc);
+   void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
+   void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
    bool IsDragging();
    void SetSelectedModule(int mod);
 
 protected:
 
    //Draw functions
-   void DrawPorti( REI_Plugin* cur_module, int index, bool flag);
+   void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
    //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);

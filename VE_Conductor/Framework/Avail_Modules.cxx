@@ -34,7 +34,7 @@
 #include "VE_Conductor/Framework/Avail_Modules.h"
 #include "VE_Conductor/GUIPlugin/StringParse.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include "VE_Conductor/xpm/icon1.xpm"
@@ -77,7 +77,7 @@ Avail_Modules::~Avail_Modules()
    delete pl_loader;
 }
 
-void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
+void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
 {
 	std::vector<wxString> lnames;
 	wxTreeItemIdValue cookie;
@@ -151,14 +151,14 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
    info = item_data->pl_clsi;
    if ( info )
    {
-      REI_Plugin* object;
-      object = dynamic_cast< REI_Plugin* >( info->CreateObject() );
+      UIPluginBase* object;
+      object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
       object->SetNetworkFrame( network );
       network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
    }
    else
    {
-      REI_Plugin* object = new DefaultPlugin();
+      UIPluginBase* object = new DefaultPlugin();
       object->SetNetworkFrame( network );
       network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
    }
@@ -256,7 +256,7 @@ bool Avail_Modules::LoadModules()
 void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
 {
   ReiTreeItemData* item_data;
-  REI_Plugin* pl;
+  UIPluginBase* pl;
   wxString desc;
   wxString title;
  
@@ -279,7 +279,7 @@ void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
 void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
 {
   char browser[1024];
-  REI_Plugin* pl;
+  UIPluginBase* pl;
   wxString help;
   wxString fgroot;
   wxString docdir;

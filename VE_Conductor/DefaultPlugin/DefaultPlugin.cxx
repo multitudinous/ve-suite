@@ -36,11 +36,11 @@
 #include <iostream>
 
 #include <wx/dc.h>
-IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, REI_Plugin)
+IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, UIPluginBase)
 
 /////////////////////////////////////////////////////////////////////////////
 DefaultPlugin::DefaultPlugin()
-:REI_Plugin()
+:UIPluginBase()
 {
    //wxImage my_img( square_xpm );
    //icon_w = (int)my_img.GetWidth()*0.30f;

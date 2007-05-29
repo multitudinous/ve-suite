@@ -33,7 +33,7 @@
 #include "VE_Conductor/GUIPlugin/NetworkDataBuffer.h"
 
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
-#include "VE_Conductor/GUIPlugin/Plugin_base.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
@@ -149,14 +149,14 @@ void NetworkDatabuffer::LoadVESData( std::string xmlNetwork )
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model.GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created
-        REI_Plugin* tempPlugin = 0;
+        UIPluginBase* tempPlugin = 0;
         if ( cls == 0 )
         {
             tempPlugin = new DefaultPlugin();
         }
         else
         {
-            tempPlugin = dynamic_cast< REI_Plugin* >( cls->CreateObject() );
+            tempPlugin = dynamic_cast< UIPluginBase* >( cls->CreateObject() );
         }
         //tempPlugin->SetNetworkFrame( this );
         tempPlugin->SetName( wxString(model.GetModelName().c_str(),wxConvUTF8) );
