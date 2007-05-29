@@ -1281,7 +1281,7 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
 
    //dc.SetPen(*wxWHITE_PEN);
    //dc.DrawLine( offSet.x, offSet.y, xold, yold);
-   //Refresh(true);
+   Refresh(true);
    Update();
 
    if ( dest_mod >=0 )
