@@ -262,6 +262,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                //_scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
                _scalarToolsDlg->UpdateScalarList(_availableScalars);
                _scalarToolsDlg->SetSize(_subDialogSize);
+               _scalarToolsDlg->CentreOnParent();
                if(_scalarToolsDlg->ShowModal() == wxID_OK)
                {
                   ;
@@ -285,6 +286,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
                         _("Unavailable!!"), wxOK | wxICON_INFORMATION );*/
 		  //_transferFunctionDlg->SetVjObsPtr(_vjObsPtr);
 		  _transferFunctionDlg->SetSize(_subDialogSize);
+        _transferFunctionDlg->CentreOnParent();
 		  if(_transferFunctionDlg->ShowModal()== wxID_OK)
 		  {
 			  ;
@@ -294,6 +296,7 @@ void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
          {
             //_roiDlg->SetVjObsPtr(_vjObsPtr);
             _roiDlg->SetSize(_subDialogSize);
+            _roiDlg->CentreOnParent();
             if(_roiDlg->ShowModal() == wxID_OK)
             {
                ;

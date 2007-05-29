@@ -110,7 +110,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/UI/win32"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\DefaultPlugin\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
@@ -170,7 +170,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib"
-				OutputFile="$(OutDir)/DefaultPlugin_d.dll"
+				OutputFile="$(OutDir)\DefaultPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"

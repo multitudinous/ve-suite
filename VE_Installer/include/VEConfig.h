@@ -38,11 +38,6 @@
 #define VES_MAJOR_VERSION 1
 #define VES_MINOR_VERSION 0
 #define VES_PATCH_VERSION 6
-//This is set to the revision corresponding to the last released
-//version of VES
-#ifndef SVN_VES_REVISION
-#define SVN_VES_REVISION 7476
-#endif
 
 #if defined(_MSC_VER)
    //#pragma warning( disable : 4244 )

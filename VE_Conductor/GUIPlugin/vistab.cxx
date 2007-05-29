@@ -558,6 +558,7 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    if(!_tbTools)
    {
       _tbTools = new TextureBasedToolBar (this,-1);
+      _tbTools->CentreOnParent();
    }
 
    _tbTools->SetSize(this->GetSize().x, this->GetSize().y, -1, -1, wxSIZE_USE_EXISTING);
@@ -567,6 +568,7 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
 
    if(_tbTools->ActivateTextureVisualization())
    {
+      _tbTools->CentreOnParent();
       _tbTools->ShowModal();
    }
 }
