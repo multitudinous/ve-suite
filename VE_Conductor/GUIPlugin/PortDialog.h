@@ -49,7 +49,9 @@ class wxStaticText;
 #include <vector>
 #include "VE_Conductor/GUIPlugin/ListTable.h"
 
-class PortDialog : public wxDialog
+#include "VE_Installer/include/VEConfig.h"
+
+class VE_GUIPLUGINS_EXPORTS PortDialog : public wxDialog
 {
  public:
   PortDialog(const wxString& title);

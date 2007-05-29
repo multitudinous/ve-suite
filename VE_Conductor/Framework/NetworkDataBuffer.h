@@ -43,7 +43,7 @@ NetworkDatabuffer API
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/GUIPlugin/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"
-
+#include "VE_Installer/include/VEConfig.h"
 //do this to remove compile warnings from linux platforms
 #undef _REENTRANT
 #include <vpr/Util/Singleton.h>
@@ -52,10 +52,10 @@ NetworkDatabuffer API
 #include <map>
 #include <string>
 
-#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_Conductor
 {
-class VE_CONDUCTOR_UTILS_EXPORTS NetworkDatabuffer
+class NetworkDatabuffer
 {
 public:
     ///Constructor

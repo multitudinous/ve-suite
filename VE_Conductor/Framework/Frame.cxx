@@ -1822,7 +1822,7 @@ void AppFrame::ViewRevision(wxCommandEvent& WXUNUSED(event))
         << VES_MINOR_VERSION << "." 
         << VES_PATCH_VERSION << "." 
         << SVN_VES_REVISION;
-        
+
     wxString tempNum = wxString("Current Revision: ", wxConvUTF8 ) + 
         wxString(revNum.str().c_str(), wxConvUTF8 );
     

@@ -40,12 +40,14 @@ ResultPanel API
 */
 #include <wx/dialog.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 class wxTextCtrl;
 class wxStaticText;
 class wxBoxSizer;
 class wxButton;
 
-class ResultPanel_Dialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS ResultPanel_Dialog : public wxDialog
 {
 public:
    ResultPanel_Dialog(){;}

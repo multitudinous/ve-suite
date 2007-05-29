@@ -99,7 +99,9 @@ class wxButton;
 #endif
 
 
-class Vistab: public wxDialog
+#include "VE_Installer/include/VEConfig.h"
+
+class VE_GUIPLUGINS_EXPORTS Vistab: public wxDialog
 {    
 public:
    ///Constructor

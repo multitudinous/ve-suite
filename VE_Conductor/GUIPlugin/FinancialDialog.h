@@ -44,11 +44,13 @@ FinancialDialog API
 
 #include <string>
 
+#include "VE_Installer/include/VEConfig.h"
+
 class wxRadioButton;
 class wxTextCtrl;
 class wxButton;
 
-class FinancialDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS FinancialDialog : public wxDialog
 {
  public:
   FinancialDialog(wxWindow *parent, wxWindowID id );

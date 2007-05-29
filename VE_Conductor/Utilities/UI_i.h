@@ -58,7 +58,7 @@ namespace VE_XML
 
 //Class Body_UI_i
 #include "VE_Installer/include/VEConfig.h"
-class VE_GUIPLUGINS_EXPORTS Body_UI_i : public virtual POA_Body::UI
+class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
  public:
   //Constructor 

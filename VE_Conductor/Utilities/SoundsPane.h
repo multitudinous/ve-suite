@@ -60,7 +60,7 @@ namespace VE_Model
 }
 }
 
-class SoundsPane : public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
     SoundsPane( VE_XML::VE_Model::Model* model );

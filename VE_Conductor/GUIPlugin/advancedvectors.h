@@ -40,6 +40,8 @@
 * 
 */
 #include "VE_Conductor/Utilities/DualSlider.h"
+
+#include "VE_Installer/include/VEConfig.h"
 #include <vector>
 
 #include <wx/dialog.h>
@@ -60,7 +62,7 @@ class wxCheckBox;
 #define SYMBOL_ADVANCEDVECTORS_SIZE wxSize(400, 300)
 #define SYMBOL_ADVANCEDVECTORS_POSITION wxDefaultPosition
 
-class AdvancedVectors: public wxDialog
+class VE_GUIPLUGINS_EXPORTS AdvancedVectors: public wxDialog
 {    
 
 public:

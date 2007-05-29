@@ -242,6 +242,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CORBAServiceList.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\DataSetLoaderUI.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\DualSlider.cxx"
 				>
 			</File>
@@ -250,7 +258,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Module.cxx"
+				RelativePath=".\OrbThread.cxx"
 				>
 			</File>
 			<File
@@ -262,11 +270,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ScalarToolsDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundsPane.cxx"
+				>
+			</File>
+			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\Tag.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\TBIsosurface.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\TBToolBar.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\TransferFunctionDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\TransformUI.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\UI_i.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\UI_TransientDialog.cxx"
 				>
 			</File>
 			<File
@@ -307,6 +347,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CORBAServiceList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataSetLoaderUI.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DualSlider.h"
 				>
 			</File>
@@ -315,7 +363,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Module.h"
+				RelativePath=".\OrbThread.h"
 				>
 			</File>
 			<File
@@ -327,11 +375,43 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ScalarToolsDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundsPane.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Tag.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TBIsosurface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TBToolBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransferFunctionDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransformUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UI_i.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UI_TransientDialog.h"
 				>
 			</File>
 			<File

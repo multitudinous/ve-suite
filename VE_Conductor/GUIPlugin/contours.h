@@ -38,6 +38,8 @@
 /*!\class contours
 * 
 */
+
+#include "VE_Installer/include/VEConfig.h"
 #include <wx/dialog.h>
 
 #include <vector>
@@ -79,7 +81,7 @@ class wxButton;
 
 
 
-class Contours: public wxDialog
+class VE_GUIPLUGINS_EXPORTS Contours: public wxDialog
 {    
     DECLARE_EVENT_TABLE()
 

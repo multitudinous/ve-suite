@@ -40,11 +40,13 @@ ListTable API
 */
 
 #include <wx/listctrl.h>
+
+#include "VE_Installer/include/VEConfig.h"
 class wxWindow;
 
 #include <vector>
 
-class ListTable : public wxListCtrl  
+class VE_GUIPLUGINS_EXPORTS ListTable : public wxListCtrl  
 {
 public:
 	ListTable(wxWindow *parent=NULL,

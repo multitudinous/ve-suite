@@ -43,6 +43,8 @@
 
 #include <wx/dialog.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 class wxListBox;
 class wxSpinCtrlDbl;
 
@@ -58,7 +60,7 @@ class wxSpinCtrlDbl;
 #define wxCLOSE_BOX 0x1000
 #endif
 
-class AdvancedIsosurface: public wxDialog
+class VE_GUIPLUGINS_EXPORTS AdvancedIsosurface: public wxDialog
 {    
     DECLARE_DYNAMIC_CLASS( AdvancedIsosurface )
     DECLARE_EVENT_TABLE()

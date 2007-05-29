@@ -41,6 +41,8 @@
 */
 #include <wx/dialog.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 #include <vector>
 #include <map>
 namespace VE_XML
@@ -64,7 +66,7 @@ class Network;
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
 
-class Isosurfaces: public wxDialog
+class VE_GUIPLUGINS_EXPORTS Isosurfaces: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()

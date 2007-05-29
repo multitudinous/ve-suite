@@ -91,8 +91,8 @@ namespace VE_XML
 /*!
  * DataSetLoaderUI class declaration
  */
-
-class DataSetLoaderUI: public wxDialog
+#include "VE_Installer/include/VEConfig.h"
+class VE_CONDUCTOR_UTILS_EXPORTS DataSetLoaderUI: public wxDialog
 {    
     //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
     DECLARE_EVENT_TABLE()

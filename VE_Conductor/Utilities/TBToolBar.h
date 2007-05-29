@@ -49,6 +49,7 @@ namespace VE_XML
 #include <string>
 
 #include "VE_Conductor/Utilities/BaseDialog.h"
+#include "VE_Installer/include/VEConfig.h"
 class UI_TransientDialog;
 class wxArrayString;
 class wxToolBar;
@@ -66,7 +67,7 @@ namespace VE_Conductor
    }
 
 }
-class TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
+class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
 {
 public:
    ///Constructor

@@ -34,9 +34,10 @@
 #define DefaultPlugin_H
 
 #include "VE_Conductor/GUIPlugin/UIPluginBase.h"
+#include "VE_Installer/include/VEConfig.h"
 #include <wx/image.h>
 
-class DefaultPlugin : public UIPluginBase
+class VE_DEFAULT_PLUGIN_EXPORTS DefaultPlugin : public UIPluginBase
 {
    DECLARE_DYNAMIC_CLASS( DefaultPlugin )
 

@@ -46,7 +46,7 @@ class wxSpinCtrlDbl;
 #include <wx/spinctrl.h>
 //Transient control ids
 
-class UI_TransientDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
+class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
 public:
    UI_TransientDialog(int numTimeSteps,

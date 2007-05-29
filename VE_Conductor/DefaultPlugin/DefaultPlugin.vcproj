@@ -15,8 +15,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(VE_SUITE_HOME)/bin/Plugins/UI/win32"
+			IntermediateDirectory=".\DefaultPlugin\$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			UseOfMFC="0"
@@ -48,7 +48,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;COMPRESSOR_EXPORTS"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;VE_DEFAULT_PLUGIN_LIBRARY"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -73,11 +74,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/Compressor.dll"
+				AdditionalDependencies="xerces-c_2.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib"
+				OutputFile="$(OutDir)/DefaultPlugin.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;"
 				ProgramDatabaseFile=".\Release/Compressor.pdb"
-				ImportLibrary=".\Release/Compressor.lib"
+				ImportLibrary="$(OutDir)\DefaultPlugin.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -139,7 +142,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;VE_DEFAULT_PLUGIN_LIBRARY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"

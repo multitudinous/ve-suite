@@ -63,7 +63,7 @@ namespace VE_XML
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
 {
-class VE_GUIPLUGINS_EXPORTS CORBAServiceList //: public wxObject
+class VE_CONDUCTOR_UTILS_EXPORTS CORBAServiceList //: public wxObject
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.

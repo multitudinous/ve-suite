@@ -50,7 +50,7 @@ class wxCheckBox;
 class wxButton;
 class wxSlider;
 
-class ScalarToolsDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
+class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
 public:
    ///Constructor

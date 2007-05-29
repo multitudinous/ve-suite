@@ -218,43 +218,11 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 			>
 			<File
-				RelativePath=".\advancedcontours.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\advancedisosurface.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\advancedstreamlines.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\advancedvectors.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\App.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\Avail_Modules.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\contours.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\DataSetLoaderUI.cxx"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin.cxx"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.cxx"
 				>
 			</File>
 			<File
@@ -264,21 +232,13 @@
 			<File
 				RelativePath=".\Frame.cxx"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ShowIncludes="false"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\isosurfaces.cxx"
-				>
 			</File>
 			<File
 				RelativePath=".\MainToolBar.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\ModelController.cxx"
 				>
 			</File>
 			<File
@@ -290,23 +250,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\paraThread.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\PluginLoader.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\polydata.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\ScalarToolsDlg.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\SoundsPane.cxx"
 				>
 			</File>
 			<File
@@ -314,27 +258,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\streamlines.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\TBToolBar.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\TransferFunctionDlg.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\TransformUI.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\UI_TeacherTab.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\UI_TransientDialog.cxx"
 				>
 			</File>
 			<File
@@ -342,15 +266,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\vectors.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\ViewLocPane.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\vistab.cxx"
 				>
 			</File>
 		</Filter>
@@ -359,43 +275,11 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
-				RelativePath=".\advancedcontours.h"
+				RelativePath=".\App.h"
 				>
 			</File>
 			<File
-				RelativePath=".\advancedisosurface.h"
-				>
-			</File>
-			<File
-				RelativePath=".\advancedstreamlines.h"
-				>
-			</File>
-			<File
-				RelativePath=".\advancedvectors.h"
-				>
-			</File>
-			<File
-				RelativePath="App.h"
-				>
-			</File>
-			<File
-				RelativePath="Avail_Modules.h"
-				>
-			</File>
-			<File
-				RelativePath=".\contours.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DataSetLoaderUI.h"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin.h"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.h"
+				RelativePath=".\Avail_Modules.h"
 				>
 			</File>
 			<File
@@ -403,11 +287,7 @@
 				>
 			</File>
 			<File
-				RelativePath="Frame.h"
-				>
-			</File>
-			<File
-				RelativePath=".\isosurfaces.h"
+				RelativePath=".\Frame.h"
 				>
 			</File>
 			<File
@@ -415,31 +295,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ModelController.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NavigationPane.h"
 				>
 			</File>
 			<File
-				RelativePath="Network.h"
+				RelativePath=".\Network.h"
 				>
 			</File>
 			<File
-				RelativePath=".\paraThread.h"
+				RelativePath=".\packable.h"
 				>
 			</File>
 			<File
-				RelativePath="PluginLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\polydata.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ScalarToolsDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SoundsPane.h"
+				RelativePath=".\PluginLoader.h"
 				>
 			</File>
 			<File
@@ -447,27 +319,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\streamlines.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TBToolBar.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TransferFunctionDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TransformUI.h"
-				>
-			</File>
-			<File
 				RelativePath=".\UI_TeacherTab.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UI_TransientDialog.h"
 				>
 			</File>
 			<File
@@ -475,15 +327,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\vectors.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ViewLocPane.h"
-				>
-			</File>
-			<File
-				RelativePath=".\vistab.h"
 				>
 			</File>
 		</Filter>

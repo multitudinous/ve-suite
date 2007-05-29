@@ -45,6 +45,8 @@ Module API
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
 
+#include "VE_Installer/include/VEConfig.h"
+
 class wxWindow;
 class UIPluginBase;
 
@@ -52,7 +54,7 @@ namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class VE_CONDUCTOR_UTILS_EXPORTS Module
+class VE_GUIPLUGINS_EXPORTS Module
 {
 public:
    ///Constructor

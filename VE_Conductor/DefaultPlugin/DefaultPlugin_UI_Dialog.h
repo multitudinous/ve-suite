@@ -32,9 +32,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef Hummer_UI_H
-#define Hummer_UI_H
+#ifndef DEFAULT_PLUGIN_UI_DIALOG_H
+#define DEFAULT_PLUGIN_UI_DIALOG_H
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
+#include "VE_Installer/include/VEConfig.h" 
 #include <vector>
 #include <string>
 
@@ -43,7 +44,7 @@ class wxSlider;
 class wxTextCtrl;
 class wxButton;
 
-class DefaultPlugin_UI_Dialog : public UIDialog
+class VE_DEFAULT_PLUGIN_EXPORTS DefaultPlugin_UI_Dialog : public UIDialog
 {
 public:
   DefaultPlugin_UI_Dialog(wxWindow* parent, int id, long int* height );
@@ -103,5 +104,5 @@ public:
   DECLARE_EVENT_TABLE()
 };
 
-#endif
+#endif//DEFAULT_PLUGIN_UI_DIALOG_H
 

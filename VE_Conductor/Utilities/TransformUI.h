@@ -46,6 +46,7 @@ TransformUI API
 #include <wx/sizer.h>
 
 #include <string>
+#include "VE_Installer/include/VEConfig.h"
 class DataSetLoaderUI;
 class wxSpinCtrlDbl;
 
@@ -64,7 +65,7 @@ namespace VE_Conductor
 {
    namespace GUI_Utilities
    {
-      class TransformUI : public wxPanel
+      class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
       {
       public:
          ///Constructor

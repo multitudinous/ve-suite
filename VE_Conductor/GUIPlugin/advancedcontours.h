@@ -44,6 +44,8 @@
 
 #include <wx/dialog.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 ////@end includes
 
 /*!
@@ -76,7 +78,7 @@ class wxRadioBox;
 #define ID_SLIDER1 10002
 #define ID_SLIDER2 10003
 
-class AdvancedContours: public wxDialog
+class VE_GUIPLUGINS_EXPORTS AdvancedContours: public wxDialog
 {    
 
 public:

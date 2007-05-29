@@ -42,6 +42,8 @@
 #include <vector>
 #include <wx/dialog.h>
 
+
+#include "VE_Installer/include/VEConfig.h"
 ////@end includes
 
 /*!
@@ -86,7 +88,7 @@ class wxButton;
 ////@end control identifiers
 
 
-class AdvancedStreamlines: public wxDialog
+class VE_GUIPLUGINS_EXPORTS AdvancedStreamlines: public wxDialog
 {    
     DECLARE_EVENT_TABLE()
 public:

@@ -44,6 +44,8 @@
 
 #include <wx/dialog.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 ////@end includes
 
 /*!
@@ -89,7 +91,7 @@ class wxButton;
 #define ID_BUTTON 10006
 #define ID_BUTTON1 10007*/
 
-class Streamlines: public wxDialog
+class VE_GUIPLUGINS_EXPORTS Streamlines: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Streamlines )
     DECLARE_EVENT_TABLE()

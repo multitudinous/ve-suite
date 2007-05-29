@@ -44,6 +44,8 @@
 
 #include <wx/dialog.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_XML
 {
    class Command;
@@ -62,7 +64,7 @@ class wxStaticBox;
 #define SYMBOL_POLYDATA_SIZE wxSize(400, 300)
 #define SYMBOL_POLYDATA_POSITION wxDefaultPosition
 
-class Polydata: public wxDialog
+class VE_GUIPLUGINS_EXPORTS Polydata: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()

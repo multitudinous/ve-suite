@@ -38,6 +38,11 @@
 #define VES_MAJOR_VERSION 1
 #define VES_MINOR_VERSION 0
 #define VES_PATCH_VERSION 6
+//This is set to the revision corresponding to the last released
+//version of VES
+#ifndef SVN_VES_REVISION
+#define SVN_VES_REVISION 7476
+#endif
 
 #if defined(_MSC_VER)
    //#pragma warning( disable : 4244 )
@@ -80,6 +85,12 @@
    #  else
    #    define VE_GUIPLUGINS_EXPORTS   __declspec(dllimport)
    #  endif /* VE_GUIPLUGINS_LIBRARY */
+
+   #  ifdef VE_DEFAULT_PLUGIN_LIBRARY
+   #    define VE_DEFAULT_PLUGIN_EXPORTS   __declspec(dllexport)
+   #  else
+   #    define VE_DEFAULT_PLUGIN_EXPORTS   __declspec(dllimport)
+   #  endif /* VE_DEFAULT_PLUGIN_LIBRARY */
 
    #  ifdef VE_GRAPHICALPLUGINS_LIBRARY
    #    define VE_GRAPHICALPLUGINS_EXPORTS   __declspec(dllexport)
@@ -177,6 +188,7 @@
    #  define VE_XPLORER_EXPORTS
    #  define VE_CONDUCTOR_EXPORTS
    #  define VE_GUIPLUGINS_EXPORTS
+   #  define VE_DEFAULT_PLUGIN_EXPORTS
    #  define VE_GRAPHICALPLUGINS_EXPORTS
    #  define VE_TEXTURE_BASED_EXPORTS
    #  define VE_USER_PLUGIN_EXPORTS

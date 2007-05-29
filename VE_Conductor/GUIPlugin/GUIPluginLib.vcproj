@@ -214,331 +214,115 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 			>
 			<File
-				RelativePath=".\CORBAServiceList.cxx"
+				RelativePath=".\advancedcontours.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedisosurface.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedstreamlines.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedvectors.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\contours.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\FinancialDialog.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\FindDialog.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\GlobalParamDialog.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\IconChooser.cxx"
 				>
 			</File>
 			<File
-				RelativePath=".\ListTable.cxx"
+				RelativePath=".\isosurfaces.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\OrbThread.cxx"
+				RelativePath=".\ListTable.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Module.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\ParamsDlg.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Plugin_base.cxx"
+				RelativePath=".\paraThread.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\polydata.cxx"
+				>
 			</File>
 			<File
 				RelativePath=".\PortDialog.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\QueryInputsDlg.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\ResultPanel.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\streamlines.cxx"
+				>
 			</File>
 			<File
 				RelativePath=".\StringParse.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\SummaryResultDialog.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\TexTable.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\TextResultDialog.cxx"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\UI_i.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\UIDialog.cxx"
 				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\UIPluginBase.cxx"
+				>
 			</File>
 			<File
 				RelativePath=".\UserPreferencesDataBuffer.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\vectors.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\vistab.cxx"
 				>
 			</File>
 			<File
@@ -551,7 +335,23 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
-				RelativePath=".\CORBAServiceList.h"
+				RelativePath=".\advancedcontours.h"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedisosurface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedstreamlines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\advancedvectors.h"
+				>
+			</File>
+			<File
+				RelativePath=".\contours.h"
 				>
 			</File>
 			<File
@@ -571,11 +371,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\isosurfaces.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ListTable.h"
 				>
 			</File>
 			<File
-				RelativePath=".\OrbThread.h"
+				RelativePath=".\Module.h"
 				>
 			</File>
 			<File
@@ -583,7 +387,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Plugin_base.h"
+				RelativePath=".\paraThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\polydata.h"
 				>
 			</File>
 			<File
@@ -596,6 +404,10 @@
 			</File>
 			<File
 				RelativePath=".\ResultPanel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\streamlines.h"
 				>
 			</File>
 			<File
@@ -615,11 +427,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UI_i.h"
+				RelativePath=".\UIDialog.h"
 				>
 			</File>
 			<File
-				RelativePath=".\UIDialog.h"
+				RelativePath=".\UIPluginBase.h"
 				>
 			</File>
 			<File
@@ -627,7 +439,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\XMLDataBufferEngine.h"
+				RelativePath=".\vectors.h"
+				>
+			</File>
+			<File
+				RelativePath=".\vistab.h"
 				>
 			</File>
 		</Filter>

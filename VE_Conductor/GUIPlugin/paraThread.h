@@ -41,9 +41,11 @@
 #include <wx/thread.h>
 
 
+#include "VE_Installer/include/VEConfig.h"
+
 class Network;
 
-class paraThread : public wxThread  
+class VE_GUIPLUGINS_EXPORTS paraThread : public wxThread  
 {
 public:
 	paraThread(Network* nt);

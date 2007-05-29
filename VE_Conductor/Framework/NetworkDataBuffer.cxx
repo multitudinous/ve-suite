@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/NetworkDataBuffer.h"
+#include "VE_Conductor/Framework/NetworkDataBuffer.h"
 
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
 #include "VE_Conductor/GUIPlugin/UIPluginBase.h"
