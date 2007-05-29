@@ -48,6 +48,8 @@
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
 
+#include "VE_Builder/Translator/DataLoader/DataLoader.h"
+
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
 #include <vtkDataSet.h>
@@ -637,13 +639,38 @@ void cfdDataSet::LoadData()
                              << std::endl << vprDEBUG_FLUSH;
    }
 
-   //this->dataSet = readVtkThing( this->fileName, 0 );
-   if(!_vtkFHndlr){
-      _vtkFHndlr = new cfdVTKFileHandler();
+   std::string extension = VE_Util::fileIO::getExtension(fileName);
+   if(extension.find("vtk")||
+      extension.find("vtu")||
+      extension.find("vtp")||
+      extension.find("vti"))
+   {
+      if(!_vtkFHndlr)
+      {
+        _vtkFHndlr = new cfdVTKFileHandler();
+      }
+      ///This will need to be changed to handle mutliblockdatasets!!!!!!
+      this->dataSet = dynamic_cast<vtkDataSet*>(_vtkFHndlr->GetDataSetFromFile(fileName));
    }
-   //_vtkFHndlr->SetInputFileName(fileName);
-   ///This will need to be changed to handle mutliblockdatasets!!!!!!
-   this->dataSet = dynamic_cast<vtkDataSet*>(_vtkFHndlr->GetDataSetFromFile(fileName));
+   else
+   {
+      VE_Builder::DataLoader externalFileloader;
+      externalFileloader.SetInputData( "something", "somedir" );
+      
+      char** parameters = new char*[5];
+      parameters[0] = new char[strlen("loaderToVtk ") + 1];
+      parameters[1] = new char[fileName.length()   + 1];
+      parameters[2] = new char[strlen(" -loader ") + 1];
+      parameters[3] = new char[extension.length() + 1];
+      parameters[4] = new char[strlen(" -w stream ") + 1];
+      
+      dataSet = dynamic_cast<vtkDataSet*>(externalFileloader.GetVTKDataSet( 6, parameters ));
+      for(unsigned int i = 0; i < 5; ++i)
+      {
+         delete [] parameters[i];
+      }
+      delete parameters;
+   }
    this->numPtDataArrays = this->dataSet->GetPointData()
                                         ->GetNumberOfArrays();
    vprDEBUG(vesDBG,1) << "|\tnumPtDataArrays = " << this->numPtDataArrays
