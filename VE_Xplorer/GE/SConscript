@@ -14,7 +14,9 @@ srcs = Split("""
 
 env = ves_pkg.getEnv().Copy()
 env.Append(
-            LIBS = ['VE_XML', 
+            LIBS = ['VE_XML',
+                   'DataLoaderLib',
+                   'TranslatorToVTKLib',
                    'VE_SceneGraph%s' %(execOsgPatTag),
                    'VE_UtilLib',
                    'VE_TextureBasedLib%s' %(execOsgPatTag),
@@ -29,6 +31,8 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','TextureBased'),
                         pj('#', buildDir, 'VE_Xplorer','GraphicalPlugin'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerNetwork'),
+                        pj('#', buildDir, 'VE_Builder','Translator','DataLoader'),
+                        pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK'),
                         pj('#', buildDir, 'VE_Open','skel'),
                         pj('#', buildDir, 'VE_Open','XML')])
 #disable profiling by default
