@@ -128,6 +128,7 @@ cfdDataSet::cfdDataSet( )
    dataSetScalarBar = 0;
    //this->animation = 0;
    _vtkFHndlr = 0;
+   m_externalFileLoader = 0;
 }
 
 cfdDataSet::~cfdDataSet()
@@ -221,6 +222,13 @@ cfdDataSet::~cfdDataSet()
       delete _vtkFHndlr;
       _vtkFHndlr = 0;
       vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
+   }
+
+   if( m_externalFileLoader )
+   {
+      delete m_externalFileLoader;
+      m_externalFileLoader = 0;
+      vprDEBUG(vesDBG,2) << "deleting m_externalFileLoader " << std::endl << vprDEBUG_FLUSH;
    }
 }
 
@@ -639,11 +647,19 @@ void cfdDataSet::LoadData()
                              << std::endl << vprDEBUG_FLUSH;
    }
 
-   std::string extension = VE_Util::fileIO::getExtension(fileName);
-   if(extension.find("vtk")||
-      extension.find("vtu")||
-      extension.find("vtp")||
-      extension.find("vti"))
+   std::string extension = VE_Util::fileIO::getExtension( fileName );
+   //What should the extension of the star.param file be?
+   //The translator expects ".star" but we have things setup to 
+   //be ".param". One or the other should be changed for consistency.
+   if(extension == "param")
+   {
+      extension = "star";
+   }
+
+   if( ( extension.find( "vtk" )!= std::string::npos ) ||
+      ( extension.find( "vtu" ) != std::string::npos ) ||
+      ( extension.find( "vtp" ) != std::string::npos ) ||
+      ( extension.find( "vti" ) != std::string::npos ) )
    {
       if(!_vtkFHndlr)
       {
@@ -654,22 +670,44 @@ void cfdDataSet::LoadData()
    }
    else
    {
-      VE_Builder::DataLoader externalFileloader;
-      externalFileloader.SetInputData( "something", "somedir" );
+      if(!m_externalFileLoader)
+      {
+         m_externalFileLoader = new VE_Builder::DataLoader();
+      }
+      m_externalFileLoader->SetInputData( "something", "somedir" );
       
-      char** parameters = new char*[5];
-      parameters[0] = new char[strlen("loaderToVtk ") + 1];
-      parameters[1] = new char[fileName.length()   + 1];
-      parameters[2] = new char[strlen(" -loader ") + 1];
-      parameters[3] = new char[extension.length() + 1];
-      parameters[4] = new char[strlen(" -w stream ") + 1];
+      char** parameters = new char*[9];
+      parameters[0] = new char[strlen("loaderToVtk") + 1];
+      strcpy(parameters[0],"loaderToVtk");      
+      parameters[1] = new char[strlen( "-singleFile" ) + 1];
+      strcpy(parameters[1], "-singleFile" );
+      parameters[2] = new char[fileName.length()   + 1];
+      strcpy(parameters[2], fileName.c_str() );
+      parameters[3] = new char[strlen("-loader") + 1];
+      strcpy(parameters[3], "-loader" );
+      parameters[4] = new char[extension.length() + 1];
+      strcpy(parameters[4], extension.c_str() );
+      parameters[5] = new char[strlen( "-o" ) + 1];
+      strcpy(parameters[5], "-o" );
+      parameters[6] = new char[strlen( "." ) + 1];
+      strcpy(parameters[6], "." );
+      parameters[7] = new char[strlen( "-w" ) + 1];
+      strcpy(parameters[7], "-w" );
+      parameters[8] = new char[strlen( "stream" ) + 1];
+      strcpy(parameters[8], "stream" );
       
-      dataSet = dynamic_cast<vtkDataSet*>(externalFileloader.GetVTKDataSet( 6, parameters ));
-      for(unsigned int i = 0; i < 5; ++i)
+      dataSet = dynamic_cast<vtkDataSet*>(m_externalFileLoader->GetVTKDataSet( 9, parameters ));
+      for(unsigned int i = 0; i < 9; ++i)
       {
          delete [] parameters[i];
       }
       delete parameters;
+      if(!dataSet)
+      {
+         vprDEBUG(vesDBG,1) << "|\tInvalid input file: " << fileName
+                          << std::endl << vprDEBUG_FLUSH;
+         return;
+      }
    }
    this->numPtDataArrays = this->dataSet->GetPointData()
                                         ->GetNumberOfArrays();

@@ -79,6 +79,10 @@ namespace VE_Util
    class cfdVTKFileHandler;
 }
 
+namespace VE_Builder
+{
+   class DataLoader;
+}
 #include "VE_Installer/include/VEConfig.h"
 
 #ifdef _OSG
@@ -327,6 +331,7 @@ private:
          VE_Util::cfdVTKFileHandler* _vtkFHndlr;
          int partOfTransientSeries;
          //int intRange[2];
+         VE_Builder::DataLoader* m_externalFileLoader;///<Translator interface
 
       #ifdef USE_OMP 
          unsigned int noOfData;   // Total no. of octants.
