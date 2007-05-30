@@ -590,9 +590,6 @@ class Launch:
         ##self.EnvFill("NSPR_ROOT", vjBaseDir) ##Can get rid of?
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
 
-        ##Set OSG_FILE_PATH
-        self.EnvFill("OSG_FILE_PATH", os.getenv("OSG_FILE_PATH", os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")))
-
         ##Set VexMaster
         ##Take the partially-qualified name if
         ##clusterMaster is a fully-qualified name.
@@ -601,8 +598,10 @@ class Launch:
                          str(self.settings["ClusterMaster"]).split('.')[0],
                          True)
 
-        ##Update PATH (and the Library Path for Unix)
+        ##Update OSG_FILE_PATH & PATH (and the Library Path for Unix)
         if windows:
+            ##Append OSG_FILE_PATH
+            self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ';')
             pathList = [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
@@ -627,6 +626,8 @@ class Launch:
                 pathList.append(os.path.join(entry, libTag))
             self.EnvAppend("PATH", pathList, ';')
         elif unix:
+            ##Append OSG_FILE_PATH
+            self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ':')
             ##Set name of library path
             libraryPath = "LD_LIBRARY_PATH"
             lib = "lib"
