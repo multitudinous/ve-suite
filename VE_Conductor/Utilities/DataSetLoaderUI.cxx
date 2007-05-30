@@ -418,7 +418,7 @@ void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
                         _T("Open file"), 
                         _T(""), 
                         _T(""),
-                        _T("VTK DataSet Files (*.vtk)|*.vtk;|VTK XML Unstructured Files (*.vtu)|*.vtu;|VTK XML Structured Files (*.vts)|*.vts;|VTK XML Image Files (*.vti)|*.vti;"),
+                        _T("VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti)|*.vtk;*.vtu;*.vts;*.vti;|StarCD (*.star)|*.star;|EnSight(*.ens)|*.ens;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;"),
                         wxOPEN|wxFILE_MUST_EXIST,
                         wxDefaultPosition); 
 

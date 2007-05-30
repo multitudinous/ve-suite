@@ -74,7 +74,7 @@ _sliceRenderMethod("VIEW_ALIGNED_POLYGON_INTERSECT")
    _tcoordBBox->push_back(osg::Vec4(0,1,0,1));
    _tcoordBBox->push_back(osg::Vec4(1,1,0,1));
 
-   _nSlices= 1;
+   _nSlices= 100;
    _deltaZ[0] = 
    _deltaZ[1] = 1.f;
 }
@@ -83,7 +83,7 @@ TextureBasedVolumeSlices::TextureBasedVolumeSlices(float* dataBoundingBox,
                                                    unsigned int numberOfSlices)
 :osg::Drawable()
 {
-   _nSlices = 1;
+   _nSlices = 100;
    _deltaZ[0] = 
    _deltaZ[1] = 1.f;
    _sliceDeltaRatio = 1.f;
@@ -377,7 +377,9 @@ void TextureBasedVolumeSlices::drawImplementation(osg::State& renderState) const
       //_nSlices = (int)(_calculateSampleDistance(inverseModelView)/_deltaZ[1]);
 	  
       //Calcluate edge intersections
-      _calculateEdgeIntersections(currentState,initialSlicePoint,slicePlaneNormal,extremaIndicies,currentDelta,deltaRatio);
+      _calculateEdgeIntersections(currentState,initialSlicePoint,
+                                         slicePlaneNormal,extremaIndicies,
+                                         currentDelta,deltaRatio);
    }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -423,11 +425,12 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(osg::State& currentSt
                              0,0,0};
 
       float* tempCoords = 0;
-      verts[0] = initialSlicePoint.x();
-      verts[1] = initialSlicePoint.y();
-      verts[2] = initialSlicePoint.z();
+      float lastVert[3] = {0,0,0};
+      lastVert[0] = initialSlicePoint.x();
+      lastVert[1] = initialSlicePoint.y();
+      lastVert[2] = initialSlicePoint.z();
       
-      verts[3] = initialSlicePoint.x();
+      /*verts[3] = initialSlicePoint.x();
       verts[4] = initialSlicePoint.y();
       verts[5] = initialSlicePoint.z();
 
@@ -445,12 +448,19 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(osg::State& currentSt
 
      verts[15] = initialSlicePoint.x();
      verts[16] = initialSlicePoint.y();
-     verts[17] = initialSlicePoint.z();
+     verts[17] = initialSlicePoint.z();*/
 
+      
       ///calculate vertex position from intersections
       for(unsigned int j = 0; j < 6; ++j)
-      {
+      { 
+          verts[j*3 ] = lastVert[0];
+          verts[j*3 +1] = lastVert[1];
+          verts[j*3 +2] = lastVert[2];
          _calculateVertsAndTextureCoordinates(j,initialSlicePoint,backSlicePoint,slicePlaneNormal,extremaIndicies,verts,frontTcoords,backTcoords);
+         lastVert[0] = verts[ j*3     ]; 
+         lastVert[1] = verts[ j*3 + 1];
+         lastVert[2] = verts[ j*3 + 2];
       }
       //render the polygons...
       glBegin(GL_POLYGON);
@@ -585,7 +595,7 @@ void TextureBasedVolumeSlices::_findBBoxMinMaxIndicies(osg::ref_ptr<osg::Vec4Arr
 {
    //this calculation is done in object coordinates
    float extremes[2] = {0,0};
-   float poleMultiplier = 20.0;
+   float poleMultiplier = 200.0;
    osg::Vec4 pole;
    //pole = _center + _slicePlaneNormal*_diagonal;
    pole = _center + slicePlaneNormal*_diagonal;
