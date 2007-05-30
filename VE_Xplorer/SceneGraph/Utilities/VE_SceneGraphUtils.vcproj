@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComputeBoundsVisitor.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialHelper.cxx"
 				>
 			</File>
@@ -222,6 +226,10 @@
 			>
 			<File
 				RelativePath=".\Attribute.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ComputeBoundsVisitor.h"
 				>
 			</File>
 			<File
