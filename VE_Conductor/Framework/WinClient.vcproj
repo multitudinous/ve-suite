@@ -26,7 +26,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="set SVN_VESVERSION=7476"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -51,7 +51,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO;SVN_VES_REVISION=7476"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -121,7 +121,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="set SVN_VESVERSION=7476"
+				CommandLine=""
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -145,7 +145,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO;SVN_VES_REVISION=7476"
 				IgnoreStandardIncludePath="false"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -228,6 +228,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin.cxx"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\DeviceProperties.cxx"
 				>
 			</File>
@@ -282,6 +290,14 @@
 			</File>
 			<File
 				RelativePath=".\Avail_Modules.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.h"
 				>
 			</File>
 			<File

@@ -37,7 +37,7 @@
 #include "VE_Installer/include/VEConfig.h"
 #include <wx/image.h>
 
-class VE_DEFAULT_PLUGIN_EXPORTS DefaultPlugin : public UIPluginBase
+class DefaultPlugin : public UIPluginBase
 {
    DECLARE_DYNAMIC_CLASS( DefaultPlugin )
 
