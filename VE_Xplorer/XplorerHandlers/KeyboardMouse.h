@@ -87,8 +87,8 @@ public:
     ///Update the current object selected
     virtual void UpdateSelection();
 
-    ///Do not know what this does
-    float GetCPThreshold();
+    ///Returns the center point threshold
+    float GetCenterPointThreshold();
 
     ///Sets the screen corner values
     ///\param values A map of strings to doubles
@@ -124,7 +124,7 @@ protected:
     ///\param endPoint The end point
     virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
 
-    ///Draws
+    ///Draws a line to help visualize the selection process
     ///\param startPoint The start position
     ///\param endPoint The end position
     virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
@@ -182,58 +182,54 @@ private:
     void Pan( float dx, float dy );
 
     ///Handles rotation of the scene
-    ///\param x_val
-    ///\param y_val
-    ///\param z_val
+    ///\param x
+    ///\param y
+    ///\param z
     ///\param angle
-    void Rotate( float x_val, float y_val, float z_val, float angle );
+    void Rotate( float x, float y, float z, float angle );
 
-    bool tb_animate;///<Determines whether in animation mode
-    bool tb_mode;///<Currently not being used
+    bool m_animate;///<Determines whether in animation mode
 
-    unsigned int width;///<Width of the window
-    unsigned int height;///<Height of the window
+    unsigned int m_width;///<Width of the window
+    unsigned int m_height;///<Height of the window
       
-    int key;///<Holds the value of the key being used
-    int button;///<Holds the value of the mouse button being used
-    int state;///<Determines if mouse button is pressed or released
-    int x;///<x position
-    int y;///<y position
+    int m_key;///<Holds the value of the key being used
+    int m_button;///<Holds the value of the mouse button being used
+    int m_state;///<Determines if mouse button is pressed or released
+    int m_x;///<x position of the mouse
+    int m_y;///<y position of the mouse
 
-    float aspect_ratio;///<Aspect ratio of window
-    float fovy;///<Do not know what this is
-    float left;///<Value of left side used in frustum calculation
-    float right;///<Value of right side used in frustum calculation
-    float top;///<Value of top side used in frustum calculation
-    float bottom;///<Value of bottom side used in frustum calculation
-    float near_plane;///<Value of near plane used in frustum calculation
-    float far_plane;///<Value of far plane used in frustum calculation
-    float tb_currPos[2];///<Do not know what this is
-    float tb_prevPos[2];///<Do not know what this is
-    float tb_magnitude;///<Do not know what this is
-    float tb_sensitivity;///<Do not know what this is
-    float tb_threshold;///<Do not know what this is
-    float tb_jump;///<Do not know what this is
+    float m_aspectRatio;///<Aspect ratio of window
+    float m_fovy;///<Field of view in the y direction
+    float m_leftFrustum;///<The left frustum value
+    float m_rightFrustum;///<The right frustum value
+    float m_topFrustum;///<The top frustum value
+    float m_bottomFrustum;///<The bottom frustum value
+    float m_nearFrustum;///<The near frustum value
+    float m_farFrustum;///<The far frustum value
+    float m_currPos[2];///<The current mouse position in the xz plane
+    float m_prevPos[2];///<The previous mouse position in the xz plane
+    float m_magnitude;///<The magnitude of the mouse movement
+    float m_sensitivity;///<
+    float m_threshold;///<
+    float m_jump;///<
 
-    double wc_screen_xmin;///<x minimum screen position
-    double wc_screen_xmax;///<x maximum screen position
-    double wc_screen_ymin;///<y minimum screen position
-    double wc_screen_ymax;///<y maximum screen position
-    double wc_screen_zval;///<Do not know what this is
-
-    std::pair< double, double > screenRatios; ///<Do not know what this is
+    double m_xminScreen;///<The minimum x position of the screen
+    double m_xmaxScreen;///<The maximum x position of the screen
+    double m_yminScreen;///<The minimum y position of the screen
+    double m_ymaxScreen;///<The maximum y position of the screen
+    double m_zvalScreen;///<The z position of the screen
 
     //Is of form [row][column]
-    gmtl::Matrix44f tb_transform;///<Do not know what this is
-    gmtl::Matrix44f tb_currTransform;///<Do not know what this is
-    //gmtl::Matrix44f tb_worldTransform;///<Do not know what this is
+    gmtl::Matrix44f m_deltaTransform;///<The change to be applied to the current transform
+    gmtl::Matrix44f m_currentTransform;///<The current transform matrix being manipulated
 
-    osg::ref_ptr< osg::Geode > beamGeode;///<Do not know what this is
-    osg::ref_ptr< osg::Geode > selectedGeometry;///<Do not know what this is
-    osg::ref_ptr< osg::LineSegment > beamLineSegment;///<Do not know what this is
+    osg::ref_ptr< osg::Geode > beamGeode;///<
+    osg::ref_ptr< osg::Geode > selectedGeometry;///<The geometry being selected
+    osg::ref_ptr< osg::LineSegment > beamLineSegment;///<
 
-    gadget::KeyboardMouseInterface mKeyboard;///<VRJuggler's keyboard/mouse positional interface
-    gadget::PositionInterface head;///<VRJuggler's head positional interface
+    gadget::KeyboardMouseInterface m_keyboard;///<VRJuggler's keyboard/mouse positional interface
+    gadget::PositionInterface m_head;///<VRJuggler's head positional interface
 };
 }
 

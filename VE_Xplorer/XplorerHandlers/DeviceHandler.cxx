@@ -75,7 +75,7 @@ device_mode( "Navigation" )
    
    activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
-   center_point.mData[1] = activeDCS->GetMat().mData[6] = static_cast< VE_Xplorer::KeyboardMouse* >( active_device )->GetCPThreshold();
+   center_point.mData[1] = activeDCS->GetMat().mData[6] = static_cast< VE_Xplorer::KeyboardMouse* >( active_device )->GetCenterPointThreshold();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()

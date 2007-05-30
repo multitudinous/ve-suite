@@ -137,7 +137,6 @@ void Device::ProcessSelection()
                std::cout << objectHit._geode->getName() << std::endl;
             }
          }
-
          else
          {
             selected_geometry = objectHit._geode;
