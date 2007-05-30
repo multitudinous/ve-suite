@@ -371,7 +371,7 @@ void KeyboardMouse::ProcessNavigationEvents()
 {
     //Translate world dcs by distance that the head is away from the origin
     gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -*center_point );
-    gmtl::Matrix44f worldMatTrans = transMat * VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat();
+    gmtl::Matrix44f worldMatTrans = transMat * tb_currTransform;
 
     //Get the position of the head in the new world space as if the head is on the origin
     gmtl::Point3f newJugglerHeadPoint;
@@ -620,7 +620,9 @@ void KeyboardMouse::FrameAll()
         tb_currTransform[0][3] -= x_val;
     }
 
+    float delta_y_val = y_val - tb_currTransform[1][3];
     tb_currTransform[1][3] = y_val;
+    center_point->mData[1] += delta_y_val;
 
     if( bs.center().z() != 0 )
     {
@@ -746,6 +748,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     {
         vprDEBUG(vesDBG,1) << "|\tKeyboardMouse::ProcessHit No object selected" 
                            << std::endl << vprDEBUG_FLUSH;
+
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
         return;
@@ -779,6 +782,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG(vesDBG,1) << "|\tObjects descriptors " 
                            << parentNode->getDescriptions().at( 1 ) << std::endl 
                            << vprDEBUG_FLUSH;
+
         activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
     }
 
@@ -788,6 +792,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG(vesDBG,1) << "|\tObject does not have name parent name " 
                            << objectHit._geode->getParents().front()->getName() 
                            << std::endl << vprDEBUG_FLUSH;
+
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }
 }
