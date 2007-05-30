@@ -80,6 +80,11 @@
     preprocessor to speed up calculations. The Volumetric Data Directories
     field takes <link linkend="visualization_texture_based">texture-based</link>
     data files.</para>
+    
+    <para><emphasis role="bold">Note:</emphasis> VE-Suite expects each type of
+    precomputed data to be stored in a separate folder. Storing all of your
+    precomputed data in one folder, or storing any of it in the Working
+    Directory, will cause problems in your dataset.</para>
 
     <para>Finally, you may need to transform the dataset to match up with the
     geometry data. The <guibutton>Transform</guibutton> button brings up a
