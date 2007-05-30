@@ -524,6 +524,7 @@ class Launch:
         SNX_BASE_DIR
         VJ_BASE_DIR
         ##VJ_DEPS_DIR
+        OSG_FILE_PATH
 
         Variables appended:
         PYTHONPATH (Windows systems only)
@@ -588,6 +589,9 @@ class Launch:
         ##self.EnvFill("VJ_CFG_PATH", os.path.join(vjBaseDir, "definitions")) ##Can get rid of?
         ##self.EnvFill("NSPR_ROOT", vjBaseDir) ##Can get rid of?
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
+
+        ##Set OSG_FILE_PATH
+        self.EnvFill("OSG_FILE_PATH", os.getenv("OSG_FILE_PATH", os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")))
 
         ##Set VexMaster
         ##Take the partially-qualified name if
