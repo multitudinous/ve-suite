@@ -175,7 +175,7 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile(std::string vtkFileName)
       {
          GetXMLImageData();
       }
-	  else if ( !strcmp( _xmlTester->GetFileDataType(), "MultiBlockDataSet" ) )
+	  else if ( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
       {
 		  std::cout<<"MultiBlockDataset!!"<<std::endl;
 		  _getXMLMultiGroupDataSet();
@@ -334,7 +334,7 @@ bool cfdVTKFileHandler::WriteDataSet(vtkDataObject* dataSet,std::string outFileN
    {
       vtkXMLDataSetWriter* writer = vtkXMLDataSetWriter::New();
       writer->SetFileName(outFileName.c_str());
-      writer->SetInput(dataSet);
+      writer->SetInput(dynamic_cast<vtkDataSet*>(dataSet));
       if ( _outFileMode == CFD_ASCII )
          writer->SetDataModeToAscii();
 
