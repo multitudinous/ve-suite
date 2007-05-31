@@ -73,7 +73,7 @@ private:
 	DeviceHandler();
 
 	///Destructor
-   ~DeviceHandler(){;}
+   ~DeviceHandler();
 
    ///Do not know what this is
    ///\param DeviceHandler 
@@ -99,14 +99,17 @@ public:
    ///Get the current device
    ///\param device The current active device
    VE_Xplorer::Device* GetDevice( std::string device );
-private:
-   std::map< std::string, VE_Xplorer::Device* > devices; ///<
-   std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
-   VE_Xplorer::Device* active_device; ///<The active device
-   osg::ref_ptr< VE_SceneGraph::DCS > activeDCS; ///<The active coordinate system
-   gmtl::Point3f center_point; ///<Do not know what this is
-   std::string device_mode; ///<Tells whether navigation or selection is active
+private:
+    std::map< std::string, VE_Xplorer::Device* > devices; ///<
+    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
+
+    VE_Xplorer::Device* active_device; ///<The active device
+    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS; ///<The active coordinate system
+    std::string device_mode; ///<Tells whether navigation or selection is active
+    gmtl::Point3f center_point; ///<Do not know what this is
+    float m_threshold;///<
+    float m_jump;///<
 };
 }
 

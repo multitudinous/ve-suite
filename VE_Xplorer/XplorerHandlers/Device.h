@@ -53,12 +53,12 @@ Device API
 
 namespace osg 
 {
-  class Vec3f;
+    class Vec3f;
 }
 
 namespace VE_XML
 {
-   class Command;
+    class Command;
 }
 
 namespace VE_Xplorer
@@ -66,58 +66,64 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS Device : public cfdGlobalBase
 {
 public:
-   ///Constructor
-   Device();
+    ///Constructor
+    Device();
 
-   ///Destructor
-   virtual ~Device(){;}
+    ///Destructor
+    virtual ~Device(){;}
 
-   ///Definition to update the position in scene
-   virtual void UpdateNavigation();
+    ///Definition to update the position in scene
+    virtual void UpdateNavigation();
 
-   ///Definition to update the current object selected
-   virtual void UpdateSelection();
+    ///Definition to update the current object selected
+    virtual void UpdateSelection();
 
-   ///New function for new VECommand structure
-   ///\param veCommand Sets the Command used for navigation
-   virtual void SetVECommand( VE_XML::Command* command=0){;}
+    ///New function for new VECommand structure
+    ///\param veCommand Sets the Command used for navigation
+    virtual void SetVECommand( VE_XML::Command* command=0){;}
 
-   ///Do not know what this is
-   virtual void UpdateCommand(){;}
+    ///Do not know what this is
+    virtual void UpdateCommand(){;}
 
-   ///Do not know what this is
-   ///\param _cfdCommandArray 
-   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){return false;}
+    ///Do not know what this is
+    ///\param _cfdCommandArray 
+    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){return false;}
 
-   ///Set the active coordinate system
-   ///\param dcs The current active coordinate system
-   void SetActiveDCS( VE_SceneGraph::DCS* dcs );
+    ///Get the active coordinate system
+    VE_SceneGraph::DCS* GetActiveDCS();
 
-   ///Get the active coordinate system
-   VE_SceneGraph::DCS* GetActiveDCS( void );
+    ///Set the active coordinate system
+    ///\param dcs The current active coordinate system
+    void SetActiveDCS( VE_SceneGraph::DCS* dcs );
 
-   ///Set the center point
-   ///\param cp The center point
-   void SetCenterPoint( gmtl::Point3f* cp );
+    ///Set the center point
+    ///\param cp The center point
+    void SetCenterPoint( gmtl::Point3f* cp );
 
-   ///Get the center point
-   gmtl::Point3f* GetCenterPoint( void );
+    ///Sets the center point threshold
+    void SetCenterPointThreshold( float* threshold );
+
+    ///Sets the center point delta jump
+    void SetCenterPointJump( float* jump );
+
 protected:
-   ///Process the selection of a piece of geometry 
-   virtual void ProcessSelection();
+    ///Process the selection of a piece of geometry 
+    virtual void ProcessSelection();
 
-   ///Definition to set the start and end point
-   ///\param startPoint The start point
-   ///\param endPoint
-   virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+    ///Definition to set the start and end point
+    ///\param startPoint The start point
+    ///\param endPoint
+    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
 
-   ///Set the start and end point
-   ///\param startPoint The start point
-   ///\param endPoint The end point
-   virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
+    ///Set the start and end point
+    ///\param startPoint The start point
+    ///\param endPoint The end point
+    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 
-   osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
-   gmtl::Point3f* center_point;///<The point about which rotation occurs
+    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
+    gmtl::Point3f* center_point;///<The point about which rotation occurs
+    float* m_threshold;///<
+    float* m_jump;///<
 };
 }
 

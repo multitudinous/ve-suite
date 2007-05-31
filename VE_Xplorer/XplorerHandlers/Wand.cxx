@@ -95,7 +95,6 @@ Wand::Wand() :
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize( void )
 {
-   activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
    rootNode = VE_SceneGraph::SceneManager::instance()->GetRootNode();
    
    for ( int i=0; i<3; i++ )

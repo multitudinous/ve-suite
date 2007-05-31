@@ -103,8 +103,6 @@ m_zvalScreen( 0.0f ),
 
 m_magnitude( 0.0f ),
 m_sensitivity( 1.0e-06 ),
-m_threshold( 0.5f ),
-m_jump( 5.0f ),
 
 m_animate( false ),
 
@@ -120,8 +118,6 @@ beamLineSegment( new osg::LineSegment )
 
     gmtl::identity( m_deltaTransform );
     gmtl::identity( m_currentTransform );
-
-    activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -137,11 +133,6 @@ void KeyboardMouse::UpdateNavigation()
 void KeyboardMouse::UpdateSelection()
 {
     ProcessKBEvents( 1 );
-}
-////////////////////////////////////////////////////////////////////////////////
-float KeyboardMouse::GetCenterPointThreshold()
-{
-    return m_threshold;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
@@ -235,9 +226,9 @@ void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
     line->setColorArray( colors.get() );
     line->setColorBinding( osg::Geometry::BIND_OVERALL );
 
-    osg::ref_ptr< osg::LineWidth > linem_width = new osg::LineWidth;
-    linem_width->setWidth( 4.0f );
-    m_stateset->setAttribute( linem_width.get() );
+    osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth;
+    line_width->setWidth( 4.0f );
+    m_stateset->setAttribute( line_width.get() );
     line->setStateSet( m_stateset.get() );
 
     line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
@@ -369,7 +360,8 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 void KeyboardMouse::ProcessNavigationEvents()
 {
     //Translate world dcs by distance that the m_head is away from the origin
-    gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -*center_point );
+    gmtl::Point3f translation( center_point->mData[0], center_point->mData[1], center_point->mData[2] );
+    gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -translation );
     gmtl::Matrix44f worldMatTrans = transMat * m_currentTransform;
 
     //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -402,8 +394,17 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix *= m_deltaTransform;
     matrix *= accuRotation;
 
-    //Set the current matrix
-    activeDCS->SetMat( matrix );
+    /*
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        activeDCS->SetMat( gmtl::invert( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat() ) * matrix );
+    }
+    else
+    {
+    */
+        //Set the current matrix
+        activeDCS->SetMat( matrix );
+    //}
 
     //If not in animation mode, reset the transform
     if( !m_animate )
@@ -423,7 +424,7 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     m_width = w;
     m_height = h;
 
-    m_aspectRatio = (float)m_width / (float)m_height;
+    m_aspectRatio = float( m_width ) / float( m_height );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float n, float f )
@@ -487,10 +488,10 @@ void KeyboardMouse::NavMouse()
 
     else if( m_state == 1 )
     {
-        m_currPos[0] = (float)m_x / (float)m_width;
-        m_currPos[1] = (float)m_y / (float)m_height;
-        m_prevPos[0] = (float)m_x / (float)m_width;
-        m_prevPos[1] = (float)m_y / (float)m_height;
+        m_currPos[0] = float( m_x ) / float( m_width );
+        m_currPos[1] = float( m_y ) / float( m_height );
+        m_prevPos[0] = float( m_x ) / float( m_width );
+        m_prevPos[1] = float( m_y ) / float( m_height );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -501,12 +502,10 @@ void KeyboardMouse::NavMotion()
         return;
     }
 
-    //Get the current matrix and world matrix
     m_currentTransform = activeDCS->GetMat();
-    //tb_worldTransform = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat();
 
-    m_currPos[0] = (float)m_x / (float)m_width;
-    m_currPos[1] = (float)m_y / (float)m_height;
+    m_currPos[0] = float( m_x ) / float( m_width );
+    m_currPos[1] = float( m_y ) / float( m_height );
     float dx = m_currPos[0] - m_prevPos[0];
     float dy = m_currPos[1] - m_prevPos[1];
 
@@ -580,7 +579,7 @@ void KeyboardMouse::SelMotion()
 void KeyboardMouse::ResetTransforms()
 {
     gmtl::Matrix44f matrix;
-    center_point->mData[1] = matrix[1][3] = m_threshold;
+    center_point->mData[1] = matrix[1][3] = *m_threshold;
 
     VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 }
@@ -652,6 +651,11 @@ void KeyboardMouse::Twist( float dx, float dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( float dy )
 {
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        //center_point->mData[1] += VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat().mData[7];
+    }
+
     float viewlength = center_point->mData[1];
     float d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
@@ -659,9 +663,9 @@ void KeyboardMouse::Zoom( float dy )
 
     center_point->mData[1] += d;
 
-    if( center_point->mData[1] < m_threshold )
+    if( center_point->mData[1] < *m_threshold )
     {
-        center_point->mData[1] = m_jump;
+        center_point->mData[1] = *m_jump;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -696,16 +700,16 @@ void KeyboardMouse::Rotate( float x, float y, float z, float angle )
 
     zero( m_deltaTransform );
 
-    m_deltaTransform[0][0] = ( x * x ) + ( cosAng * ( 1 - ( x * x ) ) );
-    m_deltaTransform[1][0] = ( y * x ) - ( cosAng *       ( y * x ) ) + ( sinAng * z );
-    m_deltaTransform[2][0] = ( z * x ) - ( cosAng *       ( z * x ) ) - ( sinAng * y );
-    m_deltaTransform[0][1] = ( x * y ) - ( cosAng *       ( x * y ) ) - ( sinAng * z );
-    m_deltaTransform[1][1] = ( y * y ) + ( cosAng * ( 1 - ( y * y ) ) );
-    m_deltaTransform[2][1] = ( z * y ) - ( cosAng *       ( z * y ) ) + ( sinAng * x );
-    m_deltaTransform[0][2] = ( x * z ) - ( cosAng *       ( x * z ) ) + ( sinAng * y );
-    m_deltaTransform[1][2] = ( y * z ) - ( cosAng *       ( y * z ) ) - ( sinAng * x );
-    m_deltaTransform[2][2] = ( z * z ) + ( cosAng * ( 1 - ( z * z ) ) );
-    m_deltaTransform[3][3] = 1.0f;
+    m_deltaTransform.mData[0]  = ( x * x ) + ( cosAng * ( 1 - ( x * x ) ) );
+    m_deltaTransform.mData[1]  = ( y * x ) - ( cosAng *       ( y * x ) ) + ( sinAng * z );
+    m_deltaTransform.mData[2]  = ( z * x ) - ( cosAng *       ( z * x ) ) - ( sinAng * y );
+    m_deltaTransform.mData[4]  = ( x * y ) - ( cosAng *       ( x * y ) ) - ( sinAng * z );
+    m_deltaTransform.mData[5]  = ( y * y ) + ( cosAng * ( 1 - ( y * y ) ) );
+    m_deltaTransform.mData[6]  = ( z * y ) - ( cosAng *       ( z * y ) ) + ( sinAng * x );
+    m_deltaTransform.mData[8]  = ( x * z ) - ( cosAng *       ( x * z ) ) + ( sinAng * y );
+    m_deltaTransform.mData[9]  = ( y * z ) - ( cosAng *       ( y * z ) ) - ( sinAng * x );
+    m_deltaTransform.mData[10] = ( z * z ) + ( cosAng * ( 1 - ( z * z ) ) );
+    m_deltaTransform.mData[15] = 1.0f;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
@@ -786,5 +790,12 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }
+
+    //Move center point to the center of the active dcs
+    VE_SceneGraph::Utilities::ComputeBoundsVisitor cbv;
+    cbv.apply( *static_cast< osg::Node* >( activeDCS.get() ) );
+    center_point->mData[0] = cbv.getBoundingBox().center().x();
+    center_point->mData[1] = cbv.getBoundingBox().center().y();
+    center_point->mData[2] = cbv.getBoundingBox().center().z();
 }
 ////////////////////////////////////////////////////////////////////////////////

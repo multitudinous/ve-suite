@@ -87,9 +87,6 @@ public:
     ///Update the current object selected
     virtual void UpdateSelection();
 
-    ///Returns the center point threshold
-    float GetCenterPointThreshold();
-
     ///Sets the screen corner values
     ///\param values A map of strings to doubles
     void SetScreenCornerValues( std::map< std::string, double > values );
@@ -207,12 +204,10 @@ private:
     float m_bottomFrustum;///<The bottom frustum value
     float m_nearFrustum;///<The near frustum value
     float m_farFrustum;///<The far frustum value
-    float m_currPos[2];///<The current mouse position in the xz plane
-    float m_prevPos[2];///<The previous mouse position in the xz plane
+    float m_currPos[2];///<The current mouse position
+    float m_prevPos[2];///<The previous mouse position
     float m_magnitude;///<The magnitude of the mouse movement
     float m_sensitivity;///<
-    float m_threshold;///<
-    float m_jump;///<
 
     double m_xminScreen;///<The minimum x position of the screen
     double m_xmaxScreen;///<The maximum x position of the screen
@@ -220,7 +215,11 @@ private:
     double m_ymaxScreen;///<The maximum y position of the screen
     double m_zvalScreen;///<The z position of the screen
 
-    //Is of form [row][column]
+    //In mData form     In row x column form
+    //[ 0 4  8 12 ]     [ 00 01 02 03 ]
+    //[ 1 5  9 13 ]     [ 10 11 12 13 ]
+    //[ 2 6 10 14 ]     [ 20 21 22 23 ]
+    //[ 3 7 11 15 ]     [ 30 31 32 33 ]
     gmtl::Matrix44f m_deltaTransform;///<The change to be applied to the current transform
     gmtl::Matrix44f m_currentTransform;///<The current transform matrix being manipulated
 

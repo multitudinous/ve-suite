@@ -71,7 +71,7 @@ class VE_XPLORER_EXPORTS Tablet : public Device
 {
 public:
    ///Constructor
-   Tablet( void );
+   Tablet();
    ///Destructor
    virtual ~Tablet();
 
