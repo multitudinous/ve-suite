@@ -31,12 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/GE/cfdVjObsWrapper.h"
-#ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
-#endif // _TAO
+#include "VE_Xplorer/GE/Xplorer_i.h" 
 #include "VE_Xplorer/GE/VjObs_i.h"     //added for corba stuff
+
+
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -54,6 +55,7 @@ using namespace VE_Xplorer;
 cfdVjObsWrapper::cfdVjObsWrapper( void )
 {
    _vjObs = new VjObs_i();
+   m_xplorer = new Body_VEXplorer_i();
    isMaster = false;
 }
 
@@ -181,6 +183,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    }
    else
    {
+      //This is the old way of communication
       VjObs_var vjobs = this->_vjObs->_this();
       
       CosNaming::Name name;
@@ -199,6 +202,26 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       }
       isMaster = true;
       _vjObs->SetClusterMode( false );
+
+	  ///This is the new way of communication
+	  Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
+      
+      CosNaming::Name xplorerName;
+      xplorerName.length(1);
+      
+      xplorerName[0].id   = (const char*) "Test";
+      xplorerName[0].kind = (const char*) "VE_Xplorer";
+      //Bind the object
+      try
+      {
+         naming_context->bind(xplorerName, xplorerCom.in());
+      }
+      catch(CosNaming::NamingContext::AlreadyBound&)
+      {
+         naming_context->rebind(xplorerName, xplorerCom.in());
+      }
+      //isMaster = true;
+      //_vjObs->SetClusterMode( false );
    }
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -225,6 +248,7 @@ void cfdVjObsWrapper::GetCfdStateVariables( void )
 void cfdVjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
+   //m_xplorer->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point

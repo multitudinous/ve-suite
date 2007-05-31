@@ -30,6 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#ifndef CFD_STATE_INFO_H
+#define CFD_STATE_INFO_H
+
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/BufferObjectReader.h>
 #include <vpr/IO/BufferObjectWriter.h>
@@ -157,3 +160,4 @@ inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::re
 #endif
 }
 }
+#endif// CFD_STATE_INFO_H

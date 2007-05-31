@@ -139,6 +139,8 @@ protected:
    float time_since_start;///< start time
    long frameNumber;///< frame number
 
+   Body::UI_var uiCom;
+
 
 };
 #endif

@@ -67,6 +67,7 @@ using namespace VE_TextureBased;
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::Body_VEXplorer_i (void)
 {
+	uiCom = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::~Body_VEXplorer_i (void)
@@ -159,8 +160,8 @@ void Body_VEXplorer_i::SetCommand ( const char* command )
 void Body_VEXplorer_i::RegisterUI ( const char* UIName, ::Body::UI_ptr ui )
   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+	std::cout << "Body_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
+	uiCom = Body::UI::_duplicate( ui );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::UnRegisterUI ( const char* UIName )

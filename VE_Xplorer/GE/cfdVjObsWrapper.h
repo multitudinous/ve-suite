@@ -44,7 +44,11 @@ namespace VE_Xplorer
 {
    class VjObs_i;
    class cfdCommandArray;
+   
 }
+
+class Body_VEXplorer_i;
+
 #ifdef _TAO
 namespace CosNaming{ class NamingContext; }
 namespace CORBA{ class ORB; }
@@ -99,6 +103,7 @@ public:
    PortableServer::POA* child_poa;///< holds the poa server for tao
    PortableServer::POA* poa;///< holds the poa server for tao
    VjObs_i* _vjObs;///< holds the vjobs pointer for tao
+   Body_VEXplorer_i* m_xplorer;///< holds the xplorer pointer for tao
 private:
    CORBA::ORB* _orbPtr;///<holds the orb pointer for tao
    bool isMaster;///is the master should be removed
