@@ -304,7 +304,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 if( m_animate )
                 {
                     gmtl::identity( m_deltaTransform );
-                    m_deltaTransform[0][3] = m_deltaTransform[1][3] = m_deltaTransform[2][3] = 0.0f;
+                    m_deltaTransform.mData[12] = m_deltaTransform.mData[13] = m_deltaTransform.mData[14] = 0.0f;
                 }
             }
 
@@ -360,8 +360,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 void KeyboardMouse::ProcessNavigationEvents()
 {
     //Translate world dcs by distance that the m_head is away from the origin
-    gmtl::Point3f translation( center_point->mData[0], center_point->mData[1], center_point->mData[2] );
-    gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -translation );
+    gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -*center_point );
     gmtl::Matrix44f worldMatTrans = transMat * m_currentTransform;
 
     //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -410,7 +409,7 @@ void KeyboardMouse::ProcessNavigationEvents()
     if( !m_animate )
     {
         gmtl::identity( m_deltaTransform );
-        m_deltaTransform[0][3] = m_deltaTransform[1][3] = m_deltaTransform[2][3] = 0.0f;
+        m_deltaTransform.mData[12] = m_deltaTransform.mData[13] = m_deltaTransform.mData[14] = 0.0f;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -600,7 +599,7 @@ void KeyboardMouse::FrameAll()
     bb = cbv.getBoundingBox();
 
     float x = bb.center().x();
-    m_currentTransform[0][3] -= x;
+    m_currentTransform.mData[12] -= x;
 
     float y;
     if( m_aspectRatio <= 1.0f )
@@ -612,12 +611,12 @@ void KeyboardMouse::FrameAll()
         y = bb.radius() / tan( Theta );
     }
 
-    float delta_y_val = y - m_currentTransform[1][3];
-    m_currentTransform[1][3] = y;
+    float delta_y_val = y - m_currentTransform.mData[13];
+    m_currentTransform.mData[13] = y;
     center_point->mData[1] += delta_y_val;
 
     float z = bb.center().z();
-    m_currentTransform[2][3] -= z;
+    m_currentTransform.mData[14] -= z;
 
     VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( m_currentTransform );
 }
@@ -659,7 +658,7 @@ void KeyboardMouse::Zoom( float dy )
     float viewlength = center_point->mData[1];
     float d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
-    m_deltaTransform[1][3] = d;
+    m_deltaTransform.mData[13] = d;
 
     center_point->mData[1] += d;
 
@@ -671,14 +670,14 @@ void KeyboardMouse::Zoom( float dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Pan( float dx, float dy )
 {
-    float d = m_currentTransform[1][3];
+    float d = m_currentTransform.mData[13];
     float theta = ( m_fovy * 0.5f ) * ( PIDivOneEighty );
     float b = 2 * d * tan( theta );
     float dwx = dx * b * m_aspectRatio;
     float dwy = -dy * b;
 
-    m_deltaTransform[0][3] = dwx;
-    m_deltaTransform[2][3] = dwy;
+    m_deltaTransform.mData[12] = dwx;
+    m_deltaTransform.mData[14] = dwy;
 
     center_point->mData[0] += dwx;
     center_point->mData[2] += dwy;
