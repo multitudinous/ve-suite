@@ -671,8 +671,8 @@ void cfdDataSet::LoadData()
          m_externalFileLoader = new VE_Builder::DataLoader();
       }
       m_externalFileLoader->SetInputData( "something", "somedir" );
-      
-      char** parameters = new char*[9];
+      unsigned int nParams = 7;
+      char** parameters = new char*[nParams];
       parameters[0] = new char[strlen("loaderToVtk") + 1];
       strcpy(parameters[0],"loaderToVtk");      
       parameters[1] = new char[strlen( "-singleFile" ) + 1];
@@ -686,16 +686,16 @@ void cfdDataSet::LoadData()
       parameters[5] = new char[strlen( "-o" ) + 1];
       strcpy(parameters[5], "-o" );
       parameters[6] = new char[strlen( "." ) + 1];
-      strcpy(parameters[6], "." );
+      strcpy(parameters[6], "." );/*
       parameters[7] = new char[strlen( "-w" ) + 1];
       strcpy(parameters[7], "-w" );
       parameters[8] = new char[strlen( "stream" ) + 1];
-      strcpy(parameters[8], "stream" );
+      strcpy(parameters[8], "stream" );*/
       
-      dataSet = dynamic_cast<vtkDataSet*>(m_externalFileLoader->GetVTKDataSet( 9, parameters ));
+      dataSet = dynamic_cast<vtkDataSet*>(m_externalFileLoader->GetVTKDataSet( nParams, parameters ));
       dataSet->Print( std::cout );
       
-      for(unsigned int i = 0; i < 9; ++i)
+      for(unsigned int i = 0; i < nParams; ++i)
       {
          delete [] parameters[i];
       }
