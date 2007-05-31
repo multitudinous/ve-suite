@@ -76,20 +76,31 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
 
-cfdDataSet::cfdDataSet( )
+cfdDataSet::cfdDataSet( ) :
+    parent( this ),
+    dataSet( 0 ),
+    x_planes( 0 ),
+    y_planes( 0 ),
+    z_planes( 0 ),
+    activeScalar( -1 ),
+    activeVector( -1 ),
+    numScalars( 0 ),
+    numVectors( 0 ),
+    partOfTransientSeries( 0 ),
+    datasetType( -1 ),
+    vectorMagRange( 0 ),
+    actualScalarRange( 0 ),
+    displayedScalarRange( 0 ),
+    meanCellBBLength( 0.0 ),
+    dataSetAxes( 0 ),
+    dataSetScalarBar( 0 ),
+    _vtkFHndlr( 0 ),
+    m_externalFileLoader( 0 )
 {
-   this->dataSet = NULL;
    this->lut = vtkLookupTable::New();
    this->arrow = NULL;
-   this->activeScalar = -1;         // 0 <= activeScalar < numScalars
-   this->activeVector = -1;
-   this->numScalars = 0;
-   this->numVectors = 0;
    this->scalarName.empty();// = NULL;
    this->vectorName.empty();// = NULL;
-   this->x_planes = NULL;
-   this->y_planes = NULL;
-   this->z_planes = NULL;
    this->range = new double [ 2 ];
    this->range[ 0 ] = 0.0f;
    this->range[ 1 ] = 1.0f;
@@ -104,7 +115,6 @@ cfdDataSet::cfdDataSet( )
    // automatically have the same color mapping as the "parent" 
    // By default, the dataset is assumed to have no parent, that is,
    // use its own range to determine color mapping.
-   this->parent = this;
    //this->dcs = NULL;
    this->switchNode = new VE_SceneGraph::Switch();
    this->switchNode->SetName( "switch_for_data_viz" );
@@ -115,20 +125,6 @@ cfdDataSet::cfdDataSet( )
    this->textureBased->SetName( "textureBased" );
    this->switchNode->AddChild( this->textureBased.get() );
    this->switchNode->SetVal(0);
-
-   this->partOfTransientSeries = 0;
-   this->datasetType = -1;
-   this->vectorMagRange = NULL;
-   this->actualScalarRange = NULL;
-   this->displayedScalarRange = NULL;
-   this->meanCellBBLength = 0.0;
-   //this->intRange[0] = 0;
-   //this->intRange[1] =1000000;
-   dataSetAxes = 0;
-   dataSetScalarBar = 0;
-   //this->animation = 0;
-   _vtkFHndlr = 0;
-   m_externalFileLoader = 0;
 }
 
 cfdDataSet::~cfdDataSet()
@@ -661,16 +657,16 @@ void cfdDataSet::LoadData()
       ( extension.find( "vtp" ) != std::string::npos ) ||
       ( extension.find( "vti" ) != std::string::npos ) )
    {
-      if(!_vtkFHndlr)
+      if( !_vtkFHndlr )
       {
-        _vtkFHndlr = new cfdVTKFileHandler();
+          _vtkFHndlr = new cfdVTKFileHandler();
       }
       ///This will need to be changed to handle mutliblockdatasets!!!!!!
       this->dataSet = dynamic_cast<vtkDataSet*>(_vtkFHndlr->GetDataSetFromFile(fileName));
    }
    else
    {
-      if(!m_externalFileLoader)
+      if( !m_externalFileLoader )
       {
          m_externalFileLoader = new VE_Builder::DataLoader();
       }
@@ -697,6 +693,8 @@ void cfdDataSet::LoadData()
       strcpy(parameters[8], "stream" );
       
       dataSet = dynamic_cast<vtkDataSet*>(m_externalFileLoader->GetVTKDataSet( 9, parameters ));
+      dataSet->Print( std::cout );
+      
       for(unsigned int i = 0; i < 9; ++i)
       {
          delete [] parameters[i];

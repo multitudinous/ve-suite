@@ -83,7 +83,7 @@ void cfdTranslatorToVTK::SetInputDirectory(std::string inDir)
    baseFileNames.clear();
    _inputDir = inDir;
    _infileNames = VE_Util::fileIO::GetFilesInDirectory(inDir,_fileExtension);
-   for (size_t i = 0; i < _infileNames.size(); i++)
+   for( size_t i = 0; i < _infileNames.size(); i++ )
    {
       ExtractBaseName(_infileNames.at(i));
    }
@@ -230,7 +230,7 @@ bool cfdTranslatorToVTK::TranslateToVTK(int argc, char** argv)
       }
    }
 
-   for ( unsigned int i = 0; i < status.size(); ++i )
+   for ( size_t i = 0; i < status.size(); ++i )
    {
       if(!status.test(i))
       {

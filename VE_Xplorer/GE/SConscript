@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options')
+Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options vesSVNRevision')
 
 srcs = Split("""
    cfdApp.cxx
@@ -38,7 +38,7 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
 #disable profiling by default
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
-
+env.Append( CPPDEFINES = [vesSVNRevision] )
 vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )

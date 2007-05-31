@@ -16,6 +16,7 @@ srcs = Split("""
    UserPreferences.cxx
    Splitter.cxx
    ../DefaultPlugin/DefaultPlugin.cxx
+   ../DefaultPlugin/DefaultPlugin_UI_Dialog.cxx
    MainToolBar.cxx
    UI_TeacherTab.cxx
 """)
