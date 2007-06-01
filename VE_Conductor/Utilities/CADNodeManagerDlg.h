@@ -38,9 +38,8 @@
 /*!\class CADNodeManagerDialog
  * GUI class to manipulate CADNode tree.
  */
-#ifndef STAND_ALONE
 #include "VE_Open/skel/VjObsC.h"
-#endif
+
 #include "wx/dialog.h"
 #include "wx/treectrl.h"
 #include "wx/window.h"
@@ -85,11 +84,6 @@ public:
       PROPERTY_ID,///<The property ID.
       GEOM_SAVE///<The save ID.
    };
-#ifndef STAND_ALONE
-   ///Set the current vjObjs ptr for data passing.
-   ///\param xplorerCom The communication interface w/ xplorer.
-   void SetVjObsPtr(VjObs_ptr xplorerCom);
-#endif
 
    ///Clear out the current queue of instructions.
    void ClearInstructions();
@@ -167,11 +161,10 @@ protected:
    ///If we have, create a clone.
    ///\param filename The filename to check
    bool _ensureClones(wxString filename);
-#ifndef STAND_ALONE
+
    ///Send CAD commands back to VE-Xplorer
    void _sendCommandsToXplorer();
-   VjObs_var _vjObsPtr;///<The VjObj ptr.
-#endif
+  
    ///This function takes a cad file name and constructs a command to send
    ///to xplorer
    ///\param fileName The filename to send to xplorer

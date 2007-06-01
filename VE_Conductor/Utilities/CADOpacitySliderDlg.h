@@ -86,10 +86,6 @@ public:
    ///Destructor 
    virtual ~CADOpacitySliderDlg();
    
-   ///Set the current vjObjs ptr for data passing.
-   ///\param xplorerCom The communication interface w/ xplorer.
-   void SetVjObsPtr(VjObs_ptr xplorerCom);
-
    ///Set the value of the slider
    ///\param value The new opacity value.
    void SetSliderValue(double value);
@@ -114,7 +110,6 @@ protected:
    ///Send CAD commands back to VE-Xplorer
    void _sendCommandsToXplorer();
 
-   VjObs_var _vjObsPtr;///<The VjObj ptr.
    wxSlider* _opacitySlider;///<The wxSlider.
 
    DECLARE_EVENT_TABLE()

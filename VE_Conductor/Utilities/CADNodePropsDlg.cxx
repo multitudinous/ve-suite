@@ -62,6 +62,8 @@
 #include "VE_Conductor/Utilities/CADMaterialEditMenu.h"
 #include "VE_Conductor/Utilities/CADOpacitySliderDlg.h"
 #include "VE_Conductor/Utilities/TransformUI.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
+
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Transform.h"
 #include "VE_Open/XML/FloatArray.h"
@@ -149,13 +151,6 @@ CADNodePropertiesDlg::CADNodePropertiesDlg (wxWindow* parent,
 CADNodePropertiesDlg::~CADNodePropertiesDlg()
 {
 }
-#ifndef STAND_ALONE
-//////////////////////////////////////////////////////////
-void CADNodePropertiesDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
-{
-   _vjObsPtr = xplorerCom;
-}
-#endif
 ///////////////////////////////////
 void CADNodePropertiesDlg::_buildGUI()
 {
@@ -1176,7 +1171,6 @@ void CADNodePropertiesDlg::_showOpacityDialog(wxCommandEvent& WXUNUSED(event))
    {
       CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
       CADOpacitySliderDlg opacityDlg(this,-1,_cadNode->GetID(),_cadNode->GetActiveAttribute().GetMaterial());
-      opacityDlg.SetVjObsPtr(_vjObsPtr);
       if (opacityDlg.ShowModal() == (wxID_OK|wxID_CANCEL))
       {
          material->SetOpacity(opacityDlg.GetOpacity());
@@ -1336,43 +1330,15 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
    }
 
    cadCommand->SetCommandName(_commandName);
-
-   std::string commandString("returnString");
-
-   VE_XML::XMLReaderWriter cadCommandWriter;
-   cadCommandWriter.UseStandaloneDOMDocumentManager();
-   cadCommandWriter.WriteToString();
-   
-   std::pair<VE_XML::Command*,std::string> nodeTagPair;
-   nodeTagPair.first = cadCommand;
-   nodeTagPair.second = std::string("vecommand");
-   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
-   nodeToWrite.push_back(nodeTagPair);
-
-   cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
-
-   char* tempDoc = new char[ commandString.size() + 1 ];
-   tempDoc = CORBA::string_dup( commandString.c_str() );
-
-   if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
+   try
    {
-      try
-      {
-         //std::cout<<"---The command to send---"<<std::endl;
-         //std::cout<<tempDoc<<std::endl;
-         // CORBA releases the allocated memory so we do not have to
-         _vjObsPtr->SetCommandString( tempDoc );
-      }
-      catch ( ... )
-      {
-         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-         delete [] tempDoc;
-      }
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(cadCommand);
    }
-   else
+   catch ( ... )
    {
-      delete [] tempDoc;
+      wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                     _("Communication Failure"), wxOK | wxICON_INFORMATION );
+      //delete [] tempDoc;
    }
    //Clean up memory
    delete cadCommand;

@@ -1277,7 +1277,6 @@ void UIPluginBase::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
 
       cadDialog->SetSize( dialogSize );
    }
-   cadDialog->SetVjObsPtr( serviceList->GetXplorerPointer() );
    cadDialog->SetRootCADNode(veModel->GetGeometry());
    cadDialog->ShowModal();
    // Get cadnode back

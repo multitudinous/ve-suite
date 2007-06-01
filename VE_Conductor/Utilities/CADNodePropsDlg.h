@@ -117,12 +117,6 @@ public:
    ///\param name The name to check for.
    bool AnimationExists(wxString name);
 
-#ifndef STAND_ALONE
-   ///Set the current vjObjs ptr for data passing.
-   ///\param xplorerCom The communication interface w/ xplorer.
-   void SetVjObsPtr(VjObs_ptr xplorerCom);
-#endif
-
    ///Clear out the current queue of instructions.
    void ClearInstructions();
 
@@ -245,12 +239,9 @@ protected:
    ///utility function to convert unsigned char to double
    ///\param value The value to convert to double
    unsigned char _convertToUnsignedCharColor(double value);
-#ifndef STAND_ALONE
-   VjObs_ptr _vjObsPtr;///<The VjObj ptr.
-   
+
    ///Send the Command back to VE-Xplorer.
    void _sendCommandsToXplorer();
-#endif
 
    wxNotebook* _propertyTabs;///<The tabs for modifying the node properties.
    wxPanel* _transformPanel;///<The transform panel.

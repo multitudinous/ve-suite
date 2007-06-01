@@ -34,6 +34,7 @@
 #include "VE_Conductor/Utilities/CADNodeMenu.h"
 #include "VE_Conductor/Utilities/CADTreeBuilder.h"
 #include "VE_Conductor/Utilities/CADNodePropsDlg.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
@@ -120,13 +121,6 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
       _loadedCAD.clear();
    }
 }
-#ifndef STAND_ALONE
-//////////////////////////////////////////////////////////
-void CADNodeManagerDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
-{
-   _vjObsPtr = VjObs::_duplicate(xplorerCom);
-}
-#endif
 /////////////////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SetRootCADNode(CADNode* rootNode)
 {
@@ -781,9 +775,6 @@ void CADNodeManagerDlg::_showPropertiesDialog(wxCommandEvent& WXUNUSED(event))
    if(_activeCADNode)
    {
       CADNodePropertiesDlg propsDlg(this,PROPERTY_ID,_activeCADNode);
-#ifndef STAND_ALONE
-      propsDlg.SetVjObsPtr(_vjObsPtr);
-#endif
       propsDlg.ShowModal();
    }
 }
@@ -845,7 +836,6 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 	    //_ensureTree();
     }
 }
-#ifndef STAND_ALONE
 ////////////////////////////////////////////////
 void CADNodeManagerDlg::_sendCommandsToXplorer()
 {
@@ -856,41 +846,21 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
       cadCommand->AddDataValuePair(_dataValuePairList.at(i));
    }
    cadCommand->SetCommandName(_commandName);
-   std::string commandString("returnString");
-
-   VE_XML::XMLReaderWriter cadCommandWriter;
-   cadCommandWriter.UseStandaloneDOMDocumentManager();
-   cadCommandWriter.WriteToString();
    
-   std::pair<VE_XML::Command*,std::string> nodeTagPair;
-   nodeTagPair.first = cadCommand;
-   nodeTagPair.second = std::string("vecommand");
-   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
-   nodeToWrite.push_back(nodeTagPair);
-
-   cadCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
-
-   //std::cout << "----Sending Command----" << std::endl;
-   //std::cout << commandString << std::endl;
-
-   if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
+   try
    {
-      try
-      {
-         // CORBA releases the allocated memory so we do not have to
-         _vjObsPtr->SetCommandString( CORBA::string_dup( commandString.c_str() ) );
-      }
-      catch ( ... )
-      {
-         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-      }
+      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(cadCommand);
    }
+   catch ( ... )
+   {
+      wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
+                     _("Communication Failure"), wxOK | wxICON_INFORMATION );
+   }
+
    //Clean up memory
    delete cadCommand;
    ClearInstructions();
 }
-#endif
 ////////////////////////////////////////
 CADNode* CADNodeManagerDlg::GetRootCADNode()
 {

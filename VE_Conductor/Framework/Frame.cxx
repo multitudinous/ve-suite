@@ -1931,15 +1931,6 @@ void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
       _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
                                                                this,CAD_NODE_DIALOG);
    }
-   /*
-   if(_activeModel)
-   {   
-      //this will change once we have a way to retrieve the geometry from the model
-      //_cadDialog->SetRootCADNode(_activeModel->GetGeometry());
-   }
-   */
-   _cadDialog->SetVjObsPtr( serviceList->GetXplorerPointer() );
-
    _cadDialog->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////

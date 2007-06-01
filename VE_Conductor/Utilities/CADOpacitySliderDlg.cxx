@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CADOpacitySliderDlg.h"
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
@@ -86,11 +87,6 @@ void CADOpacitySliderDlg::SetSliderValue(double value)
    //to an int 0-100
    _opacitySlider->SetValue(static_cast<int>(100 - 100*(1.0-value)));
 }
-///////////////////////////////////////////////////////////
-void CADOpacitySliderDlg::SetVjObsPtr(VjObs_ptr xplorerCom)
-{
-   _vjObsPtr = VjObs::_duplicate(xplorerCom);
-}
 ////////////////////////////////////////
 double CADOpacitySliderDlg::GetOpacity()
 {
@@ -144,27 +140,11 @@ void CADOpacitySliderDlg::_sendCommandsToXplorer()
       opacityCommand->AddDataValuePair(_instructions.at(i));
    }
    opacityCommand->SetCommandName(_commandName);
-   std::string commandString("returnString");
-
-   VE_XML::XMLReaderWriter opacityCommandWriter;
-   opacityCommandWriter.UseStandaloneDOMDocumentManager();
-   opacityCommandWriter.WriteToString();
-
-   std::pair<VE_XML::Command*,std::string> nodeTagPair;
-   nodeTagPair.first = opacityCommand;
-   nodeTagPair.second = std::string("vecommand");
-   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
-   nodeToWrite.push_back(nodeTagPair);
-
-   opacityCommandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
-
-
-   if ( !CORBA::is_nil( _vjObsPtr ) && !commandString.empty() )
+   
    {
       try
       {
-         // CORBA releases the allocated memory so we do not have to
-         _vjObsPtr->SetCommandString( CORBA::string_dup( commandString.c_str() ) );
+         VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(opacityCommand);
       }
       catch ( ... )
       {
