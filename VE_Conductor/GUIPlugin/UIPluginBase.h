@@ -337,4 +337,11 @@ protected:
    DECLARE_EVENT_TABLE()
 };
 
+#define UIPLUGIN_CHECKID(event)  \
+    if( !CheckID() ) \
+    { \
+        event.Skip(); \
+        return; \
+    } 
+
 #endif

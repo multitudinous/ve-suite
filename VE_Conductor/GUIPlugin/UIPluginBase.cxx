@@ -1017,11 +1017,7 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDClick( wxMouseEvent &event)
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
    networkFrame->DoPrepareDC( dc );
@@ -1066,11 +1062,7 @@ bool UIPluginBase::SelectMod( int x, int y )
 //////////////////////////////////////////////////////
 void  UIPluginBase::OnShowResult(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     char* result = 0;
 
    if ( !serviceList->IsConnectedToCE() )
@@ -1110,11 +1102,7 @@ void  UIPluginBase::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowAspenName(wxCommandEvent& event )
 {  
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
 	VE_XML::VE_Model::Model* veModel = GetModel();
 	wxString title;
 	title << wxT("Aspen Name");
@@ -1124,11 +1112,7 @@ void  UIPluginBase::OnShowAspenName(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	UIPluginBase* tempPlugin = this;
     IconChooser* chooser = new IconChooser( networkFrame );
@@ -1141,11 +1125,7 @@ void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 {  
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
 	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -1203,11 +1183,7 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 {  
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
 	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -1256,11 +1232,7 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnShowDesc(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     wxString desc;
    wxString title;
  
@@ -1288,33 +1260,21 @@ void UIPluginBase::OnParaView(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnInputsWindow(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
    ViewInputVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnResultsWindow(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
    ViewResultsVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnGeometry(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     //Set the active model so that we do not have to in every function
     if ( !SetActiveModel() ) 
     {
@@ -1347,11 +1307,7 @@ void UIPluginBase::OnGeometry(wxCommandEvent& event )
 ///////////////////////////////////////////
 void UIPluginBase::OnDataSet( wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     //Set the active model so that we do not have to in every function
     if ( !SetActiveModel() ) 
     {
@@ -1388,11 +1344,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
 ///////////////////////////////////////////
 void UIPluginBase::OnVisualization(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     //Set the active model so that we do not have to in every function
     if ( !SetActiveModel() ) 
     {
@@ -1515,11 +1467,7 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
 //////////////////////////////////////////////////
 void UIPluginBase::OnModelSounds(wxCommandEvent& event)
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     //Set the active model so that we do not have to in every function
     if ( !SetActiveModel() ) 
     {
@@ -1717,11 +1665,7 @@ void UIPluginBase::SetDialogSize( wxRect dialogSize )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDelMod(wxCommandEvent& event )
 {
-    if( !CheckID() )
-    {
-        event.Skip();
-        return;
-    }
+    UIPLUGIN_CHECKID( event )
     
     int answer=wxMessageBox(_("Do you really want to delete this module?"), _("Confirmation"), wxYES_NO);
     if (answer!=wxYES)
