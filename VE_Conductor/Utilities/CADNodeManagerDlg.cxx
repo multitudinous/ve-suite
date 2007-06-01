@@ -64,7 +64,8 @@ BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_TREE_SEL_CHANGED(TREE_ID,CADNodeManagerDlg::_setActiveNode)
    EVT_TREE_ITEM_RIGHT_CLICK(TREE_ID, CADNodeManagerDlg::_popupCADNodeManipulatorMenu)
    EVT_BUTTON(GEOM_SAVE,CADNodeManagerDlg::_saveCADFile)
-   
+   EVT_TREE_END_DRAG(TREE_ID, CADNodeManagerDlg::_onEndNodeMove)
+   EVT_TREE_BEGIN_DRAG(TREE_ID, CADNodeManagerDlg::_onBeginNodeMove)
    EVT_MENU(CADNodeMenu::GEOM_PROPERTIES,CADNodeManagerDlg::_showPropertiesDialog)
    EVT_MENU(CADNodeMenu::GEOM_DELETE,CADNodeManagerDlg::_deleteNode)
    EVT_MENU(CADNodeMenu::GEOM_ASSEMBLY_CREATE,CADNodeManagerDlg::_createNewAssembly)
@@ -265,6 +266,7 @@ void CADNodeManagerDlg::_setActiveNode(wxTreeEvent& event)
       _activeTreeNode = 0;
       _activeCADNode = 0;
    }
+   event.Skip();
 }
 /////////////////////////////////////////////////////////////////////////
 void CADNodeManagerDlg::_popupCADNodeManipulatorMenu(wxTreeEvent& event)
@@ -834,6 +836,57 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
 
        _geometryTree->Delete(_activeTreeNode->GetId()); 
 	    //_ensureTree();
+    }
+}/////////////////////////////////////////////////////
+void CADNodeManagerDlg::_onBeginNodeMove(wxTreeEvent& event)
+{
+    if ( event.GetItem() != _geometryTree->GetRootItem() )
+    {
+        m_movingNode = event.GetItem();
+
+        wxPoint clientpt = event.GetPoint();
+        wxPoint screenpt = ClientToScreen(clientpt);
+        m_movingNodeType = _activeCADNode->GetNodeType();
+        m_movingNodeName = _activeCADNode->GetNodeName();
+        
+        event.Allow();
+    }
+}
+
+/////////////////////////////////////////////////////
+void CADNodeManagerDlg::_onEndNodeMove(wxTreeEvent& event)
+{
+    wxTreeItemId newParentNode = event.GetItem();
+    wxTreeItemId oldParentNode = _geometryTree->GetItemParent(m_movingNode);
+    CADTreeBuilder::TreeNodeData* movingCADNode = 
+         dynamic_cast<CADTreeBuilder::TreeNodeData*>
+             (_geometryTree->GetItemData(m_movingNode));
+
+    CADTreeBuilder::TreeNodeData* parentCADNode = 
+         dynamic_cast<CADTreeBuilder::TreeNodeData*>
+             (_geometryTree->GetItemData(newParentNode));
+
+    if ( !newParentNode.IsOk()||
+        ( parentCADNode->GetNode()->GetNodeType() != "Assembly" ) )
+    {
+        return;
+    }
+    
+    _geometryTree->Delete(m_movingNode);
+    if( m_movingNodeType == "Part" )
+    {
+        _geometryTree->AppendItem(newParentNode,
+                               wxString(m_movingNodeName.c_str(), wxConvUTF8 )
+                               ,0,1);
+    }
+    else if( m_movingNodeType == "Assembly" )
+    {
+       _geometryTree->AppendItem(newParentNode,
+                               wxString(m_movingNodeName.c_str(), wxConvUTF8 )
+                               ,0,2);
+
+        _geometryTree->SetItemImage(newParentNode, 2, wxTreeItemIcon_Expanded);
+        _geometryTree->SetItemImage(newParentNode, 2, wxTreeItemIcon_SelectedExpanded);
     }
 }
 ////////////////////////////////////////////////

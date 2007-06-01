@@ -82,7 +82,8 @@ public:
    {
       TREE_ID=wxID_HIGHEST+1,///<The tree ID.
       PROPERTY_ID,///<The property ID.
-      GEOM_SAVE///<The save ID.
+      GEOM_SAVE,///<The save ID.
+      TREE_NODE_END_MOVE///<The save ID.
    };
 
    ///Clear out the current queue of instructions.
@@ -174,6 +175,12 @@ protected:
    ///to xplorer
    ///\param fileName The filename to send to xplorer
    void SendVEGNodesToXplorer( wxString fileName );
+   ///Signal that a CADNode started moving
+   ///\param event wxTreeEvent
+   void _onBeginNodeMove(wxTreeEvent& event);
+   ///Signal that a CADNode finished moving and update hierachy
+   ///\param event wxTreeEvent
+   void _onEndNodeMove(wxTreeEvent& event);
    
    wxTreeCtrl* _geometryTree;///<The tree control.
    wxButton* _quitButton;///<The button to close the dialog.
@@ -196,6 +203,11 @@ protected:
    VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
    std::map<wxString,VE_XML::VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
    //wxButton* _loadButton;
+   wxTreeItemId m_movingNode;///<The node that is being moved
+   wxTreeItemId m_movingNodeParent;///<The parent of the node that is being moved
+   std::string m_movingNodeName;///<The name of the CADNode that is being moved
+   std::string m_movingNodeType;///<The type of CADNode that is being moved
+
    std::string ConvertUnicode( const wxChar* data )
    {
          std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
