@@ -67,6 +67,7 @@ class StreamlinePane;
 class UserPreferences;
 class DeviceProperties;
 
+
 // --- wxWidgets Includes --- //
 #include <wx/frame.h>
 #include <wx/config.h>
@@ -80,6 +81,7 @@ class wxImageList;
 class wxSplitterWindow;
 class wxColourData;
 class wxMenu;
+class wxFileHistory;
 
 // --- C/C++ Includes --- //
 #include <vector>
@@ -391,6 +393,7 @@ private:
     UserPreferences* preferences;
     std::vector< double > xplorerColor;
     wxColourData* xplorerWxColor;
+    wxFileHistory* m_recentVESFiles;///<The list of recently opened VES files.
 
     DECLARE_EVENT_TABLE()
 };

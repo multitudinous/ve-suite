@@ -2419,7 +2419,11 @@ void Network::CreateNetwork( std::string xmlNetwork )
    std::vector< std::string > networkModelVector;
    std::vector< std::string >::iterator stringIter;
    networkModelVector = VE_Conductor::XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
-   int timeCalc = 25/networkModelVector.size();
+    int timeCalc = 0;
+    if(networkModelVector.size())
+    {
+       timeCalc = 25/networkModelVector.size();
+    }
    size_t i = 0;
     for( stringIter = networkModelVector.begin(); stringIter != networkModelVector.end(); ++stringIter )
     {

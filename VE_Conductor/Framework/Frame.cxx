@@ -92,6 +92,7 @@
 #include <wx/app.h>
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
+#include <wx/docview.h>
 
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
@@ -152,17 +153,8 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences )
     EVT_MENU( wxID_OPEN, AppFrame::Open )
 
-    //Use max of 10 for recent file list, bind each ID to OpenRecentFile
-    EVT_MENU( v21ID_BASE_RECENT  , AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+1, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+2, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+3, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+4, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+5, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+6, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+7, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+8, AppFrame::OpenRecentFile )
-    EVT_MENU( v21ID_BASE_RECENT+9, AppFrame::OpenRecentFile )
+    EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
+ 
 
     EVT_MENU( v21ID_LOAD, AppFrame::LoadFromServer )
     EVT_MENU( QUERY_FROM_SERVER, AppFrame::QueryFromServer )
@@ -263,7 +255,11 @@ _cadDialog( 0 )
                                        SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
 
     this->SetIcon( ve_icon32x32_xpm );
+    //Initialize recent files menu
+    m_recentVESFiles = new wxFileHistory();
+
     CreateMenu();
+
     mainToolBar = new MainToolBar( this );
     this->SetToolBar( mainToolBar );
     CreateStatusBar();
@@ -277,6 +273,8 @@ _cadDialog( 0 )
     fname = _( "" );
 
     GetConfig( NULL );
+    //add the stored files to the menu
+    //m_recentVESFiles->AddFilesToMenu();
 
     ///Initialize VE-Open
     VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new VE_XML::XMLCreator() );
@@ -470,6 +468,7 @@ void AppFrame::GetConfig(wxConfig* config)
       counter++;
    }
 
+   m_recentVESFiles->Load(*cfg);
    if (!config) delete cfg;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -571,8 +570,8 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 	//store recent menus in config
 	wxConfig* cfg = config;
 	if (!config) cfg = new wxConfig( wxTheApp->GetAppName() );
-	
-   wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr) + _T("/") + RECENT_FILE;
+    m_recentVESFiles->Save(*cfg);
+   /*wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr) + _T("/") + RECENT_FILE;
 	bool exist = false;
 
 	//remove old
@@ -590,7 +589,7 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 	for(int i=0; i<recentFileArchive.size(); i++)
 	{
 		cfg->Write (key + wxString::Format(_("%i"), i), recentFileArchive.at(i).GetFullPath() );
-	}
+	}*/
 
 	if (!config) delete cfg;
 }
@@ -645,6 +644,11 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
    network = 0;
    serviceList->CleanUp();
    serviceList = 0;
+    if( m_recentVESFiles)
+    {
+        delete m_recentVESFiles;
+    }
+    m_recentVESFiles = 0;
    //std::cout << "End Cleanup" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -688,7 +692,7 @@ void AppFrame::CreateMenu()
    file_menu->Enable( wxID_PREVIEW, false );	
    file_menu->Enable( wxID_PRINT, false );
 
-
+   m_recentVESFiles->UseMenu(file_menu);
    //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
    //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
    //con_menu->AppendSeparator();
@@ -1094,7 +1098,8 @@ void AppFrame::DeleteRecentFile(wxFileName vesFileName)
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile(wxFileName vesFileName)
 {
-	std::vector< wxFileName > dummyList;
+    m_recentVESFiles->AddFileToHistory(vesFileName.GetFullPath());
+	/*std::vector< wxFileName > dummyList;
 	dummyList.clear();
 	int i;
 	int offset = 0;
@@ -1121,13 +1126,15 @@ void AppFrame::SetRecentFile(wxFileName vesFileName)
 	recentFileArchive.push_back( vesFileName.GetFullPath() );
 	dummyList.clear();
 
-	SetRecentMenu();
+	SetRecentMenu();*/
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentMenu()
 {
-	int i;
+    //m_recentVESFiles->AddFilesToMenu();
+	/*int i;
 	int openRecentFile_ID = v21ID_BASE_RECENT;
 	wxString dummyFullName, dummyDirectory;
 
@@ -1151,70 +1158,74 @@ void AppFrame::SetRecentMenu()
 		dummyDirectory	= recentFileArchive.at(i).GetPath();
 		openRecentMenu->Append( openRecentFile_ID + i, dummyFullName.SubString(0, dummyFullName.size() - 5) );
 		openRecentMenu->SetHelpString( openRecentFile_ID + i, dummyDirectory );
-	}
+	}*/
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
-	int placeChosen = event.GetId();
-	wxFileName vesFileName;
-	vesFileName = recentFileArchive.at(placeChosen - v21ID_BASE_RECENT);
-   bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
-   if ( !success )
-   {
-      wxMessageBox( _("Can't open a VES file on another drive."), 
+    wxString fileToOpen(m_recentVESFiles->GetHistoryFile(event.GetId() - wxID_FILE1));
+    if (!fileToOpen.empty())
+    {
+
+	    int placeChosen = event.GetId();
+	    wxFileName vesFileName(fileToOpen);
+	    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+        if ( !success )
+        {
+            wxMessageBox( _("Can't open a VES file on another drive."), 
                     _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-      return;
-   }
+            return;
+        }
    
-   // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
-	path			= vesFileName.GetFullPath();
-	//directory	= vesFileName.GetPath();
-   directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
-   fname			= vesFileName.GetFullName();
-   //change conductor working dir
-   ::wxSetWorkingDirectory( directory );
+       // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
+	    path			= vesFileName.GetFullPath();
+	    //directory	= vesFileName.GetPath();
+       directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+       fname			= vesFileName.GetFullName();
+       //change conductor working dir
+       ::wxSetWorkingDirectory( directory );
 
-	SetRecentFile(vesFileName);
+	    SetRecentFile(vesFileName);
 
-   std::string tempDir = ConvertUnicode( directory.c_str() );
-	if ( tempDir.empty() )
-	{
-		tempDir = "./";
-	}
+       std::string tempDir = ConvertUnicode( directory.c_str() );
+	    if ( tempDir.empty() )
+	    {
+		    tempDir = "./";
+	    }
 
-	//Send Command to change xplorer working dir
-	// Create the command and data value pairs
-	VE_XML::DataValuePair* dataValuePair = 
-                  new VE_XML::DataValuePair(  std::string("STRING") );
-	dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-	VE_XML::Command* veCommand = new VE_XML::Command();
-	veCommand->SetCommandName( std::string("Change Working Directory") );
-	veCommand->AddDataValuePair( dataValuePair );
-	serviceList->SendCommandStringToXplorer( veCommand );
-	delete veCommand;
+	    //Send Command to change xplorer working dir
+	    // Create the command and data value pairs
+	    VE_XML::DataValuePair* dataValuePair = 
+                      new VE_XML::DataValuePair(  std::string("STRING") );
+	    dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
+	    VE_XML::Command* veCommand = new VE_XML::Command();
+	    veCommand->SetCommandName( std::string("Change Working Directory") );
+	    veCommand->AddDataValuePair( dataValuePair );
+	    serviceList->SendCommandStringToXplorer( veCommand );
+	    delete veCommand;
 
-	//Clear the viewpoints data
-	//Since the data is "managed" by Xplorer we need to notify 
-	//Xplorer when we load a new ves file to clear viewpoints since
-	//They don't go with the new data.
+	    //Clear the viewpoints data
+	    //Since the data is "managed" by Xplorer we need to notify 
+	    //Xplorer when we load a new ves file to clear viewpoints since
+	    //They don't go with the new data.
 
-	//Dummy data that isn't used but I don't know if a command will work
-	//w/o a DVP 
-	VE_XML::DataValuePair* dvp = 
-                  new VE_XML::DataValuePair(  std::string("STRING") );
-	dvp->SetData( "Clear Quat Data", tempDir );
-	VE_XML::Command* vec = new VE_XML::Command();
-	vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
-	vec->AddDataValuePair( dvp );
-	serviceList->SendCommandStringToXplorer( vec );
-	delete vec;
+	    //Dummy data that isn't used but I don't know if a command will work
+	    //w/o a DVP 
+	    VE_XML::DataValuePair* dvp = 
+                      new VE_XML::DataValuePair(  std::string("STRING") );
+	    dvp->SetData( "Clear Quat Data", tempDir );
+	    VE_XML::Command* vec = new VE_XML::Command();
+	    vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+	    vec->AddDataValuePair( dvp );
+	    serviceList->SendCommandStringToXplorer( vec );
+	    delete vec;
 
-	//Now laod the xml data now that we are in the correct directory
-	//SubmitToServer( event );      
-	network->Load( ConvertUnicode( path.c_str() ), true );
-	SubmitToServer( event );      	
+	    //Now laod the xml data now that we are in the correct directory
+	    //SubmitToServer( event );      
+	    network->Load( ConvertUnicode( path.c_str() ), true );
+	    SubmitToServer( event );      	
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
