@@ -110,7 +110,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    //Read the header information again from the star files to get version
    int tempGet = 0;
-   tempGet = fvertices.get();
+   tempGet = fvertices.get(); 
 
    if ( tempGet == 'P' )
    {
@@ -132,7 +132,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       fvertices.getline(tempBuffer,512);
       delete [] tempBuffer;
    }
-   
+
+   int charSize = 512;
+   char* tempLine = new char[ charSize ];   
+
    // The first thing we do is count the vertices and compute the minimum
    // and maximum vertex IDs
 
@@ -142,6 +145,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    float vx, vy, vz;
 
    fvertices >> vertexId >> vx >> vy >> vz;
+   fvertices.getline( tempLine, charSize );
 
    int vShift = vertexId;
    int maxOrigVertexId = vertexId;
@@ -152,6 +156,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    while( !fvertices.eof() )
    {
       fvertices >> vertexId >> vx >> vy >> vz;
+      fvertices.getline( tempLine, charSize );
+
       if ( vShift > vertexId ) vShift = vertexId;
       if ( maxOrigVertexId < vertexId ) maxOrigVertexId = vertexId;
       numStarVertices++;
@@ -170,8 +176,12 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    // Reread all of the vertex lines and store the vertex
    // info in the vertices array using shifted vertex numbering
-   fvertices.seekg( std::ios_base::beg);
-
+   fvertices.clear(); // needed to make seekg work because it sets fail
+   // It seems that when you finished the last read it read the end of 
+   // file which set the fail bit on the next read. 
+   // When there are fail flags set the seekg will not work. 
+   // Once you clear the flags , then your seekg should work.   
+   fvertices.seekg( 0, std::ios_base::beg);
 
    if ( starcdVersion == 4 )
    {
@@ -180,10 +190,12 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       fvertices.getline(tempBuffer,512);
       delete [] tempBuffer;
    }
-   
+
    while( !fvertices.eof() )
    {
       fvertices >> vertexId >> vx >> vy >> vz;
+      fvertices.getline( tempLine, charSize );
+
       vertices->SetPoint( vertexId-vShift, vx, vy, vz );
       if ( this->debug > 1 )
          std::cout << "Inserted point # " << vertexId-vShift << ": "
@@ -402,7 +414,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
          else
          {
-            std::cout << "Unsupported cell type " << cellType << " " << numberOfVertsPerCell << " " << cellNumber << std::endl;
+            std::cout << "Unsupported cell type " << cellType << " " << 
+               numberOfVertsPerCell << " " << cellNumber << std::endl;
+
             cellFile.getline( tempLine, charSize );
             if ( numberOfVertsPerCell > 8 )
             {   
@@ -422,7 +436,12 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    // std::cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << std::endl;
 
    // Read the cell vertex connectivity and write vtk cells...  
-   fcells.seekg( std::ios_base::beg);
+   fcells.clear(); // needed to make seekg work because it sets fail
+   // It seems that when you finished the last read it read the end of 
+   // file which set the fail bit on the next read. 
+   // When there are fail flags set the seekg will not work. 
+   // Once you clear the flags , then your seekg should work.  
+   fcells.seekg( 0, std::ios_base::beg );
 
    if ( starcdVersion == 324 )
    {
@@ -434,8 +453,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          &cPt[0], &cPt[1], &cPt[2], &cPt[3], &cPt[4], &cPt[5], &cPt[6], &cPt[7], 
          &cGroup, &cType); 
          */
-         fcells >> cId >> cPt[0] >> cPt[1] >> cPt[2] >> cPt[3] >> cPt[4] >> cPt[5] >> cPt[6] >> cPt[7] >> cGroup >> cType;
-         
+         fcells >> cId >> cPt[0] >> cPt[1] >> cPt[2] >> cPt[3] >> cPt[4] >> 
+            cPt[5] >> cPt[6] >> cPt[7] >> cGroup >> cType;
+
+         fcells.getline( tempLine , charSize );
          // reject all types except for cells or samm cells
          if ( cType != 1 && cType != -1) continue;
 
@@ -470,8 +491,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             &sGroup, &sType);
             */
 
-            fcells >> sId >> sPt[0] >> sPt[1] >> sPt[2] >> sPt[3] >> sPt[4] >> sPt[5] >> sPt[6] >> sPt[7] >> sGroup >> sType;           
-
+            fcells >> sId >> sPt[0] >> sPt[1] >> sPt[2] >> sPt[3] >> sPt[4] >> 
+               sPt[5] >> sPt[6] >> sPt[7] >> sGroup >> sType;      
+     
+            fcells.getline( tempLine, charSize );
             for ( i=0; i<8; i++ ) sPt[i] -= vShift;
 
             if ( this->debug ) 
@@ -488,8 +511,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                    &sGroup, &sType);
             */
 
-           fcells >> sId >> tPt[0] >> tPt[1] >> tPt[2] >> tPt[3] >> tPt[4] >> tPt[5] >> tPt[6] >> tPt[7] >> sGroup >> sType;
+           fcells >> sId >> tPt[0] >> tPt[1] >> tPt[2] >> tPt[3] >> tPt[4] >> 
+               tPt[5] >> tPt[6] >> tPt[7] >> sGroup >> sType;
 
+           fcells.getline( tempLine , charSize );
 
             if ( this->debug ) 
                std::cout << "                                    On line 3, vertices: " 
