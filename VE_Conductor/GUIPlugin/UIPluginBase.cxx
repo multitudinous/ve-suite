@@ -94,6 +94,8 @@ BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
    EVT_MENU( SET_UI_PLUGIN_NAME, UIPluginBase::OnSetUIPluginName )
    EVT_MENU( SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
    EVT_MENU( ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
+    EVT_MENU( DEL_MOD, UIPluginBase::OnDelMod )
+    EVT_UPDATE_UI( SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
@@ -823,7 +825,7 @@ void UIPluginBase::FinancialData ()
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::ViewInputVariables( void )
 {
-   if( inputsDialog )
+    if( inputsDialog )
    {
       inputsDialog->Destroy();
       inputsDialog = 0;
@@ -853,7 +855,8 @@ void UIPluginBase::ViewInputVariables( void )
 ///////////////////////////////////////////////
 void UIPluginBase::ViewResultsVariables( void )
 {
-   if( resultsDialog )
+
+    if( resultsDialog )
    {
       resultsDialog->Destroy();
       resultsDialog = 0;
@@ -1014,7 +1017,12 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDClick( wxMouseEvent &event)
 {
-   // This function opens a plugins dialog when double clicked on the design canvas
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
    networkFrame->DoPrepareDC( dc );
    //dc.SetUserScale( userScale.first, userScale.second );
@@ -1056,9 +1064,14 @@ bool UIPluginBase::SelectMod( int x, int y )
    return false;
 }
 //////////////////////////////////////////////////////
-void  UIPluginBase::OnShowResult(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowResult(wxCommandEvent& event )
 {
-   char* result = 0;
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    char* result = 0;
 
    if ( !serviceList->IsConnectedToCE() )
    {
@@ -1095,8 +1108,13 @@ void  UIPluginBase::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
    FinancialData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowAspenName(wxCommandEvent& event )
 {  
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
 	VE_XML::VE_Model::Model* veModel = GetModel();
 	wxString title;
 	title << wxT("Aspen Name");
@@ -1104,8 +1122,13 @@ void  UIPluginBase::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 	wxMessageDialog( networkFrame, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
 {
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	UIPluginBase* tempPlugin = this;
     IconChooser* chooser = new IconChooser( networkFrame );
@@ -1116,8 +1139,13 @@ void  UIPluginBase::OnShowIconChooser(wxCommandEvent& WXUNUSED(event))
    //delete chooser;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 {  
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
 	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -1173,8 +1201,13 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& WXUNUSED(event))
 	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
+void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 {  
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
 	std::string compName = GetModel()->GetModelName();
 
 	VE_XML::Command returnState;
@@ -1221,9 +1254,14 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& WXUNUSED(event))
 	//	this->OnQueryOutputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnShowDesc(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnShowDesc(wxCommandEvent& event )
 {
-   wxString desc;
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    wxString desc;
    wxString title;
  
    title << wxT("Description");
@@ -1248,26 +1286,42 @@ void UIPluginBase::OnParaView(wxCommandEvent& WXUNUSED(event))
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnInputsWindow(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnInputsWindow(wxCommandEvent& event )
 {
-   // Here we launch a dialog for a specific plugins input values
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    // Here we launch a dialog for a specific plugins input values
    ViewInputVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnResultsWindow(wxCommandEvent& WXUNUSED(event))
+void UIPluginBase::OnResultsWindow(wxCommandEvent& event )
 {
-   // Here we launch a dialog for a specific plugins input values
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    // Here we launch a dialog for a specific plugins input values
    ViewResultsVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnGeometry(wxCommandEvent& event )
 {
-   if ( !SetActiveModel() ) 
-   {
-      return;
-   }
-
-   // Here we launch a dialog for a specific plugins input values
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    //Set the active model so that we do not have to in every function
+    if ( !SetActiveModel() ) 
+    {
+        return;
+    }
+    
+    // Here we launch a dialog for a specific plugins input values
    VE_XML::VE_Model::Model* veModel = GetModel();
 
    if( !cadDialog )
@@ -1291,14 +1345,20 @@ void UIPluginBase::OnGeometry(wxCommandEvent& WXUNUSED( event ) )
    }
 }
 ///////////////////////////////////////////
-void UIPluginBase::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnDataSet( wxCommandEvent& event )
 {
-   if ( !SetActiveModel() ) 
-   {
-      return;
-   }
-   
-   // Here we launch a dialog for a specific plugins input values
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    //Set the active model so that we do not have to in every function
+    if ( !SetActiveModel() ) 
+    {
+        return;
+    }
+    
+    // Here we launch a dialog for a specific plugins input values
    VE_XML::VE_Model::Model* veModel = GetModel();
    DataSetLoaderUI dataSetLoaderDlg( networkFrame, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
@@ -1326,14 +1386,20 @@ void UIPluginBase::OnDataSet( wxCommandEvent& WXUNUSED( event ) )
    }
 }
 ///////////////////////////////////////////
-void UIPluginBase::OnVisualization(wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnVisualization(wxCommandEvent& event )
 {
-   if ( !SetActiveModel() ) 
-   {
-      return;
-   }
-  
-   //Get the active model ID from the xml data
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    //Set the active model so that we do not have to in every function
+    if ( !SetActiveModel() ) 
+    {
+        return;
+    }
+    
+    //Get the active model ID from the xml data
    VE_XML::VE_Model::Model* activeXMLModel = GetModel();
    unsigned int modelID = activeXMLModel->GetModelID();
 
@@ -1449,12 +1515,18 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
 //////////////////////////////////////////////////
 void UIPluginBase::OnModelSounds(wxCommandEvent& event)
 {
-   if ( !SetActiveModel() ) 
-   {
-      return;
-   }
-
-   if( !_soundsDlg )
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    //Set the active model so that we do not have to in every function
+    if ( !SetActiveModel() ) 
+    {
+        return;
+    }
+    
+    if( !_soundsDlg )
    {
       _soundsDlg = new SoundsPane( GetModel());
       _soundsDlg->SetSize( dialogSize );
@@ -1476,18 +1548,14 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
        event.Skip();
        return;
    }
+   //send the active id so that each plugin knows what to do
+   wxUpdateUIEvent setActivePluginId;
+   setActivePluginId.SetClientData( &id );
+   setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
+   networkFrame->GetEventHandler()->ProcessEvent( setActivePluginId );
    
    wxString menuName = name + wxString( " Menu", wxConvUTF8 );
    wxMenu pop_menu( menuName );
-
-   //pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
-
-   //pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
-   //pop_menu.Append(EDIT_TAG, _("Edit Tag") );
-   //pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
-   //pop_menu.Append(DEL_LINK, _("Delete Link") );
-   //pop_menu.Append(DEL_TAG, _("Delete Tag") );
-   //pop_menu.Append(DEL_MOD, _("Del Module") );
 
    pop_menu.Append(SHOW_DESC, _("Show Module Description") );	
    pop_menu.Append(SHOW_RESULT, _("Show Module Result") );
@@ -1551,7 +1619,9 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
    //Set the plugin name for a model
    pop_menu.Append(SET_UI_PLUGIN_NAME, _("Set UI Plugin Name") );
    pop_menu.Enable(SET_UI_PLUGIN_NAME, true);
-
+   pop_menu.Append(DEL_MOD, _("Del Module") );
+   pop_menu.Enable(DEL_MOD, true);
+   
    //pop_menu.Enable(ADD_LINK_CON, false);
    //pop_menu.Enable(EDIT_TAG, false);
    //pop_menu.Enable(DEL_LINK_CON, false);
@@ -1589,6 +1659,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
      pop_menu.Enable(ICON_MENU, true);
 
    wxPoint action_point = event.GetLogicalPosition(dc);
+   pop_menu.SetClientData( &id );
    networkFrame->PopupMenu(&pop_menu, event.GetPosition());
 
    m_selFrPort = -1; 
@@ -1600,9 +1671,26 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
    //xold = yold =0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& event )
 {
    SetActiveModel();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::OnSetActivePluginID( wxUpdateUIEvent& event )
+{
+    int* activeIdTemp = static_cast< int* >( event.GetClientData() );
+    //std::cout << *activeIdTemp << std::endl;
+    activeId = *activeIdTemp;
+    event.Skip();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIPluginBase::CheckID()
+{
+    if( activeId == id )
+    {
+        return true;
+    }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIPluginBase::SetActiveModel()
@@ -1625,4 +1713,47 @@ bool UIPluginBase::SetActiveModel()
 void UIPluginBase::SetDialogSize( wxRect dialogSize )
 {
     this->dialogSize = dialogSize;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::OnDelMod(wxCommandEvent& event )
+{
+    if( !CheckID() )
+    {
+        event.Skip();
+        return;
+    }
+    
+    int answer=wxMessageBox(_("Do you really want to delete this module?"), _("Confirmation"), wxYES_NO);
+    if (answer!=wxYES)
+        return;
+    
+    //Now delete the plugin from the module and then remove from the map
+    ///This is so that we find the right eventhandler to pop rather than
+    ///popping the last one
+    std::vector< wxEvtHandler* > tempEvtHandlerVector;
+    wxEvtHandler* tempEvtHandler = 0;
+    tempEvtHandler = networkFrame->PopEventHandler( false );
+    while ( this != tempEvtHandler )
+    {
+        tempEvtHandlerVector.push_back( tempEvtHandler );
+        tempEvtHandler = networkFrame->PopEventHandler( false );
+    }
+    
+    for ( size_t i = 0; i < tempEvtHandlerVector.size(); ++i )
+    {
+        networkFrame->PushEventHandler( tempEvtHandlerVector.at( i ) );
+    }
+    
+    ///Now send the erased module to xplorer to delete it as well
+    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+    dataValuePair->SetDataName( "Object ID" );
+    dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
+    VE_XML::Command* veCommand = new VE_XML::Command();
+    veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+    veCommand->AddDataValuePair( dataValuePair );
+    bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    //Clean up memory
+    delete veCommand;
+    event.SetClientData( &id );
+    ::wxPostEvent( networkFrame, event );
 }

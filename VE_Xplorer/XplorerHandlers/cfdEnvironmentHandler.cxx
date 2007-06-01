@@ -394,7 +394,10 @@ float cfdEnvironmentHandler::GetFrameRate()
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
-	static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, _frustumBottom, _frustumNear, _frustumFar );
+	static_cast< VE_Xplorer::KeyboardMouse* >( 
+        VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+        SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, 
+            _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()

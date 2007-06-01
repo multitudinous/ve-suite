@@ -85,7 +85,6 @@ public:
       DEL_TAG,
       DEL_LINK,
       DEL_LINK_CON,
-      DEL_MOD,
       SHOW_LINK_CONT
    };
 

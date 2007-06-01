@@ -129,7 +129,9 @@ public:
       VISUALIZATION,
       SET_UI_PLUGIN_NAME,
       SET_ACTIVE_MODEL,
-      ACTIVE_MODEL_SOUNDS
+      ACTIVE_MODEL_SOUNDS,
+      DEL_MOD,
+      SET_ACTIVE_PLUGIN
    };
    ///Defualt constructor
    UIPluginBase();
@@ -235,6 +237,8 @@ public:
    void OnVisualization( wxCommandEvent& event );
    void OnSetUIPluginName( wxCommandEvent& event );
    void OnSetActiveXplorerModel( wxCommandEvent& event );
+   void OnSetActivePluginID( wxUpdateUIEvent& event );
+   void OnDelMod( wxCommandEvent &event );
    // EPRI TAG
    void OnShowFinancial(wxCommandEvent &event);
    void OnShowAspenName(wxCommandEvent &event);
@@ -261,6 +265,9 @@ protected:
    void RegistVar(std::string vname, std::vector<double> *var);
    void RegistVar(std::string vname, std::vector<std::string> *var);
 
+   ///Check the active id against the plugin id
+   bool CheckID();
+   
    UIDialog* dlg;
    TextResultDialog* result_dlg;
    TextResultDialog* port_dlg;
@@ -325,6 +332,7 @@ protected:
    int m_selTag; 
    int m_selTagCon; 
    wxRect dialogSize;
+   int activeId;
    DECLARE_DYNAMIC_CLASS( UIPluginBase )
    DECLARE_EVENT_TABLE()
 };

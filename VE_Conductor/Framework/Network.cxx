@@ -101,7 +101,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(DEL_TAG, Network::OnDelTag)
    EVT_MENU(DEL_LINK, Network::OnDelLink)
    EVT_MENU(DEL_LINK_CON, Network::OnDelLinkCon)
-   EVT_MENU(DEL_MOD, Network::OnDelMod)
+   EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod)
    EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
 END_EVENT_TABLE()
 
@@ -567,7 +567,6 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
    pop_menu.Append(DEL_LINK, _("Delete Link") );
    pop_menu.Append(DEL_TAG, _("Delete Tag") );
-   pop_menu.Append(DEL_MOD, _("Del Module") );
    pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
 
    pop_menu.Enable(ADD_LINK_CON, false);
@@ -575,7 +574,6 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Enable(DEL_LINK_CON, false);
    pop_menu.Enable(DEL_LINK, false);
    pop_menu.Enable(DEL_TAG, false);
-   pop_menu.Enable(DEL_MOD, false);
 
    pop_menu.Enable(SHOW_LINK_CONT, false);
 
@@ -593,11 +591,6 @@ void Network::OnMRightDown(wxMouseEvent& event)
    {
       pop_menu.Enable(EDIT_TAG, true);
       pop_menu.Enable(DEL_TAG, true);
-   }
-
-   if (m_selMod>=0)
-   {
-      pop_menu.Enable(DEL_MOD, true);
    }
 
    action_point = event.GetLogicalPosition(dc);
@@ -810,22 +803,19 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelMod(wxCommandEvent& WXUNUSED( event ) )
+void Network::OnDelMod(wxCommandEvent& event )
 {
-   int answer=wxMessageBox(_("Do you really want to delete this module?"), _("Confirmation"), wxYES_NO);
-   if (answer!=wxYES)
-      return;
-
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
    
    // Need to delete all links associated with this particular module
    // first, delete all the links connects to it
+   int* selMod = static_cast< int* >( event.GetClientData() );
    std::vector< Link >::iterator iter3;
    for ( iter3=links.begin(); iter3!=links.end(); )
    {
 	   if ( 
-            (iter3->GetFromModule() == m_selMod) || 
-            (iter3->GetToModule() == m_selMod) 
+            (iter3->GetFromModule() == *selMod) || 
+            (iter3->GetToModule() == *selMod) 
          )
 	   {
 	      iter3 = links.erase( iter3 );
@@ -835,7 +825,7 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED( event ) )
          ++iter3;
       }
    }
- 
+
    ///Need to clear out the vector of polygon boxes as well
    ///XXX
    /////////////
@@ -844,38 +834,12 @@ void Network::OnDelMod(wxCommandEvent& WXUNUSED( event ) )
    std::map< int, Module >::iterator iter;
    for (iter=modules.begin(); iter!=modules.end();)
    {
-      if ( iter->first == m_selMod )
+      if ( iter->first == *selMod )
       {
-         ///This is so that we find the right eventhandler to pop rather than
-         ///popping the last one
-         std::vector< wxEvtHandler* > tempEvtHandlerVector;
-         wxEvtHandler* tempEvtHandler = 0;
-         tempEvtHandler = PopEventHandler( false );
-         while ( modules[m_selMod].GetPlugin() != tempEvtHandler )
-         {
-            tempEvtHandlerVector.push_back( tempEvtHandler );
-            tempEvtHandler = PopEventHandler( false );
-         }
-        
-         for ( size_t i = 0; i < tempEvtHandlerVector.size(); ++i )
-         {
-           PushEventHandler( tempEvtHandlerVector.at( i ) );
-         }
-         
          //delete modules[m_selMod].GetPlugin();
 	      modules.erase( iter );
-         ///Now send the erased module to xplorer to delete it as well
-         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
-         dataValuePair->SetDataName( "Object ID" );
-         dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
-         VE_XML::Command* veCommand = new VE_XML::Command();
-         veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
-         veCommand->AddDataValuePair( dataValuePair );
-         bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-         //Clean up memory
-         delete veCommand;       
 	      m_selLink = -1;
-         m_selMod = -1;
+          m_selMod = -1;
 	      break;
       }
       else
