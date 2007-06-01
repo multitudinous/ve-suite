@@ -35,6 +35,7 @@
 
 #include "VE_Open/skel/moduleS.h"
 
+#undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vpr/IO/SerializableObject.h>
