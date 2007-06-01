@@ -177,6 +177,6 @@ void OpacityVisitor::apply( osg::Group& node )
       stateset->setAttribute( material.get(), osg::StateAttribute::ON );
    }
 
-   osg::NodeVisitor::apply( (osg::Node&)node );
+   osg::NodeVisitor::apply( node );
 }
 ////////////////////////////////////////////////////////////////////////////////

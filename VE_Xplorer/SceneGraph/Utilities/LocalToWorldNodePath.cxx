@@ -30,9 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldNodePath.h"
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
 #include <osg/PositionAttitudeTransform>
 
 // --- C/C++ Libraries --- //
@@ -62,7 +63,7 @@ void LocalToWorldNodePath::apply( osg::PositionAttitudeTransform& pat )
         return;
     }
 
-    osg::NodeVisitor::apply( (osg::Transform&)pat );
+    osg::NodeVisitor::apply( pat );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::NodePath& LocalToWorldNodePath::GetNodePath()

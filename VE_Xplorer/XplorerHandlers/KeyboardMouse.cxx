@@ -40,7 +40,7 @@
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 
-#include "VE_Xplorer/SceneGraph/Utilities/ComputeBoundsVisitor.h"
+#include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldNodePath.h"
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>
@@ -79,7 +79,7 @@ KeyboardMouse::KeyboardMouse()
 :
 m_key( -1 ),
 m_button( -1 ),
-m_state( -1 ),
+m_state( 0 ),
 m_x( 0 ),
 m_y( 0 ),
 
@@ -175,11 +175,13 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
     double distance = 10000.0f;
 
     gmtl::Matrix44f vjHeadMat = m_head->getData();
-    // get juggler Matrix of worldDCS
-    // Note:: for pf we are in juggler land
-    //        for osg we are in z up land
+
+    //Get juggler Matrix of worldDCS
+    //Note:: for pf we are in juggler land
+    //       for osg we are in z up land
     gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
     jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+
     //We have to offset negative m_x because the view is being drawn for the m_leftFrustum 
     //eye which means the the frustums are being setup for the m_leftFrustum eye
     jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[0] - ( 0.034 * 3.280839 );
@@ -393,17 +395,8 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix *= m_deltaTransform;
     matrix *= accuRotation;
 
-    /*
-    if( activeDCS->GetName() != "World DCS" )
-    {
-        activeDCS->SetMat( gmtl::invert( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat() ) * matrix );
-    }
-    else
-    {
-    */
-        //Set the current matrix
-        activeDCS->SetMat( matrix );
-    //}
+    //Set the current matrix
+    activeDCS->SetMat( matrix );
 
     //If not in animation mode, reset the transform
     if( !m_animate )
@@ -592,30 +585,26 @@ void KeyboardMouse::FrameAll()
 
     //Get the selected objects and expand by their bounding box
     float Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
-    VE_SceneGraph::Utilities::ComputeBoundsVisitor cbv;
-    osg::BoundingBox bb;
+    osg::BoundingSphere bs = root->computeBound();
 
-    cbv.apply( *root.get() );
-    bb = cbv.getBoundingBox();
-
-    float x = bb.center().x();
+    float x = bs.center().x();
     m_currentTransform.mData[12] -= x;
 
     float y;
     if( m_aspectRatio <= 1.0f )
     {
-        y = ( bb.radius() / tan( Theta ) ) * m_aspectRatio;
+        y = ( bs.radius() / tan( Theta ) ) * m_aspectRatio;
     }
     else
     {
-        y = bb.radius() / tan( Theta );
+        y = bs.radius() / tan( Theta );
     }
 
     float delta_y_val = y - m_currentTransform.mData[13];
     m_currentTransform.mData[13] = y;
     center_point->mData[1] += delta_y_val;
 
-    float z = bb.center().z();
+    float z = bs.center().z();
     m_currentTransform.mData[14] -= z;
 
     VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( m_currentTransform );
@@ -626,7 +615,7 @@ void KeyboardMouse::RotateView( float dx, float dy )
     gmtl::Matrix44f mat;
     float tb_axis[3];
 
-    identity( mat );
+    gmtl::identity( mat );
     float angle = m_magnitude * 400.0f;
 
     tb_axis[0] = mat[0][0] * dy + mat[2][0] * dx;
@@ -639,7 +628,7 @@ void KeyboardMouse::RotateView( float dx, float dy )
 void KeyboardMouse::Twist( float dx, float dy )
 {
     gmtl::Matrix44f mat;
-    identity( mat );
+    gmtl::identity( mat );
 
     float Theta = atan2f( m_prevPos[0] - 0.5, m_prevPos[1] - 0.5 );
     float newTheta = atan2f( m_currPos[0] - 0.5, m_currPos[1] - 0.5 );
@@ -650,11 +639,6 @@ void KeyboardMouse::Twist( float dx, float dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( float dy )
 {
-    if( activeDCS->GetName() != "World DCS" )
-    {
-        //center_point->mData[1] += VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat().mData[7];
-    }
-
     float viewlength = center_point->mData[1];
     float d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
@@ -697,7 +681,7 @@ void KeyboardMouse::Rotate( float x, float y, float z, float angle )
         z /= denom;
     }
 
-    zero( m_deltaTransform );
+    gmtl::zero( m_deltaTransform );
 
     m_deltaTransform.mData[0]  = ( x * x ) + ( cosAng * ( 1 - ( x * x ) ) );
     m_deltaTransform.mData[1]  = ( y * x ) - ( cosAng *       ( y * x ) ) + ( sinAng * z );
@@ -790,11 +774,41 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }
 
-    //Move center point to the center of the active dcs
-    VE_SceneGraph::Utilities::ComputeBoundsVisitor cbv;
-    cbv.apply( *static_cast< osg::Node* >( activeDCS.get() ) );
-    center_point->mData[0] = cbv.getBoundingBox().center().x();
-    center_point->mData[1] = cbv.getBoundingBox().center().y();
-    center_point->mData[2] = cbv.getBoundingBox().center().z();
+    osg::Vec3 nodeCenterWorldCoords( 0, 0, 0 );
+
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldNodePath > nv = new VE_SceneGraph::Utilities::LocalToWorldNodePath( activeDCS.get() );
+        
+        osg::Matrix toWorldTransform;
+        toWorldTransform.identity();
+        toWorldTransform = osg::computeLocalToWorld( nv->GetNodePath() );
+
+        osg::Vec3 localPos = activeDCS->getPosition();
+        osg::Vec3 transPos = activeDCS->getBound().center() - localPos;
+
+        nodeCenterWorldCoords = transPos * toWorldTransform;
+
+        /*
+        std::cout << toWorldTransform( 0, 0 ) << "  " << toWorldTransform( 0, 1 ) << "  " << toWorldTransform( 0, 2 ) << "  " << toWorldTransform( 0, 3 ) << std::endl;
+        std::cout << toWorldTransform( 1, 0 ) << "  " << toWorldTransform( 1, 1 ) << "  " << toWorldTransform( 1, 2 ) << "  " << toWorldTransform( 1, 3 ) << std::endl;
+        std::cout << toWorldTransform( 2, 0 ) << "  " << toWorldTransform( 2, 1 ) << "  " << toWorldTransform( 2, 2 ) << "  " << toWorldTransform( 2, 3 ) << std::endl;
+        std::cout << toWorldTransform( 3, 0 ) << "  " << toWorldTransform( 3, 1 ) << "  " << toWorldTransform( 3, 2 ) << "  " << toWorldTransform( 3, 3 ) << std::endl;
+        std::cout << std::endl;
+        */
+    }
+    /*
+    else
+    {
+        nodeCenterWorldCoords = activeDCS->getBound().center();
+    }
+    */
+
+    center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
+
+    if( center_point->mData[1] < *m_threshold )
+    {
+        center_point->mData[1] = *m_jump;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

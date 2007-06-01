@@ -41,8 +41,10 @@ LocalToWorldNodePath API
 * 
 */
 
+// --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
 
+// --- OSG Includes --- //
 #include <osg/NodeVisitor>
 
 namespace VE_SceneGraph
@@ -61,6 +63,7 @@ public:
 
 private:
     osg::NodePath m_nodePath;
+
 };
 }
 }
