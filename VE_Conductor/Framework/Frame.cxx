@@ -196,17 +196,6 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
     EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
-    //EVT_MENU( XPLORER_VISTABS, AppFrame::LaunchVisTabs ) 
-    //EVT_MENU( XPLORER_STREAMLINE, AppFrame::LaunchStreamlinePane )
-    //EVT_MENU( XPLORER_VISTAB, AppFrame::LaunchVistab )   
-
-    //EVT_MENU( v21ID_GLOBAL_PARAM, AppFrame::GlobalParam )
-    //EVT_MENU( v21ID_BASE, AppFrame::LoadBase )
-    //EVT_MENU( v21ID_SOUR, AppFrame::LoadSour )
-    //EVT_MENU( v21ID_REI_BASE, AppFrame::LoadREIBase )
-    //EVT_MENU( v21ID_REI_SOUR, AppFrame::LoadREISour )
-    //EVT_IDLE( AppFrame::IdleEvent )
-    //EVT_TIMER( TIMER_ID, AppFrame::TimerEvent )
     EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
    EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
    EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
@@ -218,8 +207,6 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
-
-    //EVT_SPLITTER_SASH_POS_CHANGED( SPLIT_WINDOW, AppFrame::UnSplitWindow )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -273,6 +260,7 @@ _cadDialog( 0 )
     fname = _( "" );
 
     m_recentVESFiles->UseMenu(file_menu);
+    m_recentVESFiles->AddFilesToMenu(file_menu);
     GetConfig( NULL );
     
 
@@ -456,18 +444,6 @@ void AppFrame::GetConfig(wxConfig* config)
 		f_visualization = true;
 	}
 
-   key = LOCATION + wxString::Format( _("%d"), m_frameNr) + _T("/") + RECENT_FILE;
-   wxString pathDummy;
-   int counter = 0;
-   exist = cfg->Exists( key + wxString::Format( _("%i"), counter) );
-   while( exist == true )	
-   {
-      exist = cfg->Read( key + wxString::Format (_("%i"), counter), &pathDummy );
-      if( exist == true )
-         recentFileArchive.push_back( wxFileName(pathDummy) );
-      counter++;
-   }
-
    m_recentVESFiles->Load(*cfg);
    if (!config)
    {
@@ -516,8 +492,6 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   wxConfig* cfg = config;
   if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
   int i;
-  //for (i = 0; i <= m_frameNr; i++) { //cyang only 1 frame
-    //wxString key = LOCATION + wxString::Format ("%d", m_frameNr - i);
   wxString key = LOCATION + wxString::Format(_("%d"), 0);
   if (cfg->Exists (key)) 
   {
@@ -526,7 +500,6 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
       rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
       rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
   }
-	//}
   if (!config) delete cfg;
   
   // check for reasonable values (within screen)
