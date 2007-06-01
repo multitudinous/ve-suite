@@ -5,7 +5,7 @@
 #OUTPUT: A velauncher executable in ${Output_Dir}.
 
 #Location of PyInstaller
-export PyInstaller_Location=~pyinstaller-1.3
+export PyInstaller_Location=pyinstaller-1.3
 #Directory the executable will be written to.
 export Output_Dir=dist
 
