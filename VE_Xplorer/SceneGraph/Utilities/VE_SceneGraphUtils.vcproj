@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LocalToWorldNodePath.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialHelper.cxx"
 				>
 			</File>
@@ -230,6 +234,10 @@
 			</File>
 			<File
 				RelativePath=".\ComputeBoundsVisitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LocalToWorldNodePath.h"
 				>
 			</File>
 			<File
