@@ -90,13 +90,13 @@ public:
     ///New 
     void NewVESData( bool promptClearXplorer );
     ///Get data
-    VE_XML::VE_Model::Network& GetXMLNetworkDataObject( std::string dataNumber );
+    VE_XML::VE_Model::Network GetXMLNetworkDataObject( std::string dataNumber );
     ///Get data
-    VE_XML::VE_Model::Model& GetXMLModelDataObject( std::string dataNumber );
+    VE_XML::VE_Model::Model GetXMLModelDataObject( std::string dataNumber );
     ///Get data
-    std::vector< std::string >& GetNetworkModelVector( std::string dataNumber );
+    std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
     ///Get data
-    VE_XML::User& GetXMLUserDataObject( std::string dataNumber );
+    VE_XML::User GetXMLUserDataObject( std::string dataNumber );
         
 private:
     ///Map to store the command name and command for easy lookup by the user

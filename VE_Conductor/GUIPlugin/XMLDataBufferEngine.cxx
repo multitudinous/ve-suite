@@ -101,6 +101,9 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         return;
     }
     
+    //Clean up all the maps so that everything is set for the new network data
+    CleanUp();
+    
     // Just clear the design canvas
     // Start the busy cursor
     // Load from the nt file loaded through wx
@@ -294,22 +297,22 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     m_networkModelMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Network& XMLDataBufferEngine::GetXMLNetworkDataObject( std::string dataNumber )
+VE_XML::VE_Model::Network XMLDataBufferEngine::GetXMLNetworkDataObject( std::string dataNumber )
 {
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Model& XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
+VE_XML::VE_Model::Model XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
 {
     return m_modelMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::User& XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
+VE_XML::User XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
 {
     return m_userMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string >& XMLDataBufferEngine::GetNetworkModelVector( std::string dataNumber )
+std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector( std::string dataNumber )
 {
     //std::vector< std::string > temp = m_networkModelMap[ dataNumber ];
     //std::cout << " size " << temp.size() << std::endl;
