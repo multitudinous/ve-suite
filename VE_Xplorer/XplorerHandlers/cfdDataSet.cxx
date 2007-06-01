@@ -651,6 +651,10 @@ void cfdDataSet::LoadData()
    {
       extension = "star";
    }
+   if( ( extension == "case") )
+   {
+      extension = "ens";
+   }
 
    if( ( extension.find( "vtk" )!= std::string::npos ) ||
       ( extension.find( "vtu" ) != std::string::npos ) ||
