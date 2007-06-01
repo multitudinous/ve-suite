@@ -784,18 +784,12 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         toWorldTransform.identity();
         toWorldTransform = osg::computeLocalToWorld( nv->GetNodePath() );
 
-        osg::Vec3 localPos = activeDCS->getPosition();
-        osg::Vec3 transPos = activeDCS->getBound().center() - localPos;
+        osg::Matrix localDCS;
+        localDCS.identity();
+        localDCS.setTrans( activeDCS->getPosition() );
+        localDCS.setRotate( activeDCS->getAttitude() );
 
-        nodeCenterWorldCoords = transPos * toWorldTransform;
-
-        /*
-        std::cout << toWorldTransform( 0, 0 ) << "  " << toWorldTransform( 0, 1 ) << "  " << toWorldTransform( 0, 2 ) << "  " << toWorldTransform( 0, 3 ) << std::endl;
-        std::cout << toWorldTransform( 1, 0 ) << "  " << toWorldTransform( 1, 1 ) << "  " << toWorldTransform( 1, 2 ) << "  " << toWorldTransform( 1, 3 ) << std::endl;
-        std::cout << toWorldTransform( 2, 0 ) << "  " << toWorldTransform( 2, 1 ) << "  " << toWorldTransform( 2, 2 ) << "  " << toWorldTransform( 2, 3 ) << std::endl;
-        std::cout << toWorldTransform( 3, 0 ) << "  " << toWorldTransform( 3, 1 ) << "  " << toWorldTransform( 3, 2 ) << "  " << toWorldTransform( 3, 3 ) << std::endl;
-        std::cout << std::endl;
-        */
+        nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localDCS ) * toWorldTransform;
     }
     /*
     else
