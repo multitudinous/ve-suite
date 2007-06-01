@@ -110,22 +110,14 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
       worldRot[ i ] = 0.0f;
    }
 
-   #ifdef _OSG
-      display_information = 0;
-               this->objectHandler = 0;
-         _activeGeomPicking = false;
-   #endif //_OSG
+    display_information = 0;
+    this->objectHandler = 0;
+    _activeGeomPicking = false;
 
    _readParam = 0;
    _param.erase();// = 0;
    desktopWidth = 0;
    desktopHeight = 0;
-
-   _clearColor.push_back(0);
-   _clearColor.push_back(0);
-   _clearColor.push_back(0);
-
-   _updateBackgroundColor = false;
 
    ///create seed points drawable
    _seedPoints = new VE_Xplorer::SeedPoints(4,4,1);
@@ -211,32 +203,9 @@ void cfdEnvironmentHandler::CleanUp( void )
    VE_Xplorer::DeviceHandler::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool cfdEnvironmentHandler::BackgroundColorChanged()
-{
-   return _updateBackgroundColor;
-}
-////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::ResetBackgroundColorUpdateFlag()
-{
-   _updateBackgroundColor = false;
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::SetBackgroundColor(std::vector<double> color)
-{
-   _clearColor.clear();
-   for(size_t i =0; i < color.size(); i++)
-   {
-      _clearColor.push_back(static_cast<float>(color.at(i)));
-   }
-	
-	this->display_information->SetTextColor( color );
-
-   _updateBackgroundColor = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
@@ -253,11 +222,6 @@ cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
 {
    return _camHandler;
 }*/
-////////////////////////////////////////////////////////////////////////////////
-std::vector<float> cfdEnvironmentHandler::GetBackgroundColor()
-{
-   return _clearColor;
-}
 ////////////////////////////////////////////////////////////////////////////////
 cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
 {

@@ -32,7 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DisplayInformation.h"
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -82,7 +84,9 @@ void ChangeBackgroundColorEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    activeModelDVP->GetData( color );
    if(!color.empty())
    {
-      VE_Xplorer::cfdEnvironmentHandler::instance()->SetBackgroundColor(color);
+      VE_SceneGraph::SceneManager::instance()->SetBackgroundColor(color);
+      VE_Xplorer::cfdEnvironmentHandler::instance()->
+       GetDisplayInformation()->SetTextColor( color );
    }
 }
 ///////////////////////////////////////////////////////////////////////

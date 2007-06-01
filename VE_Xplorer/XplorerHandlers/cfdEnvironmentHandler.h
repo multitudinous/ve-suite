@@ -107,19 +107,8 @@ public:
    ///Set the command array ?
    ///\param input
    void SetCommandArray( cfdCommandArray* input );
-
-   //void CreateObjects( void );
-
-   ///Update the background color
-   ///\param color The background color
-   void SetBackgroundColor(std::vector<double> color);
-
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
-
-   ///Accessor for cfdSoundHandler
-   //cfdSoundHandler* GetSoundHandler( void );
-
    ///Accessor for cfdTeacher
    cfdTeacher* GetTeacher( void );
 
@@ -128,10 +117,6 @@ public:
 
    ///Accessor for cfdDisplaySettings
    cfdDisplaySettings* GetDisplaySettings( void );
-
-   ///Get the background color
-   std::vector<float> GetBackgroundColor( void );
-
    ///Accessor to set desktop size information for
    /// runtime reconfiguration of desktop windows
    ///\param width The desktop width
@@ -166,14 +151,6 @@ public:
 
    ///Post frame update (look this up)
    void PostFrameUpdate();
-
-   ///Check if the background color has changed
-   bool BackgroundColorChanged();
-
-   ///Reset the background changed color flag
-   void ResetBackgroundColorUpdateFlag();
-  
-#ifdef _OSG
    ///Accessor for DisplayInformation
    DisplayInformation* GetDisplayInformation( void );
 
@@ -182,7 +159,6 @@ public:
 
    ///Deactivate geoometry picking functionality.
    void DeactivateGeometryPicking( void );
-#endif //_OSG 
 
    ///Get the seed points drawable
    SeedPoints* GetSeedPoints();
@@ -206,7 +182,6 @@ private:
    bool _activeGeomPicking;
    #endif //_OSG
 
-   std::vector<float> _clearColor;///<The background color;
    cfdCursor* cursor;///<The cursor.
    std::string _param;///<Store parameters.
    cfdCommandArray* _commandArray;///<Command array.
@@ -237,10 +212,7 @@ private:
    float _frustumFar;///<Far frustum.
 
    float framerate;///<Frame rate.
-
-   bool _updateBackgroundColor;///<The flag for updating the background color in xplorer.
-   
-   std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;///<The event handler for commands.
+    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;///<The event handler for commands.
 };
 }
 

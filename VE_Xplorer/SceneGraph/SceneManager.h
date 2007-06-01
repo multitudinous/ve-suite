@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
@@ -61,6 +59,8 @@ namespace VE_SceneGraph
    class CADEntity;
 }
 
+#include <osg/ClearNode>
+
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -74,7 +74,7 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS SceneManager //: public vpr::Singleton< SceneManager >
 {
 public:
-   ///
+   ///???
    ///\param param
    void Initialize( std::string param );
 
@@ -106,7 +106,10 @@ public:
 
    ///PreFrameUpdate call to sync DCS information across cluster
    void PreFrameUpdate();
-
+   ///Set the background color
+   ///\param color the color to set the background color
+   void SetBackgroundColor( std::vector<double> color );
+       
 private:
    //Required so that vpr::Singleton can instantiate this class
    //Friend class vpr::Singleton< SceneManager >;
@@ -131,6 +134,8 @@ private:
    VE_SceneGraph::CADEntity* _movingPyramidsAssembly;///<Logo Animated pyramids
    VE_SceneGraph::CADEntity* _textPart;///<Logo Text
 
+    ///Clear node to control the background color
+    osg::ref_ptr< osg::ClearNode > m_clrNode;
 protected:
    ///Create the model for the logo
    #ifdef _OSG

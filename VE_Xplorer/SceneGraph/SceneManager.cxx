@@ -108,6 +108,11 @@ void SceneManager::InitScene( void )
    this->networkDCS  = new VE_SceneGraph::DCS();
    this->networkDCS->SetName( "Network DCS" );
 
+   m_clrNode = new osg::ClearNode();
+   m_clrNode->setRequiresClear( true );
+   m_clrNode->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+   m_clrNode->setName( "Clear Node - Control ClearColor" );
+   
    //Create the switch for our logo
    _createLogo();
 
@@ -118,7 +123,8 @@ void SceneManager::InitScene( void )
    //Now lets put it on the main group node
    //Remember that the logo switch is right below the group node 
    //NOT the world dcs
-   rootNode->AddChild( _logoSwitch.get() );
+   rootNode->addChild( m_clrNode.get() );
+   m_clrNode->addChild( _logoSwitch.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Group* SceneManager::GetRootNode( void )
@@ -195,5 +201,10 @@ VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode( void )
          return dynamic_cast< VE_SceneGraph::DCS* >( _logoSwitch->getChild( i ) );
       }
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::SetBackgroundColor(std::vector<double> color)
+{
+    m_clrNode->setClearColor( osg::Vec4( color.at(0), color.at(1), color.at(2), 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -296,7 +296,7 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	newSceneViewer->setDefaults( osgUtil::SceneView::NO_SCENEVIEW_LIGHT | 
                                 osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT  );
 	newSceneViewer->init();
-	newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+	//newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
 
 	//Needed for stereo to work.
 	newSceneViewer->setDrawBufferValue( GL_NONE );
@@ -473,7 +473,7 @@ void cfdApp::latePreFrame( void )
    ///////////////////////
    cfdEnvironmentHandler::instance()->LatePreFrameUpdate(); 
    ///////////////////////
-   svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
+   //svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
    ///////////////////////
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
 	
@@ -505,10 +505,10 @@ void cfdApp::latePreFrame( void )
 	//**********************************************************************
    ///We must do this here because this must be serial not parallel in
    ///multiple contexts
-   if ( svUpdate )
+   /*if ( svUpdate )
    {
       clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
-   }
+   }*/
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
    this->update();
@@ -544,8 +544,8 @@ void cfdApp::postFrame()
     vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
-    svUpdate = false;
-    cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
+    //svUpdate = false;
+    //cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
     time_since_start = _timer.delta_s(_start_tick,_timer.tick());
 #ifdef _WEB_INTERfACE
     if( time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
@@ -680,13 +680,13 @@ void cfdApp::contextPreDraw( void )
       {
          ///This does not seem to affect the background color
          ///not sure why
-         //sv->setClearColor( osg::Vec4( clearColor.at(0),
-         //                              clearColor.at(1),
-         //                              clearColor.at(2), 1.0 ) );
+         /*sv->setClearColor( osg::Vec4( clearColor.at(0),
+                                       clearColor.at(1),
+                                       clearColor.at(2), 1.0 ) );*/
          ///This does change the background color
-         glClearColor( clearColor.at(0),
+         /*glClearColor( clearColor.at(0),
                        clearColor.at(1),
-                       clearColor.at(2), 1.0 );
+                       clearColor.at(2), 1.0 );*/
       }
    }
 }
