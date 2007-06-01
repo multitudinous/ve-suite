@@ -55,7 +55,7 @@ public:
       //ouputDataset should be populated              //
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
+      virtual void Translate( vtkDataObject*& outputDataset,
 		                     cfdTranslatorToVTK* toVTK);
       ///This creates additional scalars from vector components
       ///\param outputDataset Dataset to be used and modified

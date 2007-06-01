@@ -123,7 +123,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
       {
          if ( !outputDataset )
          {
-            outputDataset = vtkUnstructuredGrid::New();
+            outputDataset = vtkMultiBlockDataSet::New();
          }
          outputDataset->DeepCopy(reader->GetOutput());
       }
@@ -154,7 +154,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             
             if ( !outputDataset )
             {
-               outputDataset = vtkUnstructuredGrid::New();
+               outputDataset = vtkMultiBlockDataSet::New();
             }
             //vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
             outputDataset->DeepCopy( reader->GetOutput() );
