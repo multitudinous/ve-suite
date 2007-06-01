@@ -272,9 +272,9 @@ _cadDialog( 0 )
     directory = _( "" );
     fname = _( "" );
 
+    m_recentVESFiles->UseMenu(file_menu);
     GetConfig( NULL );
-    //add the stored files to the menu
-    //m_recentVESFiles->AddFilesToMenu();
+    
 
     ///Initialize VE-Open
     VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new VE_XML::XMLCreator() );
@@ -469,7 +469,10 @@ void AppFrame::GetConfig(wxConfig* config)
    }
 
    m_recentVESFiles->Load(*cfg);
-   if (!config) delete cfg;
+   if (!config)
+   {
+      delete cfg;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::GetAppropriateSubDialogSize()
@@ -569,27 +572,11 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 {
 	//store recent menus in config
 	wxConfig* cfg = config;
-	if (!config) cfg = new wxConfig( wxTheApp->GetAppName() );
-    m_recentVESFiles->Save(*cfg);
-   /*wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr) + _T("/") + RECENT_FILE;
-	bool exist = false;
-
-	//remove old
-	for(int i=0; i<10; i++)
-	{
-		exist = cfg->HasEntry(key + wxString::Format(_("%i"), i));
-
-		if(exist)	
-		{	
-			cfg->DeleteEntry( key + wxString::Format(_("%i")), false);
-		}
-	}
-
-	//store new
-	for(int i=0; i<recentFileArchive.size(); i++)
-	{
-		cfg->Write (key + wxString::Format(_("%i"), i), recentFileArchive.at(i).GetFullPath() );
-	}*/
+	if (!config) 
+   {
+      cfg = new wxConfig( wxTheApp->GetAppName() );
+   }
+   m_recentVESFiles->Save(*cfg);
 
 	if (!config) delete cfg;
 }
@@ -665,9 +652,6 @@ void AppFrame::CreateMenu()
    run_menu = new wxMenu;
    edit_menu = new wxMenu;
    help_menu = new wxMenu;
-//   config_menu = new wxMenu;
-	openRecentMenu = new wxMenu;
-	// TODO update openRecentMenu
 
    file_menu->Append( wxID_NEW, _( "&New\tCtrl+N" ) );
    file_menu->Append( wxID_OPEN, _( "&Open ..\tCtrl+O" ) );
@@ -689,7 +673,6 @@ void AppFrame::CreateMenu()
    file_menu->Enable( wxID_PREVIEW, false );	
    file_menu->Enable( wxID_PRINT, false );
 
-   m_recentVESFiles->UseMenu(file_menu);
    //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
    //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
    //con_menu->AppendSeparator();
