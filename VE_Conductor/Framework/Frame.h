@@ -270,12 +270,7 @@ protected:
     void SaveAs( wxCommandEvent &event );
     void OnPreferences( wxCommandEvent &event );
 	
-    //TODO -- cleanup
-    void InitRecentFile();
-    void SetRecentMenu();
-    void DeleteRecentFile( wxFileName vesFileName );
     void SetRecentFile( wxFileName vesFileName );
-    void ClearRecentFile( wxCommandEvent& WXUNUSED( event ) );
     void OpenRecentFile( wxCommandEvent& event );
 
 public:

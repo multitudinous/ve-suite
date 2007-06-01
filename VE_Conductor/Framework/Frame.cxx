@@ -672,10 +672,7 @@ void AppFrame::CreateMenu()
    file_menu->Append( wxID_NEW, _( "&New\tCtrl+N" ) );
    file_menu->Append( wxID_OPEN, _( "&Open ..\tCtrl+O" ) );
 
-	InitRecentFile();
-
-	//file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), openRecentMenu, _("Open recent menu") );
-   file_menu->AppendSeparator();
+	file_menu->AppendSeparator();
 
    file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
    file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
@@ -1045,122 +1042,11 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       SubmitToServer( event );      
    }
 }
-
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::InitRecentFile()
-{
-	int i;
-	int openRecentFile_ID = v21ID_BASE_RECENT;
-	wxString dummyString;
-
-	if(recentFileArchive.size() == 0)
-	{
-		openRecentMenu->Append (openRecentFile_ID, _("None"));
-		openRecentMenu->Enable (openRecentFile_ID, false);
-	}
-	else 
-	{
-		for( i=(recentFileArchive.size()-1); i>=0; i-- )
-		{
-			dummyString = recentFileArchive.at(i).GetFullName();
-			openRecentMenu->Append (openRecentFile_ID + i, dummyString.SubString(0, dummyString.size() - 5));
-		}
-	}
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::DeleteRecentFile(wxFileName vesFileName)
-{
-	// PROMPT BOX look at SaveAs() -- box that states fill has been moved or deleted, and ask them with radio buttons
-	// a) to continue to Open menu, b) cancel and return to current working document
-	std::vector< wxFileName > dummyList;
-	int i;
-	bool deleteFile = false;
-
-	for(i=0; i<recentFileArchive.size(); i++)
-	{
-		if(vesFileName.GetFullPath() == recentFileArchive.at(i).GetFullPath())
-			deleteFile = true;
-
-		if(!deleteFile)	dummyList.push_back(recentFileArchive.at(i));
-		else					deleteFile = false;
-	}
-	recentFileArchive.clear();
-	
-	for(i=0; i<dummyList.size(); i++)
-	{
-		recentFileArchive.push_back(dummyList.at(i));
-	}
-	dummyList.clear();
-
-	SetRecentMenu();
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile(wxFileName vesFileName)
 {
     m_recentVESFiles->AddFileToHistory(vesFileName.GetFullPath());
-	/*std::vector< wxFileName > dummyList;
-	dummyList.clear();
-	int i;
-	int offset = 0;
-	bool repeat = false;
-
-	// check if path is already in list, erase old location and place up front
-	for(i=0; i<recentFileArchive.size(); i++)
-	{
-		if(vesFileName.GetFullPath() == recentFileArchive.at(i).GetFullPath())
-		{
-			repeat = true;
-		}
-
-		if(!repeat)		dummyList.push_back(recentFileArchive.at(i));
-		else				repeat = false;
-	}
-	recentFileArchive.clear();
-
-	if( dummyList.size() >= 10 )	offset = dummyList.size()-9;
-
-	for(i=0+offset; i<dummyList.size(); i++)
-		recentFileArchive.push_back(dummyList.at(i));
-
-	recentFileArchive.push_back( vesFileName.GetFullPath() );
-	dummyList.clear();
-
-	SetRecentMenu();*/
-
 }
-
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SetRecentMenu()
-{
-    //m_recentVESFiles->AddFilesToMenu();
-	/*int i;
-	int openRecentFile_ID = v21ID_BASE_RECENT;
-	wxString dummyFullName, dummyDirectory;
-
-	size_t menuSize = openRecentMenu->GetMenuItemCount();
-	while( menuSize > 0 )
-	{
-		openRecentMenu->Delete(v21ID_BASE_RECENT + menuSize - 1);
-		menuSize = openRecentMenu->GetMenuItemCount();
-	}
-
-	// set menu
-	if( recentFileArchive.size() == 0 )
-	{
-		openRecentMenu->Append (openRecentFile_ID, _("None"));
-		openRecentMenu->Enable (openRecentFile_ID, false);
-	}
-
-	for( i=(recentFileArchive.size()-1); i>=0; i-- )
-	{
-		dummyFullName  = recentFileArchive.at(i).GetFullName();
-		dummyDirectory	= recentFileArchive.at(i).GetPath();
-		openRecentMenu->Append( openRecentFile_ID + i, dummyFullName.SubString(0, dummyFullName.size() - 5) );
-		openRecentMenu->SetHelpString( openRecentFile_ID + i, dummyDirectory );
-	}*/
-}
-
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
@@ -1204,11 +1090,6 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	    veCommand->AddDataValuePair( dataValuePair );
 	    serviceList->SendCommandStringToXplorer( veCommand );
 	    delete veCommand;
-
-	    //Clear the viewpoints data
-	    //Since the data is "managed" by Xplorer we need to notify 
-	    //Xplorer when we load a new ves file to clear viewpoints since
-	    //They don't go with the new data.
 
 	    //Dummy data that isn't used but I don't know if a command will work
 	    //w/o a DVP 
