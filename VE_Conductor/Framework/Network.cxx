@@ -2476,7 +2476,9 @@ void Network::CreateNetwork( std::string xmlNetwork )
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
 
+std::cout << " here 1 " << std::endl;
     VE_XML::User userInfo = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLUserDataObject( "Network" );
+    std::cout << " here 1 " << std::endl;
     if ( userInfo.GetUserStateInfo() )
     {
         backgroundColor.clear();

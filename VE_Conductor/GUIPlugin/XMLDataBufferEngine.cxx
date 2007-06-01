@@ -59,6 +59,8 @@ void XMLDataBufferEngine::CleanUp( void )
     m_networkMap.clear();
     m_modelMap.clear();
     m_networkModelMap.clear();
+    m_userMap.clear();
+    m_tagMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command& XMLDataBufferEngine::GetCommand( std::string commandKey )

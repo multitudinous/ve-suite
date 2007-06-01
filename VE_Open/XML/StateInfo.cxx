@@ -149,7 +149,7 @@ StateInfo::StateInfo( const StateInfo& input)
 {
    for(size_t i = 0; i < input._stateInfo.size(); i++)
    {
-      _stateInfo.push_back(input._stateInfo.at(i));
+      _stateInfo.push_back( new Command( *(input._stateInfo.at(i)) ) );
    }
 }
 /////////////////////////////////////////////////////////
@@ -157,10 +157,10 @@ StateInfo& StateInfo::operator= ( const StateInfo& input)
 {
    if( this != &input )
    {
-      _stateInfo.clear();
+      ClearState();
       for(size_t i = 0; i < input._stateInfo.size(); i++)
       {
-         _stateInfo.push_back(input._stateInfo.at(i));
+         _stateInfo.push_back( new Command( *(input._stateInfo.at(i)) ) );
       }
    }
    return *this;
