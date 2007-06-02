@@ -56,6 +56,11 @@
 #include <osg/Switch>
 #endif
 
+#ifdef VE_PATENTED
+#include <osgOQ/OcclusionQueryRoot.h>
+#include <osgOQ/OcclusionQueryContext.h>
+#endif
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <string>
@@ -118,13 +123,44 @@ void SceneManager::InitScene( void )
 
    _logoSwitch->AddChild( worldDCS.get() );
    _logoSwitch->AddChild( _logoNode.get() );
-   _logoSwitch->AddChild( networkDCS.get() );
+   _logoSwitch->AddChild( networkDCS.get() );   
 
-   //Now lets put it on the main group node
-   //Remember that the logo switch is right below the group node 
-   //NOT the world dcs
-   rootNode->addChild( m_clrNode.get() );
-   m_clrNode->addChild( _logoSwitch.get() );
+#ifdef VE_PATENTED   
+    osg::ref_ptr<osgOQ::OcclusionQueryContext> oqc = new osgOQ::OcclusionQueryContext();
+    ///number of pixels
+    oqc->setVisibilityThreshold( 500 );
+    ///Number of verts
+    oqc->setOccluderThreshold( 5000 );
+    ///Specifies the number of occlusion query identifiers to allocate
+    ///per rendering context.    
+    oqc->setBufferSize( -1 );
+    ///Specify whether to use hierarchical ("NonFlat") placement for
+    oqc->setNonFlatPlacement( true );
+    ///Place bounding volumes in for osgOQ nodes
+    oqc->setDebugDisplay( true );
+    // Sets the debug verbosity. Currently supported 'level' values:
+    //    0 -- Verbosity is controlled by osg::notify.
+    //    1 -- For each OQN in each frame, displays whether that node
+    //         thinks its actual geometry is visible or not and why.
+    // Call through OcclusionQueryRoot to set value only for a
+    //   specific number of frames.
+    //void setDebugVerbosity( 0 );
+    oqc->setStatistics( true );
+        
+    osg::ref_ptr<osgOQ::OcclusionQueryRoot> osgOQRoot;
+    // Some other plugin was used. Add it to an OQR.
+    osgOQRoot = new osgOQ::OcclusionQueryRoot( oqc.get() );
+#endif    
+    //Now lets put it on the main group node
+    //Remember that the logo switch is right below the group node 
+    //NOT the world dcs
+#ifdef VE_PATENTED
+    rootNode->addChild( osgOQRoot.get() );
+    osgOQRoot->addChild( m_clrNode.get() );
+#else
+    rootNode->addChild( m_clrNode.get() );
+#endif
+    m_clrNode->addChild( _logoSwitch.get() );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Group* SceneManager::GetRootNode( void )
