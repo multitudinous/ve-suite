@@ -273,9 +273,11 @@ void CADEntityHelper::LoadFile( std::string filename,
     if( m_cadNode.valid() && !isStream )
     {
         m_cadNode->setName( filename.c_str() );
-        osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+#ifdef VE_PATENTED 
+       osgOQ::OcclusionQueryNonFlatVisitor oqv( 
             VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
 		m_cadNode->accept( oqv );
+#endif
     }
     else if( m_cadNode.valid() && isStream )
     {
@@ -284,9 +286,11 @@ void CADEntityHelper::LoadFile( std::string filename,
         {
             m_cadNode->setName( "NULL_FILENAME" );
         }
+#ifdef VE_PATENTED 
         osgOQ::OcclusionQueryNonFlatVisitor oqv( 
             VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
 		m_cadNode->accept( oqv );
+#endif
     }
     else 
     {

@@ -315,7 +315,7 @@ if not SConsAddons.Util.hasHelpFlag():
    if baseEnv['build_dir'] != '':
       buildDir = baseEnv['build_dir']
 
-   if baseEnv['tao'] == 'yes':
+   if baseEnv['Patented'] == 'yes':
       baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
 
    ## read the builder options after they have been added to the env
