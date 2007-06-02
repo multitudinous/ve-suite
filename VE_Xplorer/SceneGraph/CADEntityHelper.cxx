@@ -34,6 +34,7 @@
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
@@ -64,6 +65,10 @@
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
 #elif _OPENSG
+#endif
+
+#ifdef VE_PATENTED
+#include <osgOQ/OcclusionQueryVisitor.h>
 #endif
 
 // --- C/C++ Libraries --- //
@@ -242,13 +247,11 @@ void CADEntityHelper::LoadFile( std::string filename,
                 std::cerr << "Error: could not load file `" << filename << "'" << std::endl;
             }
         }
-
         else
         {
             m_cadNode = osgDB::readNodeFile( filename );
         }
     }
-
     else
     {
         std::istringstream textNodeStream( filename );
@@ -270,6 +273,9 @@ void CADEntityHelper::LoadFile( std::string filename,
     if( m_cadNode.valid() && !isStream )
     {
         m_cadNode->setName( filename.c_str() );
+        osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+            VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
+		m_cadNode->accept( oqv );
     }
     else if( m_cadNode.valid() && isStream )
     {
@@ -278,6 +284,9 @@ void CADEntityHelper::LoadFile( std::string filename,
         {
             m_cadNode->setName( "NULL_FILENAME" );
         }
+        osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+            VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
+		m_cadNode->accept( oqv );
     }
     else 
     {

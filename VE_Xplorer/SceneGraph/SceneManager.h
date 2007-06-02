@@ -51,6 +51,11 @@
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 
+#ifdef VE_PATENTED
+#include <osgOQ/OcclusionQueryRoot.h>
+#include <osgOQ/OcclusionQueryContext.h>
+#endif
+
 namespace VE_SceneGraph
 {
    class DCS;
@@ -95,7 +100,10 @@ public:
 
    ///Return the active switch node of the scenegraph
    VE_SceneGraph::DCS* GetActiveSwitchNode();
-
+#ifdef VE_PATENTED
+   ///Return the active switch node of the scenegraph
+   osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
+#endif
    ///Set the node on the switch node that is active
    ///\param activeNode The node to activate
    void SetActiveSwitchNode( int activeNode );
@@ -136,6 +144,9 @@ private:
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
+#ifdef VE_PATENTED
+    osg::ref_ptr<osgOQ::OcclusionQueryContext> m_oqc;
+#endif
 protected:
    ///Create the model for the logo
    #ifdef _OSG

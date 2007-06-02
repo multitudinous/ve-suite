@@ -57,8 +57,9 @@ lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cfl
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
-#ode_options.apply( lib_env )
-#opal_options.apply( lib_env )
+lib_env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
+lib_env.Append(LIBS = ['osgOQ'])
+lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_XplorerNetworkLib%s' %(execOsgPatTag),
                                                         lib_env,

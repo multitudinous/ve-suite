@@ -35,6 +35,9 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
 env.Append( CPPDEFINES = [vesSVNRevision] )
+env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
+env.Append(LIBS = ['osgOQ'])
+env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )

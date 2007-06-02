@@ -56,11 +56,6 @@
 #include <osg/Switch>
 #endif
 
-#ifdef VE_PATENTED
-#include <osgOQ/OcclusionQueryRoot.h>
-#include <osgOQ/OcclusionQueryContext.h>
-#endif
-
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <string>
@@ -126,18 +121,18 @@ void SceneManager::InitScene( void )
    _logoSwitch->AddChild( networkDCS.get() );   
 
 #ifdef VE_PATENTED   
-    osg::ref_ptr<osgOQ::OcclusionQueryContext> oqc = new osgOQ::OcclusionQueryContext();
+    m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
-    oqc->setVisibilityThreshold( 500 );
+    m_oqc->setVisibilityThreshold( 500 );
     ///Number of verts
-    oqc->setOccluderThreshold( 5000 );
+    m_oqc->setOccluderThreshold( 5000 );
     ///Specifies the number of occlusion query identifiers to allocate
     ///per rendering context.    
-    oqc->setBufferSize( -1 );
+    m_oqc->setBufferSize( -1 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
-    oqc->setNonFlatPlacement( true );
+    m_oqc->setNonFlatPlacement( false );
     ///Place bounding volumes in for osgOQ nodes
-    oqc->setDebugDisplay( true );
+    m_oqc->setDebugDisplay( true );
     // Sets the debug verbosity. Currently supported 'level' values:
     //    0 -- Verbosity is controlled by osg::notify.
     //    1 -- For each OQN in each frame, displays whether that node
@@ -145,11 +140,11 @@ void SceneManager::InitScene( void )
     // Call through OcclusionQueryRoot to set value only for a
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
-    oqc->setStatistics( true );
+    m_oqc->setStatistics( true );
         
     osg::ref_ptr<osgOQ::OcclusionQueryRoot> osgOQRoot;
     // Some other plugin was used. Add it to an OQR.
-    osgOQRoot = new osgOQ::OcclusionQueryRoot( oqc.get() );
+    osgOQRoot = new osgOQ::OcclusionQueryRoot( m_oqc.get() );
 #endif    
     //Now lets put it on the main group node
     //Remember that the logo switch is right below the group node 
@@ -244,3 +239,9 @@ void SceneManager::SetBackgroundColor(std::vector<double> color)
     m_clrNode->setClearColor( osg::Vec4( color.at(0), color.at(1), color.at(2), 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef VE_PATENTED
+osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
+{
+    return m_oqc.get();
+}
+#endif
