@@ -166,7 +166,7 @@ bool UserPreferences::GetMode( std::string mode )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::ReadConfiguration( void )
 {
-   wxConfig* cfg = new wxConfig( _("VE-Conductor") );
+   wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());//new wxConfig( _("VE-Conductor") );
    
    wxString key = _T("UserPreferences");
    if ( !cfg->Exists( key ) ) 
@@ -184,13 +184,13 @@ void UserPreferences::ReadConfiguration( void )
       //std::cout << iter->second << " " << iter->first << std::endl;
    }
    
-   delete cfg;
+   //delete cfg;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::WriteConfiguration( void )
 {
-   wxConfig* cfg = new wxConfig( _("VE-Conductor") );
-   
+   //wxConfig* cfg = new wxConfig( _("VE-Conductor") );
+   wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());//new wxConfig( _("VE-Conductor") );
    wxString key = _T("UserPreferences");
    std::map< std::string, bool >::iterator iter;
    for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
@@ -201,5 +201,5 @@ void UserPreferences::WriteConfiguration( void )
                   iter->second );
    }
    
-   delete cfg;
+   //delete cfg;
 }

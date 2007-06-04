@@ -44,6 +44,7 @@
 #include <wx/splitter.h>
 #include <wx/dialog.h>
 #include <wx/filename.h>
+#include <wx/config.h>
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Utilities/OrbThread.h"
@@ -237,9 +238,7 @@ _cadDialog( 0 )
     }
     serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
 
-    preferences = new UserPreferences( this, ::wxNewId(), 
-                                       SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
-                                       SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
+    
 
     this->SetIcon( ve_icon32x32_xpm );
     //Initialize recent files menu
@@ -259,11 +258,14 @@ _cadDialog( 0 )
     directory = _( "" );
     fname = _( "" );
 
+    GetConfig( NULL );
     m_recentVESFiles->UseMenu(file_menu);
     m_recentVESFiles->AddFilesToMenu(file_menu);
-    GetConfig( NULL );
     
 
+    preferences = new UserPreferences( this, ::wxNewId(), 
+                                       SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
+                                       SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
     ///Initialize VE-Open
     VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new VE_XML::XMLCreator() );
     VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new VE_Shader::ShaderCreator() );
@@ -426,29 +428,30 @@ bool AppFrame::Show(bool value)
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::GetConfig(wxConfig* config)
 {
-  wxConfig* cfg = config;
-  if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-  bool exist = false;
+   wxConfig* cfg = config;
+   if (!config)
+   { 
+      cfg = new wxConfig(wxTheApp->GetAppName());
+   }
+   wxConfig::Set(cfg);
 
-  wxString key = FEATURE;
-  if (cfg->Exists (key)) 
-  {
+   bool exist = false;
+
+   wxString key = FEATURE;
+   if (cfg->Exists (key)) 
+   {
       exist  = cfg->Read (key + _T("/") + F_FINANCIAL, &f_financial);
       exist  = cfg->Read (key + _T("/") + F_GEOMETRY, &f_geometry);
       exist  = cfg->Read (key + _T("/") + F_VISUALIZATION, &f_visualization);
-  }
-  else
-	{
-		f_financial = true;
-		f_geometry = true;
-		f_visualization = true;
-	}
+   }
+   else
+   {
+       f_financial = true;
+       f_geometry = true;
+       f_visualization = true;
+   }
 
    m_recentVESFiles->Load(*cfg);
-   if (!config)
-   {
-      delete cfg;
-   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::GetAppropriateSubDialogSize()
@@ -489,8 +492,8 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   
   wxRect rect;
   wxSize scr = wxGetDisplaySize();
-  wxConfig* cfg = config;
-  if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+ 
+  wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
   int i;
   wxString key = LOCATION + wxString::Format(_("%d"), 0);
   if (cfg->Exists (key)) 
@@ -500,7 +503,6 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
       rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
       rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
   }
-  if (!config) delete cfg;
   
   // check for reasonable values (within screen)
   rect.x = wxMin (abs (rect.x), (scr.x - minFrameWidth));
@@ -515,43 +517,51 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
 {
-  // store size
-  wxConfig* cfg = config;
-  if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-  wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr);
-  cfg->Write (key + _T("/") + LOCATION_X, rect.x);
-  cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
-  cfg->Write (key + _T("/") + LOCATION_W, rect.width);
-  cfg->Write (key + _T("/") + LOCATION_H, rect.height);
+    // store size
+    wxConfig* cfg = config;
+    if (!config)
+    {
+      cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+    }
+    std::cout<<"Config name Store Frame: "<<cfg->GetAppName()<<std::endl;
+    std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+
+    wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr);
+    cfg->Write (key + _T("/") + LOCATION_X, rect.x);
+    cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
+    cfg->Write (key + _T("/") + LOCATION_W, rect.width);
+    cfg->Write (key + _T("/") + LOCATION_H, rect.height);
   
-  if (!config) delete cfg;
 }
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig(wxConfig* config)
 {
-	//store config
+    //store config
 
-	wxConfig* cfg = config;
-	if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-	wxString key = FEATURE;
-	cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
-	cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
-	cfg->Write (key+_T("/") + F_VISUALIZATION, f_visualization);
-
-	if (!config) delete cfg;
+    wxConfig* cfg = config;
+    if (!config)
+    { 
+      cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+    }
+    std::cout<<"Config name Store config: "<<cfg->GetAppName()<<std::endl;
+    std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+    wxString key = FEATURE;
+    cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
+    cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
+    cfg->Write (key+_T("/") + F_VISUALIZATION, f_visualization);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreRecentFile( wxConfig* config )
 {
-	//store recent menus in config
-	wxConfig* cfg = config;
-	if (!config) 
-   {
-      cfg = new wxConfig( wxTheApp->GetAppName() );
-   }
-   m_recentVESFiles->Save(*cfg);
-
-	if (!config) delete cfg;
+    //store recent menus in config
+    wxConfig* cfg = config;
+    if (!config) 
+    {
+       cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+    }
+    std::cout<<"Config name Store Recent file: "<<cfg->GetAppName()<<std::endl;
+    std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+    m_recentVESFiles->Save(*cfg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -593,10 +603,17 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
       _cadDialog = 0;
    }
 
+    if(preferences)
+    {
+        delete preferences;
+        preferences = 0;
+    }
    //std::cout << "Deleting Frame" << std::endl;
    StoreFrameSize(GetRect(), NULL);
    StoreConfig(NULL);
-	StoreRecentFile(NULL);
+   StoreRecentFile(NULL);
+   delete wxConfigBase::Set((wxConfigBase *) NULL); 
+   
    Destroy();
    //std::cout << "Shuting Down CORBA" << std::endl;
 
@@ -908,11 +925,9 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
    
    if ( vesFileName.HasName() ) 
    {
-		SetRecentFile(vesFileName);
-
-      path			= vesFileName.GetFullPath();
+      path = vesFileName.GetFullPath();
       directory	= vesFileName.GetPath();
-      fname			= vesFileName.GetFullName();
+      fname = vesFileName.GetFullName();
       ///now write the file out from domdocument manager
       //wrtie to path
       std::string data = network->Save( ConvertUnicode( path.c_str() ) );
@@ -957,7 +972,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       path = vesFileName.GetFullName();
       std::string tempDir = ConvertUnicode( directory.c_str() );
 		
-		SetRecentFile( wxFileName(dialog.GetPath()) );
+     SetRecentFile( wxFileName(dialog.GetPath()) );
 
       if ( tempDir.empty() )
       {
@@ -1028,7 +1043,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
        //change conductor working dir
        ::wxSetWorkingDirectory( directory );
 
-	    SetRecentFile(vesFileName);
+       SetRecentFile(vesFileName);
 
        std::string tempDir = ConvertUnicode( directory.c_str() );
 	    if ( tempDir.empty() )
