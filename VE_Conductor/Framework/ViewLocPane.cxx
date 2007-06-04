@@ -63,7 +63,8 @@ BEGIN_EVENT_TABLE(ViewLocPane, wxDialog)
    EVT_BUTTON(VIEWLOC_SAVE_FILE,ViewLocPane::_onSaveStoredPointsFile)
    EVT_BUTTON(VIEWLOC_STOPFLY_BUTTON,ViewLocPane::_onStopFly)
    EVT_LISTBOX(VIEWLOC_FLYBUILDER_LISTBOX,ViewLocPane::_onFlyBuilderListBox)
-   EVT_COMMAND_SCROLL(VIEWLOC_SPEED_CONTROL_SLIDER, ViewLocPane::_onSpeedChange )
+   //EVT_COMMAND_SCROLL(VIEWLOC_SPEED_CONTROL_SLIDER, ViewLocPane::_onSpeedChange )
+   EVT_SPINCTRL(VIEWLOC_SPEED_CONTROL_SPIN, ViewLocPane::_onSpeedChange )
 END_EVENT_TABLE()
 ///////////////
 //Constructor//
@@ -102,9 +103,10 @@ ViewLocPane::ViewLocPane(  )
    //this->SetSize( dialogPosition );
 
    _buildPage();
+   
    GetSizer()->Fit(this);
    GetSizer()->SetSizeHints(this);
-   Centre();
+   //Centre();
 
 }
 /////////////////////////////////
@@ -194,14 +196,24 @@ void ViewLocPane::_buildPage()
    int nPixY = 10;
    //scrollWindow->SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, _("View Point Controls"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
-
-	//wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, _("Name the new View Point"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
-
-   wxButton* loadViewLocationButton = new wxButton(this,VIEWLOC_LOAD_FILE, _("Load View Location File") );
-
-   wxButton* _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
+   wxStaticBox* _ViewPointsControls = new wxStaticBox(this, -1, _("Viewpoint Controls"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   wxStaticBoxSizer* _allVPCtrlsGroup = new wxStaticBoxSizer(_ViewPointsControls, wxVERTICAL);
    
+   
+   /*wxStaticBoxSizer _ViewPointsControlsSizer = new wxStaticBoxSizer(_ViewPointsControls, wxVERTICAL);
+*/
+   //wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, _("Name the new View Point"), wxDefaultPosition,wxDefaultSize,wxCAPTION);
+
+  /* wxBoxSizer* _loadPointsControls = new wxBoxSizer(wxHORIZONTAL);
+   */
+  
+  
+   wxStaticText* _loadLabel = new wxStaticText(this, -1, wxT("Load Viewpoints from File"));
+   wxButton* _loadViewLocationButton = new wxButton(this,VIEWLOC_LOAD_FILE, _("Load") );
+  
+  
+   /*_loadPointsControls->Add(_loadViewPointFile,1,wxALIGN_LEFT);
+   */
    //wxTextCtrl* _newvwptNameCtrl = new wxTextCtrl(this, -1, wxT("Enter Name for new pt"));
 
    //wxButton* _newvwptNameOKButton = new wxButton(this, VIEWLOC_ACCEPTNEWVPNAME_BUTTON, wxT("OK"));
@@ -218,24 +230,98 @@ void ViewLocPane::_buildPage()
 //***************************************************************************
 
 //********Finishing off the view points controls
-   wxStaticText* _removevwptLabel = new wxStaticText(this, -1, wxT("Delete View Points "));
-   wxButton* _removeViewPointButton = new wxButton(this,REMOVE_VIEW_PT_BUTTON,wxT("Delete"));
-   wxStaticText* _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a View Point "));
+   wxStaticText* _addvwptLabel = new wxStaticText(this, -1, wxT("Add Current Location as Viewpoint"));
+   wxButton* _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add Location"));
+   
+   wxStaticText* _removevwptLabel = new wxStaticText(this, -1, wxT("Select Viewpoint(s) for Removal"));
+   wxButton* _removeViewPointButton = new wxButton(this,REMOVE_VIEW_PT_BUTTON,wxT("Delete Location(s)"));
+        
+   //wxBoxSizer* _addremoveVPSizer = new wxBoxSizer(wxHORIZONTAL);
+   //_addremoveVPSizer->Add(_addnewviewptButton,1,wxALIGN_CENTER_HORIZONTAL);
+   //_addremoveVPSizer->Add(_removeViewPointButton,1,wxALIGN_CENTER_HORIZONTAL);
 
-   _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+
+    wxBoxSizer* _viewpointLoadControlsSizer = new wxBoxSizer(wxVERTICAL);
+    _viewpointLoadControlsSizer->Add(_loadLabel,0,wxALIGN_LEFT);
+    _viewpointLoadControlsSizer->Add(_loadViewLocationButton,0,wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxTOP,10);
+
+    wxBoxSizer* _viewpointAddControlsSizer = new wxBoxSizer(wxVERTICAL);
+    _viewpointAddControlsSizer->Add(_addvwptLabel,0,wxALIGN_LEFT);//2
+    _viewpointAddControlsSizer->Add(_addnewviewptButton,0,wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxTOP,10);
+
+    wxBoxSizer* _viewpointRemoveControlsSizer = new wxBoxSizer(wxVERTICAL);
+    _viewpointRemoveControlsSizer->Add(_removevwptLabel,0,wxALIGN_LEFT);
+    _viewpointRemoveControlsSizer->Add(_removeViewPointButton,0,wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxTOP,10);
+
+
+    _allVPCtrlsGroup->Add(_viewpointLoadControlsSizer,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+    _allVPCtrlsGroup->Add(_viewpointAddControlsSizer,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);   
+    _allVPCtrlsGroup->Add(_viewpointRemoveControlsSizer,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);   
+   
+   
+///////////////////////////
+    wxStaticBox* _FlythroughControls = new wxStaticBox(this, -1, _("Flythrough Control"),
+    		wxDefaultPosition,wxDefaultSize,wxCAPTION);
+    wxStaticBoxSizer* _FlythroughGroup = new wxStaticBoxSizer(_FlythroughControls,wxVERTICAL);
+    
+    wxBoxSizer* _moveToViewpointSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxStaticText* _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a Viewpoint "));
+    _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a Viewpoint"),wxDefaultPosition, 
                                  wxDefaultSize,1, 
                                  choices, wxCB_READONLY);
+				 
+    _moveToViewpointSizer->Add(_movetovwptSel,0,wxALIGN_CENTER); 
 
-   wxBoxSizer* _newVPControlsSizer = new wxBoxSizer(wxVERTICAL);
-   _newVPControlsSizer->Add(loadViewLocationButton,1,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_addnewviewptButton,1,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_removevwptLabel,2,wxALIGN_LEFT);
-   _newVPControlsSizer->Add(_removeViewPointButton,1,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_movetovwptLabel,2,wxALIGN_LEFT);
-   _newVPControlsSizer->Add(_movetovwptSel,1,wxALIGN_CENTER_HORIZONTAL);
+    
+    wxBoxSizer* _speedGroup = new wxBoxSizer(wxHORIZONTAL);
 
-   wxStaticBoxSizer* _allVPCtrlsGroup = new wxStaticBoxSizer(_allVPCtrlBox, wxVERTICAL);
-   _allVPCtrlsGroup->Add(_newVPControlsSizer,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+    wxBoxSizer* _speedButtonsSizer = new wxBoxSizer(wxVERTICAL);
+
+    wxButton* _startFlythrough = new wxButton (this, VIEWLOC_RUNFLY_BUTTON, wxT("Start"));     
+    wxButton* _stopFlythrough = new wxButton(this,VIEWLOC_STOPFLY_BUTTON, wxT("Stop")); 
+
+    
+    _speedButtonsSizer->Add(_startFlythrough,1,wxALIGN_LEFT|wxBOTTOM,2);
+    _speedButtonsSizer->Add(_stopFlythrough,1,wxALIGN_LEFT|wxTOP,2);
+
+    wxBoxSizer* _spinControlsSizer = new wxBoxSizer(wxVERTICAL);
+    wxStaticText* _spinLabel = new wxStaticText(this, -1, wxT("Speed (ft/s)"));
+    
+    _spinSpeedControls = new wxSpinCtrl( this,
+    				VIEWLOC_SPEED_CONTROL_SPIN,
+				wxT("Point-to-Point Speed (~feet/second)"),
+    				wxDefaultPosition,
+				wxSize(40,40),
+    				wxSP_VERTICAL|wxSP_ARROW_KEYS,
+				0,
+				100,
+				20,
+				wxT("Point-to-Point Speed (~feet/second)")
+   	 			);
+				 //Adjust middle integer to value to change maximum speed 
+
+
+    _spinControlsSizer->Add(_spinSpeedControls,1,wxALIGN_CENTER|wxALIGN_TOP|wxALL,2);
+    _spinControlsSizer->Add(_spinLabel,1,wxALIGN_CENTER);
+
+      
+    _speedGroup->Add(_speedButtonsSizer,1,wxALIGN_LEFT|wxRIGHT,5);
+    _speedGroup->Add(_spinControlsSizer,1,wxALIGN_RIGHT|wxLEFT,5);    
+
+    wxStaticText* _FlythroughLabel = new wxStaticText(this, -1, wxT("Automate Flythrough"));
+    
+    _FlythroughGroup->Add(_movetovwptLabel,0,wxALIGN_LEFT); 
+    _FlythroughGroup->Add(_moveToViewpointSizer,1,wxALIGN_CENTER_HORIZONTAL|wxTOP,10); 
+    _FlythroughGroup->Add(_FlythroughLabel,0,wxALIGN_LEFT);        
+    _FlythroughGroup->Add(_speedGroup,2,wxALIGN_CENTER_HORIZONTAL|wxTOP,10);
+
+    
+mainSizer->Add(_allVPCtrlsGroup ,1,wxEXPAND|wxALIGN_CENTER);
+mainSizer->Add( _FlythroughGroup,1,wxEXPAND|wxALIGN_CENTER);
+
+///////////////////////////////////////////////
+/*
 
 //*******Throw in the Speed Control Slider
    wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, _("Movement Speed Control"), wxDefaultPosition,wxDefaultSize,wxCAPTION); 
@@ -276,7 +362,7 @@ void ViewLocPane::_buildPage()
    //add the rows to the main panel
    viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
    mainSizer->Add( viewlocPanelGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
- 
+*/ 
    SetAutoLayout(true);
    SetSizer(mainSizer);
 
@@ -731,6 +817,19 @@ void ViewLocPane::_onFlyBuilderListBox(wxCommandEvent& WXUNUSED(event))
    
 }
 ///////////////////////////////////////////////////////////////////
+void ViewLocPane::_onSpeedChange( wxSpinEvent& WXUNUSED(event) )
+{
+   /* if _spinSpeedControls->GetValue() > {#Viewpoints stored}
+      _spinSpeedControls->SetValue(#Viewpoints)
+      else {
+   */ 
+   
+   dataValueName = "CHANGE_MOVEMENT_SPEED";
+   commandInputs.push_back( _spinSpeedControls->GetValue() );
+   commandInputs.push_back( 0 );
+   SendCommandsToXplorer();
+}
+/*
 void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
 {
    dataValueName = "CHANGE_MOVEMENT_SPEED";
@@ -738,6 +837,8 @@ void ViewLocPane::_onSpeedChange( wxScrollEvent& WXUNUSED(event) )
    commandInputs.push_back( 0 );
    SendCommandsToXplorer();
 }
+*/
+
 ///////////////////////////////////////
 void ViewLocPane::_rebuildPage( void )
 { 

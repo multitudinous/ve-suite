@@ -39,6 +39,8 @@
  * This class builds the user interface panel which contains all of
  * the controls for the view points and flythrough functionality
  */
+#include <wx/gdicmn.h>
+#include <wx/spinctrl.h>
 #include <wx/image.h>
 #include <wx/dialog.h>
 #include <wx/bmpbuttn.h>
@@ -115,7 +117,8 @@ public:
       VIEWLOC_SPEED_CONTROL_SLIDER,
       VIEWLOC_LOAD_FILE,
       VIEWLOC_SAVE_FILE,
-      REMOVE_VIEW_PT_BUTTON
+      REMOVE_VIEW_PT_BUTTON,
+      VIEWLOC_SPEED_CONTROL_SPIN
    };
 
    unsigned int _numStoredLocations;
@@ -168,7 +171,8 @@ protected:
    wxComboBox* _removevpfromflySel;
    wxComboBox* _deleteflySel;
    wxSlider* _speedCtrlSlider;
-
+   wxSpinCtrl* _spinSpeedControls;
+   
    //the controls
    void _onLoad(wxCommandEvent& event);
    void _onAcceptNewVPName(wxCommandEvent& event);
@@ -186,7 +190,8 @@ protected:
    void _onStopFly(wxCommandEvent& event);
    void _onFlyBuilderListBox(wxCommandEvent& event);
    void _onDeleteFlySel(wxCommandEvent& event);
-   void _onSpeedChange(wxScrollEvent& event);
+   //void _onSpeedChange(wxScrollEvent& event);
+   void _onSpeedChange(wxSpinEvent& event);
    
    ///Load a stored view points file
    void _onLoadStoredPointsFile(wxCommandEvent& event);
