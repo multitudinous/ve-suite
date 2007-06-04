@@ -1017,8 +1017,7 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDClick( wxMouseEvent &event)
 {
-    UIPLUGIN_CHECKID( event )
-    // This function opens a plugins dialog when double clicked on the design canvas
+   // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
    networkFrame->DoPrepareDC( dc );
    //dc.SetUserScale( userScale.first, userScale.second );
