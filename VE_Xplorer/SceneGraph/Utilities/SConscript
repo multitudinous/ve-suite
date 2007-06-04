@@ -13,6 +13,7 @@ sources = Split("""
     MaterialInitializer.cxx
     OpacityVisitor.cxx
     LocalToWorldNodePath.cxx
+    WorldToLocalNodePath.cxx
 """)
 
 headers = Split("""
@@ -23,6 +24,7 @@ headers = Split("""
     MaterialInitializer.h
     OpacityVisitor.h
     LocalToWorldNodePath.h
+    WorldToLocalNodePath.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
