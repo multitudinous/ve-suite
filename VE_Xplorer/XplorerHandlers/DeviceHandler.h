@@ -89,7 +89,7 @@ public:
    ///\param device The active device
    void SetActiveDevice( std::string device );
 
-   ///Set the device mode
+    ///Set the device mode
    ///\param mode Do not know what this does
    void SetDeviceMode( std::string mode );
 

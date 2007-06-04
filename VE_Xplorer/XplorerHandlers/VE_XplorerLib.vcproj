@@ -710,6 +710,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UnselectObjectsEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ViewEventHandler.cxx"
 				>
 				<FileConfiguration
@@ -1213,6 +1217,10 @@
 			</File>
 			<File
 				RelativePath=".\TextureBasedEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UnselectObjectsEventHandler.h"
 				>
 			</File>
 			<File

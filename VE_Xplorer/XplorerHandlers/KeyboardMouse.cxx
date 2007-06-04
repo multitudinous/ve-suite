@@ -791,12 +791,10 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
         nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localDCS ) * toWorldTransform;
     }
-    /*
     else
     {
         nodeCenterWorldCoords = activeDCS->getBound().center();
     }
-    */
 
     center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
 

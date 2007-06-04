@@ -10,14 +10,8 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-#include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
-
-#ifdef WIN32
-#include <direct.h>
-#else
-#include <unistd.h>
-#endif
 
 using namespace VE_EVENTS;
 

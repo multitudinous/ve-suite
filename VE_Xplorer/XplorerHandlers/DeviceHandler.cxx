@@ -42,6 +42,7 @@
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceEH.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceModeEH.h"
+#include "VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h"
 #include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
 
@@ -57,11 +58,11 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
-center_point(),
+activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ),
+device_mode( "World Navigation" ),
+center_point( 0, 0, 0 ),
 m_threshold( 0.5f ),
-m_jump( 10.0f ),
-device_mode( "Navigation" ),
-activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() )
+m_jump( 10.0f )
 {
    center_point.mData[1] = activeDCS->GetMat().mData[13] = m_threshold;
 
@@ -74,6 +75,7 @@ activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() )
    for( itr = devices.begin(); itr != devices.end(); itr++ )
    {
       itr->second->SetActiveDCS( activeDCS.get() );
+      //itr->second->SetDeviceMode( &device_mode );
       itr->second->SetCenterPoint( &center_point );
       itr->second->SetCenterPointThreshold( &m_threshold );
       itr->second->SetCenterPointJump( &m_jump );
@@ -83,6 +85,7 @@ activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() )
 
    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
+   _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new VE_EVENTS::UnselectObjectsEventHandler();
    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
    _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
 }
@@ -106,25 +109,29 @@ void DeviceHandler::CleanUp()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
 {
-   std::map< std::string, VE_EVENTS::EventHandler* >::iterator currentEventHandler;
-   if( cfdModelHandler::instance()->GetXMLCommand() )
-	{
-      currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+    std::map< std::string, VE_EVENTS::EventHandler* >::iterator currentEventHandler;
+    if( cfdModelHandler::instance()->GetXMLCommand() )
+    {
+        currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
 
-      if( currentEventHandler != _eventHandlers.end() )
-		{
-         currentEventHandler->second->SetGlobalBaseObject( active_device );
-         currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
-         //Tablet and Wand is always active and need updated...
-         if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
-         {
-            currentEventHandler->second->SetGlobalBaseObject( devices[ "Tablet" ] );
+        if( currentEventHandler != _eventHandlers.end() )
+        {
+            devices[ "Tablet" ]->SetActiveDCS( activeDCS.get() );
+            devices[ "Wand" ]->SetActiveDCS( activeDCS.get() );
+            devices[ "KeyboardMouse" ]->SetActiveDCS( activeDCS.get() );
+
+            currentEventHandler->second->SetGlobalBaseObject( active_device );
             currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
-            currentEventHandler->second->SetGlobalBaseObject( devices[ "Wand" ] );
-            currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
-         }
-      }
-   }
+            //Tablet and Wand is always active and need updated...
+            if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
+            {
+                currentEventHandler->second->SetGlobalBaseObject( devices[ "Tablet" ] );
+                currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+                currentEventHandler->second->SetGlobalBaseObject( devices[ "Wand" ] );
+                currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( std::string device )
@@ -139,6 +146,12 @@ void DeviceHandler::SetActiveDevice( std::string device )
 void DeviceHandler::SetDeviceMode( std::string mode )
 {
    device_mode = mode;
+
+   if( device_mode == "World Navigation" )
+   {
+        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        active_device->SetActiveDCS( activeDCS.get() );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
@@ -146,7 +159,7 @@ void DeviceHandler::ProcessDeviceEvents()
    //Update Device properties
    this->ExecuteCommands();
 
-   if ( device_mode == "Navigation" )
+   if ( device_mode == "World Navigation" )
    {
       devices[ "Wand" ]->UpdateNavigation();
       devices[ "KeyboardMouse" ]->UpdateNavigation();
@@ -164,7 +177,6 @@ void DeviceHandler::ProcessDeviceEvents()
    activeDCS = active_device->GetActiveDCS();
 
    //Always do this be default
-   devices[ "Tablet" ]->SetActiveDCS( activeDCS.get() );
    devices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////

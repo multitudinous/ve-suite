@@ -215,7 +215,7 @@ private:
     double m_ymaxScreen;///<The maximum y position of the screen
     double m_zvalScreen;///<The z position of the screen
 
-    //In mData form     In row x column form
+    //In mData form     In row by column form
     //[ 0 4  8 12 ]     [ 00 01 02 03 ]
     //[ 1 5  9 13 ]     [ 10 11 12 13 ]
     //[ 2 6 10 14 ]     [ 20 21 22 23 ]

@@ -46,6 +46,7 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
 :
+//device_mode( 0 ),
 center_point( 0 ),
 m_threshold( 0 ),
 m_jump( 0 )
@@ -67,6 +68,13 @@ void Device::SetActiveDCS( VE_SceneGraph::DCS* dcs )
 {
    activeDCS = dcs;
 }
+////////////////////////////////////////////////////////////////////////////////
+/*
+void Device::SetDeviceMode( std::string* mode )
+{
+   device_mode = mode;
+}
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPoint( gmtl::Point3f* cp )
 {

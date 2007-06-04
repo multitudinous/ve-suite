@@ -174,6 +174,7 @@ void Wand::UpdateNavigation()
 	   {
          worldTrans[ i ] = 0.0f;
          world_quat[ i ] = 0.0f;
+         center_point->mData[i] = 0.0f;
 	   }
       world_quat[ 3 ] = 1.0f;
    }
