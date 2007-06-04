@@ -30,12 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef _TAO
 #include "VE_Open/skel/VjObsS.h"
 #include <orbsvcs/CosNamingC.h>
-#else
-#include "VjObs.h"
-#endif
 #include "VE_Xplorer/cfdDebug.h"
 
 #include "VEMsgInterpreter.h"

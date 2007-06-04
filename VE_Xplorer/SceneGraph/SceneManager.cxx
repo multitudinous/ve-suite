@@ -125,12 +125,12 @@ void SceneManager::InitScene( void )
     ///number of pixels
     m_oqc->setVisibilityThreshold( 500 );
     ///Number of verts
-    m_oqc->setOccluderThreshold( 5000 );
+    m_oqc->setOccluderThreshold( 1000 );
     ///Specifies the number of occlusion query identifiers to allocate
     ///per rendering context.    
     m_oqc->setBufferSize( -1 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
-    m_oqc->setNonFlatPlacement( false );
+    m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes
     m_oqc->setDebugDisplay( true );
     // Sets the debug verbosity. Currently supported 'level' values:
@@ -142,19 +142,19 @@ void SceneManager::InitScene( void )
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
         
-    osg::ref_ptr<osgOQ::OcclusionQueryRoot> osgOQRoot;
+    //osg::ref_ptr<osgOQ::OcclusionQueryRoot> osgOQRoot;
     // Some other plugin was used. Add it to an OQR.
-    osgOQRoot = new osgOQ::OcclusionQueryRoot( m_oqc.get() );
+    //osgOQRoot = new osgOQ::OcclusionQueryRoot( m_oqc.get() );
 #endif    
     //Now lets put it on the main group node
     //Remember that the logo switch is right below the group node 
     //NOT the world dcs
-#ifdef VE_PATENTED
-    rootNode->addChild( osgOQRoot.get() );
-    osgOQRoot->addChild( m_clrNode.get() );
-#else
+//#ifdef VE_PATENTED
+//    rootNode->addChild( osgOQRoot.get() );
+//    osgOQRoot->addChild( m_clrNode.get() );
+//#else
     rootNode->addChild( m_clrNode.get() );
-#endif
+//#endif
     m_clrNode->addChild( _logoSwitch.get() );    
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -67,7 +67,16 @@ m_transparencyFlag( false )
     m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream );
     m_fileName.assign( geomFile );
     m_dcs->SetName( "CADEntityDCS" );
+/*#ifdef VE_PATENTED
+    osg::ref_ptr<osgOQ::OcclusionQueryRoot> osgOQRoot;
+    // Some other plugin was used. Add it to an OQR.
+    osgOQRoot = new osgOQ::OcclusionQueryRoot( 
+        VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
+    osgOQRoot->addChild( m_cadEntityHelper->GetNode() );
+    m_dcs->addChild( osgOQRoot.get() );
+#else*/
     m_dcs->addChild( m_cadEntityHelper->GetNode() );
+//#endif
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

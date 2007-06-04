@@ -30,13 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifdef _TAO
 #include <Executive_i.h>
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
-#else
-#include <omniORB4/CORBA.h>
-#endif
 #include <iostream>
 #include "cfdWebServices.h"
 int main(int argc, char* argv[])
@@ -45,11 +41,7 @@ int main(int argc, char* argv[])
 #ifndef USE_TEST_FILE
 
    printf("initing corba...\n");
-#ifdef _TAO
    CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"VE_Suite_ORB" );
-#else
-   CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"omniORB4" ); 
-#endif // _TAO
    if ( CORBA::is_nil( orb.in() ) )
    {
       printf("nil thingy.  Quitting\n");
@@ -69,7 +61,6 @@ int main(int argc, char* argv[])
    PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
    PortableServer::POAManager_var poa_manager = poa->the_POAManager();
 
-#ifdef _TAO
    printf("tao stuff now...\n");
    // Create policy with BiDirPolicy::BOTH
    CORBA::PolicyList policies( 1 );
@@ -94,8 +85,6 @@ int main(int argc, char* argv[])
    {
          policies[i]->destroy();
    }
-#endif // _TAO
-
    poa_manager->activate();
 
    // Create webservice class here

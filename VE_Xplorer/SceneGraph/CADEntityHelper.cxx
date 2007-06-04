@@ -34,7 +34,6 @@
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
@@ -67,10 +66,11 @@
 #elif _OPENSG
 #endif
 
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 #ifdef VE_PATENTED
 #include <osgOQ/OcclusionQueryVisitor.h>
+#include <osgOQ/OcclusionQueryRoot.h>
 #endif
-
 // --- C/C++ Libraries --- //
 #include <sstream>
 #include <istream>

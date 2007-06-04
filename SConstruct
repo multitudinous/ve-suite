@@ -186,8 +186,8 @@ opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If true, make the distribution packages as part of the build', 'no')
-opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'yes')
-opts.Add('tao', 'If true, use TAO in the build', 'no')
+opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'no')
+#opts.Add('tao', 'If true, use TAO in the build', 'no')
 ##Added options for velauncher build.
 ##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
 ##opts.Add('CxPath', "Set CXPATH to find 
@@ -325,7 +325,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
-   baseEnv.Append( CPPDEFINES = ['_TAO','_OSG','VTK44'] )
+   baseEnv.Append( CPPDEFINES = ['_OSG','VTK44'] )
    #baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )

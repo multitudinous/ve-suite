@@ -49,13 +49,9 @@ namespace VE_Xplorer
 
 class Body_VEXplorer_i;
 
-#ifdef _TAO
 namespace CosNaming{ class NamingContext; }
 namespace CORBA{ class ORB; }
 namespace PortableServer{ class POA; }
-#else
-#include <omniORB4/CORBA.h>
-#endif
 #include <vector>
 #include <string>
 

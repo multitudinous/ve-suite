@@ -106,11 +106,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
       << std::endl << vprDEBUG_FLUSH;
 }
 
-#ifdef _TAO
 void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, PortableServer::POA* child_poa, PortableServer::POA* poa,int argc, char* argv[]  )
-#else
-void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
-#endif // _TAO
 {
    //boost::ignore_unused_variable_warning( argc );
    //boost::ignore_unused_variable_warning( argv );
@@ -123,10 +119,8 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
          break;
       }
    }
-#ifdef _TAO
    this->child_poa = child_poa;
    this->poa = poa;
-#endif // _TAO
    naming_context = input;
 
    if ( isCluster )

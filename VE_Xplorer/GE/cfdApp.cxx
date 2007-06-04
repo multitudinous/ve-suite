@@ -62,17 +62,10 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
 
-#ifdef _TAO
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#endif //_TAO
 
 // Scene graph dependant headers
-#ifdef _PERFORMER
-#include <Performer/pf.h>
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pfdb/pfpfb.h>
-#include "VE_Xplorer/cfdNotify.h"
-#elif _OSG
+#ifdef _OSG
 #include <osg/Group>
 #include <osg/FrameStamp>
 #include <osg/MatrixTransform>
@@ -215,17 +208,13 @@ inline void cfdApp::preSync( )
 }
 #endif
 
-#ifdef _PERFORMER
-inline pfGroup* cfdApp::getScene()
-#elif _OSG
+#ifdef _OSG
 osg::Group* cfdApp::getScene()
 #endif
 {
    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
    //   "C:/test.osg");
-#ifdef _PERFORMER
-   return (pfGroup*)(VE_SceneGraph::SceneManager::instance()->GetRootNode()->GetRawNode());
-#elif _OSG
+#ifdef _OSG
    return (osg::Group*)VE_SceneGraph::SceneManager::instance()->GetRootNode();
 #endif
 }
@@ -415,10 +404,8 @@ void cfdApp::initScene( void )
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
 #endif
 
-#ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
-#endif // _TAO
 
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
