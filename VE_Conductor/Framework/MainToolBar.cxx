@@ -198,7 +198,7 @@ void MainToolBar::CreateMainToolBar()
     SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
 #endif
 
-    EnableTool( TOOLBAR_OBJECT_NAVIGATION, false );
+    //EnableTool( TOOLBAR_OBJECT_NAVIGATION, false );
     EnableTool( TOOLBAR_RESET, false );
     EnableTool( TOOLBAR_PAUSE, false );
     EnableTool( TOOLBAR_PLAY, false );
@@ -270,7 +270,9 @@ void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
 
     SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
     SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );  
+    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
+
+    ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
 
     command->SetCommandName( std::string( "UNSELECT_OBJECTS" ) );
 
