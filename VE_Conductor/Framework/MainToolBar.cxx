@@ -38,13 +38,13 @@
 #include "VE_Conductor/xpm/ToolBar/NewDocumentButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/OpenButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/SaveButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/UnselectButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/CursorButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/CursorButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/WorldCoButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/WorldCoButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/ObjectCoButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/ObjectCoButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/WorldNavigationButton.xpm"
+#include "VE_Conductor/xpm/ToolBar/WorldNavigationButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/ObjectNavigationButton.xpm"
+#include "VE_Conductor/xpm/ToolBar/ObjectNavigationButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/UnselectButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButtonDisabled.xpm"
@@ -116,16 +116,16 @@ void MainToolBar::LoadToolBarBitmaps()
         wxBitmap( CursorButton_xpm );
     m_toolbarBitmaps[ std::string( "cursorSelectBitmap" ) ] = 
         wxBitmap( CursorButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "worldCoBitmap" ) ] = 
-        wxBitmap( WorldCoButton_xpm );
-    m_toolbarBitmaps[ std::string( "worldCoSelectBitmap" ) ] = 
-        wxBitmap( WorldCoButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "objectCoBitmap" ) ] = 
-        wxBitmap( ObjectCoButton_xpm );
-    m_toolbarBitmaps[ std::string( "objectCoSelectBitmap" ) ] = 
-        wxBitmap( ObjectCoButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "worldNavigationBitmap" ) ] = 
+        wxBitmap( WorldNavigationButton_xpm );
+    m_toolbarBitmaps[ std::string( "worldNavigationSelectBitmap" ) ] = 
+        wxBitmap( WorldNavigationButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "objectNavigationBitmap" ) ] = 
+        wxBitmap( ObjectNavigationButton_xpm );
+    m_toolbarBitmaps[ std::string( "objectNavigationSelectBitmap" ) ] = 
+        wxBitmap( ObjectNavigationButtonSelect_xpm );
     m_toolbarBitmaps[ std::string( "unselectBitmap" ) ] = 
-        wxBitmap( SaveButton_xpm );
+        wxBitmap( UnselectButton_xpm );
 
     m_toolbarBitmaps[ std::string( "physicsBitmap" ) ] = 
         wxBitmap( PhysicsButton_xpm );
@@ -169,8 +169,8 @@ void MainToolBar::CreateMainToolBar()
     AddSeparator();
 
     AddTool( TOOLBAR_SELECTION, _( "" ), m_toolbarBitmaps[ "cursorBitmap" ], _( "Selection" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_WORLD_NAVIGATION, _( "" ), m_toolbarBitmaps[ "worldCoSelectBitmap" ], _( "Navigation" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_OBJECT_NAVIGATION, _( "" ), m_toolbarBitmaps[ "objectCoBitmap" ], _( "Navigation" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_WORLD_NAVIGATION, _( "" ), m_toolbarBitmaps[ "worldNavigationSelectBitmap" ], _( "World Navigation" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_OBJECT_NAVIGATION, _( "" ), m_toolbarBitmaps[ "objectNavigationBitmap" ], _( "Object Navigation" ), wxITEM_RADIO );
     AddTool( TOOLBAR_UNSELECT, _( "" ), m_toolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
     AddSeparator();
 
@@ -232,8 +232,8 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
         mode = "Selection";
 
         SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldCoBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectCoBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
     }
 
     else if( event.GetId() == TOOLBAR_WORLD_NAVIGATION )
@@ -241,8 +241,8 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
         mode = "World Navigation";
 
         SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldCoSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectCoBitmap" ] );  
+        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );  
     }
 
     else if( event.GetId() == TOOLBAR_OBJECT_NAVIGATION )
@@ -250,8 +250,8 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
         mode = "Object Navigation";
 
         SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldCoBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectCoSelectBitmap" ] );  
+        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationSelectBitmap" ] );  
     }
 
     dvp->SetData( std::string( "Mode" ), mode );
@@ -269,8 +269,8 @@ void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
     VE_XML::Command* command = new VE_XML::Command();
 
     SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldCoSelectBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectCoBitmap" ] );  
+    SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
+    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );  
 
     command->SetCommandName( std::string( "UNSELECT_OBJECTS" ) );
 
