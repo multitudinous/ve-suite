@@ -415,3 +415,8 @@ bool Body_VEXplorer_i::GetClusterMode( void )
 {
    return isCluster;
 }
+////////////////////////////////////////////////////////////////////////////////
+void Body_VEXplorer_i::SetXplorerData( std::string input )
+{
+    uiCom->SetXplorerData( input.c_str() );
+}

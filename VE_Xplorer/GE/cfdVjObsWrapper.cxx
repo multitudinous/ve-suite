@@ -41,6 +41,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 

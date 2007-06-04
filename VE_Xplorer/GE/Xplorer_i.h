@@ -123,6 +123,10 @@ public:
    VE_XML::Command* bufferCommand;///< Data to hold command data
    std::vector< VE_Xplorer::cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
 
+   ///Set xplorer data
+   ///\param input
+   void SetXplorerData( std::string input);
+
 protected:
    ///Create command queue for transient vis
    ///Should be removed once non texture pipelines are created
@@ -141,7 +145,5 @@ protected:
    long frameNumber;///< frame number
 
    Body::UI_var uiCom;
-
-
 };
 #endif
