@@ -722,12 +722,23 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
 
+    osg::Vec3 nodeCenterWorldCoords( 0, 0, 0 );
+
     if( listOfHits.empty() )
     {
         vprDEBUG(vesDBG,1) << "|\tKeyboardMouse::ProcessHit No object selected" 
                            << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+
+        nodeCenterWorldCoords = activeDCS->getBound().center();
+
+        center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
+
+        if( center_point->mData[1] < *m_threshold )
+        {
+            center_point->mData[1] = *m_jump;
+        }
 
         return;
     }
@@ -774,29 +785,25 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }
 
-    osg::Vec3 nodeCenterWorldCoords( 0, 0, 0 );
+    
 
-    if( activeDCS->GetName() != "World DCS" )
-    {
-        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldNodePath > nv = new VE_SceneGraph::Utilities::LocalToWorldNodePath( activeDCS.get() );
-        
-        osg::Matrix toWorldTransform;
-        toWorldTransform.identity();
-        toWorldTransform = osg::computeLocalToWorld( nv->GetNodePath() );
+    //if( activeDCS->GetName() != "World DCS" )
+    //{
+    osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldNodePath > nv = new VE_SceneGraph::Utilities::LocalToWorldNodePath( activeDCS.get() );
+    
+    osg::Matrix toWorldTransform;
+    toWorldTransform.identity();
+    toWorldTransform = osg::computeLocalToWorld( nv->GetNodePath() );
 
-        osg::Matrix localDCS;
-        localDCS.identity();
-        localDCS.setTrans( activeDCS->getPosition() );
-        localDCS.setRotate( activeDCS->getAttitude() );
+    osg::Matrix localDCS;
+    localDCS.identity();
+    localDCS.setTrans( activeDCS->getPosition() );
+    localDCS.setRotate( activeDCS->getAttitude() );
 
-        nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localDCS ) * toWorldTransform;
-    }
-    else
-    {
-        nodeCenterWorldCoords = activeDCS->getBound().center();
-    }
+    nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localDCS ) * toWorldTransform;
 
     center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
+    //}    
 
     if( center_point->mData[1] < *m_threshold )
     {
