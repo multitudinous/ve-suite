@@ -64,6 +64,26 @@ void Device::UpdateSelection()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Device::SetVECommand( VE_XML::Command* command )
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::UpdateCommand()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool Device::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray )
+{
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* Device::GetActiveDCS()
+{
+    return activeDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 void Device::SetActiveDCS( VE_SceneGraph::DCS* dcs )
 {
    activeDCS = dcs;
@@ -89,11 +109,6 @@ void Device::SetCenterPointThreshold( float* threshold )
 void Device::SetCenterPointJump( float* jump )
 {
     m_jump = jump;
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* Device::GetActiveDCS()
-{
-    return activeDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::ProcessSelection()
@@ -162,22 +177,16 @@ void Device::ProcessSelection()
       } 
    }
 
-   osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
-   osg::ref_ptr< osg::Material > material = new osg::Material;
-   material->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
-   stateset->setAttributeAndModes( material.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-   //selected_geometry->setStateSet( stateset.get() );
-
    this->DrawLine( start_point, end_point );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////

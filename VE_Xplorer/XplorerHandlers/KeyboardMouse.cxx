@@ -445,6 +445,38 @@ void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float 
     m_fovy = topAngle + bottomAngle;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::FrameAll()
+{
+    VE_SceneGraph::DCS* switchNode = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    gmtl::Matrix44f matrix = switchNode->GetMat();
+
+    //Get the selected objects and expand by their bounding box
+    float Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
+    osg::BoundingSphere bs = switchNode->computeBound();
+
+    float x = bs.center().x();
+    matrix.mData[12] -= x;
+
+    float y;
+    if( m_aspectRatio <= 1.0f )
+    {
+        y = ( bs.radius() / tan( Theta ) ) * m_aspectRatio;
+    }
+    else
+    {
+        y = bs.radius() / tan( Theta );
+    }
+
+    matrix.mData[13] = y;
+
+    float z = bs.center().z();
+    matrix.mData[14] -= z;
+
+    switchNode->SetMat( matrix );
+    bs = switchNode->computeBound();
+    center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
+}
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
 {
     if( m_key == gadget::KEY_R )
@@ -576,40 +608,6 @@ void KeyboardMouse::ResetTransforms()
     VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::FrameAll()
-{
-    osg::ref_ptr< osg::Group > root = new osg::Group;
-    root->addChild( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode() );
-
-    m_currentTransform = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->GetMat();
-
-    //Get the selected objects and expand by their bounding box
-    float Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
-    osg::BoundingSphere bs = root->computeBound();
-
-    float x = bs.center().x();
-    m_currentTransform.mData[12] -= x;
-
-    float y;
-    if( m_aspectRatio <= 1.0f )
-    {
-        y = ( bs.radius() / tan( Theta ) ) * m_aspectRatio;
-    }
-    else
-    {
-        y = bs.radius() / tan( Theta );
-    }
-
-    float delta_y_val = y - m_currentTransform.mData[13];
-    m_currentTransform.mData[13] = y;
-    center_point->mData[1] += delta_y_val;
-
-    float z = bs.center().z();
-    m_currentTransform.mData[14] -= z;
-
-    VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( m_currentTransform );
-}
-////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( float dx, float dy )
 {
     gmtl::Matrix44f mat;
@@ -700,15 +698,13 @@ void KeyboardMouse::ProcessSelectionEvents()
     osg::Vec3f startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
 
-    //DrawLine( startPoint, endPoint);
-
-    beamLineSegment->set(startPoint, endPoint);
+    beamLineSegment->set( startPoint, endPoint );
 
     osgUtil::IntersectVisitor objectBeamIntersectVisitor;
     objectBeamIntersectVisitor.addLineSegment( beamLineSegment.get() );
 
     //Add the IntersectVisitor to the root Node so that all all geometry will be
-    //checked and no transforms are done to the Line segement.
+    //checked and no transforms are done to the Line segement
     VE_SceneGraph::SceneManager::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
 
     osgUtil::IntersectVisitor::HitList beamHitList;
@@ -783,9 +779,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
                            << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
-    }
-
-    
+    }    
 
     //if( activeDCS->GetName() != "World DCS" )
     //{

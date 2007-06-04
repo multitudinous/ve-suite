@@ -64,30 +64,28 @@ center_point( 0, 0, 0 ),
 m_threshold( 0.5f ),
 m_jump( 10.0f )
 {
-   center_point.mData[1] = activeDCS->GetMat().mData[13] = m_threshold;
+    devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
+    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
+    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
 
-   devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
-   devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
-   devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
+    //Set properties in Devices
+    std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+    for( itr = devices.begin(); itr != devices.end(); itr++ )
+    {
+        itr->second->SetActiveDCS( activeDCS.get() );
+        //itr->second->SetDeviceMode( &device_mode );
+        itr->second->SetCenterPoint( &center_point );
+        itr->second->SetCenterPointThreshold( &m_threshold );
+        itr->second->SetCenterPointJump( &m_jump );
+    }
 
-   //Set properties in Devices
-   std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
-   for( itr = devices.begin(); itr != devices.end(); itr++ )
-   {
-      itr->second->SetActiveDCS( activeDCS.get() );
-      //itr->second->SetDeviceMode( &device_mode );
-      itr->second->SetCenterPoint( &center_point );
-      itr->second->SetCenterPointThreshold( &m_threshold );
-      itr->second->SetCenterPointJump( &m_jump );
-   }
-   
-   active_device = devices[ "KeyboardMouse" ];
+    active_device = devices[ "KeyboardMouse" ];
 
-   _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
-   _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
-   _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new VE_EVENTS::UnselectObjectsEventHandler();
-   _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
-   _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
+    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
+    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
+    _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new VE_EVENTS::UnselectObjectsEventHandler();
+    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
+    _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
@@ -97,14 +95,14 @@ DeviceHandler::~DeviceHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::CleanUp()
 {
-   //Delete devices in map
-   std::map< std::string, VE_Xplorer::Device* >::iterator itr;
-   for( itr = devices.begin(); itr != devices.end(); )
-   {
-      devices.erase( itr++ );
-   }
+    //Delete devices in map
+    std::map< std::string, VE_Xplorer::Device* >::iterator itr;
+    for( itr = devices.begin(); itr != devices.end(); )
+    {
+        devices.erase( itr++ );
+    }
 
-   devices.clear();
+    devices.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
@@ -136,11 +134,11 @@ void DeviceHandler::ExecuteCommands()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( std::string device )
 {
-   std::map< std::string, VE_Xplorer::Device* >::iterator itr = devices.find( device );
-   if ( itr != devices.end() )
-   {
-      active_device = devices[ device ];
-   }
+    std::map< std::string, VE_Xplorer::Device* >::iterator itr = devices.find( device );
+    if ( itr != devices.end() )
+    {
+        active_device = devices[ device ];
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetDeviceMode( std::string mode )
@@ -156,32 +154,32 @@ void DeviceHandler::SetDeviceMode( std::string mode )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
-   //Update Device properties
-   this->ExecuteCommands();
+    //Update Device properties
+    this->ExecuteCommands();
 
-   if ( device_mode == "World Navigation" )
-   {
-      devices[ "Wand" ]->UpdateNavigation();
-      devices[ "KeyboardMouse" ]->UpdateNavigation();
+    if ( device_mode == "World Navigation" )
+    {
+        devices[ "Wand" ]->UpdateNavigation();
+        devices[ "KeyboardMouse" ]->UpdateNavigation();
 
-      if( ( active_device != devices[ "Wand" ] ) && ( active_device != devices[ "KeyboardMouse" ] ) )
-      {
-         active_device->UpdateNavigation();
-      }
-   }
-   else if ( device_mode == "Selection" )
-   {
-      active_device->UpdateSelection();
-   }
-   //get the active dcs from the active device
-   activeDCS = active_device->GetActiveDCS();
+        if( ( active_device != devices[ "Wand" ] ) && ( active_device != devices[ "KeyboardMouse" ] ) )
+        {
+            active_device->UpdateNavigation();
+        }
+    }
+    else if ( device_mode == "Selection" )
+    {
+        active_device->UpdateSelection();
+    }
+    //get the active dcs from the active device
+    activeDCS = active_device->GetActiveDCS();
 
-   //Always do this be default
-   devices[ "Tablet" ]->UpdateNavigation();
+    //Always do this be default
+    devices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_Xplorer::Device* DeviceHandler::GetDevice( std::string device )
 {
-   return devices[ device ];
+    return devices[ device ];
 }
 ////////////////////////////////////////////////////////////////////////////////

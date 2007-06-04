@@ -80,14 +80,14 @@ public:
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
-    virtual void SetVECommand( VE_XML::Command* command=0){;}
+    virtual void SetVECommand( VE_XML::Command* command = 0 );
 
     ///Do not know what this is
-    virtual void UpdateCommand(){;}
+    virtual void UpdateCommand();
 
     ///Do not know what this is
     ///\param _cfdCommandArray 
-    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray= 0 ){return false;}
+    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray* _cfdCommandArray = 0 );
 
     ///Get the active coordinate system
     VE_SceneGraph::DCS* GetActiveDCS();

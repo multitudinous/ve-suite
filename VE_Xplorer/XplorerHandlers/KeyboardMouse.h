@@ -109,11 +109,11 @@ public:
     ///\param f
     void SetFrustumValues( float l, float r, float t, float b, float n, float f );
 
+    ///Bring all objects into view
+    void FrameAll();
+
     ///Resets the scene to original position
     void ResetTransforms();
-
-    ///Sets the scene so all objects are viewable
-    void FrameAll();
 
 protected:
     ///Set the start and end point
