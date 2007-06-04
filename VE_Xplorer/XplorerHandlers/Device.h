@@ -96,10 +96,6 @@ public:
     ///\param dcs The current active coordinate system
     void SetActiveDCS( VE_SceneGraph::DCS* dcs );
 
-   ///Set the device mode
-   ///\param mode Do not know what this does
-   //void SetDeviceMode( std::string* mode );
-
     ///Set the center point
     ///\param cp The center point
     void SetCenterPoint( gmtl::Point3f* cp );
@@ -125,7 +121,6 @@ protected:
     virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
 
     osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
-    //std::string* device_mode;///<The device mode
     gmtl::Point3f* center_point;///<The point about which rotation occurs
     float* m_threshold;///<
     float* m_jump;///<

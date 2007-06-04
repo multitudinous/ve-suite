@@ -89,13 +89,6 @@ void Device::SetActiveDCS( VE_SceneGraph::DCS* dcs )
    activeDCS = dcs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-void Device::SetDeviceMode( std::string* mode )
-{
-   device_mode = mode;
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPoint( gmtl::Point3f* cp )
 {
    center_point = cp;

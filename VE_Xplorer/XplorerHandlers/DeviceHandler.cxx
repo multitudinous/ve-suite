@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -51,6 +51,8 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+#include <osg/BoundingSphere>
+
 vprSingletonImp( VE_Xplorer::DeviceHandler );
 
 using namespace VE_Xplorer;
@@ -64,6 +66,7 @@ center_point( 0, 0, 0 ),
 m_threshold( 0.5f ),
 m_jump( 10.0f )
 {
+    //Initialize Devices
     devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
     devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
     devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
@@ -73,7 +76,6 @@ m_jump( 10.0f )
     for( itr = devices.begin(); itr != devices.end(); itr++ )
     {
         itr->second->SetActiveDCS( activeDCS.get() );
-        //itr->second->SetDeviceMode( &device_mode );
         itr->second->SetCenterPoint( &center_point );
         itr->second->SetCenterPointThreshold( &m_threshold );
         itr->second->SetCenterPointJump( &m_jump );
@@ -171,7 +173,8 @@ void DeviceHandler::ProcessDeviceEvents()
     {
         active_device->UpdateSelection();
     }
-    //get the active dcs from the active device
+
+    //Get the active dcs from the active device
     activeDCS = active_device->GetActiveDCS();
 
     //Always do this be default

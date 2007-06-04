@@ -783,7 +783,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     //if( activeDCS->GetName() != "World DCS" )
     //{
-    osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldNodePath > nv = new VE_SceneGraph::Utilities::LocalToWorldNodePath( activeDCS.get() );
+    osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldNodePath > nv = 
+        new VE_SceneGraph::Utilities::LocalToWorldNodePath( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
     
     osg::Matrix toWorldTransform;
     toWorldTransform.identity();
