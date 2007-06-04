@@ -70,12 +70,10 @@ public:
         TOOLBAR_OPEN,///<ID for open tool
         TOOLBAR_SAVE,///<ID for save tool
 
-        TOOLBAR_SELECTION,///<ID for cursor tool
-        TOOLBAR_NAVIGATION,///<ID for navigation tool
-
-        TOOLBAR_OBJECT_TRANSLATE,///<ID for object translation tool
-        TOOLBAR_OBJECT_ROTATE,///<ID for object rotation tool
-        TOOLBAR_OBJECT_SCALE,///<ID for object scale tool
+        TOOLBAR_SELECTION,///<ID for select tool
+        TOOLBAR_WORLD_NAVIGATION,///<ID for world navigation tool
+        TOOLBAR_OBJECT_NAVIGATION,///<ID for object navigation tool
+        TOOLBAR_UNSELECT,///<ID for unselect tool
 
         TOOLBAR_PHYSICS,///<ID for physics simulation tool
         TOOLBAR_RESET,///<ID for reset simulation tool
@@ -108,6 +106,10 @@ private:
     ///Handles events for changing xplorer device mode
     ///\param event The wxCommand event
     void OnChangeDeviceMode( wxCommandEvent& event );
+    
+    ///Handles the event to unselect all objects in xplorer
+    ///\param event The wxCommand event
+    void OnUnselectObjects( wxCommandEvent& event );
 
     ///Handles event for physics state
     ///\param event The wxCommand event
