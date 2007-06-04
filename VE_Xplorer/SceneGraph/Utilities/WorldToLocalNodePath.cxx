@@ -42,11 +42,12 @@
 using namespace VE_SceneGraph::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-WorldToLocalNodePath::WorldToLocalNodePath( osg::Node* node )
+WorldToLocalNodePath::WorldToLocalNodePath( osg::Node* worldNode, osg::Node* localNode )
 :
-NodeVisitor( TRAVERSE_PARENTS )
+NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-    node->accept( *this );
+    m_localNode = localNode;
+    worldNode->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 WorldToLocalNodePath::~WorldToLocalNodePath()
@@ -56,7 +57,7 @@ WorldToLocalNodePath::~WorldToLocalNodePath()
 ////////////////////////////////////////////////////////////////////////////////    
 void WorldToLocalNodePath::apply( osg::PositionAttitudeTransform& pat )
 {
-    if( pat.getName() == "World DCS" )
+    if( pat.getName() == m_localNode->getName() )
     {
         m_nodePath = _nodePath;
 
