@@ -54,7 +54,7 @@ namespace Utilities
 class VE_SCENEGRAPH_UTILS_EXPORTS LocalToWorldNodePath : public osg::NodeVisitor
 {
 public:
-    LocalToWorldNodePath( osg::Node* node );
+    LocalToWorldNodePath( osg::Node* worldNode, osg::Node* localNode );
     virtual ~LocalToWorldNodePath();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
@@ -62,6 +62,7 @@ public:
     osg::NodePath& GetNodePath();
 
 private:
+    osg::Node* m_worldNode;
     osg::NodePath m_nodePath;
 
 };
