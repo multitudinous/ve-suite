@@ -414,7 +414,15 @@ void KeyboardMouse::ProcessNavigationEvents()
         worldMatrix.setTrans( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition() );
         worldMatrix.setRotate( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude() );
 
-        localMatrix = localMatrix * worldMatrix * wtlt->GetWorldToLocalTransform();
+        localMatrix = osg::Matrix::inverse( worldMatrix ) * wtlt->GetWorldToLocalTransform() * localMatrix;
+
+        /*
+        std::cout << wtlt->GetWorldToLocalTransform()( 0, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 0, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 0, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 0, 3 ) << "  " << std::endl;
+        std::cout << wtlt->GetWorldToLocalTransform()( 1, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 1, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 1, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 1, 3 ) << "  " << std::endl;
+        std::cout << wtlt->GetWorldToLocalTransform()( 2, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 2, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 2, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 2, 3 ) << "  " << std::endl;
+        std::cout << wtlt->GetWorldToLocalTransform()( 3, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 3, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 3, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 3, 3 ) << "  " << std::endl;
+        std::cout << std::endl;
+        */
 
         activeDCS->setPosition( localMatrix.getTrans() );
         activeDCS->setAttitude( localMatrix.getRotate() );
@@ -690,7 +698,7 @@ void KeyboardMouse::Zoom( float dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Pan( float dx, float dy )
 {
-    float d = m_currentTransform.mData[13];
+    float d = center_point->mData[1];
     float theta = ( m_fovy * 0.5f ) * ( PIDivOneEighty );
     float b = 2 * d * tan( theta );
     float dwx = dx * b * m_aspectRatio;
@@ -819,8 +827,6 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }    
 
-    //if( activeDCS->GetName() != "World DCS" )
-    //{
     osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
     new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
@@ -831,8 +837,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localMatrix ) * ltwt->GetLocalToWorldTransform();
 
-    center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
-    //}    
+    center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );  
 
     if( center_point->mData[1] < *m_threshold )
     {
