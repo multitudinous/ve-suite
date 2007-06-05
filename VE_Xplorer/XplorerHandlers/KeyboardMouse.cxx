@@ -405,31 +405,31 @@ void KeyboardMouse::ProcessNavigationEvents()
     std::cout << std::endl;
     */
 
-    osg::Matrix localMatrix;
-    localMatrix.identity();
+    osg::ref_ptr< osg::PositionAttitudeTransform > pat = new osg::PositionAttitudeTransform();
+    osg::Matrix temp;
+    temp.identity();
 
     for( int j = 0; j < 4; j++ )
     {
         for( int i = 0; i < 4; i++ )
         {
-             localMatrix( i, j ) = matrix[j][i];
+            temp( i, j ) = matrix[j][i];
         }
     }
+
+    pat->setPosition( temp.getTrans() );
+    pat->setAttitude( temp.getRotate() );
+    
 
     if( activeDCS->GetName() != "World DCS" )
     {
         osg::ref_ptr< VE_SceneGraph::Utilities::WorldToLocalTransform > wtlt = 
-        new VE_SceneGraph::Utilities::WorldToLocalTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+        new VE_SceneGraph::Utilities::WorldToLocalTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), pat.get() );
 
-        osg::Matrix worldMatrix;
-        worldMatrix.identity();
-        worldMatrix.setTrans( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition() );
-        worldMatrix.setRotate( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude() );
+        temp = wtlt->GetWorldToLocalTransform();
 
-        localMatrix = localMatrix * wtlt->GetWorldToLocalTransform();
-
-        activeDCS->setPosition( localMatrix.getTrans() );
-        activeDCS->setAttitude( localMatrix.getRotate() );
+        activeDCS->setPosition( temp.getTrans() );
+        activeDCS->setAttitude( temp.getRotate() );
     }
     else
     {
@@ -854,11 +854,6 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     //Move the center point to the center of the selected object
     osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
     new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
-
-    osg::Matrix localMatrix;
-    localMatrix.identity();
-    localMatrix.setTrans( activeDCS->getPosition() );
-    localMatrix.setRotate( activeDCS->getAttitude() );
 
     nodeCenterWorldCoords = activeDCS->getBound().center() * ltwt->GetLocalToWorldTransform();
     center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );  
