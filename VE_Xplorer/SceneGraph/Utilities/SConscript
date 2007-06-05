@@ -12,7 +12,7 @@ sources = Split("""
     PhongLoader.cxx
     MaterialInitializer.cxx
     OpacityVisitor.cxx
-    LocalToWorldNodePath.cxx
+    LocalToWorldTransform.cxx
     WorldToLocalNodePath.cxx
 """)
 
@@ -23,7 +23,7 @@ headers = Split("""
     PhongLoader.h
     MaterialInitializer.h
     OpacityVisitor.h
-    LocalToWorldNodePath.h
+    LocalToWorldTransform.h
     WorldToLocalNodePath.h
 """)
 

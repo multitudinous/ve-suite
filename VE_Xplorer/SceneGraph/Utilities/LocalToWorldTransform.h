@@ -26,18 +26,17 @@
  * Date modified: $Date: 2007-03-23 12:23:48 -0500 (Fri, 23 Mar 2007) $
  * Version:       $Rev: 7205 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: WorldToLocalNodePath.h 7205 2007-03-23 17:23:48Z jbkoch $
+ * Id:            $Id: LocalToWorldTransform.h 7205 2007-03-23 17:23:48Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef WORLD_TO_LOCAL_NODE_PATH_H
-#define WORLD_TO_LOCAL_NODE_PATH_H
+#ifndef LOCAL_TO_WORLD_TRANSFORM_H
+#define LOCAL_TO_WORLD_TRANSFORM_H
 
-/*!\file LocalToWorldNodePath.h
-WorldToLocalNodePath API
+/*!\file LocalToWorldTransform.h
 */
 
-/*!\class WorldToLocalNodePath
+/*!\class LocalToWorldTransform
 * 
 */
 
@@ -51,22 +50,22 @@ namespace VE_SceneGraph
 {
 namespace Utilities
 {
-class VE_SCENEGRAPH_UTILS_EXPORTS WorldToLocalNodePath : public osg::NodeVisitor
+class VE_SCENEGRAPH_UTILS_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    WorldToLocalNodePath( osg::Node* worldNode, osg::Node* localNode );
-    virtual ~WorldToLocalNodePath();
+    LocalToWorldTransform( osg::Node* worldNode, osg::Node* localNode );
+    virtual ~LocalToWorldTransform();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
 
-    osg::NodePath& GetNodePath();
+    osg::Matrix& GetLocalToWorldTransform();
 
 private:
-    osg::Node* m_localNode;
-    osg::NodePath m_nodePath;
+    osg::Node* m_worldNode;
+    osg::Matrix m_localToWorldTransform;
 
 };
 }
 }
 
-#endif //WORLD_TO_LOCAL_NODE_PATH_H
+#endif //LOCAL_TO_WORLD_TRANSFORM_H

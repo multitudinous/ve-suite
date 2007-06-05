@@ -26,12 +26,12 @@
  * Date modified: $Date: 2007-04-10 19:18:51 -0500 (Tue, 10 Apr 2007) $
  * Version:       $Rev: 7298 $
  * Author:        $Author: jbkoch $
- * Id:            $Id: LocalToWorldNodePath.cxx 7298 2007-04-11 00:18:51Z jbkoch $
+ * Id:            $Id: WorldToLocalTransform.cxx 7298 2007-04-11 00:18:51Z jbkoch $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldNodePath.h"
+#include "VE_Xplorer/SceneGraph/Utilities/WorldToLocalTransform.h"
 
 // --- OSG Includes --- //
 #include <osg/PositionAttitudeTransform>
@@ -42,24 +42,25 @@
 using namespace VE_SceneGraph::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldNodePath::LocalToWorldNodePath( osg::Node* worldNode, osg::Node* localNode )
+WorldToLocalTransform::WorldToLocalTransform( osg::Node* worldNode, osg::Node* localNode )
 :
-NodeVisitor( TRAVERSE_PARENTS )
+NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+m_worldToLocalTransform( osg::Matrix::identity() )
 {
-    m_worldNode = worldNode;
-    localNode->accept( *this );
+    m_localNode = localNode;
+    worldNode->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldNodePath::~LocalToWorldNodePath()
+WorldToLocalTransform::~WorldToLocalTransform()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////    
-void LocalToWorldNodePath::apply( osg::PositionAttitudeTransform& pat )
+void WorldToLocalTransform::apply( osg::PositionAttitudeTransform& pat )
 {
-    if( pat.getName() == m_worldNode->getName() )
+    if( pat.getName() == m_localNode->getName() )
     {
-        m_nodePath = _nodePath;
+        m_worldToLocalTransform = osg::computeWorldToLocal( _nodePath );
 
         return;
     }
@@ -67,8 +68,8 @@ void LocalToWorldNodePath::apply( osg::PositionAttitudeTransform& pat )
     osg::NodeVisitor::apply( pat );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::NodePath& LocalToWorldNodePath::GetNodePath()
+osg::Matrix& WorldToLocalTransform::GetWorldToLocalTransform()
 {
-    return m_nodePath;
+    return m_worldToLocalTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////

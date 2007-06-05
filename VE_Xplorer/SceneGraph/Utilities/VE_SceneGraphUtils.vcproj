@@ -199,7 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LocalToWorldNodePath.cxx"
+				RelativePath=".\LocalToWorldTransform.cxx"
 				>
 			</File>
 			<File
@@ -223,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WorldToLocalNodePath.cxx"
+				RelativePath=".\WorldToLocalTransform.cxx"
 				>
 			</File>
 		</Filter>
@@ -241,7 +241,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LocalToWorldNodePath.h"
+				RelativePath=".\LocalToWorldTransform.h"
 				>
 			</File>
 			<File
@@ -265,7 +265,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WorldToLocalNodePath.h"
+				RelativePath=".\WorldToLocalTransform.h"
 				>
 			</File>
 		</Filter>
