@@ -42,11 +42,12 @@
 using namespace VE_SceneGraph::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
-WorldToLocalTransform::WorldToLocalTransform( osg::Node* worldNode, osg::Node* localNode )
+WorldToLocalTransform::WorldToLocalTransform( osg::PositionAttitudeTransform* worldNode, osg::PositionAttitudeTransform* localNode )
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN ),
 m_worldToLocalTransform( osg::Matrix::identity() )
 {
+    m_worldNode = worldNode;
     m_localNode = localNode;
     worldNode->accept( *this );
 }
@@ -61,6 +62,13 @@ void WorldToLocalTransform::apply( osg::PositionAttitudeTransform& pat )
     if( pat.getName() == m_localNode->getName() )
     {
         m_worldToLocalTransform = osg::computeWorldToLocal( _nodePath );
+
+        //Postmultiply by the worldNode transform since it is not in the node path
+        osg::Matrix worldTransform;
+        worldTransform.identity();
+        worldTransform.setTrans( m_worldNode->getPosition() );
+        worldTransform.setRotate( m_worldNode->getAttitude() );
+        m_worldToLocalTransform.postMult( worldTransform );
 
         return;
     }

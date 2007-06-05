@@ -53,7 +53,7 @@ namespace Utilities
 class VE_SCENEGRAPH_UTILS_EXPORTS WorldToLocalTransform : public osg::NodeVisitor
 {
 public:
-    WorldToLocalTransform( osg::Node* worldNode, osg::Node* localNode );
+    WorldToLocalTransform( osg::PositionAttitudeTransform* worldNode, osg::PositionAttitudeTransform* localNode );
     virtual ~WorldToLocalTransform();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
@@ -61,7 +61,8 @@ public:
     osg::Matrix& GetWorldToLocalTransform();
 
 private:
-    osg::Node* m_localNode;
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_worldNode;
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_localNode;
     osg::Matrix m_worldToLocalTransform;
 
 };

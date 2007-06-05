@@ -63,7 +63,7 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
     {
         m_localToWorldTransform = osg::computeLocalToWorld( _nodePath );
         
-        //Premultiply by the localNode transform
+        //Premultiply by the localNode transform since it is not in the node path
         osg::Matrix localTransform;
         localTransform.identity();
         localTransform.setTrans( m_localNode->getPosition() );
