@@ -128,7 +128,7 @@ void SceneManager::InitScene( void )
     m_oqc->setOccluderThreshold( 1000 );
     ///Specifies the number of occlusion query identifiers to allocate
     ///per rendering context.    
-    m_oqc->setBufferSize( -1 );
+    m_oqc->setBufferSize( 50000 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes
