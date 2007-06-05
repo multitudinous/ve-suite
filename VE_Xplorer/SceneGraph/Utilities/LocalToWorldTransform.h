@@ -44,6 +44,7 @@
 #include "VE_Installer/include/VEConfig.h"
 
 // --- OSG Includes --- //
+#include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
 namespace VE_SceneGraph
@@ -53,7 +54,7 @@ namespace Utilities
 class VE_SCENEGRAPH_UTILS_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    LocalToWorldTransform( osg::Node* worldNode, osg::Node* localNode );
+    LocalToWorldTransform( osg::PositionAttitudeTransform* worldNode, osg::PositionAttitudeTransform* localNode );
     virtual ~LocalToWorldTransform();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
@@ -61,7 +62,8 @@ public:
     osg::Matrix& GetLocalToWorldTransform();
 
 private:
-    osg::Node* m_worldNode;
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_worldNode;
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_localNode;
     osg::Matrix m_localToWorldTransform;
 
 };
