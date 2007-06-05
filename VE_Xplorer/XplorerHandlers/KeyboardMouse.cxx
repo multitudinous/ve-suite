@@ -405,7 +405,6 @@ void KeyboardMouse::ProcessNavigationEvents()
     std::cout << std::endl;
     */
 
-    osg::ref_ptr< osg::PositionAttitudeTransform > pat = new osg::PositionAttitudeTransform();
     osg::Matrix temp;
     temp.identity();
 
@@ -417,16 +416,12 @@ void KeyboardMouse::ProcessNavigationEvents()
         }
     }
 
-    pat->setPosition( temp.getTrans() );
-    pat->setAttitude( temp.getRotate() );
-    
-
     if( activeDCS->GetName() != "World DCS" )
     {
-        osg::ref_ptr< VE_SceneGraph::Utilities::WorldToLocalTransform > wtlt = 
-        new VE_SceneGraph::Utilities::WorldToLocalTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), pat.get() );
+        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > wtlt = 
+            new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ,activeDCS.get() );
 
-        temp = wtlt->GetWorldToLocalTransform();
+        temp = temp * osg::Matrix::inverse( wtlt->GetLocalToWorldTransform() );
 
         activeDCS->setPosition( temp.getTrans() );
         activeDCS->setAttitude( temp.getRotate() );
@@ -575,8 +570,7 @@ void KeyboardMouse::NavMotion()
 
     osg::Matrix localMatrix;
     localMatrix.identity();
-    localMatrix.setTrans( activeDCS->getPosition() );
-    localMatrix.setRotate( activeDCS->getAttitude() );
+    
 
     if( activeDCS->GetName() != "World DCS" )
     {
@@ -584,6 +578,11 @@ void KeyboardMouse::NavMotion()
         new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
         localMatrix = ltwt->GetLocalToWorldTransform();
+    }
+    else
+    {
+        localMatrix.setTrans( activeDCS->getPosition() );
+        localMatrix.setRotate( activeDCS->getAttitude() );
     }
 
     for( int j = 0; j < 4; j++ )
