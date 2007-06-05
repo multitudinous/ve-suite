@@ -159,7 +159,7 @@ void DeviceHandler::ProcessDeviceEvents()
     //Update Device properties
     this->ExecuteCommands();
 
-    if ( device_mode == "World Navigation" )
+    if ( device_mode == "World Navigation" || device_mode == "Object Navigation" )
     {
         devices[ "Wand" ]->UpdateNavigation();
         devices[ "KeyboardMouse" ]->UpdateNavigation();

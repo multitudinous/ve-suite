@@ -40,7 +40,8 @@
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 
-#include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldNodePath.h"
+#include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldTransform.h"
+#include "VE_Xplorer/SceneGraph/Utilities/WorldToLocalTransform.h"
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>
@@ -398,6 +399,27 @@ void KeyboardMouse::ProcessNavigationEvents()
     //Set the current matrix
     activeDCS->SetMat( matrix );
 
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        osg::ref_ptr< VE_SceneGraph::Utilities::WorldToLocalTransform > wtlt = 
+        new VE_SceneGraph::Utilities::WorldToLocalTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+
+        osg::Matrix localMatrix;
+        localMatrix.identity();
+        localMatrix.setTrans( activeDCS->getPosition() );
+        localMatrix.setRotate( activeDCS->getAttitude() );
+
+        osg::Matrix worldMatrix;
+        worldMatrix.identity();
+        worldMatrix.setTrans( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition() );
+        worldMatrix.setRotate( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude() );
+
+        localMatrix = localMatrix * worldMatrix * wtlt->GetWorldToLocalTransform();
+
+        activeDCS->setPosition( localMatrix.getTrans() );
+        activeDCS->setAttitude( localMatrix.getRotate() );
+    }
+
     //If not in animation mode, reset the transform
     if( !m_animate )
     {
@@ -524,6 +546,22 @@ void KeyboardMouse::NavMotion()
     if( m_state == 0 )
     {
         return;
+    }
+
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
+        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+
+        osg::Matrix localMatrix;
+        localMatrix.identity();
+        localMatrix.setTrans( activeDCS->getPosition() );
+        localMatrix.setRotate( activeDCS->getAttitude() );
+
+        localMatrix = ltwt->GetLocalToWorldTransform() * localMatrix;
+
+        activeDCS->setPosition( localMatrix.getTrans() );
+        activeDCS->setAttitude( localMatrix.getRotate() );
     }
 
     m_currentTransform = activeDCS->GetMat();
@@ -722,8 +760,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     if( listOfHits.empty() )
     {
-        vprDEBUG(vesDBG,1) << "|\tKeyboardMouse::ProcessHit No object selected" 
-                           << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected" 
+                              << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
@@ -761,12 +799,12 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
     {
-        vprDEBUG(vesDBG,1) << "|\tObjects has name " 
-                           << parentNode->getName() << std::endl 
-                           << vprDEBUG_FLUSH;
-        vprDEBUG(vesDBG,1) << "|\tObjects descriptors " 
-                           << parentNode->getDescriptions().at( 1 ) << std::endl 
-                           << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tObjects has name " 
+                              << parentNode->getName() << std::endl 
+                              << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors " 
+                              << parentNode->getDescriptions().at( 1 ) << std::endl 
+                              << vprDEBUG_FLUSH;
 
         activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
     }
@@ -774,28 +812,24 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     else
     {
         selectedGeometry = objectHit._geode;
-        vprDEBUG(vesDBG,1) << "|\tObject does not have name parent name " 
-                           << objectHit._geode->getParents().front()->getName() 
-                           << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name " 
+                              << objectHit._geode->getParents().front()->getName() 
+                              << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }    
 
     //if( activeDCS->GetName() != "World DCS" )
     //{
-    osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldNodePath > nv = 
-        new VE_SceneGraph::Utilities::LocalToWorldNodePath( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
-    
-    osg::Matrix toWorldTransform;
-    toWorldTransform.identity();
-    toWorldTransform = osg::computeLocalToWorld( nv->GetNodePath() );
+    osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
+    new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-    osg::Matrix localDCS;
-    localDCS.identity();
-    localDCS.setTrans( activeDCS->getPosition() );
-    localDCS.setRotate( activeDCS->getAttitude() );
+    osg::Matrix localMatrix;
+    localMatrix.identity();
+    localMatrix.setTrans( activeDCS->getPosition() );
+    localMatrix.setRotate( activeDCS->getAttitude() );
 
-    nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localDCS ) * toWorldTransform;
+    nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localMatrix ) * ltwt->GetLocalToWorldTransform();
 
     center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
     //}    
