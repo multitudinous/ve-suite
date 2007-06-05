@@ -396,37 +396,55 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix *= m_deltaTransform;
     matrix *= accuRotation;
 
-    //Set the current matrix
-    activeDCS->SetMat( matrix );
+    /*
+    std::cout << "After Delta Transform Has Been Applied" << std::endl;
+    std::cout << matrix.mData[0] << "  " << matrix.mData[4] << "  " << matrix.mData[8] << "  " << matrix.mData[12] << std::endl;
+    std::cout << matrix.mData[1] << "  " << matrix.mData[5] << "  " << matrix.mData[9] << "  " << matrix.mData[13] << std::endl;
+    std::cout << matrix.mData[2] << "  " << matrix.mData[6] << "  " << matrix.mData[10] << "  " << matrix.mData[14] << std::endl;
+    std::cout << matrix.mData[3] << "  " << matrix.mData[7] << "  " << matrix.mData[11] << "  " << matrix.mData[15] << std::endl;
+    std::cout << std::endl;
+    */
+
+    osg::Matrix localMatrix;
+    localMatrix.identity();
+
+    for( int j = 0; j < 4; j++ )
+    {
+        for( int i = 0; i < 4; i++ )
+        {
+             localMatrix( i, j ) = matrix[j][i];
+        }
+    }
 
     if( activeDCS->GetName() != "World DCS" )
     {
         osg::ref_ptr< VE_SceneGraph::Utilities::WorldToLocalTransform > wtlt = 
         new VE_SceneGraph::Utilities::WorldToLocalTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-        osg::Matrix localMatrix;
-        localMatrix.identity();
-        localMatrix.setTrans( activeDCS->getPosition() );
-        localMatrix.setRotate( activeDCS->getAttitude() );
-
         osg::Matrix worldMatrix;
         worldMatrix.identity();
         worldMatrix.setTrans( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition() );
         worldMatrix.setRotate( VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude() );
 
-        localMatrix = osg::Matrix::inverse( worldMatrix ) * wtlt->GetWorldToLocalTransform() * localMatrix;
-
-        /*
-        std::cout << wtlt->GetWorldToLocalTransform()( 0, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 0, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 0, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 0, 3 ) << "  " << std::endl;
-        std::cout << wtlt->GetWorldToLocalTransform()( 1, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 1, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 1, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 1, 3 ) << "  " << std::endl;
-        std::cout << wtlt->GetWorldToLocalTransform()( 2, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 2, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 2, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 2, 3 ) << "  " << std::endl;
-        std::cout << wtlt->GetWorldToLocalTransform()( 3, 0 ) << "  " << wtlt->GetWorldToLocalTransform()( 3, 1 ) << "  " << wtlt->GetWorldToLocalTransform()( 3, 2 ) << "  " << wtlt->GetWorldToLocalTransform()( 3, 3 ) << "  " << std::endl;
-        std::cout << std::endl;
-        */
+        localMatrix = localMatrix * wtlt->GetWorldToLocalTransform();
 
         activeDCS->setPosition( localMatrix.getTrans() );
         activeDCS->setAttitude( localMatrix.getRotate() );
     }
+    else
+    {
+        //Set the current matrix
+        activeDCS->SetMat( matrix );
+    }
+
+    /*
+    std::cout << "After Transformed Back To Local Coordinate System" << std::endl;
+    std::cout << activeDCS->GetMat().mData[0] << "  " << activeDCS->GetMat().mData[4] << "  " << activeDCS->GetMat().mData[8] << "  " << activeDCS->GetMat().mData[12] << std::endl;
+    std::cout << activeDCS->GetMat().mData[1] << "  " << activeDCS->GetMat().mData[5] << "  " << activeDCS->GetMat().mData[9] << "  " << activeDCS->GetMat().mData[13] << std::endl;
+    std::cout << activeDCS->GetMat().mData[2] << "  " << activeDCS->GetMat().mData[6] << "  " << activeDCS->GetMat().mData[10] << "  " << activeDCS->GetMat().mData[14] << std::endl;
+    std::cout << activeDCS->GetMat().mData[3] << "  " << activeDCS->GetMat().mData[7] << "  " << activeDCS->GetMat().mData[11] << "  " << activeDCS->GetMat().mData[15] << std::endl;
+    std::cout << std::endl << std::endl << std::endl;
+    */
 
     //If not in animation mode, reset the transform
     if( !m_animate )
@@ -451,16 +469,6 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float n, float f )
 {
-    /*
-    std::cout << "m_leftFrustum: "   << m_leftFrustum       << std::endl;
-    std::cout << "m_rightFrustum: "  << m_rightFrustum      << std::endl;
-    std::cout << "m_topFrustum: "    << m_topFrustum        << std::endl;
-    std::cout << "m_bottomFrustum: " << m_bottomFrustum     << std::endl;
-    std::cout << "near: "   << m_nearFrustum << std::endl;
-    std::cout << "far: "    << m_farFrustum  << std::endl;
-    std::cout <<                             std::endl;
-    */
-
     m_leftFrustum = l;
     m_rightFrustum = r;
     m_topFrustum = t;
@@ -556,23 +564,44 @@ void KeyboardMouse::NavMotion()
         return;
     }
 
+    /*
+    std::cout << "Before Transformed To World Coordinate System" << std::endl;
+    std::cout << activeDCS->GetMat().mData[0] << "  " << activeDCS->GetMat().mData[4] << "  " << activeDCS->GetMat().mData[8] << "  " << activeDCS->GetMat().mData[12] << std::endl;
+    std::cout << activeDCS->GetMat().mData[1] << "  " << activeDCS->GetMat().mData[5] << "  " << activeDCS->GetMat().mData[9] << "  " << activeDCS->GetMat().mData[13] << std::endl;
+    std::cout << activeDCS->GetMat().mData[2] << "  " << activeDCS->GetMat().mData[6] << "  " << activeDCS->GetMat().mData[10] << "  " << activeDCS->GetMat().mData[14] << std::endl;
+    std::cout << activeDCS->GetMat().mData[3] << "  " << activeDCS->GetMat().mData[7] << "  " << activeDCS->GetMat().mData[11] << "  " << activeDCS->GetMat().mData[15] << std::endl;
+    std::cout << std::endl;
+    */
+
+    osg::Matrix localMatrix;
+    localMatrix.identity();
+    localMatrix.setTrans( activeDCS->getPosition() );
+    localMatrix.setRotate( activeDCS->getAttitude() );
+
     if( activeDCS->GetName() != "World DCS" )
     {
         osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
         new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-        osg::Matrix localMatrix;
-        localMatrix.identity();
-        localMatrix.setTrans( activeDCS->getPosition() );
-        localMatrix.setRotate( activeDCS->getAttitude() );
-
-        localMatrix = ltwt->GetLocalToWorldTransform() * localMatrix;
-
-        activeDCS->setPosition( localMatrix.getTrans() );
-        activeDCS->setAttitude( localMatrix.getRotate() );
+        localMatrix = ltwt->GetLocalToWorldTransform();
     }
 
-    m_currentTransform = activeDCS->GetMat();
+    for( int j = 0; j < 4; j++ )
+    {
+        for( int i = 0; i < 4; i++ )
+        {
+            m_currentTransform[i][j] = localMatrix( j, i );
+        }
+    }
+
+    /*
+    std::cout << "After Transformed To World Coordinate System" << std::endl;
+    std::cout << m_currentTransform.mData[0] << "  " << m_currentTransform.mData[4] << "  " << m_currentTransform.mData[8] << "  " << m_currentTransform.mData[12] << std::endl;
+    std::cout << m_currentTransform.mData[1] << "  " << m_currentTransform.mData[5] << "  " << m_currentTransform.mData[9] << "  " << m_currentTransform.mData[13] << std::endl;
+    std::cout << m_currentTransform.mData[2] << "  " << m_currentTransform.mData[6] << "  " << m_currentTransform.mData[10] << "  " << m_currentTransform.mData[14] << std::endl;
+    std::cout << m_currentTransform.mData[3] << "  " << m_currentTransform.mData[7] << "  " << m_currentTransform.mData[11] << "  " << m_currentTransform.mData[15] << std::endl;
+    std::cout << std::endl;
+    */
 
     m_currPos[0] = float( m_x ) / float( m_width );
     m_currPos[1] = float( m_y ) / float( m_height );
@@ -773,14 +802,9 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
+        //Move the center point to the center of all objects in the world
         nodeCenterWorldCoords = activeDCS->getBound().center();
-
         center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
-
-        if( center_point->mData[1] < *m_threshold )
-        {
-            center_point->mData[1] = *m_jump;
-        }
 
         return;
     }
@@ -827,6 +851,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }    
 
+    //Move the center point to the center of the selected object
     osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
     new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
@@ -835,13 +860,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     localMatrix.setTrans( activeDCS->getPosition() );
     localMatrix.setRotate( activeDCS->getAttitude() );
 
-    nodeCenterWorldCoords = activeDCS->getBound().center() * osg::Matrix::inverse( localMatrix ) * ltwt->GetLocalToWorldTransform();
-
+    nodeCenterWorldCoords = activeDCS->getBound().center() * ltwt->GetLocalToWorldTransform();
     center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );  
-
-    if( center_point->mData[1] < *m_threshold )
-    {
-        center_point->mData[1] = *m_jump;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
