@@ -50,7 +50,8 @@ void Body_AMI_UIHandler_i::UpdateNetwork( )
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateNetwork_excep (
@@ -60,7 +61,8 @@ void Body_AMI_UIHandler_i::UpdateNetwork_excep (
     ::CORBA::SystemException
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleUI( )
@@ -69,7 +71,8 @@ void Body_AMI_UIHandler_i::UpdateModuleUI( )
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleUI_excep(
@@ -79,7 +82,8 @@ void Body_AMI_UIHandler_i::UpdateModuleUI_excep(
     ::CORBA::SystemException
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleResult( )
@@ -88,7 +92,8 @@ void Body_AMI_UIHandler_i::UpdateModuleResult( )
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateModuleResult_excep(
@@ -98,7 +103,8 @@ void Body_AMI_UIHandler_i::UpdateModuleResult_excep(
     ::CORBA::SystemException
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateLinkContent( )
@@ -107,7 +113,8 @@ void Body_AMI_UIHandler_i::UpdateLinkContent( )
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::UpdateLinkContent_excep(
@@ -117,7 +124,8 @@ void Body_AMI_UIHandler_i::UpdateLinkContent_excep(
     ::CORBA::SystemException
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::Raise( )
@@ -126,7 +134,8 @@ void Body_AMI_UIHandler_i::Raise( )
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::Raise_excep(
@@ -136,7 +145,8 @@ void Body_AMI_UIHandler_i::Raise_excep(
     ::CORBA::SystemException
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData( )
@@ -145,7 +155,8 @@ void Body_AMI_UIHandler_i::SetXplorerData( )
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_AMI_UIHandler_i::SetXplorerData_excep(
@@ -155,7 +166,8 @@ void Body_AMI_UIHandler_i::SetXplorerData_excep(
     ::CORBA::SystemException
   ))
 {
-  // Add your implementation here
+    // Add your implementation here
+	 throw CORBA::NO_IMPLEMENT();
 }
 
 

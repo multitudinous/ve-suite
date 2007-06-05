@@ -66,6 +66,8 @@ using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::Body_VEXplorer_i (void)
+:
+m_xplorerAMIHandler()
 {
 	uiCom = 0;
 }
@@ -418,5 +420,8 @@ bool Body_VEXplorer_i::GetClusterMode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetXplorerData( std::string input )
 {
-    uiCom->SetXplorerData( input.c_str() );
+    ///AMI call
+    Body::AMI_UIHandler_var xplorerComAMIHandler = m_xplorerAMIHandler._this();
+    uiCom->sendc_SetXplorerData(xplorerComAMIHandler.in(), input.c_str());
+    ///uiCom->SetXplorerData( input.c_str() );
 }

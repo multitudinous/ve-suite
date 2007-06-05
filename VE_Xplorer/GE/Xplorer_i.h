@@ -34,6 +34,7 @@
 #define _XPLORER_I_H_
 
 #include "VE_Open/skel/moduleS.h"
+#include "VE_Xplorer/GE/Body_AMI_UIHandler_i.h"
 
 #undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
@@ -61,7 +62,6 @@ namespace VE_XML
 {
 	class Command;
 }
-
 #include <vector>
 #include <iostream>
 
@@ -145,5 +145,6 @@ protected:
    long frameNumber;///< frame number
 
    Body::UI_var uiCom;
+   Body_AMI_UIHandler_i m_xplorerAMIHandler;///<AMI handler for asynchronous calls to conductor
 };
 #endif
