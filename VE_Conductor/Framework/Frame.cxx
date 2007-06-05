@@ -493,7 +493,7 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   wxRect rect;
   wxSize scr = wxGetDisplaySize();
  
-  wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+  wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
   int i;
   wxString key = LOCATION + wxString::Format(_("%d"), 0);
   if (cfg->Exists (key)) 
@@ -515,16 +515,16 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   return rect;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
+void AppFrame::StoreFrameSize( wxRect rect, wxConfig* config)
 {
     // store size
     wxConfig* cfg = config;
     if (!config)
     {
-      cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+      cfg = static_cast<wxConfig*>(wxConfig::Get());
     }
-    std::cout<<"Config name Store Frame: "<<cfg->GetAppName()<<std::endl;
-    std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+    //std::cout<<"Config name Store Frame: "<<cfg->GetAppName()<<std::endl;
+    //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
 
     wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr);
     cfg->Write (key + _T("/") + LOCATION_X, rect.x);
@@ -541,10 +541,10 @@ void AppFrame::StoreConfig(wxConfig* config)
     wxConfig* cfg = config;
     if (!config)
     { 
-      cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+      cfg = static_cast<wxConfig*>(wxConfig::Get());
     }
-    std::cout<<"Config name Store config: "<<cfg->GetAppName()<<std::endl;
-    std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+    //std::cout<<"Config name Store config: "<<cfg->GetAppName()<<std::endl;
+    //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
     wxString key = FEATURE;
     cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
     cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
@@ -557,10 +557,10 @@ void AppFrame::StoreRecentFile( wxConfig* config )
     wxConfig* cfg = config;
     if (!config) 
     {
-       cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+       cfg = static_cast<wxConfig*>(wxConfig::Get());
     }
-    std::cout<<"Config name Store Recent file: "<<cfg->GetAppName()<<std::endl;
-    std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+    //std::cout<<"Config name Store Recent file: "<<cfg->GetAppName()<<std::endl;
+    //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
     m_recentVESFiles->Save(*cfg);
 }
 
