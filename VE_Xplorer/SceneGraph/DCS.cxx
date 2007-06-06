@@ -138,9 +138,9 @@ float* DCS::GetRotationArray( void )
 {
     osg::Quat quat = this->getAttitude();
 
-    gmtl::Quatf tempQuat( quat[0], quat[1], quat[2], quat[3] );
-    gmtl::Matrix44f _vjMatrix = gmtl::makeRot< gmtl::Matrix44f >( tempQuat );
-    gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( _vjMatrix );
+    gmtl::Quatd tempQuat( quat[0], quat[1], quat[2], quat[3] );
+    gmtl::Matrix44d _vjMatrix = gmtl::makeRot< gmtl::Matrix44d >( tempQuat );
+    gmtl::EulerAngleZXYd tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYd >( _vjMatrix );
 
     m_Rotation[0] = gmtl::Math::rad2Deg( tempZXY[0] );
     m_Rotation[1] = gmtl::Math::rad2Deg( tempZXY[1] );
@@ -255,7 +255,7 @@ void DCS::SetScaleArray( float* scale )
     SetScaleArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
-gmtl::Matrix44f DCS::GetMat( void )
+gmtl::Matrix44d DCS::GetMat( void )
 {
 #ifdef _OSG
     osg::Matrixd scaleMat = osg::Matrixd::scale( this->getScale() );
@@ -269,8 +269,8 @@ gmtl::Matrix44f DCS::GetMat( void )
     rotateMat.makeRotate( this->getAttitude() );
     rotateMat = inverseTranslationMat * rotateMat * translationMat;
 
-    osg::Matrixf osgMat = translationMat * scaleMat * rotateMat;
-    gmtl::Matrix44f _vjMatrix;
+    osg::Matrixd osgMat = translationMat * scaleMat * rotateMat;
+    gmtl::Matrix44d _vjMatrix;
     if( osgMat.valid() )
     {
         _vjMatrix.set( osgMat.ptr() );
@@ -289,17 +289,17 @@ gmtl::Matrix44f DCS::GetMat( void )
     return _vjMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetMat( gmtl::Matrix44f& input )
+void DCS::SetMat( gmtl::Matrix44d& input )
 {
 #ifdef _OSG
-    gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
-    gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
-    gmtl::Vec3f scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
+    gmtl::Vec3d scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+    gmtl::Vec3d scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
+    gmtl::Vec3d scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
 
-    float tempScale = 1.0f/gmtl::length( scaleXVec );
-    gmtl::Matrix44f tempScaleMat;
+    double tempScale = 1.0f / gmtl::length( scaleXVec );
+    gmtl::Matrix44d tempScaleMat;
     gmtl::setScale( tempScaleMat, tempScale );
-    gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+    gmtl::Matrix44d unScaleInput = tempScaleMat * input;
 
     //Set scale values
     this->setScale( osg::Vec3d( gmtl::length( scaleXVec ), 
@@ -307,7 +307,7 @@ void DCS::SetMat( gmtl::Matrix44f& input )
                                 gmtl::length( scaleZVec ) ) );
 
     //Set rotation values
-    gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
+    gmtl::Quatd tempQuat = gmtl::make< gmtl::Quatd >( unScaleInput );
     osg::Quat quat( tempQuat[0], tempQuat[1], tempQuat[2], tempQuat[3] );
     this->setAttitude( quat );
 
@@ -324,7 +324,7 @@ void DCS::SetMat( gmtl::Matrix44f& input )
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetRotationMatrix( gmtl::Matrix44f& input )
+void DCS::SetRotationMatrix( gmtl::Matrix44d& input )
 {
     //There is currently a bug here
     //We need to set the roation array so that if someone requests the rotation array,
@@ -333,14 +333,14 @@ void DCS::SetRotationMatrix( gmtl::Matrix44f& input )
     //Need to set rotation to this matrix
 #ifdef _OSG
     //Remove the scale from the rotation
-    gmtl::Vec3f scaleVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
-    float tempScale = 1.0f / gmtl::length( scaleVec );
-    gmtl::Matrix44f tempScaleMat;
+    gmtl::Vec3d scaleVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+    double tempScale = 1.0f / gmtl::length( scaleVec );
+    gmtl::Matrix44d tempScaleMat;
     gmtl::setScale( tempScaleMat, tempScale );
-    gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+    gmtl::Matrix44d unScaleInput = tempScaleMat * input;
 
     //Create the quat for rotataion
-    gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
+    gmtl::Quatd tempQuat = gmtl::make< gmtl::Quatd >( unScaleInput );
     osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
     this->setAttitude( quat );
 #elif _OPENSG

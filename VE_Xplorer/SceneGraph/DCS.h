@@ -113,7 +113,7 @@ public:
     float* GetScaleArray();
 
     ///Get the transform in 4x4 matrix form
-    gmtl::Matrix44f GetMat();
+    gmtl::Matrix44d GetMat();
 
     ///Set the translation array with a vector
     ///\param transArray A vector to set the translation array values
@@ -145,11 +145,11 @@ public:
 
     ///Set the matrix for this transform
     ///\param input Matrix with all transform information
-    void SetMat( gmtl::Matrix44f& input );
+    void SetMat( gmtl::Matrix44d& input );
 
     ///Set just the roation portion of this transform with the 4x4 matrix
     ///\param input Matrix with pure rotations
-    void SetRotationMatrix( gmtl::Matrix44f& input );
+    void SetRotationMatrix( gmtl::Matrix44d& input );
 
     ///Generic set name function
     ///\param name The name
