@@ -129,7 +129,7 @@ cfdApp::cfdApp( int argc, char* argv[] )
    light_0->setAmbient( osg::Vec4d( 0.36862f, 0.36842f, 0.36842f, 1.0f ) );
    light_0->setDiffuse( osg::Vec4d( 0.88627f, 0.88500f, 0.88500f, 1.0f ) );
    light_0->setSpecular( osg::Vec4d( 0.49019f, 0.48872f, 0.48872f, 1.0f ) );
-   light_0->setPosition( osg::Vec4d( 10000.0f, -10000.0f, 10000.0f, 0.0f ) );
+   light_0->setPosition( osg::Vec4d( 0.0f, -10000.0f, 10000.0f, 0.0f ) );
    light_0->setDirection( osg::Vec3d( -1, 1, -1 ) );
 
    light_source_0->setLight( light_0.get() );
