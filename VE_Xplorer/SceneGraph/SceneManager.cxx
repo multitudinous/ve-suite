@@ -233,6 +233,58 @@ void SceneManager::_createLogo()
       m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true );
       m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true );
       m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true );
+
+        char phong_vertex[]=
+            "varying vec4 color; \n"
+            "varying vec3 eyePos; \n"
+            "varying vec3 lightPos; \n"
+            "varying vec3 normal; \n"
+
+            "void main() \n"
+            "{ \n"
+                 "gl_Position=ftransform(); \n"
+
+                 "color=gl_Color; \n"
+                 "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+                 "lightPos=gl_LightSource[0].position.xyz; \n"
+                 "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
+            "} \n";
+
+        char phong_fragment[]=
+        "varying vec4 color; \n"
+        "varying vec3 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"   
+             "vec3 N=normalize(normal); \n"
+             "vec3 L=normalize(lightPos); \n"
+             "float NDotL=max(dot(N,L),0.0); \n"
+
+             "vec3 V=normalize(eyePos); \n"
+             "vec3 R=reflect(V,N); \n"
+             "float RDotL=max(dot(R,L),0.0); \n"
+
+             "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
+             "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
+             "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
+
+             "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
+
+             "gl_FragColor=vec4(color,1.0); \n"
+        "} \n";
+
+        osg::ref_ptr< osg::StateSet > stateset = _logoNode->getOrCreateStateSet();
+        osg::ref_ptr< osg::Program > program = new osg::Program;
+
+        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, phong_vertex );
+        program->addShader( vertex_shader.get() );
+
+        osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, phong_fragment );
+        program->addShader( fragment_shader.get() );
+
+        stateset->setAttribute( program.get() );
    }
 #endif
 }
