@@ -53,7 +53,7 @@ Device API
 
 namespace osg 
 {
-    class Vec3f;
+    class Vec3d;
 }
 
 namespace VE_XML
@@ -98,7 +98,7 @@ public:
 
     ///Set the center point
     ///\param cp The center point
-    void SetCenterPoint( gmtl::Point3f* cp );
+    void SetCenterPoint( gmtl::Point3d* cp );
 
     ///Sets the center point threshold
     void SetCenterPointThreshold( float* threshold );
@@ -113,15 +113,15 @@ protected:
     ///Definition to set the start and end point
     ///\param startPoint The start point
     ///\param endPoint
-    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+    virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
     ///Set the start and end point
     ///\param startPoint The start point
     ///\param endPoint The end point
-    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
+    virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
     osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
-    gmtl::Point3f* center_point;///<The point about which rotation occurs
+    gmtl::Point3d* center_point;///<The point about which rotation occurs
     float* m_threshold;///<
     float* m_jump;///<
 };

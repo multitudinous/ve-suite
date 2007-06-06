@@ -133,8 +133,8 @@ void Wand::UpdateNavigation()
    osg::Quat rot_quat;
    osg::Quat world_quat = activeDCS->getAttitude();
    
-	float* tempWorldTrans = activeDCS->GetVETranslationArray();
-   float worldTrans[ 3 ];
+	double* tempWorldTrans = activeDCS->GetVETranslationArray();
+   double worldTrans[ 3 ];
 	worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
 	worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
 	worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
@@ -200,7 +200,7 @@ void Wand::UpdateNavigation()
                            << this->dir[2]
                            << std::endl << vprDEBUG_FLUSH;
       //Get the largest direction component so that we know how to rotate
-      float direction = 0.0f;
+      double direction = 0.0f;
       //size_t dirIndex = 0;
       size_t rotIndex = 0;
       //If we want pitch
@@ -221,70 +221,74 @@ void Wand::UpdateNavigation()
       if ( direction > 0.0f )
       {
          ///worldRot[ dirIndex ] += rotationStepSize;
-         osg::Vec3f tempVec( 0, 0, 0 );
+         osg::Vec3d tempVec( 0, 0, 0 );
          tempVec[ rotIndex ] = 1;
          rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
       }
       else 
       {
          //worldRot[ dirIndex ] -= rotationStepSize;
-         osg::Vec3f tempVec( 0, 0, 0 );
+         osg::Vec3d tempVec( 0, 0, 0 );
          tempVec[ rotIndex ] = 1;
          rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
       }
       
       if ( rotationFlag )
       {
-         vjHeadMat = head->getData();
+         //vjHeadMat = head->getData();
+         for( size_t i = 0; i < 16; ++i )
+         {
+             vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
+         }
          // get juggler Matrix of worldDCS
          // Note:: for pf we are in juggler land
          //        for osg we are in z up land
-         Matrix44f worldMat;
+         Matrix44d worldMat;
          worldMat = activeDCS->GetMat();
          
-         gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
-         jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
+         gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
+         jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
          jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
          jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
          jugglerHeadPointTemp[ 2 ] = 0;//jugglerHeadPoint[ 1 ];
 
          // translate world dcs by distance that the head
          // is away from the origin
-         gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
-         gmtl::Matrix44f worldMatTrans = transMat * worldMat;
-         gmtl::Point3f newJugglerHeadPoint;
+         gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -jugglerHeadPointTemp );
+         gmtl::Matrix44d worldMatTrans = transMat * worldMat;
+         gmtl::Point3d newJugglerHeadPoint;
          // get the position of the head in the new world space
          // as if the head is on the origin
-         gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
+         gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
          
          // Create rotation matrix and juggler head vector
-         gmtl::Matrix44f rotMatTemp;
+         gmtl::Matrix44d rotMatTemp;
          
          if ( direction > 0.0f )
          {
             //worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(rotationStepSize);
-            osg::Vec3f tempVec( 0, 0, 0 );
+            osg::Vec3d tempVec( 0, 0, 0 );
             tempVec[ rotIndex ] = 1;
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
          }
          else 
          {
             //worldRotVecTemp[ rotIndex ] = gmtl::Math::deg2Rad(-rotationStepSize);
-            osg::Vec3f tempVec( 0, 0, 0 );
+            osg::Vec3d tempVec( 0, 0, 0 );
             tempVec[ rotIndex ] = 1;
             rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
          }
          
-         rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >( gmtl::Quat< float >( rot_quat[0], 
+         rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >( gmtl::Quat< double >( rot_quat[0], 
                                                                     rot_quat[1], 
                                                                     rot_quat[2], 
                                                                     rot_quat[3] ) );
-         gmtl::Vec4f newGlobalHeadPointVec;
+         gmtl::Vec4d newGlobalHeadPointVec;
          newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
          newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
          newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
          // roate the head vector by the rotation increment
-         gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
+         gmtl::Vec4d rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
          
          // create translation from new rotated point
          // and add original head off set to the newly found location
@@ -341,7 +345,7 @@ void Wand::UpdateSelection( void )
    UpdateObjectHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
+void Wand::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
    ;
 }
@@ -358,7 +362,7 @@ void Wand::SetVECommand( VE_XML::Command* veCommand )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SelectObject( void )
 {
-   osg::Vec3f startPoint, endPoint;
+   osg::Vec3d startPoint, endPoint;
    this->SetupStartEndPoint(&startPoint, &endPoint);
 
    beamLineSegment->set(startPoint, endPoint);
@@ -430,7 +434,7 @@ void Wand::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
 //This function currently deletes the existing beam each time it is called and
 //add a new beam.  This should be replaced such that it is only called once
 //and then a transform is modified for the location.  
-void Wand::DrawLine(osg::Vec3f start, osg::Vec3f end)
+void Wand::DrawLine(osg::Vec3d start, osg::Vec3d end)
 {   
    if ( beamGeode.valid() )
    {
@@ -538,7 +542,7 @@ void Wand::UpdateObjectHandler( void )
    //UpdateDeltaWandPosition();
    
    //Now draw the new line location and setup the data for the hit list pointer
-   osg::Vec3f startPoint, endPoint;
+   osg::Vec3d startPoint, endPoint;
    this->SetupStartEndPoint(&startPoint, &endPoint);
    this->DrawLine(startPoint, endPoint);
    
@@ -563,7 +567,7 @@ void Wand::UpdateObjectHandler( void )
                         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
+void Wand::SetupStartEndPoint(osg::Vec3d * startPoint, osg::Vec3d * endPoint)
 {
    double* wandPosition = this->GetObjLocation();
    double* wandDirection = this->GetDirection();
@@ -581,16 +585,16 @@ void Wand::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
 void Wand::TranslateObject()
 {
    //double* wandPosition = this->GetObjLocation();
-   osg::Vec3f offsetFromLastPosition;
+   osg::Vec3d offsetFromLastPosition;
    
-   float* tempWorldRot = activeDCS->GetRotationArray();
-   float worldRot[ 3 ];
+   double* tempWorldRot = activeDCS->GetRotationArray();
+   double worldRot[ 3 ];
    worldRot[ 0 ] = tempWorldRot[ 0 ];
    worldRot[ 1 ] = tempWorldRot[ 1 ];
    worldRot[ 2 ] = tempWorldRot[ 2 ];
    
-	float* tempWorldTrans = activeDCS->GetVETranslationArray();
-   float worldTrans[ 3 ];
+	double* tempWorldTrans = activeDCS->GetVETranslationArray();
+   double worldTrans[ 3 ];
 	worldTrans[ 0 ] = tempWorldTrans[ 0 ];
 	worldTrans[ 1 ] = tempWorldTrans[ 1 ];
 	worldTrans[ 2 ] = tempWorldTrans[ 2 ];
@@ -605,7 +609,11 @@ void Wand::UpdateWandLocalDirection()
 {
    // get the normalized direction relative to the juggler frame
    vjVec.set( 0.0f, 0.0f, -1.0f );
-   vjMat = wand->getData();
+   //vjMat = wand->getData();
+   for( size_t i = 0; i < 16; ++i )
+   {
+       vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[i] );
+   }
    gmtl::xform( vjVec, vjMat, vjVec );
    gmtl::normalize( vjVec );
    
@@ -620,8 +628,12 @@ void Wand::UpdateWandGlobalLocation( )
    //Transform wand point into global space
    // get juggler Matrix of worldDCS
    // Note:: for osg we are in z up land
-   gmtl::Point3f loc_temp, osgPointLoc;
-   vjMat = wand->getData( );
+   gmtl::Point3d loc_temp, osgPointLoc;
+   //vjMat = wand->getData( );
+   for( size_t i = 0; i < 16; ++i )
+   {
+       vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[i] );
+   }
    gmtl::setTrans(loc_temp,vjMat);
    osgPointLoc[0] =  loc_temp[0];
    osgPointLoc[1] = -loc_temp[2];

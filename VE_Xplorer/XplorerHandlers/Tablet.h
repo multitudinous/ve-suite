@@ -97,19 +97,19 @@ private:
 
    int cfdIso_value; ///<Variable used for keeping track of type of movement
 private:
-   gmtl::Matrix44f vjMat; ///<Contains current translation matrix
-   gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix
+   gmtl::Matrix44d vjMat; ///<Contains current translation matrix
+   gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
    double loc[3]; ///<Location of the wand with respect to the virtual space
    double dir[3]; ///<Direction of the wand
    double worldLoc[3]; ///<Location of the objects with respect to the virtual space
    double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
-   float objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
-   float cursorLen; ///<Cursor length
-   float dObj; ///<Displacement of the objects in virtual space
+   double objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
+   double cursorLen; ///<Cursor length
+   double dObj; ///<Displacement of the objects in virtual space
 
-   float translationStepSize; ///<Size of translation step
-   float rotationStepSize; ///<Size of rotation step
+   double translationStepSize; ///<Size of translation step
+   double rotationStepSize; ///<Size of rotation step
 
    int rotationFlag; ///<Rotation flag
    int subzeroFlag; ///<Zero plane flag

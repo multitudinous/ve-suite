@@ -45,7 +45,7 @@
 /*
 #include <osg/Geode>
 #include <osg/LineSegment>
-#include <osg/Vec3f>
+#include <osg/Vec3d>
 #include <osg/ref_ptr>
 #include <osgUtil/IntersectVisitor>
 #include <osg/Matrix>
@@ -105,7 +105,7 @@ void cfdObjectHandler::DeactivateGeometryPicking()
 }
 void cfdObjectHandler::SelectObject()
 {
-   osg::Vec3f startPoint, endPoint;
+   osg::Vec3d startPoint, endPoint;
    this->SetupStartEndPoint(&startPoint, &endPoint);
    
    osg::LineSegment* beamLineSegment = new osg::LineSegment();
@@ -171,7 +171,7 @@ void cfdObjectHandler::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
 //This function currently deletes the existing beam each time it is called and
 //add a new beam.  This should be replaced such that it is only called once
 //and then a transform is modified for the location.  
-void cfdObjectHandler::DrawLine(osg::Vec3f start, osg::Vec3f end)
+void cfdObjectHandler::DrawLine(osg::Vec3d start, osg::Vec3d end)
 {
    static osg::Geode* beamGeode;
    static osg::Geometry* beamGeometry;
@@ -288,7 +288,7 @@ void cfdObjectHandler::UpdateObjectHandler()
 {
    if ( _active )
    {
-      osg::Vec3f startPoint, endPoint;
+      osg::Vec3d startPoint, endPoint;
       this->SetupStartEndPoint(&startPoint, &endPoint);
       this->DrawLine(startPoint, endPoint);
 
@@ -310,9 +310,9 @@ void cfdObjectHandler::UpdateObjectHandler()
    }
 }
 
-void cfdObjectHandler::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint)
+void cfdObjectHandler::SetupStartEndPoint(osg::Vec3d * startPoint, osg::Vec3d * endPoint)
 {
-   float * wandPosition  =  this->navigator->GetObjLocation();
+   double * wandPosition  =  this->navigator->GetObjLocation();
    //double * worldPosition = this->navigator->GetWorldLocation();
    double * wandDirection  =  this->navigator->GetDirection();
 
@@ -330,7 +330,7 @@ void cfdObjectHandler::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * 
 
    osg::Matrix osgMat;
 
-   float * worldRotation  = this->navigator->GetWorldRotation();
+   double * worldRotation  = this->navigator->GetWorldRotation();
    
    osgMat.makeRotate(gmtl::Math::deg2Rad(worldRotation [ 0 ]), 
 		     osg::Vec3(0.0, 0.0, 1.0)); 
@@ -347,7 +347,7 @@ void cfdObjectHandler::SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * 
 }
 void cfdObjectHandler::SetWandPosition()
 {
-   float * wandPosition = this->navigator->GetObjLocation();
+   double * wandPosition = this->navigator->GetObjLocation();
    for (unsigned int i = 0; i < 3; i++)
    {
       this->LastWandPosition[ i ] = wandPosition[ i ];
@@ -357,8 +357,8 @@ void cfdObjectHandler::SetWandPosition()
 
 void cfdObjectHandler::TranslateObject()
 {
-   float * wandPosition = this->navigator->GetObjLocation();
-   osg::Vec3f offsetFromLastPosition;
+   double * wandPosition = this->navigator->GetObjLocation();
+   osg::Vec3d offsetFromLastPosition;
    
    for (int i = 0; i < 3; i++)
    {
@@ -369,7 +369,7 @@ void cfdObjectHandler::TranslateObject()
    
    osg::Matrix osgMat;
 
-   float * worldRotation  = this->navigator->GetWorldRotation();
+   double * worldRotation  = this->navigator->GetWorldRotation();
    
    osgMat.makeRotate(gmtl::Math::deg2Rad(worldRotation [ 0 ]), 
 		     osg::Vec3(0.0, 0.0, 1.0)); 

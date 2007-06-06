@@ -157,12 +157,12 @@ void cfdDigitalAnalogGauge::SetGaugeName( const char input[] )
    strcpy( this->gaugeName, input );
 }
 
-void cfdDigitalAnalogGauge::SetPosition( float x[3] )
+void cfdDigitalAnalogGauge::SetPosition( double x[3] )
 {
    this->SetPosition( x[0], x[1], x[2] );
 }
 
-void cfdDigitalAnalogGauge::SetPosition( float x, float y, float z )
+void cfdDigitalAnalogGauge::SetPosition( double x, double y, double z )
 {
    this->itsX[ 0 ] = x;
    this->itsX[ 1 ] = y;
@@ -170,12 +170,12 @@ void cfdDigitalAnalogGauge::SetPosition( float x, float y, float z )
    this->gaugeDCS->SetTranslationArray( this->itsX );
 }
 
-void cfdDigitalAnalogGauge::GetPosition( float x[3] )
+void cfdDigitalAnalogGauge::GetPosition( double x[3] )
 {
    this->GetPosition( x[0], x[1], x[2] );
 }
 
-void cfdDigitalAnalogGauge::GetPosition( float &x, float &y, float &z )
+void cfdDigitalAnalogGauge::GetPosition( double &x, double &y, double &z )
 {
    x = this->itsX[ 0 ];
    y = this->itsX[ 1 ];
@@ -184,7 +184,7 @@ void cfdDigitalAnalogGauge::GetPosition( float &x, float &y, float &z )
 
 void cfdDigitalAnalogGauge::SetOrientation( double Xrot, double Yrot, double Zrot )
 {
-   float rotationArray [ 3 ];
+   double rotationArray [ 3 ];
    rotationArray[ 0 ] = Xrot;
    rotationArray[ 1 ] = Yrot;
    rotationArray[ 2 ] = Zrot;

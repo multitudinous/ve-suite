@@ -242,10 +242,10 @@ void cfdTeacher::RecordScene()
    // store the world DCS matrix..
    if ( _worldDCS.valid() )
    {
-      gmtl::Matrix44f m = this->_worldDCS->GetMat();
+      gmtl::Matrix44d m = this->_worldDCS->GetMat();
 
       //temporarily reset the world DCS matrix to the identity
-      gmtl::Matrix44f I;
+      gmtl::Matrix44d I;
 
       // Make an identity matrix
       gmtl::identity( I );

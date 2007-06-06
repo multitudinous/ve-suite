@@ -61,8 +61,8 @@ namespace osg
   class Geode;
   class Group;
   class Geometry;
-  class Vec4f;
-  class Vec3f;
+  class Vec4d;
+  class Vec3d;
   class MatrixTransform;
 }
 
@@ -115,10 +115,10 @@ public:
    ///Deletes existing beam aand adds new one.
    ///\param start
    ///\param end
-   void DrawLine(osg::Vec3f start , osg::Vec3f end);
+   void DrawLine(osg::Vec3d start , osg::Vec3d end);
 
    ///not sure if this is needed?
-   void ChangeColor(osg::Vec3f);
+   void ChangeColor(osg::Vec3d);
 
    ///Process whether an object is hit?
    ///\param listOfHits
@@ -138,16 +138,16 @@ private:
    void SelectObject();
    
    ///Not sure if used?
-   void ChangeColor (osg::Vec4f);
+   void ChangeColor (osg::Vec4d);
 
    ///Not sure if used?
-   void ChangeColor (osg::Geometry *, osg::Vec4f); 
+   void ChangeColor (osg::Geometry *, osg::Vec4d); 
 
    gadget::DigitalInterface digital;///<gadgeteer digital interface.
    osg::ref_ptr<osg::Geode> selectedGeometry;///<select geometry.
    double distance;///<Distance which is initialized.
    std::string laserName;///<name of laser.
-   osg::Vec3f LastWandPosition;///<wand position vector.
+   osg::Vec3d LastWandPosition;///<wand position vector.
 
    ///performs matrix tranformation.
    osg::MatrixTransform* getMatrixTransform();
@@ -162,7 +162,7 @@ private:
    ///Assigns start and ending points of wand.
    ///\param *startPoint
    ///\param *endPoint
-   void SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint );
+   void SetupStartEndPoint(osg::Vec3d * startPoint, osg::Vec3d * endPoint );
 
    ///Resets wand position.
    void SetWandPosition();

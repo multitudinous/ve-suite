@@ -220,8 +220,8 @@ public:
    void GetDataFromUnit(void* unused);
 #endif
    const std::string MakeSurfaceFile(vtkDataSet*,int);
-   void DynamicLoadingData(vtkUnstructuredGrid*, int, float*, float*, float*);
-   void DynamicLoadingGeom(std::string, float*, float*, float*, float*, int, int);
+   void DynamicLoadingData(vtkUnstructuredGrid*, int, double*, double*, double*);
+   void DynamicLoadingGeom(std::string, double*, double*, double*, double*, int, int);
    void AddVTKDataSet(vtkDataSet* );
    std::vector<vtkDataSet* >GetWaitingDataList();
 

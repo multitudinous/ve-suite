@@ -70,7 +70,7 @@ namespace VE_Xplorer
          ///\param scale The scale value.
          ///\param trans The translation value.
          ///\param rot The rotation value.
-         void SetTransforms( float scale[ 3 ] , float trans[ 3 ] , float rot[ 3 ]  );
+         void SetTransforms( double scale[ 3 ] , double trans[ 3 ] , double rot[ 3 ]  );
          ///Set the Filename of the dataset
          ///\param fileName
          void SetFilename( std::string fileName);

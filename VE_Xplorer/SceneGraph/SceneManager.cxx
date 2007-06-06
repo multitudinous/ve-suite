@@ -196,8 +196,8 @@ void SceneManager::_createLogo()
    
    if( !_logoNode.valid() )
    {
-      float translation[3] = {0, 5, 4};
-      float scale[3] = {0.02, 0.02, 0.02};
+      double translation[3] = {0, 5, 4};
+      double scale[3] = {0.02, 0.02, 0.02};
 
       _logoNode = new VE_SceneGraph::DCS();
       _logoNode->SetTranslationArray( translation );

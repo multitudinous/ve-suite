@@ -94,9 +94,9 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_Scen
    _rootNode = rootNode;
 
    // get scale factors of the worldDCS...
-   Matrix44f mat = this->worldDCS->GetMat();
+   Matrix44d mat = this->worldDCS->GetMat();
 
-   Vec3f r;
+   Vec3d r;
    
    for ( unsigned int i = 0; i < 3; i++ )
       r[ i ] = mat[ 0 ][ i ];
@@ -144,7 +144,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_Scen
    this->cursorGeode = new VE_SceneGraph::Geode();
    this->cursorDCS = new VE_SceneGraph::DCS();
    cursorDCS->SetName( "cfdCursor" );
-   float tempArray[ 3 ];
+   double tempArray[ 3 ];
    tempArray[ 0 ] = xscale;
    tempArray[ 1 ] = yscale;
    tempArray[ 2 ] = zscale;
@@ -559,9 +559,9 @@ vtkCubeSource * cfdCursor::getBox()
 
 void cfdCursor::SetPlaneSize( float size )
 {	
-   float* dataDCSScale = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
-	float* worldDCSScale = this->worldDCS->GetScaleArray();
-	float combineScale[ 3 ];
+   double* dataDCSScale = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
+	double* worldDCSScale = this->worldDCS->GetScaleArray();
+	double combineScale[ 3 ];
 	combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
    //this controls the size of the plane for the seed points
@@ -705,28 +705,28 @@ void cfdCursor::SetTranslation( void )
    // Extract rotations from totalMat, where
    // totalMat = activeDataSetMat * pfWorldMat;
 
-   float loc_f[ 3 ];
+   double loc_f[ 3 ];
    loc_f[ 0 ] = this->loc[ 0 ];
    loc_f[ 1 ] = this->loc[ 1 ];
    loc_f[ 2 ] = this->loc[ 2 ];
 
    // get pfMatrix of worldDCS
-   Matrix44f worldMat = this->worldDCS->GetMat();
+   Matrix44d worldMat = this->worldDCS->GetMat();
 
-   Matrix44f totalMat;
+   Matrix44d totalMat;
    if ( this->activeDataSetDCS.valid() )
    {
-      // apparently unused ...Matrix44f cursorDCSMat = this->cursorDCS->GetMat();
-      float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-      float* worldDCSScale = this->worldDCS->GetScaleArray();
+      // apparently unused ...Matrix44d cursorDCSMat = this->cursorDCS->GetMat();
+      double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+      double* worldDCSScale = this->worldDCS->GetScaleArray();
 
-      float combineScale[ 3 ];
+      double combineScale[ 3 ];
       combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
       combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
 
 		dynamic_cast< VE_SceneGraph::DCS* >(this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
-      Matrix44f dataSetMatrix = this->activeDataSetDCS->GetMat();
+      Matrix44d dataSetMatrix = this->activeDataSetDCS->GetMat();
 
       totalMat = worldMat * dataSetMatrix;
    }
@@ -759,7 +759,7 @@ void cfdCursor::GetLocalLocationVector( void )
                           << this->loc[ 2 ] << std::endl << vprDEBUG_FLUSH;
 
    // store the global location in a performer vector...
-   gmtl::Vec4f jugglerVec;
+   gmtl::Vec4d jugglerVec;
 #ifdef _PERFORMER
    jugglerVec[ 0 ] = this->loc[ 0 ];
    jugglerVec[ 1 ] = this->loc[ 2 ];
@@ -772,27 +772,27 @@ void cfdCursor::GetLocalLocationVector( void )
    jugglerVec[ 3 ] = 1.0f;
 
    // get juggler Matrix of worldDCS
-   Matrix44f worldMat;
+   Matrix44d worldMat;
    worldMat = this->worldDCS->GetMat();
 
    // invert the worldDCS matrix...
-   Matrix44f worldMatInv;
+   Matrix44d worldMatInv;
    gmtl::invertFull( worldMatInv, worldMat );
 
    // compute local_vec = [world matrix]^(-1) * global_vec
-   Vec4f localVector;
+   Vec4d localVector;
    localVector = worldMatInv * jugglerVec;
 
    // get juggler Matrix of activeDataSetDCS
-   Matrix44f activeDataSetMat;
+   Matrix44d activeDataSetMat;
    activeDataSetMat = this->activeDataSetDCS->GetMat();
 
    // invert activeDataSetDCS
-   Matrix44f activeDataSetMatInv;
+   Matrix44d activeDataSetMatInv;
    gmtl::invertFull( activeDataSetMatInv, activeDataSetMat );
 
    // compute new_local_vec = [activeDataSet Matrix]^(-1) * local_vec
-   Vec4f pfLocXX;
+   Vec4d pfLocXX;
    pfLocXX = activeDataSetMatInv * localVector;
    
    // Set class member location
@@ -916,9 +916,9 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
 	         if ( this->activeDataSetDCS.valid() )
 	         {
-		         float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-		         float* worldDCSScale = this->worldDCS->GetScaleArray();
-		         float combineScale[ 3 ];
+		         double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+		         double* worldDCSScale = this->worldDCS->GetScaleArray();
+		         double combineScale[ 3 ];
 		         combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
                //this controls the size of the plane for the seed points

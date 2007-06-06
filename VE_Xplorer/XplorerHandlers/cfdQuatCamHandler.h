@@ -139,7 +139,7 @@ public:
 
    void TurnOffMovement( void );
 
-   double getLinearDistance( gmtl::Vec3f, gmtl::Vec3f );
+   double getLinearDistance( gmtl::Vec3d, gmtl::Vec3d );
 
    int getNumLocs();
 
@@ -150,7 +150,7 @@ public:
    // If a quat is active this will move the cam to the next location
    void PreFrameUpdate();
 
-   float GetQuatCamIncrementor( void );
+   double GetQuatCamIncrementor( void );
 
    bool IsActive( void );
 
@@ -173,20 +173,20 @@ private:
    cfdNavigate* _nav;
    cfdReadParam* _readParam;
    std::string   _param;
-   float t;
+   double t;
    std::string quatCamFileName;
    std::string quatCamDirName;
    std::vector<cfdQuatCam*> QuatCams;
    int run;
    int cam_id;
-   float rotvec[3];
-   float angle;
+   double rotvec[3];
+   double angle;
    bool activecam;
    bool _runFlyThrough;
    int activeFlyThrough;
    unsigned int pointCounter;
    bool writeReadComplete;
-   float movementIntervalCalc;
+   double movementIntervalCalc;
    double movementSpeed;
    bool onMasterNode;
    int lastCommandId;

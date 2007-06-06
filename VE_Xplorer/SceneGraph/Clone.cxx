@@ -87,7 +87,7 @@ void Clone::CloneNode( osg::Node* original )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Clone::SetTranslationArray( float* translation )
+void Clone::SetTranslationArray( double* translation )
 {
    if( m_cloneTransform.valid() )
    {
@@ -95,7 +95,7 @@ void Clone::SetTranslationArray( float* translation )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Clone::SetRotationArray( float* rotation )
+void Clone::SetRotationArray( double* rotation )
 {
    if( m_cloneTransform.valid() )
    {
@@ -103,7 +103,7 @@ void Clone::SetRotationArray( float* rotation )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Clone::SetScaleArray( float* scale )
+void Clone::SetScaleArray( double* scale )
 {
    if( m_cloneTransform.valid() )
    {

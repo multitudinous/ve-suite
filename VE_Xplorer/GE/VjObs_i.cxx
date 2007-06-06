@@ -628,7 +628,7 @@ void VjObs_i::GetCfdStateVariables( void )
    this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
    this->mStates->clusterTime_since_start = time_since_start;
 
-   gmtl::Matrix44f matrix=VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat();
+   gmtl::Matrix44d matrix=VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat();
 
    //std::cout << "master: " << std::endl << matrix << std::endl;
    for(int i=0;i<16;i++)
@@ -702,7 +702,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    //cluster
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-      gmtl::Matrix44f matrix;
+      gmtl::Matrix44d matrix;
 
       for(int i=0;i<16;i++){
          matrix.mData[i]=this->mStates->clusterMatrix[i];

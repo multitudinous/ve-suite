@@ -215,7 +215,7 @@ void cfdModel::SetMirrorNode( VE_SceneGraph::Group* dataNode )
    {
       mirrorNode = new VE_SceneGraph::Clone();
 		mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
-      float rot[ 3 ];
+      double rot[ 3 ];
       rot[ 0 ] = 180.0f;
       rot[ 1 ] = 0.0f;
       rot[ 2 ] = 0.0f;
@@ -227,7 +227,7 @@ void cfdModel::SetMirrorNode( VE_SceneGraph::Group* dataNode )
       this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
       delete mirrorNode;     
       mirrorNode = new VE_SceneGraph::Clone( GetActiveDataSet()->GetDCS() );
-      float rot[ 3 ];
+      double rot[ 3 ];
       rot[ 0 ] = 180.0f;
       rot[ 1 ] = 0.0f;
       rot[ 2 ] = 0.0f;
@@ -394,7 +394,7 @@ unsigned int cfdModel::GetNumberOfGeomDataSets( void )
 
 ////////////////////////////////////////////////////////////////////////////////
 // Dynamic Loading Data Start From Here
-void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, float* scale, float* trans, float* rotate)
+void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, double* scale, double* trans, double* rotate)
 {
    this->CreateCfdDataSet();
    
@@ -405,7 +405,7 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
-   //float scale[3], trans[3], rotate[3];   // pfDCS stuff
+   //double scale[3], trans[3], rotate[3];   // pfDCS stuff
    //this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
 
    //hard code here and will change it later
@@ -426,8 +426,8 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::DynamicLoadingGeom(std::string surfacefilename, float* scale, 
-               float* trans, float* rotate, float* stlColor, int color, int transFlag)
+void cfdModel::DynamicLoadingGeom(std::string surfacefilename, double* scale, 
+               double* trans, double* rotate, double* stlColor, int color, int transFlag)
 {  
    std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
    this->CreateGeomDataSet(surfacefilename);
@@ -575,7 +575,7 @@ void cfdModel::GetDataFromUnit(void* unused)
     mValueLock.acquire();
     {
       std::cout<<"[DBG]...READY TO READ DATA FROM UNIT **********************************"<<std::endl;
-      float scale[3],trans[3],rotate[3];
+      double scale[3],trans[3],rotate[3];
       scale[0] = scale[1] = scale[2] = 1.0f;
       trans[0] = trans[1] = trans[2] = 0.0f;
       rotate[0] = rotate[1] = rotate[2] = 0.0f;

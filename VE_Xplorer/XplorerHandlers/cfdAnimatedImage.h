@@ -109,9 +109,9 @@ namespace VE_Xplorer
          int dim;///<dimension.
          double origin[3];///<Defines origin.
          double spacing[3];///<Spacing.
-         float imageScale[ 3 ];///<Scaling of Image
-         float imageTrans[ 3 ];///<Translation of image.
-         float imageRot[ 3 ];///<Rotation of image.
+         double imageScale[ 3 ];///<Scaling of Image
+         double imageTrans[ 3 ];///<Translation of image.
+         double imageRot[ 3 ];///<Rotation of image.
          std::string _param;///<The string storing parameters.
          //std::string _param
          cfdReadParam* _readParam;///<Read out parameters.

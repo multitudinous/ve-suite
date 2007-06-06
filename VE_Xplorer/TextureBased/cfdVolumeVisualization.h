@@ -226,7 +226,7 @@ namespace VE_TextureBased
 
       std::string _shaderDirectory;///<DEPRICATED\n The directory of the shaders
       cfdTextureManager* _tm;///The cfd Texture manger
-      osg::Vec3 _center;///<The ceneter of of the data
+      osg::Vec3f _center;///<The ceneter of of the data
       float _transRatio[3];///<Used for building the texture matrix
       float _diagonal;///<BBox diagonal
       float _scale[3];///<The scale

@@ -156,7 +156,7 @@ private:
 
    // Move the cursor methods
    void SetTranslation( void );
-   void SetRotation( float [3] );
+   void SetRotation( double [3] );
 
    void BuildSphere();           // Build sphere cursor.
    void BuildPlaneSource();      // Build nxn plane cursor

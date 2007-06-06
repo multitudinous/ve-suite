@@ -88,20 +88,20 @@ public:
    double* GetLocation( );
 
    ///Get the object location
-   ///\param xyzO An array of floats containing the object position
-   void GetObjLocation( float xyzO[3] );
+   ///\param xyzO An array of doubles containing the object position
+   void GetObjLocation( double xyzO[3] );
 
    ///Get the object location
    ///\param &x0 The x position
    ///\param &y0 The y position
    ///\param &z0 The z position
-   void GetObjLocation( float &xO, float &yO, float &zO );
+   void GetObjLocation( double &xO, double &yO, double &zO );
 
    ///Get the object location
-   float* GetObjLocation( );
+   double* GetObjLocation( );
 
    ///Get the cursor location with respect to the data set
-   float* GetCurObjLocation( ); 
+   double* GetCurObjLocation( ); 
 
    ///Get cursor location with respect to the virtual space
    double* GetCursorLocation( );
@@ -143,7 +143,7 @@ public:
    double* GetWorldTranslation();
 
    ///Get the current world coordinate rotation
-   float* GetWorldRotation();
+   double* GetWorldRotation();
 
    ///Set the rotation method
    ///\param input Indicates which rotation method is needed
@@ -175,33 +175,33 @@ public:
    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS; ///<The world coordinate system
 
    double worldTrans[ 3 ]; ///<World coordinate translation
-   float worldRot[ 3 ]; ///<World coordinate rotation
+   double worldRot[ 3 ]; ///<World coordinate rotation
 
 private:
-   gmtl::Vec3f  vjVec; ///<VRJuggler's vector position
-   gmtl::Vec3f  LastVec; ///<VRJuggler's last vector position
+   gmtl::Vec3d  vjVec; ///<VRJuggler's vector position
+   gmtl::Vec3d  LastVec; ///<VRJuggler's last vector position
 
-   gmtl::Matrix44f vjMat; ///<Contains current translation matrix
-   gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix
+   gmtl::Matrix44d vjMat; ///<Contains current translation matrix
+   gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
    double loc[3]; ///<Location of the wand with respect to the virtual space
    double dir[3]; ///<Direction of the wand
    double worldLoc[3]; ///<Location of the objects with respect to the virtual space
    double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
-   float objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
-   float cursorLen; ///<Cursor length
-   float dObj; ///<Displacement of the objects in virtual space
+   double objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
+   double cursorLen; ///<Cursor length
+   double dObj; ///<Displacement of the objects in virtual space
 
-   float translationStepSize; ///<Size of translation step
-   float rotationStepSize; ///<Size of rotation step
+   double translationStepSize; ///<Size of translation step
+   double rotationStepSize; ///<Size of rotation step
 
    int rotationFlag; ///<Rotation flag
    int subzeroFlag; ///<Zero plane flag
  
    VE_XML::Command* command; ///<Store xml command
 
-   float initialTranslate[ 3 ]; ///<Initial world coordinate translation
-   float initialRotate[ 3 ]; ///<Initial world coordinate rotation
+   double initialTranslate[ 3 ]; ///<Initial world coordinate translation
+   double initialRotate[ 3 ]; ///<Initial world coordinate rotation
 };
 }
 #endif

@@ -57,6 +57,7 @@
 
 // --- OSG Stuff --- //
 #include <osg/Array>
+#include <osg/Matrix>
 #include <osg/Group>
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -64,6 +65,7 @@
 #include <osg/LineSegment>
 #include <osg/NodeVisitor>
 #include <osg/BoundingBox>
+
 //#include <osg/PolygonStipple>
 
 // --- C/C++ Libraries --- //
@@ -136,7 +138,7 @@ void KeyboardMouse::UpdateSelection()
     ProcessKBEvents( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
+void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
     //Be sure m_width and m_height are set before calling this function
     double wc_x_trans_ratio = ( ( m_xmaxScreen - m_xminScreen ) ) / double( m_width );
@@ -175,7 +177,12 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
     double wandEndPoint[3];
     double distance = 10000.0f;
 
-    gmtl::Matrix44f vjHeadMat = m_head->getData();
+    gmtl::Matrix44d vjHeadMat;// = m_head->getData();
+
+     for( size_t i = 0; i < 16; ++i )
+     {
+         vjHeadMat.mData[ i ] = static_cast< double >( m_head->getData().mData[i] );
+     }
 
     //Get juggler Matrix of worldDCS
     //Note:: for pf we are in juggler land
@@ -206,7 +213,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoi
     endPoint->set( wandEndPoint[0], wandEndPoint[1], wandEndPoint[2] );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
+void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
     if( beamGeode.valid() )
     {
@@ -362,24 +369,43 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    std::cout << "Before Transformed To World Coordinate System" << std::endl;
+    std::cout << activeDCS->GetMat() << std::endl;
+    
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
+        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+
+        double* tempData = ltwt->GetLocalToWorldTransform().ptr();
+        m_currentTransform.set( tempData );
+    }
+    else
+    {
+        m_currentTransform = activeDCS->GetMat();
+    }
+
+    std::cout << "After Transformed To World Coordinate System" << std::endl;
+    std::cout << m_currentTransform << std::endl;
+
     //Translate world dcs by distance that the m_head is away from the origin
-    gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -*center_point );
-    gmtl::Matrix44f worldMatTrans = transMat * m_currentTransform;
+    gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+    gmtl::Matrix44d worldMatTrans = transMat * m_currentTransform;
 
     //Get the position of the m_head in the new world space as if the m_head is on the origin
-    gmtl::Point3f newJugglerHeadPoint;
-    gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
-    gmtl::Vec4f newGlobalHeadPointVec;
+    gmtl::Point3d newJugglerHeadPoint;
+    gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
+    gmtl::Vec4d newGlobalHeadPointVec;
     newGlobalHeadPointVec[0] = newGlobalHeadPointTemp[0];
     newGlobalHeadPointVec[1] = newGlobalHeadPointTemp[1];
     newGlobalHeadPointVec[2] = newGlobalHeadPointTemp[2];
 
     //Rotate the m_head vector by the rotation increment
-    gmtl::Vec4f rotateJugglerHeadVec = m_deltaTransform * newGlobalHeadPointVec;
+    gmtl::Vec4d rotateJugglerHeadVec = m_deltaTransform * newGlobalHeadPointVec;
 
     //Split apart the current matrix into rotation and translation parts
-    gmtl::Matrix44f accuRotation;
-    gmtl::Matrix44f matrix;
+    gmtl::Matrix44d accuRotation;
+    gmtl::Matrix44d matrix;
 
     for( int i = 0; i < 3; i++ )
     {
@@ -396,31 +422,15 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix *= m_deltaTransform;
     matrix *= accuRotation;
 
-    /*
     std::cout << "After Delta Transform Has Been Applied" << std::endl;
-    std::cout << matrix.mData[0] << "  " << matrix.mData[4] << "  " << matrix.mData[8] << "  " << matrix.mData[12] << std::endl;
-    std::cout << matrix.mData[1] << "  " << matrix.mData[5] << "  " << matrix.mData[9] << "  " << matrix.mData[13] << std::endl;
-    std::cout << matrix.mData[2] << "  " << matrix.mData[6] << "  " << matrix.mData[10] << "  " << matrix.mData[14] << std::endl;
-    std::cout << matrix.mData[3] << "  " << matrix.mData[7] << "  " << matrix.mData[11] << "  " << matrix.mData[15] << std::endl;
-    std::cout << std::endl;
-    */
-
-    osg::Matrix temp;
-    temp.identity();
-
-    for( int j = 0; j < 4; j++ )
-    {
-        for( int i = 0; i < 4; i++ )
-        {
-            temp( i, j ) = matrix[j][i];
-        }
-    }
+    std::cout << matrix << std::endl;
 
     if( activeDCS->GetName() != "World DCS" )
     {
         osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > wtlt = 
             new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ,activeDCS.get() );
 
+        osg::Matrix temp( matrix.getData() );
         temp = temp * osg::Matrix::inverse( wtlt->GetLocalToWorldTransform() );
 
         activeDCS->setPosition( temp.getTrans() );
@@ -432,14 +442,8 @@ void KeyboardMouse::ProcessNavigationEvents()
         activeDCS->SetMat( matrix );
     }
 
-    /*
     std::cout << "After Transformed Back To Local Coordinate System" << std::endl;
-    std::cout << activeDCS->GetMat().mData[0] << "  " << activeDCS->GetMat().mData[4] << "  " << activeDCS->GetMat().mData[8] << "  " << activeDCS->GetMat().mData[12] << std::endl;
-    std::cout << activeDCS->GetMat().mData[1] << "  " << activeDCS->GetMat().mData[5] << "  " << activeDCS->GetMat().mData[9] << "  " << activeDCS->GetMat().mData[13] << std::endl;
-    std::cout << activeDCS->GetMat().mData[2] << "  " << activeDCS->GetMat().mData[6] << "  " << activeDCS->GetMat().mData[10] << "  " << activeDCS->GetMat().mData[14] << std::endl;
-    std::cout << activeDCS->GetMat().mData[3] << "  " << activeDCS->GetMat().mData[7] << "  " << activeDCS->GetMat().mData[11] << "  " << activeDCS->GetMat().mData[15] << std::endl;
-    std::cout << std::endl << std::endl << std::endl;
-    */
+    std::cout << activeDCS ->GetMat() << std::endl;
 
     //If not in animation mode, reset the transform
     if( !m_animate )
@@ -481,7 +485,7 @@ void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float 
 void KeyboardMouse::FrameAll()
 {
     VE_SceneGraph::DCS* switchNode = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
-    gmtl::Matrix44f matrix = switchNode->GetMat();
+    gmtl::Matrix44d matrix = switchNode->GetMat();
 
     //Get the selected objects and expand by their bounding box
     float Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
@@ -559,53 +563,14 @@ void KeyboardMouse::NavMotion()
         return;
     }
 
-    /*
-    std::cout << "Before Transformed To World Coordinate System" << std::endl;
-    std::cout << activeDCS->GetMat().mData[0] << "  " << activeDCS->GetMat().mData[4] << "  " << activeDCS->GetMat().mData[8] << "  " << activeDCS->GetMat().mData[12] << std::endl;
-    std::cout << activeDCS->GetMat().mData[1] << "  " << activeDCS->GetMat().mData[5] << "  " << activeDCS->GetMat().mData[9] << "  " << activeDCS->GetMat().mData[13] << std::endl;
-    std::cout << activeDCS->GetMat().mData[2] << "  " << activeDCS->GetMat().mData[6] << "  " << activeDCS->GetMat().mData[10] << "  " << activeDCS->GetMat().mData[14] << std::endl;
-    std::cout << activeDCS->GetMat().mData[3] << "  " << activeDCS->GetMat().mData[7] << "  " << activeDCS->GetMat().mData[11] << "  " << activeDCS->GetMat().mData[15] << std::endl;
-    std::cout << std::endl;
-    */
-
-    osg::Matrix localMatrix;
-    localMatrix.identity();
-    
-
-    if( activeDCS->GetName() != "World DCS" )
-    {
-        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
-        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
-
-        localMatrix = ltwt->GetLocalToWorldTransform();
-    }
-    else
-    {
-        localMatrix.setTrans( activeDCS->getPosition() );
-        localMatrix.setRotate( activeDCS->getAttitude() );
-    }
-
-    for( int j = 0; j < 4; j++ )
-    {
-        for( int i = 0; i < 4; i++ )
-        {
-            m_currentTransform[i][j] = localMatrix( j, i );
-        }
-    }
-
-    /*
-    std::cout << "After Transformed To World Coordinate System" << std::endl;
-    std::cout << m_currentTransform.mData[0] << "  " << m_currentTransform.mData[4] << "  " << m_currentTransform.mData[8] << "  " << m_currentTransform.mData[12] << std::endl;
-    std::cout << m_currentTransform.mData[1] << "  " << m_currentTransform.mData[5] << "  " << m_currentTransform.mData[9] << "  " << m_currentTransform.mData[13] << std::endl;
-    std::cout << m_currentTransform.mData[2] << "  " << m_currentTransform.mData[6] << "  " << m_currentTransform.mData[10] << "  " << m_currentTransform.mData[14] << std::endl;
-    std::cout << m_currentTransform.mData[3] << "  " << m_currentTransform.mData[7] << "  " << m_currentTransform.mData[11] << "  " << m_currentTransform.mData[15] << std::endl;
-    std::cout << std::endl;
-    */
-
     m_currPos[0] = float( m_x ) / float( m_width );
     m_currPos[1] = float( m_y ) / float( m_height );
+
     float dx = m_currPos[0] - m_prevPos[0];
     float dy = m_currPos[1] - m_prevPos[1];
+
+    m_prevPos[0] = m_currPos[0];
+    m_prevPos[1] = m_currPos[1];
 
     m_magnitude = sqrtf( dx * dx + dy * dy );
     if( m_magnitude < m_sensitivity )
@@ -636,9 +601,6 @@ void KeyboardMouse::NavMotion()
     {
         Twist( dx, dy );
     }
-
-    m_prevPos[0] = m_currPos[0];
-    m_prevPos[1] = m_currPos[1];
 
     ProcessNavigationEvents();
 }
@@ -676,7 +638,7 @@ void KeyboardMouse::SelMotion()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
-    gmtl::Matrix44f matrix;
+    gmtl::Matrix44d matrix;
     center_point->mData[1] = matrix[1][3] = *m_threshold;
 
     VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
@@ -684,7 +646,7 @@ void KeyboardMouse::ResetTransforms()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( float dx, float dy )
 {
-    gmtl::Matrix44f mat;
+    gmtl::Matrix44d mat;
     float tb_axis[3];
 
     gmtl::identity( mat );
@@ -699,7 +661,7 @@ void KeyboardMouse::RotateView( float dx, float dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Twist( float dx, float dy )
 {
-    gmtl::Matrix44f mat;
+    gmtl::Matrix44d mat;
     gmtl::identity( mat );
 
     float Theta = atan2f( m_prevPos[0] - 0.5, m_prevPos[1] - 0.5 );
@@ -769,7 +731,7 @@ void KeyboardMouse::Rotate( float x, float y, float z, float angle )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
 {
-    osg::Vec3f startPoint, endPoint;
+    osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
 
     beamLineSegment->set( startPoint, endPoint );

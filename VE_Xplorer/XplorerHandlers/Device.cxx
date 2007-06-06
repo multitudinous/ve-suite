@@ -89,7 +89,7 @@ void Device::SetActiveDCS( VE_SceneGraph::DCS* dcs )
    activeDCS = dcs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetCenterPoint( gmtl::Point3f* cp )
+void Device::SetCenterPoint( gmtl::Point3d* cp )
 {
    center_point = cp;
 }
@@ -106,8 +106,8 @@ void Device::SetCenterPointJump( float* jump )
 ////////////////////////////////////////////////////////////////////////////////
 void Device::ProcessSelection()
 {
-   osg::Vec3f start_point;
-   osg::Vec3f end_point;
+   osg::Vec3d start_point;
+   osg::Vec3d end_point;
    this->SetStartEndPoint( &start_point, &end_point );
 
    /*
@@ -173,12 +173,12 @@ void Device::ProcessSelection()
    this->DrawLine( start_point, end_point );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint )
+void Device::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint )
+void Device::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
     ;
 }

@@ -134,7 +134,7 @@ void cfdQuatCamHandler::CleanUp( void )
 }
 void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::DCS* worldDCS)
 {
-   Matrix44f vjm;
+   Matrix44d vjm;
 
    vjm = worldDCS->GetMat();
 
@@ -174,7 +174,7 @@ void cfdQuatCamHandler::WriteToFile(std::string fileName)
 
             //std::cout<< QuatCams.size() << " view points are being written" << std::endl;
 
-            Matrix44f temp;
+            Matrix44d temp;
             for (unsigned int i=0; i<QuatCams.size(); i++)
             {
                temp = QuatCams[i]->GetMatrix();
@@ -188,7 +188,7 @@ void cfdQuatCamHandler::WriteToFile(std::string fileName)
 
                inFile << std::endl;
 
-               gmtl::Vec3f temptrans;
+               gmtl::Vec3d temptrans;
                for (int k=0; k<3; k++)
                {
                   temptrans = QuatCams[i]->GetTrans();
@@ -243,8 +243,8 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 	} 
 
    char textLine [ 256 ];
-   float transpts[3];
-   Matrix44f temp;
+   double transpts[3];
+   Matrix44d temp;
 
    if ( !QuatCams.empty() )
    {
@@ -353,14 +353,14 @@ void cfdQuatCamHandler::ClearQuaternionData()
 //////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::Relocate( VE_SceneGraph::DCS* worldDCS, cfdNavigate* nav )
 {
-   Matrix44f vjm;
+   Matrix44d vjm;
 
    if ( t == 0.0f )
    {
       //QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
 		QuatCams.at( cam_id )->SetCamPos( worldDCS->GetVETranslationArray(), worldDCS );
    }
-   float temp = this->GetQuatCamIncrementor();
+   double temp = this->GetQuatCamIncrementor();
 
    if ( ( t < 1.0f ) )
    {
@@ -643,8 +643,8 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
       
       if ( t == 0.0f )
       {
-         gmtl::Vec3f vjVecTemp;
-			float* veTransTemp = _worldDCS->GetVETranslationArray();
+         gmtl::Vec3d vjVecTemp;
+			double* veTransTemp = _worldDCS->GetVETranslationArray();
          for ( int i=0; i<3; i++ )
          {
             //vjVecTemp[i] = this->_nav->worldTrans[i];
@@ -683,10 +683,10 @@ void cfdQuatCamHandler::UpdateCommand()
 
 }*/
 
-double cfdQuatCamHandler::getLinearDistance( gmtl::Vec3f vjVecLast, gmtl::Vec3f vjVecNext )
+double cfdQuatCamHandler::getLinearDistance( gmtl::Vec3d vjVecLast, gmtl::Vec3d vjVecNext )
 {
    double distance;
-   gmtl::Vec3f temp;
+   gmtl::Vec3d temp;
 
    temp = vjVecNext - vjVecLast; 
 
@@ -726,7 +726,7 @@ std::vector < int > cfdQuatCamHandler::getCompletionTest()
    return this->completionTest;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float cfdQuatCamHandler::GetQuatCamIncrementor( void )
+double cfdQuatCamHandler::GetQuatCamIncrementor( void )
 {
    ////////////////////////////////////////////////////////////////////////
    //When in cluster mode this function is only called by the Master Node//

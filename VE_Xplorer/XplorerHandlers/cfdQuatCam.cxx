@@ -42,7 +42,7 @@
 #elif _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
-#include <osg/Vec3f>
+#include <osg/Vec3d>
 #include <osg/NodeVisitor>
 #elif _OPENSG
 #endif
@@ -50,63 +50,63 @@ using namespace gmtl;
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
 
-cfdQuatCam::cfdQuatCam(gmtl::Matrix44f& m, float* worldTrans)
+cfdQuatCam::cfdQuatCam(gmtl::Matrix44d& m, double* worldTrans)
 {
    nextMatrix = m;
-   gmtl::Vec3f scaleXVec( nextMatrix[ 0 ][ 0 ], nextMatrix[ 1 ][ 0 ], nextMatrix[ 2 ][ 0 ] );
-   gmtl::Vec3f scaleYVec( nextMatrix[ 0 ][ 1 ], nextMatrix[ 1 ][ 1 ], nextMatrix[ 2 ][ 1 ] );
-   gmtl::Vec3f scaleZVec( nextMatrix[ 0 ][ 2 ], nextMatrix[ 1 ][ 2 ], nextMatrix[ 2 ][ 2 ] );
-   float tempScale = 1.0f/gmtl::length( scaleXVec );
-   gmtl::Matrix44f tempScaleMat;
+   gmtl::Vec3d scaleXVec( nextMatrix[ 0 ][ 0 ], nextMatrix[ 1 ][ 0 ], nextMatrix[ 2 ][ 0 ] );
+   gmtl::Vec3d scaleYVec( nextMatrix[ 0 ][ 1 ], nextMatrix[ 1 ][ 1 ], nextMatrix[ 2 ][ 1 ] );
+   gmtl::Vec3d scaleZVec( nextMatrix[ 0 ][ 2 ], nextMatrix[ 1 ][ 2 ], nextMatrix[ 2 ][ 2 ] );
+   double tempScale = 1.0f/gmtl::length( scaleXVec );
+   gmtl::Matrix44d tempScaleMat;
    gmtl::setScale( tempScaleMat, tempScale );
-   gmtl::Matrix44f unScaleInput = tempScaleMat * nextMatrix;   
+   gmtl::Matrix44d unScaleInput = tempScaleMat * nextMatrix;   
    set(NextPosQuat,unScaleInput);
-   for (int i=0; i<3; i++)
+   for(int i=0; i<3; i++)
       vjVecNextTrans[i] = worldTrans[i];
 /*
-         gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
-         gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
-         gmtl::Vec3f scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
-         float tempScale = 1.0f/gmtl::length( scaleXVec );
-         gmtl::Matrix44f tempScaleMat;
+         gmtl::Vec3d scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+         gmtl::Vec3d scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
+         gmtl::Vec3d scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
+         double tempScale = 1.0f/gmtl::length( scaleXVec );
+         gmtl::Matrix44d tempScaleMat;
          gmtl::setScale( tempScaleMat, tempScale );
-         gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+         gmtl::Matrix44d unScaleInput = tempScaleMat * input;
 */
 
 }
 
-void cfdQuatCam::SetCamPos(float* worldTrans, VE_SceneGraph::DCS* worldDCS)
+void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::DCS* worldDCS)
 {
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
    
-   gmtl::Matrix44f vjm;  
+   gmtl::Matrix44d vjm;  
    vjm = worldDCS->GetMat();
-   gmtl::Vec3f scaleXVec( vjm[ 0 ][ 0 ], vjm[ 1 ][ 0 ], vjm[ 2 ][ 0 ] );
-   gmtl::Vec3f scaleYVec( vjm[ 0 ][ 1 ], vjm[ 1 ][ 1 ], vjm[ 2 ][ 1 ] );
-   gmtl::Vec3f scaleZVec( vjm[ 0 ][ 2 ], vjm[ 1 ][ 2 ], vjm[ 2 ][ 2 ] );
-   float tempScale = 1.0f/gmtl::length( scaleXVec );
-   gmtl::Matrix44f tempScaleMat;
+   gmtl::Vec3d scaleXVec( vjm[ 0 ][ 0 ], vjm[ 1 ][ 0 ], vjm[ 2 ][ 0 ] );
+   gmtl::Vec3d scaleYVec( vjm[ 0 ][ 1 ], vjm[ 1 ][ 1 ], vjm[ 2 ][ 1 ] );
+   gmtl::Vec3d scaleZVec( vjm[ 0 ][ 2 ], vjm[ 1 ][ 2 ], vjm[ 2 ][ 2 ] );
+   double tempScale = 1.0f / gmtl::length( scaleXVec );
+   gmtl::Matrix44d tempScaleMat;
    gmtl::setScale( tempScaleMat, tempScale );
-   gmtl::Matrix44f unScaleInput = tempScaleMat * vjm;   
+   gmtl::Matrix44d unScaleInput = tempScaleMat * vjm;   
 
    set(LastPosQuat,unScaleInput);
 }
 
 
-void cfdQuatCam::MoveCam( float t )
+void cfdQuatCam::MoveCam( double t )
 {
    TransLerp(t);
    RotSlerp(t);
 }
 
-void cfdQuatCam::RotSlerp(float t)
+void cfdQuatCam::RotSlerp(double t)
 {  
    gmtl::slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);;
 }
 
 
-void cfdQuatCam::TransLerp(float t)
+void cfdQuatCam::TransLerp(double t)
 {
    gmtl::lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
 }
@@ -121,10 +121,10 @@ void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
 
 void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
 {
-   Matrix44f temp;
-   temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
+   Matrix44d temp;
+   temp = makeRot<gmtl::Matrix44d>( CurPosQuat );
    worldDCS->SetRotationMatrix( temp );
-   float tempTrans[3] ;
+   double tempTrans[3] ;
    /*tempTrans[0] = -vjVecCurrTrans[0];
    tempTrans[1] = -vjVecCurrTrans[1];
    tempTrans[2] = -vjVecCurrTrans[2];*/
@@ -134,17 +134,17 @@ void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
    worldDCS->SetTranslationArray(tempTrans/*vjVecCurrTrans.getData()*/);
 }  
 
-gmtl::Matrix44f cfdQuatCam::GetMatrix( void )
+gmtl::Matrix44d cfdQuatCam::GetMatrix( void )
 {
    return nextMatrix;
 } 
 
-gmtl::Vec3f cfdQuatCam::GetTrans( void )
+gmtl::Vec3d cfdQuatCam::GetTrans( void )
 {
    return vjVecNextTrans;
 }
 
-gmtl::Vec3f cfdQuatCam::GetLastTrans( void )
+gmtl::Vec3d cfdQuatCam::GetLastTrans( void )
 {
    return vjVecLastTrans;
 }

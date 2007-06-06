@@ -65,8 +65,8 @@ namespace osg
 {
     class Geode;
     class Group;
-    class Vec4f;
-    class Vec3f;
+    class Vec4d;
+    class Vec3d;
     class LineSegment;
 }
 
@@ -119,12 +119,12 @@ protected:
     ///Set the start and end point
     ///\param startPoint The start point
     ///\param endPoint The end point
-    virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+    virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
     ///Draws a line to help visualize the selection process
     ///\param startPoint The start position
     ///\param endPoint The end position
-    virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
+    virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
 private:
     ///Processes any keyboard events
@@ -220,8 +220,8 @@ private:
     //[ 1 5  9 13 ]     [ 10 11 12 13 ]
     //[ 2 6 10 14 ]     [ 20 21 22 23 ]
     //[ 3 7 11 15 ]     [ 30 31 32 33 ]
-    gmtl::Matrix44f m_deltaTransform;///<The change to be applied to the current transform
-    gmtl::Matrix44f m_currentTransform;///<The current transform matrix being manipulated
+    gmtl::Matrix44d m_deltaTransform;///<The change to be applied to the current transform
+    gmtl::Matrix44d m_currentTransform;///<The current transform matrix being manipulated
 
     osg::ref_ptr< osg::Geode > beamGeode;///<
     osg::ref_ptr< osg::Geode > selectedGeometry;///<The geometry being selected

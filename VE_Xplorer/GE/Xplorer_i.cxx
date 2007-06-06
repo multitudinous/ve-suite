@@ -355,7 +355,7 @@ void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
    //cluster
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-      gmtl::Matrix44f matrix;
+      gmtl::Matrix44d matrix;
 
       for(int i=0;i<16;i++){
          matrix.mData[i]=this->mStates->clusterMatrix[i];

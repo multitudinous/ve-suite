@@ -99,7 +99,7 @@ public:
    void SetColor( double* );
 
    // transform object based 
-   void SetTransforms( float*, float*, float* );
+   void SetTransforms( double*, double*, double* );
 
    // Implement Gengxun's work by using socket
    // stuff from vtk. This will be used in parallel

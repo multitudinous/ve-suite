@@ -83,19 +83,19 @@ namespace VE_Xplorer
 	      ///\param x
 	      ///\param y
 	      ///\param z
-         void SetPosition( float x, float y, float z );
+         void SetPosition( double x, double y, double z );
          ///Set Position.
          ///\param x[3]
-	      void SetPosition( float x[3] );
+	      void SetPosition( double x[3] );
          ///Get Position.
 	      ///\param x[3]
-         void GetPosition( float x[3] );
+         void GetPosition( double x[3] );
         
 	      ///Get position.
          ///\param &x
 	      ///\param &y
          ///\param &z
-         void GetPosition( float &x, float &y, float &z );
+         void GetPosition( double &x, double &y, double &z );
 
          ///Set the orientation of the gauge.
 	      ///\param Xrot
@@ -201,7 +201,7 @@ namespace VE_Xplorer
       osg::ref_ptr< VE_SceneGraph::Geode > minMarkersGeode;///<min markers. //angran
       osg::ref_ptr< VE_SceneGraph::Geode > maxMarkersGeode;///<max markers.  //angran
 
-      float itsX [ 3 ];
+      double itsX [ 3 ];
       vtkArrowSource * movingArrow;///<moving arrow for vtk arrow source.
       vtkTransform * arrowTransform;///<arrow transform for vtk.
       vtkMatrix4x4 * arrowRefPosition;///<arroiw reference position for vtk.

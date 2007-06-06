@@ -70,9 +70,9 @@ void cfd1DTextInput::SetFilename( std::string text )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfd1DTextInput::SetTransforms( float scale[ 3 ],
-                                    float trans[ 3 ],
-                                    float rot[ 3 ] )
+void cfd1DTextInput::SetTransforms( double scale[ 3 ],
+                                    double trans[ 3 ],
+                                    double rot[ 3 ] )
 {
    this->SetScaleArray( scale );
    this->SetTranslationArray( trans );

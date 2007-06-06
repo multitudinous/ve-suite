@@ -53,8 +53,8 @@ namespace osg
 {
    class Geode;
    class Group;
-   class Vec4f;
-   class Vec3f;
+   class Vec4d;
+   class Vec3d;
    class MatrixTransform;
    class LineSegment;
 }
@@ -111,7 +111,7 @@ public:
    ///\param listOfHits A vector containing CAD hit in selection process
    void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
 
-   //void DrawLine(osg::Vec3f start, osg::Vec3f end);
+   //void DrawLine(osg::Vec3d start, osg::Vec3d end);
 
    ///Update the events done by wand
    void UpdateObjectHandler( void );
@@ -119,7 +119,7 @@ public:
    ///Set the start and end position 
    ///\param startPoint The start position
    ///\param endPoint The end position
-   void SetupStartEndPoint(osg::Vec3f * startPoint, osg::Vec3f * endPoint);
+   void SetupStartEndPoint(osg::Vec3d * startPoint, osg::Vec3d * endPoint);
 
    ///Performs translation through scene
    void TranslateObject( void ); 
@@ -147,12 +147,12 @@ protected:
    ///Set the start and end point
    ///\param startPoint The start point
    ///\param endPoint The end point
-   virtual void SetStartEndPoint( osg::Vec3f* startPoint, osg::Vec3f* endPoint );
+   virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
    ///Draws a beam from the wand to object
    ///\param startPoint The start position
    ///\param endPoint The end position
-   virtual void DrawLine( osg::Vec3f startPoint, osg::Vec3f endPoint );
+   virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
       
 private:
    gadget::DigitalInterface digital[6]; ///Array handling button controls on wand
@@ -165,20 +165,20 @@ private:
    gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
    gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
-   gmtl::Vec3f  vjVec; ///<VRJuggler's vector position
-   gmtl::Vec3f  LastVec; ///<VRJuggler's last vector position
+   gmtl::Vec3d  vjVec; ///<VRJuggler's vector position
+   gmtl::Vec3d  LastVec; ///<VRJuggler's last vector position
 
-   gmtl::Matrix44f vjMat; ///<Contains current translation matrix
-   gmtl::Matrix44f vjHeadMat; ///<Contains current head position matrix
+   gmtl::Matrix44d vjMat; ///<Contains current translation matrix
+   gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
    double dir[3]; ///<Direction of the wand
    double worldLoc[3]; ///<Location of the objects with respect to the virtual space
    double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
    double objLoc[3]; ///<Location with respect to data set (the actual location to interact with data
-   float cursorLen; ///<Cursor length
+   double cursorLen; ///<Cursor length
    
-   float translationStepSize; ///<Size of translation step
-   float rotationStepSize; ///<Size of rotation step
+   double translationStepSize; ///<Size of translation step
+   double rotationStepSize; ///<Size of rotation step
    
    int rotationFlag; ///<Rotation flag
    int subzeroFlag; ///<Zero plane flag
@@ -190,7 +190,7 @@ private:
    osg::ref_ptr<osg::Geode> selectedGeometry; ///<Geometry currently selected
    double distance; ///<Used for scaling
    std::string laserName; ///<do not know what this does
-   osg::Vec3f LastWandPosition; ///<Stores last wand position
+   osg::Vec3d LastWandPosition; ///<Stores last wand position
    osg::Node* rootNode; ///<do not know what this does
 
    osg::ref_ptr< osg::Geode > beamGeode;///<do not know what this does

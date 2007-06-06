@@ -80,15 +80,15 @@ public:
 
     ///Set the translation array of the clone
     ///\param translation The translation array pointer
-    void SetTranslationArray( float* translation );
+    void SetTranslationArray( double* translation );
 
     ///Set the rotation array of the clone
     ///\param rotation The rotation array pointer
-    void SetRotationArray( float* rotation );
+    void SetRotationArray( double* rotation );
 
     ///Set the scale array of the clone
     ///\param scale The scale array pointer
-    void SetScaleArray( float* scale );
+    void SetScaleArray( double* scale );
 
     ///Return the cloned structure including the transform
     VE_SceneGraph::DCS* GetClonedGraph();

@@ -35,7 +35,7 @@
 
 // --- OSG Includes --- //
 #ifdef _OSG
-#include <osg/Vec3f>
+#include <osg/Vec3d>
 #include <osg/Matrix>
 #include <osg/MatrixTransform>
 #include <osg/NodeVisitor>
@@ -65,7 +65,7 @@ DCS::DCS( void )
 :
 m_btBody( 0 )
 {
-    float temp[3];
+    double temp[3];
     for( unsigned int i = 0; i < 3; i++ )
     {
         temp[i] = 0.0f;
@@ -95,7 +95,7 @@ m_btBody( 0 )
     this->setUpdateCallback( m_udcb.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-DCS::DCS( float* scale, float* trans, float* rot )
+DCS::DCS( double* scale, double* trans, double* rot )
 :
 m_btBody( 0 )
 {
@@ -123,7 +123,7 @@ DCS::~DCS()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float* DCS::GetVETranslationArray( void )
+double* DCS::GetVETranslationArray( void )
 {
     osg::Vec3d trans = this->getPosition();
     for( size_t i = 0; i < 3; i++ )
@@ -134,7 +134,7 @@ float* DCS::GetVETranslationArray( void )
     return m_Translation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float* DCS::GetRotationArray( void )
+double* DCS::GetRotationArray( void )
 {
     osg::Quat quat = this->getAttitude();
 
@@ -149,7 +149,7 @@ float* DCS::GetRotationArray( void )
     return m_Rotation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float* DCS::GetScaleArray( void )
+double* DCS::GetScaleArray( void )
 {
     osg::Vec3d tempScale = this->getScale();
     for ( size_t i = 0; i < 3; i++ )
@@ -183,9 +183,9 @@ void DCS::SetQuat( osg::Quat quat )
 void DCS::SetRotationArray( std::vector< double > rotArray )
 {
 #ifdef _OSG
-    osg::Vec3f pitch( 1, 0, 0 );
-    osg::Vec3f roll( 0, 1, 0 );
-    osg::Vec3f yaw( 0, 0, 1 );
+    osg::Vec3d pitch( 1, 0, 0 );
+    osg::Vec3d roll( 0, 1, 0 );
+    osg::Vec3d yaw( 0, 0, 1 );
 
     osg::Matrixd rotateMat;
 
@@ -225,7 +225,7 @@ void DCS::SetScaleArray( std::vector< double > scaleArray )
 UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetTranslationArray( float* trans )
+void DCS::SetTranslationArray( double* trans )
 {
     std::vector< double > temp;
     temp.push_back( trans[0] );
@@ -235,7 +235,7 @@ void DCS::SetTranslationArray( float* trans )
     SetTranslationArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetRotationArray( float* rot )
+void DCS::SetRotationArray( double* rot )
 {
     std::vector< double > temp;
     temp.push_back( rot[0] );
@@ -245,7 +245,7 @@ void DCS::SetRotationArray( float* rot )
     SetRotationArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::SetScaleArray( float* scale )
+void DCS::SetScaleArray( double* scale )
 {
     std::vector< double > temp;
     temp.push_back( scale[0] );

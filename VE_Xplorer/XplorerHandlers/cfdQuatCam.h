@@ -75,7 +75,7 @@ namespace VE_Xplorer
          ///Constructors   
          ///\param &m Matrix.
          ///\param worldTrans Translation of world.
-         cfdQuatCam( gmtl::Matrix44f& m, float* worldTrans );
+         cfdQuatCam( gmtl::Matrix44d& m, double* worldTrans );
    
          ///Destructor
          ~cfdQuatCam(){;}
@@ -83,19 +83,19 @@ namespace VE_Xplorer
          ///Set camera position
          ///\param worldTrans
          ///\param worldDCS
-         void SetCamPos( float* worldTrans, VE_SceneGraph::DCS* worldDCS);
+         void SetCamPos( double* worldTrans, VE_SceneGraph::DCS* worldDCS);
 
          ///Move camera position, both translation and rotation slerp.
          ///\param t 
-         void MoveCam( float t);
+         void MoveCam( double t);
 
          ///Rotation slerp.
          ///\param t 
-         void RotSlerp( float t);
+         void RotSlerp( double t);
 
          ///Translation slerp.
          ///\param t 
-         void TransLerp( float t);
+         void TransLerp( double t);
 
          ///Update translation
          ///\param nav
@@ -106,29 +106,29 @@ namespace VE_Xplorer
          void UpdateRotation( VE_SceneGraph::DCS* worldDCS);
 
          ///Returns matrix for gmtl.
-         gmtl::Matrix44f GetMatrix( void );
+         gmtl::Matrix44d GetMatrix( void );
 
          ///Returns next tranlation vector.
-         gmtl::Vec3f GetTrans( void );
+         gmtl::Vec3d GetTrans( void );
 
          ///Returns last tranlation vector.
-         gmtl::Vec3f GetLastTrans( void );
+         gmtl::Vec3d GetLastTrans( void );
 
-         gmtl::Vec3f  vjVecCurrTrans;///VRJuggler current translation vector.
+         gmtl::Vec3d  vjVecCurrTrans;///VRJuggler current translation vector.
 
-         float rotPoints[4];///<rotation points.
+         double rotPoints[4];///<rotation points.
 
-         float angle;///<angle (nay not be in use).
+         double angle;///<angle (nay not be in use).
 
       private:
-         gmtl::Quatf LastPosQuat;///<gmtl last quaternion position.
-         gmtl::Quatf NextPosQuat;///<gmtl next quaternion position.
-         gmtl::Quatf CurPosQuat;///<gmtl current quaternion position.
-         gmtl::Vec3f vjVecNextTrans;///<gmtl next translation.
-         gmtl::Vec3f vjVecLastTrans;///<gmtl last translation.
-         gmtl::Matrix44f nextMatrix;///<gmtl next matrix.
+         gmtl::Quatd LastPosQuat;///<gmtl last quaternion position.
+         gmtl::Quatd NextPosQuat;///<gmtl next quaternion position.
+         gmtl::Quatd CurPosQuat;///<gmtl current quaternion position.
+         gmtl::Vec3d vjVecNextTrans;///<gmtl next translation.
+         gmtl::Vec3d vjVecLastTrans;///<gmtl last translation.
+         gmtl::Matrix44d nextMatrix;///<gmtl next matrix.
 
-         float rotvec[3];///<rotation vector (may not be in use).
+         double rotvec[3];///<rotation vector (may not be in use).
    };
 }
 #endif

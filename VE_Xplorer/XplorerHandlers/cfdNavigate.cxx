@@ -118,24 +118,24 @@ double * cfdNavigate::GetLocation( )
   return this->loc;
 }
 
-void cfdNavigate::GetObjLocation( float xyzO[3] )
+void cfdNavigate::GetObjLocation( double xyzO[3] )
 {
   this->GetObjLocation( xyzO[0], xyzO[1], xyzO[2] );
 }
 
-void cfdNavigate::GetObjLocation( float &xO, float &yO, float &zO )
+void cfdNavigate::GetObjLocation( double &xO, double &yO, double &zO )
 {
   xO = this->objLoc[0];
   yO = this->objLoc[1];
   zO = this->objLoc[2];
 }
 
-float * cfdNavigate::GetObjLocation( )
+double * cfdNavigate::GetObjLocation( )
 {
   return this->objLoc;
 }
 
-float * cfdNavigate::GetCurObjLocation( )
+double * cfdNavigate::GetCurObjLocation( )
 {
  this->CursorTranslate(); 
  return this->objLoc;
@@ -179,7 +179,11 @@ void cfdNavigate::UpdateDir( )      //Changed by Gengxun
 { 
    // get the normalized direction relative to the juggler frame
    vjVec.set( 0.0f, 0.0f, -1.0f );
-   vjMat = wand->getData( );
+   //vjMat = wand->getData( );
+   for( size_t i = 0; i < 16; ++i )
+   {
+       vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[i] );
+   }
    vjVec = gmtl::xform( vjVec,vjMat,vjVec);
    gmtl::normalize(vjVec);
 
@@ -192,7 +196,7 @@ void cfdNavigate::UpdateDir( )      //Changed by Gengxun
 void cfdNavigate::UpdateLoc( )      //Changed by Gengxun
 {
    // get the location relative to the juggler frame
-   gmtl::Vec3f loc_temp;
+   gmtl::Vec3d loc_temp;
    gmtl::setTrans(loc_temp,vjMat);
 
    // transform from juggler to performer...
@@ -258,12 +262,12 @@ void cfdNavigate::updateNavigationFromGUI()
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
 
-   float* tempWorldRot = this->worldDCS->GetRotationArray();
+   double* tempWorldRot = this->worldDCS->GetRotationArray();
    this->worldRot[ 0 ] = tempWorldRot[ 0 ];
    this->worldRot[ 1 ] = tempWorldRot[ 1 ];
    this->worldRot[ 2 ] = tempWorldRot[ 2 ];
 
-	float* tempWorldTrans = this->worldDCS->GetVETranslationArray();
+	double* tempWorldTrans = this->worldDCS->GetVETranslationArray();
 	this->worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
 	this->worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
 	this->worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
@@ -368,15 +372,19 @@ void cfdNavigate::updateNavigationFromGUI()
 
          if ( rotationFlag )
          {
-            vjHeadMat = head->getData();
+            //vjHeadMat = head->getData();
+            for( size_t i = 0; i < 16; ++i )
+            {
+                vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
+            }
             // get juggler Matrix of worldDCS
             // Note:: for pf we are in juggler land
             //        for osg we are in z up land
-            Matrix44f worldMat;
+            Matrix44d worldMat;
             worldMat = this->worldDCS->GetMat();
 
-            gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
-            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
+            gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
+            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
          #ifdef _OSG
             jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
             jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
@@ -389,26 +397,26 @@ void cfdNavigate::updateNavigationFromGUI()
 
             // translate world dcs by distance that the head
             // is away from the origin
-            gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
-            gmtl::Matrix44f worldMatTrans = transMat * worldMat;
-            gmtl::Point3f newJugglerHeadPoint;
+            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -jugglerHeadPointTemp );
+            gmtl::Matrix44d worldMatTrans = transMat * worldMat;
+            gmtl::Point3d newJugglerHeadPoint;
             // get the position of the head in the new world space
             // as if the head is on the origin
-            gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
+            gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
 
             // Create rotation matrix and juggler head vector
          #ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
+            gmtl::EulerAngleXYZd worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
          #else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
+            gmtl::EulerAngleXYZd worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
          #endif
-            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
-            gmtl::Vec4f newGlobalHeadPointVec;
+            gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >(worldRotVecTemp);
+            gmtl::Vec4d newGlobalHeadPointVec;
             newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
             newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
             newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
             // roate the head vector by the rotation increment
-            gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
+            gmtl::Vec4d rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
 
             // create translation from new rotated point
             // and add original head off set to the newly found location
@@ -429,15 +437,19 @@ void cfdNavigate::updateNavigationFromGUI()
 
          if ( rotationFlag )
          {
-            vjHeadMat = head->getData();
+            //vjHeadMat = head->getData();
+            for( size_t i = 0; i < 16; ++i )
+            {
+                vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
+            }
             // get juggler Matrix of worldDCS
             // Note:: for pf we are in juggler land
             //        for osg we are in z up land
-            Matrix44f worldMat;
+            Matrix44d worldMat;
             worldMat = this->worldDCS->GetMat();
 
-            gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
-            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
+            gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
+            jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
          #ifdef _OSG
             jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
             jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
@@ -450,26 +462,26 @@ void cfdNavigate::updateNavigationFromGUI()
 
             // translate world dcs by distance that the head
             // is away from the origin
-            gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
-            gmtl::Matrix44f worldMatTrans = transMat * worldMat;
-            gmtl::Point3f newJugglerHeadPoint;
+            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -jugglerHeadPointTemp );
+            gmtl::Matrix44d worldMatTrans = transMat * worldMat;
+            gmtl::Point3d newJugglerHeadPoint;
             // get the position of the head in the new world space
             // as if the head is on the origin
-            gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
+            gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
 
             // Create rotation matrix and juggler head vector
          #ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
+            gmtl::EulerAngleXYZd worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
          #else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
+            gmtl::EulerAngleXYZd worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
          #endif
-            gmtl::Matrix44f rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
-            gmtl::Vec4f newGlobalHeadPointVec;
+            gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >(worldRotVecTemp);
+            gmtl::Vec4d newGlobalHeadPointVec;
             newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
             newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
             newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
             // roate the head vector by the rotation increment
-            gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
+            gmtl::Vec4d rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
 
             // create translation from new rotated point
             // and add original head off set to the newly found location
@@ -521,15 +533,20 @@ void cfdNavigate::updateNavigationFromGUI()
       
       if ( rotationFlag )
       {
-         vjHeadMat = head->getData();
+         //vjHeadMat = head->getData();
+
+         for( size_t i = 0; i < 16; ++i )
+         {
+             vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
+         }
          // get juggler Matrix of worldDCS
          // Note:: for pf we are in juggler land
          //        for osg we are in z up land
-         Matrix44f worldMat;
+         Matrix44d worldMat;
          worldMat = this->worldDCS->GetMat();
 
-         gmtl::Point3f jugglerHeadPoint, jugglerHeadPointTemp;
-         jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
+         gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
+         jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
       #ifdef _OSG
          jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
          jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
@@ -542,39 +559,39 @@ void cfdNavigate::updateNavigationFromGUI()
 
          // translate world dcs by distance that the head
          // is away from the origin
-         gmtl::Matrix44f transMat = gmtl::makeTrans< gmtl::Matrix44f >( -jugglerHeadPointTemp );
-         gmtl::Matrix44f worldMatTrans = transMat * worldMat;
-         gmtl::Point3f newJugglerHeadPoint;
+         gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -jugglerHeadPointTemp );
+         gmtl::Matrix44d worldMatTrans = transMat * worldMat;
+         gmtl::Point3d newJugglerHeadPoint;
          // get the position of the head in the new world space
          // as if the head is on the origin
-         gmtl::Point3f newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
+         gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
 
          // Create rotation matrix and juggler head vector
-         gmtl::Matrix44f rotMatTemp;
+         gmtl::Matrix44d rotMatTemp;
          if ( this->currentWandDirection[ 0 ] > 0.0f )
          {
          #ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
+            gmtl::EulerAngleXYZd worldRotVecTemp(0,0, gmtl::Math::deg2Rad(-rotationStepSize));
          #else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
+            gmtl::EulerAngleXYZd worldRotVecTemp(0, gmtl::Math::deg2Rad(-rotationStepSize), 0);
          #endif
-            rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+            rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >(worldRotVecTemp);
          }
          else 
          {
          #ifdef _OSG
-            gmtl::EulerAngleXYZf worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
+            gmtl::EulerAngleXYZd worldRotVecTemp(0,0, gmtl::Math::deg2Rad(rotationStepSize));
          #else
-            gmtl::EulerAngleXYZf worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
+            gmtl::EulerAngleXYZd worldRotVecTemp(0, gmtl::Math::deg2Rad(rotationStepSize), 0);
          #endif
-            rotMatTemp = gmtl::makeRot< gmtl::Matrix44f >(worldRotVecTemp);
+            rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >(worldRotVecTemp);
          }
-         gmtl::Vec4f newGlobalHeadPointVec;
+         gmtl::Vec4d newGlobalHeadPointVec;
          newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
          newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
          newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
          // roate the head vector by the rotation increment
-         gmtl::Vec4f rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
+         gmtl::Vec4d rotateJugglerHeadVec = rotMatTemp * newGlobalHeadPointVec;
 
          // create translation from new rotated point
          // and add original head off set to the newly found location
@@ -597,7 +614,7 @@ void cfdNavigate::updateNavigationFromGUI()
 
    // Set the DCS postion based off of previous 
    // manipulation of the worldTrans array
-   float tempArray[ 3 ];
+   double tempArray[ 3 ];
    for ( unsigned int i = 0; i < 3; i++ )
       tempArray[ i ] = -this->worldTrans[ i ];
 
@@ -620,7 +637,7 @@ double* cfdNavigate::GetWorldTranslation()
    return worldTrans;
 }
 //////////////////////////////////////////
-float* cfdNavigate::GetWorldRotation()
+double* cfdNavigate::GetWorldRotation()
 {
    return worldRot;
 }

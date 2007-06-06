@@ -126,11 +126,11 @@ cfdApp::cfdApp( int argc, char* argv[] )
    light_model_0 = new osg::LightModel;
 
    light_0->setLightNum( 0 );
-   light_0->setAmbient( osg::Vec4f( 0.36862f, 0.36842f, 0.36842f, 1.0f ) );
-   light_0->setDiffuse( osg::Vec4f( 0.88627f, 0.88500f, 0.88500f, 1.0f ) );
-   light_0->setSpecular( osg::Vec4f( 0.49019f, 0.48872f, 0.48872f, 1.0f ) );
-   light_0->setPosition( osg::Vec4f( 10000.0f, -10000.0f, 10000.0f, 0.0f ) );
-   light_0->setDirection( osg::Vec3f( -1, 1, -1 ) );
+   light_0->setAmbient( osg::Vec4d( 0.36862f, 0.36842f, 0.36842f, 1.0f ) );
+   light_0->setDiffuse( osg::Vec4d( 0.88627f, 0.88500f, 0.88500f, 1.0f ) );
+   light_0->setSpecular( osg::Vec4d( 0.49019f, 0.48872f, 0.48872f, 1.0f ) );
+   light_0->setPosition( osg::Vec4d( 10000.0f, -10000.0f, 10000.0f, 0.0f ) );
+   light_0->setDirection( osg::Vec3d( -1, 1, -1 ) );
 
    light_source_0->setLight( light_0.get() );
    light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
@@ -769,8 +769,8 @@ void cfdApp::draw()
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
    {
-      //Matrix44f headMat=mHead->getData();      //grab the head matrix
-//      Matrix44f h=headMat;
+      //Matrix44d headMat=mHead->getData();      //grab the head matrix
+//      Matrix44d h=headMat;
 //      glMultMatrixf(headMat.mData);         //and multiply to cancel it out of the modelview
 //      gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);   //an overhead view
       if(captureNextFrameForWeb) goCapture=true;   //now if we're go for capture, we'll know for sure
@@ -801,8 +801,8 @@ void cfdApp::draw()
    SGLContext.End();
    
    SGLContext.Begin(SGL_RIGHT_FRAME);
-   gmtl::Matrix44f _vjMatrixRight( userData->getViewport()->getRightProj()->getViewMatrix() );
-   gmtl::postMult(_vjMatrixRight, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+   gmtl::Matrix44d _vjMatrixRight( userData->getViewport()->getRightProj()->getViewMatrix() );
+   gmtl::postMult(_vjMatrixRight, gmtl::makeRot<gmtl::Matrix44d>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
    osg_proj_xform_mat->set( _vjMatrixRight.mData );
    
    // Copy the view matrix

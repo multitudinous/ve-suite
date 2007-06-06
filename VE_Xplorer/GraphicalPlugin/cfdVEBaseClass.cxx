@@ -121,7 +121,7 @@ void cfdVEBaseClass::SetColor( double* color )
 }
 //////////////////////////////////////////////////////////////////      
 // transform object based 
-void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* trans)
+void cfdVEBaseClass::SetTransforms( double* scale, double* rot, double* trans)
 {
    this->_dcs->SetTranslationArray( trans );
    this->_dcs->SetScaleArray( scale );

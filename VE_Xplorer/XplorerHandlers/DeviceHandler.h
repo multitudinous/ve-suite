@@ -107,7 +107,7 @@ private:
     VE_Xplorer::Device* active_device; ///<The active device
     osg::ref_ptr< VE_SceneGraph::DCS > activeDCS; ///<The active coordinate system
     std::string device_mode; ///<Tells whether navigation or selection is active
-    gmtl::Point3f center_point; ///<Do not know what this is
+    gmtl::Point3d center_point; ///<Do not know what this is
     float m_threshold;///<
     float m_jump;///<
 };

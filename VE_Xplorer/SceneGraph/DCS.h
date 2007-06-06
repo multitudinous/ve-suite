@@ -96,7 +96,7 @@ public:
     ///\param scale The scale array pointer
     ///\param trans The translation array pointer
     ///\param rot The rotation array pointer
-    DCS( float* scale, float* trans, float* rot );
+    DCS( double* scale, double* trans, double* rot );
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     DCS( const DCS&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
@@ -104,13 +104,13 @@ public:
     META_Node( VE_SceneGraph, DCS );
 
     ///Get translation array pointer
-    float* GetVETranslationArray();
+    double* GetVETranslationArray();
 
     ///Get rotation array pointer
-    float* GetRotationArray();
+    double* GetRotationArray();
 
     ///Get scale array pointer
-    float* GetScaleArray();
+    double* GetScaleArray();
 
     ///Get the transform in 4x4 matrix form
     gmtl::Matrix44d GetMat();
@@ -121,7 +121,7 @@ public:
 
     ///Set the translation array
     ///\param trans A pointer to set the translation array values
-    void SetTranslationArray( float* trans );
+    void SetTranslationArray( double* trans );
 
     ///Set the attitude with a quat
     ///\param quat A quat to set the attitude
@@ -133,7 +133,7 @@ public:
 
     ///Set the rotation array with a pointer
     ///\param rot A pointer to set the rotation array values
-    void SetRotationArray( float* rot );
+    void SetRotationArray( double* rot );
 
     ///Set the scale array with a vector
     ///\param scaleArray A vector to set the scale array values
@@ -141,7 +141,7 @@ public:
 
     ///Set the scale array with a pointer
     ///\param scale A pointer to set the scale array values
-    void SetScaleArray( float* scale );
+    void SetScaleArray( double* scale );
 
     ///Set the matrix for this transform
     ///\param input Matrix with all transform information
@@ -204,9 +204,9 @@ public:
     void SetbtRigidBody( btRigidBody* rigidBody );
    
 protected:
-    float m_Rotation[3];///<The rotation array
-    float m_Translation[3];///<The translation array
-    float m_Scale[3];///<The scale array
+    double m_Rotation[3];///<The rotation array
+    double m_Translation[3];///<The translation array
+    double m_Scale[3];///<The scale array
 
     btRigidBody* m_btBody;///<The rigid body to access the respective btTransform
 
