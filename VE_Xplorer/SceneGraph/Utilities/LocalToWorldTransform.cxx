@@ -68,7 +68,7 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
         localTransform.identity();
         localTransform.setTrans( m_localNode->getPosition() );
         localTransform.setRotate( m_localNode->getAttitude() );
-        m_localToWorldTransform.preMult( localTransform );
+        m_localToWorldTransform.preMult( osg::Matrix::inverse( localTransform ) );
 
         return;
     }
