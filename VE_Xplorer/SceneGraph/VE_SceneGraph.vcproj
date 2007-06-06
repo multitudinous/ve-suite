@@ -263,15 +263,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Text.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\TextTexture.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\Triangles.cxx"
 				>
 			</File>
 			<File
@@ -311,6 +303,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Logo\BlueArrow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\CADEntity.h"
 				>
 			</File>
@@ -339,7 +335,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Logo\GreyArrow.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Group.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Logo\OrangeArrow.h"
 				>
 			</File>
 			<File
@@ -363,11 +367,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Switch.h"
+				RelativePath=".\Logo\Suite.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Text.h"
+				RelativePath=".\Switch.h"
 				>
 			</File>
 			<File
@@ -375,11 +379,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Triangles.h"
+				RelativePath=".\UpdateIDOnChildrenVisitor.h"
 				>
 			</File>
 			<File
-				RelativePath=".\UpdateIDOnChildrenVisitor.h"
+				RelativePath=".\Logo\VE.h"
 				>
 			</File>
 			<File

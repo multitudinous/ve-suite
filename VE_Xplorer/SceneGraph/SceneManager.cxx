@@ -40,9 +40,13 @@
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 
-#include "VE_Xplorer/SceneGraph/Text.h"
-#include "VE_Xplorer/SceneGraph/Triangles.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
+
+#include "VE_Xplorer/SceneGraph/Logo/BlueArrow.h"
+#include "VE_Xplorer/SceneGraph/Logo/GreyArrow.h"
+#include "VE_Xplorer/SceneGraph/Logo/OrangeArrow.h"
+#include "VE_Xplorer/SceneGraph/Logo/VE.h"
+#include "VE_Xplorer/SceneGraph/Logo/Suite.h"
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -70,8 +74,11 @@ SceneManager::SceneManager( void )
 {
    this->_param.erase();
 
-   _textPart = 0;
-   _movingPyramidsAssembly = 0;
+   m_blueArrow = 0;
+   m_greyArrow = 0;
+   m_orangeArrow = 0;
+   m_veText = 0;
+   m_suiteText = 0;
 }
 //////////////////////////////////////////////////////////
 void SceneManager::Initialize( std::string param )
@@ -82,16 +89,34 @@ void SceneManager::Initialize( std::string param )
 void SceneManager::CleanUp( void )
 {
    //Do nothing right now
-   if( _textPart )
+   if( m_blueArrow )
    {
-      delete _textPart;
-      _textPart = 0;
+      delete m_blueArrow;
+      m_blueArrow = 0;
    }
 	
-   if( _movingPyramidsAssembly )
+   if( m_greyArrow )
    {
-      delete _movingPyramidsAssembly;
-      _movingPyramidsAssembly = 0;
+      delete m_greyArrow;
+      m_greyArrow = 0;
+   }
+
+   if( m_orangeArrow )
+   {
+      delete m_orangeArrow;
+      m_orangeArrow = 0;
+   }
+
+   if( m_veText )
+   {
+      delete m_veText;
+      m_veText = 0;
+   }
+
+   if( m_suiteText )
+   {
+      delete m_suiteText;
+      m_suiteText = 0;
    }
 }
 
@@ -196,16 +221,18 @@ void SceneManager::_createLogo()
    
    if( !_logoNode.valid() )
    {
-      double translation[3] = {0, 5, 4};
-      double scale[3] = {0.02, 0.02, 0.02};
+      double translation[3] = {0, 0, 0};
+      double scale[3] = {0.01, 0.01, 0.01};
 
       _logoNode = new VE_SceneGraph::DCS();
       _logoNode->SetTranslationArray( translation );
       _logoNode->SetScaleArray( scale );
 
-      _textPart = new VE_SceneGraph::CADEntity( GetVESuite_Text(), _logoNode.get(), true );
-
-      _movingPyramidsAssembly = new VE_SceneGraph::CADEntity( GetVESuite_Triangles(), _logoNode.get(), true );
+      m_blueArrow = new VE_SceneGraph::CADEntity( BlueArrow(), _logoNode.get(), true );
+      m_greyArrow = new VE_SceneGraph::CADEntity( GreyArrow(), _logoNode.get(), true );
+      m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true );
+      m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true );
+      m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true );
    }
 #endif
 }

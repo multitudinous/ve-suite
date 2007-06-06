@@ -139,8 +139,13 @@ private:
    osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
    osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
-   VE_SceneGraph::CADEntity* _movingPyramidsAssembly;///<Logo Animated pyramids
-   VE_SceneGraph::CADEntity* _textPart;///<Logo Text
+   
+   //The logo
+   VE_SceneGraph::CADEntity* m_blueArrow;
+   VE_SceneGraph::CADEntity* m_greyArrow;
+   VE_SceneGraph::CADEntity* m_orangeArrow;
+   VE_SceneGraph::CADEntity* m_veText;///<Logo VE text
+   VE_SceneGraph::CADEntity* m_suiteText;///<Logo SUITE text
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
