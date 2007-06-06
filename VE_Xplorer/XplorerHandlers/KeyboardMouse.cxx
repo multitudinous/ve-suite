@@ -41,7 +41,7 @@
 #include "VE_Xplorer/SceneGraph/Group.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldTransform.h"
-#include "VE_Xplorer/SceneGraph/Utilities/WorldToLocalTransform.h"
+
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>
@@ -121,6 +121,7 @@ beamLineSegment( new osg::LineSegment )
 
     gmtl::identity( m_deltaTransform );
     gmtl::identity( m_currentTransform );
+    gmtl::identity( m_localToWorldTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -733,8 +734,6 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
 
-    osg::Vec3 nodeCenterWorldCoords( 0, 0, 0 );
-
     if( listOfHits.empty() )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected" 
@@ -743,8 +742,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
 
         //Move the center point to the center of all objects in the world
-        nodeCenterWorldCoords = activeDCS->getBound().center();
-        center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );
+        osg::Vec3d worldCenter = activeDCS->getBound().center();
+        center_point->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
 
         return;
     }
@@ -790,11 +789,14 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
     }    
 
-    //Move the center point to the center of the selected object
-    osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
-    new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        //Move the center point to the center of the selected object
+        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
+        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-    nodeCenterWorldCoords = activeDCS->getBound().center() * ltwt->GetLocalToWorldTransform();
-    center_point->set( nodeCenterWorldCoords.x(), nodeCenterWorldCoords.y(), nodeCenterWorldCoords.z() );  
+        osg::Vec3d center = activeDCS->getBound().center() * ltwt->GetLocalToWorldTransform();
+        center_point->set( center.x(), center.y(), center.z() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
