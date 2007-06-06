@@ -243,7 +243,7 @@ void cfdVjObsWrapper::GetCfdStateVariables( void )
 void cfdVjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
-   //m_xplorer->PreFrameUpdate();
+   m_xplorer->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point

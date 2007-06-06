@@ -69,11 +69,20 @@ Body_VEXplorer_i::Body_VEXplorer_i (void)
 :
 m_xplorerAMIHandler()
 {
-	uiCom = 0;
+	//uiCom = 0; 
+   bufferCommand = new Command(  );
+   bufferCommand->AddDataValuePair( new DataValuePair(  ) );
+   bufferCommand->SetCommandName( "wait" );
+   isCluster = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::~Body_VEXplorer_i (void)
 {
+   if(bufferCommand)
+   {
+      delete bufferCommand;
+      bufferCommand = 0;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_VEXplorer_i::GetStatusMessage( )
@@ -163,7 +172,7 @@ void Body_VEXplorer_i::RegisterUI ( const char* UIName, ::Body::UI_ptr ui )
   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
 	std::cout << "Body_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
-	uiCom = Body::UI::_duplicate( ui );
+	uiCom[std::string(UIName)] = Body::UI::_duplicate( ui );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::UnRegisterUI ( const char* UIName )
@@ -176,35 +185,7 @@ void Body_VEXplorer_i::UnRegisterUI ( const char* UIName )
 void Body_VEXplorer_i::PreFrameUpdate( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   // If the data is transient command data
-   if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-            == TRANSIENT_VIS_ACTIVE )
-   {
-      CreateCommandQueue();
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-      return;
-   }
-
-   // Just reinitialize the cfdid to null essentially
-   if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-
-   // Populate the buffer array with the next command queue command
-   if ( !commandQueue.empty() && !cfdSteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
-   {
-      std::vector< cfdCommandArray* >::iterator iter;
-      iter = commandQueue.begin();
-      (*_bufferArray) = (*(*iter));
-      delete commandQueue.at( 0 );
-      commandQueue.erase( iter );
-   }
-
-   // Just reinitialize the cfdid to null essentially if it is NOT GUI_NAV
-   if(bufferCommand->GetNumberOfDataValuePairs()){
-      if ( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
-         bufferCommand->SetCommandName( "wait" );
-   }
-
+ 
    // New xml command queue
    if ( !commandVectorQueue.empty() )
    {
@@ -219,6 +200,12 @@ void Body_VEXplorer_i::PreFrameUpdate( void )
       if ( cfdModelHandler::instance()->GetActiveModel() )
       {
          cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
+         //if(vpr::Debug::instance()->getLevel() > 1)
+         {
+            std::stringstream commandStatement;
+            commandStatement<<"Executing: "<<bufferCommand->GetCommandName()<<std::endl;
+            SetXplorerData(commandStatement.str());
+         }
       }
    }
    else
@@ -422,6 +409,13 @@ void Body_VEXplorer_i::SetXplorerData( std::string input )
 {
     ///AMI call
     Body::AMI_UIHandler_var xplorerComAMIHandler = m_xplorerAMIHandler._this();
-    uiCom->sendc_SetXplorerData(xplorerComAMIHandler.in(), input.c_str());
+    std::map<std::string,Body::UI_var>::iterator currentConductor;
+    for(currentConductor = uiCom.begin();
+        currentConductor != uiCom.end();
+        ++currentConductor)
+    {
+        
+       currentConductor->second->sendc_SetXplorerData(xplorerComAMIHandler.in(), input.c_str());
+    }
     ///uiCom->SetXplorerData( input.c_str() );
 }

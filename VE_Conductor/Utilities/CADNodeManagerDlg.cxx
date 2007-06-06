@@ -842,8 +842,13 @@ void CADNodeManagerDlg::_onBeginNodeMove(wxTreeEvent& event)
 {
     if ( event.GetItem() != _geometryTree->GetRootItem() )
     {
-        m_movingNode = event.GetItem();
+       m_movingNode = event.GetItem();
 
+       CADTreeBuilder::TreeNodeData* movingCADNode = 
+         dynamic_cast<CADTreeBuilder::TreeNodeData*>
+             (_geometryTree->GetItemData(m_movingNode));
+
+        _activeCADNode = movingCADNode->GetNode();
         wxPoint clientpt = event.GetPoint();
         wxPoint screenpt = ClientToScreen(clientpt);
         m_movingNodeType = _activeCADNode->GetNodeType();

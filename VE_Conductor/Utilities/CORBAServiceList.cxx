@@ -208,8 +208,8 @@ bool CORBAServiceList::ConnectToXplorer( void )
       CosNaming::NamingContext_var naming_context1 = 
                CosNaming::NamingContext::_narrow( naming_context_object.in() );
       CORBA::Object_var ve_object = naming_context1->resolve(xplorerCom);
-	  m_xplorer = Body::VEXplorer::_narrow( ve_object.in() );
-	  m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() ); 
+	   m_xplorer = Body::VEXplorer::_narrow( ve_object.in() );
+	   m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() ); 
       GetMessageLog()->SetMessage( "Connected to NEW VE server.\n");
    } 
    catch ( CORBA::Exception& ex ) 
@@ -307,6 +307,7 @@ bool CORBAServiceList::DisconnectFromXplorer( void )
 {
    VjObs::_tao_release( vjobs );
    GetMessageLog()->SetMessage( "Disconnect VE suceeded.\n");
+   Body::VEXplorer::_tao_release(m_xplorer);
    return true;
 }
 /////////////////////////////////////////////////////////////
@@ -459,6 +460,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
    netowrkWriter.WriteToString();
    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
+   std::string copiedCommandForAMITesting(xmlDocument);
    if ( !CORBA::is_nil( vjobs.in() ) && !xmlDocument.empty() )
    {
       try
@@ -468,15 +470,21 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
       }
       catch ( ... )
       {
-         //VjObs::_tao_release( vjobs );
-         //if ( !IsConnectedToXplorer() )
-         {  
-            //wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-            //              "Communication Failure", wxOK | wxICON_INFORMATION );
-            return false;
-         }
-      }
+          return false;
+      }      
    }
+   /*if ( !CORBA::is_nil( m_xplorer.in() ) && !copiedCommandForAMITesting.empty() )
+   {
+      try
+      {
+         // CORBA releases the allocated memory so we do not have to
+         m_xplorer->SetCommand( copiedCommandForAMITesting.c_str() );
+      }
+      catch ( ... )
+      {
+         return false;
+      }
+   }*/
    //Clean up memory
    //delete veCommand;
    return true;

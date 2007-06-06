@@ -63,6 +63,7 @@ namespace VE_XML
 	class Command;
 }
 #include <vector>
+#include <map>
 #include <iostream>
 
 class Body_VEXplorer_i
@@ -144,7 +145,7 @@ protected:
    float time_since_start;///< start time
    long frameNumber;///< frame number
 
-   Body::UI_var uiCom;
+   std::map<std::string,Body::UI_var> uiCom;///<The conductor interfaces
    Body_AMI_UIHandler_i m_xplorerAMIHandler;///<AMI handler for asynchronous calls to conductor
 };
 #endif
