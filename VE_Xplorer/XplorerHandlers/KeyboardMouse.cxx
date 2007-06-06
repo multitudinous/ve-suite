@@ -421,11 +421,11 @@ void KeyboardMouse::ProcessNavigationEvents()
     }
     else
     {
-        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > wtlt = 
+        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
         new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
         osg::Matrix temp( matrix.getData() );
-        temp = temp * osg::Matrix::inverse( wtlt->GetLocalToWorldTransform() );
+        temp = temp * osg::Matrix::inverse( ltwt->GetLocalToWorldTransform() );
 
         gmtl::Matrix44d holder;
         holder.set( temp.ptr() );
@@ -552,9 +552,6 @@ void KeyboardMouse::NavMotion()
     float dx = m_currPos[0] - m_prevPos[0];
     float dy = m_currPos[1] - m_prevPos[1];
 
-    m_prevPos[0] = m_currPos[0];
-    m_prevPos[1] = m_currPos[1];
-
     m_magnitude = sqrtf( dx * dx + dy * dy );
     if( m_magnitude < m_sensitivity )
     {
@@ -581,6 +578,9 @@ void KeyboardMouse::NavMotion()
     {
         Twist( dx, dy );
     }
+
+    m_prevPos[0] = m_currPos[0];
+    m_prevPos[1] = m_currPos[1];
 
     ProcessNavigationEvents();
 }
