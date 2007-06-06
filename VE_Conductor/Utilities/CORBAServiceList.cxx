@@ -151,6 +151,7 @@ bool CORBAServiceList::ConnectToCE( void )
       catch ( CORBA::Exception& ex ) 
       {
          GetMessageLog()->SetMessage( "Can't find executive or UI registration error\n");
+		 GetMessageLog()->SetMessage( ex._info().c_str() );
          return false;
       }
    }
@@ -170,6 +171,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
       return false;
    }
    
+   ///This is the old way of communication
    try 
    {
       CosNaming::Name name(1);
@@ -184,11 +186,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
       CORBA::Object_var ve_object = naming_context1->resolve(name);
       vjobs = VjObs::_narrow( ve_object.in() );
 
-      //Create the VE Tab
-      //con_menu->Enable(v21ID_DISCONNECT_VE, true);
       GetMessageLog()->SetMessage( "Connected to VE server.\n");
-      //connectToVE = true;
-      //network->SetXplorerInterface( vjobs.in() );
    } 
    catch ( CORBA::Exception& ex ) 
    {
@@ -197,6 +195,29 @@ bool CORBAServiceList::ConnectToXplorer( void )
       return false;
    }
   
+   ///This is the new way of communication
+   try 
+   {
+      CosNaming::Name xplorerCom(1);
+      xplorerCom.length(1);
+      //Now get the reference of the VE server
+      xplorerCom[0].id   = CORBA::string_dup ("Test");
+      xplorerCom[0].kind = CORBA::string_dup ("VE_Xplorer");
+      CORBA::Object_var naming_context_object =
+      orb->resolve_initial_references ("NameService");
+      CosNaming::NamingContext_var naming_context1 = 
+               CosNaming::NamingContext::_narrow( naming_context_object.in() );
+      CORBA::Object_var ve_object = naming_context1->resolve(xplorerCom);
+	  m_xplorer = Body::VEXplorer::_narrow( ve_object.in() );
+	  m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() ); 
+      GetMessageLog()->SetMessage( "Connected to NEW VE server.\n");
+   } 
+   catch ( CORBA::Exception& ex ) 
+   {
+      GetMessageLog()->SetMessage( "Can't find NEW VE server\n");
+      GetMessageLog()->SetMessage( ex._info().c_str() );
+      return false;
+   }
    return true;
 }
 /////////////////////////////////////////////////////////////
@@ -375,12 +396,12 @@ void CORBAServiceList::CreateCORBAModule( void )
          
          //Activate it to obtain the object reference
          CORBA::Object_var objectRef = poa->id_to_reference( idObject.in() );
-         Body::UI_var ui = Body::UI::_narrow( objectRef.in() );
+         m_ui = Body::UI::_narrow( objectRef.in() );
         
          try 
          {
             //std::cout << "corba 6 " << std::endl;      
-            veCE->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
+            veCE->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in());
             //std::cout << "corba 7 " << std::endl;      
          }
          catch ( CORBA::Exception& ex ) 
@@ -397,9 +418,9 @@ void CORBAServiceList::CreateCORBAModule( void )
             
             //Activate it to obtain the object reference
             CORBA::Object_var objectRef = poa->id_to_reference( idObject.in() );
-            Body::UI_var ui = Body::UI::_narrow( objectRef.in() );
+            m_ui = Body::UI::_narrow( objectRef.in() );
             
-            veCE->RegisterUI( p_ui_i->UIName_.c_str(), ui.in());
+            veCE->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in());
          }
          catch (CORBA::Exception& ex ) 
          {

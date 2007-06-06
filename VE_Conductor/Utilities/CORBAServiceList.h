@@ -140,6 +140,8 @@ private:
    PortableServer::POA_var poa_root;
    CosNaming::NamingContext_var naming_context;
    VjObs_var vjobs;
+   Body::VEXplorer_var m_xplorer;
+   Body::UI_var m_ui;
    //Body::Executive_var module;
    Body::VEXplorer_var veXplorer;
    Body::Executive_var veCE;

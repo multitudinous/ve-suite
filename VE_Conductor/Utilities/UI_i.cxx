@@ -160,6 +160,7 @@ void Body_UI_i::SetXplorerData (
 	networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
 	m_xmlObjects = networkReader.GetLoadedXMLObjects();
+	logWindow->SetMessage( xplorerData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetLogWindow( PEThread* logWindow )
