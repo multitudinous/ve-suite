@@ -213,6 +213,10 @@
 			Filter=".cpp"
 			>
 			<File
+				RelativePath=".\Body_AMI_UIHandler_i.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfdApp.cxx"
 				>
 			</File>
@@ -249,6 +253,10 @@
 			Name="headers"
 			Filter=".h"
 			>
+			<File
+				RelativePath=".\Body_AMI_UIHandler_i.h"
+				>
+			</File>
 			<File
 				RelativePath=".\cfdApp.h"
 				>
