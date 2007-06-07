@@ -260,6 +260,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CADMoveNodeEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\CADPhysicsMeshEventHandler.cxx"
 				>
 			</File>
@@ -806,6 +810,10 @@
 			</File>
 			<File
 				RelativePath=".\CADInitializePhysicsEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CADMoveNodeEventHandler.h"
 				>
 			</File>
 			<File

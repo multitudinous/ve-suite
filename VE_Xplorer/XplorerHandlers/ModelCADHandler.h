@@ -121,6 +121,12 @@ public:
                    std::string partID,
                    std::string parentID);
 
+    ///Clear out the associated information for a node
+    ///\param nodeID The node id
+    ///\param nodeTyp The type of node
+    void RemoveNode(std::string nodeID,
+                    std::string nodeType);
+
     ///Get a specified CADAttribute for a specified CADNode
     ///\param nodeID The CADNode  
     ///\param attributeName The name of the CADAttribute to find.

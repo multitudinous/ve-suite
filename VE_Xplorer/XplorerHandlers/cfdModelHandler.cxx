@@ -64,6 +64,7 @@
 #include "VE_Xplorer/XplorerHandlers/CADSetRootNodeEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADToggleEH.h"
 #include "VE_Xplorer/XplorerHandlers/CADRemoveAttributeEH.h"
+#include "VE_Xplorer/XplorerHandlers/CADMoveNodeEventHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/ActiveModelEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/MaterialUpdateEH.h"
@@ -143,6 +144,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE") ] = new VE_EVENTS::MaterialUpdateEventHandler();
    _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_MODE") ] = new VE_EVENTS::MaterialModeUpdateEventHandler();
    _eventHandlers[ std::string("CAD_REMOVE_ATTRIBUTE") ] = new VE_EVENTS::CADRemoveAttributeEventHandler();
+   _eventHandlers[ std::string("CAD_MOVE_NODE") ] = new VE_EVENTS::CADMoveNodeEventHandler();
    _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new VE_EVENTS::AddVTKDataSetEventHandler();
    _eventHandlers[ std::string("Change Bounding Box State") ] = new VE_EVENTS::BBoxEventHandler();
    _eventHandlers[ std::string("Change Wire Frame State") ] = new VE_EVENTS::WireframeEventHandler();
@@ -155,7 +157,7 @@ cfdModelHandler::cfdModelHandler( void )
    _eventHandlers[ std::string("INITIALIZE_PHYSICS") ] = new VE_EVENTS::CADInitializePhysicsEventHandler();
    _eventHandlers[ std::string("PHYSICS_MESH") ] = new VE_EVENTS::CADPhysicsMeshEventHandler();
    _eventHandlers[ std::string("PHYSICS_PROPERTIES") ] = new VE_EVENTS::CADPhysicsPropertiesEventHandler();
-
+   
 #ifdef _OSG
    _activeTDSet = 0;
 #endif

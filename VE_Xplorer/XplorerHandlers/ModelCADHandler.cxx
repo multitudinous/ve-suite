@@ -163,10 +163,34 @@ void ModelCADHandler::CreatePart( std::string fileName,
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
 }
+/////////////////////////////////////////////////////
+void ModelCADHandler::RemoveNode( std::string nodeID,
+                                  std::string nodeType )
+{
+    //first remove all the attributes for this node
+   std::map<std::string, 
+                 std::vector< std::pair< std::string, 
+                                             osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+    attributeList = m_nodeAttributes.find( nodeID );
+    if( attributeList != m_nodeAttributes.end() )
+    {
+        //clear out this attribute list associated with this node
+        m_nodeAttributes.erase( attributeList );
+    }
+    //remove the node from the list
+    if( nodeType == "Assembly" )
+    {
+        m_assemblyList.erase( nodeID );
+    }
+    else if( nodeType == "Part" )
+    {
+        m_partList.erase( nodeID );
+    }
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID, 
-                                                                 std::string nodeType, 
-                                                                 std::string attributeName )
+                                               std::string nodeType, 
+                                               std::string attributeName )
 {
 #ifdef _OSG
     std::map<std::string, 
@@ -295,8 +319,8 @@ void ModelCADHandler::MakeCADRootOpaque()
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::RemoveAttributeFromNode(std::string nodeID,
-                                                                  std::string nodeType,
-                                                                  std::string attributeName)
+                                              std::string nodeType,
+                                              std::string attributeName)
 {
 #ifdef _OSG
 	std::map< std::string, 

@@ -103,6 +103,8 @@ void CADDeleteNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       {
          parentAssembly->RemoveChild(m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph());
       }
+      //Need to also remove the node from ModelCADHandler node maps
+      m_cadHandler->RemoveNode(nodeID->GetDataString(),nodeType->GetDataString());
    }
    catch(...)
    {
