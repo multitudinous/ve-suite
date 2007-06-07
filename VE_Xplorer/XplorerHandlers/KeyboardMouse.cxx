@@ -365,8 +365,8 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
-    std::cout << "Before transformed to world coordinates" << std::endl;
-    std::cout << activeDCS->GetMat() << std::endl;
+    //std::cout << "Before transformed to world coordinates" << std::endl;
+    //std::cout << activeDCS->GetMat() << std::endl;
 
     if( activeDCS->GetName() == "World DCS" )
     {
@@ -384,8 +384,8 @@ void KeyboardMouse::ProcessNavigationEvents()
         m_currentTransform.set( localTransform.ptr() );
     }
 
-    std::cout << "After transformed to world coordinates" << std::endl;
-    std::cout << m_currentTransform << std::endl;
+    //std::cout << "After transformed to world coordinates" << std::endl;
+    //std::cout << m_currentTransform << std::endl;
 
     //Translate world dcs by distance that the m_head is away from the origin
     gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -421,8 +421,8 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix *= m_deltaTransform;
     matrix *= accuRotation;
 
-    std::cout << "After delta transform has been applied" << std::endl;
-    std::cout << matrix << std::endl;
+    //std::cout << "After delta transform has been applied" << std::endl;
+    //std::cout << matrix << std::endl;
 
     //Set the activeDCS w/ new transform
     if( activeDCS->GetName() == "World DCS" )
@@ -442,8 +442,8 @@ void KeyboardMouse::ProcessNavigationEvents()
         activeDCS->SetMat( holder );
     }
 
-    std::cout << "After transformed back to local coordinates" << std::endl;
-    std::cout << activeDCS->GetMat() << std::endl;
+    //std::cout << "After transformed back to local coordinates" << std::endl;
+    //std::cout << activeDCS->GetMat() << std::endl;
 
     //If not in animation mode, reset the transform
     if( !m_animate )
