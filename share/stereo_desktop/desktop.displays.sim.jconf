@@ -8,7 +8,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <use_swap_group>false</use_swap_group>
       </display_system>
-      <display_window name="Welcome To Your Virtual Workspace / www.vesuite.org" version="4">
+      <display_window name="ve-suite / ve-xplorer" version="4">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>

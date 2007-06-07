@@ -89,15 +89,18 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 #ifdef _OSG
     if( input.m_cadNode.valid() )
     {
-        ///We deep copy nodes so that picking is accurate and so that physics will work properly in the future
+        ///We deep copy nodes so that picking is accurate 
+        ///and so that physics will work properly in the future
         if( input.m_cadNode->asGroup() )
         {
-            m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), osg::CopyOp::DEEP_COPY_NODES );
+            m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), 
+                osg::CopyOp::DEEP_COPY_NODES );
         }
 
         else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
         {
-            m_cadNode = new osg::Geode( *static_cast< osg::Geode* >( input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+            m_cadNode = new osg::Geode( *static_cast< osg::Geode* >( 
+                input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
         }
 
         else
@@ -109,7 +112,8 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 
     else
     {
-        std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node" << std::endl;
+        std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node" 
+            << std::endl;
     }
 #elif _OPENSG
 #endif
@@ -190,7 +194,6 @@ void CADEntityHelper::ToggleDisplay( std::string onOff )
 #elif _OPENSG
 #endif
     }
-
     else if( onOff == "OFF" )
     {
 #ifdef _OSG
@@ -200,16 +203,10 @@ void CADEntityHelper::ToggleDisplay( std::string onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::LoadFile( std::string filename,
-#ifdef _OSG
-                                          bool isStream
-#endif
-                                          )
+void CADEntityHelper::LoadFile( std::string filename, bool isStream )
 {
-    //std::ostringstream filestring;
-    //filestring << filename;
-    //if ( strstr( filestring.str().c_str(), ".stl") || strstr( filestring.str().c_str(), ".stla" ) )
-    if( strstr( filename.c_str(), ".stl" ) || strstr( filename.c_str(), ".stla" ) )
+    if( strstr( filename.c_str(), ".stl" ) || 
+        strstr( filename.c_str(), ".stla" ) )
     {
         m_twoSidedLighting = true;
     }
@@ -219,10 +216,13 @@ void CADEntityHelper::LoadFile( std::string filename,
     {
         if( osgDB::getLowerCaseFileExtension(filename) == "osg" )
         {
-            osgDB::ReaderWriter *rw = osgDB::Registry::instance()->getReaderWriterForExtension( osgDB::getLowerCaseFileExtension( filename ) );
+            osgDB::ReaderWriter *rw = osgDB::Registry::instance()->
+                getReaderWriterForExtension( 
+                osgDB::getLowerCaseFileExtension( filename ) );
             if( !rw )
             {
-                std::cerr << "Error: could not find a suitable reader/writer to load the specified file" << std::endl;
+                std::cerr << "Error: could not find a suitable " << 
+                    "reader/writer to load the specified file" << std::endl;
                 return;
             }
 
@@ -230,7 +230,8 @@ void CADEntityHelper::LoadFile( std::string filename,
             std::auto_ptr< progbuf > pb( new progbuf( filename ) );
             if( !pb->is_open() )
             {
-                std::cerr << "Error: could not open file `" << filename << "'" << std::endl;
+                std::cerr << "Error: could not open file `" 
+                    << filename << "'" << std::endl;
                 return;
             }
             
@@ -244,7 +245,8 @@ void CADEntityHelper::LoadFile( std::string filename,
             m_cadNode = rr.getNode();
             if( !m_cadNode.valid() )
             {
-                std::cerr << "Error: could not load file `" << filename << "'" << std::endl;
+                std::cerr << "Error: could not load file `" 
+                    << filename << "'" << std::endl;
             }
         }
         else
@@ -255,46 +257,54 @@ void CADEntityHelper::LoadFile( std::string filename,
     else
     {
         std::istringstream textNodeStream( filename );
-        m_cadNode = osgDB::Registry::instance()->getReaderWriterForExtension( "osg" )->readNode( textNodeStream ).getNode();
+        m_cadNode = osgDB::Registry::instance()->
+            getReaderWriterForExtension( "osg" )->
+            readNode( textNodeStream ).getNode();
     }
 
-    if ( m_twoSidedLighting && m_cadNode.valid() )
+    if( !m_cadNode.valid() )
+    {
+        std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " 
+            << filename << std::endl;
+        return;
+    }
+
+    if( m_twoSidedLighting )
     {
         m_lightModel = new osg::LightModel;
         m_lightModel->setTwoSided( true );
-        m_cadNode->getOrCreateStateSet()->setAttributeAndModes( m_lightModel.get(), osg::StateAttribute::ON );
+        m_cadNode->getOrCreateStateSet()->setAttributeAndModes( 
+            m_lightModel.get(), osg::StateAttribute::ON );
     }  
         
 #elif _OPENSG
     std::cout << " Error:LoadFile !!! " << std::endl;
     exit( 1 );
 #endif
-
-    if( m_cadNode.valid() && !isStream )
+    
+    if( !isStream )
     {
         m_cadNode->setName( filename.c_str() );
-#ifdef VE_PATENTED 
-       osgOQ::OcclusionQueryNonFlatVisitor oqv( 
-            VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
-		m_cadNode->accept( oqv );
-#endif
     }
-    else if( m_cadNode.valid() && isStream )
+    else
     {
         std::string nodeName = m_cadNode->getName();
         if ( nodeName.empty() )
         {
             m_cadNode->setName( "NULL_FILENAME" );
         }
+    }
+
 #ifdef VE_PATENTED 
-        osgOQ::OcclusionQueryNonFlatVisitor oqv( 
-            VE_SceneGraph::SceneManager::instance()->GetOcclusionQueryContext() );
-		m_cadNode->accept( oqv );
-#endif
-    }
-    else 
+    osg::ref_ptr<osgOQ::OcclusionQueryRoot> root;
+    root = dynamic_cast<osgOQ::OcclusionQueryRoot*>( m_cadNode.get() );
+    if( !root.valid() )
     {
-        std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " << filename << std::endl;
+        osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+            VE_SceneGraph::SceneManager::instance()->
+            GetOcclusionQueryContext() );
+        m_cadNode->accept( oqv );
     }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
