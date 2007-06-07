@@ -64,7 +64,22 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
 {
     if( pat.getName() == m_worldNode->getName() )
     {
-        m_localToWorldTransform.set( osg::computeLocalToWorld( _nodePath ).ptr() );
+        //m_localToWorldTransform.set( osg::computeLocalToWorld( _nodePath ).ptr() );
+
+        for( size_t i = 0; i < _nodePath.size(); ++i )
+        {
+            osg::Matrixd matrix;
+            matrix.identity();
+            osg::ref_ptr< osg::Node > node = _nodePath.at( i );
+            matrix.setTrans( static_cast< osg::PositionAttitudeTransform* >( node.get() )->getPosition() );
+            matrix.setRotate( static_cast< osg::PositionAttitudeTransform* >( node.get() )->getAttitude() );
+
+            gmtl::Matrix44d temp;
+            gmtl::identity( temp );
+            temp.set( matrix.ptr() );
+
+            m_localToWorldTransform *= temp;
+        }
         
         //Premultiply by the localNode transform since it is not in the node path
         osg::Matrix localTransform;
