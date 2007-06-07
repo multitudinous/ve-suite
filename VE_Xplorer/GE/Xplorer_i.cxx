@@ -185,34 +185,7 @@ void Body_VEXplorer_i::UnRegisterUI ( const char* UIName )
 void Body_VEXplorer_i::PreFrameUpdate( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
- 
-   // New xml command queue
-   if ( !commandVectorQueue.empty() )
-   {
-      std::vector< Command* >::iterator iter;
-      iter = commandVectorQueue.begin();
-      (*bufferCommand) = (*(*iter));
-      delete commandVectorQueue.at( 0 );
-      commandVectorQueue.erase( iter );
-      cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
-      cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
-      cfdModelHandler::instance()->SetXMLCommand( bufferCommand );
-      if ( cfdModelHandler::instance()->GetActiveModel() )
-      {
-         cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
-         //if(vpr::Debug::instance()->getLevel() > 1)
-         {
-            std::stringstream commandStatement;
-            commandStatement<<"Executing: "<<bufferCommand->GetCommandName()<<std::endl;
-            SetXplorerData(commandStatement.str());
-         }
-      }
-   }
-   else
-   {
-      ;
-   }
-}
+ }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::CreateCommandQueue( void )
 {

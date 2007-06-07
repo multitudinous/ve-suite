@@ -119,6 +119,7 @@ sources = Split("""
    CADPhysicsMeshEventHandler.cxx
    CADPhysicsPropertiesEventHandler.cxx
    UnselectObjectsEventHandler.cxx
+   CommandHandler.cxx
 """)
 ##   DataSetFileEH.cxx
 ##   DataSetPrecomputeEH.cxx
@@ -238,6 +239,7 @@ headers = Split("""
    CADPhysicsMeshEventHandler.h
    CADPhysicsPropertiesEventHandler.h
    UnselectObjectsEventHandler.h
+   CommandHandler.h
 """)
 ##   DataSetFileEH.h
 ##   DataSetPrecomputeEH.h

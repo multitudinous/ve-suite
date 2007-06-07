@@ -66,9 +66,24 @@ void CommandHandler::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
 {
-    //if ( !IsConnectedToXplorer() )
-      //return false;
-      
+    
+    /*// New xml command queue
+    if ( !commandVectorQueue.empty() )
+    {
+        std::vector< Command* >::iterator iter;
+        iter = commandVectorQueue.begin();
+        (*bufferCommand) = (*(*iter));
+        delete commandVectorQueue.at( 0 );
+        commandVectorQueue.erase( iter );
+                 std::stringstream commandStatement;
+                commandStatement<<"Executing: "<<bufferCommand->GetCommandName()<<std::endl;
+                SetXplorerData(commandStatement.str());
+    }
+    else
+    {
+        ;
+    }*/
+    
     //Now send the data to xplorer
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
