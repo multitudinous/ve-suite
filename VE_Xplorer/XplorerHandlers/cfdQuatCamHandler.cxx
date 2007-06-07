@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/QCClearDataEH.h"
@@ -455,16 +456,12 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    if ( !commandType.compare( "ViewLoc_Data" ) )
    {
       VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
-      //this->cfdIso_value = commandData->GetDataValue();
       
       ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
       std::vector< long > commandIds;
-      //VE_XML::OneDIntArray *tempArray = commandData->GetDataXMLObject(); 
-      //commandIds = tempArray->GetArray();
       commandData->GetData( commandIds );
       std::string newCommand = commandData->GetDataName();
 
-      //if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )
       if ( !newCommand.compare( "LOAD_NEW_VIEWPT" ) ) 
       {
          writeFrame = currentFrame;
@@ -476,7 +473,6 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->lastCommandId = LOAD_NEW_VIEWPT;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
       else if ( !newCommand.compare( "MOVE_TO_SELECTED_LOCATION" ) )      
       {
          //this->frameTimer->startTiming();
@@ -485,118 +481,110 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->cam_id = (unsigned int)commandIds.at( 0 );
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_SELECTED_VIEWPT )
       else if ( !newCommand.compare( "REMOVE_SELECTED_VIEWPT" ) )      
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-         //this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->cam_id = (unsigned int)commandIds.at( 0 );
          this->RemoveViewPt();
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = REMOVE_SELECTED_VIEWPT;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_POINT_TO_FLYTHROUGH )
       else if ( !newCommand.compare( "ADD_NEW_POINT_TO_FLYTHROUGH" ) )      
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-         //this->AddViewPtToFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
-         //                             (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
          this->AddViewPtToFlyThrough( (unsigned int)commandIds.at( 0 ), 
                                       (unsigned int)commandIds.at( 1 ) );
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == INSERT_NEW_POINT_IN_FLYTHROUGH )
       else if ( !newCommand.compare( "INSERT_NEW_POINT_IN_FLYTHROUGH" ) )      
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-         //this->InsertViewPtInFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
-         //                                (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ),
-         //                                (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) );
          this->InsertViewPtInFlyThrough( (unsigned int)commandIds.at( 0 ), 
                                          (unsigned int)commandIds.at( 1 ),
                                          (unsigned int)commandIds.at( 2 ) );
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_POINT_FROM_FLYTHROUGH )
       else if ( !newCommand.compare( "REMOVE_POINT_FROM_FLYTHROUGH" ) )      
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-         //this->RemoveFlythroughPt( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
-         //                          (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
          this->RemoveFlythroughPt( (unsigned int)commandIds.at( 0 ), 
                                    (unsigned int)commandIds.at( 1 ) );
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == DELETE_ENTIRE_FLYTHROUGH )
       else if ( !newCommand.compare( "DELETE_ENTIRE_FLYTHROUGH" ) )      
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-         //this->DeleteEntireFlythrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
          this->DeleteEntireFlythrough( (unsigned int)commandIds.at( 0 ) );
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_FLYTHROUGH )
       else if ( !newCommand.compare( "ADD_NEW_FLYTHROUGH" ) )      
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
          this->AddNewFlythrough();
          this->WriteToFile( this->quatCamFileName );
-         //this->LoadFromFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = ADD_NEW_FLYTHROUGH;
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RUN_ACTIVE_FLYTHROUGH )
       else if ( !newCommand.compare( "RUN_ACTIVE_FLYTHROUGH" ) )      
       {
-         //this->activeFlyThrough = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->activeFlyThrough = (unsigned int)commandIds.at( 0 );
          this->_runFlyThrough = true;
          this->activecam = true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STOP_ACTIVE_FLYTHROUGH )
       else if ( !newCommand.compare( "STOP_ACTIVE_FLYTHROUGH" ) )      
       {
          this->TurnOffMovement();
          return true;
       }
-      //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_MOVEMENT_SPEED )
       else if ( !newCommand.compare( "CHANGE_MOVEMENT_SPEED" ) )      
       {
-         //this->movementSpeed = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->movementSpeed = commandIds.at( 0 );
          return true;
       }
+      _updateViewGUIPointData();
    }
    return flag;
 }
+/////////////////////////////////////////////////////
+void cfdQuatCamHandler::_updateViewGUIPointData()
+{
+    VE_XML::Command* viewPointGUIData = new VE_XML::Command( );
+    viewPointGUIData->SetCommandName( "VIEWPOINT_GUI_DATA" );
+    size_t nViewPoints = this->QuatCams.size( );
 
-
+    ///This will need to change once we can modify viewpoint names
+    std::stringstream name;
+    for(size_t i = 0; i < nViewPoints; ++i)
+    {
+        name<<"View Location_"<<i;
+        VE_XML::DataValuePair* viewPointNames = new VE_XML::DataValuePair( );
+        viewPointNames->SetData( "View Location", name.str() );
+        viewPointGUIData->AddDataValuePair( viewPointNames );
+        name.clear( );
+    }
+    VE_Xplorer::CommandHandler::instance( )->SetXMLCommand( viewPointGUIData );
+}
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
 {
@@ -703,12 +691,6 @@ int cfdQuatCamHandler::getNumLocs()
 
 std::vector< std::vector <int> > cfdQuatCamHandler::getFlyThroughs()
 {
-   /*if ( flyThroughList.empty() )
-   {
-      std::vector<int> temp;
-      temp.push_back( 0 );
-      flyThroughList.push_back( temp );
-   }*/
    return this->flyThroughList;
 }
 

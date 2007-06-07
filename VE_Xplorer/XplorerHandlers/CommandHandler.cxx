@@ -66,24 +66,6 @@ void CommandHandler::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
 {
-    
-    /*// New xml command queue
-    if ( !commandVectorQueue.empty() )
-    {
-        std::vector< Command* >::iterator iter;
-        iter = commandVectorQueue.begin();
-        (*bufferCommand) = (*(*iter));
-        delete commandVectorQueue.at( 0 );
-        commandVectorQueue.erase( iter );
-                 std::stringstream commandStatement;
-                commandStatement<<"Executing: "<<bufferCommand->GetCommandName()<<std::endl;
-                SetXplorerData(commandStatement.str());
-    }
-    else
-    {
-        ;
-    }*/
-    
     //Now send the data to xplorer
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -97,24 +79,15 @@ bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
 
     if ( !CORBA::is_nil( m_xplorer->_this() ) && !xmlDocument.empty() )
     {
-       try
-       {
-          // CORBA releases the allocated memory so we do not have to
-          // Old way
-          //vjobs->SetCommandString( xmlDocument.c_str() );
+        try
+        {
           //new way
-          m_xplorer->SetCommand( xmlDocument.c_str() );
-       }
-       catch ( ... )
-       {
-          //VjObs::_tao_release( vjobs );
-          //if ( !IsConnectedToXplorer() )
-          {  
-             //wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
-             //              "Communication Failure", wxOK | wxICON_INFORMATION );
-             return false;
-          }
-       }
+          m_xplorer->SetXplorerData( xmlDocument.c_str() );
+        }
+        catch ( ... )
+        {
+            return false;
+        }
     }
    //Clean up memory
    //delete veCommand;

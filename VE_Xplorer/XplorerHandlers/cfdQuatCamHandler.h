@@ -164,10 +164,14 @@ public:
    int cfdId;
    int cfdIso_value;
 protected:
+    ///Update the gui with the new data
+    void _updateViewGUIPointData();
+
    std::map<std::string,VE_EVENTS::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
 
 
 private:
+
    cfdQuatCam* thisQuatCam;
    osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
    cfdNavigate* _nav;

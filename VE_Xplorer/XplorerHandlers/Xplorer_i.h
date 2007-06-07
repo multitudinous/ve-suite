@@ -122,6 +122,9 @@ public:
    ///Determine if we are in cluster mode or not
    bool GetClusterMode( void );
 
+   ///Get the command queue
+   std::vector <VE_XML::Command*> GetCommandQueue();
+
    VE_Xplorer::cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
    VE_XML::Command* bufferCommand;///< Data to hold command data
    std::vector< VE_Xplorer::cfdCommandArray* > commandQueue; ///< vector to hold current list of commands

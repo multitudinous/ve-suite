@@ -113,6 +113,10 @@ public:
    VjObs_ptr GetXplorerPointer( void );
    ///Return log pointer
    PEThread* GetMessageLog( void );
+
+   ///Get the current commands from xplorer
+   std::vector<VE_XML::XMLObject*> GetGUIUpdateCommands();
+   
    ///Call set id on all modules in the current network
    bool SetID( int moduleId, std::string moduleName );
    ///Event to update the text feedback window

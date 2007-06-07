@@ -260,22 +260,11 @@ bool CORBAServiceList::ConnectToNamingService( void )
       CORBA::Object_var naming_context_object =
          orb->resolve_initial_references ("NameService");
       naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-      /*if (naming_context==CORBA)
-      {
-         poa->destroy (1, 1);
-		    // Finally destroy the ORB
-		    orb->destroy();
-		    std::cerr << "Naming service not found!" << std::endl;
-		    return false;
-		    }
-      */
       GetMessageLog()->SetMessage( "Initialized ORB and connection to the Naming Service\n");
       return true;
    }
    catch ( CORBA::Exception& ex ) 
    {  
-      //		poa->destroy (1, 1);
-      // Finally destroy the ORB
       orb->destroy();
       GetMessageLog()->SetMessage( "CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
       GetMessageLog()->SetMessage( ex._info().c_str() );
@@ -335,13 +324,9 @@ void CORBAServiceList::CreateCORBAModule( void )
    try
    {
       long id = time(NULL);
-      //char* uiname;
-      //sprintf(uiname, "UIClient%ld", id);
       std::ostringstream dirStringStream;
       dirStringStream << "UIClient" << id;
       std::string UINAME = dirStringStream.str();
-      //uiname = (char*)dirString.c_str();
-      //std::string UINAME = uiname;
       CosNaming::Name name(1);
       name.length(1);
       name[0].id = CORBA::string_dup ("Executive");
@@ -446,13 +431,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
 
-   // Create the command and data value pairs
-   //VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
-   //dataValuePair->SetData( "CREATE_NEW_DATASETS", veModel );
-   //VE_XML::Command* veCommand = new VE_XML::Command();
-   //veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
-   //veCommand->AddDataValuePair( dataValuePair );
-
    // New need to destroy document and send it
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
@@ -473,18 +451,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
           return false;
       }      
    }
-   /*if ( !CORBA::is_nil( m_xplorer.in() ) && !copiedCommandForAMITesting.empty() )
-   {
-      try
-      {
-         // CORBA releases the allocated memory so we do not have to
-         m_xplorer->SetCommand( copiedCommandForAMITesting.c_str() );
-      }
-      catch ( ... )
-      {
-         return false;
-      }
-   }*/
    //Clean up memory
    //delete veCommand;
    return true;
@@ -522,6 +488,11 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
       return false;
    }
    return true;
+}
+///////////////////////////////////////////////////////////////////////
+std::vector< VE_XML::XMLObject*> CORBAServiceList::GetGUIUpdateCommands()
+{
+    return p_ui_i->GetXplorerData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CORBAServiceList::GetNetwork( void )

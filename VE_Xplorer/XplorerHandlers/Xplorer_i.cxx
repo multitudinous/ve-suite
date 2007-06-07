@@ -205,27 +205,6 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 0 );
 
-   /*for ( iter = cfdModelHandler::instance()->GetActiveModel()->transientDataSets.begin(); 
-         iter != cfdModelHandler::instance()->GetActiveModel()->transientDataSets.end(); ++iter)
-   { 
-      // Set the active datasets
-      commandQueue.push_back( new cfdCommandArray() );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_STEADYSTATE_DATASET );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, iter->first );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC, activeScalar);
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MIN, activeMinMax[ 0 ] );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MAX, activeMinMax[ 1 ] );
-      // Set active Vector
-      commandQueue.push_back( new cfdCommandArray() );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_VECTOR );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC,  activeVector);
-      // Set current viz      
-      commandQueue.push_back( new cfdCommandArray() );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, newId );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, newIsoValue );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, newPreState );
-   }*/
-
    commandQueue.push_back( new cfdCommandArray() );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
@@ -322,15 +301,6 @@ void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
       //std::cout << "slave: " << std::endl << matrix << std::endl;
       VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 
-      /*if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
-      {
-         cfdTempAnimation* the_sequence = cfdSteadyStateVizHandler::instance()->GetActiveAnimation();
-         if ( the_sequence != NULL )
-         {
-            the_sequence->SetCurrentFrame( (int)this->getTimesteps() );
-            //std::cout << " cfdTimesteps in preframe : " << cfdTimesteps << std::endl;
-         }
-      }*/
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
@@ -389,5 +359,4 @@ void Body_VEXplorer_i::SetXplorerData( std::string input )
         
        currentConductor->second->sendc_SetXplorerData(xplorerComAMIHandler.in(), input.c_str());
     }
-    ///uiCom->SetXplorerData( input.c_str() );
 }
