@@ -43,20 +43,20 @@
 // --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
 
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
 #include <gmtl/Matrix.h>
 
-namespace VE_SceneGraph
+namespace VE_Xplorer
 {
-namespace Utilities
-{
-class VE_SCENEGRAPH_UTILS_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
+class VE_XPLORER_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    LocalToWorldTransform( osg::PositionAttitudeTransform* worldNode, osg::PositionAttitudeTransform* localNode );
+    LocalToWorldTransform( VE_SceneGraph::DCS* worldNode, VE_SceneGraph::DCS* localNode );
     virtual ~LocalToWorldTransform();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
@@ -64,12 +64,12 @@ public:
     gmtl::Matrix44d& GetLocalToWorldTransform();
 
 private:
-    osg::ref_ptr< osg::PositionAttitudeTransform > m_worldNode;
-    osg::ref_ptr< osg::PositionAttitudeTransform > m_localNode;
+    osg::ref_ptr< VE_SceneGraph::DCS > m_worldNode;
+    osg::ref_ptr< VE_SceneGraph::DCS > m_localNode;
+
     gmtl::Matrix44d m_localToWorldTransform;
 
 };
-}
 }
 
 #endif //LOCAL_TO_WORLD_TRANSFORM_H

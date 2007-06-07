@@ -199,10 +199,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LocalToWorldTransform.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\MaterialHelper.cxx"
 				>
 			</File>
@@ -234,10 +230,6 @@
 			</File>
 			<File
 				RelativePath=".\ComputeBoundsVisitor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LocalToWorldTransform.h"
 				>
 			</File>
 			<File

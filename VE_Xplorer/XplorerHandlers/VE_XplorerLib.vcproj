@@ -598,6 +598,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LocalToWorldTransform.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialModeUpdateEH.cxx"
 				>
 			</File>
@@ -1114,6 +1118,10 @@
 			</File>
 			<File
 				RelativePath=".\KeyboardMouseEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LocalToWorldTransform.h"
 				>
 			</File>
 			<File

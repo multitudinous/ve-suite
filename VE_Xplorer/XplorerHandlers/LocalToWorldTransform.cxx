@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldTransform.h"
+#include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
 // --- OSG Includes --- //
 #include <osg/PositionAttitudeTransform>
@@ -41,10 +41,10 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph::Utilities;
+using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldTransform::LocalToWorldTransform( osg::PositionAttitudeTransform* worldNode, osg::PositionAttitudeTransform* localNode )
+LocalToWorldTransform::LocalToWorldTransform( VE_SceneGraph::DCS* worldNode, VE_SceneGraph::DCS* localNode )
 :
 NodeVisitor( TRAVERSE_PARENTS )
 {
@@ -52,6 +52,7 @@ NodeVisitor( TRAVERSE_PARENTS )
 
     m_worldNode = worldNode;
     m_localNode = localNode;
+
     localNode->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,33 +65,12 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
 {
     if( pat.getName() == m_worldNode->getName() )
     {
-        //m_localToWorldTransform.set( osg::computeLocalToWorld( _nodePath ).ptr() );
-
         for( size_t i = 0; i < _nodePath.size(); ++i )
         {
-            osg::Matrixd matrix;
-            matrix.identity();
-            osg::ref_ptr< osg::Node > node = _nodePath.at( i );
-            matrix.setTrans( static_cast< osg::PositionAttitudeTransform* >( node.get() )->getPosition() );
-            matrix.setRotate( static_cast< osg::PositionAttitudeTransform* >( node.get() )->getAttitude() );
-
-            gmtl::Matrix44d temp;
-            gmtl::identity( temp );
-            temp.set( matrix.ptr() );
-
-            m_localToWorldTransform *= temp;
+            m_localToWorldTransform *= static_cast< VE_SceneGraph::DCS* >( _nodePath.at( i ) )->GetMat();;
         }
-        
-        //Premultiply by the localNode transform since it is not in the node path
-        osg::Matrix localTransform;
-        localTransform.identity();
-        localTransform.setTrans( m_localNode->getPosition() );
-        localTransform.setRotate( m_localNode->getAttitude() );
 
-        gmtl::Matrix44d local;
-        local.set( localTransform.ptr() );
-
-        m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( local );
+        m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( m_localNode->GetMat() );
 
         return;
     }

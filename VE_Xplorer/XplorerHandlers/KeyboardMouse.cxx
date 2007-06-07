@@ -40,7 +40,7 @@
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 
-#include "VE_Xplorer/SceneGraph/Utilities/LocalToWorldTransform.h"
+#include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
 
 // --- Bullet Stuff --- //
@@ -374,8 +374,8 @@ void KeyboardMouse::ProcessNavigationEvents()
     } 
     else
     {
-        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
-        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+        osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
+        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
         m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
         m_currentTransform = m_localToWorldTransform * activeDCS->GetMat();
@@ -817,8 +817,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     if( activeDCS->GetName() != "World DCS" )
     {
         //Move the center point to the center of the selected object
-        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
-        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+        osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
+        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
         osg::Matrixd interchange;
         interchange.identity();
