@@ -107,7 +107,7 @@ public:
     ///\param b
     ///\param n
     ///\param f
-    void SetFrustumValues( float l, float r, float t, float b, float n, float f );
+    void SetFrustumValues( double l, double r, double t, double b, double n, double f );
 
     ///Bring all objects into view
     void FrameAll();
@@ -162,28 +162,28 @@ private:
     ///Do not know how to describe this
     ///\param dx The change in the x direction
     ///\param dy The change in the y direction
-    void RotateView( float dx, float dy );
+    void RotateView( double dx, double dy );
 
     ///Do not know how to describe this
     ///\param dx The change in the x direction
     ///\param dy The change in the y direction	
-    void Twist( float dx, float dy );
+    void Twist( double dx, double dy );
 
     ///Handles movement in and out of the scene
     ///\param dy The change in the y direction
-    void Zoom( float dy );
+    void Zoom( double dy );
 
     ///Handles panning movements through the scene
     ///\param dx The change in the x direction
     ///\param dy The change in the y direction
-    void Pan( float dx, float dy );
+    void Pan( double dx, double dy );
 
     ///Handles rotation of the scene
     ///\param x
     ///\param y
     ///\param z
     ///\param angle
-    void Rotate( float x, float y, float z, float angle );
+    void Rotate( double x, double y, double z, double angle );
 
     bool m_animate;///<Determines whether in animation mode
 
@@ -196,18 +196,18 @@ private:
     int m_x;///<x position of the mouse
     int m_y;///<y position of the mouse
 
-    float m_aspectRatio;///<Aspect ratio of window
-    float m_fovy;///<Field of view in the y direction
-    float m_leftFrustum;///<The left frustum value
-    float m_rightFrustum;///<The right frustum value
-    float m_topFrustum;///<The top frustum value
-    float m_bottomFrustum;///<The bottom frustum value
-    float m_nearFrustum;///<The near frustum value
-    float m_farFrustum;///<The far frustum value
-    float m_currPos[2];///<The current mouse position
-    float m_prevPos[2];///<The previous mouse position
-    float m_magnitude;///<The magnitude of the mouse movement
-    float m_sensitivity;///<
+    double m_aspectRatio;///<Aspect ratio of window
+    double m_fovy;///<Field of view in the y direction
+    double m_leftFrustum;///<The left frustum value
+    double m_rightFrustum;///<The right frustum value
+    double m_topFrustum;///<The top frustum value
+    double m_bottomFrustum;///<The bottom frustum value
+    double m_nearFrustum;///<The near frustum value
+    double m_farFrustum;///<The far frustum value
+    double m_currPos[2];///<The current mouse position
+    double m_prevPos[2];///<The previous mouse position
+    double m_magnitude;///<The magnitude of the mouse movement
+    double m_sensitivity;///<
 
     double m_xminScreen;///<The minimum x position of the screen
     double m_xmaxScreen;///<The maximum x position of the screen

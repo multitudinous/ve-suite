@@ -365,6 +365,9 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    std::cout << "Before transformed to world coordinates" << std::endl;
+    std::cout << activeDCS->GetMat() << std::endl;
+
     if( activeDCS->GetName() == "World DCS" )
     {
         m_currentTransform = activeDCS->GetMat();
@@ -380,6 +383,9 @@ void KeyboardMouse::ProcessNavigationEvents()
 
         m_currentTransform.set( localTransform.ptr() );
     }
+
+    std::cout << "After transformed to world coordinates" << std::endl;
+    std::cout << m_currentTransform << std::endl;
 
     //Translate world dcs by distance that the m_head is away from the origin
     gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -415,6 +421,9 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix *= m_deltaTransform;
     matrix *= accuRotation;
 
+    std::cout << "After delta transform has been applied" << std::endl;
+    std::cout << matrix << std::endl;
+
     //Set the activeDCS w/ new transform
     if( activeDCS->GetName() == "World DCS" )
     {
@@ -432,6 +441,9 @@ void KeyboardMouse::ProcessNavigationEvents()
         holder.set( temp.ptr() );
         activeDCS->SetMat( holder );
     }
+
+    std::cout << "After transformed back to local coordinates" << std::endl;
+    std::cout << activeDCS->GetMat() << std::endl;
 
     //If not in animation mode, reset the transform
     if( !m_animate )
@@ -451,10 +463,10 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     m_width = w;
     m_height = h;
 
-    m_aspectRatio = float( m_width ) / float( m_height );
+    m_aspectRatio = double( m_width ) / double( m_height );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float n, float f )
+void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, double n, double f )
 {
     m_leftFrustum = l;
     m_rightFrustum = r;
@@ -463,9 +475,9 @@ void KeyboardMouse::SetFrustumValues( float l, float r, float t, float b, float 
     m_nearFrustum = n;
     m_farFrustum = f;
 
-    float topAngle = OneEightyDivPI * atan( m_topFrustum / m_nearFrustum );
-    float tempDiv = fabs( m_bottomFrustum ) / m_nearFrustum;
-    float bottomAngle = OneEightyDivPI * atan( tempDiv );
+    double topAngle = OneEightyDivPI * atan( m_topFrustum / m_nearFrustum );
+    double tempDiv = fabs( m_bottomFrustum ) / m_nearFrustum;
+    double bottomAngle = OneEightyDivPI * atan( tempDiv );
 
     m_fovy = topAngle + bottomAngle;
 }
@@ -476,13 +488,13 @@ void KeyboardMouse::FrameAll()
     gmtl::Matrix44d matrix = switchNode->GetMat();
 
     //Get the selected objects and expand by their bounding box
-    float Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
+    double Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
     osg::BoundingSphere bs = switchNode->computeBound();
 
-    float x = bs.center().x();
+    double x = bs.center().x();
     matrix.mData[12] -= x;
 
-    float y;
+    double y;
     if( m_aspectRatio <= 1.0f )
     {
         y = ( bs.radius() / tan( Theta ) ) * m_aspectRatio;
@@ -494,7 +506,7 @@ void KeyboardMouse::FrameAll()
 
     matrix.mData[13] = y;
 
-    float z = bs.center().z();
+    double z = bs.center().z();
     matrix.mData[14] -= z;
 
     switchNode->SetMat( matrix );
@@ -533,10 +545,10 @@ void KeyboardMouse::NavMouse()
     }
     else if( m_state == 1 )
     {
-        m_currPos[0] = float( m_x ) / float( m_width );
-        m_currPos[1] = float( m_y ) / float( m_height );
-        m_prevPos[0] = float( m_x ) / float( m_width );
-        m_prevPos[1] = float( m_y ) / float( m_height );
+        m_currPos[0] = double( m_x ) / double( m_width );
+        m_currPos[1] = double( m_y ) / double( m_height );
+        m_prevPos[0] = double( m_x ) / double( m_width );
+        m_prevPos[1] = double( m_y ) / double( m_height );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,11 +559,11 @@ void KeyboardMouse::NavMotion()
         return;
     }
 
-    m_currPos[0] = float( m_x ) / float( m_width );
-    m_currPos[1] = float( m_y ) / float( m_height );
+    m_currPos[0] = double( m_x ) / double( m_width );
+    m_currPos[1] = double( m_y ) / double( m_height );
 
-    float dx = m_currPos[0] - m_prevPos[0];
-    float dy = m_currPos[1] - m_prevPos[1];
+    double dx = m_currPos[0] - m_prevPos[0];
+    double dy = m_currPos[1] - m_prevPos[1];
 
     m_magnitude = sqrtf( dx * dx + dy * dy );
     if( m_magnitude < m_sensitivity )
@@ -624,13 +636,13 @@ void KeyboardMouse::ResetTransforms()
     VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::RotateView( float dx, float dy )
+void KeyboardMouse::RotateView( double dx, double dy )
 {
     gmtl::Matrix44d mat;
-    float tb_axis[3];
+    double tb_axis[3];
 
     gmtl::identity( mat );
-    float angle = m_magnitude * 400.0f;
+    double angle = m_magnitude * 400.0f;
 
     tb_axis[0] = mat[0][0] * dy + mat[2][0] * dx;
     tb_axis[1] = mat[0][1] * dy + mat[2][1] * dx;
@@ -639,40 +651,51 @@ void KeyboardMouse::RotateView( float dx, float dy )
     Rotate( tb_axis[0], tb_axis[1], tb_axis[2], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Twist( float dx, float dy )
+void KeyboardMouse::Twist( double dx, double dy )
 {
     gmtl::Matrix44d mat;
     gmtl::identity( mat );
 
-    float Theta = atan2f( m_prevPos[0] - 0.5, m_prevPos[1] - 0.5 );
-    float newTheta = atan2f( m_currPos[0] - 0.5, m_currPos[1] - 0.5 );
-    float angle = ( OneEightyDivPI ) * ( Theta - newTheta );
+    double Theta = atan2f( m_prevPos[0] - 0.5, m_prevPos[1] - 0.5 );
+    double newTheta = atan2f( m_currPos[0] - 0.5, m_currPos[1] - 0.5 );
+    double angle = ( OneEightyDivPI ) * ( Theta - newTheta );
 
     Rotate( mat[1][0], mat[1][1], mat[1][2], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Zoom( float dy )
+void KeyboardMouse::Zoom( double dy )
 {
-    float viewlength = center_point->mData[1];
-    float d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
+    double viewlength = center_point->mData[1];
+    double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
     m_deltaTransform.mData[13] = d;
 
     center_point->mData[1] += d;
 
+    //Test if center point has breached our specified threshold
     if( center_point->mData[1] < *m_threshold )
     {
-        center_point->mData[1] = *m_jump;
+        //Only jump center point for the worldDCS
+        if( activeDCS->GetName() == "World DCS" )
+        {
+            center_point->mData[1] = *m_jump;
+        }
+        //Prevent the center point from jumping if we are manipulating a selected object
+        else
+        {
+            m_deltaTransform.mData[13] = 0;
+            center_point->mData[1] -= d;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Pan( float dx, float dy )
+void KeyboardMouse::Pan( double dx, double dy )
 {
-    float d = center_point->mData[1];
-    float theta = ( m_fovy * 0.5f ) * ( PIDivOneEighty );
-    float b = 2 * d * tan( theta );
-    float dwx = dx * b * m_aspectRatio;
-    float dwy = -dy * b;
+    double d = center_point->mData[1];
+    double theta = ( m_fovy * 0.5f ) * ( PIDivOneEighty );
+    double b = 2 * d * tan( theta );
+    double dwx = dx * b * m_aspectRatio;
+    double dwy = -dy * b;
 
     m_deltaTransform.mData[12] = dwx;
     m_deltaTransform.mData[14] = dwy;
@@ -681,12 +704,12 @@ void KeyboardMouse::Pan( float dx, float dy )
     center_point->mData[2] += dwy;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Rotate( float x, float y, float z, float angle )
+void KeyboardMouse::Rotate( double x, double y, double z, double angle )
 {
-    float rad = angle * PIDivOneEighty;
-    float cosAng = cos( rad );
-    float sinAng = sin( rad );
-    float denom = sqrtf( x * x + y * y + z * z );
+    double rad = angle * PIDivOneEighty;
+    double cosAng = cos( rad );
+    double sinAng = sin( rad );
+    double denom = sqrtf( x * x + y * y + z * z );
 
     if( denom != 0.0f )
     {
@@ -745,6 +768,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         osg::Vec3d worldCenter = activeDCS->getBound().center();
         center_point->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
 
+        selectedDCS = 0;
+
         return;
     }
 
@@ -761,6 +786,17 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     //Make sure it is good
     if( !objectHit._geode.valid() )
     {
+        vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit Invalid object selected" 
+                              << std::endl << vprDEBUG_FLUSH;
+
+        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+
+        //Move the center point to the center of all objects in the world
+        osg::Vec3d worldCenter = activeDCS->getBound().center();
+        center_point->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
+
+        selectedDCS = 0;
+
         return;
     } 
 
@@ -798,5 +834,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         osg::Vec3d center = activeDCS->getBound().center() * ltwt->GetLocalToWorldTransform();
         center_point->set( center.x(), center.y(), center.z() );
     }
+
+    selectedDCS = activeDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -61,11 +61,16 @@ using namespace VE_Xplorer;
 DeviceHandler::DeviceHandler()
 :
 activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ),
+selectedDCS( 0 ),
 device_mode( "World Navigation" ),
 center_point( 0, 0, 0 ),
 m_threshold( 0.5f ),
 m_jump( 10.0f )
 {
+    //Move the center point to the center of all objects in the world
+    osg::Vec3d worldCenter = activeDCS->getBound().center();
+    center_point.set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
+
     //Initialize Devices
     devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
     devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
@@ -76,6 +81,7 @@ m_jump( 10.0f )
     for( itr = devices.begin(); itr != devices.end(); itr++ )
     {
         itr->second->SetActiveDCS( activeDCS.get() );
+        itr->second->SetSelectedDCS( selectedDCS.get() );
         itr->second->SetCenterPoint( &center_point );
         itr->second->SetCenterPointThreshold( &m_threshold );
         itr->second->SetCenterPointJump( &m_jump );
@@ -116,9 +122,13 @@ void DeviceHandler::ExecuteCommands()
 
         if( currentEventHandler != _eventHandlers.end() )
         {
-            devices[ "Tablet" ]->SetActiveDCS( activeDCS.get() );
-            devices[ "Wand" ]->SetActiveDCS( activeDCS.get() );
-            devices[ "KeyboardMouse" ]->SetActiveDCS( activeDCS.get() );
+            //Set properties in Devices
+            std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+            for( itr = devices.begin(); itr != devices.end(); itr++ )
+            {
+                itr->second->SetActiveDCS( activeDCS.get() );
+                itr->second->SetSelectedDCS( selectedDCS.get() );
+            }
 
             currentEventHandler->second->SetGlobalBaseObject( active_device );
             currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
@@ -145,13 +155,22 @@ void DeviceHandler::SetActiveDevice( std::string device )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetDeviceMode( std::string mode )
 {
-   device_mode = mode;
+    device_mode = mode;
 
-   if( device_mode == "World Navigation" )
-   {
+    if( device_mode == "World Navigation" )
+    {
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
         active_device->SetActiveDCS( activeDCS.get() );
-   }
+    }
+    else if( device_mode == "Object Navigation" )
+    {
+        if( selectedDCS.valid() )
+        {
+            activeDCS = selectedDCS;
+        }
+
+        active_device->SetActiveDCS( activeDCS.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
@@ -176,6 +195,9 @@ void DeviceHandler::ProcessDeviceEvents()
 
     //Get the active dcs from the active device
     activeDCS = active_device->GetActiveDCS();
+
+    //Get the selected dcs from the active device
+    selectedDCS = active_device->GetSelectedDCS();
 
     //Always do this be default
     devices[ "Tablet" ]->UpdateNavigation();

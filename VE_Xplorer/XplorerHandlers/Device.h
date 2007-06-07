@@ -96,15 +96,22 @@ public:
     ///\param dcs The current active coordinate system
     void SetActiveDCS( VE_SceneGraph::DCS* dcs );
 
+    ///Get the active coordinate system
+    VE_SceneGraph::DCS* GetSelectedDCS();
+
+    ///Set the active coordinate system
+    ///\param dcs The current active coordinate system
+    void SetSelectedDCS( VE_SceneGraph::DCS* dcs );
+
     ///Set the center point
     ///\param cp The center point
     void SetCenterPoint( gmtl::Point3d* cp );
 
     ///Sets the center point threshold
-    void SetCenterPointThreshold( float* threshold );
+    void SetCenterPointThreshold( double* threshold );
 
     ///Sets the center point delta jump
-    void SetCenterPointJump( float* jump );
+    void SetCenterPointJump( double* jump );
 
 protected:
     ///Process the selection of a piece of geometry 
@@ -120,10 +127,11 @@ protected:
     ///\param endPoint The end point
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
-    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<Active DCS for the devices to operate on
+    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<The active DCS
+    osg::ref_ptr< VE_SceneGraph::DCS > selectedDCS;///<The DCS which is selected
     gmtl::Point3d* center_point;///<The point about which rotation occurs
-    float* m_threshold;///<
-    float* m_jump;///<
+    double* m_threshold;///<
+    double* m_jump;///<
 };
 }
 

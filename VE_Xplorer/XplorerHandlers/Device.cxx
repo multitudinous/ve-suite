@@ -46,7 +46,8 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
 :
-//device_mode( 0 ),
+activeDCS( 0 ),
+selectedDCS( 0 ),
 center_point( 0 ),
 m_threshold( 0 ),
 m_jump( 0 )
@@ -86,7 +87,17 @@ VE_SceneGraph::DCS* Device::GetActiveDCS()
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetActiveDCS( VE_SceneGraph::DCS* dcs )
 {
-   activeDCS = dcs;
+    activeDCS = dcs;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::DCS* Device::GetSelectedDCS()
+{
+    return selectedDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::SetSelectedDCS( VE_SceneGraph::DCS* dcs )
+{
+    selectedDCS = dcs;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPoint( gmtl::Point3d* cp )
@@ -94,12 +105,12 @@ void Device::SetCenterPoint( gmtl::Point3d* cp )
    center_point = cp;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetCenterPointThreshold( float* threshold )
+void Device::SetCenterPointThreshold( double* threshold )
 {
     m_threshold = threshold;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetCenterPointJump( float* jump )
+void Device::SetCenterPointJump( double* jump )
 {
     m_jump = jump;
 }

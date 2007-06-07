@@ -24,29 +24,29 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::DisplayInformation()
 {
-   display_switch = new VE_SceneGraph::Switch;
-   display_switch->SetName( "Display Information Switch Node" );
-	VE_SceneGraph::SceneManager::instance()->GetRootNode()->AddChild( display_switch.get() );
+    display_switch = new VE_SceneGraph::Switch;
+    display_switch->SetName( "Display Information Switch Node" );
+    VE_SceneGraph::SceneManager::instance()->GetRootNode()->AddChild( display_switch.get() );
 
-	framerate = new osg::CameraNode;
-   framerate->setName( "Framerate Node" );
-	wcs = new osg::CameraNode;
-   wcs->setName( "World Coordinate System Node" );
+    framerate = new osg::CameraNode;
+    framerate->setName( "Framerate Node" );
+    wcs = new osg::CameraNode;
+    wcs->setName( "World Coordinate System Node" );
 
-	framerate_text = new osgText::Text;
-	wcs_x_text = new osgText::Text;
-	wcs_y_text = new osgText::Text;
-	wcs_z_text = new osgText::Text;
+    framerate_text = new osgText::Text;
+    wcs_x_text = new osgText::Text;
+    wcs_y_text = new osgText::Text;
+    wcs_z_text = new osgText::Text;
 
-	//The physical model for the world coordinate system display
-	osg::ref_ptr< VE_SceneGraph::DCS > dcs = new VE_SceneGraph::DCS();
-	wcs_model = new VE_SceneGraph::CADEntity( GetVESuite_WCS(), dcs.get(), true );
+    //The physical model for the world coordinate system display
+    osg::ref_ptr< VE_SceneGraph::DCS > dcs = new VE_SceneGraph::DCS();
+    wcs_model = new VE_SceneGraph::CADEntity( GetVESuite_WCS(), dcs.get(), true );
 
-	display_switch->addChild( framerate.get() );
-	display_switch->addChild( wcs.get() );
+    display_switch->addChild( framerate.get() );
+    display_switch->addChild( wcs.get() );
 
-	display_switch->setChildValue( framerate.get(), false );
-	display_switch->setChildValue( wcs.get(), false );
+    display_switch->setChildValue( framerate.get(), false );
+    display_switch->setChildValue( wcs.get(), false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::~DisplayInformation()
@@ -68,11 +68,11 @@ void DisplayInformation::InitFrameRateDisplay()
 	//framerate->setStateSet( stateset.get() );
 
 	{
-      geode->addDrawable( framerate_text.get() );
-      framerate_text->setFont( framerate_font );
-		framerate_text->setCharacterSize( 20 );
-		framerate_text->setAxisAlignment( osgText::Text::SCREEN );
-		framerate_text->setAlignment( osgText::Text::RIGHT_BOTTOM );
+        geode->addDrawable( framerate_text.get() );
+        framerate_text->setFont( framerate_font );
+        framerate_text->setCharacterSize( 20 );
+        framerate_text->setAxisAlignment( osgText::Text::SCREEN );
+        framerate_text->setAlignment( osgText::Text::RIGHT_BOTTOM );
 	}
 
    //Set the view matrix    
