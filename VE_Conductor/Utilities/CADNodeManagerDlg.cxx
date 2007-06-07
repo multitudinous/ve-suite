@@ -499,7 +499,6 @@ void CADNodeManagerDlg::_cloneNode(wxCommandEvent& WXUNUSED(event))
                                wxString(newClone->GetNodeName().c_str(), wxConvUTF8 )
                                ,0,1,new CADTreeBuilder::TreeNodeData(newClone));
      }
-
       _commandName = std::string("CAD_ADD_NODE");
 
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
@@ -624,8 +623,6 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
          dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newPart);
          SetRootCADNode(_rootNode);
       }
-      
-  
       _commandName = "CAD_ADD_NODE";
       VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
       cadNode->SetDataType(std::string("XMLOBJECT"));
@@ -689,6 +686,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
    newCADPart->SetCADFileName( ConvertUnicode( vegFileNamePath.c_str() ) );
    //_toggleNodeOnOff[newCADPart->GetID()] = true;
    newCADPart->SetVisibility(true);
+
    dynamic_cast<CADAssembly*>(_activeCADNode)->AddChild(newCADPart);
 
    _geometryTree->AppendItem(_activeTreeNode->GetId(),wxString(newCADPart->GetNodeName().c_str(), wxConvUTF8),
@@ -799,8 +797,11 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
     }
     if(_activeTreeNode)
     {
-      CADNode* parentCADNode = dynamic_cast<CADTreeBuilder::TreeNodeData*>(_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
+       CADNode* parentCADNode = 
+                dynamic_cast<CADTreeBuilder::TreeNodeData*>
+                            (_geometryTree->GetItemData(_geometryTree->GetItemParent(_activeTreeNode->GetId())))->GetNode();
        _activeCADNode = _activeTreeNode->GetNode();
+
        _commandName = std::string("CAD_DELETE_NODE");
 
        VE_XML::DataValuePair* deleteNode = new VE_XML::DataValuePair();
@@ -833,7 +834,7 @@ void CADNodeManagerDlg::_deleteNode(wxCommandEvent& WXUNUSED(event))
              break;
           }
        }
-
+       
        _geometryTree->Delete(_activeTreeNode->GetId()); 
 	    //_ensureTree();
     }
@@ -867,32 +868,104 @@ void CADNodeManagerDlg::_onEndNodeMove(wxTreeEvent& event)
          dynamic_cast<CADTreeBuilder::TreeNodeData*>
              (_geometryTree->GetItemData(m_movingNode));
 
-    CADTreeBuilder::TreeNodeData* parentCADNode = 
+    CADTreeBuilder::TreeNodeData* newParentCADNode = 
          dynamic_cast<CADTreeBuilder::TreeNodeData*>
              (_geometryTree->GetItemData(newParentNode));
 
     if ( !newParentNode.IsOk()||
-        ( parentCADNode->GetNode()->GetNodeType() != "Assembly" ) )
+        ( newParentCADNode->GetNode()->GetNodeType() != "Assembly" ) )
     {
         return;
     }
-    
-    _geometryTree->Delete(m_movingNode);
-    if( m_movingNodeType == "Part" )
-    {
-        _geometryTree->AppendItem(newParentNode,
-                               wxString(m_movingNodeName.c_str(), wxConvUTF8 )
-                               ,0,1);
-    }
-    else if( m_movingNodeType == "Assembly" )
-    {
-       _geometryTree->AppendItem(newParentNode,
-                               wxString(m_movingNodeName.c_str(), wxConvUTF8 )
-                               ,0,2);
+    //Move the node from it's old parent and add it to the new one
+    _moveNodeToNewParent( movingCADNode->GetNode( ),
+                          oldParentNode,
+                          newParentNode);
 
-        _geometryTree->SetItemImage(newParentNode, 2, wxTreeItemIcon_Expanded);
-        _geometryTree->SetItemImage(newParentNode, 2, wxTreeItemIcon_SelectedExpanded);
-    }
+    ///ensure that the parent node has an assembly icon
+    _geometryTree->SetItemImage(newParentNode, 2, wxTreeItemIcon_Expanded);
+    _geometryTree->SetItemImage(newParentNode, 2, wxTreeItemIcon_SelectedExpanded);
+}
+/////////////////////////////////////////////////////////////////////////// `
+void CADNodeManagerDlg::_moveNodeToNewParent( VE_XML::VE_CAD::CADNode* movingChild,
+                                              wxTreeItemId oldParentTreeID,
+                                              wxTreeItemId newParentTreeID)
+{
+    //The CADAssembly representing the new parent
+    CADTreeBuilder::TreeNodeData* newParentCADNode = 
+         dynamic_cast<CADTreeBuilder::TreeNodeData*>
+             (_geometryTree->GetItemData(newParentTreeID));
+
+    CADAssembly* newParent = 
+        dynamic_cast<CADAssembly*>( newParentCADNode->GetNode( ) );
+
+    _commandName = std::string("CAD_MOVE_NODE");
+
+    VE_XML::DataValuePair* deleteNode = new VE_XML::DataValuePair();
+    deleteNode->SetDataType("STRING");
+    deleteNode->SetData(std::string("Move Node Type"),movingChild->GetNodeType());
+    _dataValuePairList.push_back(deleteNode);
+
+    VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+    nodeID->SetDataType("STRING");
+    nodeID->SetData(std::string("Move Node ID"),movingChild->GetID());
+    _dataValuePairList.push_back(nodeID);
+
+    VE_XML::DataValuePair* oldParentNode = new VE_XML::DataValuePair();
+    oldParentNode->SetDataType(std::string("STRING"));
+    oldParentNode->SetData(std::string("Old Parent ID"),movingChild->GetParent());
+    _dataValuePairList.push_back( oldParentNode );
+
+    VE_XML::DataValuePair* newParentNode = new VE_XML::DataValuePair();
+    newParentNode ->SetDataType(std::string("STRING"));
+    newParentNode ->SetData(std::string("New Parent ID"),newParent->GetID());
+    _dataValuePairList.push_back( newParentNode );
+
+    _sendCommandsToXplorer();
+    ClearInstructions();
+
+    //update the xml of the old parent
+    CADTreeBuilder::TreeNodeData* oldParentTreeNode = 
+         dynamic_cast<CADTreeBuilder::TreeNodeData*>
+             (_geometryTree->GetItemData(oldParentTreeID));
+
+    dynamic_cast<CADAssembly*>
+        (oldParentTreeNode->GetNode())->RemoveChild(movingChild->GetID());
+    
+    newParent->AddChild( movingChild );
+
+   _geometryTree->AppendItem(newParentTreeID,
+                             wxString(movingChild->GetNodeName().c_str(), wxConvUTF8),
+                             0, ( (movingChild->GetNodeType() == "Assembly" )?2:1),
+                             new CADTreeBuilder::TreeNodeData(movingChild));
+    //Remove the old reference in the tree
+    //Not sure if this should this be passed in 
+    //to make the function more generic???????
+    _geometryTree->Delete( m_movingNode );
+}
+///////////////////////////////////////////////////////////////////////////////
+void CADNodeManagerDlg::_addNodeToParent(VE_XML::VE_CAD::CADAssembly* parent,
+                                         VE_XML::VE_CAD::CADNode* childToAdd,
+                                         wxTreeItemId parentTreeID)
+{
+    parent->AddChild( childToAdd );
+
+   _geometryTree->AppendItem(parentTreeID,
+                             wxString(childToAdd->GetNodeName().c_str(), wxConvUTF8),
+                             0, ( (childToAdd->GetNodeType() == "Assembly" )?2:1),
+                             new CADTreeBuilder::TreeNodeData(childToAdd));
+
+   _commandName = std::string("CAD_ADD_NODE");
+
+   childToAdd->SetParent( parent->GetID( ) );
+
+   VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
+   cadNode->SetDataType( std::string( "XMLOBJECT" ) );
+   cadNode->SetData("New Node", childToAdd );
+   _dataValuePairList.push_back( cadNode );
+
+   _sendCommandsToXplorer( );
+   ClearInstructions( );
 }
 ////////////////////////////////////////////////
 void CADNodeManagerDlg::_sendCommandsToXplorer()

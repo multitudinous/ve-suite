@@ -54,6 +54,7 @@ class wxFileName;
 namespace VE_CAD
 {
    class CADNode;
+   class CADAssembly;
 }
 namespace VE_XML
 {
@@ -175,13 +176,33 @@ protected:
    ///to xplorer
    ///\param fileName The filename to send to xplorer
    void SendVEGNodesToXplorer( wxString fileName );
+
    ///Signal that a CADNode started moving
    ///\param event wxTreeEvent
    void _onBeginNodeMove(wxTreeEvent& event);
+
    ///Signal that a CADNode finished moving and update hierachy
    ///\param event wxTreeEvent
    void _onEndNodeMove(wxTreeEvent& event);
    
+   ///Add a CADNode to an assembly.\n This should send command, update XML and tree\n
+   ///\param parent The parent CADAssembly to add the CADNode to.
+   ///\param childToAdd The CADNode to add
+   ///\param parentTreeID The ID associated with the parent in the wxTreeCtrl
+   void _addNodeToParent(VE_XML::VE_CAD::CADAssembly* parent,
+                         VE_XML::VE_CAD::CADNode* childToAdd,
+                         wxTreeItemId parentTreeID);
+
+   
+   ///Move a CADNode from on CADAssembly to another.\n This should send command, update XML and tree\n
+   ///\param newParent The parent CADAssembly to move the CADNode to.
+   ///\param childToAdd The CADNode to move
+   ///\param oldParentTreeID The ID associated with the old parent in the wxTreeCtrl
+   ///\param newParentTreeID The ID associated with the new parent in the wxTreeCtrl
+   void _moveNodeToNewParent( VE_XML::VE_CAD::CADNode* childToRemove,
+                              wxTreeItemId oldParentTreeID,
+                              wxTreeItemId newParentTreeID );
+
    wxTreeCtrl* _geometryTree;///<The tree control.
    wxButton* _quitButton;///<The button to close the dialog.
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
