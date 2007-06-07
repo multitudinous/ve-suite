@@ -47,6 +47,8 @@
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
+#include <gmtl/Matrix.h>
+
 namespace VE_SceneGraph
 {
 namespace Utilities
@@ -59,12 +61,12 @@ public:
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
 
-    osg::Matrix& GetLocalToWorldTransform();
+    gmtl::Matrix44d& GetLocalToWorldTransform();
 
 private:
     osg::ref_ptr< osg::PositionAttitudeTransform > m_worldNode;
     osg::ref_ptr< osg::PositionAttitudeTransform > m_localNode;
-    osg::Matrix m_localToWorldTransform;
+    gmtl::Matrix44d m_localToWorldTransform;
 
 };
 }

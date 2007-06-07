@@ -215,6 +215,8 @@ private:
     double m_ymaxScreen;///<The maximum y position of the screen
     double m_zvalScreen;///<The z position of the screen
 
+    //Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
+    //For gmtl::Matrix
     //In mData form     In row by column form
     //[ 0 4  8 12 ]     [ 00 01 02 03 ]
     //[ 1 5  9 13 ]     [ 10 11 12 13 ]

@@ -377,11 +377,8 @@ void KeyboardMouse::ProcessNavigationEvents()
         osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
         new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-        osg::Matrix localTransform;
-        localTransform.set( activeDCS->GetMat().getData() );
-        localTransform = localTransform * ltwt->GetLocalToWorldTransform();
-
-        m_currentTransform.set( localTransform.ptr() );
+        m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
+        m_currentTransform = m_localToWorldTransform * activeDCS->GetMat();
     }
 
     //std::cout << "After transformed to world coordinates" << std::endl;
@@ -418,8 +415,7 @@ void KeyboardMouse::ProcessNavigationEvents()
     }
 
     //Multiply by the transform and then by the rotation
-    matrix *= m_deltaTransform;
-    matrix *= accuRotation;
+    matrix = matrix * m_deltaTransform * accuRotation;
 
     //std::cout << "After delta transform has been applied" << std::endl;
     //std::cout << matrix << std::endl;
@@ -431,15 +427,8 @@ void KeyboardMouse::ProcessNavigationEvents()
     }
     else
     {
-        osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
-        new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
-
-        osg::Matrix temp( matrix.getData() );
-        temp = temp * osg::Matrix::inverse( ltwt->GetLocalToWorldTransform() );
-
-        gmtl::Matrix44d holder;
-        holder.set( temp.ptr() );
-        activeDCS->SetMat( holder );
+        matrix = gmtl::invert( m_localToWorldTransform ) * matrix;
+        activeDCS->SetMat( matrix );
     }
 
     //std::cout << "After transformed back to local coordinates" << std::endl;
@@ -831,7 +820,12 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         osg::ref_ptr< VE_SceneGraph::Utilities::LocalToWorldTransform > ltwt = 
         new VE_SceneGraph::Utilities::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-        osg::Vec3d center = activeDCS->getBound().center() * ltwt->GetLocalToWorldTransform();
+        osg::Matrixd interchange;
+        interchange.identity();
+        gmtl::Matrix44d tmp = ltwt->GetLocalToWorldTransform();
+        interchange.set( tmp.getData() );
+
+        osg::Vec3d center = activeDCS->getBound().center() * interchange;
         center_point->set( center.x(), center.y(), center.z() );
     }
 

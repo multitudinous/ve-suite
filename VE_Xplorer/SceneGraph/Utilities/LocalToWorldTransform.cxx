@@ -36,6 +36,8 @@
 // --- OSG Includes --- //
 #include <osg/PositionAttitudeTransform>
 
+#include <gmtl/Xforms.h>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 
@@ -44,9 +46,10 @@ using namespace VE_SceneGraph::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 LocalToWorldTransform::LocalToWorldTransform( osg::PositionAttitudeTransform* worldNode, osg::PositionAttitudeTransform* localNode )
 :
-NodeVisitor( TRAVERSE_PARENTS ),
-m_localToWorldTransform( osg::Matrix::identity() )
+NodeVisitor( TRAVERSE_PARENTS )
 {
+    gmtl::identity( m_localToWorldTransform );
+
     m_worldNode = worldNode;
     m_localNode = localNode;
     localNode->accept( *this );
@@ -61,14 +64,18 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
 {
     if( pat.getName() == m_worldNode->getName() )
     {
-        m_localToWorldTransform = osg::computeLocalToWorld( _nodePath );
+        m_localToWorldTransform.set( osg::computeLocalToWorld( _nodePath ).ptr() );
         
         //Premultiply by the localNode transform since it is not in the node path
         osg::Matrix localTransform;
         localTransform.identity();
         localTransform.setTrans( m_localNode->getPosition() );
         localTransform.setRotate( m_localNode->getAttitude() );
-        m_localToWorldTransform.preMult( osg::Matrix::inverse( localTransform ) );
+
+        gmtl::Matrix44d local;
+        local.set( localTransform.ptr() );
+
+        m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( local );
 
         return;
     }
@@ -76,7 +83,7 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
     osg::NodeVisitor::apply( pat );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Matrix& LocalToWorldTransform::GetLocalToWorldTransform()
+gmtl::Matrix44d& LocalToWorldTransform::GetLocalToWorldTransform()
 {
     return m_localToWorldTransform;
 }
