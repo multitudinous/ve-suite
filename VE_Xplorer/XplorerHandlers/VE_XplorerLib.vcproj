@@ -236,6 +236,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Body_AMI_UIHandler_i.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\CADAddAttributeEH.cxx"
 				>
 			</File>
@@ -743,6 +747,10 @@
 				RelativePath=".\WireframeEventHandler.cxx"
 				>
 			</File>
+			<File
+				RelativePath=".\Xplorer_i.cxx"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="headers"
@@ -774,6 +782,10 @@
 			</File>
 			<File
 				RelativePath=".\BBoxVolumePoints.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Body_AMI_UIHandler_i.h"
 				>
 			</File>
 			<File
@@ -1241,6 +1253,10 @@
 			</File>
 			<File
 				RelativePath=".\WireframeEventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Xplorer_i.h"
 				>
 			</File>
 		</Filter>
