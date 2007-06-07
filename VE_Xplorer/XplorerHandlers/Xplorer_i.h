@@ -34,7 +34,7 @@
 #define _XPLORER_I_H_
 
 #include "VE_Open/skel/moduleS.h"
-#include "VE_Xplorer/GE/Body_AMI_UIHandler_i.h"
+#include "VE_Xplorer/XplorerHandlers/Body_AMI_UIHandler_i.h"
 
 #undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
@@ -53,6 +53,8 @@
 
 #include <plugins/ApplicationDataManager/UserData.h>
 
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_Xplorer
 {
 	class cfdModelHandler;
@@ -66,7 +68,7 @@ namespace VE_XML
 #include <map>
 #include <iostream>
 
-class Body_VEXplorer_i
+class VE_XPLORER_EXPORTS Body_VEXplorer_i
   : public virtual POA_Body::VEXplorer
 {
 public:

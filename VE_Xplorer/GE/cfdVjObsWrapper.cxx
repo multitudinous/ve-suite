@@ -34,7 +34,7 @@
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
-#include "VE_Xplorer/GE/Xplorer_i.h" 
+#include "VE_Xplorer/XplorerHandlers/Xplorer_i.h" 
 #include "VE_Xplorer/GE/VjObs_i.h"     //added for corba stuff
 
 

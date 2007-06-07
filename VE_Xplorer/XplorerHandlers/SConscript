@@ -120,6 +120,8 @@ sources = Split("""
    CADPhysicsPropertiesEventHandler.cxx
    UnselectObjectsEventHandler.cxx
    CommandHandler.cxx
+   Xplorer_i.cxx
+   Body_AMI_UIHandler_i.cxx
 """)
 ##   DataSetFileEH.cxx
 ##   DataSetPrecomputeEH.cxx
@@ -240,6 +242,8 @@ headers = Split("""
    CADPhysicsPropertiesEventHandler.h
    UnselectObjectsEventHandler.h
    CommandHandler.h
+   Xplorer_i.h
+   Body_AMI_UIHandler_i.h
 """)
 ##   DataSetFileEH.h
 ##   DataSetPrecomputeEH.h
@@ -248,14 +252,24 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_XML','DataLoaderLib','VE_SceneGraph%s' %(execOsgPatTag),
+                   'VE_OpenModuleLib',
                    'VE_UtilLib','VE_TextureBasedLib%s' %(execOsgPatTag)])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','Utilities'),
                         pj('#', buildDir, 'VE_Xplorer','TextureBased'),
                         pj('#', buildDir, 'VE_Builder','Translator','DataLoader'),
+                        pj('#', buildDir, 'VE_Open','skel'),
                         pj('#', buildDir, 'VE_Open','XML')])
-lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-vrj-ogl-libs --libs --cflags'%lib_env['VRJugglerVersion'])
-lib_env.ParseConfig('flagpoll bullet --libs --cflags Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
+lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s \
+			--get-vrj-ogl-libs --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll bullet --libs --cflags Boost.Filesystem \
+			--atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
+lib_env.ParseConfig('flagpoll TAO \
+                          ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                          TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                          TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
+                          --libs --cflags')
+
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )

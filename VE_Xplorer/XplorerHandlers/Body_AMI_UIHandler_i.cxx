@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/GE/Body_AMI_UIHandler_i.h"
+#include "VE_Xplorer/XplorerHandlers/Body_AMI_UIHandler_i.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_AMI_UIHandler_i::Body_AMI_UIHandler_i( void )

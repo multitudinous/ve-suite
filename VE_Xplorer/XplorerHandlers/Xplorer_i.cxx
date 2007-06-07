@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/GE/Xplorer_i.h"
+#include "VE_Xplorer/XplorerHandlers/Xplorer_i.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
@@ -68,10 +68,9 @@ using namespace VE_TextureBased;
 Body_VEXplorer_i::Body_VEXplorer_i (void)
 :
 m_xplorerAMIHandler()
-{
-	//uiCom = 0; 
-   bufferCommand = new Command(  );
-   bufferCommand->AddDataValuePair( new DataValuePair(  ) );
+{ 
+   bufferCommand = new Command();
+   bufferCommand->AddDataValuePair( new DataValuePair() );
    bufferCommand->SetCommandName( "wait" );
    isCluster = false;
 }
