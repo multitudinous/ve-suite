@@ -69,8 +69,8 @@ END_EVENT_TABLE()
 ///////////////
 //Constructor//
 ///////////////
-ViewLocPane::ViewLocPane(  )
-:wxDialog(NULL, -1, _("Viewing Locations Pane"),
+ViewLocPane::ViewLocPane( wxWindow* parent )
+:wxDialog( parent, -1, _("Viewing Locations Pane"),
          wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {

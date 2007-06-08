@@ -196,7 +196,6 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
-    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
     EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
    EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
    EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
@@ -225,8 +224,7 @@ m_frame( 0 ),
 _treeView( 0 ),
 deviceProperties( 0 ),
 navPane( 0 ),
-viewlocPane( 0 ),
-_cadDialog( 0 )
+viewlocPane( 0 )
 {
     serviceList = VE_Conductor::CORBAServiceList::instance();
 
@@ -237,8 +235,6 @@ _cadDialog( 0 )
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
     serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
-
-    
 
     this->SetIcon( ve_icon32x32_xpm );
     //Initialize recent files menu
@@ -487,32 +483,32 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::DetermineFrameSize (wxConfig* config)
 {
-  const int minFrameWidth = 600;
-  const int minFrameHight = 400;
-  
-  wxRect rect;
-  wxSize scr = wxGetDisplaySize();
- 
-  wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
-  int i;
-  wxString key = LOCATION + wxString::Format(_("%d"), 0);
-  if (cfg->Exists (key)) 
-  {
+    const int minFrameWidth = 600;
+    const int minFrameHight = 400;
+
+    wxRect rect;
+    wxSize scr = wxGetDisplaySize();
+
+    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
+    int i;
+    wxString key = LOCATION + wxString::Format(_("%d"), 0);
+    if (cfg->Exists (key)) 
+    {
       rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
       rect.y = cfg->Read (key + _T("/") + LOCATION_Y, rect.y);
       rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
       rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
-  }
-  
-  // check for reasonable values (within screen)
-  rect.x = wxMin (abs (rect.x), (scr.x - minFrameWidth));
-  rect.y = wxMin (abs (rect.y), (scr.y - minFrameHight));
-  rect.width = wxMax (abs (rect.width), (minFrameWidth));
-  rect.width = wxMin (abs (rect.width), (scr.x - rect.x));
-  rect.height = wxMax (abs (rect.height), (minFrameHight));
-  rect.height = wxMin (abs (rect.height), (scr.y - rect.y));
-  
-  return rect;
+    }
+
+    // check for reasonable values (within screen)
+    rect.x = wxMin (abs (rect.x), (scr.x - minFrameWidth));
+    rect.y = wxMin (abs (rect.y), (scr.y - minFrameHight));
+    rect.width = wxMax (abs (rect.width), (minFrameWidth));
+    rect.width = wxMin (abs (rect.width), (scr.x - rect.x));
+    rect.height = wxMax (abs (rect.height), (minFrameHight));
+    rect.height = wxMin (abs (rect.height), (scr.y - rect.y));
+
+    return rect;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreFrameSize( wxRect rect, wxConfig* config)
@@ -531,13 +527,11 @@ void AppFrame::StoreFrameSize( wxRect rect, wxConfig* config)
     cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
     cfg->Write (key + _T("/") + LOCATION_W, rect.width);
     cfg->Write (key + _T("/") + LOCATION_H, rect.height);
-  
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig(wxConfig* config)
 {
     //store config
-
     wxConfig* cfg = config;
     if (!config)
     { 
@@ -563,70 +557,33 @@ void AppFrame::StoreRecentFile( wxConfig* config )
     //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
     m_recentVESFiles->Save(*cfg);
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
     //std::cout << "Conductor Exiting Xplorer" << std::endl;
-   if ( GetDisplayMode() == "Desktop" )
-   {
-      ExitXplorer();
-   }
-   //std::cout << "Deleting TreeView" << std::endl;
-   if(_treeView)
-   {
-      _treeView->Destroy();
-   }
-   //std::cout << "Deleting Device Properties" << std::endl;
-   if ( deviceProperties )
-   {
-      deviceProperties->Destroy();
-      deviceProperties = 0;
-   }
-   //std::cout << "Deleting Nav Pane" << std::endl;
-   if ( navPane )
-   {
-      navPane->Destroy();
-      navPane = 0;
-   }
-   //std::cout << "Deleting View Pane" << std::endl;
-   if ( viewlocPane )
-   {
-      viewlocPane->Destroy();
-      viewlocPane = 0;
-   }
-   //std::cout << "Deleting CAD Dialog" << std::endl;
-  
-   if( _cadDialog)
-   {
-      _cadDialog->Destroy();
-      _cadDialog = 0;
-   }
-
-    if(preferences)
+    if( GetDisplayMode() == "Desktop" )
     {
-        delete preferences;
-        preferences = 0;
+        ExitXplorer();
     }
-   //std::cout << "Deleting Frame" << std::endl;
-   StoreFrameSize(GetRect(), NULL);
-   StoreConfig(NULL);
-   StoreRecentFile(NULL);
-   delete wxConfigBase::Set((wxConfigBase *) NULL); 
-   
-   Destroy();
-   //std::cout << "Shuting Down CORBA" << std::endl;
 
-   network->Destroy();
-   network = 0;
-   serviceList->CleanUp();
-   serviceList = 0;
-    if( m_recentVESFiles)
-    {
-        delete m_recentVESFiles;
-    }
+    //std::cout << "Deleting Frame" << std::endl;
+    StoreFrameSize(GetRect(), NULL);
+    StoreConfig(NULL);
+    StoreRecentFile(NULL);
+    delete wxConfigBase::Set((wxConfigBase *) NULL); 
+
+    Destroy();
+    //std::cout << "Shuting Down CORBA" << std::endl;
+    //We have to mannually destroy these to make sure that things shutdown 
+    //properly with CORBA. There may be a possible way to get around this but
+    //am not sure.
+    network->Destroy();
+    network = 0;
+    serviceList->CleanUp();
+    serviceList = 0;
+    delete m_recentVESFiles;
     m_recentVESFiles = 0;
-   //std::cout << "End Cleanup" << std::endl;
+    //std::cout << "End Cleanup" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
@@ -780,17 +737,12 @@ void AppFrame::CreateMenu()
    {
       xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
    }
-	//xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
-//	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
-//   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
 
    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
    //xplorerMenu->Enable( XPLORER_SOUNDS, true);
    xplorerMenu->Enable( XPLORER_SCENES, true);
-   //xplorerMenu->Enable( XPLORER_STREAMLINE, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
-//	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
    }
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
 //  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
@@ -1713,7 +1665,7 @@ void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
    if ( deviceProperties == 0 )
    {
       // create pane and set appropriate vars
-      deviceProperties = new DeviceProperties();
+      deviceProperties = new DeviceProperties( this );
    }
    // now show it
    deviceProperties->Show();
@@ -1724,7 +1676,7 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    if ( navPane == 0 )
    {
       // create pane and set appropriate vars
-      navPane = new NavigationPane();
+      navPane = new NavigationPane( this );
    }
    // now show it
    navPane->Show();
@@ -1883,7 +1835,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    if ( viewlocPane == 0 )
    {
       // create pane and set appropriate vars
-      viewlocPane = new ViewLocPane( );
+      viewlocPane = new ViewLocPane( this );
    }
    else
    {
@@ -1892,17 +1844,6 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    viewlocPane->Show();
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
-{
-   if( !_cadDialog)
-   {
-      //this will change once we have a way to retrieve the geometry from the model
-      _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
-                                                               this,CAD_NODE_DIALOG);
-   }
-   _cadDialog->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& event )

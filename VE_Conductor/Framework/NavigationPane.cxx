@@ -90,8 +90,8 @@ END_EVENT_TABLE()
 using namespace VE_Conductor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////  
-NavigationPane::NavigationPane()
-:wxDialog(NULL,-1, _("Navigation Pane"), 
+NavigationPane::NavigationPane( wxWindow* parent )
+:wxDialog( parent, -1, _("Navigation Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {

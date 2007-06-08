@@ -81,7 +81,7 @@ protected:
 class NavigationPane : public wxDialog 
 {
 public:
-   NavigationPane( void );
+   NavigationPane( wxWindow* parent );
    virtual ~NavigationPane();
 
    enum NAV_TAB_IDS 

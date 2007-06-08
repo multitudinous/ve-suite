@@ -59,7 +59,7 @@ namespace VE_Conductor
 class DeviceProperties:public wxDialog 
 {
    public:
-      DeviceProperties();
+      DeviceProperties( wxWindow* parent );
 
       virtual ~DeviceProperties();
 

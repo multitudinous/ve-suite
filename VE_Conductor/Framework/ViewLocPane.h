@@ -94,7 +94,7 @@ protected:
 class ViewLocPane : public wxDialog
 {
 public:
-   ViewLocPane( );
+   ViewLocPane( wxWindow* parent );
    virtual ~ViewLocPane( void );
 
    enum VIEWLOC_TAB_IDS{

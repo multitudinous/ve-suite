@@ -22,8 +22,8 @@ BEGIN_EVENT_TABLE(DeviceProperties,wxDialog)
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-DeviceProperties::DeviceProperties()
-:wxDialog(NULL,-1,_("Device Interface"),wxDefaultPosition,wxDefaultSize, 
+DeviceProperties::DeviceProperties( wxWindow* parent )
+:wxDialog( parent,-1,_("Device Interface"),wxDefaultPosition,wxDefaultSize, 
 		   (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX)&~wxSTAY_ON_TOP)
 {
    device_splitter=NULL;

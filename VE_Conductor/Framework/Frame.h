@@ -172,7 +172,6 @@ public:
         JUGGLER_MONO, 
         JUGGLER_SETTINGS,
 
-        CAD_NODE_DIALOG,
         XPLORER_SCENES,
         XPLORER_EXIT,
         XPLORER_COLOR,
@@ -330,12 +329,6 @@ protected:
     void SetBackgroundColor( wxCommandEvent& event ); 
 
     void OnExitXplorer( wxCommandEvent& event );
-    //void LaunchVisTabs( wxCommandEvent& event );
-    //void LaunchVistab( wxCommandEvent& event );
-
-    ///Launch the CADNode GUI
-    ///\param event The wxCommand event
-    void LaunchCADNodePane( wxCommandEvent& event );
 
     ///Process Juggler settings
     void JugglerSettings( wxCommandEvent& event );
@@ -379,9 +372,6 @@ private:
 
     ///<Desktop or Tablet
     std::string _displayMode;
-
-    ///<The CADNode GUI
-    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* _cadDialog;
 
     StreamlinePane* streamlinePane;
     VE_Conductor::CORBAServiceList* serviceList;
