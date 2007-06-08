@@ -178,28 +178,22 @@ void UserPreferences::ReadConfiguration( void )
    for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
    {
       cfg->Read( key + 
-                 _T("/") + 
-                 wxString( iter->first.c_str(), wxConvUTF8 ), 
-                 &iter->second, false);
-      //std::cout << iter->second << " " << iter->first << std::endl;
+         _T("/") + 
+         wxString( iter->first.c_str(), wxConvUTF8 ), 
+         &iter->second, false);
    }
-   
-   //delete cfg;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::WriteConfiguration( void )
 {
-   //wxConfig* cfg = new wxConfig( _("VE-Conductor") );
-   wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());//new wxConfig( _("VE-Conductor") );
+   wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
    wxString key = _T("UserPreferences");
    std::map< std::string, bool >::iterator iter;
    for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
    {
       cfg->Write( key + 
-                  _T("/") + 
-                  wxString( iter->first.c_str(), wxConvUTF8 ), 
-                  iter->second );
+          _T("/") + 
+          wxString( iter->first.c_str(), wxConvUTF8 ), 
+          iter->second );
    }
-   
-   //delete cfg;
 }
