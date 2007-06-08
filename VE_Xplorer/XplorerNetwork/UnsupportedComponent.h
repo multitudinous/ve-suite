@@ -1,0 +1,13 @@
+#ifndef GETVESUITE_UnsupportedComponent_H
+#define GETVESUITE_UnsupportedComponent_H
+
+#include <string>
+
+std::string GetVESuite_UnsupportedComponent( void )
+{
+  std::string osgData;
+  osgData.append( "MatrixTransform {  DataVariance STATIC  name \"Scene Root\"  nodeMask 0xff  cullingActive TRUE  StateSet {    DataVariance STATIC    rendering_hint DEFAULT_BIN    renderBinMode INHERIT    GL_LIGHTING ON  }  referenceFrame RELATIVE  Matrix {    1 0 0 0    0 1 0 0    0 0 1 0    0 0 0 1  }  num_children 1  Group {    DataVariance STATIC    name \"Box01\"    nodeMask 0xff    cullingActive TRUE    num_children 1    Geode {      DataVariance STATIC      nodeMask 0xff      cullingActive TRUE      num_drawables 1      Geometry {        DataVariance DYNAMIC        StateSet {          DataVariance STATIC          rendering_hint DEFAULT_BIN          renderBinMode INHERIT          GL_CULL_FACE ON          GL_LIGHTING ON          0xba1 ON          Material {            DataVariance STATIC            ColorMode OFF            ambientColor 1 0 0 1            diffuseColor 1 0 0 1            specularColor 0 0 0 1            emissionColor 0 0 0 1            shininess 0          }        }        useDisplayList TRUE        useVertexBufferObjects FALSE        PrimitiveSets 1        {          DrawArrays TRIANGLES 0 36        }        VertexArray Vec3Array 36        {          -6 -6 0          -6 6 0          6 6 0          6 6 0          6 -6 0          -6 -6 0          -6 -6 12          6 -6 12          6 6 12          6 6 12          -6 6 12          -6 -6 12          -6 -6 0          6 -6 0          6 -6 12          6 -6 12          -6 -6 12          -6 -6 0          6 -6 0          6 6 0          6 6 12          6 6 12          6 -6 12          6 -6 0          6 6 0          -6 6 0          -6 6 12          -6 6 12          6 6 12          6 6 0          -6 6 0          -6 -6 0          -6 -6 12          -6 -6 12          -6 6 12          -6 6 0        }        NormalBinding PER_VERTEX        NormalArray Vec3Array 36        {          0 0 -1          0 0 -1          0 0 -1          0 0 -1          0 0 -1          0 0 -1          0 0 1          0 0 1          0 0 1          0 0 1          0 0 1          0 0 1          0 -1 0          0 -1 0          0 -1 0          0 -1 0          0 -1 0          0 -1 0          1 0 0          1 0 0          1 0 0          1 0 0          1 0 0          1 0 0          0 1 0          0 1 0          0 1 0          0 1 0          0 1 0          0 1 0          -1 0 0          -1 0 0          -1 0 0          -1 0 0          -1 -0 -0          -1 0 0        }      }    }  }}" );
+  return osgData;
+}
+#endif
+

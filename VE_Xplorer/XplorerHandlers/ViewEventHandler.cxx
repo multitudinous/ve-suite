@@ -46,27 +46,33 @@ void ViewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandl
 ////////////////////////////////////////////////////////////////////////////////
 void ViewEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
-   VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-   VE_XML::DataValuePair* viewDVP=command->GetDataValuePair("ViewID");
+    VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
+    VE_XML::DataValuePair* viewDVP=command->GetDataValuePair("ViewID");
 
-   unsigned int view;
-   viewDVP->GetData(view);
+    unsigned int view;
+    viewDVP->GetData(view);
 
-   if( viewDVP )
-   {
-      if( view == 0 )
-		{
-         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->FrameAll();
-      }
-      else if( view == 1 )
-		{
-         
-      }
-      else if( view == 2 )
-		{
-         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->ResetTransforms();
-      }
-   }
+    if( viewDVP )
+    {
+        return;
+    }
+
+    if( view == 0 )
+    {
+        static_cast< VE_Xplorer::KeyboardMouse* >( 
+            VE_Xplorer::DeviceHandler::instance()->
+            GetDevice( "KeyboardMouse" ) )->FrameAll();
+    }
+    else if( view == 1 )
+    {
+        ;
+    }
+    else if( view == 2 )
+    {
+        static_cast< VE_Xplorer::KeyboardMouse* >( 
+            VE_Xplorer::DeviceHandler::instance()->
+            GetDevice( "KeyboardMouse" ) )->ResetTransforms();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler& ViewEventHandler::operator=(const ViewEventHandler& rhs)

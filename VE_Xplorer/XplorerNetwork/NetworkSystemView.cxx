@@ -51,6 +51,7 @@
 #include <osg/StateSet>
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Xplorer/SceneGraph/TextTexture.h"
+#include "VE_Xplorer/XplorerNetwork/UnsupportedComponent.h"
 
 using namespace VE_Xplorer;
 
@@ -116,8 +117,18 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//text->UpdateText(model->GetModelName());
 		
 		//add red block id if block .ive file is not found
-		if(loadedModel.get() == NULL)
-			loadedModel = osgDB::readNodeFile("3DIcons/UnsupportedComponent.ive");
+		if( !loadedModel.valid() )
+		{	
+            std::istringstream textNodeStream( GetVESuite_UnsupportedComponent() );
+            loadedModel = osgDB::Registry::instance()->
+                getReaderWriterForExtension( "osg" )->
+                readNode( textNodeStream ).getNode();        
+        }
+        
+        if( !loadedModel.valid() )
+        {
+            return 0;
+        }
 
 		//set the blocks name
 		loadedModel->setName(model->GetModelName());

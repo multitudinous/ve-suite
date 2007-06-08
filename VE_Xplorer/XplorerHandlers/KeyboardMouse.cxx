@@ -441,7 +441,8 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     m_aspectRatio = double( m_width ) / double( m_height );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, double n, double f )
+void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, 
+    double n, double f )
 {
     m_leftFrustum = l;
     m_rightFrustum = r;
@@ -459,7 +460,8 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, do
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-    VE_SceneGraph::DCS* switchNode = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    VE_SceneGraph::DCS* switchNode = 
+        VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
     gmtl::Matrix44d matrix = switchNode->GetMat();
 
     //Get the selected objects and expand by their bounding box
@@ -484,6 +486,7 @@ void KeyboardMouse::FrameAll()
     double z = bs.center().z();
     matrix.mData[14] -= z;
 
+    //std::cout << z << " " << y << " " << x << std::endl;
     switchNode->SetMat( matrix );
     bs = switchNode->computeBound();
     center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
