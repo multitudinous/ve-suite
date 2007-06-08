@@ -180,6 +180,8 @@ public:
         CHANGE_XPLORER_VIEW_CAD,
         CHANGE_XPLORER_VIEW_LOGO,
 
+        CLEAR_RECENT_FILES,
+
         //For debugging purposes
         v21ID_DUMMY,
 
@@ -270,6 +272,8 @@ protected:
 	
     void SetRecentFile( wxFileName vesFileName );
     void OpenRecentFile( wxCommandEvent& event );
+    ///Clear the recent file history menu
+    void OnClearRecentFiles( wxCommandEvent& event );
 
 public:
     void New( wxCommandEvent &event );

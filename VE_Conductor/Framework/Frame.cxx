@@ -45,6 +45,7 @@
 #include <wx/dialog.h>
 #include <wx/filename.h>
 #include <wx/config.h>
+#include <wx/msgdlg.h>
 
 #include "VE_Conductor/GUIPlugin/ResultPanel.h"
 #include "VE_Conductor/Utilities/OrbThread.h"
@@ -152,6 +153,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     //This is probably a bug and needs to be fixed
     EVT_MENU( wxID_EXIT, AppFrame::FrameClose )
     EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences )
+    EVT_MENU( CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
     EVT_MENU( wxID_OPEN, AppFrame::Open )
 
     EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
@@ -618,7 +620,7 @@ void AppFrame::CreateMenu()
    file_menu->Append( wxID_NEW, _( "&New\tCtrl+N" ) );
    file_menu->Append( wxID_OPEN, _( "&Open ..\tCtrl+O" ) );
 
-	file_menu->AppendSeparator();
+   file_menu->AppendSeparator();
 
    file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
    file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
@@ -628,6 +630,9 @@ void AppFrame::CreateMenu()
    file_menu->Append( wxID_PRINT, _( "&Print ..\tCtrl+P" ) );
    file_menu->AppendSeparator();
    file_menu->Append( ID_PREFERENCES, _( "Preferences" ) );
+   file_menu->AppendSeparator();
+   file_menu->Append( CLEAR_RECENT_FILES, _( "&Clear File History" ) );
+
    file_menu->AppendSeparator();
    file_menu->Append( wxID_EXIT, _( "&Quit\tCtrl+Q" ) );
 
@@ -1028,6 +1033,21 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	    //SubmitToServer( event );      
 	    network->Load( ConvertUnicode( path.c_str() ), true );
 	    SubmitToServer( event );      	
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnClearRecentFiles( wxCommandEvent& event ) 
+{
+    wxMessageDialog confirm(this,
+                            _("Are you sure you want to clear the recent files list?"),
+                           _("Confirm")); 
+    if(confirm.ShowModal() == wxID_OK)
+    {
+        size_t numFilesInHistory = m_recentVESFiles->GetCount();
+        for( size_t i = 0; i < numFilesInHistory; ++i )
+        {
+            m_recentVESFiles->RemoveFileFromHistory( ( numFilesInHistory - 1) - i);
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
