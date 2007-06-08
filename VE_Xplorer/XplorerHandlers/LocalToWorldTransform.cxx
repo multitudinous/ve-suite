@@ -67,8 +67,8 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
         {
             m_localToWorldTransform *= static_cast< VE_SceneGraph::DCS* >( _nodePath.at( i ) )->GetMat();;
         }
-
-        m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( m_localNode->GetMat() );
+        gmtl::Matrix44d tempLocalMat = m_localNode->GetMat();
+        m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( tempLocalMat );
 
         return;
     }
