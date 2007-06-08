@@ -50,9 +50,6 @@
         <para>TAO_PORT (TAO Port)</para>
       </listitem>
       <listitem>
-        <para>VEXMASTER (Cluster Master)</para>
-      </listitem>
-      <listitem>
         <para>OSGNOTIFYLEVEL (OSG Debug Level)</para>
       </listitem>
       <listitem>

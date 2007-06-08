@@ -74,8 +74,9 @@
 	      of the screen.</para>
 	    </listitem>
 	    <listitem>
-	      <para><emphasis role="bold">-VESCluster:</emphasis>
-	      Runs Xplorer in cluster mode.</para>
+	      <para><emphasis role="bold">-VESCluster [master computer name]:</emphasis>
+	      Runs Xplorer in cluster mode. [master computer name] should be the 
+          computer name of the master in the graphics cluster.</para>
 	    </listitem>
 	  </itemizedlist>
         </listitem>
