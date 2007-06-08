@@ -82,17 +82,21 @@ public:
     ///\param geomFile The geometry file to be read in
     ///\param parentDCS The parent DCS that CADEntity is added to
     ///\param isStream Is the file a stream
-    CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool isStream = false );
+    ///\param occlude Occlude the node with osgOQ
+    CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, 
+        bool isStream = false, bool occlude = false );
 
     ///Constructor that takes an osg::Node*
     ///\param node
     ///\param parentDCS
     CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS );
 
-    ///Constructor that takes a CADEntityHelper and deep copies the osg node contained in the CADEntityHelper
+    ///Constructor that takes a CADEntityHelper and deep copies 
+    ///the osg node contained in the CADEntityHelper
     ///\param nodeToCopy The node to copy
     ///\param parentDCS The parent DCS that CADEntity is added to
-    CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS );
+    CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, 
+        VE_SceneGraph::DCS* parentDCS );
 
     ///Destructor
     virtual ~CADEntity();
@@ -121,15 +125,17 @@ public:
     void SetTransparencyFlag( bool flag );
 
 private:
-    VE_SceneGraph::CADEntityHelper* m_cadEntityHelper;///<A helper class to give added functionality to CADEntity
-    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;///<The DCS of CADEntity
-    osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > m_physicsRigidBody;///<The physics rigid body representation of CADEntity
+    ///A helper class to give added functionality to CADEntity
+    VE_SceneGraph::CADEntityHelper* m_cadEntityHelper;
+    ///The DCS of CADEntity
+    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;
+    ///The physics rigid body representation of CADEntity
+    osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > m_physicsRigidBody;
 
     bool m_physicsFlag;///<The current state of physics for CADEntity
     bool m_transparencyFlag;///<The current state of transparency
 
     std::string m_fileName;///<The name of the geometry file loaded
-
 };
 }
 

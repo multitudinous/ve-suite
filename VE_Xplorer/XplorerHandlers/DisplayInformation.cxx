@@ -40,7 +40,7 @@ DisplayInformation::DisplayInformation()
 
     //The physical model for the world coordinate system display
     osg::ref_ptr< VE_SceneGraph::DCS > dcs = new VE_SceneGraph::DCS();
-    wcs_model = new VE_SceneGraph::CADEntity( GetVESuite_WCS(), dcs.get(), true );
+    wcs_model = new VE_SceneGraph::CADEntity( GetVESuite_WCS(), dcs.get(), true, false );
 
     display_switch->addChild( framerate.get() );
     display_switch->addChild( wcs.get() );

@@ -53,7 +53,8 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, bool isStream )
+CADEntity::CADEntity( std::string geomFile, 
+    VE_SceneGraph::DCS* parentDCS, bool isStream, bool occlude )
 :
 m_physicsRigidBody( 0 ),
 m_physicsFlag( false ),
@@ -64,7 +65,7 @@ m_transparencyFlag( false )
     m_dcs = new VE_SceneGraph::DCS();
     m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper();
 
-    m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream );
+    m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream, occlude );
     m_fileName.assign( geomFile );
     m_dcs->SetName( "CADEntityDCS" );
 /*#ifdef VE_PATENTED
@@ -98,7 +99,8 @@ m_transparencyFlag( false )
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, VE_SceneGraph::DCS* parentDCS )
+CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, 
+    VE_SceneGraph::DCS* parentDCS )
 :
 m_physicsRigidBody( 0 ),
 m_physicsFlag( false ),
@@ -124,7 +126,8 @@ void CADEntity::InitPhysics()
 {
     if( !m_physicsRigidBody.valid() )
     {
-        m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( m_cadEntityHelper->GetNode() );
+        m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( 
+            m_cadEntityHelper->GetNode() );
 
         m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
     }

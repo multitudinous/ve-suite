@@ -228,11 +228,11 @@ void SceneManager::_createLogo()
       _logoNode->SetTranslationArray( translation );
       _logoNode->SetScaleArray( scale );
 
-      m_blueArrow = new VE_SceneGraph::CADEntity( BlueArrow(), _logoNode.get(), true );
-      m_greyArrow = new VE_SceneGraph::CADEntity( GreyArrow(), _logoNode.get(), true );
-      m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true );
-      m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true );
-      m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true );
+      m_blueArrow = new VE_SceneGraph::CADEntity( BlueArrow(), _logoNode.get(), true, false );
+      m_greyArrow = new VE_SceneGraph::CADEntity( GreyArrow(), _logoNode.get(), true, false );
+      m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
+      m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true, false );
+      m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true, false );
 
         char phong_vertex[]=
             "varying vec4 color; \n"

@@ -153,11 +153,9 @@ public:
     ///Load a geometry file
     ///\param filename The name of the file to be loaded
     ///\param isStream Is the file a stream
-    void LoadFile( std::string filename,
-                   #ifdef _OSG
-                   bool isStream = false
-                   #endif
-                   );
+    ///\param occlude Occlude the geom with osgOQ if desired
+    void LoadFile( std::string filename, bool isStream = false, 
+        bool occlude = false );
 private:
 #ifdef _OSG
     osg::ref_ptr< osg::Node > m_cadNode;///<Node representing the loaded in geometry file

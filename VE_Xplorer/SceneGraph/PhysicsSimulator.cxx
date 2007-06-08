@@ -384,7 +384,7 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
 
         osgDB::Registry::instance()->getReaderWriterForExtension("osg")->writeNode( *geode, box_ss );
 
-        box_vector.push_back( new VE_SceneGraph::CADEntity( "C:/Users/JK/Desktop/Models/box.osg", VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), false ) );
+        box_vector.push_back( new VE_SceneGraph::CADEntity( "C:/Users/JK/Desktop/Models/box.osg", VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), false, false ) );
 
         float mass = 1.0f;
         btTransform transform;

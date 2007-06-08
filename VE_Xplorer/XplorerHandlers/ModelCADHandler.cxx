@@ -135,9 +135,8 @@ void ModelCADHandler::CreateAssembly( std::string assemblyID )
     m_assemblyList[ assemblyID ] = new VE_SceneGraph::DCS();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::CreatePart( std::string fileName, 
-                                              std::string partID, 
-                                              std::string parentID )
+void ModelCADHandler::CreatePart( std::string fileName, std::string partID, 
+    std::string parentID )
 {
     VE_SceneGraph::CADEntity* tempCAD = 
         cfdModelHandler::instance()->IsCADFileLoaded( fileName );
@@ -154,8 +153,9 @@ void ModelCADHandler::CreatePart( std::string fileName,
     else
     {
         ///If we have not loaded this part
+        ///turn on occlusion culling by default
         m_partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( fileName, m_assemblyList[ parentID ].get() );
+            new VE_SceneGraph::CADEntity( fileName, m_assemblyList[ parentID ].get(), false, true );
         vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
                             << std::endl << vprDEBUG_FLUSH;
     }

@@ -203,7 +203,8 @@ void CADEntityHelper::ToggleDisplay( std::string onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::LoadFile( std::string filename, bool isStream )
+void CADEntityHelper::LoadFile( std::string filename, 
+    bool isStream, bool occlude )
 {
     if( strstr( filename.c_str(), ".stl" ) || 
         strstr( filename.c_str(), ".stla" ) )
@@ -298,7 +299,7 @@ void CADEntityHelper::LoadFile( std::string filename, bool isStream )
 #ifdef VE_PATENTED 
     osg::ref_ptr<osgOQ::OcclusionQueryRoot> root;
     root = dynamic_cast<osgOQ::OcclusionQueryRoot*>( m_cadNode.get() );
-    if( !root.valid() )
+    if( !root.valid() && occlude )
     {
         osgOQ::OcclusionQueryNonFlatVisitor oqv( 
             VE_SceneGraph::SceneManager::instance()->

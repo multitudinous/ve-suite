@@ -262,7 +262,7 @@ void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::CreateGeomDataSet( std::string filename )
 {
-   mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get() ) );
+   mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get(), false, true ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModel::setModelType( ModelTypeIndex type )
