@@ -471,7 +471,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = LOAD_NEW_VIEWPT;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "MOVE_TO_SELECTED_LOCATION" ) )      
       {
@@ -479,7 +479,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->activecam = true;
          //this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->cam_id = (unsigned int)commandIds.at( 0 );
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "REMOVE_SELECTED_VIEWPT" ) )      
       {
@@ -490,7 +490,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = REMOVE_SELECTED_VIEWPT;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "ADD_NEW_POINT_TO_FLYTHROUGH" ) )      
       {
@@ -501,7 +501,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "INSERT_NEW_POINT_IN_FLYTHROUGH" ) )      
       {
@@ -513,7 +513,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "REMOVE_POINT_FROM_FLYTHROUGH" ) )      
       {
@@ -524,7 +524,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "DELETE_ENTIRE_FLYTHROUGH" ) )      
       {
@@ -534,7 +534,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "ADD_NEW_FLYTHROUGH" ) )      
       {
@@ -544,25 +544,29 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
          this->lastCommandId = ADD_NEW_FLYTHROUGH;
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "RUN_ACTIVE_FLYTHROUGH" ) )      
       {
          this->activeFlyThrough = (unsigned int)commandIds.at( 0 );
          this->_runFlyThrough = true;
          this->activecam = true;
+         flag = true;
       }
       else if ( !newCommand.compare( "STOP_ACTIVE_FLYTHROUGH" ) )      
       {
          this->TurnOffMovement();
-         return true;
+         flag = true;
       }
       else if ( !newCommand.compare( "CHANGE_MOVEMENT_SPEED" ) )      
       {
          this->movementSpeed = commandIds.at( 0 );
-         return true;
+         flag = true;
       }
-      _updateViewGUIPointData();
+      if(flag)
+      {
+          _updateViewGUIPointData();
+      }
    }
    return flag;
 }

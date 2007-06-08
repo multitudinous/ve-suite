@@ -215,8 +215,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
       {
          naming_context->rebind(xplorerName, xplorerCom.in());
       }
-      //isMaster = true;
-      //_vjObs->SetClusterMode( false );
+      VE_Xplorer::CommandHandler::instance()->SetXplorer(m_xplorer);
    }
 }
 //////////////////////////////////////////////////////////////////////////////
@@ -243,7 +242,6 @@ void cfdVjObsWrapper::GetCfdStateVariables( void )
 void cfdVjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
-   //m_xplorer->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point

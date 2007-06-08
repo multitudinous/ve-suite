@@ -192,6 +192,10 @@ protected:
    void _onDeleteFlySel(wxCommandEvent& event);
    //void _onSpeedChange(wxScrollEvent& event);
    void _onSpeedChange(wxSpinEvent& event);
+
+   ///Refresh the GUI
+   ///\param event The idle event
+   void _refreshGUIFromXplorerData( wxIdleEvent& event );
    
    ///Load a stored view points file
    void _onLoadStoredPointsFile(wxCommandEvent& event);
