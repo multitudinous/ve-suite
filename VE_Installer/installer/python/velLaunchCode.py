@@ -298,7 +298,8 @@ class Launch:
         ##Construct the call
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
-            s += ["-VESCluster"]
+            s += ["-VESCluster "]
+            s += self.settings["ClusterMaster"]).split('.')[0]
         s[len(s):] = desktop
         ##Special arguments added for master, slave, and solo computer Xplorer calls.
         if computerType.lower() == "master":
@@ -502,7 +503,6 @@ class Launch:
         CFDHOSTTYPE (removes parantheses from CFDHOSTTYPE)
         TAO_MACHINE
         TAO_PORT
-        VEXMASTER
         VPR_DEBUG_ENABLE
         VPR_DEBUG_NFY_LEVEL
         OSGNOTIFYLEVEL
@@ -593,10 +593,10 @@ class Launch:
         ##Set VexMaster
         ##Take the partially-qualified name if
         ##clusterMaster is a fully-qualified name.
-        if self.settings["ClusterMaster"]:
-            self.EnvFill("VEXMASTER",
-                         str(self.settings["ClusterMaster"]).split('.')[0],
-                         True)
+        #if self.settings["ClusterMaster"]:
+        #    self.EnvFill("VEXMASTER",
+        #                 str(self.settings["ClusterMaster"]).split('.')[0],
+        #                 True)
 
         ##Update OSG_FILE_PATH & PATH (and the Library Path for Unix)
         if windows:

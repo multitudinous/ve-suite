@@ -270,7 +270,7 @@ void UserPreferences::ReadConfiguration( void )
                        _T("/") + 
                        _T("BackgroundColor") +
                        _T("/") +
-                       wxString( "Red" ), 
+                       wxString( "Red", wxConvUTF8 ), 
                        &backgroundColor[ "Red" ] );
             xplorerColor.push_back( backgroundColor[ "Red" ] );
 
@@ -278,7 +278,7 @@ void UserPreferences::ReadConfiguration( void )
                        _T("/") + 
                        _T("BackgroundColor") +
                        _T("/") +
-                       wxString( "Green" ), 
+                       wxString( "Green", wxConvUTF8 ), 
                        &backgroundColor[ "Green" ] ); 
             xplorerColor.push_back( backgroundColor[ "Green" ] );
 
@@ -286,7 +286,7 @@ void UserPreferences::ReadConfiguration( void )
                        _T("/") + 
                        _T("BackgroundColor") +
                        _T("/") +
-                       wxString( "Blue" ), 
+                       wxString( "Blue", wxConvUTF8 ), 
                        &backgroundColor[ "Blue" ] );  
             xplorerColor.push_back( backgroundColor[ "Blue" ] );
 
@@ -294,7 +294,7 @@ void UserPreferences::ReadConfiguration( void )
                        _T("/") + 
                        _T("BackgroundColor") +
                        _T("/") +
-                       wxString( "Alpha" ), 
+                       wxString( "Alpha", wxConvUTF8 ), 
                        &backgroundColor[ "Alpha" ] );
             xplorerColor.push_back( backgroundColor[ "Alpha" ] );
         }
@@ -321,25 +321,25 @@ void UserPreferences::WriteConfiguration( void )
                         _T("/") + 
                         _T("BackgroundColor") +
                         _T("/") +
-                        wxString( "Red" ), 
+                        wxString( "Red", wxConvUTF8 ), 
                         backgroundColor[ "Red" ] );  
             cfg->Write( key + 
                         _T("/") + 
                         _T("BackgroundColor") +
                         _T("/") +
-                        wxString( "Green" ), 
+                        wxString( "Green", wxConvUTF8 ), 
                         backgroundColor[ "Green" ] );  
             cfg->Write( key + 
                         _T("/") + 
                         _T("BackgroundColor") +
                         _T("/") +
-                        wxString( "Blue" ), 
+                        wxString( "Blue", wxConvUTF8 ), 
                         backgroundColor[ "Blue" ] );  
             cfg->Write( key + 
                         _T("/") + 
                         _T("BackgroundColor") +
                         _T("/") +
-                        wxString( "Alpha" ), 
+                        wxString( "Alpha", wxConvUTF8 ), 
                         backgroundColor[ "Alpha" ] );  
         }
     }

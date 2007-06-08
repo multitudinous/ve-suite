@@ -378,15 +378,14 @@ void cfdApp::initScene( void )
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    for(int i=1;i<argc;++i)
    {
-      if((std::string( argv[i] ) == std::string("-VESDesktop"))&&(argc>=i+2))
+      if( (std::string( argv[i] ) == std::string("-VESDesktop"))&&(argc>=i+2) )
       {
          cfdEnvironmentHandler::instance()->
                      SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
-         //break;
       }
       else if ( std::string( argv[i] ) == std::string("-VESCluster") )
       {
-         isCluster = true;
+          isCluster = true;
       }
    }
    cfdEnvironmentHandler::instance()->InitScene();

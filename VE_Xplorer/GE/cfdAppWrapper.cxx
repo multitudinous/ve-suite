@@ -91,12 +91,13 @@ void cfdAppWrapper::init( void* )
    {
       if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
       {
+          //skip the resolutions
          i = i + 2;
       }
       else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
       {
-         //do nothing
-         ; 
+          //Skip the mast computer name
+          i = i + 1;
       }
       else
       {
