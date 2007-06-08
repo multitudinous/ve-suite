@@ -33,9 +33,7 @@
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
-// --- OSG Includes --- //
-#include <osg/PositionAttitudeTransform>
-
+// --- VR Juggler Includes --- //
 #include <gmtl/Xforms.h>
 
 // --- C/C++ Libraries --- //

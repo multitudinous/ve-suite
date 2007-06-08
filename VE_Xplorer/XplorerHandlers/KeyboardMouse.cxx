@@ -42,7 +42,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
-
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>
 
@@ -65,7 +64,6 @@
 #include <osg/LineSegment>
 #include <osg/NodeVisitor>
 #include <osg/BoundingBox>
-
 //#include <osg/PolygonStipple>
 
 // --- C/C++ Libraries --- //
@@ -365,9 +363,6 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
-    //std::cout << "Before transformed to world coordinates" << std::endl;
-    //std::cout << activeDCS->GetMat() << std::endl;
-
     if( activeDCS->GetName() == "World DCS" )
     {
         m_currentTransform = activeDCS->GetMat();
@@ -380,9 +375,6 @@ void KeyboardMouse::ProcessNavigationEvents()
         m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
         m_currentTransform = m_localToWorldTransform * activeDCS->GetMat();
     }
-
-    //std::cout << "After transformed to world coordinates" << std::endl;
-    //std::cout << m_currentTransform << std::endl;
 
     //Translate world dcs by distance that the m_head is away from the origin
     gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -417,9 +409,6 @@ void KeyboardMouse::ProcessNavigationEvents()
     //Multiply by the transform and then by the rotation
     matrix = matrix * m_deltaTransform * accuRotation;
 
-    //std::cout << "After delta transform has been applied" << std::endl;
-    //std::cout << matrix << std::endl;
-
     //Set the activeDCS w/ new transform
     if( activeDCS->GetName() == "World DCS" )
     {
@@ -430,9 +419,6 @@ void KeyboardMouse::ProcessNavigationEvents()
         matrix = gmtl::invert( m_localToWorldTransform ) * matrix;
         activeDCS->SetMat( matrix );
     }
-
-    //std::cout << "After transformed back to local coordinates" << std::endl;
-    //std::cout << activeDCS->GetMat() << std::endl;
 
     //If not in animation mode, reset the transform
     if( !m_animate )
@@ -627,29 +613,29 @@ void KeyboardMouse::ResetTransforms()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( double dx, double dy )
 {
-    gmtl::Matrix44d mat;
     double tb_axis[3];
-
-    gmtl::identity( mat );
     double angle = m_magnitude * 400.0f;
 
-    tb_axis[0] = mat[0][0] * dy + mat[2][0] * dx;
-    tb_axis[1] = mat[0][1] * dy + mat[2][1] * dx;
-    tb_axis[2] = mat[0][2] * dy + mat[2][2] * dx;
+    gmtl::Matrix44d matrix;
+    gmtl::identity( matrix );
+
+    tb_axis[0] = matrix[0][0] * dy + matrix[2][0] * dx;
+    tb_axis[1] = matrix[0][1] * dy + matrix[2][1] * dx;
+    tb_axis[2] = matrix[0][2] * dy + matrix[2][2] * dx;
 
     Rotate( tb_axis[0], tb_axis[1], tb_axis[2], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Twist( double dx, double dy )
 {
-    gmtl::Matrix44d mat;
-    gmtl::identity( mat );
+    gmtl::Matrix44d matrix;
+    gmtl::identity( matrix );
 
     double Theta = atan2f( m_prevPos[0] - 0.5, m_prevPos[1] - 0.5 );
     double newTheta = atan2f( m_currPos[0] - 0.5, m_currPos[1] - 0.5 );
     double angle = ( OneEightyDivPI ) * ( Theta - newTheta );
 
-    Rotate( mat[1][0], mat[1][1], mat[1][2], angle );
+    Rotate( matrix[1][0], matrix[1][1], matrix[1][2], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )
@@ -820,12 +806,10 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
         new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
-        osg::Matrixd interchange;
-        interchange.identity();
-        gmtl::Matrix44d tmp = ltwt->GetLocalToWorldTransform();
-        interchange.set( tmp.getData() );
+        osg::Matrixd matrix;
+        matrix.set( ltwt->GetLocalToWorldTransform().getData() );
 
-        osg::Vec3d center = activeDCS->getBound().center() * interchange;
+        osg::Vec3d center = activeDCS->getBound().center() * matrix;
         center_point->set( center.x(), center.y(), center.z() );
     }
 
