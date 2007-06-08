@@ -40,20 +40,38 @@
 #include <wx/bookctrl.h>
 #include <wx/panel.h>
 #include <wx/config.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
+#include <wx/colordlg.h>
+
 
 //#include <iostream>
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/UserPreferences.h"
+#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
+
+using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
    EVT_CHECKLISTBOX( ID_PREFERENCE_CHKBX, UserPreferences::OnPreferenceCheck )
-   EVT_CHECKLISTBOX( ID_XPLORER_CHKBX, UserPreferences::OnXplorerCheck )
+   EVT_CHECKBOX( ID_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
+   EVT_CHECKBOX( ID_BACKGROUND_COLOR_CHKBX, UserPreferences::OnBackgroundColorCheck )
+   EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
 {
-   ;
+   xplorerColor.push_back( 0.0f );
+   xplorerColor.push_back( 0.0f );
+   xplorerColor.push_back( 0.0f );
+   xplorerColor.push_back( 1.0f );
+   xplorerWxColor = new wxColourData();
+   xplorerWxColor->SetChooseFull(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::~UserPreferences()
@@ -74,6 +92,14 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    ///Set the map
    preferenceMap[ "Interactive_State" ] = false;
    preferenceMap[ "Auto Launch Nav Pane" ] = false;
+   preferenceMap[ "Use Preferred Background Color" ] = false;
+
+   ///Set the color map
+   backgroundColor[ "Red" ] = 0.0;
+   backgroundColor[ "Green" ] = 0.0;
+   backgroundColor[ "Blue" ] = 0.0;
+   backgroundColor[ "Alpha" ] = 1.0;
+
    ///Read from wxConfig
    ReadConfiguration();
    ///Read from ves file
@@ -115,17 +141,28 @@ void UserPreferences::CreateControls()
    GetBookCtrl()->AddPage(panel, _("Xplorer Settings"));
    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
    panel->SetSizer(itemBoxSizer3);
-   xplorerChoices[ 0 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
-   xplorerPrefChkBx = new wxCheckListBox( panel, ID_XPLORER_CHKBX, wxDefaultPosition, wxDefaultSize, 1, xplorerChoices, 0, wxDefaultValidator, _("listBox") );
-   xplorerPrefChkBx->Check( 0, preferenceMap[ "Auto Launch Nav Pane" ] );
-   itemBoxSizer3->Add( xplorerPrefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+   wxBoxSizer* colorSizer = new wxBoxSizer(wxHORIZONTAL);
+   backgroundColorChkBx = new wxCheckBox(panel, ID_BACKGROUND_COLOR_CHKBX, wxT("Use Preferred Background Color"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   backgroundColorButton = new wxButton( panel, ID_BACKGROUND_COLOR_BUTTON, _T("Background Color"), wxDefaultPosition, wxDefaultSize, 0 );
+   colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+   navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+
+   xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
+   xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
+   backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
+   backgroundColorChkBx->IsChecked();
+   navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
+   navigationChkBx->IsChecked();
+
+   itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+   itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
    ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("User Mode"));
    ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("Defaults"));
-   ///////////////////////////////////////
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
@@ -144,13 +181,62 @@ void UserPreferences::OnPreferenceCheck( wxCommandEvent& WXUNUSED(event) )
    preferenceMap[ "Interactive_State" ] = prefChkBx->IsChecked( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnXplorerCheck( wxCommandEvent& event )
+void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
    wxString mode = xplorerChoices[ event.GetSelection() ];
-   //std::cout << ConvertUnicode( mode.c_str() ) << " " 
-   //            << xplorerPrefChkBx->IsChecked( event.GetSelection() ) << std::endl;
-   preferenceMap[ ConvertUnicode( mode.c_str() ) ] = 
-               xplorerPrefChkBx->IsChecked( event.GetSelection() );
+
+   preferenceMap[ "Auto Launch Nav Pane" ] = navigationChkBx->IsChecked();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnBackgroundColorCheck( wxCommandEvent& event )
+{
+   wxString mode = xplorerChoices[ event.GetSelection() ];
+
+   preferenceMap[ "Use Preferred Background Color" ] = backgroundColorChkBx->IsChecked();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
+{
+   serviceList = VE_Conductor::CORBAServiceList::instance();
+
+   VE_XML::Command bkColor( UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" ) );
+   if ( bkColor.GetCommandName() != "NULL" )
+   {
+      bkColor.GetDataValuePair( "Background Color" )->GetData( xplorerColor );
+   }
+
+   wxColourDialog colorDlg(this,NULL);
+
+   colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
+
+   if (colorDlg.ShowModal() == wxID_OK)
+   {	   
+      wxColourData colorData = colorDlg.GetColourData();  
+      wxColour col = colorData.GetColour();
+
+      xplorerColor.clear();
+      xplorerColor.push_back(static_cast<double>(col.Red())/255.0);
+      xplorerColor.push_back(static_cast<double>(col.Green())/255.0);
+      xplorerColor.push_back(static_cast<double>(col.Blue())/255.0);
+      xplorerColor.push_back(1.0);
+
+      backgroundColor[ "Red" ] = xplorerColor.at(0);
+      backgroundColor[ "Green" ] = xplorerColor.at(1);
+      backgroundColor[ "Blue" ] = xplorerColor.at(2);
+      backgroundColor[ "Alpha" ] = xplorerColor.at(3);
+
+      // Create the command and data value pairs
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      dataValuePair->SetData(std::string("Background Color"),xplorerColor);
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+      veCommand->AddDataValuePair(dataValuePair);
+
+      serviceList->SendCommandStringToXplorer( veCommand );
+         
+      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
+      delete veCommand;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UserPreferences::GetMode( std::string mode )
@@ -178,9 +264,9 @@ void UserPreferences::ReadConfiguration( void )
    for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
    {
       cfg->Read( key + 
-         _T("/") + 
-         wxString( iter->first.c_str(), wxConvUTF8 ), 
-         &iter->second, false);
+                 _T("/") + 
+                 wxString( iter->first.c_str(), wxConvUTF8 ), 
+                 &iter->second, false);
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,4 +282,9 @@ void UserPreferences::WriteConfiguration( void )
           wxString( iter->first.c_str(), wxConvUTF8 ), 
           iter->second );
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+std::vector< double > UserPreferences::GetBackgroundColor()
+{
+    return xplorerColor;
 }

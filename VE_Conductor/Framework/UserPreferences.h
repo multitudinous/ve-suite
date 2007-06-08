@@ -26,7 +26,7 @@
  * Date modified: $Date: 2006-10-25 17:27:44 -0500 (Wed, 25 Oct 2006) $
  * Version:       $Rev: 5850 $
  * Author:        $Author: mccdo $
- * Id:            $Id: DataSetLoaderUI.h 5850 2006-10-25 22:27:44Z mccdo $
+ * Id:            $Id: UserPreferences.h 5850 2006-10-25 22:27:44Z mccdo $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -38,12 +38,17 @@ UserPreferences API
 /*!\class UserPreferences
 * 
 */
+#include <vector>
+
 #include <wx/string.h>
 #include <wx/gdicmn.h>
 #include <wx/intl.h>
 #include <wx/propdlg.h>
 
 class wxCheckListBox;
+class wxButton;
+class wxCheckBox;
+class wxColourData;
 
 #include <map>
 #include <string>
@@ -89,7 +94,9 @@ public:
    enum
    {
       ID_PREFERENCE_CHKBX=20001,
-      ID_XPLORER_CHKBX
+      ID_NAVIGATION_CHKBX,
+	  ID_BACKGROUND_COLOR_CHKBX,
+	  ID_BACKGROUND_COLOR_BUTTON
    };
 
    virtual ~UserPreferences();
@@ -107,7 +114,9 @@ public:
 
    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
    void OnPreferenceCheck( wxCommandEvent& event );
-   void OnXplorerCheck( wxCommandEvent& event );
+   void OnNavigationCheck( wxCommandEvent& event );
+   void OnBackgroundColorCheck( wxCommandEvent& event );
+   void OnSetBackgroundColor( wxCommandEvent& event );
    bool GetInteractiveMode( void );
    bool GetMode( std::string mode );
    void ReadConfiguration( void );
@@ -115,13 +124,26 @@ public:
       
    /// Should we show tooltips?
    static bool ShowToolTips();
+
+   ///Returns the chosen background color
+   std::vector< double > GetBackgroundColor( void );
    
 private:
    wxCheckListBox* prefChkBx;///<The check box list of preferences
-   wxCheckListBox* xplorerPrefChkBx;///<The check box list of preferences
+
+   wxButton* backgroundColorButton;///<To choose background color
+   wxCheckBox* backgroundColorChkBx;///<The check box list of preferences
+   wxCheckBox* navigationChkBx;///<The check box list of preferences
    //bool interactiveState;
    //bool autuLaunchNavPane;
-   wxString xplorerChoices[1];
+   wxString xplorerChoices[2];
+   wxColourData* xplorerWxColor;
+   std::vector<double> xplorerColor;
+   //wxColour* colour;
+
+   VE_Conductor::CORBAServiceList* serviceList;
+
+   std::map< std::string, double > backgroundColor; ///Map the colors to their values
 
    std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
    
