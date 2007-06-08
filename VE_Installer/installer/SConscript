@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg')
+Import('ves_pkg RootDir')
 
 launcherBundle = ves_pkg.createFileBundle( 'bin' )
 pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )
@@ -19,10 +19,10 @@ launcherBundle.addFiles( runScripts )
 launcherBundle.addFiles( pyFile )
 
 linuxDClick = ves_pkg.createFileBundle( pj('share','vesuite','misc' ) )
-dclickFiles = sca_util.getFilesRecursiveByExt( pj('.','LinuxConfig'), ['.xml'] )
-dclickFiles += sca_util.getFilesRecursiveByExt( pj('.','LinuxConfig'), ['.desktop'] )
-dclickFiles += sca_util.getFilesRecursiveByExt( pj('.','LinuxConfig'), ['.sh'] )
-dclickFiles += sca_util.getFilesRecursiveByExt( pj('.','LinuxConfig'), ['.png'] )
+dclickFiles = sca_util.getFilesRecursiveByExt( pj(RootDir,'VE_Installer','installer','LinuxConfig'), ['.xml'] )
+dclickFiles += sca_util.getFilesRecursiveByExt( pj(RootDir,'VE_Installer','installer','LinuxConfig'), ['.desktop'] )
+dclickFiles += sca_util.getFilesRecursiveByExt( pj(RootDir,'VE_Installer','installer','LinuxConfig'), ['.sh'] )
+dclickFiles += sca_util.getFilesRecursiveByExt( pj(RootDir,'VE_Installer','installer','LinuxConfig'), ['.png'] )
 
 dclickFiles = map(lambda s: pj('LinuxConfig', s), dclickFiles)
 
