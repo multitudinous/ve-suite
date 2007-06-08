@@ -290,7 +290,7 @@ viewlocPane( 0 )
 
     if( preferences->GetMode( "Use Preferred Background Color" ) )
     {
-        //xplorerColor = preferences->GetBackgroundColor();
+        xplorerColor = preferences->GetBackgroundColor();
 
         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
         dataValuePair->SetData(std::string("Background Color"),xplorerColor);
@@ -302,9 +302,6 @@ viewlocPane( 0 )
 
         UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
         delete veCommand;
-
-        //wxCommandEvent event;
-        //preferences->SetBackgroundColor( );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -94,12 +94,6 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    preferenceMap[ "Auto Launch Nav Pane" ] = false;
    preferenceMap[ "Use Preferred Background Color" ] = false;
 
-   ///Set the color map
-   backgroundColor[ "Red" ] = 0.0;
-   backgroundColor[ "Green" ] = 0.0;
-   backgroundColor[ "Blue" ] = 0.0;
-   backgroundColor[ "Alpha" ] = 1.0;
-
    ///Read from wxConfig
    ReadConfiguration();
    ///Read from ves file
@@ -252,36 +246,103 @@ bool UserPreferences::GetMode( std::string mode )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::ReadConfiguration( void )
 {
-   wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());//new wxConfig( _("VE-Conductor") );
+    wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());//new wxConfig( _("VE-Conductor") );
    
-   wxString key = _T("UserPreferences");
-   if ( !cfg->Exists( key ) ) 
-   {
-      return;
-   }
+    wxString key = _T("UserPreferences");
+    if ( !cfg->Exists( key ) ) 
+    {
+        return;
+    }
    
-   std::map< std::string, bool >::iterator iter;
-   for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
-   {
-      cfg->Read( key + 
+    std::map< std::string, bool >::iterator iter;
+    for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
+    {
+        cfg->Read( key + 
                  _T("/") + 
                  wxString( iter->first.c_str(), wxConvUTF8 ), 
                  &iter->second, false);
-   }
+
+        std::map< std::string, double >::iterator colorIter;
+        if( iter->first == "Use Preferred Background Color" )
+        {
+            xplorerColor.clear();
+            cfg->Read( key + 
+                       _T("/") + 
+                       _T("BackgroundColor") +
+                       _T("/") +
+                       wxString( "Red" ), 
+                       &backgroundColor[ "Red" ] );
+            xplorerColor.push_back( backgroundColor[ "Red" ] );
+
+            cfg->Read( key + 
+                       _T("/") + 
+                       _T("BackgroundColor") +
+                       _T("/") +
+                       wxString( "Green" ), 
+                       &backgroundColor[ "Green" ] ); 
+            xplorerColor.push_back( backgroundColor[ "Green" ] );
+
+            cfg->Read( key + 
+                       _T("/") + 
+                       _T("BackgroundColor") +
+                       _T("/") +
+                       wxString( "Blue" ), 
+                       &backgroundColor[ "Blue" ] );  
+            xplorerColor.push_back( backgroundColor[ "Blue" ] );
+
+            cfg->Read( key + 
+                       _T("/") + 
+                       _T("BackgroundColor") +
+                       _T("/") +
+                       wxString( "Alpha" ), 
+                       &backgroundColor[ "Alpha" ] );
+            xplorerColor.push_back( backgroundColor[ "Alpha" ] );
+        }
+        
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::WriteConfiguration( void )
 {
-   wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
-   wxString key = _T("UserPreferences");
-   std::map< std::string, bool >::iterator iter;
-   for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
-   {
-      cfg->Write( key + 
-          _T("/") + 
-          wxString( iter->first.c_str(), wxConvUTF8 ), 
-          iter->second );
-   }
+    wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
+    wxString key = _T("UserPreferences");
+    std::map< std::string, bool >::iterator iter;
+    for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
+    {
+        cfg->Write( key + 
+                    _T("/") + 
+                    wxString( iter->first.c_str(), wxConvUTF8 ), 
+                    iter->second );
+
+        std::map< std::string, double >::iterator colorIter;
+        if( iter->first == "Use Preferred Background Color" )
+        {
+            cfg->Write( key + 
+                        _T("/") + 
+                        _T("BackgroundColor") +
+                        _T("/") +
+                        wxString( "Red" ), 
+                        backgroundColor[ "Red" ] );  
+            cfg->Write( key + 
+                        _T("/") + 
+                        _T("BackgroundColor") +
+                        _T("/") +
+                        wxString( "Green" ), 
+                        backgroundColor[ "Green" ] );  
+            cfg->Write( key + 
+                        _T("/") + 
+                        _T("BackgroundColor") +
+                        _T("/") +
+                        wxString( "Blue" ), 
+                        backgroundColor[ "Blue" ] );  
+            cfg->Write( key + 
+                        _T("/") + 
+                        _T("BackgroundColor") +
+                        _T("/") +
+                        wxString( "Alpha" ), 
+                        backgroundColor[ "Alpha" ] );  
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< double > UserPreferences::GetBackgroundColor()
