@@ -1,0 +1,12 @@
+#!python
+import os, sys, string
+from time import sleep
+
+Import('baseEnv buildDir start RootDir')
+
+print "Creating ChangeLog...."
+os.system("svn log --xml --verbose -r'{'%s'}':'HEAD' %s > ChangeLog.xml" % (start, RootDir))
+sleep(2)
+os.system("xsltproc -o ChangeLog %s/Tools/svn2cl/svn2cl.xsl ChangeLog.xml" % RootDir)
+print "ChangeLog and ChangeLog.xml files are successfully created"
+
