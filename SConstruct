@@ -373,7 +373,11 @@ if not SConsAddons.Util.hasHelpFlag():
    if baseEnv[ 'buildLog' ] != '':
       sys.stdout = os.popen("tee "+ baseEnv[ 'buildLog' ], "w")
       sys.stderr = sys.stdout
-   
+
+   #Get Agument for changelog
+   start = ARGUMENTS.get('start', 0)
+   Export('start')   
+
    ##Tack on path prefixes to subdirs specified above.
    builderSubdirs=pj(buildDir, 'VE_Builder')
    ##builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
@@ -389,6 +393,8 @@ if not SConsAddons.Util.hasHelpFlag():
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    shareSubdirs = pj(buildDir,'share')
    docsSubdirs = pj('#', 'share', 'docs')
+   chlogSubdirs = pj('#', 'share', 'docs', 'changelog')
+   doxySubdirs = pj('#', 'share' , 'docs', 'doxygen')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    ##Set the Sconscript files to build.
@@ -410,6 +416,12 @@ if not SConsAddons.Util.hasHelpFlag():
    elif 'docs' in COMMAND_LINE_TARGETS:
       ves_dirs = [ docsSubdirs ]
       baseEnv.Alias('docs', docsSubdirs)
+   elif 'changelog' in COMMAND_LINE_TARGETS:
+      ves_dirs = [ chlogSubdirs ]
+      baseEnv.Alias('changelog', chlogSubdirs)
+   elif 'doxygen' in  COMMAND_LINE_TARGETS:
+      ves_dirs = [ doxySubdirs ]
+      baseEnv.Alias('doxygen', doxySubdirs)
    else:
       ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
                   xplorerSubdirs, ceSubdirs, veiSubdirs, 
@@ -419,23 +431,6 @@ if not SConsAddons.Util.hasHelpFlag():
    if 'testsuite' in COMMAND_LINE_TARGETS:
       ves_dirs.append(pj('#', 'test'))
       baseEnv.Alias('testsuite', pj('#', 'test'))
-
-   # Create Chagelog file
-   if 'changelog' in COMMAND_LINE_TARGETS:
-      print "Creating ChangeLog...."
-      myEnv = Environment()
-      start = ARGUMENTS.get('start', 0)
-      os.system("svn log --xml --verbose -r'{'%s'}':'HEAD' > ChangeLog.xml" % (start)) 
-      sleep(2)
-      os.system("xsltproc -o ChangeLog Tools/svn2cl/svn2cl.xsl ChangeLog.xml")
-      print "ChangeLog and ChangeLog.xml files are successfully created"
-      Exit(value=0)
-
-   if 'doxygen' in COMMAND_LINE_TARGETS:
-      print "Generating doxygen files...."
-      cmd = "doxygen"
-      os.system(cmd)
-      Exit(value=0)
 
    ## directory for dzr files
    ves_dirs += [pj( buildDir,'VE_Installer','mk')]
