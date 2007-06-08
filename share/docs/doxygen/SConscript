@@ -1,0 +1,6 @@
+#!python
+import os, sys
+
+print "Generating doxygen files...."
+cmd = "doxygen"
+os.system(cmd)
