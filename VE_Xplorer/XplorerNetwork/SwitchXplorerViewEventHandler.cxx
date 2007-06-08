@@ -103,28 +103,31 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
       command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
    std::string viewData;
    activeModelDVP->GetData( viewData );
-   if ( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
+   if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
    {
       SceneManager::instance()->SetActiveSwitchNode( 2 );
       VE_SceneGraph::DCS  * tempDCS = SceneManager::instance()->GetNetworkDCS();
 
       NetworkSystemView networkLayout( cfdExecutive::instance()->veNetwork );
-      if ( tempDCS->GetNumChildren() >= 1 )
+      if( tempDCS->GetNumChildren() >= 1 )
       {
          tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
       }
-      tempDCS->addChild( networkLayout.DrawNetwork().get() );
+      
+      osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
+      if( tempGroup.valid() )
+      {
+          tempDCS->addChild( tempGroup.get() );
+      }
    }
-   else if ( viewData == "CHANGE_XPLORER_VIEW_CAD" )
+   else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
    {
       SceneManager::instance()->SetActiveSwitchNode( 0 );
    }
-
-   else if ( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
+   else if( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
    {
       SceneManager::instance()->SetActiveSwitchNode( 1 );
    }
-	
    else
    {
       SceneManager::instance()->SetActiveSwitchNode( 0 );

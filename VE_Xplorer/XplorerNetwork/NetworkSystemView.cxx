@@ -87,20 +87,23 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 ////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 {
+	VE_XML::XMLReaderWriter networkWriter;
+	networkWriter.UseStandaloneDOMDocumentManager();
+	std::vector< VE_XML::XMLObject* > objectVector;
+	// do this for models
+	networkWriter.ReadXMLData( network, "Model", "veModel" );
+	objectVector = networkWriter.GetLoadedXMLObjects();
+    if( objectVector.empty() )
+    {
+        return 0;
+    }
+    
 	osg::ref_ptr<osg::Group> loadedModels = new osg::Group(); 
 	osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
 	colorBlack->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
 	osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
 	shared_normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
-	VE_XML::XMLReaderWriter networkWriter;
-	networkWriter.UseStandaloneDOMDocumentManager();
-
-	std::vector< VE_XML::XMLObject* > objectVector;
-
-	// do this for models
-	networkWriter.ReadXMLData( network, "Model", "veModel" );
-	objectVector = networkWriter.GetLoadedXMLObjects();
-
+    
 	// now lets create a list of them
 	for ( size_t i = 0; i < objectVector.size(); ++i )
 	{
