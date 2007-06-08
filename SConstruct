@@ -5,6 +5,7 @@ SConsignFile()
 import os, sys, re,string, smtplib,platform
 import distutils.util
 import commands
+from time import sleep
 pj = os.path.join
 
 # Pull in SConsAddons from the source directory if necessary.
@@ -134,9 +135,8 @@ def CreateConfig(target, source, env):
 ################################################################################
 ################################################################################
 # Figure out what version of VE-Suite we're building
-VE_SUITE_VERSION = ( int('1'), int('0'), int('2') )
+VE_SUITE_VERSION = ( int('1'), int('1'), int('0') )
 print 'Building VE-Suite Version: %i.%i.%i' % VE_SUITE_VERSION
-
 help_text = "\n---- VE-Suite Build System ----\n"
 
 # Create the extra builders
@@ -229,7 +229,15 @@ Targets:
 
       ce - Build VE-CE
       > scons ce
-      
+
+   To create a ChageLog file:
+      changelog - Create ChangeLog and ChangeLog.xml
+      > scons changelog start=2007-06-01' you can change a start date
+
+   To generate the doxygen documents:
+      doxygen - Generate Doxygen Document
+      > scons doxygen
+
    Make sure that:
       vrjuggler, 
       gmtl, 
@@ -383,7 +391,6 @@ if not SConsAddons.Util.hasHelpFlag():
    docsSubdirs = pj('#', 'share', 'docs')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
-
    ##Set the Sconscript files to build.
    if 'xplorer' in COMMAND_LINE_TARGETS:
       ves_dirs = [ xplorerSubdirs ]
@@ -413,6 +420,23 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs.append(pj('#', 'test'))
       baseEnv.Alias('testsuite', pj('#', 'test'))
 
+   # Create Chagelog file
+   if 'changelog' in COMMAND_LINE_TARGETS:
+      print "Creating ChangeLog...."
+      myEnv = Environment()
+      start = ARGUMENTS.get('start', 0)
+      os.system("svn log --xml --verbose -r'{'%s'}':'HEAD' > ChangeLog.xml" % (start)) 
+      sleep(2)
+      os.system("xsltproc -o ChangeLog Tools/svn2cl/svn2cl.xsl ChangeLog.xml")
+      print "ChangeLog and ChangeLog.xml files are successfully created"
+      Exit(value=0)
+
+   if 'doxygen' in COMMAND_LINE_TARGETS:
+      print "Generating doxygen files...."
+      cmd = "doxygen"
+      os.system(cmd)
+      Exit(value=0)
+
    ## directory for dzr files
    ves_dirs += [pj( buildDir,'VE_Installer','mk')]
    ## directory for examples
@@ -441,3 +465,11 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Alias('install', PREFIX)
    Default('.')
 
+#Freeze the velauncher.py
+#   if GetPlatform() == 'linux':
+#      baseDir = "/home/vr/Applications/TSVEG/Build_Apps/pyinstaller-1.3"
+#      targetDir = pj(PREFIX, 'bin')
+#      os.system("python %s/Configure.py" % baseDir)
+#      os.system("python %s/Makespec.py --onefile --out=%s velauncher.py" % (baseDir, veiSubdirs))
+#      os.system("python %s/Build.py %s/velauncher.spec" % (baseDir, veiSubdirs))
+#      os.system("mv velauncher %s/velauncher" % targetDir)
