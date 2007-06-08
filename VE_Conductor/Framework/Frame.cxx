@@ -196,7 +196,6 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
-    EVT_MENU( CAD_NODE_DIALOG, AppFrame::LaunchCADNodePane )
     EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
    EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
    EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
@@ -225,8 +224,7 @@ m_frame( 0 ),
 _treeView( 0 ),
 deviceProperties( 0 ),
 navPane( 0 ),
-viewlocPane( 0 ),
-_cadDialog( 0 )
+viewlocPane( 0 )
 {
     serviceList = VE_Conductor::CORBAServiceList::instance();
 
@@ -292,7 +290,7 @@ _cadDialog( 0 )
 
     if( preferences->GetMode( "Use Preferred Background Color" ) )
     {
-        xplorerColor = preferences->GetBackgroundColor();
+        //xplorerColor = preferences->GetBackgroundColor();
 
         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
         dataValuePair->SetData(std::string("Background Color"),xplorerColor);
@@ -548,7 +546,6 @@ void AppFrame::StoreFrameSize( wxRect rect, wxConfig* config)
     cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
     cfg->Write (key + _T("/") + LOCATION_W, rect.width);
     cfg->Write (key + _T("/") + LOCATION_H, rect.height);
-  
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig(wxConfig* config)
@@ -580,70 +577,31 @@ void AppFrame::StoreRecentFile( wxConfig* config )
     //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
     m_recentVESFiles->Save(*cfg);
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
     //std::cout << "Conductor Exiting Xplorer" << std::endl;
-   if ( GetDisplayMode() == "Desktop" )
-   {
-      ExitXplorer();
-   }
-   //std::cout << "Deleting TreeView" << std::endl;
-   if(_treeView)
-   {
-      _treeView->Destroy();
-   }
-   //std::cout << "Deleting Device Properties" << std::endl;
-   if ( deviceProperties )
-   {
-      deviceProperties->Destroy();
-      deviceProperties = 0;
-   }
-   //std::cout << "Deleting Nav Pane" << std::endl;
-   if ( navPane )
-   {
-      navPane->Destroy();
-      navPane = 0;
-   }
-   //std::cout << "Deleting View Pane" << std::endl;
-   if ( viewlocPane )
-   {
-      viewlocPane->Destroy();
-      viewlocPane = 0;
-   }
-   //std::cout << "Deleting CAD Dialog" << std::endl;
-  
-   if( _cadDialog)
-   {
-      _cadDialog->Destroy();
-      _cadDialog = 0;
-   }
-
-    if(preferences)
+    if ( GetDisplayMode() == "Desktop" )
     {
-        delete preferences;
-        preferences = 0;
+        ExitXplorer();
     }
-   //std::cout << "Deleting Frame" << std::endl;
-   StoreFrameSize(GetRect(), NULL);
-   StoreConfig(NULL);
-   StoreRecentFile(NULL);
-   delete wxConfigBase::Set((wxConfigBase *) NULL); 
-   
-   Destroy();
-   //std::cout << "Shuting Down CORBA" << std::endl;
+    //std::cout << "Deleting Frame" << std::endl;
+    //We have to mannually destroy these to make sure that things shutdown 
+    //properly with CORBA. There may be a possible way to get around this but
+    //am not sure.
+    StoreFrameSize(GetRect(), NULL);
+    StoreConfig(NULL);
+    StoreRecentFile(NULL);
+    delete wxConfigBase::Set((wxConfigBase *) NULL); 
+    Destroy();
+    //std::cout << "Shuting Down CORBA" << std::endl;
 
-   network->Destroy();
-   network = 0;
-   serviceList->CleanUp();
-   serviceList = 0;
-    if( m_recentVESFiles)
-    {
-        delete m_recentVESFiles;
-    }
+    network->Destroy();
+    network = 0;
+    serviceList->CleanUp();
+    serviceList = 0;
+    delete m_recentVESFiles;
     m_recentVESFiles = 0;
-   //std::cout << "End Cleanup" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
@@ -747,9 +705,6 @@ void AppFrame::CreateMenu()
    //help_menu->Enable(v21ID_HELP, false);
    //help_menu->Enable(wxID_ABOUT, true);
 
-   //if (f_visualization)
-   {
-
     xplorerMenu = new wxMenu();
     xplorerDeviceMenu = new wxMenu();
 
@@ -797,37 +752,19 @@ void AppFrame::CreateMenu()
    {
       xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
    }
-	//xplorerMenu->Append( CAD_NODE_DIALOG, _("CAD Hierarchy"));
-//	xplorerMenu->Append( XPLORER_VISTABS, _("Vis Tabs"));
-//   xplorerMenu->Append( XPLORER_VISTAB, _("Visualization Tabs"));
 
    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
    //xplorerMenu->Enable( XPLORER_SOUNDS, true);
    xplorerMenu->Enable( XPLORER_SCENES, true);
-   //xplorerMenu->Enable( XPLORER_STREAMLINE, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
-//	xplorerMenu->Enable( CAD_NODE_DIALOG,true);
-   }
-//  config_menu->Append(v21ID_BASE,_("Base Quench"));
-//  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
-//  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
-//  config_menu->Append(v21ID_REI_SOUR, _("Base Quench & Sour Shift CO2 (REI)"));
-//  config_menu->Append(v21ID_SWEET, _("Sweet Shift CO2"));
-//  config_menu->Append(v21ID_CO_DISPOSAL, _("Co-Disposal of H2S+CO2"));
-  
-//  config_menu->Enable(v21ID_SWEET, false);
-//  config_menu->Enable(v21ID_CO_DISPOSAL, false);
 
-   menubar->Append(file_menu, _("&File"));
-//   menubar->Append(config_menu, _("&Configurations"));
-   menubar->Append(edit_menu, _("&Edit"));
-   menubar->Append(con_menu, _("&Connection"));
-   menubar->Append(run_menu, _("&Execution"));
-   menubar->Append( xplorerMenu, _("&VE-Xplorer") );
-   menubar->Append(help_menu, _("&Help"));
-   //if (f_visualization)
-
+    menubar->Append(file_menu, _("&File"));
+    menubar->Append(edit_menu, _("&Edit"));
+    menubar->Append(con_menu, _("&Connection"));
+    menubar->Append(run_menu, _("&Execution"));
+    menubar->Append( xplorerMenu, _("&VE-Xplorer") );
+    menubar->Append(help_menu, _("&Help"));
 
    SetMenuBar( menubar );
 }
@@ -1730,7 +1667,7 @@ void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
    if ( deviceProperties == 0 )
    {
       // create pane and set appropriate vars
-      deviceProperties = new DeviceProperties();
+      deviceProperties = new DeviceProperties( this );
    }
    // now show it
    deviceProperties->Show();
@@ -1741,7 +1678,7 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    if ( navPane == 0 )
    {
       // create pane and set appropriate vars
-      navPane = new NavigationPane();
+      navPane = new NavigationPane( this );
    }
    // now show it
    navPane->Show();
@@ -1900,7 +1837,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    if ( viewlocPane == 0 )
    {
       // create pane and set appropriate vars
-      viewlocPane = new ViewLocPane( );
+      viewlocPane = new ViewLocPane( this );
    }
    else
    {
@@ -1909,17 +1846,6 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    viewlocPane->Show();
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LaunchCADNodePane( wxCommandEvent& WXUNUSED( event ) )
-{
-   if( !_cadDialog)
-   {
-      //this will change once we have a way to retrieve the geometry from the model
-      _cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg(0,
-                                                               this,CAD_NODE_DIALOG);
-   }
-   _cadDialog->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& event )
