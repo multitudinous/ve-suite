@@ -12,12 +12,3 @@ launcherBundle.addFiles( jconfFile )
 fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
 fontBundle.addFiles( fontFile )
-
-##env = ves_pkg.getEnv().Copy()
-##if env.has_key('SVN_Date'):
-##=env['SVN_Date']
-##execute the command
-##add to launcherBundle
-   
-
-

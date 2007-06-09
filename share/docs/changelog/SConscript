@@ -1,12 +1,38 @@
-#!python
+##Building the ChangeLog
 import os, sys, string
 from time import sleep
+from SCons.Util import WhereIs
 
 Import('baseEnv buildDir start RootDir')
 
-print "Creating ChangeLog...."
-os.system("svn log --xml --verbose -r'{'%s'}':'HEAD' %s > ChangeLog.xml" % (start, RootDir))
+##env = ves_pkg.getEnv().Copy()
+##if env.has_key('SVN_Previous_Date'):
+##=env['SVN_Previous_Date']
+##execute the command
+##add to launcherBundle
+
+sys.stdout.write("Generating the ChangeLog....\n")
+# Find svn
+sys.stdout.write("searching for svn...\n")
+svn_cmd = WhereIs('svn')
+if None == svn_cmd:
+    sys.stdout.write("Could not find svn. Please make sure svn is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found svn\n")
+
+# Find xsltproc
+sys.stdout.write("searching for xsltproc...\n")
+xsltproc_cmd = WhereIs('xsltproc')
+if None == svn_cmd:
+    sys.stdout.write("Could not find xsltproc. Please make sure xsltproc is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found xsltproc\n")
+
+os.system("%s log --xml --verbose -r'{'%s'}':'HEAD' %s > ChangeLog.xml" % (svn_cmd, start, RootDir))
 sleep(2)
-os.system("xsltproc -o ChangeLog %s/Tools/svn2cl/svn2cl.xsl ChangeLog.xml" % RootDir)
-print "ChangeLog and ChangeLog.xml files are successfully created"
+os.system("%s -o ChangeLog %s/Tools/svn2cl/svn2cl.xsl ChangeLog.xml" % (xsltproc_cmd, RootDir) )
+
+sys.stdout.write("ChangeLog and ChangeLog.xml files are successfully created\n")
 

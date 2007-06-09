@@ -1,6 +1,18 @@
-#!python
+##Builds the ChangeLog files
 import os, sys
+from SCons.Util import WhereIs
+pj = os.path.join
 
-print "Generating doxygen files...."
-cmd = "doxygen"
-os.system(cmd)
+sys.stdout.write("Generating doxygen files....\n")
+# Find doxygen
+sys.stdout.write("searching for doxygen...\n")
+doxygen_cmd = WhereIs('doxygen')
+if None == doxygen_cmd:
+    sys.stdout.write("Could not find doxygen. Please make sure doxygen is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found doxygen\n")
+
+os.system( doxygen_cmd )
+sys.stdout.write("Done creating documentation\n")
+

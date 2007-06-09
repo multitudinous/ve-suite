@@ -205,7 +205,7 @@ opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'no')
 opts.Add('buildLog', 'Provide a file name for the build log if you would like a log', '')
 opts.Add('options_file', 'Provide a file name for the options caches', '')
 opts.Add('build_dir', 'Provide an alternate build directory for variants', buildDir)
-opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from','')
+opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should be of the form yyyy-mm-dd','')
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 
@@ -241,7 +241,7 @@ Targets:
 
    To create a ChageLog file:
       changelog - Create ChangeLog and ChangeLog.xml
-      > scons changelog start=2007-06-01' you can change a start date
+      > scons changelog SVN_Previous_Date=2007-06-01' you can change a start date
 
    To generate the doxygen documents:
       doxygen - Generate Doxygen Document
