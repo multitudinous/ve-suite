@@ -120,6 +120,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
       {
          isCluster = true;
          masterhost = std::string( argv[i+1] );
+         std::cout << "The cluster master is " << masterhost << std::endl;
          break;
       }
    }
@@ -138,29 +139,38 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
         _vjObs->SetClusterMode( true );
         std::string name;
         vpr::InetAddr masterAddress;
+        std::vector< vpr::InetAddr > tempAddrVec;
 #if __VJ_version > 2000003
-        name = masterAddress.getHostname();
+        tempAddrVec = vpr::InetAddr::getAllLocalAddrs( false );
 #elif __VJ_version == 2000003
-        masterAddress.getHostname( name );
+        masterAddress.getAllLocalAddrs( tempAddrVec, false );
 #endif
-        std::cout << "Primary hostname " << name << " and primary address " 
-            << masterAddress.getAddressString() << std::endl;
-        std::vector< std::string > hostnames = masterAddress.getHostnames();
 
         std::vector<std::string> toks;
-        for( size_t i = 0; i < hostnames.size(); ++i )
+        std::string tempHostname;
+        for( size_t i = 0; i < tempAddrVec.size(); ++i )
         {
-            std::cout << "Host name is " << hostnames.at( i ) <<std::endl;
-            getStringTokens( hostnames.at( i ).c_str(),".", toks);
+#if __VJ_version > 2000003
+            tempHostname = tempAddrVec.at( i ).getHostname();
+#elif __VJ_version == 2000003
+             tempAddrVec.at( i ).getHostname( tempHostname );
+#endif
+            std::cout << "Host name is " << tempHostname <<std::endl;
+            getStringTokens( tempHostname.c_str(),".", toks);
             //now toks[0] will be the short host name
             //the one without the domain name
-            if( (hostnames.at( i ) == masterhost) || (toks[0]==masterhost) )
+            if( (tempHostname == masterhost) || (toks[0]==masterhost) )
             {
                 std::cout<<"This is the master!"<<std::endl;
                 isMaster = true;
                 break;
             }
         }
+    }
+    else
+    {
+        isMaster = true;
+        _vjObs->SetClusterMode( false );
     }
 
    if( isMaster || !isCluster )
@@ -182,11 +192,9 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
       {
          naming_context->rebind(name, vjobs.in());
       }
-      isMaster = true;
-      _vjObs->SetClusterMode( false );
 
-	  ///This is the new way of communication
-	  Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
+	   ///This is the new way of communication
+	   Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
       
       CosNaming::Name xplorerName;
       xplorerName.length(1);
