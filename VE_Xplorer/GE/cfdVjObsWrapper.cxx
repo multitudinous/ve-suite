@@ -138,7 +138,11 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
         _vjObs->SetClusterMode( true );
         std::string name;
         vpr::InetAddr masterAddress;
+#if __VJ_version > 2000003
+        name = masterAddress.getHostname();
+#elif __VJ_version == 2000003
         masterAddress.getHostname( name );
+#endif
         std::cout << "Primary hostname " << name << " and primary address " 
             << masterAddress.getAddressString() << std::endl;
         std::vector< std::string > hostnames = masterAddress.getHostnames();
