@@ -96,7 +96,8 @@ public:
       ID_PREFERENCE_CHKBX=20001,
       ID_NAVIGATION_CHKBX,
 	  ID_BACKGROUND_COLOR_CHKBX,
-	  ID_BACKGROUND_COLOR_BUTTON
+	  ID_BACKGROUND_COLOR_BUTTON,
+      ID_SHUTDOWN_MODE_CHKBX
    };
 
    virtual ~UserPreferences();
@@ -117,6 +118,7 @@ public:
    void OnNavigationCheck( wxCommandEvent& event );
    void OnBackgroundColorCheck( wxCommandEvent& event );
    void OnSetBackgroundColor( wxCommandEvent& event );
+   void OnShutdownMode( wxCommandEvent& event );
    bool GetInteractiveMode( void );
    bool GetMode( std::string mode );
    void ReadConfiguration( void );
@@ -132,11 +134,13 @@ private:
    wxCheckListBox* prefChkBx;///<The check box list of preferences
 
    wxButton* backgroundColorButton;///<To choose background color
-   wxCheckBox* backgroundColorChkBx;///<The check box list of preferences
-   wxCheckBox* navigationChkBx;///<The check box list of preferences
+   wxCheckBox* backgroundColorChkBx;///<The check box for background color
+   wxCheckBox* navigationChkBx;///<The check box for navigation pane
+   wxCheckBox* shutdownModeChkBx;///<The check for shutting down in cluster mode
+
    //bool interactiveState;
    //bool autuLaunchNavPane;
-   wxString xplorerChoices[2];
+   wxString xplorerChoices[3];
    wxColourData* xplorerWxColor;
    std::vector<double> xplorerColor;
    //wxColour* colour;

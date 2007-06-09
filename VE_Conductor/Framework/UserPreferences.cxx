@@ -62,6 +62,7 @@ BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
    EVT_CHECKBOX( ID_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
    EVT_CHECKBOX( ID_BACKGROUND_COLOR_CHKBX, UserPreferences::OnBackgroundColorCheck )
    EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
+   EVT_CHECKBOX( ID_SHUTDOWN_MODE_CHKBX, UserPreferences::OnShutdownMode )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
@@ -93,6 +94,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    preferenceMap[ "Interactive_State" ] = false;
    preferenceMap[ "Auto Launch Nav Pane" ] = false;
    preferenceMap[ "Use Preferred Background Color" ] = false;
+   preferenceMap[ "Shut Down Xplorer Option" ] = false;
 
    ///Read from wxConfig
    ReadConfiguration();
@@ -141,16 +143,23 @@ void UserPreferences::CreateControls()
    colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
    navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   shutdownModeChkBx = new wxCheckBox(panel, ID_SHUTDOWN_MODE_CHKBX, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
    xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
    xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
+   xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
+
    backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
    backgroundColorChkBx->IsChecked();
    navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
    navigationChkBx->IsChecked();
+   shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
+   shutdownModeChkBx->IsChecked();
 
    itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
    itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+   itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+
    ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("User Mode"));
@@ -187,6 +196,13 @@ void UserPreferences::OnBackgroundColorCheck( wxCommandEvent& event )
    wxString mode = xplorerChoices[ event.GetSelection() ];
 
    preferenceMap[ "Use Preferred Background Color" ] = backgroundColorChkBx->IsChecked();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnShutdownMode( wxCommandEvent& event )
+{
+   wxString mode = xplorerChoices[ event.GetSelection() ];
+
+   preferenceMap[ "Shut Down Xplorer Option" ] = shutdownModeChkBx->IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
@@ -262,7 +278,6 @@ void UserPreferences::ReadConfiguration( void )
                  wxString( iter->first.c_str(), wxConvUTF8 ), 
                  &iter->second, false);
 
-        std::map< std::string, double >::iterator colorIter;
         if( iter->first == "Use Preferred Background Color" )
         {
             xplorerColor.clear();
@@ -297,8 +312,7 @@ void UserPreferences::ReadConfiguration( void )
                        wxString( "Alpha", wxConvUTF8 ), 
                        &backgroundColor[ "Alpha" ] );
             xplorerColor.push_back( backgroundColor[ "Alpha" ] );
-        }
-        
+        }     
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -314,7 +328,6 @@ void UserPreferences::WriteConfiguration( void )
                     wxString( iter->first.c_str(), wxConvUTF8 ), 
                     iter->second );
 
-        std::map< std::string, double >::iterator colorIter;
         if( iter->first == "Use Preferred Background Color" )
         {
             cfg->Write( key + 

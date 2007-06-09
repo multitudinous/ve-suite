@@ -305,6 +305,11 @@ viewlocPane( 0 )
         UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
         delete veCommand;
     }
+
+    if( preferences->GetMode( "Shut Down Xplorer Option" ) )
+    {
+        xplorerMenu->Enable( XPLORER_EXIT, true);
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
@@ -760,6 +765,7 @@ void AppFrame::CreateMenu()
    //xplorerMenu->Enable( XPLORER_SOUNDS, true);
    xplorerMenu->Enable( XPLORER_SCENES, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+   xplorerMenu->Enable( XPLORER_EXIT, false);
 
     menubar->Append(file_menu, _("&File"));
     menubar->Append(edit_menu, _("&Edit"));
