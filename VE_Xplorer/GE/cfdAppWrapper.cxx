@@ -96,7 +96,7 @@ void cfdAppWrapper::init( void* )
       }
       else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
       {
-          //Skip the mast computer name
+          //Skip the master computer name
           i = i + 1;
       }
       else

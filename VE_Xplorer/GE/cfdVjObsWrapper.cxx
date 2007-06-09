@@ -50,6 +50,8 @@
 #include <iostream>
 #include <boost/concept_check.hpp>
 
+#include <vpr/IO/Socket/InetAddr.h>
+
 using namespace CosNaming;
 using namespace VE_Xplorer;
 
@@ -125,29 +127,37 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
    this->poa = poa;
    naming_context = input;
 
-   if ( isCluster )
-   {
-       std::vector<std::string> toks;
-       std::string hostfile;
-       std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
-       std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
-                << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-                << "       in the application data config file." << std::endl;
+    if( isCluster )
+    {
+        std::cout << "----------------CLUSTER INFO-------------------" 
+            << std::endl
+            << "NOTE : Be sure to specify this GUID = " << std::endl
+            << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+            << "       in the application data config file." << std::endl;
 
-      char raw_hostname[256];
-      std::string hostname;
-      gethostname(raw_hostname, 255); //get the host name 
-      hostname = raw_hostname;
-      std::cout<<"Host name is "<<hostname<<std::endl;   
-      _vjObs->SetClusterMode( true );
-      getStringTokens(raw_hostname,".", toks);
-      //now toks[0] will be the short host name: the one without the domain name
-      if (hostname==masterhost||toks[0]==masterhost)
-      {
-          std::cout<<"This is the master!"<<std::endl;
-          isMaster = true;
-      }
-   }
+        _vjObs->SetClusterMode( true );
+        std::string name;
+        vpr::InetAddr masterAddress;
+        masterAddress.getHostname( name );
+        std::cout << "Primary hostname " << name << " and primary address " 
+            << masterAddress.getAddressString() << std::endl;
+        std::vector< std::string > hostnames = masterAddress.getHostnames();
+
+        std::vector<std::string> toks;
+        for( size_t i = 0; i < hostnames.size(); ++i )
+        {
+            std::cout << "Host name is " << hostnames.at( i ) <<std::endl;
+            getStringTokens( hostnames.at( i ).c_str(),".", toks);
+            //now toks[0] will be the short host name
+            //the one without the domain name
+            if( (hostnames.at( i ) == masterhost) || (toks[0]==masterhost) )
+            {
+                std::cout<<"This is the master!"<<std::endl;
+                isMaster = true;
+                break;
+            }
+        }
+    }
 
    if( isMaster || !isCluster )
    {
@@ -228,11 +238,13 @@ long cfdVjObsWrapper::GetSetFrameNumber( long x )
    return _vjObs->GetSetFrameNumber( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int cfdVjObsWrapper::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
+int cfdVjObsWrapper::getStringTokens(const char* buffer, char* delim, std::vector<std::string> &toks)
 {
    char* token;
    int i=0;
-   token = strtok(buffer, delim);
+   std::string tempBuffer( buffer );
+   char* temp = const_cast< char* >( tempBuffer.c_str() );
+   token = strtok(temp, delim);
 
    toks.clear();
    while( token )

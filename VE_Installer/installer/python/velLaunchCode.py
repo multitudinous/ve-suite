@@ -298,8 +298,8 @@ class Launch:
         ##Construct the call
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
-            s += ["-VESCluster "]
-            s += self.settings["ClusterMaster"]).split('.')[0]
+            s += ["-VESCluster"]
+            s += [ self.settings["ClusterMaster"].split('.')[0] ]
         s[len(s):] = desktop
         ##Special arguments added for master, slave, and solo computer Xplorer calls.
         if computerType.lower() == "master":
