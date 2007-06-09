@@ -35,9 +35,9 @@
 
 #define VE_PHYSICS 1
 
-#define VES_MAJOR_VERSION 1
-#define VES_MINOR_VERSION 0
-#define VES_PATCH_VERSION 6
+#define VES_MAJOR_VERSION    1
+#define VES_MINOR_VERSION    0
+#define VES_PATCH_VERSION    6
 
 #if defined(_MSC_VER)
    //#pragma warning( disable : 4244 )

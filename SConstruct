@@ -135,7 +135,16 @@ def CreateConfig(target, source, env):
 ################################################################################
 ################################################################################
 # Figure out what version of VE-Suite we're building
-VE_SUITE_VERSION = ( int('1'), int('1'), int('0') )
+def GetVESVersion():
+   "Gets the VE-Suite version from the VE_Installer/include/VEConfig.h header"
+
+   contents = open( pj('VE_Installer','include','VEConfig.h'), 'r').read()
+   major = re.compile('.*(#define *VES_MAJOR_VERSION *(\d+)).*', re.DOTALL).sub(r'\2', contents)
+   minor = re.compile('.*(#define *VES_MINOR_VERSION *(\d+)).*', re.DOTALL).sub(r'\2', contents)
+   patch = re.compile('.*(#define *VES_PATCH_VERSION *(\d+)).*', re.DOTALL).sub(r'\2', contents)
+   return (int(major), int(minor), int(patch))
+
+VE_SUITE_VERSION = GetVESVersion()
 print 'Building VE-Suite Version: %i.%i.%i' % VE_SUITE_VERSION
 help_text = "\n---- VE-Suite Build System ----\n"
 
