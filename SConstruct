@@ -117,20 +117,6 @@ def CreateConfig(target, source, env):
 
 ##See scons users guide section 15 on variant builds
 ##Setup some project defaults
-
-## make the temp bin and lib dirs in the build dir
-##if not os.path.exists( pj( buildDir, 'lib' ) ):
-   ##baseEnv.Execute(Mkdir( pj( buildDir, 'lib' ) ))
-   ##os.makedirs( pj( buildDir, 'lib' ) )
-
-##if not os.path.exists( pj( buildDir, 'lib', 'flagpoll' ) ):
-   ##baseEnv.Execute(Mkdir( pj( buildDir, 'lib', 'flagpoll' ) ))
-   ##os.makedirs( pj( buildDir, 'lib', 'flagpoll' ) )
-
-##if not os.path.exists( pj( buildDir, 'bin' ) ):
-   ##baseEnv.Execute(Mkdir( pj( buildDir, 'bin' ) ))
-   ##os.makedirs( pj( buildDir, 'bin' ) )
-
 ################################################################################
 ################################################################################
 ################################################################################
@@ -334,6 +320,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if baseEnv['Patented'] == 'yes':
       baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
+      buildDir += '.patented'
 
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
