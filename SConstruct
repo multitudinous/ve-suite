@@ -207,23 +207,28 @@ Targets:
    
    To install VE-Suite:
       install - Install VE-Suite
-      > scons install prefix=build/test' to install in a test build directory
+      > scons install prefix=<build/test> to install in a test build directory
  
    To build a specific component of VE-Suite:
-      builder - Build VE-Builder
-      > scons builder
+      Build VE-Builder
+      > cd VE_Builder
+      > scons -u
 
-      open - Build VE-Open
-      > scons open
+      Build VE-Open
+      > cd VE_Open
+      > scons -u
 
-      conductor - Build VE-Conductor
-      > scons conductor
+      Build VE-Conductor
+      > cd VE_Condutor
+      > scons -u
 
-      xplorer - Build VE-Xplorer
-      > scons xplorer
+      Build VE-Xplorer
+      > cd VE_Xplorer
+      > scons -u
 
-      ce - Build VE-CE
-      > scons ce
+      Build VE-CE
+      > cd VE_CE
+      > scons -u
 
    To create a ChageLog file:
       changelog - Create ChangeLog and ChangeLog.xml
@@ -394,22 +399,7 @@ if not SConsAddons.Util.hasHelpFlag():
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    ##Set the Sconscript files to build.
-   if 'xplorer' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ xplorerSubdirs ]
-      baseEnv.Alias('xplorer', xplorerSubdirs)
-   elif 'builder' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ builderSubdirs ]
-      baseEnv.Alias('builder', builderSubdirs)
-   elif 'ce' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ ceSubdirs ]
-      baseEnv.Alias('ce', ceSubdirs)
-   elif 'open' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ openSubdirs ]
-      baseEnv.Alias('open', openSubdirs)
-   elif 'conductor' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ conductorSubdirs ]
-      baseEnv.Alias('conductor', conductorSubdirs)
-   elif 'docs' in COMMAND_LINE_TARGETS:
+   if 'docs' in COMMAND_LINE_TARGETS:
       ves_dirs = [ docsSubdirs ]
       baseEnv.Alias('docs', docsSubdirs)
    elif 'changelog' in COMMAND_LINE_TARGETS:
