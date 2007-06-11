@@ -460,8 +460,8 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b,
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-    VE_SceneGraph::DCS* switchNode = 
-        VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    VE_SceneGraph::DCS* switchNode = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+
     gmtl::Matrix44d matrix = switchNode->GetMat();
 
     //Get the selected objects and expand by their bounding box

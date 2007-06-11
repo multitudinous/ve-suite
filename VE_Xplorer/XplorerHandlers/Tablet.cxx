@@ -126,8 +126,7 @@ void Tablet::UpdateNavigation()
          center_point->mData[i] = 0.0f;
 	   }
 
-      //center_point->mData[1] = worldTrans[1] =
-      //static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->GetCenterPointThreshold();
+      center_point->mData[1] = worldTrans[1] = 2.0f;
    }
    else if ( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
    {

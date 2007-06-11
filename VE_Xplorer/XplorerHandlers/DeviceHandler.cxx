@@ -67,9 +67,8 @@ center_point( 0, 0, 0 ),
 m_threshold( 0.5f ),
 m_jump( 10.0f )
 {
-    //Move the center point to the center of all objects in the world
-    osg::Vec3d worldCenter = activeDCS->getBound().center();
-    center_point.set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
+    //Move the world DCS forward a little bit
+    activeDCS->setPosition( osg::Vec3d( 0.0, 2.0, 0.0 ) );
 
     //Initialize Devices
     devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
