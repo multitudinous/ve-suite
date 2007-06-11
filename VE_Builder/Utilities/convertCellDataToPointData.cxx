@@ -42,6 +42,8 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
+#include <vtkDataObject.h>
+#include <vtkMultiGroupDataSet.h>
 using namespace VE_Util;
 
 int main( int argc, char *argv[] )
@@ -57,8 +59,22 @@ int main( int argc, char *argv[] )
 
    int printInfoToScreen = 0; // "1" means print info to screen
    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
-   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
-   int numArrays = dataset->GetCellData()->GetNumberOfArrays();
+   vtkDataObject * dataset = (readVtkThing( inFileName, 1 ));
+   int numArrays;
+   if ( dataset->IsA("vtkMultiGroupDataSet") )
+   {
+      vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*> ( dataset );
+      
+      numArrays = dynamic_cast<vtkDataSet*>(mgd->GetDataSet(0,0))
+            ->GetCellData()->GetNumberOfArrays();
+   }
+   else
+   {
+      vtkDataSet* ds = dynamic_cast<vtkDataSet*> ( dataset );
+      numArrays = ds->GetCellData()->GetNumberOfArrays();
+   }
+   
+   std::cout<<"Number of arrays :"<<numArrays<<std::endl;
    if ( numArrays > 0 )
    {
       vtkCellDataToPointData * converter = vtkCellDataToPointData::New();

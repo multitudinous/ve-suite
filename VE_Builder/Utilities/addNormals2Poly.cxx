@@ -32,11 +32,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <vtkDataSet.h>
+#include <vtkDataObject.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkGeometryFilter.h>
-
+#include <vtkMultiGroupDataGeometryFilter.h>
 #include "VE_Xplorer/Utilities/fileIO.h"
 #include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 using namespace VE_Util;
@@ -50,11 +50,10 @@ int main( int argc, char *argv[] )
    fileIO::processCommandLineArgs( argc, argv, "add normals to", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
 
-   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
-   vtkDataSet* dataset= dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
+   vtkDataObject* dataset= (readVtkThing( inFileName, 1 ));
    
    // convert vtkUnstructuredGrid to vtkPolyData    
-   vtkGeometryFilter *gFilter = vtkGeometryFilter::New();
+   vtkMultiGroupDataGeometryFilter *gFilter = vtkMultiGroupDataGeometryFilter::New();
       gFilter->SetInput( dataset );
 
    vtkPolyDataNormals * pdWithNormals = vtkPolyDataNormals::New();

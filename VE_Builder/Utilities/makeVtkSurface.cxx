@@ -49,13 +49,24 @@
 #include <vtkFloatArray.h>
 #include <vtkTriangleFilter.h>
 #include <vtkSTLWriter.h>
+#include <vtkDataObject.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkMultiGroupDataSet.h>
+#include <vtkCellDataToPointData.h>
+#include <vtkCompositeDataPipeline.h>
+#include <vtkAlgorithm.h>
 
+#include <vtkAlgorithmOutput.h>
+#include <vtkMultiGroupDataSetAlgorithm.h>
+#include <vtkAppendPolyData.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkMultiBlockDataSetAlgorithm.h>
 using namespace VE_Util;
 
-void writeVtkGeomToStl( vtkDataSet * dataset, std::string filename )
+void writeVtkGeomToStl( vtkDataObject * dataset, std::string filename )
 {
    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
-   vtkGeometryFilter *gFilter = NULL;
+   vtkMultiGroupDataGeometryFilter *gFilter = NULL;
 
    // convert dataset to vtkPolyData 
    if ( dataset->IsA("vtkPolyData") )
@@ -63,8 +74,8 @@ void writeVtkGeomToStl( vtkDataSet * dataset, std::string filename )
    else 
    {
       std::cout << "Using vtkGeometryFilter to convert to polydata" << std::endl;
-      gFilter = vtkGeometryFilter::New();
-      gFilter->SetInput( dataset );
+      gFilter = vtkMultiGroupDataGeometryFilter::New();
+      gFilter->SetInput( dynamic_cast<vtkMultiGroupDataSet*> (dataset) );
       tFilter->SetInput( gFilter->GetOutput() );
    }
 
@@ -95,39 +106,49 @@ int main( int argc, char *argv[] )
                   "make a surface from the data in", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
-   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
+   vtkDataObject* dataset = (readVtkThing( inFileName, 1 ));
+   //////////DEBUGGING STUFF//////////
+   if ( dataset == NULL )
+      std::cout<<"NULL dataset :"<<std::endl;
+   //////////DEBUGGING STUFF//////////
+   
    std::cout << "\nEnter (0) to wrap the entire solution space in a surface, or"
         << "\n      (1) to extract a particular isosurface: " << std::endl;
    int extractIsosurface = fileIO::getIntegerBetween( 0, 1 );
 
-   vtkPolyData * surface = NULL;
+   vtkPolyData* surface = NULL;
 
    if (extractIsosurface)
    {
       // set the active scalar...
+      std::cout<<"Activating scalar :"<<std::endl;
       activateScalar( dataset );
-      double range[2];
-      dataset->GetScalarRange( range );
-      std::cout << "\nThe scalar range is " << range[0] << " to " << range[1] << std::endl;
 
       float value = 0.0;
       std::cout << "Enter isosurface value: ";
       std::cin >> value;
 
-      // Create an isosurace with the specified isosurface value...
+      vtkMultiGroupDataGeometryFilter* filter1 = 
+               vtkMultiGroupDataGeometryFilter::New( );
+      filter1->SetInput( 0, dataset );
+      filter1->Update();
+      
       vtkContourFilter *contour = vtkContourFilter::New();
-         contour->SetInput( dataset );
+         contour->SetInputConnection( 0, filter1->GetOutputPort(0) );
          contour->SetValue( 0, value );
          contour->UseScalarTreeOff();
+         contour->Update();
+         if ( contour != NULL )
+            std::cout<<"Set contour filter :"<<std::endl;
 
       vtkPolyDataNormals *normals = vtkPolyDataNormals::New();
-         normals->SetInput( contour->GetOutput() );
+         normals->SetInputConnection( 0, contour->GetOutputPort(0) );
+         normals->Update();
+         filter1->Update();
 
-      vtkGeometryFilter *filter = vtkGeometryFilter::New();
-         filter->SetInput( normals->GetOutput() );
-         filter->Update();
-
-      int numPolys = filter->GetOutput()->GetNumberOfPolys();
+      std::cout<<"Set normals :"<<std::endl;
+      
+      int numPolys = filter1->GetOutput()->GetNumberOfPolys();
       std::cout << "     The number of polys is "<< numPolys << std::endl;
       if ( numPolys==0 ) return 1;
 
@@ -135,13 +156,17 @@ int main( int argc, char *argv[] )
       std::cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
       std::cin >> deciVal;
 
-      surface = cfdGrid2Surface( filter->GetOutput(), deciVal );
+      surface = cfdGrid2Surface( filter1->GetOutputDataObject(0), deciVal );
+      std::cout<<"Num polys in surf :"<<surface->GetNumberOfPolys()<<std::endl;
+      if ( surface == NULL )
+         std::cout<<"No surface !!!! "<<std::endl;
 
       //clean up
       contour->Delete();
       normals->Delete();
-      filter->Delete();
-
+      filter1->Delete();
+   
+      std::cout<<" writing :"<<std::endl;
       writeVtkThing( surface, outFileName, 1 );   //1 is for binary
    }
    else // Create a polydata surface file that completely envelopes the solution space
@@ -150,7 +175,6 @@ int main( int argc, char *argv[] )
       std::cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
       std::cin >> deciVal;
       std::cin.ignore();
-      //std::cout << "Decimation value = " << deciVal << std::endl;
 
       surface = cfdGrid2Surface( dataset, deciVal );
 
@@ -182,9 +206,6 @@ int main( int argc, char *argv[] )
    //clean up
    surface->Delete();
    dataset->Delete();
-   //delete [] inFileName;    inFileName = NULL;
-   //delete [] outFileName;   outFileName = NULL;
-
    std::cout << "\ndone\n";
    return 0;
 }

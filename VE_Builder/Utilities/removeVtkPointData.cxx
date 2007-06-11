@@ -41,23 +41,52 @@
 #include <vtkDataSet.h>
 #include <vtkFloatArray.h>
 #include <vtkPointData.h>
+#include <vtkDataObject.h>
+#include <vtkMultiGroupDataSet.h>
 using namespace VE_Util;
 
-void removeVtkPointData( vtkDataSet * dataSet )
+void removeVtkPointData( vtkDataObject* dataObject )
 {
+   
    // if there are data arrays, count the number of arrays
-   int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
+   int numPDArrays;
+   if ( dataObject->IsA("vtkMultiGroupDataSet") )
+   {
+      vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*> ( dataObject );
+      //count number of arrays from the first data set in the mgd, use this as the superset of 
+      //data arrays of point data
+      
+      numPDArrays = dynamic_cast<vtkDataSet*>(mgd->GetDataSet(0,0))
+            ->GetPointData()->GetNumberOfArrays();
+   }
+   else
+   {
+      numPDArrays = dynamic_cast<vtkDataSet*>(dataObject)
+            ->GetPointData()->GetNumberOfArrays();
+   }
+   
    std::cout << "numPDArrays = " << numPDArrays << std::endl;
-   if ( numPDArrays )
+   if ( numPDArrays > 0 )
    {
       std::vector< std::string > names;//char **names = new char * [numPDArrays];
       for (int i=0; i < numPDArrays; i++)
       {
+         //get the names of the arrays
+         if ( dataObject->IsA("vtkMultiGroupDataSet") )
+               
+         {
+            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*> ( dataObject );
+            vtkDataSet* dataset = dynamic_cast<vtkDataSet*>( mgd->GetDataSet(0,0) );
+            names.push_back( dataset->GetPointData()->GetArray(i)->GetName() );
+         }
+         else
+         {
+            vtkDataSet* dataset = dynamic_cast<vtkDataSet*>( dataObject );
+            
+            names.push_back(dataset->GetPointData()->GetArray(i)->GetName());
+         }
          
-         //names[i] = new char [len+1];
-         names.push_back(dataSet->GetPointData()->GetArray(i)->GetName());//strcpy( names[i], dataSet->GetPointData()->GetArray(i)->GetName() );
-         //std::cout << "names[i] = " <<  names[i] << std::endl;
-      }
+     }
 
       for (int i=0; i < numPDArrays; i++)
       {
@@ -71,8 +100,28 @@ void removeVtkPointData( vtkDataSet * dataSet )
 
          // go to next scalar if anything other than n/N was input...
          if (response != 'n' && response != 'N') continue;
-
-         dataSet->GetPointData()->RemoveArray( names[i].c_str() );
+         
+         if ( dataObject->IsA("vtkMultiGroupDataSet") )
+         {
+            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*> ( dataObject );
+            //loop over the MGD and delete arrays
+            for ( int grp=0;grp<mgd->GetNumberOfGroups();grp++ )
+            {
+               for ( int ds=0;ds<mgd->GetNumberOfDataSets(grp);ds++ )
+               {
+                  std::cout<<"Removing array :"<<names[i].c_str()<<" Group :"<<grp<<
+                        " Dataset :"<<ds<<std::endl;
+                  vtkDataSet* dataset = dynamic_cast<vtkDataSet*>( mgd->GetDataSet(grp,ds) );
+                  dataset->GetPointData()->RemoveArray( names[i].c_str() );
+               }
+            }
+         }
+         else
+         {
+            std::cout<<"Removing array :"<<names[i].c_str()<<std::endl;
+            vtkDataSet* dataset = dynamic_cast<vtkDataSet*>( dataObject );
+            dataset->GetPointData()->RemoveArray( names[i].c_str() );
+         }
       }
 
       for (int i=0; i < numPDArrays; i++)
@@ -95,8 +144,7 @@ int main( int argc, char *argv[] )
    fileIO::processCommandLineArgs( argc, argv, "remove point data parameters from", inFileName, outFileName );
    if ( ! inFileName.c_str() ) return 1;
 
-   ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
-   vtkDataSet * dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
+   vtkDataObject * dataset = (readVtkThing( inFileName, 1 ));
    removeVtkPointData( dataset );
 
    writeVtkThing( dataset, outFileName );
