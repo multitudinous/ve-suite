@@ -182,6 +182,7 @@ opts.Add('prefix', 'Installation prefix', '/usr/local')
 opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If true, make the distribution packages as part of the build', 'no')
 opts.Add('Patented', 'If true, make the patented version of VE-Suite', 'no')
+opts.Add('validate', 'If no, do not validate flagpoll packages. Should help speed up the build', 'yes')
 #opts.Add('tao', 'If true, use TAO in the build', 'no')
 ##Added options for velauncher build.
 ##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
@@ -274,42 +275,43 @@ if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
    opts.Process(baseEnv, None, True)                   # Update the options
    
-   # check the apr and apu utilities
-   # there is probably an easier way to do this so feel free to simplify
-   aprVersion = '0.9'
-   aprCommand = 'apr'
-   apuCommand = 'apr-util'
-   #apuLib = 'aprutil'
-   if baseEnv.has_key('AprVersion'):
-      aprVersion = baseEnv[ 'AprVersion' ]
-      if baseEnv[ 'AprVersion' ] >= "1.0":
-         aprCommand = 'apr-1'
-         apuCommand = 'apr-util-1'
-         #apuLib = 'aprutil-1'
+   if baseEnv[ 'validate' ] == 'yes':
+       # check the apr and apu utilities
+       # there is probably an easier way to do this so feel free to simplify
+       aprVersion = '0.9'
+       aprCommand = 'apr'
+       apuCommand = 'apr-util'
+       #apuLib = 'aprutil'
+       if baseEnv.has_key('AprVersion'):
+          aprVersion = baseEnv[ 'AprVersion' ]
+          if baseEnv[ 'AprVersion' ] >= "1.0":
+             aprCommand = 'apr-1'
+             apuCommand = 'apr-util-1'
+             #apuLib = 'aprutil-1'
 
-   fgpApr = sca_util.FlagPollParser( aprCommand )
-   if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
-      Exit(1)
+       fgpApr = sca_util.FlagPollParser( aprCommand )
+       if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
+          Exit(1)
 
-   fgpApu = sca_util.FlagPollParser( apuCommand )
-   if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
-      Exit(1)
+       fgpApu = sca_util.FlagPollParser( apuCommand )
+       if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
+          Exit(1)
 
-   fgpBullet = sca_util.FlagPollParser('bullet')
-   if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
-      Exit(1)
+       fgpBullet = sca_util.FlagPollParser('bullet')
+       if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
+          Exit(1)
 
-   fgpTAO = sca_util.FlagPollParser('TAO')
-   if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
-      Exit(1)
+       fgpTAO = sca_util.FlagPollParser('TAO')
+       if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
+          Exit(1)
 
-   fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
-   if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
-      Exit(1)
+       fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
+       if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
+          Exit(1)
 
-   fgpBoost = sca_util.FlagPollParser('Boost.Filesystem')
-   if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
-      Exit(1)
+       fgpBoost = sca_util.FlagPollParser('Boost.Filesystem')
+       if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
+          Exit(1)
 
    ## Try to save the options if possible and if the user did
    ## not specify an options file
@@ -409,8 +411,7 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs = [ doxySubdirs ]
       baseEnv.Alias('doxygen', doxySubdirs)
    else:
-      #builderSubdirs
-      ves_dirs = [openSubdirs, conductorSubdirs, 
+      ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
                   xplorerSubdirs, ceSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs]
 

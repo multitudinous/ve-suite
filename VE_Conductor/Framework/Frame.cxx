@@ -982,67 +982,65 @@ void AppFrame::SetRecentFile(wxFileName vesFileName)
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
     wxString fileToOpen(m_recentVESFiles->GetHistoryFile(event.GetId() - wxID_FILE1));
-    if( !fileToOpen.empty() && wxFileName::FileExists( fileToOpen ) )
+    if( fileToOpen.empty() && !wxFileName::FileExists( fileToOpen ) )
     {
-	     int placeChosen = event.GetId();
-	     wxFileName vesFileName(fileToOpen);
-	     bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
-        if ( !success )
-        {
-            wxMessageBox( _("Can't open a VES file on another drive."), 
-                    _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-            return;
-        }
-   
-        directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
-        //change conductor working dir
-        ::wxSetWorkingDirectory( directory );
-		  directory.Replace( _("\\"), _("/"), true );
-
-        // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
-        fname = vesFileName.GetFullName();
-
-        std::string tempDir = ConvertUnicode( directory.c_str() );
-	     if ( tempDir.empty() )
-	     {
-		     tempDir = "./";
-	     }
-
-	    //Send Command to change xplorer working dir
-	    // Create the command and data value pairs
-	    VE_XML::DataValuePair* dataValuePair = 
-                      new VE_XML::DataValuePair(  std::string("STRING") );
-	    dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-	    VE_XML::Command* veCommand = new VE_XML::Command();
-	    veCommand->SetCommandName( std::string("Change Working Directory") );
-	    veCommand->AddDataValuePair( dataValuePair );
-	    serviceList->SendCommandStringToXplorer( veCommand );
-	    delete veCommand;
-
-	    //Dummy data that isn't used but I don't know if a command will work
-	    //w/o a DVP 
-	    VE_XML::DataValuePair* dvp = 
-                      new VE_XML::DataValuePair(  std::string("STRING") );
-	    dvp->SetData( "Clear Quat Data", tempDir );
-	    VE_XML::Command* vec = new VE_XML::Command();
-	    vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
-	    vec->AddDataValuePair( dvp );
-	    serviceList->SendCommandStringToXplorer( vec );
-	    delete vec;
-
-	    //Now laod the xml data now that we are in the correct directory
-	    network->Load( ConvertUnicode( fname.c_str() ), true );
-	    SubmitToServer( event );      	
-    }
-    else
-    {
-        wxString message("VES file ");
+        wxString message( _("VES file "));
         message += fileToOpen;
-        message += wxString(" does not exist!");
+        message += wxString( _(" does not exist!") );
         wxMessageBox( message, 
-                       _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+                      _("VES File Read Error"), wxOK | wxICON_INFORMATION );
         return;
     }
+    
+    int placeChosen = event.GetId();
+    wxFileName vesFileName(fileToOpen);
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    if( !success )
+    {
+        wxMessageBox( _("Can't open a VES file on another drive."), 
+                _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+        return;
+    }
+
+    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+    //change conductor working dir
+    ::wxSetWorkingDirectory( directory );
+    directory.Replace( _("\\"), _("/"), true );
+
+    // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
+    fname = vesFileName.GetFullName();
+
+    std::string tempDir = ConvertUnicode( directory.c_str() );
+    if( tempDir.empty() )
+    {
+        tempDir = "./";
+    }
+
+    //Send Command to change xplorer working dir
+    // Create the command and data value pairs
+    VE_XML::DataValuePair* dataValuePair = 
+                  new VE_XML::DataValuePair(  std::string("STRING") );
+    dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
+    VE_XML::Command* veCommand = new VE_XML::Command();
+    veCommand->SetCommandName( std::string("Change Working Directory") );
+    veCommand->AddDataValuePair( dataValuePair );
+    serviceList->SendCommandStringToXplorer( veCommand );
+    delete veCommand;
+
+    //Dummy data that isn't used but I don't know if a command will work
+    //w/o a DVP 
+    VE_XML::DataValuePair* dvp = 
+                  new VE_XML::DataValuePair(  std::string("STRING") );
+    dvp->SetData( "Clear Quat Data", tempDir );
+    VE_XML::Command* vec = new VE_XML::Command();
+    vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+    vec->AddDataValuePair( dvp );
+    serviceList->SendCommandStringToXplorer( vec );
+    delete vec;
+
+    //Now laod the xml data now that we are in the correct directory
+    network->Load( ConvertUnicode( fname.c_str() ), true );
+    SubmitToServer( event );      	
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClearRecentFiles( wxCommandEvent& event ) 
