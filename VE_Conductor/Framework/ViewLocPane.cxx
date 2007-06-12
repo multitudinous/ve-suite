@@ -69,7 +69,7 @@ END_EVENT_TABLE()
 //Constructor//
 ///////////////
 ViewLocPane::ViewLocPane( wxWindow* parent )
-:wxDialog( parent, -1, _("Viewing Locations Pane"),
+:wxDialog( parent, -1, _("Viewpoints Pane"),
          wxDefaultPosition, wxDefaultSize, 
 		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
@@ -250,15 +250,16 @@ void ViewLocPane::_buildPage()
     				VIEWLOC_SPEED_CONTROL_SPIN,
 				wxT("Point-to-Point Speed (~feet/second)"),
     				wxDefaultPosition,
-				wxSize(40,40),
+				wxSize(90,45),
     				wxSP_VERTICAL|wxSP_ARROW_KEYS,
-				0,
+				1,
 				100,
 				20,
 				wxT("Point-to-Point Speed (~feet/second)")
    	 			);
 				 //Adjust middle integer to value to change maximum speed 
-
+				 //Spin ctrl selcected over slider b/c user can select speed
+				 //with mouse, number pad, or arrow keys
 
     _spinControlsSizer->Add(_spinSpeedControls,1,wxALIGN_CENTER|wxALIGN_TOP|wxALL,2);
     _spinControlsSizer->Add(_spinLabel,1,wxALIGN_CENTER);
@@ -277,6 +278,10 @@ void ViewLocPane::_buildPage()
     mainSizer->Add(_allVPCtrlsGroup ,1,wxEXPAND|wxALIGN_CENTER);
     mainSizer->Add( _FlythroughGroup,1,wxEXPAND|wxALIGN_CENTER);
 
+
+    wxButton* _closeButton = new wxButton( this, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    mainSizer->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    
    SetAutoLayout(true);
    SetSizer(mainSizer);
 

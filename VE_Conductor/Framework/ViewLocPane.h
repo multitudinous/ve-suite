@@ -190,7 +190,6 @@ protected:
    void _onStopFly(wxCommandEvent& event);
    void _onFlyBuilderListBox(wxCommandEvent& event);
    void _onDeleteFlySel(wxCommandEvent& event);
-   //void _onSpeedChange(wxScrollEvent& event);
    void _onSpeedChange(wxSpinEvent& event);
 
    ///Refresh the GUI
