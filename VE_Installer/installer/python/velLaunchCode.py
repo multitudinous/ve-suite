@@ -248,9 +248,10 @@ class Launch:
         exe = "Naming_Service"
         if windows:
             exe += ".exe"
+        else: 
+            exe += self.debugSuffix
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
         return c
-
 
     def ServerCall(self):
         """Returns a generic Server call."""
