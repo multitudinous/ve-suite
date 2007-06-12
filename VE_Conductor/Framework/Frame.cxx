@@ -968,17 +968,25 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile(wxFileName vesFileName)
 {
+    size_t numFilesInHistory = m_recentVESFiles->GetCount();
+    for( size_t i = 0; i < numFilesInHistory; ++i )
+    { 
+        if ( !m_recentVESFiles->GetHistoryFile(i).Cmp(vesFileName.GetFullPath()))
+        {
+            return;
+        }
+    }
     m_recentVESFiles->AddFileToHistory(vesFileName.GetFullPath());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
     wxString fileToOpen(m_recentVESFiles->GetHistoryFile(event.GetId() - wxID_FILE1));
-    if( !fileToOpen.empty() )
+    if( !fileToOpen.empty() && wxFileName::FileExists( fileToOpen ) )
     {
-	    int placeChosen = event.GetId();
-	    wxFileName vesFileName(fileToOpen);
-	    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+	     int placeChosen = event.GetId();
+	     wxFileName vesFileName(fileToOpen);
+	     bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
         if ( !success )
         {
             wxMessageBox( _("Can't open a VES file on another drive."), 
@@ -989,18 +997,16 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
         directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
         //change conductor working dir
         ::wxSetWorkingDirectory( directory );
-		directory.Replace( _("\\"), _("/"), true );
+		  directory.Replace( _("\\"), _("/"), true );
+
         // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
         fname = vesFileName.GetFullName();
 
-       // Not sure why we are doing this...
-       //SetRecentFile(vesFileName);
-
-       std::string tempDir = ConvertUnicode( directory.c_str() );
-	    if ( tempDir.empty() )
-	    {
-		    tempDir = "./";
-	    }
+        std::string tempDir = ConvertUnicode( directory.c_str() );
+	     if ( tempDir.empty() )
+	     {
+		     tempDir = "./";
+	     }
 
 	    //Send Command to change xplorer working dir
 	    // Create the command and data value pairs
@@ -1028,13 +1034,22 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	    network->Load( ConvertUnicode( fname.c_str() ), true );
 	    SubmitToServer( event );      	
     }
+    else
+    {
+        wxString message("VES file ");
+        message += fileToOpen;
+        message += wxString(" does not exist!");
+        wxMessageBox( message, 
+                       _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClearRecentFiles( wxCommandEvent& event ) 
 {
     wxMessageDialog confirm(this,
                             _("Are you sure you want to clear the recent files list?"),
-                           _("Confirm")); 
+                           _("Confirm"),wxOK|wxCANCEL); 
     if(confirm.ShowModal() == wxID_OK)
     {
         size_t numFilesInHistory = m_recentVESFiles->GetCount();
