@@ -837,15 +837,20 @@ class LauncherWindow(wx.Frame):
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
-        ##Launch splash screen
-        velLaunchSplash.LaunchSplash()
-        ##thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
+
+        ##Launch splash screen (Splash screen never get terminated until naming_service is killed)
+	#Splash = velLaunchSplash.LaunchSplash() 
+
+        #thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
+	
         ##Go into the Launch
         try:
             launchInstance = Launch(self.state.GetLaunchSurface())
+	    ##Splash.OnClose()
             ##Show NameServer kill window if NameServer was started.
             if v("NameServer"):
-                window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
+					  conduct_Pid = launchInstance.GetConductorPid())
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,
                                    "Launch aborted by user.",
@@ -853,10 +858,11 @@ class LauncherWindow(wx.Frame):
                                    wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+        
         ##Close the Launcher
-        self.OnClose()
+	self.OnClose()
 
-    def OnClose(self, event = None):
+    def OnClose(self):
         """Saves launcher's current configuration and quits the launcher.
 
         Called after a successful Launch or when the user manually closes
@@ -869,6 +875,7 @@ class LauncherWindow(wx.Frame):
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
             velShell.Start(self.state.GetSurface("ShellScript"))
+
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
@@ -944,3 +951,4 @@ del config
 ##    app = wx.PySimpleApp()
 ##    app.MainLoop()
 ##    CommandLine(opts, args, previousState)
+
