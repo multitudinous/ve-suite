@@ -1120,7 +1120,6 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   //Get results
 	   std::string nw_str = serviceList->Query( status );
 
-	   //Log(nw_str.c_str());
 	   // If there is nothing on the CE
 	   if ( !nw_str.empty() )
 	   {
@@ -1134,7 +1133,6 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   }
 	   else
 	   {
-	   Log("Don't\n");
 		  Log("No ves network available\n");
 	   }
    }
