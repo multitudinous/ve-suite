@@ -1,3 +1,0 @@
-1
-steve's_vector
-./simpleScalars/vectors/steve's_vector_0.rgb
