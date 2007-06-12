@@ -39,6 +39,7 @@ class Launch:
         ##Set self's variables
         self.settings = settings
         self.nameserverPids = []
+        self.conductorPid = []
         ##Debug settings.
         self.debugOutput = []
         if self.settings["Debug"]:
@@ -87,6 +88,8 @@ class Launch:
     def GetNameserverPids(self):
         return self.nameserverPids
 
+    def GetConductorPid(self):
+        return self.conductorPid
 
     def Windows(self):
         """Launches the chosen programs under an Unix OS.
@@ -105,12 +108,12 @@ class Launch:
                                          stdin = self.inputSource,
                                          stdout = self.outputDestination,
                                          stderr = self.outputDestination).pid)
-            sleep(5)
+            sleep(3)
             pids.append(subprocess.Popen(self.ServerCall(),
                                          stdin = self.inputSource,
                                          stdout = self.outputDestination,
                                          stderr = self.outputDestination).pid)
-            sleep(5)
+            sleep(3)
             self.nameserverPids = pids
         ##Cluster Xplorer section
         if self.settings["Cluster"]:
@@ -143,12 +146,18 @@ class Launch:
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
+            conduct_Pid = []
             ##Append argument if desktop mode selected
             if self.settings["VESFile"]:
-                sleep(10)
-            subprocess.Popen(self.ConductorCall(),
-                             stdin = self.inputSource,
-                             stdout = self.outputDestination, stderr = self.outputDestination)
+                sleep(5)
+            conduct_Pid.append(subprocess.Popen(self.ConductorCall(),
+                             			stdin = self.inputSource,
+                             			stdout = self.outputDestination, 
+						stderr = self.outputDestination).pid)
+	    sleep(3)
+            self.conductorPid = conduct_Pid
+
+
         print "Finished sending launch commands."
         return
 
@@ -176,7 +185,7 @@ class Launch:
             pids = []
             pids.append(subprocess.Popen(self.NameServiceCall(),
                                          stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-            sleep(5)
+            sleep(3)
             pids.append(subprocess.Popen(self.ServerCall(),
                                          stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             self.nameserverPids = pids
@@ -212,8 +221,11 @@ class Launch:
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
-            subprocess.Popen(self.ConductorCall(),
-                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
+            conduct_Pid = []
+            conduct_Pid.append(subprocess.Popen(self.ConductorCall(),
+                                                stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
+            sleep(2)
+	    self.conductorPid = conduct_Pid
         print "Finished sending launch commands."
         return
 
