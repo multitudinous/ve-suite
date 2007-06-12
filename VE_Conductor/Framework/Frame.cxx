@@ -252,7 +252,6 @@ viewlocPane( 0 )
     _displayMode = "Tablet";
     _detectDisplayAndCreate();
 
-    path = _( "" );
     directory = _( "" );
     fname = _( "" );
 
@@ -837,7 +836,7 @@ void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
 void AppFrame::Save( wxCommandEvent& event )
 {
    //First time call save will be the same as SaveAs
-   if ( path == wxString( "", wxConvUTF8) ) 
+   if ( fname == wxString( "", wxConvUTF8) ) 
    {
       SaveAs( event );
    }
@@ -845,7 +844,7 @@ void AppFrame::Save( wxCommandEvent& event )
    {
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save( ConvertUnicode( path.c_str() ) );
+      std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
    }
 }
 
@@ -887,12 +886,11 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
    
    if ( vesFileName.HasName() ) 
    {
-      path = vesFileName.GetFullPath();
       directory	= vesFileName.GetPath();
       fname = vesFileName.GetFullName();
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save( ConvertUnicode( path.c_str() ) );
+      std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
    }
 }
 
@@ -920,18 +918,11 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
          return;
       }
       
-      //We must make this call here 
-      //because we set path to null in the New call
-      //wxCommandEvent event;
-      //New( event );
-      path.clear();
-      //path = vesFileName.GetFullPath();
-		//path.Replace( _("\\"), _("/"), true );
+
       directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
       //change conductor working dir
       ::wxSetWorkingDirectory( directory );
-		directory.Replace( _("\\"), _("/"), true );
-      path = vesFileName.GetFullName();
+      directory.Replace( _("\\"), _("/"), true );
       std::string tempDir = ConvertUnicode( directory.c_str() );
 		
      SetRecentFile( wxFileName(dialog.GetPath()) );
@@ -969,8 +960,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
-      //SubmitToServer( event );      
-      network->Load( ConvertUnicode( path.c_str() ), true );
+      network->Load( ConvertUnicode( fname.c_str() ), true );
       wxCommandEvent event;
       SubmitToServer( event );      
    }
@@ -984,9 +974,8 @@ void AppFrame::SetRecentFile(wxFileName vesFileName)
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
     wxString fileToOpen(m_recentVESFiles->GetHistoryFile(event.GetId() - wxID_FILE1));
-    if (!fileToOpen.empty())
+    if( !fileToOpen.empty() )
     {
-
 	    int placeChosen = event.GetId();
 	    wxFileName vesFileName(fileToOpen);
 	    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
@@ -997,15 +986,15 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
             return;
         }
    
-       // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
-	    path			= vesFileName.GetFullPath();
-	    //directory	= vesFileName.GetPath();
-       directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
-       fname			= vesFileName.GetFullName();
-       //change conductor working dir
-       ::wxSetWorkingDirectory( directory );
+        directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+        //change conductor working dir
+        ::wxSetWorkingDirectory( directory );
+		directory.Replace( _("\\"), _("/"), true );
+        // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
+        fname = vesFileName.GetFullName();
 
-       SetRecentFile(vesFileName);
+       // Not sure why we are doing this...
+       //SetRecentFile(vesFileName);
 
        std::string tempDir = ConvertUnicode( directory.c_str() );
 	    if ( tempDir.empty() )
@@ -1036,8 +1025,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 	    delete vec;
 
 	    //Now laod the xml data now that we are in the correct directory
-	    //SubmitToServer( event );      
-	    network->Load( ConvertUnicode( path.c_str() ), true );
+	    network->Load( ConvertUnicode( fname.c_str() ), true );
 	    SubmitToServer( event );      	
     }
 }
@@ -1310,7 +1298,6 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
-   path.clear();
    network->New( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1943,13 +1930,9 @@ void AppFrame::ProcessCommandLineArgs( void )
       return;
    }
 
-   path.clear();
-   path = vesFileName.GetFullPath();
-   path.Replace( _("\\"), _("/"), true );
    directory = vesFileName.GetPath();
    //change conductor working dir
    ::wxSetWorkingDirectory( directory );
-   path = vesFileName.GetFullName();
    
    //Send Command to change xplorer working dir
    // Create the command and data value pairs
@@ -1966,8 +1949,7 @@ void AppFrame::ProcessCommandLineArgs( void )
    fname=vesFileName.GetFullName();
    // we submit after new to make sure that the ce and ge ar cleared
    wxCommandEvent event;
-   //SubmitToServer( event );      
-   network->Load( ConvertUnicode( path.c_str() ), true );
+   network->Load( ConvertUnicode( fname.c_str() ), true );
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
 }

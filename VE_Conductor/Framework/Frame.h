@@ -250,7 +250,7 @@ protected:
     int m_frameNr;
     wxString fname;
     wxString directory;
-    wxString path;
+    //wxString path;
 
     std::vector< wxFileName > recentFileArchive;
 
