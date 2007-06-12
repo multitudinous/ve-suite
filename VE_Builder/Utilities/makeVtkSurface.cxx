@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
@@ -118,7 +116,7 @@ int main( int argc, char *argv[] )
 
    vtkPolyData* surface = NULL;
 
-   if (extractIsosurface)
+   if( extractIsosurface )
    {
       // set the active scalar...
       std::cout<<"Activating scalar :"<<std::endl;

@@ -409,7 +409,8 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs = [ doxySubdirs ]
       baseEnv.Alias('doxygen', doxySubdirs)
    else:
-      ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
+      #builderSubdirs
+      ves_dirs = [openSubdirs, conductorSubdirs, 
                   xplorerSubdirs, ceSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs]
 
