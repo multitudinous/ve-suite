@@ -91,6 +91,8 @@ public:
    Point* GetLinkPoint( unsigned int i );
    ///Get the number of points used to define a link.
    size_t GetNumberOfLinkPoints( void );
+   void SetLinkName( std::string name );
+   std::string GetLinkName( void );
 
 protected:
    ///Internally update the data.
@@ -103,6 +105,7 @@ private:
    ///The data value pair will contain the model and port number of the appropriate port to be linked
    std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > moduleInfo;///<The classes hold the fromPort in first and the toPort in second.
    std::pair< long int, long int > portInfo;///<The classes hold the fromPort in first and the toPort in second.
+   std::string linkName;///<The name of the link.
 };
 }
 template<>

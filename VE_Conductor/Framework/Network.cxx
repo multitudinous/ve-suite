@@ -103,6 +103,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(DEL_LINK_CON, Network::OnDelLinkCon)
    EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod)
    EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
+   EVT_MENU(LINK_NAME, Network::OnShowLinkName)
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -568,6 +569,7 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Append(DEL_LINK, _("Delete Link") );
    pop_menu.Append(DEL_TAG, _("Delete Tag") );
    pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
+   pop_menu.Append(LINK_NAME, _("Link Name") );
 
    pop_menu.Enable(ADD_LINK_CON, false);
    pop_menu.Enable(EDIT_TAG, false);
@@ -2127,7 +2129,7 @@ std::string Network::Save( std::string fileName )
    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
-   for ( size_t i = 0; i < links.size(); ++i )
+   /*for ( size_t i = 0; i < links.size(); ++i )
    {
       VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
       //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
@@ -2136,15 +2138,16 @@ std::string Network::Save( std::string fileName )
       xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
       *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
       *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
+      xmlLink->SetLinkName("TEST");
 
       //Try to store link cons,
       //link cons are (x,y) wxpoint
       //here I store x in one vector and y in the other
       for ( size_t j = 0; j < links[ i ].GetNumberOfPoints(); ++j )
-	   {
+      {
          xmlLink->GetLinkPoint( j )->SetPoint( std::pair< unsigned int, unsigned int >( links[ i ].GetPoint( j )->x, links[ i ].GetPoint( j )->y ) );
       }
-   }
+   }*/
 
    //  Models
    std::map< int, Module >::iterator iter;
@@ -2356,7 +2359,14 @@ void Network::CreateNetwork( std::string xmlNetwork )
    {
 	   links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
 
-      links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
+	   links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+    
+	   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	   serviceList->GetMessageLog()->SetMessage( "links:_ " );
+	   serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
+	   serviceList->GetMessageLog()->SetMessage( "_\n" );
+      
+	  links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
       links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
 
       long moduleID;
@@ -2551,6 +2561,24 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
       if ( port_dlg != NULL )
          port_dlg->Show();*/
    }
+}
+
+//////////////////////////////////////////////////////
+void Network::OnShowLinkName(wxCommandEvent& WXUNUSED(event))
+{
+	//VE_XML::VE_Model::Link* veLink = links[ m_selLink ];
+	//VE_Conductor::GUI_Utilities::Link veLink = links[ 0 ];
+    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	for( int i = 0; i < links.size(); i++)
+	{
+		serviceList->GetMessageLog()->SetMessage( "link:_ " );
+		serviceList->GetMessageLog()->SetMessage( links[i].GetName().c_str() );
+		serviceList->GetMessageLog()->SetMessage( "_\n" );
+	}
+	//wxString title;
+	//title << wxT("Aspen Name");
+	//wxString desc( veLink.GetName().c_str(), wxConvUTF8);
+	//wxMessageDialog( this, desc, title).ShowModal();
 }
 
 ///////////////////////////////////////////

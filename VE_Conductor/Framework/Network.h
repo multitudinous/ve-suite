@@ -85,7 +85,8 @@ public:
       DEL_TAG,
       DEL_LINK,
       DEL_LINK_CON,
-      SHOW_LINK_CONT
+      SHOW_LINK_CONT,
+	  LINK_NAME
    };
 
    ///Fucntion called during submit job to send the id of all active
@@ -116,6 +117,7 @@ public:
    void OnDelLinkCon( wxCommandEvent &event );
    void OnDelMod( wxCommandEvent &event );
    void OnShowLinkContent( wxCommandEvent& event );
+   void OnShowLinkName( wxCommandEvent& event );
    
    //Add to network fuctions
    void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);

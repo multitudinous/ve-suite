@@ -43,6 +43,7 @@ using namespace VE_XML::VE_Model;
 Link::Link()
 :XMLObject()
 {
+   linkName = '\0';
    moduleInfo.first = new DataValuePair( "FLOAT" );
    moduleInfo.second = new DataValuePair( "FLOAT" );
    portInfo.first = 0;
@@ -67,6 +68,7 @@ Link::~Link()
 Link::Link( const Link& input )
 :XMLObject( input )
 {
+   linkName = input.linkName;
    for ( size_t i = 0; i < input.linkPoints.size(); ++i )
    {
       linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
@@ -101,11 +103,21 @@ Link& Link::operator=( const Link& input )
    }
    return *this;
 }
+////////////////////////////////////////////////////////////
+void Link::SetLinkName( std::string name )
+{
+   linkName = name;
+}
+////////////////////////////////////////////////////////////
+std::string Link::GetLinkName( void )
+{
+   return linkName;
+}
 ///////////////////////////////////////
 void Link::_updateVEElement( std::string input )
 {
    // write all the elements according to verg_model.xsd
-   
+   SetAttribute("name", linkName);
    SetSubElement( "fromModule", moduleInfo.first );
    SetSubElement( "toModule", moduleInfo.second );
    SetSubElement( "fromPort", portInfo.first );
@@ -175,6 +187,19 @@ void Link::SetObjectFromXMLData(DOMNode* element)
    {
       //get variables by tags
       DOMElement* dataValueStringName = 0;
+	  //link name
+	  {
+         dataValueStringName = GetSubElement( currentElement, "name", 0 );
+         if ( dataValueStringName )
+         {
+            linkName = ExtractFromSimpleElement< std::string >( dataValueStringName );
+            dataValueStringName = 0;            
+         }
+         else
+         {
+            GetAttribute( currentElement, "name", linkName );
+         }
+      }
       // for module location
       {
          dataValueStringName = GetSubElement( currentElement, "fromModule", 0 );

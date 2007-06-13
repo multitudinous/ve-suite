@@ -94,10 +94,16 @@ public:
    void SetToModule( unsigned long );
    Polygon* GetPolygon( void );
 
+   void SetName(wxString name);
+   wxString GetName();
+
    ///Helper functions
    void DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc );
    void CalcLinkPoly( void );
    void DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale );
+
+protected:
+   wxString linkName;
 
 private:
    unsigned long Fr_mod;

@@ -160,6 +160,20 @@ void Link::SetToModule( unsigned long input )
    To_mod = input;
 }
 ////////////////////////////////////////////////
+void Link::SetName(wxString name)
+{
+	linkName = name;
+}
+////////////////////////////////////////////////
+wxString Link::GetName()
+{
+	if ( linkName.IsEmpty() )
+	{
+		linkName = wxString("NoName",wxConvUTF8);
+	}
+	return linkName;
+}
+////////////////////////////////////////////////
 VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
 {
    return &(poly);
