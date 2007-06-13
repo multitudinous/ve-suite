@@ -866,7 +866,7 @@ class LauncherWindow(wx.Frame):
         ##Close the Launcher
 	self.OnClose()
 
-    def OnClose(self):
+    def OnClose(self, event=None):
         """Saves launcher's current configuration and quits the launcher.
 
         Called after a successful Launch or when the user manually closes
