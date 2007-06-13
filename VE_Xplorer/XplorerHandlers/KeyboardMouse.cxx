@@ -814,6 +814,89 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
         osg::Vec3d center = activeDCS->getBound().center() * matrix;
         center_point->set( center.x(), center.y(), center.z() );
+
+        /*
+        char phong_vertex[]=
+            "#version 110 \n"
+
+            "//Structure definitions \n"
+            "struct shadedVertexOutput \n"
+            "{ \n"
+                "vec4 HPosition; \n"
+                "vec4 diffCol; \n"
+                "vec4 specCol; \n"
+            "}; \n"
+
+            "struct appdata \n"
+            "{ \n"
+                "vec3 Position; \n"
+                "vec4 Normal; \n"
+                "mat4 ViewI; \n"
+                "mat4 World; \n"
+                "mat4 WorldIT; \n"
+                "mat4 WorldViewProj; \n"
+            "}; \n"
+
+            "//Function declarations \n"
+            "shadedVertexOutput velvetVS( in appdata IN ); \n"
+
+            "//Function definitions \n"
+            "shadedVertexOutput velvetVS( in appdata IN ) \n"
+            "{ \n"
+                "vec3 DiffColor = vec3( 0.5, 0.5, 0.5 ); \n"
+                "vec3 LightPos = gl_LightSource[0].position.xyz; \n"
+                "float RollOff = 1.0; \n"      
+                "vec3 SpecColor = vec3( 0.75, 0.7, 0.7 ); \n"
+                "vec3 SubColor = vec3( 1.0, 0.0, 0.0 ); \n"
+
+                "vec3 Nn = normalize( ( IN.WorldIT * IN.Normal ).xyz ); \n"
+                "vec4 Po = vec4( IN.Position.xyz, 1.00000 ); \n"
+                "shadedVertexOutput OUT; \n"
+                "OUT.HPosition = ( IN.WorldViewProj * Po ); \n"
+                "vec3 Pw = ( IN.World * Po ).xyz ; \n"
+                "vec3 Ln = normalize( ( LightPos - Pw ) ); \n"
+                "float ldn = dot( Ln, Nn); \n"
+                "float diffComp = max( 0.000000, ldn); \n"
+                "vec3 diffContrib = ( diffComp * DiffColor ); \n"
+                "float subLamb = ( smoothstep( ( -RollOff ), 1.00000, ldn ) - smoothstep( 0.000000, 1.00000, ldn ) ); \n"
+                "subLamb = max( 0.000000, subLamb ); \n"
+                "vec3 subContrib = ( subLamb * SubColor ); \n"
+                "vec3 Vn = normalize( ( IN.ViewI[3].xyz  - Pw ) ); \n"
+                "float vdn = ( 1.00000 - dot( Vn, Nn ) ); \n"
+                "vec3 vecColor = vec3( vdn, vdn, vdn ); \n"
+                "OUT.diffCol = vec4( ( subContrib + diffContrib ).xyz , 1.00000 ); \n"
+                "OUT.specCol = vec4( ( vecColor * SpecColor ).xyz , 1.00000 ); \n"
+                "return OUT; \n"
+            "} \n"
+
+            "//Vertex shader \n"
+            "void main() \n"
+            "{ \n"
+                "appdata IN; \n"
+                "IN.Position = vec3( gl_Vertex ); \n"
+                "IN.Normal = vec4( gl_Normal, 0.0 ); \n"
+                "IN.ViewI = gl_ModelViewMatrixInverse; \n"
+                "IN.World = gl_ModelViewMatrix; \n"
+                "IN.WorldIT = gl_ModelViewMatrixInverseTranspose; \n"
+                "IN.WorldViewProj = gl_ModelViewProjectionMatrix; \n"
+
+                "shadedVertexOutput SVO; \n"
+                "SVO = velvetVS( IN ); \n"
+
+                "gl_Position = vec4( SVO.HPosition ); \n"
+                "gl_FrontColor = vec4( SVO.diffCol ); \n"
+                "gl_FrontSecondaryColor = vec4( SVO.specCol ); \n"
+            "} \n";
+
+
+        osg::ref_ptr< osg::StateSet > stateset = activeDCS->getOrCreateStateSet();
+        osg::ref_ptr< osg::Program > program = new osg::Program;
+
+        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, phong_vertex );
+        program->addShader( vertex_shader.get() );
+
+        stateset->setAttribute( program.get() );
+        */
     }
 
     selectedDCS = activeDCS;
