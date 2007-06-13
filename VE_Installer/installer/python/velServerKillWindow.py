@@ -40,13 +40,6 @@ class ServerKillWindow:
         #self.Show()
         self.runWhile()
         #thread.start_new_thread(self.test, ())
-
-    def test(self):
-        ts = True
-        while ts:
-              ts = True
-              print "thread"	
-	      sleep(3)
 	
     def runWhile(self):
 	if windows:
