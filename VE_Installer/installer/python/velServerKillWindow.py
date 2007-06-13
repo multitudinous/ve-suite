@@ -35,7 +35,7 @@ class ServerKillWindow(wx.Frame):
         Style(self)
         self.SetSizer(rowSizer)
         self.SetSize(KILL_WINDOW_SIZE)
-        self.CentreOnScreen()
+        #self.CentreOnScreen()
         self.Show()
         #self.runWhile()
     """	
@@ -83,7 +83,7 @@ class ServerKillWindow(wx.Frame):
             killArray = ["kill"]
             for pid in self.pids:
                 killArray[len(killArray):] = [str(pid)]
-            os.popen(str(killArray))
+            Popen(killArray)
         self.OnClose()
 
     def OnClose(self, event = None):
