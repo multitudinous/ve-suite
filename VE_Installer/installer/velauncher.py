@@ -839,14 +839,7 @@ class LauncherWindow(wx.Frame):
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
 
         ##Launch splash screen
-	#velLaunchSplash.LaunchSplash()
-	"""
-        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
-        wx.SplashScreen(image,
-                        wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
-                        SPLASH_TIME, None, -1)	
-        wx.Yield()
-	"""
+	velLaunchSplash.LaunchSplash()
         #thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
 	
         ##Go into the Launch
