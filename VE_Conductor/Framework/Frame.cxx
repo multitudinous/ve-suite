@@ -989,7 +989,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
         message += wxString( _(" does not exist!") );
         wxMessageBox( message, 
                       _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-	m_recentVESFiles->RemoveHistoryFile(event.GetId() - wxID_FILE1);
+        m_recentVESFiles->RemoveFileFromHistory( event.GetId() - wxID_FILE1 );
         return;
     }
     
