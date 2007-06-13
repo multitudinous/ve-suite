@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """Takes VE-Suite settings input and launches chosen VE-Suite programs.
-
+#
 --v1.0.5 coded by Jeff Groves
 This module creates a launcher window so the user can choose which
 parts of VE-Suite to launch:
