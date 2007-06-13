@@ -838,15 +838,20 @@ class LauncherWindow(wx.Frame):
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
 
-        ##Launch splash screen (Splash screen never get terminated until naming_service is killed)
-	#Splash = velLaunchSplash.LaunchSplash() 
-
+        ##Launch splash screen
+	#velLaunchSplash.LaunchSplash()
+	"""
+        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
+        wx.SplashScreen(image,
+                        wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
+                        SPLASH_TIME, None, -1)	
+        wx.Yield()
+	"""
         #thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
 	
         ##Go into the Launch
         try:
             launchInstance = Launch(self.state.GetLaunchSurface())
-	    ##Splash.OnClose()
             ##Show NameServer kill window if NameServer was started.
             if v("NameServer"):
                 window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
@@ -858,7 +863,6 @@ class LauncherWindow(wx.Frame):
                                    wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
-        
         ##Close the Launcher
 	self.OnClose()
 
@@ -875,7 +879,6 @@ class LauncherWindow(wx.Frame):
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
             velShell.Start(self.state.GetSurface("ShellScript"))
-
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
