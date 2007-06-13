@@ -154,6 +154,7 @@ void Body_UI_i::SetXplorerData (
     ::Error::EUnknown
   ))
 {
+    //std::cout << xplorerData << std::endl;
 	//Receive the data from Xplorer
 	std::string tempString( const_cast<char*>(xplorerData) );
     VE_XML::XMLReaderWriter networkReader;
@@ -164,15 +165,23 @@ void Body_UI_i::SetXplorerData (
     std::vector<VE_XML::XMLObject*> xmlObjects;
 	xmlObjects = networkReader.GetLoadedXMLObjects();
     
-    std::vector< VE_XML::XMLObject* >::iterator iter;
-    for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
+    //std::cout << xmlObjects.size() << std::endl;
+    //std::vector< VE_XML::XMLObject* >::iterator iter;
+    //Not sure why this is not working...
+    //for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
     {
-        VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
+        //iter
+        VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( xmlObjects.at( 0 ) );
+        if( !temp )
+        {
+            std::cout << " bad stuff " << std::endl;
+        }
         m_commandNameMap[ temp->GetCommandName() ] = *temp;
         delete temp;
-        iter = xmlObjects.erase( iter );
+        //iter = xmlObjects.erase( iter );
+        xmlObjects.clear();
     }
-	logWindow->SetMessage( xplorerData );
+	//logWindow->SetMessage( xplorerData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetLogWindow( PEThread* logWindow )
