@@ -43,6 +43,8 @@ CORBAServiceList API
 #include "VE_Open/skel/VjObsC.h"
 #include "VE_Conductor/Utilities/UI_i.h"
 
+#include "VE_Open/XML/Command.h"
+
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
 #include <vpr/Util/Singleton.h>
@@ -115,7 +117,7 @@ public:
    PEThread* GetMessageLog( void );
 
    ///Get the current commands from xplorer
-   std::vector<VE_XML::XMLObject*> GetGUIUpdateCommands();
+   VE_XML::Command GetGUIUpdateCommands( std::string commandName );
    
    ///Call set id on all modules in the current network
    bool SetID( int moduleId, std::string moduleName );

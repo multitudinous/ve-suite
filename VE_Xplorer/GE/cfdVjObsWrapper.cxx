@@ -54,24 +54,24 @@
 
 using namespace CosNaming;
 using namespace VE_Xplorer;
-
+////////////////////////////////////////////////////////////////////////////////
 cfdVjObsWrapper::cfdVjObsWrapper( void )
 {
    _vjObs = new VjObs_i();
    m_xplorer = new Body_VEXplorer_i();
    isMaster = false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVjObsWrapper::InitCluster( void )
 {
    _vjObs->InitCluster();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVjObsWrapper::GetUpdateClusterStateVariables( void )
 {
    _vjObs->GetUpdateClusterStateVariables();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdVjObsWrapper::~cfdVjObsWrapper( void )
 {
    CosNaming::Name name(1);
@@ -107,8 +107,10 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
       << " End VjObsWraper Destructor  " 
       << std::endl << vprDEBUG_FLUSH;
 }
-
-void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, PortableServer::POA* child_poa, PortableServer::POA* poa,int argc, char* argv[]  )
+////////////////////////////////////////////////////////////////////////////////
+void cfdVjObsWrapper::init( CosNaming::NamingContext* input, 
+    CORBA::ORB* orbPtr, PortableServer::POA* child_poa, 
+    PortableServer::POA* poa,int argc, char* argv[]  )
 {
     //boost::ignore_unused_variable_warning( argc );
     //boost::ignore_unused_variable_warning( argv );
@@ -213,27 +215,27 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
       VE_Xplorer::CommandHandler::instance()->SetXplorer(m_xplorer);
    }
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdCommandArray* cfdVjObsWrapper::GetCommandArray( void )
 {
    return _vjObs->_cfdArray;
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command* cfdVjObsWrapper::GetXMLCommand( void )
 {
    return _vjObs->bufferCommand;
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double cfdVjObsWrapper::GetShortArray( int i )
 {
    return _vjObs->cfdShort_data_array[ i ];
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVjObsWrapper::GetCfdStateVariables( void )
 {
    _vjObs->GetCfdStateVariables();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdVjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
@@ -250,7 +252,8 @@ long cfdVjObsWrapper::GetSetFrameNumber( long x )
    return _vjObs->GetSetFrameNumber( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int cfdVjObsWrapper::getStringTokens(const char* buffer, char* delim, std::vector<std::string> &toks)
+int cfdVjObsWrapper::getStringTokens(const char* buffer, char* delim, 
+    std::vector<std::string> &toks)
 {
    char* token;
    int i=0;

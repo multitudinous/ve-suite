@@ -119,21 +119,21 @@ void Body_VEXplorer_i::SetName ( const char* name )
 	throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_VEXplorer_i::GetName ( )
+char* Body_VEXplorer_i::GetName()
   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
   // Add your implementation here
 	throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetNetwork ( const char* network )
+void Body_VEXplorer_i::SetNetwork( const char* network )
   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
   // Add your implementation here
 	throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetCommand ( const char* command )
+void Body_VEXplorer_i::SetCommand( const char* command )
   ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
 {
   //When starting xplorer it is possible to connect and send a command before 

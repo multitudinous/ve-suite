@@ -1860,11 +1860,6 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
       // create pane and set appropriate vars
       viewlocPane = new ViewLocPane( this );
    }
-   else
-   {
-      // set pointer to corba object for comm
-      viewlocPane->SetCommInstance( serviceList->GetXplorerPointer() );
-   }
    // now show it
    viewlocPane->Show();
 }

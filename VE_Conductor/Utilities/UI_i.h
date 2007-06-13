@@ -44,12 +44,15 @@ Body_UI_i API
 #include <vector>
 #include <map>
 
+#include "VE_Open/XML/Command.h"
+
 class PEThread;
 //class Network;
 
 namespace VE_XML
 {
 	class XMLObject;
+    class Command;
 	namespace VE_Model
 	{
 		class Model;
@@ -77,7 +80,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
      void SetLogWindow( PEThread* logWindow );
 
 	 ///Returns vector containing XMLObjects
-	 std::vector<VE_XML::XMLObject*> GetXplorerData();
+	 VE_XML::Command GetXplorerData( std::string commandName );
      
 virtual void UpdateNetwork (
     const char * network
@@ -131,9 +134,9 @@ virtual void Raise (
       ::Error::EUnknown
     ));
 
-  std::vector<VE_XML::XMLObject*> m_xmlObjects;
   std::map<int,std::string> m_idToModelName;
   std::map<std::string, VE_XML::XMLObject*> m_objectToModel;
+  std::map< std::string, VE_XML::Command > m_commandNameMap;
 };
 
 

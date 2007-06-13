@@ -32,9 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Framework/ViewLocPane.h"
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/App.h"
-#include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
@@ -372,114 +369,32 @@ void ViewLocPane::_setUpActiveFlyThroughNames( int index )
 ///////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED(event) )
 {
-    if ( IsShown() )
+    if( !IsShown() )
     {
-        std::vector<VE_XML::XMLObject*> viewPointData = 
-        VE_Conductor::CORBAServiceList::instance()->GetGUIUpdateCommands();
-        //Hasn't updated yet
-        if(viewPointData.empty())
-        {
-            return;
-        }
+        return;
+    }
 
-        VE_XML::Command* viewLocations = dynamic_cast<VE_XML::Command*>(viewPointData.at( 0 ) );
-        if(viewLocations)
-        {
-            if( viewLocations->GetCommandName( ) == "VIEWPOINT_GUI_DATA" ) 
-            {
-                //This needs to be fixed.
-                //This assumes that if the num of locations hasn't changed
-                //There's no need to update the GUI
-                if(_numStoredLocations != viewLocations->GetNumberOfDataValuePairs())
-                {
-                    _numStoredLocations = viewLocations->GetNumberOfDataValuePairs();
-                    _numView_LocsGlobal = _numStoredLocations;
-     
-                    _rebuildNameArrays();
-                    if ( flyThroughList.size() > 0  )
-                    {
-                        _setUpActiveFlyThroughNames( 0 );
-                    }
-                    else if ( flyThroughList.size() != 0 )
-                    {
-                        _setUpActiveFlyThroughNames( 0 );
-                    }
-                    _rebuildPage();
-                    }
-            }
-        }
-   }
-}
-//////////////////////////////////////////////////////
-void ViewLocPane::_updateWithcfdQuatCamHandler( void )
-{
-   unsigned int tempindex = 0;
-   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToXplorer() )
-   {
-      return;
-   }
+    VE_XML::Command viewPointData = VE_Conductor::CORBAServiceList::instance()->
+        GetGUIUpdateCommands( "VIEWPOINT_GUI_DATA" );
+    //Hasn't updated yet
+    if( viewPointData.GetCommandName() == "NULL" )
+    {
+        return;
+    }
 
-   VjObs::obj_pd_var tempTest;
-   int tempTestlocal = 0;
-   int counter = 0;
-   
-   while ( tempTestlocal == 0 )
-   {
-      tempTest = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->getDouble1D( "getCompletionTest" );
-      tempTestlocal = (int)tempTest[ 0 ];       
-      wxMilliSleep( 50 );
-      ++counter;
-      if ( counter == 6 )
-      {
-         return;
-      }
-   }
-   
-   _numStoredLocations = 0; 
+    _numStoredLocations = viewPointData.GetNumberOfDataValuePairs();
+    _numView_LocsGlobal = _numStoredLocations;
 
-   std::vector<VE_XML::XMLObject*> viewPointData = 
-       VE_Conductor::CORBAServiceList::instance()->GetGUIUpdateCommands();
-   VE_XML::Command* viewLocations = dynamic_cast<VE_XML::Command*>(viewPointData.at( 0 ) );
-   if(viewLocations)
-   {
-       if( viewLocations->GetCommandName( ) == "VIEWPOINT_GUI_DATA" ) 
-       {
-           _numStoredLocations = viewLocations->GetNumberOfDataValuePairs();
-       }
-   }
-   /*VjObs::double2DArray_var  flyThroughArray;
-   flyThroughArray = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->getDouble2D( "getFlythroughData" );
- 
-   flyThroughList.clear();
-   for (CORBA::ULong j=0; j<flyThroughArray->length(); j++ )
-   {
-      std::vector<int> tempPts;
-      for (CORBA::ULong k=0; k<flyThroughArray[j].length(); k++ )
-      {
-         tempPts.push_back( (int)flyThroughArray[j][k] );
-      }    
-      flyThroughList.push_back(tempPts);
-      tempPts.clear();
-   }*/
-
-   _numView_LocsGlobal = _numStoredLocations;
- 
-   _rebuildNameArrays();
-   if ( flyThroughList.size() > tempindex && flyThroughList.size() != 0 )
-   {
-      _setUpActiveFlyThroughNames( tempindex );
-   }
-   else if ( flyThroughList.size() != 0 )
-   {
-      tempindex = 0;
-      _setUpActiveFlyThroughNames( tempindex );
-   }
-   else
-   {
-      tempindex = 0;
-   }
-   _rebuildPage();
-   _resetSelections();
+    _rebuildNameArrays();
+    if( flyThroughList.size() > 0  )
+    {
+        _setUpActiveFlyThroughNames( 0 );
+    }
+    else if( flyThroughList.size() != 0 )
+    {
+        _setUpActiveFlyThroughNames( 0 );
+    }
+    _rebuildPage();
 }
 //////////////////
 //event handling//
@@ -671,10 +586,6 @@ void ViewLocPane::_resetSelections( void )
 {
    if(_removevwptSel)
       _removevwptSel->SetSelection( 0 );
-}
-///////////////////////////////////////////////////////
-void ViewLocPane::SetCommInstance( VjObs_ptr veEngine )
-{
 }
 ////////////////////////////////////////////////
 void ViewLocPane::SendCommandsToXplorer( void )

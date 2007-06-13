@@ -75,22 +75,6 @@ namespace VE_XML
    class DataValuePair;
 }
 
-/*class UI_ViewLocTabScroll: public wxScrolledWindow{
-public:
-   UI_ViewLocTabScroll(wxWindow* parent);
-   ~UI_ViewLocTabScroll();
-
-
-   int _numViewLocLocal;
-   int _vwptsInActiveFlyLocal;
-   int _numStoredFlythroughsLocal;
-
-protected:
-
-
-   DECLARE_EVENT_TABLE()
-};*/
-
 class ViewLocPane : public wxDialog
 {
 public:
@@ -134,16 +118,12 @@ public:
 	wxArrayString _locNamesLocal;
 	wxArrayString _activeFlyNamesLocal;
 	wxArrayString _flythroughNamesLocal;
-   void SetCommInstance( VjObs_ptr veEngine );
    void SendCommandsToXplorer( void );
 
    short    num_viewlocs;
-   VjObs::scalar_p_var   viewlocNameArray;
-   VjObs::double2DArray_var  flyThroughArray;
 
 protected:
    void _buildPage( void );
-   void _updateWithcfdQuatCamHandler( void );
 
    void _rebuildNameArrays( void );
    void _setUpActiveFlyThroughNames( int );
@@ -154,12 +134,10 @@ protected:
    std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
    int _numView_LocsGlobal;
    std::vector< VE_XML::Command* > commands;
-   //VjObs_ptr xplorerPtr;
    int cId, cIso_value, cSc, cMin;
    std::string dataValueName;
 
    std::vector< long > commandInputs;
-   wxWindow* _parent;
    wxScrolledWindow* scrollWindow;
 
    wxComboBox* _activeflySel;

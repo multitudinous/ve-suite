@@ -44,6 +44,8 @@ Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : UIName_(name), executive_(Body::Executive::_duplicate(exec))
 {
     UIName_=name;
+    m_commandNameMap[ "NULL" ] = VE_XML::Command();
+    m_commandNameMap[ "NULL" ].SetCommandName( "NULL" );
 }
   
 // Implementation skeleton destructor
@@ -159,7 +161,17 @@ void Body_UI_i::SetXplorerData (
     networkReader.ReadFromString();
 	networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
-	m_xmlObjects = networkReader.GetLoadedXMLObjects();
+    std::vector<VE_XML::XMLObject*> xmlObjects;
+	xmlObjects = networkReader.GetLoadedXMLObjects();
+    
+    std::vector< VE_XML::XMLObject* >::iterator iter;
+    for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
+    {
+        VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
+        m_commandNameMap[ temp->GetCommandName() ] = *temp;
+        delete temp;
+        iter = xmlObjects.erase( iter );
+    }
 	logWindow->SetMessage( xplorerData );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +180,15 @@ void Body_UI_i::SetLogWindow( PEThread* logWindow )
 	  this->logWindow = logWindow;
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::vector<VE_XML::XMLObject*> Body_UI_i::GetXplorerData()
+VE_XML::Command Body_UI_i::GetXplorerData( std::string commandName )
 {
-	return m_xmlObjects;
+    std::map< std::string, VE_XML::Command >::iterator iter;
+    iter = m_commandNameMap.find( commandName );
+    if( iter == m_commandNameMap.end() )
+    {
+        return m_commandNameMap[ "NULL" ];
+    }
+    VE_XML::Command temp = iter->second;
+    m_commandNameMap.erase( iter );
+	return temp;
 }

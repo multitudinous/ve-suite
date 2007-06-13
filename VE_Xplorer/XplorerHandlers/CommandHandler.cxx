@@ -39,9 +39,11 @@ vprSingletonImp( VE_Xplorer::CommandHandler );
 using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
-CommandHandler::CommandHandler()
+CommandHandler::CommandHandler():
+m_xplorer( 0 ),
+m_input( 0 )
 {
-
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::Initialize()
@@ -66,6 +68,13 @@ void CommandHandler::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
 {
+    //The calling function is reponsible for deleting the incoming command
+    //If in cluster mode
+    if( !m_xplorer )
+    {
+        return false;
+    }
+    
     //Now send the data to xplorer
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -77,21 +86,19 @@ bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
     netowrkWriter.WriteToString();
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
-    if ( !CORBA::is_nil( m_xplorer->_this() ) && !xmlDocument.empty() )
+    if( !CORBA::is_nil( m_xplorer->_this() ) && !xmlDocument.empty() )
     {
         try
         {
           //new way
-          m_xplorer->SetXplorerData( xmlDocument.c_str() );
+          m_xplorer->SetXplorerData( xmlDocument );
         }
         catch ( ... )
         {
             return false;
         }
     }
-   //Clean up memory
-   //delete veCommand;
-   return true;
+    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command* CommandHandler::GetXMLCommand()

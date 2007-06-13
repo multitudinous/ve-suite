@@ -302,21 +302,27 @@ bool CORBAServiceList::DisconnectFromXplorer( void )
 /////////////////////////////////////////////////////////////
 void CORBAServiceList::CheckORBWorkLoad( void )
 {
-   try
-   {
-      if ( !CORBA::is_nil( orb.in() ) )
-      {
-         ::wxMilliSleep( 250 );
-         if ( orb->work_pending() )
-         {
-            orb->perform_work();
-         }      
-      }
-   }
-   catch ( ... )
-   {
-      
-   }
+    try
+    {
+        if( !CORBA::is_nil( orb.in() ) )
+        {
+            ::wxMilliSleep( 500 );
+            if ( orb->work_pending() )
+            {
+                orb->perform_work();
+            }
+            
+            VE_XML::Command textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
+            if( textOutput.GetCommandName() != "NULL" )
+            {
+                GetMessageLog()->SetMessage( textOutput.GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
+            }
+        }
+    }
+    catch( ... )
+    {
+        ;
+    }
 }
 /////////////////////////////////////////////////////////////
 void CORBAServiceList::CreateCORBAModule( void )
@@ -424,6 +430,7 @@ void CORBAServiceList::CreateCORBAModule( void )
 //////////////////////////////////////////////////
 bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
 {
+    //Calling function is responsible for the command memory
    if ( !IsConnectedToXplorer() )
       return false;
       
@@ -438,7 +445,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
    netowrkWriter.WriteToString();
    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
-   std::string copiedCommandForAMITesting(xmlDocument);
    if ( !CORBA::is_nil( vjobs.in() ) && !xmlDocument.empty() )
    {
       try
@@ -451,8 +457,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
           return false;
       }      
    }
-   //Clean up memory
-   //delete veCommand;
    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -490,9 +494,9 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
    return true;
 }
 ///////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::XMLObject*> CORBAServiceList::GetGUIUpdateCommands()
+VE_XML::Command CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
 {
-    return p_ui_i->GetXplorerData();
+    return p_ui_i->GetXplorerData( commandName );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CORBAServiceList::GetNetwork( void )

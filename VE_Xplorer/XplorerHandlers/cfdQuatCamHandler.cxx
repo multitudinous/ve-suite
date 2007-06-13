@@ -588,6 +588,7 @@ void cfdQuatCamHandler::_updateViewGUIPointData()
         name.clear( );
     }
     VE_Xplorer::CommandHandler::instance( )->SetXMLCommand( viewPointGUIData );
+    delete viewPointGUIData;
 }
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
