@@ -135,14 +135,14 @@ public:
    ///so that evehenthandlers can manipulate the plugins while
    ///with commands from the gui
    std::map<int, cfdVEBaseClass* >* GetTheCurrentPlugins( void );
-   ///Loading the Available Modules
-   cfdVEAvail_Modules* av_modules;
    ///Register plugin specific eh's so that cfdexecutive only calls the correct
    ///plugin for a specific command
    //bool RegisterEHForGEPlugin( std::string commandName, cfdVEBaseClass* baseClass );
    
    std::string veNetwork;
 private:
+   ///Loading the Available Modules
+   cfdVEAvailModules* m_avModules;
    ///Laod data from CE
    void LoadDataFromCE( void );
 

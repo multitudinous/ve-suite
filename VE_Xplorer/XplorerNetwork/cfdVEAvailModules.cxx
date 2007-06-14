@@ -37,38 +37,33 @@
 #include <sstream>
 
 using namespace VE_Xplorer;
-
-cfdVEAvail_Modules::cfdVEAvail_Modules( void )
+////////////////////////////////////////////////////////////////////////////////
+cfdVEAvailModules::cfdVEAvailModules()
 {
-   pl_loader = new cfdVEPluginLoader();
-   LoadModules();
+    pl_loader = new cfdVEPluginLoader();
+    LoadModules();
 }
-
-cfdVEAvail_Modules::~cfdVEAvail_Modules( void )
+////////////////////////////////////////////////////////////////////////////////
+cfdVEAvailModules::~cfdVEAvailModules()
 {
    delete pl_loader;
 }
-
-bool cfdVEAvail_Modules::LoadModules()
+////////////////////////////////////////////////////////////////////////////////
+bool cfdVEAvailModules::LoadModules()
 {
-/*   char* path = "Plugins/";
-   char* modelPath =  getenv("CFDHOSTTYPE");
-   char* file = new char[100];
-   
-   strcpy( file, path );
-   strcat( file, modelPath );
-
-   wxString wxPath = file;
-   pl_loader->LoadPlugins( wxPath );*/
-   pl_loader->ScanAndLoad();
-  
-   //delete [] file;
-
-   return true;
+    pl_loader->ScanAndLoad();
+    return true;
 }
-
-cfdVEPluginLoader* cfdVEAvail_Modules::GetLoader( void )
+////////////////////////////////////////////////////////////////////////////////
+cfdVEPluginLoader* cfdVEAvailModules::GetLoader()
 {
-   return pl_loader;
+    return pl_loader;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEAvailModules::ResetPluginLoader()
+{
+    delete pl_loader;
+    pl_loader = new cfdVEPluginLoader();
+    LoadModules();
 }
 

@@ -60,28 +60,35 @@ Scheduler::~Scheduler ()
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::clear ()
 {
-  visit_val.clear();
-  while(!visit_stack.empty()) visit_stack.pop();
-  _schedule_nodes.clear();
+    visit_val.clear();
+    while( !visit_stack.empty() ) 
+    {
+        visit_stack.pop();
+    }
+    _schedule_nodes.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-//This function appears to not be used anymore and my not be needed
-/*void Scheduler::reset()
+void Scheduler::reset()
 {
-   for( int i = 0; i < _net->nmodules(); ++i )
-   {
-      _net->GetModule(i)->_need_execute = 1;
-      _net->GetModule(i)->_return_state = 0;
-      //_net->GetModule(i)->_inputs.clear();
-      //_net->GetModule(i)->_outputs.clear();
-      //_net->GetModule(i)->_messages.clear();
+    for( int i = 0; i < _net->nmodules(); ++i )
+    {
+        _net->GetModule(i)->_need_execute = 1;
+        _net->GetModule(i)->_return_state = 0;
+        //_net->GetModule(i)->_inputs.clear();
+        //_net->GetModule(i)->_outputs.clear();
+        //_net->GetModule(i)->_messages.clear();
 
-      for ( int j=0; j<_net->GetModule(i)->numOPorts(); j++)
-      {
-         _net->GetModule(i)->getOPort(j)->_data.clear();
-      }
-   }
-}*/
+        /*for ( int j=0; j<_net->GetModule(i)->numOPorts(); j++)
+        {
+            _net->GetModule(i)->getOPort(j)->_data.clear();
+        }*/
+    }
+
+    while( !visit_stack.empty() )
+    {
+        visit_stack.pop();
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 void Scheduler::set_net (Network *n)
 {

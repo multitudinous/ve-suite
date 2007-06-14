@@ -99,7 +99,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    this->_masterNode->SetName( "cfdExecutive_Node" );
    VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
 
-   av_modules = new cfdVEAvail_Modules();
+   m_avModules = new cfdVEAvailModules();
 
    std::ostringstream dirStringStream;
    dirStringStream << "VEClient-" << vpr::System::getHostname() 
@@ -165,7 +165,7 @@ void cfdExecutive::CleanUp( void )
     vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
                         << std::endl << vprDEBUG_FLUSH;
    this->runGetEverythingThread = false;
-   delete av_modules;
+   delete m_avModules;
 
    _plugins.clear();
    _id_map.clear();
@@ -287,7 +287,7 @@ void cfdExecutive::GetEverything( void )
       {
          // if a new module is on the id map but not on the plugins map
          // create it...
-         cfdVEBaseClass* temp = dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( iter->second ) );
+         cfdVEBaseClass* temp = dynamic_cast< cfdVEBaseClass* >( m_avModules->GetLoader()->CreateObject( iter->second ) );
          if ( temp == 0 )
          {
             //load the default plugin

@@ -45,14 +45,14 @@
 #include <wx/filefn.h>
 
 #include <iostream>
-
+////////////////////////////////////////////////////////////////////////////////
 PluginLoader::PluginLoader()
 {
   plugins.clear();
   plugin_cls.clear();
   ::wxInitAllImageHandlers();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 PluginLoader::~PluginLoader()
 {
    for ( unsigned int i=0; i<plugins.size(); ++i )
@@ -63,7 +63,7 @@ PluginLoader::~PluginLoader()
   plugins.clear();
   plugin_cls.clear();
 }
-    
+////////////////////////////////////////////////////////////////////////////////    
 bool PluginLoader::LoadPlugins(wxString lib_dir)
 {
    // Load the default plugin no matter what
@@ -93,8 +93,10 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    if ( !dir.IsOpened() )
    {
       // Dispaly error
-      wxString msg( _("Directory ") + dir.GetName() + _(" is present but cannot be opened.") );
-      wxMessageBox( msg, _("Plugin Loader Failure"), wxOK | wxICON_INFORMATION );
+      wxString msg( _("Directory ") + dir.GetName() + 
+          _(" is present but cannot be opened.") );
+      wxMessageBox( msg, _("Plugin Loader Failure"), 
+          wxOK | wxICON_INFORMATION );
       // deal with the error here - wxDir would already log an error 
       // message explaining the exact reason of the failure
       return FALSE;
@@ -118,7 +120,7 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 
    return TRUE;	
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginLoader::RegisterPlugins()
 {
    wxNode *node;
@@ -141,7 +143,8 @@ void PluginLoader::RegisterPlugins()
    {
       wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
 
-      if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "UIPluginBase", wxConvUTF8 ) )
+      if( wxString( classInfo->GetBaseClassName1() ) == 
+          wxString( "UIPluginBase", wxConvUTF8 ) )
       {   
          RegisterPlugin(classInfo);
          wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
@@ -149,13 +152,25 @@ void PluginLoader::RegisterPlugins()
       node = (wxNode*)wxClassInfo::sm_classTable->Next();
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void PluginLoader::RegisterPlugin(wxClassInfo* info)
 {
-   if (info)
+   if( info )
    {
        UIPluginBase* object = (UIPluginBase*)(info->CreateObject());
        plugins.push_back(object);
        plugin_cls.push_back(info);
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+size_t PluginLoader::GetNumberOfPlugins( void )
+{
+    return plugin_cls.size();
+}
+////////////////////////////////////////////////////////////////////////////////
+std::pair< UIPluginBase*, wxClassInfo* > PluginLoader::GetPluginDataPair( size_t i )
+{
+    std::pair< UIPluginBase*, wxClassInfo* > 
+        dataPair( plugins.at( i ), plugin_cls.at( i ) );
+    return dataPair;
 }

@@ -478,7 +478,7 @@ void Body_Executive_i::SetNetwork (
    {
       _mutex.release();
       // Make the new schedule
-      if ( !_scheduler->schedule(0) )
+      if ( !_scheduler->schedule( 0 ) )
       {
          ClientMessage( "Error in VES Schedule\n" );
          return;
@@ -621,7 +621,7 @@ void Body_Executive_i::StartCalc (
     , Error::EUnknown
   ))
 {
-   //_scheduler->reset();
+    _scheduler->reset();
 
    if(_scheduler->snodes_size()==0)
    {

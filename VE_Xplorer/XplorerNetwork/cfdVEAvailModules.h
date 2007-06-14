@@ -44,16 +44,23 @@ cfdVEAvailModules API
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_NETWORK_EXPORTS cfdVEAvail_Modules
+class VE_XPLORER_NETWORK_EXPORTS cfdVEAvailModules
 {
 public:
-   cfdVEAvail_Modules( void );
-   ~cfdVEAvail_Modules( void );
-   bool LoadModules(); //Load all the modules from the dlls 
-   cfdVEPluginLoader* GetLoader( void );
+    ///Constructor
+    cfdVEAvailModules( void );
+    ///Destructor
+    ~cfdVEAvailModules( void );
+    //Load all the modules from the dlls
+    bool LoadModules(); 
+    ///Get the plugin loader to load available plugins
+    cfdVEPluginLoader* GetLoader( void );
+    ///Reset the plugin loader so that plugins can be 
+    ///loaded as required by the user
+    void ResetPluginLoader( void );
 
 protected:
-   cfdVEPluginLoader* pl_loader;
+    cfdVEPluginLoader* pl_loader;
 };
 }
 #endif

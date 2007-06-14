@@ -72,9 +72,6 @@
 #include "VE_Conductor/GUIPlugin/Module.h"
 #include "VE_Conductor/Utilities/Tag.h"
 
-//#include "VE_Conductor/VE_UI/UI_Tabs.h"
-//#include "VE_Conductor/VE_UI/UI_Frame.h"
-
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
@@ -157,7 +154,6 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( wxID_OPEN, AppFrame::Open )
 
     EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
- 
 
     EVT_MENU( v21ID_LOAD, AppFrame::LoadFromServer )
     EVT_MENU( QUERY_FROM_SERVER, AppFrame::QueryFromServer )
@@ -1342,7 +1338,7 @@ void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
    try	
    { 
       serviceList->StartCalc();
-      run_menu->Enable(v21ID_START_CALC, false);
+      //run_menu->Enable(v21ID_START_CALC, true);
    }
    catch ( CORBA::Exception& ) 
    {

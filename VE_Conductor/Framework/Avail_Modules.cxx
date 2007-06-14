@@ -59,7 +59,8 @@ END_EVENT_TABLE()
    
 Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
 :
-wxTreeCtrl(parent, id, pos, size, style), network(0)
+wxTreeCtrl(parent, id, pos, size, style), 
+network(0)
 {
   
   int image1 = TreeCtrlIcon_Folder;
@@ -71,12 +72,12 @@ wxTreeCtrl(parent, id, pos, size, style), network(0)
   pl_loader = new PluginLoader();
   LoadModules();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Avail_Modules::~Avail_Modules()
 {
    delete pl_loader;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
 {
 	std::vector<wxString> lnames;
@@ -95,13 +96,15 @@ void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
 	id = rootId;
 	lsize = lnames.size();
 
-	for (i=0; i<(lsize-1); i++){
+    //This parses the _ in the plugin name so that the proper folder hiearachy
+    //can be created
+	for( i=0; i < (lsize-1); i++)
+    {
 		lastid=id;
-      id = GetFirstChild(id, cookie);
+        id = GetFirstChild(id, cookie);
       
 		while (1)
 		{
-	  
 			if (id<=0)
 			{
 				id=AppendItem( lastid,lnames[i], image1, image2, NULL );
@@ -113,14 +116,14 @@ void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
 			if(GetItemText(id)==lnames[i])
 				 break;
 			  
-			  id= GetNextChild(lastid, cookie);
+            id= GetNextChild(lastid, cookie);
 		}
 	}
    
    id = AppendItem(id, lnames[i], image3, image4,  new ReiTreeItemData(plugin, clsi));
    SetItemBold(id);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 {
   ReiTreeItemData* item_data;
@@ -129,13 +132,13 @@ void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
   if (selection<=0)
     return;
 
-  item_data = (ReiTreeItemData*) GetItemData(selection);
+  item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
   if (item_data==NULL)
     return;
 
   ShowMenu(selection, event.GetPoint());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
 {
    selection = GetSelection();
@@ -143,7 +146,7 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
       return;
 
    ReiTreeItemData* item_data;
-   item_data = (ReiTreeItemData*) GetItemData(selection);
+   item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
    if ( item_data == NULL )
       return;
 
@@ -182,7 +185,7 @@ void Avail_Modules::ShowMenu(wxTreeItemId id, const wxPoint& pt)
 
     PopupMenu(&menu, pt);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::getLeveledName(wxString name, std::vector<wxString> & lnames)
 {
   char * s;
@@ -197,7 +200,7 @@ void Avail_Modules::getLeveledName(wxString name, std::vector<wxString> & lnames
   delete [] s;
   
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::CreateImageList(int size)
 {
     if ( size == -1 )
@@ -237,61 +240,61 @@ void Avail_Modules::CreateImageList(int size)
 
     AssignImageList(images);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 {
+    ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 bool Avail_Modules::LoadModules()
 {
-  pl_loader->LoadPlugins( _("Plugins/UI") );
-  for ( unsigned int i=0; i<pl_loader->plugins.size(); i++)
-  {  
-     AddModule( pl_loader->plugins[i], pl_loader->plugin_cls[i] );
-  }
-
-  return true;
+    pl_loader->LoadPlugins( _("Plugins/UI") );
+    for( size_t i=0; i < pl_loader->GetNumberOfPlugins(); i++)
+    {  
+        UIPluginBase* plugin = pl_loader->GetPluginDataPair( i ).first;
+        wxClassInfo* clsi = pl_loader->GetPluginDataPair( i ).second;
+            
+        AddModule( plugin, clsi);
+    }
+    return true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
 {
-  ReiTreeItemData* item_data;
-  UIPluginBase* pl;
-  wxString desc;
-  wxString title;
- 
-  title << wxT("Description for ") << GetItemText(selection);
-  
-  if (selection<=0)
-    return;
-  
-  item_data = (ReiTreeItemData*) GetItemData(selection);
-  if (item_data==NULL)
-    return;
+    ReiTreeItemData* item_data;
+    UIPluginBase* pl;
+    wxString desc;
+    wxString title;
 
-  pl = item_data->plugin;
-  desc = pl->GetDesc();
-  
-  wxMessageDialog(this, desc, title).ShowModal();
-   
+    title << wxT("Description for ") << GetItemText(selection);
+
+    if (selection<=0)
+        return;
+
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
+    if (item_data==NULL)
+        return;
+
+    pl = item_data->plugin;
+    desc = pl->GetDesc();
+
+    wxMessageDialog(this, desc, title).ShowModal();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
 {
-  char browser[1024];
-  UIPluginBase* pl;
-  wxString help;
-  wxString fgroot;
-  wxString docdir;
-  wxString cmd;
-  ReiTreeItemData* item_data;
-  item_data = (ReiTreeItemData*) GetItemData(selection);
-  if (item_data==NULL)
-    return;
+    char browser[1024];
+    UIPluginBase* pl;
+    wxString help;
+    wxString fgroot;
+    wxString docdir;
+    wxString cmd;
+    ReiTreeItemData* item_data;
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
+    if( !item_data )
+        return;
 
-
-  pl = item_data->plugin;
-  pl = item_data->plugin;
+    pl = item_data->plugin;
   /*fgroot = getenv("FGROOT");
   
 #ifdef WIN32
