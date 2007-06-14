@@ -62,8 +62,8 @@ int main( int argc, char *argv[] )
    }
 
    // read the data set ("1" means print info to screen)
-   vtkDataSet* dataset = readVtkThing( inFileName, 1 );
-
+   vtkDataSet* dataset = dynamic_cast<vtkDataSet*>(readVtkThing( inFileName, 1 ));
+   ///need to check for cell data...if present convert to point data first!!!
    std::string input;
    std::string tempText;
    std::string response;
@@ -84,18 +84,7 @@ int main( int argc, char *argv[] )
       
       if ( response == "y" || response == "Y" )
       {
-         if ( dataset->GetCellData() )
-         {   
-            if ( dataset->GetCellData()->GetArray( tempText.c_str() ) )
-            {   
-               vectorNames.push_back( tempText );
-            }
-            else
-            {   
-               std::cout << " scalar is not in dataset" << std::endl;
-            }
-         }
-         else if ( dataset->GetPointData() )
+          if ( dataset->GetPointData() )
          {   
             if ( dataset->GetPointData()->GetArray( tempText.c_str() ) )
             {   
@@ -112,19 +101,13 @@ int main( int argc, char *argv[] )
          }
       }
    }
-   while ( vectorNames.size() < 4 );
+   while ( vectorNames.size() < 3 );
 
    vtkDataArray* uVectorArray = 0;
    vtkDataArray* vVectorArray = 0;
    vtkDataArray* wVectorArray = 0;
 
-   if ( dataset->GetCellData() )
-   {
-      uVectorArray = dataset->GetCellData()->GetArray( vectorNames.at( 0 ).c_str() );
-      vVectorArray = dataset->GetCellData()->GetArray( vectorNames.at( 1 ).c_str() );
-      wVectorArray = dataset->GetCellData()->GetArray( vectorNames.at( 2 ).c_str() );
-   }
-   else if ( dataset->GetPointData() )
+   if ( dataset->GetPointData() )
    {
       uVectorArray = dataset->GetPointData()->GetArray( vectorNames.at( 0 ).c_str() );
       vVectorArray = dataset->GetPointData()->GetArray( vectorNames.at( 1 ).c_str() );
@@ -134,7 +117,7 @@ int main( int argc, char *argv[] )
    vectorArray->SetName( "Velocity" );
    vectorArray->SetNumberOfComponents( 3 );
    
-   int numTuples = uVectorArray->GetNumberOfTuples();
+    int numTuples = uVectorArray->GetNumberOfTuples();
    vectorArray->SetNumberOfTuples( numTuples );
 
    for ( int i = 0; i < numTuples; ++i )
