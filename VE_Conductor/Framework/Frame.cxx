@@ -978,7 +978,7 @@ void AppFrame::SetRecentFile(wxFileName vesFileName)
 void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
 {
     wxString fileToOpen(m_recentVESFiles->GetHistoryFile(event.GetId() - wxID_FILE1));
-    if( fileToOpen.empty() && !wxFileName::FileExists( fileToOpen ) )
+    if( fileToOpen.empty() || (!wxFileName::FileExists( fileToOpen ) ) )
     {
         wxString message( _("VES file "));
         message += fileToOpen;
