@@ -2572,7 +2572,7 @@ void Network::OnShowLinkName(wxCommandEvent& WXUNUSED(event))
 	for( int i = 0; i < links.size(); i++)
 	{
 		serviceList->GetMessageLog()->SetMessage( "link:_ " );
-		serviceList->GetMessageLog()->SetMessage( links[i].GetName().c_str() );
+		serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
 		serviceList->GetMessageLog()->SetMessage( "_\n" );
 	}
 	//wxString title;
