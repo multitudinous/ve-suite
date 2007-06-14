@@ -578,11 +578,13 @@ void Network::OnMRightDown(wxMouseEvent& event)
    pop_menu.Enable(DEL_TAG, false);
 
    pop_menu.Enable(SHOW_LINK_CONT, false);
+   pop_menu.Enable(LINK_NAME, false);
 
    if (m_selLink>=0)
    {
       pop_menu.Enable(DEL_LINK, true);
       pop_menu.Enable(SHOW_LINK_CONT, true);
+	  pop_menu.Enable(LINK_NAME, true);
       if (m_selLinkCon>=0) 
          pop_menu.Enable(DEL_LINK_CON, true);
       else
@@ -2566,8 +2568,6 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////
 void Network::OnShowLinkName(wxCommandEvent& WXUNUSED(event))
 {
-	//VE_XML::VE_Model::Link* veLink = links[ m_selLink ];
-	//VE_Conductor::GUI_Utilities::Link veLink = links[ 0 ];
     CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	for( int i = 0; i < links.size(); i++)
 	{
@@ -2575,10 +2575,13 @@ void Network::OnShowLinkName(wxCommandEvent& WXUNUSED(event))
 		serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
 		serviceList->GetMessageLog()->SetMessage( "_\n" );
 	}
-	//wxString title;
-	//title << wxT("Aspen Name");
-	//wxString desc( veLink.GetName().c_str(), wxConvUTF8);
-	//wxMessageDialog( this, desc, title).ShowModal();
+
+	//VE_XML::VE_Model::Link* veLink = links[ m_selLink ];
+	VE_Conductor::GUI_Utilities::Link veLink = links[ m_selLink ];
+	wxString title;
+	title << wxT("Aspen Name");
+	wxString desc( veLink.GetName().c_str(), wxConvUTF8);
+	wxMessageDialog( this, desc, title).ShowModal();
 }
 
 ///////////////////////////////////////////
