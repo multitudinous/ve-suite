@@ -401,7 +401,7 @@ void AppFrame::_detectDisplayAndCreate()
    if ( GetDisplayMode() == "Desktop")
    {
       _configureDesktop();
-      SetWindowStyle( wxDEFAULT_FRAME_STYLE & ~ (wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX) );
+      SetWindowStyle( wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
    }
    else if ( GetDisplayMode() == "Tablet")
    {
