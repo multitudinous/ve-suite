@@ -103,7 +103,10 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_MENU(DEL_LINK_CON, Network::OnDelLinkCon)
    EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod)
    EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
-   EVT_MENU(LINK_NAME, Network::OnShowLinkName)
+   //Aspen Menu
+   EVT_MENU( SHOW_LINK_NAME, Network::OnShowAspenName )
+   EVT_MENU( LINK_INPUTS, Network::OnQueryStreamInputs )
+   EVT_MENU( LINK_OUTPUTS, Network::OnQueryStreamOutputs )
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -559,46 +562,56 @@ void Network::OnMRightDown(wxMouseEvent& event)
    //Update();
    /////////////////////////////////////////////////
 
-   wxMenu pop_menu( _("Action"));
+   wxMenu the_pop_menu( _("Action"));
 
-   pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
+   the_pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
 
-   pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
-   pop_menu.Append(EDIT_TAG, _("Edit Tag") );
-   pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
-   pop_menu.Append(DEL_LINK, _("Delete Link") );
-   pop_menu.Append(DEL_TAG, _("Delete Tag") );
-   pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
-   pop_menu.Append(LINK_NAME, _("Link Name") );
+   the_pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
+   the_pop_menu.Append(EDIT_TAG, _("Edit Tag") );
+   the_pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
+   the_pop_menu.Append(DEL_LINK, _("Delete Link") );
+   the_pop_menu.Append(DEL_TAG, _("Delete Tag") );
+   the_pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
 
-   pop_menu.Enable(ADD_LINK_CON, false);
-   pop_menu.Enable(EDIT_TAG, false);
-   pop_menu.Enable(DEL_LINK_CON, false);
-   pop_menu.Enable(DEL_LINK, false);
-   pop_menu.Enable(DEL_TAG, false);
+   the_pop_menu.Enable(ADD_LINK_CON, false);
+   the_pop_menu.Enable(EDIT_TAG, false);
+   the_pop_menu.Enable(DEL_LINK_CON, false);
+   the_pop_menu.Enable(DEL_LINK, false);
+   the_pop_menu.Enable(DEL_TAG, false);
 
-   pop_menu.Enable(SHOW_LINK_CONT, false);
-   pop_menu.Enable(LINK_NAME, false);
+   the_pop_menu.Enable(SHOW_LINK_CONT, false);
+   
+   //Aspen Menu
+   wxMenu * aspen_menu = new wxMenu();
+   aspen_menu->Append(SHOW_LINK_NAME, _("Aspen Name") );
+   aspen_menu->Enable(SHOW_LINK_NAME, true);
+   aspen_menu->Append(LINK_INPUTS, _("Query Inputs") );
+   aspen_menu->Enable(LINK_INPUTS, true);
+   aspen_menu->Append(LINK_OUTPUTS, _("Query Outputs") );
+   aspen_menu->Enable(LINK_OUTPUTS, true);
+   the_pop_menu.Append( LINK_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
+   the_pop_menu.Enable(LINK_MENU, false);
 
    if (m_selLink>=0)
    {
-      pop_menu.Enable(DEL_LINK, true);
-      pop_menu.Enable(SHOW_LINK_CONT, true);
-	  pop_menu.Enable(LINK_NAME, true);
+      the_pop_menu.Enable(DEL_LINK, true);
+      the_pop_menu.Enable(SHOW_LINK_CONT, true);
       if (m_selLinkCon>=0) 
-         pop_menu.Enable(DEL_LINK_CON, true);
+         the_pop_menu.Enable(DEL_LINK_CON, true);
       else
-         pop_menu.Enable(ADD_LINK_CON, true);
+         the_pop_menu.Enable(ADD_LINK_CON, true);
+
+	  the_pop_menu.Enable(LINK_MENU, true);
    }
 
    if (m_selTag>=0 )
    {
-      pop_menu.Enable(EDIT_TAG, true);
-      pop_menu.Enable(DEL_TAG, true);
+      the_pop_menu.Enable(EDIT_TAG, true);
+      the_pop_menu.Enable(DEL_TAG, true);
    }
 
    action_point = event.GetLogicalPosition(dc);
-   PopupMenu(&pop_menu, event.GetPosition());
+   PopupMenu(&the_pop_menu, event.GetPosition());
 
 
    m_selMod = -1;
@@ -2566,7 +2579,7 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 }
 
 //////////////////////////////////////////////////////
-void Network::OnShowLinkName(wxCommandEvent& WXUNUSED(event))
+void Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 {
     CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	for( int i = 0; i < links.size(); i++)
@@ -2577,11 +2590,102 @@ void Network::OnShowLinkName(wxCommandEvent& WXUNUSED(event))
 	}
 
 	//VE_XML::VE_Model::Link* veLink = links[ m_selLink ];
-	VE_Conductor::GUI_Utilities::Link veLink = links[ m_selLink ];
+	//VE_Conductor::GUI_Utilities::Link veLink = links[ m_selLink ];
 	wxString title;
 	title << wxT("Aspen Name");
-	wxString desc( veLink.GetName().c_str(), wxConvUTF8);
+	//wxString desc( veLink.GetName().c_str(), wxConvUTF8);
+	wxString desc( links[m_selLink].GetName().c_str(), wxConvUTF8);
 	wxMessageDialog( this, desc, title).ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnQueryStreamInputs(wxCommandEvent& event )
+{  
+    //UIPLUGIN_CHECKID( event )
+	std::string compName = links[m_selLink].GetName().c_str();
+
+	VE_XML::Command returnState;
+	returnState.SetCommandName("getStreamInputModuleParamList");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	
+	//Get results
+    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	std::string nw_str = serviceList->Query( status );
+	wxString title( compName.c_str(),wxConvUTF8);
+	
+	ParamsDlg* params = new ParamsDlg(this);
+	params->SetIsBlock(false);
+    //params->SetSize( dialogSize );
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	std::vector< std::string > temp_vector;
+	pair->GetData(temp_vector);
+
+	params->SetCompName(compName.c_str());
+	params->SetServiceList(serviceList);
+	params->SetDialogType("input");
+	for (int i=0; i < temp_vector.size(); i++) 
+		params->AppendList(temp_vector[i].c_str());
+	params->ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnQueryStreamOutputs(wxCommandEvent& event )
+{  
+    //UIPLUGIN_CHECKID( event )
+	std::string compName = links[m_selLink].GetName().c_str();
+
+	VE_XML::Command returnState;
+	returnState.SetCommandName("getStreamOutputModuleParamList");
+	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	data->SetData(std::string("ModuleName"), compName);
+	
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	
+	VE_XML::XMLReaderWriter commandWriter;
+	std::string status="returnString";
+	commandWriter.UseStandaloneDOMDocumentManager();
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	
+	//Get results
+    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	std::string nw_str = serviceList->Query( status );
+	wxString title( compName.c_str(),wxConvUTF8);
+
+	ParamsDlg * params = new ParamsDlg(this);
+	params->SetIsBlock(false);
+    //params->SetSize( dialogSize );
+	VE_XML::XMLReaderWriter networkReader;
+	networkReader.UseStandaloneDOMDocumentManager();
+	networkReader.ReadFromString();
+	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	std::vector< std::string > temp_vector;
+	pair->GetData(temp_vector);
+
+	params->SetCompName(compName.c_str());
+	params->SetServiceList(serviceList);
+	params->SetDialogType("output");
+	for (int i=0; i < temp_vector.size(); i++) 
+		params->AppendList(temp_vector[i].c_str());
+	params->ShowModal();
 }
 
 ///////////////////////////////////////////

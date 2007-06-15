@@ -127,6 +127,7 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 		void SetCompName(const char *);
 		void SetServiceList(VE_Conductor::CORBAServiceList *);
 		void SetDialogType(const char *);
+		void SetIsBlock(bool);
 	
 	private:
 		wxString CompName;
@@ -190,6 +191,8 @@ class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
 		wxStaticText *NodePathLabel;
 		wxTextCtrl *NodePath;
 		wxStaticText *ParameterLabel;
+
+		bool IsBlock;
 	
 	private:
 		void OnClose(wxCloseEvent& event);

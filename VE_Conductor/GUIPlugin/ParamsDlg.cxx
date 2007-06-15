@@ -137,6 +137,8 @@ void ParamsDlg::CreateGUIControls()
 	ParamChoice = new wxChoice(this, ID_PARAMCHOICE, wxPoint(166,8), wxSize(211,21), arrayStringFor_ParamChoice, 0, wxDefaultValidator, wxT("ParamChoice"));
 	ParamChoice->SetSelection(-1);
 
+	//allow the class to work with blocks and streams
+	IsBlock = true;
 }
 
 void ParamsDlg::OnClose(wxCloseEvent& /*event*/)
@@ -150,18 +152,28 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 	std::string compName = ConvertUnicode( CompName.c_str() );
 
 	VE_XML::Command returnState;
+	
+	//Block
 	if(!DialogType.compare(wxT("input")))
 	{
-		returnState.SetCommandName("getInputModuleProperties");
+		if(IsBlock)
+			returnState.SetCommandName("getInputModuleProperties");
+		else
+			returnState.SetCommandName("getStreamInputModuleProperties");
 		ValueEdit->SetEditable(true);
 		SetButton->Enable(true);
 	}
 	else
 	{
-		returnState.SetCommandName("getOutputModuleProperties");
+		if(IsBlock)
+			returnState.SetCommandName("getOutputModuleProperties");
+		else
+			returnState.SetCommandName("getStreamOutputModuleProperties");
 		ValueEdit->SetEditable(false);
 		SetButton->Enable(false);
 	}
+
+
 	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
 	data->SetData(std::string("ModuleName"), compName );
 	data = returnState.GetDataValuePair(-1);
@@ -290,4 +302,9 @@ void ParamsDlg::SetServiceList(VE_Conductor::CORBAServiceList * serviceList)
 void ParamsDlg::SetDialogType(const char * type)
 {
 	this->DialogType = wxString(type,wxConvUTF8);
+}
+
+void ParamsDlg::SetIsBlock(bool isBlock)
+{
+	IsBlock = isBlock;
 }

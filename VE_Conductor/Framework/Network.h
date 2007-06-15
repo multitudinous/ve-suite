@@ -86,7 +86,12 @@ public:
       DEL_LINK,
       DEL_LINK_CON,
       SHOW_LINK_CONT,
-	  LINK_NAME
+
+	  //Aspen
+      LINK_MENU,
+      SHOW_LINK_NAME,
+      LINK_INPUTS,
+      LINK_OUTPUTS,
    };
 
    ///Fucntion called during submit job to send the id of all active
@@ -117,7 +122,9 @@ public:
    void OnDelLinkCon( wxCommandEvent &event );
    void OnDelMod( wxCommandEvent &event );
    void OnShowLinkContent( wxCommandEvent& event );
-   void OnShowLinkName( wxCommandEvent& event );
+   void OnShowAspenName( wxCommandEvent& event );
+   void OnQueryStreamInputs( wxCommandEvent &event );
+   void OnQueryStreamOutputs( wxCommandEvent &event );
    
    //Add to network fuctions
    void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
