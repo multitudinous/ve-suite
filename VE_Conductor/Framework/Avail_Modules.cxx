@@ -30,12 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
-#include "VE_Conductor/GUIPlugin/StringParse.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
+#include "VE_Conductor/GUIPlugin/StringParse.h"
 #include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
+
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 
 #include "VE_Conductor/xpm/icon1.xpm"
 #include "VE_Conductor/xpm/icon2.xpm"
@@ -325,4 +329,14 @@ void Avail_Modules::ResetPluginTree()
     pl_loader = new PluginLoader();
     //Load the plugins now
     LoadModules();
+    
+    //Now tell Xplorer to reload plugins
+    VE_XML::DataValuePair* dvp = 
+        new VE_XML::DataValuePair(  std::string("STRING") );
+    dvp->SetData( "Reload_Plugin_Objects", "Reload" );
+    VE_XML::Command vec;
+    vec.SetCommandName( std::string("Plugin_Control") );
+    vec.AddDataValuePair( dvp );
+    VE_Conductor::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( &vec );
 }

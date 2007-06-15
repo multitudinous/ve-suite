@@ -135,9 +135,8 @@ public:
    ///so that evehenthandlers can manipulate the plugins while
    ///with commands from the gui
    std::map<int, cfdVEBaseClass* >* GetTheCurrentPlugins( void );
-   ///Register plugin specific eh's so that cfdexecutive only calls the correct
-   ///plugin for a specific command
-   //bool RegisterEHForGEPlugin( std::string commandName, cfdVEBaseClass* baseClass );
+   ///Get available plugins object
+   cfdVEAvailModules* GetAvailablePlugins( void );
    
    std::string veNetwork;
 private:

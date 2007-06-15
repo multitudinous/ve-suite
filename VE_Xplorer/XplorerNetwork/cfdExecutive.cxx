@@ -51,6 +51,7 @@
 
 #include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
 #include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
+#include "VE_Xplorer/XplorerNetwork/ReloadPluginsEventHandler.h"
 
 #include <iostream>
 #include <fstream>
@@ -152,7 +153,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
    _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
    _eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
-   //_eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler(veNetwork);
+   _eventHandlers[std::string("Plugin_Control")] = new VE_EVENTS::ReloadPluginsEventHandler();
 }
 ///////////////////////////////////////////////////////////////////
 std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
@@ -549,3 +550,8 @@ void cfdExecutive::LoadDataFromCE( void )
    pluginEHMap[ commandName ] = baseClass;
    return true;
 }*/
+////////////////////////////////////////////////////////////////////////////////
+cfdVEAvailModules* cfdExecutive::GetAvailablePlugins()
+{
+    return m_avModules;
+}

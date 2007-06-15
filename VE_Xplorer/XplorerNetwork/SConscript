@@ -11,6 +11,7 @@ sources = Split("""
    VE_i.cxx
    DeleteObjectFromNetworkEventHandler.cxx
    SwitchXplorerViewEventHandler.cxx
+   ReloadPluginsEventHandler.cxx
    NetworkSystemView.cxx
    temp/StringTokenizer.cxx
    temp/bkpparser.cxx
@@ -24,6 +25,7 @@ headers = Split("""
    VE_i.h
    DeleteObjectFromNetworkEventHandler.h
    SwitchXplorerViewEventHandler.h
+   ReloadPluginsEventHandler.h
    NetworkSystemView.h
    temp/StringTokenizer.h
    temp/bkpparser.h
