@@ -49,12 +49,13 @@ class PluginLoader;
 
 class Avail_Modules : public wxTreeCtrl
 {
- public:
-
-  Avail_Modules() {;}
-  Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
-
-  virtual ~Avail_Modules();
+public:
+    ///Default constructor
+    Avail_Modules() {;}
+    ///Normal constructor
+    Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
+    ///Destructor
+    virtual ~Avail_Modules();
 
   enum
   {
@@ -79,6 +80,8 @@ class Avail_Modules : public wxTreeCtrl
   void ShowHelp(wxCommandEvent& event);
   void Instantiate(wxTreeEvent& event);
   void SetNetwork(Network *nw) { network = nw; };
+  ///Get the new plugin tree after reseting it
+  void ResetPluginTree( void );
 
  protected:
   

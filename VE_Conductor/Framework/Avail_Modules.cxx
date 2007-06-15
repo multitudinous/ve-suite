@@ -310,3 +310,14 @@ void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
   
   ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);*/
 }
+////////////////////////////////////////////////////////////////////////////////
+void Avail_Modules::ResetPluginTree()
+{
+    //Destroy the old tree
+    DeleteAllItems();
+    //Remove all the old plugins and create the new one
+    delete pl_loader;
+    pl_loader = new PluginLoader();
+    //Load the plugins now
+    LoadModules();
+}
