@@ -100,6 +100,7 @@ Link& Link::operator=( const Link& input )
       *(moduleInfo.first) = *(input.moduleInfo.first);
       *(moduleInfo.second) = *(input.moduleInfo.second);
       portInfo = input.portInfo;
+	  linkName = input.linkName;
    }
    return *this;
 }

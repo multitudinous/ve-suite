@@ -2373,13 +2373,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
    for ( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
    {
 	   links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
-
-	   links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
-    
-	   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	   serviceList->GetMessageLog()->SetMessage( "links:_ " );
-	   serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
-	   serviceList->GetMessageLog()->SetMessage( "_\n" );
       
 	  links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
       links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
@@ -2401,6 +2394,16 @@ void Network::CreateNetwork( std::string xmlNetwork )
       }
       // Create the polygon for links
       links.at( i ).CalcLinkPoly();
+
+	   links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+    
+	   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	   serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
+	   serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
+	   serviceList->GetMessageLog()->SetMessage( "_\n" );
+	   serviceList->GetMessageLog()->SetMessage( "links:_ " );
+	   serviceList->GetMessageLog()->SetMessage( links[i].GetName().c_str() );
+	   serviceList->GetMessageLog()->SetMessage( "_\n" );
    }
    _fileProgress->Update( 50, _("create models") );
    _fileProgress->Update( 75, _("done create models") );
