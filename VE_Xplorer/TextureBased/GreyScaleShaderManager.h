@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2006-07-28 20:47:10 -0500 (Fri, 28 Jul 2006) $
- * Version:       $Rev: 5067 $
- * Author:        $Author: mccdo $
- * Id:            $Id: SmokeShaderManager.h 5067 2006-07-29 01:47:10Z mccdo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

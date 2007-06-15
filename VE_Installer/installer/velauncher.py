@@ -24,10 +24,10 @@
 # * Boston, MA 02111-1307, USA.
 # *
 # * -----------------------------------------------------------------
-# * Date modified: $Date:  $
-# * Version:       $Rev:  $
-# * Author:        $Author:  $
-# * Id:            $Id:  $
+# * Date modified: $Date$
+# * Version:       $Rev$
+# * Author:        $Author$
+# * Id:            $Id$
 # * -----------------------------------------------------------------
 # *
 # *************** <auto-copyright.pl END do not edit this line> ***************/

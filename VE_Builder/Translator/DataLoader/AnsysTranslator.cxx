@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2006-08-19 20:42:23 -0500 (Sat, 19 Aug 2006) $
- * Version:       $Rev: 5225 $
- * Author:        $Author: sgent $
- * Id:            $Id: StarCDTranslator.cxx 5225 2006-08-20 01:42:23Z sgent $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

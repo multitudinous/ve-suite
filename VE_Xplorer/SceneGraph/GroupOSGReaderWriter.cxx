@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -23,8 +23,8 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-03-26 17:31:03 -0500 (Mon, 26 Mar 2007) $
- * Version:       $Rev: 7216 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
