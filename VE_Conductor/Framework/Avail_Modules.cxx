@@ -315,6 +315,11 @@ void Avail_Modules::ResetPluginTree()
 {
     //Destroy the old tree
     DeleteAllItems();
+    int image1 = TreeCtrlIcon_Folder;
+    int image2 = TreeCtrlIcon_FolderSelected;
+    rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
+    SetItemImage(rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+    SetItemFont(rootId, *wxITALIC_FONT);
     //Remove all the old plugins and create the new one
     delete pl_loader;
     pl_loader = new PluginLoader();

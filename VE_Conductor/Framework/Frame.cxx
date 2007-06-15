@@ -954,6 +954,9 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       serviceList->SendCommandStringToXplorer( vec );
       delete vec;
 
+      //Reloading plugins
+      av_modules->ResetPluginTree();
+
       //Now laod the xml data now that we are in the correct directory
       fname=dialog.GetFilename();
       network->Load( ConvertUnicode( fname.c_str() ), true );
@@ -1034,6 +1037,9 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
     delete vec;
+
+    //Reloading plugins
+    av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
     network->Load( ConvertUnicode( fname.c_str() ), true );
