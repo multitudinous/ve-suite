@@ -4,6 +4,8 @@
 # contained in current directory
 
 # get the list of files that contain the old header
+#NOTE: Might not pick up the copyright in .py files, since they add a # to
+#the beginning of the line for comments.
 set containingHeader = `grep -lr "VE-Suite is (C) Copyright 1998-2006 by Iowa State University" * | grep -v "\.svn"`
 
 foreach file ( $containingHeader )
