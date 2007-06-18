@@ -80,7 +80,12 @@ UserPreferences::~UserPreferences()
    WriteConfiguration();
 }
 ////////////////////////////////////////////////////////////////////////////////
-UserPreferences::UserPreferences( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
+UserPreferences::UserPreferences( wxWindow* parent, 
+                                            wxWindowID id, 
+                                            const wxString& caption, 
+                                            const wxPoint& pos, 
+                                            const wxSize& size, 
+                                            long style )
 {
    Create(parent, id, caption, pos, size, style );
 }
@@ -92,9 +97,9 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    wxPropertySheetDialog::Create( parent, id, caption, pos, size, style );
    ///Set the map
    preferenceMap[ "Interactive_State" ] = false;
-   preferenceMap[ "Auto Launch Nav Pane" ] = false;
-   preferenceMap[ "Use Preferred Background Color" ] = false;
-   preferenceMap[ "Shut Down Xplorer Option" ] = false;
+   preferenceMap[ "Auto_Launch_Nav_Pane" ] = false;
+   preferenceMap[ "Use_Preferred_Background_Color" ] = false;
+   preferenceMap[ "Shut_Down_Xplorer_Option" ] = false;
 
    ///Read from wxConfig
    ReadConfiguration();
@@ -149,11 +154,11 @@ void UserPreferences::CreateControls()
    xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
    xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
 
-   backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
+   backgroundColorChkBx->SetValue( preferenceMap[ "Use_Preferred_Background_Color" ] );
    backgroundColorChkBx->IsChecked();
-   navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
+   navigationChkBx->SetValue( preferenceMap[ "Auto_Launch_Nav_Pane" ] );
    navigationChkBx->IsChecked();
-   shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
+   shutdownModeChkBx->SetValue( preferenceMap[ "Shut_Down_Xplorer_Option" ] );
    shutdownModeChkBx->IsChecked();
 
    itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
@@ -188,21 +193,21 @@ void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
    wxString mode = xplorerChoices[ event.GetSelection() ];
 
-   preferenceMap[ "Auto Launch Nav Pane" ] = navigationChkBx->IsChecked();
+   preferenceMap[ "Auto_Launch_Nav_Pane" ] = navigationChkBx->IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnBackgroundColorCheck( wxCommandEvent& event )
 {
    wxString mode = xplorerChoices[ event.GetSelection() ];
 
-   preferenceMap[ "Use Preferred Background Color" ] = backgroundColorChkBx->IsChecked();
+   preferenceMap[ "Use_Preferred_Background_Color" ] = backgroundColorChkBx->IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnShutdownMode( wxCommandEvent& event )
 {
    wxString mode = xplorerChoices[ event.GetSelection() ];
 
-   preferenceMap[ "Shut Down Xplorer Option" ] = shutdownModeChkBx->IsChecked();
+   preferenceMap[ "Shut_Down_Xplorer_Option" ] = shutdownModeChkBx->IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
@@ -262,7 +267,7 @@ bool UserPreferences::GetMode( std::string mode )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::ReadConfiguration( void )
 {
-    wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());//new wxConfig( _("VE-Conductor") );
+    wxConfig* cfg = dynamic_cast<wxConfig*>(wxConfig::Get());
    
     wxString key = _T("UserPreferences");
     if ( !cfg->Exists( key ) ) 
@@ -278,7 +283,7 @@ void UserPreferences::ReadConfiguration( void )
                  wxString( iter->first.c_str(), wxConvUTF8 ), 
                  &iter->second, false);
 
-        if( iter->first == "Use Preferred Background Color" )
+        if( iter->first == "Use_Preferred_Background_Color" )
         {
             xplorerColor.clear();
             cfg->Read( key + 
@@ -328,7 +333,7 @@ void UserPreferences::WriteConfiguration( void )
                     wxString( iter->first.c_str(), wxConvUTF8 ), 
                     iter->second );
 
-        if( iter->first == "Use Preferred Background Color" )
+        if( iter->first == "Use_Preferred_Background_Color" )
         {
             cfg->Write( key + 
                         _T("/") + 

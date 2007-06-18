@@ -279,13 +279,13 @@ viewlocPane( 0 )
                                        SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
                                        SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
 
-    if( preferences->GetMode( "Auto Launch Nav Pane" ) )
+    if( preferences->GetMode( "Auto_Launch_Nav_Pane" ) )
     {
         wxCommandEvent event;
         LaunchNavigationPane( event );
     }
 
-    if( preferences->GetMode( "Use Preferred Background Color" ) )
+    if( preferences->GetMode( "Use_Preferred_Background_Color" ) )
     {
         xplorerColor = preferences->GetBackgroundColor();
 
@@ -301,7 +301,7 @@ viewlocPane( 0 )
         delete veCommand;
     }
 
-    if( preferences->GetMode( "Shut Down Xplorer Option" ) )
+    if( preferences->GetMode( "Shut_Down_Xplorer_Option" ) )
     {
         xplorerMenu->Enable( XPLORER_EXIT, true);
     }
