@@ -66,6 +66,7 @@ Link::Link( const Link& input )
    cons = input.cons;
    poly = input.poly;
    canvas = input.canvas;
+   linkName = input.linkName;
 }
 ////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
