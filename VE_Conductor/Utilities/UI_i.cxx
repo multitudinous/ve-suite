@@ -166,11 +166,12 @@ void Body_UI_i::SetXplorerData (
 	xmlObjects = networkReader.GetLoadedXMLObjects();
     
     //std::cout << xmlObjects.size() << std::endl;
-    //std::vector< VE_XML::XMLObject* >::iterator iter;
+    std::vector< VE_XML::XMLObject* >::iterator iter;
     //Not sure why this is not working...
     //for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
     {
         //iter
+       //  VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
         VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( xmlObjects.at( 0 ) );
         if( !temp )
         {

@@ -43,7 +43,7 @@ using namespace VE_XML::VE_Model;
 Link::Link()
 :XMLObject()
 {
-   linkName = '\0';
+   //linkName = '\0';
    moduleInfo.first = new DataValuePair( "FLOAT" );
    moduleInfo.second = new DataValuePair( "FLOAT" );
    portInfo.first = 0;
@@ -86,6 +86,7 @@ Link& Link::operator=( const Link& input )
    {
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
+       linkName = input.linkName;
       for ( size_t i = 0; i < linkPoints.size(); ++i )
       {
          delete linkPoints.at( i );

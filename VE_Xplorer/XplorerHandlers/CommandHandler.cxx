@@ -33,6 +33,8 @@
 #include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
 
 #include "VE_Open/XML/XMLReaderWriter.h"
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Command.h"
 
 vprSingletonImp( VE_Xplorer::CommandHandler );
 
@@ -109,4 +111,16 @@ VE_XML::Command* CommandHandler::GetXMLCommand()
 void CommandHandler::SetXplorer( Body_VEXplorer_i* xplorer )
 {
 	m_xplorer = xplorer;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CommandHandler::SendConductorMessage( std::string message )
+{
+    //Now tell conductor to display text
+    VE_XML::DataValuePair* dvp = 
+        new VE_XML::DataValuePair(  std::string("STRING") );
+    dvp->SetData( "TEXT_OUTPUT", message );
+    VE_XML::Command vec;
+    vec.SetCommandName( std::string("TEXT_FEEDBACK") );
+    vec.AddDataValuePair( dvp );
+    SetXMLCommand( &vec );
 }

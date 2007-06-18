@@ -2402,7 +2402,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 	   serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
 	   serviceList->GetMessageLog()->SetMessage( "_\n" );
 	   serviceList->GetMessageLog()->SetMessage( "links:_ " );
-	   serviceList->GetMessageLog()->SetMessage( links[i].GetName().c_str() );
+	   serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
 	   serviceList->GetMessageLog()->SetMessage( "_\n" );
    }
    _fileProgress->Update( 50, _("create models") );
@@ -2604,7 +2604,7 @@ void Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 void Network::OnQueryStreamInputs(wxCommandEvent& event )
 {  
     //UIPLUGIN_CHECKID( event )
-	std::string compName = links[m_selLink].GetName().c_str();
+	std::string compName = ConvertUnicode( links[m_selLink].GetName().c_str() );
 
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getStreamInputModuleParamList");
@@ -2650,7 +2650,7 @@ void Network::OnQueryStreamInputs(wxCommandEvent& event )
 void Network::OnQueryStreamOutputs(wxCommandEvent& event )
 {  
     //UIPLUGIN_CHECKID( event )
-	std::string compName = links[m_selLink].GetName().c_str();
+	std::string compName = ConvertUnicode( links[m_selLink].GetName().c_str() );
 
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getStreamOutputModuleParamList");

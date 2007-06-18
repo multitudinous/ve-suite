@@ -40,147 +40,148 @@
 
 using namespace VE_Conductor::GUI_Utilities;
 
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Link::Link( wxWindow* designCanvas )
 {
-   Fr_mod = 1000000;
-   To_mod = 1000000;
-   Fr_port = 1000000;
-   To_port = 1000000;
-   //cons.resize( 2 );
-   canvas = designCanvas;
+    Fr_mod = 1000000;
+    To_mod = 1000000;
+    Fr_port = 1000000;
+    To_port = 1000000;
+    //cons.resize( 2 );
+    canvas = designCanvas;
+    linkName = wxString( "Link::Link-noname", wxConvUTF8 );
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
 {
    cons.clear();
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Link::Link( const Link& input )
 {
-   Fr_mod = input.Fr_mod;
-   To_mod = input.To_mod;
-   Fr_port = input.Fr_port;
-   To_port = input.To_port;
+    Fr_mod = input.Fr_mod;
+    To_mod = input.To_mod;
+    Fr_port = input.Fr_port;
+    To_port = input.To_port;
 
-   cons = input.cons;
-   poly = input.poly;
-   canvas = input.canvas;
-   linkName = input.linkName;
+    cons = input.cons;
+    poly = input.poly;
+    canvas = input.canvas;
+    linkName = input.linkName;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
 {
-   if ( this != &input )
-   {
-      Fr_mod = input.Fr_mod;
-      To_mod = input.To_mod;
-      Fr_port = input.Fr_port;
-      To_port = input.To_port;
+    if( this != &input )
+    {
+        Fr_mod = input.Fr_mod;
+        To_mod = input.To_mod;
+        Fr_port = input.Fr_port;
+        To_port = input.To_port;
 
-      cons.clear();
-      cons = input.cons;
-      poly = input.poly;
-      canvas = input.canvas;
-	  linkName = input.linkName;
-   }
-   return *this;
+        cons.clear();
+        cons = input.cons;
+        poly = input.poly;
+        canvas = input.canvas;
+        linkName = input.linkName;
+    }
+    return *this;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetWxWindow( wxWindow* window )
 {
    canvas = window;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPoint* Link::GetPoint( size_t i )
 {
    try
    {
       return &(cons.at( i ));
    }
-   catch (...)
+   catch( ... )
    {
       cons.push_back( wxPoint() );
       return &(cons.at( i ));
    }
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetPoint( wxPoint* pnt )
 {
    cons.push_back( wxPoint() );
    cons.back().x = pnt->x;
    cons.back().y = pnt->y;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 size_t Link::GetNumberOfPoints( void )
 {
    return cons.size();
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::vector< wxPoint >* Link::GetPoints( void )
 {
    return &(cons);
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int Link::GetFromPort( void )
 {
    return Fr_port;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned int Link::GetToPort( void )
 {
    return To_port;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned long Link::GetFromModule( void )
 {
    return Fr_mod;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 unsigned long Link::GetToModule( void )
 {
    return To_mod;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetFromPort( unsigned int input )
 {
    Fr_port = input;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetToPort( unsigned int input )
 {
    To_port = input;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetFromModule( unsigned long input )
 {
    Fr_mod = input;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetToModule( unsigned long input )
 {
    To_mod = input;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::SetName(wxString name)
 {
 	linkName = name;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxString Link::GetName()
 {
-	if ( linkName.IsEmpty() )
+	if( linkName.IsEmpty() )
 	{
 		linkName = wxString("NoName",wxConvUTF8);
 	}
 	return linkName;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
 {
    return &(poly);
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc )
 {
    //wxClientDC dc( canvas );
@@ -190,7 +191,7 @@ void Link::DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc )
    wxBrush old_brush = dc.GetBrush();
    wxPen old_pen = dc.GetPen();
 
-   if ( flag )
+   if( flag )
    {
       dc.SetBrush( *wxGREEN_BRUSH );
       dc.SetPen( *wxBLACK_PEN );
@@ -208,7 +209,7 @@ void Link::DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc )
    bport[ 3 ] = wxPoint( 0, 6 );
   
    //Draw the connectors for the particular link
-   for ( size_t i = 0; i < cons.size(); ++i )
+   for( size_t i = 0; i < cons.size(); ++i )
    { 
       wxCoord xoff = cons[ i ].x - 3;
       wxCoord yoff = cons[ i ].y - 3;
@@ -219,13 +220,12 @@ void Link::DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc )
    dc.SetBrush( old_brush );
    dc.SetPen( old_pen );
 }
-
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::CalcLinkPoly()
 {
    // -3 so that we end up getting a 6 point wide line
 	poly.clear();
-   for ( size_t i = 0; i < cons.size(); i++ )
+   for( size_t i = 0; i < cons.size(); i++ )
    {
 	   int x = cons[i].x;
 	   int y = cons[i].y-3;
@@ -233,7 +233,7 @@ void Link::CalcLinkPoly()
    }
 
    // +3 so that we end up getting a 6 point wide line
-   for ( int j = (cons.size()-1); j >=0 ; j-- )
+   for( int j = (cons.size()-1); j >=0 ; j-- )
    {
 	   int x = cons[j].x;
 	   int y = cons[j].y+3;
@@ -248,8 +248,7 @@ void Link::CalcLinkPoly()
    }
    */
 }
-
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
 { 
    //wxClientDC dc( canvas );
@@ -272,7 +271,7 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
       //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
    }
 
-   if (!flag)
+   if( !flag )
    {
       dc.SetPen( *wxWHITE_PEN );
       dc.SetBrush( *wxWHITE_BRUSH );
@@ -285,7 +284,7 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
    dc.DrawLines( cons.size(), points );
 
    //Now draw the arrow head
-   if ( !flag )
+   if( !flag )
    {
       dc.SetPen( *wxWHITE_PEN );
       dc.SetBrush( *wxWHITE_BRUSH );

@@ -76,6 +76,8 @@ public:
 
    ///
    void SetXplorer( Body_VEXplorer_i* xplorer );
+   ///Send a text message to all conductors
+   void SendConductorMessage( std::string message );
 
 private:
 	VE_XML::Command* m_input;///<XML command
