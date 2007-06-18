@@ -304,6 +304,19 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\ReloadPluginsEventHandler.cxx"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\temp\StringTokenizer.cxx"
 				>
 				<FileConfiguration
@@ -391,6 +404,10 @@
 			</File>
 			<File
 				RelativePath=".\NetworkSystemView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ReloadPluginsEventHandler.h"
 				>
 			</File>
 			<File
