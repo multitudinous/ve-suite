@@ -49,6 +49,7 @@ TransformUI API
 #include "VE_Installer/include/VEConfig.h"
 class DataSetLoaderUI;
 class wxSpinCtrlDbl;
+class wxCheckBox;
 
 namespace VE_XML
 {
@@ -77,10 +78,16 @@ namespace VE_Conductor
          enum TRANSFORM_UI
          {
             TRANSFORM_PANEL_ID,///<The transform panel ID.
+            UNIFORM_SCALE///<The scale uniformly ID
          };
 
          ///Callback for the transform ui
          void UpdateTransform( wxSpinEvent& event );
+
+         ///Update whether uniform scaling is used
+         ///\param event The wxCommand event
+         void UpdateUniformScale( wxCommandEvent& event );
+
          ///Get the current transform
          //VE_XML::Transform* GetTransform( void );
 
@@ -105,6 +112,8 @@ namespace VE_Conductor
          wxSpinCtrlDbl* _yScaleCtrl;///<Y scale control
          wxSpinCtrlDbl* _zScaleCtrl;///<Z scale control
 
+         wxCheckBox* m_uniformScale;///<Uniform scaling checkbox
+
          std::string _commandName;///<The command name.
          std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 
@@ -113,6 +122,10 @@ namespace VE_Conductor
 
          ///Send the Command back to VE-Xplorer.
          void _sendCommandsToXplorer();
+
+         double tempX;///<The x scale value.
+         double tempY;///<The y scale value.
+         double tempZ;///<The z scale value.
 
          DataSetLoaderUI* dataset;
          VE_XML::ParameterBlock* paramBlock;

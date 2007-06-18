@@ -44,6 +44,8 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/Model/Model.h"
 
+#include <wx/checkbox.h>
+
 #include <vector>
 
 using namespace VE_Conductor::GUI_Utilities;
@@ -51,6 +53,7 @@ using namespace VE_XML;
 
 BEGIN_EVENT_TABLE( TransformUI,wxPanel)
    EVT_SPINCTRL( TRANSFORM_PANEL_ID, TransformUI::UpdateTransform )
+   EVT_CHECKBOX( UNIFORM_SCALE,      TransformUI::UpdateUniformScale )
 END_EVENT_TABLE()
 
 TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform )
@@ -63,7 +66,6 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
    wxBoxSizer* transformPanelSizer = new wxBoxSizer(wxVERTICAL);
    wxStaticBox* transformProperties = new wxStaticBox(this, -1, dialogName );
    wxStaticBoxSizer* transformPropSizer = new wxStaticBoxSizer(transformProperties, wxVERTICAL);
-
 
    ///translation
    wxStaticBox* translation = new wxStaticBox(this, -1, wxT("Translation (ft)"));
@@ -94,17 +96,17 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
    wxStaticBoxSizer* rotationSizer = new wxStaticBoxSizer(rotation, wxHORIZONTAL);
    _xRotationCtrl =  new wxSpinCtrlDbl(this, TRANSFORM_PANEL_ID);
    _xRotationCtrl->SetValue(0);
-   _xRotationCtrl->SetRange(0.0,360.0);
+   _xRotationCtrl->SetRange(-360.0,360.0);
    _xRotationCtrl->SetIncrement(1.0);
 
    _yRotationCtrl =  new wxSpinCtrlDbl(this, TRANSFORM_PANEL_ID);
    _yRotationCtrl->SetValue(0);
-   _yRotationCtrl->SetRange(0.0,360.0);
+   _yRotationCtrl->SetRange(-360.0,360.0);
    _yRotationCtrl->SetIncrement(1.0);
 
    _zRotationCtrl =  new wxSpinCtrlDbl(this, TRANSFORM_PANEL_ID);
    _zRotationCtrl->SetValue(0);
-   _zRotationCtrl->SetRange(0.0,360.0);
+   _zRotationCtrl->SetRange(-360.0,360.0);
    _zRotationCtrl->SetIncrement(1.0);
 
    rotationSizer->Add(_xRotationCtrl,1,wxALIGN_CENTER_HORIZONTAL);
@@ -114,6 +116,7 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
    transformPropSizer->Add(rotationSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //scale
+   wxBoxSizer* scaleInfo = new wxBoxSizer(wxVERTICAL);
    wxStaticBox* scale = new wxStaticBox(this, -1, wxT("Scale "));
    wxStaticBoxSizer* scaleSizer = new wxStaticBoxSizer(scale, wxHORIZONTAL);
    _xScaleCtrl =  new wxSpinCtrlDbl(this, TRANSFORM_PANEL_ID);
@@ -151,12 +154,21 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transfo
       _zRotationCtrl->SetValue( transform->GetRotationArray()->GetElement(2) );
    }
    
-   transformPropSizer->Add( scaleSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   m_uniformScale = new wxCheckBox(this, UNIFORM_SCALE, wxT("Uniform Scaling"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   m_uniformScale->SetValue( true );
+   
+   scaleInfo->Add(scaleSizer, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   scaleInfo->Add(m_uniformScale, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   transformPropSizer->Add( scaleInfo,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    transformPanelSizer->Add( transformPropSizer,1,wxEXPAND|wxALIGN_CENTER);
    this->SetAutoLayout(true);
    this->SetSizer(transformPanelSizer);
 
+   tempX = 1.0;
+   tempY = 1.0;
+   tempZ = 1.0;
 //   paramBlock = 0;
 }
 ///////////////////////////////////////////////////////////////////
@@ -178,11 +190,45 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED(event) )
 std::cout<<"YTRANSFORM :"<<temp.at(1)<<std::endl;
       temp.clear();
 
-      temp.push_back(_xScaleCtrl->GetValue());
-      temp.push_back(_yScaleCtrl->GetValue());
-      temp.push_back(_zScaleCtrl->GetValue());
+	  double xScale = _xScaleCtrl->GetValue();
+	  double yScale = _yScaleCtrl->GetValue();
+	  double zScale = _zScaleCtrl->GetValue();
+
+	  if( m_uniformScale->IsChecked() == true )
+	  {
+		 if( tempX != xScale )
+		 {
+			double scaleBy = _xScaleCtrl->GetValue();
+			_yScaleCtrl->SetValue(scaleBy);
+			_zScaleCtrl->SetValue(scaleBy);
+		 }
+		 else if( tempY != yScale )
+		 {
+			double scaleBy = _yScaleCtrl->GetValue();
+			_xScaleCtrl->SetValue(scaleBy);
+			_zScaleCtrl->SetValue(scaleBy);
+		 }
+		 else if( tempZ != zScale )
+		 {
+			double scaleBy = _zScaleCtrl->GetValue();
+			_xScaleCtrl->SetValue(scaleBy);
+			_yScaleCtrl->SetValue(scaleBy);
+		 }
+	     temp.push_back(_xScaleCtrl->GetValue());
+         temp.push_back(_yScaleCtrl->GetValue());
+         temp.push_back(_zScaleCtrl->GetValue());
+	  }
+	  else
+	  {
+	     temp.push_back(_xScaleCtrl->GetValue());
+         temp.push_back(_yScaleCtrl->GetValue());
+         temp.push_back(_zScaleCtrl->GetValue());	  
+	  }
       _transform->GetScaleArray()->SetArray(temp);
 
+	  tempX = _xScaleCtrl->GetValue();
+	  tempY = _yScaleCtrl->GetValue();
+	  tempZ = _zScaleCtrl->GetValue();
       temp.clear();
 
       temp.push_back(_xRotationCtrl->GetValue());
@@ -224,12 +270,17 @@ std::cout<<"TRANSFORM :"<<std::endl;
       delete veCommand;
    }
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void TransformUI::UpdateUniformScale(wxCommandEvent &event)
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
 void TransformUI::SetParamBlockTransform( VE_XML::Transform* transform )
 {
    _transform = transform;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void TransformUI::_sendCommandsToXplorer()
 {/*
    VE_XML::Command* command=new VE_XML::Command();
