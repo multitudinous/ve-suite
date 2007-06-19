@@ -591,6 +591,9 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
     StoreFrameSize(GetRect(), NULL);
     StoreConfig(NULL);
     StoreRecentFile(NULL);
+    
+    preferences->WriteConfiguration();
+
     delete wxConfigBase::Set((wxConfigBase *) NULL); 
     Destroy();
     //std::cout << "Shuting Down CORBA" << std::endl;
