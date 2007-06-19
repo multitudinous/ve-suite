@@ -34,6 +34,12 @@
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
+#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+
+#include "VE_Open/XML/Shader/Program.h"
+#include "VE_Open/XML/Shader/Shader.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
@@ -107,7 +113,11 @@ m_sensitivity( 1.0e-06 ),
 
 m_animate( false ),
 
-beamLineSegment( new osg::LineSegment )
+beamLineSegment( new osg::LineSegment ),
+
+cadAttribute( 0 ),
+vertexShader( 0 ),
+fragmentShader( 0 )
 {
     m_keyboard.init( "VJKeyboard" );
     m_head.init( "VJHead" );
@@ -120,6 +130,10 @@ beamLineSegment( new osg::LineSegment )
     gmtl::identity( m_deltaTransform );
     gmtl::identity( m_currentTransform );
     gmtl::identity( m_localToWorldTransform );
+
+    cadAttribute = new VE_XML::VE_CAD::CADAttribute();
+    vertexShader = new VE_XML::VE_Shader::Shader();
+    fragmentShader = new VE_XML::VE_Shader::Shader();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -735,6 +749,14 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
 
+    /*
+    if( selectedDCS.valid() )
+    {
+        VE_Xplorer::cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->
+            SetActiveAttributeOnNode( selectedDCS->getDescriptions().at( 1 ), "Part", "Default Attribute" );
+    }
+    */
+
     if( listOfHits.empty() )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected" 
@@ -815,90 +837,90 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         osg::Vec3d center = activeDCS->getBound().center() * matrix;
         center_point->set( center.x(), center.y(), center.z() );
 
-        /*
-        char phong_vertex[]=
-            "#version 110 \n"
-
-            "//Structure definitions \n"
-            "struct shadedVertexOutput \n"
-            "{ \n"
-                "vec4 HPosition; \n"
-                "vec4 diffCol; \n"
-                "vec4 specCol; \n"
-            "}; \n"
-
-            "struct appdata \n"
-            "{ \n"
-                "vec3 Position; \n"
-                "vec4 Normal; \n"
-                "mat4 ViewI; \n"
-                "mat4 World; \n"
-                "mat4 WorldIT; \n"
-                "mat4 WorldViewProj; \n"
-            "}; \n"
-
-            "//Function declarations \n"
-            "shadedVertexOutput velvetVS( in appdata IN ); \n"
-
-            "//Function definitions \n"
-            "shadedVertexOutput velvetVS( in appdata IN ) \n"
-            "{ \n"
-                "vec3 DiffColor = vec3( 0.5, 0.5, 0.5 ); \n"
-                "vec3 LightPos = gl_LightSource[0].position.xyz; \n"
-                "float RollOff = 1.0; \n"      
-                "vec3 SpecColor = vec3( 0.75, 0.7, 0.7 ); \n"
-                "vec3 SubColor = vec3( 1.0, 0.0, 0.0 ); \n"
-
-                "vec3 Nn = normalize( ( IN.WorldIT * IN.Normal ).xyz ); \n"
-                "vec4 Po = vec4( IN.Position.xyz, 1.00000 ); \n"
-                "shadedVertexOutput OUT; \n"
-                "OUT.HPosition = ( IN.WorldViewProj * Po ); \n"
-                "vec3 Pw = ( IN.World * Po ).xyz ; \n"
-                "vec3 Ln = normalize( ( LightPos - Pw ) ); \n"
-                "float ldn = dot( Ln, Nn); \n"
-                "float diffComp = max( 0.000000, ldn); \n"
-                "vec3 diffContrib = ( diffComp * DiffColor ); \n"
-                "float subLamb = ( smoothstep( ( -RollOff ), 1.00000, ldn ) - smoothstep( 0.000000, 1.00000, ldn ) ); \n"
-                "subLamb = max( 0.000000, subLamb ); \n"
-                "vec3 subContrib = ( subLamb * SubColor ); \n"
-                "vec3 Vn = normalize( ( IN.ViewI[3].xyz  - Pw ) ); \n"
-                "float vdn = ( 1.00000 - dot( Vn, Nn ) ); \n"
-                "vec3 vecColor = vec3( vdn, vdn, vdn ); \n"
-                "OUT.diffCol = vec4( ( subContrib + diffContrib ).xyz , 1.00000 ); \n"
-                "OUT.specCol = vec4( ( vecColor * SpecColor ).xyz , 1.00000 ); \n"
-                "return OUT; \n"
-            "} \n"
-
-            "//Vertex shader \n"
-            "void main() \n"
-            "{ \n"
-                "appdata IN; \n"
-                "IN.Position = vec3( gl_Vertex ); \n"
-                "IN.Normal = vec4( gl_Normal, 0.0 ); \n"
-                "IN.ViewI = gl_ModelViewMatrixInverse; \n"
-                "IN.World = gl_ModelViewMatrix; \n"
-                "IN.WorldIT = gl_ModelViewMatrixInverseTranspose; \n"
-                "IN.WorldViewProj = gl_ModelViewProjectionMatrix; \n"
-
-                "shadedVertexOutput SVO; \n"
-                "SVO = velvetVS( IN ); \n"
-
-                "gl_Position = vec4( SVO.HPosition ); \n"
-                "gl_FrontColor = vec4( SVO.diffCol ); \n"
-                "gl_FrontSecondaryColor = vec4( SVO.specCol ); \n"
-            "} \n";
-
-
-        osg::ref_ptr< osg::StateSet > stateset = activeDCS->getOrCreateStateSet();
-        osg::ref_ptr< osg::Program > program = new osg::Program;
-
-        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, phong_vertex );
-        program->addShader( vertex_shader.get() );
-
-        stateset->setAttribute( program.get() );
-        */
+        CreateSelectShader();
     }
 
     selectedDCS = activeDCS;
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::CreateSelectShader()
+{
+    char select_vertex[] =
+        "#version 110 \n"
+        "varying mat4 ViewI; \n"
+
+        "varying vec3 ECPosition; \n"
+        "varying vec3 LightDirection; \n"
+        "varying vec3 Normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "ViewI = gl_ModelViewProjectionMatrixInverse; \n"
+            "ECPosition = vec3( gl_ModelViewMatrix * gl_Vertex ); \n"
+            "LightDirection = gl_LightSource[0].position.xyz - ECPosition; \n"
+            "Normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+        "} \n";
+
+    char select_fragment[] =
+        "varying mat4 ViewI; \n"
+
+        "varying vec3 ECPosition; \n"
+        "varying vec3 LightDirection; \n"
+        "varying vec3 Normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 diffColor = vec3( 0.4, 0.4, 0.4 ); \n"
+            "float rollOff = 0.3; \n"      
+            "vec3 specColor = vec3( 0.6, 0.65, 0.6 ); \n"
+            "vec3 subColor = vec3( 0.0, 1.0, 0.0 ); \n"
+
+            "vec3 Nn = normalize( Normal ); \n"
+            "vec3 Ln = normalize( LightDirection ); \n"
+            "float ldn = dot( Nn, Ln ); \n"
+            "float diffComp = max( ldn, 0.0 ); \n"
+            "vec3 diffContrib = diffComp * diffColor; \n"
+            "float subLamb = smoothstep( -rollOff, 1.00000, ldn ) - smoothstep( 0.000000, 1.00000, ldn ); \n"
+            "subLamb = max( subLamb, 0.0 ); \n"
+            "vec3 subContrib = subColor * subLamb; \n"
+            "vec3 Vn = normalize( ViewI[3].xyz - ECPosition ); \n"
+            "float vdn = 1.0 - dot( Nn, Vn ); \n"
+            "vec3 vecColor = vec3( vdn, vdn, vdn ); \n"
+            "vec3 Diffuse = subContrib + diffContrib; \n"
+            "vec3 Specular = specColor * vecColor; \n"
+
+            "gl_FragColor = vec4( Diffuse + Specular, 1.0 ); \n"
+        "} \n";
+
+    osg::ref_ptr< osg::StateSet > stateset = activeDCS->getOrCreateStateSet();
+    osg::ref_ptr< osg::Program > program = new osg::Program;
+
+    osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, select_vertex );
+    program->addShader( vertex_shader.get() );
+
+    osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, select_fragment );
+    program->addShader( fragment_shader.get() );
+    	
+    //stateset->setAttribute( program.get() );
+
+    /*
+    VE_XML::VE_Shader::Program shaderProgram;
+    vertexShader->SetShaderType( "Vertex" );
+    vertexShader->SetShaderSource( select_vertex );
+    fragmentShader->SetShaderType( "Fragment" );
+    fragmentShader->SetShaderSource( select_fragment );
+    shaderProgram.SetVertexShader( vertexShader );
+    shaderProgram.SetFragmentShader( vertexShader );
+    cadAttribute->SetID( "Select" );
+    cadAttribute->SetProgram( shaderProgram );
+
+    VE_Xplorer::cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->
+        AddAttributeToNode( activeDCS->getDescriptions().at( 1 ), cadAttribute );
+
+    VE_Xplorer::cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->
+        SetActiveAttributeOnNode( activeDCS->getDescriptions().at( 1 ), "Part", cadAttribute->GetID() );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
