@@ -76,11 +76,11 @@
 BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
 
 ////@begin DataSetLoaderUI event table entries
-   EVT_BUTTON( ID_BUTTON, DataSetLoaderUI::OnButtonClick )
-   EVT_BUTTON( ID_BUTTON3, DataSetLoaderUI::OnButton4Click )
-   EVT_BUTTON( ID_BUTTON4, DataSetLoaderUI::OnButton4Click )
-   EVT_BUTTON( ID_BUTTON6, DataSetLoaderUI::OnButton6Click )
-   EVT_BUTTON( ID_BUTTON2, DataSetLoaderUI::OnButton2Click )
+   EVT_BUTTON( ID_BUTTON, DataSetLoaderUI::OnLoadFile )
+   EVT_BUTTON( ID_BUTTON3, DataSetLoaderUI::OnLoadSurfaceFile )
+   EVT_BUTTON( ID_BUTTON4, DataSetLoaderUI::OnLoadSurfaceFile )
+   EVT_BUTTON( ID_BUTTON6, DataSetLoaderUI::OnTransformDataset )
+   EVT_BUTTON( ID_BUTTON2, DataSetLoaderUI::OnLoadTextureFile )
    EVT_BUTTON( ID_ADD_DATASET, DataSetLoaderUI::OnInformationPacketAdd )
    EVT_LISTBOX_DCLICK( ID_LISTBOX, DataSetLoaderUI::OnListboxSelected )
    EVT_COMBOBOX( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChange ) // this will refresh all the widgets for the given dataset
@@ -304,7 +304,7 @@ void DataSetLoaderUI::CreateControls()
     wxStdDialogButtonSizer* itemStdDialogButtonSizer25 = new wxStdDialogButtonSizer;
 
     itemBoxSizer2->Add(itemStdDialogButtonSizer25, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-    wxButton* itemButton26 = new wxButton( itemDialog1, wxID_OK, _("Load"), wxDefaultPosition, wxDefaultSize, 0 );
+    wxButton* itemButton26 = new wxButton( itemDialog1, wxID_OK, _("OK"), wxDefaultPosition, wxDefaultSize, 0 );
     //itemButton26->SetDefault();
     itemStdDialogButtonSizer25->AddButton(itemButton26);
 
@@ -408,7 +408,7 @@ wxIcon DataSetLoaderUI::GetIconResource( const wxString& name )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
  */
 
-void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
+void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED(event) )
 {
    //Load a vtk file
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI.
@@ -445,7 +445,7 @@ void DataSetLoaderUI::OnButtonClick( wxCommandEvent& WXUNUSED(event) )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4
  */
 
-void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
+void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
 {
    //Launch the surface data dir 
    //Launch the precomputed data dir 
@@ -498,7 +498,7 @@ void DataSetLoaderUI::OnButton4Click( wxCommandEvent& event )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6
  */
 
-void DataSetLoaderUI::OnButton6Click( wxCommandEvent& WXUNUSED(event) )
+void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED(event) )
 {
    // Launch the transform UI
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI.
@@ -549,7 +549,7 @@ void DataSetLoaderUI::OnButton6Click( wxCommandEvent& WXUNUSED(event) )
  * wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2
  */
 
-void DataSetLoaderUI::OnButton2Click( wxCommandEvent& WXUNUSED(event) )
+void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED(event) )
 {
    //Load data for the texturebased vis
 ////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI.

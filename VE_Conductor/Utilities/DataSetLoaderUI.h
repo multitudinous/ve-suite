@@ -38,6 +38,8 @@ DataSetLoaderUI API
 /*!\class DataSetLoaderUI
 * 
 */
+#include "VE_Installer/include/VEConfig.h"
+
 #include <wx/string.h>
 #include <wx/gdicmn.h>
 #include <wx/dialog.h>
@@ -91,7 +93,6 @@ namespace VE_XML
 /*!
  * DataSetLoaderUI class declaration
  */
-#include "VE_Installer/include/VEConfig.h"
 class VE_CONDUCTOR_UTILS_EXPORTS DataSetLoaderUI: public wxDialog
 {    
     //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
@@ -146,19 +147,19 @@ public:
 ////@begin DataSetLoaderUI event handler declarations
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
-    void OnButtonClick( wxCommandEvent& event );
+    void OnLoadFile( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON3
     void OnButton3Click( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4
-    void OnButton4Click( wxCommandEvent& event );
+    void OnLoadSurfaceFile( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6
-    void OnButton6Click( wxCommandEvent& event );
+    void OnTransformDataset( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2
-    void OnButton2Click( wxCommandEvent& event );
+    void OnLoadTextureFile( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX
     void OnListboxSelected( wxCommandEvent& event );
