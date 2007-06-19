@@ -52,7 +52,10 @@ class ServerKillWindow(wx.Frame):
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
         self.pids = pids
-        self.c_Pid = str(conduct_Pid[0])
+##        if len(conduct_Pid > 0):
+##            self.c_Pid = str(conduct_Pid[0])
+##        else:
+##            self.c_Pid = None
         lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
                                          "press the button below to shutdown\n"+\
                                          "the Name Server.")
