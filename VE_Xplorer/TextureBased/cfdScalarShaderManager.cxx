@@ -126,7 +126,7 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("jitterSize",osg::Vec2(_jitterTexture->GetResolutionX(),_jitterTexture->GetResolutionY())));
    //_ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
    _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
-
+   _ss->addUniform(new osg::Uniform("datacenter",osg::Vec3f(0,0,0)));
    _tUnit = 0;
    osg::ref_ptr<osg::Shader> basicVertShader = _createGLSLShaderFromInline(vrBasicVertSource,false);                          
    osg::ref_ptr<osg::Shader> basicFragShader = _createGLSLShaderFromInline(vrBasicFragSource,true);
@@ -222,170 +222,6 @@ void cfdScalarShaderManager::_updateTransferFunction(bool fastUpdate)
    { 
 	   _preIntTexture->FastUpdate();
    }
-   /*
-   GLubyte* lutex =0;
-   GLfloat R,G,B,A;
-   GLfloat newMid = 0;
-   GLfloat newRange[2];
-   ScalarRange origRange ;
-   GLfloat alpha = 0;
-   GLfloat isoVal = 0;
-   float invSRange = 0;
-   osg::ref_ptr<osg::Texture2D> tFunc = _transferFunctions.at(0);
-   if(tFunc.valid())
-   {
-      lutex = tFunc->getImage()->data();
-      if(!lutex)
-      {
-         std::cout<<"ERROR!"<<std::endl;
-         std::cout<<"Invalid data for transfer function!!"<<std::endl;
-         std::cout<<"cfdOSGGammaShader::_updateTransferFunction()"<<std::endl;
-         return;
-      }
-   }
-   origRange = _tm->dataRange(_tm->GetCurrentFrame());
-   if((origRange.range[1]-origRange.range[0]) == 0.0)
-   {
-      newRange[0] = 0.0;
-      newRange[1] = 255.0;
-   }
-   else
-   {
-      newRange[0] = (_scalarRange[0] - origRange.range[0])/
-                (origRange.range[1]-origRange.range[0]);
-      newRange[0] *= 255.0;
-      newRange[1] = (_scalarRange[1] - origRange.range[0])/
-                (origRange.range[1]-origRange.range[0]);
-      newRange[1] *= 255.0;
-   }
-   newMid = newRange[0] + .5*(newRange[1] - newRange[0]);
-   invSRange =  1.0/(newRange[1]-newRange[0]);
-   float opacity = 1.0/128;
-   //only update the diagonal so that our transfer function mods are still fast
-   {
-      for(int i = 0; i < 256; i++)
-      {
-         {
-            if(i < newRange[0])
-            {
-               if(_isoSurface)
-               {
-                  lutex[i*(256*4) + i*4 ] = 0;
-                  lutex[i*(256*4) + i*4 + 1] = 0;
-                  lutex[i*(256*4) + i*4 + 2] = 0;
-                  lutex[i*(256*4) + i*4 + 3] = 0;
-               }else{
-                  lutex[i*(256*4) + i*4     ] = 0;
-                  lutex[i*(256*4) + i*4  + 1] = 0;
-                  lutex[i*(256*4) + i*4  + 2] = 0;
-                  lutex[i*(256*4) + i*4  + 3] = 0;
-               }
-            }
-            else if( i > newRange[1])
-            {
-               if(_isoSurface)
-               {
-                  lutex[i*(256*4) + i*4 ] = 0;
-                  lutex[i*(256*4) + i*4 + 1] = 0;
-                  lutex[i*(256*4) + i*4 + 2] = 0;
-                  lutex[i*(256*4) + i*4 + 3] = 0;
-               }
-               else
-               {
-                  lutex[i*(256*4) + i*4 ] = 0;//255;
-                  lutex[i*(256*4) + i*4 + 1] = 0;
-                  lutex[i*(256*4) + i*4 + 2] = 0;
-                  lutex[i*(256*4) + i*4 + 3] = 0;
-               }
-            }
-            else
-            {
-               if(_isoSurface)
-               {
-                  GLfloat isoRange [2];
-                  isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-                  isoRange[0] = isoVal - 4.0;
-                  isoRange[1] = isoVal + 4.0;
-                  if(i >= isoRange[0] && i <= isoRange[1]){
-                     alpha = (i - newRange[0])*invSRange;
-                     if(alpha <= .25)
-                     {
-                        R = 0;
-                        G = (4.0*alpha)*255,      
-                        B = (1.0)*255;
-                        A = alpha*255.0*.5;
-                     }
-                     else if(alpha <= .5)
-                     {
-                        R = 0;
-                        G = (1.0)*255,      
-                        B = (2.0-4.0*alpha)*255;
-                        A = alpha*255.0*.5;
-                     }
-                     else if(alpha <= .75)
-                     {
-                        R = (4.0*alpha-2.0)*255;
-                        G = (1.0)*255;       
-                        B = 0.;
-                        A = alpha*255.0*.5;
-                     }
-                     else if(alpha <= 1.0)
-                     {
-                        R = (1.0)*255;
-                        G = (4.0-4.0*alpha)*255;       
-                        B = 0.;
-                        A = alpha*255.0*.5;
-                     }
-                  }else{
-                     R = 0;
-                     G = 0;
-                     B = 0;
-                     A = 0;
-                  }
-               }
-               else
-               {
-                  alpha = (i - newRange[0])*invSRange;
-                  if(alpha <= .25)
-                  {
-                     R = 0;
-                     G = (4.0*alpha)*255,      
-                     B = (1.0)*255;
-                     A = alpha*255.0*.5;
-                  }
-                  else if(alpha <= .5)
-                  {
-                     R = 0;
-                     G = (1.0)*255,      
-                     B = (2.0-4.0*alpha)*255;
-                     A = alpha*255.0;
-                  }
-                  else if(alpha <= .75)
-                  {
-                     R = (4.0*alpha-2.0)*255;
-                     G = (1.0)*255;       
-                     B = 0.;
-                     A = alpha*255.0*.5;
-                  }
-                  else if(alpha <= 1.0)
-                  {
-                     R = (1.0)*255;
-                     G = (4.0-4.0*alpha)*255;       
-                     B = 0.;
-                     A = alpha*255.0*.5;
-                  }
-               }
-               lutex[i*(256*4) + i*4    ]  = (unsigned char)R;
-               lutex[i*(256*4) + i*4  + 1] = (unsigned char)G;
-               lutex[i*(256*4) + i*4  + 2] = (unsigned char)B;
-               lutex[i*(256*4) + i*4  + 3] = (unsigned char)A; 
-            }
-         }
-      }
-   }
-   tFunc->dirtyTextureParameters();
-   tFunc->dirtyTextureObject();*/
-   
 }
 //////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::EnsureScalarRange()
@@ -496,9 +332,9 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setDataVariance(osg::Object::DYNAMIC);
       _property->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
       _property->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
-      _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
-      _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
-      _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+      _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP_TO_EDGE);
+      _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP_TO_EDGE);
+      _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP_TO_EDGE);
       _property->setInternalFormat(GL_LUMINANCE_ALPHA);
       _property->setImage(propertyField.get());
       _property->setSubloadCallback(_utCbk.get());

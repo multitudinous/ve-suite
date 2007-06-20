@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -180,6 +180,7 @@ void cfdVolumeVisNodeHandler::Init()
       _bboxSwitch->setSingleChildOn(1);
       _decoratorGroup->addChild(_texGenParams.get());
       _texGenParams->addChild(_byPassNode.get());
+      //_decoratorGroup->addChild(_byPassNode.get());
      
       
       //NOTE -- In derived classes, must override this call

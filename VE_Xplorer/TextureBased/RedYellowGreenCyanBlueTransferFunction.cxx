@@ -151,8 +151,8 @@ void RYGCBLinearTF::_update()
            if(_isoSurface)
            {
               isoValue = newRange[0] + _percentIsoValue*(newRange[1] - newRange[0]);
-              isoRange[0] = isoValue - 8.f;
-              isoRange[1] = isoValue + 8.f;
+              isoRange[0] = isoValue - 4.f;
+              isoRange[1] = isoValue + 4.f;
 
             if(i >= isoRange[0] && i <= isoRange[1])
 		      {

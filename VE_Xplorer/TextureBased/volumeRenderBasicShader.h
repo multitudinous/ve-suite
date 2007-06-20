@@ -33,20 +33,26 @@
 #ifndef VR_BASIC_SHADER_SOURCE_H
 #define VR_BASIC_SHADER_SOURCE_H
 static const char* vrBasicVertSource = {
-   "//#version 110\n"
+   "#version 110\n"
+   "uniform vec3 datacenter;\n"
+   "//varying vec3 sliceNormal;\n"
+   "//varying vec3 sliceNormal;\n"
+   "//uniform mat4 inverseModelViewMatrix;\n"
    "void main() \n"
    "{ \n"
    " \n"
-      "//gl_TexCoord[0].s=dot(gl_ClipVertex,gl_EyePlaneS[0]); \n"
-      "//gl_TexCoord[0].t=dot(gl_ClipVertex,gl_EyePlaneT[0]); \n"
-      "//gl_TexCoord[0].p=dot(gl_ClipVertex,gl_EyePlaneR[0]); \n"
-      "//gl_TexCoord[0].q=dot(gl_ClipVertex,gl_EyePlaneQ[0]); \n"
-      "//gl_TexCoord[0] *= gl_TextureMatrix[0];\n"
       "gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-      "gl_TexCoord[1] = gl_MultiTexCoord1;\n"
-       "gl_ClipVertex = gl_ModelViewMatrix*gl_Vertex;\n"
-       "gl_Position=ftransform(); \n"
-      
+      "//transform view position and direction into object space\n"
+      "vec4 cameraPosition = vec4(0,0,0,1);\n"
+      "cameraPosition = gl_ModelViewMatrixInverse*cameraPosition;\n"
+      "vec4 viewDirection = vec4(0.0,0.0,-1.0,1.0);\n"
+      "//viewDirection = normalize(gl_ModelViewMatrixInverse*viewDirection) ;\n"
+      "viewDirection = normalize(vec4(datacenter,1) - cameraPosition) ;\n"
+      "//Compute the position of back texture coord\n"
+      "vec4 eyeToVertex = normalize(gl_Vertex - cameraPosition);\n"
+      "gl_TexCoord[1]= gl_TexCoord[0] - eyeToVertex*(gl_MultiTexCoord1.x/dot(viewDirection,eyeToVertex));\n"
+      "gl_ClipVertex = gl_ModelViewMatrix*gl_Vertex;\n"
+      "gl_Position=ftransform(); \n"
    "} \n"
 };
 static const char* vrBasicFragSource = {
@@ -58,6 +64,7 @@ static const char* vrBasicFragSource = {
    "uniform vec2 jitterSize;\n"
    "uniform bool fastUpdate;\n"
    "uniform float alphaRatio;\n"
+   "//varying vec3 sliceNormal;\n"
    "void main(void)\n"
    "{\n"
       "//dependent texture look up in transfer function\n"
@@ -70,9 +77,9 @@ static const char* vrBasicFragSource = {
       "//PreIntegration\n"
       "gl_FragColor = (fastUpdate==true)?texture2D(transferFunction,vec2(sback)):texture2D(transferFunction,vec2(sfront,sback)); \n"
       "//gl_FragColor = (fastUpdate==true)?vec4(gl_TexCoord[1].xyz,.2):vec4(gl_TexCoord[0].xyz,.2); \n"
-
+      "//gl_FragColor = (fastUpdate==true)?vec4(gl_TexCoord[1].xyz,.2):vec4(sliceNormal.xyz,.2); \n"
       "//set the opacity to .2 for all fragments\n"
-      "gl_FragColor.a = 1.0-pow(1.0-gl_FragColor.a,alphaRatio);\n"
+      "//gl_FragColor.a = 1.0-pow(1.0-gl_FragColor.a,alphaRatio);\n"
    "}\n"
 };
 #endif// VR_BASIC_VERT_SOURCE_H

@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -61,6 +61,7 @@ namespace osg
    class Group;
    class BoundingBox;
    class Billboard;
+   class PositionAttitudeTransform;
 }
 #include <osgUtil/CullVisitor>
 #include <osg/TexMat>
@@ -205,6 +206,8 @@ namespace VE_TextureBased
       void _createVisualBBox();
       ///Create a clipping cube from the bounding box data
       void _createClipCube();
+      ///Initialize the tranform for the volume
+      void _initializeVolumeDCS();
 
       ///Build the volume visualization graph
       void _buildGraph();
@@ -238,6 +241,7 @@ namespace VE_TextureBased
       osg::ref_ptr<osg::ClipNode> _clipNode;///<Clipping nodes for the volume
       osg::ref_ptr<osg::StateSet> _stateSet;///<The default state set
       osg::ref_ptr<VE_TextureBased::TextureBasedVolumeSlices> _slices;///<The volume rendering slices
+      osg::ref_ptr<osg::PositionAttitudeTransform> _volumeDCS;///<The transform for the volume rendering
       osg::ref_ptr<osg::Geode> _billboard;///<The geode holding the slice
       osg::ref_ptr<osg::Group> _noShaderGroup;///<The default group for volume rendering
       osg::ref_ptr<osg::Group> _decoratorAttachNode;///<Node to attach shaders to

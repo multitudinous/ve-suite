@@ -1,6 +1,6 @@
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2006 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -89,6 +89,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
    _preIntTexture = 0;
    _jitterTexture = 0;
    //_utCbk = 0;
+   _tUnit = 0;
 }
 //////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
