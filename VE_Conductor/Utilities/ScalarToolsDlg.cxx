@@ -227,6 +227,8 @@ void ScalarToolsDialog::_updateActiveScalar(wxCommandEvent& command)
 
    _sendCommandsToXplorer();
    ClearInstructions();
+   wxScrollEvent event;
+   _onPreIntegrate(event);
 }
 /////////////////////////////////////////////////////////////////////////////////
 void ScalarToolsDialog::_updateActiveScalarShaderManager(wxCommandEvent& command)
@@ -241,6 +243,8 @@ void ScalarToolsDialog::_updateActiveScalarShaderManager(wxCommandEvent& command
 
    _sendCommandsToXplorer();
    ClearInstructions();
+   wxScrollEvent event;
+   _onPreIntegrate(event);
 }
 ////////////////////////////////////////////////////////////////
 void ScalarToolsDialog::_setColorByFace(wxCommandEvent& command)
