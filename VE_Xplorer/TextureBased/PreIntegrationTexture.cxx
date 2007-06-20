@@ -185,11 +185,11 @@ void PreIntegrationTexture2D::FullUpdate()
 	  }
 	  if(col == row)
 	  {
-         fout<<"("<<(unsigned int)_rawData[i*4]<<","
+         /*fout<<"("<<(unsigned int)_rawData[i*4]<<","
                <<(unsigned int)_rawData[i*4 + 1]<<","
                <<(unsigned int)_rawData[i*4 + 2]<<","
                <<(unsigned int)_rawData[i*4 + 3]<<")";
-         fout<<std::endl;
+         fout<<std::endl;*/
 	  }
 		 
    }
