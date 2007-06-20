@@ -131,7 +131,7 @@ void PreIntegrationTexture2D::FullUpdate()
       std::cout<<"PreIntegrationTexture2D::Update()"<<std::endl;
 
    }
-   std::ofstream fout("./diagonal.txt");
+   //std::ofstream fout("./diagonal.txt");
    //make sure we have a texture
    if(!_preIntegratedTexture.valid())
    {
