@@ -106,7 +106,8 @@ class AppFrame : public wxFrame
 public:
     AppFrame(){;}
     AppFrame( wxWindow* parent, wxWindowID id, const wxString& title );
-    virtual ~AppFrame(){;}
+    //virtual ~AppFrame(){;}
+	~AppFrame();
    enum 
    {
       v21ID_CONNECT,
