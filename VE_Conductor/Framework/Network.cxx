@@ -40,14 +40,11 @@
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/Utilities/OrbThread.h"
-#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
-#include "VE_Conductor/GUIPlugin/QueryInputsDlg.h"
-#include "VE_Conductor/GUIPlugin/IconChooser.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
+#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include "VE_Conductor/Framework/Frame.h"
 #include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Point.h"
@@ -2397,13 +2394,13 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
 	   links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
     
-	   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	   serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
-	   serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
-	   serviceList->GetMessageLog()->SetMessage( "_\n" );
-	   serviceList->GetMessageLog()->SetMessage( "links:_ " );
-	   serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
-	   serviceList->GetMessageLog()->SetMessage( "_\n" );
+	   //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	   //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
+	   //serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
+	   //serviceList->GetMessageLog()->SetMessage( "_\n" );
+	   //serviceList->GetMessageLog()->SetMessage( "links:_ " );
+	   //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
+	   //serviceList->GetMessageLog()->SetMessage( "_\n" );
    }
    _fileProgress->Update( 50, _("create models") );
    _fileProgress->Update( 75, _("done create models") );
@@ -2585,19 +2582,16 @@ void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////
 void Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
 {
-    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	for( int i = 0; i < links.size(); i++)
-	{
-		serviceList->GetMessageLog()->SetMessage( "link:_ " );
-		serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
-		serviceList->GetMessageLog()->SetMessage( "_\n" );
-	}
+    //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	//for( int i = 0; i < links.size(); i++)
+	//{
+	//	serviceList->GetMessageLog()->SetMessage( "link:_ " );
+	//	serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
+	//	serviceList->GetMessageLog()->SetMessage( "_\n" );
+	//}
 
-	//VE_XML::VE_Model::Link* veLink = links[ m_selLink ];
-	//VE_Conductor::GUI_Utilities::Link veLink = links[ m_selLink ];
 	wxString title;
 	title << wxT("Aspen Name");
-	//wxString desc( veLink.GetName().c_str(), wxConvUTF8);
 	wxString desc( links[m_selLink].GetName().c_str(), wxConvUTF8);
 	wxMessageDialog( this, desc, title).ShowModal();
 }
@@ -2650,7 +2644,10 @@ void Network::OnQueryStreamInputs(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnQueryStreamOutputs(wxCommandEvent& event )
 {  
-    //UIPLUGIN_CHECKID( event )
+	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	//serviceList->GetMessageLog()->SetMessage( "QueryOutput" );
+    
+	//UIPLUGIN_CHECKID( event )
 	std::string compName = ConvertUnicode( links[m_selLink].GetName().c_str() );
 
 	VE_XML::Command returnState;
@@ -2667,7 +2664,6 @@ void Network::OnQueryStreamOutputs(wxCommandEvent& event )
 	commandWriter.WriteXMLDocument( nodes, status, "Command" );
 	
 	//Get results
-    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 	std::string nw_str = serviceList->Query( status );
 	wxString title( compName.c_str(),wxConvUTF8);
 

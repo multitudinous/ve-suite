@@ -1117,7 +1117,7 @@ void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
     IconChooser* chooser = new IconChooser( networkFrame );
 	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
-    chooser->SetSize( dialogSize );
+    //chooser->SetSize( dialogSize );
 	chooser->Show();
    //delete chooser;
 }
@@ -1146,7 +1146,7 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 	//TextResultDialog * results = new TextResultDialog(this, title);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
 	ParamsDlg* params = new ParamsDlg(networkFrame);
-    //params->SetSize( dialogSize );
+	//params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
@@ -1203,7 +1203,7 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 	wxString title( compName.c_str(),wxConvUTF8);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
 	ParamsDlg * params = new ParamsDlg(networkFrame);
-    //params->SetSize( dialogSize );
+	//params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
