@@ -104,7 +104,7 @@ bool CORBAServiceList::IsConnectedToXplorer( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::IsConnectedToCE( void )
 {
-   if ( CORBA::is_nil( veCE.in() ) )
+   if( CORBA::is_nil( veCE.in() ) )
    {
       return ConnectToCE();
    }
@@ -131,18 +131,17 @@ std::vector< std::string > CORBAServiceList::GetListOfServices( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::ConnectToCE( void )
 {
-   if ( pelog == NULL )
+   if( pelog == NULL )
    {
 	   pelog = new PEThread();
-	   //pelog->activate();
    }
 
-   if ( !IsConnectedToNamingService() )
+   if( !IsConnectedToNamingService() )
    {
       return false;
    }
 
-   if ( p_ui_i == 0 )
+   if( p_ui_i == 0 )
    {
       try
       {   
@@ -358,16 +357,14 @@ void CORBAServiceList::CreateCORBAModule( void )
          CORBA::Any pol;
          pol <<= BiDirPolicy::BOTH;
          policies[0] =
-            orb->create_policy (BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE,
-                                        pol);
+            orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol );
          
          // Create POA as child of RootPOA with the above policies.  This POA
          // will receive request in the same connection in which it sent
          // the request
          try
          {
-            poa = poa_root->create_POA ("childPOA",
-                                                        poa_manager.in (),
+            poa = poa_root->create_POA( "childPOA", poa_manager.in(),
                                                         policies);
          }
          catch (const PortableServer::POA::AdapterAlreadyExists & )

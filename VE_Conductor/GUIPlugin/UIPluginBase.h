@@ -42,6 +42,7 @@ UIPluginBase API
 #include "VE_Open/XML/Model/Port.h"
 #include <vector>
 #include <map>
+#include <utility>
 
 #define ICON 20000
 
@@ -221,6 +222,8 @@ public:
    ///Set the corba servicelist so that the plugin can talk with the graphical
    ///engine
    void SetCORBAService( VE_Conductor::CORBAServiceList* serviceList );
+   ///Set the user scale to enable working with the dc
+   void SetDCScale( std::pair< double, double >* scale );
    ///See if this plugin is selected
    bool SelectMod( int x, int y );
 
@@ -333,6 +336,10 @@ protected:
    int m_selTagCon; 
    wxRect dialogSize;
    int activeId;
+   ///User scale
+   /// first = x scale
+   /// second = y scale
+   std::pair< double, double >* userScale;
    DECLARE_DYNAMIC_CLASS( UIPluginBase )
    DECLARE_EVENT_TABLE()
 };

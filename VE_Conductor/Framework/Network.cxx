@@ -2437,6 +2437,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
          tempPlugin = dynamic_cast< UIPluginBase* >( cls->CreateObject() );
         }
         tempPlugin->SetNetworkFrame( this );
+        tempPlugin->SetDCScale( &userScale );
         ///Add event handler for the plugins
         PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );

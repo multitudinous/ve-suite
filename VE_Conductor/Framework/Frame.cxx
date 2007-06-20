@@ -775,61 +775,58 @@ void AppFrame::CreateMenu()
    SetMenuBar( menubar );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
 {
-  //  printf("Scale = %g\n", network->m_xUserScale);
-  int w, h, sx, sy;
-  int xpos, ypos;
-  network->GetClientSize(&w, &h);
-  //  printf("Client size w: %d, h: %d\n", w, h);
-  network->GetVirtualSize(&sx, &sy);
-  //  printf("Virtual size sx: %d, sy: %d\n", sx, sy);
+    int w, h, sx, sy;
+    network->GetClientSize(&w, &h);
+    network->GetVirtualSize(&sx, &sy);
 
-   if ( network->GetUserScale()->first > 4 )
-      return; // maximum zoom in x3
+    if( network->GetUserScale()->first > 4 )
+    {    
+        return; // maximum zoom in x3
+    }
 
-  network->GetUserScale()->first +=0.1;
-  network->GetUserScale()->second +=0.1; 
-
-  
-  network->GetNumPix()->first += 1;
-  network->GetNumPix()->second += 1;
-  network->GetViewStart(&xpos, &ypos);
-  network->SetScrollbars( 
-            network->GetNumPix()->first, 
-            network->GetNumPix()->second, 
-            network->GetNumUnit()->first, 
-            network->GetNumUnit()->second );
-  network->Scroll(xpos, ypos);
-  network->ReDrawAll();
+    network->GetUserScale()->first +=0.1;
+    network->GetUserScale()->second +=0.1; 
+    network->GetNumPix()->first += 1;
+    network->GetNumPix()->second += 1;
+    
+    int xpos, ypos;
+    network->GetViewStart( &xpos, &ypos );
+    network->SetScrollbars( 
+        network->GetNumPix()->first, 
+        network->GetNumPix()->second, 
+        network->GetNumUnit()->first, 
+        network->GetNumUnit()->second );
+    network->Scroll(xpos, ypos);
+    network->ReDrawAll();
 }
-
-void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
 {
-  //  printf("Scale = %g\n", network->m_xUserScale);
-  int w, h, sx, sy;
-  int xpos, ypos;
-  network->GetClientSize(&w, &h);
-  //  printf("Client size w: %d, h: %d\n", w, h);
-  network->GetVirtualSize(&sx, &sy);
-  //  printf("Virtual size sx: %d, sy: %d\n", sx, sy);
+    int w, h, sx, sy;
+    network->GetClientSize(&w, &h);
+    network->GetVirtualSize(&sx, &sy);
 
-   if ( network->GetUserScale()->first < 0.4 )
-      return; //minimum x-5
+    if( network->GetUserScale()->first < 0.4 )
+    {   
+        return; //minimum x-5
+    }
 
-  network->GetUserScale()->first -= 0.1;
-  network->GetUserScale()->second -=0.1;
-  network->GetNumPix()->first-=1;
-  network->GetNumPix()->second-=1;
+    network->GetUserScale()->first -= 0.1;
+    network->GetUserScale()->second -=0.1;
+    network->GetNumPix()->first-=1;
+    network->GetNumPix()->second-=1;
 
-  network->GetViewStart(&xpos, &ypos);
-  network->SetScrollbars( 
-            network->GetNumPix()->first, 
-            network->GetNumPix()->second, 
-            network->GetNumUnit()->first, 
-            network->GetNumUnit()->second );
-  network->Scroll(xpos, ypos);
-  network->ReDrawAll();
+    int xpos, ypos;
+    network->GetViewStart(&xpos, &ypos);
+    network->SetScrollbars( 
+        network->GetNumPix()->first, 
+        network->GetNumPix()->second, 
+        network->GetNumUnit()->first, 
+        network->GetNumUnit()->second );
+    network->Scroll(xpos, ypos);
+    network->ReDrawAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )

@@ -161,12 +161,14 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
       UIPluginBase* object;
       object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
       object->SetNetworkFrame( network );
+      object->SetDCScale( network->GetUserScale() );
       network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
    }
    else
    {
       UIPluginBase* object = new DefaultPlugin();
       object->SetNetworkFrame( network );
+      object->SetDCScale( network->GetUserScale() );
       network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
    }
 }

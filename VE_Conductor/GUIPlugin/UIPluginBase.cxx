@@ -1020,7 +1020,7 @@ void UIPluginBase::OnDClick( wxMouseEvent &event)
    // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
    networkFrame->DoPrepareDC( dc );
-   //dc.SetUserScale( userScale.first, userScale.second );
+   dc.SetUserScale( userScale->first, userScale->second );
    wxPoint evtpos = event.GetLogicalPosition( dc );
    //If this is not the plugin then move on to the next one
    if ( !SelectMod( evtpos.x, evtpos.y ) )
@@ -1487,7 +1487,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
    // This function opens a plugins dialog when double clicked on the design canvas
    wxClientDC dc( networkFrame );
    networkFrame->DoPrepareDC( dc );
-   //dc.SetUserScale( userScale.first, userScale.second );
+   dc.SetUserScale( userScale->first, userScale->second );
    wxPoint evtpos = event.GetLogicalPosition( dc );
    //If this is not the plugin then move on to the next one
    if ( !SelectMod( evtpos.x, evtpos.y ) )
@@ -1605,7 +1605,6 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
      pop_menu.Enable(ASPEN_MENU, true);
      pop_menu.Enable(ICON_MENU, true);
 
-   wxPoint action_point = event.GetLogicalPosition(dc);
    pop_menu.SetClientData( &id );
    networkFrame->PopupMenu(&pop_menu, event.GetPosition());
 
@@ -1699,4 +1698,9 @@ void UIPluginBase::OnDelMod(wxCommandEvent& event )
     delete veCommand;
     event.SetClientData( &id );
     ::wxPostEvent( networkFrame, event );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetDCScale( std::pair< double, double >* scale )
+{
+    userScale = scale;
 }
