@@ -307,6 +307,34 @@ viewlocPane( 0 )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+AppFrame::~AppFrame()
+{
+    StoreFrameSize(GetRect(), NULL);
+    StoreConfig(NULL);
+    StoreRecentFile(NULL);
+    
+    if( preferences )
+    {
+        preferences->Destroy();
+        preferences = 0;
+    }
+    if( network )
+    {
+        network->Destroy();
+        network = 0;
+    }
+    if( serviceList )
+    {
+        serviceList->CleanUp();
+        serviceList = 0;
+    }
+
+    delete wxConfigBase::Set((wxConfigBase *) NULL); 
+    
+    delete m_recentVESFiles;
+    m_recentVESFiles = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
 std::string AppFrame::GetDisplayMode()
 {
     return _displayMode;
@@ -579,31 +607,11 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
-    //std::cout << "Conductor Exiting Xplorer" << std::endl;
     if ( GetDisplayMode() == "Desktop" )
     {
         ExitXplorer();
     }
-    //std::cout << "Deleting Frame" << std::endl;
-    //We have to mannually destroy these to make sure that things shutdown 
-    //properly with CORBA. There may be a possible way to get around this but
-    //am not sure.
-    StoreFrameSize(GetRect(), NULL);
-    StoreConfig(NULL);
-    StoreRecentFile(NULL);
-    
-    preferences->WriteConfiguration();
-
-    delete wxConfigBase::Set((wxConfigBase *) NULL); 
     Destroy();
-    //std::cout << "Shuting Down CORBA" << std::endl;
-
-    network->Destroy();
-    network = 0;
-    serviceList->CleanUp();
-    serviceList = 0;
-    delete m_recentVESFiles;
-    m_recentVESFiles = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
