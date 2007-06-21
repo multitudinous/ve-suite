@@ -82,6 +82,7 @@ bool REIApp::OnInit()
 
 int REIApp::OnExit()
 {
-  XMLPlatformUtils::Terminate();
-  return 0;
+   delete wxConfigBase::Set((wxConfigBase *) NULL);
+   XMLPlatformUtils::Terminate();
+   return 0;
 }

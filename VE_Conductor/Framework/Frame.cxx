@@ -308,11 +308,7 @@ viewlocPane( 0 )
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
-{    
-    //This should be removed.
-    //preferences->Destroy();
-    //preferences = 0;
-    
+{
     //Shutdown xplorer
     if ( GetDisplayMode() == "Desktop" )
     {
