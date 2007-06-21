@@ -141,7 +141,7 @@ lrintf( float flt )
 #endif
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
-    EVT_CLOSE( AppFrame::OnClose )
+    //EVT_CLOSE( AppFrame::OnClose )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
@@ -313,6 +313,17 @@ AppFrame::~AppFrame()
     //preferences->Destroy();
     //preferences = 0;
     
+    //Shutdown xplorer
+    if ( GetDisplayMode() == "Desktop" )
+    {
+        ExitXplorer();
+    }
+    
+    //Store settings to wxConfig to be written out
+    StoreFrameSize(GetRect(), NULL);
+    StoreConfig(NULL);
+    StoreRecentFile(NULL);
+    
     //We have to mannually destroy these to make sure that things shutdown 
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
@@ -473,7 +484,7 @@ void AppFrame::GetConfig(wxConfig* config)
    bool exist = false;
 
    wxString key = FEATURE;
-   if (cfg->Exists (key)) 
+   if( cfg->Exists(key) ) 
    {
       exist  = cfg->Read (key + _T("/") + F_FINANCIAL, &f_financial);
       exist  = cfg->Read (key + _T("/") + F_GEOMETRY, &f_geometry);
@@ -596,22 +607,6 @@ void AppFrame::StoreRecentFile( wxConfig* config )
     //std::cout<<"Config name Store Recent file: "<<cfg->GetAppName()<<std::endl;
     //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
     m_recentVESFiles->Save(*cfg);
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
-{   
-    //Shutdown xplorer
-    if ( GetDisplayMode() == "Desktop" )
-    {
-        ExitXplorer();
-    }
-
-    //Store settings to wxConfig to be written out
-    StoreFrameSize(GetRect(), NULL);
-    StoreConfig(NULL);
-    StoreRecentFile(NULL);
-
-    Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )

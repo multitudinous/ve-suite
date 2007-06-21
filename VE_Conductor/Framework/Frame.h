@@ -190,7 +190,7 @@ public:
         v21ID_BASE_RECENT
     };
 
-    void OnClose( wxCloseEvent& event );
+    //void OnClose( wxCloseEvent& event );
 
     void FrameClose( wxCommandEvent& event );
 
