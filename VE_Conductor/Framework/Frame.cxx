@@ -141,7 +141,6 @@ lrintf( float flt )
 #endif
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
-    //EVT_CLOSE( AppFrame::OnClose )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
@@ -470,7 +469,6 @@ void AppFrame::GetConfig(wxConfig* config)
    wxConfig* cfg = config;
    if (!config)
    { 
-       //wx will delete this...no need for us to do it
       cfg = new wxConfig(wxTheApp->GetAppName());
    }
    //Do not let wx create a new wxConfig with Get calls
@@ -536,9 +534,8 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   wxSize scr = wxGetDisplaySize();
  
   wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
-  int i;
   wxString key = LOCATION + wxString::Format(_("%d"), 0);
-  if (cfg->Exists (key)) 
+  if( cfg->Exists(key) ) 
   {
       rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
       rect.y = cfg->Read (key + _T("/") + LOCATION_Y, rect.y);
@@ -547,12 +544,12 @@ wxRect AppFrame::DetermineFrameSize (wxConfig* config)
   }
   
   // check for reasonable values (within screen)
-  rect.x = wxMin (abs (rect.x), (scr.x - minFrameWidth));
-  rect.y = wxMin (abs (rect.y), (scr.y - minFrameHight));
-  rect.width = wxMax (abs (rect.width), (minFrameWidth));
-  rect.width = wxMin (abs (rect.width), (scr.x - rect.x));
-  rect.height = wxMax (abs (rect.height), (minFrameHight));
-  rect.height = wxMin (abs (rect.height), (scr.y - rect.y));
+  rect.x = wxMin(abs (rect.x), (scr.x - minFrameWidth));
+  rect.y = wxMin(abs (rect.y), (scr.y - minFrameHight));
+  rect.width = wxMax(abs (rect.width), (minFrameWidth));
+  rect.width = wxMin(abs (rect.width), (scr.x - rect.x));
+  rect.height = wxMax(abs (rect.height), (minFrameHight));
+  rect.height = wxMin(abs (rect.height), (scr.y - rect.y));
   
   return rect;
 }
@@ -565,31 +562,27 @@ void AppFrame::StoreFrameSize( wxRect rect, wxConfig* config)
     {
       cfg = static_cast<wxConfig*>(wxConfig::Get());
     }
-    //std::cout<<"Config name Store Frame: "<<cfg->GetAppName()<<std::endl;
-    //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
 
     wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr);
-    cfg->Write (key + _T("/") + LOCATION_X, rect.x);
-    cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
-    cfg->Write (key + _T("/") + LOCATION_W, rect.width);
-    cfg->Write (key + _T("/") + LOCATION_H, rect.height);
+    cfg->Write(key + _T("/") + LOCATION_X, rect.x);
+    cfg->Write(key + _T("/") + LOCATION_Y, rect.y);
+    cfg->Write(key + _T("/") + LOCATION_W, rect.width);
+    cfg->Write(key + _T("/") + LOCATION_H, rect.height);
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig(wxConfig* config)
 {
     //store config
-
     wxConfig* cfg = config;
     if (!config)
     { 
       cfg = static_cast<wxConfig*>(wxConfig::Get());
     }
-    //std::cout<<"Config name Store config: "<<cfg->GetAppName()<<std::endl;
-    //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+
     wxString key = FEATURE;
-    cfg->Write (key+_T("/") + F_FINANCIAL, f_financial);
-    cfg->Write (key+_T("/") + F_GEOMETRY, f_geometry);
-    cfg->Write (key+_T("/") + F_VISUALIZATION, f_visualization);
+    cfg->Write(key+_T("/") + F_FINANCIAL, f_financial);
+    cfg->Write(key+_T("/") + F_GEOMETRY, f_geometry);
+    cfg->Write(key+_T("/") + F_VISUALIZATION, f_visualization);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreRecentFile( wxConfig* config )
@@ -600,8 +593,7 @@ void AppFrame::StoreRecentFile( wxConfig* config )
     {
        cfg = static_cast<wxConfig*>(wxConfig::Get());
     }
-    //std::cout<<"Config name Store Recent file: "<<cfg->GetAppName()<<std::endl;
-    //std::cout<<"Path: "<<cfg->GetPath()<<std::endl;
+
     m_recentVESFiles->Save(*cfg);
 }
 ////////////////////////////////////////////////////////////////////////////////

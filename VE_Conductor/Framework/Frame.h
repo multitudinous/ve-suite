@@ -190,8 +190,6 @@ public:
         v21ID_BASE_RECENT
     };
 
-    //void OnClose( wxCloseEvent& event );
-
     void FrameClose( wxCommandEvent& event );
 
     ///Override so we can show the tree after things are initialized. 
