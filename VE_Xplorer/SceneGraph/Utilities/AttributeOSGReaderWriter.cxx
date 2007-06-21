@@ -72,7 +72,7 @@ RegisterDotOsgWrapperProxy ve_AttributeFuncProxy
 (
     new VE_SceneGraph::Utilities::Attribute(),
     "Attribute",
-    "Object Attribute",
+    "Object VE_SceneGraph::Utilities::Attribute",
     &VEAttribute_readLocalData,
     &VEAttribute_writeLocalData,
     DotOsgWrapper::READ_AND_WRITE
