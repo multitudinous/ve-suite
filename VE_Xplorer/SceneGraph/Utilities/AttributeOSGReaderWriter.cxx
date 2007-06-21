@@ -58,110 +58,110 @@ using namespace VE_SceneGraph::Utilities;
 using namespace VE_XML::VE_CAD;
 using namespace VE_XML::VE_Shader;
 
-bool Attribute_readLocalData(Object& obj, Input& fr);
-bool Attribute_writeLocalData(const Object& obj, Output& fw);
+bool VEAttribute_readLocalData(Object& obj, Input& fr);
+bool VEAttribute_writeLocalData(const Object& obj, Output& fw);
 
-bool Attribute_matchModeStr(const char* str,StateAttribute::GLModeValue& mode);
-const char* Attribute_getModeStr(StateAttribute::GLModeValue mode);
+bool VEAttribute_matchModeStr(const char* str,StateAttribute::GLModeValue& mode);
+const char* VEAttribute_getModeStr(StateAttribute::GLModeValue mode);
 
-bool Attribute_matchRenderBinModeStr(const char* str,StateSet::RenderBinMode& mode);
-const char* Attribute_getRenderBinModeStr(StateSet::RenderBinMode mode);
+bool VEAttribute_matchRenderBinModeStr(const char* str,StateSet::RenderBinMode& mode);
+const char* VEAttribute_getRenderBinModeStr(StateSet::RenderBinMode mode);
 
 // register the read and write functions with the osgDB::Registry.
-RegisterDotOsgWrapperProxy g_AttributeFuncProxy
+RegisterDotOsgWrapperProxy ve_AttributeFuncProxy
 (
     new VE_SceneGraph::Utilities::Attribute(),
     "Attribute",
     "Object Attribute",
-    &Attribute_readLocalData,
-    &Attribute_writeLocalData,
+    &VEAttribute_readLocalData,
+    &VEAttribute_writeLocalData,
     DotOsgWrapper::READ_AND_WRITE
 );
 //
 // Set up the maps from name to GLMode and visa versa.
 //
-typedef std::map<std::string,StateAttribute::GLMode>    GLNameToGLModeMap;
-typedef std::map<StateAttribute::GLMode,std::string>    GLModeToGLNameMap;
-typedef std::set<StateAttribute::GLMode>                TextureGLModeSet;
+typedef std::map<std::string,StateAttribute::GLMode>    VEGLNameToGLModeMap;
+typedef std::map<StateAttribute::GLMode,std::string>    VEGLModeToGLNameMap;
+typedef std::set<StateAttribute::GLMode>                VETextureGLModeSet;
 
-GLNameToGLModeMap s_GLNameToGLModeMap;
-GLModeToGLNameMap s_GLModeToGLNameMap;
-TextureGLModeSet s_TextureGLModeSet;
+VEGLNameToGLModeMap ve_GLNameToGLModeMap;
+VEGLModeToGLNameMap ve_GLModeToGLNameMap;
+VETextureGLModeSet ve_TextureGLModeSet;
 
-#define ADD_NAME(name,mode) s_GLNameToGLModeMap[name]=mode; s_GLModeToGLNameMap[mode]=name;
+#define VEADD_NAME(name,mode) ve_GLNameToGLModeMap[name]=mode; ve_GLModeToGLNameMap[mode]=name;
 
-void initGLNames()
+void ve_initGLNames()
 {
     static bool first_time = true;
     if (!first_time) return;
     
-    ADD_NAME("GL_ALPHA_TEST",GL_ALPHA_TEST)
-    ADD_NAME("GL_BLEND",GL_BLEND)
-    ADD_NAME("GL_COLOR_MATERIAL",GL_COLOR_MATERIAL)
-    ADD_NAME("GL_CULL_FACE",GL_CULL_FACE)
-    ADD_NAME("GL_DEPTH_TEST",GL_DEPTH_TEST)
-    ADD_NAME("GL_FOG",GL_FOG)
-    ADD_NAME("GL_LIGHTING",GL_LIGHTING)
-    ADD_NAME("GL_POINT_SMOOTH",GL_POINT_SMOOTH)
-    ADD_NAME("GL_LINE_STIPPLE",GL_LINE_STIPPLE)
-    ADD_NAME("GL_POLYGON_OFFSET_FILL",GL_POLYGON_OFFSET_FILL)
-    ADD_NAME("GL_POLYGON_OFFSET_LINE",GL_POLYGON_OFFSET_LINE)
-    ADD_NAME("GL_POLYGON_OFFSET_POINT",GL_POLYGON_OFFSET_POINT)
-    ADD_NAME("GL_COLOR_SUM",GL_COLOR_SUM);
+    VEADD_NAME("GL_ALPHA_TEST",GL_ALPHA_TEST)
+    VEADD_NAME("GL_BLEND",GL_BLEND)
+    VEADD_NAME("GL_COLOR_MATERIAL",GL_COLOR_MATERIAL)
+    VEADD_NAME("GL_CULL_FACE",GL_CULL_FACE)
+    VEADD_NAME("GL_DEPTH_TEST",GL_DEPTH_TEST)
+    VEADD_NAME("GL_FOG",GL_FOG)
+    VEADD_NAME("GL_LIGHTING",GL_LIGHTING)
+    VEADD_NAME("GL_POINT_SMOOTH",GL_POINT_SMOOTH)
+    VEADD_NAME("GL_LINE_STIPPLE",GL_LINE_STIPPLE)
+    VEADD_NAME("GL_POLYGON_OFFSET_FILL",GL_POLYGON_OFFSET_FILL)
+    VEADD_NAME("GL_POLYGON_OFFSET_LINE",GL_POLYGON_OFFSET_LINE)
+    VEADD_NAME("GL_POLYGON_OFFSET_POINT",GL_POLYGON_OFFSET_POINT)
+    VEADD_NAME("GL_COLOR_SUM",GL_COLOR_SUM);
     
-    ADD_NAME("GL_TEXTURE_1D",GL_TEXTURE_1D)
-    ADD_NAME("GL_TEXTURE_2D",GL_TEXTURE_2D)
-    ADD_NAME("GL_TEXTURE_3D",GL_TEXTURE_3D)
+    VEADD_NAME("GL_TEXTURE_1D",GL_TEXTURE_1D)
+    VEADD_NAME("GL_TEXTURE_2D",GL_TEXTURE_2D)
+    VEADD_NAME("GL_TEXTURE_3D",GL_TEXTURE_3D)
     
-    ADD_NAME("GL_TEXTURE_CUBE_MAP",GL_TEXTURE_CUBE_MAP);
-    ADD_NAME("GL_TEXTURE_RECTANGLE",GL_TEXTURE_RECTANGLE);
+    VEADD_NAME("GL_TEXTURE_CUBE_MAP",GL_TEXTURE_CUBE_MAP);
+    VEADD_NAME("GL_TEXTURE_RECTANGLE",GL_TEXTURE_RECTANGLE);
     
-    ADD_NAME("GL_TEXTURE_GEN_Q",GL_TEXTURE_GEN_Q)
-    ADD_NAME("GL_TEXTURE_GEN_R",GL_TEXTURE_GEN_R)
-    ADD_NAME("GL_TEXTURE_GEN_S",GL_TEXTURE_GEN_S)
-    ADD_NAME("GL_TEXTURE_GEN_T",GL_TEXTURE_GEN_T)
+    VEADD_NAME("GL_TEXTURE_GEN_Q",GL_TEXTURE_GEN_Q)
+    VEADD_NAME("GL_TEXTURE_GEN_R",GL_TEXTURE_GEN_R)
+    VEADD_NAME("GL_TEXTURE_GEN_S",GL_TEXTURE_GEN_S)
+    VEADD_NAME("GL_TEXTURE_GEN_T",GL_TEXTURE_GEN_T)
     
-    ADD_NAME("GL_STENCIL_TEST",GL_STENCIL_TEST)
+    VEADD_NAME("GL_STENCIL_TEST",GL_STENCIL_TEST)
     
-    ADD_NAME("GL_CLIP_PLANE0",GL_CLIP_PLANE0);
-    ADD_NAME("GL_CLIP_PLANE1",GL_CLIP_PLANE1);
-    ADD_NAME("GL_CLIP_PLANE2",GL_CLIP_PLANE2);
-    ADD_NAME("GL_CLIP_PLANE3",GL_CLIP_PLANE3);
-    ADD_NAME("GL_CLIP_PLANE4",GL_CLIP_PLANE4);
-    ADD_NAME("GL_CLIP_PLANE5",GL_CLIP_PLANE5);
+    VEADD_NAME("GL_CLIP_PLANE0",GL_CLIP_PLANE0);
+    VEADD_NAME("GL_CLIP_PLANE1",GL_CLIP_PLANE1);
+    VEADD_NAME("GL_CLIP_PLANE2",GL_CLIP_PLANE2);
+    VEADD_NAME("GL_CLIP_PLANE3",GL_CLIP_PLANE3);
+    VEADD_NAME("GL_CLIP_PLANE4",GL_CLIP_PLANE4);
+    VEADD_NAME("GL_CLIP_PLANE5",GL_CLIP_PLANE5);
 
-    ADD_NAME("GL_LIGHT0",GL_LIGHT0);
-    ADD_NAME("GL_LIGHT1",GL_LIGHT1);
-    ADD_NAME("GL_LIGHT2",GL_LIGHT2);
-    ADD_NAME("GL_LIGHT3",GL_LIGHT3);
-    ADD_NAME("GL_LIGHT4",GL_LIGHT4);
-    ADD_NAME("GL_LIGHT5",GL_LIGHT5);
-    ADD_NAME("GL_LIGHT6",GL_LIGHT6);
-    ADD_NAME("GL_LIGHT7",GL_LIGHT7);
+    VEADD_NAME("GL_LIGHT0",GL_LIGHT0);
+    VEADD_NAME("GL_LIGHT1",GL_LIGHT1);
+    VEADD_NAME("GL_LIGHT2",GL_LIGHT2);
+    VEADD_NAME("GL_LIGHT3",GL_LIGHT3);
+    VEADD_NAME("GL_LIGHT4",GL_LIGHT4);
+    VEADD_NAME("GL_LIGHT5",GL_LIGHT5);
+    VEADD_NAME("GL_LIGHT6",GL_LIGHT6);
+    VEADD_NAME("GL_LIGHT7",GL_LIGHT7);
     
-    s_TextureGLModeSet.insert(GL_TEXTURE_1D);
-    s_TextureGLModeSet.insert(GL_TEXTURE_2D);
-    s_TextureGLModeSet.insert(GL_TEXTURE_3D);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_1D);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_2D);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_3D);
     
-    s_TextureGLModeSet.insert(GL_TEXTURE_CUBE_MAP);
-    s_TextureGLModeSet.insert(GL_TEXTURE_RECTANGLE);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_CUBE_MAP);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_RECTANGLE);
     
-    s_TextureGLModeSet.insert(GL_TEXTURE_GEN_Q);
-    s_TextureGLModeSet.insert(GL_TEXTURE_GEN_R);
-    s_TextureGLModeSet.insert(GL_TEXTURE_GEN_S);
-    s_TextureGLModeSet.insert(GL_TEXTURE_GEN_T);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_GEN_Q);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_GEN_R);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_GEN_S);
+    ve_TextureGLModeSet.insert(GL_TEXTURE_GEN_T);
   
     first_time = false;
 }
 
-bool Attribute_readLocalData(Object& obj, Input& fr)
+bool VEAttribute_readLocalData(Object& obj, Input& fr)
 {
     bool iteratorAdvanced = false;
 
     // note, StateSet replaced GeoState April 2001.
     Attribute& stateset = static_cast<Attribute&>(obj);
 
-    initGLNames();
+    ve_initGLNames();
     
     // read the rendering hint value.    
     if (fr[0].matchWord("rendering_hint"))
@@ -196,7 +196,7 @@ bool Attribute_readLocalData(Object& obj, Input& fr)
 
     bool setRenderBinDetails=false;
     StateSet::RenderBinMode rbmode = stateset.getRenderBinMode();
-    if (fr[0].matchWord("renderBinMode") && Attribute_matchRenderBinModeStr(fr[1].getStr(),rbmode))
+    if (fr[0].matchWord("renderBinMode") && VEAttribute_matchRenderBinModeStr(fr[1].getStr(),rbmode))
     {
         setRenderBinDetails=true;
         fr+=2;
@@ -235,12 +235,12 @@ bool Attribute_readLocalData(Object& obj, Input& fr)
         readingMode=false;
         if (fr[0].isInt())
         {
-            if (Attribute_matchModeStr(fr[1].getStr(),value))
+            if (VEAttribute_matchModeStr(fr[1].getStr(),value))
             {
                 int mode;
                 fr[0].getInt(mode);
                 
-                if (s_TextureGLModeSet.find(mode)!=s_TextureGLModeSet.end())
+                if (ve_TextureGLModeSet.find(mode)!=ve_TextureGLModeSet.end())
                 {
                     // remap to a texture unit.
                     stateset.setTextureMode(0,(StateAttribute::GLMode)mode,value);
@@ -257,13 +257,13 @@ bool Attribute_readLocalData(Object& obj, Input& fr)
         else
         if (fr[0].getStr())
         {
-            if (Attribute_matchModeStr(fr[1].getStr(),value))
+            if (VEAttribute_matchModeStr(fr[1].getStr(),value))
             {
-                GLNameToGLModeMap::iterator nitr = s_GLNameToGLModeMap.find(fr[0].getStr());
-                if (nitr!=s_GLNameToGLModeMap.end())
+                VEGLNameToGLModeMap::iterator nitr = ve_GLNameToGLModeMap.find(fr[0].getStr());
+                if (nitr!=ve_GLNameToGLModeMap.end())
                 {
                     StateAttribute::GLMode mode = nitr->second;
-                    if (s_TextureGLModeSet.find(mode)!=s_TextureGLModeSet.end())
+                    if (ve_TextureGLModeSet.find(mode)!=ve_TextureGLModeSet.end())
                     {
                         // remap to a texture unit.
                         stateset.setTextureMode(0,mode,value);
@@ -324,7 +324,7 @@ bool Attribute_readLocalData(Object& obj, Input& fr)
                 readingMode=false;
                 if (fr[0].isInt())
                 {
-                    if (Attribute_matchModeStr(fr[1].getStr(),value))
+                    if (VEAttribute_matchModeStr(fr[1].getStr(),value))
                     {
                         int mode;
                         fr[0].getInt(mode);
@@ -337,10 +337,10 @@ bool Attribute_readLocalData(Object& obj, Input& fr)
                 else
                 if (fr[0].getStr())
                 {
-                    if (Attribute_matchModeStr(fr[1].getStr(),value))
+                    if (VEAttribute_matchModeStr(fr[1].getStr(),value))
                     {
-                        GLNameToGLModeMap::iterator nitr = s_GLNameToGLModeMap.find(fr[0].getStr());
-                        if (nitr!=s_GLNameToGLModeMap.end())
+                        VEGLNameToGLModeMap::iterator nitr = ve_GLNameToGLModeMap.find(fr[0].getStr());
+                        if (nitr!=ve_GLNameToGLModeMap.end())
                         {
                             StateAttribute::GLMode mode = nitr->second;
                             stateset.setTextureMode(unit,mode,value);
@@ -378,17 +378,17 @@ bool Attribute_readLocalData(Object& obj, Input& fr)
 
 // visual studio 6.0 doesn't appear to define std::max?!? So do our own here.. 
 template<class T>
-T mymax(const T& a,const T& b)
+T vemymax(const T& a,const T& b)
 {
     return (((a) > (b)) ? (a) : (b));
 }
 
-bool Attribute_writeLocalData(const Object& obj, Output& fw)
+bool VEAttribute_writeLocalData(const Object& obj, Output& fw)
 {
 
     const Attribute& stateset = static_cast<const Attribute&>(obj);
 
-    initGLNames();
+    ve_initGLNames();
 
     // write the rendering hint value.    
     fw.indent()<<"rendering_hint ";
@@ -408,7 +408,7 @@ bool Attribute_writeLocalData(const Object& obj, Output& fw)
         break;    
     }
 
-    fw.indent()<<"renderBinMode "<<Attribute_getRenderBinModeStr(stateset.getRenderBinMode())<< std::endl;
+    fw.indent()<<"renderBinMode "<<VEAttribute_getRenderBinModeStr(stateset.getRenderBinMode())<< std::endl;
     if (stateset.getRenderBinMode()!=StateSet::INHERIT_RENDERBIN_DETAILS)
     {
         fw.indent()<<"binNumber "<<stateset.getBinNumber()<< std::endl;
@@ -421,15 +421,15 @@ bool Attribute_writeLocalData(const Object& obj, Output& fw)
         mitr!=ml.end();
         ++mitr)
     {
-         GLModeToGLNameMap::iterator nitr = s_GLModeToGLNameMap.find(mitr->first);
-         if (nitr!=s_GLModeToGLNameMap.end())
+         VEGLModeToGLNameMap::iterator nitr = ve_GLModeToGLNameMap.find(mitr->first);
+         if (nitr!=ve_GLModeToGLNameMap.end())
          {
-             fw.indent() << nitr->second << " " << Attribute_getModeStr(mitr->second) << std::endl;
+             fw.indent() << nitr->second << " " << VEAttribute_getModeStr(mitr->second) << std::endl;
          }
          else
          {
             // no name defined for GLMode so just pass its value to fw.
-             fw.indent() << "0x" << hex << (unsigned int)mitr->first << dec <<" " << Attribute_getModeStr(mitr->second) << std::endl;
+             fw.indent() << "0x" << hex << (unsigned int)mitr->first << dec <<" " << VEAttribute_getModeStr(mitr->second) << std::endl;
          }
     }
     
@@ -452,7 +452,7 @@ bool Attribute_writeLocalData(const Object& obj, Output& fw)
     
     const StateSet::TextureModeList& tml = stateset.getTextureModeList();    
     const StateSet::TextureAttributeList& tal = stateset.getTextureAttributeList();
-    unsigned int maxUnit = mymax(tml.size(),tal.size());
+    unsigned int maxUnit = vemymax(tml.size(),tal.size());
     for(unsigned int unit=0;unit<maxUnit;++unit)
     {
         fw.indent()<<"textureUnit "<<unit<<" {"<< std::endl;
@@ -465,15 +465,15 @@ bool Attribute_writeLocalData(const Object& obj, Output& fw)
                 mitr!=ml.end();
                 ++mitr)
             {
-                 GLModeToGLNameMap::iterator nitr = s_GLModeToGLNameMap.find(mitr->first);
-                 if (nitr!=s_GLModeToGLNameMap.end())
+                 VEGLModeToGLNameMap::iterator nitr = ve_GLModeToGLNameMap.find(mitr->first);
+                 if (nitr!=ve_GLModeToGLNameMap.end())
                  {
-                     fw.indent() << nitr->second << " " << Attribute_getModeStr(mitr->second) << std::endl;
+                     fw.indent() << nitr->second << " " << VEAttribute_getModeStr(mitr->second) << std::endl;
                  }
                  else
                  {
                     // no name defined for GLMode so just pass its value to fw.
-                    fw.indent() << "0x" << hex << (unsigned int)mitr->first << dec <<" " << Attribute_getModeStr(mitr->second) << std::endl;
+                    fw.indent() << "0x" << hex << (unsigned int)mitr->first << dec <<" " << VEAttribute_getModeStr(mitr->second) << std::endl;
                  }
             }
         }
@@ -497,7 +497,7 @@ bool Attribute_writeLocalData(const Object& obj, Output& fw)
 }
 
 
-bool Attribute_matchModeStr(const char* str,StateAttribute::GLModeValue& mode)
+bool VEAttribute_matchModeStr(const char* str,StateAttribute::GLModeValue& mode)
 {
     if (strcmp(str,"INHERIT")==0) mode = StateAttribute::INHERIT;
     else if (strcmp(str,"ON")==0) mode = StateAttribute::ON;
@@ -515,7 +515,7 @@ bool Attribute_matchModeStr(const char* str,StateAttribute::GLModeValue& mode)
 }
 
 
-const char* Attribute_getModeStr(StateAttribute::GLModeValue value)
+const char* VEAttribute_getModeStr(StateAttribute::GLModeValue value)
 {
     switch(value)
     {
@@ -532,7 +532,7 @@ const char* Attribute_getModeStr(StateAttribute::GLModeValue value)
     return "";
 }
 
-bool Attribute_matchRenderBinModeStr(const char* str,StateSet::RenderBinMode& mode)
+bool VEAttribute_matchRenderBinModeStr(const char* str,StateSet::RenderBinMode& mode)
 {
     if (strcmp(str,"INHERIT")==0) mode = StateSet::INHERIT_RENDERBIN_DETAILS;
     else if (strcmp(str,"USE")==0) mode = StateSet::USE_RENDERBIN_DETAILS;
@@ -542,7 +542,7 @@ bool Attribute_matchRenderBinModeStr(const char* str,StateSet::RenderBinMode& mo
     return true;
 }
 
-const char* Attribute_getRenderBinModeStr(StateSet::RenderBinMode mode)
+const char* VEAttribute_getRenderBinModeStr(StateSet::RenderBinMode mode)
 {
     switch(mode)
     {
