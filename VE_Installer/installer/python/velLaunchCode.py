@@ -417,11 +417,11 @@ class Launch:
             slaveCommand = "%s &" %(string.join(self.XplorerCall("slave")))
             masterCommand = "%s &" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
-            self.clusterScript += 'if ( $2 == "slave" ) then\n'
-            self.clusterScript += "    %s\n" %(slaveCommand)
-            self.clusterScript += "else\n"
+            #self.clusterScript += 'if ( $2 == "slave" ) then\n'
+            #self.clusterScript += "    %s\n" %(slaveCommand)
+            #self.clusterScript += "else\n"
             self.clusterScript += "    %s\n" %(masterCommand)
-            self.clusterScript += "endif\n"
+            #self.clusterScript += "endif\n"
             self.clusterScript += "EOF\n"
 ##        elif windows:
 ##            commandList = self.XplorerCall()

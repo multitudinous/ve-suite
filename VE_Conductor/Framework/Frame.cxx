@@ -309,7 +309,8 @@ viewlocPane( 0 )
 AppFrame::~AppFrame()
 {
     //Shutdown xplorer
-    if ( GetDisplayMode() == "Desktop" )
+    if ( (GetDisplayMode() == "Desktop") ||
+        ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
     {
         ExitXplorer();
     }
