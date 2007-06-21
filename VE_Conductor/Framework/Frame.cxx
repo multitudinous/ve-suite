@@ -308,26 +308,18 @@ viewlocPane( 0 )
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
-{
-    StoreFrameSize(GetRect(), NULL);
-    StoreConfig(NULL);
-    StoreRecentFile(NULL);
+{    
+    //This should be removed.
+    preferences->Destroy();
+    preferences = 0;
     
-    if( preferences )
-    {
-        preferences->Destroy();
-        preferences = 0;
-    }
-    if( network )
-    {
-        network->Destroy();
-        network = 0;
-    }
-    if( serviceList )
-    {
-        serviceList->CleanUp();
-        serviceList = 0;
-    }
+    //We have to mannually destroy these to make sure that things shutdown 
+    //properly with CORBA. There may be a possible way to get around this but
+    //am not sure.
+    network->Destroy();
+    network = 0;
+    serviceList->CleanUp();
+    serviceList = 0;
 
     delete wxConfigBase::Set((wxConfigBase *) NULL); 
     
@@ -607,10 +599,17 @@ void AppFrame::StoreRecentFile( wxConfig* config )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {   
+    //Shutdown xplorer
     if ( GetDisplayMode() == "Desktop" )
     {
         ExitXplorer();
     }
+
+    //Store settings to wxConfig to be written out
+    StoreFrameSize(GetRect(), NULL);
+    StoreConfig(NULL);
+    StoreRecentFile(NULL);
+
     Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
