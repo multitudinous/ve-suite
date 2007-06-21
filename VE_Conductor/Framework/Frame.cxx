@@ -310,8 +310,8 @@ viewlocPane( 0 )
 AppFrame::~AppFrame()
 {    
     //This should be removed.
-    preferences->Destroy();
-    preferences = 0;
+    //preferences->Destroy();
+    //preferences = 0;
     
     //We have to mannually destroy these to make sure that things shutdown 
     //properly with CORBA. There may be a possible way to get around this but
@@ -321,8 +321,6 @@ AppFrame::~AppFrame()
     serviceList->CleanUp();
     serviceList = 0;
 
-    delete wxConfigBase::Set((wxConfigBase *) NULL); 
-    
     delete m_recentVESFiles;
     m_recentVESFiles = 0;
 }
@@ -465,8 +463,11 @@ void AppFrame::GetConfig(wxConfig* config)
    wxConfig* cfg = config;
    if (!config)
    { 
+       //wx will delete this...no need for us to do it
       cfg = new wxConfig(wxTheApp->GetAppName());
    }
+   //Do not let wx create a new wxConfig with Get calls
+   cfg->DontCreateOnDemand();
    wxConfig::Set(cfg);
 
    bool exist = false;
