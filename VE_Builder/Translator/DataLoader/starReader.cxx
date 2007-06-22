@@ -1140,7 +1140,7 @@ void starReader::ReadParameterFile( void )
    std::string tagValue;//char tagValue[ 50 ];//   
    int  scaleIndexSpecified = 0;
    int  scaleFactorSpecified = 0;
-  
+     
    while( 1 )
    {
       StarParamFile.getline(textline,256);
@@ -1149,6 +1149,12 @@ void starReader::ReadParameterFile( void )
       {
          break;
       }
+
+      if ( StarParamFile.peek()== '\n' )
+      {
+         break;
+      }
+
       tagName.clear();
       tagValue.clear();
 
@@ -1159,7 +1165,6 @@ void starReader::ReadParameterFile( void )
          std::cout << "textline = " << textline << std::endl;
          std::cout << "tagValue = " << tagValue << std::endl;
       }
-
       if( tagName.compare( "STARVRT" )==0 )
       {
          this->starVertFileName.assign( tagValue );
