@@ -122,7 +122,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="..\..\..\include;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\include;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;OSGDB_OSGOQ_EXPORTS"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
