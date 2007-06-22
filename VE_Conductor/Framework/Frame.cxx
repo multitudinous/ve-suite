@@ -236,6 +236,16 @@ viewlocPane( 0 )
     this->SetIcon( ve_icon32x32_xpm );
     //Initialize recent files menu
     m_recentVESFiles = new wxFileHistory();
+    //This must go before preferences so that wxConfig is already loaded
+    GetConfig( NULL );
+    //This must go before CreateMenu so that we can configure the menu properly
+    preferences = new UserPreferences( this, ::wxNewId(), 
+                                       SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
+                                       SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
+    //This must be configured before the menu is created so that the menus for
+    //shutdown are configured correctly
+    _displayMode = "Tablet";
+    _detectDisplayAndCreate();
 
     CreateMenu();
 
@@ -244,13 +254,9 @@ viewlocPane( 0 )
     CreateStatusBar();
     SetStatusText( _( "VE-Conductor Status" ) );
 
-    _displayMode = "Tablet";
-    _detectDisplayAndCreate();
-
     directory = _( "" );
     fname = _( "" );
 
-    GetConfig( NULL );
     m_recentVESFiles->UseMenu(file_menu);
     m_recentVESFiles->AddFilesToMenu(file_menu);
     
@@ -274,17 +280,13 @@ viewlocPane( 0 )
     xplorerWxColor = new wxColourData();
     xplorerWxColor->SetChooseFull(true);
 
-    preferences = new UserPreferences( this, ::wxNewId(), 
-                                       SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
-                                       SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
-
-    if( preferences->GetMode( "Auto_Launch_Nav_Pane" ) )
+    if( preferences->GetMode( "Auto Launch Nav Pane" ) )
     {
         wxCommandEvent event;
         LaunchNavigationPane( event );
     }
 
-    if( preferences->GetMode( "Use_Preferred_Background_Color" ) )
+    if( preferences->GetMode( "Use Preferred Background Color" ) )
     {
         xplorerColor = preferences->GetBackgroundColor();
 
@@ -300,10 +302,10 @@ viewlocPane( 0 )
         delete veCommand;
     }
 
-    if( preferences->GetMode( "Shut_Down_Xplorer_Option" ) )
+    /*if( preferences->GetMode( "Shut Down Xplorer Option" ) )
     {
         xplorerMenu->Enable( XPLORER_EXIT, true);
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
@@ -745,9 +747,11 @@ void AppFrame::CreateMenu()
    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );
    //If the display mode is desktop then we will disconnect when exit is selected
    //and in other modes we will give the user the ability to exit
-   if ( GetDisplayMode() != "Desktop" )
+   if( ( GetDisplayMode() != "Desktop" ) ||
+       ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
    {
       xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
+       xplorerMenu->Enable( XPLORER_EXIT, true);
    }
 
    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
@@ -755,7 +759,6 @@ void AppFrame::CreateMenu()
    //xplorerMenu->Enable( XPLORER_SOUNDS, true);
    xplorerMenu->Enable( XPLORER_SCENES, true);
    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
-   xplorerMenu->Enable( XPLORER_EXIT, false);
 
     menubar->Append(file_menu, _("&File"));
     menubar->Append(edit_menu, _("&Edit"));

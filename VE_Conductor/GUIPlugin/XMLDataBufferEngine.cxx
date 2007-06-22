@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
+#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
@@ -220,8 +221,9 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
             VE_XML::Command* tempCommand = tempStates.at( i );
             tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
+            //std::cout << " here " << tempCommand->GetCommandName() << std::endl;
         }
-        //UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
+        UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
     }
     else
     {

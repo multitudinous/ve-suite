@@ -2467,44 +2467,27 @@ void Network::CreateNetwork( std::string xmlNetwork )
     }
 
     VE_XML::User userInfo = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLUserDataObject( "Network" );
-    if ( userInfo.GetUserStateInfo() )
+    if ( !userInfo.GetUserStateInfo() )
     {
+        ///Color vector
+        std::vector<double> backgroundColor;
         backgroundColor.clear();
-        //Set user preferences
-        std::vector< VE_XML::Command* > tempStates = userInfo.GetUserStateInfo()->GetStateVector();
-        std::map< std::string, VE_XML::Command > tempMap;
-        for ( size_t i = 0; i < tempStates.size(); ++i )
-        {
-            VE_XML::Command* tempCommand = tempStates.at( i );
-            tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
-        }
-        UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
-   }
-   else
-   {
-      //Set the user preferences to nothing since this 
-      //ves file does not have anything
-      std::map< std::string, VE_XML::Command > tempMap;
-      UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
-      
-      backgroundColor.clear();
-      backgroundColor.push_back( 0.0f );
-      backgroundColor.push_back( 0.0f );
-      backgroundColor.push_back( 0.0f );
-      backgroundColor.push_back( 1.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 1.0f );
 
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
-      dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-      VE_XML::Command* veCommand = new VE_XML::Command();
-      veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-      veCommand->AddDataValuePair(dataValuePair);
-      UserPreferencesDataBuffer::instance()->SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), *veCommand );
-      delete veCommand;
-   }
-   // Create the command and data value pairs
-
-   VE_XML::Command colorCommand = UserPreferencesDataBuffer::instance()->
-                     GetCommand( "CHANGE_BACKGROUND_COLOR" );
+        VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+        dataValuePair->SetData(std::string("Background Color"),backgroundColor);
+        VE_XML::Command* veCommand = new VE_XML::Command();
+        veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+        veCommand->AddDataValuePair(dataValuePair);
+        UserPreferencesDataBuffer::instance()->SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), *veCommand );
+        delete veCommand;
+    }
+    // Create the command and data value pairs
+    VE_XML::Command colorCommand = UserPreferencesDataBuffer::instance()->
+        GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( &colorCommand );
    /*

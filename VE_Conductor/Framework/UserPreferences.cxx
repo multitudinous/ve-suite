@@ -58,11 +58,11 @@
 using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
-   EVT_CHECKLISTBOX( ID_PREFERENCE_CHKBX, UserPreferences::OnPreferenceCheck )
-   EVT_CHECKBOX( ID_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
-   EVT_CHECKBOX( ID_BACKGROUND_COLOR_CHKBX, UserPreferences::OnBackgroundColorCheck )
-   EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
-   EVT_CHECKBOX( ID_SHUTDOWN_MODE_CHKBX, UserPreferences::OnShutdownMode )
+   //EVT_CHECKLISTBOX( ID_PREFERENCE_CHKBX, UserPreferences::OnPreferenceCheck )
+    EVT_CHECKBOX( ID_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
+    //EVT_CHECKBOX( ID_BACKGROUND_COLOR_CHKBX, UserPreferences::OnBackgroundColorCheck )
+    EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
+    // EVT_CHECKBOX( ID_SHUTDOWN_MODE_CHKBX, UserPreferences::OnShutdownMode )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
@@ -96,10 +96,10 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    //SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
    wxPropertySheetDialog::Create( parent, id, caption, pos, size, style );
    ///Set the map
-   preferenceMap[ "Interactive_State" ] = false;
-   preferenceMap[ "Auto_Launch_Nav_Pane" ] = false;
-   preferenceMap[ "Use_Preferred_Background_Color" ] = false;
-   preferenceMap[ "Shut_Down_Xplorer_Option" ] = false;
+   preferenceMap[ "Interactive State" ] = false;
+   preferenceMap[ "Auto Launch Nav Pane" ] = false;
+   preferenceMap[ "Use Preferred Background Color" ] = false;
+   preferenceMap[ "Shut Down Xplorer Option" ] = false;
 
    ///Read from wxConfig
    ReadConfiguration();
@@ -135,7 +135,7 @@ void UserPreferences::CreateControls()
    panel->SetSizer(itemBoxSizer2);
    wxString choices[1];
    choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
-   prefChkBx = new wxCheckListBox( panel, ID_PREFERENCE_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
+   prefChkBx = new wxCheckListBox( panel, ID_NAVIGATION_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
    itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
    ///////////////////////////////////////
    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -143,22 +143,22 @@ void UserPreferences::CreateControls()
    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
    panel->SetSizer(itemBoxSizer3);
    wxBoxSizer* colorSizer = new wxBoxSizer(wxHORIZONTAL);
-   backgroundColorChkBx = new wxCheckBox(panel, ID_BACKGROUND_COLOR_CHKBX, wxT("Use Preferred Background Color"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   backgroundColorChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Use Preferred Background Color"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
    backgroundColorButton = new wxButton( panel, ID_BACKGROUND_COLOR_BUTTON, _T("Background Color"), wxDefaultPosition, wxDefaultSize, 0 );
    colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
    navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-   shutdownModeChkBx = new wxCheckBox(panel, ID_SHUTDOWN_MODE_CHKBX, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   shutdownModeChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
    xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
    xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
    xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
 
-   backgroundColorChkBx->SetValue( preferenceMap[ "Use_Preferred_Background_Color" ] );
+   backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
    backgroundColorChkBx->IsChecked();
-   navigationChkBx->SetValue( preferenceMap[ "Auto_Launch_Nav_Pane" ] );
+   navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
    navigationChkBx->IsChecked();
-   shutdownModeChkBx->SetValue( preferenceMap[ "Shut_Down_Xplorer_Option" ] );
+   shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
    shutdownModeChkBx->IsChecked();
 
    itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
@@ -184,31 +184,33 @@ wxBitmap UserPreferences::GetBitmapResource( const wxString& name )
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnPreferenceCheck( wxCommandEvent& WXUNUSED(event) )
+/*void UserPreferences::OnPreferenceCheck( wxCommandEvent& event )
 {
-   preferenceMap[ "Interactive_State" ] = prefChkBx->IsChecked( 0 );
-}
+    //wxString mode = xplorerChoices[ event.GetSelection() ];
+   
+   preferenceMap[ "Interactive State" ] = prefChkBx->IsChecked( 0 );
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
-   wxString mode = xplorerChoices[ event.GetSelection() ];
+   wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
 
-   preferenceMap[ "Auto_Launch_Nav_Pane" ] = navigationChkBx->IsChecked();
+   preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnBackgroundColorCheck( wxCommandEvent& event )
+/*void UserPreferences::OnBackgroundColorCheck( wxCommandEvent& event )
 {
    wxString mode = xplorerChoices[ event.GetSelection() ];
 
-   preferenceMap[ "Use_Preferred_Background_Color" ] = backgroundColorChkBx->IsChecked();
+   preferenceMap[ mode ] = backgroundColorChkBx->IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnShutdownMode( wxCommandEvent& event )
 {
    wxString mode = xplorerChoices[ event.GetSelection() ];
 
-   preferenceMap[ "Shut_Down_Xplorer_Option" ] = shutdownModeChkBx->IsChecked();
-}
+   preferenceMap[ mode ] = shutdownModeChkBx->IsChecked();
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
 {
@@ -283,7 +285,7 @@ void UserPreferences::ReadConfiguration( void )
                  wxString( iter->first.c_str(), wxConvUTF8 ), 
                  &iter->second, false);
 
-        if( iter->first == "Use_Preferred_Background_Color" )
+        if( iter->first == "Use Preferred Background Color" )
         {
             xplorerColor.clear();
             cfg->Read( key + 
@@ -333,7 +335,7 @@ void UserPreferences::WriteConfiguration( void )
                     wxString( iter->first.c_str(), wxConvUTF8 ), 
                     iter->second );
 
-        if( iter->first == "Use_Preferred_Background_Color" )
+        if( iter->first == "Use Preferred Background Color" )
         {
             cfg->Write( key + 
                         _T("/") + 

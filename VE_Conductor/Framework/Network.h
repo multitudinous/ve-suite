@@ -256,8 +256,6 @@ private:
    /// first = x unit
    /// second = y unit
    std::pair< unsigned int, unsigned int > numUnit;
-   ///Color vector
-   std::vector<double> backgroundColor;
    ///ptr to send data back to explorer
    VjObs_var xplorerPtr;
    
