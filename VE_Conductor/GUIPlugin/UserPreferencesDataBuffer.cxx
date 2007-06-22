@@ -77,6 +77,14 @@ std::map< std::string, VE_XML::Command >& UserPreferencesDataBuffer::GetCommandM
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap )
 {
-   commandMap = tempMap;
+    commandMap = tempMap;
+    std::map< std::string, VE_XML::Command >::iterator iter;
+    iter = commandMap.find( "NULL" );
+    if( iter == commandMap.end() )
+    {
+        VE_XML::Command nullCommand;
+        nullCommand.SetCommandName( "NULL" );
+        commandMap[ "NULL" ] = nullCommand;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

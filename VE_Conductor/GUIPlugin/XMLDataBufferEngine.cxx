@@ -322,5 +322,3 @@ std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector( std::stri
     //std::cout << " size " << temp.size() << std::endl;
     return m_networkModelMap[ dataNumber ];
 }
-
-
