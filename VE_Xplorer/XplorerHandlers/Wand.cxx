@@ -236,10 +236,11 @@ void Wand::UpdateNavigation()
       if ( rotationFlag )
       {
          //vjHeadMat = head->getData();
-         for( size_t i = 0; i < 16; ++i )
+         vjHeadMat = convertTo< double >( head->getData() );
+         /*for( size_t i = 0; i < 16; ++i )
          {
              vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
-         }
+         }*/
          // get juggler Matrix of worldDCS
          // Note:: for pf we are in juggler land
          //        for osg we are in z up land
@@ -610,10 +611,11 @@ void Wand::UpdateWandLocalDirection()
    // get the normalized direction relative to the juggler frame
    vjVec.set( 0.0f, 0.0f, -1.0f );
    //vjMat = wand->getData();
-   for( size_t i = 0; i < 16; ++i )
+   vjMat = convertTo< double >( wand->getData() );
+   /*for( size_t i = 0; i < 16; ++i )
    {
        vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[i] );
-   }
+   }*/
    gmtl::xform( vjVec, vjMat, vjVec );
    gmtl::normalize( vjVec );
    
@@ -630,10 +632,11 @@ void Wand::UpdateWandGlobalLocation( )
    // Note:: for osg we are in z up land
    gmtl::Point3d loc_temp, osgPointLoc;
    //vjMat = wand->getData( );
-   for( size_t i = 0; i < 16; ++i )
+   vjMat = convertTo< double >( wand->getData() );
+   /*for( size_t i = 0; i < 16; ++i )
    {
        vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[i] );
-   }
+   }*/
    gmtl::setTrans(loc_temp,vjMat);
    osgPointLoc[0] =  loc_temp[0];
    osgPointLoc[1] = -loc_temp[2];

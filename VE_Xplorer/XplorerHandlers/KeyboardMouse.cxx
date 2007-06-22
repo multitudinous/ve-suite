@@ -131,9 +131,9 @@ fragmentShader( 0 )
     gmtl::identity( m_currentTransform );
     gmtl::identity( m_localToWorldTransform );
 
-    cadAttribute = new VE_XML::VE_CAD::CADAttribute();
-    vertexShader = new VE_XML::VE_Shader::Shader();
-    fragmentShader = new VE_XML::VE_Shader::Shader();
+    //cadAttribute = new VE_XML::VE_CAD::CADAttribute();
+    //vertexShader = new VE_XML::VE_Shader::Shader();
+    //fragmentShader = new VE_XML::VE_Shader::Shader();
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -191,11 +191,11 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
     double distance = 10000.0f;
 
     gmtl::Matrix44d vjHeadMat;// = m_head->getData();
-
-    for( size_t i = 0; i < 16; ++i )
+    vjHeadMat = convertTo< double >( m_head->getData() );
+    /*for( size_t i = 0; i < 16; ++i )
     {
         vjHeadMat.mData[ i ] = static_cast< double >( m_head->getData().mData[i] );
-    }
+    }*/
 
     //Get juggler Matrix of worldDCS
     //Note:: for pf we are in juggler land
@@ -845,10 +845,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::CreateSelectShader()
 {
+    /*
     char select_vertex[] =
-        "#version 110 \n"
-        "varying mat4 ViewI; \n"
-
         "varying vec3 ECPosition; \n"
         "varying vec3 LightDirection; \n"
         "varying vec3 Normal; \n"
@@ -857,24 +855,21 @@ void KeyboardMouse::CreateSelectShader()
         "{ \n"
             "gl_Position = ftransform(); \n"
 
-            "ViewI = gl_ModelViewProjectionMatrixInverse; \n"
             "ECPosition = vec3( gl_ModelViewMatrix * gl_Vertex ); \n"
-            "LightDirection = gl_LightSource[0].position.xyz - ECPosition; \n"
+            "LightDirection = -ECPosition; \n"
             "Normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
         "} \n";
 
     char select_fragment[] =
-        "varying mat4 ViewI; \n"
-
         "varying vec3 ECPosition; \n"
         "varying vec3 LightDirection; \n"
         "varying vec3 Normal; \n"
 
         "void main() \n"
         "{ \n"
-            "vec3 diffColor = vec3( 0.4, 0.4, 0.4 ); \n"
-            "float rollOff = 0.3; \n"      
-            "vec3 specColor = vec3( 0.6, 0.65, 0.6 ); \n"
+            "vec3 diffColor = vec3( 0.2, 0.2, 0.2 ); \n"
+            "float rollOff = 0.9; \n"      
+            "vec3 specColor = vec3( 0.7, 0.75, 0.7 ); \n"
             "vec3 subColor = vec3( 0.0, 1.0, 0.0 ); \n"
 
             "vec3 Nn = normalize( Normal ); \n"
@@ -885,7 +880,7 @@ void KeyboardMouse::CreateSelectShader()
             "float subLamb = smoothstep( -rollOff, 1.00000, ldn ) - smoothstep( 0.000000, 1.00000, ldn ); \n"
             "subLamb = max( subLamb, 0.0 ); \n"
             "vec3 subContrib = subColor * subLamb; \n"
-            "vec3 Vn = normalize( ViewI[3].xyz - ECPosition ); \n"
+            "vec3 Vn = normalize( -ECPosition ); \n"
             "float vdn = 1.0 - dot( Nn, Vn ); \n"
             "vec3 vecColor = vec3( vdn, vdn, vdn ); \n"
             "vec3 Diffuse = subContrib + diffContrib; \n"
@@ -903,7 +898,8 @@ void KeyboardMouse::CreateSelectShader()
     osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, select_fragment );
     program->addShader( fragment_shader.get() );
     	
-    //stateset->setAttribute( program.get() );
+    stateset->setAttribute( program.get() );
+    */
 
     /*
     VE_XML::VE_Shader::Program shaderProgram;

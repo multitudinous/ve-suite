@@ -187,10 +187,11 @@ void Tablet::UpdateNavigation()
          if ( rotationFlag )
          {
             //vjHeadMat = head->getData();
-            for( size_t i = 0; i < 16; ++i )
+            vjHeadMat = convertTo< double >( head->getData() );
+            /*for( size_t i = 0; i < 16; ++i )
             {
                 vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
-            }
+            }*/
             // get juggler Matrix of worldDCS
             // Note:: for pf we are in juggler land
             //        for osg we are in z up land
@@ -241,10 +242,11 @@ void Tablet::UpdateNavigation()
          if ( rotationFlag )
          {
             //vjHeadMat = head->getData();
-            for( size_t i = 0; i < 16; ++i )
+            vjHeadMat = convertTo< double >( head->getData() );
+            /*for( size_t i = 0; i < 16; ++i )
             {
                 vjHeadMat.mData[ i ] = static_cast< double >( head->getData().mData[i] );
-            }
+            }*/
             // get juggler Matrix of worldDCS
             // Note:: for pf we are in juggler land
             //        for osg we are in z up land
