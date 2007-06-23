@@ -23,10 +23,11 @@ os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'
 # Set FLAGPOLL_PATH to the local flagpoll if necessary.
 if not os.environ.has_key('FLAGPOLL_PATH'):
    os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
-
+# determine the svn version of the local vesuite build
 cmd_call = os.popen('svnversion')
 svn_str = cmd_call.read().strip()
 if None != cmd_call.close():
+    svn_str = 999999
     print "Unable to determine local subversion revision number %s"%svn_str
 else:
     print "Subversion revision number %s"%svn_str
