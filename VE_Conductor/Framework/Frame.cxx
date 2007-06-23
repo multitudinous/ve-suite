@@ -1715,10 +1715,10 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       bkColor.GetDataValuePair( "Background Color" )->GetData( xplorerColor );
    }
    
-   xplorerWxColor->GetColour().Set( xplorerColor.at( 0 ), 
-                                     xplorerColor.at( 1 ), 
-                                     xplorerColor.at( 2 ), 
-                                     xplorerColor.at( 3 ) 
+   xplorerWxColor->GetColour().Set( static_cast<unsigned char>(xplorerColor.at( 0 )), 
+                                     static_cast<unsigned char>(xplorerColor.at( 1 )), 
+                                     static_cast<unsigned char>(xplorerColor.at( 2 )), 
+                                     static_cast<unsigned char>(xplorerColor.at( 3 )) 
                                     );
    wxColourDialog colorDlg(this,xplorerWxColor);
    colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
