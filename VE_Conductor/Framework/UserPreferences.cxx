@@ -58,11 +58,8 @@
 using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
-   //EVT_CHECKLISTBOX( ID_PREFERENCE_CHKBX, UserPreferences::OnPreferenceCheck )
     EVT_CHECKBOX( ID_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
-    //EVT_CHECKBOX( ID_BACKGROUND_COLOR_CHKBX, UserPreferences::OnBackgroundColorCheck )
     EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
-    // EVT_CHECKBOX( ID_SHUTDOWN_MODE_CHKBX, UserPreferences::OnShutdownMode )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
@@ -128,6 +125,10 @@ void UserPreferences::CreateControls()
 
    CreateButtons(wxOK|wxCANCEL|wxHELP);
 
+    wxCheckBox* backgroundColorChkBx = 0;
+    wxCheckBox* navigationChkBx = 0;
+    wxCheckBox* shutdownModeChkBx = 0;
+                   
    // Add page
    wxPanel* panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
    GetBookCtrl()->AddPage(panel, _("General"));
@@ -173,44 +174,12 @@ void UserPreferences::CreateControls()
    GetBookCtrl()->AddPage(panel, _("Defaults"));
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-wxBitmap UserPreferences::GetBitmapResource( const wxString& name )
-{
-    // Bitmap retrieval
-////@begin UserPreferences bitmap retrieval
-    wxUnusedVar(name);
-    return wxNullBitmap;
-////@end UserPreferences bitmap retrieval
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
-/*void UserPreferences::OnPreferenceCheck( wxCommandEvent& event )
-{
-    //wxString mode = xplorerChoices[ event.GetSelection() ];
-   
-   preferenceMap[ "Interactive State" ] = prefChkBx->IsChecked( 0 );
-}*/
-////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
 
    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void UserPreferences::OnBackgroundColorCheck( wxCommandEvent& event )
-{
-   wxString mode = xplorerChoices[ event.GetSelection() ];
-
-   preferenceMap[ mode ] = backgroundColorChkBx->IsChecked();
-}
-////////////////////////////////////////////////////////////////////////////////
-void UserPreferences::OnShutdownMode( wxCommandEvent& event )
-{
-   wxString mode = xplorerChoices[ event.GetSelection() ];
-
-   preferenceMap[ mode ] = shutdownModeChkBx->IsChecked();
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
 {
