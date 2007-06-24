@@ -44,13 +44,15 @@ Link API
 
 #include <wx/gdicmn.h>
 #include <wx/dc.h>
+#include <wx/event.h>
+
 class wxWindow;
 
 namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class VE_CONDUCTOR_UTILS_EXPORTS Link
+class VE_CONDUCTOR_UTILS_EXPORTS Link : public wxEvtHandler
 {
 public:
    ///Constructor
@@ -114,6 +116,7 @@ private:
    std::vector< wxPoint > cons; //connectors
    Polygon poly; //Poly is the current poly on the canvas
    wxWindow* canvas;
+   DECLARE_EVENT_TABLE()
 };
 }
 }

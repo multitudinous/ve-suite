@@ -40,6 +40,18 @@
 
 using namespace VE_Conductor::GUI_Utilities;
 
+BEGIN_EVENT_TABLE(Link, wxEvtHandler)
+    /*// The following are rightclick menu options
+    EVT_MENU(ADD_LINK_CON, Network::OnAddLinkCon)
+    EVT_MENU(DEL_LINK, Network::OnDelLink)
+    EVT_MENU(DEL_LINK_CON, Network::OnDelLinkCon)
+    EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
+    //Aspen Menu
+    EVT_MENU( SHOW_LINK_NAME, Network::OnShowAspenName )
+    EVT_MENU( LINK_INPUTS, Network::OnQueryStreamInputs )
+    EVT_MENU( LINK_OUTPUTS, Network::OnQueryStreamOutputs )*/
+END_EVENT_TABLE()
+
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link( wxWindow* designCanvas )
 {
@@ -170,10 +182,6 @@ void Link::SetName(wxString name)
 ////////////////////////////////////////////////////////////////////////////////
 wxString Link::GetName()
 {
-	if( linkName.IsEmpty() )
-	{
-		linkName = wxString("NoName",wxConvUTF8);
-	}
 	return linkName;
 }
 ////////////////////////////////////////////////////////////////////////////////

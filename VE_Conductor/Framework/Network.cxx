@@ -88,9 +88,6 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
    EVT_LEFT_UP(Network::OnMLeftUp)
    //brings up the design canvas menu on a specfic module
    EVT_RIGHT_DOWN(Network::OnMRightDown)
-   //bring up custom ui dialog
-   //EVT_LEFT_DCLICK(Network::OnDClick)
-
    // The following are rightclick menu options
    EVT_MENU(ADD_TAG, Network::OnAddTag)
    EVT_MENU(ADD_LINK_CON, Network::OnAddLinkCon)
@@ -865,10 +862,6 @@ void Network::OnDelMod(wxCommandEvent& event )
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
    ReDrawAll();
-   /*if(vistab)
-   {
-      vistab->ResetAllDatasetDependentCheckBoxes();
-   }*/
 }
 
 /////////////////////////////////////
@@ -1283,19 +1276,17 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    wxRect bbox;
    wxPoint temp;
    int dest_mod, dest_port;
-   int i;
    std::map< int, Module >::iterator iter;
 
    dest_mod = dest_port = -1;
 
    for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
-      i = iter->first;
       temp.x = x;
       temp.y = y;
-      if ( modules[i].GetPolygon()->inside( temp ) )
+      if ( modules[ iter->first ].GetPolygon()->inside( temp ) )
       {
-         dest_mod = i;
+         dest_mod = iter->first;
          break;
       }
    }
@@ -1321,7 +1312,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          ports.resize( modules[dest_mod].GetPlugin()->GetNumOports() );
          modules[dest_mod].GetPlugin()->GetOPorts(ports);
    
-         for (i=0; i<(int)ports.size(); i++)
+         for( size_t i=0; i < ports.size(); i++)
          {
             wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
             if (computenorm(temp, tempPoint)<=10) 
@@ -1347,7 +1338,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
       {
          ports.resize( modules[dest_mod].GetPlugin()->GetNumIports() );
          modules[dest_mod].GetPlugin()->GetIPorts(ports);
-         for (i=0; i<(int)ports.size(); i++)
+         for ( size_t i=0; i< ports.size(); i++)
          {
             wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
             if (computenorm(temp, tempPoint)<=10)
@@ -1389,7 +1380,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    
       // check for duplicate links
       bool found = false;
-      for (i=0; i<(int)links.size(); i++)
+      for ( size_t i=0; i< links.size(); i++)
       {
          if ( links.at( i ) == ln )
          {
