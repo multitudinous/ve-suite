@@ -1606,19 +1606,6 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    result_dlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
-{
-   if ( network->globalparam_dlg != NULL )
-   {
-      network->globalparam_dlg->Show();
-   }
-   else
-   {
-      network->globalparam_dlg = new GlobalParamDialog( this, -1 );
-      network->globalparam_dlg->Show();
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Log(const char* msg)
 {
    serviceList->GetMessageLog()->SetMessage( msg );

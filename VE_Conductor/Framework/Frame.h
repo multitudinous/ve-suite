@@ -304,8 +304,6 @@ protected:
     void ViewContacts( wxCommandEvent &event );
     void ViewPlatformInfo( wxCommandEvent &event );
 
-    void GlobalParam( wxCommandEvent &event );
-
     void DisConExeServer( wxCommandEvent &event );
     void DisConVEServer( wxCommandEvent &event );
     void LoadBase( wxCommandEvent &event );

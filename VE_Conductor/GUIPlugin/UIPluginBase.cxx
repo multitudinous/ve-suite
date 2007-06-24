@@ -75,26 +75,29 @@ using namespace VE_XML;
 using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
-   EVT_LEFT_DCLICK( UIPluginBase::OnDClick )
-   EVT_RIGHT_DOWN( UIPluginBase::OnMRightDown)
-   EVT_MENU( SHOW_RESULT, UIPluginBase::OnShowResult )
-   EVT_MENU( PARAVIEW, UIPluginBase::OnParaView )
-   EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
-   EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
-   EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
-   EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
-   EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
-   EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
-   EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
-   EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
-   EVT_MENU( DATASET, UIPluginBase::OnDataSet )
-   EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
-   EVT_MENU( MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
-   EVT_MENU( VISUALIZATION, UIPluginBase::OnVisualization )
-   EVT_MENU( SET_UI_PLUGIN_NAME, UIPluginBase::OnSetUIPluginName )
-   EVT_MENU( SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
-   EVT_MENU( ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
+    EVT_LEFT_DCLICK( UIPluginBase::OnDClick )
+    EVT_RIGHT_DOWN( UIPluginBase::OnMRightDown)
+    EVT_MENU( SHOW_RESULT, UIPluginBase::OnShowResult )
+    EVT_MENU( PARAVIEW, UIPluginBase::OnParaView )
+    EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
+    EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
+    EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
+    EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
+    EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
+    EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
+    EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
+    EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
+    EVT_MENU( DATASET, UIPluginBase::OnDataSet )
+    EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
+    EVT_MENU( MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
+    EVT_MENU( VISUALIZATION, UIPluginBase::OnVisualization )
+    EVT_MENU( SET_UI_PLUGIN_NAME, UIPluginBase::OnSetUIPluginName )
+    EVT_MENU( SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
+    EVT_MENU( ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
     EVT_MENU( DEL_MOD, UIPluginBase::OnDelMod )
+    EVT_MENU( ADD_INPUT_PORT, UIPluginBase::AddPort ) 
+    EVT_MENU( ADD_OUTPUT_PORT, UIPluginBase::AddPort ) 
+    EVT_MENU( DELETE_PORT, UIPluginBase::DeletePort ) 
     EVT_UPDATE_UI( SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
 END_EVENT_TABLE()
 
@@ -1519,16 +1522,27 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
 	pop_menu.Enable(SHOW_FINANCIAL, true);
    }
    
-   //Aspen Menu
-   wxMenu * aspen_menu = new wxMenu();
-   aspen_menu->Append(SHOW_ASPEN_NAME, _("Aspen Name") );
-   aspen_menu->Enable(SHOW_ASPEN_NAME, true);
-   aspen_menu->Append(QUERY_INPUTS, _("Query Inputs") );
-   aspen_menu->Enable(QUERY_INPUTS, true);
-   aspen_menu->Append(QUERY_OUTPUTS, _("Query Outputs") );
-   aspen_menu->Enable(QUERY_OUTPUTS, true);
-   pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
-
+    //Aspen Menu
+    wxMenu * aspen_menu = new wxMenu();
+    aspen_menu->Append(SHOW_ASPEN_NAME, _("Aspen Name") );
+    aspen_menu->Enable(SHOW_ASPEN_NAME, true);
+    aspen_menu->Append(QUERY_INPUTS, _("Query Inputs") );
+    aspen_menu->Enable(QUERY_INPUTS, true);
+    aspen_menu->Append(QUERY_OUTPUTS, _("Query Outputs") );
+    aspen_menu->Enable(QUERY_OUTPUTS, true);
+    pop_menu.Append( ASPEN_MENU,   _("Aspen"), aspen_menu, 
+        _("Used in conjunction with Aspen") );
+    //Port Menu
+    wxMenu * port_menu = new wxMenu();
+    port_menu->Append( ADD_INPUT_PORT, _("Add Input Port") );
+    port_menu->Enable( ADD_INPUT_PORT, true);
+    port_menu->Append( ADD_OUTPUT_PORT, _("Add Output Port") );
+    port_menu->Enable( ADD_OUTPUT_PORT, true);
+    port_menu->Append( DELETE_PORT, _("Delete Port") );
+    port_menu->Enable( DELETE_PORT, true);
+    pop_menu.Append( ::wxNewId(), _("Ports"), port_menu, 
+        _("Used to manipulate ports") );
+   
    //Icon Menu
    wxMenu * icon_menu = new wxMenu();
    icon_menu->Append(SHOW_ICON_CHOOSER, _("Icon Chooser") );

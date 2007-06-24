@@ -38,8 +38,6 @@ Network API
 /*!\class Network
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
-
 #include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/Utilities/Tag.h"
@@ -58,7 +56,6 @@ Network API
 
 #include "VE_Open/XML/Model/Network.h"
 
-class GlobalParamDialog;
 class wxProgressDialog;
 namespace VE_XML
 {
@@ -97,12 +94,7 @@ public:
    ///Fucntion called during submit job to send the id of all active
    ///modules to the CE
    void SetIDOnAllActiveModules( void );
-
-   //Body::Executive_var exec; //put this reference here, so ther frame work can still access it YANG
-
    wxMutex s_mutexProtect;
-
-   GlobalParamDialog * globalparam_dlg;
 
    void ReDrawAll();
 
@@ -145,15 +137,13 @@ public:
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
    virtual void* Entry();
    
-   void SetXplorerInterface( VjObs_ptr veEngine );
-   bool SetActiveModel( void );
    void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
    void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
    bool IsDragging();
    void SetSelectedModule(int mod);
-
+   std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
+   
 protected:
-
    //Draw functions
    void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
@@ -204,15 +194,7 @@ protected:
 
    //Check if the two port is compatible
    bool IsPortCompatible(int frmod, int frport, int tomod, int toport);
-protected:
-   //Three main list of network objs
-   std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
-   std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
 
-public:
-   std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
-
-protected:
    int m_selMod; // selected module
    int m_selFrPort; // selected From port
    int m_selToPort; // selected To port;
@@ -220,7 +202,10 @@ protected:
    int m_selLinkCon; //selected Link Connector
    int m_selTag; //selected Tag
    int m_selTagCon; //selected Tag Connector
-
+    //Three main list of network objs
+   std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
+   std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
+   
    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
    wxPoint tag_rpt; // the relative point of the tag
 
@@ -256,8 +241,6 @@ private:
    /// first = x unit
    /// second = y unit
    std::pair< unsigned int, unsigned int > numUnit;
-   ///ptr to send data back to explorer
-   VjObs_var xplorerPtr;
    
    std::string ConvertUnicode( const wxChar* data )
    {

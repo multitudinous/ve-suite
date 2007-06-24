@@ -46,7 +46,7 @@ Link API
 #include <wx/dc.h>
 #include <wx/event.h>
 
-class wxWindow;
+class wxScrolledWindow;
 
 namespace VE_Conductor
 {
@@ -56,7 +56,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS Link : public wxEvtHandler
 {
 public:
    ///Constructor
-   Link( wxWindow* designCanvas );
+   Link( wxScrolledWindow* designCanvas );
    ///Destructor
    ~Link( void );
    ///Copy Constructor
@@ -78,9 +78,6 @@ public:
       return false;
    }
    
-   ///Set the wxWindow on which you wish to draw a tag
-   ///\param window The window on which the tag will be drawn
-   void SetWxWindow( wxWindow* window );
    wxPoint* GetPoint( size_t i );
    size_t GetNumberOfPoints( void );
    std::vector< wxPoint >* GetPoints( void );
@@ -115,7 +112,7 @@ private:
 
    std::vector< wxPoint > cons; //connectors
    Polygon poly; //Poly is the current poly on the canvas
-   wxWindow* canvas;
+   wxScrolledWindow* canvas;
    DECLARE_EVENT_TABLE()
 };
 }

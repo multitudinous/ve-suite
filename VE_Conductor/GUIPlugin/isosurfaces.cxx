@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/GUIPlugin/vistab.h"
-#include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/GUIPlugin/isosurfaces.h"
 #include "VE_Conductor/GUIPlugin/advancedisosurface.h"
 
@@ -50,6 +49,8 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/textctrl.h>
+
 #include <iostream>
 #include <vector>
 #include <map>

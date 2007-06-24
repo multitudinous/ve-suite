@@ -53,7 +53,7 @@ BEGIN_EVENT_TABLE(Link, wxEvtHandler)
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-Link::Link( wxWindow* designCanvas )
+Link::Link( wxScrolledWindow* designCanvas )
 {
     Fr_mod = 1000000;
     To_mod = 1000000;
@@ -98,11 +98,6 @@ Link& Link::operator= ( const Link& input )
         linkName = input.linkName;
     }
     return *this;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Link::SetWxWindow( wxWindow* window )
-{
-   canvas = window;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxPoint* Link::GetPoint( size_t i )

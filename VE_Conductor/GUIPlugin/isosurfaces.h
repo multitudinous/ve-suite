@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _ISOSURFACES_H_
 #define _ISOSURFACES_H_
 /*!\file isosurfaces.h

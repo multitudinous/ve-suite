@@ -132,7 +132,10 @@ public:
       SET_ACTIVE_MODEL,
       ACTIVE_MODEL_SOUNDS,
       DEL_MOD,
-      SET_ACTIVE_PLUGIN
+      SET_ACTIVE_PLUGIN,
+      ADD_INPUT_PORT,
+      ADD_OUTPUT_PORT,
+      DELETE_PORT
    };
    ///Defualt constructor
    UIPluginBase();
@@ -192,6 +195,10 @@ public:
    ///on subdialogs for plugins
    //allows user to set the image to be displayed on the icon
    void SetImageIcon(std::string path, float rotation = 0.0f, int mirror = 0, float scale = 1.0f);
+   ///Add port to the plugin
+   void AddPort( wxCommandEvent& event ){ ; }
+   ///Delete selected port
+   void DeletePort( wxCommandEvent& event ){ ; }
    
    //To Get around the Memory allocation problem of windows dll
    //Add the calls for the size. So the main program can preallocate memory for it

@@ -38,7 +38,6 @@
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
 
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
-#include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
 #include "VE_Conductor/Utilities/OrbThread.h"
 #include "VE_Conductor/GUIPlugin/ParamsDlg.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
@@ -64,6 +63,7 @@
 #include <wx/utils.h>
 #include <wx/progdlg.h>
 #include <wx/filename.h>
+#include <wx/msgdlg.h>
 
 #include <sstream>
 #include <iomanip>
@@ -124,7 +124,6 @@ Network::Network(wxWindow* parent, int id)
    m_selTag = -1; 
    m_selTagCon = -1; 
    xold = yold =0;
-   globalparam_dlg = new GlobalParamDialog(NULL, -1);
    isLoading = false;
    this->parent = parent;
    isDataSet = false;
@@ -140,25 +139,26 @@ Network::Network(wxWindow* parent, int id)
 
 Network::~Network()
 {
-    //std::cout << "Deleting Links" << std::endl;
-   links.clear();
-   //std::cout << "Deleting Modules" << std::endl;
-
-   std::map< int, Module >::iterator iter;
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      //delete modules[ iter->first ];
-      PopEventHandler( false );
-   }
-   //std::cout << "Deleting Plugins" << std::endl;
-   modules.clear();
-   delete globalparam_dlg;
-   //std::cout << "Ending Cleanup" << std::endl;
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+         iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        PopEventHandler( false );
+    }
+    links.clear();
+    
+    //Pop the plugin event handlers to clear these event handlers
+    for( std::map< int, Module >::iterator iter = modules.begin(); 
+         iter!=modules.end(); iter++)
+    {
+        PopEventHandler( false );
+    }
+    modules.clear();
 }
 /////////////////////////////////////////////
 ///////// Event Handlers ////////////////////
 /////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
    while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
@@ -172,11 +172,11 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnErase(wxEraseEvent& WXUNUSED( event ) )
 {
 }
-
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnMLeftDown(wxMouseEvent& event)
 {
  	if(event.Dragging())
@@ -262,8 +262,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
     Refresh(true);
     //Update();
 }
-
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnMouseMove(wxMouseEvent& event)
 {
 /*  wxClientDC dc(this);
@@ -748,27 +747,41 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 {
-   int answer=wxMessageBox(_("Do you really want to delete this link?"), _("Confirmation"), wxYES_NO);
-   if (answer!=wxYES)
-      return;
-   
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+    int answer=wxMessageBox(_("Do you really want to delete this link?"), _("Confirmation"), wxYES_NO);
+    if (answer!=wxYES)
+        return;
 
-   std::vector< Link >::iterator iter;
-   int i;
-   for (iter=links.begin(), i=0; iter!=links.end(); i++)
-   {
-      if (i==m_selLink)
-      {
-         iter = links.erase( iter );
-         m_selLink=-1;
-         break;
-      }
-      else
-      {
-         ++iter;
-      }
-   }
+    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+    int i = 0;
+    std::vector< Link >::iterator iter;
+    for( iter = links.begin(), i=0; iter!=links.end(); i++)
+    {
+        if( i==m_selLink )
+        {
+            std::vector< wxEvtHandler* > tempEvtHandlerVector;
+            wxEvtHandler* tempEvtHandler = 0;
+            tempEvtHandler = PopEventHandler( false );
+            while( &(*iter) != tempEvtHandler )
+            {
+                tempEvtHandlerVector.push_back( tempEvtHandler );
+                tempEvtHandler = PopEventHandler( false );
+            }
+
+            for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
+            {
+                PushEventHandler( tempEvtHandlerVector.at( j ) );
+            }
+
+            iter = links.erase( iter );
+            m_selLink=-1;
+
+            break;
+        }
+        else
+        {
+            ++iter;
+        }
+    }
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
@@ -829,7 +842,20 @@ void Network::OnDelMod(wxCommandEvent& event )
             (iter3->GetToModule() == *selMod) 
          )
 	   {
-	      iter3 = links.erase( iter3 );
+           std::vector< wxEvtHandler* > tempEvtHandlerVector;
+           wxEvtHandler* tempEvtHandler = 0;
+           tempEvtHandler = PopEventHandler( false );
+           while( &(*iter3) != tempEvtHandler )
+           {
+               tempEvtHandlerVector.push_back( tempEvtHandler );
+               tempEvtHandler = PopEventHandler( false );
+           }
+           
+           for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
+           {
+               PushEventHandler( tempEvtHandlerVector.at( j ) );
+           }
+           iter3 = links.erase( iter3 );
 	   }
       else
       {
@@ -948,10 +974,6 @@ void Network::UnSelectTag(wxDC &dc)
 ////////////////////////////////////////////////////////////////////////////////
 /////////////// Misc Functions //////////////////
 ////////////////////////////////////////////////////////////////////////////////
-void Network::SetXplorerInterface( VjObs_ptr veEngine )
-{
-   xplorerPtr = VjObs::_duplicate( veEngine );
-}
 ////////////////////////////////////////////////////////////////////////////////
 void Network::CleanRect(wxRect box, wxDC &dc)
 {
@@ -1400,6 +1422,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" ) );
          ln.CalcLinkPoly();
          links.push_back( ln );
+         PushEventHandler( &links.back() );
       }
    }
 
@@ -2258,34 +2281,30 @@ void Network::New( bool promptClearXplorer )
          delete veCommand;
       }
    }
-
-   links.clear();
-
-   std::map< int, Module >::iterator iter;
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      PopEventHandler( false );
-   }
-   modules.clear();
-
-   tags.clear();
-   ///Reset the canvas available spaces
-   sbboxes.clear();
    
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+        iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        PopEventHandler( false );
+    }
+    links.clear();
 
-   Refresh();
+    //Pop the plugin event handlers to clear these event handlers
+    for( std::map< int, Module >::iterator iter = modules.begin(); 
+        iter!=modules.end(); iter++)
+    {
+        PopEventHandler( false );
+    }
+    modules.clear();
+
+    tags.clear();
+    ///Reset the canvas available spaces
+    sbboxes.clear();
    
-   //reset the state of dataset check boxes on a new network load
-   /*if(vistab)
-   {
-      vistab->ResetAllDatasetDependentCheckBoxes();
-   }
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
-   if(cadDialog)
-   {
-      cadDialog->ClearLoadedCADFiles();
-   }*/
+    Refresh();
 }
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
@@ -2355,56 +2374,59 @@ void Network::CreateNetwork( std::string xmlNetwork )
    veNetwork.GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
 
-   links.clear();
    _fileProgress->Update( 35, _("start loading") );
 
-   for ( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
-   {
-	   links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
-      
-	  links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
-      links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
+    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    {
+        links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
+        //Add this link as an event handler to process link specific events
+        PushEventHandler( &links.at( i ) );
 
-      long moduleID;
-      veNetwork.GetLink( i )->GetFromModule()->GetData( moduleID );
-      links.at( i ).SetFromModule( moduleID );
-      veNetwork.GetLink( i )->GetToModule()->GetData( moduleID );
-      links.at( i ).SetToModule( moduleID );
+        links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
+        links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
 
-      size_t numberOfPoints = veNetwork.GetLink( i )->GetNumberOfLinkPoints();
-      for ( size_t j = 0; j < numberOfPoints; ++j )
-      {
-         std::pair< unsigned int, unsigned int > rawPoint = veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
-         wxPoint point;
-         point.x = rawPoint.first;
-         point.y = rawPoint.second;
-         links.at( i ).SetPoint( &point );
-      }
-      // Create the polygon for links
-      links.at( i ).CalcLinkPoly();
+        long moduleID;
+        veNetwork.GetLink( i )->GetFromModule()->GetData( moduleID );
+        links.at( i ).SetFromModule( moduleID );
+        veNetwork.GetLink( i )->GetToModule()->GetData( moduleID );
+        links.at( i ).SetToModule( moduleID );
 
-	   links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+        size_t numberOfPoints = veNetwork.GetLink( i )->GetNumberOfLinkPoints();
+        for ( size_t j = 0; j < numberOfPoints; ++j )
+        {
+            std::pair< unsigned int, unsigned int > rawPoint = veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
+            wxPoint point;
+            point.x = rawPoint.first;
+            point.y = rawPoint.second;
+            links.at( i ).SetPoint( &point );
+        }
+        // Create the polygon for links
+        links.at( i ).CalcLinkPoly();
+
+        links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+
+        //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+        //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
+        //serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
+        //serviceList->GetMessageLog()->SetMessage( "_\n" );
+        //serviceList->GetMessageLog()->SetMessage( "links:_ " );
+        //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
+        //serviceList->GetMessageLog()->SetMessage( "_\n" );
+    }
     
-	   //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	   //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
-	   //serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
-	   //serviceList->GetMessageLog()->SetMessage( "_\n" );
-	   //serviceList->GetMessageLog()->SetMessage( "links:_ " );
-	   //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
-	   //serviceList->GetMessageLog()->SetMessage( "_\n" );
-   }
-   _fileProgress->Update( 50, _("create models") );
-   _fileProgress->Update( 75, _("done create models") );
-   // now lets create a list of them
-   std::vector< std::string > networkModelVector;
-   std::vector< std::string >::iterator stringIter;
-   networkModelVector = VE_Conductor::XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
+    _fileProgress->Update( 50, _("create models") );
+    _fileProgress->Update( 75, _("done create models") );
+    // now lets create a list of them
+    std::vector< std::string > networkModelVector;
+    std::vector< std::string >::iterator stringIter;
+    networkModelVector = VE_Conductor::XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
     int timeCalc = 0;
     if(networkModelVector.size())
     {
-       timeCalc = 25/networkModelVector.size();
+        timeCalc = 25/networkModelVector.size();
     }
-   size_t i = 0;
+    
+    size_t i = 0;
     for( stringIter = networkModelVector.begin(); stringIter != networkModelVector.end(); ++stringIter )
     {
         _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
@@ -2743,32 +2765,6 @@ void* Network::Entry( void )
    this->CreateNetwork( tempXMLNetworkData );
    isLoading = false;
    return 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool Network::SetActiveModel()
-{
-   if (m_selMod<0) 
-      return false;
-
-   //std::cout << m_selMod << std::endl;
-   // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
-   dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
-   dataValuePair->SetDataValue( static_cast< unsigned int >( m_selMod ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
-   veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
-   veCommand->AddDataValuePair( dataValuePair );
-
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-
-   if ( connected )
-   {
-      SetXplorerInterface( VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer() );
-   }
-
-   //Clean up memory
-   delete veCommand;
-   return connected;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetIDOnAllActiveModules( void )
