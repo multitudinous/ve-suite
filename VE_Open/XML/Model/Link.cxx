@@ -43,7 +43,7 @@ using namespace VE_XML::VE_Model;
 Link::Link()
 :XMLObject()
 {
-   //linkName = '\0';
+   linkName = "noName";
    moduleInfo.first = new DataValuePair( "FLOAT" );
    moduleInfo.second = new DataValuePair( "FLOAT" );
    portInfo.first = 0;
@@ -119,7 +119,7 @@ std::string Link::GetLinkName( void )
 void Link::_updateVEElement( std::string input )
 {
    // write all the elements according to verg_model.xsd
-   SetAttribute("name", linkName);
+   SetAttribute( "name", linkName );
    SetSubElement( "fromModule", moduleInfo.first );
    SetSubElement( "toModule", moduleInfo.second );
    SetSubElement( "fromPort", portInfo.first );

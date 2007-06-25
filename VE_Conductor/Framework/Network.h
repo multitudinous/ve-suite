@@ -77,18 +77,8 @@ public:
    enum 
    {
       ADD_TAG,
-      ADD_LINK_CON,
       EDIT_TAG,
-      DEL_TAG,
-      DEL_LINK,
-      DEL_LINK_CON,
-      SHOW_LINK_CONT,
-
-	  //Aspen
-      LINK_MENU,
-      SHOW_LINK_NAME,
-      LINK_INPUTS,
-      LINK_OUTPUTS,
+      DEL_TAG
    };
 
    ///Fucntion called during submit job to send the id of all active
@@ -107,17 +97,11 @@ public:
 
    void OnMRightDown( wxMouseEvent &event );
    void OnAddTag( wxCommandEvent &event );
-   void OnAddLinkCon( wxCommandEvent &event );
    void OnEditTag( wxCommandEvent &event );
    void OnDelTag( wxCommandEvent &event );
-   void OnDelLink( wxCommandEvent &event );
-   void OnDelLinkCon( wxCommandEvent &event );
    void OnDelMod( wxCommandEvent &event );
-   void OnShowLinkContent( wxCommandEvent& event );
-   void OnShowAspenName( wxCommandEvent& event );
-   void OnQueryStreamInputs( wxCommandEvent &event );
-   void OnQueryStreamOutputs( wxCommandEvent &event );
-   
+   void OnDelLink(wxCommandEvent& event );
+       
    //Add to network fuctions
    void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
    void AddTag(int x, int y, wxString text);

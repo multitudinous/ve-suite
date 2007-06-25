@@ -39,6 +39,9 @@ Link API
 *
 */
 #include <vector>
+#include <string>
+#include <utility>
+
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Conductor/Utilities/Polygon.h"
 
@@ -78,6 +81,20 @@ public:
       return false;
    }
    
+   enum
+   {
+       DEL_LINK,
+       DEL_LINK_CON,
+       SHOW_LINK_CONT,
+       ADD_LINK_CON,
+       SET_ACTIVE_LINK,
+       //Aspen
+       LINK_MENU,
+       SHOW_LINK_NAME,
+       LINK_INPUTS,
+       LINK_OUTPUTS
+   };
+   
    wxPoint* GetPoint( size_t i );
    size_t GetNumberOfPoints( void );
    std::vector< wxPoint >* GetPoints( void );
@@ -100,21 +117,63 @@ public:
    void DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc );
    void CalcLinkPoly( void );
    void DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale );
+   double computenorm( wxPoint pt1, wxPoint pt2 );
+   ///Set the user scale to enable working with the dc
+   void SetDCScale( std::pair< double, double >* scale );
 
 protected:
-   wxString linkName;
+    void OnShowLinkContent( wxCommandEvent& event );
+    void OnShowAspenName( wxCommandEvent& event );
+    void OnQueryStreamInputs( wxCommandEvent &event );
+    void OnQueryStreamOutputs( wxCommandEvent &event );
+    void OnAddLinkCon( wxCommandEvent &event );
+    void OnDelLink( wxCommandEvent &event );
+    void OnDelLinkCon( wxCommandEvent &event );
+    void OnMRightDown( wxMouseEvent &event );
+    void OnSetActiveLinkID( wxUpdateUIEvent& event );
+    bool SelectLink(int x, int y);
+    ///Check the active id against the plugin id
+    bool CheckID();
 
 private:
-   unsigned long Fr_mod;
-   unsigned long To_mod;
-   unsigned int Fr_port;
-   unsigned int To_port;
-
-   std::vector< wxPoint > cons; //connectors
-   Polygon poly; //Poly is the current poly on the canvas
-   wxScrolledWindow* canvas;
-   DECLARE_EVENT_TABLE()
+    wxString linkName;
+    wxString activeName;
+    unsigned long Fr_mod;
+    unsigned long To_mod;
+    unsigned int Fr_port;
+    unsigned int To_port;
+    
+    int m_selFrPort; // selected From port
+    int m_selToPort; // selected To port;
+    int m_selLinkCon; //selected Link Connector
+    
+    std::vector< wxPoint > cons; //connectors
+    Polygon poly; //Poly is the current poly on the canvas
+    wxScrolledWindow* networkFrame;
+    //The mouse position when the right button 
+    //clicked, used by menu event handlers
+    wxPoint action_point;
+    ///User scale
+    /// first = x scale
+    /// second = y scale
+    std::pair< double, double >* userScale;
+    
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+    
+    DECLARE_EVENT_TABLE()
 };
 }
 }
+
+#define UILINK_CHECKID(event)  \
+    if( !CheckID() ) \
+    { \
+        event.Skip(); \
+        return; \
+    } 
+
 #endif

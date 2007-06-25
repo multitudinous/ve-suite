@@ -44,7 +44,9 @@
       </xs:restriction>
     </xs:complexContent>
   </xs:complexType>
+  <!--link element to couple to models-->
   <xs:complexType name="veLink">
+    <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:complexContent>
       <xs:restriction base="veXMLObject">
         <xs:sequence>

@@ -39,7 +39,7 @@
 
 #include "VE_Conductor/GUIPlugin/UIDialog.h"
 #include "VE_Conductor/Utilities/OrbThread.h"
-#include "VE_Conductor/GUIPlugin/ParamsDlg.h"
+#include "VE_Conductor/Utilities/ParamsDlg.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
 #include "VE_Conductor/Framework/Frame.h"
@@ -74,35 +74,27 @@ using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
-   // see the docs on wxScrolledWindow for more info on this
-   // Also see wxPaintEvent
-   // overriding this function allows us to handle when things on redrawn
-   EVT_PAINT(Network::OnPaint)
-   EVT_ERASE_BACKGROUND(Network::OnErase)
-   
-   //See wxMoveEvent for info on this
-   // Motion now only used for dragging
-   EVT_MOTION(Network::OnMouseMove)
-   //Used for selection
-   EVT_LEFT_DOWN(Network::OnMLeftDown)
-   EVT_LEFT_UP(Network::OnMLeftUp)
-   //brings up the design canvas menu on a specfic module
-   EVT_RIGHT_DOWN(Network::OnMRightDown)
-   // The following are rightclick menu options
-   EVT_MENU(ADD_TAG, Network::OnAddTag)
-   EVT_MENU(ADD_LINK_CON, Network::OnAddLinkCon)
-   EVT_MENU(EDIT_TAG, Network::OnEditTag)
-   EVT_MENU(DEL_TAG, Network::OnDelTag)
-   EVT_MENU(DEL_LINK, Network::OnDelLink)
-   EVT_MENU(DEL_LINK_CON, Network::OnDelLinkCon)
-   EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod)
-   EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
-   //Aspen Menu
-   EVT_MENU( SHOW_LINK_NAME, Network::OnShowAspenName )
-   EVT_MENU( LINK_INPUTS, Network::OnQueryStreamInputs )
-   EVT_MENU( LINK_OUTPUTS, Network::OnQueryStreamOutputs )
+    // see the docs on wxScrolledWindow for more info on this
+    // Also see wxPaintEvent
+    // overriding this function allows us to handle when things on redrawn
+    EVT_PAINT( Network::OnPaint )
+    EVT_ERASE_BACKGROUND( Network::OnErase )
+    //See wxMoveEvent for info on this
+    // Motion now only used for dragging
+    EVT_MOTION( Network::OnMouseMove )
+    //Used for selection
+    EVT_LEFT_DOWN( Network::OnMLeftDown )
+    EVT_LEFT_UP( Network::OnMLeftUp )
+    //brings up the design canvas menu on a specfic module
+    EVT_RIGHT_DOWN( Network::OnMRightDown )
+    // The following are rightclick menu options
+    EVT_MENU( ADD_TAG, Network::OnAddTag )
+    EVT_MENU( EDIT_TAG, Network::OnEditTag )
+    EVT_MENU( DEL_TAG, Network::OnDelTag )
+    EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod )
+    EVT_MENU( Link::DEL_LINK, Network::OnDelLink )
 END_EVENT_TABLE()
-
+////////////////////////////////////////////////////////////////////////////////
 Network::Network(wxWindow* parent, int id)
   :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
 		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
@@ -136,7 +128,7 @@ Network::Network(wxWindow* parent, int id)
    GetVirtualSize(&virX, &virY);
    bitmapBuffer = new wxBitmap(virX, virY);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
 {
     //Pop the link event handlers to clear these event handlers
@@ -213,6 +205,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
     SelectMod(x, y, dc);
     if(m_selMod >= 0)
     {
+        //Select the ports for a plugin
         bbox = modules[m_selMod].GetPlugin()->GetBBox();
         temp.x = x - bbox.x;
         temp.y = y - bbox.y;
@@ -538,66 +531,28 @@ void Network::OnMRightDown(wxMouseEvent& event)
    
    /////////////////////////////////////////////////
    wxPoint evtpos = event.GetLogicalPosition( dc );
-   long x = evtpos.x;
-   long y = evtpos.y;
    
    //Clear selections
-   if (m_selMod >= 0)
+   /*if (m_selMod >= 0)
 	   UnSelectMod(dc);
    if (m_selLink >= 0)
-	   UnSelectLink(dc);
+	   UnSelectLink(dc);*/
    
    //Select Mod/Link
-   SelectMod(x, y, dc);
+   /*SelectMod(x, y, dc);
    if (m_selMod < 0)
-	   SelectLink(x, y );
-   Refresh(true);
+	   SelectLink(x, y );*/
+    SelectTag(  evtpos.x,  evtpos.y );
+    Refresh(true);
    //Update();
    /////////////////////////////////////////////////
 
    wxMenu the_pop_menu( _("Action"));
-
    the_pop_menu.Append(ADD_TAG, _("Add Tag")); //This will always be enable
-
-   the_pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
    the_pop_menu.Append(EDIT_TAG, _("Edit Tag") );
-   the_pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
-   the_pop_menu.Append(DEL_LINK, _("Delete Link") );
    the_pop_menu.Append(DEL_TAG, _("Delete Tag") );
-   the_pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
 
-   the_pop_menu.Enable(ADD_LINK_CON, false);
-   the_pop_menu.Enable(EDIT_TAG, false);
-   the_pop_menu.Enable(DEL_LINK_CON, false);
-   the_pop_menu.Enable(DEL_LINK, false);
-   the_pop_menu.Enable(DEL_TAG, false);
-
-   the_pop_menu.Enable(SHOW_LINK_CONT, false);
-   
-   //Aspen Menu
-   wxMenu * aspen_menu = new wxMenu();
-   aspen_menu->Append(SHOW_LINK_NAME, _("Aspen Name") );
-   aspen_menu->Enable(SHOW_LINK_NAME, true);
-   aspen_menu->Append(LINK_INPUTS, _("Query Inputs") );
-   aspen_menu->Enable(LINK_INPUTS, true);
-   aspen_menu->Append(LINK_OUTPUTS, _("Query Outputs") );
-   aspen_menu->Enable(LINK_OUTPUTS, true);
-   the_pop_menu.Append( LINK_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
-   the_pop_menu.Enable(LINK_MENU, false);
-
-   if (m_selLink>=0)
-   {
-      the_pop_menu.Enable(DEL_LINK, true);
-      the_pop_menu.Enable(SHOW_LINK_CONT, true);
-      if (m_selLinkCon>=0) 
-         the_pop_menu.Enable(DEL_LINK_CON, true);
-      else
-         the_pop_menu.Enable(ADD_LINK_CON, true);
-
-	  the_pop_menu.Enable(LINK_MENU, true);
-   }
-
-   if (m_selTag>=0 )
+   if( m_selTag>=0 )
    {
       the_pop_menu.Enable(EDIT_TAG, true);
       the_pop_menu.Enable(DEL_TAG, true);
@@ -625,66 +580,6 @@ void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 
    if (dialog.ShowModal() == wxID_OK)
       AddTag(action_point.x, action_point.y, dialog.GetValue());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
-{  
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   //links[m_selLink].DrawLink( false, userScale );
-
-   //int n = links[m_selLink].GetNumberOfPoints()+2;
-   //linkline.resize(n);
-
-   //unsigned long fromModuleID = links[m_selLink].GetFromModule();
-   //unsigned int fromPort = links[m_selLink].GetFromPort();
-   //*(linkline.GetPoint( 0 )) = GetPointForSelectedPlugin( fromModuleID, fromPort, "ouput" );
-
-   VE_Conductor::GUI_Utilities::Polygon linkline;
-   size_t i;
-   for ( i=0; i< links[m_selLink].GetPoints()->size(); i++ )
-      *(linkline.GetPoint( i )) = *(links[ m_selLink ].GetPoint( i ));
-   
-   //unsigned long toModuleID = links[m_selLink].GetToModule();
-   //unsigned int toPort = links[m_selLink].GetToPort();
-   //*(linkline.GetPoint( n-1 )) = GetPointForSelectedPlugin( toModuleID, toPort, "input" );
-   VE_Conductor::GUI_Utilities::Polygon Near;
-   linkline.nearpnt( action_point, Near );
-
-   //size_t i;
-   for ( i=0; i < linkline.GetNumberOfPoints()-1; i++)
-      if (  ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x && 
-            linkline.GetPoint( i+1 )->x >= Near.GetPoint( 0 )->x ) ||
-            ( linkline.GetPoint( i )->x >= Near.GetPoint( 0 )->x && 
-            linkline.GetPoint( i+1 )->x <= Near.GetPoint( 0 )->x )
-         )
-         break;
-
-   size_t j;
-   VE_Conductor::GUI_Utilities::Polygon temp;
-   for ( j=1; j< linkline.GetNumberOfPoints()-1; ++j )
-   {
-      if ( j-1 == i )
-	      temp.SetPoint( *(Near.GetPoint( 0 )) );
-	   temp.SetPoint( *(linkline.GetPoint( j )) );
-   }
-
-   //Between the first link con and the port, and no cons yet
-   if (j==1 && i==0) 
-      temp.SetPoint( *(Near.GetPoint( 0 )) );
-
-   //between the port and the las con
-   if (j==linkline.GetNumberOfPoints()-1 && i==(j-1) && i!=0) 
-      temp.SetPoint( *(Near.GetPoint( 0 )) );
-  
-  *(links[ m_selLink ].GetPolygon()) = temp;
-  //links[m_selLink].DrawLinkCon( true, userScale );
-  //m_selLink = -1;
-  m_selLinkCon = -1;
-  while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-
-   Refresh(true);
-   //Update();
-    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
@@ -743,38 +638,17 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
    Refresh(true);
    //Update();
 }
-
-/////////////////////////////////////////////////////
-void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnDelLink(wxCommandEvent& event )
 {
-    int answer=wxMessageBox(_("Do you really want to delete this link?"), _("Confirmation"), wxYES_NO);
-    if (answer!=wxYES)
-        return;
-
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-    int i = 0;
-    std::vector< Link >::iterator iter;
-    for( iter = links.begin(), i=0; iter!=links.end(); i++)
+    wxString* selLink = static_cast< wxString* >( event.GetClientData() );
+    for( std::vector< Link >::iterator iter = links.begin(); 
+        iter!=links.end(); )
     {
-        if( i==m_selLink )
+        if( iter->GetName() == *selLink )
         {
-            std::vector< wxEvtHandler* > tempEvtHandlerVector;
-            wxEvtHandler* tempEvtHandler = 0;
-            tempEvtHandler = PopEventHandler( false );
-            while( &(*iter) != tempEvtHandler )
-            {
-                tempEvtHandlerVector.push_back( tempEvtHandler );
-                tempEvtHandler = PopEventHandler( false );
-            }
-
-            for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
-            {
-                PushEventHandler( tempEvtHandlerVector.at( j ) );
-            }
-
             iter = links.erase( iter );
-            m_selLink=-1;
-
             break;
         }
         else
@@ -783,50 +657,12 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
         }
     }
 
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
-   Refresh(true);
-   //Update();
+    Refresh(true);
+    //Update();
 }
-
-/////////////////////////////////////////////////////
-void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
-{
-   std::vector<wxPoint>::iterator iter;
-   int i;
-
-   int answer=wxMessageBox(_("Do you really want to delete this link connector?"), _("Confirmation"), wxYES_NO);
-   if (answer!=wxYES)
-   {
-      return;
-   }
-
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   
-   //links[m_selLink].DrawLinkCon( false, userScale );
-
-   for (iter=links[m_selLink].GetPoints()->begin(), i=0; iter!=links[m_selLink].GetPoints()->end(); iter++, i++)
-      if ( i == m_selLinkCon )
-      {
-         iter = links[m_selLink].GetPoints()->erase( iter );
-         links[m_selLink].CalcLinkPoly();
-         m_selLinkCon=-1;
-         break;
-      }
-      else
-      {
-         ++iter;
-      }
-
-   //links[m_selLink].DrawLinkCon( true, userScale );
-
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-
-   Refresh(true);
-   //Update();
-}
-
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelMod(wxCommandEvent& event )
 {
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
@@ -869,20 +705,13 @@ void Network::OnDelMod(wxCommandEvent& event )
    
    //Now delete the plugin from the module and then remove from the map
    std::map< int, Module >::iterator iter;
-   for (iter=modules.begin(); iter!=modules.end();)
+   iter = modules.find( *selMod );
+   if( iter != modules.end() )
    {
-      if ( iter->first == *selMod )
-      {
-         //delete modules[m_selMod].GetPlugin();
-	      modules.erase( iter );
-	      m_selLink = -1;
-          m_selMod = -1;
-	      break;
-      }
-      else
-      {
-         ++iter;
-      }
+        //delete modules[m_selMod].GetPlugin();
+        modules.erase( iter );
+        m_selLink = -1;
+        m_selMod = -1;
    }
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
@@ -977,21 +806,10 @@ void Network::UnSelectTag(wxDC &dc)
 ////////////////////////////////////////////////////////////////////////////////
 void Network::CleanRect(wxRect box, wxDC &dc)
 {
-  //wxBrush oldbrush = dc.GetBrush();
-  //wxPen oldpen = dc.GetPen();
-
-  //dc.SetBrush(*wxWHITE_BRUSH);
-  //dc.SetPen(*wxWHITE_PEN);
-  
-  //dc.DrawRectangle(box.x, box.y, box.width, box.height);
-
-  //dc.SetBrush(oldbrush);
-  //dc.SetPen(oldpen);
-  
-	wxRect windowRect(wxPoint(0,0),GetClientSize());
-	CalcUnscrolledPosition(windowRect.x, windowRect.y,
-		& windowRect.x, & windowRect.y);
-	dc.DrawRectangle(windowRect);
+    wxRect windowRect( wxPoint(0,0), GetClientSize() );
+    CalcUnscrolledPosition(windowRect.x, windowRect.y, 
+        &windowRect.x, &windowRect.y);
+    dc.DrawRectangle( windowRect );
 }
 /////////////////////////////////////////////////
 wxPoint Network::GetFreePos(wxRect bbox)
@@ -1047,7 +865,7 @@ wxPoint Network::GetFreePos(wxRect bbox)
 ////////////////////////////////////////////////////
 ////////// Move and Drop Functions /////////////////
 ////////////////////////////////////////////////////
-void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
+void Network::MoveModule(int x, int y, int mod)
 {
   if (mod < 0) // no module is selected
     return;   
@@ -1125,20 +943,6 @@ void Network::MoveModule(int x, int y, int mod)//, wxDC &dc)
       }
    }
     
-/*  if ( (bbox.x-3.0/userScale.first) > 0 )
-    bbox.x-=(int)( 3.0/userScale.first );
-  else
-    bbox.x=0;
-  
-  if ( (bbox.y-3.0/userScale.second) > 0 )
-    bbox.y-=(int)( 3.0/userScale.second );
-  else
-    bbox.y=0;
-  
-  bbox.width+=(int)( 3.0/userScale.first );
-  bbox.height+=(int)( 3.0/userScale.second );
-*/
- //  CleanRect(bbox, dc);  
    if (oldxpos!=xpos||oldypos!=ypos||scroll)
    {
       xpos = (int)( 1.0 * xpos * userScale.first );
@@ -1431,6 +1235,108 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    m_selToPort = -1;
 }
 /////////////////////////////////////////////////////////////////////
+void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
+{
+    int xunit, yunit;
+    int xpos, ypos, oldxpos, oldypos;
+    int w, h, ex, ey, sx, sy;
+    bool scroll = false; 
+    
+    GetScrollPixelsPerUnit(&xunit, &yunit);
+    GetViewStart(&xpos, &ypos);
+    GetVirtualSize(&sx, &sy);
+    GetClientSize(&w, &h);
+    
+    oldxpos = xpos;
+    oldypos = ypos;
+    
+    sx = (int)( 1.0*sx / userScale.first );
+    sy = (int)( 1.0*sy / userScale.second );
+    w = (int)( 1.0*w / userScale.first );
+    h = (int)( 1.0*h / userScale.second ); 
+    
+    ex=xpos*xunit+w;
+    ey=ypos*yunit+h;
+    
+    if (x>ex)
+        xpos+=1;
+    if (x<(ex-w))
+        xpos-=1;
+    
+    if (y>ey)
+        ypos+=1;
+    if (y<(ey-h))
+        ypos-=1;
+    
+    if (x > sx)
+    {
+        GetNumUnit()->first+=2;
+        SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        scroll = true;
+    }
+    if (y > sy)
+    {
+        GetNumUnit()->second+=2;
+        SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        scroll = true;
+    }
+    
+    //erase the original link;
+    //  links[ln].DrawLink( false, userScale );
+    //  links[ln].DrawLinkCon( false, userScale );
+    *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
+    
+    if ( oldxpos!=xpos || oldypos!=ypos || scroll)
+    {
+        xpos = (int)( 1.0 * xpos * userScale.first );
+        ypos = (int)( 1.0 * ypos * userScale.second );
+        
+        Scroll(xpos, ypos);
+    }
+    
+    Refresh(true);
+    //Update();
+}
+
+//////////////////////////////////////////////////////////////////////
+void Network::DropLinkCon(int x, int y, int ln, int ln_con, wxDC &dc)
+{
+    int sx, sy;
+    double r;
+    int vx, vy;
+    bool scroll = false; 
+    
+    GetVirtualSize(&sx, &sy);
+    
+    sx = (int)( 1.0*sx / userScale.first );
+    sy = (int)( 1.0*sy / userScale.second );
+    //  w = w / userScale.first;
+    //h = h / userScale.second; 
+    
+    GetViewStart(&vx,&vy);
+    if (x > sx)
+    {
+        r=(1.0*x/sx);
+        GetNumUnit()->first=int (r*GetNumUnit()->first+1);
+        SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        scroll = true;
+        vx = GetNumUnit()->first;
+    }
+    
+    if (y > sy)
+    {
+        r=(1.0*y/sy);
+        GetNumUnit()->second=int (r*GetNumUnit()->second+1);
+        SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        scroll = true;
+        vy = GetNumUnit()->second;
+    }
+    
+    *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
+    
+    links[ln].CalcLinkPoly();
+}
+/////////////////////////////////////////////////////////////////////
 bool Network::IsPortCompatible(int frmod, int frport, int tomod, int toport)
 {
 	int num = 0;
@@ -1456,109 +1362,6 @@ bool Network::IsPortCompatible(int frmod, int frport, int tomod, int toport)
 	else
 		return false;
 }
-/////////////////////////////////////////////////////////////////////
-void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
-{
-  int xunit, yunit;
-  int xpos, ypos, oldxpos, oldypos;
-  int w, h, ex, ey, sx, sy;
-  bool scroll = false; 
-
-  GetScrollPixelsPerUnit(&xunit, &yunit);
-  GetViewStart(&xpos, &ypos);
-  GetVirtualSize(&sx, &sy);
-  GetClientSize(&w, &h);
-  
-  oldxpos = xpos;
-  oldypos = ypos;
-
-  sx = (int)( 1.0*sx / userScale.first );
-  sy = (int)( 1.0*sy / userScale.second );
-  w = (int)( 1.0*w / userScale.first );
-  h = (int)( 1.0*h / userScale.second ); 
-
-  ex=xpos*xunit+w;
-  ey=ypos*yunit+h;
-      
-  if (x>ex)
-    xpos+=1;
-  if (x<(ex-w))
-    xpos-=1;
-  
-  if (y>ey)
-    ypos+=1;
-  if (y<(ey-h))
-    ypos-=1;
-    
-  if (x > sx)
-    {
-      GetNumUnit()->first+=2;
-      SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-      scroll = true;
-    }
-  if (y > sy)
-    {
-      GetNumUnit()->second+=2;
-      SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-      scroll = true;
-    }
-
-  //erase the original link;
-//  links[ln].DrawLink( false, userScale );
-//  links[ln].DrawLinkCon( false, userScale );
-  *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
- 
-   if ( oldxpos!=xpos || oldypos!=ypos || scroll)
-   {
-      xpos = (int)( 1.0 * xpos * userScale.first );
-      ypos = (int)( 1.0 * ypos * userScale.second );
-
-      Scroll(xpos, ypos);
-   }
-
-   Refresh(true);
-   //Update();
-}
-
-//////////////////////////////////////////////////////////////////////
-void Network::DropLinkCon(int x, int y, int ln, int ln_con, wxDC &dc)
-{
-  int sx, sy;
-  double r;
-  int vx, vy;
-  bool scroll = false; 
-  
-  GetVirtualSize(&sx, &sy);
-
-  sx = (int)( 1.0*sx / userScale.first );
-  sy = (int)( 1.0*sy / userScale.second );
-  //  w = w / userScale.first;
-  //h = h / userScale.second; 
-      
-   GetViewStart(&vx,&vy);
-   if (x > sx)
-   {
-      r=(1.0*x/sx);
-      GetNumUnit()->first=int (r*GetNumUnit()->first+1);
-      SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-      scroll = true;
-      vx = GetNumUnit()->first;
-   }
-
-   if (y > sy)
-   {
-      r=(1.0*y/sy);
-      GetNumUnit()->second=int (r*GetNumUnit()->second+1);
-      SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-      scroll = true;
-      vy = GetNumUnit()->second;
-   }
-  
-  *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
-
-  links[ln].CalcLinkPoly();
-}
-
 //////////////////////////////////////////////////////////////////
 void Network::MoveTagCon(int x, int y, int t, int t_con, wxDC& dc)
 {
@@ -2537,169 +2340,22 @@ void Network::CreateNetwork( std::string xmlNetwork )
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
    Refresh();
 }
-
-//////////////////////////////////////////////////////
-void Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
-{
-   char* linkresult = 0;
-   //The to Mod are actually the from module for the data flow
-   int mod = links[ m_selLink ].GetFromModule();
-   int port = links[ m_selLink ].GetFromPort();
-
-   if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToCE() )
-   {
-      return;
-   }
-
-   try 
-   {
-      //linkresult = exec->GetExportData(mod, port);
-   }
-   catch ( CORBA::Exception& ) 
-   {
-      frame->Log( "Maybe Engine is down\n");
-      return;
-   }
-
-   if ( std::string(linkresult) !=std::string(""))
-   {
-     /* Package p;
-      p.SetSysId("linkresult.xml");
-      p.Load( linkresult, strlen(linkresult) );
-
-      // In the new code this would pass in a datavalue pair
-      UIDialog* port_dlg = 0;//modules[mod].GetPlugin()->PortData( NULL, &(p.intfs[0]) );
-
-      if ( port_dlg != NULL )
-         port_dlg->Show();*/
-   }
-}
-
-//////////////////////////////////////////////////////
-void Network::OnShowAspenName(wxCommandEvent& WXUNUSED(event))
-{
-    //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	//for( int i = 0; i < links.size(); i++)
-	//{
-	//	serviceList->GetMessageLog()->SetMessage( "link:_ " );
-	//	serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
-	//	serviceList->GetMessageLog()->SetMessage( "_\n" );
-	//}
-
-	wxString title;
-	title << wxT("Aspen Name");
-	wxString desc( links[m_selLink].GetName().c_str(), wxConvUTF8);
-	wxMessageDialog( this, desc, title).ShowModal();
-}
 ////////////////////////////////////////////////////////////////////////////////
-void Network::OnQueryStreamInputs(wxCommandEvent& event )
-{  
-    //UIPLUGIN_CHECKID( event )
-	std::string compName = ConvertUnicode( links[m_selLink].GetName().c_str() );
-
-	VE_XML::Command returnState;
-	returnState.SetCommandName("getStreamInputModuleParamList");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-	data->SetData(std::string("ModuleName"), compName);
-	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	VE_XML::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	
-	//Get results
-    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	std::string nw_str = serviceList->Query( status );
-	wxString title( compName.c_str(),wxConvUTF8);
-	
-	ParamsDlg* params = new ParamsDlg(this);
-	params->SetIsBlock(false);
-    //params->SetSize( dialogSize );
-	VE_XML::XMLReaderWriter networkReader;
-	networkReader.UseStandaloneDOMDocumentManager();
-	networkReader.ReadFromString();
-	
-	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-
-	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
-	std::vector< std::string > temp_vector;
-	pair->GetData(temp_vector);
-
-	params->SetCompName(compName.c_str());
-	params->SetServiceList(serviceList);
-	params->SetDialogType("input");
-	for (int i=0; i < temp_vector.size(); i++) 
-		params->AppendList(temp_vector[i].c_str());
-	params->ShowModal();
-}
-////////////////////////////////////////////////////////////////////////////////
-void Network::OnQueryStreamOutputs(wxCommandEvent& event )
-{  
-	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	//serviceList->GetMessageLog()->SetMessage( "QueryOutput" );
-    
-	//UIPLUGIN_CHECKID( event )
-	std::string compName = ConvertUnicode( links[m_selLink].GetName().c_str() );
-
-	VE_XML::Command returnState;
-	returnState.SetCommandName("getStreamOutputModuleParamList");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-	data->SetData(std::string("ModuleName"), compName);
-	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	VE_XML::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	
-	//Get results
-	std::string nw_str = serviceList->Query( status );
-	wxString title( compName.c_str(),wxConvUTF8);
-
-	ParamsDlg * params = new ParamsDlg(this);
-	params->SetIsBlock(false);
-    //params->SetSize( dialogSize );
-	VE_XML::XMLReaderWriter networkReader;
-	networkReader.UseStandaloneDOMDocumentManager();
-	networkReader.ReadFromString();
-	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
-	std::vector< std::string > temp_vector;
-	pair->GetData(temp_vector);
-
-	params->SetCompName(compName.c_str());
-	params->SetServiceList(serviceList);
-	params->SetDialogType("output");
-	for (int i=0; i < temp_vector.size(); i++) 
-		params->AppendList(temp_vector[i].c_str());
-	params->ShowModal();
-}
-
-///////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )
 {
    return &userScale;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::pair< unsigned int, unsigned int >* Network::GetNumPix( void )
 {
    return &numPix;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::pair< unsigned int, unsigned int >* Network::GetNumUnit( void )
 {
    return &numUnit;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType )
 {
    wxRect bbox = modules[ moduleID ].GetPlugin()->GetBBox();
@@ -2758,7 +2414,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 
    return tempPoint;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void* Network::Entry( void )
 {
    isLoading = true;
@@ -2779,12 +2435,12 @@ void Network::SetIDOnAllActiveModules( void )
       serviceList->SetID( moduleId, moduleName );
    }
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool Network::IsDragging()
 {
 	return dragging;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::SetSelectedModule(int mod)
 {
 	m_selFrPort = -1; 
