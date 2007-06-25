@@ -52,7 +52,7 @@
 #define ParamsDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 
 class AppFrame;
-class VE_GUIPLUGINS_EXPORTS ParamsDlg : public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS ParamsDlg : public wxDialog
 {
 	public:
 		ParamsDlg(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("ParamsDialog"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = ParamsDlg_STYLE);

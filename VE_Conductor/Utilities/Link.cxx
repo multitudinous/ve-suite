@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "VE_Conductor/Utilities/Link.h"
 #include "VE_Conductor/Utilities/OrbThread.h"
 #include "VE_Conductor/Utilities/ParamsDlg.h"
 

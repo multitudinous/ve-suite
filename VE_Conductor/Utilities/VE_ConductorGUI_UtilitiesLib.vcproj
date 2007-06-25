@@ -262,6 +262,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ParamsDlg.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Polygon.cxx"
 				>
 			</File>
@@ -364,6 +368,10 @@
 			</File>
 			<File
 				RelativePath=".\OrbThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ParamsDlg.h"
 				>
 			</File>
 			<File
