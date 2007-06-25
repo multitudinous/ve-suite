@@ -909,7 +909,8 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
          return;
       }
       
-
+      SetTitle(vesFileName.GetFullName());
+      
       directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
       //change conductor working dir
       ::wxSetWorkingDirectory( directory );
@@ -996,7 +997,9 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
                 _("VES File Read Error"), wxOK | wxICON_INFORMATION );
         return;
     }
-
+    
+    SetTitle(vesFileName.GetFullName());
+        
     directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
     //change conductor working dir
     ::wxSetWorkingDirectory( directory );
@@ -1309,6 +1312,7 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
+   SetTitle( _("VE-Suite: www.vesuite.org") );
    network->New( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
