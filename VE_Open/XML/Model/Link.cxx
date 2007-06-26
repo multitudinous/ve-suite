@@ -200,6 +200,10 @@ void Link::SetObjectFromXMLData(DOMNode* element)
          else
          {
             GetAttribute( currentElement, "name", linkName );
+            if( linkName.empty() )
+            {
+                linkName = "noName";
+            }
          }
       }
       // for module location

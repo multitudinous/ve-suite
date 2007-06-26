@@ -98,7 +98,7 @@ BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
     EVT_MENU( ADD_INPUT_PORT, UIPluginBase::AddPort ) 
     EVT_MENU( ADD_OUTPUT_PORT, UIPluginBase::AddPort ) 
     EVT_MENU( DELETE_PORT, UIPluginBase::DeletePort ) 
-    EVT_UPDATE_UI( SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
+    EVT_UPDATE_UI( 888, UIPluginBase::OnSetActivePluginID )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
@@ -1500,9 +1500,9 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
         return;
     }
     //send the active id so that each plugin knows what to do
-    wxUpdateUIEvent setActivePluginId;
+    wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );
-    setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
+    setActivePluginId.SetId( 888 );
     networkFrame->GetEventHandler()->ProcessEvent( setActivePluginId );
 
     wxString menuName = name + wxString( " Menu", wxConvUTF8 );
@@ -1644,19 +1644,7 @@ void UIPluginBase::OnDelMod(wxCommandEvent& event )
     //Now delete the plugin from the module and then remove from the map
     ///This is so that we find the right eventhandler to pop rather than
     ///popping the last one
-    std::vector< wxEvtHandler* > tempEvtHandlerVector;
-    wxEvtHandler* tempEvtHandler = 0;
-    tempEvtHandler = networkFrame->PopEventHandler( false );
-    while ( this != tempEvtHandler )
-    {
-        tempEvtHandlerVector.push_back( tempEvtHandler );
-        tempEvtHandler = networkFrame->PopEventHandler( false );
-    }
-    
-    for ( size_t i = 0; i < tempEvtHandlerVector.size(); ++i )
-    {
-        networkFrame->PushEventHandler( tempEvtHandlerVector.at( i ) );
-    }
+    networkFrame->RemoveEventHandler( this );
     
     ///Now send the erased module to xplorer to delete it as well
     VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );

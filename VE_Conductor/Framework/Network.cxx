@@ -135,7 +135,7 @@ Network::~Network()
     for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
          iter=links.begin(); iter!=links.end(); iter++ )
     {
-        PopEventHandler( false );
+        RemoveEventHandler( &(*iter) );
     }
     links.clear();
     
@@ -143,7 +143,7 @@ Network::~Network()
     for( std::map< int, Module >::iterator iter = modules.begin(); 
          iter!=modules.end(); iter++)
     {
-        PopEventHandler( false );
+        RemoveEventHandler( iter->second.GetPlugin() );
     }
     modules.clear();
 }
@@ -678,19 +678,7 @@ void Network::OnDelMod(wxCommandEvent& event )
             (iter3->GetToModule() == *selMod) 
          )
 	   {
-           std::vector< wxEvtHandler* > tempEvtHandlerVector;
-           wxEvtHandler* tempEvtHandler = 0;
-           tempEvtHandler = PopEventHandler( false );
-           while( &(*iter3) != tempEvtHandler )
-           {
-               tempEvtHandlerVector.push_back( tempEvtHandler );
-               tempEvtHandler = PopEventHandler( false );
-           }
-           
-           for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
-           {
-               PushEventHandler( tempEvtHandlerVector.at( j ) );
-           }
+           RemoveEventHandler( &(*iter3) );
            iter3 = links.erase( iter3 );
 	   }
       else
@@ -1216,7 +1204,14 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
 
       if ( !found ) // no duplicate links are allowed
       {
-         wxPoint pos;
+          //Pop the link event handlers to clear these event handlers
+          for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+               iter=links.begin(); iter!=links.end(); iter++ )
+          {
+              RemoveEventHandler( &(*iter) );
+          }
+          
+          wxPoint pos;
          // Get first port point for the link
          pos = GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" );
          ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" ) );
@@ -1226,7 +1221,13 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
          ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" ) );
          ln.CalcLinkPoly();
          links.push_back( ln );
-         PushEventHandler( &links.back() );
+         links.back().SetDCScale( &userScale );
+
+         for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+              iter=links.begin(); iter!=links.end(); iter++ )
+         {
+             PushEventHandler( &(*iter) );
+         }
       }
    }
 
@@ -1949,6 +1950,7 @@ std::string Network::Save( std::string fileName )
    // Here we wshould loop over all of the following
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    //  Newtork
+   //Need to delete network first
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &veNetwork, "veNetwork" ) );
 
    veNetwork.GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
@@ -2089,7 +2091,7 @@ void Network::New( bool promptClearXplorer )
     for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
         iter=links.begin(); iter!=links.end(); iter++ )
     {
-        PopEventHandler( false );
+        RemoveEventHandler( &(*iter) );
     }
     links.clear();
 
@@ -2097,7 +2099,7 @@ void Network::New( bool promptClearXplorer )
     for( std::map< int, Module >::iterator iter = modules.begin(); 
         iter!=modules.end(); iter++)
     {
-        PopEventHandler( false );
+        RemoveEventHandler( iter->second.GetPlugin() );
     }
     modules.clear();
 
@@ -2107,7 +2109,7 @@ void Network::New( bool promptClearXplorer )
    
     while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
-    Refresh();
+    Refresh( true );
 }
 ////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
@@ -2182,9 +2184,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
     for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
     {
         links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
-        //Add this link as an event handler to process link specific events
-        PushEventHandler( &links.at( i ) );
-
+        links.at( i ).SetDCScale( &userScale );
+        
         links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
         links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
 
@@ -2216,7 +2217,11 @@ void Network::CreateNetwork( std::string xmlNetwork )
         //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
         //serviceList->GetMessageLog()->SetMessage( "_\n" );
     }
-    
+
+    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    {
+        PushEventHandler( &links.at( i ) );
+    }
     _fileProgress->Update( 50, _("create models") );
     _fileProgress->Update( 75, _("done create models") );
     // now lets create a list of them
@@ -2243,11 +2248,11 @@ void Network::CreateNetwork( std::string xmlNetwork )
         UIPluginBase* tempPlugin = 0;
         if( cls == 0 )
         {
-         tempPlugin = new DefaultPlugin();
+            tempPlugin = new DefaultPlugin();
         }
         else
         {
-         tempPlugin = dynamic_cast< UIPluginBase* >( cls->CreateObject() );
+            tempPlugin = dynamic_cast< UIPluginBase* >( cls->CreateObject() );
         }
         tempPlugin->SetNetworkFrame( this );
         tempPlugin->SetDCScale( &userScale );
@@ -2258,7 +2263,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         tempPlugin->SetDialogSize( frame->GetAppropriateSubDialogSize() );
         if ( model->GetIconFilename() != "DefaultPlugin" )
         {   
-         tempPlugin->SetImageIcon( model->GetIconFilename(), 
+            tempPlugin->SetImageIcon( model->GetIconFilename(), 
                                    model->GetIconRotation(), 
                                    model->GetIconMirror(), 
                                    model->GetIconScale() );
@@ -2338,7 +2343,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    xold = yold =0;
    _fileProgress->Update( 100, _("Done") );
    //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
-   Refresh();
+   Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )
@@ -2406,7 +2411,9 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
          index = 0;
       }
       
-      std::cout << portNumber << " " << ports[ index ].GetPortLocation()->GetPoint().first << " " << ports[ index ].GetPortLocation()->GetPoint().second << std::endl;
+      /*std::cout << portNumber << " " 
+        << ports[ index ].GetPortLocation()->GetPoint().first << " " 
+        << ports[ index ].GetPortLocation()->GetPoint().second << std::endl;*/
       wxPoint portPoint( ports[ index ].GetPortLocation()->GetPoint().first, ports[ index ].GetPortLocation()->GetPoint().second );
       tempPoint.x = bbox.x+portPoint.x;
       tempPoint.y = bbox.y+portPoint.y;

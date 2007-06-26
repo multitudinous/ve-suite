@@ -67,7 +67,7 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_MENU( SHOW_LINK_NAME, Link::OnShowAspenName )
     EVT_MENU( LINK_INPUTS, Link::OnQueryStreamInputs )
     EVT_MENU( LINK_OUTPUTS, Link::OnQueryStreamOutputs )
-    EVT_UPDATE_UI( SET_ACTIVE_LINK, Link::OnSetActiveLinkID )
+    EVT_UPDATE_UI( 887, Link::OnSetActiveLinkID )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -80,6 +80,7 @@ Link::Link( wxScrolledWindow* designCanvas )
     //cons.resize( 2 );
     networkFrame = designCanvas;
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
+    userScale = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -89,6 +90,21 @@ Link::~Link( void )
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link( const Link& input )
 {
+    std::cout << "copy constructor" << std::endl;
+    //std::vector< wxEvtHandler* > tempEvtHandlerVector;
+    /*wxEvtHandler* tempEvtHandler = 0;
+    tempEvtHandler = networkFrame->PopEventHandler( false );
+    while( &input != tempEvtHandler )
+    {
+        tempEvtHandlerVector.push_back( tempEvtHandler );
+        tempEvtHandler = networkFrame->PopEventHandler( false );
+    }
+    
+    for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
+    {
+        networkFrame->PushEventHandler( tempEvtHandlerVector.at( j ) );
+    }*/
+
     Fr_mod = input.Fr_mod;
     To_mod = input.To_mod;
     Fr_port = input.Fr_port;
@@ -98,6 +114,11 @@ Link::Link( const Link& input )
     poly = input.poly;
     networkFrame = input.networkFrame;
     linkName = input.linkName;
+    userScale = input.userScale;
+    action_point = input.action_point;
+    
+    //networkFrame->RemoveEventHandler( dynamic_cast< wxEvtHandler* >( &input ) );
+    //networkFrame->PushEventHandler( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
@@ -114,6 +135,8 @@ Link& Link::operator= ( const Link& input )
         poly = input.poly;
         networkFrame = input.networkFrame;
         linkName = input.linkName;
+        userScale = input.userScale;
+        action_point = input.action_point;
     }
     return *this;
 }
@@ -542,20 +565,7 @@ void Link::OnDelLink(wxCommandEvent& event )
     if (answer!=wxYES)
         return;
 
-    std::vector< wxEvtHandler* > tempEvtHandlerVector;
-    wxEvtHandler* tempEvtHandler = 0;
-    tempEvtHandler = networkFrame->PopEventHandler( false );
-    while( this != tempEvtHandler )
-    {
-        tempEvtHandlerVector.push_back( tempEvtHandler );
-        tempEvtHandler = networkFrame->PopEventHandler( false );
-    }
-
-    for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
-    {
-        networkFrame->PushEventHandler( tempEvtHandlerVector.at( j ) );
-    }
-    
+    networkFrame->RemoveEventHandler( this );
     networkFrame->Refresh(true);
     //Update();
     event.SetClientData( &linkName );
@@ -636,10 +646,11 @@ void Link::OnMRightDown( wxMouseEvent &event )
         event.Skip();
         return;
     }
+
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActiveLinkName;
     setActiveLinkName.SetClientData( &linkName );
-    setActiveLinkName.SetId( SET_ACTIVE_LINK );
+    setActiveLinkName.SetId( 887 );
     networkFrame->GetEventHandler()->ProcessEvent( setActiveLinkName );
     
     wxString menuName = linkName + wxString( " Menu", wxConvUTF8 );

@@ -170,7 +170,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
             networkModelVector.push_back( toID.str() );
         }
-        std::cout << toID.str() << " " << fromID.str() << std::endl;
+        //std::cout << toID.str() << " " << fromID.str() << std::endl;
         fromID.str("");
         toID.str("");
     }
