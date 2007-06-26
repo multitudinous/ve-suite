@@ -45,9 +45,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/Shader/ShaderPtr.h"
-
 // --- VR Juggler Stuff --- //
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
@@ -235,12 +232,6 @@ private:
 
     gadget::KeyboardMouseInterface m_keyboard;///<VRJuggler's keyboard/mouse positional interface
     gadget::PositionInterface m_head;///<VRJuggler's head positional interface
-
-    void CreateSelectShader();
-
-    VE_XML::VE_CAD::CADAttribute* cadAttribute;
-    VE_XML::VE_Shader::ShaderPtr vertexShader;
-    VE_XML::VE_Shader::ShaderPtr fragmentShader;
 };
 }
 
