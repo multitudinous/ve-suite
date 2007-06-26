@@ -90,21 +90,6 @@ Link::~Link( void )
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link( const Link& input )
 {
-    std::cout << "copy constructor" << std::endl;
-    //std::vector< wxEvtHandler* > tempEvtHandlerVector;
-    /*wxEvtHandler* tempEvtHandler = 0;
-    tempEvtHandler = networkFrame->PopEventHandler( false );
-    while( &input != tempEvtHandler )
-    {
-        tempEvtHandlerVector.push_back( tempEvtHandler );
-        tempEvtHandler = networkFrame->PopEventHandler( false );
-    }
-    
-    for( size_t j = 0; j < tempEvtHandlerVector.size(); ++j )
-    {
-        networkFrame->PushEventHandler( tempEvtHandlerVector.at( j ) );
-    }*/
-
     Fr_mod = input.Fr_mod;
     To_mod = input.To_mod;
     Fr_port = input.Fr_port;
@@ -116,9 +101,6 @@ Link::Link( const Link& input )
     linkName = input.linkName;
     userScale = input.userScale;
     action_point = input.action_point;
-    
-    //networkFrame->RemoveEventHandler( dynamic_cast< wxEvtHandler* >( &input ) );
-    //networkFrame->PushEventHandler( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
