@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib loki_D.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgFXd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib loki_D.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_osg_vep_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(PRODUCER_HOME)\lib\win32&quot;;&quot;$(OPENTHREADS_HOME)\lib\win32&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
@@ -215,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SelectEffect.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ShaderHelper.cxx"
 				>
 			</File>
@@ -246,6 +250,10 @@
 			</File>
 			<File
 				RelativePath=".\PhongLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SelectEffect.h"
 				>
 			</File>
 			<File
