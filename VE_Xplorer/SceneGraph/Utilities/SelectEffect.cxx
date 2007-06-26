@@ -1,6 +1,10 @@
 #include "VE_Xplorer/SceneGraph/Utilities/SelectEffect.h"
 
+#include <osg/BlendFunc>
+
 #include <osgFX/Registry>
+
+using namespace VE_SceneGraph::Utilities;
 
 namespace
 {
@@ -94,12 +98,12 @@ protected:
 
                 "void main() \n"
                 "{ \n"
-                    "float GlowThickness = 1.0f; \n"
+                    "float GlowThickness = 0.05; \n"
 
-                    "// Normal ( view space ) \n"
+                    "//Normal ( view space ) \n"
                     "Normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
 
-                    "// Displaced position ( view space ) \n"
+                    "//Displaced position ( view space ) \n"
                     "vec3 P = vec3( gl_ModelViewMatrix * gl_Vertex ) + ( GlowThickness * Normal ); \n"
 
                     "gl_Position = gl_ProjectionMatrix * vec4( P, 1.0 ); \n"
@@ -115,14 +119,14 @@ protected:
 
                     "vec3 N = normalize( Normal ); \n"
 
-                    "// Glow axis \n"
+                    "//Glow axis \n"
                     "vec3 A = vec3( 0, 0, 1 ); \n"
                     "float Power = dot( N, A ); \n"
                     "Power *= Power; \n"
                     "Power -= 1.0; \n"
                     "Power *= Power; \n"
 
-                    "// Inverse Glow Effect \n"
+                    "//Inverse Glow Effect \n"
                     "//Power = pow( 1.0 - pow( Power, 2.0 ), 2.0 ); \n"
                     "//Power = pow( pow( Power, 2.0 ) - 1.0, 2.0 ); \n"
 
@@ -137,6 +141,11 @@ protected:
 
             osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, select_fragment_pass2 );
             program->addShader( fragment_shader.get() );
+
+            osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc( GL_ONE, GL_ONE );
+            stateset->setAttribute( bf.get() );
+            stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+            //stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN ); 
             	
             stateset->setAttributeAndModes( program.get() );
 
@@ -149,8 +158,6 @@ private:
 
 };
 }
-
-using namespace VE_SceneGraph::Utilities;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectEffect::SelectEffect()

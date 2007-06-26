@@ -37,13 +37,12 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
-
-#include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>
@@ -123,6 +122,10 @@ beamLineSegment( new osg::LineSegment )
     gmtl::identity( m_deltaTransform );
     gmtl::identity( m_currentTransform );
     gmtl::identity( m_localToWorldTransform );
+
+    m_selectShader = new VE_SceneGraph::Utilities::SelectEffect();
+    VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->addChild( m_selectShader.get() );
+    m_selectShader->setEnabled( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -738,6 +741,11 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
 
+    if( selectedDCS.valid() )
+    {
+        m_selectShader->removeChild( selectedDCS.get() );
+    }
+
     /*
     if( selectedDCS.valid() )
     {
@@ -826,8 +834,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         osg::Vec3d center = activeDCS->getBound().center() * matrix;
         center_point->set( center.x(), center.y(), center.z() );
 
-        //VE_SceneGraph::Utilities::SelectEffect m_selectShader;
-        //m_selectShader.addChild( activeDCS.get() );
+        m_selectShader->addChild( activeDCS.get() );
     }
 
     selectedDCS = activeDCS;
