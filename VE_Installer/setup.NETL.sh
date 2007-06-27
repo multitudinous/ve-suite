@@ -129,7 +129,7 @@ case "$CFDHOSTTYPE" in
    export FLAGPOLL_PATH=${VE_SUITE_HOME}/VE_Installer/fpc:/Volumes/data/VE_Suite_Deps/vrjuggler-2.0-svn/install-darwin/lib/flagpoll
    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/vrjuggler/cppdom-0.6.6/lib/flagpoll
    export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/ACE_TAO/install/lib/pkgconfig
-   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/bullet-2.43/install-darwin/lib/pkgconfig:/opt/local/share/pkgconfig
+   export FLAGPOLL_PATH=${FLAGPOLL_PATH}:/Volumes/data/VE_Suite_Deps/bullet-2.43/install-darwin/lib/pkgconfig:/opt/local/share/flagpoll
 
    #setenv JDK_HOME /usr/java
    export VTK_BASE_DIR=/Volumes/data/VE_Suite_Deps/vtk-cvs/install

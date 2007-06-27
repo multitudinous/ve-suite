@@ -11,7 +11,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 257394980C11B2EA0057EED3 /* Loki.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8D07F2C80486CC7A007CD1D0 /* loki.framework */;
+			remoteGlobalIDString = 8D07F2C80486CC7A007CD1D0;
 			remoteInfo = loki;
 		};
 /* End PBXContainerItemProxy section */
@@ -18828,6 +18828,8 @@
 		25B3ED6B0AFD25AB00601DFF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH)";
+				BUILD_VARIANTS = "$(inherited)";
 				COPY_PHASE_STRIP = NO;
 			};
 			name = Debug;

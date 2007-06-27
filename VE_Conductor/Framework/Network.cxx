@@ -1949,7 +1949,8 @@ std::string Network::Save( std::string fileName )
 {
    // Here we wshould loop over all of the following
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   //  Newtork
+   //Newtork
+   veNetwork = VE_XML::VE_Model::Network();
    //Need to delete network first
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &veNetwork, "veNetwork" ) );
 
@@ -1960,7 +1961,7 @@ std::string Network::Save( std::string fileName )
    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
-   /*for ( size_t i = 0; i < links.size(); ++i )
+   for ( size_t i = 0; i < links.size(); ++i )
    {
       VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
       //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
@@ -1969,7 +1970,7 @@ std::string Network::Save( std::string fileName )
       xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
       *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
       *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
-      xmlLink->SetLinkName("TEST");
+      xmlLink->SetLinkName( ConvertUnicode( links.at( i ).GetName().c_str() ) );
 
       //Try to store link cons,
       //link cons are (x,y) wxpoint
@@ -1978,7 +1979,7 @@ std::string Network::Save( std::string fileName )
       {
          xmlLink->GetLinkPoint( j )->SetPoint( std::pair< unsigned int, unsigned int >( links[ i ].GetPoint( j )->x, links[ i ].GetPoint( j )->y ) );
       }
-   }*/
+   }
 
    //  Models
    std::map< int, Module >::iterator iter;

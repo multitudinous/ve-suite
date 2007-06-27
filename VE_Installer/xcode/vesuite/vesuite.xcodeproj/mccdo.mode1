@@ -299,12 +299,14 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CE0B20306471E060097A5F4</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>cfdVEXplorer.cxx_8.xcclassmodel</string>
+								<string>test.term</string>
 								<key>PBXSplitModuleInNavigatorKey</key>
 								<dict>
 									<key>Split0</key>
@@ -312,48 +314,35 @@
 										<key>PBXProjectModuleGUID</key>
 										<string>1CE0B20406471E060097A5F4</string>
 										<key>PBXProjectModuleLabel</key>
-										<string>cfdVEXplorer.cxx_8.xcclassmodel</string>
+										<string>test.term</string>
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>2573A6AC0C11B8E20057EED3</string>
+										<string>254279030C30719400D29152</string>
 										<key>history</key>
 										<array>
-											<string>2573A67F0C11B8E20057EED3</string>
-											<string>2573A6810C11B8E20057EED3</string>
-											<string>2573A6830C11B8E20057EED3</string>
-											<string>2573A6850C11B8E20057EED3</string>
 											<string>2573A6870C11B8E20057EED3</string>
 											<string>2573A6880C11B8E20057EED3</string>
 											<string>2573A6890C11B8E20057EED3</string>
 											<string>2573A68A0C11B8E20057EED3</string>
 											<string>2573A68B0C11B8E20057EED3</string>
 											<string>2573A68C0C11B8E20057EED3</string>
-											<string>2573A68D0C11B8E20057EED3</string>
 											<string>2573A68F0C11B8E20057EED3</string>
 											<string>2573A6900C11B8E20057EED3</string>
 											<string>2573A6910C11B8E20057EED3</string>
-											<string>2573A6920C11B8E20057EED3</string>
+											<string>254279010C30719400D29152</string>
 										</array>
 										<key>prevStack</key>
 										<array>
-											<string>2573A6940C11B8E20057EED3</string>
-											<string>2573A6960C11B8E20057EED3</string>
-											<string>2573A6980C11B8E20057EED3</string>
-											<string>2573A69A0C11B8E20057EED3</string>
 											<string>2573A69C0C11B8E20057EED3</string>
 											<string>2573A69D0C11B8E20057EED3</string>
 											<string>2573A69E0C11B8E20057EED3</string>
 											<string>2573A69F0C11B8E20057EED3</string>
 											<string>2573A6A00C11B8E20057EED3</string>
-											<string>2573A6A10C11B8E20057EED3</string>
 											<string>2573A6A30C11B8E20057EED3</string>
-											<string>2573A6A40C11B8E20057EED3</string>
 											<string>2573A6A60C11B8E20057EED3</string>
 											<string>2573A6A70C11B8E20057EED3</string>
 											<string>2573A6A80C11B8E20057EED3</string>
-											<string>2573A6A90C11B8E20057EED3</string>
-											<string>2573A6AB0C11B8E20057EED3</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -411,9 +400,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>2573A6770C11B3B90057EED3</string>
+				<string>254279050C30719400D29152</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>2573A6780C11B3B90057EED3</string>
+				<string>254279060C30719400D29152</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
