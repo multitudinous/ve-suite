@@ -301,11 +301,6 @@ viewlocPane( 0 )
         UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
         delete veCommand;
     }
-
-    /*if( preferences->GetMode( "Shut Down Xplorer Option" ) )
-    {
-        xplorerMenu->Enable( XPLORER_EXIT, true);
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
@@ -750,7 +745,7 @@ void AppFrame::CreateMenu()
    if( ( GetDisplayMode() != "Desktop" ) ||
        ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
    {
-      xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
+       xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
        xplorerMenu->Enable( XPLORER_EXIT, true);
    }
 
@@ -2019,3 +2014,13 @@ void AppFrame::OnInternalIdle()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ShutdownXplorerOptionOn()
+{
+    xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
+    xplorerMenu->Enable( XPLORER_EXIT, true);
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ShutdownXplorerOptionOff()
+{
+    xplorerMenu->Remove( XPLORER_EXIT );
+}

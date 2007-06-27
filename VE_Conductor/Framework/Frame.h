@@ -278,6 +278,10 @@ public:
     void Open( wxCommandEvent &event );
     void Save( wxCommandEvent &event );
     void SubmitToServer( wxCommandEvent &event );
+    ///Allow Xplorer shutdown option with user preferences
+    void ShutdownXplorerOptionOn( void );
+    ///Removes Xplorer shutdown option using user preferences
+    void ShutdownXplorerOptionOff( void );
 
 protected:
     void LoadFromServer( wxCommandEvent &event );

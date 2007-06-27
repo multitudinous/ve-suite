@@ -48,6 +48,8 @@
 //#include <iostream>
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
+#include "VE_Conductor/Framework/Frame.h"
+
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/UserPreferences.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
@@ -58,8 +60,9 @@
 using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
-    EVT_CHECKBOX( ID_NAVIGATION_CHKBX, UserPreferences::OnNavigationCheck )
-    EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON, UserPreferences::OnSetBackgroundColor )
+    EVT_CHECKBOX    ( ID_NAVIGATION_CHKBX,          UserPreferences::OnNavigationCheck )
+    EVT_BUTTON      ( ID_BACKGROUND_COLOR_BUTTON,   UserPreferences::OnSetBackgroundColor )
+    EVT_CHECKBOX    ( ID_SHUTDOWN_XPLORER,          UserPreferences::OnShutdownXplorer )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
@@ -125,9 +128,9 @@ void UserPreferences::CreateControls()
 
    CreateButtons(wxOK|wxCANCEL|wxHELP);
 
-    wxCheckBox* backgroundColorChkBx = 0;
-    wxCheckBox* navigationChkBx = 0;
-    wxCheckBox* shutdownModeChkBx = 0;
+   backgroundColorChkBx = 0;
+   navigationChkBx = 0;
+   shutdownModeChkBx = 0;
                    
    // Add page
    wxPanel* panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -149,7 +152,7 @@ void UserPreferences::CreateControls()
    colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
    navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-   shutdownModeChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+   shutdownModeChkBx = new wxCheckBox(panel, ID_SHUTDOWN_XPLORER, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
    xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
    xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
@@ -177,7 +180,6 @@ void UserPreferences::CreateControls()
 void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
-
    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -223,6 +225,21 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
       UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
       delete veCommand;
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnShutdownXplorer( wxCommandEvent& event )
+{
+    if( shutdownModeChkBx->IsChecked() )
+    {
+        static_cast< AppFrame* >( GetParent() )->ShutdownXplorerOptionOn();
+    }
+    else
+    {
+        static_cast< AppFrame* >( GetParent() )->ShutdownXplorerOptionOff();
+    }
+
+    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
+    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UserPreferences::GetMode( std::string mode )

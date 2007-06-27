@@ -94,7 +94,8 @@ public:
    enum
    {
       ID_NAVIGATION_CHKBX,
-	  ID_BACKGROUND_COLOR_BUTTON
+	  ID_BACKGROUND_COLOR_BUTTON,
+      ID_SHUTDOWN_XPLORER
    };
 
    virtual ~UserPreferences();
@@ -110,9 +111,13 @@ public:
    /// Creates the controls and sizers
    void CreateControls();
 
-
+   ///Check to set map for navigation pane
    void OnNavigationCheck( wxCommandEvent& event );
+   ///Check to set map for background color
    void OnSetBackgroundColor( wxCommandEvent& event );
+   ///Check to set map for Xplorer shutdown option
+   void OnShutdownXplorer( wxCommandEvent& event );
+
    bool GetMode( std::string mode );
    void ReadConfiguration( void );
    void WriteConfiguration( void );
@@ -122,6 +127,10 @@ public:
 
    ///Returns the chosen background color
    std::vector< double > GetBackgroundColor( void );
+
+    wxCheckBox* backgroundColorChkBx;///<Check box to set background color
+    wxCheckBox* navigationChkBx;///<Check box to launch navigation pane
+    wxCheckBox* shutdownModeChkBx;///<Check box for Xplorer shutdown option
    
 private:
    wxCheckListBox* prefChkBx;///<The check box list of preferences
