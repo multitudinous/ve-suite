@@ -124,57 +124,57 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::CreateControls()
 {    
-   UserPreferences* userPrefDialog = this;
+    UserPreferences* userPrefDialog = this;
 
-   CreateButtons(wxOK|wxCANCEL|wxHELP);
+    CreateButtons(wxOK|wxCANCEL|wxHELP);
 
-   backgroundColorChkBx = 0;
-   navigationChkBx = 0;
-   shutdownModeChkBx = 0;
-                   
-   // Add page
-   wxPanel* panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-   GetBookCtrl()->AddPage(panel, _("General"));
-   wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
-   panel->SetSizer(itemBoxSizer2);
-   wxString choices[1];
-   choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
-   prefChkBx = new wxCheckListBox( panel, ID_NAVIGATION_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
-   itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
-   ///////////////////////////////////////
-   panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-   GetBookCtrl()->AddPage(panel, _("Xplorer Settings"));
-   wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
-   panel->SetSizer(itemBoxSizer3);
-   wxBoxSizer* colorSizer = new wxBoxSizer(wxHORIZONTAL);
-   backgroundColorChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Use Preferred Background Color"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-   backgroundColorButton = new wxButton( panel, ID_BACKGROUND_COLOR_BUTTON, _T("Background Color"), wxDefaultPosition, wxDefaultSize, 0 );
-   colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-   navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-   shutdownModeChkBx = new wxCheckBox(panel, ID_SHUTDOWN_XPLORER, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    wxCheckBox* backgroundColorChkBx = 0;
+    wxCheckBox* navigationChkBx = 0;
+    shutdownModeChkBx = 0;
+       
+    // Add page
+    wxPanel* panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    GetBookCtrl()->AddPage(panel, _("General"));
+    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
+    panel->SetSizer(itemBoxSizer2);
+    wxString choices[1];
+    choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
+    prefChkBx = new wxCheckListBox( panel, ID_NAVIGATION_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
+    itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    ///////////////////////////////////////
+    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    GetBookCtrl()->AddPage(panel, _("Xplorer Settings"));
+    wxBoxSizer* itemBoxSizer3 = new wxBoxSizer(wxVERTICAL);
+    panel->SetSizer(itemBoxSizer3);
+    wxBoxSizer* colorSizer = new wxBoxSizer(wxHORIZONTAL);
+    backgroundColorChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Use Preferred Background Color"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    backgroundColorButton = new wxButton( panel, ID_BACKGROUND_COLOR_BUTTON, _T("Background Color"), wxDefaultPosition, wxDefaultSize, 0 );
+    colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+    colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    shutdownModeChkBx = new wxCheckBox(panel, ID_SHUTDOWN_XPLORER, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
-   xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
-   xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
-   xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
+    xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
+    xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
+    xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
 
-   backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
-   backgroundColorChkBx->IsChecked();
-   navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
-   navigationChkBx->IsChecked();
-   shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
-   shutdownModeChkBx->IsChecked();
+    backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
+    backgroundColorChkBx->IsChecked();
+    navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
+    navigationChkBx->IsChecked();
+    shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
+    shutdownModeChkBx->IsChecked();
 
-   itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
-   itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
-   itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
-   ///////////////////////////////////////
-   panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-   GetBookCtrl()->AddPage(panel, _("User Mode"));
-   ///////////////////////////////////////
-   panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-   GetBookCtrl()->AddPage(panel, _("Defaults"));
+    ///////////////////////////////////////
+    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    GetBookCtrl()->AddPage(panel, _("User Mode"));
+    ///////////////////////////////////////
+    panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+    GetBookCtrl()->AddPage(panel, _("Defaults"));
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnNavigationCheck( wxCommandEvent& event )

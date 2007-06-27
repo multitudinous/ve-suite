@@ -128,8 +128,6 @@ public:
    ///Returns the chosen background color
    std::vector< double > GetBackgroundColor( void );
 
-    wxCheckBox* backgroundColorChkBx;///<Check box to set background color
-    wxCheckBox* navigationChkBx;///<Check box to launch navigation pane
     wxCheckBox* shutdownModeChkBx;///<Check box for Xplorer shutdown option
    
 private:
