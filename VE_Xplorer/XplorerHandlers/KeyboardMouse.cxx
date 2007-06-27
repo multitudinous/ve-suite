@@ -743,16 +743,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     if( selectedDCS.valid() )
     {
-        m_selectShader->removeChild( selectedDCS.get() );
+        //m_selectShader->removeChild( selectedDCS.get() );
     }
-
-    /*
-    if( selectedDCS.valid() )
-    {
-        VE_Xplorer::cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->
-            SetActiveAttributeOnNode( selectedDCS->getDescriptions().at( 1 ), "Part", "Default Attribute" );
-    }
-    */
 
     if( listOfHits.empty() )
     {
@@ -833,10 +825,10 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
         osg::Vec3d center = activeDCS->getBound().center() * matrix;
         center_point->set( center.x(), center.y(), center.z() );
-
-        m_selectShader->addChild( activeDCS.get() );
     }
 
     selectedDCS = activeDCS;
+
+    //m_selectShader->addChild( selectedDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
