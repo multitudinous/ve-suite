@@ -276,7 +276,7 @@ char * UnitWrapper::Query ( const char* command
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( command, "Command", "vecommand" );
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-   
+
    std::string network;
    //The query function assumes 1 command to be processed at a time
    if ( objectVector.size() > 1)
@@ -284,7 +284,7 @@ char * UnitWrapper::Query ( const char* command
       network.assign( "NULL" );
       return CORBA::string_dup( network.c_str() );
    }
-   
+
    std::ostringstream strm;
    strm << activeId;
 
@@ -303,7 +303,7 @@ char * UnitWrapper::Query ( const char* command
       network = "NULL";
    }
 
-	return CORBA::string_dup( network.c_str() );
+   return CORBA::string_dup( network.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UnitWrapper::DeleteModuleInstance( ::CORBA::Long module_id )
