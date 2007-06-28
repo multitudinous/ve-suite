@@ -281,7 +281,7 @@ char * UnitWrapper::Query ( const char* command
    //The query function assumes 1 command to be processed at a time
    if ( objectVector.size() > 1)
    {
-      network.assign( "Must send 1 command at a time" );
+      network.assign( "NULL" );
       return CORBA::string_dup( network.c_str() );
    }
    

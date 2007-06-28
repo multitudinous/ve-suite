@@ -75,7 +75,7 @@ std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > o
    if ( !baseModel )
    {
       std::cerr << "Must call GetResultsEventHandler::SetBaseObject first" << std::endl;
-      return std::string();
+      return std::string("NULL");
    }
    
    VE_XML::Command resultsCommand;
@@ -84,7 +84,7 @@ std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > o
    size_t numInputs = baseModel->GetNumberOfResults();
    if ( numInputs == 0 )
    {
-      return std::string();
+      return std::string("NULL");
    }
    
    for ( size_t i = 0; i < numInputs; ++i )
