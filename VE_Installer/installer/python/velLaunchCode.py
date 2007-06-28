@@ -400,7 +400,7 @@ class Launch:
         """Writes the cluster script section before the environment setting."""
         if unix:
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
-            self.clusterScript += "ssh $1 << EOF\n"
+            self.clusterScript += "ssh -C $1 << EOF\n"
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
@@ -414,13 +414,19 @@ class Launch:
     def WriteClusterScriptPost(self):
         """Writes the cluster script section after the environment setting."""
         if unix:
-            slaveCommand = "%s &" %(string.join(self.XplorerCall("slave")))
-            masterCommand = "%s &" %(string.join(self.XplorerCall("master")))
+            slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
+            masterCommand = "%s" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
             #self.clusterScript += 'if ( $2 == "slave" ) then\n'
             #self.clusterScript += "    %s\n" %(slaveCommand)
             #self.clusterScript += "else\n"
-            self.clusterScript += "    %s\n" %(masterCommand)
+            ##NOTE: StdOutput written to local /var/tmp file to avoid
+            ##network traffic issues. Change " &" to " 2>&1 &" to reroute
+            ##StdErrors to local /var/tmp file as well.
+            self.clusterScript += "%s " %(masterCommand) + \
+                                  '| grep -v -e "Stable buffer is empty." > ' +\
+                                  os.path.join('/','var', 'tmp', 'vesOut.out')+\
+                                  " &\n"
             #self.clusterScript += "endif\n"
             self.clusterScript += "EOF\n"
 ##        elif windows:
