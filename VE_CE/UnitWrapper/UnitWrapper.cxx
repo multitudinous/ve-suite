@@ -292,12 +292,13 @@ char * UnitWrapper::Query ( const char* command
    std::string commandName = params->GetCommandName();
    std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
    currentEventHandler = eventHandlerMap.find( commandName );
-   if ( currentEventHandler != eventHandlerMap.end() )
+   if( currentEventHandler != eventHandlerMap.end() )
    {
       currentEventHandler->second->SetBaseObject( xmlModelMap[ strm.str() ] );
       network = currentEventHandler->second->Execute( objectVector );
    }
-   else
+
+   if( network.empty() )
    {
       network = "NULL";
    }
