@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.4//EN"
-"http://www.oasis-open.org/docbook/xml/4.4/docbookx.dtd">
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book>
   <title>VE-Suite Documentation</title>
 
@@ -58,43 +58,43 @@
     <title>User's Guide</title>
 
     <xi:include href="chapter_1_installation_and_setup.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_2_launcher.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_3_running_vesuite.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_4_visualizations.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_5_vebuilder.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
   </part>
 
   <part>
     <title>Developer Information</title>
 
     <xi:include href="chapter_6_code_guidelines.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_7_building_vesuite.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_8_dependencies.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_9_setting_the_environment.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_10_description_of_the_engines.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_11_software_development_documents.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_12_software_development_tools.xml"
-                xmlns:xi="http://www.w3.org/2001/XInclude" />
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
   </part>
 </book>
