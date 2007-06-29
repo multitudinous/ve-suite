@@ -23,10 +23,10 @@
 # * Boston, MA 02111-1307, USA.
 # *
 # * -----------------------------------------------------------------
-# * Date modified: $Date$
-# * Version:       $Rev$
-# * Author:        $Author$
-# * Id:            $Id$
+# * Date modified: $Date: 2007-06-19 13:48:43 -0500 (Tue, 19 Jun 2007) $
+# * Version:       $Rev: 8225 $
+# * Author:        $Author: mikelem $
+# * Id:            $Id: velServerKillWindow.py 8225 2007-06-19 18:48:43Z mikelem $
 # * -----------------------------------------------------------------
 # *
 # *************** <auto-copyright.pl END do not edit this line> **************
@@ -40,56 +40,55 @@ from time import sleep
 if windows:
     import win32api
 
-class ServerKillWindow(wx.Frame):
+class ServerAutoKillWindow(wx.Frame):
     """A window to shutdown the Nameserver after launch.
     Functions:
         __init__(pids, [parent, title])
         KillNameserver(event)
         OnClose(event)"""
-    def __init__(self, pids, conduct_Pid, parent = None, title = "Shutdown Name Server"):
+    def __init__(self, pids, conduct_Pid, parent = None, id = -1, title = ""):
         """Creates the Server Shutdown Window"""
-        wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.Point(0, 0),
-                          style = wx.DEFAULT_FRAME_STYLE &
-                          ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
-        self.pids = pids
-        self.c_Pid = str(conduct_Pid[0])
-        lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
-                                         "press the button below to shutdown\n"+\
-                                         "the Name Server.")
-        bDone = wx.Button(self, -1, "Shutdown Name Server")
-        self.Bind(wx.EVT_BUTTON, self.KillNameserver1, bDone)
-        rowSizer = wx.BoxSizer(wx.VERTICAL)
-        border = 10
-        rowSizer.Add(lblMsg, 2, wx.ALL, border)
-        rowSizer.Add(bDone, 1, wx.EXPAND)
-        rowSizer.SetMinSize(KILL_WINDOW_SIZE)
-        rowSizer.SetSizeHints(self)
-        Style(self)
-        self.SetSizer(rowSizer)
-        self.SetSize(KILL_WINDOW_SIZE)
-        #self.CentreOnScreen()
-        self.Show()
-        #self.runWhile()
-  
-    def KillNameserver1(self, event):
-        #Shutdown any Nameservers running on this computer.
-        if windows:
-            PROCESS_TERMINATE = 1
-            for pid in self.pids:
-                try:
-                    handle = win32api.OpenProcess(PROCESS_TERMINATE,
-                                                  False, pid)
-                    win32api.TerminateProcess(handle, -1)
-                    win32api.CloseHandle(handle)
-                except:
-                    pass
-        elif unix:
-            killArray = ["kill"]
-            for pid in self.pids:
-                killArray[len(killArray):] = [str(pid)]
-            Popen(killArray)
-        self.OnClose()
+        wx.Frame.__init__(self, parent, id, title, size = (0, 0), 
+                          style = wx.DEFAULT_FRAME_STYLE | wx.NO_FULL_REPAINT_ON_RESIZE) 
 
+        self.pids = pids
+	self.c_Pid = str(conduct_Pid[0])
+        self.Show()
+	self.OnClose()
+        self.KillNameServer()
+
+    def KillNameServer(self):
+	if windows:
+	   #pslist is precompiled dos systemtool (pslist.exe) which needs to be distributed as a dependency
+           ps = os.popen("pslist " + self.c_Pid).read().split()
+	   while (len(ps) >= 20):
+	       ps = os.popen("pslist " + self.c_Pid).read().split()
+	       sleep(2)
+
+           PROCESS_TERMINATE = 1
+           for pid in self.pids:
+               try:
+                   handle = win32api.OpenProcess(PROCESS_TERMINATE,
+                                                 False, pid)
+                   win32api.TerminateProcess(handle, -1)
+                   win32api.CloseHandle(handle)
+               except:
+                   pass
+	   
+        elif unix:
+	   ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
+	   #print "self.c_pid %s : " % self.c_Pid
+
+	   while (len(ps) <= 4):
+	       ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
+	       #print "while loop : %s " % ps
+	       sleep(2)
+
+           killArray = ["kill"]
+           for pid in self.pids:
+               killArray.append(str(pid))
+           Popen(killArray)
+           	     
     def OnClose(self, event = None):
         #Closes Server Shutdown Window
         self.Hide()

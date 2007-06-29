@@ -73,16 +73,17 @@ from velClusterDict import *
 from velJconfWindow import *
 from velClusterWindow import *
 from velSettingWin import *
+from velServerAutoKillWindow import *
 from velServerKillWindow import *
 from velCommandLine import *
 from velLaunchCode import *
-import velLaunchSplash
 from velDebugWindow import *
 from velSetWaitWindow import *
 import velShell
 from velRecentFiles import *
 from velDepsArray import *
 from velDepsWindow import *
+import velLaunchSplash as AS
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -196,6 +197,12 @@ class LauncherWindow(wx.Frame):
         self.ConstructRecentMenu()
         menu.AppendMenu(502, "Open &Recent File", self.recentMenu)
         menu.Append(501, "&Close File\tCtrl+W")
+        self.prefSubMenu = wx.Menu()
+	self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
+	menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
+	if windows:
+            self.prefSubMenu.Check(602, False)
+	    self.prefSubMenu.Enable(602, False)
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         ##Recent files as separated add-on
         ##menu.AppendSeparator()
@@ -238,7 +245,8 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 524)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 525)
-        
+        self.Bind(wx.EVT_MENU, self.Preference, id = 601)
+
         ##Layout format settings
         ##Create the overall layout box
         rowSizer = wx.BoxSizer(wx.VERTICAL)
@@ -355,6 +363,13 @@ class LauncherWindow(wx.Frame):
                                    "Error: /bin Directory Missing", wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+
+    def Preference(self, event = None):
+	
+        #self.UpdateDisplay()
+        return
+
+
 
     def OpenFile(self, event = None):
         self.UpdateData()
@@ -704,6 +719,41 @@ class LauncherWindow(wx.Frame):
         frame = SettingsWindow(self, self.state, position = position)
         frame.ShowModal()
 
+    def SpScreen(self):
+        self.Iconize()
+        wx.MilliSleep(50)
+        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
+        #image = wx.Bitmap("velauncher_banner.png", wx.BITMAP_TYPE_PNG)
+        frame1 = AS.AdvancedSplash(self, bitmap = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
+        frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
+
+        frame1.SetTextColour(wx.BLACK)
+        frame1.SetTextPosition((155,45))
+        frame1.SetTextFont(wx.Font(8, wx.DECORATIVE, wx.NORMAL, wx.NORMAL, False))
+        frame1.SetText(" Version 1.1 \n ")
+        wx.MilliSleep(200)
+
+	if self.state.GetSurface("NameServer"):
+            frame1.SetText(" Version 1.1 \n Starting Name Server...")
+            wx.MilliSleep(3000)
+
+	if self.state.GetSurface("Xplorer"):
+            frame1.SetText(" Version 1.1 \n Starting Xplorer...")
+            wx.MilliSleep(1000)
+	if self.state.GetSurface("Conductor"):
+            frame1.SetText(" Version 1.1 \n Starting Conductor...")
+            wx.MilliSleep(700)
+
+            frame1.SetText(" Version 1.1 \n Preparing to Launch VE-Suite...")
+            wx.MilliSleep(1000)
+	
+        frame1.Close()        
+
+    def OnCloseSplash(self, event):
+
+        event.Skip()
+        self.Iconize(False)
+
     def Launch(self, event = None):
         """Checks input, begins launch if error-free."""
         self.UpdateData()
@@ -861,7 +911,8 @@ class LauncherWindow(wx.Frame):
         self.state.React(alternateDep, "DependenciesDir", alternateDep)
         ##Hide the Launcher.
         self.Hide()
-        ##Add any user-chosen launched files to RecentFiles list.
+
+	##Add any user-chosen launched files to RecentFiles list.
         fileVariables = ["ShellScript", "VESFile"]
         for fileVar in fileVariables:
             if self.state.IsEnabled(fileVar) and v(fileVar) != None:
@@ -869,18 +920,36 @@ class LauncherWindow(wx.Frame):
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
-
+	#self.SpScreen()
         ##Launch splash screen
-	velLaunchSplash.LaunchSplash()
-        #thread.start_new_thread(velLaunchSplash.LaunchSplash, ())
-	
+	#velLaunchSplash.LaunchSplash()
+	self.OnClose()
+	#self.SpScreen()
+	thread.start_new_thread(self.SpScreen, ())
         ##Go into the Launch
+ 
+	#self.prefSubMenu
         try:
             launchInstance = Launch(self.state.GetLaunchSurface())
             ##Show NameServer kill window if NameServer was started.
             if v("NameServer"):
-                window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
-					  conduct_Pid = launchInstance.GetConductorPid())
+		#pids = launchInstance.GetNameserverPids()
+		#conduct_Pid = launchInstance.GetConductorPid()
+		self.OnClose()
+		if (self.prefSubMenu.IsChecked(602)):
+                    window = ServerAutoKillWindow(pids = launchInstance.GetNameserverPids(),
+		 			          conduct_Pid = launchInstance.GetConductorPid())
+
+		else:
+                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
+		 			      conduct_Pid = launchInstance.GetConductorPid())
+		
+                #window = ServerKillWindow1(pids = launchInstance.GetNameserverPids(),
+		#                           conduct_Pid = launchInstance.GetConductorPid())
+		#lock=thread.allocate_lock()
+ 	        #thread.start_new_thread(ServerKillWindow, (pids, conduct_Pid, lock))
+                #while 1:pass
+
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,
                                    "Launch aborted by user.",
@@ -888,9 +957,8 @@ class LauncherWindow(wx.Frame):
                                    wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
-        ##Close the Launcher
-	self.OnClose()
 
+        ##Close the Launcher
     def OnClose(self, event=None):
         """Saves launcher's current configuration and quits the launcher.
 
@@ -904,6 +972,30 @@ class LauncherWindow(wx.Frame):
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
             velShell.Start(self.state.GetSurface("ShellScript"))
+
+class LaunchSplash(wx.SplashScreen):
+    def __init__(self, parent=None):
+        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
+        wx.SplashScreen.__init__(self, image, wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
+                                 3000, None, -1)
+        self.Bind(wx.EVT_CLOSE, self.OnExit)
+
+        wx.Yield()
+
+    def OnExit(self, evt):
+        self.Hide()
+
+	if not CommandLine(opts, args, previousState).AutoLaunched():
+	    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+	    app.SetTopWindow(frame)
+            frame.Show(True)
+        evt.Skip()  # Make sure the default handler runs too...
+
+class MyApp(wx.App):
+    def OnInit(self):
+        MySplash = LaunchSplash()
+        MySplash.Show()
+        return True
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
@@ -963,7 +1055,15 @@ if not CommandLine(opts, args, previousState).AutoLaunched():
 app.MainLoop()
 ##Command Line Check, then Window Boot (if necessary)
 del config
-
+del app
+"""
+app = wx.PySimpleApp()
+if not CommandLine(opts, args, previousState).AutoLaunched():
+    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+app.MainLoop()
+##Command Line Check, then Window Boot (if necessary)
+del config
+"""
 ####Window boot
 ##if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
 ##   (len(opts) == 0 or (len(opts) == 1 and devMode)):
