@@ -1,0 +1,77 @@
+import os, sys, string
+from SCons.Util import WhereIs
+pj = os.path.join
+
+Import('ves_pkg', 'RootDir')
+env = ves_pkg.getEnv().Copy()
+
+DOCBOOKBASE = pj(RootDir,'external','DocBook')
+DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-1.72.0')
+DOCBOOK_FO = pj(DOCBOOKBASE,'fop-0.20.5')
+HTML_XSL = pj(DOCBOOK_XSL,'html','docbook.xsl')
+#CHUNK_HTML_XSL = pj(DOCBOOK_XSL,'html','chunk.xsl')
+CHUNK_HTML_XSL = pj(DOCBOOK_FO,'stylesheet','html.xsl')
+FO_XSL = pj(DOCBOOK_XSL,'fo','docbook.xsl')
+
+##Base parameters.
+relativeDir = pj('share', 'docs', 'docbook')
+baseDir = pj('#', relativeDir)
+
+xslt_cmd = WhereIs('xsltproc')
+xml_cmd = WhereIs('xmllint')
+fo_cmd = pj(DOCBOOK_FO, 'fop.sh')
+
+##NOTE: Do NOT put the suffixes of the filenames.
+srcs = Split("""
+   vesuite
+""")
+
+resolvedSrcs = map(lambda s: pj(baseDir, "xml_sources", "%s.tmp" %(s)), srcs)
+foedSrcs = map(lambda s: pj(baseDir, "xml_sources","%s.fo" %(s)), srcs)
+htmlTargets = map(lambda s: pj(baseDir, "%s/%s.html" %(s,s)), srcs)
+htmlChunkTargets = map(lambda s: pj(baseDir, "%s-multipage/index.html" %(s)), srcs)
+pdfTargets = map(lambda s: pj(baseDir, "%s/%s.pdf" %(s,s)), srcs)
+srcs = map(lambda s: pj(baseDir, "xml_sources", "%s.xml" %(s)), srcs)
+
+##Builder for making *.xml into the resolved *.tmp.
+##(Replaces reference links with the docs linked.)
+
+xmlAction = '%s --xinclude ${SOURCE.abspath} > ${TARGET.abspath}' % xml_cmd
+
+xmlResolveBuilder = Builder(action = xmlAction, single_source = True,
+                            suffix = ".tmp", chdir = relativeDir)
+								
+#Convert an XML source file Unix or Linux:
+foAction = '%s %s ${TARGET.abspath} %s %s %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "fop.extensions 1", "--stringparam", "alignment start", FO_XSL)
+foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo",
+                    chdir = relativeDir)
+
+htmlAction = '%s %s ${TARGET.abspath} %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "navig.graphics 1", HTML_XSL)
+htmlBuilder = Builder(action = htmlAction, single_source = True,
+                      suffix = ".html", chdir = relativeDir)
+
+htmlChunkAction = '%s %s ${TARGET.abspath} %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "use.extensions 0", CHUNK_HTML_XSL)
+htmlChunkBuilder = Builder(action = htmlChunkAction, single_source = True,
+                           suffix = ".html", chdir = relativeDir)
+
+pdfAction = '%s ${SOURCE.abspath} ${TARGET.abspath}' % fo_cmd
+pdfBuilder = Builder(action = pdfAction, single_source = True, suffix = ".pdf",
+                     chdir = relativeDir)
+
+env.Append(BUILDERS = {'xmlResolve': xmlResolveBuilder,
+                       'fo': foBuilder,
+                       'html': htmlBuilder,
+		       'htmlChunk': htmlChunkBuilder,
+		       'pdf': pdfBuilder})
+
+env.xmlResolve(srcs)
+env.fo(resolvedSrcs)
+
+##Build the docs.
+env.html(target = htmlTargets, source = resolvedSrcs)
+env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
+env.pdf(target = pdfTargets, source = foedSrcs)
+
+##Extra cleaning
+#for chunkTarget in htmlChunkTargets:
+#      	Clean(chunkTarget, os.path.dirname(chunkTarget))
