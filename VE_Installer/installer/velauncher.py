@@ -920,12 +920,17 @@ class LauncherWindow(wx.Frame):
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
-	#self.SpScreen()
+        if windows:
+            self.SpScreen()
         ##Launch splash screen
 	#velLaunchSplash.LaunchSplash()
 	self.OnClose()
 	#self.SpScreen()
-	thread.start_new_thread(self.SpScreen, ())
+	if unix:
+            try:
+                thread.start_new_thread(self.SpScreen, ())
+            except:
+                pass
         ##Go into the Launch
  
 	#self.prefSubMenu
@@ -972,30 +977,6 @@ class LauncherWindow(wx.Frame):
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
             velShell.Start(self.state.GetSurface("ShellScript"))
-
-class LaunchSplash(wx.SplashScreen):
-    def __init__(self, parent=None):
-        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
-        wx.SplashScreen.__init__(self, image, wx.SPLASH_CENTRE_ON_SCREEN | wx.SPLASH_TIMEOUT,
-                                 3000, None, -1)
-        self.Bind(wx.EVT_CLOSE, self.OnExit)
-
-        wx.Yield()
-
-    def OnExit(self, evt):
-        self.Hide()
-
-	if not CommandLine(opts, args, previousState).AutoLaunched():
-	    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-	    app.SetTopWindow(frame)
-            frame.Show(True)
-        evt.Skip()  # Make sure the default handler runs too...
-
-class MyApp(wx.App):
-    def OnInit(self):
-        MySplash = LaunchSplash()
-        MySplash.Show()
-        return True
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
