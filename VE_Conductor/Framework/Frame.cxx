@@ -767,56 +767,44 @@ void AppFrame::CreateMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
 {
-    int w, h, sx, sy;
-    network->GetClientSize(&w, &h);
-    network->GetVirtualSize(&sx, &sy);
-
     if( network->GetUserScale()->first > 4 )
     {    
         return; // maximum zoom in x3
     }
 
-    network->GetUserScale()->first +=0.1;
-    network->GetUserScale()->second +=0.1; 
+    network->GetUserScale()->first += 0.1;
+    network->GetUserScale()->second += 0.1; 
     network->GetNumPix()->first += 1;
     network->GetNumPix()->second += 1;
     
     int xpos, ypos;
     network->GetViewStart( &xpos, &ypos );
     network->SetScrollbars( 
-        network->GetNumPix()->first, 
-        network->GetNumPix()->second, 
-        network->GetNumUnit()->first, 
-        network->GetNumUnit()->second );
-    network->Scroll(xpos, ypos);
-    network->ReDrawAll();
+        network->GetNumPix()->first, network->GetNumPix()->second, 
+        network->GetNumUnit()->first, network->GetNumUnit()->second,
+        xpos, ypos );
+    network->Refresh(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
 {
-    int w, h, sx, sy;
-    network->GetClientSize(&w, &h);
-    network->GetVirtualSize(&sx, &sy);
-
-    if( network->GetUserScale()->first < 0.4 )
+    if( network->GetUserScale()->first < 0.1 )
     {   
         return; //minimum x-5
     }
 
     network->GetUserScale()->first -= 0.1;
-    network->GetUserScale()->second -=0.1;
-    network->GetNumPix()->first-=1;
-    network->GetNumPix()->second-=1;
+    network->GetUserScale()->second -= 0.1;
+    network->GetNumPix()->first -= 1;
+    network->GetNumPix()->second -= 1;
 
     int xpos, ypos;
     network->GetViewStart(&xpos, &ypos);
     network->SetScrollbars( 
-        network->GetNumPix()->first, 
-        network->GetNumPix()->second, 
-        network->GetNumUnit()->first, 
-        network->GetNumUnit()->second );
-    network->Scroll(xpos, ypos);
-    network->ReDrawAll();
+        network->GetNumPix()->first, network->GetNumPix()->second, 
+        network->GetNumUnit()->first, network->GetNumUnit()->second,
+        xpos, ypos );
+    network->Refresh(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )

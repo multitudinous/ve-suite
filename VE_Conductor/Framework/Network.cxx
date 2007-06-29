@@ -78,7 +78,6 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
     // Also see wxPaintEvent
     // overriding this function allows us to handle when things on redrawn
     EVT_PAINT( Network::OnPaint )
-    EVT_ERASE_BACKGROUND( Network::OnErase )
     //See wxMoveEvent for info on this
     // Motion now only used for dragging
     EVT_MOTION( Network::OnMouseMove )
@@ -122,11 +121,13 @@ Network::Network(wxWindow* parent, int id)
    frame = dynamic_cast< AppFrame* >( parent->GetParent()->GetParent() );
    dragging = false;
    SetBackgroundColour(*wxWHITE);
+   //This is for the paint buffer
    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
-   int virX, virY;
-   GetVirtualSize(&virX, &virY);
-   bitmapBuffer = new wxBitmap(virX, virY);
+   //int virX, virY;
+   //GetVirtualSize(&virX, &virY);
+   //bitmapBuffer = new wxBitmap(virX, virY);
+   //bitmapBuffer->SetMask( new wxMask() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -153,20 +154,25 @@ Network::~Network()
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
-   while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
+    while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
 
-   wxBufferedPaintDC dc(this, *bitmapBuffer, wxBUFFER_VIRTUAL_AREA);
+    //xBufferedPaintDC dc(this, *bitmapBuffer, wxBUFFER_VIRTUAL_AREA);
+    wxAutoBufferedPaintDC dc(this);
+    dc.Clear();
+    dc.SetUserScale( userScale.first, userScale.second );
+    int xpix, ypix;
+    GetScrollPixelsPerUnit( &xpix, &ypix );
 
-   dc.Clear();
-   dc.SetUserScale( userScale.first, userScale.second );
-  
-   ReDraw(dc); 
+    int x, y;
+    GetViewStart( &x, &y );
 
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-}
-////////////////////////////////////////////////////////////////////////////////
-void Network::OnErase(wxEraseEvent& WXUNUSED( event ) )
-{
+    // account for the horz and vert scrollbar offset
+    dc.SetDeviceOrigin( -x * xpix, -y * ypix );
+
+    dc.SetFont( GetFont() );  
+    ReDraw(dc); 
+
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnMLeftDown(wxMouseEvent& event)
@@ -184,7 +190,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
     wxClientDC dc(this);
     PrepareDC(dc);
     dc.SetUserScale( userScale.first, userScale.second );
-
+    
     wxPoint evtpos = event.GetLogicalPosition(dc);
 
     long x = evtpos.x;
@@ -704,7 +710,7 @@ void Network::OnDelMod(wxCommandEvent& event )
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
-   ReDrawAll();
+   Refresh( true );
 }
 
 /////////////////////////////////////
@@ -1671,25 +1677,6 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
 ////////////////////////////////////////
 /////// Draw Functions /////////////////
 ////////////////////////////////////////
-void Network::ReDrawAll()
-{
-   wxClientDC dc(this);
-   PrepareDC(dc);
-   wxRect box;  
-   //  box.x = box.y=0;
-   //  box.width = dc.MaxX();
-   //  box.height = dc.MaxY();
-   //  dc.SetPen(*wxWHITE_PEN);
-   //  dc.SetBrush(*wxWHITE_BRUSH);
-   CleanRect(box, dc); 
-   dc.SetUserScale(userScale.first, userScale.second);
-   //dc.SetBackground(*wxWHITE_BRUSH);
-   //dc.Clear();
-   //dc.SetPen(*wxBLACK_PEN);
-   //dc.SetBrush(*wxWHITE_BRUSH);
-   ReDraw(dc);
-}
-
 /////////////////////////////////
 void Network::ReDraw(wxDC &dc)
 {
@@ -1780,7 +1767,7 @@ void Network::DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc )
    wxString text;
    int w, h;
    
-   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+   //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
 
    for (i=0; i<(int)ports.size(); i++)
    {
@@ -2171,6 +2158,17 @@ void Network::CreateNetwork( std::string xmlNetwork )
    long int tempScaleInfo;
    veNetwork.GetDataValuePair( 0 )->GetData( (userScale.first)  );
    veNetwork.GetDataValuePair( 1 )->GetData( (userScale.second) );
+   
+   if( userScale.first > 1 )
+   {
+       //userScale.first = 1;
+   }
+
+   if( userScale.second > 1 )
+   {
+       //userScale.second = 1;
+   }
+   
    veNetwork.GetDataValuePair( 2 )->GetData( tempScaleInfo );
    numPix.first = tempScaleInfo;
    veNetwork.GetDataValuePair( 3 )->GetData( tempScaleInfo );

@@ -86,11 +86,8 @@ public:
    void SetIDOnAllActiveModules( void );
    wxMutex s_mutexProtect;
 
-   void ReDrawAll();
-
    //Event Handlers
    void OnPaint( wxPaintEvent &event );
-   void OnErase( wxEraseEvent &event );
    void OnMouseMove( wxMouseEvent &event );
    void OnMLeftDown( wxMouseEvent &event );
    void OnMLeftUp( wxMouseEvent &event );
@@ -105,7 +102,7 @@ public:
    //Add to network fuctions
    void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
    void AddTag(int x, int y, wxString text);
-
+       
    //Save and Load the network
    std::string Save( std::string fileName );
    ///Load calls new when loading the network
