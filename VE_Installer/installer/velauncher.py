@@ -723,8 +723,7 @@ class LauncherWindow(wx.Frame):
         self.Iconize()
         wx.MilliSleep(50)
 	self.mutex.acquire()
-        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_PNG)
-        #image = wx.Bitmap("velauncher_banner.png", wx.BITMAP_TYPE_PNG)
+        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
         frame1 = AS.AdvancedSplash(self, bitmap = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
         frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 
