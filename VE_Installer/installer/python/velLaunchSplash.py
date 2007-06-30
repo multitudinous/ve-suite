@@ -194,7 +194,7 @@ class AdvancedSplash(wx.Frame):
         dc.SetTextForeground(textcolour)
         dc.DrawText(text, textpos[0], textpos[1])
 
-        wx.SafeYield()
+        #wx.SafeYield()
         
         event.Skip()
 

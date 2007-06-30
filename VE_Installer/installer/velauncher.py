@@ -722,32 +722,33 @@ class LauncherWindow(wx.Frame):
     def SpScreen(self):
         self.Iconize()
         wx.MilliSleep(50)
-        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
+	self.mutex.acquire()
+        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_PNG)
         #image = wx.Bitmap("velauncher_banner.png", wx.BITMAP_TYPE_PNG)
         frame1 = AS.AdvancedSplash(self, bitmap = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
         frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 
         frame1.SetTextColour(wx.BLACK)
-        frame1.SetTextPosition((155,45))
-        frame1.SetTextFont(wx.Font(8, wx.DECORATIVE, wx.NORMAL, wx.NORMAL, False))
-        frame1.SetText(" Version 1.1 \n ")
+        frame1.SetTextPosition((155,43))
+        frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
+        frame1.SetText("Version 1.1\n")
         wx.MilliSleep(200)
 
 	if self.state.GetSurface("NameServer"):
-            frame1.SetText(" Version 1.1 \n Starting Name Server...")
-            wx.MilliSleep(3000)
-
+            frame1.SetText("Version 1.1" + "\n" + "Starting Name Server...")
+            wx.MilliSleep(2000)
 	if self.state.GetSurface("Xplorer"):
-            frame1.SetText(" Version 1.1 \n Starting Xplorer...")
+            frame1.SetText("Version 1.1\n" + "Starting Xplorer...")
             wx.MilliSleep(1000)
 	if self.state.GetSurface("Conductor"):
-            frame1.SetText(" Version 1.1 \n Starting Conductor...")
+            frame1.SetText("Version 1.1\n" + "Starting Conductor...")
             wx.MilliSleep(700)
 
-            frame1.SetText(" Version 1.1 \n Preparing to Launch VE-Suite...")
+            frame1.SetText("Version 1.1\n" + "Preparing to Launch VE-Suite...")
             wx.MilliSleep(1000)
-	
+
         frame1.Close()        
+	self.mutex.release()
 
     def OnCloseSplash(self, event):
 
@@ -923,17 +924,14 @@ class LauncherWindow(wx.Frame):
         if windows:
             self.SpScreen()
         ##Launch splash screen
-	#velLaunchSplash.LaunchSplash()
 	self.OnClose()
-	#self.SpScreen()
 	if unix:
+	    self.mutex = thread.allocate_lock()	
             try:
                 thread.start_new_thread(self.SpScreen, ())
             except:
                 pass
         ##Go into the Launch
- 
-	#self.prefSubMenu
         try:
             launchInstance = Launch(self.state.GetLaunchSurface())
             ##Show NameServer kill window if NameServer was started.
@@ -949,12 +947,6 @@ class LauncherWindow(wx.Frame):
                     window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
 		 			      conduct_Pid = launchInstance.GetConductorPid())
 		
-                #window = ServerKillWindow1(pids = launchInstance.GetNameserverPids(),
-		#                           conduct_Pid = launchInstance.GetConductorPid())
-		#lock=thread.allocate_lock()
- 	        #thread.start_new_thread(ServerKillWindow, (pids, conduct_Pid, lock))
-                #while 1:pass
-
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,
                                    "Launch aborted by user.",

@@ -65,7 +65,7 @@ IMAGES_DIR = join(os.path.dirname(VELAUNCHER_DIR), "bin", "installerImages")
 if not os.path.isdir(IMAGES_DIR):
     IMAGES_DIR = join(VELAUNCHER_DIR, "installerImages")
 LOGO_LOCATION = join(IMAGES_DIR, "ve_logo.xpm")
-SPLASH_IMAGE = join(IMAGES_DIR, "velauncher_banner.xpm")
+SPLASH_IMAGE = join(IMAGES_DIR, "velauncher_banner.png")
 SPLASH_TIME = 7000 ##milliseconds before auto-close
 if windows:
     ##Change this if cluster.bat can't write to its directory.
