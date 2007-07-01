@@ -223,14 +223,13 @@ deviceProperties( 0 ),
 navPane( 0 ),
 viewlocPane( 0 )
 {
-    serviceList = VE_Conductor::CORBAServiceList::instance();
-
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( size_t i = 0; i < ::wxGetApp().argc; ++i )
     {
         tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
+    serviceList = VE_Conductor::CORBAServiceList::instance();
     serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
 
     this->SetIcon( ve_icon32x32_xpm );
@@ -682,7 +681,12 @@ void AppFrame::CreateMenu()
    //edit_menu->AppendSeparator();
    edit_menu->Append(v21ID_ZOOMIN, _("Zoom &In\tCtrl+UP"));
    edit_menu->Append(v21ID_ZOOMOUT, _("Zoom &Out\tCtrl+DOWN"));
-
+   //This is needed because on windows the scale must be 1 for the
+   //wxAutoBufferedPaintDC to work properly
+#ifdef WINDOWS
+   edit_menu->Enable(v21ID_ZOOMIN, false);
+   edit_menu->Enable(v21ID_ZOOMOUT, false);
+#endif
    //edit_menu->Enable(v21ID_UNDO, false);
    //edit_menu->Enable(v21ID_REDO, false);
 
@@ -724,36 +728,36 @@ void AppFrame::CreateMenu()
     xplorerView->Append( CHANGE_XPLORER_VIEW_LOGO, _("Logo") );
 
 	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
-	xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
-	xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
-	xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
-   
-	xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
-	xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
-	xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
-	xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
-	//xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
-   //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-   xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            xplorerDeviceMenu,  _("Used to change device properties") );
-	xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-   xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
-   xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
-   //add the view settings
-   xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );
-   //If the display mode is desktop then we will disconnect when exit is selected
-   //and in other modes we will give the user the ability to exit
-   if( ( GetDisplayMode() != "Desktop" ) ||
-       ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
-   {
-       xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
-       xplorerMenu->Enable( XPLORER_EXIT, true);
-   }
+    xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
+    xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
+    xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
 
-   xplorerMenu->Enable( XPLORER_NAVIGATION, true);
-   xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
-   //xplorerMenu->Enable( XPLORER_SOUNDS, true);
-   xplorerMenu->Enable( XPLORER_SCENES, true);
-   xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+    xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
+    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
+    xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
+    xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
+    //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
+    //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
+    xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            xplorerDeviceMenu,  _("Used to change device properties") );
+    xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+    xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
+    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
+    //add the view settings
+    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );
+    //If the display mode is desktop then we will disconnect when exit is selected
+    //and in other modes we will give the user the ability to exit
+    if( ( GetDisplayMode() != "Desktop" ) ||
+        ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
+    {
+        xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
+        xplorerMenu->Enable( XPLORER_EXIT, true);
+    }
+
+    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
+    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+    //xplorerMenu->Enable( XPLORER_SOUNDS, true);
+    xplorerMenu->Enable( XPLORER_SCENES, true);
+    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
 
     menubar->Append(file_menu, _("&File"));
     menubar->Append(edit_menu, _("&Edit"));
@@ -762,7 +766,7 @@ void AppFrame::CreateMenu()
     menubar->Append( xplorerMenu, _("&VE-Xplorer") );
     menubar->Append(help_menu, _("&Help"));
 
-   SetMenuBar( menubar );
+    SetMenuBar( menubar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
@@ -788,7 +792,7 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
 {
-    if( network->GetUserScale()->first < 0.1 )
+    if( network->GetUserScale()->first < 0.2 )
     {   
         return; //minimum x-5
     }

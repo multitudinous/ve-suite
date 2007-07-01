@@ -88,7 +88,10 @@ public:
 
    //Event Handlers
    void OnPaint( wxPaintEvent &event );
-   void OnMouseMove( wxMouseEvent &event );
+   ///This is needed to reduce flicker
+   ///Erase background callback
+   void OnEraseBackground( wxEraseEvent& event );
+    void OnMouseMove( wxMouseEvent &event );
    void OnMLeftDown( wxMouseEvent &event );
    void OnMLeftUp( wxMouseEvent &event );
 

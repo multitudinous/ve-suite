@@ -78,6 +78,8 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
     // Also see wxPaintEvent
     // overriding this function allows us to handle when things on redrawn
     EVT_PAINT( Network::OnPaint )
+    //This is necessary to erase the background
+    EVT_ERASE_BACKGROUND( Network::OnEraseBackground )
     //See wxMoveEvent for info on this
     // Motion now only used for dragging
     EVT_MOTION( Network::OnMouseMove )
@@ -102,11 +104,13 @@ Network::Network(wxWindow* parent, int id)
    links.clear();
    userScale.first=1;
    userScale.second=1;
-   GetNumUnit()->first=240;
-   GetNumUnit()->second=240;
+   GetNumUnit()->first=700;
+   GetNumUnit()->second=700;
    GetNumPix()->first = 10;
    GetNumPix()->second = 10;
-   SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+   SetScrollRate( 10, 10 );
+   SetVirtualSize( 7000, 7000 );
+   //SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
    m_selMod = -1;
    m_selFrPort = -1; 
    m_selToPort = -1; 
@@ -126,7 +130,7 @@ Network::Network(wxWindow* parent, int id)
 
    //int virX, virY;
    //GetVirtualSize(&virX, &virY);
-   //bitmapBuffer = new wxBitmap(virX, virY);
+   //bitmapBuffer = new wxBitmap(4000, 4000);
    //bitmapBuffer->SetMask( new wxMask() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -152,22 +156,44 @@ Network::~Network()
 ///////// Event Handlers ////////////////////
 /////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
+void Network::OnEraseBackground( wxEraseEvent& WXUNUSED( event ) )
+{
+    //do not implement 
+    //this is needed to reduce flicker
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
     while ( (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
 
-    //xBufferedPaintDC dc(this, *bitmapBuffer, wxBUFFER_VIRTUAL_AREA);
+    //wxBufferedPaintDC dc(this, *bitmapBuffer, wxBUFFER_VIRTUAL_AREA);
     wxAutoBufferedPaintDC dc(this);
+    //DoPrepareDC(dc);
     dc.Clear();
+    /*wxColour backgroundColour = GetBackgroundColour();
+    dc.SetBrush(wxBrush(backgroundColour));
+    dc.SetPen(wxPen(backgroundColour, 1));*/
+    
     dc.SetUserScale( userScale.first, userScale.second );
     int xpix, ypix;
     GetScrollPixelsPerUnit( &xpix, &ypix );
 
     int x, y;
     GetViewStart( &x, &y );
-
+    //std::cout << x << " " << y << " " << " " 
+    //  << xpix << " " << ypix << " " << userScale.first << std::endl;
     // account for the horz and vert scrollbar offset
     dc.SetDeviceOrigin( -x * xpix, -y * ypix );
+
+
+    /*wxRect windowRect(wxPoint(x, y), GetClientSize());    
+    
+    // We need to shift the client rectangle to take into account
+    // scrolling, converting device to logical coordinates    
+    CalcUnscrolledPosition(windowRect.x, windowRect.y,
+                           & windowRect.x, & windowRect.y);
+    dc.DrawRectangle(windowRect);*/
 
     dc.SetFont( GetFont() );  
     ReDraw(dc); 
@@ -1673,18 +1699,17 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
   //Update();
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
-
 ////////////////////////////////////////
 /////// Draw Functions /////////////////
 ////////////////////////////////////////
-/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::ReDraw(wxDC &dc)
 {
    // this function Redraw the design canvas
    dc.SetPen(*wxBLACK_PEN);
    dc.SetBrush(*wxWHITE_BRUSH);
    dc.SetBackground(*wxWHITE_BRUSH);
-   dc.Clear();
+   //dc.Clear();
    //dc.SetBackgroundMode(wxSOLID);
 
    // redraw all the active plugins
@@ -2154,21 +2179,13 @@ void Network::CreateNetwork( std::string xmlNetwork )
                         _("VES File Read Error"), wxOK | wxICON_INFORMATION );
     }*/
 
+//This is needed because on windows the scale must be 1 for the
+//wxAutoBufferedPaintDC to work properly
+#ifndef WINDOWS
    _fileProgress->Update( 30, _("start loading") );
    long int tempScaleInfo;
    veNetwork.GetDataValuePair( 0 )->GetData( (userScale.first)  );
    veNetwork.GetDataValuePair( 1 )->GetData( (userScale.second) );
-   
-   if( userScale.first > 1 )
-   {
-       //userScale.first = 1;
-   }
-
-   if( userScale.second > 1 )
-   {
-       //userScale.second = 1;
-   }
-   
    veNetwork.GetDataValuePair( 2 )->GetData( tempScaleInfo );
    numPix.first = tempScaleInfo;
    veNetwork.GetDataValuePair( 3 )->GetData( tempScaleInfo );
@@ -2177,7 +2194,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    numUnit.first = tempScaleInfo;
    veNetwork.GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
-
+#endif
    _fileProgress->Update( 35, _("start loading") );
 
     for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )

@@ -206,7 +206,7 @@ void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
    if (flag) 
       dc.DrawText( text, box.x, box.y );
 
-   fflush(NULL);
+   //fflush(NULL);
    dc.SetPen(old_pen);
    dc.SetBrush(old_brush);
 }
