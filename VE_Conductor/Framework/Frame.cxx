@@ -683,7 +683,7 @@ void AppFrame::CreateMenu()
    edit_menu->Append(v21ID_ZOOMOUT, _("Zoom &Out\tCtrl+DOWN"));
    //This is needed because on windows the scale must be 1 for the
    //wxAutoBufferedPaintDC to work properly
-#ifdef WINDOWS
+#ifdef _WINDOWS
    edit_menu->Enable(v21ID_ZOOMIN, false);
    edit_menu->Enable(v21ID_ZOOMOUT, false);
 #endif

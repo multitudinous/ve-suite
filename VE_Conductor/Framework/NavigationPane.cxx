@@ -557,7 +557,7 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
 void NavigationPane::UpdateNavigationData( void )
 {
    VE_XML::Command navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
-   if ( navPreferenceData.GetCommandName() == "NULL" )
+   if ( navPreferenceData.GetCommandName().empty() )
    {
       return;
    }
