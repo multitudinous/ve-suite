@@ -60,6 +60,7 @@ cfdScalarShaderManager::cfdScalarShaderManager()
    _stepSize[0] = .0001;
    _stepSize[1] = .0001;
    _stepSize[2] = .0001;
+   _tUnit = 0;
 }
 ///////////////////////////////////////////
 void cfdScalarShaderManager::Init()
