@@ -123,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_PATENTED;VE_SCENEGRAPH_UTILS_LIBRARY;_OSG"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_SCENEGRAPH_UTILS_LIBRARY;_OSG"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="loki.lib osg.lib osgDB.lib osgUtil.lib Producer.lib OpenThreadsWin32.lib"
+				AdditionalDependencies="loki.lib osg.lib osgDB.lib osgFX.lib  osgUtil.lib Producer.lib OpenThreadsWin32.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_osg_vep.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(PRODUCER_HOME)\lib\win32&quot;;&quot;$(OPENTHREADS_HOME)\lib\win32&quot;;$(VE_SUITE_HOME)\external\loki-0.1.6\lib"
