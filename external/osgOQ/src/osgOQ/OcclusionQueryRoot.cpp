@@ -38,17 +38,6 @@ OcclusionQueryRoot::OcclusionQueryRoot( OcclusionQueryContext* oqc )
 
 	if (oqc == NULL)
         _oqc = new OcclusionQueryContext;
-
-	// Set the StateSet of this top-level node to use
-	//   front-to-back and out-to-in ordering. Any
-	//   child nodes that require different rendering
-	//   should set their RenderBin details accordingly.
-	// NOTE if your application is already using bin 1,
-	//   get this nodes StateSet and change the bin
-	//   number yourself.
-	osg::StateSet* state = getOrCreateStateSet();
-	// TBD possible bug, bin num should be settable by end user.
-	state->setRenderBinDetails( 1, "FrontToBackOutToIn" );
 }
 
 OcclusionQueryRoot::~OcclusionQueryRoot()

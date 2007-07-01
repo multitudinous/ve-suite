@@ -17,7 +17,7 @@ osgDB::RegisterDotOsgWrapperProxy OcclusionQueryNode_Proxy
 (
     new osgOQ::OcclusionQueryNode,
     "OcclusionQueryNode",
-    "Object Node OcclusionQueryNode Switch Group",
+    "Object Node OcclusionQueryNode Group",
     OQN_readLocalData,
     OQN_writeLocalData
 );

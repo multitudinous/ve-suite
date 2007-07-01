@@ -96,13 +96,6 @@ OcclusionQueryNonFlatVisitor::~OcclusionQueryNonFlatVisitor()
 void
 OcclusionQueryNonFlatVisitor::apply( osg::Node& node )
 {
-	if ( !(getOQContext()->nameAvailable()) )
-	{
-		// Can't create any more OQNs.
-		osg::notify( osg::WARN ) << "OcclusionQueryVisitor: Exhausted OQNs." << std::endl;
-		return;
-	}
-
     if (node.getNumParents() == 0)
     {
         // Can't add an OQN above a root node.
@@ -176,13 +169,6 @@ OcclusionQueryFlatVisitor::~OcclusionQueryFlatVisitor()
 void
 OcclusionQueryFlatVisitor::apply( osg::Group& group )
 {
-	if ( !(getOQContext()->nameAvailable()) )
-	{
-		// Can't create any more OQNs.
-		osg::notify( osg::WARN ) << "OcclusionQueryVisitor: Exhausted OQNs." << std::endl;
-		return;
-	}
-
 	osgOQ::OcclusionQueryRoot* thisOQR = dynamic_cast<osgOQ::OcclusionQueryRoot*>( &group );
 	osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &group );
 	if ( (thisOQR != NULL) || (thisOQN != NULL) )
@@ -213,13 +199,6 @@ OcclusionQueryFlatVisitor::apply( osg::Group& group )
 void
 OcclusionQueryFlatVisitor::apply( osg::Geode& geode )
 {
-	if ( !(getOQContext()->nameAvailable()) )
-	{
-		// Can't create any more OQNs.
-		osg::notify( osg::WARN ) << "OcclusionQueryVisitor: Exhausted OQNs." << std::endl;
-		return;
-	}
-
     if (geode.getNumParents() == 0)
     {
         // Can't add an OQN above a root node.

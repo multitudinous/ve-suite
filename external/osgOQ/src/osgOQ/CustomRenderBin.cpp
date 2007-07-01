@@ -22,7 +22,7 @@ using namespace osgOQ;
 
 // Create a new RenderBin to store Drawables depth-sorted front to back.
 osgUtil::RegisterRenderBinProxy s_customRenderBinProxy(
-	"FrontToBackOutToIn", new CustomRenderBin() );
+	"FrontToBackAndOutToIn", new CustomRenderBin() );
 
 
 CustomRenderBin::CustomRenderBin()

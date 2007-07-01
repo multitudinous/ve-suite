@@ -18,19 +18,20 @@
 #include "osgOQ/ExportDeclaration.h"
 #include "osgOQ/OcclusionQueryContext.h"
 #include <osg/CopyOp>
-#include <osg/Switch>
+#include <osg/Group>
 #include <set>
+
 
 
 namespace osgOQ {
 
 
-class TestResults;
-
-// This class is for internal use by osgOQ, but is exported under
-//   Visual Studio so that the dot OSG wrapper (osgdb_osgOQ) can
-//   access it.
-class OSGOQ_EXPORT OcclusionQueryNode : public osg::Switch
+// This Node performs occlusion query testing on its children.
+//   You can use it directly to occlusion query test a portion
+//   of your scene graph, or you can use it implicitly with an
+//   OcclusionQueryRoot, which places OcclusionQueryNodes where
+//   needed and acts as a master control.
+class OSGOQ_EXPORT OcclusionQueryNode : public osg::Group
 {
 public:
     OcclusionQueryNode( OcclusionQueryContext* oqc=NULL );
@@ -52,20 +53,18 @@ public:
     void setOQC( OcclusionQueryContext* oqc ) { _oqc = oqc; }
     OcclusionQueryContext& getOQC() const { return *(_oqc.get()); }
 
-	void switchChildren( const int traversalNum );
-	void createChildren();
-	void updateBB();
+    virtual osg::BoundingSphere computeBound() const;
 
 protected:
-    void initializeContext( unsigned int contextID );
+	void createSupportNodes();
 
-    std::set<unsigned int> _initialized;
+    osg::ref_ptr< osg::Geode > _queryGeode;
+    osg::ref_ptr< osg::Geode > _debugGeode;
 
-	bool _enabled;
+    bool _enabled;
 	bool _debug;
+    int _lastQueryFrame;
     osg::ref_ptr<OcclusionQueryContext> _oqc;
-
-	osg::ref_ptr<TestResults> _tr;
 };
 
 }
