@@ -123,9 +123,10 @@ beamLineSegment( new osg::LineSegment )
     gmtl::identity( m_currentTransform );
     gmtl::identity( m_localToWorldTransform );
 
-    m_selectShader = new VE_SceneGraph::Utilities::SelectEffect();
-    VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->addChild( m_selectShader.get() );
-    m_selectShader->setEnabled( true );
+    //This causes xplorer to crash with multiple render contexts
+    //m_selectShader = new VE_SceneGraph::Utilities::SelectEffect();
+    //VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->addChild( m_selectShader.get() );
+    //m_selectShader->setEnabled( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
