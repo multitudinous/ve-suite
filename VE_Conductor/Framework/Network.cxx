@@ -2181,7 +2181,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
 //This is needed because on windows the scale must be 1 for the
 //wxAutoBufferedPaintDC to work properly
-#ifndef _WINDOWS
+#ifndef WIN32
    _fileProgress->Update( 30, _("start loading") );
    long int tempScaleInfo;
    veNetwork.GetDataValuePair( 0 )->GetData( (userScale.first)  );
