@@ -722,7 +722,8 @@ class LauncherWindow(wx.Frame):
     def SpScreen(self):
         self.Iconize()
         wx.MilliSleep(50)
-	self.mutex.acquire()
+        if not windows:
+            self.mutex.acquire()
         image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
         frame1 = AS.AdvancedSplash(self, bitmap = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
         frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
@@ -747,7 +748,8 @@ class LauncherWindow(wx.Frame):
             wx.MilliSleep(1000)
 
         frame1.Close()        
-	self.mutex.release()
+	if not windows:
+            self.mutex.release()
 
     def OnCloseSplash(self, event):
 
