@@ -131,10 +131,10 @@ class AdvancedSplash(wx.Frame):
         # Don't Know If It Works On Other Platforms!!
         # Tested Only In Windows XP/2000
         
-        if wx.Platform == "__WXGTK__":
-            self.Bind(wx.EVT_WINDOW_CREATE, self.SetSplashShape())
-        else:
+        if wx.Platform == "__WXMSW__":
             self.SetSplashShape()
+        else:
+            self.Bind(wx.EVT_WINDOW_CREATE, self.SetSplashShape())
             
         w = self.bmp.GetWidth()
         h = self.bmp.GetHeight()
