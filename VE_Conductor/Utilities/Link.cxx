@@ -302,9 +302,10 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
 
     //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
     //reverse the order of the points
+
     size_t maxSize = cons.size() - 1;
     for ( size_t i = 0; i < cons.size(); i++ )
-    {   
+	{   
         points[ i ] = cons[ maxSize - i ];
         //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
     }
@@ -681,7 +682,7 @@ void Link::OnMRightDown( wxMouseEvent &event )
     }
 
     the_pop_menu.Enable(DEL_LINK, true);
-    the_pop_menu.Enable(SHOW_LINK_CONT, true);
+    //the_pop_menu.Enable(SHOW_LINK_CONT, true);
     if (m_selLinkCon>=0) 
         the_pop_menu.Enable(DEL_LINK_CON, true);
     else

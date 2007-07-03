@@ -1062,6 +1062,8 @@ bool UIPluginBase::SelectMod( int x, int y )
    return false;
 }
 //////////////////////////////////////////////////////
+//WAS CAUSING CRASHES
+//////////////////////////
 void  UIPluginBase::OnShowResult(wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
@@ -1511,7 +1513,8 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     pop_menu.Append( SHOW_DESC, _("Show Module Description") );	
     pop_menu.Enable( SHOW_DESC, true);
     pop_menu.Append( SHOW_RESULT, _("Show Module Result") );
-    pop_menu.Enable( SHOW_RESULT, true);
+    //pop_menu.Enable( SHOW_RESULT, true);
+    pop_menu.Enable( SHOW_RESULT, false);
     pop_menu.Append( PARAVIEW, _("ParaView 3D Result") );
     pop_menu.Enable( PARAVIEW, false);
     if ( Has3Ddata() )
