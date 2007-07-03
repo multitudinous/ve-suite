@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="costello config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="costello config" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <cluster_node name="Node(costello)" version="1">
          <display_system>
@@ -65,8 +65,8 @@
                      <tracker_proxy>SimCamera Proxy</tracker_proxy>
                   </surface_viewport>
                </surface_viewports>
-               <keyboard_mouse_device_name />
-               <lock_key>0</lock_key>
+               <keyboard_mouse_device_name/>
+               <lock_key>KEY_NONE</lock_key>
                <start_locked>false</start_locked>
                <sleep_time>75</sleep_time>
             </display_window>
@@ -76,4 +76,3 @@
       </cluster_node>
    </elements>
 </configuration>
-

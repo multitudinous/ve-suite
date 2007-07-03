@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <display_system name="Display System" version="2">
          <number_of_pipes>1</number_of_pipes>
@@ -58,7 +58,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy />
+               <tracker_proxy/>
             </surface_viewport>
          </surface_viewports>
          <surface_viewports>
@@ -83,7 +83,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy />
+               <tracker_proxy/>
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -93,4 +93,3 @@
       </display_window>
    </elements>
 </configuration>
-

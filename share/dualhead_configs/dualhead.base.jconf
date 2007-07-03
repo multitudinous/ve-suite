@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Configuration" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <user name="User1" version="1">
          <head_position>VJHead</head_position>
@@ -59,141 +59,141 @@
          <key_pair>
             <key_modifier_pair name="RotateZ" version="1">
                <modifier_key>CTRL</modifier_key>
-               <key>23</key>
+               <key>KEY_F</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
+         <device_host/>
       </simulated_digital_device>
       <simulated_digital_device name="SimWandButtons" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>17</key>
+               <key>KEY_0</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 1" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>8</key>
+               <key>KEY_1</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 2" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>9</key>
+               <key>KEY_2</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 3" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>10</key>
+               <key>KEY_3</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 4" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>11</key>
+               <key>KEY_4</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 5" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>12</key>
+               <key>KEY_5</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 6" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>13</key>
+               <key>KEY_6</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 7" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>14</key>
+               <key>KEY_7</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 8" version="1">
                <modifier_key>NONE</modifier_key>
-               <key>15</key>
+               <key>KEY_8</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
+         <device_host/>
       </simulated_digital_device>
       <simulated_positional_device name="SimWandPos" version="3">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="Forward" version="1">
                <modifier_key>CTRL</modifier_key>
-               <key>48</key>
+               <key>MOUSE_NEGY</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Back" version="1">
                <modifier_key>CTRL</modifier_key>
-               <key>47</key>
+               <key>MOUSE_POSY</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Left" version="1">
                <modifier_key>CTRL</modifier_key>
-               <key>46</key>
+               <key>MOUSE_NEGX</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Right" version="1">
                <modifier_key>CTRL</modifier_key>
-               <key>45</key>
+               <key>MOUSE_POSX</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Up" version="1">
                <modifier_key>ALT</modifier_key>
-               <key>48</key>
+               <key>MOUSE_NEGY</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Down" version="1">
                <modifier_key>ALT</modifier_key>
-               <key>47</key>
+               <key>MOUSE_POSY</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Right" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>45</key>
+               <key>MOUSE_POSX</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Left" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>46</key>
+               <key>MOUSE_NEGX</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Up" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>16</key>
+               <key>KEY_9</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot Down" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>14</key>
+               <key>KEY_7</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot CCW" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>10</key>
+               <key>KEY_3</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="Rot CW" version="1">
                <modifier_key>SHIFT</modifier_key>
-               <key>8</key>
+               <key>KEY_1</key>
             </key_modifier_pair>
          </key_pair>
          <initial_position>0.5</initial_position>
@@ -206,50 +206,50 @@
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
-         <device_host />
+         <device_host/>
       </simulated_positional_device>
       <simulated_digital_device name="DigitalSystemControls" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
                <modifier_key>ANY</modifier_key>
-               <key>44</key>
+               <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
+         <device_host/>
       </simulated_digital_device>
       <simulated_relative_position name="SimRelativePosition1" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
-         <device_host />
+         <device_host/>
       </simulated_relative_position>
       <simulated_digital_device name="AppDigitalSim" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
          <key_pair>
             <key_modifier_pair name="KeyPresses 0" version="1">
                <modifier_key>ANY</modifier_key>
-               <key>34</key>
+               <key>KEY_Q</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 1" version="1">
                <modifier_key>ANY</modifier_key>
-               <key>40</key>
+               <key>KEY_W</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 2" version="1">
                <modifier_key>ANY</modifier_key>
-               <key>22</key>
+               <key>KEY_E</key>
             </key_modifier_pair>
          </key_pair>
          <key_pair>
             <key_modifier_pair name="KeyPresses 3" version="1">
                <modifier_key>ANY</modifier_key>
-               <key>35</key>
+               <key>KEY_R</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host />
+         <device_host/>
       </simulated_digital_device>
       <simulated_positional_device name="SimHeadPos" version="3">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
@@ -335,7 +335,7 @@
          <rotation_delta>1.0</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
-         <device_host />
+         <device_host/>
       </simulated_positional_device>
       <digital_proxy name="VJSystemStopKernelProxy" version="1">
          <device>DigitalSystemControls</device>
@@ -486,7 +486,7 @@
       </keyboard_mouse_proxy>
       <keyboard_mouse_device name="Keyboard KM Dev" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <device_host />
+         <device_host/>
       </keyboard_mouse_device>
       <alias name="VJButton6" version="1">
          <proxy>Button6Proxy</proxy>
@@ -497,4 +497,3 @@
       </digital_proxy>
    </elements>
 </configuration>
-

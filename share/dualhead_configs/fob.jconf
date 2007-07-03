@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/mnt/rigby/home14/users/mccdo/germany_lab/babycave/fob.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="/mnt/rigby/home14/users/mccdo/germany_lab/babycave/fob.jconf" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
       <flock name="FlockofBirds" version="2">
          <port>/dev/ttyS0</port>
@@ -27,7 +27,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
-         <device_host />
+         <device_host/>
       </flock>
       <input_manager name="InputManager" version="2">
          <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
@@ -35,4 +35,3 @@
       </input_manager>
    </elements>
 </configuration>
-
