@@ -82,9 +82,9 @@ userScale( 0 )
 {
     double a = atan(3.0/10.0);
     double b = -a;
-    sinb=sin(b); 
+    sinb = sin(b); 
     cosb = cos(b);
-    sina=sin(a); 
+    sina = sin(a); 
     cosa = cos(a);
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
 }
@@ -302,11 +302,10 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
 
     //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
     //reverse the order of the points
-    size_t j = 0;
-    std::vector< wxPoint >::iterator iter;
-    for ( size_t i = cons.size()-1; i >= 0; i--, j++ )
+    size_t maxSize = cons.size() - 1;
+    for ( size_t i = 0; i < cons.size(); i++ )
     {   
-        points[ j ] = cons[i];
+        points[ i ] = cons[ maxSize - i ];
         //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
     }
 
@@ -339,7 +338,7 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
     double dist=sqrt( double( (points[1].y-points[0].y)*
         (points[1].y-points[0].y) + (points[1].x-points[0].x)*
         (points[1].x-points[0].x) ) );
-    //Make sure we do not dvivide by zero
+    //Make sure we do not divide by zero
     if( dist <= 0.0001f )
     {
         dist = 1;
