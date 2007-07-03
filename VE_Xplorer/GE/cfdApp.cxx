@@ -301,7 +301,7 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 void cfdApp::bufferPreDraw()
 {
    //glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClear( GL_COLOR_BUFFER_BIT );
 }
 #endif //_OSG
 ////////////////////////////////////////////////////////////////////////////////
@@ -658,23 +658,6 @@ void cfdApp::writeImageFileForWeb(void*)
 void cfdApp::contextPreDraw( void )
 {
     VPR_PROFILE_GUARD("cfdApp::contextPreDraw");
-   if ( svUpdate )
-   {
-      //osg::ref_ptr<osgUtil::SceneView> sv;
-      //sv = (*sceneViewer);    // Get context specific scene viewer
-      //if ( sv.valid() )
-      {
-         ///This does not seem to affect the background color
-         ///not sure why
-         /*sv->setClearColor( osg::Vec4( clearColor.at(0),
-                                       clearColor.at(1),
-                                       clearColor.at(2), 1.0 ) );*/
-         ///This does change the background color
-         /*glClearColor( clearColor.at(0),
-                       clearColor.at(1),
-                       clearColor.at(2), 1.0 );*/
-      }
-   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
