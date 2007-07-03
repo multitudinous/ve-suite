@@ -589,6 +589,11 @@ void Network::OnMRightDown(wxMouseEvent& event)
       the_pop_menu.Enable(EDIT_TAG, true);
       the_pop_menu.Enable(DEL_TAG, true);
    }
+   else
+   {
+      the_pop_menu.Enable(EDIT_TAG, false);
+      the_pop_menu.Enable(DEL_TAG, false);
+   }
 
    action_point = event.GetLogicalPosition(dc);
    PopupMenu(&the_pop_menu, event.GetPosition());
@@ -621,54 +626,59 @@ void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
 
    dc.SetUserScale( userScale.first, userScale.second );
 
-   wxString tag_text = *( tags[ m_selTag ].GetTagText() );
-   wxTextEntryDialog dialog(this,_("Tag Editor"), _("Please enter the text for the tag : "),tag_text, wxOK);
-
-   if (dialog.ShowModal() == wxID_OK)
+   if(m_selTag >= 0)
    {
-      tag_text=dialog.GetValue();
+	   wxString tag_text = *( tags[ m_selTag ].GetTagText() );
+	   wxTextEntryDialog dialog(this,_("Tag Editor"), _("Please enter the text for the tag : "),tag_text, wxOK);
+
+	   if (dialog.ShowModal() == wxID_OK)
+	   {
+		  tag_text=dialog.GetValue();
+	   }
+
+	   int w, h;
+	   dc.GetTextExtent( tag_text, &w, &h);
+
+	   *(tags[m_selTag].GetTagText()) = tag_text;
+	   tags[m_selTag].GetBoundingBox()->width = w;
+	   tags[m_selTag].GetBoundingBox()->height = h;
+	   tags[m_selTag].CalcTagPoly();
+	   m_selTag = -1;
+	   Refresh(true);
    }
-
-   int w, h;
-   dc.GetTextExtent( tag_text, &w, &h);
-
-   *(tags[m_selTag].GetTagText()) = tag_text;
-   tags[m_selTag].GetBoundingBox()->width = w;
-   tags[m_selTag].GetBoundingBox()->height = h;
-   tags[m_selTag].CalcTagPoly();
-   //  Refresh(false);
-   m_selTag = -1;
 }
 
 /////////////////////////////////////////////////////
 void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 {
-   int answer = wxMessageBox( _("Do you really want to delete this tag?"), _("Confirmation"), wxYES_NO);
-   if ( answer != wxYES )
-   {
-      return;
-   }
-   
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-   
-   std::vector< Tag >::iterator iter;
-   int i;
-   for ( iter = tags.begin(), i=0; iter != tags.end(); i++)
-      if ( i == m_selTag )
-      {
-         iter = tags.erase( iter );
-         m_selTag=-1;
-         break;
-      }
-      else
-      {
-         ++iter;
-      }
-   
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+	if(m_selTag >= 0)
+	{
+		int answer = wxMessageBox( _("Do you really want to delete this tag?"), _("Confirmation"), wxYES_NO);
+		if ( answer != wxYES )
+		{
+		  return;
+		}
 
-   Refresh(true);
-   //Update();
+		while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+
+		std::vector< Tag >::iterator iter;
+		int i;
+		for ( iter = tags.begin(), i=0; iter != tags.end(); i++)
+		  if ( i == m_selTag )
+		  {
+			 iter = tags.erase( iter );
+			 m_selTag=-1;
+			 break;
+		  }
+		  else
+		  {
+			 ++iter;
+		  }
+
+		while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+
+		Refresh(true);
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelLink(wxCommandEvent& event )
