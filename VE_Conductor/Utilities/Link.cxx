@@ -71,16 +71,22 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-Link::Link( wxScrolledWindow* designCanvas )
+Link::Link( wxScrolledWindow* designCanvas ) 
+:
+Fr_mod( 1000000 ),
+To_mod( 1000000 ),
+Fr_port( 1000000 ),
+To_port( 1000000 ),
+networkFrame( designCanvas ),
+userScale( 0 )
 {
-    Fr_mod = 1000000;
-    To_mod = 1000000;
-    Fr_port = 1000000;
-    To_port = 1000000;
-    //cons.resize( 2 );
-    networkFrame = designCanvas;
+    double a = atan(3.0/10.0);
+    double b = -a;
+    sinb=sin(b); 
+    cosb = cos(b);
+    sina=sin(a); 
+    cosa = cos(a);
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
-    userScale = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -94,7 +100,11 @@ Link::Link( const Link& input )
     To_mod = input.To_mod;
     Fr_port = input.Fr_port;
     To_port = input.To_port;
-
+    sinb = input.sinb; 
+    cosb = input.cosb;
+    sina = input.sina; 
+    cosa = input.cosa;
+    
     cons = input.cons;
     poly = input.poly;
     networkFrame = input.networkFrame;
@@ -111,7 +121,11 @@ Link& Link::operator= ( const Link& input )
         To_mod = input.To_mod;
         Fr_port = input.Fr_port;
         To_port = input.To_port;
-
+        sinb = input.sinb; 
+        cosb = input.cosb;
+        sina = input.sina; 
+        cosa = input.cosa;
+        
         cons.clear();
         cons = input.cons;
         poly = input.poly;
@@ -277,77 +291,74 @@ void Link::CalcLinkPoly()
 ////////////////////////////////////////////////////////////////////////////////
 void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
 { 
-   //wxClientDC dc( networkFrame );
-   //networkFrame->PrepareDC( dc );
-   dc.SetUserScale( scale.first, scale.second );
+    //wxClientDC dc( networkFrame );
+    //networkFrame->PrepareDC( dc );
+    dc.SetUserScale( scale.first, scale.second );
 
-   wxBrush old_brush = dc.GetBrush();
-   wxPen old_pen = dc.GetPen();
+    wxBrush old_brush = dc.GetBrush();
+    wxPen old_pen = dc.GetPen();
 
-   wxPoint* points = new wxPoint[ cons.size() ];
+    wxPoint* points = new wxPoint[ cons.size() ];
 
+    //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
+    //reverse the order of the points
+    size_t j = 0;
+    std::vector< wxPoint >::iterator iter;
+    for ( size_t i = cons.size()-1; i >= 0; i--, j++ )
+    {   
+        points[ j ] = cons[i];
+        //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
+    }
 
-   //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
-   //reverse the order of the points
-   size_t j = 0;
-   std::vector< wxPoint >::iterator iter;
-   for ( int i = cons.size()-1; i >= 0; i--, j++ )
-   {   
-      points[ j ] = cons[i];
-      //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
-   }
+    if( !flag )
+    {
+        dc.SetPen( *wxWHITE_PEN );
+        dc.SetBrush( *wxWHITE_BRUSH );
+    }
+    else
+    {
+        dc.SetPen( *wxBLACK_PEN );
+        dc.SetBrush( *wxWHITE_BRUSH );
+    }
+    dc.DrawLines( cons.size(), points );
 
-   if( !flag )
-   {
-      dc.SetPen( *wxWHITE_PEN );
-      dc.SetBrush( *wxWHITE_BRUSH );
-   }
-   else
-   {
-      dc.SetPen( *wxBLACK_PEN );
-      dc.SetBrush( *wxWHITE_BRUSH );
-   }
-   dc.DrawLines( cons.size(), points );
+    //Now draw the arrow head
+    if( !flag )
+    {
+        dc.SetPen( *wxWHITE_PEN );
+        dc.SetBrush( *wxWHITE_BRUSH );
+    }
+    else
+    {
+        dc.SetPen( *wxBLACK_PEN );
+        dc.SetBrush( *wxBLACK_BRUSH );
+    }
 
-   //Now draw the arrow head
-   if( !flag )
-   {
-      dc.SetPen( *wxWHITE_PEN );
-      dc.SetBrush( *wxWHITE_BRUSH );
-   }
-   else
-   {
-      dc.SetPen( *wxBLACK_PEN );
-      dc.SetBrush( *wxBLACK_BRUSH );
-   }
-  
-   wxPoint arrow[ 3 ];
-   arrow[0] = points[0];
-  
-  
-   double a = atan(3.0/10.0);
-   double b = -a;
-   double sinb=sin(b); 
-   double cosb = cos(b);
-   double sina=sin(a); 
-   double cosa = cos(a);
-   double dist=sqrt(double((points[1].y-points[0].y)*(points[1].y-points[0].y)
-		   +(points[1].x-points[0].x)*(points[1].x-points[0].x)));
+    wxPoint arrow[ 3 ];
+    arrow[0] = points[0];
+    double dist=sqrt( double( (points[1].y-points[0].y)*
+        (points[1].y-points[0].y) + (points[1].x-points[0].x)*
+        (points[1].x-points[0].x) ) );
+    //Make sure we do not dvivide by zero
+    if( dist <= 0.0001f )
+    {
+        dist = 1;
+    }
+    
+    arrow[1].x = (int)( cosa*12.0/dist * (points[1].x-points[0].x)-
+        sina*12.0/dist*(points[1].y-points[0].y)+points[0].x );
+    arrow[1].y = (int)( sina*12.0/dist * (points[1].x-points[0].x)+
+        cosa*12.0/dist*(points[1].y-points[0].y)+points[0].y );
 
-  arrow[1].x=(int)( cosa*12.0/dist*(points[1].x-points[0].x)
-    -sina*12.0/dist*(points[1].y-points[0].y)+points[0].x );
-  arrow[1].y=(int)( sina*12.0/dist*(points[1].x-points[0].x)
-    +cosa*12.0/dist*(points[1].y-points[0].y)+points[0].y );
+    arrow[2].x = (int)( cosb*12.0/dist * (points[1].x-points[0].x)-
+        sinb*12.0/dist*(points[1].y-points[0].y)+points[0].x );
+    arrow[2].y = (int)( sinb*12.0/dist * (points[1].x-points[0].x)+
+        cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y );
 
-  arrow[2].x=(int)( cosb*12.0/dist*(points[1].x-points[0].x)
-    -sinb*12.0/dist*(points[1].y-points[0].y)+points[0].x );
-  arrow[2].y=(int)( sinb*12.0/dist*(points[1].x-points[0].x)
-    +cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y );
-  
-  dc.DrawPolygon(3, arrow);
-  dc.SetPen(old_pen);
-  dc.SetBrush(old_brush);
-  delete [] points;
+    dc.DrawPolygon(3, arrow);
+    dc.SetPen(old_pen);
+    dc.SetBrush(old_brush);
+    delete [] points;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnShowLinkContent(wxCommandEvent& event )

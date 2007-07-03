@@ -136,12 +136,26 @@ protected:
     bool CheckID();
 
 private:
+    ///Name of the link, should be unique
     wxString linkName;
+    ///The active link for the network
     wxString activeName;
+    ///From plugin for the link
     unsigned long Fr_mod;
+    ///To plugin for the link
     unsigned long To_mod;
+    ///From port for the link
     unsigned int Fr_port;
+    ///to port for the link
     unsigned int To_port;
+    ///Used for the construction of arrow heads
+    double sinb; 
+    ///Used for the construction of arrow heads
+    double cosb;
+    ///Used for the construction of arrow heads
+    double sina; 
+    ///Used for the construction of arrow heads
+    double cosa;    
     
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;

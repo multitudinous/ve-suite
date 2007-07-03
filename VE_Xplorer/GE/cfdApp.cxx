@@ -312,22 +312,22 @@ void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::initScene( void )
 {
-   vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
 #ifdef _SGL
-   CSGLVector2d length( 280.0, 210.0 );
-	CSGLVector2i pixels( 1024, 768 );
-	CSGLDisplay display( 60.0, 100.0, 700.0, 62.0, length, pixels );
-	SGLContext.SetDisplay( display );
-   
-	// - set auto depth and frame cancelation flags
-	SGLContext.Enable( SGL_DEPTH_AUTO|SGL_FRAME_CANCEL );
-   
-	// - set interlacing to stencil
-	SGLContext.SetInterlacing( SGL_STENCIL );
-   
-	// - set vpi
-	CSGLVPI vpi( SGL_VPI_SOLID, 10, 20, 1, 0 );
-	SGLContext.SetVPI( vpi );
+    CSGLVector2d length( 280.0, 210.0 );
+    CSGLVector2i pixels( 1024, 768 );
+    CSGLDisplay display( 60.0, 100.0, 700.0, 62.0, length, pixels );
+    SGLContext.SetDisplay( display );
+
+    // - set auto depth and frame cancelation flags
+    SGLContext.Enable( SGL_DEPTH_AUTO|SGL_FRAME_CANCEL );
+
+    // - set interlacing to stencil
+    SGLContext.SetInterlacing( SGL_STENCIL );
+
+    // - set vpi
+    CSGLVPI vpi( SGL_VPI_SOLID, 10, 20, 1, 0 );
+    SGLContext.SetVPI( vpi );
 #endif
    
 # ifdef _OPENMP
@@ -413,9 +413,9 @@ void cfdApp::initScene( void )
 void cfdApp::preFrame( void )
 {
     VPR_PROFILE_GUARD("cfdApp::preFrame");
-   vprDEBUG(vesDBG,3)<<"cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
-   //Sets the worldDCS before it is synced
-   cfdEnvironmentHandler::instance()->PreFrameUpdate();
+    vprDEBUG(vesDBG,3)<<"cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
+    //Sets the worldDCS before it is synced
+    cfdEnvironmentHandler::instance()->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
