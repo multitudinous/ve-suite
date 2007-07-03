@@ -213,6 +213,7 @@ void CADEntityHelper::LoadFile( std::string filename,
     }
 
 #ifdef _OSG
+    osg::ref_ptr< osg::Node > tempCADNode;
     if( !isStream )
     {
         if( osgDB::getLowerCaseFileExtension(filename) == "osg" )
@@ -243,8 +244,8 @@ void CADEntityHelper::LoadFile( std::string filename,
             
             std::cout << std::endl;
             
-            m_cadNode = rr.getNode();
-            if( !m_cadNode.valid() )
+            tempCADNode = rr.getNode();
+            if( !tempCADNode.valid() )
             {
                 std::cerr << "Error: could not load file `" 
                     << filename << "'" << std::endl;
@@ -252,18 +253,18 @@ void CADEntityHelper::LoadFile( std::string filename,
         }
         else
         {
-            m_cadNode = osgDB::readNodeFile( filename );
+            tempCADNode = osgDB::readNodeFile( filename );
         }
     }
     else
     {
         std::istringstream textNodeStream( filename );
-        m_cadNode = osgDB::Registry::instance()->
+        tempCADNode = osgDB::Registry::instance()->
             getReaderWriterForExtension( "osg" )->
             readNode( textNodeStream ).getNode();
     }
 
-    if( !m_cadNode.valid() )
+    if( !tempCADNode.valid() )
     {
         std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " 
             << filename << std::endl;
@@ -272,16 +273,19 @@ void CADEntityHelper::LoadFile( std::string filename,
 
     if( m_twoSidedLighting )
     {
-        m_lightModel = new osg::LightModel;
-        m_lightModel->setTwoSided( true );
-        m_cadNode->getOrCreateStateSet()->setAttributeAndModes( 
-            m_lightModel.get(), osg::StateAttribute::ON );
+        osg::ref_ptr< osg::LightModel > lightModel;
+        lightModel = new osg::LightModel;
+        lightModel->setTwoSided( true );
+        tempCADNode->getOrCreateStateSet()->setAttributeAndModes( 
+            lightModel.get(), osg::StateAttribute::ON );
     }  
         
 #elif _OPENSG
     std::cout << " Error:LoadFile !!! " << std::endl;
     exit( 1 );
 #endif
+
+    m_cadNode = tempCADNode;   
     
     if( !isStream )
     {
@@ -295,17 +299,27 @@ void CADEntityHelper::LoadFile( std::string filename,
             m_cadNode->setName( "NULL_FILENAME" );
         }
     }
-
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntityHelper::AddOccluderNodes()
+{
 #ifdef VE_PATENTED 
-    osg::ref_ptr<osgOQ::OcclusionQueryRoot> root;
-    root = dynamic_cast<osgOQ::OcclusionQueryRoot*>( m_cadNode.get() );
-    if( !root.valid() && occlude )
+    osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
+    root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( m_cadNode.get() );
+    if( !root.valid() && (m_cadNode->getNumParents() > 0) )
     {
         osgOQ::OcclusionQueryNonFlatVisitor oqv( 
             VE_SceneGraph::SceneManager::instance()->
             GetOcclusionQueryContext() );
         m_cadNode->accept( oqv );
+        
+        /*
+        root = new osgOQ::OcclusionQueryRoot( 
+            VE_SceneGraph::SceneManager::instance()->
+            GetOcclusionQueryContext() );
+        root->addChild( tempCADNode.get() );
+        m_cadNode = static_cast< osg::Node* >( root.get() );
+        */
     }
 #endif
 }
-////////////////////////////////////////////////////////////////////////////////

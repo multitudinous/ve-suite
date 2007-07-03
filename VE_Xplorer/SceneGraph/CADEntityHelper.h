@@ -140,6 +140,10 @@ public:
     ///\param onOff Turn on/off rendering of this CADEntityHelper
     void ToggleDisplay( bool onOff );
     
+    ///Add occluder nodes
+    ///Must call after this node has a parent
+    void AddOccluderNodes();
+    
 #ifdef _OSG
     ///Set the node of CADEntityHelper
     ///\param node An osg::Node pointer
@@ -158,12 +162,12 @@ public:
         bool occlude = false );
 private:
 #ifdef _OSG
-    osg::ref_ptr< osg::Node > m_cadNode;///<Node representing the loaded in geometry file
-    osg::ref_ptr< osg::LightModel > m_lightModel;///<The light model of CADEntityHelper
+    ///Node representing the loaded in geometry file
+    osg::ref_ptr< osg::Node > m_cadNode;
 #elif _OPENSG
 #endif
-
-    bool m_twoSidedLighting;///<The current state of two sided lighting for the node
+    ///The current state of two sided lighting for the node
+    bool m_twoSidedLighting;
 
 };
 }

@@ -119,11 +119,11 @@ public:
 
     ///Returns the transparency state of the node
     bool GetTransparentFlag();
-
+    
     ///Set the transparency state of the node
     ///\param flag The transparency state
     void SetTransparencyFlag( bool flag );
-
+    
 private:
     ///A helper class to give added functionality to CADEntity
     VE_SceneGraph::CADEntityHelper* m_cadEntityHelper;

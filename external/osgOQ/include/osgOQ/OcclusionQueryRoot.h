@@ -29,8 +29,11 @@ class OSGOQ_EXPORT OcclusionQueryRoot : public osg::Group
 {
 public:
     OcclusionQueryRoot( OcclusionQueryContext* oqc=NULL );
+
+protected:
     virtual ~OcclusionQueryRoot();
 
+public:
     // Copy constructor using CopyOp to manage deep vs shallow copy.
     OcclusionQueryRoot( const OcclusionQueryRoot& oqr, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
 
