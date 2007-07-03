@@ -112,7 +112,7 @@ class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler//, public wxObjec
 public:
    enum
    {
-      SHOW_RESULT,
+      SHOW_RESULT = 3500,
       SHOW_DESC,
       PARAVIEW,
       SHOW_FINANCIAL, /* EPRI TAG */

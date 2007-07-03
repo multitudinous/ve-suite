@@ -76,7 +76,7 @@ public:
 
    enum 
    {
-      ADD_TAG,
+      ADD_TAG = 3250,
       EDIT_TAG,
       DEL_TAG
    };

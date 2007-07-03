@@ -83,7 +83,7 @@ public:
    
    enum
    {
-       DEL_LINK,
+       DEL_LINK = 3000,
        DEL_LINK_CON,
        SHOW_LINK_CONT,
        ADD_LINK_CON,
