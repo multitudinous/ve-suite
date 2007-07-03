@@ -211,6 +211,10 @@
 				RelativePath="..\..\..\src\osgOQ\OcclusionQueryVisitor.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\osgOQ\QueryGeometry.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -243,6 +247,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\osgOQ\OcclusionQueryVisitor.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\osgOQ\QueryGeometry.h"
 				>
 			</File>
 		</Filter>
