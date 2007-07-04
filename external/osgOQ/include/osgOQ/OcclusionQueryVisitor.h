@@ -15,6 +15,7 @@
 #ifndef OSGOQ_OCCLUSION_QUERY_VISITOR_H
 #define OSGOQ_OCCLUSION_QUERY_VISITOR_H 1
 
+#include "osgOQ/ExportDeclaration.h"
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osg/Geode>
@@ -24,7 +25,7 @@ namespace osgOQ {
 
 class OcclusionQueryContext;
 
-class OcclusionQueryNonFlatVisitor : public osg::NodeVisitor
+class OSGOQ_EXPORT OcclusionQueryNonFlatVisitor : public osg::NodeVisitor
 {
 public:
     OcclusionQueryNonFlatVisitor( OcclusionQueryContext* oqc=NULL );
@@ -38,7 +39,7 @@ protected:
     osg::ref_ptr<OcclusionQueryContext> _oqc;
 };
 
-class OcclusionQueryFlatVisitor : public osg::NodeVisitor
+class OSGOQ_EXPORT OcclusionQueryFlatVisitor : public osg::NodeVisitor
 {
 public:
     OcclusionQueryFlatVisitor( OcclusionQueryContext* oqc=NULL );
@@ -54,6 +55,17 @@ protected:
 
     osg::ref_ptr<OcclusionQueryContext> _oqc;
 };
+
+
+class OSGOQ_EXPORT UpdateQueryGeometryVisitor : public osg::NodeVisitor
+{
+public:
+    UpdateQueryGeometryVisitor();
+    virtual ~UpdateQueryGeometryVisitor();
+
+    virtual void apply( osg::Node& node );
+};
+
 
 }
 

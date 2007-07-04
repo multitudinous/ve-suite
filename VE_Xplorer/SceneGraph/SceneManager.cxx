@@ -151,9 +151,8 @@ void SceneManager::InitScene( void )
     m_oqc->setVisibilityThreshold( 500 );
     ///Number of verts
     m_oqc->setOccluderThreshold( 1000 );
-    ///Specifies the number of occlusion query identifiers to allocate
-    ///per rendering context.    
-    //m_oqc->setBufferSize( 50000 );
+    ///Specifies how many frames to wait before issuing another query    
+    m_oqc->setQueryFrameCount( 5 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes

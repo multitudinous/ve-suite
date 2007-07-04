@@ -26,6 +26,22 @@
 using namespace osgOQ;
 
 
+class OQRUpdateCB : public osg::NodeCallback
+{
+public:
+	OQRUpdateCB() {}
+	~OQRUpdateCB() {}
+
+	virtual void operator()( osg::Node* node, osg::NodeVisitor* nv )
+    { 
+		traverse( node, nv );
+
+		OcclusionQueryRoot* oqr = dynamic_cast< OcclusionQueryRoot* >( node );
+		assert( oqr != NULL );
+		oqr->update();
+    }
+};
+
 OcclusionQueryRoot::OcclusionQueryRoot( OcclusionQueryContext* oqc )
   : _oqc( oqc ),
 	_enabled( true ),
@@ -38,6 +54,8 @@ OcclusionQueryRoot::OcclusionQueryRoot( OcclusionQueryContext* oqc )
 
 	if (oqc == NULL)
         _oqc = new OcclusionQueryContext;
+
+    setUpdateCallback( new OQRUpdateCB );
 }
 
 OcclusionQueryRoot::~OcclusionQueryRoot()
@@ -52,6 +70,13 @@ OcclusionQueryRoot::OcclusionQueryRoot( const OcclusionQueryRoot& oqr, const osg
 	//   for replacing the OQC after the copy. There's no osg::CopyOp bit
 	//   suitable for comtrolling how OQCs are copied.
 	_oqc = oqr._oqc;
+
+    // We could probably get away with assigning the same update callback to
+    //   each OQR, so we could shallow-copy here for efficiency. However, this
+    //   might not work if we enhance the update callback in the future to
+    //   contain some per-OQR member variables, for example. So, be safe:
+    //   Create a unique update callback for each OQR.
+    setUpdateCallback( new OQRUpdateCB );
 
 	_enabled = oqr._enabled;
 	_debug = oqr._debug;
@@ -122,6 +147,10 @@ OcclusionQueryRoot::processNewChild( osg::Node* child )
 		osgOQ::OcclusionQueryFlatVisitor oqv( _oqc.get() );
 		child->accept( oqv );
 	}
+
+    // Need to make sure query geometry is up-to-date initially.
+    UpdateQueryGeometryVisitor uqgv;
+    child->accept( uqgv );
 }
 
 
@@ -190,22 +219,6 @@ OcclusionQueryRoot::setDebugDisplay( bool debug )
 }
 
 
-class OQRUpdateCB : public osg::NodeCallback
-{
-public:
-	OQRUpdateCB() {}
-	~OQRUpdateCB() {}
-
-	virtual void operator()( osg::Node* node, osg::NodeVisitor* nv )
-    { 
-		traverse( node, nv );
-
-		OcclusionQueryRoot* oqr = dynamic_cast< OcclusionQueryRoot* >( node );
-		assert( oqr != NULL );
-		oqr->update();
-    }
-};
-
 void
 OcclusionQueryRoot::setDebugVerbosity( int level, int frames )
 {
@@ -220,20 +233,43 @@ OcclusionQueryRoot::setDebugVerbosity( int level, int frames )
 		(frames > 0) )
 	{
 		_debugVerbosityFrames = frames;
-		setUpdateCallback( new OQRUpdateCB );
 		_oqc->setDebugVerbosity( _debugVerbosity );
 	}
-	else
-		setUpdateCallback( NULL );
 }
 
+// Called once per frame by the OQRUpdateCB class during the
+//   update traversal. Do the following:
+// Check to see if we need to alter the debug verbosity. This is
+//   done for debugging purposes to limit the amount of data
+//   spewed out to the console.
+// Check for a bounding box change. If so, launch a visitor to
+//   look for bounding box changes in each OQN and update the
+//   geometry used in the occlusion query test. (NOTE: This
+//   DOES NOT handle changes to the bounding box that occur
+//   after the update traversal and before the cull traversals.)
 void
 OcclusionQueryRoot::update()
 {
-	if ( _debugVerbosityFrames-- == 0 )
+    // This code is handy for debugging. It allows a developer to
+    //   get gobs of information about osgOQ but only for a few frames.
+	if ( _debugVerbosityFrames != 0 )
 	{
-		_debugVerbosity = _prevDebugVerbosity;
-		_oqc->setDebugVerbosity( _debugVerbosity );
-		setUpdateCallback( NULL );
+        if (--_debugVerbosityFrames == 0)
+        {
+		    _debugVerbosity = _prevDebugVerbosity;
+		    _oqc->setDebugVerbosity( _debugVerbosity );
+        }
 	}
+
+    // If bound is dirty, launch visitor to update the query geometry.
+    //   This will modify the scene graph but should be thread-safe
+    //   because by definition we're in the update traversal. The only
+    //   possible pitfall here is if the app modifies the scene graph
+    //   after the update but before the cull/draw.
+    if (!_boundingSphereComputed)
+    {
+        UpdateQueryGeometryVisitor uqgv;
+        accept( uqgv );
+    }
 }
+

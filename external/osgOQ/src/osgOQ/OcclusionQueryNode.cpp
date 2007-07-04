@@ -277,31 +277,31 @@ OcclusionQueryNode::createSupportNodes()
     }
 }
 
-// Executes during the update traversal, called by UpdateCB.
-osg::BoundingSphere
-OcclusionQueryNode::computeBound() const
+// Executes during the update traversal, called UpdateQueryGeometryVisitor.
+void
+OcclusionQueryNode::updateQueryGeometry()
 {
-    // DO NOT get child 0 bounding sphere, instead use a visitor
-    //   to get the bounding box. Child 0's bounding sphere is a
+    // DO NOT get bounding sphere of children, instead use a visitor
+    //   to get the bounding box. Children's bounding sphere is a
     //   sphere around the bounding box, which is less efficient.
 
-    // Note: to obtain a bounding BOX, must launch a NodeVisitor.
-    //   Unfortunately, there's no such thing as a const NodeVisitor,
-    //   so must cast away const on (this). This is safe because our
-    //   NodeVisitor doesn't modify any values. It's also required
-    //   because there's no other way to be notified of a BB change
-    //   than by overriding computeBound().
-    OcclusionQueryNode* nonConst = const_cast< OcclusionQueryNode* >( this );
+	osg::Geometry* geom = dynamic_cast< osg::Geometry* >( _queryGeode->getDrawable( 0 ) );
+    if ( ( geom->getVertexArray() != NULL) &&
+        _boundingSphereComputed )
+        // This node already has some query array data and the
+        //   bounding sphere appears to be current. We don't
+        //   need to change our query geometry. Just return.
+        return;
 
 #if POST_OSG_1_2
 	// Version >1.2, use OSG's ComputeBoundsVisitor.
 	osg::ComputeBoundsVisitor cbv;
-    nonConst->accept( cbv );
+    accept( cbv );
 	osg::BoundingBox bb = cbv.getBoundingBox();
 #else
 	// Version <=1.2, use our own bounding box visitor.
 	BoundingBoxVisitor bbv;
-	nonConst->accept( bbv );
+	accept( bbv );
 	osg::BoundingBox bb = bbv.getBound();
 #endif
 
@@ -316,15 +316,10 @@ OcclusionQueryNode::computeBound() const
 	(*v)[6] = osg::Vec3( bb._min.x(), bb._max.y(), bb._max.z() );
 	(*v)[7] = osg::Vec3( bb._max.x(), bb._max.y(), bb._max.z() );
 
-	osg::Geometry* geom = dynamic_cast< osg::Geometry* >( _queryGeode->getDrawable( 0 ) );
 	geom->setVertexArray( v.get() );
 
 	geom = dynamic_cast< osg::Geometry* >( _debugGeode->getDrawable( 0 ) );
 	geom->setVertexArray( v.get() );
-
-
-    // Get child's bounding sphere for return value.
-    return osg::Group::computeBound();
 }
 
 

@@ -53,7 +53,7 @@ public:
     void setOQC( OcclusionQueryContext* oqc ) { _oqc = oqc; }
     OcclusionQueryContext& getOQC() const { return *(_oqc.get()); }
 
-    virtual osg::BoundingSphere computeBound() const;
+    void updateQueryGeometry();
 
 protected:
 	void createSupportNodes();

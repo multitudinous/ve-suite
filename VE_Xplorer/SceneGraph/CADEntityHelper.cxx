@@ -285,7 +285,30 @@ void CADEntityHelper::LoadFile( std::string filename,
     exit( 1 );
 #endif
 
+#ifdef VE_PATENTED 
+    osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
+    root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( tempCADNode.get() );
+    if( !root.valid() && occlude ) //(m_cadNode->getNumParents() > 0) )
+    {
+        /*osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+                                             VE_SceneGraph::SceneManager::instance()->
+                                             GetOcclusionQueryContext() );
+        m_cadNode->accept( oqv );*/
+
+
+        root = new osgOQ::OcclusionQueryRoot( 
+            VE_SceneGraph::SceneManager::instance()->
+            GetOcclusionQueryContext() );
+        root->addChild( tempCADNode.get() );
+        m_cadNode = static_cast< osg::Node* >( root.get() );
+    }
+    else
+    {
+        m_cadNode = tempCADNode;   
+    }
+#else
     m_cadNode = tempCADNode;   
+#endif
     
     if( !isStream )
     {

@@ -69,10 +69,10 @@ m_transparencyFlag( false )
     m_fileName.assign( geomFile );
     m_dcs->SetName( "CADEntityDCS" );
     m_dcs->addChild( m_cadEntityHelper->GetNode() );
-    if( occlude )
+    /*if( occlude )
     {
         m_cadEntityHelper->AddOccluderNodes();
-    }
+    }*/
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

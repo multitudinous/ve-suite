@@ -421,24 +421,24 @@ void cfdApp::preFrame( void )
 void cfdApp::latePreFrame( void )
 {
     VPR_PROFILE_GUARD("cfdApp::latePreFrame");
-   static long lastFrame=0;
-	//Used for framerate calculation as integers only
-   static float lastTime=0.0f;
+    static long lastFrame=0;
+    //Used for framerate calculation as integers only
+    static float lastTime=0.0f;
 
-   vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
 
-   //call the parent method
-   _vjobsWrapper->GetUpdateClusterStateVariables();
+    //call the parent method
+    _vjobsWrapper->GetUpdateClusterStateVariables();
 
-	float current_time = this->_vjobsWrapper->GetSetAppTime( -1 );
+    float current_time = this->_vjobsWrapper->GetSetAppTime( -1 );
 
 #ifdef _OSG
-   //This is order dependent
-   //don't move above function call
-   _frameStamp->setFrameNumber( _frameNumber );
-   _frameStamp->setReferenceTime( current_time );
+    //This is order dependent
+    //don't move above function call
+    _frameStamp->setFrameNumber( _frameNumber );
+    _frameStamp->setReferenceTime( current_time );
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
-   _frameStamp->setSimulationTime( current_time );
+    _frameStamp->setSimulationTime( current_time );
 #endif
    //This is a frame rate calculation
    float deltaTime = current_time - lastTime;
@@ -558,7 +558,7 @@ void cfdApp::postFrame()
 
 //web interface thread for writing the file
 #ifdef _WEB_INTERFACE
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdApp::captureWebImage()
 {
    if(writingWebImageNow || readyToWriteWebImage) return;
@@ -576,7 +576,7 @@ void cfdApp::captureWebImage()
    glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);   //copy from the framebuffer
    readyToWriteWebImage=true;      
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdApp::writeImageFileForWeb(void*)
 {
    while(runWebImageSaveThread)
@@ -650,7 +650,7 @@ void cfdApp::writeImageFileForWeb(void*)
    osgDB::writeImageFile(shot, "test.jpg" );
 }
 #endif   //_WEB_INTERFACE
-
+////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -743,7 +743,7 @@ void cfdApp::draw()
    cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
                                                        frustum[vrj::Frustum::VJ_RIGHT],
                                                        frustum[vrj::Frustum::VJ_TOP],
-																		 frustum[vrj::Frustum::VJ_BOTTOM],
+                                                        frustum[vrj::Frustum::VJ_BOTTOM],
                                                        frustum[vrj::Frustum::VJ_NEAR],
                                                        frustum[vrj::Frustum::VJ_FAR]);
 

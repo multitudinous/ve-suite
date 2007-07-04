@@ -230,3 +230,33 @@ OcclusionQueryFlatVisitor::addOQN( osg::Node& node )
 		}
     }
 }
+
+
+
+// In general, apps should use an OcclusionQueryRoot (OQR) as the top
+//   node of any osgOQ-managed scene graphs. However, if you don't want
+//   to use OQR, then you can still use osgOQ as long as you do everything
+//   that OQR does.
+// If the bounding box changes, OQR launches this visitor during the update
+//   traversal. The visitor calls updateQueryGeometry on every OQN, which
+//   ensures that the query geometry matches the latest bounding box.
+UpdateQueryGeometryVisitor::UpdateQueryGeometryVisitor()
+  : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+{
+}
+
+UpdateQueryGeometryVisitor::~UpdateQueryGeometryVisitor()
+{
+}
+
+void
+UpdateQueryGeometryVisitor::apply( osg::Node& node )
+{
+    traverse( node );
+
+	osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
+	if ( thisOQN == NULL )
+        return;
+    thisOQN->updateQueryGeometry();
+}
+
