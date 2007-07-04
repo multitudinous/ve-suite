@@ -49,16 +49,16 @@ using namespace VE_XML::VE_Model;
 //Constructor                             //
 ////////////////////////////////////////////
 Model::Model()
-:XMLObject(  )
+:XMLObject( )
 {
-   modelName = '\0';
+   //modelName = '\0';
    uniqueModelID = 0;
-   iconFileName = '\0';
-   iconLocation = new Point(  );
+   //iconFileName = '\0';
+   iconLocation = new Point();
    geometry = 0;
    SetObjectType("Model");
    SetObjectNamespace("Model");
-   vendorUnit = '\0';
+   //vendorUnit = '\0';
    modelAttribute = 0;
    iconScale = 1.0f;
    iconRotation = 0.0f;
@@ -256,8 +256,17 @@ void Model::SetObjectFromXMLData(DOMNode* element)
       currentElement = dynamic_cast< DOMElement* >( element );
    }
 
-   if ( currentElement )
+   if( currentElement )
    {
+       //Setup uuid for model element
+       {
+           std::string tempUuid;
+           VE_XML::XMLObject::GetAttribute(currentElement, "id", tempUuid);
+           if( !tempUuid.empty() )
+           {
+               uuid = tempUuid;
+           }
+       }
       //get variables by tags
       DOMElement* dataValueStringName = 0;
 

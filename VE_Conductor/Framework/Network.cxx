@@ -684,11 +684,11 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 void Network::OnDelLink(wxCommandEvent& event )
 {
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-    wxString* selLink = static_cast< wxString* >( event.GetClientData() );
+    std::string* selLink = static_cast< std::string* >( event.GetClientData() );
     for( std::vector< Link >::iterator iter = links.begin(); 
         iter!=links.end(); )
     {
-        if( iter->GetName() == *selLink )
+        if( iter->GetUUID() == *selLink )
         {
             iter = links.erase( iter );
             break;
@@ -715,7 +715,7 @@ void Network::OnDelMod(wxCommandEvent& event )
    std::vector< Link >::iterator iter3;
    for ( iter3=links.begin(); iter3!=links.end(); )
    {
-	   if ( 
+	   if( 
             (iter3->GetFromModule() == *selMod) || 
             (iter3->GetToModule() == *selMod) 
          )
@@ -1993,6 +1993,7 @@ std::string Network::Save( std::string fileName )
       *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
       *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
       xmlLink->SetLinkName( ConvertUnicode( links.at( i ).GetName().c_str() ) );
+      xmlLink->SetID( links.at( i ).GetUUID() );
 
       //Try to store link cons,
       //link cons are (x,y) wxpoint
@@ -2224,7 +2225,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
         size_t numberOfPoints = veNetwork.GetLink( i )->GetNumberOfLinkPoints();
         for ( size_t j = 0; j < numberOfPoints; ++j )
         {
-            std::pair< unsigned int, unsigned int > rawPoint = veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
+            std::pair< unsigned int, unsigned int > rawPoint = 
+                veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
             wxPoint point;
             point.x = rawPoint.first;
             point.y = rawPoint.second;
@@ -2233,7 +2235,9 @@ void Network::CreateNetwork( std::string xmlNetwork )
         // Create the polygon for links
         links.at( i ).CalcLinkPoly();
 
-        links.at(i).SetName(wxString(veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+        links.at(i).SetName( wxString( 
+            veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+        links.at(i).SetUUID( veNetwork.GetLink( i )->GetID() );
 
         //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
         //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );

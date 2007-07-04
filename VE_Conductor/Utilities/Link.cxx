@@ -67,7 +67,7 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_MENU( SHOW_LINK_NAME, Link::OnShowAspenName )
     EVT_MENU( LINK_INPUTS, Link::OnQueryStreamInputs )
     EVT_MENU( LINK_OUTPUTS, Link::OnQueryStreamOutputs )
-    EVT_UPDATE_UI( 887, Link::OnSetActiveLinkID )
+    EVT_UPDATE_UI( SET_ACTIVE_LINK, Link::OnSetActiveLinkID )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,6 +87,7 @@ userScale( 0 )
     sina = sin(a); 
     cosa = cos(a);
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
+    m_uuid = "notSet";
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -111,6 +112,7 @@ Link::Link( const Link& input )
     linkName = input.linkName;
     userScale = input.userScale;
     action_point = input.action_point;
+    m_uuid = input.m_uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
@@ -133,6 +135,7 @@ Link& Link::operator= ( const Link& input )
         linkName = input.linkName;
         userScale = input.userScale;
         action_point = input.action_point;
+        m_uuid = input.m_uuid;
     }
     return *this;
 }
@@ -269,7 +272,7 @@ void Link::CalcLinkPoly()
    {
 	   int x = cons[i].x;
 	   int y = cons[i].y-3;
-      poly.SetPoint( wxPoint( cons[i].x, cons[i].y-3 ) );
+      poly.SetPoint( wxPoint( x, y ) );
    }
 
    // +3 so that we end up getting a 6 point wide line
@@ -277,7 +280,7 @@ void Link::CalcLinkPoly()
    {
 	   int x = cons[j].x;
 	   int y = cons[j].y+3;
-	   poly.SetPoint( wxPoint( cons[j].x, cons[j].y+3 ) );
+	   poly.SetPoint( wxPoint( x, y ) );
    }
 /*   std::vector< wxPoint >::iterator iter;
    for ( iter = cons.end()-1; iter >= cons.begin(); --iter )
@@ -524,16 +527,14 @@ void Link::OnDelLinkCon(wxCommandEvent& event )
     {
         return;
     }
-        
-    //links[m_selLink].DrawLinkCon( false, userScale );
-                
+
     std::vector<wxPoint>::iterator iter;
     int i;
-    for( iter=GetPoints()->begin(), i=0; iter!=GetPoints()->end(); iter++, i++)
+    for( iter=cons.begin(), i=0; iter!=cons.end(); i++)
     {    
         if ( i == m_selLinkCon )
         {
-            iter = GetPoints()->erase( iter );
+            iter = cons.erase( iter );
             CalcLinkPoly();
             m_selLinkCon=-1;
             break;
@@ -543,9 +544,7 @@ void Link::OnDelLinkCon(wxCommandEvent& event )
             ++iter;
         }
     }
-            
-    //links[m_selLink].DrawLinkCon( true, userScale );
-    
+
     networkFrame->Refresh(true);
     //Update();
 }
@@ -560,8 +559,8 @@ void Link::OnDelLink(wxCommandEvent& event )
 
     networkFrame->RemoveEventHandler( this );
     networkFrame->Refresh(true);
-    //Update();
-    event.SetClientData( &linkName );
+    //Post this so that network can delete "this" out of the vector of links
+    event.SetClientData( &m_uuid );
     ::wxPostEvent( networkFrame, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -621,8 +620,6 @@ void Link::OnAddLinkCon(wxCommandEvent& event )
     m_selLinkCon = -1;
     
     networkFrame->Refresh(true);
-    //Update();
-    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnMRightDown( wxMouseEvent &event )
@@ -642,8 +639,8 @@ void Link::OnMRightDown( wxMouseEvent &event )
 
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActiveLinkName;
-    setActiveLinkName.SetClientData( &linkName );
-    setActiveLinkName.SetId( 887 );
+    setActiveLinkName.SetClientData( &m_uuid );
+    setActiveLinkName.SetId( SET_ACTIVE_LINK );
     networkFrame->GetEventHandler()->ProcessEvent( setActiveLinkName );
     
     wxString menuName = linkName + wxString( " Menu", wxConvUTF8 );
@@ -720,7 +717,7 @@ void Link::SetDCScale( std::pair< double, double >* scale )
 ////////////////////////////////////////////////////////////////////////////////
 bool Link::CheckID()
 {
-    if( activeName == linkName )
+    if( activeUUID == m_uuid )
     {
         return true;
     }
@@ -729,8 +726,18 @@ bool Link::CheckID()
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnSetActiveLinkID( wxUpdateUIEvent& event )
 {
-    wxString* activeIdTemp = static_cast< wxString* >( event.GetClientData() );
+    std::string* activeIdTemp = static_cast< std::string* >( event.GetClientData() );
     //std::cout << *activeIdTemp << std::endl;
-    activeName = *activeIdTemp;
+    activeUUID = *activeIdTemp;
     event.Skip();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::SetUUID( std::string uuid )
+{
+    m_uuid = uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string Link::GetUUID()
+{
+    return m_uuid;
 }

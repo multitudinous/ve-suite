@@ -120,6 +120,7 @@ void Link::_updateVEElement( std::string input )
 {
    // write all the elements according to verg_model.xsd
    SetAttribute( "name", linkName );
+   SetAttribute( "id", uuid );
    SetSubElement( "fromModule", moduleInfo.first );
    SetSubElement( "toModule", moduleInfo.second );
    SetSubElement( "fromPort", portInfo.first );
@@ -187,8 +188,17 @@ void Link::SetObjectFromXMLData(DOMNode* element)
 
    if ( currentElement )
    {
-      //get variables by tags
-      DOMElement* dataValueStringName = 0;
+        //get variables by tags
+        //Setup uuid for model element
+        {
+           std::string tempUuid;
+           VE_XML::XMLObject::GetAttribute(currentElement, "id", tempUuid);
+           if( !tempUuid.empty() )
+           {
+               uuid = tempUuid;
+           }
+        }
+       DOMElement* dataValueStringName = 0;
 	  //link name
 	  {
          dataValueStringName = GetSubElement( currentElement, "name", 0 );

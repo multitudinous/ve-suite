@@ -120,6 +120,10 @@ public:
    double computenorm( wxPoint pt1, wxPoint pt2 );
    ///Set the user scale to enable working with the dc
    void SetDCScale( std::pair< double, double >* scale );
+   ///Set UUID for this link
+   void SetUUID( std::string uuid );
+   ///Get UUID for this link
+   std::string GetUUID();
 
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
@@ -138,8 +142,8 @@ protected:
 private:
     ///Name of the link, should be unique
     wxString linkName;
-    ///The active link for the network
-    wxString activeName;
+    ///The active link uuid for the network
+    std::string activeUUID;
     ///From plugin for the link
     unsigned long Fr_mod;
     ///To plugin for the link
@@ -155,7 +159,9 @@ private:
     ///Used for the construction of arrow heads
     double sina; 
     ///Used for the construction of arrow heads
-    double cosa;    
+    double cosa;
+    ///UUID for this link
+    std::string m_uuid;
     
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;
