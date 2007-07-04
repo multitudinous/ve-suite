@@ -665,10 +665,7 @@ void cfdApp::contextPreDraw( void )
 void cfdApp::draw()
 {
     VPR_PROFILE_GUARD("cfdApp::draw");
-#ifndef _SGL
    glClear(GL_DEPTH_BUFFER_BIT);
-#endif
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    // Users have reported problems with OpenGL reporting stack underflow
    // problems when the texture attribute bit is pushed here, so we push all
    // attributes *except* GL_TEXTURE_BIT.
@@ -715,7 +712,8 @@ void cfdApp::draw()
    //sv->setCalcNearFar(false);
    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
-   sv->getRenderStage()->setClearMask(GL_NONE);
+   //This causes problems in multi threaded rendering environments
+   //sv->getRenderStage()->setClearMask(GL_NONE);
 
    //Get the view matrix and the frustrum form the draw manager
    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
@@ -759,16 +757,8 @@ void cfdApp::draw()
    }
 #endif   //_WEB_INTERFACE
 
-#ifdef _SGL
-   SGLContext.Begin(SGL_FORMAT_FRAME);
-   SGLContext.Begin(SGL_LEFT_FRAME);
-#endif// _SGL
    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-#ifdef _SGL
-   gmtl::Matrix44f _vjMatrixLeft( userData->getViewport()->getLeftProj()->getViewMatrix() );
-#else
    gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-#endif// _SGL
    gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
    //copy the matrix
    osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
@@ -779,23 +769,6 @@ void cfdApp::draw()
    
    sv->cull();
    sv->draw();
-#ifdef _SGL
-   SGLContext.End();
-   
-   SGLContext.Begin(SGL_RIGHT_FRAME);
-   gmtl::Matrix44d _vjMatrixRight( userData->getViewport()->getRightProj()->getViewMatrix() );
-   gmtl::postMult(_vjMatrixRight, gmtl::makeRot<gmtl::Matrix44d>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
-   osg_proj_xform_mat->set( _vjMatrixRight.mData );
-   
-   // Copy the view matrix
-   sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
-   
-   sv->cull();
-   sv->draw();
-   SGLContext.End();
-	
-   SGLContext.End();
-#endif// _SGL
 
 #ifdef _WEB_INTERFACE
    if(goCapture)
