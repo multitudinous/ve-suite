@@ -683,7 +683,8 @@ void Model::_updateVEElement( std::string input )
 
    SetSubElement( "iconLocation", iconLocation );
    SetAttribute( "name", modelName );
-
+   SetAttribute( "id", uuid );
+   
    if ( vendorUnit.empty() )
    {
       vendorUnit = modelName;
