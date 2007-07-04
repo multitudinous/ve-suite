@@ -143,12 +143,6 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
    this->argc = argc;
    this->argv = argv;
-
-   //Set the deafult clear color of black
-   clearColor.push_back( 0.0f );
-   clearColor.push_back( 0.0f );
-   clearColor.push_back( 0.0f );
-   clearColor.push_back( 1.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::exit()
@@ -312,24 +306,7 @@ void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::initScene( void )
 {
-    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
-#ifdef _SGL
-    CSGLVector2d length( 280.0, 210.0 );
-    CSGLVector2i pixels( 1024, 768 );
-    CSGLDisplay display( 60.0, 100.0, 700.0, 62.0, length, pixels );
-    SGLContext.SetDisplay( display );
-
-    // - set auto depth and frame cancelation flags
-    SGLContext.Enable( SGL_DEPTH_AUTO|SGL_FRAME_CANCEL );
-
-    // - set interlacing to stencil
-    SGLContext.SetInterlacing( SGL_STENCIL );
-
-    // - set vpi
-    CSGLVPI vpi( SGL_VPI_SOLID, 10, 20, 1, 0 );
-    SGLContext.SetVPI( vpi );
-#endif
-   
+    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;   
 # ifdef _OPENMP
    std::cout << "\n\n\n";
    std::cout << "|===================================================================|" << std::endl;
@@ -489,12 +466,6 @@ void cfdApp::latePreFrame( void )
 	VE_SceneGraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
 	previous_time = current_time;
 	//**********************************************************************
-   ///We must do this here because this must be serial not parallel in
-   ///multiple contexts
-   /*if ( svUpdate )
-   {
-      clearColor = VE_Xplorer::cfdEnvironmentHandler::instance()->GetBackgroundColor();
-   }*/
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
    this->update();
@@ -665,80 +636,78 @@ void cfdApp::contextPreDraw( void )
 void cfdApp::draw()
 {
     VPR_PROFILE_GUARD("cfdApp::draw");
-   glClear(GL_DEPTH_BUFFER_BIT);
-   // Users have reported problems with OpenGL reporting stack underflow
-   // problems when the texture attribute bit is pushed here, so we push all
-   // attributes *except* GL_TEXTURE_BIT.
-   glPushAttrib(GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT);
-   glPushAttrib(GL_TRANSFORM_BIT);
-   glPushAttrib(GL_VIEWPORT_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    // Users have reported problems with OpenGL reporting stack underflow
+    // problems when the texture attribute bit is pushed here, so we push all
+    // attributes *except* GL_TEXTURE_BIT.
+    glPushAttrib(GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT);
+    glPushAttrib(GL_TRANSFORM_BIT);
+    glPushAttrib(GL_VIEWPORT_BIT);
 
-   glMatrixMode(GL_MODELVIEW);
-   glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
 
-   glMatrixMode(GL_PROJECTION);
-   glPushMatrix();
-   
-   // The code below is commented out because it causes 
-   // problems with the cg shader code
-   // for more details please contact Gerrick
-   //glMatrixMode(GL_TEXTURE);
-   //glPushMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
 
-   osg::ref_ptr<osgUtil::SceneView> sv;
-   sv = (*sceneViewer);    // Get context specific scene viewer
-   vprASSERT(sv.get() != NULL);
+    // The code below is commented out because it causes 
+    // problems with the cg shader code
+    // for more details please contact Gerrick
+    //glMatrixMode(GL_TEXTURE);
+    //glPushMatrix();
 
-   vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
-   gl_manager = vrj::GlDrawManager::instance();
+    osg::ref_ptr<osgUtil::SceneView> sv;
+    sv = (*sceneViewer);    // Get context specific scene viewer
+    vprASSERT(sv.get() != NULL);
 
-   // Set the up the viewport (since OSG clears it out)
-   float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
-   int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
-   gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
-   gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
+    vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
+    gl_manager = vrj::GlDrawManager::instance();
 
-   //gl_manager->currentUserData()->getProjection()->getViewMatrix();
-  
-   // compute unsigned versions of the viewport info (for passing to glViewport)
-   unsigned ll_x = unsigned( vp_ox*float( w_width ) );
-   unsigned ll_y = unsigned( vp_oy*float( w_height) );
-   unsigned x_size = unsigned( vp_sx*float( w_width) );
-   unsigned y_size = unsigned( vp_sy*float( w_height) );
+    // Set the up the viewport (since OSG clears it out)
+    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
+    int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
+    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
-   //There is no resize event as of now
-   //cfdEnvironmentHandler::instance()->SetWindowDimensions(x_size,y_size);
+    //gl_manager->currentUserData()->getProjection()->getViewMatrix();
 
-   //sv->setCalcNearFar(false);
-   //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
-   sv->setViewport(ll_x, ll_y, x_size, y_size);
-   //This causes problems in multi threaded rendering environments
-   //sv->getRenderStage()->setClearMask(GL_NONE);
+    // compute unsigned versions of the viewport info (for passing to glViewport)
+    unsigned ll_x = unsigned( vp_ox*float( w_width ) );
+    unsigned ll_y = unsigned( vp_oy*float( w_height) );
+    unsigned x_size = unsigned( vp_sx*float( w_width) );
+    unsigned y_size = unsigned( vp_sy*float( w_height) );
 
-   //Get the view matrix and the frustrum form the draw manager
-   vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
-   vprASSERT(drawMan != NULL);
-   vrj::GlUserData* userData = drawMan->currentUserData();
+    //Should these commented out
+    //sv->setCalcNearFar(false);
+    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
+    sv->setViewport(ll_x, ll_y, x_size, y_size);
+    //This causes problems in multi threaded rendering environments
+    //sv->getRenderStage()->setClearMask(GL_NONE);
 
-   // get the current projection
+    //Get the view matrix and the frustrum form the draw manager
+    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
+    vprASSERT(drawMan != NULL);
+    vrj::GlUserData* userData = drawMan->currentUserData();
+
+    // get the current projection
 #if __VJ_version < 2003000
-   vrj::Projection* project = userData->getProjection();
+    vrj::Projection* project = userData->getProjection();
 #elif __VJ_version >= 2003008
-   vrj::ProjectionPtr project = userData->getProjection();
+    vrj::ProjectionPtr project = userData->getProjection();
 #endif
 
 
-   //Get the frustrum
-   vrj::Frustum frustum = project->getFrustum();
-   sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
+    //Get the frustrum
+    vrj::Frustum frustum = project->getFrustum();
+    sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
                                     frustum[vrj::Frustum::VJ_RIGHT],
                                     frustum[vrj::Frustum::VJ_BOTTOM],
                                     frustum[vrj::Frustum::VJ_TOP],
                                     frustum[vrj::Frustum::VJ_NEAR],
                                     frustum[vrj::Frustum::VJ_FAR]);
 
-	//Allow trackball to grab frustum values to calculate FOVy
-   cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
+    //Allow trackball to grab frustum values to calculate FOVy
+    cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
                                                        frustum[vrj::Frustum::VJ_RIGHT],
                                                        frustum[vrj::Frustum::VJ_TOP],
                                                         frustum[vrj::Frustum::VJ_BOTTOM],
@@ -746,62 +715,63 @@ void cfdApp::draw()
                                                        frustum[vrj::Frustum::VJ_FAR]);
 
 #ifdef _WEB_INTERFACE
-   bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
-   if(userData->getViewport()->isSimulator())   //if this is a sim window context....
-   {
-      //Matrix44d headMat=mHead->getData();      //grab the head matrix
-//      Matrix44d h=headMat;
-//      glMultMatrixf(headMat.mData);         //and multiply to cancel it out of the modelview
-//      gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);   //an overhead view
-      if(captureNextFrameForWeb) goCapture=true;   //now if we're go for capture, we'll know for sure
-   }
+    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
+    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
+    {
+        //Matrix44d headMat=mHead->getData();      //grab the head matrix
+        //      Matrix44d h=headMat;
+        //      glMultMatrixf(headMat.mData);         //and multiply to cancel it out of the modelview
+        //      gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);   //an overhead view
+        if(captureNextFrameForWeb) 
+            goCapture=true;   //now if we're go for capture, we'll know for sure
+    }
 #endif   //_WEB_INTERFACE
 
-   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-   gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-   gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
-   //copy the matrix
-   osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
-   osg_proj_xform_mat->set( _vjMatrixLeft.mData );
-   
-   // set the view matrix
-   sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
-   
-   sv->cull();
-   sv->draw();
+    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+    gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
+    gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+    //copy the matrix
+    osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
+    osg_proj_xform_mat->set( _vjMatrixLeft.mData );
+
+    // set the view matrix
+    sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
+
+    sv->cull();
+    sv->draw();
 
 #ifdef _WEB_INTERFACE
-   if(goCapture)
-      captureWebImage();
+    if(goCapture)
+        captureWebImage();
 #endif   //_WEB_INTERFACE
-   //glMatrixMode(GL_TEXTURE);
-   //glPopMatrix();
+    //glMatrixMode(GL_TEXTURE);
+    //glPopMatrix();
 
-   glMatrixMode(GL_PROJECTION);
-   glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
 
-   glMatrixMode(GL_MODELVIEW);
-   glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
 
-   glPopAttrib();
-   glPopAttrib();
-   glPopAttrib();
+    glPopAttrib();
+    glPopAttrib();
+    glPopAttrib();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::update( void )
 {
-	// Update the frame stamp with information from this frame
-	//frameStamp->setFrameNumber( getFrameNumber() );
-   //frameStamp->setReferenceTime( getFrameTime().secd() );
-	
-	// Set up the time and frame number so time dependant things (animations, particle system)
-	// function correctly
-	mUpdateVisitor->setTraversalNumber( _frameNumber );//getFrameNumber() ); // I'm not sure if this is nessisary
-	mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
-	
-	// update the scene by traversing it with the the update visitor which will
-	// call all node update callbacks and animations. This is equivalent to calling
-	// SceneView::update
-	getScene()->accept(*mUpdateVisitor);
+    // Update the frame stamp with information from this frame
+    //frameStamp->setFrameNumber( getFrameNumber() );
+    //frameStamp->setReferenceTime( getFrameTime().secd() );
+
+    // Set up the time and frame number so time dependant things (animations, particle system)
+    // function correctly
+    mUpdateVisitor->setTraversalNumber( _frameNumber );//getFrameNumber() ); // I'm not sure if this is nessisary
+    mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
+
+    // update the scene by traversing it with the the update visitor which will
+    // call all node update callbacks and animations. This is equivalent to calling
+    // SceneView::update
+    getScene()->accept(*mUpdateVisitor);
 }
 #endif //_OSG

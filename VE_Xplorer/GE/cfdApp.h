@@ -91,10 +91,6 @@ const float SAMPLE_TIME = 1.0f;
       }
 #endif //_PERFORMER _OSG
 
-#ifdef _SGL
-   #include <SGLContext.h>
-#endif //_SGL
-
 namespace VE_Xplorer
 {
 #ifdef _PERFORMER
@@ -186,16 +182,15 @@ public:
    int   lastFrame;///The last frame
    void update();///< update the framestamp and traverse the scenegraph
 private:
-   bool isCluster;///< are we in cluster mode
-   
-   vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
-   std::string filein_name;///< file name for something should be removed
-	double time_since_start;///< time to start
-   int argc;///< command line args
-   char** argv;///< command line args
-   std::vector<float> _clearColor;///<The clear color
-   //web interface stuff for writing the image file
-   //to be viewed over the web
+    bool isCluster;///< are we in cluster mode
+
+    vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
+    std::string filein_name;///< file name for something should be removed
+    double time_since_start;///< time to start
+    int argc;///< command line args
+    char** argv;///< command line args
+    //web interface stuff for writing the image file
+    //to be viewed over the web
 #ifdef _WEB_INTERFACE
 	bool runWebImageSaveThread;///< not sure what this is for
 	bool readyToWriteWebImage;///< not sure what this is for
@@ -212,18 +207,12 @@ private:
 	double timeOfLastCapture;///< not sure what this is for
 #endif 
 
-   std::vector<float> clearColor; ///<Container for clear color
-
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;///<update visitor
    osg::ref_ptr<osg::FrameStamp> frameStamp;///<framestamp
    osg::ref_ptr< osg::Light > light_0;///< ligth for the scene
    osg::ref_ptr< osg::LightSource > light_source_0;///< light source for the scene
    osg::ref_ptr< osg::LightModel > light_model_0;///< light model for the scene
-#endif
-
-#ifdef _SGL
-   CSGLContext SGLContext;///< for sharp stereo - should be removed in the future and may be replaced with stereo from sceneview
 #endif
 };
 }
