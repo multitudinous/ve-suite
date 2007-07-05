@@ -15,6 +15,9 @@ except:
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
 
+# Pull in HDF options files
+sys.path.append(pj(os.getcwd(), 'share', 'python'))
+
 # Add flagpoll from the source directory to the end of the path so it is found
 # LAST.
 local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
