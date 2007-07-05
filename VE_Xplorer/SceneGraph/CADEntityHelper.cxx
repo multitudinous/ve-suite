@@ -96,13 +96,16 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
     
     ///We deep copy nodes so that picking is accurate 
     ///and so that physics will work properly in the future
+#ifdef VE_PATENTED
     if( dynamic_cast< osgOQ::OcclusionQueryRoot* >( input.m_cadNode.get() ) )
     {
         m_cadNode = new osgOQ::OcclusionQueryRoot( 
             *static_cast< osgOQ::OcclusionQueryRoot* >( 
             input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
     }
-    else if( input.m_cadNode->asGroup() )
+    else
+#endif
+    if( input.m_cadNode->asGroup() )
     {
         m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), 
             osg::CopyOp::DEEP_COPY_NODES );
