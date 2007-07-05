@@ -65,6 +65,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "User",
                  "FileDir",
                  "ExtraVariables",
+		 "AutoShutDown",
                  "RunDebugPrograms"]
     if saveLastConfig:
         ##Variables that only the main config stores.
@@ -97,7 +98,6 @@ def SaveConfig(name, state, saveLastConfig = False):
 
 def LoadConfig(name, state, loadLastConfig = False):
     """Loads the configuration under name.
-
     Keyword arguments:
     name -- Name of configuration to load
     state -- Launcher's data
@@ -130,6 +130,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                  "Conductor": None,
                  "Xplorer": None,
                  "DesktopMode": None,
+		 "AutoShutDown": None,
                  "RunDebugPrograms": None}
     ##Load these if it's loading the initial configuration.
     if loadLastConfig:
@@ -179,7 +180,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 result = False
             else:
                 print 'ERROR! Saved boolean var not "True" or "False".'
-                result = None
+                result = False
             state.Edit(var, result)
     ##Set Jconf dictionary.
     if config.Exists(JCONF_CONFIG):

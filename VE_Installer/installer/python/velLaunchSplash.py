@@ -35,7 +35,7 @@
 # Andrea Gavana, @ 10 Oct 2005
 # Latest Revision: 10 Oct 2005, 15.50 CET
 import wx
-
+import time 
 # These Are Used To Declare If The AdvancedSplash Should Be Destroyed After The
 # Timeout Or Not
 AS_TIMEOUT = 1
@@ -57,66 +57,38 @@ AS_SHADOW_BITMAP = 32
 
 class AdvancedSplash(wx.Frame):
 
-    def __init__(self, parent, id=-1, pos=wx.DefaultPosition, size=wx.DefaultSize,
-                 style=wx.FRAME_NO_TASKBAR | wx.FRAME_SHAPED | wx.STAY_ON_TOP,
-                 bitmap=None, timeout=5000,
+    def __init__(self, parent, ID=-1, title="", 
+                 style=wx.SIMPLE_BORDER | wx.STAY_ON_TOP,
+                 timeout = 5000, bitmapfile = None,
                  extrastyle=AS_TIMEOUT | AS_CENTER_ON_SCREEN,
-                 shadowcolour=None):
+                 pos=wx.DefaultPosition, size=wx.DefaultSize):
 
-        """ Default Class Constructor.
+        ### Loading bitmap
+        self.bitmap = bmp = wx.Image(bitmapfile, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        
+        ### Determine size of bitmap to size window...
+        size = (bmp.GetWidth(), bmp.GetHeight())
+        w = bmp.GetWidth()
+        h = bmp.GetHeight()
+        
+        # size of screen
+        width = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_X)
+        height = wx.SystemSettings_GetMetric(wx.SYS_SCREEN_Y)
+        pos = ((width-size[0])/2, (height-size[1])/2)
 
-        Non Standard wxPython Parameters Are:
-
-        a) bitmap: This Must Be A Valid wx.Bitmap, That You May Construct Using
-           Whatever Image File Format Supported By wxPython. If The File You Load
-           Already Supports Mask/Transparency (Like PNG), The Transparent Areas
-           Will Not Be Drawn On Screen, And The AdvancedSplash Frame Will Have
-           The Shape Defined Only By *Non-Transparent* Pixels.
-           If You Use Other File Formats That Does Not Supports Transparency, You
-           Can Obtain The Same Effect As Above By Masking A Specific Colour In
-           Your wx.Bitmap. See "shadowcolour" and "extrastyle" Parameters;
-
-        b) timeout: If You Construct AdvancedSplash Using The Style AS_TIMEOUT,
-           AdvancedSplash Will Be Destroyed After "timeout" Milliseconds;
-
-        c) extrastyle: This Value Specifies The AdvancedSplash Styles:
-           - AS_TIMEOUT: AdvancedSplash Will Be Destroyed After "timeout"
-             Milliseconds;
-           - AS_NOTIMEOUT: AdvancedSplash Can Be Destroyed By Clicking On It,
-             Pressing A Key Or By Explicitly Call The Close() Method;
-           - AS_CENTER_ON_SCREEN: AdvancedSplash Will Be Centered On Screen;
-           - AS_CENTER_ON_PARENT: AdvancedSplash Will Be Centered On Parent;
-           - AS_NO_CENTER: AdvancedSplash Will Not Be Centered;
-           - AS_SHADOW_BITMAP: If The Bitmap You Pass As Input Has No Transparency,
-             You Can Choose One Colour That Will Be Masked In Your Bitmap. The
-             Final Shape Of AdvancedSplash Will Be Defined Only By Non-Transparent
-             (Non-Masked) Pixels.
-
-        d) shadowcolour: If You Construct AdvancedSplash Using The Style
-           AS_SHADOW_BITMAP, Here You Can Specify The Colour That Will Be Masked On
-           Your Input Bitmap. This Has To BeA Valid wxPython Colour.
-
-        """
-
-        wx.Frame.__init__(self, parent, id, "", pos, size, style)
+        # check for overflow...
+        if pos[0] < 0:
+            size = (wx.SystemSettings_GetSystemMetric(wx.SYS_SCREEN_X), size[1])
+        if pos[1] < 0:
+            size = (size[0], wx.SystemSettings_GetSystemMetric(wx.SYS_SCREEN_Y))
+            
+        wx.Frame.__init__(self, parent, ID, title, pos, size, style)
 
         # Some Error Checking
         if extrastyle & AS_TIMEOUT and timeout <= 0:
             raise '\nERROR: Style "AS_TIMEOUT" Used With Invalid "timeout" Parameter Value (' \
                   + str(timeout) + ')'
-
-        if extrastyle & AS_SHADOW_BITMAP and not shadowcolour.Ok():
-            raise '\nERROR: Style "AS_SHADOW_BITMAP" Used With Invalid "shadowcolour" Parameter'
-                            
-        if not bitmap.Ok():
-            raise "\nERROR: Bitmap Passed To AdvancedSplash Is Invalid."
     
-        if extrastyle & AS_SHADOW_BITMAP:
-            # Our Bitmap Is Masked Accordingly To User Input
-            self.bmp = self.ShadowBitmap(bitmap, shadowcolour)
-        else:
-            self.bmp = bitmap
-
         self._extrastyle = extrastyle
 
         # Setting Initial Properties        
@@ -124,20 +96,6 @@ class AdvancedSplash(wx.Frame):
         self.SetTextFont()
         self.SetTextPosition()
         self.SetTextColour()
-
-        # Calculate The Shape Of AdvancedSplash Using The Input-Modified Bitmap        
-        self.reg = wx.RegionFromBitmap(self.bmp)
-
-        # Don't Know If It Works On Other Platforms!!
-        # Tested Only In Windows XP/2000
-        
-        if wx.Platform == "__WXMSW__":
-            self.SetSplashShape()
-        else:
-            self.Bind(wx.EVT_WINDOW_CREATE, self.SetSplashShape())
-            
-        w = self.bmp.GetWidth()
-        h = self.bmp.GetHeight()
 
         # Set The AdvancedSplash Size To The Bitmap Size
         self.SetSize((w, h))
@@ -153,36 +111,16 @@ class AdvancedSplash(wx.Frame):
             self._splashtimer.Start(timeout)
 
         # Catch Some Mouse Events, To Behave Like wx.SplashScreen
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
-        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(wx.EVT_MOUSE_EVENTS, self.OnMouseEvents)
+        self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
         self.Bind(wx.EVT_CHAR, self.OnCharEvents)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
         
-        self.Show()
-
-
-    def SetSplashShape(self):
-        """ Sets AdvancedSplash Shape Using The Region Created From The Bitmap."""
-        
-        self.SetShape(self.reg)
-        
-        
-    def ShadowBitmap(self, bmp, shadowcolour):
-        """ Applies A Mask On The Bitmap Accordingly To User Input. """
-        
-        mask = wx.Mask(bmp, shadowcolour)
-        bmp.SetMask(mask)
-
-        return bmp
+        self.Show(True)
 
 
     def OnPaint(self, event):        
         """ Handles The wx.EVT_PAINT For AdvancedSplash. """
-        
-        dc = wx.PaintDC(self)
-
-        # Here We Redraw The Bitmap Over The Frame
-        dc.DrawBitmap(self.bmp, 0, 0, True)
 
         # We Draw The Text Anyway, Wheter It Is Empty ("") Or Not
         textcolour = self.GetTextColour()
@@ -190,12 +128,16 @@ class AdvancedSplash(wx.Frame):
         textpos = self.GetTextPosition()
         text = self.GetText()
         
-        dc.SetFont(textfont[0])
-        dc.SetTextForeground(textcolour)
-        dc.DrawText(text, textpos[0], textpos[1])
-
-        #wx.SafeYield()
+        dc = wx.PaintDC(self)
+        dc1 = wx.PaintDC(self)
         
+        # Here We Redraw The Bitmap Over The Frame        
+        dc1.SetFont(textfont[0])
+        dc1.SetTextForeground(textcolour)
+
+        dc.DrawBitmap(self.bitmap, 0, 0, True)
+        dc1.DrawText(text, textpos[0], textpos[1])
+
         event.Skip()
 
 

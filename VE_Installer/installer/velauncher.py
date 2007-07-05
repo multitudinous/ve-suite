@@ -200,9 +200,11 @@ class LauncherWindow(wx.Frame):
         self.prefSubMenu = wx.Menu()
 	self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
 	menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
+	"""
 	if windows:
             self.prefSubMenu.Check(602, False)
 	    self.prefSubMenu.Enable(602, False)
+	"""
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         ##Recent files as separated add-on
         ##menu.AppendSeparator()
@@ -472,6 +474,15 @@ class LauncherWindow(wx.Frame):
         ##Tao Port
         if self.txTaoPort.IsEnabled():
             self.state.Edit("TaoPort", self.txTaoPort.GetValue())
+	##AutoShutDown
+	if self.prefSubMenu.IsEnabled(602):
+	    FirstTimeCheck = self.state.GetSurface("AutoShutDown")
+	    if (FirstTimeCheck == None):
+		FirstTimeCheck = False
+                self.state.Edit("AutoShutDown", FirstTimeCheck)
+
+            self.state.Edit("AutoShutDown", self.prefSubMenu.IsChecked(602))
+
         ##Mode
         if self.rbMode.IsEnabled():
             modeChosen = self.rbMode.GetSelection()
@@ -560,7 +571,13 @@ class LauncherWindow(wx.Frame):
 ##            self.fileNameText.SetLabel(fileName)
 ##        else:
 ##            self.fileTypeText.SetLabel("")
-##            self.fileNameText.SetLabel("")            
+##            self.fileNameText.SetLabel("")
+        ##AutoShutDown self.prefSubMenu.Check(602, True)
+	confCheck = self.state.GetSurface("AutoShutDown")
+	if (confCheck == None):
+	    confCheck = False
+	#if not windows:
+        self.prefSubMenu.Check(602, confCheck)
         return
 
     def ConstructRecentMenu(self, event = None):
@@ -724,30 +741,53 @@ class LauncherWindow(wx.Frame):
         wx.MilliSleep(50)
         if not windows:
             self.mutex.acquire()
-        image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
-        frame1 = AS.AdvancedSplash(self, bitmap = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
-        frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 
+        #image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
+
+	image = SPLASH_IMAGE
+        frame1 = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
+        frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
+		
         frame1.SetTextColour(wx.BLACK)
         frame1.SetTextPosition((155,43))
-        frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-        frame1.SetText("Version 1.1\n")
-        wx.MilliSleep(200)
 
-	if self.state.GetSurface("NameServer"):
-            frame1.SetText("Version 1.1" + "\n" + "Starting Name Server...")
-            wx.MilliSleep(2000)
-	if self.state.GetSurface("Xplorer"):
-            frame1.SetText("Version 1.1\n" + "Starting Xplorer...")
-            wx.MilliSleep(1000)
-	if self.state.GetSurface("Conductor"):
-            frame1.SetText("Version 1.1\n" + "Starting Conductor...")
-            wx.MilliSleep(700)
+	if windows:
+            frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
+            frame1.SetText("Version 1.1\\n")
+            wx.MilliSleep(200)
+	    if self.state.GetSurface("NameServer"):
+                frame1.SetText("Version 1.1\\nStarting Name Server...")
+                wx.MilliSleep(2000)
+	    if self.state.GetSurface("Xplorer"):
+                frame1.SetText("Version 1.1\\nStarting Xplorer...")
+                wx.MilliSleep(1000)
+	    if self.state.GetSurface("Conductor"):
+                frame1.SetText("Version 1.1\\nStarting Conductor...")
+                wx.MilliSleep(700)
 
-            frame1.SetText("Version 1.1\n" + "Preparing to Launch VE-Suite...")
-            wx.MilliSleep(1000)
+                frame1.SetText("Version 1.1\\nPreparing to Launch VE-Suite...")
+                wx.MilliSleep(1000)
 
-        frame1.Close()        
+	elif unix:
+            frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
+            frame1.SetText("Version 1.1\n")
+            wx.MilliSleep(200)
+	    if self.state.GetSurface("NameServer"):
+                frame1.SetText("Version 1.1\nStarting Name Server...")
+                wx.MilliSleep(2000)
+	    if self.state.GetSurface("Xplorer"):
+                frame1.SetText("Version 1.1\nStarting Xplorer...")
+                wx.MilliSleep(1000)
+	    if self.state.GetSurface("Conductor"):
+                frame1.SetText("Version 1.1\nStarting Conductor...")
+                wx.MilliSleep(700)
+
+                frame1.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
+                wx.MilliSleep(1000)
+	else:
+            wx.MilliSleep(5000)
+
+	frame1.Close()        
 	if not windows:
             self.mutex.release()
 
