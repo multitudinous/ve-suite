@@ -1236,8 +1236,6 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
                    network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetY()/(yPix));
    
    //highlight the selected icon
-   //network->HighlightSelectedIcon(network->modules[moduleIDs[selectedModulePos]].GetPlugin());
-   //network->DrawPorts(network->modules[moduleIDs[selectedModulePos]].GetPlugin(), true);
    network->SetSelectedModule(moduleIDs[selectedModulePos]);
 }
 
