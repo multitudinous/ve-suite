@@ -1,6 +1,5 @@
 ##Builds the ChangeLog files
 import os, sys
-import doxygen
 from SCons.Util import WhereIs
 pj = os.path.join
 
