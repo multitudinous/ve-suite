@@ -392,7 +392,7 @@ if not SConsAddons.Util.hasHelpFlag():
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    shareSubdirs = pj(buildDir,'share')
-   docsSubdirs = pj('#', 'share', 'docs')
+   docsSubdirs = pj('#', 'share', 'docs', 'docbook')
    chlogSubdirs = pj('#', 'share', 'docs', 'changelog')
    doxySubdirs = pj('#', 'share' , 'docs', 'doxygen')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
