@@ -166,7 +166,7 @@ vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True,
                          'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
                          'vtkzlib','vtkNetCDF','verdict'])
 opts.AddOption( vtk_options )
-opts.Add( 'VtkVersion','Set the verison of Visualization Toolkit (VTK).')
+opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
 opts.AddOption(hdf5_options)
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['bdf','mfhdf'])
