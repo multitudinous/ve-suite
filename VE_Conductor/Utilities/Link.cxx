@@ -88,6 +88,7 @@ userScale( 0 )
     cosa = cos(a);
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
     m_uuid = "notSet";
+	highlightFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -113,6 +114,7 @@ Link::Link( const Link& input )
     userScale = input.userScale;
     action_point = input.action_point;
     m_uuid = input.m_uuid;
+	highlightFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
@@ -136,6 +138,7 @@ Link& Link::operator= ( const Link& input )
         userScale = input.userScale;
         action_point = input.action_point;
         m_uuid = input.m_uuid;
+		highlightFlag = false;
     }
     return *this;
 }
@@ -636,6 +639,8 @@ void Link::OnMRightDown( wxMouseEvent &event )
         event.Skip();
         return;
     }
+	highlightFlag = true;
+	networkFrame->Refresh();
 
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActiveLinkName;

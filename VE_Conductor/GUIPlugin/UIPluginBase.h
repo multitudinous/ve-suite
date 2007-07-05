@@ -263,6 +263,7 @@ public:
    void OnShowIconChooser(wxCommandEvent &event);
 
    void SetDialogSize( wxRect dialogSize );
+   bool highlightFlag;
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 

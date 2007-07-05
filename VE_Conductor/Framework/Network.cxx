@@ -223,10 +223,10 @@ void Network::OnMLeftDown(wxMouseEvent& event)
     long y = evtpos.y;
 
     //Clear selections
-    if (m_selMod >= 0)
+    //if (m_selMod >= 0)
      UnSelectMod(dc);
-    if (m_selLink >= 0)
-     UnSelectLink(dc);
+    //if (m_selLink >= 0)
+	 UnSelectLink(dc);
     if (m_selTag >= 0)
      UnSelectTag(dc);
 
@@ -567,10 +567,10 @@ void Network::OnMRightDown(wxMouseEvent& event)
    wxPoint evtpos = event.GetLogicalPosition( dc );
    
    //Clear selections
-   /*if (m_selMod >= 0)
+   //if (m_selMod >= 0)
 	   UnSelectMod(dc);
-   if (m_selLink >= 0)
-	   UnSelectLink(dc);*/
+   //if (m_selLink >= 0)
+	   UnSelectLink(dc);
    
    //Select Mod/Link
    /*SelectMod(x, y, dc);
@@ -781,7 +781,10 @@ int Network::SelectMod( int x, int y, wxDC &dc )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::UnSelectMod(wxDC &dc)
 {
-  m_selMod = -1;
+	std::map<int, Module>::iterator iter;
+	for ( iter = modules.begin(); iter != modules.end(); iter++)
+		iter->second.GetPlugin()->highlightFlag = false;
+	m_selMod = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Network::SelectLink(int x, int y)
@@ -805,6 +808,8 @@ int Network::SelectLink(int x, int y)
 ////////////////////////////////////////////////////////////////////////////////
 void Network::UnSelectLink(wxDC &dc)
 {
+   for ( size_t i = 0; i < links.size(); ++i )
+      links[i].highlightFlag = false;
    m_selLink = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1735,6 +1740,11 @@ void Network::ReDraw(wxDC &dc)
       iter->second.GetPlugin()->DrawIcon(&dc);
       iter->second.GetPlugin()->DrawID(&dc);
       iter->second.GetPlugin()->DrawName(&dc);
+	  if(iter->second.GetPlugin()->highlightFlag)
+	  {
+		  HighlightSelectedIcon(iter->second.GetPlugin(), dc);
+		  DrawPorts( iter->second.GetPlugin(), true, dc);
+	  }
    }
 
    if ( modules.find( m_selMod ) != modules.end() )
@@ -1743,14 +1753,18 @@ void Network::ReDraw(wxDC &dc)
       DrawPorts( modules[m_selMod].GetPlugin(), true, dc);
    }
 
+   // draw all the links
+   for ( size_t i = 0; i < links.size(); ++i )
+   {
+      links[i].DrawLink( true, dc, userScale );
+	  if(links[i].highlightFlag)
+		  links[i].DrawLinkCon( true, userScale, dc );
+   }
+
    if(m_selLink >= 0)
    {
 	   links[m_selLink].DrawLinkCon( true, userScale, dc ); 
    }
-
-   // draw all the links
-   for ( size_t i = 0; i < links.size(); ++i )
-      links[i].DrawLink( true, dc, userScale );
 
    // draw all the tags
    for ( size_t i = 0; i < tags.size(); ++i )

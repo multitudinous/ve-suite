@@ -62,6 +62,7 @@
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
+#include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
 #include <wx/image.h>
 #include <wx/wx.h>
@@ -148,6 +149,8 @@ UIPluginBase::UIPluginBase() :
    defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
    defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
    defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
+
+   highlightFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
@@ -1501,6 +1504,8 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
         event.Skip();
         return;
     }
+	highlightFlag = true;
+	networkFrame->Refresh();
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );

@@ -124,6 +124,7 @@ public:
    void SetUUID( std::string uuid );
    ///Get UUID for this link
    std::string GetUUID();
+   int highlightFlag;
 
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
