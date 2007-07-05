@@ -35,8 +35,9 @@ class OSGOQ_EXPORT OcclusionQueryNode : public osg::Group
 {
 public:
     OcclusionQueryNode( OcclusionQueryContext* oqc=NULL );
+protected:
     virtual ~OcclusionQueryNode();
-
+public:
     // Copy constructor using CopyOp to manage deep vs shallow copy.
     OcclusionQueryNode( const OcclusionQueryNode& oqn, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
 

@@ -87,34 +87,37 @@ CADEntityHelper::CADEntityHelper( void )
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 {
 #ifdef _OSG
-    if( input.m_cadNode.valid() )
-    {
-        ///We deep copy nodes so that picking is accurate 
-        ///and so that physics will work properly in the future
-        if( input.m_cadNode->asGroup() )
-        {
-            m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), 
-                osg::CopyOp::DEEP_COPY_NODES );
-        }
-
-        else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
-        {
-            m_cadNode = new osg::Geode( *static_cast< osg::Geode* >( 
-                input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
-        }
-
-        else
-        {
-            std::cout << "ERROR : Cast not present " << std::endl;
-            std::cout << typeid( *input.m_cadNode.get() ).name() << std::endl;
-        }
-    }
-
-    else
+    if( !input.m_cadNode.valid() )
     {
         std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node" 
             << std::endl;
+        return;
     }
+    
+    ///We deep copy nodes so that picking is accurate 
+    ///and so that physics will work properly in the future
+    if( dynamic_cast< osgOQ::OcclusionQueryRoot* >( input.m_cadNode.get() ) )
+    {
+        m_cadNode = new osgOQ::OcclusionQueryRoot( 
+            *static_cast< osgOQ::OcclusionQueryRoot* >( 
+            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+    }
+    else if( input.m_cadNode->asGroup() )
+    {
+        m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), 
+            osg::CopyOp::DEEP_COPY_NODES );
+    }
+    else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
+    {
+        m_cadNode = new osg::Geode( *static_cast< osg::Geode* >( 
+            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+    }
+    else
+    {
+        std::cout << "ERROR : Cast not present " << std::endl;
+        std::cout << typeid( *input.m_cadNode.get() ).name() << std::endl;
+    }
+
 #elif _OPENSG
 #endif
 }

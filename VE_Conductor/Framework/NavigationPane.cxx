@@ -547,7 +547,7 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
    //or an wxIdleEvent may need to be used here
    //we will have to do testing to figure out the best methods
    //wxInternalIdle was called too often
-   if ( IsShown() )
+   if( IsShown() )
    {
       UpdateNavigationData();
       UpdateWindowUI(wxUPDATE_UI_FROMIDLE);

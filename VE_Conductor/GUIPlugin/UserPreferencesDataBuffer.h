@@ -43,6 +43,7 @@ UserPreferencesDataBuffer API
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
 #include <vpr/Util/Singleton.h>
+#include <vpr/Sync/Mutex.h>
 
 #include <map>
 #include <string>
@@ -58,26 +59,29 @@ namespace VE_Conductor
 class VE_GUIPLUGINS_EXPORTS UserPreferencesDataBuffer
 {
 private:
-   // Required so that vpr::Singleton can instantiate this class.
-   // friend class vpr::Singleton< UserPreferenceDataBuffer >;
-   UserPreferencesDataBuffer( void );
-   ~UserPreferencesDataBuffer(){ ; } // Never gets called, don't implement
-   vprSingletonHeader( UserPreferencesDataBuffer );
+    // Required so that vpr::Singleton can instantiate this class.
+    // friend class vpr::Singleton< UserPreferenceDataBuffer >;
+    UserPreferencesDataBuffer( void );
+    ~UserPreferencesDataBuffer(){ ; } // Never gets called, don't implement
+    vprSingletonHeader( UserPreferencesDataBuffer );
 public:
-   ///Destructor
-   //~CORBAServiceList( void );
-   void CleanUp( void );
-   ///Get Command with key
-   ///The key MUST be the command name
-   VE_XML::Command& GetCommand( std::string commandKey );
-   ///set Command with key
-   void SetCommand( std::string commandKey, VE_XML::Command& command );
-   ///Get all the commands
-   std::map< std::string, VE_XML::Command >& GetCommandMap( void );
-   ///Set all the commands
-   void SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap );
+    ///Destructor
+    //~CORBAServiceList( void );
+    void CleanUp( void );
+    ///Get Command with key
+    ///The key MUST be the command name
+    VE_XML::Command& GetCommand( std::string commandKey );
+    ///set Command with key
+    void SetCommand( std::string commandKey, VE_XML::Command& command );
+    ///Get all the commands
+    std::map< std::string, VE_XML::Command >& GetCommandMap( void );
+    ///Set all the commands
+    void SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap );
 private:
-   std::map< std::string, VE_XML::Command > commandMap;
+    ///Mapp to hold all the preference data to be written to the ves file
+    std::map< std::string, VE_XML::Command > commandMap;
+    ///A mutex to protect variables accesses
+    vpr::Mutex m_valueLock;  
 };
 }
 #endif

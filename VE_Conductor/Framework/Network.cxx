@@ -357,7 +357,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		if (m_selLinkCon >= 0 && m_selLink >= 0)
 		{		
 			wxClientDC dc(this);
-			PrepareDC(dc);
+			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
@@ -369,7 +369,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		else if (m_selTag>=0 && m_selTagCon<0)
 		{		
 			wxClientDC dc(this);
-			PrepareDC(dc);
+			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
@@ -381,7 +381,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		else if (m_selTag>=0 && m_selTagCon>=0)
 		{		
 			wxClientDC dc(this);
-			PrepareDC(dc);
+			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
@@ -393,11 +393,13 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		else if (m_selMod>=0 && m_selFrPort>=0)
 		{		
 			wxClientDC dc(this);
-			PrepareDC(dc);
+			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
 			wxPoint evtpos = event.GetLogicalPosition(dc);
-			long x = evtpos.x;
-			long y = evtpos.y;
+			//long x = evtpos.x;
+			//long y = evtpos.y;
+			long x = event.GetPosition().x;
+			long y = event.GetPosition().y;            
 			TryLink(x, y, m_selMod, m_selFrPort, dc, true); // draw input ports
 			//DrawPorts( modules[m_selMod].GetPlugin(), true );
 		}
@@ -406,7 +408,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		else if (m_selMod>=0 && m_selToPort>=0)
 		{		
 			wxClientDC dc(this);
-			PrepareDC(dc);
+			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
@@ -419,7 +421,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		else if (m_selMod >= 0 && m_selFrPort < 0 && m_selToPort < 0)
 		{		
 			wxClientDC dc(this);
-			PrepareDC(dc);
+			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
@@ -1115,6 +1117,10 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
       DrawPorts( modules[dest_mod].GetPlugin(), true, dc); //draw the ports
 
    dc.SetPen(*wxBLACK_PEN);
+   /*offSet.x = dc.LogicalToDeviceX( offSet.x );
+   offSet.y = dc.LogicalToDeviceY( offSet.y );
+   x = dc.LogicalToDeviceX( x );
+   y = dc.LogicalToDeviceY( y );*/
    dc.DrawLine( offSet.x, offSet.y, x, y);
 
    xold = x;

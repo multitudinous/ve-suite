@@ -51,32 +51,37 @@ UserPreferencesDataBuffer::UserPreferencesDataBuffer( void )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::CleanUp( void )
 {
-   commandMap.clear();
+    vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
+    commandMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::Command& UserPreferencesDataBuffer::GetCommand( std::string commandKey )
 {
-   std::map< std::string, VE_XML::Command >::iterator iter;
-   iter = commandMap.find( commandKey );
-   if ( iter == commandMap.end() )
-   {
-      return commandMap[ "NULL" ];
-   }
-   return iter->second;
+    vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
+    std::map< std::string, VE_XML::Command >::iterator iter;
+    iter = commandMap.find( commandKey );
+    if( iter == commandMap.end() )
+    {
+        return commandMap[ "NULL" ];
+    }
+    return iter->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::SetCommand( std::string commandKey, VE_XML::Command& command )
 {
-   commandMap[ commandKey ] = command;
+    vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
+    commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, VE_XML::Command >& UserPreferencesDataBuffer::GetCommandMap( void )
 {
-   return commandMap;
+    vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
+    return commandMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap )
 {
+    vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     commandMap = tempMap;
     std::map< std::string, VE_XML::Command >::iterator iter;
     iter = commandMap.find( "NULL" );
