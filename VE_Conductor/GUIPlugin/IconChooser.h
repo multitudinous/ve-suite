@@ -43,6 +43,8 @@
 #include <wx/notebook.h>
 #include <wx/panel.h>
 #include <wx/bmpbuttn.h>
+#include <wx/choice.h>
+#include <wx/scrolwin.h>
 #include <map>
 #include <string>
 
@@ -77,7 +79,9 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 		wxDirDialog *WxDirDialog;
 		wxMenuBar *WxMenuBar1;
 		wxNotebook * WxNotebook;
-		//wxChoice *WxChoice;
+		wxChoice *WxChoice;
+		wxArrayString choices;
+		wxWindow * networkFrame;
         //wxArrayString componentList;
 		
 	private:

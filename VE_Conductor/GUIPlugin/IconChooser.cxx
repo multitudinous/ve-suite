@@ -48,6 +48,7 @@ IconChooser::IconChooser(wxWindow *parent, /*std::string path,*/ wxWindowID id, 
 {
 	//directory = wxString(path.c_str(), wxConvUTF8);
 	CreateGUIControls();
+	networkFrame = parent;
 }
 ////////////////////////////////////////////////////////////////////////////////
 IconChooser::~IconChooser()
@@ -59,7 +60,15 @@ void IconChooser::CreateGUIControls()
 {
 	wxPanel * WxPanel = new wxPanel(this, 1000, wxPoint(0,0), wxSize(640,480));
 	WxNotebook = new wxNotebook(WxPanel, 1001, wxPoint(0,0),wxSize(617,460));
-	WxEdit = new wxTextCtrl(WxPanel, 1002, wxT(""), wxPoint(40, 463), wxSize(400,21), 0, wxDefaultValidator, wxT(""));
+	WxEdit = new wxTextCtrl(WxPanel, 1002, wxT(""), wxPoint(10, 463), wxSize(300,21), 0, wxDefaultValidator, wxT(""));
+
+	choices.Add("None");
+	choices.Add("Rotate Left");
+	choices.Add("Rotate Right");
+	choices.Add("Flip Left/Right");
+	choices.Add("Flip Up/Down");
+	WxChoice = new wxChoice(WxPanel, 1006, wxPoint(325, 463), wxSize(100,21), choices, 0, wxDefaultValidator, wxT("WxChoice"));
+
 	WxEdit->SetEditable(false);
 	okButton = new wxButton(WxPanel, 1003, wxT("OK"), wxPoint(450, 463));
 	cancelButton = new wxButton(WxPanel, 1004, wxT("Cancel"), wxPoint(535, 463));
@@ -158,7 +167,17 @@ void IconChooser::SetPlugin( UIPluginBase * plugin)
 ////////////////////////////////////////////////////////////////////////////////
 void IconChooser::okButtonClick(wxCommandEvent& event)
 {
-	thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ) );
+	if(choices[WxChoice->GetCurrentSelection()] == "None")
+		thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ) );
+	else if(choices[WxChoice->GetCurrentSelection()] == "Rotate Left")
+		thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 90.0 );
+	else if(choices[WxChoice->GetCurrentSelection()] == "Rotate Right")
+		thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 270.0 );
+	else if(choices[WxChoice->GetCurrentSelection()] == "Flip Left/Right")
+		thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 1 );
+	else if(choices[WxChoice->GetCurrentSelection()] == "Flip Up/Down")
+		thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 2 );
+	networkFrame->Refresh();
 	Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
