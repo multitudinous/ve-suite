@@ -21,6 +21,8 @@ try:
    import HDF4
 except:
    sys.path.append(pj(os.getcwd(), 'share', 'python'))
+   import HDF5
+   import HDF4
 
 # Add flagpoll from the source directory to the end of the path so it is found
 # LAST.
