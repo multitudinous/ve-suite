@@ -176,7 +176,7 @@ opts.AddOption( vtk_options )
 opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
 opts.AddOption(hdf5_options)
-hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','bdf'])
+hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
 opts.AddOption(hdf4_options)
 osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',

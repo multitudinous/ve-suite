@@ -64,7 +64,7 @@ class HDF4(SConsAddons.Options.PackageOption):
       # configurable options
       self.baseDir = None
       if libList == None:
-         self.libList=['bdf', 'mfhdf']
+         self.libList=['df', 'mfhdf','jpeg']
       else:
          self.libList=libList
          
