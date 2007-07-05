@@ -44,6 +44,8 @@ import SConsAddons.Options.Xerces
 import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
 import SConsAddons.Options.FlagPollBasedOption as fp_opt
+import HDF5
+import HDF4
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
 ########### Setup build dir and name
@@ -156,7 +158,7 @@ if ARGUMENTS.has_key("options_file"):
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
-opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
+
 vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True,
                         ['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
                          'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
@@ -164,6 +166,11 @@ vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True,
                          'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
                          'vtkzlib','vtkNetCDF','verdict'])
 opts.AddOption( vtk_options )
+opts.Add( 'VtkVersion','Set the verison of Visualization Toolkit (VTK).')
+hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
+opts.AddOption(hdf5_options)
+hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['bdf','mfhdf'])
+opts.AddOption(hdf4_options)
 osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',
                          'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
@@ -197,8 +204,10 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 
-Export('opts', 'vtk_options', 'osg_options',
+Export('opts', 'vtk_options', 'osg_options', 
          'xerces_options','wxwidgets_options',
+         'hdf5_options',
+         'hdf4_options',
          'VE_SUITE_VERSION', 'vesSVNRevision')
 
 ##Display some help
