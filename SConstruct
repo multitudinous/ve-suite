@@ -16,7 +16,11 @@ except:
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
 
 # Pull in HDF options files
-sys.path.append(pj(os.getcwd(), 'share', 'python'))
+try:
+   import HDF5
+   import HDF4
+except:
+   sys.path.append(pj(os.getcwd(), 'share', 'python'))
 
 # Add flagpoll from the source directory to the end of the path so it is found
 # LAST.
@@ -47,8 +51,6 @@ import SConsAddons.Options.Xerces
 import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
 import SConsAddons.Options.FlagPollBasedOption as fp_opt
-import HDF5
-import HDF4
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
 ########### Setup build dir and name
@@ -172,7 +174,7 @@ opts.AddOption( vtk_options )
 opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
 opts.AddOption(hdf5_options)
-hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['bdf','mfhdf'])
+hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','bdf'])
 opts.AddOption(hdf4_options)
 osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',
