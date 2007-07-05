@@ -1,0 +1,39 @@
+##Builds vtkTo3DTexture
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR GetPlatform vtk_options hdf4_options hdf5_options buildDir PREFIX')
+
+srcs = Split("""
+   HDFToVTKTranslator.cxx 
+   HDFtoVTK.cxx
+   viewCells.cxx 
+""")
+
+env = ves_pkg.getEnv().Copy()
+env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
+            LIBS = ['VE_UtilLib'])
+##env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
+hdf4_options.apply( env )
+hdf5_options.apply( env )
+
+vtk_options.apply( env )
+prog = ves_pkg.createProgram('HDFToVTKTranslator', env, 'bin')
+prog.addSources( srcs )
+prog.build()
+
+
+
+##if GetPlatform() == "darwin":
+##   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o ${SOURCE}'
+##   bld = Builder(action = idlCmd )
+##   env.Append(BUILDERS = {'apple_rez': bld})
+##   if 'install' in COMMAND_LINE_TARGETS:
+##      conductorTarget = pj(PREFIX,'bin','Texture')
+##      winTarget = pj(PREFIX,'bin','HDFToVTKTranslator')
+##   else:
+ ##     conductorTarget = pj( '#', buildDir,'VE_Builder','HDFToVTKTranalator','tcGUI','Texture')
+##      winTarget = pj( '#',buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','vtkTo3DTexture')
+
+##  env.apple_rez( conductorTarget, winTarget)
+##   env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))

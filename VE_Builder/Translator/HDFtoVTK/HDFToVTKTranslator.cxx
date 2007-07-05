@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdHDFtoVTK.h"
-
+#include "VE_Builder/Translator/HDFtoVTK/HDFtoVTK.h"
+#include <iostream>
 int main(int argc, char** argv)
 {
    char* inFile = 0;

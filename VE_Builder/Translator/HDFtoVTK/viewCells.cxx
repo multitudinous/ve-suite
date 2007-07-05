@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "viewCells.h"
+#include "VE_Builder/Translator/HDFtoVTK/viewCells.h"
 
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>
@@ -59,13 +59,15 @@
 #include <vtkCellArray.h>
 #include <vtkScalarsToColors.h>
 #include <vtkLookupTable.h>
+
+#include <iostream>
 void viewCells( vtkDataSet *dataset, const float shrinkFactor )
 {
-    cout << "\nviewCells: Preparing to view mesh..." << endl;
+    std::cout << "\nviewCells: Preparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();
-    cout << "     The number of cells is " << numCells << endl;
+    std::cout << "     The number of cells is " << numCells << std::endl;
     int numPts = dataset->GetNumberOfPoints();
-    cout << "     The number of points is "<< numPts << endl;
+    std::cout << "     The number of points is "<< numPts << std::endl;
     
     if ( numCells==0 ) return;
 
@@ -139,7 +141,7 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
     // Reset the clipping range of the camera; set the camera of the follower; render.
     ren1->ResetCameraClippingRange();
 
-    cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << endl;
+    std::cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << std::endl;
 
     // interact with data
     renWin->SetSize( 800, 800 );
@@ -264,7 +266,7 @@ vtkActor * AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float sh
 
     if ( numCells==0 )
     {
-        cout << "\tNothing to plot in AddToRenderer: The number of cells is " << numCells << endl;
+        std::cout << "\tNothing to plot in AddToRenderer: The number of cells is " << numCells << std::endl;
         return actor;
     }
     
@@ -274,12 +276,12 @@ vtkActor * AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float sh
 //    You can turn off display lists by turning on ImmediateModeRendering.
     map->ImmediateModeRenderingOn();
 
-    cout << "Using shrinkFactor = " << shrinkFactor << endl;
+    std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
 
     vtkShrinkFilter *shrink = NULL;
     if ( shrinkFactor > 0.0 && shrinkFactor < 1.0 ) 
     {
-        //cout << "Using shrinkFactor = " << shrinkFactor << endl;
+        //cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
         shrink = vtkShrinkFilter::New();
         shrink->SetInput( dataset );
         shrink->SetShrinkFactor( shrinkFactor );
