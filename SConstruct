@@ -213,8 +213,8 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 
 Export('opts', 'vtk_options', 'osg_options', 
          'xerces_options','wxwidgets_options',
-         'hdf5_options',
-         'hdf4_options',
+         #'hdf5_options',
+         #'hdf4_options',
          'VE_SUITE_VERSION', 'vesSVNRevision')
 
 ##Display some help

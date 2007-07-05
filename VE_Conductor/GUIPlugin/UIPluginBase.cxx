@@ -106,19 +106,19 @@ IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
 
 /////////////////////////////////////////////////////////////////////////////
 UIPluginBase::UIPluginBase() :
-   networkFrame( 0 ),
-   dlg( 0 ), 
-   result_dlg( 0 ),
-   port_dlg( 0 ),
-   geom_dlg( 0 ),
-   financial_dlg( 0 ),
-   numberOfInputPorts( 0 ),
-   numberOfOutputPorts( 0 ),
-   inputsDialog( 0 ),
-   resultsDialog( 0 ),
-   portsDialog( 0 ),
-   vistab( 0 ),
-   iconFilename( "DefaultPlugin" ),
+    networkFrame( 0 ),
+    dlg( 0 ), 
+    result_dlg( 0 ),
+    port_dlg( 0 ),
+    geom_dlg( 0 ),
+    financial_dlg( 0 ),
+    numberOfInputPorts( 0 ),
+    numberOfOutputPorts( 0 ),
+    inputsDialog( 0 ),
+    resultsDialog( 0 ),
+    portsDialog( 0 ),
+    vistab( 0 ),
+    iconFilename( "DefaultPlugin" ),
     _soundsDlg( 0 ),
     cadDialog( 0 ),
     m_selFrPort( 0 ),
@@ -126,31 +126,30 @@ UIPluginBase::UIPluginBase() :
     m_selLink( 0 ),
     m_selLinkCon( 0 ),
     m_selTag( 0 ),
-    m_selTagCon( 0 )
+    m_selTagCon( 0 ),
+    highlightFlag( false )
 { 
-   pos = wxPoint(0,0); //default position
+    pos = wxPoint(0,0); //default position
 
-   wxImage my_img( square_xpm );
-   icon_w = static_cast< int >( my_img.GetWidth()*0.30f );
-   icon_h = static_cast< int >( my_img.GetHeight()*0.30f );
-   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-   
-   n_pts = 4;
-   poly = new wxPoint[n_pts];
-   poly[0]=wxPoint(0,0);
-   poly[1]=wxPoint(icon_w,0);
-   poly[2]=wxPoint(icon_w,icon_h);
-   poly[3]=wxPoint(0,icon_h);
-  
-   veModel = new Model();
-   defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
-   defaultIconMap[ "isosurface.xpm" ] = wxImage( isosurface_xpm );
-   defaultIconMap[ "ROItb.xpm" ] = wxImage( ROItb_xpm );
-   defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
-   defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
-   defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
+    wxImage my_img( square_xpm );
+    icon_w = static_cast< int >( my_img.GetWidth()*0.30f );
+    icon_h = static_cast< int >( my_img.GetHeight()*0.30f );
+    my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
 
-   highlightFlag = false;
+    n_pts = 4;
+    poly = new wxPoint[n_pts];
+    poly[0]=wxPoint(0,0);
+    poly[1]=wxPoint(icon_w,0);
+    poly[2]=wxPoint(icon_w,icon_h);
+    poly[3]=wxPoint(0,icon_h);
+
+    veModel = new Model();
+    defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
+    defaultIconMap[ "isosurface.xpm" ] = wxImage( isosurface_xpm );
+    defaultIconMap[ "ROItb.xpm" ] = wxImage( ROItb_xpm );
+    defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
+    defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
+    defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
@@ -1672,3 +1671,214 @@ void UIPluginBase::SetDCScale( std::pair< double, double >* scale )
 {
     userScale = scale;
 }
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetHighlightFlag( bool flag )
+{
+    highlightFlag = flag;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool UIPluginBase::GetHighlightFlag()
+{
+    return highlightFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::DrawPlugin( wxDC* dc )
+{
+    DrawIcon( dc );
+    DrawID( dc );
+    DrawName( dc );
+    if( highlightFlag )
+    {
+        HighlightSelectedIcon( dc );
+        DrawPorts( true, dc );
+    }    
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
+{
+    // flag sets whether we we are erasing the ports or not 
+    // This function draws the input and output ports on a selected module
+    // that is on the design canvas
+    size_t i;
+    wxPoint bport[4];
+    wxCoord xoff, yoff;
+    int num;
+    
+    bport[0]=wxPoint(0,0);
+    bport[1]=wxPoint(10,0);
+    bport[2]=wxPoint(10,10);
+    bport[3]=wxPoint(0,10);
+    
+    
+    wxRect bbox = GetBBox();
+    
+    wxBrush old_brush = dc->GetBrush();
+    wxPen old_pen = dc->GetPen();
+    
+    if( flag )
+    {
+        dc->SetBrush(*wxRED_BRUSH);
+        dc->SetPen(*wxBLACK_PEN);
+        dc->SetTextForeground(*wxBLACK);
+    }
+    else
+    {
+        dc->SetBrush(*wxWHITE_BRUSH);
+        dc->SetPen(*wxWHITE_PEN);
+        dc->SetTextForeground(*wxWHITE);
+    }
+    
+    PORT ports;
+    num = GetNumIports();
+    ports.resize(num);
+    GetIPorts(ports);
+    
+    wxString text;
+    int w = 0;
+    int h = 0;
+    
+    //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+    
+    for (i=0; i<(int)ports.size(); i++)
+    {
+        //std::stringstream output;
+        //output << ports[i].GetPortLocation()->GetPoint().first<< " "<<ports[i].GetPortLocation()->GetPoint().second<<std::endl;
+        //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+        wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+        // I believe this means move the points in from the edge of the icon
+        // by 3 pixles
+        // bbox.x returns the global x location and the ports.x returns the x location with respect to bbox.x
+        // the same is also true for the y values 
+        xoff = tempPoint.x+pos.x-3;
+        yoff = tempPoint.y+pos.y-3;
+        
+        // draw the polygon 
+        dc->DrawPolygon(4, bport, xoff, yoff);  
+        
+        //also, need to draw port type
+        text = wxString( ports[i].GetPortType().c_str(),wxConvUTF8);
+        dc->GetTextExtent( text, &w, &h);
+        dc->DrawText( text, xoff-w-2, yoff);
+    }
+    
+    if ( flag )
+    {
+        dc->SetBrush(*wxCYAN_BRUSH);
+    }
+    else
+    {
+        ; //keep the white brush
+    }
+    
+    // do the same thing as we did for the input ports
+    num = GetNumOports();
+    ports.resize(num);
+    GetOPorts(ports);
+    
+    for ( i=0; i < ports.size(); i++)
+    { 
+        wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+        xoff = tempPoint.x+pos.x-3;
+        yoff = tempPoint.y+pos.y-3;
+        
+        dc->DrawPolygon(4, bport, xoff, yoff);      
+        //also, need to draw port type
+        text = wxString( ports[i].GetPortType().c_str(), wxConvUTF8);
+        dc->GetTextExtent( text, &w, &h);
+        dc->DrawText( text, xoff+12, yoff );
+    }
+    
+    /* if ((bbox.x-3)>0)
+        bbox.x-=3;
+    else
+        bbox.x=0;
+    
+    if ((bbox.y-3)>0)
+        bbox.y-=3;
+    else
+        bbox.y=0;
+    
+    bbox.width+=3;
+    bbox.height+=3;
+    */
+    // restore the default brush and pen settings as stored initially
+    dc->SetBrush(old_brush);
+    dc->SetPen(old_pen);
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::HighlightSelectedIcon( wxDC* dc )
+{
+    size_t i;
+    wxPoint bport[5];
+    wxCoord xoff, yoff;
+    int num;
+    wxPoint tempPoint  = pos;
+    //minus 10 because the icon size seems to be smaller than the bbox size
+    int tempHeight = GetBBox().GetHeight() - 10;
+    int tempWidth = GetBBox().GetWidth() - 10;
+    int highlightBoxWidth = tempWidth;// + 10;
+    int highlightBoxHeight = tempHeight;// + 10;
+
+    bport[0] = wxPoint(tempPoint.x, tempPoint.y);
+    bport[1] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y);
+    bport[2] = wxPoint(tempPoint.x + highlightBoxWidth, tempPoint.y + highlightBoxHeight);
+    bport[3] = wxPoint(tempPoint.x, tempPoint.y + highlightBoxHeight);
+    bport[4] = wxPoint(tempPoint.x, tempPoint.y);
+    ///Draw the highlight
+    wxPen old_pen = dc->GetPen();
+    dc->SetPen(*wxRED_PEN);
+    dc->DrawLines(5, bport);
+    dc->SetPen(old_pen);
+}
+////////////////////////////////////////////////////////////////////////////////
+/*void UIPluginBase::DrawPorti(UIPluginBase * cur_module, int index, bool flag)
+{
+    // used by trylink only which redraws things only if we are draggin a module
+    // draw either the input or output ports for an specific port index in the module
+    PORT ports;
+    int num;
+    
+    if ( !cur_module )
+        return;
+    
+    wxPoint bport[4];
+    wxCoord xoff, yoff;
+    wxRect bbox;
+    
+    wxClientDC dc(this);
+    PrepareDC(dc);
+    dc.SetUserScale( userScale.first, userScale.second );
+    
+    bport[0]=wxPoint(0,0);
+    bport[1]=wxPoint(10,0);
+    bport[2]=wxPoint(10,10);
+    bport[3]=wxPoint(0,10);
+    
+    bbox = cur_module->GetBBox();
+    wxBrush old_brush=dc.GetBrush();
+    
+    dc.SetBrush(*wxRED_BRUSH);
+    
+    if (flag)
+    {
+        num = cur_module->GetNumIports();
+        ports.resize(num);
+        cur_module->GetIPorts(ports);
+        dc.SetBrush(*wxRED_BRUSH);
+    }
+    else
+    {
+        num = cur_module->GetNumOports();
+        ports.resize(num);
+        cur_module->GetOPorts(ports);
+        dc.SetBrush(*wxCYAN_BRUSH);
+    }
+    
+    wxPoint tempPoint( ports[index].GetPortLocation()->GetPoint().first, ports[index].GetPortLocation()->GetPoint().second );
+    xoff = tempPoint.x+bbox.x-3;
+    yoff = tempPoint.y+bbox.y-3;
+    
+    dc.DrawPolygon(4, bport, xoff, yoff);      
+    
+    dc.SetBrush( old_brush );
+}*/

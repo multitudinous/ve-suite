@@ -233,7 +233,19 @@ public:
    void SetDCScale( std::pair< double, double >* scale );
    ///See if this plugin is selected
    bool SelectMod( int x, int y );
-
+   ///Set the highlight flag for this plugin
+   void SetHighlightFlag( bool flag );
+   ///Get the highlight flag for this plugin
+   bool GetHighlightFlag();
+   ///Draw function to handle all drawing for a plugin
+   ///All draw functions for the plugin should be called in this function
+   ///\param dc DC to draw on for the plugin
+   void DrawPlugin( wxDC* dc );
+   ///Draw the highlight for this plugin
+   void HighlightSelectedIcon( wxDC* dc );
+   ///Draw the ports for this plugin
+   void DrawPorts( bool flag, wxDC* dc );
+   
    void OnMRightDown( wxMouseEvent &event );
    bool SetActiveModel( void );
    ///Still need to be documented
@@ -263,7 +275,6 @@ public:
    void OnShowIconChooser(wxCommandEvent &event);
 
    void SetDialogSize( wxRect dialogSize );
-   bool highlightFlag;
 protected:
    void GetDataTables( VE_XML::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 
@@ -344,6 +355,9 @@ protected:
    int m_selTagCon; 
    wxRect dialogSize;
    int activeId;
+   ///Determine wether to draw the ports and highlight band
+   bool highlightFlag;
+
    ///User scale
    /// first = x scale
    /// second = y scale

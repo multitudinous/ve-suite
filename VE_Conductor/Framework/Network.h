@@ -121,15 +121,15 @@ public:
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
    virtual void* Entry();
    
-   void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
-   void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
+   //void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
+   //void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
    bool IsDragging();
    void SetSelectedModule(int mod);
    std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
    
 protected:
    //Draw functions
-   void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
+   //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
    //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
@@ -191,7 +191,7 @@ protected:
    std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
    
    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
-   wxPoint tag_rpt; // the relative point of the tag
+   //wxPoint tag_rpt; // the relative point of the tag
 
    //void Pack( std::vector<Interface> & UIs );
    //void UnPack( std::vector<Interface> & UIs );
@@ -201,9 +201,12 @@ private:
    wxProgressDialog* _fileProgress;
    bool isLoading;
    bool isDataSet;
+   bool tryingLink;
    bool dragging;
    wxBitmap * bitmapBuffer;
-
+   wxPoint point1;
+   wxPoint point2;
+   
    std::string tempXMLNetworkData;
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
