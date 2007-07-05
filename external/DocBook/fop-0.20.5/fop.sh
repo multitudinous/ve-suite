@@ -75,7 +75,7 @@ if [ -n "$CLASSPATH" ] ; then
 fi
 
 # add fop.jar, which resides in $FOP_HOME/build
-LOCALCLASSPATH=${FOP_HOME}/build/fop.jar:$LOCALCLASSPATH
+LOCALCLASSPATH=${FOP_HOME}/lib/fop.jar:$LOCALCLASSPATH
 
 # add in the dependency .jar files, which reside in $FOP_HOME/lib
 DIRLIBS=${FOP_HOME}/lib/*.jar

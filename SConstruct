@@ -378,10 +378,6 @@ if not SConsAddons.Util.hasHelpFlag():
       sys.stdout = os.popen("tee "+ baseEnv[ 'buildLog' ], "w")
       sys.stderr = sys.stdout
 
-   #Get Agument for changelog
-   start = ARGUMENTS.get('start', 0)
-   Export('start')   
-
    ##Tack on path prefixes to subdirs specified above.
    builderSubdirs=pj(buildDir, 'VE_Builder')
    ##builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)

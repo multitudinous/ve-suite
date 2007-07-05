@@ -19,7 +19,10 @@ baseDir = pj('#', relativeDir)
 
 xslt_cmd = WhereIs('xsltproc')
 xml_cmd = WhereIs('xmllint')
-fo_cmd = pj(DOCBOOK_FO, 'fop.sh')
+if windows:
+    fo_cmd = pj(DOCBOOK_FO, 'fop.bat')
+else:
+    fo_cmd = pj(DOCBOOK_FO, 'fop.sh')
 
 ##NOTE: Do NOT put the suffixes of the filenames.
 srcs = Split("""

@@ -2,19 +2,32 @@
 import os, sys, string
 from time import sleep
 from SCons.Util import WhereIs
+pj = os.path.join
 
-Import('baseEnv buildDir start RootDir')
+Import('ves_pkg', 'baseEnv', 'buildDir', 'RootDir')
+env = ves_pkg.getEnv().Copy()
 
-##env = ves_pkg.getEnv().Copy()
-##if env.has_key('SVN_Previous_Date'):
-##=env['SVN_Previous_Date']
-##execute the command
-##add to launcherBundle
+##Base parameters.
+relativeDir = pj('share', 'docs', 'changelog')
+baseDir = pj('#', relativeDir)
 
-sys.stdout.write("Generating the ChangeLog....\n")
+srcs = Split("""
+   ChangeLog
+""")
+
+chLogSrc = map(lambda s: pj(baseDir, "%s.xml" %(s)), srcs)
+chLogTarget = map(lambda s: pj(baseDir, "%s" %(s)), srcs)
+
+if env.has_key('SVN_Previous_Date'):
+    sys.stdout.write("Generating the ChangeLog....\n")
+else:
+    sys.stdout.write("No SVN_Previous_Date defined")
+    sys.exit(0)
+    
 # Find svn
 sys.stdout.write("searching for svn...\n")
 svn_cmd = WhereIs('svn')
+
 if None == svn_cmd:
     sys.stdout.write("Could not find svn. Please make sure svn is in your PATH.\n")
     sys.exit(0)
@@ -24,15 +37,20 @@ else:
 # Find xsltproc
 sys.stdout.write("searching for xsltproc...\n")
 xsltproc_cmd = WhereIs('xsltproc')
+
 if None == svn_cmd:
     sys.stdout.write("Could not find xsltproc. Please make sure xsltproc is in your PATH.\n")
     sys.exit(0)
 else:
     sys.stdout.write("Found xsltproc\n")
 
-os.system("%s log --xml --verbose -r'{'%s'}':'HEAD' %s > ChangeLog.xml" % (svn_cmd, start, RootDir))
-sleep(2)
-os.system("%s -o ChangeLog %s/Tools/svn2cl/svn2cl.xsl ChangeLog.xml" % (xsltproc_cmd, RootDir) )
+os.system("%s log --xml --verbose -r'{'%s'}':'HEAD' %s > ChangeLog.xml" % (svn_cmd, env['SVN_Previous_Date'], RootDir))
+
+xsltAction = '%s -o ${TARGET.abspath} %s/Tools/svn2cl/svn2cl.xsl ${SOURCE.abspath}' % (xsltproc_cmd, RootDir)
+xsltBuilder = Builder(action = xsltAction, single_source = True, suffix = "", chdir = relativeDir)
+
+env.Append(BUILDERS = {'xslt': xsltBuilder})
+env.xslt(target = chLogTarget, source = chLogSrc)
 
 sys.stdout.write("ChangeLog and ChangeLog.xml files are successfully created\n")
 

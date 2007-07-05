@@ -7,7 +7,6 @@ pj = os.path.join
 Import('ves_pkg')
 env = ves_pkg.getEnv().Copy()
 
-sys.stdout.write("Generating doxygen files....\n")
 # Find doxygen
 sys.stdout.write("searching for doxygen...\n")
 doxygen_cmd = WhereIs('doxygen')
@@ -18,8 +17,8 @@ if None == doxygen_cmd:
 
 else:
     sys.stdout.write("Found doxygen\n")
+    sys.stdout.write("Generating doxygen files....\n")
 
-os.system(doxygen_cmd)
+os.popen(doxygen_cmd)
 
-
-sys.stdout.write("Done creating documentation\n")
+sys.stdout.write("Done generating documentation\n")
