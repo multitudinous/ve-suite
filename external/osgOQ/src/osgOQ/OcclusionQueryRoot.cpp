@@ -48,7 +48,7 @@ OcclusionQueryRoot::OcclusionQueryRoot( OcclusionQueryContext* oqc )
 	_debug( false ),
 	_debugVerbosity( 0 ),
 	_prevDebugVerbosity( 0 ),
-	_debugVerbosityFrames( 0 )
+	_debugVerbosityFrames( -1 )
 {
     setName( "OQRoot" );
 
@@ -137,6 +137,11 @@ OcclusionQueryRoot::processNewChild( osg::Node* child )
 		//   (us) and our first child.
 		return;
 
+    // Adding OQNs could invalidate our "child" param, because it could
+    //   insert a new OQN between the child and us. Get the index of
+    //   "child" to avoid that issue.
+    unsigned int idx = getChildIndex( child );
+
 	if (_oqc->getNonFlatPlacement())
 	{
 		osgOQ::OcclusionQueryNonFlatVisitor oqv( _oqc.get() );
@@ -150,7 +155,7 @@ OcclusionQueryRoot::processNewChild( osg::Node* child )
 
     // Need to make sure query geometry is up-to-date initially.
     UpdateQueryGeometryVisitor uqgv;
-    child->accept( uqgv );
+    getChild( idx )->accept( uqgv );
 }
 
 
@@ -252,9 +257,9 @@ OcclusionQueryRoot::update()
 {
     // This code is handy for debugging. It allows a developer to
     //   get gobs of information about osgOQ but only for a few frames.
-	if ( _debugVerbosityFrames != 0 )
+	if ( _debugVerbosityFrames >= 0 )
 	{
-        if (--_debugVerbosityFrames == 0)
+        if (_debugVerbosityFrames-- == 0)
         {
 		    _debugVerbosity = _prevDebugVerbosity;
 		    _oqc->setDebugVerbosity( _debugVerbosity );

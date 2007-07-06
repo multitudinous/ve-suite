@@ -136,12 +136,12 @@ OcclusionQueryNode::~OcclusionQueryNode()
 OcclusionQueryNode::OcclusionQueryNode( const OcclusionQueryNode& oqn, const osg::CopyOp& copyop )
   : Group( oqn, copyop )
 {
-    _enabled = _enabled;
-    _debug = _debug;
-    _lastQueryFrame = _lastQueryFrame;
+    _enabled = oqn._enabled;
+    _debug = oqn._debug;
+    _lastQueryFrame = oqn._lastQueryFrame;
 
     // Assume a shallow copy and share the OQC.
-    _oqc = _oqc;
+    _oqc = oqn._oqc;
 
     // Regardless of shallow or deep, create unique support nodes.
     createSupportNodes();
