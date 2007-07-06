@@ -114,9 +114,9 @@ public:
    wxString GetName();
 
    ///Helper functions
-   void DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc );
+   void DrawLinkCon( wxDC* dc );
    void CalcLinkPoly( void );
-   void DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale );
+   void DrawLinkLine( wxDC* dc );
    double computenorm( wxPoint pt1, wxPoint pt2 );
    ///Set the user scale to enable working with the dc
    void SetDCScale( std::pair< double, double >* scale );
@@ -124,7 +124,10 @@ public:
    void SetUUID( std::string uuid );
    ///Get UUID for this link
    std::string GetUUID();
-   int highlightFlag;
+   ///Set highlight flag for link
+   void SetHighlightFlag( bool flag );
+   ///Draw link
+   void DrawLink( wxDC* dc );
 
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
@@ -163,7 +166,9 @@ private:
     double cosa;
     ///UUID for this link
     std::string m_uuid;
-    
+    ///Highlight flag to control drawing
+    bool highlightFlag;
+
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;
     int m_selLinkCon; //selected Link Connector

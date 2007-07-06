@@ -271,6 +271,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
         SelectLink(x, y );
         if (m_selLink>=0)
         {
+            links[m_selLink].SetHighlightFlag( true );
             for (unsigned int i=0; i<links[m_selLink].GetPoints()->size(); i++)
             if (computenorm( evtpos, *(links[m_selLink].GetPoint( i )) )<=3)
             {
@@ -354,6 +355,7 @@ void Network::OnMouseMove(wxMouseEvent& event)
 		if (m_selLinkCon >= 0 && m_selLink >= 0)
 		{		
             //std::cout << " drag link connector " << std::endl;
+            links[m_selLink].SetHighlightFlag( true );
 			wxClientDC dc(this);
 			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
@@ -395,12 +397,13 @@ void Network::OnMouseMove(wxMouseEvent& event)
             modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
             //std::cout << " drag link input " << std::endl;
 			wxClientDC dc(this);
-			DoPrepareDC(dc);
 			dc.SetUserScale( userScale.first, userScale.second );
+			DoPrepareDC(dc);
 			wxPoint evtpos = event.GetLogicalPosition(dc);
 			long x = evtpos.x;
 			long y = evtpos.y;
-            //std::cout << x << " " << y << " " <<  evtpos.x << " " <<  evtpos.y << std::endl;
+            tryingLink = true;
+           //std::cout << x << " " << y << " " <<  evtpos.x << " " <<  evtpos.y << std::endl;
 			TryLink(x, y, m_selMod, m_selFrPort, dc, true); // draw input ports
 		}
 
@@ -516,6 +519,7 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		long y = evtpos.y;
 
 		// drop the start point of the link
+        std::cout << true << std::endl;
 		DropLink(x, y, m_selMod, m_selFrPort, dc, true);
 		//m_selMod = -1;
 		m_selFrPort = -1;
@@ -535,6 +539,7 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		long y = evtpos.y;
 
 		// drop the final point of the link
+        std::cout << false << std::endl;
 		DropLink(x, y, m_selMod, m_selToPort, dc, false);
 		//m_selMod = -1;
 		m_selToPort = -1;
@@ -694,6 +699,13 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 void Network::OnDelLink(wxCommandEvent& event )
 {
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+         iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
+
     std::string* selLink = static_cast< std::string* >( event.GetClientData() );
     for( std::vector< Link >::iterator iter = links.begin(); 
         iter!=links.end(); )
@@ -709,6 +721,13 @@ void Network::OnDelLink(wxCommandEvent& event )
         }
     }
 
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+         iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        PushEventHandler( &(*iter) );
+    }
+
     while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 
     Refresh(true);
@@ -717,48 +736,58 @@ void Network::OnDelLink(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelMod(wxCommandEvent& event )
 {
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
-   
-   // Need to delete all links associated with this particular module
-   // first, delete all the links connects to it
-   int* selMod = static_cast< int* >( event.GetClientData() );
-   std::vector< Link >::iterator iter3;
-   for ( iter3=links.begin(); iter3!=links.end(); )
-   {
-	   if( 
-            (iter3->GetFromModule() == *selMod) || 
-            (iter3->GetToModule() == *selMod) 
-         )
-	   {
-           RemoveEventHandler( &(*iter3) );
-           iter3 = links.erase( iter3 );
-	   }
-      else
-      {
-         ++iter3;
-      }
-   }
+    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
 
-   ///Need to clear out the vector of polygon boxes as well
-   ///XXX
-   /////////////
-   
-   //Now delete the plugin from the module and then remove from the map
-   std::map< int, Module >::iterator iter;
-   iter = modules.find( *selMod );
-   if( iter != modules.end() )
-   {
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+         iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
+
+    // Need to delete all links associated with this particular module
+    // first, delete all the links connects to it
+    int* selMod = static_cast< int* >( event.GetClientData() );
+    std::vector< Link >::iterator iter3;
+    for ( iter3=links.begin(); iter3!=links.end(); )
+    {
+        if( (iter3->GetFromModule() == *selMod) || 
+            (iter3->GetToModule() == *selMod) 
+            )
+        {
+            iter3 = links.erase( iter3 );
+        }
+        else
+        {
+            ++iter3;
+        }
+    }
+
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        PushEventHandler( &(*iter) );
+    }
+    ///Need to clear out the vector of polygon boxes as well
+    ///XXX
+    /////////////
+
+    //Now delete the plugin from the module and then remove from the map
+    std::map< int, Module >::iterator iter;
+    iter = modules.find( *selMod );
+    if( iter != modules.end() )
+    {
         //delete modules[m_selMod].GetPlugin();
         modules.erase( iter );
         m_selLink = -1;
         m_selMod = -1;
-   }
+    }
 
-   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
-   Refresh( true );
+    Refresh( true );
 }
-
 /////////////////////////////////////
 ///// Selection Functions ///////////
 /////////////////////////////////////
@@ -815,7 +844,7 @@ int Network::SelectLink(int x, int y)
 void Network::UnSelectLink(wxDC &dc)
 {
    for ( size_t i = 0; i < links.size(); ++i )
-      links[i].highlightFlag = false;
+      links[i].SetHighlightFlag( false );
    m_selLink = -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1162,23 +1191,18 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    temp.x = x;
    temp.y = y;
    
-   for (iter=modules.begin(); iter!=modules.end(); iter++)
-   {
-      if ( modules[ iter->first ].GetPolygon()->inside( temp ) )
-      {
-         dest_mod = iter->first;
-         break;
-      }
-   }
+    for (iter=modules.begin(); iter!=modules.end(); iter++)
+    {
+        if ( modules[ iter->first ].GetPolygon()->inside( temp ) )
+        {
+            dest_mod = iter->first;
+            bbox = modules[dest_mod].GetPlugin()->GetBBox();
 
-   if (dest_mod>=0)
-   {
-      //DrawPorts( modules[dest_mod].GetPlugin(), false ); //Wipe off the port rect
-      bbox = modules[dest_mod].GetPlugin()->GetBBox();
-
-      temp.x = x - bbox.x;
-      temp.y = y - bbox.y;
-   }
+            temp.x = x - bbox.x;
+            temp.y = y - bbox.y;
+            break;
+        }
+    }
 
    // If input port
    wxPoint offSet;
@@ -1252,60 +1276,62 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
    //std::cout << dest_mod << " " << acutallDestPortNumber << " " << mod << " " << acutallPortNumber << std::endl;
    if (dest_mod>=0 && acutallDestPortNumber>=0 && ( (dest_mod!=mod) || (acutallDestPortNumber!=acutallPortNumber) ) )
    {
-      Link ln( this );
-      if ( flag ) // if input port
-      {
-         ln.SetToModule( mod );
-         ln.SetToPort( acutallDestPortNumber );
-         ln.SetFromModule( dest_mod );
-         ln.SetFromPort( acutallPortNumber );
-      }
-      else // if output port
-      {
-         ln.SetToModule( dest_mod );
-         ln.SetToPort( acutallDestPortNumber );
-         ln.SetFromModule( mod );
-         ln.SetFromPort( acutallPortNumber );
-      }
+        Link ln( this );
+        if ( flag ) // if input port
+        {
+            ln.SetToModule( mod );
+            ln.SetToPort( acutallPortNumber );
+            ln.SetFromModule( dest_mod );
+            ln.SetFromPort( acutallDestPortNumber );
+        }
+        else // if output port
+        {
+            ln.SetToModule( dest_mod );
+            ln.SetToPort( acutallDestPortNumber );
+            ln.SetFromModule( mod );
+            ln.SetFromPort( acutallPortNumber );
+        }
    
-      // check for duplicate links
-      bool found = false;
-      for ( size_t i=0; i< links.size(); i++)
-      {
-         if ( links.at( i ) == ln )
-         {
-            found = true;
-         }
-      }
+        // check for duplicate links
+        bool found = false;
+        for ( size_t i=0; i< links.size(); i++)
+        {
+            if ( links.at( i ) == ln )
+            {
+                found = true;
+            }
+        }
 
-      if ( !found ) // no duplicate links are allowed
-      {
-          //Pop the link event handlers to clear these event handlers
-          for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
-               iter=links.begin(); iter!=links.end(); iter++ )
-          {
-              RemoveEventHandler( &(*iter) );
-          }
-          
-          wxPoint pos;
-         // Get first port point for the link
-         pos = GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" );
-         ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" ) );
+        if ( !found ) // no duplicate links are allowed
+        {
+            //Pop the link event handlers to clear these event handlers
+            for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+                iter=links.begin(); iter!=links.end(); iter++ )
+            {
+                RemoveEventHandler( &(*iter) );
+            }
 
-         // Get last port point for the link
-         pos = GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" );
-         ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" ) );
-         ln.CalcLinkPoly();
-         links.push_back( ln );
-         links.back().SetDCScale( &userScale );
+            wxPoint pos;
+            // Get first port point for the link
+            pos = GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" );
+            ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetFromModule(), ln.GetFromPort(), "output" ) );
 
-         for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
-              iter=links.begin(); iter!=links.end(); iter++ )
-         {
-             PushEventHandler( &(*iter) );
-         }
-      }
-   }
+            // Get last port point for the link
+            pos = GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" );
+            ln.SetPoint( &pos );//->push_back( GetPointForSelectedPlugin( ln.GetToModule(), ln.GetToPort(), "input" ) );
+            ln.CalcLinkPoly();
+            links.push_back( ln );
+            links.back().SetDCScale( &userScale );
+            VE_XML::VE_Model::Link object;
+            links.back().SetUUID( object.GetID() );
+
+            for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+                iter=links.begin(); iter!=links.end(); iter++ )
+            {
+                PushEventHandler( &(*iter) );
+            }
+        }
+    }
 
    Refresh( true );
    //m_selMod = -1;
@@ -1768,16 +1794,9 @@ void Network::ReDraw(wxDC &dc)
     // draw all the links
     for ( size_t i = 0; i < links.size(); ++i )
     {
-        links[i].DrawLink( true, dc, userScale );
-        if( links[i].highlightFlag )
-        {
-            links[i].DrawLinkCon( true, userScale, dc );
-        }
-    }
-
-    if(m_selLink >= 0)
-    {
-        links[m_selLink].DrawLinkCon( true, userScale, dc ); 
+        links.at( i ).DrawLink( &dc );
+        ///Set everything back to false for next loop
+		links.at( i ).SetHighlightFlag( false );
     }
 
     // draw all the tags

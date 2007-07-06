@@ -228,25 +228,12 @@ VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
    return &(poly);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc )
+void Link::DrawLinkCon( wxDC* dc )
 {
-   //wxClientDC dc( networkFrame );
-   //networkFrame->PrepareDC( dc );
-   dc.SetUserScale( scale.first , scale.second );
-
-   wxBrush old_brush = dc.GetBrush();
-   wxPen old_pen = dc.GetPen();
-
-   if( flag )
-   {
-      dc.SetBrush( *wxGREEN_BRUSH );
-      dc.SetPen( *wxBLACK_PEN );
-   }
-   else
-   {
-      dc.SetBrush( *wxWHITE_BRUSH );
-      dc.SetPen( *wxWHITE_PEN );
-   }
+   wxBrush old_brush = dc->GetBrush();
+   wxPen old_pen = dc->GetPen();
+   dc->SetBrush( *wxGREEN_BRUSH );
+   dc->SetPen( *wxBLACK_PEN );
   
    wxPoint bport[4];
    bport[ 0 ] = wxPoint( 0, 0 );
@@ -255,16 +242,18 @@ void Link::DrawLinkCon( bool flag, std::pair< double, double > scale, wxDC &dc )
    bport[ 3 ] = wxPoint( 0, 6 );
   
    //Draw the connectors for the particular link
+   wxCoord xoff;
+   wxCoord yoff;
    for( size_t i = 0; i < cons.size(); ++i )
    { 
-      wxCoord xoff = cons[ i ].x - 3;
-      wxCoord yoff = cons[ i ].y - 3;
+       xoff = cons[ i ].x - 3;
+       yoff = cons[ i ].y - 3;
 
-      dc.DrawPolygon( 4, bport, xoff, yoff );      
+      dc->DrawPolygon( 4, bport, xoff, yoff );      
    }
 
-   dc.SetBrush( old_brush );
-   dc.SetPen( old_pen );
+   dc->SetBrush( old_brush );
+   dc->SetPen( old_pen );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::CalcLinkPoly()
@@ -295,20 +284,15 @@ void Link::CalcLinkPoly()
    */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
+void Link::DrawLinkLine( wxDC* dc )
 { 
-    //wxClientDC dc( networkFrame );
-    //networkFrame->PrepareDC( dc );
-    dc.SetUserScale( scale.first, scale.second );
-
-    wxBrush old_brush = dc.GetBrush();
-    wxPen old_pen = dc.GetPen();
+    wxBrush old_brush = dc->GetBrush();
+    wxPen old_pen = dc->GetPen();
 
     wxPoint* points = new wxPoint[ cons.size() ];
 
     //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
     //reverse the order of the points
-
     size_t maxSize = cons.size() - 1;
     for ( size_t i = 0; i < cons.size(); i++ )
 	{   
@@ -316,29 +300,13 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
         //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
     }
 
-    if( !flag )
-    {
-        dc.SetPen( *wxWHITE_PEN );
-        dc.SetBrush( *wxWHITE_BRUSH );
-    }
-    else
-    {
-        dc.SetPen( *wxBLACK_PEN );
-        dc.SetBrush( *wxWHITE_BRUSH );
-    }
-    dc.DrawLines( cons.size(), points );
+    dc->SetPen( *wxBLACK_PEN );
+    dc->SetBrush( *wxWHITE_BRUSH );
+    dc->DrawLines( cons.size(), points );
 
     //Now draw the arrow head
-    if( !flag )
-    {
-        dc.SetPen( *wxWHITE_PEN );
-        dc.SetBrush( *wxWHITE_BRUSH );
-    }
-    else
-    {
-        dc.SetPen( *wxBLACK_PEN );
-        dc.SetBrush( *wxBLACK_BRUSH );
-    }
+    dc->SetPen( *wxBLACK_PEN );
+    dc->SetBrush( *wxBLACK_BRUSH );
 
     wxPoint arrow[ 3 ];
     arrow[0] = points[0];
@@ -361,9 +329,9 @@ void Link::DrawLink( bool flag, wxDC& dc, std::pair< double, double > scale )
     arrow[2].y = (int)( sinb*12.0/dist * (points[1].x-points[0].x)+
         cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y );
 
-    dc.DrawPolygon(3, arrow);
-    dc.SetPen(old_pen);
-    dc.SetBrush(old_brush);
+    dc->DrawPolygon(3, arrow);
+    dc->SetPen(old_pen);
+    dc->SetBrush(old_brush);
     delete [] points;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -603,8 +571,6 @@ void Link::OnAddLinkCon(wxCommandEvent& event )
     
     cons = *(temp.GetPolygon());
     CalcLinkPoly();
-    //links[m_selLink].DrawLinkCon( true, userScale );
-    //m_selLink = -1;
     m_selLinkCon = -1;
     
     networkFrame->Refresh(true);
@@ -687,9 +653,6 @@ bool Link::SelectLink(int x, int y)
     temp.y = y;
     if( GetPolygon()->inside( temp ) )
     {
-        //draw link connectors
-        //links[i].DrawLinkCon( true, userScale ); 
-        //m_selLink = i;
         return true;
     }
     return false;
@@ -730,4 +693,18 @@ void Link::SetUUID( std::string uuid )
 std::string Link::GetUUID()
 {
     return m_uuid;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::SetHighlightFlag( bool flag )
+{
+    highlightFlag = flag;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::DrawLink( wxDC* dc )
+{
+    DrawLinkLine( dc );
+    if( highlightFlag )
+    {
+        DrawLinkCon( dc );
+    }
 }
