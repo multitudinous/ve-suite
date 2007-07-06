@@ -644,7 +644,7 @@ void CADNodeManagerDlg::_addNodeFromCADFile(wxCommandEvent& WXUNUSED(event))
                        _T("Open file"), 
                        _T(""), 
                        _T(""),
-                       _T("OSG files (*.osg;*.ive)|*.osg;*.ive;|STL files (*.stl)|*.stl;|VRML/Inventor files (*.wrl;*.iv)|*.wrl;*.iv;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb;|Flight files (*.flt)|*.flt;|DXF files (*.dxf)|*.dxf;|3DS files (*.3ds)|*.3ds;|All Files (*.*)|*.*"),
+                       _T("All Supported Files (*.osg;*.ive;*.stl;*.wrl;*.iv;*.obj;*.pfb;*.flt;*.dxf;*.3ds)|*.osg;*.ive;*.stl;*.wrl;*.iv;*.obj;*.pfb;*.flt;*.dxf;*.3ds|OSG files (*.osg;*.ive)|*.osg;*.ive;|STL files (*.stl)|*.stl;|VRML/Inventor files (*.wrl;*.iv)|*.wrl;*.iv;|OBJ files (*.obj)|*.obj;|Performer Binary files (*.pfb)|*.pfb;|Flight files (*.flt)|*.flt;|DXF files (*.dxf)|*.dxf;|3DS files (*.3ds)|*.3ds;|All Files (*.*)|*.*"),
                        //"BMP and GIF files (*.bmp;*.gif)|*.bmp;*.gif|PNG files (*.png)|*.png"
                        wxOPEN|wxFILE_MUST_EXIST|wxMULTIPLE,
                        wxDefaultPosition);
