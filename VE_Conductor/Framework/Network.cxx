@@ -484,8 +484,6 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		// drop the tag we just created
 		DropTag(x, y, m_selTag, dc);
 		//m_selTag=-1;
-		//Refresh(true);
-		//Update();
 	}
 
 	//release tag connection
@@ -503,8 +501,6 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		DropTagCon(x, y, m_selTag, m_selTagCon, dc);
 		//m_selTag=-1;
 		m_selTagCon=-1;
-		//Refresh(true);
-		//Update();
 	}
 
 	//release start point of link
@@ -519,12 +515,9 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		long y = evtpos.y;
 
 		// drop the start point of the link
-        std::cout << true << std::endl;
 		DropLink(x, y, m_selMod, m_selFrPort, dc, true);
 		//m_selMod = -1;
 		m_selFrPort = -1;
-		//Refresh(true);
-		//Update();
 	}
 
 	//release end point of link
@@ -539,12 +532,9 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 		long y = evtpos.y;
 
 		// drop the final point of the link
-        std::cout << false << std::endl;
 		DropLink(x, y, m_selMod, m_selToPort, dc, false);
 		//m_selMod = -1;
 		m_selToPort = -1;
-		//Refresh(true);
-		//Update();
 	}
 
 	//release the module
@@ -560,13 +550,7 @@ void Network::OnMLeftUp(wxMouseEvent& event)
 
 		//drop a module after dragging it around
 		DropModule(x, y, m_selMod );
-		//Refresh(true);
-		//Update();
-		//HighlightSelectedIcon( modules[m_selMod].GetPlugin());
-		//DrawPorts( modules[m_selMod].GetPlugin(), true );
 	}
-	//Refresh(true);
-	//Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
