@@ -69,6 +69,7 @@ cfdTextureManager::cfdTextureManager()
    _bbox[3] = 0;
    _bbox[4] = 0;
    _bbox[5] = 0;
+   m_isSlave = false;
 }
 /////////////////////////////////////////////////////////////////
 cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
@@ -113,6 +114,7 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
    _range[1] = tm._range[1];
    _direction = tm._direction;
    _useShaders =  tm._useShaders;
+    m_isSlave = tm.m_isSlave;
 }
 /////////////////////////////////
 cfdTextureManager::~cfdTextureManager()
@@ -166,11 +168,17 @@ void cfdTextureManager::SetUseShaders(bool useShaders)
 {
    _useShaders = useShaders;
 }
-
+//////////////////////////////////////////////////////////
+bool cfdTextureManager::IsOnSlaveNode()
+{
+   return m_isSlave;
+}
 ///////////////////////////////////////////////////////////
-void cfdTextureManager::SetCurrentFrame(unsigned int frame)
+void cfdTextureManager::SetCurrentFrame(unsigned int frame,
+                                        bool isSlave)
 {
    _curField = frame;
+   m_isSlave = isSlave;
 }
 /////////////////////////////////////////////////
 unsigned int cfdTextureManager::GetCurrentFrame()

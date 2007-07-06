@@ -39,6 +39,7 @@
 
 #include <osg/Node>
 #include <osg/NodeVisitor>
+#include <vpr/Util/Debug.h>
 #include "VE_Xplorer/TextureBased/cfdTextureManager.h"
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////////////
@@ -105,7 +106,8 @@ void cfdUpdateTextureCallback::SetDelayTime(double delayTime)
 ////////////////////////////////////////////////////////
 unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
 {
-   if(_tm){
+   if(_tm)
+   {
       return _tm->GetCurrentFrame();
    }
    return 0;
@@ -113,7 +115,8 @@ unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
 ///////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame, bool makeSlave)
 {
-   if(_tm){
+   if(_tm)
+   {
       _currentFrame = cFrame;
       if(makeSlave)
          _isSlave = true;
@@ -150,10 +153,12 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
    if(state.getFrameStamp()){
       double currTime = state.getFrameStamp()->getReferenceTime();
       if(_tm){
-         if(!_isSlave && _tm->getPlayMode() == cfdTextureManager::PLAY){
+         if(!_tm->IsOnSlaveNode() && _tm->getPlayMode() == cfdTextureManager::PLAY){
             //master node in the cluster
             if(_tm->TimeToUpdate()||_update)
             {
+               std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
+               
                if(_isLuminance)
                {
                   texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
@@ -183,7 +188,9 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
          }else{
             if(_isLuminance)
             {
-               texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+                ///remove this after syncing is fixed
+                vprDEBUG(vprDBG_ALL,2) <<"current frame slaves:  " << _tm->GetCurrentFrame() << " "<<currTime<<" "<<state.getFrameStamp()->getFrameNumber()<< std::endl << vprDEBUG_FLUSH;               
+                texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
                              _textureWidth,
@@ -191,7 +198,8 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              _textureDepth, 
                              GL_LUMINANCE_ALPHA, 
                              GL_UNSIGNED_BYTE,
-                             (unsigned char*)_tm->dataField(_currentFrame));
+                             //(unsigned char*)_tm->dataField(_currentFrame));
+                             (unsigned char*)_tm->getCurrentField());
             }else{
                texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
@@ -201,7 +209,8 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              _textureDepth, 
                              GL_RGBA, 
                              GL_UNSIGNED_BYTE,
-                             (unsigned char*)_tm->dataField(_currentFrame));
+                             //(unsigned char*)_tm->dataField(_currentFrame));
+                             (unsigned char*)_tm->getCurrentField());
             }
          }
       }   

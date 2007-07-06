@@ -85,6 +85,8 @@ namespace VE_TextureBased
    {
       public:
          void PreFrameUpdate( void );
+         ///Update the frame number of the transient animation
+         void UpdateTransientFrame();
          void CleanUp( void );
          void SetParameterFile(std::string paramFile);
          void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
@@ -106,6 +108,7 @@ namespace VE_TextureBased
                        std::string planeDirection,
                        double alpha);
 
+         
          ///Update the scalar range
          ///\param range The new scalar range
          void UpdateScalarRange(float* range);
@@ -158,7 +161,11 @@ namespace VE_TextureBased
          void SetTransientDirection(std::string direction);
 
          void SetCurrentTime(double time);
-  
+        
+         //Set the master node
+         ///\param isMaster Flag depicting the master node
+         void SetMasterNode( bool isMaster );
+        
          void ViewTextureBasedVis(bool trueFalse);
          //once we get pf side this may need to be ifdef'd
          //void SetSceneView(osgUtil::SceneView* sv); 
@@ -168,6 +175,9 @@ namespace VE_TextureBased
          //bool InitVolumeVizNodes( void );
          cfdVolumeVisualization* GetVolumeVizNode(int index);
          cfdVolumeVisualization* GetActiveVolumeVizNode( void );
+         
+         ///The active texture manager
+         cfdTextureManager* GetActiveTextureManager();
   
       protected:
          void _updateShaderState();
@@ -193,7 +203,7 @@ namespace VE_TextureBased
          cfdVolumeVisNodeHandler* _activeVisNodeHdlr;
          cfdScalarVolumeVisHandler* _svvh;
          cfdVectorVolumeVisHandler* _vvvh;
-      
+         bool m_isMaster;///<Flag defining the master node
       //osg::ref_ptr< VE_SceneGraph::Switch > _visOptionSwitch;
          float* _currentBBox;
          bool _cleared;

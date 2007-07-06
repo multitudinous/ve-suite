@@ -378,6 +378,7 @@ void cfdApp::initScene( void )
    _start_tick = _timer.tick();
    _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   _tbvHandler->SetMasterNode( _vjobsWrapper->IsMaster() );
 #endif
 
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
@@ -444,7 +445,7 @@ void cfdApp::latePreFrame( void )
    {
       if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
       {
-			_tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+         _tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
          _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
          _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
          _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
@@ -494,7 +495,7 @@ void cfdApp::contextPostDraw()
      _tbvHandler->PingPongTextures();
 }
 #endif//_OSG
-
+/////////////////////////////////////////////////////////////////////////////////////////
 void cfdApp::postFrame()
 {
     VPR_PROFILE_GUARD("cfdApp::postFrame");
@@ -521,8 +522,12 @@ void cfdApp::postFrame()
     this->_vjobsWrapper->GetSetAppTime( time_since_start );
     cfdEnvironmentHandler::instance()->PostFrameUpdate();
     //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
+    
+    ///update the transient frame number on the master
+    _tbvHandler->UpdateTransientFrame();
 #endif   //_OSG
     cfdExecutive::instance()->PostFrameUpdate();
+
     this->_vjobsWrapper->GetCfdStateVariables();
     vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }

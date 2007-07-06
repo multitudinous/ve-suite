@@ -90,7 +90,8 @@ public:
 
    ///Set the current "frame", ie timestep within the texture sequence.
    ///\param whichFrame The frame, ie timestep to set as current.
-   void SetCurrentFrame(unsigned int whichFrame);
+   ///\param isOnSlave The app is running on a slave node of the cluster.
+   void SetCurrentFrame(unsigned int whichFrame, bool isOnSlave=true);
 
    ///Set the flag for using shaders
    ///\param useShaders true/false 
@@ -152,6 +153,9 @@ public:
 
    ///Get the name of this data 
    std::string GetDataName( void ); 
+
+   ///Query if app is running on a slave node in the cluster
+   bool IsOnSlaveNode();
 protected:
    ///calculate the length of the diagonal of the bbox
    ///\param bbox the bbox parameters
@@ -161,6 +165,7 @@ protected:
    ///\param bbox the bbox parameters
    void _ensureBBox(double* bbox);
 
+   bool m_isSlave;///<Is this cfdTextureManager running on a slave node.
    bool _useShaders;///<Flag for shaders
    bool _timeToUpdate;///<Flag deteriming update time
    int _curField;///<The current field

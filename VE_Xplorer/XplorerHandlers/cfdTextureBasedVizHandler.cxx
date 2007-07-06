@@ -103,6 +103,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _activeTDSet = 0;
    _svvh = 0;
    _vvvh = 0;
+   m_isMaster = false;
 
    
    _eventHandlers[std::string("TB_SET_ACTIVE_SHADER_MANAGER")] = new VE_EVENTS::TextureBasedSetActiveShaderManagerEventHandler();
@@ -157,15 +158,17 @@ void cfdTextureBasedVizHandler::CleanUp( void )
       _eventHandlers.erase( pos++ );
    }
 }
+//////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetMasterNode( bool isMaster )
+{
+    m_isMaster = isMaster;
+}
 /////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaders()
 {
-   if(_activeTM){
-      _activeTM->CalculateUpdateTime(_appTime,_animationDelay);
-      if(_activeTM->TimeToUpdate())
-      {
-         _activeTM->getNextField();
-      }
+   if(_activeTM )
+   {
+      
       if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR)
       {
         _updateScalarVisHandler();
@@ -175,6 +178,23 @@ void cfdTextureBasedVizHandler::_updateShaders()
         _updateVectorVisHandler();
       }
    }
+}
+//////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::UpdateTransientFrame()
+{
+    if(_activeTM && m_isMaster)
+    {
+        _activeTM->CalculateUpdateTime(_appTime,_animationDelay);
+        if( _activeTM->TimeToUpdate() )
+        {
+            _activeTM->getNextFrame();
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////
+cfdTextureManager* cfdTextureBasedVizHandler::GetActiveTextureManager()
+{
+   return _activeTM;
 }
 //////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
@@ -248,11 +268,13 @@ void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
       if(planeDirection == "Positive")
       {
          plane[3] *=-1.0;
+         plane[3] += .001;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MIN,plane);
       }
       else if(planeDirection == "Negative")
       {
          plane[0] *=-1.0;
+         plane[3] -= .001;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MAX,plane);
       }
    }
@@ -264,11 +286,13 @@ void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
       if(planeDirection == "Positive")
       {
          plane[3] *= -1.0;
+         plane[3] +=.001;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MIN,plane);
       }
       else if(planeDirection == "Negative")
       {
          plane[1] *= -1.0;
+         plane[3] -= .001;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MAX,plane);
       }
    }
@@ -281,11 +305,13 @@ void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
       if(planeDirection == "Positive")
       {
          plane[3] *= -1.0;
+         plane[3] +=.001;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MIN,plane);
       }
       else if(planeDirection == "Negative")
       {
          plane[2] *= -1.0;
+         plane[3] -=.001;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MAX,plane);
       }
    }
@@ -356,13 +382,16 @@ void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction
       StopTransientVisualization();
       SetTransientDirection(direction);
 
-      int curFrame = _activeTM->getNextFrame();
-      if(_svvh)
+      if(m_isMaster)
       {
-		  cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
-         if(sShader)
-         {
-            sShader->SetCurrentTransientTexture(curFrame,false);
+          int curFrame = _activeTM->getNextFrame();
+          if(_svvh)
+          {
+		      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+            if(sShader)
+            {
+               sShader->SetCurrentTransientTexture(curFrame,false);
+            }
          }
       }
    }
@@ -506,7 +535,10 @@ void cfdTextureBasedVizHandler::ClearAll()
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetCurrentTime(double time)
 {
-  _appTime = time; 
+    if(m_isMaster)
+    {
+        _appTime = time;
+    } 
 }
 ////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateBoundingBox(bool value)
@@ -530,7 +562,6 @@ void cfdTextureBasedVizHandler::UpdateActiveTextureManager()
    {
      _activeVolumeVizNode =  _activeTDSet->GetVolumeVisNode();
      _activeTM = _activeTDSet->GetActiveTextureManager();
-     _updateShaders();
      
      if(!_currentBBox)
      {
@@ -567,6 +598,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       }
    }
    _updateShaders();  
+   
 }
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetParameterFile(std::string paramFile)

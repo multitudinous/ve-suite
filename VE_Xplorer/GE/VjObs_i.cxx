@@ -57,6 +57,8 @@
 #ifdef _OSG
 #include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
 #include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
+#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+
 using namespace VE_TextureBased;
 #endif
 
@@ -656,9 +658,10 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterXMLCommands.erase();
    }
 #ifdef _OSG
-   if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
+   if ( cfdTextureBasedVizHandler::instance()->GetActiveTextureManager() )
    {
-      this->mStates->clusterFrameNumber   = cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->GetCurrentTransientTexture();   
+      this->mStates->clusterFrameNumber = cfdTextureBasedVizHandler::instance()->GetActiveTextureManager()->GetCurrentFrame();   
+      //std::cout<<"Master frame :"<<this->mStates->clusterFrameNumber<<std::endl;
    }
    else
    {
@@ -718,20 +721,12 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       //std::cout << "slave: " << std::endl << matrix << std::endl;
       VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 
-      /*if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
-      {
-         cfdTempAnimation* the_sequence = cfdSteadyStateVizHandler::instance()->GetActiveAnimation();
-         if ( the_sequence != NULL )
-         {
-            the_sequence->SetCurrentFrame( (int)this->getTimesteps() );
-            //std::cout << " cfdTimesteps in preframe : " << cfdTimesteps << std::endl;
-         }
-      }*/
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
-      if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
+      if ( cfdTextureBasedVizHandler::instance()->GetActiveTextureManager() )
       {
-         cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
+         //std::cout<<"Updating slaves with frame :"<<this->mStates->clusterFrameNumber<<std::endl;
+         cfdTextureBasedVizHandler::instance()->GetActiveTextureManager()->SetCurrentFrame( this->mStates->clusterFrameNumber);
       }
 #endif
    }
