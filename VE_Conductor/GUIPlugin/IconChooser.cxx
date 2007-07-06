@@ -58,7 +58,7 @@ IconChooser::~IconChooser()
 ////////////////////////////////////////////////////////////////////////////////
 void IconChooser::CreateGUIControls()
 {
-	wxPanel * WxPanel = new wxPanel(this, 1000, wxPoint(0,0), wxSize(640,480));
+	WxPanel = new wxPanel(this, 1000, wxPoint(0,0), wxSize(640,480));
 	WxNotebook = new wxNotebook(WxPanel, 1001, wxPoint(0,0),wxSize(617,460));
 	WxEdit = new wxTextCtrl(WxPanel, 1002, wxT(""), wxPoint(10, 463), wxSize(300,21), 0, wxDefaultValidator, wxT(""));
 
@@ -195,6 +195,7 @@ void IconChooser::AddIconsDir(wxString directory)
    wxDir parentDir (directory);
    bool isParentTrue = parentDir.GetFirst(&dirname);
    int buttonCount = 2000;
+   maxRows = 0;
    while(isParentTrue)
    {
       //do not include the .svn folders
@@ -247,8 +248,18 @@ void IconChooser::AddIconsDir(wxString directory)
             }
             isChildTrue = childDir.GetNext(&filename);
          }
+		if(vCount > maxRows)
+			maxRows = vCount+1;
       }
       isParentTrue = parentDir.GetNext(&dirname);
+	  //button size and # of columns is fixed
+	  SetSize(640, maxRows*80+125);
+	  //WxPanel->SetSize(640, maxRows*80+50);
+	  WxNotebook->SetSize(635, maxRows*80+25);
+	  WxEdit->SetPosition(wxPoint(10, maxRows*80+30));
+	  WxChoice->SetPosition(wxPoint(325, maxRows*80+30));
+	  okButton->SetPosition(wxPoint(450, maxRows*80+30));
+	  cancelButton->SetPosition(wxPoint(535, maxRows*80+30));
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

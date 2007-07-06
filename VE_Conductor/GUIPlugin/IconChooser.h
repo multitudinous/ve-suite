@@ -79,10 +79,12 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 		wxDirDialog *WxDirDialog;
 		wxMenuBar *WxMenuBar1;
 		wxNotebook * WxNotebook;
+		wxPanel * WxPanel;
 		wxChoice *WxChoice;
 		wxArrayString choices;
 		wxWindow * networkFrame;
         //wxArrayString componentList;
+		int maxRows;
 		
 	private:
 		void OnClose(wxCloseEvent& event);
