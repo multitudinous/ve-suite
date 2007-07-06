@@ -571,53 +571,38 @@ void Link::OnAddLinkCon(wxCommandEvent& event )
 {  
     UILINK_CHECKID( event )
     
-    //links[m_selLink].DrawLink( false, userScale );
-    
-    //int n = links[m_selLink].GetNumberOfPoints()+2;
-    //linkline.resize(n);
-    
-    //unsigned long fromModuleID = links[m_selLink].GetFromModule();
-    //unsigned int fromPort = links[m_selLink].GetFromPort();
-    //*(linkline.GetPoint( 0 )) = GetPointForSelectedPlugin( fromModuleID, fromPort, "ouput" );
-    
     VE_Conductor::GUI_Utilities::Polygon linkline;
-    size_t i;
-    for ( i=0; i< GetPoints()->size(); i++ )
-        *(linkline.GetPoint( i )) = *(GetPoint( i ));
+    *(linkline.GetPolygon()) = cons;
     
-    //unsigned long toModuleID = links[m_selLink].GetToModule();
-    //unsigned int toPort = links[m_selLink].GetToPort();
-    //*(linkline.GetPoint( n-1 )) = GetPointForSelectedPlugin( toModuleID, toPort, "input" );
     VE_Conductor::GUI_Utilities::Polygon Near;
     linkline.nearpnt( action_point, Near );
     
-    //size_t i;
+    size_t i;
     for ( i=0; i < linkline.GetNumberOfPoints()-1; i++)
+    {    
         if (  ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x && 
                 linkline.GetPoint( i+1 )->x >= Near.GetPoint( 0 )->x ) ||
               ( linkline.GetPoint( i )->x >= Near.GetPoint( 0 )->x && 
                 linkline.GetPoint( i+1 )->x <= Near.GetPoint( 0 )->x )
               )
+        {
             break;
-    
-    size_t j;
-    VE_Conductor::GUI_Utilities::Polygon temp;
-    for ( j=1; j< linkline.GetNumberOfPoints()-1; ++j )
-    {
-        if ( j-1 == i )
-            temp.SetPoint( *(Near.GetPoint( 0 )) );
-        temp.SetPoint( *(linkline.GetPoint( j )) );
+        }
     }
     
-    //Between the first link con and the port, and no cons yet
-    if (j==1 && i==0) 
-        temp.SetPoint( *(Near.GetPoint( 0 )) );
+    VE_Conductor::GUI_Utilities::Polygon temp;
+    for( size_t j=0; j < linkline.GetNumberOfPoints(); ++j )
+    {
+        temp.SetPoint( *(linkline.GetPoint( j )) );
+        //i can never be the last point
+        if( j == i )
+        {    
+            temp.SetPoint( *(Near.GetPoint( 0 )) );
+        }
+    }
     
-    //between the port and the las con
-    if (j==linkline.GetNumberOfPoints()-1 && i==(j-1) && i!=0) 
-        temp.SetPoint( *(Near.GetPoint( 0 )) );
-    
-    *(GetPolygon()) = temp;
+    cons = *(temp.GetPolygon());
+    CalcLinkPoly();
     //links[m_selLink].DrawLinkCon( true, userScale );
     //m_selLink = -1;
     m_selLinkCon = -1;

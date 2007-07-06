@@ -228,13 +228,22 @@ int Polygon::ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 )
   
    return 1;
 }
-///////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double Polygon::computenorm( wxPoint pt1, wxPoint pt2 )
 {
   return std::sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Polygon::clear()
 {
 	poly.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Polygon::print()
+{
+	for( size_t i = 0; i < poly.size(); ++i )
+    {
+        std::cout << "Point " << i << " x= " << poly.at( i ).x 
+            << " y= " << poly.at( i ).y << std::endl;
+    }
 }
