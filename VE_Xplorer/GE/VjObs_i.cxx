@@ -679,7 +679,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
                            << std::endl << vprDEBUG_FLUSH;
     if ( !isCluster )
     {
-        std::string commandString;
+        /*std::string commandString;
         {
             vpr::Guard<vpr::Mutex> val_guard(mValueLock);
             std::vector< std::string >::iterator iter;
@@ -687,7 +687,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
             commandString = (*iter);
             commandStringQueue.erase( iter );
         }
-        CreatCommandVector( commandString );
+        CreatCommandVector( commandString );*/
         return;
     }
    
@@ -921,19 +921,20 @@ void VjObs_i::SetCommandString( const char* value)
     {
         vpr::System::msleep( 50 );  // 50 milli-second delay
     }
-    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 
     std::string commandString( value );
     if( isCluster )
     {
         if( mStates.isLocal() )
         {
+            vpr::Guard<vpr::Mutex> val_guard(mValueLock);
             commandStringQueue.push_back( commandString );
         }
     }
     else
     {
-        commandStringQueue.push_back( commandString );
+        //commandStringQueue.push_back( commandString );
+        CreatCommandVector( commandString );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -941,6 +942,7 @@ void VjObs_i::CreatCommandVector( std::string commandString )
 {
     //This function is called from juggler threads
     vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
+    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
     VE_XML::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
