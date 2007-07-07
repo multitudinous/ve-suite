@@ -149,7 +149,7 @@ void VjObs_i::InitCluster( void )
    this->mStates->clusterClientInfoFlag = 0; 
    this->mStates->currentFrame = 0;; // the index of the current frame
    this->mStates->clusterTime_since_start = 0;
-   this->mStates->clusterFrameNumber = 0.0f;
+   this->mStates->clusterFrameNumber = 0;
    this->mStates->clusterQuatCamIncrement = 0.0f;
    
    for(int i=0;i<16;i++)
@@ -607,7 +607,6 @@ void VjObs_i::GetCfdStateVariables( void )
    {
       cfdShort_data_array[ i ] = mShort_data_array[ i ];
    } 
-
    
    vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetCfdStateVariables Cluster Mode " 
                            << isCluster << std::endl << vprDEBUG_FLUSH;
@@ -650,7 +649,7 @@ void VjObs_i::GetCfdStateVariables( void )
    {
       std::vector< std::string >::iterator iter;
       iter = commandStringQueue.begin();
-      this->mStates->clusterXMLCommands      = (*iter);
+      this->mStates->clusterXMLCommands = (*iter);
       commandStringQueue.erase( iter );
    }
    else
@@ -674,10 +673,23 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 {
    vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode " 
                            << isCluster << std::endl << vprDEBUG_FLUSH;
-   if ( !isCluster )
-   {
-      return;
-   }
+   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
+                           << mStates.isLocal() << " " 
+                           << vpr::System::getHostname() 
+                           << std::endl << vprDEBUG_FLUSH;
+    if ( !isCluster )
+    {
+        std::string commandString;
+        {
+            vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+            std::vector< std::string >::iterator iter;
+            iter = commandStringQueue.begin();
+            commandString = (*iter);
+            commandStringQueue.erase( iter );
+        }
+        CreatCommandVector( commandString );
+        return;
+    }
    
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
@@ -691,28 +703,22 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
-   }
+   }  
 
-   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
-                           << mStates.isLocal() << " " 
-                           << vpr::System::getHostname() 
-                           << std::endl << vprDEBUG_FLUSH;
-   
-   if ( mStates.isLocal() )
-   {
-      return;
-   }
+    //Do for all the slaves
+    if ( this->mStates->clusterXMLCommands.size() > 0 )
+    {  
+      CreatCommandVector( this->mStates->clusterXMLCommands.c_str() );  
+    }
 
-   //Do for all the slaves
-   if ( this->mStates->clusterXMLCommands.size() > 0 )
-   {  
-      SetCommandString( this->mStates->clusterXMLCommands.c_str() );  
-   }
-
+    if( mStates.isLocal() )
+    {
+        return;
+    }
    //sync up the frames on all nodes in the
    //cluster
    {
-      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+      //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
       gmtl::Matrix44d matrix;
 
       for(int i=0;i<16;i++){
@@ -835,33 +841,29 @@ void VjObs_i::PreFrameUpdate( void )
       commandQueue.erase( iter );
    }
 
-   // Just reinitialize the cfdid to null essentially if it is NOT GUI_NAV
-   if(bufferCommand->GetNumberOfDataValuePairs()){
-      if ( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
-         bufferCommand->SetCommandName( "wait" );
-   }
-
-   // New xml command queue
-   if ( !commandVectorQueue.empty() )
-   {
-      std::vector< Command* >::iterator iter;
-      iter = commandVectorQueue.begin();
-      (*bufferCommand) = (*(*iter));
-      delete commandVectorQueue.at( 0 );
-      commandVectorQueue.erase( iter );
-      cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
-      cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
-      cfdModelHandler::instance()->SetXMLCommand( bufferCommand );
-      if ( cfdModelHandler::instance()->GetActiveModel() )
-      {
-         cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
-      }
-   }
-   else
-   {
-      ;
-   }
-}
+    // New xml command queue
+    if( !commandVectorQueue.empty() )
+    {
+        std::vector< Command* >::iterator iter;
+        iter = commandVectorQueue.begin();
+        (*bufferCommand) = (*(*iter));
+        delete commandVectorQueue.at( 0 );
+        commandVectorQueue.erase( iter );
+        cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
+        cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
+        cfdModelHandler::instance()->SetXMLCommand( bufferCommand );
+        if( cfdModelHandler::instance()->GetActiveModel() )
+        {
+            cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
+        }
+    }
+    else
+    {
+        // Just reinitialize the cfdid to null essentially if it is NOT GUI_NAV
+        if ( bufferCommand->GetDataValuePair( 0 )->GetDataName().compare( "GUI_NAV" ) )
+            bufferCommand->SetCommandName( "wait" );
+    }
+ }
 
 void VjObs_i::CreateCommandQueue( void )
 {
@@ -907,43 +909,49 @@ void VjObs_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::SetCommandString( const char* value)
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
 {
-   //When starting xplorer it is possible to connect and send a command before 
-   // xplorer is ready to receive it
-   while ( !jccl::ConfigManager::instance()->isPendingStale() )
-   {
-      vpr::System::msleep( 50 );  // 50 milli-second delay
-   }
-   
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+    //When starting xplorer it is possible to connect and send a command before 
+    // xplorer is ready to receive it
+    while ( !jccl::ConfigManager::instance()->isPendingStale() )
+    {
+        vpr::System::msleep( 50 );  // 50 milli-second delay
+    }
+    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 
-   std::string commandString( value );
-   if ( isCluster )
-   {
-      if ( mStates.isLocal()   )
-      {
-         commandStringQueue.push_back( commandString );
-      }
-   }
-
-   vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
-   VE_XML::XMLReaderWriter networkWriter;
-   networkWriter.UseStandaloneDOMDocumentManager();
-   networkWriter.ReadFromString();
-   networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-
-   for ( size_t i = 0; i < objectVector.size(); ++i )
-   {
-      commandVectorQueue.push_back( static_cast< VE_XML::Command* >( objectVector.at( i ) ) );
-   }
+    std::string commandString( value );
+    if( isCluster )
+    {
+        if( mStates.isLocal() )
+        {
+            commandStringQueue.push_back( commandString );
+        }
+    }
+    else
+    {
+        commandStringQueue.push_back( commandString );
+    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void VjObs_i::CreatCommandVector( std::string commandString )
+{
+    //This function is called from juggler threads
+    vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
+    VE_XML::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
+    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
+    for ( size_t i = 0; i < objectVector.size(); ++i )
+    {
+        commandVectorQueue.push_back( static_cast< VE_XML::Command* >( objectVector.at( i ) ) );
+    }
+}
 // Frame sync variables used by osg only at this point
 float VjObs_i::GetSetAppTime( float x )
 {

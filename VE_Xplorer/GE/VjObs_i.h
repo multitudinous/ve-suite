@@ -80,57 +80,59 @@ class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
 {
 public:
-   ///Constructor
-   VjObs_i();
-   ///Destructor
-   virtual ~VjObs_i(){;}
-   ///Creates the geom info transfered to conductor
-   ///may not be needed anymore
-   void CreateGeometryInfo( void );
-   ///Create the dataset info transferred to conductor
-   ///May not be needed anymore
-   void CreateDatasetInfo( void );
-   ///Create the treacher info for conductor
-   ///May not be needed anymore
-   void CreateTeacherInfo( void );
-   ///Called everyframe to update parameters
-   void PreFrameUpdate( void );
-   ///Initialize cluster stuff depending on cluster mode
-   void InitCluster( void );
-   ///Called in post frame to get variables
-   void GetUpdateClusterStateVariables( void );
-   /// Frame sync variables used by osg only at this point
-   float GetSetAppTime( float );
-   ///Get/Set the frame number
-   long GetSetFrameNumber( long );
-   ///Set the cluster mode flag
-   void SetClusterMode( bool clusterFlag );
-   ///Determine if we are in cluster mode or not
-   bool GetClusterMode( void );
-   ///Get the teacher name files
-   VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
-   ///Get the models in IDL format
-   VjObs::Models* GetModels() throw (CORBA::SystemException);
-   ///Get the model with a specific id
-   ///\param modelID the model id to get
-   VjObs::Model* GetModel( CORBA::Long modelID ) throw (CORBA::SystemException);
-   ///Get the number of teacher files
-   short get_teacher_num() throw (CORBA::SystemException);
-   ///Set the client info flag
-   ///\param flag the client info flags
-   void SetClientInfoFlag( short ) throw (CORBA::SystemException);
-   ///Set the client info data
-   ///\param value the client info data
-   void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
-   ///Get the client info data
-   VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
-   ///Called in latepreframe to sync state variables
-   void GetCfdStateVariables( void );
-   cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
-   VE_XML::Command* bufferCommand;///< Data to hold command data
-   double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
+    ///Constructor
+    VjObs_i();
+    ///Destructor
+    virtual ~VjObs_i(){;}
+    ///Creates the geom info transfered to conductor
+    ///may not be needed anymore
+    void CreateGeometryInfo( void );
+    ///Create the dataset info transferred to conductor
+    ///May not be needed anymore
+    void CreateDatasetInfo( void );
+    ///Create the treacher info for conductor
+    ///May not be needed anymore
+    void CreateTeacherInfo( void );
+    ///Called everyframe to update parameters
+    void PreFrameUpdate( void );
+    ///Initialize cluster stuff depending on cluster mode
+    void InitCluster( void );
+    ///Called in post frame to get variables
+    void GetUpdateClusterStateVariables( void );
+    /// Frame sync variables used by osg only at this point
+    float GetSetAppTime( float );
+    ///Get/Set the frame number
+    long GetSetFrameNumber( long );
+    ///Set the cluster mode flag
+    void SetClusterMode( bool clusterFlag );
+    ///Determine if we are in cluster mode or not
+    bool GetClusterMode( void );
+    ///Get the teacher name files
+    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
+    ///Get the models in IDL format
+    VjObs::Models* GetModels() throw (CORBA::SystemException);
+    ///Get the model with a specific id
+    ///\param modelID the model id to get
+    VjObs::Model* GetModel( CORBA::Long modelID ) throw (CORBA::SystemException);
+    ///Get the number of teacher files
+    short get_teacher_num() throw (CORBA::SystemException);
+    ///Set the client info flag
+    ///\param flag the client info flags
+    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
+    ///Set the client info data
+    ///\param value the client info data
+    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
+    ///Get the client info data
+    VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
+    ///Called in latepreframe to sync state variables
+    void GetCfdStateVariables( void );
+    ///Create the vector with XML Commands to be used by Xplorer
+    void CreatCommandVector( std::string commandString );
+    cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
+    VE_XML::Command* bufferCommand;///< Data to hold command data
+    double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
    
-   std::vector< cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
+    std::vector< cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
 protected:
    ///Create command queue for transient vis
    ///Should be removed once non texture pipelines are created

@@ -93,11 +93,11 @@ using namespace VE_TextureBased;
 
 #include <vrj/Kernel/Kernel.h>
 #include <vpr/Perf/ProfileManager.h>
+#include <vpr/System.h>
 
 //web interface stuff
 #ifdef _WEB_INTERFACE
    #include <corona.h>
-   #include <vpr/System.h>
 #endif //_WEB_INTERFACE
 
 using namespace VE_Xplorer;
@@ -295,7 +295,7 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 void cfdApp::bufferPreDraw()
 {
    //glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear( GL_COLOR_BUFFER_BIT );
+   //glClear( GL_COLOR_BUFFER_BIT );
 }
 #endif //_OSG
 ////////////////////////////////////////////////////////////////////////////////
@@ -404,12 +404,25 @@ void cfdApp::latePreFrame( void )
     static float lastTime=0.0f;
 
     vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
-
+    //The calls below are order dependent so do not move them around
     //call the parent method
     _vjobsWrapper->GetUpdateClusterStateVariables();
+    //This should be called after the update so that
+    //all the singletons below get the updated command
+    _vjobsWrapper->PreFrameUpdate();
+    //Exit - must be called AFTER _vjobsWrapper->PreFrameUpdate();
+    if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
+    {
+        /*if( _vjobsWrapper->IsMaster() )
+        {
+
+            vpr::System::msleep( 1000 );  // 50 milli-second delay
+        }*/
+        // exit cfdApp was selected
+        vrj::Kernel::instance()->stop(); // Stopping kernel 
+    }
 
     float current_time = this->_vjobsWrapper->GetSetAppTime( -1 );
-
 #ifdef _OSG
     //This is order dependent
     //don't move above function call
@@ -431,31 +444,29 @@ void cfdApp::latePreFrame( void )
    }
 #endif
          
-   VE_SceneGraph::SceneManager::instance()->PreFrameUpdate();
-   ///////////////////////
-   cfdModelHandler::instance()->PreFrameUpdate();
-   ///////////////////////
-   cfdEnvironmentHandler::instance()->LatePreFrameUpdate(); 
-   ///////////////////////
-   //svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
-   ///////////////////////
-   cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
-	
-   if ( cfdModelHandler::instance()->GetActiveModel() )
-   {
-      if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
-      {
-         _tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
-         _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
-         _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
-         _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
-         _tbvHandler->PreFrameUpdate();
-      }
-   }
+    VE_SceneGraph::SceneManager::instance()->PreFrameUpdate();
+    ///////////////////////
+    cfdModelHandler::instance()->PreFrameUpdate();
+    ///////////////////////
+    cfdEnvironmentHandler::instance()->LatePreFrameUpdate(); 
+    ///////////////////////
+    //svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
+    ///////////////////////
+    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
 
-   cfdExecutive::instance()->PreFrameUpdate();
-   this->_vjobsWrapper->PreFrameUpdate();
-
+    if ( cfdModelHandler::instance()->GetActiveModel() )
+    {
+        if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+        {
+            _tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+            _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
+            _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
+            _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
+            _tbvHandler->PreFrameUpdate();
+        }
+    }
+    ///////////////////////
+    cfdExecutive::instance()->PreFrameUpdate();
 
 	//Update physics objects with time passed from last frame
 	//**********************************************************************
@@ -473,12 +484,6 @@ void cfdApp::latePreFrame( void )
 #endif
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
-
-   if ( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
-   {
-      // exit cfdApp was selected
-      vrj::Kernel::instance()->stop(); // Stopping kernel 
-   }
 }
 
 void cfdApp::intraFrame()
@@ -715,10 +720,10 @@ void cfdApp::draw()
     cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
                                                        frustum[vrj::Frustum::VJ_RIGHT],
                                                        frustum[vrj::Frustum::VJ_TOP],
-                                                        frustum[vrj::Frustum::VJ_BOTTOM],
+                                                       frustum[vrj::Frustum::VJ_BOTTOM],
                                                        frustum[vrj::Frustum::VJ_NEAR],
                                                        frustum[vrj::Frustum::VJ_FAR]);
-
+   
 #ifdef _WEB_INTERFACE
     bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
     if(userData->getViewport()->isSimulator())   //if this is a sim window context....
