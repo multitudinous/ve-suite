@@ -1,5 +1,6 @@
 #!python
 Import('opts')
+
 builderSubdirs = Split("""
     Translator/cfdTranslatorToVTK
     Translator/DataLoader
@@ -8,10 +9,11 @@ builderSubdirs = Split("""
     vtkTo3DTexture/tcGUI
     Utilities
 """) 
-if (opts.GetOption("HDF5BaseDir") != ""):
+
+if (opts.GetOption("HDF5BaseDir")):
    builderSubdirs.append('Translator/HDFtoVTK')
 
 ##Run SConscript files in all of those folders.
 for d in builderSubdirs:
-   ##print " dir ", d
+   #print " dir ", d
    SConscript( dirs = d )
