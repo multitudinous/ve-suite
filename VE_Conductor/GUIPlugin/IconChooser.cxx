@@ -68,6 +68,7 @@ void IconChooser::CreateGUIControls()
 	choices.Add( _("Flip Left/Right") );
 	choices.Add( _("Flip Up/Down") );
 	WxChoice = new wxChoice(WxPanel, 1006, wxPoint(325, 463), wxSize(100,21), choices, 0, wxDefaultValidator, wxT("WxChoice"));
+    WxChoice->Select( 0 );
 
 	WxEdit->SetEditable(false);
 	okButton = new wxButton(WxPanel, 1003, wxT("OK"), wxPoint(450, 463));
@@ -191,6 +192,11 @@ void IconChooser::AddIconsDir(wxString directory)
 	//Parse the default directory structure
    //wxString directory( _("F:/ASPENV21/2DIcons") );
    //wxString directory = wxString(path, wxConvUTF8);
+    if( !wxDir::Exists( directory ) )
+    {
+        return;
+    }
+
    wxString dirname;
    wxDir parentDir (directory);
    bool isParentTrue = parentDir.GetFirst(&dirname);
