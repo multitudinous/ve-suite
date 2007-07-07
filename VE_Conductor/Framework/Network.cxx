@@ -1772,7 +1772,10 @@ void Network::ReDraw(wxDC &dc)
     {
         iter->second.GetPlugin()->DrawPlugin( &dc );
         ///Set everything back to false for next loop
-		iter->second.GetPlugin()->SetHighlightFlag( false );
+        if( iter->first != m_selMod )
+		{
+            iter->second.GetPlugin()->SetHighlightFlag( false );
+        }
     }
 
     // draw all the links
