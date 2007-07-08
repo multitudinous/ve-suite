@@ -304,6 +304,10 @@ void Wand::UpdateNavigation()
       // Navigation based on current wand direction
    { 
       double* tempWandDir = GetDirection();
+       vprDEBUG(vesDBG,1) << "|\tWand direction :" << tempWandDir[0] << " : "
+           << tempWandDir[1] << " : "
+           << tempWandDir[2]
+           << std::endl << vprDEBUG_FLUSH;
       for ( int i=0; i<3; i++ )
       {
          // Update the translation movement for the objects

@@ -161,7 +161,9 @@ void Body_UI_i::UpdateLinkContent (
   {
     // Add your implementation here
     if (msg!=NULL)
-      std::cout<<id<<" : "<<msg<<std::endl;
+    {
+        std::cout<<id<<" : "<<msg<<std::endl;
+    }
     std::cout<<UIName_<<" :UpdateLinkContent called"<<std::endl;
   }
   
@@ -183,11 +185,6 @@ void Body_UI_i::Raise (
       std::cout << "|\tNotification Message : " << notification
                   << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
       
-      {
-         vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
-         statusStringBuffer.push_back( std::string( notification ) );
-      }
-      
       std::string temp( notification );
       if ( !temp.compare(0,30,"VES Network Execution Complete") ||
            !temp.compare(0,34,"Successfully Scheduled VES Network" ) ||
@@ -200,24 +197,30 @@ void Body_UI_i::Raise (
       {
          std::cout << "|\tNot Going To Do Anything" << std::endl;
       }
+
+      {
+          vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+          statusStringBuffer.push_back( std::string( notification ) );
+      }
+      
       std::cout << "|\tEnd Raise " << std::endl;  
    }
 ////////////////////////////////////////////////////////////////////////////////  
 void Body_UI_i::GetNetworkFromCE( void )
 {
-   try 
-   { 
-      const char* tempNetwork = executive_->GetNetwork( UIName_.c_str() );
-      std::string network( tempNetwork );
-      if ( !network.empty() )
-      {
-         this->SetNetworkString( network );
-         std::cout << "|\tGoing To Do Something" << std::endl;
-      }
-      delete tempNetwork;
-   } 
-   catch (CORBA::Exception &) 
-   {
-      std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl;
-   }
+    try 
+    { 
+        const char* tempNetwork = executive_->GetNetwork( UIName_.c_str() );
+        std::string network( tempNetwork );
+        if ( !network.empty() )
+        {
+            this->SetNetworkString( network );
+            std::cout << "|\tGoing To Do Something" << std::endl;
+        }
+        delete tempNetwork;
+    } 
+    catch (CORBA::Exception &) 
+    {
+        std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl;
+    }
 }

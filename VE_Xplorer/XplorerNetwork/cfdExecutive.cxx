@@ -268,12 +268,12 @@ void cfdExecutive::GetNetwork( void )
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::GetEverything( void )
 {
-   if ( CORBA::is_nil( this->_exec ) )
-   {
-      vprDEBUG(vesDBG,3) << "ERROR : The Executive has not been intialized!"
-      << std::endl << vprDEBUG_FLUSH;
-      return;
-   }
+    if( CORBA::is_nil( this->_exec ) )
+    {
+        vprDEBUG(vesDBG,3) << "ERROR : The Executive has not been intialized!"
+            << std::endl << vprDEBUG_FLUSH;
+        return;
+    }
    
    vprDEBUG(vesDBG,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
    GetNetwork();
@@ -461,7 +461,7 @@ void cfdExecutive::PostFrameUpdate( void )
    vprDEBUG(vesDBG,3) << " cfdExecutive::PostFrameUpdate"
                         << std::endl << vprDEBUG_FLUSH;
    
-   LoadDataFromCE();
+   //LoadDataFromCE();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::LoadDataFromCE( void )
@@ -502,35 +502,42 @@ void cfdExecutive::LoadDataFromCE( void )
    if ( pos1 != std::string::npos || 
         pos3 != std::string::npos )
    {
-      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
       std::map< int, std::string >::iterator idMap;
-      for ( foundPlugin=_plugins.begin(); 
-            foundPlugin!=_plugins.end(); 
-            foundPlugin++ )
+      for( std::map< int, cfdVEBaseClass* >::iterator foundPlugin = 
+           _plugins.begin(); 
+           foundPlugin!=_plugins.end(); 
+           foundPlugin++ )
       {  
-         idMap = _id_map.find( foundPlugin->first );
-         VE_XML::Command returnState;
-         returnState.SetCommandName("Get XML Model Results");
-         VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
-         data->SetData("moduleName", idMap->second );
-      	data=returnState.GetDataValuePair(-1);
-      	data->SetData("vendorUnit", idToModel[ foundPlugin->first ]->GetVendorName() );
-         data=returnState.GetDataValuePair(-1);
-         data->SetData("moduleId", static_cast< unsigned int >( idMap->first ) );
-         
-         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-         nodes.push_back( 
-                          std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
-                          );
-         VE_XML::XMLReaderWriter commandWriter;
-         std::string status="returnString";
-         commandWriter.UseStandaloneDOMDocumentManager();
-         commandWriter.WriteXMLDocument( nodes, status, "Command" );
-         const char* tempResult = this->_exec->Query( status.c_str() );
-         std::string tempResultString = tempResult;
-         _plugins[ foundPlugin->first ]->SetModuleResults( tempResultString );
-         delete tempResult;
-         
+          idMap = _id_map.find( foundPlugin->first );
+          //No need to call this function when execution is complete because it
+          //is called in the get network call
+          if( pos3 != std::string::npos )
+          {
+              VE_XML::Command returnState;
+              returnState.SetCommandName("Get XML Model Results");
+              VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+              data->SetData("moduleName", idMap->second );
+              data=returnState.GetDataValuePair(-1);
+              data->SetData("vendorUnit", 
+                    idToModel[ foundPlugin->first ]->GetVendorName() );
+              data=returnState.GetDataValuePair(-1);
+              data->SetData("moduleId", 
+                    static_cast< unsigned int >( idMap->first ) );
+              
+              std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+              nodes.push_back( std::pair< VE_XML::XMLObject*, 
+                    std::string >( &returnState, "vecommand" ) );
+              VE_XML::XMLReaderWriter commandWriter;
+              std::string status="returnString";
+              commandWriter.UseStandaloneDOMDocumentManager();
+              commandWriter.WriteXMLDocument( nodes, status, "Command" );
+              const char* tempResult = this->_exec->Query( status.c_str() );
+              std::string tempResultString = tempResult;
+              _plugins[ foundPlugin->first ]->
+                  SetModuleResults( tempResultString );
+              delete tempResult;
+          }
+          
          int dummyVar = 0;
          _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
       }

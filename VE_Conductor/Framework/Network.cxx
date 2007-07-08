@@ -1663,11 +1663,9 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
   Refresh(true);
   //Update();
 }
-
 //////////////////////////////////////////////////////
 ///////// Add to Network Funtions ////////////////////
 //////////////////////////////////////////////////////
-
 void Network::AddTag(int x, int y, wxString text)
 {
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
@@ -1705,53 +1703,53 @@ void Network::AddTag(int x, int y, wxString text)
 //////////////////////////////////////////////////////////////
 void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
 {
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-  POLY tmpPoly;
-  int num;
+    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+    POLY tmpPoly;
+    int num;
 
-  int id;
-  std::map<int, Module>::iterator mit;
-  while (1)
-  {
-     id = wxNewId();
-     if ( id > 9999 )
+    int id;
+    std::map<int, Module>::iterator mit;
+    while (1)
+    {
+        id = wxNewId();
+        if ( id > 9999 )
         id=id%9999;
-     
-     mit = modules.find(id);
-     if ( mit == modules.end() )
-        break;
-  };
-  //do it this way because we don't have equal operators setup for plugins
-  Module mod;
-  modules[id]=mod;
-  
-  wxRect bbox; //Bounding box  
 
-  bbox = cur_module->GetBBox(); //Get the Boundoing box of the modul 
+        mit = modules.find(id);
+        if( mit == modules.end() )
+            break;
+    };
+    //do it this way because we don't have equal operators setup for plugins
+    Module mod;
+    modules[id]=mod;
 
-  cur_module->SetPos( GetFreePos(bbox) ); //Set the new modules position to be a free space allocated by the network according to its bounding box
-  bbox = cur_module->GetBBox();
-  modules[id].SetPlugin( cur_module );
+    wxRect bbox; //Bounding box  
 
-   num = cur_module->GetNumPoly();
-   tmpPoly.resize(num);
-   cur_module->GetPoly(tmpPoly); 
-   VE_Conductor::GUI_Utilities::Polygon newPolygon;
-   *(newPolygon.GetPolygon()) = tmpPoly;
+    bbox = cur_module->GetBBox(); //Get the Boundoing box of the modul 
 
-   newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
-   modules[id].SetClassName( cls_name );
+    cur_module->SetPos( GetFreePos(bbox) ); //Set the new modules position to be a free space allocated by the network according to its bounding box
+    bbox = cur_module->GetBBox();
+    modules[id].SetPlugin( cur_module );
 
-  modules[id].GetPlugin()->SetID(id);
-  modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
-  modules[id].GetPlugin()->SetDialogSize( frame->GetAppropriateSubDialogSize() );
-  //modules.push_back(mod);
-  sbboxes.push_back(bbox);
-  //  for (i=0; i<modules.size(); i++)
-  //Setup the event handlers for the plugin
-  PushEventHandler( modules[id].GetPlugin() );
-  Refresh(true);
-  //Update();
+    num = cur_module->GetNumPoly();
+    tmpPoly.resize(num);
+    cur_module->GetPoly(tmpPoly); 
+    VE_Conductor::GUI_Utilities::Polygon newPolygon;
+    *(newPolygon.GetPolygon()) = tmpPoly;
+
+    newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
+    modules[id].SetClassName( cls_name );
+
+    modules[id].GetPlugin()->SetID(id);
+    modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+    modules[id].GetPlugin()->SetDialogSize( frame->GetAppropriateSubDialogSize() );
+    //modules.push_back(mod);
+    sbboxes.push_back(bbox);
+    //  for (i=0; i<modules.size(); i++)
+    //Setup the event handlers for the plugin
+    PushEventHandler( modules[id].GetPlugin() );
+    Refresh(true);
+    //Update();
   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 ////////////////////////////////////////
@@ -1808,7 +1806,7 @@ void Network::ReDraw(wxDC &dc)
 /////////////////////////////////////////////////////////////////
 double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 {
-  return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
+    return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
 }
 
 //////////////////////////////////////////////
@@ -1830,7 +1828,7 @@ std::string Network::Save( std::string fileName )
    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
-   for ( size_t i = 0; i < links.size(); ++i )
+   for( size_t i = 0; i < links.size(); ++i )
    {
       VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
       //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
@@ -1853,7 +1851,7 @@ std::string Network::Save( std::string fileName )
 
    //  Models
    std::map< int, Module >::iterator iter;
-   for ( iter=modules.begin(); iter!=modules.end(); ++iter )
+   for( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
       iter->second.GetPlugin()->SetID( iter->first );
       nodes.push_back( 
@@ -1913,10 +1911,8 @@ std::string Network::Save( std::string fileName )
    }
    userInfo.SetStateInfo( colorState );
    
-   nodes.push_back( 
-                    std::pair< VE_XML::XMLObject*, std::string >( 
-                    &userInfo, "User" ) 
-                  );
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+        &userInfo, "User" ) );
    
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
