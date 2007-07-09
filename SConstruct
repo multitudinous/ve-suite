@@ -406,6 +406,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ceSubdirs = pj(buildDir,'VE_CE')
    ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
+   veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')	
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    shareSubdirs = pj(buildDir,'share')
    docsSubdirs = pj('#', 'share', 'docs', 'docbook')
@@ -425,7 +426,7 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Alias('doxygen', doxySubdirs)
    else:
       ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
-                  xplorerSubdirs, ceSubdirs, veiSubdirs, 
+                  xplorerSubdirs, veiDistSubdirs, ceSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs]
 
    # Build the test suite if asked.
@@ -460,12 +461,3 @@ if not SConsAddons.Util.hasHelpFlag():
          
    baseEnv.Alias('install', PREFIX)
    Default('.')
-
-#Freeze the velauncher.py
-#   if GetPlatform() == 'linux':
-#      baseDir = "/home/vr/Applications/TSVEG/Build_Apps/pyinstaller-1.3"
-#      targetDir = pj(PREFIX, 'bin')
-#      os.system("python %s/Configure.py" % baseDir)
-#      os.system("python %s/Makespec.py --onefile --out=%s velauncher.py" % (baseDir, veiSubdirs))
-#      os.system("python %s/Build.py %s/velauncher.spec" % (baseDir, veiSubdirs))
-#      os.system("mv velauncher %s/velauncher" % targetDir)
