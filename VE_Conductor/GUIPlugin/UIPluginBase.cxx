@@ -1831,54 +1831,21 @@ void UIPluginBase::HighlightSelectedIcon( wxDC* dc )
     dc->SetPen(old_pen);
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void UIPluginBase::DrawPorti(UIPluginBase * cur_module, int index, bool flag)
-{
-    // used by trylink only which redraws things only if we are draggin a module
-    // draw either the input or output ports for an specific port index in the module
-    PORT ports;
-    int num;
-    
-    if ( !cur_module )
-        return;
-    
-    wxPoint bport[4];
-    wxCoord xoff, yoff;
-    wxRect bbox;
-    
-    wxClientDC dc(this);
-    PrepareDC(dc);
-    dc.SetUserScale( userScale.first, userScale.second );
-    
-    bport[0]=wxPoint(0,0);
-    bport[1]=wxPoint(10,0);
-    bport[2]=wxPoint(10,10);
-    bport[3]=wxPoint(0,10);
-    
-    bbox = cur_module->GetBBox();
-    wxBrush old_brush=dc.GetBrush();
-    
-    dc.SetBrush(*wxRED_BRUSH);
-    
-    if (flag)
-    {
-        num = cur_module->GetNumIports();
-        ports.resize(num);
-        cur_module->GetIPorts(ports);
-        dc.SetBrush(*wxRED_BRUSH);
-    }
-    else
-    {
-        num = cur_module->GetNumOports();
-        ports.resize(num);
-        cur_module->GetOPorts(ports);
-        dc.SetBrush(*wxCYAN_BRUSH);
-    }
-    
-    wxPoint tempPoint( ports[index].GetPortLocation()->GetPoint().first, ports[index].GetPortLocation()->GetPoint().second );
-    xoff = tempPoint.x+bbox.x-3;
-    yoff = tempPoint.y+bbox.y-3;
-    
-    dc.DrawPolygon(4, bport, xoff, yoff);      
-    
-    dc.SetBrush( old_brush );
-}*/
+void UIPluginBase::AddPort( wxCommandEvent& event )
+{ 
+    UIPLUGIN_CHECKID( event )
+    //get location
+    //Ask what type of port
+    //add the port to the model
+    //add the port to the internal plugin structure
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::DeletePort( wxCommandEvent& event )
+{ 
+    UIPLUGIN_CHECKID( event )
+    //get location
+    //find port in model
+    //find port in plugin
+    //delete associated links
+}
+////////////////////////////////////////////////////////////////////////////////
