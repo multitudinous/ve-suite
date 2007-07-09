@@ -197,6 +197,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
    EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
    EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
     EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
+    EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
     EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
     EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
     EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::CloseAspenSimulation )
@@ -643,7 +644,8 @@ void AppFrame::CreateMenu()
    aspenMenu->Append( SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
    aspenMenu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
    aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
-   aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run Simulation" ) );
+   aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
+   aspenMenu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
    aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
    aspenMenu->Append( SAVE_SIMULATION, _("Save Simulation") );
    aspenMenu->Append( SAVEAS_SIMULATION, _("SaveAs Simulation") );
@@ -1196,6 +1198,26 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
    Log("Run Simulation.\n");
    VE_XML::Command returnState;
    returnState.SetCommandName("runNetwork");
+   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+   data->SetData("NetworkQuery", "runNetwork" );
+
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   serviceList->Query( status );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED(event) )
+{
+   Log("Run Simulation.\n");
+   VE_XML::Command returnState;
+   returnState.SetCommandName("stepNetwork");
    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
    data->SetData("NetworkQuery", "runNetwork" );
 

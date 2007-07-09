@@ -116,6 +116,7 @@ public:
       QUERY_FROM_SERVER, 
       QUERY_NETWORK,  
       RUN_ASPEN_NETWORK,
+      STEP_ASPEN_NETWORK,
       ASPEN_CONNECTION_MENU,
       SHOW_ASPEN_SIMULATION,
       HIDE_ASPEN_SIMULATION,
@@ -289,6 +290,7 @@ protected:
    void QueryFromServer( wxCommandEvent& event );
    void QueryNetwork( wxCommandEvent& event );
    void RunAspenNetwork( wxCommandEvent& event );
+   void StepAspenNetwork( wxCommandEvent& event );
    void ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) );
    void HideAspenSimulation( wxCommandEvent& WXUNUSED(event) );
    void CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) );
