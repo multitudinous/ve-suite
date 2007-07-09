@@ -1,10 +1,12 @@
 import os, sys, string
+import SConsAddons.Util
 from SCons.Util import WhereIs
 pj = os.path.join
 
 Import('ves_pkg', 'RootDir')
 env = ves_pkg.getEnv().Copy()
 
+#Tool Directory
 DOCBOOKBASE = pj(RootDir,'external','DocBook')
 DOCBOOK_XSL = pj(DOCBOOKBASE,'docbook-xsl-1.72.0')
 DOCBOOK_FO = pj(DOCBOOKBASE,'fop-0.20.5')
@@ -13,13 +15,47 @@ HTML_XSL = pj(DOCBOOK_XSL,'html','docbook.xsl')
 CHUNK_HTML_XSL = pj(DOCBOOK_FO,'stylesheet','html.xsl')
 FO_XSL = pj(DOCBOOK_XSL,'fo','docbook.xsl')
 
+#Java Classpath
+JAR_PATH = pj(DOCBOOK_FO,'lib')
+
+#Jar Files
+FOP_JAR = pj(JAR_PATH,'fop.jar')
+BATIK_JAR = pj(JAR_PATH,'batik-all-1.6.jar')
+AVALON_JAR = pj(JAR_PATH,'avalon-framework-cvs-20020806.jar')
+XALAN_JAR = pj(JAR_PATH,'xalan-2.4.1.jar')
+RESOLVER_JAR = pj(JAR_PATH,'resolver.jar')
+XALAN_JAR = pj(JAR_PATH,'xalan-2.4.1.jar')
+XERCES_JAR = pj(JAR_PATH,'xercesImpl-2.2.1.jar')
+XML_JAR = pj(JAR_PATH,'xml-apis.jar')
+JIMI_JAR = pj(JAR_PATH,'JimiProClasses.jar')
+
+if SConsAddons.Util.GetPlatform() == "win32":
+    JAI_JAR = pj(JAR_PATH,'jai_windows-i586.jar')
+else:
+    JAI_JAR = pj(JAR_PATH,'jai_linux-i586.jar')
+
+#Set Classpath in ENV
+env['ENV']['CLASSPATH'] = ['${FOP_JAR}','${BATIK_JAR}','${AVALON_JAR}'
+			   ,'${JAI_JAR}','${XALAN_JAR}','${RESOLVER_JAR}'
+			   ,'${XALAN_JAR}','${XERCES_JAR}','${XML_JAR}','${JIMI_JAR}']
+
 ##Base parameters.
 relativeDir = pj('share', 'docs', 'docbook')
 baseDir = pj('#', relativeDir)
 
-xslt_cmd = WhereIs('xsltproc')
-xml_cmd = WhereIs('xmllint')
-fo_cmd = pj(DOCBOOK_FO, 'fop.sh')
+if SConsAddons.Util.GetPlatform() == "win32":
+    TOOL_PATH = pj(DOCBOOK_FO,'libxml')
+    env['ENV']['PATH'] = ['${TOOL_PATH}']
+    xslt_cmd = 'xsltproc'
+    xml_cmd = 'xmllint'
+else:
+    xslt_cmd = WhereIs('xsltproc')
+    xml_cmd = WhereIs('xmllint')
+
+if SConsAddons.Util.GetPlatform() == "win32":
+    fo_cmd = pj(DOCBOOK_FO, 'fop.bat')
+else:
+    fo_cmd = pj(DOCBOOK_FO, 'fop.sh')
 
 ##NOTE: Do NOT put the suffixes of the filenames.
 srcs = Split("""
