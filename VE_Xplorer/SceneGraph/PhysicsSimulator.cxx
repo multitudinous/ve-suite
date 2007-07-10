@@ -72,7 +72,7 @@ vprSingletonImp( PhysicsSimulator );
 //#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
 
-#define USE_CUSTOM_NEAR_CALLBACK 1
+//#define USE_CUSTOM_NEAR_CALLBACK 1
 #define USE_SWEEP_AND_PRUNE 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
@@ -183,7 +183,7 @@ void PhysicsSimulator::InitializePhysicsSimulation( void )
     m_dispatcher = new btCollisionDispatcher();
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
-    //m_dispatcher->setNearCallback( customNearCallback );
+    m_dispatcher->setNearCallback( customNearCallback );
 #else
 #endif
 

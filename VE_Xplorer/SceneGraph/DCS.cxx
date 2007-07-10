@@ -490,13 +490,17 @@ void DCS::UpdatePhysicsTransform( void )
     osg::Vec3d trans = this->getPosition();
 
     btTransform bulletTransform;
+    bulletTransform.setIdentity();
     btQuaternion btQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
     bulletTransform.setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
     bulletTransform.setRotation( btQuat );
 
-    btDefaultMotionState* dcsMotionState = (btDefaultMotionState*)m_btBody->getMotionState();
-    m_btBody->setWorldTransform( bulletTransform );
-    dcsMotionState->m_startWorldTrans = bulletTransform;
+    if( m_btBody->getMotionState() )
+    {
+        btDefaultMotionState* dcsMotionState = (btDefaultMotionState*)m_btBody->getMotionState();
+        m_btBody->setWorldTransform( bulletTransform );
+        dcsMotionState->m_startWorldTrans = bulletTransform;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetbtRigidBody( btRigidBody* rigidBody )
