@@ -152,7 +152,8 @@ class CommandLine:
             app.MainLoop()
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
-            velShell.Start(self.state.GetSurface("ShellScript"))
+	    globalPath = launchInstance.GetPathEnv()
+            velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
 
 
     def AutoLaunched(self):

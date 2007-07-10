@@ -1009,7 +1009,9 @@ class LauncherWindow(wx.Frame):
         self.Destroy()
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
-            velShell.Start(self.state.GetSurface("ShellScript"))
+            lInstance = Launch(self.state.GetLaunchSurface())
+	    globalPath = lInstance.GetPathEnv()
+            velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.

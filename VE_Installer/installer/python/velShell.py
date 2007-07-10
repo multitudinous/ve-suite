@@ -33,16 +33,17 @@
 """Contains functions for starting up the shell in VE-Launcher."""
 from subprocess import Popen, PIPE
 from os import execl
-
+import os, sys
 from velBase import *
-from velCoveredConfig import *
+import string
 
-def Start(shellScript = None):
+def Start(shellScript=None, pathEnv=None):
     if windows:
         if shellScript:
             Popen([shellScript])
         else:
-            os.system('start "%s" cmd' %LAUNCHER_SHELL_NAME)
+            os.system('start "%s" set path=%s' % (LAUNCHER_SHELL_NAME, pathEnv))
+            #os.system('start "%s" cmd' %LAUNCHER_SHELL_NAME)
     elif unix:
         if shellScript:
             print "VE-Suite script started."

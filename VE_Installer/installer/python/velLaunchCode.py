@@ -30,7 +30,7 @@
 # * -----------------------------------------------------------------
 # *
 # *************** <auto-copyright.pl END do not edit this line> **************
-import os
+import os, sys
 import wx
 from sys import stdin
 from time import sleep ##Used for delays in launch
@@ -122,6 +122,9 @@ class Launch:
 
     def GetConductorPid(self):
         return self.conductorPid
+
+    def GetPathEnv(self):	
+	return self.pathEnv
 
     def Windows(self):
         """Launches the chosen programs under an Unix OS.
@@ -674,6 +677,10 @@ class Launch:
                 pathList.append(os.path.join(entry, "bin"))
                 pathList.append(os.path.join(entry, libTag))
             self.EnvAppend("PATH", pathList, ';')
+
+            #Add pathEnv value for shell launching mode
+            self.pathEnv = os.getenv("OSG_FILE_PATH") + ";" +os.getenv("PATH")
+            
         elif unix:
             ##Append OSG_FILE_PATH
             self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ':')
@@ -722,7 +729,6 @@ class Launch:
                 if os.getenv(var) != None:
                     self.WriteToClusterScript(var)
 
-
     def EnvAppend(self, var, appendages, sep):
         """Appends appendages (list) to var, using sep to separate them."""
         originalVar = os.getenv(var, "None")
@@ -753,8 +759,7 @@ class Launch:
                 self.debugOutput.append([app, None])
                 self.debugOutput.append(["\n", None])
             self.debugOutput.append(["\n", None])
-
-
+	    	
     def EnvFill(self, var, default, overwrite = False):
         """Overwrites env var in normal mode, ensures it's filled in dev mode.
 
@@ -790,7 +795,6 @@ class Launch:
             self.debugOutput.append(["Original: ", "Bold"])
             self.debugOutput.append(["%s" %originalVar, None])
             self.debugOutput.append(["\n\n", None])
-
 
     def WriteToClusterScript(self, var):
         """Writes an environmental setting to clusterScript.
