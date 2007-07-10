@@ -70,6 +70,7 @@ class Launch:
         """Sets environmental vars and calls OS-specific launch code."""
         ##Set self's variables
         self.settings = settings
+	self.pathEnv = ""
         self.nameserverPids = []
         self.conductorPid = []
         ##Debug settings.
