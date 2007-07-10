@@ -240,7 +240,6 @@ void Network::OnMLeftDown(wxMouseEvent& event)
         temp.y = y - bbox.y;
 
         relative_pt = temp;
-
         ports.resize( modules[m_selMod].GetPlugin()->GetNumIports() );
         modules[m_selMod].GetPlugin()->GetIPorts( ports );
 
@@ -1781,7 +1780,10 @@ void Network::ReDraw(wxDC &dc)
     {
         links.at( i ).DrawLink( &dc );
         ///Set everything back to false for next loop
-		links.at( i ).SetHighlightFlag( false );
+        if( i != m_selLink )
+        {
+            links.at( i ).SetHighlightFlag( false );
+        }
     }
 
     // draw all the tags
@@ -1802,8 +1804,7 @@ void Network::ReDraw(wxDC &dc)
 /////////////////////////////////////////////////////////
 ////// Math Functions for the points and polygons ///////
 /////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 {
     return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));

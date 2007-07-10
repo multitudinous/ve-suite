@@ -204,11 +204,9 @@ public:
    //Add the calls for the size. So the main program can preallocate memory for it
 
    int GetNumIports();
-   void SetNumIports( int numPorts );
    virtual void GetIPorts(PORT& ports);
 
    int GetNumOports();
-   void SetNumOports( int numPorts );
    virtual void GetOPorts(PORT& ports);
 
    virtual void Lock(bool lock);
@@ -296,7 +294,9 @@ protected:
    GeometryDialog* geom_dlg;
    unsigned int id;
 
-   wxPoint pos; //The Position to draw Icon;
+   wxPoint pos; //The Position to draw Icon
+   ///Point where the mouse event takes place with the right click menu
+   wxPoint actionPoint;
 
    VE_XML::VE_Model::Model* veModel;
    wxString name;
@@ -306,8 +306,8 @@ protected:
    int n_pts; //Number of points
 
    ///Port data info
-   int numberOfInputPorts;
-   int numberOfOutputPorts;
+   //int numberOfInputPorts;
+   //int numberOfOutputPorts;
    std::vector< VE_XML::VE_Model::Port* > inputPort;
    std::vector< VE_XML::VE_Model::Port* > outputPort;
    

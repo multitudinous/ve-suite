@@ -112,8 +112,6 @@ UIPluginBase::UIPluginBase() :
     port_dlg( 0 ),
     geom_dlg( 0 ),
     financial_dlg( 0 ),
-    numberOfInputPorts( 0 ),
-    numberOfOutputPorts( 0 ),
     inputsDialog( 0 ),
     resultsDialog( 0 ),
     portsDialog( 0 ),
@@ -298,11 +296,6 @@ int UIPluginBase::GetNumIports()
 	return inputPort.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SetNumIports( int numPorts )
-{
-   numberOfInputPorts = numPorts;
-}
-////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::GetIPorts(PORT& iports)
 {
    for ( size_t i = 0; i <  inputPort.size(); ++i )
@@ -327,11 +320,6 @@ void UIPluginBase::GetIPorts(PORT& iports)
 int UIPluginBase::GetNumOports()
 {
 	return outputPort.size();
-}
-/////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SetNumOports( int numPorts )
-{
-   numberOfOutputPorts = numPorts;
 }
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::GetOPorts(PORT& oports)
@@ -416,11 +404,8 @@ UIDialog* UIPluginBase::UI(wxWindow* parent)
 {
   if (dlg!=NULL)
     return dlg;
-  long new_id;
 
-  new_id = wxNewId();
-  //  std::cout<<"New id "<<new_id<<std::endl;
-  
+  long new_id = wxNewId();  
   dlg = new UIDialog(parent, new_id, _("UIDialog") );
 
   return dlg;
@@ -768,6 +753,8 @@ void UIPluginBase::SetVEModel( VE_XML::VE_Model::Model* tempModel )
       */
    }
 
+   inputPort.clear();
+   outputPort.clear();
    //Setup the ports so that the plugin can access them.
    for ( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
    {
@@ -1503,6 +1490,8 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
         event.Skip();
         return;
     }
+    
+    actionPoint = evtpos;
 	highlightFlag = true;
 	networkFrame->Refresh();
     //send the active id so that each plugin knows what to do
@@ -1699,10 +1688,8 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
     // flag sets whether we we are erasing the ports or not 
     // This function draws the input and output ports on a selected module
     // that is on the design canvas
-    size_t i;
     wxPoint bport[4];
     wxCoord xoff, yoff;
-    int num;
     
     bport[0]=wxPoint(0,0);
     bport[1]=wxPoint(10,0);
@@ -1715,36 +1702,21 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
     wxBrush old_brush = dc->GetBrush();
     wxPen old_pen = dc->GetPen();
     
-    if( flag )
-    {
-        dc->SetBrush(*wxRED_BRUSH);
-        dc->SetPen(*wxBLACK_PEN);
-        dc->SetTextForeground(*wxBLACK);
-    }
-    else
-    {
-        dc->SetBrush(*wxWHITE_BRUSH);
-        dc->SetPen(*wxWHITE_PEN);
-        dc->SetTextForeground(*wxWHITE);
-    }
-    
-    PORT ports;
-    num = GetNumIports();
-    ports.resize(num);
-    GetIPorts(ports);
+    dc->SetBrush(*wxRED_BRUSH);
+    dc->SetPen(*wxBLACK_PEN);
+    dc->SetTextForeground(*wxBLACK);
     
     wxString text;
     int w = 0;
     int h = 0;
     
-    //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-    
-    for (i=0; i<(int)ports.size(); i++)
+    //setup the input ports
+    for ( size_t i=0; i < inputPort.size(); i++)
     {
         //std::stringstream output;
         //output << ports[i].GetPortLocation()->GetPoint().first<< " "<<ports[i].GetPortLocation()->GetPoint().second<<std::endl;
         //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-        wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+        wxPoint tempPoint( inputPort[i]->GetPortLocation()->GetPoint().first, inputPort[i]->GetPortLocation()->GetPoint().second );
         // I believe this means move the points in from the edge of the icon
         // by 3 pixles
         // bbox.x returns the global x location and the ports.x returns the x location with respect to bbox.x
@@ -1756,51 +1728,26 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
         dc->DrawPolygon(4, bport, xoff, yoff);  
         
         //also, need to draw port type
-        text = wxString( ports[i].GetPortType().c_str(),wxConvUTF8);
+        text = wxString( inputPort[i]->GetPortType().c_str(),wxConvUTF8);
         dc->GetTextExtent( text, &w, &h);
         dc->DrawText( text, xoff-w-2, yoff);
     }
     
-    if ( flag )
-    {
-        dc->SetBrush(*wxCYAN_BRUSH);
-    }
-    else
-    {
-        ; //keep the white brush
-    }
+    dc->SetBrush(*wxCYAN_BRUSH);
     
-    // do the same thing as we did for the input ports
-    num = GetNumOports();
-    ports.resize(num);
-    GetOPorts(ports);
-    
-    for ( i=0; i < ports.size(); i++)
+    // do the same thing as we did for the output ports    
+    for ( size_t i=0; i < outputPort.size(); i++)
     { 
-        wxPoint tempPoint( ports[i].GetPortLocation()->GetPoint().first, ports[i].GetPortLocation()->GetPoint().second );
+        wxPoint tempPoint( outputPort[i]->GetPortLocation()->GetPoint().first, outputPort[i]->GetPortLocation()->GetPoint().second );
         xoff = tempPoint.x+pos.x-3;
         yoff = tempPoint.y+pos.y-3;
-        
         dc->DrawPolygon(4, bport, xoff, yoff);      
         //also, need to draw port type
-        text = wxString( ports[i].GetPortType().c_str(), wxConvUTF8);
+        text = wxString( outputPort[i]->GetPortType().c_str(), wxConvUTF8);
         dc->GetTextExtent( text, &w, &h);
         dc->DrawText( text, xoff+12, yoff );
     }
     
-    /* if ((bbox.x-3)>0)
-        bbox.x-=3;
-    else
-        bbox.x=0;
-    
-    if ((bbox.y-3)>0)
-        bbox.y-=3;
-    else
-        bbox.y=0;
-    
-    bbox.width+=3;
-    bbox.height+=3;
-    */
     // restore the default brush and pen settings as stored initially
     dc->SetBrush(old_brush);
     dc->SetPen(old_pen);
@@ -1835,15 +1782,37 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
 { 
     UIPLUGIN_CHECKID( event )
     //get location
+    VE_XML::VE_Model::Point* tempLoc = new VE_XML::VE_Model::Point();
+    std::pair< unsigned int, unsigned int > newPoint;
+    newPoint.first = actionPoint.x / userScale->first - pos.x;
+    newPoint.second = actionPoint.y / userScale->second - pos.y;
+    tempLoc->SetPoint( newPoint );
     //Ask what type of port
+    VE_XML::VE_Model::Port* port = veModel->GetPort( -1 );
+    port->SetPortLocation( tempLoc );
+    //either input or output
+    port->SetModelName( ConvertUnicode( name.c_str() ) );
     //add the port to the model
     //add the port to the internal plugin structure
+    if( event.GetId() == UIPluginBase::ADD_INPUT_PORT )
+    {
+        port->SetDataFlowDirection( "input" );
+        inputPort.push_back( port );
+    }
+    else if( event.GetId() == UIPluginBase::ADD_OUTPUT_PORT )
+    {
+        port->SetDataFlowDirection( "output" );
+        outputPort.push_back( port );
+    }
+    port->SetPortNumber( outputPort.size() + inputPort.size() );
+    networkFrame->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DeletePort( wxCommandEvent& event )
 { 
     UIPLUGIN_CHECKID( event )
     //get location
+    actionPoint;
     //find port in model
     //find port in plugin
     //delete associated links

@@ -46,9 +46,9 @@ Port::Port(  )
 :XMLObject(  )
 {
    portNumber = 0;
-   modelName = '\0';
-   dataFlow = '\0';
-   portLocation = new Point(  );
+   //modelName = '\0';
+   //dataFlow = '\0';
+   portLocation = new Point();
    SetObjectType("Port");
    SetObjectNamespace("Model");
 }
