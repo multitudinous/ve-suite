@@ -69,10 +69,10 @@ Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: 
 Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
 [Files]
-Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\WinClient_d.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_d.exe; DestDir: {app}\bin; Components: vexplorer; Flags: ignoreversion
 Source: {#VEHOME}\lib\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#VEHOME}\bin\win32\WinServerd.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\WinServer_d.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples
@@ -102,6 +102,7 @@ Source: {#VEHOME}/share/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\vrj
 Source: {#VEHOME}/share/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\vecr_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
 
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 ;Source: {#VEHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 ;Source: {#JUGGLERINSTHOME}\lib\ms*.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
