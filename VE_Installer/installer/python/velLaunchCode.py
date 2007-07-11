@@ -66,16 +66,17 @@ class Launch:
         EnvSetup(self, dependenciesDir, workingDir, taoMachine, taoPort,
                  clusterMaster)
         EnvFill(var, default)"""
-    def __init__(self, settings):
+    def __init__(self, settings, runOnce = True):
         """Sets environmental vars and calls OS-specific launch code."""
         ##Set self's variables
         self.settings = settings
 	self.pathEnv = ""
         self.nameserverPids = []
         self.conductorPid = []
+        self.runOnce = runOnce
         ##Debug settings.
         self.debugOutput = []
-        if self.settings["Debug"]:
+        if self.settings["Debug"] and self.runOnce:
             self.inputSource = subprocess.PIPE
             self.debugFile = open("debug.txt", 'w')
             self.outputDestination = self.debugFile
@@ -101,8 +102,8 @@ class Launch:
         else:
             self.cluster = False
         ##Set the environmental variables
-        self.EnvSetup()
-        if self.settings["Debug"]:
+	self.EnvSetup()
+        if self.settings["Debug"] and self.runOnce:
             frame = LauncherDebugWin(None, self.debugOutput)
         ##Change the directory.
         os.chdir(self.settings["Directory"])

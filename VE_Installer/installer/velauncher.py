@@ -997,7 +997,7 @@ class LauncherWindow(wx.Frame):
             dlg.Destroy()
 
         ##Close the Launcher
-    def OnClose(self, event=None):
+    def OnClose(self, event=None ,te=None):
         """Saves launcher's current configuration and quits the launcher.
 
         Called after a successful Launch or when the user manually closes
@@ -1006,11 +1006,11 @@ class LauncherWindow(wx.Frame):
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
         self.Hide()
-        self.Destroy()
+        self.Destroy()        
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
-            lInstance = Launch(self.state.GetLaunchSurface())
-	    globalPath = lInstance.GetPathEnv()
+            launchInstance = Launch(self.state.GetLaunchSurface(),runOnce = False)
+	    globalPath = launchInstance.GetPathEnv()
             velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
 
 ##START MAIN PROGRAM
