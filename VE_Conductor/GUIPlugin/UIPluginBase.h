@@ -243,7 +243,9 @@ public:
    void HighlightSelectedIcon( wxDC* dc );
    ///Draw the ports for this plugin
    void DrawPorts( bool flag, wxDC* dc );
-   
+   ///Find how near the two points are
+   double computenorm( wxPoint pt1, wxPoint pt2 );
+       
    void OnMRightDown( wxMouseEvent &event );
    bool SetActiveModel( void );
    ///Still need to be documented

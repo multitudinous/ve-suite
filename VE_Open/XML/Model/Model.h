@@ -142,16 +142,12 @@ public:
    Port* GetPort( void );
    ///Get port data
    size_t GetNumberOfPorts( void );
-   /*///Get the i'th input port for the model.
-   ///\param i The i'th input port you are after.
-   Port* GetInputPort( unsigned int i );
-   ///Get the number of input ports for a model
-   size_t GetNumberOfInputPorts( void );
-   ///Get the i'th output port for the model.
-   ///\param i The i'th output port you are after.
-   Port* GetOutputPort( unsigned int i );
-   ///Get the number of output ports for a model
-   size_t GetNumberOfOutputPorts( void );*/
+   ///Remove the i'th port for the model.
+   ///\param i The i'th port you are after.
+   void RemovePort( unsigned int i );
+   ///Remove the selected port for the model.
+   ///\param removePort The port you are after.
+   void RemovePort( VE_XML::VE_Model::Port* removePort );
    ///Get the i'th information packet for a model.
    ///\param i The i'th packet you are after.
    VE_XML::ParameterBlock* GetInformationPacket( int i );
@@ -197,8 +193,6 @@ private:
    unsigned int uniqueModelID;///<The unique model id. 
    std::string iconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
    std::vector< Port* > ports;///<The vector port data if any for a model.
-   std::vector< Port* > outputPorts;///<The vector port data if any for a model.
-   std::vector< Port* > inputPorts;///<The vector port data if any for a model.
    Point* iconLocation;///<The icon location point container.
    ///The data value pair will contain all the results for a paticular model
    std::vector< VE_XML::Command* > results;///<The classes hold the results for the model.

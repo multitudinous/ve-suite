@@ -93,6 +93,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
     EVT_MENU( EDIT_TAG, Network::OnEditTag )
     EVT_MENU( DEL_TAG, Network::OnDelTag )
     EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod )
+    EVT_MENU( UIPluginBase::DELETE_PORT, Network::OnDelPort )
     EVT_MENU( Link::DEL_LINK, Network::OnDelLink )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
@@ -771,6 +772,51 @@ void Network::OnDelMod(wxCommandEvent& event )
 
     Refresh( true );
 }
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnDelPort(wxCommandEvent& event )
+{
+    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
+    
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+        iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
+    
+    // Need to delete all links associated with this particular module
+    // first, delete all the links connects to it
+    VE_XML::VE_Model::Port* selPort = 
+        static_cast< VE_XML::VE_Model::Port* >( event.GetClientData() );
+    for( std::vector< Link >::iterator iter3=links.begin(); 
+        iter3!=links.end(); )
+    {
+        if( (iter3->GetFromModule() == m_selMod ) && 
+            (iter3->GetFromPort() == selPort->GetPortNumber() ) )
+        {
+            iter3 = links.erase( iter3 );
+        }
+        else if( (iter3->GetToModule() == m_selMod ) && 
+            (iter3->GetToPort() ==  selPort->GetPortNumber() ) )
+        {
+            iter3 = links.erase( iter3 );
+        }
+        else
+        {
+            ++iter3;
+        }
+    }
+    
+    //Pop the link event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+        iter=links.begin(); iter!=links.end(); iter++ )
+    {
+        PushEventHandler( &(*iter) );
+    }
+    
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
+}
+////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////
 ///// Selection Functions ///////////
 /////////////////////////////////////

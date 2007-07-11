@@ -81,30 +81,31 @@ public:
       DEL_TAG
    };
 
-   ///Fucntion called during submit job to send the id of all active
-   ///modules to the CE
-   void SetIDOnAllActiveModules( void );
-   wxMutex s_mutexProtect;
+    ///Fucntion called during submit job to send the id of all active
+    ///modules to the CE
+    void SetIDOnAllActiveModules( void );
+    wxMutex s_mutexProtect;
 
-   //Event Handlers
-   void OnPaint( wxPaintEvent &event );
-   ///This is needed to reduce flicker
-   ///Erase background callback
-   void OnEraseBackground( wxEraseEvent& event );
+    //Event Handlers
+    void OnPaint( wxPaintEvent &event );
+    ///This is needed to reduce flicker
+    ///Erase background callback
+    void OnEraseBackground( wxEraseEvent& event );
     void OnMouseMove( wxMouseEvent &event );
-   void OnMLeftDown( wxMouseEvent &event );
-   void OnMLeftUp( wxMouseEvent &event );
+    void OnMLeftDown( wxMouseEvent &event );
+    void OnMLeftUp( wxMouseEvent &event );
 
-   void OnMRightDown( wxMouseEvent &event );
-   void OnAddTag( wxCommandEvent &event );
-   void OnEditTag( wxCommandEvent &event );
-   void OnDelTag( wxCommandEvent &event );
-   void OnDelMod( wxCommandEvent &event );
-   void OnDelLink(wxCommandEvent& event );
-       
-   //Add to network fuctions
-   void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
-   void AddTag(int x, int y, wxString text);
+    void OnMRightDown( wxMouseEvent &event );
+    void OnAddTag( wxCommandEvent &event );
+    void OnEditTag( wxCommandEvent &event );
+    void OnDelTag( wxCommandEvent &event );
+    void OnDelMod( wxCommandEvent &event );
+    void OnDelPort(wxCommandEvent& event );
+    void OnDelLink(wxCommandEvent& event );
+
+    //Add to network fuctions
+    void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
+    void AddTag(int x, int y, wxString text);
        
    //Save and Load the network
    std::string Save( std::string fileName );

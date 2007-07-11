@@ -513,46 +513,47 @@ Port* Model::GetPort(int i )
       }
    }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Port* Model::GetPort( void )
 {
    ports.push_back( new Port() );
    return ports.back();
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfPorts( void )
 {
    return ports.size();
 }
-////////////////////////////////////////////////////////////
-/*Port* Model::GetInputPort( unsigned int i )
+////////////////////////////////////////////////////////////////////////////////
+void Model::RemovePort( unsigned int i )
 {
-   try
-   {
-      return inputPorts.at( i );
-   }
-   catch (...)
-   {
-      if ( i > ( inputPorts.size() + 1) )
-      {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         return 0;
-      }
-      else
-      {
-         ports.push_back( new Port() );
-         inputPorts.push_back( ports.back() );
-         return ports.back();
-      }
-   }
+    size_t count = 0;
+    for( std::vector< Port* >::iterator iter = ports.begin(); 
+        iter != ports.end(); ++iter )
+    {
+        if( count == i )
+        {
+            ports.erase( iter );
+            break;
+        }
+        ++count;
+    }
 }
-////////////////////////////////////////////////////////////
-size_t Model::GetNumberOfInputPorts( void )
+////////////////////////////////////////////////////////////////////////////////
+void Model::RemovePort( VE_XML::VE_Model::Port* removePort )
 {
-   return inputPorts.size();
+    for( std::vector< Port* >::iterator iter = ports.begin(); 
+        iter != ports.end(); ++iter )
+    {
+        if( *iter == removePort )
+        {
+            ports.erase( iter );
+            break;
+        }
+    }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/*////////////////////////////////////////////////////////////
 Port* Model::GetOutputPort( unsigned int i )
 {
    try

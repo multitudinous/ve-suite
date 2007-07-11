@@ -99,7 +99,7 @@ BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
     EVT_MENU( ADD_INPUT_PORT, UIPluginBase::AddPort ) 
     EVT_MENU( ADD_OUTPUT_PORT, UIPluginBase::AddPort ) 
     EVT_MENU( DELETE_PORT, UIPluginBase::DeletePort ) 
-    EVT_UPDATE_UI( 888, UIPluginBase::OnSetActivePluginID )
+    EVT_UPDATE_UI( SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
@@ -1227,13 +1227,13 @@ void UIPluginBase::OnShowDesc(wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     wxString desc;
-   wxString title;
- 
-   title << wxT("Description");
-  
-   desc = GetDesc();
-  
-   wxMessageDialog( networkFrame, desc, title).ShowModal();
+    wxString title;
+
+    title << wxT("Description");
+
+    desc = GetDesc();
+
+    wxMessageDialog( networkFrame, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnParaView(wxCommandEvent& WXUNUSED(event))
@@ -1255,14 +1255,14 @@ void UIPluginBase::OnInputsWindow(wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
-   ViewInputVariables();
+    ViewInputVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnResultsWindow(wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
-   ViewResultsVariables();
+    ViewResultsVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnGeometry(wxCommandEvent& event )
@@ -1452,10 +1452,12 @@ void UIPluginBase::OnVisualization(wxCommandEvent& event )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::OnSetUIPluginName( wxCommandEvent& WXUNUSED( event ) )
+void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
 {
-   // Here we launch a dialog for a specific plugins input values
-   SetPluginNameDialog();   
+    UIPLUGIN_CHECKID( event )
+    // Here we launch a dialog for a specific plugins input values
+    SetPluginNameDialog();   
+    networkFrame->Refresh( true );
 }
 //////////////////////////////////////////////////
 void UIPluginBase::OnModelSounds(wxCommandEvent& event)
@@ -1466,14 +1468,14 @@ void UIPluginBase::OnModelSounds(wxCommandEvent& event)
     {
         return;
     }
-    
+
     if( !_soundsDlg )
-   {
-      _soundsDlg = new SoundsPane( GetModel());
-      _soundsDlg->SetSize( dialogSize );
-   }
-   _soundsDlg->SetActiveModel( GetModel());
-   _soundsDlg->Show();
+    {
+        _soundsDlg = new SoundsPane( GetModel());
+        _soundsDlg->SetSize( dialogSize );
+    }
+    _soundsDlg->SetActiveModel( GetModel());
+    _soundsDlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnMRightDown(wxMouseEvent& event)
@@ -1497,7 +1499,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );
-    setActivePluginId.SetId( 888 );
+    setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
     networkFrame->GetEventHandler()->ProcessEvent( setActivePluginId );
 
     wxString menuName = name + wxString( " Menu", wxConvUTF8 );
@@ -1812,9 +1814,54 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
 { 
     UIPLUGIN_CHECKID( event )
     //get location
-    actionPoint;
+    wxPoint temp;
+    temp.x = actionPoint.x / userScale->first - pos.x;
+    temp.y = actionPoint.y / userScale->second - pos.y;
     //find port in model
-    //find port in plugin
+    int acutallDestPortNumber = -1;
+    VE_XML::VE_Model::Port* tempPort = 0;
+    for( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
+    {
+        VE_XML::VE_Model::Point* tempLoc = 
+            veModel->GetPort( i )->GetPortLocation();
+        wxPoint tempPoint( tempLoc->GetPoint().first, 
+            tempLoc->GetPoint().second );
+        if( computenorm(temp, tempPoint) <= 10 ) 
+        {
+            acutallDestPortNumber = veModel->GetPort( i )->GetPortNumber();
+            tempPort = veModel->GetPort( i );
+            //delete the port from the model
+            std::vector< Port* >::iterator iter;
+            iter = std::find( inputPort.begin(), 
+                inputPort.end(), veModel->GetPort( i ) );
+            if( iter != inputPort.end() )
+            {
+                inputPort.erase( iter );
+                veModel->RemovePort( veModel->GetPort( i ) );
+                break;
+            }
+            
+            iter = std::find( outputPort.begin(), outputPort.end(), 
+                veModel->GetPort( i ) );
+            if( iter != outputPort.end() )
+            {
+                outputPort.erase( iter );
+                veModel->RemovePort( veModel->GetPort( i ) );
+                break;
+            }
+        }
+    }
     //delete associated links
+    if( tempPort )
+    {
+        event.SetClientData( tempPort );
+        ::wxPostEvent( networkFrame, event );
+    }
+    networkFrame->Refresh( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+double UIPluginBase::computenorm( wxPoint pt1, wxPoint pt2 )
+{
+    return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
 }
 ////////////////////////////////////////////////////////////////////////////////
