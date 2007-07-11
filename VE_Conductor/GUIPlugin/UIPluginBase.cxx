@@ -1817,8 +1817,10 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     //get location
     wxPoint temp;
-    temp.x = unsigned int( actionPoint.x / userScale->first - pos.x );
-    temp.y = unsigned int( actionPoint.y / userScale->second - pos.y );
+    temp.x = 
+        static_cast< unsigned int >( actionPoint.x / userScale->first - pos.x );
+    temp.y = 
+        static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
     //find port in model
     int acutallDestPortNumber = -1;
     VE_XML::VE_Model::Port* tempPort = 0;
