@@ -147,12 +147,12 @@ class CommandLine:
         ##Show NameServer kill window if NameServer was started.
         if self.state.GetSurface("NameServer"):
             app = wx.PySimpleApp()
-	    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
-				      conduct_Pid = launchInstance.GetConductorPid())
+            window = ServerKillWindow(pids = launchInstance.GetNameserverPids(), 
+                                      conduct_Pid = launchInstance.GetConductorPid())
             app.MainLoop()
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
-	    globalPath = launchInstance.GetPathEnv()
+            globalPath = launchInstance.GetPathEnv()
             velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
 
 

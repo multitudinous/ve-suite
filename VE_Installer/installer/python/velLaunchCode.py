@@ -70,7 +70,9 @@ class Launch:
         """Sets environmental vars and calls OS-specific launch code."""
         ##Set self's variables
         self.settings = settings
-	self.pathEnv = ""
+        self.pathEnv = ""
+        self.VeDepsDir = ""
+        self.VeLauncherDir = ""
         self.nameserverPids = []
         self.conductorPid = []
         self.runOnce = runOnce
@@ -102,7 +104,7 @@ class Launch:
         else:
             self.cluster = False
         ##Set the environmental variables
-	self.EnvSetup()
+        self.EnvSetup()
         if self.settings["Debug"] and self.runOnce:
             frame = LauncherDebugWin(None, self.debugOutput)
         ##Change the directory.
@@ -125,12 +127,17 @@ class Launch:
     def GetConductorPid(self):
         return self.conductorPid
 
-    def GetPathEnv(self):	
-	return self.pathEnv
+    def GetPathEnv(self):
+        return self.pathEnv
+
+    def GetVeDepsDir(self):
+        return self.VeDepsDir
+
+    def GetVeLauncherDir(self):
+        return self.VeLauncherDir
 
     def Windows(self):
         """Launches the chosen programs under an Unix OS.
-
         Keyword arguments:
         runName, runConductor, runXplorer -- Run NameServer/Conductor/Xplorer?
         typeXplorer -- Which Xplorer program to run.
@@ -140,18 +147,48 @@ class Launch:
         if self.settings["NameServer"]:
             sleep(1)
             print "Starting Name Server."
-            pids = []
-            pids.append(subprocess.Popen(self.NameServiceCall(),
-                                         stdin = self.inputSource,
-                                         stdout = self.outputDestination,
-                                         stderr = self.outputDestination).pid)
-            sleep(3)
-            pids.append(subprocess.Popen(self.ServerCall(),
-                                         stdin = self.inputSource,
-                                         stdout = self.outputDestination,
-                                         stderr = self.outputDestination).pid)
-            sleep(3)
-            self.nameserverPids = pids
+            #Checking existence of executable file first before calling it
+            exe = "Naming_Service.exe"
+            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                pids = []
+                pids.append(subprocess.Popen(self.NameServiceCall(), 
+                                             stdin = self.inputSource, 
+                                             stdout = self.outputDestination, 
+                                             stderr = self.outputDestination).pid)
+            else:
+                #Otherwise print error message
+                print "******************************************************************************"
+                print "ERROR: Name Server Call Error"
+                print "REASON: Naming_Service Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeDepsDir
+                print "******************************************************************************"
+                sys.exit(2)                     
+
+            #Checking existence of executable file first before calling it
+            exe = "Winserver" + self.windowsSuffix
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                sleep(2)
+                pids.append(subprocess.Popen(self.ServerCall(),
+                                             stdin = self.inputSource,
+                                             stdout = self.outputDestination,
+                                             stderr = self.outputDestination).pid)
+                sleep(2)
+                self.nameserverPids = pids
+            else:
+                #Otherwise print error message
+                print "******************************************************************************"
+                print "ERROR: Server Call Error"
+                print "REASON: Winserver Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeLauncherDir
+                print "******************************************************************************"
+                sys.exit(2)        
+                
         ##Cluster Xplorer section
         if self.settings["Cluster"]:
             print "Starting Xplorer on the cluster."
@@ -177,25 +214,51 @@ class Launch:
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
-            subprocess.Popen(self.XplorerCall(),
-                             stdin = self.inputSource,
-                             stdout = self.outputDestination, stderr = self.outputDestination)
+            exe = "project_tao_osg_vep" + self.windowsSuffix
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                subprocess.Popen(self.XplorerCall(), 
+                                 stdin = self.inputSource, 
+                                 stdout = self.outputDestination, stderr = self.outputDestination)
+            else:
+                #Otherwise print error message
+                print "******************************************************************************"
+                print "ERROR: Xplorer Call Error"
+                print "REASON: project_tao_osg_vep Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeLauncherDir
+                print "******************************************************************************"
+                sys.exit(2)        
+            
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
-            conduct_Pid = []
-            ##Append argument if desktop mode selected
-            if self.settings["VESFile"]:
-                sleep(5)
-            conduct_Pid.append(subprocess.Popen(self.ConductorCall(),
-                             			stdin = self.inputSource,
-                             			stdout = self.outputDestination, 
-						stderr = self.outputDestination).pid)
-	    sleep(3)
-            self.conductorPid = conduct_Pid
-
-
-        print "Finished sending launch commands."
+            exe = "WinClient" + self.windowsSuffix
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                conduct_Pid = []
+                ##Append argument if desktop mode selected
+                if self.settings["VESFile"]:
+                    sleep(2)
+                conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
+                                                    stdin = self.inputSource, 
+                                                    stdout = self.outputDestination, 
+                                                    stderr = self.outputDestination).pid)
+                sleep(2)
+                self.conductorPid = conduct_Pid
+                print "Finished sending launch commands."
+            else:
+                #Otherwise print error message
+                print "******************************************************************************"
+                print "ERROR: Conductor Call Error"
+                print "REASON: WinClient Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeLauncherDir
+                print "******************************************************************************"
+                sys.exit(2)        
+                
         return
 
 
@@ -213,7 +276,7 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-	subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
+        subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
                           "s", "reset", "s", "off"])
         ##Name Server section
         if self.settings["NameServer"]:
@@ -222,10 +285,26 @@ class Launch:
             pids = []
             pids.append(subprocess.Popen(self.NameServiceCall(),
                                          stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-            sleep(3)
-            pids.append(subprocess.Popen(self.ServerCall(),
-                                         stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-            self.nameserverPids = pids
+            
+            #Checking existence of executable file first before calling it
+            exe = "Exe_server" + self.debugSuffix
+            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                sleep(3)
+                pids.append(subprocess.Popen(self.ServerCall(), 
+                                             stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
+                self.nameserverPids = pids
+            else:
+                #Otherwise print error message
+                print "**********************************************************************************"
+                print "ERROR: Name Server Call Error"
+                print "REASON: ExeServer Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeDepsDir
+                print "**********************************************************************************"
+                sys.exit(2)                
+            
         ##Cluster mode
         if self.settings["Cluster"]:
             print "Starting Xplorer on the cluster."
@@ -253,17 +332,48 @@ class Launch:
         ##Xplorer section
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
-            subprocess.Popen(self.XplorerCall(),
-                             stdout = self.outputDestination, stderr = subprocess.STDOUT)
+            #Checking existence of project_tao_osg_vep file first before calling it
+            exe = "project_tao_osg_vep" + self.debugSuffix
+            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                subprocess.Popen(self.XplorerCall(), 
+                                 stdout = self.outputDestination, stderr = subprocess.STDOUT)
+            else:
+                #Otherwise print error message
+                print "**********************************************************************************"
+                print "ERROR: Xplorer Call Error"
+                print "REASON: project_tao_osg_vep Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeDepsDir
+                print "**********************************************************************************"
+                sys.exit(2)              
+        
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
-            conduct_Pid = []
-            conduct_Pid.append(subprocess.Popen(self.ConductorCall(),
-                                                stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-            sleep(2)
-	    self.conductorPid = conduct_Pid
-        print "Finished sending launch commands."
+            #Checking existence of WinClient file first before calling it
+            exe = "WinClient" + self.debugSuffix
+            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+
+            if isFileExist:
+                #If exist then call it
+                conduct_Pid = []
+                conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
+                                                    stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
+                sleep(3)
+                self.conductorPid = conduct_Pid
+                print "Finished sending launch commands."
+
+            else:
+                #Otherwise print error
+                print "**********************************************************************************"
+                print "ERROR: Conductor Call Error"
+                print "REASON: WinClient Call Failed"
+                print "REMARKS: Please make sure that you have \"%s\" file" % exe
+                print "         in your \"%s\" directory" % self.VeDepsDir
+                print "**********************************************************************************"
+                sys.exit(2)
         return
 
 
@@ -404,8 +514,9 @@ class Launch:
     def WriteClusterScriptPrefix(self):
         """Writes the cluster script section before the environment setting."""
         if unix:
+            ssh_cmd = os.popen("whereis ssh").readline().split()[1]
             self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
-            self.clusterScript += "ssh -C $1 << EOF\n"
+            self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
@@ -643,7 +754,7 @@ class Launch:
         ##self.EnvFill("VJ_CFG_PATH", os.path.join(vjBaseDir, "definitions")) ##Can get rid of?
         ##self.EnvFill("NSPR_ROOT", vjBaseDir) ##Can get rid of?
         self.EnvFill("SNX_BASE_DIR", vjBaseDir)
-
+        
         ##Set VexMaster
         ##Take the partially-qualified name if
         ##clusterMaster is a fully-qualified name.
@@ -682,6 +793,9 @@ class Launch:
 
             #Add pathEnv value for shell launching mode
             self.pathEnv = os.getenv("OSG_FILE_PATH") + ";" +os.getenv("PATH")
+            #Get dependency base directory
+            self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
+            self.VeLauncherDir = str(VELAUNCHER_DIR)
             
         elif unix:
             ##Append OSG_FILE_PATH
@@ -720,6 +834,9 @@ class Launch:
             ##Write the libraries & paths.
             self.EnvAppend(libraryPath, libList, ':')
             self.EnvAppend("PATH", pathList, ':')
+
+            self.VeDepsDir = os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")
+            self.VeLauncherDir = str(pathList[0])
         ##Update other vars listed.
         if self.settings["Cluster"]:
             for var in self.settings["ExtraVariables"]:

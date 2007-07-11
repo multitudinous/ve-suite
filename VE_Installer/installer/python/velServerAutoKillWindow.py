@@ -53,9 +53,9 @@ class ServerAutoKillWindow(wx.Frame):
                           style = wx.DEFAULT_FRAME_STYLE | wx.NO_FULL_REPAINT_ON_RESIZE) 
 
         self.pids = pids
-	self.c_Pid = str(conduct_Pid[0])
+        self.c_Pid = str(conduct_Pid[0])
         self.Show()
-	self.OnClose()
+        self.OnClose()
         self.KillNameServer()
         
     def KillNameServer(self):
@@ -66,7 +66,7 @@ class ServerAutoKillWindow(wx.Frame):
 
 	    while (ps == 1):
                 ps = len (c.Win32_Process (ProcessId=pID))
-	        sleep(2)
+                sleep(2)
             
             PROCESS_TERMINATE = 1
             for pid in self.pids:
@@ -89,7 +89,7 @@ class ServerAutoKillWindow(wx.Frame):
             killArray = ["kill"]
             for pid in self.pids:
                 killArray.append(str(pid))
-            Popen(killArray)
+                Popen(killArray)
         	     
     def OnClose(self, event = None):
         #Closes Server Shutdown Window

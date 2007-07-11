@@ -198,13 +198,13 @@ class LauncherWindow(wx.Frame):
         menu.AppendMenu(502, "Open &Recent File", self.recentMenu)
         menu.Append(501, "&Close File\tCtrl+W")
         self.prefSubMenu = wx.Menu()
-	self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
-	menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
-	"""
-	if windows:
+        self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
+        menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
+        """
+        if windows:
             self.prefSubMenu.Check(602, False)
-	    self.prefSubMenu.Enable(602, False)
-	"""
+            self.prefSubMenu.Enable(602, False)
+        """
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         ##Recent files as separated add-on
         ##menu.AppendSeparator()
@@ -743,52 +743,49 @@ class LauncherWindow(wx.Frame):
             self.mutex.acquire()
 
         #image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
-
-	image = SPLASH_IMAGE
+        image = SPLASH_IMAGE
         frame1 = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
         frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 		
         frame1.SetTextColour(wx.BLACK)
         frame1.SetTextPosition((155,43))
-
-	if windows:
+        if windows:
             frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
             frame1.SetText("Version 1.1\\n")
             wx.MilliSleep(200)
-	    if self.state.GetSurface("NameServer"):
+            if self.state.GetSurface("NameServer"):
                 frame1.SetText("Version 1.1\\nStarting Name Server...")
-                wx.MilliSleep(2000)
-	    if self.state.GetSurface("Xplorer"):
+                wx.MilliSleep(1000)
+            if self.state.GetSurface("Xplorer"):
                 frame1.SetText("Version 1.1\\nStarting Xplorer...")
                 wx.MilliSleep(1000)
-	    if self.state.GetSurface("Conductor"):
+            if self.state.GetSurface("Conductor"):
                 frame1.SetText("Version 1.1\\nStarting Conductor...")
-                wx.MilliSleep(700)
+                wx.MilliSleep(1000)
 
                 frame1.SetText("Version 1.1\\nPreparing to Launch VE-Suite...")
                 wx.MilliSleep(1000)
-
-	elif unix:
+        elif unix:
             frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
             frame1.SetText("Version 1.1\n")
             wx.MilliSleep(200)
-	    if self.state.GetSurface("NameServer"):
+            if self.state.GetSurface("NameServer"):
                 frame1.SetText("Version 1.1\nStarting Name Server...")
-                wx.MilliSleep(2000)
-	    if self.state.GetSurface("Xplorer"):
+                wx.MilliSleep(1000)
+            if self.state.GetSurface("Xplorer"):
                 frame1.SetText("Version 1.1\nStarting Xplorer...")
                 wx.MilliSleep(1000)
-	    if self.state.GetSurface("Conductor"):
+            if self.state.GetSurface("Conductor"):
                 frame1.SetText("Version 1.1\nStarting Conductor...")
-                wx.MilliSleep(700)
+                wx.MilliSleep(1000)
 
                 frame1.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
                 wx.MilliSleep(1000)
-	else:
-            wx.MilliSleep(5000)
-
-	frame1.Close()        
-	if not windows:
+                
+        else:
+            wx.MilliSleep(4500)
+        frame1.Close()
+        if not windows:
             self.mutex.release()
 
     def OnCloseSplash(self, event):
@@ -918,8 +915,7 @@ class LauncherWindow(wx.Frame):
         ##Set the builderDir, if necessary.
         passedBuilderDir = None
 ##        if v("Shell") and v("BuilderShell") == None:
-        if v("Shell") and v("BuilderDir") == None and \
-           self.state.IsEnabled("BuilderDir"):
+        if v("Shell") and v("BuilderDir") == None and self.state.IsEnabled("BuilderDir"):
             dlg = wx.MessageDialog(self,
                                     "Do you want to use this shell\n" +
                                     "to run VE-Builder?",
@@ -953,8 +949,8 @@ class LauncherWindow(wx.Frame):
         self.state.React(alternateDep, "DependenciesDir", alternateDep)
         ##Hide the Launcher.
         self.Hide()
-
-	##Add any user-chosen launched files to RecentFiles list.
+        
+        ##Add any user-chosen launched files to RecentFiles list.
         fileVariables = ["ShellScript", "VESFile"]
         for fileVar in fileVariables:
             if self.state.IsEnabled(fileVar) and v(fileVar) != None:
@@ -965,28 +961,25 @@ class LauncherWindow(wx.Frame):
         if windows:
             self.SpScreen()
         ##Launch splash screen
-	self.OnClose()
-	if unix:
-	    self.mutex = thread.allocate_lock()	
+        self.OnClose()
+        if unix:
+            self.mutex = thread.allocate_lock()	
             try:
                 thread.start_new_thread(self.SpScreen, ())
             except:
                 pass
-        ##Go into the Launch
+            ##Go into the Launch
         try:
             launchInstance = Launch(self.state.GetLaunchSurface())
             ##Show NameServer kill window if NameServer was started.
             if v("NameServer"):
-		#pids = launchInstance.GetNameserverPids()
-		#conduct_Pid = launchInstance.GetConductorPid()
-		self.OnClose()
-		if (self.prefSubMenu.IsChecked(602)):
-                    window = ServerAutoKillWindow(pids = launchInstance.GetNameserverPids(),
-		 			          conduct_Pid = launchInstance.GetConductorPid())
 
-		else:
-                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
-		 			      conduct_Pid = launchInstance.GetConductorPid())
+                if (self.prefSubMenu.IsChecked(602)):
+                    window = ServerAutoKillWindow(pids = launchInstance.GetNameserverPids(), 
+                                                  conduct_Pid = launchInstance.GetConductorPid())
+                else:
+                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(), 
+                                              conduct_Pid = launchInstance.GetConductorPid())
 		
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,
@@ -1010,7 +1003,7 @@ class LauncherWindow(wx.Frame):
         ##If a shell's launched, start it here, after cleanup.
         if self.state.GetSurface("Shell") == True and self.launch == True:
             launchInstance = Launch(self.state.GetLaunchSurface(),runOnce = False)
-	    globalPath = launchInstance.GetPathEnv()
+            globalPath = launchInstance.GetPathEnv()
             velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
 
 ##START MAIN PROGRAM
