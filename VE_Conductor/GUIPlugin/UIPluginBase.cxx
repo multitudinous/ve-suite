@@ -1786,8 +1786,10 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
     //get location
     VE_XML::VE_Model::Point* tempLoc = new VE_XML::VE_Model::Point();
     std::pair< unsigned int, unsigned int > newPoint;
-    newPoint.first = actionPoint.x / userScale->first - pos.x;
-    newPoint.second = actionPoint.y / userScale->second - pos.y;
+    newPoint.first = 
+        static_cast< unsigned int >( actionPoint.x / userScale->first - pos.x );
+    newPoint.second = 
+        static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
     tempLoc->SetPoint( newPoint );
     //Ask what type of port
     VE_XML::VE_Model::Port* port = veModel->GetPort( -1 );
@@ -1815,8 +1817,8 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     //get location
     wxPoint temp;
-    temp.x = actionPoint.x / userScale->first - pos.x;
-    temp.y = actionPoint.y / userScale->second - pos.y;
+    temp.x = unsigned int( actionPoint.x / userScale->first - pos.x );
+    temp.y = unsigned int( actionPoint.y / userScale->second - pos.y );
     //find port in model
     int acutallDestPortNumber = -1;
     VE_XML::VE_Model::Port* tempPort = 0;
