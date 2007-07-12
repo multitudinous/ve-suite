@@ -124,17 +124,22 @@ class Launch:
     def GetNameserverPids(self):
         return self.nameserverPids
 
+
     def GetConductorPid(self):
         return self.conductorPid
+
 
     def GetPathEnv(self):
         return self.pathEnv
 
+
     def GetVeDepsDir(self):
         return self.VeDepsDir
 
+
     def GetVeLauncherDir(self):
         return self.VeLauncherDir
+
 
     def Windows(self):
         """Launches the chosen programs under an Unix OS.
@@ -159,13 +164,9 @@ class Launch:
                                              stderr = self.outputDestination).pid)
             else:
                 #Otherwise print error message
-                print "******************************************************************************"
-                print "ERROR: Name Server Call Error"
-                print "REASON: Naming_Service Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeDepsDir
-                print "******************************************************************************"
-                sys.exit(2)                     
+                error = "Name Server Call Error"
+                reason = "Naming_Service Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
 
             #Checking existence of executable file first before calling it
             exe = "Winserver" + self.windowsSuffix
@@ -181,13 +182,9 @@ class Launch:
                 self.nameserverPids = pids
             else:
                 #Otherwise print error message
-                print "******************************************************************************"
-                print "ERROR: Server Call Error"
-                print "REASON: Winserver Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeLauncherDir
-                print "******************************************************************************"
-                sys.exit(2)        
+                error = "Server Call Error"
+                reason = "Winserver Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
                 
         ##Cluster Xplorer section
         if self.settings["Cluster"]:
@@ -223,13 +220,9 @@ class Launch:
                                  stdout = self.outputDestination, stderr = self.outputDestination)
             else:
                 #Otherwise print error message
-                print "******************************************************************************"
-                print "ERROR: Xplorer Call Error"
-                print "REASON: project_tao_osg_vep Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeLauncherDir
-                print "******************************************************************************"
-                sys.exit(2)        
+                error = "Xplorer Call Error"
+                reason = "project_tao_osg_vep Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
             
         ##Conductor section
         if self.settings["Conductor"]:
@@ -251,14 +244,10 @@ class Launch:
                 print "Finished sending launch commands."
             else:
                 #Otherwise print error message
-                print "******************************************************************************"
-                print "ERROR: Conductor Call Error"
-                print "REASON: WinClient Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeLauncherDir
-                print "******************************************************************************"
-                sys.exit(2)        
-                
+                error = "Conductor Call Error"
+                reason = "WinClient Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
+                                
         return
 
 
@@ -297,13 +286,9 @@ class Launch:
                 self.nameserverPids = pids
             else:
                 #Otherwise print error message
-                print "**********************************************************************************"
-                print "ERROR: Name Server Call Error"
-                print "REASON: ExeServer Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeDepsDir
-                print "**********************************************************************************"
-                sys.exit(2)                
+                error = "Name Server Call Error"
+                reason = "ExeServer Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
             
         ##Cluster mode
         if self.settings["Cluster"]:
@@ -341,13 +326,9 @@ class Launch:
                                  stdout = self.outputDestination, stderr = subprocess.STDOUT)
             else:
                 #Otherwise print error message
-                print "**********************************************************************************"
-                print "ERROR: Xplorer Call Error"
-                print "REASON: project_tao_osg_vep Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeDepsDir
-                print "**********************************************************************************"
-                sys.exit(2)              
+                error = "Xplorer Call Error"
+                reason = "project_tao_osg_vep Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
         
         ##Conductor section
         if self.settings["Conductor"]:
@@ -367,16 +348,28 @@ class Launch:
 
             else:
                 #Otherwise print error
-                print "**********************************************************************************"
-                print "ERROR: Conductor Call Error"
-                print "REASON: WinClient Call Failed"
-                print "REMARKS: Please make sure that you have \"%s\" file" % exe
-                print "         in your \"%s\" directory" % self.VeDepsDir
-                print "**********************************************************************************"
-                sys.exit(2)
+                error = "Conductor Call Error"
+                reason = "WinClient Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
         return
 
 
+    def ErrorMessage(self, error, reason, exe, dir):
+        if windows:
+            print "**************************************************************************"
+        else:
+            print "******************************************************************************"
+        print "ERROR  : %s" % error
+        print "REASON : %s" % reason
+        print "REMARKS: Please make sure that you have \"%s\" file" % exe
+        print "         in your \"%s\" directory" % dir
+        if windows:
+            print "**************************************************************************"
+        else:
+            print "******************************************************************************"
+        sys.exit(2)
+
+        
     def TaoPair(self):
         """Returns TAO_MACHINE:TAO_PORT."""
         taoMachine = os.getenv("TAO_MACHINE", "None")
@@ -397,6 +390,7 @@ class Launch:
             exe += ".exe"
         c = [exe, "-ORBEndPoint", "iiop://%s" %self.TaoPair()]
         return c
+
 
     def ServerCall(self):
         """Returns a generic Server call."""
@@ -530,6 +524,8 @@ class Launch:
     def WriteClusterScriptPost(self):
         """Writes the cluster script section after the environment setting."""
         if unix:
+            vesOutFile = os.popen("whoami").readline().split() + "." + \
+                         os.popen("hostname").readline().split() + ".out"
             slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
             masterCommand = "%s" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
@@ -541,7 +537,7 @@ class Launch:
             ##StdErrors to local /var/tmp file as well.
             self.clusterScript += "%s " %(masterCommand) + \
                                   '| grep -v -e "Stable buffer is empty." > ' +\
-                                  os.path.join('/','var', 'tmp', 'vesOut.out')+\
+                                  os.path.join('/','var', 'tmp', vesOutFile)+\
                                   " &\n"
             #self.clusterScript += "endif\n"
             self.clusterScript += "EOF\n"
