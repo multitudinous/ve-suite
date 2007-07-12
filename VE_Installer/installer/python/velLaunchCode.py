@@ -271,10 +271,20 @@ class Launch:
         if self.settings["NameServer"]:
             sleep(1)
             print "Starting Name Server."
-            pids = []
-            pids.append(subprocess.Popen(self.NameServiceCall(),
-                                         stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-            
+            #Checking existence of executable file first before calling it
+            exe = "Naming_Service"
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
+            #If file exist then call it
+            if isFileExist:
+                pids = []
+                pids.append(subprocess.Popen(self.NameServiceCall(),
+                                             stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
+            else:
+                #Otherwise print error message
+                error = "Name Server Call Error"
+                reason = "Naming_Service Call Failed"
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
+           
             #Checking existence of executable file first before calling it
             exe = "Exe_server" + self.debugSuffix
             isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
@@ -524,8 +534,9 @@ class Launch:
     def WriteClusterScriptPost(self):
         """Writes the cluster script section after the environment setting."""
         if unix:
-            vesOutFile = os.popen("whoami").readline().split() + "." + \
-                         os.popen("hostname").readline().split() + ".out"
+            ves_userName = os.popen("whoami").readline().split()[0]
+            ves_machineName = os.popen("hostname").readline().split()[0]
+            vesOutFile = "ves." + ves_userName +"."+ves_machineName+".out"
             slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
             masterCommand = "%s" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
@@ -830,8 +841,8 @@ class Launch:
             ##Write the libraries & paths.
             self.EnvAppend(libraryPath, libList, ':')
             self.EnvAppend("PATH", pathList, ':')
-
             self.VeLauncherDir = str(VELAUNCHER_DIR)
+            
         ##Update other vars listed.
         if self.settings["Cluster"]:
             for var in self.settings["ExtraVariables"]:
