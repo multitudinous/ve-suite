@@ -747,25 +747,27 @@ class LauncherWindow(wx.Frame):
         frame1 = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
         frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 		
-        frame1.SetTextColour(wx.BLACK)
-        frame1.SetTextPosition((155,43))
         if windows:
+            frame1.SetTextColour(wx.BLACK)
+            frame1.SetTextPosition((155,43))
             frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-            frame1.SetText("Version 1.1\\n")
+            frame1.SetText("Version 1.1\n")
             wx.MilliSleep(200)
             if self.state.GetSurface("NameServer"):
-                frame1.SetText("Version 1.1\\nStarting Name Server...")
+                frame1.SetText("Version 1.1\nStarting Name Server...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Xplorer"):
-                frame1.SetText("Version 1.1\\nStarting Xplorer...")
+                frame1.SetText("Version 1.1\nStarting Xplorer...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Conductor"):
-                frame1.SetText("Version 1.1\\nStarting Conductor...")
+                frame1.SetText("Version 1.1\nStarting Conductor...")
                 wx.MilliSleep(1000)
 
-                frame1.SetText("Version 1.1\\nPreparing to Launch VE-Suite...")
+                frame1.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
                 wx.MilliSleep(1000)
         elif unix:
+            frame1.SetTextColour(wx.BLACK)
+            frame1.SetTextPosition((155,43))
             frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
             frame1.SetText("Version 1.1\n")
             wx.MilliSleep(200)
