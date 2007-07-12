@@ -277,7 +277,7 @@ class Launch:
             
             #Checking existence of executable file first before calling it
             exe = "Exe_server" + self.debugSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
             #If file exist then call it
             if isFileExist:
                 sleep(3)
@@ -288,7 +288,7 @@ class Launch:
                 #Otherwise print error message
                 error = "Name Server Call Error"
                 reason = "ExeServer Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
             
         ##Cluster mode
         if self.settings["Cluster"]:
@@ -319,7 +319,7 @@ class Launch:
             print "Starting Xplorer."
             #Checking existence of project_tao_osg_vep file first before calling it
             exe = "project_tao_osg_vep" + self.debugSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
             #If file exist then call it
             if isFileExist:
                 subprocess.Popen(self.XplorerCall(), 
@@ -328,14 +328,14 @@ class Launch:
                 #Otherwise print error message
                 error = "Xplorer Call Error"
                 reason = "project_tao_osg_vep Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
         
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
             #Checking existence of WinClient file first before calling it
             exe = "WinClient" + self.debugSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
+            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
 
             if isFileExist:
                 #If exist then call it
@@ -350,7 +350,7 @@ class Launch:
                 #Otherwise print error
                 error = "Conductor Call Error"
                 reason = "WinClient Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
+                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
         return
 
 
@@ -831,8 +831,7 @@ class Launch:
             self.EnvAppend(libraryPath, libList, ':')
             self.EnvAppend("PATH", pathList, ':')
 
-            self.VeDepsDir = os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")
-            self.VeLauncherDir = str(pathList[0])
+            self.VeLauncherDir = str(VELAUNCHER_DIR)
         ##Update other vars listed.
         if self.settings["Cluster"]:
             for var in self.settings["ExtraVariables"]:
