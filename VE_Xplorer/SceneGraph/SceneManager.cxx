@@ -179,7 +179,7 @@ void SceneManager::InitScene( void )
 //#else
     rootNode->addChild( m_clrNode.get() );
 //#endif
-    m_clrNode->addChild( _logoSwitch.get() );    
+    m_clrNode->addChild( _logoSwitch.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Group* SceneManager::GetRootNode( void )
