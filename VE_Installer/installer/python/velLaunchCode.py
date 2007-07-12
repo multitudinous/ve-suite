@@ -271,20 +271,10 @@ class Launch:
         if self.settings["NameServer"]:
             sleep(1)
             print "Starting Name Server."
-            #Checking existence of executable file first before calling it
-            exe = "Naming_Service"
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-            #If file exist then call it
-            if isFileExist:
-                pids = []
-                pids.append(subprocess.Popen(self.NameServiceCall(),
+            pids = []
+            pids.append(subprocess.Popen(self.NameServiceCall(),
                                              stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-            else:
-                #Otherwise print error message
-                error = "Name Server Call Error"
-                reason = "Naming_Service Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
-           
+      
             #Checking existence of executable file first before calling it
             exe = "Exe_server" + self.debugSuffix
             isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
