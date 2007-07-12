@@ -217,6 +217,7 @@ osg::Group* cfdApp::getScene()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextInit()
 {
+    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 	//Override the vrj::OsgApp::contextInit() default functionality
 	//**************************************************************************
 	unsigned int unique_context_id = vrj::GlDrawManager::instance()->getCurrentContext();
