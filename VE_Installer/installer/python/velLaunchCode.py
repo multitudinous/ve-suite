@@ -165,7 +165,10 @@ class Launch:
             else:
                 #Otherwise print error message
                 error = "Name Server Call Error"
-                reason = "Naming_Service Call Failed"
+                if self.settings["DevMode"]:
+                    reason = "In DevMode, You need to set \"VE_DEPS_DIR\" variable in your environment"
+                else:
+                    reason = "Naming_Service Call Failed"
                 self.ErrorMessage(error, reason, exe, self.VeDepsDir)
 
             #Checking existence of executable file first before calling it
@@ -183,7 +186,10 @@ class Launch:
             else:
                 #Otherwise print error message
                 error = "Server Call Error"
-                reason = "Winserver Call Failed"
+                if self.settings["DevMode"]:
+                    reason = "In DevMode, You need to set \"VE_INSTALL_DIR\" variable in your environment"
+                else:
+                    reason = "Winserver Call Failed"
                 self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
                 
         ##Cluster Xplorer section
@@ -527,6 +533,7 @@ class Launch:
             ves_userName = os.popen("whoami").readline().split()[0]
             ves_machineName = os.popen("hostname").readline().split()[0]
             vesOutFile = "ves." + ves_userName +"."+ves_machineName+".out"
+            
             slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
             masterCommand = "%s" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
@@ -536,11 +543,13 @@ class Launch:
             ##NOTE: StdOutput written to local /var/tmp file to avoid
             ##network traffic issues. Change " &" to " 2>&1 &" to reroute
             ##StdErrors to local /var/tmp file as well.
-            self.clusterScript += "%s " %(masterCommand) + \
-                                  '| grep -v -e "Stable buffer is empty." > ' +\
-                                  os.path.join('/','var', 'tmp', vesOutFile)+\
-                                  " &\n"
-            #self.clusterScript += "endif\n"
+            self.clusterScript += "%s " % (masterCommand) + '| grep -v -e "Stable buffer is empty." > '
+            if self.settings["Debug"]: 
+                self.clusterScript += os.path.join('/','var', 'tmp', vesOutFile)
+            else :
+                self.clusterScript += os.path.join('/','dev', 'null')
+            self.clusterScript += " &\n"
+                #self.clusterScript += "endif\n"
             self.clusterScript += "EOF\n"
 ##        elif windows:
 ##            commandList = self.XplorerCall()
