@@ -154,37 +154,30 @@ class Launch:
             print "Starting Name Server."
             #Checking existence of executable file first before calling it
             exe = "Naming_Service.exe"
-            isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
-            #If file exist then call it
-            if isFileExist or self.settings["DevMode"]:
-                pids = []
+            pids = []
+            try:
                 pids.append(subprocess.Popen(self.NameServiceCall(), 
                                              stdin = self.inputSource, 
                                              stdout = self.outputDestination, 
                                              stderr = self.outputDestination).pid)
-            else:
-                #Otherwise print error message
-                error = "Name Server Call Error"
-                reason = "Naming_Service Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeDepsDir)
-
+            except OSError:
+                print "Naming Service call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+                
             #Checking existence of executable file first before calling it
             exe = "Winserver" + self.windowsSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-            #If file exist then call it
-            if isFileExist or self.settings["DevMode"]:
-                sleep(2)
+            sleep(2)
+            try:
                 pids.append(subprocess.Popen(self.ServerCall(),
                                              stdin = self.inputSource,
                                              stdout = self.outputDestination,
                                              stderr = self.outputDestination).pid)
-                sleep(2)
-                self.nameserverPids = pids
-            else:
-                #Otherwise print error message
-                error = "Server Call Error"
-                reason = "Winserver Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
+            except OSError:
+                print "Winserver call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+                
+            sleep(2)
+            self.nameserverPids = pids
                 
         ##Cluster Xplorer section
         if self.settings["Cluster"]:
@@ -212,41 +205,34 @@ class Launch:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
             exe = "project_tao_osg_vep" + self.windowsSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-            #If file exist then call it
-            if isFileExist or self.settings["DevMode"]:
+            try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdin = self.inputSource, 
                                  stdout = self.outputDestination, stderr = self.outputDestination)
-            else:
-                #Otherwise print error message
-                error = "Xplorer Call Error"
-                reason = "project_tao_osg_vep Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
-            
+            except OSError:
+                print "Xplorer call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+                
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
             exe = "WinClient" + self.windowsSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-            #If file exist then call it
-            if isFileExist or self.settings["DevMode"]:
-                conduct_Pid = []
-                ##Append argument if desktop mode selected
-                if self.settings["VESFile"]:
-                    sleep(2)
+            conduct_Pid = []
+            ##Append argument if desktop mode selected
+            if self.settings["VESFile"]:
+                sleep(2)
+            try:
                 conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
                                                     stdin = self.inputSource, 
                                                     stdout = self.outputDestination, 
                                                     stderr = self.outputDestination).pid)
-                sleep(2)
-                self.conductorPid = conduct_Pid
-                print "Finished sending launch commands."
-            else:
-                #Otherwise print error message
-                error = "Conductor Call Error"
-                reason = "WinClient Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
+            except OSError:
+                print "WinClient call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+
+            sleep(2)
+            self.conductorPid = conduct_Pid
+            print "Finished sending launch commands."
                                 
         return
 
@@ -265,30 +251,36 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-        subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
-                          "s", "reset", "s", "off"])
+        try:
+            subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
+                              "s", "reset", "s", "off"])
+        except OSError:
+            print "OS can not find \"xset\" command on your environment."
+            sys.exit(2)
         ##Name Server section
         if self.settings["NameServer"]:
             sleep(1)
             print "Starting Name Server."
+            exe = "Naming_Service"
             pids = []
-            pids.append(subprocess.Popen(self.NameServiceCall(),
+            try:
+                pids.append(subprocess.Popen(self.NameServiceCall(),
                                              stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-      
+            except OSError:
+                print "Naming Service call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+                
             #Checking existence of executable file first before calling it
             exe = "Exe_server" + self.debugSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-            #If file exist then call it
-            if isFileExist:
-                sleep(3)
+            sleep(3)
+            try:
                 pids.append(subprocess.Popen(self.ServerCall(), 
                                              stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-                self.nameserverPids = pids
-            else:
-                #Otherwise print error message
-                error = "Name Server Call Error"
-                reason = "ExeServer Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
+            except OSError:
+                print "Exe_server call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+                
+            self.nameserverPids = pids
             
         ##Cluster mode
         if self.settings["Cluster"]:
@@ -319,56 +311,31 @@ class Launch:
             print "Starting Xplorer."
             #Checking existence of project_tao_osg_vep file first before calling it
             exe = "project_tao_osg_vep" + self.debugSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-            #If file exist then call it
-            if isFileExist:
+            try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdout = self.outputDestination, stderr = subprocess.STDOUT)
-            else:
-                #Otherwise print error message
-                error = "Xplorer Call Error"
-                reason = "project_tao_osg_vep Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
+            except OSError:
+                print "Xplorer call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
         
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
             #Checking existence of WinClient file first before calling it
             exe = "WinClient" + self.debugSuffix
-            isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
-
-            if isFileExist:
-                #If exist then call it
-                conduct_Pid = []
+            conduct_Pid = []
+            try:
                 conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
                                                     stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
-                sleep(3)
-                self.conductorPid = conduct_Pid
-                print "Finished sending launch commands."
+            except OSError:
+                print "WinClient call error, \"%s\" not found on your environment." % exe
+                sys.exit(2)
+                
+            sleep(3)
+            self.conductorPid = conduct_Pid
+            print "Finished sending launch commands."
 
-            else:
-                #Otherwise print error
-                error = "Conductor Call Error"
-                reason = "WinClient Call Failed"
-                self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
         return
-
-
-    def ErrorMessage(self, error, reason, exe, dir):
-        if windows:
-            print "**************************************************************************"
-        else:
-            print "******************************************************************************"
-        print "ERROR  : %s" % error
-        print "REASON : %s" % reason
-        print "REMARKS: Please make sure that you have \"%s\" file" % exe
-        print "         in your \"%s\" directory" % dir
-        if windows:
-            print "**************************************************************************"
-        else:
-            print "******************************************************************************"
-        sys.exit(2)
-
         
     def TaoPair(self):
         """Returns TAO_MACHINE:TAO_PORT."""
@@ -565,7 +532,12 @@ class Launch:
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
-                subprocess.Popen(self.XplorerCall())
+                try:
+                    subprocess.Popen(self.XplorerCall())
+                except OSError:
+                    exe = "project_tao_osg_vep"
+                    print "Xplorer Call Error, \"%s\" not found on your environment."
+                    sys.exit(2)
                 return
             else:
                 os.system("source %s %s %s &" %(clusterFilePath,
@@ -582,17 +554,26 @@ class Launch:
             print "Executing %s!" %nodeName
             ##Do a regular call if the initial machine's the node.
             if gethostname() == nodeName.split('.')[0]:
-                subprocess.Popen(self.XplorerCall())
+                try:
+                    subprocess.Popen(self.XplorerCall())
+                except OSError:
+                    exe = "project_tao_osg_vep"
+                    print "Xplorer Call Error, \"%s\" not found on your environment."
+                    sys.exit(2)
                 return
             ##Else call the script on the other computer in psexec.
             self.clusterCall[1] = "\\\\%s" %nodeName
             ##Sets the psexec window to stay up after it quits (Debug mode).
             if self.settings["Debug"]:
-                subprocess.Popen(["cmd", "/k"] + self.clusterCall)
+                try:
+                    subprocess.Popen(["cmd", "/k"] + self.clusterCall)
+                except OSError:
+                    print "System function call error, fail to run \"cmd\" command."
+                    sys.exit(2)
             else:
                 try:
                     subprocess.Popen(self.clusterCall)
-                except:
+                except OSError:
                     ##Send error & 'psexec' to error call.
                     self.ErrorCall(sys.exc_info(), self.clusterCall[0])
         else:
