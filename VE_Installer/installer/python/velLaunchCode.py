@@ -794,8 +794,12 @@ class Launch:
             else:
                 self.pathEnv = str(os.getenv("OSG_FILE_PATH")) + ";" + str(os.getenv("PATH"))
             #Get dependency base directory
-            self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
-            self.VeLauncherDir = str(VELAUNCHER_DIR)
+            if self.settings["DevMode"]:
+                self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
+                self.VeLauncherDir = os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")
+            else:
+                self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
+                self.VeLauncherDir = str(VELAUNCHER_DIR)
             
         elif unix:
             ##Append OSG_FILE_PATH
