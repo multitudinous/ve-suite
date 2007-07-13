@@ -156,7 +156,7 @@ class Launch:
             exe = "Naming_Service.exe"
             isFileExist = os.path.exists(str(os.path.join(self.VeDepsDir, exe)))
             #If file exist then call it
-            if isFileExist:
+            if isFileExist or self.settings["DevMode"]:
                 pids = []
                 pids.append(subprocess.Popen(self.NameServiceCall(), 
                                              stdin = self.inputSource, 
@@ -165,17 +165,14 @@ class Launch:
             else:
                 #Otherwise print error message
                 error = "Name Server Call Error"
-                if self.settings["DevMode"]:
-                    reason = "In DevMode, You need to set \"VE_DEPS_DIR\" variable in your environment"
-                else:
-                    reason = "Naming_Service Call Failed"
+                reason = "Naming_Service Call Failed"
                 self.ErrorMessage(error, reason, exe, self.VeDepsDir)
 
             #Checking existence of executable file first before calling it
             exe = "Winserver" + self.windowsSuffix
             isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
             #If file exist then call it
-            if isFileExist:
+            if isFileExist or self.settings["DevMode"]:
                 sleep(2)
                 pids.append(subprocess.Popen(self.ServerCall(),
                                              stdin = self.inputSource,
@@ -186,10 +183,7 @@ class Launch:
             else:
                 #Otherwise print error message
                 error = "Server Call Error"
-                if self.settings["DevMode"]:
-                    reason = "In DevMode, You need to set \"VE_INSTALL_DIR\" variable in your environment"
-                else:
-                    reason = "Winserver Call Failed"
+                reason = "Winserver Call Failed"
                 self.ErrorMessage(error, reason, exe, self.VeLauncherDir)
                 
         ##Cluster Xplorer section
@@ -220,7 +214,7 @@ class Launch:
             exe = "project_tao_osg_vep" + self.windowsSuffix
             isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
             #If file exist then call it
-            if isFileExist:
+            if isFileExist or self.settings["DevMode"]:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdin = self.inputSource, 
                                  stdout = self.outputDestination, stderr = self.outputDestination)
@@ -236,7 +230,7 @@ class Launch:
             exe = "WinClient" + self.windowsSuffix
             isFileExist = os.path.exists(str(os.path.join(self.VeLauncherDir, exe)))
             #If file exist then call it
-            if isFileExist:
+            if isFileExist or self.settings["DevMode"]:
                 conduct_Pid = []
                 ##Append argument if desktop mode selected
                 if self.settings["VESFile"]:
@@ -803,12 +797,8 @@ class Launch:
             else:
                 self.pathEnv = str(os.getenv("OSG_FILE_PATH")) + ";" + str(os.getenv("PATH"))
             #Get dependency base directory
-            if self.settings["DevMode"]:
-                self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
-                self.VeLauncherDir = os.path.join(str(os.getenv("VE_INSTALL_DIR")), "bin")
-            else:
-                self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
-                self.VeLauncherDir = str(VELAUNCHER_DIR)
+            self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
+            self.VeLauncherDir = str(VELAUNCHER_DIR)
             
         elif unix:
             ##Append OSG_FILE_PATH
