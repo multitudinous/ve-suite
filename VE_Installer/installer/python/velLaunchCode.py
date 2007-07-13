@@ -789,7 +789,10 @@ class Launch:
             self.EnvAppend("PATH", pathList, ';')
 
             #Add pathEnv value for shell launching mode
-            self.pathEnv = os.getenv("OSG_FILE_PATH") + ";" +os.getenv("PATH")
+            if str(os.getenv("OSG_FILE_PATH")) == "None":
+                self.pathEnv = str(os.getenv("PATH"))
+            else:
+                self.pathEnv = str(os.getenv("OSG_FILE_PATH")) + ";" + str(os.getenv("PATH"))
             #Get dependency base directory
             self.VeDepsDir = os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")
             self.VeLauncherDir = str(VELAUNCHER_DIR)
