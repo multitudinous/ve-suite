@@ -44,7 +44,6 @@ from string import strip, replace
 
 class ClusterWindow(wx.Dialog):
     """A window for editing a list of clustered computers.
-
     Functions:
         __init__(parent, state)
         UpdateData()    
