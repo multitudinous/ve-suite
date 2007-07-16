@@ -75,6 +75,8 @@ class ClusterWindow(wx.Dialog):
         self.bEdit.SetToolTip(wx.ToolTip("Rename a slave listing."))
         self.bDelete = wx.Button(self, -1, "Delete")
         self.bDelete.SetToolTip(wx.ToolTip("Delete a slave listing."))
+        self.bDeleteAll = wx.Button(self, -1, "Delete All")
+        self.bDeleteAll.SetToolTip(wx.ToolTip("Delete all slave listing."))        
         self.bExtraVars = wx.Button(self, -1, "Pass Extra Vars")
         self.bExtraVars.SetToolTip(wx.ToolTip("Set extra environment" +
                                               " variables for VE-Suite to" +
@@ -98,6 +100,7 @@ class ClusterWindow(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
         self.Bind(wx.EVT_BUTTON, self.Rename, self.bEdit)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
+        self.Bind(wx.EVT_BUTTON, self.DeleteAll, self.bDeleteAll)        
         self.Bind(wx.EVT_BUTTON, self.ExtraVars, self.bExtraVars)
         self.Bind(wx.EVT_TEXT, self.UpdateExampleCode, self.userCtrl)
         self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
@@ -109,6 +112,7 @@ class ClusterWindow(wx.Dialog):
                           self.bAdd, VERTICAL_SPACE,
                           self.bEdit, VERTICAL_SPACE,
                           self.bDelete, VERTICAL_SPACE,
+                          self.bDeleteAll, VERTICAL_SPACE,
                           self.bExtraVars])
         columnSizer = wx.BoxSizer(wx.HORIZONTAL)
         ##List field + buttons.
@@ -213,6 +217,8 @@ class ClusterWindow(wx.Dialog):
         self.bAdd.Enable(self.state.IsEnabled("ClusterDict"))
         self.bDelete.Enable(self.state.IsEnabled("ClusterDict") and
                             len(self.state.GetSurface("ClusterDict")) > 0)
+        self.bDeleteAll.Enable(self.state.IsEnabled("ClusterDict") and
+                               len(self.state.GetSurface("ClusterDict")) > 0)
 
 
     def AddNew(self, event):
@@ -400,6 +406,24 @@ class ClusterWindow(wx.Dialog):
         if dlg.ShowModal() == wx.ID_YES:
             name = self.clustList.GetStringSelection()
             self.state.GetBase("ClusterDict").Delete(name)
+            ##Update other data & display.
+            self.UpdateData()
+            self.UpdateDisplay()
+
+
+    def DeleteAll(self, event):
+        """
+        Deletes All the entry from the list.
+        """
+        ##Confirm delete.
+        dlg = wx.MessageDialog(self,
+                               "Are you sure you want to delete the all computers?",
+                               "Confirm Deletion",
+                               wx.YES_NO | wx.NO_DEFAULT)
+        dlg.CenterOnParent(wx.BOTH)
+        if dlg.ShowModal() == wx.ID_YES:
+            reset = ClusterDict({})
+            self.state.Edit("ClusterDict", reset)
             ##Update other data & display.
             self.UpdateData()
             self.UpdateDisplay()
