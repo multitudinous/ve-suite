@@ -65,7 +65,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "User",
                  "FileDir",
                  "ExtraVariables",
-		 "AutoShutDown",
+                 "AutoShutDown",
                  "RunDebugPrograms"]
     if saveLastConfig:
         ##Variables that only the main config stores.
@@ -76,6 +76,7 @@ def SaveConfig(name, state, saveLastConfig = False):
         state.GetBase("RecentFiles").WriteConfig() ##Has config.DeleteGroup
         state.GetBase("Dependencies").WriteConfig() ##Ditto.
     intWrites = ["Mode",
+                 "AddMode",
                  "VPRDebug",
                  "MasterWait",
                  "SlaveWait"]
@@ -123,6 +124,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "FileDir": None,
                 "ExtraVariables": None}
     intReads = {"Mode": None,
+                "AddMode": None,
                 "VPRDebug": GetVPRDebug(),
                 "MasterWait": None,
                 "SlaveWait": None}
@@ -130,7 +132,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                  "Conductor": None,
                  "Xplorer": None,
                  "DesktopMode": None,
-		 "AutoShutDown": None,
+                 "AutoShutDown": None,
                  "RunDebugPrograms": None}
     ##Load these if it's loading the initial configuration.
     if loadLastConfig:
