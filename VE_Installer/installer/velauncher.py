@@ -247,7 +247,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 524)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 525)
-        self.Bind(wx.EVT_MENU, self.Preference, id = 601)
+        self.Bind(wx.EVT_MENU, self.UpdateData, id = 601)
 
         ##Layout format settings
         ##Create the overall layout box
@@ -366,12 +366,6 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
 
-    def Preference(self, event = None):
-	
-        #self.UpdateDisplay()
-        return
-
-
 
     def OpenFile(self, event = None):
         self.UpdateData()
@@ -391,6 +385,7 @@ class LauncherWindow(wx.Frame):
         dlg.Destroy()
         self.UpdateDisplay()
         return
+
 
     def CloseFiles(self, event = None):
         """Closes any VES/script files the user has slated to run."""
@@ -416,11 +411,14 @@ class LauncherWindow(wx.Frame):
             confirm.Destroy()
         return
 
+
     def DebugOptions(self, event = None):
         DebugWindow(self, self.state)
 
+
     def WaitOptions(self, event = None):
         SetWaitWindow(self, self.state)
+
 
     def DependenciesChange(self, event = None):
         """Asks the user to choose a new Dependencies folder."""
@@ -432,6 +430,7 @@ class LauncherWindow(wx.Frame):
         else:
             depWindow = DepsWindow(self, self.state)
             depWindow.ShowModal()
+
 
     def BuilderChange(self, event = None):
         """Asks the user to choose a new Builder folder."""
@@ -452,6 +451,7 @@ class LauncherWindow(wx.Frame):
             return True
         else: ##If not, return False.
             return False        
+
         
     def UpdateData(self, event = None, depDir = None):
         """Saves the user's input to the launcher's data.
@@ -474,15 +474,9 @@ class LauncherWindow(wx.Frame):
         ##Tao Port
         if self.txTaoPort.IsEnabled():
             self.state.Edit("TaoPort", self.txTaoPort.GetValue())
-	##AutoShutDown
-	if self.prefSubMenu.IsEnabled(602):
-	    FirstTimeCheck = self.state.GetSurface("AutoShutDown")
-	    if (FirstTimeCheck == None):
-		FirstTimeCheck = False
-                self.state.Edit("AutoShutDown", FirstTimeCheck)
-
+        ##AutoShutDown
+        if self.prefSubMenu.IsEnabled(602):
             self.state.Edit("AutoShutDown", self.prefSubMenu.IsChecked(602))
-
         ##Mode
         if self.rbMode.IsEnabled():
             modeChosen = self.rbMode.GetSelection()
@@ -497,6 +491,7 @@ class LauncherWindow(wx.Frame):
             self.React()
         return
 
+
     def React(self):
         """Covers/uncovers data based on user input."""
         ##Change Mode cover.
@@ -505,6 +500,7 @@ class LauncherWindow(wx.Frame):
         ##UpdateDisplay
         self.UpdateDisplay()
         return
+
     
     def UpdateDisplay(self):
         """Changes GUI to match changes made by React."""
@@ -560,6 +556,10 @@ class LauncherWindow(wx.Frame):
         ##AutoRun Ves menu.
         self.autoRunVes.Enable(self.state.IsEnabled("AutoRunVes"))
         self.autoRunVes.Check(self.state.GetSurface("AutoRunVes"))
+        ##AutoShutDown menu.
+        confCheck = self.state.GetSurface("AutoShutDown")
+        self.prefSubMenu.Check(602, confCheck)
+
         ##Loaded file name. Under work.
 ##        if self.state.GetSurface("VESFile"):
 ##            self.fileTypeText.SetLabel("VES File:")
@@ -572,13 +572,9 @@ class LauncherWindow(wx.Frame):
 ##        else:
 ##            self.fileTypeText.SetLabel("")
 ##            self.fileNameText.SetLabel("")
-        ##AutoShutDown self.prefSubMenu.Check(602, True)
-	confCheck = self.state.GetSurface("AutoShutDown")
-	if (confCheck == None):
-	    confCheck = False
-	#if not windows:
-        self.prefSubMenu.Check(602, confCheck)
+
         return
+
 
     def ConstructRecentMenu(self, event = None):
         """Constructs the recent items menu.
@@ -600,6 +596,7 @@ class LauncherWindow(wx.Frame):
             currentId += 1
         return
 
+
     def ChooseRecentFile(self, event):
         """Gets the path for the Recent Files item chosen
         and loads it into the program."""
@@ -608,6 +605,7 @@ class LauncherWindow(wx.Frame):
         self.state.InterpretArgument(path)
         self.React()
         return
+
 
     def DeleteRecentMenuItem(self, badFile):
         """Deletes a non-existant recent file."""
@@ -622,6 +620,7 @@ class LauncherWindow(wx.Frame):
 ##
 ##    def Append
 
+
     def FileButtonBranch(self, event = None):
         """Goes to Close Files function if VES/Script file's loaded,
         ChooseDirectory if a file isn't loaded."""
@@ -630,6 +629,7 @@ class LauncherWindow(wx.Frame):
             self.CloseFiles()
         else:
             self.ChooseDirectory()
+
 
     def ChooseDirectory(self, event = None):
         """The user chooses the working directory through a dialog."""
@@ -645,11 +645,13 @@ class LauncherWindow(wx.Frame):
         dlg.Destroy()
         self.UpdateData()
 
+
     def ChooseSaveConfig(self, event = None):
         """Lets the user choose which name to save a configuration under."""
         self.UpdateData()
         dlg = SaveConfigWindow(self, self.state)
         dlg.ShowModal()
+
 
     def ChooseLoadConfig(self, event = None):
         """Lets the user choose a configuration to load."""
@@ -681,6 +683,7 @@ class LauncherWindow(wx.Frame):
             LoadConfig(choice, self.state)
             self.React()
         dlg.Destroy()
+
 
     def DeleteConfig(self, event = None):
         """Lets the user choose a confiuration to delete."""
@@ -722,6 +725,7 @@ class LauncherWindow(wx.Frame):
             confirm.Destroy()
         dlg.Destroy()
 
+
     def Settings(self, event = None):
         """Launches the Custom Settings window."""
         x, y = self.GetPosition()
@@ -736,6 +740,7 @@ class LauncherWindow(wx.Frame):
         frame = SettingsWindow(self, self.state, position = position)
         frame.ShowModal()
 
+
     def SpScreen(self):
         self.Iconize()
         wx.MilliSleep(50)
@@ -744,56 +749,58 @@ class LauncherWindow(wx.Frame):
 
         #image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
         image = SPLASH_IMAGE
-        frame1 = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
-        frame1.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
+        spFrame = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
+        spFrame.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 		
         if windows:
-            frame1.SetTextColour(wx.BLACK)
-            frame1.SetTextPosition((155,43))
-            frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-            frame1.SetText("Version 1.1\n")
+            spFrame.SetTextColour(wx.BLACK)
+            spFrame.SetTextPosition((155,43))
+            spFrame.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
+            spFrame.SetText("Version 1.1\n")
             wx.MilliSleep(200)
             if self.state.GetSurface("NameServer"):
-                frame1.SetText("Version 1.1\nStarting Name Server...")
+                spFrame.SetText("Version 1.1\nStarting Name Server...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Xplorer"):
-                frame1.SetText("Version 1.1\nStarting Xplorer...")
+                spFrame.SetText("Version 1.1\nStarting Xplorer...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Conductor"):
-                frame1.SetText("Version 1.1\nStarting Conductor...")
+                spFrame.SetText("Version 1.1\nStarting Conductor...")
                 wx.MilliSleep(1000)
 
-                frame1.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
+                spFrame.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
                 wx.MilliSleep(1000)
         elif unix:
-            frame1.SetTextColour(wx.BLACK)
-            frame1.SetTextPosition((155,43))
-            frame1.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-            frame1.SetText("Version 1.1\n")
+            spFrame.SetTextColour(wx.BLACK)
+            spFrame.SetTextPosition((155,43))
+            spFrame.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
+            spFrame.SetText("Version 1.1\n")
             wx.MilliSleep(200)
             if self.state.GetSurface("NameServer"):
-                frame1.SetText("Version 1.1\nStarting Name Server...")
+                spFrame.SetText("Version 1.1\nStarting Name Server...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Xplorer"):
-                frame1.SetText("Version 1.1\nStarting Xplorer...")
+                spFrame.SetText("Version 1.1\nStarting Xplorer...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Conductor"):
-                frame1.SetText("Version 1.1\nStarting Conductor...")
+                spFrame.SetText("Version 1.1\nStarting Conductor...")
                 wx.MilliSleep(1000)
 
-                frame1.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
+                spFrame.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
                 wx.MilliSleep(1000)
                 
         else:
             wx.MilliSleep(4500)
-        frame1.Close()
+        spFrame.Close()
         if not windows:
             self.mutex.release()
+
 
     def OnCloseSplash(self, event):
 
         event.Skip()
         self.Iconize(False)
+
 
     def Launch(self, event = None):
         """Checks input, begins launch if error-free."""
