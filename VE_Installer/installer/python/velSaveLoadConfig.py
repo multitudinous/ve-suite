@@ -40,7 +40,6 @@ from velBase import *
 
 def SaveConfig(name, state, saveLastConfig = False):
     """Saves the current configuration under name.
-
     Keyword arguments:
     name -- What to name this configuration
     state -- Launcher's data
