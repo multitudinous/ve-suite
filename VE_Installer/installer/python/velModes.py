@@ -46,8 +46,10 @@ if os.path.basename(JCONF_BASE_PATH) == "bin":
 DEFAULT_JCONF = join(JCONF_BASE_PATH, "share", "vesuite","vrj_configs", "stereo_desktop", "desktop.jconf")
 DEFAULT_DEV_JCONF = join(JCONF_BASE_PATH, "..", "..", "share",
                          "stereo_desktop", "desktop.jconf")
-MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization",
-             "Shell", "Custom"]
+MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Shell", "Custom"]
+COMP_ADD_MODE_LIST = ["Manual", "From File"]
+#COMP_ADD_MODE_LIST = ["Manual", "Auto Fill", "From File"]
+
 MODE_DICT = {"Desktop": {"Conductor": True,
                          "NameServer": True,
                          "Xplorer": True,
@@ -97,7 +99,9 @@ BASE_CONFIG = {"DependenciesDir": None,
                "TaoMachine": DEFAULT_TAO_MACHINE,
                "TaoPort": DEFAULT_TAO_PORT,
                "DesktopMode": False,
+               "AutoShutDown": False,
                "Mode": 0,
+               "AddMode": 0, ##Adding computer name mode in cluster mode
                "ClusterMaster": "",
                "JconfDict": JconfDict({"Desktop": DEFAULT_JCONF}),
                "JconfSelection": "Desktop",
