@@ -59,8 +59,8 @@ public:
       TEACHER_CLEAR_BUTTON,
       RECORD_SCENE
    };
-protected:
    void _buildPage();
+protected:
    
    wxWindow* _parent;
    //the controls

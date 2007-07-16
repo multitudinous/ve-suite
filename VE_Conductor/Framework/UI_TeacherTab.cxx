@@ -106,25 +106,17 @@ void UI_TeacherTab::_buildPage()
       numStoredScenes = fileNames->length() + 1;
    }   
    
-   wxString* defaultName;
-   //if ( numStoredScenes > 1 )
-   {
-      defaultName = new wxString[ numStoredScenes ];
-      defaultName[ 0 ] = wxT("No Stored Scenes Selected");
+    wxString* defaultName;
+    defaultName = new wxString[ numStoredScenes ];
+    defaultName[ 0 ] = wxT("No Stored Scenes Selected");
 
-      for(CORBA::ULong i = 1; i < (unsigned int)numStoredScenes; ++i )
-      {
-         defaultName[ i ] = wxString( fileNames[ i - 1 ], wxConvUTF8 );
-         //std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
-      }
-   }
-   //else
-   //{
-   //   defaultName = new wxString[ 1];
-   //   defaultName[ 0 ] = wxT("No Stored Scenes");
-   //}
+    for( CORBA::ULong i = 1; i < (unsigned int)numStoredScenes; ++i )
+    {
+        defaultName[ i ] = wxString( fileNames[ i - 1 ], wxConvUTF8 );
+        //std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
+    }
 
-   if ( _teacherRBox )
+   if( _teacherRBox )
    {
       teacherPanelGroup->Detach( _teacherRBox );
       _teacherRBox->Destroy();
@@ -137,11 +129,6 @@ void UI_TeacherTab::_buildPage()
                                 defaultName,1 , wxRA_SPECIFY_COLS);
    teacherPanelGroup->Insert(0,_teacherRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   //if ( numStoredScenes == 1 )
-   //{
-   //   _teacherRBox->Enable( false );
-      //_teacherRBox->Enable( false );
-  // }
    wxSize temp = GetSize();
    temp.SetHeight( temp.GetHeight() +1);
    temp.SetWidth( temp.GetWidth()+1 );

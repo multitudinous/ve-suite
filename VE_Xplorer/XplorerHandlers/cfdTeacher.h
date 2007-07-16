@@ -93,8 +93,9 @@ public:
     ///Set/Get number of fles
     ///\param i file name ID
     int getNumberOfFiles();
+    ///The the filename of the i'th file
+    ///\param i The i'th filename to be returned
     std::string getFileName( int i );
-
     ///Clear the stored scenes
     void ClearStoredScenes();
     ///Switch the active scene
@@ -102,11 +103,14 @@ public:
     void LoadScene(unsigned int whichScene);
     ///Save out the scene
     void RecordScene();
-
+    ///Reset Teacher so that the new application's scenes can be loaded
+    void Reset();
+    
 private:
     osg::ref_ptr< VE_SceneGraph::DCS > dcs;
     osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-    std::vector< VE_SceneGraph::CADEntityHelper* > node;  // array of nodes
+    //std::vector< VE_SceneGraph::CADEntityHelper* > node;  // array of nodes
+    VE_SceneGraph::CADEntityHelper* m_currentScene;
     ///Sorted file filenames for stored scenes
     std::vector<std::string> pfbFileNames;
     std::string directory;

@@ -67,6 +67,8 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::DCS* worldDCS )
+:
+m_currentScene( 0 )
 {
     this->directory = specifiedDir;
 
@@ -96,14 +98,13 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::DCS* worldDCS )
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::~cfdTeacher( )
 {
-    for( size_t i = 0; i < this->node.size(); ++i )
-    {  
-        this->dcs->removeChild( this->node[i]->GetNode() );
-        delete this->node[i];
+    if( m_currentScene )
+    {
+        this->dcs->removeChild( m_currentScene->GetNode() );
+        delete m_currentScene;
+        m_currentScene = 0;
     }
-
-    node.clear();
-
+    
     vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
         << std::endl << vprDEBUG_FLUSH;
 }
@@ -111,16 +112,16 @@ cfdTeacher::~cfdTeacher( )
 VE_SceneGraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
 {
     //only load the current one so clear out the list
-    if( node.size() > 0 )
+    if( m_currentScene )
     {
-        this->dcs->removeChild( this->node.back()->GetNode() );
-        delete this->node.back();
-        this->node.clear();
+        this->dcs->removeChild( m_currentScene->GetNode() );
+        delete m_currentScene;
+        m_currentScene = 0;
     }
 
-    this->node.push_back( new VE_SceneGraph::CADEntityHelper() );
-    this->node.back()->LoadFile( this->pfbFileNames[ i ], false, true );
-    return this->node.back();
+    m_currentScene = new VE_SceneGraph::CADEntityHelper();
+    m_currentScene->LoadFile( this->pfbFileNames[ i ], false, true );
+    return m_currentScene;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* cfdTeacher::GetDCS()
@@ -257,3 +258,32 @@ void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileN
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
+void cfdTeacher::Reset()
+{
+    vprDEBUG(vesDBG,1) << "|\tStored Scenes directory : \"" << this->directory 
+        << "\"" << std::endl << vprDEBUG_FLUSH;
+    //Remove the other application's stored scenes
+    ClearStoredScenes();
+    //Delete the old active scene if we have one
+    if( m_currentScene )
+    {
+        this->dcs->removeChild( m_currentScene->GetNode() );
+        delete m_currentScene;
+        m_currentScene = 0;
+    }    
+    //Get ive, osg, and pfb filenames for the new application
+    pfbFileNames.clear();
+    pfbFileNames = VE_Util::fileIO::GetFilesInDirectory( directory, ".pfb" );
+    std::vector< std::string > tempFilenames;
+    tempFilenames = VE_Util::fileIO::GetFilesInDirectory( directory, ".ive" );
+    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
+                         tempFilenames.end() );
+    tempFilenames.clear();
+    tempFilenames = VE_Util::fileIO::GetFilesInDirectory( directory, ".osg" );
+    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
+                         tempFilenames.end() );
+    
+    // how many performer binaries found ?
+    vprDEBUG(vesDBG,1) << "|\t\tNumber of stored scenes found: " 
+        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;    
+}

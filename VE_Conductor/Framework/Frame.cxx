@@ -946,7 +946,11 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       fname=dialog.GetFilename();
       network->Load( ConvertUnicode( fname.c_str() ), true );
       wxCommandEvent event;
-      SubmitToServer( event );      
+      SubmitToServer( event );
+      if( recordScenes )
+      {
+          recordScenes->_buildPage();
+      }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1030,7 +1034,12 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Now laod the xml data now that we are in the correct directory
     network->Load( ConvertUnicode( fname.c_str() ), true );
-    SubmitToServer( event );      	
+    SubmitToServer( event );
+    //Rebuild the teacher tab so that the new stored files are loaded
+    if( recordScenes )
+    {
+        recordScenes->_buildPage();
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClearRecentFiles( wxCommandEvent& event ) 
