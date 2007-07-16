@@ -49,7 +49,6 @@ DEFAULT_DEV_JCONF = join(JCONF_BASE_PATH, "..", "..", "share",
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Shell", "Custom"]
 COMP_ADD_MODE_LIST = ["Manual", "From File"]
 #COMP_ADD_MODE_LIST = ["Manual", "Auto Fill", "From File"]
-
 MODE_DICT = {"Desktop": {"Conductor": True,
                          "NameServer": True,
                          "Xplorer": True,
