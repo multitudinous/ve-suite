@@ -349,7 +349,6 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
       }
    }
 
-   _teacher->CheckCommandId( _commandArray );
    displaySettings->CheckCommandId( _commandArray );
 	display_information->LatePreFrame();
    vprDEBUG(vesDBG,3) << "|\tEnd cfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;

@@ -46,70 +46,70 @@ cfdTeacher API
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 
 #ifdef _OSG
-#include <osg/ref_ptr>
+    #include <osg/ref_ptr>
 #elif _PERFORMER
 #endif
 
 namespace VE_Xplorer
 {
-   class cfdWriteTraverser;
-   class cfdCommandArray;
+    class cfdWriteTraverser;
+    class cfdCommandArray;
 }
 
 namespace VE_SceneGraph
 {
-   class DCS;
-	class CADEntityHelper;
+    class DCS;
+    class CADEntityHelper;
 }
 
 //A reader that reads performer binary files
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
-   {
-      public:
-		  ///Constructor
-         cfdTeacher( std::string, VE_SceneGraph::DCS* );
+class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
+{
+public:
+    ///Constructor
+    cfdTeacher( std::string, VE_SceneGraph::DCS* );
 
-         ///Destructor
-		 ~cfdTeacher( );
+    ///Destructor
+    ~cfdTeacher();
 
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+    // compare VjObs_i commandArray with its child's value
+    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray )
+        { return false;}
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
+    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand();
 
-		 ///Write out a performer bindary file
-		 ///\param SceneNode* and file name
-		 void writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName);
+    ///Write out a performer bindary file
+    ///\param SceneNode* and file name
+    void writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName);
 
-		 ///Get DCS 
-		 VE_SceneGraph::DCS* GetDCS( );
-		 ///Get a performer node output
-		 ///\param node ID
-         VE_SceneGraph::CADEntityHelper* getpfNode( int );
-		 ///Set/Get number of fles
-		 ///\param i file name ID
-         int getNumberOfFiles();
-         std::string getFileName( int i );
+    ///Get DCS 
+    VE_SceneGraph::DCS* GetDCS( );
+    ///Get a performer node output
+    ///\param node ID
+    VE_SceneGraph::CADEntityHelper* getpfNode( int );
+    ///Set/Get number of fles
+    ///\param i file name ID
+    int getNumberOfFiles();
+    std::string getFileName( int i );
 
-         ///Clear the stored scenes
-         void ClearStoredScenes();
-         ///Switch the active scene
-         ///\param whichScene The scene to display
-         void LoadScene(unsigned int whichScene);
-         ///Save out the scene
-         void RecordScene();
+    ///Clear the stored scenes
+    void ClearStoredScenes();
+    ///Switch the active scene
+    ///\param whichScene The scene to display
+    void LoadScene(unsigned int whichScene);
+    ///Save out the scene
+    void RecordScene();
 
-      private:
-         osg::ref_ptr< VE_SceneGraph::DCS > dcs;
-         osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-         std::vector< VE_SceneGraph::CADEntityHelper* > node;  // array of nodes
-         int pfb_count;
-	      std::vector<std::string> pfbFileNames;
-         std::string directory;
-         cfdWriteTraverser* _cfdWT;
-   };
+private:
+    osg::ref_ptr< VE_SceneGraph::DCS > dcs;
+    osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
+    std::vector< VE_SceneGraph::CADEntityHelper* > node;  // array of nodes
+    ///Sorted file filenames for stored scenes
+    std::vector<std::string> pfbFileNames;
+    std::string directory;
+};
 }
 #endif   // CFD_TEACHER_H
