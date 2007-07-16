@@ -34,8 +34,11 @@
 import wx
 import os
 from velBase import *
+from velModes import *
 from velClusterDict import *
 from velCoveredConfig import *
+from velSaveLoadConfig import *
+from velSaveConfigWindow import *
 from velExtraVarsWindow import *
 from string import strip, replace
 
@@ -44,7 +47,7 @@ class ClusterWindow(wx.Dialog):
 
     Functions:
         __init__(parent, state)
-        UpdateData()
+        UpdateData()    
         UpdateDisplay(cursor)
         AddNew(event)
         Delete(event)
@@ -56,9 +59,16 @@ class ClusterWindow(wx.Dialog):
                            style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
         ##Data storage.
         self.state = state
+        ##Prepare Panel
         ##Build displays.
         self.clustList = wx.ListBox(self, -1,
                                     size=JCONF_LIST_DISPLAY_MIN_SIZE)
+        ##Computer names adding mode radio box.
+        self.rbAddMode = wx.RadioBox(self, -1, "Add Mode",
+                                     wx.DefaultPosition, wx.DefaultSize,
+                                     COMP_ADD_MODE_LIST, 1, wx.RA_SPECIFY_COLS)
+        self.rbAddMode.SetToolTip(wx.ToolTip("Choose the way to input computer names."))
+        
         ##Build Add & Delete buttons.
         self.bAdd = wx.Button(self, -1, "Add")
         self.bAdd.SetToolTip(wx.ToolTip("Add a slave listing."))
@@ -84,9 +94,8 @@ class ClusterWindow(wx.Dialog):
         ##Build OK button.
         bOk = wx.Button(self, -1, "Ok")
         bOk.SetToolTip(wx.ToolTip("Return to Settings."))
-        ##Fill in info.
-        self.UpdateDisplay()
         ##Bind buttons.
+        self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbAddMode)
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
         self.Bind(wx.EVT_BUTTON, self.Rename, self.bEdit)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
@@ -97,7 +106,8 @@ class ClusterWindow(wx.Dialog):
         ##Construct layout.
         ##Add/Rename/Delete buttons.
         rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.AddMany([self.bAdd, VERTICAL_SPACE,
+        rowSizer.AddMany([self.rbAddMode, VERTICAL_SPACE,
+                          self.bAdd, VERTICAL_SPACE,
                           self.bEdit, VERTICAL_SPACE,
                           self.bDelete, VERTICAL_SPACE,
                           self.bExtraVars])
@@ -133,18 +143,42 @@ class ClusterWindow(wx.Dialog):
         self.CenterOnParent(wx.BOTH)
         ##Set the background color.
         Style(self)
+        wx.ToolTip.SetDelay(2000)
+        ##Fill in info.
+        self.React()    
 
-    def UpdateData(self):
+
+    def React(self):
+        """Covers/uncovers data based on user input."""
+        ##Change Mode cover.
+        addMode = str(COMP_ADD_MODE_LIST[self.state.GetSurface("AddMode")])
+        self.UpdateDisplay()
+        return
+
+
+    def UpdateData(self, event = None):
+        react = False
         """Updates data to match the display."""
         if self.masterCtrl.IsEnabled():
             self.state.Edit("ClusterMaster", self.masterCtrl.GetValue())
         if self.userCtrl.IsEnabled():
             self.state.Edit("User", self.GetUser())
+        ##Update Add Mode    
+        if self.rbAddMode.IsEnabled():
+            modeChosen = self.rbAddMode.GetSelection()
+            if modeChosen != self.state.GetBase("AddMode"):
+                self.state.Edit("AddMode", modeChosen)
+                react = True
+        ##React, then Update Display
+        if react:
+            self.React()
         return
 
+    
     def GetUser(self):
         """Returns the username input with slashes corrected."""
         return replace(strip(self.userCtrl.GetValue()), '/', '\\')
+
 
     def UpdateExampleCode(self, event = None):
         user = self.GetUser()
@@ -153,6 +187,7 @@ class ClusterWindow(wx.Dialog):
         else:
             phrase = "-u %s" %(user)
         self.userExampleText.SetLabel("psexec slave %s -i..." %phrase)
+
 
     def UpdateDisplay(self, cursor = None):
         """Updates display to match the data."""
@@ -172,59 +207,115 @@ class ClusterWindow(wx.Dialog):
         if cursor in newSlaveList:
             self.clustList.SetStringSelection(cursor)
         self.clustList.Enable(self.state.IsEnabled("ClusterDict"))
+        ##Add Mode
+        self.rbAddMode.SetSelection(self.state.GetSurface("AddMode"))
+        self.rbAddMode.Enable(self.state.IsEnabled("AddMode"))        
+                
         self.bAdd.Enable(self.state.IsEnabled("ClusterDict"))
         self.bDelete.Enable(self.state.IsEnabled("ClusterDict") and
                             len(self.state.GetSurface("ClusterDict")) > 0)
 
+
     def AddNew(self, event):
         """User chooses a new cluster computer to add to the list.
-
         Default name: Address of cluster computer."""
-        while True:
-            dlg = wx.TextEntryDialog(self,
-                                     "Please enter the name of the computer:",
-                                     "Add Cluster Computer")
-            if dlg.ShowModal() == wx.ID_OK:
-                location = dlg.GetValue()
-                dlg.Destroy()
-                locationList = self.state.GetBase("ClusterDict").GetLocations()
-                ##Reject if it's empty.
-                if location.isspace() or location == '':
-                    dlg = wx.MessageDialog(self,
-                                           "Your name is empty." + \
-                                           " Please try again.",
-                                           "ERROR: Name is Empty",
-                                           wx.OK)
-                    dlg.ShowModal()
+        addMode = self.state.GetSurface("AddMode")
+        if addMode == 0:
+            while True:
+                dlg = wx.TextEntryDialog(self,
+                                         "Please enter the name of the computer:",
+                                         "Add Cluster Computer")
+                if dlg.ShowModal() == wx.ID_OK:
+                    location = dlg.GetValue()
                     dlg.Destroy()
-                ##Reject if it has slashes.
-                elif '/' in location or '\\' in location:
-                    dlg = wx.MessageDialog(self,
-                                           "Your name has slashes in it.\n" + \
-                                           "Please try again.",
-                                           "ERROR: Name Contains Slashes",
-                                           wx.OK)
-                    dlg.ShowModal()
-                    dlg.Destroy()                
-                ##Return if this location's already listed.
-                elif location in locationList:
-                    dlg = wx.MessageDialog(self,
-                                           "[%s] is already in the" %(location)+
-                                           " cluster list.\n" +
-                                           "You don't need to add it again.",
-                                           "ERROR: Computer Already in List",
-                                           wx.OK)
-                    dlg.ShowModal()
-                    dlg.Destroy()
-                    return
+                    locationList = self.state.GetBase("ClusterDict").GetLocations()
+                    ##Reject if it's empty.
+                    if location.isspace() or location == '':
+                        dlg = wx.MessageDialog(self,
+                                               "Your name is empty.\nPlease check your file format.",
+                                               "ERROR: Name is Empty",
+                                               wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                    ##Reject if it has slashes.
+                    elif '/' in location or '\\' in location:
+                        dlg = wx.MessageDialog(self,
+                                               "Your name has slashes in it.\n" + \
+                                               "Please try again.",
+                                               "ERROR: Name Contains Slashes",
+                                               wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()                
+                    ##Return if this location's already listed.
+                    elif location in locationList:
+                        dlg = wx.MessageDialog(self,
+                                               "[%s] is already in the" %(location)+
+                                               " cluster list.\n" +
+                                               "You don't need to add it again.",
+                                               "ERROR: Computer Already in List",
+                                               wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                        return
+                    else:
+                        self.state.GetBase("ClusterDict").Add(location, location)
+                        self.UpdateData()
+                        self.UpdateDisplay()
+                        break
                 else:
-                    self.state.GetBase("ClusterDict").Add(location, location)
-                    self.UpdateData()
-                    self.UpdateDisplay()
+                    dlg.Destroy()
                     break
-            else:
+                    
+        ##elif addMode == 1:
+        ##    test = 0;
+        else:    
+            f = self.state.GetSurface("Directory")
+            dlg = wx.FileDialog(self,
+                                "Choose a name data file.",
+                                defaultDir = f,
+                                wildcard = "Name Data File (*.ndf)|*.ndf",
+                                style=wx.OPEN)
+            if dlg.ShowModal() == wx.ID_OK:
+                path = dlg.GetPath()
+                name = str(path)
+                file = open(name, 'rU')
+                for line in file.readlines():
+                    location = line.split()[0]
+                    locationList = self.state.GetBase("ClusterDict").GetLocations()
+                    if location.isspace() or location == '':
+                        dlg = wx.MessageDialog(self,
+                                               "Your name is empty.\n" + \
+                                               "Please check your file format.",
+                                               "ERROR: Name is Empty",
+                                               wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                    ##Reject if it has slashes.
+                    elif '/' in location or '\\' in location:
+                        dlg = wx.MessageDialog(self,
+                                               "Your name has slashes in it.\n" + \
+                                               "Please check your file format.",
+                                               "ERROR: Name Contains Slashes",
+                                               wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()                
+                    ##Return if this location's already listed.
+                    elif location in locationList:
+                        dlg = wx.MessageDialog(self,
+                                               "[%s] is already in the" %(location)+
+                                               " cluster list.\n" +
+                                               "Please check your file format.",
+                                               "ERROR: Computer Already in List",
+                                               wx.OK)
+                        dlg.ShowModal()
+                        dlg.Destroy()
+                        return
+                    else:    
+                        self.state.GetBase("ClusterDict").Add(location, location)
+
+                self.UpdateData()
+                self.UpdateDisplay()                    
                 dlg.Destroy()
-                break
 
 
     def Rename(self, event):
@@ -314,10 +405,12 @@ class ClusterWindow(wx.Dialog):
             self.UpdateData()
             self.UpdateDisplay()
 
+
     def ExtraVars(self, event):
         """Opens up the Extra Vars editing window."""
         extraVarsWindow = ExtraVarsWindow(self, self.state)
         extraVarsWindow.ShowModal()
+
 
     def OnClose(self, event):
         """Closes ClusterWindow."""
