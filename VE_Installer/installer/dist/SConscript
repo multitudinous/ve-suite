@@ -1,10 +1,21 @@
-##sets up jconf files for stereo_desktop
+##Builds idl skeleton files for veopen
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg')
+Import('ves_pkg', 'RootDir')
+env = ves_pkg.getEnv().Copy()
 
-#launcherBundle = ves_pkg.createFileBundle('bin')
-#frozenFile = ['velauncher']
-#launcherBundle.addFiles( frozenFile )
+launcherBundle = ves_pkg.createFileBundle( 'bin' )
+##Move frozen code to PREFIX if it exists.
+frozenVelauncherCode = pj(RootDir, 'VE_Installer','installer','dist','velauncher')
+
+frozenFile = ['velauncher']
+
+##To freeze velauncher.py, please use "scons freeze" option first.
+if os.path.exists(frozenVelauncherCode):
+    print "Frozen launcher file found...\n"
+    launcherBundle.addFiles( frozenFile )
+else:
+    print "Frozen launcher file not found..."
+    print "If you want to freeze the launcher code, please run \"scons freeze\" option first."

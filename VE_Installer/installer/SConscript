@@ -14,8 +14,9 @@ pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 runScripts = ['vesuiteReboot.sh',
               'vesuiteWake.sh',
               'vesuiteShutdown.sh',
-	      'velauncher.sh'
+              'velauncher.sh'
              ]
+
 launcherBundle.addFiles( runScripts )
 launcherBundle.addFiles( pyFile )
 
@@ -29,25 +30,3 @@ dclickFiles = map(lambda s: pj('LinuxConfig', s), dclickFiles)
 
 linuxDClick.addFiles( dclickFiles )
 linuxDClick.addFiles( runScripts )
-
-##Freezing Launcher Code
-##Set UPX path in ENV
-#if sca_util.GetPlatform() == "win32":
-#    UPX_PATH = pj(RootDir,'external','FreezePython','upx300w')
-#else:
-#    UPX_PATH = pj(RootDir,'external','FreezePython','upx-3.00-i386_linux')
-
-#os.environ['PATH'] = '%s%s%s' %(UPX_PATH, os.path.pathsep, os.environ['PATH'])
-
-#baseDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
-#velauncherCodeDir = pj(RootDir,'VE_Installer','installer')
-#velauncherLibDir = pj(velauncherCodeDir, 'python')
-#velauncherDistDir = pj(velauncherCodeDir, 'dist')
-
-#print "Freezing Launcher Code..."
-#print "Please wait... it takes a minute"
-#os.popen("python " + baseDir + "/Configure.py")
-#os.popen("python " + baseDir + "/Makespec.py --onefile --out=" + velauncherDistDir + " --paths=" + #velauncherLibDir + " " + velauncherCodeDir + "/velauncher.py")
-#os.popen("python " + baseDir + "/Build.py " + velauncherDistDir + "/velauncher.spec")	
-
-#print "Done Freezing Launcher Code..."

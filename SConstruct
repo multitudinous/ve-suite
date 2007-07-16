@@ -406,7 +406,8 @@ if not SConsAddons.Util.hasHelpFlag():
    ceSubdirs = pj(buildDir,'VE_CE')
    ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
-   veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')	
+   veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
+   veiFreezeSubdirs = pj(buildDir,'VE_Installer','installer', 'freezeCode')	
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    shareSubdirs = pj(buildDir,'share')
    docsSubdirs = pj('#', 'share', 'docs', 'docbook')
@@ -424,6 +425,9 @@ if not SConsAddons.Util.hasHelpFlag():
    elif 'doxygen' in  COMMAND_LINE_TARGETS:
       ves_dirs = [ doxySubdirs ]
       baseEnv.Alias('doxygen', doxySubdirs)
+   elif 'freeze' in  COMMAND_LINE_TARGETS:
+      ves_dirs = [ veiFreezeSubdirs ]
+      baseEnv.Alias('freeze', veiFreezeSubdirs)      
    else:
       ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
                   xplorerSubdirs, veiDistSubdirs, ceSubdirs, veiSubdirs, 

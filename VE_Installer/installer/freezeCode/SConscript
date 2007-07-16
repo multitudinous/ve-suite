@@ -1,0 +1,65 @@
+##sets up jconf files for stereo_desktop
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg', 'RootDir')
+env = ves_pkg.getEnv().Copy()
+
+##Freezing Launcher Code
+##Set UPX path in ENV
+if sca_util.GetPlatform() == "win32":
+    UPX_PATH = pj(RootDir,'external','FreezePython','upx300w')
+else:
+    UPX_PATH = pj(RootDir,'external','FreezePython','upx-3.00-i386_linux')
+
+os.environ['PATH'] = '%s%s%s' %(UPX_PATH, os.path.pathsep, os.environ['PATH'])
+
+srcs = Split("""
+   velauncher
+""")
+
+installerDir = pj('VE_Installer', 'installer')
+installerbaseDir = pj('#', installerDir)
+
+installerDistDir = pj('VE_Installer', 'installer', 'dist')
+installerDistbaseDir = pj('#', installerDistDir)
+
+basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
+
+makespec_py = pj(basePyinstallerDir, 'Makespec.py')
+build_py = pj(basePyinstallerDir, 'Build.py')
+
+velauncherCodeDir = pj(RootDir, 'VE_Installer','installer')
+velauncherLibDir = pj(velauncherCodeDir, 'python')
+velauncherDistDir = pj(velauncherCodeDir, 'dist')
+
+makespecSrc = map(lambda s: pj(installerbaseDir, "%s.py" %(s)), srcs)
+makespecTarget = map(lambda s: "%s.spec" %(s), srcs)
+
+freezeSrc = map(lambda s: pj(installerDistbaseDir, "%s.spec" %(s)), srcs)
+freezeTarget = map(lambda s: "%s" %(s), srcs)
+
+print "####################################"
+print "# Freezing Launcher Code..."       #
+print "# Please wait... it takes a minute #"
+print "####################################\n"
+os.popen("python " + basePyinstallerDir + "/Configure.py")
+
+make_cmd = "python " + makespec_py
+build_cmd = "python"
+
+makespecAction = '%s --onefile --out=%s --path=%s ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir)
+makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = installerDistDir)
+
+freezeAction = '%s ${SOURCE.abspath} %s/velauncher.spec' % (build_cmd, velauncherDistDir)
+freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
+
+env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
+
+env.makespec(target = makespecTarget ,source = makespecSrc)
+env.freeze(target = freezeTarget, source = build_py)
+
+Depends('velauncher', 'velauncher.spec')
+
+
