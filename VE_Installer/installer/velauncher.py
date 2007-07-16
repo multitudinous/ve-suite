@@ -797,7 +797,6 @@ class LauncherWindow(wx.Frame):
 
 
     def OnCloseSplash(self, event):
-
         event.Skip()
         self.Iconize(False)
 
