@@ -33,6 +33,7 @@ flagpoll_cmd = WhereIs('flagpoll')
 
 if None == flagpoll_cmd:
     sys.stdout.write("Could not find flagpoll. Please make sure flagpoll is in your PATH.\n")
+    sys.stdout.write("Flagpoll can be found here: https://realityforge.vrsource.org/view/FlagPoll\n")
     sys.exit(0)
 else:
     sys.stdout.write("Found flagpoll %s\n" % flagpoll_cmd )
