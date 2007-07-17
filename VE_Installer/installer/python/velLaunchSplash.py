@@ -126,17 +126,18 @@ class AdvancedSplash(wx.Frame):
         textcolour = self.GetTextColour()
         textfont = self.GetTextFont()
         textpos = self.GetTextPosition()
-        text = self.GetText()
+        text1 = self.GetText1()
+        text2 = self.GetText2()
         
         dc = wx.PaintDC(self)
-        dc1 = wx.PaintDC(self)
         
         # Here We Redraw The Bitmap Over The Frame        
-        dc1.SetFont(textfont[0])
-        dc1.SetTextForeground(textcolour)
+        dc.SetFont(textfont[0])
+        dc.SetTextForeground(textcolour)
 
         dc.DrawBitmap(self.bitmap, 0, 0, True)
-        dc1.DrawText(text, textpos[0], textpos[1])
+        dc.DrawText(text1, textpos[0], textpos[1])
+        dc.DrawText(text2, textpos[0], textpos[1]+15)
 
         event.Skip()
 
@@ -178,23 +179,29 @@ class AdvancedSplash(wx.Frame):
         self.Destroy()
         
         
-    def SetText(self, text=None):
+    def SetText(self, text1 = None, text2 = None):
         """ Sets The Text To Be Displayed On AdvancedSplash."""
         
-        if text is None:
-            text = ""
+        if text1 is None:
+            text1 = ""
+
+        if text2 is None:
+            text2 = ""
             
-        self._text = text
+        self._text1 = text1
+        self._text2 = text2
         
         self.Refresh()
         self.Update()
                 
 
-    def GetText(self):
+    def GetText1(self):
         """ Returns The Text Displayed On AdvancedSplash."""
-        
-        return self._text
+        return self._text1
 
+    def GetText2(self):
+        """ Returns The Text Displayed On AdvancedSplash."""
+        return self._text2
 
     def SetTextFont(self, font=None):
         """ Sets The Font For The Text In AdvancedSplash."""
