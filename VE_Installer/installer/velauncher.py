@@ -752,43 +752,24 @@ class LauncherWindow(wx.Frame):
         spFrame = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
         spFrame.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
 		
-        if windows:
+        if windows or unix:
             spFrame.SetTextColour(wx.BLACK)
             spFrame.SetTextPosition((155,43))
             spFrame.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-            spFrame.SetText("Version 1.1\n")
+            spFrame.SetText("Version 1.1")
             wx.MilliSleep(200)
             if self.state.GetSurface("NameServer"):
-                spFrame.SetText("Version 1.1\nStarting Name Server...")
+                spFrame.SetText("Version 1.1", "Starting Name Server...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Xplorer"):
-                spFrame.SetText("Version 1.1\nStarting Xplorer...")
+                spFrame.SetText("Version 1.1", "Starting Xplorer...")
                 wx.MilliSleep(1000)
             if self.state.GetSurface("Conductor"):
-                spFrame.SetText("Version 1.1\nStarting Conductor...")
+                spFrame.SetText("Version 1.1", "Starting Conductor...")
                 wx.MilliSleep(1000)
 
-                spFrame.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
+                spFrame.SetText("Version 1.1", "Preparing to Launch VE-Suite...")
                 wx.MilliSleep(1000)
-        elif unix:
-            spFrame.SetTextColour(wx.BLACK)
-            spFrame.SetTextPosition((155,43))
-            spFrame.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-            spFrame.SetText("Version 1.1\n")
-            wx.MilliSleep(200)
-            if self.state.GetSurface("NameServer"):
-                spFrame.SetText("Version 1.1\nStarting Name Server...")
-                wx.MilliSleep(1000)
-            if self.state.GetSurface("Xplorer"):
-                spFrame.SetText("Version 1.1\nStarting Xplorer...")
-                wx.MilliSleep(1000)
-            if self.state.GetSurface("Conductor"):
-                spFrame.SetText("Version 1.1\nStarting Conductor...")
-                wx.MilliSleep(1000)
-
-                spFrame.SetText("Version 1.1\nPreparing to Launch VE-Suite...")
-                wx.MilliSleep(1000)
-                
         else:
             wx.MilliSleep(4500)
         spFrame.Close()
