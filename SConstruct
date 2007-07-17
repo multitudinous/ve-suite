@@ -26,12 +26,20 @@ except:
 
 # Add flagpoll from the source directory to the end of the path so it is found
 # LAST.
-local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
-os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
+#local_fp_dir = pj(os.getcwd(), 'Tools', 'flagpoll') 
+#os.environ['PATH'] = '%s%s%s' %(local_fp_dir, os.path.pathsep, os.environ['PATH'])
+sys.stdout.write("Searching for flagpoll...\n")
+flagpoll_cmd = WhereIs('flagpoll')
+
+if None == flagpoll_cmd:
+    sys.stdout.write("Could not find flagpoll. Please make sure flagpoll is in your PATH.\n")
+    sys.exit(0)
+else:
+    sys.stdout.write("Found flagpoll %s\n" % flagpoll_cmd )
 
 # Set FLAGPOLL_PATH to the local flagpoll if necessary.
-if not os.environ.has_key('FLAGPOLL_PATH'):
-   os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
+#if not os.environ.has_key('FLAGPOLL_PATH'):
+#   os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
 # determine the svn version of the local vesuite build
 cmd_call = os.popen('svnversion')
 svn_str = cmd_call.read().strip()
