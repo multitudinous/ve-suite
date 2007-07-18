@@ -80,10 +80,6 @@ const float SAMPLE_TIME = 1.0f;
       class UpdateVisitor;
    }
 
-   #ifdef _WEB_INTERFACE
-      #include <vpr/Thread/Thread.h>
-   #endif //_WEB_INTERFACE
-
       namespace VE_TextureBased
       {
          class cfdPBufferManager;
@@ -143,9 +139,7 @@ public:
 #elif _OPENSG
 #endif //_PERFORMER _OSG _OPENSG
   
-#ifdef _WEB_INTERFACE
-   void writeImageFileForWeb(void*);
-#endif //_WEB_INTERFACE
+   void writeImageFileForWeb(void);
 
    /// Function called after pfSync and before pfDraw
    virtual void preFrame( void );
@@ -189,23 +183,12 @@ private:
     double time_since_start;///< time to start
     int argc;///< command line args
     char** argv;///< command line args
-    //web interface stuff for writing the image file
-    //to be viewed over the web
-#ifdef _WEB_INTERFACE
 	bool runWebImageSaveThread;///< not sure what this is for
 	bool readyToWriteWebImage;///< not sure what this is for
 	bool writingWebImageNow;///< not sure what this is for
 	bool captureNextFrameForWeb;///< not sure what this is for
 	int webImageWidth;///< not sure what this is for
 	int webImageHeight;///< not sure what this is for
-	vpr::Thread* writeWebImageFileThread;///<thread in which we write to the file
-	std::string webImagePixelArray;///< not sure what this is for
-   /// not sure what this is for
-	void writeWebImageFile(void*);
-   /// not sure what this is for
-	void captureWebImage();
-	double timeOfLastCapture;///< not sure what this is for
-#endif 
 
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;///<update visitor

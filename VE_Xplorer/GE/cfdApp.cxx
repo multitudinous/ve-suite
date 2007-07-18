@@ -73,6 +73,8 @@
 #include <osg/Referenced>
 #include <osg/Light>
 #include <osg/LightSource>
+#include <osg/CameraNode>
+#include <osg/Image>
 
 #include <osgDB/WriteFile>
 
@@ -95,19 +97,17 @@ using namespace VE_TextureBased;
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
 
-//web interface stuff
-#ifdef _WEB_INTERFACE
-   #include <corona.h>
-#endif //_WEB_INTERFACE
-
 using namespace VE_Xplorer;
 using namespace VE_Util;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdApp::cfdApp( int argc, char* argv[] ) 
 #ifdef _OSG
-: vrj::OsgApp( vrj::Kernel::instance() )
+: vrj::OsgApp( vrj::Kernel::instance() ),
 #endif
+readyToWriteWebImage( false ),
+writingWebImageNow( false ),
+captureNextFrameForWeb( false )
 {
    filein_name.erase();// = 0;
    isCluster = false;
@@ -158,13 +158,6 @@ void cfdApp::exit()
 
    cfdExecutive::instance()->CleanUp();
 
-#ifdef _WEB_INTERFACE
-   runWebImageSaveThread=false;
-   //vpr::System::msleep( 1000 );  // one-second delay
-   delete writeWebImageFileThread;
-   if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
-      delete[] webImagePixelArray;   //delete the pixel array
-#endif  //_WEB_INTERFACE
    //Profiling guard used by vrjuggler
    VPR_PROFILE_RESULTS();
 }
@@ -325,15 +318,6 @@ void cfdApp::initScene( void )
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
    _vjobsWrapper->InitCluster();
-
-#ifdef _WEB_INTERFACE
-   timeOfLastCapture = 0;
-   runWebImageSaveThread = true;
-   readyToWriteWebImage = false;
-   writingWebImageNow = false;
-   captureNextFrameForWeb = false;
-#endif   //_WEB_INTERFACE
-
    // define the rootNode, worldDCS, and lighting
    //VE_SceneGraph::SceneManager::instance()->Initialize( this->filein_name );
    VE_SceneGraph::SceneManager::instance()->InitScene();
@@ -414,15 +398,10 @@ void cfdApp::latePreFrame( void )
     //Exit - must be called AFTER _vjobsWrapper->PreFrameUpdate();
     if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
     {
-        /*if( _vjobsWrapper->IsMaster() )
-        {
-
-            vpr::System::msleep( 1000 );  // 50 milli-second delay
-        }*/
         // exit cfdApp was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel 
-    }
-
+    }    
+    
     float current_time = this->_vjobsWrapper->GetSetAppTime( -1 );
 #ifdef _OSG
     //This is order dependent
@@ -485,6 +464,11 @@ void cfdApp::latePreFrame( void )
 #endif
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
+   
+   /*if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "Stored Scenes" )
+   {
+       captureNextFrameForWeb = true;
+   }*/
 }
 
 void cfdApp::intraFrame()
@@ -511,16 +495,6 @@ void cfdApp::postFrame()
     //svUpdate = false;
     //cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
     time_since_start = _timer.delta_s(_start_tick,_timer.tick());
-#ifdef _WEB_INTERfACE
-    if( time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
-    {
-       if( !readyToWriteWebImage )
-       {
-           captureNextFrameForWeb = true
-           timeOfLastCapture = time_since_start;
-        }
-    }
-#endif  //_WEB_INTERFACE
 #endif  //_OSG
 
 
@@ -537,31 +511,10 @@ void cfdApp::postFrame()
     this->_vjobsWrapper->GetCfdStateVariables();
     vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
-
-//web interface thread for writing the file
-#ifdef _WEB_INTERFACE
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::captureWebImage()
+void cfdApp::writeImageFileForWeb()
 {
-   if(writingWebImageNow || readyToWriteWebImage) return;
-   int dummyOx=0;
-   int dummyOy=0;
-
-   std::cout << "Reading viewport size...!" << std::endl;
-   //get the viewport height and width
-   vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
-      getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
-   std::cout << "Copying frame buffer "<< webImageWidth 
-               << " " << webImageHeight << "......." << std::endl;
-   captureNextFrameForWeb=false;      //we're not going to capture next time around
-   std::string webImagePixelArray; //=new char[webImageHeight*webImageWidth*3];      //create an array to store the data
-   glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);   //copy from the framebuffer
-   readyToWriteWebImage=true;      
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdApp::writeImageFileForWeb(void*)
-{
-   while(runWebImageSaveThread)
+  /* while(runWebImageSaveThread)
    {
       vpr::System::msleep( 500 );  // half-second delay
       if(readyToWriteWebImage)
@@ -576,62 +529,63 @@ void cfdApp::writeImageFileForWeb(void*)
          else 
             std::cout << "Image saved successfully.!" << std::endl;
          delete frameCap;
-         delete [] webImagePixelArray;                              //delete our array
+         delete [] webImagePixelArray;                             //delete our array
          std::cout << "All done!" << std::endl;
          writingWebImageNow = false;
       }
-   }
+   }*/
    
-   
+    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    osg::ref_ptr< osg::Image > shot = new osg::Image();
-   //This is wxWidgets-Stuff to get the image ratio:
+   // get the image ratio:
    int w = 0; int  h = 0;
    w = 1280;
    h = 1024;
-   //GetClientSize(&w, &h);
-   int newSize = 5000;
-   float ratio = (float)w/(float)h;
+   int newSize = 1000;
+   float ratio = 4/3;
    w = newSize;
    h = (int)((float)w/ratio);
    shot->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
    osg::ref_ptr<osg::Node> subgraph = getScene();
-   osg::ref_ptr<osg::Camera> camera = new osg::Camera;
-   osg::ref_ptr<osg::Camera> oldcamera;// = sceneView->getCamera();
+   osg::ref_ptr<osg::CameraNode> camera = new osg::CameraNode;
+   osg::ref_ptr<osgUtil::SceneView> sv;
+   sv = (*sceneViewer);    // Get context specific scene viewer
+   osg::ref_ptr<osg::CameraNode> oldcamera = sv->getCamera();
    //Copy the settings from sceneView-camera to get exactly the view the user sees at the moment:
-   camera->setClearColor(oldcamera->getClearColor() );
-   camera->setClearMask(oldcamera->getClearMask() );
-   camera->setColorMask(oldcamera->getColorMask() );
-   camera->setTransformOrder(oldcamera->getTransformOrder() );
-   camera->setProjectionMatrix(oldcamera->getProjectionMatrix() );
-   camera->setViewMatrix(oldcamera->getViewMatrix() );
+   camera->setClearColor( oldcamera->getClearColor() );
+   camera->setClearMask( oldcamera->getClearMask() );
+   camera->setColorMask( oldcamera->getColorMask() );
+   camera->setTransformOrder( oldcamera->getTransformOrder() );
+   camera->setProjectionMatrix( oldcamera->getProjectionMatrix() );
+   camera->setViewMatrix( oldcamera->getViewMatrix() );
    // set view
    camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
 
    // set viewport
-   camera->setViewport(0,0,w,h);
+   camera->setViewport(sv->getViewport()->x(), sv->getViewport()->y(), sv->getViewport()->width(), sv->getViewport()->height());
 
    // set the camera to render before after the main camera.
-   camera->setRenderOrder(osg::Camera::POST_RENDER);
+   camera->setRenderOrder(osg::CameraNode::POST_RENDER);
 
    // tell the camera to use OpenGL frame buffer object where supported.
-   camera->setRenderTargetImplementation(osg::Camera::FRAME_BUFFER_OBJECT);
+   camera->setRenderTargetImplementation(osg::CameraNode::FRAME_BUFFER_OBJECT);
 
-   camera->attach(osg::Camera::COLOR_BUFFER, shot.get());
+   camera->attach(osg::CameraNode::COLOR_BUFFER, shot.get());
 
    // add subgraph to render
    camera->addChild(subgraph.get());
    //Need to mage it part of the scene :
-   //sceneView->setSceneData(camera.get());
+   sv->setSceneData(camera.get());
    //Make it frame:
-   //sceneView->update();
-   //sceneView->cull();
-   //sceneView->draw();
+   sv->update();
+   sv->cull();
+   std::cout << " make image " << std::endl;   
+   sv->draw();
    //Reset the old data to the sceneView, so it doesn«t always render to image:
-   //sceneView->setSceneData(subgraph.get() );
+   sv->setSceneData( subgraph.get() );
    //This would work, too:
-   osgDB::writeImageFile(shot, "test.jpg" );
+   osgDB::writeImageFile(*(shot.get()), "test.jpg" );
 }
-#endif   //_WEB_INTERFACE
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
@@ -725,19 +679,6 @@ void cfdApp::draw()
                                                        frustum[vrj::Frustum::VJ_NEAR],
                                                        frustum[vrj::Frustum::VJ_FAR]);
    
-#ifdef _WEB_INTERFACE
-    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
-    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
-    {
-        //Matrix44d headMat=mHead->getData();      //grab the head matrix
-        //      Matrix44d h=headMat;
-        //      glMultMatrixf(headMat.mData);         //and multiply to cancel it out of the modelview
-        //      gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);   //an overhead view
-        if(captureNextFrameForWeb) 
-            goCapture=true;   //now if we're go for capture, we'll know for sure
-    }
-#endif   //_WEB_INTERFACE
-
     gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
     gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
@@ -751,10 +692,14 @@ void cfdApp::draw()
     sv->cull();
     sv->draw();
 
-#ifdef _WEB_INTERFACE
-    if(goCapture)
-        captureWebImage();
-#endif   //_WEB_INTERFACE
+    if( captureNextFrameForWeb ) 
+    {
+        //gl_manager->currentUserData()->getViewport()->isSimulator();
+        //gl_manager->currentUserData()->getGlWindow()->getId();
+        writeImageFileForWeb();
+        captureNextFrameForWeb = false;
+    }
+        
     //glMatrixMode(GL_TEXTURE);
     //glPopMatrix();
 
