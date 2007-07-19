@@ -562,7 +562,8 @@ void cfdApp::writeImageFileForWeb()
    camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
 
    // set viewport
-   camera->setViewport(sv->getViewport()->x(), sv->getViewport()->y(), sv->getViewport()->width(), sv->getViewport()->height());
+   camera->setViewport(sv->getViewport()->x(), sv->getViewport()->y(), 
+        sv->getViewport()->width(), sv->getViewport()->height());
 
    // set the camera to render before after the main camera.
    camera->setRenderOrder(osg::CameraNode::POST_RENDER);

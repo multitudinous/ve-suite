@@ -165,20 +165,9 @@ void SceneManager::InitScene( void )
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
-        
-    //osg::ref_ptr<osgOQ::OcclusionQueryRoot> osgOQRoot;
-    // Some other plugin was used. Add it to an OQR.
-    //osgOQRoot = new osgOQ::OcclusionQueryRoot( m_oqc.get() );
 #endif    
-    //Now lets put it on the main group node
-    //Remember that the logo switch is right below the group node 
-    //NOT the world dcs
-//#ifdef VE_PATENTED
-//    rootNode->addChild( osgOQRoot.get() );
-//    osgOQRoot->addChild( m_clrNode.get() );
-//#else
+
     rootNode->addChild( m_clrNode.get() );
-//#endif
     m_clrNode->addChild( _logoSwitch.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -321,5 +310,31 @@ void SceneManager::SetBackgroundColor(std::vector<double> color)
 osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
 {
     return m_oqc.get();
+}
+#endif
+////////////////////////////////////////////////////////////////////////////////
+#ifdef VE_PATENTED
+void SceneManager::ResetOcclusionQueryContext()
+{
+    m_oqc->unref();
+    m_oqc = new osgOQ::OcclusionQueryContext();
+    ///number of pixels
+    m_oqc->setVisibilityThreshold( 500 );
+    ///Number of verts
+    m_oqc->setOccluderThreshold( 1000 );
+    ///Specifies how many frames to wait before issuing another query    
+    m_oqc->setQueryFrameCount( 5 );
+    ///Specify whether to use hierarchical ("NonFlat") placement for
+    m_oqc->setNonFlatPlacement( true );
+    ///Place bounding volumes in for osgOQ nodes
+    m_oqc->setDebugDisplay( true );
+    // Sets the debug verbosity. Currently supported 'level' values:
+    //    0 -- Verbosity is controlled by osg::notify.
+    //    1 -- For each OQN in each frame, displays whether that node
+    //         thinks its actual geometry is visible or not and why.
+    // Call through OcclusionQueryRoot to set value only for a
+    //   specific number of frames.
+    //void setDebugVerbosity( 0 );
+    m_oqc->setStatistics( true );
 }
 #endif

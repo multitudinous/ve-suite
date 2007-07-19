@@ -34,6 +34,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
@@ -101,6 +102,8 @@ void ChangeWorkingDirectoryEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    //A new working directory also means that 
    //the STORED scenes are no longer valid
    VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->Reset();
+   //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
+   VE_SceneGraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }
 ///////////////////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler& ChangeWorkingDirectoryEventHandler::operator=(const ChangeWorkingDirectoryEventHandler& rhs)

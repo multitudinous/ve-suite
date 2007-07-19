@@ -111,12 +111,14 @@ public:
    ///Switch the logo on and off
    ///\param trueFalse Turn the logo on and off
    void ViewLogo( bool trueFalse );
-
    ///PreFrameUpdate call to sync DCS information across cluster
    void PreFrameUpdate();
    ///Set the background color
    ///\param color the color to set the background color
    void SetBackgroundColor( std::vector<double> color );
+   ///Reset the osgOQC node accessor
+   ///Should be used when new ves files are loaded
+   void ResetOcclusionQueryContext();
        
 private:
    //Required so that vpr::Singleton can instantiate this class
