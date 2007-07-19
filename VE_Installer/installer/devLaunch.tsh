@@ -1,5 +1,0 @@
-#!/bin/csh
-setenv VE_SUITE_HOME /home/users/biv/work/RHEL_4/VE_Suite
-source $VE_SUITE_HOME/VE_Installer/setup.tsh
-cd $VE_SUITE_HOME/VE_Installer/installer
-python velauncher.py --dev
