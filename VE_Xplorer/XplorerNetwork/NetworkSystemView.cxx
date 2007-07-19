@@ -35,7 +35,7 @@
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
-#include "temp/bkpparser.h"
+
 #include <osgDB/ReadFile>
 #include <osgUtil/Optimizer>
 #include <osg/CoordinateSystemNode>
@@ -49,6 +49,7 @@
 #include <osg/TextureRectangle>
 #include <osg/TexMat>
 #include <osg/StateSet>
+
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Xplorer/SceneGraph/TextTexture.h"
 #include "VE_Xplorer/XplorerNetwork/UnsupportedComponent.h"
