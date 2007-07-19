@@ -46,13 +46,12 @@ class ServerKillWindow(wx.Frame):
         __init__(pids, [parent, title])
         KillNameserver(event)
         OnClose(event)"""
-    def __init__(self, pids, conduct_Pid, parent = None, title = "Shutdown Name Server"):
+    def __init__(self, pids, parent = None, title = "Shutdown Name Server"):
         """Creates the Server Shutdown Window"""
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.Point(0, 0),
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
         self.pids = pids
-        self.c_Pid = str(conduct_Pid[0])
         lblMsg = wx.StaticText(self, -1, "After you're done with VE-Suite,\n"+\
                                          "press the button below to shutdown\n"+\
                                          "the Name Server.")

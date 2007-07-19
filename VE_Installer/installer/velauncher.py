@@ -200,11 +200,10 @@ class LauncherWindow(wx.Frame):
         self.prefSubMenu = wx.Menu()
         self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
         menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
-        """
-        if windows:
-            self.prefSubMenu.Check(602, False)
+        if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
             self.prefSubMenu.Enable(602, False)
-        """
+        else:    
+            self.prefSubMenu.Enable(602, True)
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         ##Recent files as separated add-on
         ##menu.AppendSeparator()
@@ -483,6 +482,10 @@ class LauncherWindow(wx.Frame):
             if modeChosen != self.state.GetBase("Mode"):
                 self.state.Edit("Mode", modeChosen)
                 react = True
+            if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
+                self.prefSubMenu.Enable(602, False)
+            else:    
+                self.prefSubMenu.Enable(602, True)                
         ##Auto-Run Ves Files Mode
         if self.autoRunVes.IsEnabled():
             self.state.Edit("AutoRunVes", self.autoRunVes.IsChecked())
@@ -959,17 +962,20 @@ class LauncherWindow(wx.Frame):
                 pass
             ##Go into the Launch
         try:
-            launchInstance = Launch(self.state.GetLaunchSurface())
             ##Show NameServer kill window if NameServer was started.
-            if v("NameServer"):
-
-                if (self.prefSubMenu.IsChecked(602)):
-                    window = ServerAutoKillWindow(pids = launchInstance.GetNameserverPids(), 
-                                                  conduct_Pid = launchInstance.GetConductorPid())
-                else:
-                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(), 
-                                              conduct_Pid = launchInstance.GetConductorPid())
-		
+            if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
+                if v("NameServer"):
+                    launchInstance = Launch(self.state.GetLaunchSurface())
+                    if (self.prefSubMenu.IsChecked(602)):
+                        window = ServerAutoKillWindow(pids = launchInstance.GetNameserverPids(), 
+                                                      conduct_Pid = launchInstance.GetConductorPid())
+                    else:
+                        window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+            else:
+                if v("NameServer"):
+                    launchInstance = Launch(self.state.GetLaunchSurface())
+                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                             
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,
                                    "Launch aborted by user.",
