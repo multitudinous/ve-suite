@@ -45,16 +45,16 @@ Tag::Tag()
    SetObjectType("Tag");
    SetObjectNamespace("Model");   
 }
-///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Tag::~Tag()
 {
-   for ( size_t i = 0; i < tagPoints.size(); ++i )
+   /*for ( size_t i = 0; i < tagPoints.size(); ++i )
    {
       delete tagPoints.at( i );
-   }
+   }*/
    tagPoints.clear();
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Tag::Tag( const Tag& input )
 :XMLObject(input)
 {
@@ -65,7 +65,7 @@ Tag::Tag( const Tag& input )
       tagPoints.push_back( new Point( *(input.tagPoints.at( i )) ) );
    }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Tag& Tag::operator=( const Tag& input)
 {
    if ( this != &input )
@@ -74,88 +74,92 @@ Tag& Tag::operator=( const Tag& input)
       XMLObject::operator =(input);
       tagText = input.tagText;
 
-      for ( size_t i = 0; i < tagPoints.size(); ++i )
+      /*for ( size_t i = 0; i < tagPoints.size(); ++i )
       {
          delete tagPoints.at( i );
-      }
+      }*/
       tagPoints.clear();
 
-      for ( size_t i = 0; i < input.tagPoints.size(); ++i )
+      for( size_t i = 0; i < input.tagPoints.size(); ++i )
       {
          tagPoints.push_back( new Point( *(input.tagPoints.at( i )) ) );
       }
    }
    return *this;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Tag::SetTagText( std::string text )
 {
    tagText = text;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Tag::_updateVEElement( std::string input )
 {
-   // write all the elements according to verg_model.xsd
-   SetSubElement( "tagText", tagText );
-   for ( size_t i = 0; i < tagPoints.size(); ++i )
-   {
-      SetSubElement( "linkPoints", tagPoints.at( i ) );   
-   }
+    // write all the elements according to verg_model.xsd
+    SetAttribute( "id", uuid );
+    SetSubElement( "tagText", tagText );
+    for( size_t i = 0; i < tagPoints.size(); ++i )
+    {
+        SetSubElement( "linkPoints", tagPoints.at( i ) );   
+    }
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string Tag::GetTagText( void )
 {
    return tagText;
 }
-/////////////////////////////////////
-Point* Tag::GetTagPoint( unsigned int i )
+////////////////////////////////////////////////////////////////////////////////
+PointPtr Tag::GetTagPoint( size_t i )
 {
-   try
-   {
-      return tagPoints.at( i );
-   }
-   catch (...)
-   {
-      if ( i > (tagPoints.size() + 1) )
-      {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         return 0;
-      }
-      else
-      {
-         tagPoints.push_back( new Point(  ) );
-         return tagPoints.back();
-      }
-   }
+    try
+    {
+        return tagPoints.at( i );
+    }
+    catch (...)
+    {
+        std::cerr << "The element request is out of sequence."
+            << " Please ask for a lower number point." << std::endl;
+        return PointPtr();
+    }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void Tag::AddTagPoint( PointPtr newPoint )
+{
+    tagPoints.push_back( newPoint );
+}
+////////////////////////////////////////////////////////////////////////////////
 void Tag::SetObjectFromXMLData(DOMNode* element)
 {
-   DOMElement* currentElement = 0;
-   if( element->getNodeType() == DOMNode::ELEMENT_NODE )
-   {
-      currentElement = dynamic_cast< DOMElement* >( element );
-   }
+    DOMElement* currentElement = 0;
+    if( element->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = static_cast< DOMElement* >( element );
+    }
 
-   if ( currentElement )
-   {
-      //get variables by tags
-      DOMElement* dataValueStringName = 0;
-       dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
-       tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
-      // for Tag points
-     unsigned int numberOfPoints = 
-      currentElement->getElementsByTagName( 
-      xercesString("linkPoints") )->getLength();
+    if( !currentElement )
+    {
+        return;
+    }   
+    
+    //get variables by tags
+    DOMElement* dataValueStringName = 0;
+    dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
+    tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
+    // for Tag points
+    unsigned int numberOfPoints = 
+    currentElement->getElementsByTagName( 
+    xercesString("linkPoints") )->getLength();
 
-     for ( unsigned int i = 0; i < numberOfPoints; ++i )
-     {
+    for( unsigned int i = 0; i < numberOfPoints; ++i )
+    {
         dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-        tagPoints.push_back( new Point(  ) );
+        tagPoints.push_back( new Point() );
         tagPoints.back()->SetObjectFromXMLData( dataValueStringName );
-     }
-   }   
+    }
+    
+    //Setup uuid for model element
+    {
+        VE_XML::XMLObject::GetAttribute(currentElement, "id", uuid);
+    }
 }
-   
-
+////////////////////////////////////////////////////////////////////////////////

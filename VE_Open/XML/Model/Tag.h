@@ -45,16 +45,10 @@
 #include <string>
 #include <vector>
 #include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/Model/PointPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace VE_XML
-{
-namespace VE_Model
-{
-   class Point;
-}
-}
 
 namespace VE_XML
 {
@@ -63,28 +57,30 @@ namespace VE_Model
 class VE_MODEL_EXPORTS Tag : public VE_XML::XMLObject
 {
 public:
-   ///Constructor
-   Tag(  );
-   ///Destructor
-   virtual ~Tag();
-   ///Copy Constructor
-   Tag( const Tag& );
-   ///equal operator
-   Tag& operator= ( const Tag& );
+    ///Constructor
+    Tag(  );
+    ///Destructor
+    virtual ~Tag();
+    ///Copy Constructor
+    Tag( const Tag& );
+    ///equal operator
+    Tag& operator= ( const Tag& );
 
-   ///Set the text for the tag
-   ///\param text string containing text for the tag
-   void SetTagText( std::string text );
-   ///set the data from an string representing the xml
-   ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData( 
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
-   
-   ///Get the i'th point for a Tag.
-   ///\param i The i'th point you are after.
-   Point* GetTagPoint( unsigned int i );
-   ///Get the tag text
-   std::string GetTagText( void );
+    ///Set the text for the tag
+    ///\param text string containing text for the tag
+    void SetTagText( std::string text );
+    ///set the data from an string representing the xml
+    ///\param xmlInput The input XML data.
+    virtual void SetObjectFromXMLData( 
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    ///Get the i'th point for a Tag.
+    ///\param i The i'th point you are after.
+    PointPtr GetTagPoint( size_t i );
+    ///Get the tag text
+    std::string GetTagText( void );
+    ///Add a new point to the tag
+    ///\param newPoint The new point to be added
+    void AddTagPoint( PointPtr newPoint );
 
 protected:
    ///Internally update the data.
@@ -93,7 +89,7 @@ protected:
 
 private:
    ///raw datatypes of Tag that are specified in the verg_model.xsd file
-   std::vector< Point* > tagPoints;///<Vector of Points.
+   std::vector< PointPtr > tagPoints;///<Vector of Points.
    std::string tagText;///<string that contains text for the tag
 };
 }
@@ -101,11 +97,11 @@ template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
     const std::string subElementTagName, VE_Model::Tag* val)
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( 
-    subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( 
+        subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 #endif// _VE_Tag_H_

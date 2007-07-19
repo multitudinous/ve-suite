@@ -30,23 +30,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Link.h"
+#include "VE_Open/XML/Model/Tag.h"
+
 #include "VE_Open/XML/DataValuePair.h"
+
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_XML::VE_Model;
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 //Constructor                             //
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 Network::Network(  )
 :XMLObject(  )
 {
    SetObjectType("Network");
    SetObjectNamespace("Model");
 }
-///////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 Network::~Network()
 {
    for ( size_t i = 0; i < links.size(); ++i )
@@ -60,53 +62,66 @@ Network::~Network()
       delete conductorState.at( i );
    }
    conductorState.clear();
+   
+   tags.clear();
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 Network::Network( const Network& input )
 :XMLObject(input)
 {
-   for ( size_t i = 0; i < input.links.size(); ++i )
+   for( size_t i = 0; i < input.links.size(); ++i )
    {
       links.push_back( new Link( *(input.links.at( i )) ) );
    }
 
-   for ( size_t i = 0; i < input.conductorState.size(); ++i )
+   for( size_t i = 0; i < input.conductorState.size(); ++i )
    {
       conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
    }
+   
+   for( size_t i = 0; i < input.tags.size(); ++i )
+   {
+       tags.push_back( new Tag( *input.tags.at( i ) ) );
+   }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 Network& Network::operator=( const Network& input)
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-      for ( size_t i = 0; i < links.size(); ++i )
-      {
-         delete links.at( i );
-      }
-      links.clear();
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =(input);
+        for( size_t i = 0; i < links.size(); ++i )
+        {
+            delete links.at( i );
+        }
+        links.clear();
 
-      for ( size_t i = 0; i < input.links.size(); ++i )
-      {
-         links.push_back( new Link( *(input.links.at( i )) ) );
-      }
+        for( size_t i = 0; i < input.links.size(); ++i )
+        {
+            links.push_back( new Link( *(input.links.at( i )) ) );
+        }
 
-      for ( size_t i = 0; i < conductorState.size(); ++i )
-      {
-         delete conductorState.at( i );
-      }
-      conductorState.clear();
+        for ( size_t i = 0; i < conductorState.size(); ++i )
+        {
+            delete conductorState.at( i );
+        }
+        conductorState.clear();
 
-      for ( size_t i = 0; i < input.conductorState.size(); ++i )
-      {
-         conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
-      }
-   }
-   return *this;
+        for( size_t i = 0; i < input.conductorState.size(); ++i )
+        {
+            conductorState.push_back( new DataValuePair( *(input.conductorState.at( i )) ) );
+        }
+
+        tags.clear();
+        for( size_t i = 0; i < input.tags.size(); ++i )
+        {
+            tags.push_back( new Tag( *input.tags.at( i ) ) );
+        }
+    }
+    return *this;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 void Network::_updateVEElement( std::string input )
 {
    // write all the elements according to verg_model.xsd
@@ -120,7 +135,7 @@ void Network::_updateVEElement( std::string input )
       SetSubElement( "conductorState", conductorState.at( i ) );   
    }
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 Link* Network::GetLink( int i )
 {
    try
@@ -133,12 +148,12 @@ Link* Network::GetLink( int i )
       return links.back();
    }
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 size_t Network::GetNumberOfLinks( void )
 {
    return links.size();
 }
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 DataValuePair* Network::GetDataValuePair( int i )
 {
    try
@@ -151,42 +166,85 @@ DataValuePair* Network::GetDataValuePair( int i )
       return conductorState.back();
    }
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////   
 void Network::SetObjectFromXMLData(DOMNode* element)
 {
-   DOMElement* currentElement = 0;
-   if( element->getNodeType() == DOMNode::ELEMENT_NODE )
-   {
-      currentElement = dynamic_cast< DOMElement* >( element );
-   }
+    DOMElement* currentElement = 0;
+    if( element->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast< DOMElement* >( element );
+    }
 
-   if ( currentElement )
-   {
-      //get variables by tags
-      DOMElement* dataValueStringName = 0;
-      // for link
-      {
-         unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("link") )->getLength();
+    if( !currentElement )
+    {
+        return;
+    }   
+    
+    //get variables by tags
+    DOMElement* dataValueStringName = 0;
+    // for link
+    {
+        unsigned int numberOfPortData = 
+            currentElement->getElementsByTagName( 
+            xercesString("link") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfPortData; ++i )
-         {
+        for( unsigned int i = 0; i < numberOfPortData; ++i )
+        {
             dataValueStringName = GetSubElement( currentElement, "link", i );
             links.push_back( new Link(  ) );
             links.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
-      // for state info
-      {
-         unsigned int numberOfStates = currentElement->getElementsByTagName( xercesString("conductorState") )->getLength();
+        }
+    }
+    // for state info
+    {
+        unsigned int numberOfStates = 
+            currentElement->getElementsByTagName( 
+            xercesString("conductorState") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfStates; ++i )
-         {
-            dataValueStringName = GetSubElement( currentElement, "conductorState", i );
+        for( unsigned int i = 0; i < numberOfStates; ++i )
+        {
+            dataValueStringName = GetSubElement( currentElement, 
+                "conductorState", i );
             conductorState.push_back( new DataValuePair(  ) );
             conductorState.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
-   }   
-}
-   
+        }
+    }
+    // for tags
+    {
+        unsigned int numberOfPortData = 
+            currentElement->getElementsByTagName( 
+            xercesString("tag") )->getLength();
 
+        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        {
+            dataValueStringName = GetSubElement( currentElement, "tag", i );
+            tags.push_back( TagPtr() );
+            tags.back()->SetObjectFromXMLData( dataValueStringName );
+        }
+    }      
+}
+////////////////////////////////////////////////////////////////////////////////   
+TagPtr Network::GetTag( size_t i )
+{
+    try
+    {
+        return tags.at( i );
+    }
+    catch(...)
+    {
+        std::cerr << "Network::GetTag value greater than number of tags present"
+            << std::endl;
+        return TagPtr();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////   
+size_t Network::GetNumberOfTags( void )
+{
+    tags.size();
+}
+////////////////////////////////////////////////////////////////////////////////   
+void Network::SetTag( TagPtr newLink )
+{
+    tags.push_back( newLink );
+}
+////////////////////////////////////////////////////////////////////////////////   
