@@ -1068,7 +1068,7 @@ app.MainLoop()
 ##Command Line Check, then Window Boot (if necessary)
 del config
 """
-####Window boot
+####Window boot 
 ##if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
 ##   (len(opts) == 0 or (len(opts) == 1 and devMode)):
 ##    ##Launch the application
