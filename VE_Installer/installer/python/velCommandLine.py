@@ -63,7 +63,7 @@ class CommandLine:
         self.autoLaunch = False
         ##Set Configuration & Dev mode.
         for opt, arg in opts:
-            ##print opt, arg ##TESTER
+            ##print opt, arg ##TESTER 
             if opt in ('-g', "--config="):
                 try:
                     LoadConfig(arg, self.state)
