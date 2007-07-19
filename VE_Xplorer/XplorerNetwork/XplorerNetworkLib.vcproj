@@ -216,28 +216,6 @@
 			Filter=".cpp"
 			>
 			<File
-				RelativePath=".\temp\bkpparser.cxx"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)1.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)2.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\cfdExecutive.cxx"
 				>
 			</File>
@@ -317,10 +295,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\temp\StringTokenizer.cxx"
+				RelativePath=".\SwitchXplorerViewEventHandler.cxx"
 				>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -328,18 +306,9 @@
 						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)\$(InputName)2.obj"
-						XMLDocumentationFileName="$(IntDir)\$(InputName)2.xdc"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\SwitchXplorerViewEventHandler.cxx"
+				RelativePath=".\UpdateNetworkEventHandler.cxx"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -379,10 +348,6 @@
 			Filter=".h"
 			>
 			<File
-				RelativePath=".\temp\bkpparser.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdExecutive.h"
 				>
 			</File>
@@ -411,11 +376,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\temp\StringTokenizer.h"
+				RelativePath=".\SwitchXplorerViewEventHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SwitchXplorerViewEventHandler.h"
+				RelativePath=".\UpdateNetworkEventHandler.h"
 				>
 			</File>
 			<File
