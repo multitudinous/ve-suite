@@ -1,36 +1,61 @@
 #!/bin/csh
+# this is a C shell script
 # sets up environment to build and/or run VE-Suite
 
-#setenv VPR_DEBUG_ALLOW_CATEGORIES "VES_DBG"
+# location of of VE-Suite installation location
+setenv VES_BASE_DIR <location of VES installation>
+
+# Some miscellaneous variables used by VR Juggler, OSG, Performer, and OmniORB
+# Performer
+#setenv PFNFYLEVEL 0
+#setenv PFSHAREDSIZE 534773700
+# VR Juggler
+#setenv VPR_DEBUG_NFY_LEVEL 0 
+#setenv VPR_DEBUG_ENABLE 1
+#setenv VPR_DEBUG_FILE ${VE_SUITE_HOME}/VE_Xplorer/VPRDebugOutput.txt
+#setenv VPR_DEBUG_ALLOW_CATEGORIES "DBG_ALL DBG_ERROR VES_DBG"
 #setenv VPR_DEBUG_DISALLOW_CATEGORIES "VES_DBG DBG_KERNEL"
+setenv NO_RTRC_PLUGIN TRUE
+setenv NO_PERF_PLUGIN TRUE
+# OSG
 setenv OSG_THREAD_SAFE_REF_UNREF 1
-   
-# These are used to build VE-Suite
-setenv FLAGPOLL_PATH /home/vr/Applications/TSVEG/Libraries/Release/Opt/VRJuggler-2.0.1-branch/Linux-RHEL4/lib/flagpoll
-setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/cppdom-0.6.6/Linux-RHEL4/lib/flagpoll
-setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/GMTL-0.4.12/Linux-RHEL4/share/pkgconfig
-setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:/home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-TAO-5.5/Linux-RHEL_4/lib/pkgconfig
+setenv OSGNOTIFYLEVEL DEBUG_INFO
+# OmniORB
+#setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
+#setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 
-# These are used to run VE-Suite
-#setenv JDK_HOME /usr/java
-setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK-5.0/Linux-RHEL4
-#`flagpoll vtk --get-prefix`
-setenv TAO_HOME "`flagpoll TAO --get-prefix`"
-setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.8.0/Linux-RHEL4_32
-setenv VJ_BASE_DIR "`flagpoll vrjuggler --get-prefix`"
-setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG-1.2/Linux-RHEL_4
-#`flagpoll osg --get-prefix`
-#setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
+# Setup flagpoll path to to be utilized by VE-Suite
+# Can be used to setup package specific installation variables if desired
+# with something like > `flagpoll vtk --get-prefix`
+setenv FLAGPOLL_PATH <path to gmtl fpc file>
+setenv FLAGPOLL_PATH ${FLAGPOLL_PATH}:<anymore directories needed by flagpoll>
 
-setenv  LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib
-setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
-setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
-setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
-#setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/Volumes/data/VE_Suite_Deps/opal-install/lib
-#setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/opt/local/lib
-setenv  LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/home/users/mccdo/svn_VE_Suite/VE_Suite/test_two/lib
+# Setup variables to make configuration of environment easier
+setenv JDK_HOME <location of Java installation>
+setenv VTK_BASE_DIR <location of VTK installation>
+setenv TAO_HOME <location of TAO installation>
+setenv WX_HOME <location of wxWidgets installation>
+setenv VJ_BASE_DIR <location of VR Juggler installation>
+setenv OSG_HOME <location of OSG installation>
+setenv BULLET_HOME <location of Bullet installation>
 
-setenv OSG_FILE_PATH ${OSG_HOME}/share/OpenSceneGraph-Data
+# Setup library search path
+# Can be LD_LIBRARY_PATH (for linux) and DYLD_LIBRARY_PATH for MacOS
+setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}::${TAO_HOME}/lib
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VES_BASE_DIR}/lib
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${BULLET_HOME}/lib
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:<other non-standard library installations>
+
+# Setup path for running applications
 setenv PATH ${TAO_HOME}/bin:${PATH}
+setenv PATH ${VJ_BASE_DIR}/bin:${VES_BASE_DIR}/bin:${PATH}
 setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
-setenv PATH ${VJ_BASE_DIR}/bin:/home/users/mccdo/svn_VE_Suite/VE_Suite/test_two/bin:${PATH}
+
+# Setup this to get access to fonts
+setenv OSG_FILE_PATH ${OSG_HOME}/share/OpenSceneGraph-Data:${VES_BASE_DIR}/share/vesuite
+
+# Another miscellaneous environment variable for building VR Juggler applications
+setenv DZR_BASE_DIR ${VJ_BASE_DIR}/share/Doozer
