@@ -316,7 +316,6 @@ osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
 #ifdef VE_PATENTED
 void SceneManager::ResetOcclusionQueryContext()
 {
-    m_oqc->unref();
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
     m_oqc->setVisibilityThreshold( 500 );
