@@ -313,9 +313,9 @@ osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef VE_PATENTED
 void SceneManager::ResetOcclusionQueryContext()
 {
+#ifdef VE_PATENTED
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
     m_oqc->setVisibilityThreshold( 500 );
@@ -335,5 +335,5 @@ void SceneManager::ResetOcclusionQueryContext()
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
-}
 #endif
+}
