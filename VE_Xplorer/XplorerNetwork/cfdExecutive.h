@@ -137,13 +137,17 @@ public:
    std::map<int, cfdVEBaseClass* >* GetTheCurrentPlugins( void );
    ///Get available plugins object
    cfdVEAvailModules* GetAvailablePlugins( void );
+   ///Accessor for ehs to use
+   Body_UI_i* GetCORBAInterface();
+   ///Laod data from CE
+   void LoadDataFromCE( void );
+   ///Get the current network string being used by cfdExecutive
+   std::string GetCurrentNetwork();
    
-   std::string veNetwork;
 private:
    ///Loading the Available Modules
    cfdVEAvailModules* m_avModules;
-   ///Laod data from CE
-   void LoadDataFromCE( void );
+   std::string veNetwork;
 
    std::string _activeScalarName;
    cfdGauges* _gauges;
@@ -156,19 +160,6 @@ private:
    bool _doneWithCalculations;
    bool updateNetworkString;
    bool runGetEverythingThread;
-   // Classes and variables for multithreading.
-   //cfdThread* thread;
-   // _id_map : maps a module id to an interface object for a module's inputs.
-   //std::map<int, Interface>   _it_map;
-
-   // _pt_map : maps a module id to an interface object for a module's port data.
-   //std::map<int, Interface>   _pt_map;
-
-   // _pt_map : maps a module id to an interface object for a module's geom data.
-   //std::map<int, Interface>   _geom_map;
-
-   // _ot_map : maps a module id to an interface object for a modules's outputs.
-   //std::map<int, Interface>   _ot_map;
 
    // _name_map : maps a module id to it's module name.
    std::map< int, std::string> _id_map;

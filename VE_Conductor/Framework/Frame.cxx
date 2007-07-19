@@ -1346,6 +1346,14 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
       //Now that we have an active xml model in all units
       // set the network
       serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
+      // Tell xplorer to ask ce for the new data
+      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      dataValuePair->SetData(std::string("Load Data"),xplorerColor);
+      VE_XML::Command* veCommand = new VE_XML::Command();
+      veCommand->SetCommandName(std::string("veNetwork Update"));
+      veCommand->AddDataValuePair(dataValuePair);
+      serviceList->SendCommandStringToXplorer( veCommand );
+      //enable the menus now
       run_menu->Enable( v21ID_START_CALC, true );
    }
    catch ( CORBA::Exception& ) 
@@ -1359,7 +1367,6 @@ void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
    try	
    { 
       serviceList->StartCalc();
-      //run_menu->Enable(v21ID_START_CALC, true);
    }
    catch ( CORBA::Exception& ) 
    {

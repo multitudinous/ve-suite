@@ -34,6 +34,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerNetwork/cfdVEAvailModules.h"
+#include "VE_Xplorer/XplorerNetwork/UpdateNetworkEventHandler.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
@@ -154,6 +155,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
    _eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
    _eventHandlers[std::string("Plugin_Control")] = new VE_EVENTS::ReloadPluginsEventHandler();
+   _eventHandlers[std::string("veNetwork Update")] = new VE_EVENTS::UpdateNetworkEventHandler();
 }
 ///////////////////////////////////////////////////////////////////
 std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
@@ -414,7 +416,7 @@ void cfdExecutive::PreFrameUpdate( void )
    }
 
    ///Load the data from ce
-   LoadDataFromCE();
+   //LoadDataFromCE();
 
    ///process the standard plugin stuff
    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
@@ -460,8 +462,6 @@ void cfdExecutive::PostFrameUpdate( void )
 {
    vprDEBUG(vesDBG,3) << " cfdExecutive::PostFrameUpdate"
                         << std::endl << vprDEBUG_FLUSH;
-   
-   //LoadDataFromCE();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::LoadDataFromCE( void )
@@ -561,4 +561,14 @@ void cfdExecutive::LoadDataFromCE( void )
 cfdVEAvailModules* cfdExecutive::GetAvailablePlugins()
 {
     return m_avModules;
+}
+////////////////////////////////////////////////////////////////////////////////
+Body_UI_i* cfdExecutive::GetCORBAInterface()
+{
+    return ui_i;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdExecutive::GetCurrentNetwork()
+{
+    return veNetwork;
 }

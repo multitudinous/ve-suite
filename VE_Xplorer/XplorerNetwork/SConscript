@@ -13,8 +13,7 @@ sources = Split("""
    SwitchXplorerViewEventHandler.cxx
    ReloadPluginsEventHandler.cxx
    NetworkSystemView.cxx
-   temp/StringTokenizer.cxx
-   temp/bkpparser.cxx
+   UpdateNetworkEventHandler.cxx
    ../DefaultGraphicalPlugin/DefaultGraphicalPlugin.cxx
 """)
 
@@ -27,8 +26,7 @@ headers = Split("""
    SwitchXplorerViewEventHandler.h
    ReloadPluginsEventHandler.h
    NetworkSystemView.h
-   temp/StringTokenizer.h
-   temp/bkpparser.h
+   UpdateNetworkEventHandler.h
 """)
 ##   ../DefaultGraphicalPlugin/DefaultGraphicalPlugin.h
 

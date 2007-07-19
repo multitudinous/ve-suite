@@ -23,51 +23,37 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2007-06-15 11:06:13 -0500 (Fri, 15 Jun 2007) $
+ * Version:       $Rev: 8206 $
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerNetwork/UpdateNetworkEventHandler.h"
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
-
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/Model/Model.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
-#include <osg/MatrixTransform>
-#include <osg/Group>
+#include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 
 #include <iostream>
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
-SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
+UpdateNetworkEventHandler::UpdateNetworkEventHandler()
 :VE_EVENTS::EventHandler()
 {
    ;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
-SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler(const SwitchXplorerViewEventHandler& rhs)
+UpdateNetworkEventHandler::UpdateNetworkEventHandler(const UpdateNetworkEventHandler& rhs)
 :VE_EVENTS::EventHandler(rhs)
 {
    ;
@@ -75,62 +61,32 @@ SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler(const SwitchXplorer
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
-SwitchXplorerViewEventHandler::~SwitchXplorerViewEventHandler()
+UpdateNetworkEventHandler::~UpdateNetworkEventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=(const SwitchXplorerViewEventHandler& rhs)
+UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=(const UpdateNetworkEventHandler& rhs)
 {
    if(this != &rhs)
    {
-      VE_EVENTS::SwitchXplorerViewEventHandler::operator=(rhs);
+      VE_EVENTS::UpdateNetworkEventHandler::operator=(rhs);
    }
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void UpdateNetworkEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 {
    ;
 }
 //////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void UpdateNetworkEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = 
-      command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
-   std::string viewData;
-   activeModelDVP->GetData( viewData );
-   if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 2 );
-      VE_SceneGraph::DCS  * tempDCS = SceneManager::instance()->GetNetworkDCS();
-
-      NetworkSystemView networkLayout( 
-        cfdExecutive::instance()->GetCurrentNetwork() );
-      if( tempDCS->GetNumChildren() >= 1 )
-      {
-         tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
-      }
-      
-      osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
-      if( tempGroup.valid() )
-      {
-          tempDCS->addChild( tempGroup.get() );
-      }
-   }
-   else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 0 );
-   }
-   else if( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 1 );
-   }
-   else
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 0 );
-   }
+    VE_XML::Command* cmd = static_cast< VE_XML::Command* >( xmlObject );
+    if( cmd->GetDataValuePair( "Load Data" ) )
+    {
+        cfdExecutive::instance()->LoadDataFromCE();
+    }
 }

@@ -75,6 +75,7 @@
         <xs:sequence>
           <xs:element name="link" type="veLink" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="conductorState" type="veDataValuePair" maxOccurs="6" minOccurs="6"/>
+          <xs:element name="tag" type="veTag" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
       </xs:restriction>
     </xs:complexContent>
