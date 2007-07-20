@@ -1495,7 +1495,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     
     actionPoint = evtpos;
 	highlightFlag = true;
-	networkFrame->Refresh();
+	networkFrame->Refresh( true );
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );
@@ -1585,6 +1585,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     m_selTag = -1; 
     m_selTagCon = -1; 
     //xold = yold =0;
+    networkFrame->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& event )

@@ -2160,7 +2160,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         tags.at( i ).CalcTagPoly();
     }
     
-    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    for( size_t i = 0; i < veNetwork.GetNumberOfTags(); ++i )
     {
         PushEventHandler( &tags.at( i ) );
     }
