@@ -166,48 +166,48 @@ void Tag::DrawTagCon( bool flag, std::pair< double, double > scale )
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
 {
-   //wxClientDC dc( canvas );
-   //canvas->PrepareDC(dc);
-   dc.SetUserScale( scale.first, scale.second );
-  
-   wxBrush old_brush = dc.GetBrush();
-   wxPen old_pen = dc.GetPen();
-   wxPen mypen(old_pen);
-   mypen.SetColour( _("BLUE") );
-   //  mypen.SetStyle(wxDOT);
-   // mypen.SetStyle(wxLONG_DASH);
+    //wxClientDC dc( canvas );
+    //canvas->PrepareDC(dc);
+    dc.SetUserScale( scale.first, scale.second );
 
-   int w, h;
-   dc.GetTextExtent( text, &w, &h);
-   box.width = w;
-   box.height = h;
+    wxBrush old_brush = dc.GetBrush();
+    wxPen old_pen = dc.GetPen();
+    wxPen mypen(old_pen);
+    mypen.SetColour( _("BLUE") );
+    //  mypen.SetStyle(wxDOT);
+    // mypen.SetStyle(wxLONG_DASH);
 
-   CalcTagPoly();
-   wxPoint points[3];
-   points[0] = cons[0];
-   points[1] = cons[1];
-   points[2] = wxPoint( box.x,  box.y + box.height/2);
+    int w, h;
+    dc.GetTextExtent( text, &w, &h);
+    box.width = w;
+    box.height = h;
+
+    CalcTagPoly();
+    wxPoint points[3];
+    points[0] = cons[0];
+    points[1] = cons[1];
+    points[2] = wxPoint( box.x,  box.y + box.height/2);
 
 
-   if (!flag)
-   {
-      dc.SetPen(*wxWHITE_PEN);
-      dc.SetBrush(*wxWHITE_BRUSH);
-   }
-   else
-   {
-      dc.SetPen(mypen);
-      dc.SetBrush(*wxWHITE_BRUSH);
-   }
+    if(!flag)
+    {
+        dc.SetPen(*wxWHITE_PEN);
+        dc.SetBrush(*wxWHITE_BRUSH);
+    }
+    else
+    {
+        dc.SetPen(mypen);
+        dc.SetBrush(*wxWHITE_BRUSH);
+    }
 
-   dc.DrawLines(3, points);
-   dc.DrawRectangle( box.x-3,  box.y-3,  box.width+6,  box.height+6);
+    dc.DrawLines(3, points);
+    dc.DrawRectangle( box.x-3,  box.y-3,  box.width+6,  box.height+6);
 
-   if (flag) 
-      dc.DrawText( text, box.x, box.y );
+    if(flag) 
+        dc.DrawText( text, box.x, box.y );
 
-   dc.SetPen(old_pen);
-   dc.SetBrush(old_brush);
+    dc.SetPen(old_pen);
+    dc.SetBrush(old_brush);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag )
