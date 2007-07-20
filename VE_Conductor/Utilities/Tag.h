@@ -66,13 +66,15 @@ public:
    Tag( const Tag& );
    ///equal operator
    Tag& operator= ( const Tag& );
-
-   ///Set the wxWindow on which you wish to draw a tag
-   ///\param window The window on which the tag will be drawn
-   //void SetWxWindow( wxWindow* window );
+   
+   ///Get the i'th point for the tag
+   ///\param i The i'th point you are after
    wxPoint* GetConnectorsPoint( size_t i );
+   ///Get tag text
    wxString* GetTagText( void );
+   ///Get the polygon that will be rendered
    Polygon* GetPolygon( void );
+   ///Get the bounging box for the tag
    wxRect* GetBoundingBox( void );
    ///Set the raw xml data to configure the tag
    ///\param inputTag The pointer to the class holding the tag data
@@ -82,7 +84,9 @@ public:
    
    ///Calculate tag polygon to be drawn
    void CalcTagPoly( void );
+   ///Draw functions
    void DrawTagCon( bool flag, std::pair< double, double > scale );
+   ///Draw functions
    void DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale );
 
 private:
