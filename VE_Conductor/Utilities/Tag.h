@@ -58,50 +58,56 @@ namespace GUI_Utilities
 class VE_CONDUCTOR_UTILS_EXPORTS Tag : public wxEvtHandler
 {
 public:
-   ///Constructor
-   Tag( wxScrolledWindow* designCanvas );
-   ///Destructor
-   ~Tag( void );
-   ///Copy Constructor
-   Tag( const Tag& );
-   ///equal operator
-   Tag& operator= ( const Tag& );
-   
-   ///Get the i'th point for the tag
-   ///\param i The i'th point you are after
-   wxPoint* GetConnectorsPoint( size_t i );
-   ///Get tag text
-   wxString* GetTagText( void );
-   ///Get the polygon that will be rendered
-   Polygon* GetPolygon( void );
-   ///Get the bounging box for the tag
-   wxRect* GetBoundingBox( void );
-   ///Set the raw xml data to configure the tag
-   ///\param inputTag The pointer to the class holding the tag data
-   void SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag );
-   ///Get the raw xml data to be written back out
-   VE_XML::VE_Model::TagPtr GetVETagPtr();
-   
-   ///Calculate tag polygon to be drawn
-   void CalcTagPoly( void );
-   ///Draw functions
-   void DrawTagCon( bool flag, std::pair< double, double > scale );
-   ///Draw functions
-   void DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale );
+    ///Constructor
+    Tag( wxScrolledWindow* designCanvas );
+    ///Destructor
+    ~Tag( void );
+    ///Copy Constructor
+    Tag( const Tag& );
+    ///equal operator
+    Tag& operator= ( const Tag& );
+
+    ///Get the i'th point for the tag
+    ///\param i The i'th point you are after
+    wxPoint* GetConnectorsPoint( size_t i );
+    ///Get tag text
+    wxString* GetTagText( void );
+    ///Get the polygon that will be rendered
+    Polygon* GetPolygon( void );
+    ///Get the bounging box for the tag
+    wxRect* GetBoundingBox( void );
+    ///Set the raw xml data to configure the tag
+    ///\param inputTag The pointer to the class holding the tag data
+    void SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag );
+    ///Get the raw xml data to be written back out
+    VE_XML::VE_Model::TagPtr GetVETagPtr();
+    ///Calculate tag polygon to be drawn
+    void CalcTagPoly( void );
+    ///Draw functions
+    void DrawTagCon( bool flag, std::pair< double, double > scale );
+    ///Draw functions
+    void DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale );
 
 private:
-   wxPoint cons[2]; ///<2 connectors for tag, end and middle
-   wxString text;///<Text displayed by the tag
-   wxRect box;///<Box that the tag is contained in
-   Polygon poly; ///<Poly is the current poly on the canvas
-   wxScrolledWindow* canvas;
-   std::string uuid;
-
-   std::string ConvertUnicode( const wxChar* data )
-   {
-       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-       return tempStr;
-   }
+    ///2 connectors for a tag, end and middle
+    wxPoint cons[2]; 
+    ///Text to be dispalyed in the tag
+    wxString text;
+    ///Box that the tag is contained in
+    wxRect box;
+    ///Poly is the current poly on the canvas
+    Polygon poly;
+    ///The canvas to be drawn to
+    wxScrolledWindow* canvas;
+    ///Unique identifier for this tag
+    std::string uuid;
+    ///Convert unicode strings
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( 
+            static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }
