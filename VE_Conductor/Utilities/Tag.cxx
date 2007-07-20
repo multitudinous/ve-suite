@@ -45,84 +45,84 @@ using namespace VE_Conductor::GUI_Utilities;
 ////////////////////////////////////////////////
 Tag::Tag( wxScrolledWindow* designCanvas )
 {
-   canvas = designCanvas;
-   VE_XML::VE_Model::Tag temp;
-   uuid = temp.GetID();
+    canvas = designCanvas;
+    VE_XML::VE_Model::Tag temp;
+    uuid = temp.GetID();
 }
 ////////////////////////////////////////////////
 Tag::~Tag( void )
 {
-   ;//Do nothing since this class doesn't manage any of the pointers memory
+    ;//Do nothing since this class doesn't manage any of the pointers memory
 }
 ////////////////////////////////////////////////
 Tag::Tag( const Tag& input )
 {
-   cons[0] = input.cons[0];
-   cons[1] = input.cons[1];
-   text = input.text;
-   box = input.box;
-   poly = input.poly;
-   canvas = input.canvas;
-   uuid = input.uuid;
+    cons[0] = input.cons[0];
+    cons[1] = input.cons[1];
+    text = input.text;
+    box = input.box;
+    poly = input.poly;
+    canvas = input.canvas;
+    uuid = input.uuid;
 }
 ////////////////////////////////////////////////
 Tag& Tag::operator= ( const Tag& input )
 {
-   if ( this != &input )
-   {
-      cons[0] = input.cons[0];
-      cons[1] = input.cons[1];
-      text = input.text;
-      box = input.box;
-      poly = input.poly;
-      canvas = input.canvas;
-      uuid = input.uuid;
-   }
-   return *this;
+    if( this != &input )
+    {
+        cons[0] = input.cons[0];
+        cons[1] = input.cons[1];
+        text = input.text;
+        box = input.box;
+        poly = input.poly;
+        canvas = input.canvas;
+        uuid = input.uuid;
+    }
+    return *this;
 }
 ////////////////////////////////////////////////
 wxPoint* Tag::GetConnectorsPoint( size_t i )
 {
-   return &(cons[i]);
+    return &(cons[i]);
 }
 ////////////////////////////////////////////////
 wxString* Tag::GetTagText( void )
 {
-   return &(text);
+    return &(text);
 }
 ////////////////////////////////////////////////
 VE_Conductor::GUI_Utilities::Polygon* Tag::GetPolygon( void )
 {
-   return &(poly);
+    return &(poly);
 }
 ////////////////////////////////////////////////
 wxRect* Tag::GetBoundingBox( void )
 {
-   return &(box);
+    return &(box);
 }
 
 ////////////////////////////////////////////////////
 void Tag::CalcTagPoly( void )
 {
-   // Create a poly based on a tag
-   wxPoint endpos;
-   endpos.x = box.x;
-   endpos.y = box.y+box.height/2;
-   
-   // first point of the extension line
-   poly.GetPolygon()->push_back(wxPoint(cons[0].x, cons[0].y-3));
-   // second point of the extension line
-   poly.GetPolygon()->push_back(wxPoint(cons[1].x, cons[1].y-3));
-   // first corner of the text box
-   poly.GetPolygon()->push_back(wxPoint(endpos.x, endpos.y-3));
-   poly.GetPolygon()->push_back(wxPoint(box.x, box.y));
-   poly.GetPolygon()->push_back(wxPoint(box.x+box.width, box.y));
-   poly.GetPolygon()->push_back(wxPoint(box.x+box.width, box.y+box.height));
-   poly.GetPolygon()->push_back(wxPoint(box.x, box.y+box.height));
-   // and now back around again
-   poly.GetPolygon()->push_back(wxPoint(endpos.x, endpos.y+3));
-   poly.GetPolygon()->push_back(wxPoint(cons[1].x, cons[1].y+3));
-   poly.GetPolygon()->push_back(wxPoint(cons[0].x, cons[0].y+3));
+    // Create a poly based on a tag
+    wxPoint endpos;
+    endpos.x = box.x;
+    endpos.y = box.y+box.height/2;
+
+    // first point of the extension line
+    poly.GetPolygon()->push_back(wxPoint(cons[0].x, cons[0].y-3));
+    // second point of the extension line
+    poly.GetPolygon()->push_back(wxPoint(cons[1].x, cons[1].y-3));
+    // first corner of the text box
+    poly.GetPolygon()->push_back(wxPoint(endpos.x, endpos.y-3));
+    poly.GetPolygon()->push_back(wxPoint(box.x, box.y));
+    poly.GetPolygon()->push_back(wxPoint(box.x+box.width, box.y));
+    poly.GetPolygon()->push_back(wxPoint(box.x+box.width, box.y+box.height));
+    poly.GetPolygon()->push_back(wxPoint(box.x, box.y+box.height));
+    // and now back around again
+    poly.GetPolygon()->push_back(wxPoint(endpos.x, endpos.y+3));
+    poly.GetPolygon()->push_back(wxPoint(cons[1].x, cons[1].y+3));
+    poly.GetPolygon()->push_back(wxPoint(cons[0].x, cons[0].y+3));
 }
 
 ////////////////////////////////////////////////////////////
