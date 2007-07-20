@@ -68,19 +68,19 @@ public:
 
     ///Set the text for the tag
     ///\param text string containing text for the tag
-    void SetTagText( std::string text );
+    void SetText( std::string text );
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData( 
         XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
     ///Get the i'th point for a Tag.
     ///\param i The i'th point you are after.
-    PointPtr GetTagPoint( size_t i );
+    PointPtr GetPoint( size_t i );
     ///Get the tag text
-    std::string GetTagText( void );
+    std::string GetText( void );
     ///Add a new point to the tag
     ///\param newPoint The new point to be added
-    void AddTagPoint( PointPtr newPoint );
+    void AddPoint( PointPtr newPoint );
 
 protected:
    ///Internally update the data.

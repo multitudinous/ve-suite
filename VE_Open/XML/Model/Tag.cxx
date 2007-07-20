@@ -88,7 +88,7 @@ Tag& Tag::operator=( const Tag& input)
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::SetTagText( std::string text )
+void Tag::SetText( std::string text )
 {
    tagText = text;
 }
@@ -100,16 +100,16 @@ void Tag::_updateVEElement( std::string input )
     SetSubElement( "tagText", tagText );
     for( size_t i = 0; i < tagPoints.size(); ++i )
     {
-        SetSubElement( "linkPoints", tagPoints.at( i ) );   
+        SetSubElement( "linkPoints", &(*tagPoints.at( i )) );   
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string Tag::GetTagText( void )
+std::string Tag::GetText( void )
 {
    return tagText;
 }
 ////////////////////////////////////////////////////////////////////////////////
-PointPtr Tag::GetTagPoint( size_t i )
+PointPtr Tag::GetPoint( size_t i )
 {
     try
     {
@@ -123,7 +123,7 @@ PointPtr Tag::GetTagPoint( size_t i )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::AddTagPoint( PointPtr newPoint )
+void Tag::AddPoint( PointPtr newPoint )
 {
     tagPoints.push_back( newPoint );
 }
@@ -147,8 +147,8 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
     tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
     // for Tag points
     unsigned int numberOfPoints = 
-    currentElement->getElementsByTagName( 
-    xercesString("linkPoints") )->getLength();
+        currentElement->getElementsByTagName( 
+        xercesString("linkPoints") )->getLength();
 
     for( unsigned int i = 0; i < numberOfPoints; ++i )
     {

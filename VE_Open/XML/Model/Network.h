@@ -92,7 +92,7 @@ public:
     size_t GetNumberOfTags( void );
     ///Add a tag to the network
     ///\param newLink The new tag to be added
-    void SetTag( TagPtr newLink );
+    void AddTag( TagPtr newLink );
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.

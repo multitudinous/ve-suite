@@ -124,16 +124,21 @@ Network& Network::operator=( const Network& input)
 ////////////////////////////////////////////////////////////////////////////////   
 void Network::_updateVEElement( std::string input )
 {
-   // write all the elements according to verg_model.xsd
-   for ( size_t i = 0; i < links.size(); ++i )
-   {
-      SetSubElement( "link", links.at( i ) );   
-   }
+    // write all the elements according to verg_model.xsd
+    for ( size_t i = 0; i < links.size(); ++i )
+    {
+        SetSubElement( "link", links.at( i ) );   
+    }
 
-   for ( size_t i = 0; i < conductorState.size(); ++i )
-   {
-      SetSubElement( "conductorState", conductorState.at( i ) );   
-   }
+    for ( size_t i = 0; i < conductorState.size(); ++i )
+    {
+        SetSubElement( "conductorState", conductorState.at( i ) );   
+    }
+
+    for ( size_t i = 0; i < tags.size(); ++i )
+    {
+        SetSubElement( "tag", &(*tags.at( i )) );   
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////   
 Link* Network::GetLink( int i )
@@ -214,11 +219,10 @@ void Network::SetObjectFromXMLData(DOMNode* element)
         unsigned int numberOfPortData = 
             currentElement->getElementsByTagName( 
             xercesString("tag") )->getLength();
-
         for ( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "tag", i );
-            tags.push_back( TagPtr() );
+            tags.push_back( new Tag() );
             tags.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }      
@@ -240,10 +244,10 @@ TagPtr Network::GetTag( size_t i )
 ////////////////////////////////////////////////////////////////////////////////   
 size_t Network::GetNumberOfTags( void )
 {
-    tags.size();
+    return tags.size();
 }
 ////////////////////////////////////////////////////////////////////////////////   
-void Network::SetTag( TagPtr newLink )
+void Network::AddTag( TagPtr newLink )
 {
     tags.push_back( newLink );
 }

@@ -192,10 +192,6 @@ protected:
    std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
    
    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
-   //wxPoint tag_rpt; // the relative point of the tag
-
-   //void Pack( std::vector<Interface> & UIs );
-   //void UnPack( std::vector<Interface> & UIs );
 
 private:
    int intfssize;

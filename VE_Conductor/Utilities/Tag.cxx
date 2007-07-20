@@ -31,7 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/Tag.h"
-#include <wx/window.h>
+
+#include "VE_Open/XML/Model/Tag.h"
+#include "VE_Open/XML/Model/Point.h"
+
+#include <wx/scrolwin.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
 #include <wx/dcclient.h>
@@ -39,9 +43,11 @@
 using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
-Tag::Tag( wxWindow* designCanvas )
+Tag::Tag( wxScrolledWindow* designCanvas )
 {
    canvas = designCanvas;
+   VE_XML::VE_Model::Tag temp;
+   uuid = temp.GetID();
 }
 ////////////////////////////////////////////////
 Tag::~Tag( void )
@@ -57,6 +63,7 @@ Tag::Tag( const Tag& input )
    box = input.box;
    poly = input.poly;
    canvas = input.canvas;
+   uuid = input.uuid;
 }
 ////////////////////////////////////////////////
 Tag& Tag::operator= ( const Tag& input )
@@ -69,13 +76,9 @@ Tag& Tag::operator= ( const Tag& input )
       box = input.box;
       poly = input.poly;
       canvas = input.canvas;
+      uuid = input.uuid;
    }
    return *this;
-}
-////////////////////////////////////////////////
-void Tag::SetWxWindow( wxWindow* window )
-{
-   canvas = window;
 }
 ////////////////////////////////////////////////
 wxPoint* Tag::GetConnectorsPoint( size_t i )
@@ -160,8 +163,7 @@ void Tag::DrawTagCon( bool flag, std::pair< double, double > scale )
    dc.SetBrush(old_brush);
    dc.SetPen(old_pen);
 }
-
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
 {
    //wxClientDC dc( canvas );
@@ -198,16 +200,52 @@ void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
       dc.SetBrush(*wxWHITE_BRUSH);
    }
 
-   //fflush(NULL);
    dc.DrawLines(3, points);
    dc.DrawRectangle( box.x-3,  box.y-3,  box.width+6,  box.height+6);
 
-   //fflush(NULL);
    if (flag) 
       dc.DrawText( text, box.x, box.y );
 
-   //fflush(NULL);
    dc.SetPen(old_pen);
    dc.SetBrush(old_brush);
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void Tag::SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag )
+{
+    text = wxString( inputTag->GetText().c_str(), wxConvUTF8 );
+    cons[0].x = inputTag->GetPoint( 0 )->GetPoint().first;
+    cons[0].y = inputTag->GetPoint( 0 )->GetPoint().second;
+    cons[1].x = inputTag->GetPoint( 1 )->GetPoint().first;
+    cons[1].y = inputTag->GetPoint( 1 )->GetPoint().second;
+    box.x = inputTag->GetPoint( 2 )->GetPoint().first;
+    box.x = inputTag->GetPoint( 2 )->GetPoint().second;
+    uuid = inputTag->GetID();
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::VE_Model::TagPtr Tag::GetVETagPtr()
+{
+    VE_XML::VE_Model::TagPtr tagPtr = new VE_XML::VE_Model::Tag();
+    tagPtr->SetText( ConvertUnicode( text.c_str() ) );
+    tagPtr->SetID( uuid );
+    //Order is important below
+    VE_XML::VE_Model::PointPtr con0Ptr = new VE_XML::VE_Model::Point();
+    std::pair< unsigned int, unsigned int > point0;
+    point0.first = cons[0].x;
+    point0.second = cons[0].y;
+    con0Ptr->SetPoint( point0 );
+    tagPtr->AddPoint( con0Ptr );
+    VE_XML::VE_Model::PointPtr con1Ptr = new VE_XML::VE_Model::Point();
+    std::pair< unsigned int, unsigned int > point1;
+    point1.first = cons[1].x;
+    point1.second = cons[1].y;
+    con1Ptr->SetPoint( point1 );
+    tagPtr->AddPoint( con1Ptr );
+    VE_XML::VE_Model::PointPtr con2Ptr = new VE_XML::VE_Model::Point();
+    std::pair< unsigned int, unsigned int > point2;
+    point2.first = box.x;
+    point2.second = box.y;
+    con2Ptr->SetPoint( point2 );
+    tagPtr->AddPoint( con2Ptr );
+    return tagPtr;
+}
+////////////////////////////////////////////////////////////////////////////////

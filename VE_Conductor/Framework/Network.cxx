@@ -146,6 +146,14 @@ Network::~Network()
     }
     links.clear();
     
+    //Pop the tag event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+         iter=tags.begin(); iter!=tags.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
+    tags.clear();
+
     //Pop the plugin event handlers to clear these event handlers
     for( std::map< int, Module >::iterator iter = modules.begin(); 
          iter!=modules.end(); iter++)
@@ -650,34 +658,52 @@ void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
 /////////////////////////////////////////////////////
 void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 {
-	if(m_selTag >= 0)
+	if( m_selTag < 0 )
 	{
-		int answer = wxMessageBox( _("Do you really want to delete this tag?"), _("Confirmation"), wxYES_NO);
-		if ( answer != wxYES )
-		{
-		  return;
-		}
-
-		while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-
-		std::vector< Tag >::iterator iter;
-		int i;
-		for ( iter = tags.begin(), i=0; iter != tags.end(); i++)
-		  if ( i == m_selTag )
-		  {
-			 iter = tags.erase( iter );
-			 m_selTag=-1;
-			 break;
-		  }
-		  else
-		  {
-			 ++iter;
-		  }
-
-		while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-
-		Refresh(true);
+        return;
 	}
+    
+    int answer = wxMessageBox( _("Do you really want to delete this tag?"), _("Confirmation"), wxYES_NO);
+    if( answer != wxYES )
+    {
+        return;
+    }
+
+    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+
+    //Pop the tag event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+         iter=tags.begin(); iter!=tags.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
+
+    int i;
+    std::vector< Tag >::iterator iter;
+    for( iter = tags.begin(), i=0; iter != tags.end(); ++i )
+    {  
+        if( i == m_selTag )
+        {
+            iter = tags.erase( iter );
+            m_selTag=-1;
+            break;
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+    
+    //Pop the tag event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+       iter=tags.begin(); iter!=tags.end(); iter++ )
+    {
+        PushEventHandler( &(*iter) );
+    }
+    
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+
+    Refresh(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelLink(wxCommandEvent& event )
@@ -1713,7 +1739,14 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 //////////////////////////////////////////////////////
 void Network::AddTag(int x, int y, wxString text)
 {
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
+    //Pop the tag event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+         iter=tags.begin(); iter!=tags.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
+    
    Tag t( this );
    int w, h;
    wxClientDC dc(this);
@@ -1739,10 +1772,16 @@ void Network::AddTag(int x, int y, wxString text)
    t.CalcTagPoly();
    tags.push_back(t);
 
-  Refresh(true);
-  //Update();
+   //Pop the tag event handlers to clear these event handlers
+   for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+        iter=tags.begin(); iter!=tags.end(); iter++ )
+   {
+       PushEventHandler( &(*iter) );
+   }
 
    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+   
+   Refresh(true);
 }
 
 //////////////////////////////////////////////////////////////
@@ -1795,7 +1834,7 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     PushEventHandler( modules[id].GetPlugin() );
     Refresh(true);
     //Update();
-  while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 ////////////////////////////////////////
 /////// Draw Functions /////////////////
@@ -1861,88 +1900,56 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 //////////////////////////////////////////////
 std::string Network::Save( std::string fileName )
 {
-   // Here we wshould loop over all of the following
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   //Newtork
-   veNetwork = VE_XML::VE_Model::Network();
-   //Need to delete network first
-   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &veNetwork, "veNetwork" ) );
+    // Here we wshould loop over all of the following
+    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    //Newtork
+    veNetwork = VE_XML::VE_Model::Network();
+    //Need to delete network first
+    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &veNetwork, "veNetwork" ) );
 
-   veNetwork.GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
-   veNetwork.GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
-   veNetwork.GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
-   veNetwork.GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
-   veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
-   veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+    veNetwork.GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
+    veNetwork.GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
+    veNetwork.GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
+    veNetwork.GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
+    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
-   for( size_t i = 0; i < links.size(); ++i )
-   {
-      VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
-      //xmlLink->GetFromPort()->SetData( modules[ links[i].GetFromModule() ].GetPlugin()->GetModelName(), links[i].GetFromPort() );
-      //xmlLink->GetToPort()->SetData( modules[ links[i].GetToModule() ].pl_mod->GetModelName(), links[i].GetToPort() );
-      xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
-      xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
-      *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
-      *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
-      xmlLink->SetLinkName( ConvertUnicode( links.at( i ).GetName().c_str() ) );
-      xmlLink->SetID( links.at( i ).GetUUID() );
+    //Update the links
+    for( size_t i = 0; i < links.size(); ++i )
+    {
+        VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
+        xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
+        xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
+        *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
+        *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
+        xmlLink->SetLinkName( ConvertUnicode( links.at( i ).GetName().c_str() ) );
+        xmlLink->SetID( links.at( i ).GetUUID() );
 
-      //Try to store link cons,
-      //link cons are (x,y) wxpoint
-      //here I store x in one vector and y in the other
-      for ( size_t j = 0; j < links[ i ].GetNumberOfPoints(); ++j )
-      {
-         xmlLink->GetLinkPoint( j )->SetPoint( std::pair< unsigned int, unsigned int >( links[ i ].GetPoint( j )->x, links[ i ].GetPoint( j )->y ) );
-      }
-   }
+        //Try to store link cons,
+        //link cons are (x,y) wxpoint
+        //here I store x in one vector and y in the other
+        for ( size_t j = 0; j < links[ i ].GetNumberOfPoints(); ++j )
+        {
+            xmlLink->GetLinkPoint( j )->SetPoint( 
+                std::pair< unsigned int, unsigned int >( 
+                links[ i ].GetPoint( j )->x, links[ i ].GetPoint( j )->y ) );
+        }
+    }
 
-   //  Models
-   std::map< int, Module >::iterator iter;
-   for( iter=modules.begin(); iter!=modules.end(); ++iter )
-   {
-      iter->second.GetPlugin()->SetID( iter->first );
-      nodes.push_back( 
-                  std::pair< VE_XML::XMLObject*, std::string >( 
-                  iter->second.GetPlugin()->GetVEModel(), "veModel" ) 
-                     );
-      //dynamic_cast< VE_Model::Model* >( nodes.back().first )->SetModelName( modules[ iter->first ].GetClassName() );
-   }
-
-   //  tags
-   /*for ( size_t i = 0; i < veTagVector.size(); ++i )
-   {
-      delete veTagVector.at( i );
-   }
-   veTagVector.clear();
-
-   for ( size_t i = 0; i < tags.size(); ++i )
-   {
-      std::pair< unsigned int, unsigned int > pointCoords;
-
-      veTagVector.push_back( new VE_Model::Tag( doc ) );
-
-      veTagVector.back()->SetTagText( tags.back().text.c_str() );
-
-      pointCoords.first = tags.back().cons[0].x;
-      pointCoords.second = tags.back().cons[0].y;
-      veTagVector.back()->GetTagPoint( 0 )->SetPoint( pointCoords );
-
-      pointCoords.first = tags.back().cons[1].x;
-      pointCoords.second = tags.back().cons[1].y;
-      veTagVector.back()->GetTagPoint( 1 )->SetPoint( pointCoords );
-
-      pointCoords.first = tags.back().box.x;
-      pointCoords.second = tags.back().box.y;
-      veTagVector.back()->GetTagPoint( 2 )->SetPoint( pointCoords );
-   }
-
-   for ( size_t i = 0; i < tags.size(); ++i )
-   {
-      doc->getDocumentElement()->appendChild
-         ( 
-            veTagVector.at( i )->GetXMLData( "veTag" )
-         );
-   }*/
+    //Update the tags
+    for( size_t i = 0; i < tags.size(); ++i )
+    {
+        veNetwork.AddTag( tags.at( i ).GetVETagPtr() );
+    }
+       
+    //Models
+    for( std::map< int, Module >::iterator iter = modules.begin(); 
+         iter!=modules.end(); ++iter )
+    {
+        iter->second.GetPlugin()->SetID( iter->first );
+        nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+            iter->second.GetPlugin()->GetVEModel(), "veModel" ) );
+    }
 
    //Write out the veUser info for the local user
    VE_XML::User userInfo;
@@ -1950,9 +1957,10 @@ std::string Network::Save( std::string fileName )
    userInfo.SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
    VE_XML::StateInfo* colorState = new VE_XML::StateInfo();
    ///Load the current preferences from the data buffer
-   std::map< std::string, VE_XML::Command > tempMap = UserPreferencesDataBuffer::instance()->GetCommandMap();
+   std::map< std::string, VE_XML::Command > tempMap = 
+       UserPreferencesDataBuffer::instance()->GetCommandMap();
    std::map< std::string, VE_XML::Command >::iterator prefIter;
-   for ( prefIter = tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
+   for( prefIter = tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
    {
       colorState->AddState( new VE_XML::Command( prefIter->second ) );
    }
@@ -2017,7 +2025,14 @@ void Network::New( bool promptClearXplorer )
     }
     modules.clear();
 
+    //Pop the tag event handlers to clear these event handlers
+    for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+         iter =  tags.begin(); iter != tags.end(); iter++ )
+    {
+        RemoveEventHandler( &(*iter) );
+    }
     tags.clear();
+    
     ///Reset the canvas available spaces
     sbboxes.clear();
    
@@ -2098,6 +2113,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 #endif
    _fileProgress->Update( 35, _("start loading") );
 
+    //Setup the links
     for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
     {
         links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
@@ -2142,6 +2158,22 @@ void Network::CreateNetwork( std::string xmlNetwork )
     {
         PushEventHandler( &links.at( i ) );
     }
+
+    //Setup the tags
+    for( size_t i = 0; i < veNetwork.GetNumberOfTags(); ++i )
+    {
+        tags.push_back( VE_Conductor::GUI_Utilities::Tag( this ) );
+        tags.at( i ).SetVETagPtr( veNetwork.GetTag( i ) );
+        // Create the polygon for tags
+        tags.at( i ).CalcTagPoly();
+    }
+    
+    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    {
+        PushEventHandler( &tags.at( i ) );
+    }
+    
+
     _fileProgress->Update( 50, _("create models") );
     _fileProgress->Update( 75, _("done create models") );
     // now lets create a list of them
@@ -2231,28 +2263,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( &colorCommand );
-   /*
-   // do this for tags
-   DOMNodeList* subElements = doc->getDocumentElement()->getElementsByTagName( xercesString("veTag") );
-   unsigned int numTags = subElements->getLength();
-   // now lets create a list of them
-   for ( unsigned int i = 0; i < numCommands; ++i )
-   {
-      VE_Model::Tag* temp = new VE_Model::Tag( doc );
-      temp->SetObjectFromXMLData( dynamic_cast< DOMElement* >( subElements->item(i) ) );
-      veTagVector.push_back( temp );
-      tags.push_back( TAG );
-      tags.back().text = wxString( veTagVector.back()->GetTagText().c_str() );
-      tags.back().cons[0].x = veTagVector.back()->GetTagPoint( 0 )->GetPoint().first;
-      tags.back().cons[0].y = veTagVector.back()->GetTagPoint( 0 )->GetPoint().second;
-      tags.back().cons[1].x = veTagVector.back()->GetTagPoint( 1 )->GetPoint().first;
-      tags.back().cons[1].y = veTagVector.back()->GetTagPoint( 1 )->GetPoint().second;
-      tags.back().box.x = veTagVector.back()->GetTagPoint( 2 )->GetPoint().first;
-      tags.back().box.x = veTagVector.back()->GetTagPoint( 2 )->GetPoint().second;
-      // Create the polygon for tags
-      tags.back().CalcTagPoly();
-   }
-   */
+
    m_selMod = -1;
    m_selFrPort = -1; 
    m_selToPort = -1; 
@@ -2262,7 +2273,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
    m_selTagCon = -1; 
    xold = yold =0;
    _fileProgress->Update( 100, _("Done") );
-   //while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
    Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////

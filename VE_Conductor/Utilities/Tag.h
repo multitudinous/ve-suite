@@ -41,20 +41,25 @@ Tag API
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
 #include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Open/XML/Model/TagPtr.h"
+
 #include <wx/gdicmn.h>
 #include <wx/string.h>
 #include <wx/dc.h>
-class wxWindow;
+#include <wx/event.h>
+
+class wxScrolledWindow;
 
 namespace VE_Conductor
 {
 namespace GUI_Utilities
 {
-class VE_CONDUCTOR_UTILS_EXPORTS Tag
+class VE_CONDUCTOR_UTILS_EXPORTS Tag : public wxEvtHandler
 {
 public:
    ///Constructor
-   Tag( wxWindow* designCanvas );
+   Tag( wxScrolledWindow* designCanvas );
    ///Destructor
    ~Tag( void );
    ///Copy Constructor
@@ -64,13 +69,18 @@ public:
 
    ///Set the wxWindow on which you wish to draw a tag
    ///\param window The window on which the tag will be drawn
-   void SetWxWindow( wxWindow* window );
+   //void SetWxWindow( wxWindow* window );
    wxPoint* GetConnectorsPoint( size_t i );
    wxString* GetTagText( void );
    Polygon* GetPolygon( void );
    wxRect* GetBoundingBox( void );
-
-   ///
+   ///Set the raw xml data to configure the tag
+   ///\param inputTag The pointer to the class holding the tag data
+   void SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag );
+   ///Get the raw xml data to be written back out
+   VE_XML::VE_Model::TagPtr GetVETagPtr();
+   
+   ///Calculate tag polygon to be drawn
    void CalcTagPoly( void );
    void DrawTagCon( bool flag, std::pair< double, double > scale );
    void DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale );
@@ -80,7 +90,14 @@ private:
    wxString text;///<Text displayed by the tag
    wxRect box;///<Box that the tag is contained in
    Polygon poly; ///<Poly is the current poly on the canvas
-   wxWindow* canvas;
+   wxScrolledWindow* canvas;
+   std::string uuid;
+
+   std::string ConvertUnicode( const wxChar* data )
+   {
+       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+       return tempStr;
+   }
 };
 }
 }
