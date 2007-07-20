@@ -129,11 +129,6 @@ isLoading( false )
    SetBackgroundColour(*wxWHITE);
    //This is for the paint buffer
    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-
-   //int virX, virY;
-   //GetVirtualSize(&virX, &virY);
-   //bitmapBuffer = new wxBitmap(4000, 4000);
-   //bitmapBuffer->SetMask( new wxMask() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -1440,9 +1435,6 @@ void Network::MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc)
         scroll = true;
     }
     
-    //erase the original link;
-    //  links[ln].DrawLink( false, userScale );
-    //  links[ln].DrawLinkCon( false, userScale );
     *(links[ln].GetPoint( ln_con )) = wxPoint(x,y);
     
     if ( oldxpos!=xpos || oldypos!=ypos || scroll)
