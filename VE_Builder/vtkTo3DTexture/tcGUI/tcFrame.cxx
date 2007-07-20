@@ -480,8 +480,8 @@ void TCFrame::_onResolutionCallback(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////
 void TCFrame::_onUpdateDirectoryText(wxCommandEvent& event)
 {
-   _inputDir = wxString(_inputDirBox->GetValue(), wxConvUTF8);
-   _outputDir = wxString(_outputDirBox->GetValue(), wxConvUTF8);
+   SetInputDirectory(_inputDirBox->GetValue().c_str());
+   SetOutputDirectory(_outputDirBox->GetValue().c_str());
 }
 ////////////////////////////////////////////////////
 void TCFrame::_onQuitCallback(wxCommandEvent& event)
