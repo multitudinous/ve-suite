@@ -41,86 +41,99 @@ using namespace VE_XML::VE_Model;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-Point::Point( )
-:XMLObject( )
+Point::Point()
+:XMLObject()
 {
-   point.first = 0;
-   point.second = 0;
-   SetObjectType("Point");
-   SetObjectNamespace("Model");
+    point.first = 0;
+    point.second = 0;
+    SetObjectType("Point");
+    SetObjectNamespace("Model");
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
 Point::~Point()
 {
-   ;
+    ;
 }
 ///////////////////////////////////////////
 Point::Point( const Point& input )
 :XMLObject(input)
 {
-   point = input.point;
+    point = input.point;
 }
 /////////////////////////////////////////////////////
 Point& Point::operator=( const Point& input)
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-      point = input.point;
-   }
-   return *this;
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =(input);
+        point = input.point;
+    }
+    return *this;
 }
 /////////////////////////////////////////////////////////////////
 void Point::SetPoint( std::pair< unsigned int, unsigned int > input )
 {
-   point = input;
+    point = input;
 }
 ///////////////////////////////////////////////////
 std::pair< unsigned int, unsigned int > Point::GetPoint( void )
 {
-   return point;
+    return point;
 }
 ////////////////////////////////////
 void Point::_updateVEElement( std::string input )
 {
-   //Add code here to update the specific sub elements
-   // name comes from verg.xsd
-   SetSubElement( "xLocation", point.first );
-   SetSubElement( "yLocation", point.second );
+    //Add code here to update the specific sub elements
+    // name comes from verg.xsd
+    SetAttribute( "xLocation", point.first );
+    SetAttribute( "yLocation", point.second );
 }
 ////////////////////////////////////////////////////////////
 void Point::SetObjectFromXMLData(DOMNode* xmlInput)
 {
-   //TODO:fill in the values for the double array
-   //this is currently maxed out at 4 in the schema but
-   //we can adjust this to be larger if needed. Also it
-   //has to be at least 2 elements according to the schema
-   //_nElements = xerces->();
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast< DOMElement* >( xmlInput );
-   }
+    //TODO:fill in the values for the double array
+    //this is currently maxed out at 4 in the schema but
+    //we can adjust this to be larger if needed. Also it
+    //has to be at least 2 elements according to the schema
+    //_nElements = xerces->();
+    DOMElement* currentElement = 0;
+    if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+    {
+        currentElement = static_cast< DOMElement* >( xmlInput );
+    }
    
-   if ( currentElement )
-   {  
-      // Let's get the X location
-      DOMElement* xNode = GetSubElement( currentElement, "xLocation", 0 );
-      //We know this about the node so we can cast it...
-      point.first = ExtractFromSimpleElement< unsigned int >( xNode );
+    if( !currentElement )
+    { 
+        std::cerr << " ERROR : Point::SetObjectFromXMLData :" << 
+            "This node has no children which means there is probably a problem." 
+            << std::endl;
+    }
 
-      // Let's get the Y location
-      DOMElement* yNode = GetSubElement( currentElement, "yLocation", 0 );
-      //We know this about the node so we can cast it...
-      point.second = ExtractFromSimpleElement< unsigned int >( yNode );
-   }
-   else
-   {
-      std::cerr << " ERROR : Point::SetObjectFromXMLData :" << 
-                  " This node has no children which means there is probably a problem." << std::endl;
-   }
+    // Let's get the X location
+    DOMElement* xNode = GetSubElement( currentElement, "xLocation", 0 );
+    if( xNode )
+    {
+        //We know this about the node so we can cast it...
+        point.first = ExtractFromSimpleElement< unsigned int >( xNode );
+    }
+    else
+    {
+        GetAttribute( currentElement, "xLocation", point.first );  
+    }
+
+    // Let's get the Y location
+    DOMElement* yNode = GetSubElement( currentElement, "yLocation", 0 );
+    if( yNode )
+    {
+        //We know this about the node so we can cast it...
+        point.second = ExtractFromSimpleElement< unsigned int >( yNode );
+    }
+    else
+    {
+        GetAttribute( currentElement, "yLocation", point.second );  
+    }
 }
 
