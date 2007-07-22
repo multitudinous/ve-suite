@@ -129,6 +129,8 @@ UIPluginBase::UIPluginBase() :
 { 
     pos = wxPoint(0,0); //default position
 
+    name = wxString( "DefaultPlugin", wxConvUTF8 );
+
     wxImage my_img( square_xpm );
     icon_w = static_cast< int >( my_img.GetWidth()*0.30f );
     icon_h = static_cast< int >( my_img.GetHeight()*0.30f );
@@ -917,7 +919,7 @@ void UIPluginBase::SetPluginNameDialog( void )
    wxTextEntryDialog newPluginName( 0, 
                                     _("Enter the name for your UI plugin:"),
                                     _("Set UI Plugin Name..."),
-                                    _("YourPluginName"),wxOK|wxCANCEL);
+                                    name,wxOK|wxCANCEL);
 
    if ( newPluginName.ShowModal() == wxID_OK )
    {

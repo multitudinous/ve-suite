@@ -301,6 +301,7 @@ protected:
    wxPoint actionPoint;
 
    VE_XML::VE_Model::Model* veModel;
+   ///Name seen by the user and rendered on the canvas
    wxString name;
 
    //That's the for default implementation of the DrawIcon. Not part of the general interface
