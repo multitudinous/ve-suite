@@ -245,7 +245,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
-            temp->SetGeodes( _activeObject->GetGeodes() );
+            temp->SetGeodes( _activeObject );
             temp->AddGraphicsObjectToSceneGraph();
             
             // search map for other object types with the same type as this one

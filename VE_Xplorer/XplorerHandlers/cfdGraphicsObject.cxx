@@ -33,6 +33,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include "VE_Xplorer/XplorerHandlers/cfdStreamers.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
 
@@ -188,19 +189,29 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 }
 
 // set actor for classic and trans viz objects
-void cfdGraphicsObject::SetGeodes( std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > input )
+void cfdGraphicsObject::SetGeodes( VE_Xplorer::cfdObjects* input )
 {
-   for ( unsigned int i = 0; i < input.size(); ++i )
-   {
-      //std::cout << "1 " << input.at( i ).get() << std::endl;
-      this->geodes.push_back( new VE_SceneGraph::Geode( *input.at( i ) ) );
-      //std::cout << input.at( i ).get() << std::endl;
-      //Add phong shading to the geodes
-      osg::ref_ptr<osg::StateSet> geodeProperties = geodes.at(i)->getOrCreateStateSet();
-		VE_SceneGraph::Utilities::PhongLoader phongShader;
-		phongShader.SetStateSet(geodeProperties.get());
-		phongShader.SyncShaderAndStateSet();
-   }
+
+    for( unsigned int i = 0; i < input->GetGeodes().size(); ++i )
+    {
+        //std::cout << "1 " << input.at( i ).get() << std::endl;
+        this->geodes.push_back( new VE_SceneGraph::Geode( *input->GetGeodes().at( i ) ) );
+        //std::cout << input.at( i ).get() << std::endl;
+
+        //Add phong shading to the geodes
+        osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
+        VE_SceneGraph::Utilities::PhongLoader phongShader;
+
+        if( dynamic_cast< VE_Xplorer::cfdStreamers* >( input ) )
+        {
+            ;
+        }
+        else
+        {
+            phongShader.SetStateSet( geodeProperties.get() );
+            phongShader.SyncShaderAndStateSet();
+        }
+    }
 }
 
 // Return parent node for a this object

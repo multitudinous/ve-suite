@@ -46,14 +46,15 @@ cfdGraphicsObject API
 
 namespace VE_SceneGraph
 {
-	class Group;
-   class Geode;
-   ///class DCS;
+    class Group;
+    class Geode;
+    ///class DCS;
 }
 
 namespace VE_Xplorer
 {
-   class cfdModel;
+    class cfdModel;
+    class cfdObjects;
 }
 
 #include <vector>
@@ -106,7 +107,7 @@ public:
    void SetTypeOfViz( VizType );
 
    ///Set geodes for classic and trans viz objects
-   void SetGeodes( std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > );
+   void SetGeodes( VE_Xplorer::cfdObjects* input );
 
    ///Return parent node for a this object
    VE_SceneGraph::DCS* GetParentNode( void );
