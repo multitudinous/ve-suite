@@ -191,6 +191,11 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 // set actor for classic and trans viz objects
 void cfdGraphicsObject::SetGeodes( VE_Xplorer::cfdObjects* input )
 {
+    bool isStreamLine = false;
+    if( dynamic_cast< VE_Xplorer::cfdStreamers* >( input ) )
+    {
+        isStreamLine = true;
+    }
 
     for( unsigned int i = 0; i < input->GetGeodes().size(); ++i )
     {
@@ -202,7 +207,7 @@ void cfdGraphicsObject::SetGeodes( VE_Xplorer::cfdObjects* input )
         osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
         VE_SceneGraph::Utilities::PhongLoader phongShader;
 
-        if( dynamic_cast< VE_Xplorer::cfdStreamers* >( input ) )
+        if( isStreamLine )
         {
             ;
         }
