@@ -157,7 +157,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
             //master node in the cluster
             if(_tm->TimeToUpdate()||_update)
             {
-               std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
+               //std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
                
                if(_isLuminance)
                {
@@ -189,7 +189,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
             if(_isLuminance)
             {
                 ///remove this after syncing is fixed
-                vprDEBUG(vprDBG_ALL,2) <<"current frame slaves:  " << _tm->GetCurrentFrame() << " "<<currTime<<" "<<state.getFrameStamp()->getFrameNumber()<< std::endl << vprDEBUG_FLUSH;               
+                //vprDEBUG(vprDBG_ALL,2) <<"current frame slaves:  " << _tm->GetCurrentFrame() << " "<<currTime<<" "<<state.getFrameStamp()->getFrameNumber()<< std::endl << vprDEBUG_FLUSH;               
                 texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
