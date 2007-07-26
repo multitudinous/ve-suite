@@ -465,10 +465,10 @@ void cfdApp::latePreFrame( void )
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
    
-   /*if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "Stored Scenes" )
+   if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "Stored Scenes" )
    {
        captureNextFrameForWeb = true;
-   }*/
+   }
 }
 
 void cfdApp::intraFrame()
@@ -565,6 +565,20 @@ void cfdApp::writeImageFileForWeb()
     osg::ref_ptr<osg::CameraNode> oldcamera = sv->getCamera();
     //Copy the settings from sceneView-camera to 
     //get exactly the view the user sees at the moment:
+
+    //Get the current frustum from the current sceneView-camera
+    double frustum[6] = {0,0,0,0,0,0};
+
+    oldcamera->getProjectionMatrixAsFrustum(frustum[0], frustum[1],
+                                                          frustum[2], frustum[3],
+                                                          frustum[4], frustum[5]);
+    //Create 4 cameras whose frustums tile the original camera frustum
+    double tileFrustum[6] = {0,0,0,0,0,0};
+    //z values don't change
+    tileFrustum[4] = frustum[4];
+    tileFrustum[5] = frustum[5];
+
+
     for( size_t i = 0; i < 4; ++i )
     {
         cameraList.push_back( new osg::CameraNode );
@@ -595,8 +609,19 @@ void cfdApp::writeImageFileForWeb()
         //setup ll
         activeCamera = cameraList.begin();
         // set viewport
-        (*activeCamera)->setViewport( sv->getViewport()->x(), 
+       (*activeCamera)->setViewport( sv->getViewport()->x(), 
             sv->getViewport()->y(), w, h );
+        //left
+        tileFrustum[0] = frustum[0]; 
+        //right 
+        tileFrustum[1] = frustum[0] + (frustum[1] - frustum[0])*.5; 
+        //bottom
+        tileFrustum[2] = frustum[2]; 
+        //top
+        tileFrustum[3] = frustum[3] + (frustum[2] - frustum[3])*.5; 
+        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
+                                                                    tileFrustum[2],tileFrustum[3],
+                                                                    tileFrustum[4],tileFrustum[5]);
         ///Attach the camera to something...the image
         (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, llImage.get());
     }
@@ -605,8 +630,19 @@ void cfdApp::writeImageFileForWeb()
         //setup lr
         // set viewport
         activeCamera = cameraList.begin() + 1;
-        (*activeCamera)->setViewport( sv->getViewport()->x()+w, 
+        (*activeCamera)->setViewport( sv->getViewport()->x(), 
             sv->getViewport()->y(), w, h );
+        //left
+        tileFrustum[0] = frustum[0] + .5*(frustum[1] - frustum[0]); 
+        //right 
+        tileFrustum[1] = frustum[1]; 
+        //bottom
+        tileFrustum[2] = frustum[2]; 
+        //top
+        tileFrustum[3] = frustum[3] + (frustum[2] - frustum[3])*.5; 
+        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
+                                                                    tileFrustum[2],tileFrustum[3],
+                                                                    tileFrustum[4],tileFrustum[5]);
         ///Attach the camera to something...the image
         (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, lrImage.get());
     }
@@ -615,8 +651,19 @@ void cfdApp::writeImageFileForWeb()
         //setup ur
         // set viewport
         activeCamera = cameraList.begin() + 2;
-        (*activeCamera)->setViewport( sv->getViewport()->x()+w, 
-            sv->getViewport()->y()+h, w, h );
+        (*activeCamera)->setViewport( sv->getViewport()->x(), 
+            sv->getViewport()->y(), w, h );
+        //left
+        tileFrustum[0] = frustum[0] + .5*(frustum[1] - frustum[0]); 
+        //right 
+        tileFrustum[1] = frustum[1]; 
+        //bottom
+        tileFrustum[2] = frustum[3] + (frustum[2] - frustum[3])*.5;  
+        //top
+        tileFrustum[3] = frustum[3]; 
+        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
+                                                                    tileFrustum[2],tileFrustum[3],
+                                                                    tileFrustum[4],tileFrustum[5]);
         ///Attach the camera to something...the image
         (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, urImage.get());
     }
@@ -626,7 +673,18 @@ void cfdApp::writeImageFileForWeb()
         // set viewport
         activeCamera = cameraList.begin() + 3;
         (*activeCamera)->setViewport( sv->getViewport()->x(), 
-            sv->getViewport()->y()+h, w, h );
+            sv->getViewport()->y(), w, h );
+        //left
+        tileFrustum[0] = frustum[0]; 
+        //right 
+        tileFrustum[1] = frustum[0] + .5*(frustum[1] - frustum[0]); 
+        //bottom
+        tileFrustum[2] = frustum[3] + (frustum[2] - frustum[3])*.5;  
+        //top
+        tileFrustum[3] = frustum[3]; 
+        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
+                                                                    tileFrustum[2],tileFrustum[3],
+                                                                    tileFrustum[4],tileFrustum[5]);
         ///Attach the camera to something...the image
         (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, ulImage.get());
     }
