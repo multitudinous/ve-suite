@@ -73,7 +73,8 @@ from velClusterDict import *
 from velJconfWindow import *
 from velClusterWindow import *
 from velSettingWin import *
-from velServerAutoKillWindow import *
+from velServerAutoKillUnix import *
+from velServerAutoKillWin32 import *
 from velServerKillWindow import *
 from velCommandLine import *
 from velLaunchCode import *
@@ -83,7 +84,7 @@ import velShell
 from velRecentFiles import *
 from velDepsArray import *
 from velDepsWindow import *
-import velLaunchSplash as AS
+from velLaunchSplash import *
 
 ##Set up the master config file
 config = wx.Config(CONFIG_FILE)
@@ -745,44 +746,42 @@ class LauncherWindow(wx.Frame):
 
 
     def SpScreen(self):
-        self.Iconize()
-        wx.MilliSleep(50)
-        if not windows:
-            self.mutex.acquire()
+        wx.MilliSleep(50)    
 
-        #image = wx.Bitmap(SPLASH_IMAGE, wx.BITMAP_TYPE_XPM)
-        image = SPLASH_IMAGE
-        spFrame = AS.AdvancedSplash(self, bitmapfile = image, extrastyle=AS.AS_NOTIMEOUT | AS.AS_CENTER_ON_SCREEN)
-        spFrame.Bind(wx.EVT_CLOSE, self.OnCloseSplash)
-		
         if windows or unix:
-            spFrame.SetTextColour(wx.BLACK)
-            spFrame.SetTextPosition((155,43))
-            spFrame.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
-            spFrame.SetText("Version 1.1")
-            wx.MilliSleep(200)
-            if self.state.GetSurface("NameServer"):
-                spFrame.SetText("Version 1.1", "Starting Name Server...")
-                wx.MilliSleep(1000)
-            if self.state.GetSurface("Xplorer"):
-                spFrame.SetText("Version 1.1", "Starting Xplorer...")
-                wx.MilliSleep(1000)
-            if self.state.GetSurface("Conductor"):
-                spFrame.SetText("Version 1.1", "Starting Conductor...")
-                wx.MilliSleep(1000)
+            self.mutex.acquire()
+            
+        self.image = SPLASH_IMAGE
 
-                spFrame.SetText("Version 1.1", "Preparing to Launch VE-Suite...")
-                wx.MilliSleep(1000)
-        else:
-            wx.MilliSleep(4500)
-        spFrame.Close()
-        if not windows:
+        self.splash = VeSplashScreen(self, bitmapfile = self.image)
+        self.splash.Bind(wx.EVT_CLOSE, self.OnSplashExit)
+        self.splash.SetTextColor(wx.BLACK)
+        self.splash.SetTextPosition((155,43))
+        self.splash.SetTextFont(wx.Font(8, wx.SWISS, wx.NORMAL, wx.NORMAL, False, "Arial"))
+        self.splash.SetText("Version 1.1")
+        self.splash.Show(True)
+
+        if self.state.GetSurface("NameServer"):
+            self.splash.SetText("Version 1.1", "Starting Name Server...")
+            wx.MilliSleep(1000)
+        if self.state.GetSurface("Xplorer"):
+            self.splash.SetText("Version 1.1", "Starting Xplorer...")
+            wx.MilliSleep(1000)
+        if self.state.GetSurface("Conductor"):
+            self.splash.SetText("Version 1.1", "Starting Conductor...")
+            wx.MilliSleep(1000)
+
+        self.splash.SetText("Version 1.1", "Preparing to Launch VE-Suite...")
+        wx.MilliSleep(2000)
+        
+        self.splash.OnCloseWindow()
+        
+        if windows or unix:
             self.mutex.release()
-
-
-    def OnCloseSplash(self, event):
-        event.Skip()
-        self.Iconize(False)
+        
+    def OnSplashExit(self, event=None):
+        self.splash.Close(True)
+        del self.splash
 
 
     def Launch(self, event = None):
@@ -950,25 +949,29 @@ class LauncherWindow(wx.Frame):
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
-        if windows:
-            self.SpScreen()
-        ##Launch splash screen
         self.OnClose()
-        if unix:
+        
+        if windows or unix:
             self.mutex = thread.allocate_lock()	
             try:
                 thread.start_new_thread(self.SpScreen, ())
             except:
                 pass
             ##Go into the Launch
+        else:
+            self.SpScreen()
+            
         try:
             ##Show NameServer kill window if NameServer was started.
             if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 if v("NameServer"):
                     launchInstance = Launch(self.state.GetLaunchSurface())
-                    if (self.prefSubMenu.IsChecked(602)):
-                        window = ServerAutoKillWindow(pids = launchInstance.GetNameserverPids(), 
-                                                      conduct_Pid = launchInstance.GetConductorPid())
+                    if (self.prefSubMenu.IsChecked(602) and not windows):
+                        window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
+                                                    conduct_Pid = launchInstance.GetConductorPid())
+                    elif (self.prefSubMenu.IsChecked(602) and windows):
+                        window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
+                                                     conduct_Pid = launchInstance.GetConductorPid())
                     else:
                         window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
             else:

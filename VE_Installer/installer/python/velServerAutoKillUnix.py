@@ -41,7 +41,7 @@ if windows:
     import win32api
     import wmi
 
-class ServerAutoKillWindow(wx.Frame):
+class ServerAutoKillUnix(wx.Frame):
     """A window to shutdown the Nameserver after launch.
     Functions:
         __init__(pids, [parent, title])
@@ -59,37 +59,18 @@ class ServerAutoKillWindow(wx.Frame):
         self.KillNameServer()
         
     def KillNameServer(self):
-        if windows:
-            c = wmi.WMI()
-            pID = self.c_Pid
-            ps = len (c.Win32_Process (ProcessId=pID))
-
-	    while (ps == 1):
-                ps = len (c.Win32_Process (ProcessId=pID))
-                sleep(2)
-            
-            PROCESS_TERMINATE = 1
-            for pid in self.pids:
-                try:
-                    handle = win32api.OpenProcess(PROCESS_TERMINATE, False, pid)
-                    win32api.TerminateProcess(handle, -1)
-                    win32api.CloseHandle(handle)
-                except:
-                    pass
-
-        elif unix:
+        
 	    ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
-	    #print "self.c_pid %s : " % self.c_Pid
 
 	    while (len(ps) <= 4):
 	        ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
-	        #print "while loop : %s " % ps
 	        sleep(2)
 
             killArray = ["kill"]
             for pid in self.pids:
                 killArray.append(str(pid))
                 Popen(killArray)
+
         	     
     def OnClose(self, event = None):
         #Closes Server Shutdown Window
