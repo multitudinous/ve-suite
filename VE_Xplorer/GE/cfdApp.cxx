@@ -103,7 +103,11 @@ using namespace VE_Util;
 ////////////////////////////////////////////////////////////////////////////////
 cfdApp::cfdApp( int argc, char* argv[] ) 
 #ifdef _OSG
+#if __VJ_version >= 2003000
+: vrj::OSG::App( vrj::Kernel::instance() ),
+#else
 : vrj::OsgApp( vrj::Kernel::instance() ),
+#endif
 #endif
 readyToWriteWebImage( false ),
 writingWebImageNow( false ),
@@ -213,7 +217,11 @@ void cfdApp::contextInit()
     vpr::Guard<vpr::Mutex> val_guard(mValueLock);
 	//Override the vrj::OsgApp::contextInit() default functionality
 	//**************************************************************************
+#if __VJ_version >= 2003000
+	unsigned int unique_context_id = vrj::opengl::DrawManager::instance()->getCurrentContext();
+#else
 	unsigned int unique_context_id = vrj::GlDrawManager::instance()->getCurrentContext();
+#endif
 
    // --- Create new context specific scene viewer -- //
    osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
@@ -726,8 +734,13 @@ void cfdApp::draw()
     sv = (*sceneViewer);    // Get context specific scene viewer
     vprASSERT(sv.get() != NULL);
 
+#if __VJ_version >= 2003000
+    vrj::opengl::DrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
+    gl_manager = vrj::opengl::DrawManager::instance();
+#else
     vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
     gl_manager = vrj::GlDrawManager::instance();
+#endif
 
     // Set the up the viewport (since OSG clears it out)
     float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
@@ -751,9 +764,13 @@ void cfdApp::draw()
     //sv->getRenderStage()->setClearMask(GL_NONE);
 
     //Get the view matrix and the frustrum form the draw manager
-    vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
-    vprASSERT(drawMan != NULL);
-    vrj::GlUserData* userData = drawMan->currentUserData();
+    //vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
+    //vprASSERT(drawMan != NULL);
+#if __VJ_version >= 2003000
+    vrj::opengl::UserData* userData = gl_manager->currentUserData();
+#else
+    vrj::GlUserData* userData = gl_manager->currentUserData();
+#endif
 
     // get the current projection
 #if __VJ_version < 2003000

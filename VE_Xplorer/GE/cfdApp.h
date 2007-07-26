@@ -60,10 +60,12 @@ const float SAMPLE_TIME = 1.0f;
    #include <osg/LightModel>
 #endif
 
-//#include <vrj/vrjParam.h>
-//#if __VJ_version >= 2000003
+#include <vrj/vrjParam.h>
+#if __VJ_version >= 2003000
+#include <vrj/Draw/OSG/App.h>
+#else
 #include <vrj/Draw/OSG/OsgApp.h>
-//#endif
+#endif
 #include <vpr/Sync/Mutex.h>
 
    namespace osg
@@ -92,7 +94,11 @@ namespace VE_Xplorer
 #ifdef _PERFORMER
 class cfdApp : public vrj::PfApp
 #elif _OSG
+#if __VJ_version >= 2003000
+class cfdApp : public vrj::OSG::App
+#else
 class cfdApp : public vrj::OsgApp
+#endif
 #elif _OPENSG
 #endif //_PERFORMER _OSG _OPENSG
 {
