@@ -54,6 +54,8 @@
 #include "VE_Xplorer/SceneGraph/TextTexture.h"
 #include "VE_Xplorer/XplorerNetwork/UnsupportedComponent.h"
 
+#include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
+
 using namespace VE_Xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,6 +301,12 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	//osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0 - worldCenter.y(), 0 - worldCenter.z());
 	osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0, 0 - worldCenter.z());
 	worldTranslate->setPosition(worldTrans);
+
+    //Add phong shading to the geodes
+    /*osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
+    VE_SceneGraph::Utilities::PhongLoader phongShader;
+    phongShader.SetStateSet( geodeProperties.get() );
+    phongShader.SyncShaderAndStateSet();*/
 
 	return worldTranslate.get();
 }
