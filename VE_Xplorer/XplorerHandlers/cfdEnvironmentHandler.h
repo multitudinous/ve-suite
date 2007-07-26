@@ -122,7 +122,11 @@ public:
    ///\param width The desktop width
    ///\param height The desktop height
    void SetDesktopSize( int width, int height );
-
+   ///Accessor to get desktop size information 
+   ///\param width The desktop width
+   ///\param height The desktop height
+   void GetDesktopSize( int &width, int &height );
+   
    ///Set the window dimension
    ///\param width The window width
    ///\param height The window height

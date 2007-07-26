@@ -245,6 +245,12 @@ void cfdEnvironmentHandler::SetDesktopSize( int width, int height )
    desktopHeight = height;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void cfdEnvironmentHandler::GetDesktopSize( int &width, int &height )
+{
+    width = desktopWidth;
+    height = desktopHeight;
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
