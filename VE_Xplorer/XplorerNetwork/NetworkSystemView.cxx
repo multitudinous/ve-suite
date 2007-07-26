@@ -254,7 +254,9 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		mModelTrans->addChild(scale.get());
 		mModelTrans->setPosition(centerTrans);
 		mModelTrans->setName(model->GetModelName());
-		loadedModels->addChild(mModelTrans.get());		
+		loadedModels->addChild(mModelTrans.get());	
+        //normalize the normals so that lighting works better
+        loadedModels->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
 	}	
 	
 	//Streams	
