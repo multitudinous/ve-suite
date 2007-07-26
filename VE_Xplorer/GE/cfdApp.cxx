@@ -536,56 +536,121 @@ void cfdApp::writeImageFileForWeb()
    }*/
    
     vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   osg::ref_ptr< osg::Image > shot = new osg::Image();
-   // get the image ratio:
-   int w = 0; int  h = 0;
-   w = 1280;
-   h = 1024;
-   int newSize = 1000;
-   float ratio = 4/3;
-   w = newSize;
-   h = (int)((float)w/ratio);
-   shot->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
-   osg::ref_ptr<osg::Node> subgraph = getScene();
-   osg::ref_ptr<osg::CameraNode> camera = new osg::CameraNode;
-   osg::ref_ptr<osgUtil::SceneView> sv;
-   sv = (*sceneViewer);    // Get context specific scene viewer
-   osg::ref_ptr<osg::CameraNode> oldcamera = sv->getCamera();
-   //Copy the settings from sceneView-camera to get exactly the view the user sees at the moment:
-   camera->setClearColor( oldcamera->getClearColor() );
-   camera->setClearMask( oldcamera->getClearMask() );
-   camera->setColorMask( oldcamera->getColorMask() );
-   camera->setTransformOrder( oldcamera->getTransformOrder() );
-   camera->setProjectionMatrix( oldcamera->getProjectionMatrix() );
-   camera->setViewMatrix( oldcamera->getViewMatrix() );
-   // set view
-   camera->setReferenceFrame(osg::Transform::ABSOLUTE_RF);
+    ///Setup all the images for rendering
+    osg::ref_ptr< osg::Image > shot = new osg::Image();
+    osg::ref_ptr< osg::Image > ulImage = new osg::Image();
+    osg::ref_ptr< osg::Image > urImage = new osg::Image();
+    osg::ref_ptr< osg::Image > lrImage = new osg::Image();
+    osg::ref_ptr< osg::Image > llImage = new osg::Image();
+    // get the image ratio:
+    int w = 0; int  h = 0;
+    w = 1280;
+    h = 1024;
+    int newSize = 1000;
+    float ratio = 4/3;
+    w = newSize;
+    h = (int)((float)w/ratio);
+    shot->allocateImage(w*2, h*2, 24, GL_RGB, GL_UNSIGNED_BYTE);
+    ulImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+    urImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+    lrImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+    llImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
 
-   // set viewport
-   camera->setViewport(sv->getViewport()->x(), sv->getViewport()->y(), 
-        sv->getViewport()->width(), sv->getViewport()->height());
+    ///Now lets create the scene
+    osg::ref_ptr<osg::Node> subgraph = getScene();
+    osg::ref_ptr< osg::Group > cameraGroup = new osg::Group;
+    std::vector< osg::ref_ptr<osg::CameraNode> > cameraList;
+    osg::ref_ptr<osgUtil::SceneView> sv;
+    sv = (*sceneViewer);    // Get context specific scene viewer
+    osg::ref_ptr<osg::CameraNode> oldcamera = sv->getCamera();
+    //Copy the settings from sceneView-camera to 
+    //get exactly the view the user sees at the moment:
+    for( size_t i = 0; i < 4; ++i )
+    {
+        cameraList.push_back( new osg::CameraNode );
+        cameraList.back()->setClearColor( oldcamera->getClearColor() );
+        cameraList.back()->setClearMask( oldcamera->getClearMask() );
+        cameraList.back()->setColorMask( oldcamera->getColorMask() );
+        cameraList.back()->setTransformOrder( oldcamera->getTransformOrder() );
+        cameraList.back()->
+            setProjectionMatrix( oldcamera->getProjectionMatrix() );
+        cameraList.back()->setViewMatrix( oldcamera->getViewMatrix() );
+        // set view
+        cameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
+        // set the camera to render before after the main camera.
+        cameraList.back()->setRenderOrder( osg::CameraNode::POST_RENDER );
+        // tell the camera to use OpenGL frame buffer object where supported.
+        cameraList.back()->setRenderTargetImplementation( 
+            osg::CameraNode::FRAME_BUFFER_OBJECT );
+        // add subgraph to render
+        cameraList.back()->addChild( subgraph.get() );
+        cameraGroup->addChild( cameraList.back().get() );
+    }
+    //image dims
+    double imageWidth = sv->getViewport()->width() * 0.5f;
+    double imageHeight = sv->getViewport()->height() * 0.5f;
+    std::vector< osg::ref_ptr<osg::CameraNode> >::iterator activeCamera;
+    ///
+    {
+        //setup ll
+        activeCamera = cameraList.begin();
+        // set viewport
+        (*activeCamera)->setViewport( sv->getViewport()->x(), 
+            sv->getViewport()->y(), w, h );
+        ///Attach the camera to something...the image
+        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, llImage.get());
+    }
+    ///
+    {
+        //setup lr
+        // set viewport
+        activeCamera = cameraList.begin() + 1;
+        (*activeCamera)->setViewport( sv->getViewport()->x()+w, 
+            sv->getViewport()->y(), w, h );
+        ///Attach the camera to something...the image
+        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, lrImage.get());
+    }
+    ///
+    {
+        //setup ur
+        // set viewport
+        activeCamera = cameraList.begin() + 2;
+        (*activeCamera)->setViewport( sv->getViewport()->x()+w, 
+            sv->getViewport()->y()+h, w, h );
+        ///Attach the camera to something...the image
+        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, urImage.get());
+    }
+    ///
+    {
+        //setup ul
+        // set viewport
+        activeCamera = cameraList.begin() + 3;
+        (*activeCamera)->setViewport( sv->getViewport()->x(), 
+            sv->getViewport()->y()+h, w, h );
+        ///Attach the camera to something...the image
+        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, ulImage.get());
+    }
 
-   // set the camera to render before after the main camera.
-   camera->setRenderOrder(osg::CameraNode::POST_RENDER);
-
-   // tell the camera to use OpenGL frame buffer object where supported.
-   camera->setRenderTargetImplementation(osg::CameraNode::FRAME_BUFFER_OBJECT);
-
-   camera->attach(osg::CameraNode::COLOR_BUFFER, shot.get());
-
-   // add subgraph to render
-   camera->addChild(subgraph.get());
-   //Need to mage it part of the scene :
-   sv->setSceneData(camera.get());
-   //Make it frame:
-   sv->update();
-   sv->cull();
-   std::cout << " make image " << std::endl;   
-   sv->draw();
-   //Reset the old data to the sceneView, so it doesn«t always render to image:
-   sv->setSceneData( subgraph.get() );
-   //This would work, too:
-   osgDB::writeImageFile(*(shot.get()), "test.jpg" );
+    //Need to mage it part of the scene :
+    sv->setSceneData( cameraGroup.get() );
+    //Make it frame:
+    sv->update();
+    sv->cull();
+    std::cout << " make image " << std::endl;   
+    sv->draw();
+    //Reset the old data to the sceneView, so it doesn«t always render to image:
+    sv->setSceneData( subgraph.get() );
+    ///Now put the images together
+    shot->copySubImage(            0,            0, 0, llImage.get() );
+    osgDB::writeImageFile(*(llImage.get()), "ll.jpg" );
+    shot->copySubImage( llImage->s(),            0, 0, lrImage.get() );
+    osgDB::writeImageFile(*(lrImage.get()), "lr.jpg" );
+    shot->copySubImage( llImage->s(), llImage->t(), 0, urImage.get() );
+    osgDB::writeImageFile(*(urImage.get()), "ur.jpg" );
+    shot->copySubImage(            0, ulImage->t(), 0, ulImage.get() );
+    osgDB::writeImageFile(*(ulImage.get()), "ul.jpg" );
+    //This would work, too:
+    osgDB::writeImageFile(*(shot.get()), "test.jpg" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
