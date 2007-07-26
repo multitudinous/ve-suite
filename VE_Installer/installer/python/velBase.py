@@ -40,6 +40,7 @@ join = os.path.join
 ##Set up the system's ID.
 windows = (name == "nt")
 unix = (name == "posix" or name == "mac")
+posix = (name == "posix")
 ##CFD_HOST_TYPE: Set below.
 ##Shell variables.
 UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
