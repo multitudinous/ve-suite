@@ -465,10 +465,10 @@ void cfdApp::latePreFrame( void )
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
    
-   if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "Stored Scenes" )
+   /*if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "Stored Scenes" )
    {
        captureNextFrameForWeb = true;
-   }
+   }*/
 }
 
 void cfdApp::intraFrame()
@@ -538,23 +538,13 @@ void cfdApp::writeImageFileForWeb()
     vpr::Guard<vpr::Mutex> val_guard(mValueLock);
     ///Setup all the images for rendering
     osg::ref_ptr< osg::Image > shot = new osg::Image();
-    osg::ref_ptr< osg::Image > ulImage = new osg::Image();
-    osg::ref_ptr< osg::Image > urImage = new osg::Image();
-    osg::ref_ptr< osg::Image > lrImage = new osg::Image();
-    osg::ref_ptr< osg::Image > llImage = new osg::Image();
+    std::vector< osg::ref_ptr< osg::Image > > imageList;
     // get the image ratio:
     int w = 0; int  h = 0;
-    w = 1280;
-    h = 1024;
-    int newSize = 1000;
-    float ratio = 4/3;
-    w = newSize;
-    h = (int)((float)w/ratio);
-    shot->allocateImage(w*2, h*2, 24, GL_RGB, GL_UNSIGNED_BYTE);
-    ulImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
-    urImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
-    lrImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
-    llImage->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+    cfdEnvironmentHandler::instance()->GetDesktopSize( w, h );
+    int largeWidth = w * 2;
+    int largeHeight = h * 2;
+    shot->allocateImage( largeWidth, largeHeight, 24, GL_RGB, GL_UNSIGNED_BYTE);
 
     ///Now lets create the scene
     osg::ref_ptr<osg::Node> subgraph = getScene();
@@ -565,29 +555,29 @@ void cfdApp::writeImageFileForWeb()
     osg::ref_ptr<osg::CameraNode> oldcamera = sv->getCamera();
     //Copy the settings from sceneView-camera to 
     //get exactly the view the user sees at the moment:
-
     //Get the current frustum from the current sceneView-camera
     double frustum[6] = {0,0,0,0,0,0};
-
-    oldcamera->getProjectionMatrixAsFrustum(frustum[0], frustum[1],
-                                                          frustum[2], frustum[3],
-                                                          frustum[4], frustum[5]);
+    oldcamera->getProjectionMatrixAsFrustum( frustum[0], frustum[1],
+        frustum[2], frustum[3], frustum[4], frustum[5] );
     //Create 4 cameras whose frustums tile the original camera frustum
     double tileFrustum[6] = {0,0,0,0,0,0};
     //z values don't change
     tileFrustum[4] = frustum[4];
     tileFrustum[5] = frustum[5];
 
-
     for( size_t i = 0; i < 4; ++i )
     {
+        //Setup the image
+        imageList.push_back( new osg::Image() );
+        imageList.back()->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+        //Setup the cameras
         cameraList.push_back( new osg::CameraNode );
         cameraList.back()->setClearColor( oldcamera->getClearColor() );
         cameraList.back()->setClearMask( oldcamera->getClearMask() );
         cameraList.back()->setColorMask( oldcamera->getColorMask() );
         cameraList.back()->setTransformOrder( oldcamera->getTransformOrder() );
-        cameraList.back()->
-            setProjectionMatrix( oldcamera->getProjectionMatrix() );
+        //cameraList.back()->
+        //    setProjectionMatrix( oldcamera->getProjectionMatrix() );
         cameraList.back()->setViewMatrix( oldcamera->getViewMatrix() );
         // set view
         cameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
@@ -598,19 +588,19 @@ void cfdApp::writeImageFileForWeb()
             osg::CameraNode::FRAME_BUFFER_OBJECT );
         // add subgraph to render
         cameraList.back()->addChild( subgraph.get() );
+        // set viewport
+        cameraList.back()->setViewport( 0, 0, w, h );
+        ///Attach the camera to something...the image
+        cameraList.back()->attach( osg::CameraNode::COLOR_BUFFER, 
+            imageList.back().get() );
         cameraGroup->addChild( cameraList.back().get() );
     }
-    //image dims
-    double imageWidth = sv->getViewport()->width() * 0.5f;
-    double imageHeight = sv->getViewport()->height() * 0.5f;
+
     std::vector< osg::ref_ptr<osg::CameraNode> >::iterator activeCamera;
     ///
     {
         //setup ll
         activeCamera = cameraList.begin();
-        // set viewport
-       (*activeCamera)->setViewport( sv->getViewport()->x(), 
-            sv->getViewport()->y(), w, h );
         //left
         tileFrustum[0] = frustum[0]; 
         //right 
@@ -619,19 +609,14 @@ void cfdApp::writeImageFileForWeb()
         tileFrustum[2] = frustum[2]; 
         //top
         tileFrustum[3] = frustum[3] + (frustum[2] - frustum[3])*.5; 
-        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
-                                                                    tileFrustum[2],tileFrustum[3],
-                                                                    tileFrustum[4],tileFrustum[5]);
-        ///Attach the camera to something...the image
-        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, llImage.get());
+        (*activeCamera)->setProjectionMatrixAsFrustum( tileFrustum[0],
+            tileFrustum[1], tileFrustum[2], tileFrustum[3], tileFrustum[4], 
+            tileFrustum[5] );
     }
     ///
     {
         //setup lr
-        // set viewport
         activeCamera = cameraList.begin() + 1;
-        (*activeCamera)->setViewport( sv->getViewport()->x(), 
-            sv->getViewport()->y(), w, h );
         //left
         tileFrustum[0] = frustum[0] + .5*(frustum[1] - frustum[0]); 
         //right 
@@ -640,19 +625,14 @@ void cfdApp::writeImageFileForWeb()
         tileFrustum[2] = frustum[2]; 
         //top
         tileFrustum[3] = frustum[3] + (frustum[2] - frustum[3])*.5; 
-        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
-                                                                    tileFrustum[2],tileFrustum[3],
-                                                                    tileFrustum[4],tileFrustum[5]);
-        ///Attach the camera to something...the image
-        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, lrImage.get());
+        (*activeCamera)->setProjectionMatrixAsFrustum( tileFrustum[0],
+            tileFrustum[1], tileFrustum[2], tileFrustum[3], tileFrustum[4], 
+            tileFrustum[5] );
     }
     ///
     {
         //setup ur
-        // set viewport
         activeCamera = cameraList.begin() + 2;
-        (*activeCamera)->setViewport( sv->getViewport()->x(), 
-            sv->getViewport()->y(), w, h );
         //left
         tileFrustum[0] = frustum[0] + .5*(frustum[1] - frustum[0]); 
         //right 
@@ -661,19 +641,14 @@ void cfdApp::writeImageFileForWeb()
         tileFrustum[2] = frustum[3] + (frustum[2] - frustum[3])*.5;  
         //top
         tileFrustum[3] = frustum[3]; 
-        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
-                                                                    tileFrustum[2],tileFrustum[3],
-                                                                    tileFrustum[4],tileFrustum[5]);
-        ///Attach the camera to something...the image
-        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, urImage.get());
+        (*activeCamera)->setProjectionMatrixAsFrustum( tileFrustum[0], 
+            tileFrustum[1], tileFrustum[2], tileFrustum[3], tileFrustum[4], 
+            tileFrustum[5] );
     }
     ///
     {
         //setup ul
-        // set viewport
         activeCamera = cameraList.begin() + 3;
-        (*activeCamera)->setViewport( sv->getViewport()->x(), 
-            sv->getViewport()->y(), w, h );
         //left
         tileFrustum[0] = frustum[0]; 
         //right 
@@ -682,33 +657,35 @@ void cfdApp::writeImageFileForWeb()
         tileFrustum[2] = frustum[3] + (frustum[2] - frustum[3])*.5;  
         //top
         tileFrustum[3] = frustum[3]; 
-        (*activeCamera)->setProjectionMatrixAsFrustum(tileFrustum[0],tileFrustum[1],
-                                                                    tileFrustum[2],tileFrustum[3],
-                                                                    tileFrustum[4],tileFrustum[5]);
-        ///Attach the camera to something...the image
-        (*activeCamera)->attach(osg::CameraNode::COLOR_BUFFER, ulImage.get());
+        (*activeCamera)->setProjectionMatrixAsFrustum( tileFrustum[0],
+            tileFrustum[1], tileFrustum[2], tileFrustum[3], tileFrustum[4], 
+            tileFrustum[5] );
     }
 
-    //Need to mage it part of the scene :
+    //Need to make it part of the scene :
     sv->setSceneData( cameraGroup.get() );
     //Make it frame:
     sv->update();
     sv->cull();
-    std::cout << " make image " << std::endl;   
     sv->draw();
     //Reset the old data to the sceneView, so it doesn«t always render to image:
     sv->setSceneData( subgraph.get() );
     ///Now put the images together
-    shot->copySubImage(            0,            0, 0, llImage.get() );
-    osgDB::writeImageFile(*(llImage.get()), "ll.jpg" );
-    shot->copySubImage( llImage->s(),            0, 0, lrImage.get() );
-    osgDB::writeImageFile(*(lrImage.get()), "lr.jpg" );
-    shot->copySubImage( llImage->s(), llImage->t(), 0, urImage.get() );
-    osgDB::writeImageFile(*(urImage.get()), "ur.jpg" );
-    shot->copySubImage(            0, ulImage->t(), 0, ulImage.get() );
-    osgDB::writeImageFile(*(ulImage.get()), "ul.jpg" );
+    std::vector< osg::ref_ptr< osg::Image > >::iterator activeImage;
+    //setup ll
+    activeImage = imageList.begin();
+    shot->copySubImage( 0, 0, 0, (*activeImage).get() );
+    //setup lr
+    activeImage = imageList.begin() + 1;
+    shot->copySubImage( w, 0, 0, (*activeImage).get() );
+    //setup ur
+    activeImage = imageList.begin() + 2;
+    shot->copySubImage( w, h, 0, (*activeImage).get() );
+    //setup ul
+    activeImage = imageList.begin() + 3;
+    shot->copySubImage( 0, h, 0, (*activeImage).get() );
     //This would work, too:
-    osgDB::writeImageFile(*(shot.get()), "test.jpg" );
+    osgDB::writeImageFile(*(shot.get()), "screenCap.jpg" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
