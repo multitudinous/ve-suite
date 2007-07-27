@@ -979,7 +979,7 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 	//Implement Scale - scale the images to where the longest length is 40
 	//while the smallest length is scaled accordingly
 	
-	if(image.GetWidth() > image.GetHeight())
+	/*if(image.GetWidth() > image.GetHeight())
 	{
 		icon_w = 40;
 		icon_h = 40 * image.GetHeight() / image.GetWidth();
@@ -989,6 +989,9 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 		icon_h = 40;
 		icon_w = 40 * image.GetWidth() / image.GetHeight();
 	}
+	*/
+	icon_w = image.GetWidth();
+	icon_h = image.GetHeight();
 
 	//now scale it up or down according to the specified scale
 	icon_w = static_cast< int >( icon_w * scale );
