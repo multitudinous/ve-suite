@@ -246,7 +246,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//translate to comp with name to correct location
 		VE_XML::VE_Model::Point * iconLocation = model->GetIconLocation();
 		std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
-		std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
+		//std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
 		osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
 		osg::Vec3 center = mModelTrans.get()->getBound().center();
 		//20 and 28 should be replaced with conductor icon width and height respectively
@@ -272,16 +272,17 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
 		osg::Vec3Array* vertices = new osg::Vec3Array(numberOfPoints);
 		osg::Geometry* linesGeom = new osg::Geometry();
-		std::cout<<"NP: "<< numberOfPoints<<std::endl;
+		//std::cout<<"NP: "<< numberOfPoints<<std::endl;
 		for ( size_t j = 0; j < numberOfPoints; j++ )
 		{
 			std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
-			std::cout << "X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
+			//std::cout << "X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
 			//(*vertices)[j].set(rawPoint.first, rawPoint.second, 0.0);
 			(*vertices)[j].set(rawPoint.first, 0.0, rawPoint.second);
 		}
 		linesGeom->setVertexArray(vertices);
-		linesGeom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints));		linesGeom->setColorBinding(osg::Geometry::BIND_OVERALL);
+		linesGeom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints));		
+        linesGeom->setColorBinding(osg::Geometry::BIND_OVERALL);
 		linesGeom->setNormalArray(shared_normals.get());
 		linesGeom->setNormalBinding(osg::Geometry::BIND_OVERALL);
 		linesGeom->setColorArray(colorBlack.get());
@@ -303,10 +304,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	worldTranslate->setPosition(worldTrans);
 
     //Add phong shading to the geodes
-    /*osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
     VE_SceneGraph::Utilities::PhongLoader phongShader;
     phongShader.SetStateSet( geodeProperties.get() );
-    phongShader.SyncShaderAndStateSet();*/
+    phongShader.SyncShaderAndStateSet();
 
 	return worldTranslate.get();
 }
