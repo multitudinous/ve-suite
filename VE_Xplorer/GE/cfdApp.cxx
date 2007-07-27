@@ -104,7 +104,7 @@ using namespace VE_Util;
 cfdApp::cfdApp( int argc, char* argv[] ) 
 #ifdef _OSG
 #if __VJ_version >= 2003000
-: vrj::OSG::App( vrj::Kernel::instance() ),
+: vrj::osg::App( vrj::Kernel::instance() ),
 #else
 : vrj::OsgApp( vrj::Kernel::instance() ),
 #endif

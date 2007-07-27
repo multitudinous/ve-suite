@@ -95,7 +95,7 @@ namespace VE_Xplorer
 class cfdApp : public vrj::PfApp
 #elif _OSG
 #if __VJ_version >= 2003000
-class cfdApp : public vrj::OSG::App
+class cfdApp : public vrj::osg::App
 #else
 class cfdApp : public vrj::OsgApp
 #endif
