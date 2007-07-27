@@ -143,6 +143,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//loadedModelNormalized->setPosition(osg::Vec3(0, 0, 0-radius));
 
 		//Result Pane
+		/*
 		osg::ref_ptr<osg::Group> resultPane = new osg::Group();
 
 		osg::ref_ptr<osgText::Text> text = new osgText::Text();
@@ -200,6 +201,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		resultPane->addChild(transTextGeode.get());
 		resultPane->addChild(paneGeode.get());
+		*/
 
 		//Rotate the 3d comps 180 degrees around X axis
 		//corrects issue with initial model location
@@ -232,7 +234,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//move the text to the -y
 		osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
-		textTrans->addChild(resultPane.get());
+		//textTrans->addChild(resultPane.get());
 		textTrans->setPosition(osg::Vec3d(0.0, 0.0, loadedModel.get()->getBound().radius()));
 		textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
@@ -304,10 +306,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	worldTranslate->setPosition(worldTrans);
 
     //Add phong shading to the geodes
-    osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
-    VE_SceneGraph::Utilities::PhongLoader phongShader;
-    phongShader.SetStateSet( geodeProperties.get() );
-    phongShader.SyncShaderAndStateSet();
+    //osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
+    //VE_SceneGraph::Utilities::PhongLoader phongShader;
+    //phongShader.SetStateSet( geodeProperties.get() );
+    //phongShader.SyncShaderAndStateSet();
 
 	return worldTranslate.get();
 }
