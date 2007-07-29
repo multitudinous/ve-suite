@@ -71,4 +71,4 @@ private:
    VE_XML::VE_Model::Model* baseModel;
 };
 }
-#endif// SET_INPUTS_EVENT_HANDLER_H
+#endif// GET_INPUTS_EVENT_HANDLER_H

@@ -81,7 +81,6 @@ BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
     EVT_MENU( SHOW_RESULT, UIPluginBase::OnShowResult )
     EVT_MENU( PARAVIEW, UIPluginBase::OnParaView )
     EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
-    EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
     EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
     EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
     EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
@@ -820,31 +819,81 @@ void UIPluginBase::FinancialData ()
 void UIPluginBase::ViewInputVariables( void )
 {
     if( inputsDialog )
-   {
-      inputsDialog->Destroy();
-      inputsDialog = 0;
-   }
-   
-   if( veModel->GetNumberOfInputs() == 0 )
-   {
-       serviceList->GetMessageLog()->SetMessage( "Model contains no input variables\n" );
-       return;
-   }
+    {
+        inputsDialog->Destroy();
+        inputsDialog = 0;
+    }
 
-   inputsDialog = new SummaryResultDialog(NULL, wxT("Input Variables"), wxSize(560, 400));
-   // Get all the inputs form the model
-   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
-   {
-      std::vector< wxString > tagNames;
-      std::vector< wxString > values;
-      VE_XML::Command* inputCommand = veModel->GetInput( i );
-      GetDataTables( inputCommand, tagNames, values );
-      std::string inputParamter = inputCommand->GetCommandName();
-      inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
-      inputsDialog->Set2Cols( tagNames, values );
-   }
-   // Get all the results form the model
-   inputsDialog->Show();
+    size_t numInputs = veModel->GetNumberOfInputs();
+    ///First try check and see if there are any local variables
+    if( numInputs == 0 )
+    {
+        serviceList->GetMessageLog()->
+            SetMessage( "Model contains no input variables\n" );
+        ///Query for the inputs
+        std::string compName = GetModel()->GetModelName();
+        
+        VE_XML::Command returnState;
+        returnState.SetCommandName("getInputModuleParamList");
+        VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+        data->SetData(std::string("ModuleName"), compName);
+        
+        std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+        nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+        
+        VE_XML::XMLReaderWriter commandWriter;
+        std::string status="returnString";
+        commandWriter.UseStandaloneDOMDocumentManager();
+        commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        
+        //Get inputs
+        std::string nw_str = serviceList->Query( status );
+        if( nw_str.empty() )
+        {
+            return;
+        }
+        //wxString title( compName.c_str(),wxConvUTF8);
+        //TextResultDialog * results = new TextResultDialog(this, title);
+        //QueryInputsDlg * results = new QueryInputsDlg(this);
+        //ParamsDlg* params = new ParamsDlg(networkFrame);
+        //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
+        VE_XML::XMLReaderWriter networkReader;
+        networkReader.UseStandaloneDOMDocumentManager();
+        networkReader.ReadFromString();
+        //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
+        networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+        std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+        //std::ostringstream output;
+        //output << objectVector.size()<<std::endl;
+        //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+        VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+        VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+        /*std::vector< std::string > temp_vector;
+        pair->GetData(temp_vector);
+        
+        params->SetCompName(compName.c_str());
+        params->SetServiceList(serviceList);
+        params->SetDialogType("input");
+        for (int i=0; i < temp_vector.size(); i++) 
+            params->AppendList(temp_vector[i].c_str());
+        params->ShowModal();*/
+    }
+
+    inputsDialog = 
+        new SummaryResultDialog(NULL, wxT("Input Variables"), wxSize(560, 400));
+    // Get all the inputs form the model
+    for ( size_t i = 0; i < numInputs; ++i )
+    {
+        std::vector< wxString > tagNames;
+        std::vector< wxString > values;
+        VE_XML::Command* inputCommand = veModel->GetInput( i );
+        GetDataTables( inputCommand, tagNames, values );
+        std::string inputParamter = inputCommand->GetCommandName();
+        inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
+        inputsDialog->Set2Cols( tagNames, values );
+    }
+    // Get all the results form the model
+    inputsDialog->Show();
 }
 ///////////////////////////////////////////////
 void UIPluginBase::ViewResultsVariables( void )

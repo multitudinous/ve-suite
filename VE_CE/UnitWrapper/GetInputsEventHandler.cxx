@@ -98,9 +98,9 @@ std::string GetInputsEventHandler::Execute( std::vector< VE_XML::XMLObject* > ob
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
         }
     }
-    catch (...)
+    catch( ... )
     {
         std::cerr << " ERROR : GetInputsEventHandler::Execute " << std::endl;
     }
-   return status;
+    return status;
 }

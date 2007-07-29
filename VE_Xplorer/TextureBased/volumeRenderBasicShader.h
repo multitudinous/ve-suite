@@ -59,7 +59,7 @@ static const char* vrBasicFragSource = {
    //a volume rendering shader which applies a 2D transfer function
    "uniform sampler3D volumeData;\n"
    "uniform sampler2D transferFunction;\n"
-   "uniform sampler2D jitter2D;\n"
+   "//uniform sampler2D jitter2D;\n"
    "uniform vec3 viewRay;\n"
    "uniform vec2 jitterSize;\n"
    "uniform bool fastUpdate;\n"
