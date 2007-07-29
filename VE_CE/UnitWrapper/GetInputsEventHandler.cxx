@@ -23,15 +23,16 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2007-06-15 11:06:13 -0500 (Fri, 15 Jun 2007) $
+ * Version:       $Rev: 8206 $
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_CE/UnitWrapper/SetInputsEventHandler.h"
+#include "VE_CE/UnitWrapper/GetInputsEventHandler.h"
 
 #include "VE_Open/XML/XMLObject.h"
+#include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -40,7 +41,7 @@ using namespace VE_CE;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
-SetInputsEventHandler::SetInputsEventHandler()
+GetInputsEventHandler::GetInputsEventHandler()
 :VE_CE::EventHandler()
 {
    baseModel = 0;
@@ -48,12 +49,12 @@ SetInputsEventHandler::SetInputsEventHandler()
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
-SetInputsEventHandler::~SetInputsEventHandler()
+GetInputsEventHandler::~GetInputsEventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SetInputsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
+void GetInputsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
 {
    try
    {
@@ -65,40 +66,41 @@ void SetInputsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
    catch(...)
    {
       baseModel = 0;
-      std::cout<<"Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!"<<std::endl;
+      std::cout<<"Invalid object passed to GetInputsEventHandler::SetGlobalBaseObject!"<<std::endl;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string SetInputsEventHandler::Execute( std::vector< VE_XML::XMLObject* > objectToProcess )
+std::string GetInputsEventHandler::Execute( std::vector< VE_XML::XMLObject* > objectToProcess )
 {
-   if ( !baseModel )
-   {
-      std::cerr << "Must call SetInputsEventHandler::SetBaseObject first" << std::endl;
-      return std::string();
-   }
+    if( !baseModel )
+    {
+        std::cerr << "Must call GetInputsEventHandler::SetBaseObject first" << std::endl;
+        return std::string();
+    }
 
-   try
-   {
-      
-      size_t numInputs = objectToProcess.size();
-      for ( size_t i = 0; i < numInputs; ++i )
-      {
-         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( objectToProcess.at( i ) );
-         std::string dataName = command->GetCommandName();
-         VE_XML::Command* tempInput = baseModel->GetInput( dataName );
-         if ( tempInput )
-         {
-            (*tempInput) = (*command);
-         }
-         else
-         {
-            *(baseModel->GetInput()) = (*command);
-         }
-      }
-   }
-   catch (...)
-   {
-      std::cerr << " ERROR : SetInputsEventHandler::Execute " << std::endl;
-   }
-   return std::string();
+    std::string status="returnString";
+    try
+    {
+        size_t numInputs = objectToProcess.size();
+        for ( size_t i = 0; i < numInputs; ++i )
+        {
+            VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( objectToProcess.at( i ) );
+            std::string dataName = command->GetCommandName();
+            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+            for( size_t j = 0; j < baseModel->GetNumberOfInputs(); ++j )
+            {
+                VE_XML::Command* tempInput = baseModel->GetInput( j );
+                nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( tempInput, "vecommand" ));
+            }
+
+            VE_XML::XMLReaderWriter commandWriter;
+            commandWriter.UseStandaloneDOMDocumentManager();
+            commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        }
+    }
+    catch (...)
+    {
+        std::cerr << " ERROR : GetInputsEventHandler::Execute " << std::endl;
+    }
+   return status;
 }

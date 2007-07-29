@@ -49,6 +49,7 @@
 
 // Event handlers
 #include "VE_CE/UnitWrapper/SetInputsEventHandler.h"
+#include "VE_CE/UnitWrapper/GetInputsEventHandler.h"
 #include "VE_CE/UnitWrapper/EventHandler.h"
 
 #include <sstream>
@@ -66,7 +67,7 @@ UnitWrapper::UnitWrapper (Body::Executive_ptr exec, std::string name)
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
 
    eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
-   //eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
+   eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::GetInputsEventHandler();
    eventHandlerMap[ "Get XML Model Results" ] = new VE_CE::SetInputsEventHandler();
    //eventHandlerMap[ "Get XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
    //eventHandlerMap[ "Set XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();

@@ -101,8 +101,6 @@ int Network::parse( std::string xmlNetwork )
    objectVector = networkWriter.GetLoadedXMLObjects();
 
    // do this for network
-   //if ( veNetwork )
-   //   delete veNetwork;
    if ( veNetwork )
    {
       delete veNetwork;
