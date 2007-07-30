@@ -187,6 +187,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\GetInputsEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\GetResultsEventHandler.cxx"
 				>
 			</File>
@@ -206,6 +210,10 @@
 			>
 			<File
 				RelativePath=".\EventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GetInputsEventHandler.h"
 				>
 			</File>
 			<File
