@@ -151,19 +151,19 @@ captureNextFrameForWeb( false )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::exit()
 {
-   VE_SceneGraph::SceneManager::instance()->CleanUp();
-   cfdModelHandler::instance()->CleanUp();
-   cfdEnvironmentHandler::instance()->CleanUp();
-   cfdSteadyStateVizHandler::instance()->CleanUp();
+    //Profiling guard used by vrjuggler
+    VPR_PROFILE_RESULTS();
+
+    VE_SceneGraph::SceneManager::instance()->CleanUp();
+    cfdModelHandler::instance()->CleanUp();
+    cfdEnvironmentHandler::instance()->CleanUp();
+    cfdSteadyStateVizHandler::instance()->CleanUp();
 
 #ifdef _OSG
-   cfdTextureBasedVizHandler::instance()->CleanUp();
+    cfdTextureBasedVizHandler::instance()->CleanUp();
 #endif
 
-   cfdExecutive::instance()->CleanUp();
-
-   //Profiling guard used by vrjuggler
-   VPR_PROFILE_RESULTS();
+    cfdExecutive::instance()->CleanUp();
 }
 
 #ifdef _PERFORMER
