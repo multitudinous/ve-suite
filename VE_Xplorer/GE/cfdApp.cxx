@@ -244,7 +244,7 @@ void cfdApp::contextInit()
 
 	//**************************************************************************
 
-   if ( !_pbuffer )
+   /*if ( !_pbuffer )
    {
       _pbuffer = new cfdPBufferManager();
       _pbuffer->isSupported();
@@ -253,7 +253,7 @@ void cfdApp::contextInit()
    //if ( _tbvHandler )
    {
       _tbvHandler->SetPBuffer(_pbuffer);
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextClose()
@@ -267,11 +267,7 @@ void cfdApp::contextClose()
 ////////////////////////////////////////////////////////////////////////////////
 cfdPBufferManager* cfdApp::GetPBuffer()
 {
-   if ( _pbuffer )
-   {
-      return _pbuffer;
-   }
-   return 0;
+    return _pbuffer;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
@@ -406,6 +402,7 @@ void cfdApp::latePreFrame( void )
     //Exit - must be called AFTER _vjobsWrapper->PreFrameUpdate();
     if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
     {
+        VPR_PROFILE_RESULTS();
         // exit cfdApp was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel 
     }    
@@ -429,9 +426,12 @@ void cfdApp::latePreFrame( void )
 
       lastTime = current_time;
       lastFrame = _frameNumber;
-      vprDEBUG(vesDBG,3)
-      VPR_PROFILE_RESULTS();
-      vprDEBUG_STREAM_UNLOCK;
+      if( (vpr::Debug::instance()->isDebugEnabled()) && (2 <= vpr::Debug::instance()->getLevel()) )
+      {
+            vprDEBUG(vesDBG,2)<<" cfdApp::latePreFrame Profiling data for frame " 
+                << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
+            VPR_PROFILE_RESULTS();
+      }
    }
 #endif
          
