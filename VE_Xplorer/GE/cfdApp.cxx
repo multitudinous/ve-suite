@@ -466,9 +466,12 @@ void cfdApp::latePreFrame( void )
 	VE_SceneGraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
 	previous_time = current_time;
 	//**********************************************************************
-   vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
-   this->update();
+   //profile the update call
+   {
+       VPR_PROFILE_GUARD("cfdApp::latePreFrame update");
+       this->update();
+   }
 #endif
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
@@ -477,6 +480,7 @@ void cfdApp::latePreFrame( void )
    {
        captureNextFrameForWeb = true;
    }*/
+   vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdApp::intraFrame()
@@ -806,10 +810,17 @@ void cfdApp::draw()
 
     // set the view matrix
     sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
-
-    sv->cull();
-    sv->draw();
-
+    //profile the cull call
+    {
+        VPR_PROFILE_GUARD("cfdApp::draw sv->cull");
+        sv->cull();        
+    }
+    //profile the draw call
+    {
+        VPR_PROFILE_GUARD("cfdApp::draw sv->draw");
+        sv->draw();        
+    }
+    
     if( captureNextFrameForWeb ) 
     {
         //gl_manager->currentUserData()->getViewport()->isSimulator();
