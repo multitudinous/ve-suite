@@ -383,7 +383,7 @@ void cfdApp::initScene( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
 {
-    VPR_PROFILE_GUARD("cfdApp::preFrame");
+    VPR_PROFILE_GUARD("cfdApp::preFrame",20);
     vprDEBUG(vesDBG,3)<<"cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
     //Sets the worldDCS before it is synced
     cfdEnvironmentHandler::instance()->PreFrameUpdate();
@@ -391,7 +391,7 @@ void cfdApp::preFrame( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
 {
-    VPR_PROFILE_GUARD("cfdApp::latePreFrame");
+    VPR_PROFILE_GUARD("cfdApp::latePreFrame", 20 );
     static long lastFrame=0;
     //Used for framerate calculation as integers only
     static float lastTime=0.0f;
@@ -429,6 +429,7 @@ void cfdApp::latePreFrame( void )
 
       lastTime = current_time;
       lastFrame = _frameNumber;
+      //VPR_PROFILE_RESULTS()
    }
 #endif
          
@@ -469,7 +470,7 @@ void cfdApp::latePreFrame( void )
 #ifdef _OSG
    //profile the update call
    {
-       VPR_PROFILE_GUARD("cfdApp::latePreFrame update");
+       VPR_PROFILE_GUARD("cfdApp::latePreFrame update", 20);
        this->update();
    }
 #endif
@@ -492,7 +493,7 @@ void cfdApp::intraFrame()
 #ifdef _OSG
 void cfdApp::contextPostDraw()
 {
-    VPR_PROFILE_GUARD("cfdApp::contextPostDraw");
+    VPR_PROFILE_GUARD("cfdApp::contextPostDraw", 20 );
    //if(_tbvHandler)
      _tbvHandler->PingPongTextures();
 }
@@ -500,7 +501,7 @@ void cfdApp::contextPostDraw()
 /////////////////////////////////////////////////////////////////////////////////////////
 void cfdApp::postFrame()
 {
-    VPR_PROFILE_GUARD("cfdApp::postFrame");
+    VPR_PROFILE_GUARD("cfdApp::postFrame",20);
     vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
@@ -706,14 +707,14 @@ void cfdApp::writeImageFileForWeb()
 ///so setting variables should not be done here
 void cfdApp::contextPreDraw( void )
 {
-    VPR_PROFILE_GUARD("cfdApp::contextPreDraw");
+    VPR_PROFILE_GUARD("cfdApp::contextPreDraw",20);
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
 void cfdApp::draw()
 {
-    VPR_PROFILE_GUARD("cfdApp::draw");
+    VPR_PROFILE_GUARD("cfdApp::draw",20);
     glClear(GL_DEPTH_BUFFER_BIT);
     // Users have reported problems with OpenGL reporting stack underflow
     // problems when the texture attribute bit is pushed here, so we push all
@@ -812,12 +813,12 @@ void cfdApp::draw()
     sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
     //profile the cull call
     {
-        VPR_PROFILE_GUARD("cfdApp::draw sv->cull");
+        VPR_PROFILE_GUARD("cfdApp::draw sv->cull",20);
         sv->cull();        
     }
     //profile the draw call
     {
-        VPR_PROFILE_GUARD("cfdApp::draw sv->draw");
+        VPR_PROFILE_GUARD("cfdApp::draw sv->draw",20);
         sv->draw();        
     }
     
