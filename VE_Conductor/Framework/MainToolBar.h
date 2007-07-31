@@ -75,6 +75,10 @@ public:
         TOOLBAR_OBJECT_NAVIGATION,///<ID for object navigation tool
         TOOLBAR_UNSELECT,///<ID for unselect tool
 
+        TOOLBAR_SMALL_CENTERPOINT_JUMP,///<ID for fixed centerpoint small jump setting
+        TOOLBAR_MEDIUM_CENTERPOINT_JUMP,///<ID for fixed centerpoint medium jump setting
+        TOOLBAR_LARGE_CENTERPOINT_JUMP,///<ID for fixed centerpoint large jump setting
+
         TOOLBAR_PHYSICS,///<ID for physics simulation tool
         TOOLBAR_RESET,///<ID for reset simulation tool
         TOOLBAR_PAUSE,///<ID for pause simulation tool
@@ -106,6 +110,10 @@ private:
     ///Handles events for changing xplorer device mode
     ///\param event The wxCommand event
     void OnChangeDeviceMode( wxCommandEvent& event );
+
+    ///Handles events for changing the centerpoint jump distance
+    ///\param event The wxCommand event
+    void OnChangeCenterPointJump( wxCommandEvent& event );
     
     ///Handles the event to unselect all objects in xplorer
     ///\param event The wxCommand event

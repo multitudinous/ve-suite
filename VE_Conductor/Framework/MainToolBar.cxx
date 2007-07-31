@@ -45,6 +45,12 @@
 #include "VE_Conductor/xpm/ToolBar/ObjectNavigationButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/ObjectNavigationButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/UnselectButton.xpm"
+//#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButton.xpm"
+//#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButtonSelect.xpm"
+//#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButton.xpm"
+//#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm"
+//#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm"
+//#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButtonDisabled.xpm"
@@ -75,6 +81,10 @@ BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_WORLD_NAVIGATION, MainToolBar::OnChangeDeviceMode )
     EVT_MENU( TOOLBAR_OBJECT_NAVIGATION, MainToolBar::OnChangeDeviceMode )
     EVT_MENU( TOOLBAR_UNSELECT, MainToolBar::OnUnselectObjects )
+
+    //EVT_MENU( TOOLBAR_SMALL_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    //EVT_MENU( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    //EVT_MENU( TOOLBAR_LARGE_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
 
     EVT_MENU( TOOLBAR_PHYSICS, MainToolBar::OnPhysicsState )
 
@@ -127,6 +137,21 @@ void MainToolBar::LoadToolBarBitmaps()
     m_toolbarBitmaps[ std::string( "unselectBitmap" ) ] = 
         wxBitmap( UnselectButton_xpm );
 
+    /*
+    m_toolbarBitmaps[ std::string( "smallCenterPointBitmap" ) ] = 
+        wxBitmap( SmallCenterPointJumpButton_xpm );
+    m_toolbarBitmaps[ std::string( "smallCenterPointSelectBitmap" ) ] = 
+        wxBitmap( SmallCenterPointJumpButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "mediumCenterPointBitmap" ) ] = 
+        wxBitmap( MediumCenterPointJumpButton_xpm );
+    m_toolbarBitmaps[ std::string( "mediumCenterPointSelectBitmap" ) ] = 
+        wxBitmap( MediumCenterPointJumpButtonSelect_xpm );
+    m_toolbarBitmaps[ std::string( "largeCenterPointBitmap" ) ] = 
+        wxBitmap( LargeCenterPointJumpButton_xpm );
+    m_toolbarBitmaps[ std::string( "largeCenterPointSelectBitmap" ) ] = 
+        wxBitmap( LargeCenterPointJumpButtonSelect_xpm );
+    */
+
     m_toolbarBitmaps[ std::string( "physicsBitmap" ) ] = 
         wxBitmap( PhysicsButton_xpm );
     m_toolbarBitmaps[ std::string( "physicsSelectBitmap" ) ] = 
@@ -174,6 +199,10 @@ void MainToolBar::CreateMainToolBar()
     AddTool( TOOLBAR_UNSELECT, _( "" ), m_toolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
     AddSeparator();
 
+    //AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
+    //AddTool( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
+    //AddTool( TOOLBAR_LARGE_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
+    //AddSeparator();
 
     AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef WIN32
@@ -198,7 +227,6 @@ void MainToolBar::CreateMainToolBar()
     SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
 #endif
 
-    //EnableTool( TOOLBAR_OBJECT_NAVIGATION, false );
     EnableTool( TOOLBAR_RESET, false );
     EnableTool( TOOLBAR_PAUSE, false );
     EnableTool( TOOLBAR_PLAY, false );
