@@ -106,6 +106,7 @@ public:
    ///Get the real-world bounds of the data
    float* getBoundingBox(){return _bbox;}
    ///Determine if it is time to step the data based on currentTime - lastUpdateTime > delay
+   ///NOTE: This requires VRJ Start Barrier to work properly
    ///\param currentTime The current time from the application.
    ///\param delay The amount of time between each timestep
    void CalculateUpdateTime(double curTime,double delay);

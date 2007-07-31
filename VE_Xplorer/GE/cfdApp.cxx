@@ -426,13 +426,16 @@ void cfdApp::latePreFrame( void )
 
       lastTime = current_time;
       lastFrame = _frameNumber;
-      if( (vpr::Debug::instance()->isDebugEnabled()) && (2 <= vpr::Debug::instance()->getLevel()) )
+   }
+      if( (vpr::Debug::instance()->isDebugEnabled()) && (3 <= vpr::Debug::instance()->getLevel()) )
       {
-            vprDEBUG(vesDBG,2)<<" cfdApp::latePreFrame Profiling data for frame " 
+        if( (_frameNumber%500) == 0.0f )
+        {    vprDEBUG(vesDBG,3)<<" cfdApp::latePreFrame Profiling data for frame " 
                 << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
             VPR_PROFILE_RESULTS();
+        }
       }
-   }
+
 #endif
          
     VE_SceneGraph::SceneManager::instance()->PreFrameUpdate();
@@ -844,6 +847,9 @@ void cfdApp::draw()
     glPopAttrib();
     glPopAttrib();
     glPopAttrib();
+
+    //Here for testing purposes
+    glFlush();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::update( void )

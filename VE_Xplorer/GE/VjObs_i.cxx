@@ -66,6 +66,7 @@ using namespace VE_TextureBased;
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 #include <jccl/RTRC/ConfigManager.h>
+#include <vpr/Perf/ProfileManager.h>
 
 #include <iostream>
 #include <map>
@@ -608,6 +609,7 @@ void VjObs_i::GetCfdStateVariables( void )
 {
    // Called in post frame to get next command out to all the cfdobjects
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+    VPR_PROFILE_GUARD_HISTORY("Set application data", 20 );
    (*_cfdArray) = (*_bufferArray);
    
    for ( int i = 0; i < 9; i++ )
@@ -697,6 +699,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
         CreatCommandVector( commandString );*/
         return;
     }
+    VPR_PROFILE_GUARD_HISTORY("Get application data", 20 );
    
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);

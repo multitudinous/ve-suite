@@ -182,7 +182,7 @@ void cfdTextureBasedVizHandler::_updateShaders()
 //////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateTransientFrame()
 {
-    if(_activeTM && m_isMaster)
+    if( _activeTM )
     {
         _activeTM->CalculateUpdateTime(_appTime,_animationDelay);
         if( _activeTM->TimeToUpdate() )
@@ -382,18 +382,15 @@ void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction
       StopTransientVisualization();
       SetTransientDirection(direction);
 
-      if(m_isMaster)
+      int curFrame = _activeTM->getNextFrame();
+      if(_svvh)
       {
-          int curFrame = _activeTM->getNextFrame();
-          if(_svvh)
-          {
-		      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
-            if(sShader)
-            {
-               sShader->SetCurrentTransientTexture(curFrame,false);
-            }
-         }
-      }
+		  cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+        if(sShader)
+        {
+           sShader->SetCurrentTransientTexture(curFrame,false);
+        }
+     }
    }
    catch(...)
    {
@@ -535,10 +532,7 @@ void cfdTextureBasedVizHandler::ClearAll()
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetCurrentTime(double time)
 {
-    if(m_isMaster)
-    {
-        _appTime = time;
-    } 
+    _appTime = time;
 }
 ////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::UpdateBoundingBox(bool value)

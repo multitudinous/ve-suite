@@ -519,6 +519,7 @@ void cfdTextureManager::CalculateUpdateTime(double curTime, double delay)
 
    if ( (numFields > 1) && _mode == PLAY  )
    {
+        //This requires VRJ Start Barrier to work properly
       if ( curTime - _prevTime >= delay )
       {
          _prevTime = curTime;

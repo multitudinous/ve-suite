@@ -150,70 +150,53 @@ void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& st
 //////////////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State& state) const
 {
-   if(state.getFrameStamp()){
-      double currTime = state.getFrameStamp()->getReferenceTime();
-      if(_tm){
-         if(!_tm->IsOnSlaveNode() && _tm->getPlayMode() == cfdTextureManager::PLAY){
-            //master node in the cluster
-            if(_tm->TimeToUpdate()||_update)
-            {
-               //std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
-               
-               if(_isLuminance)
-               {
-                  texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                             0,
-                             0,0,0, 
-                             _textureWidth,
-                             _textureHeight,
-                             _textureDepth, 
-                             GL_LUMINANCE_ALPHA, 
-                             GL_UNSIGNED_BYTE,
-                             (unsigned char*)_tm->getCurrentField());
-              
-               }else{
-                  texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                             0,
-                             0,0,0, 
-                             _textureWidth,
-                             _textureHeight,
-                             _textureDepth, 
-                             GL_RGBA, 
-                             GL_UNSIGNED_BYTE,
-                             (unsigned char*)_tm->getCurrentField());
-               }
-               ///reset the update flag so we don't subload every frame!!
-               _update = false;
-            }
-         }else{
-            if(_isLuminance)
-            {
-                ///remove this after syncing is fixed
-                //vprDEBUG(vprDBG_ALL,2) <<"current frame slaves:  " << _tm->GetCurrentFrame() << " "<<currTime<<" "<<state.getFrameStamp()->getFrameNumber()<< std::endl << vprDEBUG_FLUSH;               
-                texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                             0,
-                             0,0,0, 
-                             _textureWidth,
-                             _textureHeight,
-                             _textureDepth, 
-                             GL_LUMINANCE_ALPHA, 
-                             GL_UNSIGNED_BYTE,
-                             //(unsigned char*)_tm->dataField(_currentFrame));
-                             (unsigned char*)_tm->getCurrentField());
-            }else{
-               texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                             0,
-                             0,0,0, 
-                             _textureWidth,
-                             _textureHeight,
-                             _textureDepth, 
-                             GL_RGBA, 
-                             GL_UNSIGNED_BYTE,
-                             //(unsigned char*)_tm->dataField(_currentFrame));
-                             (unsigned char*)_tm->getCurrentField());
-            }
-         }
-      }   
-   }
+    if( !state.getFrameStamp() )
+    {
+        return;
+    }
+
+    double currTime = state.getFrameStamp()->getReferenceTime();
+    
+    if( !_tm )
+    {
+        return;
+    }            
+
+    /*if( _tm->getPlayMode() != cfdTextureManager::PLAY)
+    {
+        return;
+    }*/
+
+    //master node in the cluster
+    if(_tm->TimeToUpdate()||_update)
+    {
+        //std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
+
+        if(_isLuminance)
+        {
+          texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+                     0,
+                     0,0,0, 
+                     _textureWidth,
+                     _textureHeight,
+                     _textureDepth, 
+                     GL_LUMINANCE_ALPHA, 
+                     GL_UNSIGNED_BYTE,
+                     (unsigned char*)_tm->getCurrentField());
+
+        }else{
+          texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+                     0,
+                     0,0,0, 
+                     _textureWidth,
+                     _textureHeight,
+                     _textureDepth, 
+                     GL_RGBA, 
+                     GL_UNSIGNED_BYTE,
+                     (unsigned char*)_tm->getCurrentField());
+        }
+        ///reset the update flag so we don't subload every frame!!
+        _update = false;
+    }
 }
 #endif

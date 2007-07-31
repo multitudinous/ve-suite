@@ -38,6 +38,7 @@
 #include <vpr/IO/BufferObjectWriter.h>
 
 #include <vrj/vrjParam.h>
+#include <vpr/Perf/ProfileManager.h>
 
 #include <string>
 /*!\file cfdStateInfo.h
@@ -81,6 +82,7 @@ template<>
    inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
 #endif
 { 
+    VPR_PROFILE_GUARD_HISTORY("writeObject", 20 );
    writer->writeDouble( clusterIso_value );  
    writer->writeDouble( clusterSc );  
    writer->writeDouble( clusterMin );  
@@ -123,6 +125,7 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
 inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject(vpr::ObjectReader* reader)
 #endif
 {
+    VPR_PROFILE_GUARD_HISTORY("readObject", 20 );
    clusterIso_value        = reader->readDouble();  
    clusterSc               = reader->readDouble();  
    clusterMin              = reader->readDouble();  
