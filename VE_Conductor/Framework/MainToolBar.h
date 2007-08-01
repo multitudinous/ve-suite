@@ -34,11 +34,11 @@
 #define MAIN_TOOL_BAR_H
 
 /*!\file MainToolBar.h
-*/
+ */
 
 /*!\class MainToolBar
-* 
-*/
+ * 
+ */
 
 // --- wxWidgets Includes --- //
 #include <wx/toolbar.h>

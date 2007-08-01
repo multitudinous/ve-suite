@@ -204,10 +204,10 @@ void MainToolBar::CreateMainToolBar()
     AddTool( TOOLBAR_UNSELECT, _( "" ), m_toolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
     AddSeparator();
 
-    AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
     AddTool( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
     AddTool( TOOLBAR_LARGE_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_BB_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "bbCenterPointSelectBitmap" ], _( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_BB_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "bbCenterPointBitmap" ], _( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
     AddSeparator();
 
     AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
@@ -229,7 +229,7 @@ void MainToolBar::CreateMainToolBar()
     Realize();
 
     ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
-    ToggleTool( TOOLBAR_BB_CENTERPOINT_JUMP, true );
+    ToggleTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, true );
 #ifdef WIN32
     SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
 #endif
