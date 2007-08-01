@@ -962,13 +962,9 @@ class LauncherWindow(wx.Frame):
             self.SpScreen()
             
         try:
-            ##Show NameServer kill window if NameServer was started.
-            if (MODE_LIST[self.state.GetSurface("Mode")]) == "Tablet":
+            if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 launchInstance = Launch(self.state.GetLaunchSurface())
-                    
-            elif not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 if v("NameServer"):
-                    launchInstance = Launch(self.state.GetLaunchSurface())
                     if (self.prefSubMenu.IsChecked(602) and not windows):
                         window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
                                                     conduct_Pid = launchInstance.GetConductorPid())
@@ -977,7 +973,6 @@ class LauncherWindow(wx.Frame):
                                                      conduct_Pid = launchInstance.GetConductorPid())
                     else:
                         window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
-                           
             else:
                 if v("NameServer"):
                     launchInstance = Launch(self.state.GetLaunchSurface())
