@@ -215,10 +215,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SelectEffect.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\ShaderHelper.cxx"
 				>
 			</File>
@@ -250,10 +246,6 @@
 			</File>
 			<File
 				RelativePath=".\PhongLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SelectEffect.h"
 				>
 			</File>
 			<File

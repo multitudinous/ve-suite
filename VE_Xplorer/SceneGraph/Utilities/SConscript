@@ -12,7 +12,6 @@ sources = Split("""
     PhongLoader.cxx
     MaterialInitializer.cxx
     OpacityVisitor.cxx
-    SelectEffect.cxx
 """)
 
 headers = Split("""
@@ -22,7 +21,6 @@ headers = Split("""
     PhongLoader.h
     MaterialInitializer.h
     OpacityVisitor.h
-    SelectEffect.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph',
