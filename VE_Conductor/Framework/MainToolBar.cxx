@@ -358,7 +358,10 @@ void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
 {
+    VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
     VE_XML::Command* command = new VE_XML::Command();
+
+    //std::string mode;
 
     SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
     SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
@@ -366,7 +369,10 @@ void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
 
     ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
 
+    //dvp->SetData( std::string( "Mode" ), mode );
+
     command->SetCommandName( std::string( "UNSELECT_OBJECTS" ) );
+    command->AddDataValuePair( dvp );
 
     VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
