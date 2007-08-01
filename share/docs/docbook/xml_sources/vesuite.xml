@@ -4,7 +4,7 @@
 <book>
   <title>VE-Suite Documentation</title>
 
-  <preface>
+  <preface id="Introduction_to_VE_Suite">
     <title>Introduction to VE-Suite</title>
 
     <para>VE-Suite is an open source virtual engineering software toolkit. The
@@ -54,7 +54,7 @@
     stakeholders to gain insight into complex engineering problems.</para>
   </preface>
 
-  <part>
+  <part id="Users_Guide">
     <title>User's Guide</title>
 
     <xi:include href="chapter_1_installation_and_setup.xml"
@@ -73,7 +73,7 @@
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
   </part>
 
-  <part>
+  <part id="Developer_Information">
     <title>Developer Information</title>
 
     <xi:include href="chapter_6_code_guidelines.xml"
@@ -95,6 +95,9 @@
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
 
     <xi:include href="chapter_12_software_development_tools.xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+    <xi:include href="chapter_13_testing_matrix.xml"
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
   </part>
 </book>

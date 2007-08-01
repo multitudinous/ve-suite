@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter>
+<chapter id="Code_Guidelines">
   <title>Code Guidelines</title>
 
   <section id="class_structure_guidelines">
@@ -193,13 +193,13 @@
     <para><code> array[ 2 ] = 0.0;</code></para>
   </section>
 
-  <section>
+  <section id="Documentation">
     <title>Documentation</title>
 
     <para>The following sections provide guidelines for editing the VE-Suite
     documentation using Docbook.</para>
 
-    <section>
+    <section id="GUI_Buttons">
       <title>GUI Buttons</title>
 
       <para>When referring to GUI buttons, use the Docbook "guibutton" tag,
@@ -214,7 +214,7 @@
       and start VE-Suite.</para>
     </section>
 
-    <section>
+    <section id="Notes">
       <title>Notes</title>
 
       <para>When including an important note that you want to draw users'
@@ -229,7 +229,7 @@
       <para><emphasis role="bold">NOTE:</emphasis></para>
     </section>
 
-    <section>
+    <section id="Referring_to_VE_Suite_Versions">
       <title>Referring to VE-Suite Versions</title>
 
       <para>When referring to a general version of VE-Suite or any application

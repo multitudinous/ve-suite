@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter>
+<chapter id="Installation_and_Setup">
   <title>Installation and Setup</title>
 
   <para>Support is provided at the following locations:</para>
@@ -35,7 +35,7 @@
   dependencies' RPM files. Be sure to install each dependency you need before
   you run VE-Suite.</para>
   
-  <section>
+  <section id="Windows_Installation">
     <title>Windows Installation</title>
 
     <para>Installing VE-Suite and its dependencies follows the same procedure

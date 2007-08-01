@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter>
+<chapter id="Building_VE_Suite">
   <title>Building VE-Suite</title>
 
   <para>Before attempting to build VE-Suite, be sure to build/install the

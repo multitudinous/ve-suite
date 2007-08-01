@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter>
+<chapter id="Setting_the_Environment">
   <title>Setting the Environment</title>
 
   <para>To specify the build/run environment, perform a one-time edit of the

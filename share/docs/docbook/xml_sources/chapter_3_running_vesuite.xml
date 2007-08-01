@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter>
+<chapter id="Running_VE_Suite">
   <title>Running VE-Suite</title>
 
   <para>VE-Suite contains three programs you can run: the Naming Service,
