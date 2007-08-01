@@ -296,6 +296,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CenterPointJumpEventHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\cfd1DTextInput.cxx"
 				>
 			</File>
@@ -850,6 +854,10 @@
 			</File>
 			<File
 				RelativePath=".\CADTransformEH.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CenterPointJumpEventHandler.h"
 				>
 			</File>
 			<File

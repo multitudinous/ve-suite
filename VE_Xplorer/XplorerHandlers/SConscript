@@ -124,6 +124,7 @@ sources = Split("""
    Xplorer_i.cxx
    Body_AMI_UIHandler_i.cxx
    LocalToWorldTransform.cxx
+   CenterPointJumpEventHandler.cxx
 """)
 ##   DataSetFileEH.cxx
 ##   DataSetPrecomputeEH.cxx
@@ -248,6 +249,7 @@ headers = Split("""
    Xplorer_i.h
    Body_AMI_UIHandler_i.h
    LocalToWorldTransform.h
+   CenterPointJumpEventHandler.h
 """)
 ##   DataSetFileEH.h
 ##   DataSetPrecomputeEH.h

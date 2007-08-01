@@ -45,8 +45,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
-#include "VE_Xplorer/SceneGraph/Utilities/SelectEffect.h"
-
 // --- VR Juggler Stuff --- //
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
@@ -234,8 +232,6 @@ private:
 
     gadget::KeyboardMouseInterface m_keyboard;///<VRJuggler's keyboard/mouse positional interface
     gadget::PositionInterface m_head;///<VRJuggler's head positional interface
-
-    osg::ref_ptr< VE_SceneGraph::Utilities::SelectEffect > m_selectShader;
 };
 }
 

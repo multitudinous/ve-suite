@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.pl BEGIN do not edit this line> *************
  *
  * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
  *
@@ -23,70 +23,78 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
- * Author:        $Author$
- * Id:            $Id$
+ * Date modified: $Date: 2007-06-15 11:02:33 -0500 (Fri, 15 Jun 2007) $
+ * Version:       $Rev: 8205 $
+ * Author:        $Author: jbkoch $
+ * Id:            $Id: CenterPointJumpEventHandler.cxx 8205 2007-06-15 16:02:33Z jbkoch $
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
-// --- VE-Suite Includes --- //
-#include "VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h"
+ *************** <auto-copyright.pl END do not edit this line> **************/
+#include "VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+
 
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
-#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/operations.hpp> //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+
+#include <string>
+
+#ifdef WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
 
 using namespace VE_EVENTS;
 
 ////////////////////////////////////////////////////////////////////////////////
-UnselectObjectsEventHandler::UnselectObjectsEventHandler()
+CenterPointJumpEventHandler::CenterPointJumpEventHandler()
 :
 VE_EVENTS::EventHandler()
 {
-    ;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnselectObjectsEventHandler::UnselectObjectsEventHandler( const UnselectObjectsEventHandler& rhs )
+CenterPointJumpEventHandler::CenterPointJumpEventHandler( const CenterPointJumpEventHandler& rhs )
 :
 VE_EVENTS::EventHandler()
 {
-    ;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnselectObjectsEventHandler::~UnselectObjectsEventHandler()
+CenterPointJumpEventHandler::~CenterPointJumpEventHandler()
 {
-    ;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void CenterPointJumpEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
 {
-    ;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
+void CenterPointJumpEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
 {
-    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+   
+   std::string mode;
+   command->GetDataValuePair( "Mode" )->GetData( mode );
 
-    if( command->GetCommandName() == "UNSELECT_OBJECTS" )
-    {
-        VE_Xplorer::DeviceHandler::instance()->UnselectObjects();
-    }
+   VE_Xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-UnselectObjectsEventHandler& UnselectObjectsEventHandler::operator=( const UnselectObjectsEventHandler& rhs )
+CenterPointJumpEventHandler& CenterPointJumpEventHandler::operator=( const CenterPointJumpEventHandler& rhs )
 {
-    if( this != &rhs )
-    {
-        VE_EVENTS::EventHandler::operator=( rhs );
-    }
+   if( this != &rhs )
+   {
+      VE_EVENTS::EventHandler::operator=( rhs );
+   }
 
-    return *this;
+   return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

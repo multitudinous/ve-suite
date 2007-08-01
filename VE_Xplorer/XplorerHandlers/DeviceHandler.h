@@ -54,14 +54,14 @@ DeviceHandler API
 
 namespace VE_Xplorer
 {
-   class Device;
-   class Wand;
-   class KeyboardMouse;
+    class Device;
+    class Wand;
+    class KeyboardMouse;
 }
 
 namespace VE_EVENTS
 {
-   class EventHandler;
+    class EventHandler;
 }
 
 namespace VE_Xplorer
@@ -69,36 +69,43 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS DeviceHandler
 {
 private:
-	///Constructor
-	DeviceHandler();
+    ///Constructor
+    DeviceHandler();
 
-	///Destructor
-   ~DeviceHandler();
+    ///Destructor
+    ~DeviceHandler();
 
-   ///Do not know what this is
-   ///\param DeviceHandler 
-   vprSingletonHeader( DeviceHandler );
+    ///Do not know what this is
+    ///\param DeviceHandler 
+    vprSingletonHeader( DeviceHandler );
 public:
-   ///Delete existing devices
-   void CleanUp();
+    ///Delete existing devices
+    void CleanUp();
 
-   ///Execute navigation commands from active device
-   void ExecuteCommands();
+    ///Execute navigation commands from active device
+    void ExecuteCommands();
 
-   ///Set the active device
-   ///\param device The active device
-   void SetActiveDevice( std::string device );
+    ///Set the active device
+    ///\param device The active device
+    void SetActiveDevice( std::string device );
 
     ///Set the device mode
-   ///\param mode Do not know what this does
-   void SetDeviceMode( std::string mode );
+    ///\param mode Do not know what this does
+    void SetDeviceMode( std::string mode );
 
-   ///Process navigation and selection commands
-   void ProcessDeviceEvents();
+    ///Set the center point mode
+    ///\param mode Do not know what this does
+    void SetCenterPointJumpMode( std::string mode );
 
-   ///Get the current device
-   ///\param device The current active device
-   VE_Xplorer::Device* GetDevice( std::string device );
+    ///Unselect all currently selected objects
+    void UnselectObjects();
+
+    ///Process navigation and selection commands
+    void ProcessDeviceEvents();
+
+    ///Get the current device
+    ///\param device The current active device
+    VE_Xplorer::Device* GetDevice( std::string device );
 
 private:
     std::map< std::string, VE_Xplorer::Device* > devices; ///<

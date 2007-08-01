@@ -43,6 +43,7 @@
 #include "VE_Xplorer/XplorerHandlers/DeviceEH.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceModeEH.h"
 #include "VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h"
+#include "VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h"
 #include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
 
@@ -91,6 +92,7 @@ m_jump( 10.0f )
     _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
     _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
     _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new VE_EVENTS::UnselectObjectsEventHandler();
+    _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" ) ] = new VE_EVENTS::CenterPointJumpEventHandler();
     _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
     _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
 }
@@ -170,6 +172,35 @@ void DeviceHandler::SetDeviceMode( std::string mode )
 
         active_device->SetActiveDCS( activeDCS.get() );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetCenterPointJumpMode( std::string mode )
+{
+    if( mode == "Small" )
+    {
+        m_jump = 10.0;
+    }
+    else if( mode == "Medium" )
+    {
+        m_jump = 100.0;
+    }
+    else if( mode == "Large" )
+    {
+        m_jump = 1000.0;
+    }
+    else if( mode == "Bounding Box" )
+    {
+        m_jump = activeDCS->getBound().radius();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::UnselectObjects()
+{
+    activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    active_device->SetActiveDCS( activeDCS.get() );
+
+    selectedDCS = 0;
+    active_device->SetSelectedDCS( selectedDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
