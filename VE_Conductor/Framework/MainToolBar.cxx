@@ -45,12 +45,14 @@
 #include "VE_Conductor/xpm/ToolBar/ObjectNavigationButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/ObjectNavigationButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/UnselectButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButtonSelect.xpm"
-//#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm"
-//#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm"
-//#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButton.xpm"
+#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButton.xpm"
+#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm"
+#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm"
+#include "VE_Conductor/xpm/ToolBar/BBCenterPointJumpButton.xpm"
+#include "VE_Conductor/xpm/ToolBar/BBCenterPointJumpButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButton.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButtonSelect.xpm"
 #include "VE_Conductor/xpm/ToolBar/PauseButtonDisabled.xpm"
@@ -82,9 +84,10 @@ BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_OBJECT_NAVIGATION, MainToolBar::OnChangeDeviceMode )
     EVT_MENU( TOOLBAR_UNSELECT, MainToolBar::OnUnselectObjects )
 
-    //EVT_MENU( TOOLBAR_SMALL_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
-    //EVT_MENU( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
-    //EVT_MENU( TOOLBAR_LARGE_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    EVT_MENU( TOOLBAR_SMALL_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    EVT_MENU( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    EVT_MENU( TOOLBAR_LARGE_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    EVT_MENU( TOOLBAR_BB_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
 
     EVT_MENU( TOOLBAR_PHYSICS, MainToolBar::OnPhysicsState )
 
@@ -137,7 +140,6 @@ void MainToolBar::LoadToolBarBitmaps()
     m_toolbarBitmaps[ std::string( "unselectBitmap" ) ] = 
         wxBitmap( UnselectButton_xpm );
 
-    /*
     m_toolbarBitmaps[ std::string( "smallCenterPointBitmap" ) ] = 
         wxBitmap( SmallCenterPointJumpButton_xpm );
     m_toolbarBitmaps[ std::string( "smallCenterPointSelectBitmap" ) ] = 
@@ -150,7 +152,10 @@ void MainToolBar::LoadToolBarBitmaps()
         wxBitmap( LargeCenterPointJumpButton_xpm );
     m_toolbarBitmaps[ std::string( "largeCenterPointSelectBitmap" ) ] = 
         wxBitmap( LargeCenterPointJumpButtonSelect_xpm );
-    */
+    m_toolbarBitmaps[ std::string( "bbCenterPointBitmap" ) ] = 
+        wxBitmap( BBCenterPointJumpButton_xpm );
+    m_toolbarBitmaps[ std::string( "bbCenterPointSelectBitmap" ) ] = 
+        wxBitmap( BBCenterPointJumpButtonSelect_xpm );
 
     m_toolbarBitmaps[ std::string( "physicsBitmap" ) ] = 
         wxBitmap( PhysicsButton_xpm );
@@ -199,10 +204,11 @@ void MainToolBar::CreateMainToolBar()
     AddTool( TOOLBAR_UNSELECT, _( "" ), m_toolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
     AddSeparator();
 
-    //AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
-    //AddTool( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
-    //AddTool( TOOLBAR_LARGE_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
-    //AddSeparator();
+    AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_LARGE_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_BB_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "bbCenterPointSelectBitmap" ], _( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
+    AddSeparator();
 
     AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef WIN32
@@ -223,6 +229,7 @@ void MainToolBar::CreateMainToolBar()
     Realize();
 
     ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
+    ToggleTool( TOOLBAR_BB_CENTERPOINT_JUMP, true );
 #ifdef WIN32
     SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
 #endif
@@ -285,6 +292,63 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     dvp->SetData( std::string( "Mode" ), mode );
 
     command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
+    command->AddDataValuePair( dvp );
+
+    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+
+    delete command;
+}
+////////////////////////////////////////////////////////////////////////////////
+void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
+{
+    VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
+    VE_XML::Command* command = new VE_XML::Command();
+
+    std::string mode;
+
+    if( event.GetId() == TOOLBAR_SMALL_CENTERPOINT_JUMP )
+    {
+        mode = "Small";
+
+        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+    }
+
+    else if( event.GetId() == TOOLBAR_MEDIUM_CENTERPOINT_JUMP )
+    {
+        mode = "Medium";
+
+        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+    }
+
+    else if( event.GetId() == TOOLBAR_LARGE_CENTERPOINT_JUMP )
+    {
+        mode = "Large";
+
+        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+    }
+
+    else if( event.GetId() == TOOLBAR_BB_CENTERPOINT_JUMP )
+    {
+        mode = "Bounding Box";
+
+        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointSelectBitmap" ] );
+    }
+
+    dvp->SetData( std::string( "Mode" ), mode );
+
+    command->SetCommandName( std::string( "CHANGE_CENTERPOINT_MODE" ) );
     command->AddDataValuePair( dvp );
 
     VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );

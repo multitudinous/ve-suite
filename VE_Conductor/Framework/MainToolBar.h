@@ -78,6 +78,7 @@ public:
         TOOLBAR_SMALL_CENTERPOINT_JUMP,///<ID for fixed centerpoint small jump setting
         TOOLBAR_MEDIUM_CENTERPOINT_JUMP,///<ID for fixed centerpoint medium jump setting
         TOOLBAR_LARGE_CENTERPOINT_JUMP,///<ID for fixed centerpoint large jump setting
+        TOOLBAR_BB_CENTERPOINT_JUMP,///<ID for centerpoint boundingbox jump setting
 
         TOOLBAR_PHYSICS,///<ID for physics simulation tool
         TOOLBAR_RESET,///<ID for reset simulation tool
