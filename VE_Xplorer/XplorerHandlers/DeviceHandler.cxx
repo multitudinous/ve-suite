@@ -123,14 +123,6 @@ void DeviceHandler::ExecuteCommands()
 
         if( currentEventHandler != _eventHandlers.end() )
         {
-            //Set properties in Devices
-            std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
-            for( itr = devices.begin(); itr != devices.end(); itr++ )
-            {
-                itr->second->SetActiveDCS( activeDCS.get() );
-                itr->second->SetSelectedDCS( selectedDCS.get() );
-            }
-
             currentEventHandler->second->SetGlobalBaseObject( active_device );
             currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
             //Tablet and Wand is always active and need updated...
@@ -161,7 +153,6 @@ void DeviceHandler::SetDeviceMode( std::string mode )
     if( device_mode == "World Navigation" )
     {
         activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
-        active_device->SetActiveDCS( activeDCS.get() );
     }
     else if( device_mode == "Object Navigation" )
     {
@@ -169,8 +160,13 @@ void DeviceHandler::SetDeviceMode( std::string mode )
         {
             activeDCS = selectedDCS;
         }
+    }
 
-        active_device->SetActiveDCS( activeDCS.get() );
+    //Set properties in Devices
+    std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+    for( itr = devices.begin(); itr != devices.end(); itr++ )
+    {
+        itr->second->SetActiveDCS( activeDCS.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -197,10 +193,15 @@ void DeviceHandler::SetCenterPointJumpMode( std::string mode )
 void DeviceHandler::UnselectObjects()
 {
     activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
-    active_device->SetActiveDCS( activeDCS.get() );
-
     selectedDCS = 0;
-    active_device->SetSelectedDCS( selectedDCS.get() );
+
+    //Set properties in Devices
+    std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+    for( itr = devices.begin(); itr != devices.end(); itr++ )
+    {
+        itr->second->SetActiveDCS( activeDCS.get() );
+        itr->second->SetSelectedDCS( selectedDCS.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
@@ -231,6 +232,14 @@ void DeviceHandler::ProcessDeviceEvents()
 
     //Always do this be default
     devices[ "Tablet" ]->UpdateNavigation();
+
+    //Set properties in Devices
+    std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+    for( itr = devices.begin(); itr != devices.end(); itr++ )
+    {
+        itr->second->SetActiveDCS( activeDCS.get() );
+        itr->second->SetSelectedDCS( selectedDCS.get() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_Xplorer::Device* DeviceHandler::GetDevice( std::string device )
