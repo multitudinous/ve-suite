@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
-<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="/Volumes/data/TSVEG/VE_Suite/share/stereo_desktop/multiple_contexts.jconf" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/Volumes/data/TSVEG/VE_Suite/share/stereo_desktop/multiple_contexts.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <display_system name="Display System" version="2">
+      <display_system name="Display System" version="3">
          <number_of_pipes>1</number_of_pipes>
-         <x11_pipes>-1</x11_pipes>
-         <x11_pipes>-1</x11_pipes>
-         <x11_pipes>-1</x11_pipes>
-         <x11_pipes>-1</x11_pipes>
-         <x11_pipes>-1</x11_pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
+         <pipes>-1</pipes>
          <use_swap_group>false</use_swap_group>
       </display_system>
-      <display_window name="context1" version="4">
+      <display_window name="context1" version="5">
          <origin>0</origin>
          <origin>0</origin>
          <size>200</size>
@@ -38,6 +38,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
@@ -61,7 +63,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -129,7 +131,7 @@
                <key>KEY_8</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host/>
+         <device_host />
       </simulated_digital_device>
       <simulated_positional_device name="SimWandPos" version="3">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
@@ -215,7 +217,7 @@
          <rotation_delta>0.1</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
-         <device_host/>
+         <device_host />
       </simulated_positional_device>
       <simulated_digital_device name="DigitalSystemControls" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
@@ -225,12 +227,12 @@
                <key>KEY_ESC</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host/>
+         <device_host />
       </simulated_digital_device>
       <simulated_relative_position name="SimRelativePosition1" version="1">
          <base_frame_proxy>Head Proxy</base_frame_proxy>
          <relative_proxy>Wand Proxy</relative_proxy>
-         <device_host/>
+         <device_host />
       </simulated_relative_position>
       <simulated_digital_device name="AppDigitalSim" version="2">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
@@ -258,7 +260,7 @@
                <key>KEY_R</key>
             </key_modifier_pair>
          </key_pair>
-         <device_host/>
+         <device_host />
       </simulated_digital_device>
       <simulated_positional_device name="SimHeadPos" version="3">
          <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
@@ -344,7 +346,7 @@
          <rotation_delta>1.0</rotation_delta>
          <translation_coordinate_system>1</translation_coordinate_system>
          <rotation_coordinate_system>1</rotation_coordinate_system>
-         <device_host/>
+         <device_host />
       </simulated_positional_device>
       <digital_proxy name="VJSystemStopKernelProxy" version="1">
          <device>DigitalSystemControls</device>
@@ -432,7 +434,7 @@
       </keyboard_mouse_proxy>
       <keyboard_mouse_device name="Keyboard KM Dev" version="1">
          <mouse_sensitivity>1.0</mouse_sensitivity>
-         <device_host/>
+         <device_host />
       </keyboard_mouse_device>
       <alias name="VJButton6" version="1">
          <proxy>Button6Proxy</proxy>
@@ -441,7 +443,7 @@
          <device>SimWandButtons</device>
          <unit>6</unit>
       </digital_proxy>
-      <display_window name="context2" version="4">
+      <display_window name="context2" version="5">
          <origin>0</origin>
          <origin>200</origin>
          <size>200</size>
@@ -468,6 +470,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
@@ -491,7 +495,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -499,7 +503,7 @@
          <start_locked>false</start_locked>
          <sleep_time>25</sleep_time>
       </display_window>
-      <display_window name="context3" version="4">
+      <display_window name="context3" version="5">
          <origin>200</origin>
          <origin>0</origin>
          <size>200</size>
@@ -526,6 +530,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
@@ -549,7 +555,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -557,7 +563,7 @@
          <start_locked>false</start_locked>
          <sleep_time>25</sleep_time>
       </display_window>
-      <display_window name="context4" version="4">
+      <display_window name="context4" version="5">
          <origin>200</origin>
          <origin>200</origin>
          <size>200</size>
@@ -584,6 +590,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
@@ -607,7 +615,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -615,7 +623,7 @@
          <start_locked>false</start_locked>
          <sleep_time>25</sleep_time>
       </display_window>
-      <display_window name="context5" version="4">
+      <display_window name="context5" version="5">
          <origin>400</origin>
          <origin>0</origin>
          <size>200</size>
@@ -642,6 +650,8 @@
          <stereo>false</stereo>
          <border>true</border>
          <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="Desktop Display" version="2">
@@ -665,7 +675,7 @@
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
-               <tracker_proxy/>
+               <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
          <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
@@ -675,3 +685,4 @@
       </display_window>
    </elements>
 </configuration>
+
