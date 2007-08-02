@@ -194,8 +194,8 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
     EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
-   EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
-   EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
+	EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
+	EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
     EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
     EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
     EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
@@ -1137,7 +1137,29 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 	   }
    }
 }
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OpenSimulation( wxString simName )
+{
+	   wxFileName bkpFileName;
+	   bkpFileName.SetName( simName); 
 
+	   VE_XML::Command returnState;
+	   returnState.SetCommandName("getNetwork");
+	   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	   data->SetData("NetworkQuery", "getNetwork" );
+	   data = returnState.GetDataValuePair(-1);
+	   data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+
+	   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	   VE_XML::XMLReaderWriter commandWriter;
+	   std::string status="returnString";
+	   commandWriter.UseStandaloneDOMDocumentManager();
+	   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+	   //Get results
+	   std::string nw_str = serviceList->Query( status );
+	   Log(nw_str.c_str());
+}
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {

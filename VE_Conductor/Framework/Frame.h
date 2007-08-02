@@ -286,6 +286,8 @@ public:
 
 protected:
     void LoadFromServer( wxCommandEvent &event );
+	
+	void OpenSimulation( wxString simName );
 
    void QueryFromServer( wxCommandEvent& event );
    void QueryNetwork( wxCommandEvent& event );
