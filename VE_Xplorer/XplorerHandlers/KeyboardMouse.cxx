@@ -367,18 +367,16 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
-    if( activeDCS->GetName() == "World DCS" )
-    {
-        m_currentTransform = activeDCS->GetMat();
-    } 
-    else
+    m_currentTransform = activeDCS->GetMat();
+
+    if( activeDCS->GetName() != "World DCS" )
     {
         osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
         new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
 
         m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
-        m_currentTransform = m_localToWorldTransform * activeDCS->GetMat();
-    }
+        m_currentTransform = m_localToWorldTransform * m_currentTransform;
+    } 
 
     //Translate world dcs by distance that the m_head is away from the origin
     gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -413,16 +411,13 @@ void KeyboardMouse::ProcessNavigationEvents()
     //Multiply by the transform and then by the rotation
     matrix = matrix * m_deltaTransform * accuRotation;
 
-    //Set the activeDCS w/ new transform
-    if( activeDCS->GetName() == "World DCS" )
-    {
-        activeDCS->SetMat( matrix );
-    }
-    else
+    if( activeDCS->GetName() != "World DCS" )
     {
         matrix = gmtl::invert( m_localToWorldTransform ) * matrix;
-        activeDCS->SetMat( matrix );
     }
+
+    //Set the activeDCS w/ new transform
+    activeDCS->SetMat( matrix );
 
     //If not in animation mode, reset the transform
     if( !m_animate )

@@ -105,6 +105,12 @@ void Tablet::UpdateNavigation()
     }
 
     /*
+    gmtl::Matrix44d m_currentTransform;
+    gmtl::Matrix44d m_localToWorldTransform;
+
+    gmtl::identity( m_currentTransform );
+    gmtl::identity( m_localToWorldTransform );
+
     if( activeDCS->GetName() == "World DCS" )
     {
         m_currentTransform = activeDCS->GetMat();
@@ -138,7 +144,7 @@ void Tablet::UpdateNavigation()
     }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )         
     {
-        for ( unsigned int i = 0; i < 3; i++ )
+        for ( unsigned int i = 0; i < 3; ++i )
         {
             worldTrans[ i ] = 0.0f;
             world_quat.set( 0, 0, 0, 1 );
@@ -239,8 +245,8 @@ void Tablet::UpdateNavigation()
 
                 //Create translation from new rotated point and add original head offset to the newly found location
                 //Set world translation accordingly
-                worldTrans[0] = -(rotateJugglerHeadVec[0] + jugglerHeadPointTemp[0] );
-                worldTrans[1] = -(rotateJugglerHeadVec[1] + jugglerHeadPointTemp[1] );
+                worldTrans[0] = -( rotateJugglerHeadVec[0] + jugglerHeadPointTemp[0] );
+                worldTrans[1] = -( rotateJugglerHeadVec[1] + jugglerHeadPointTemp[1] );
 
                 center_point->mData[0] = -worldTrans[0];
                 center_point->mData[1] = -worldTrans[1];
@@ -287,6 +293,7 @@ void Tablet::UpdateNavigation()
 #else
                 gmtl::EulerAngleXYZd worldRotVecTemp( 0, gmtl::Math::deg2Rad( -rotationStepSize ), 0 );
 #endif
+
                 gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >( worldRotVecTemp );
                 gmtl::Vec4d newGlobalHeadPointVec;
                 newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
@@ -342,9 +349,18 @@ void Tablet::UpdateNavigation()
         }
     }
 
-    activeDCS->SetTranslationArray( worldTrans );
-
     world_quat *= rot_quat;
+
+    /*
+    //Set the activeDCS w/ new transform
+    if( activeDCS->GetName() != "World DCS" )
+    {
+        matrix = gmtl::invert( m_localToWorldTransform ) * matrix;
+        activeDCS->SetMat( matrix ); 
+    }
+    */
+
+    activeDCS->SetTranslationArray( worldTrans );
     activeDCS->SetQuat( world_quat );
 
     vprDEBUG( vesDBG,3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;

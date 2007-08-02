@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef TABLET_DEVICE_H
-#define TABLET_DEVICE_H
+#ifndef TABLET_H
+#define TABLET_H
 
 /*!\file Tablet.h
 Tablet API
@@ -125,4 +125,4 @@ private:
 
 };
 }
-#endif
+#endif //TABLET_H
