@@ -45,7 +45,7 @@
 
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
-// --- VR Juggler Stuff --- //
+// --- VRJuggler Stuff --- //
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
 

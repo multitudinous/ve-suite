@@ -32,89 +32,97 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TABLET_DEVICE_H
 #define TABLET_DEVICE_H
+
 /*!\file Tablet.h
 Tablet API
 */
+
 /*!\class VE_Xplorer::Tablet
-*   A class to track the wand location, object translation,
+* A class to track the wand location, object translation,
 and virtual cursor location in virtual environment.
 */
+
+// --- VE-Suite Includes --- //
+#include "VE_Installer/include/VEConfig.h"
+
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
+#include "VE_Xplorer/XplorerHandlers/Device.h"
+
+// --- VRJuggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/ref_ptr>
+#endif
+
 namespace VE_SceneGraph
 {
-   class DCS;
+    class DCS;
 }
 
 namespace VE_XML
 {
-   class Command;
+    class Command;
 }
-
-#include "VE_Installer/include/VEConfig.h"
-
-#include "VE_Xplorer/XplorerHandlers/Device.h"
-
-#ifdef _OSG
-#include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
 
 namespace VE_Xplorer
 {
 class VE_XPLORER_EXPORTS Tablet : public Device
 {
 public:
-   ///Constructor
-   Tablet();
-   ///Destructor
-   virtual ~Tablet();
+    ///Constructor
+    Tablet();
+    ///Destructor
+    virtual ~Tablet();
 
-   ///Initialize some variables in the class
-   void Initialize( void );
+    ///Initialize some variables in the class
+    void Initialize();
 
-   ///Update the position in scene
-   void UpdateNavigation( void );
+    ///Update the position in scene
+    void UpdateNavigation();
 
-   ///Set the rotation method
-   ///\param input Indicates which rotation method is needed
-   void SetHeadRotationFlag( int input );
+    ///Set the rotation method
+    ///\param input Indicates which rotation method is needed
+    void SetHeadRotationFlag( int input );
 
-   ///Does not let the user go below the ground plane at 0,0,0 
-   ///\param input Flag to insure translation does not go below zero plane
-   void SetSubZeroFlag( int zero );
+    ///Does not let the user go below the ground plane at 0,0,0 
+    ///\param input Flag to insure translation does not go below zero plane
+    void SetSubZeroFlag( int zero );
 
-   ///New function for new VECommand structure
-   ///\param veCommand Sets the Command used for navigation
-   void SetVECommand( VE_XML::Command* veCommand );
+    ///New function for new VECommand structure
+    ///\param veCommand Sets the Command used for navigation
+    void SetVECommand( VE_XML::Command* veCommand );
+
 private:
-   gadget::PositionInterface head; ///<VRJuggler's head positional interface
+    gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
-   int cfdIso_value; ///<Variable used for keeping track of type of movement
+    int cfdIso_value; ///<Variable used for keeping track of type of movement
+
 private:
-   gmtl::Matrix44d vjMat; ///<Contains current translation matrix
-   gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
+    gmtl::Matrix44d vjMat; ///<Contains current translation matrix
+    gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
-   double loc[3]; ///<Location of the wand with respect to the virtual space
-   double dir[3]; ///<Direction of the wand
-   double worldLoc[3]; ///<Location of the objects with respect to the virtual space
-   double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
-   double objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
-   double cursorLen; ///<Cursor length
-   double dObj; ///<Displacement of the objects in virtual space
+    double loc[3]; ///<Location of the wand with respect to the virtual space
+    double dir[3]; ///<Direction of the wand
+    double worldLoc[3]; ///<Location of the objects with respect to the virtual space
+    double cursorLoc[3]; ///<Location of the cursor with respect to the virtual space
+    double objLoc[3]; ///<Location with respect to data set (the actual location to interact with data)
+    double cursorLen; ///<Cursor length
+    double dObj; ///<Displacement of the objects in virtual space
 
-   double translationStepSize; ///<Size of translation step
-   double rotationStepSize; ///<Size of rotation step
+    double translationStepSize; ///<Size of translation step
+    double rotationStepSize; ///<Size of rotation step
 
-   int rotationFlag; ///<Rotation flag
-   int subzeroFlag; ///<Zero plane flag
+    int rotationFlag; ///<Rotation flag
+    int subzeroFlag; ///<Zero plane flag
 
-   VE_XML::Command* command; ///<Stores xml command
+    VE_XML::Command* command; ///<Stores xml command
+
 };
 }
 #endif
