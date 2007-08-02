@@ -134,6 +134,13 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
    
+
+    m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
+    m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
+    m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON; 
+    m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON; 
+    m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON; 
+    m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON; 
    //_vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
 }
 ///////////////////////////////////////////////////////////////////
@@ -175,6 +182,13 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
+
+    m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
+    m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
+    m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON; 
+    m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON; 
+    m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON; 
+    m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON; 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -1397,4 +1411,33 @@ void Vistab::UpdateSpinControls()
 	  _maxSpinner->SetValue(100);
       return;
    }
+}
+////////////////////////////////////////////////////////////////
+void Vistab::SetButtonStatus(std::string buttonName, bool onOff)
+{
+    std::map<std::string,VISTAB_IDS>::iterator buttonIterator;
+    //check for "All"
+    if(buttonName == "All")
+    {
+        for(buttonIterator = m_vistabButtonMap.begin();
+            buttonIterator != m_vistabButtonMap.end();
+            ++buttonIterator)
+        {
+            itemToolBar3->EnableTool(buttonIterator->second,onOff);             
+        }
+    }
+    else
+    {
+        buttonIterator = m_vistabButtonMap.find(buttonName);
+        if(buttonIterator != m_vistabButtonMap.end())
+        {
+            itemToolBar3->EnableTool(buttonIterator->second,onOff);             
+        }
+        else
+        {
+             wxMessageBox( _("Invalid button specified!"),_("Button failure!"),
+                     wxOK | wxICON_ERROR );
+
+        }
+    }
 }

@@ -192,6 +192,11 @@ public:
    ///\param type The type of data\n Valid types are:\n TEXTURE_SCALARS\n TEXTURE_VECTORS
    void SetTextureData(wxArrayString textureData,std::string type);
 
+   ///Set the visibility of a toolbar button
+   ///\param buttonName The name of the button to disable 
+   ///\param onOff The visibility of the button 
+   void SetButtonStatus(std::string buttonName, bool onOff);
+
    ///Get active scalar name
    std::string GetActiveScalarName();
    ///Get active vector name
@@ -426,6 +431,7 @@ protected:
       return tempStr;
    }   
 
+    std::map<std::string,VISTAB_IDS> m_vistabButtonMap;///<Mapping of names of buttons to enums.
     DECLARE_EVENT_TABLE()
 };
 

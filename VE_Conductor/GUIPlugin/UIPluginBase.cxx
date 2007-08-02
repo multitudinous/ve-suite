@@ -1493,6 +1493,10 @@ void UIPluginBase::OnVisualization(wxCommandEvent& event )
    {
       vistab->SetTextureData(vectorTextureDatasets,"TEXTURE_VECTORS");
    }
+    if(!hasScalarTextures && !hasVectorTextures)
+    {
+        vistab->SetButtonStatus("TBET",false);       
+    }
 
 
    if(isDataSet)
