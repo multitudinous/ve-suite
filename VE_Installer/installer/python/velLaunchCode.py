@@ -295,12 +295,12 @@ class Launch:
             ##Master call
             print "***MASTER CALL: %s***" %self.settings["ClusterMaster"] ##TESTER
             self.ExecuteClusterScriptUnix(self.settings["ClusterMaster"],
-                                          clusterFilePath, "Master")
+                                          clusterFilePath, "master")
             sleep(self.settings["MasterWait"])
             ##Slave calls
             for comp in self.settings["ClusterSlaves"]:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
-                self.ExecuteClusterScriptUnix(comp, clusterFilePath, "Slave")
+                self.ExecuteClusterScriptUnix(comp, clusterFilePath, "slave")
                 sleep(self.settings["SlaveWait"])
             ##Delete the cluster file afterwards.
             print clusterFilePath
@@ -476,7 +476,7 @@ class Launch:
         """Writes the cluster script section before the environment setting."""
         if unix:
             ssh_cmd = os.popen("whereis ssh").readline().split()[1]
-            self.clusterScript = "#!%s\n" % os.getenv('SHELL', '/bin/sh')
+            self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
@@ -498,9 +498,9 @@ class Launch:
             slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
             masterCommand = "%s" %(string.join(self.XplorerCall("master")))
             self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
-            #self.clusterScript += 'if ( $2 == "slave" ) then\n'
-            #self.clusterScript += "    %s\n" %(slaveCommand)
-            #self.clusterScript += "else\n"
+            self.clusterScript += 'if ( $2 == "slave" ) then\n'
+            self.clusterScript += "    %s\n" %(slaveCommand)
+            self.clusterScript += "else\n"
             ##NOTE: StdOutput written to local /var/tmp file to avoid
             ##network traffic issues. Change " &" to " 2>&1 &" to reroute
             ##StdErrors to local /var/tmp file as well.
@@ -528,7 +528,7 @@ class Launch:
 
 
     def ExecuteClusterScriptUnix(self, nodeName,
-                                 clusterFilePath, nodeStatus = "Slave"):
+                                 clusterFilePath, nodeStatus = "slave"):
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
