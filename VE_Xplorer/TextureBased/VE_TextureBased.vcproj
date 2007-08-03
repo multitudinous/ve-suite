@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;BOOST_ALL_DYN_LINK"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;BOOST_ALL_DYN_LINK;JUGGLER_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -125,7 +125,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;VE_PATENTED;BOOST_ALL_DYN_LINK"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;VE_PATENTED;BOOST_ALL_DYN_LINK;JUGGLER_OPT"
 				RuntimeLibrary="2"
 				OpenMP="true"
 				UsePrecompiledHeader="0"
