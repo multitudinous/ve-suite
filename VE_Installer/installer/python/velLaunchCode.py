@@ -906,10 +906,10 @@ class Launch:
             return
         if unix:
             ##Choose export command based on shell type.
-            shellName = os.getenv('SHELL', 'None')
-            if shellName[-3:] != 'csh':
-                self.clusterScript += 'export %s="%s"\n' %(var, os.getenv(var))
-            else:
-                self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
+            ##shellName = 'csh'#os.getenv('SHELL', 'None')
+            ##if shellName[-3:] != 'csh':
+            ##    self.clusterScript += 'export %s="%s"\n' %(var, os.getenv(var))
+            ##else:
+            self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
         elif windows:
             self.clusterScript += 'set %s=%s\n' %(var, os.getenv(var))
