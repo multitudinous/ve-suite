@@ -367,8 +367,10 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    //Grab the active matrix to manipulate
     m_currentTransform = activeDCS->GetMat();
 
+    //Convert to world space if not already in it
     if( activeDCS->GetName() != "World DCS" )
     {
         osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
@@ -378,7 +380,7 @@ void KeyboardMouse::ProcessNavigationEvents()
         m_currentTransform = m_localToWorldTransform * m_currentTransform;
     } 
 
-    //Translate world dcs by distance that the m_head is away from the origin
+    //Translate active dcs by distance that the m_head is away from the origin
     gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
     gmtl::Matrix44d worldMatTrans = transMat * m_currentTransform;
 
@@ -411,6 +413,7 @@ void KeyboardMouse::ProcessNavigationEvents()
     //Multiply by the transform and then by the rotation
     matrix = matrix * m_deltaTransform * accuRotation;
 
+    //Convert matrix back to local space after delta transform has been applied
     if( activeDCS->GetName() != "World DCS" )
     {
         matrix = gmtl::invert( m_localToWorldTransform ) * matrix;
@@ -736,7 +739,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     if( selectedDCS.valid() )
     {
-        
+        selectedDCS->EnableMultiPass( false );
     }
 
     if( listOfHits.empty() )
@@ -766,7 +769,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     }
 
     //Make sure it is good
-    if( !objectHit._geode.valid() )
+    if( !objectHit._geode.valid()) 
     {
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit Invalid object selected" 
                               << std::endl << vprDEBUG_FLUSH;
@@ -821,5 +824,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     }
 
     selectedDCS = activeDCS;
+
+    selectedDCS->EnableMultiPass( true );
 }
 ////////////////////////////////////////////////////////////////////////////////

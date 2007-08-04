@@ -64,7 +64,7 @@ DeviceHandler::DeviceHandler()
 activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ),
 selectedDCS( 0 ),
 device_mode( "World Navigation" ),
-center_point( 0, 0, 0 ),
+center_point( 0, 2, 0 ),
 m_threshold( 0.5f ),
 m_jump( 10.0f )
 {
