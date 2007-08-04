@@ -255,11 +255,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SelectTechnique.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Switch.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\SwitchOSGReaderWriter.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\Technique.cxx"
 				>
 			</File>
 			<File
@@ -367,11 +375,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SelectTechnique.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Logo\Suite.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Switch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Technique.h"
 				>
 			</File>
 			<File

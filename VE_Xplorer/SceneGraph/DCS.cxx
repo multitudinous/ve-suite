@@ -33,6 +33,9 @@
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
+#include "VE_Xplorer/SceneGraph/Technique.h"
+#include "VE_Xplorer/SceneGraph/SelectTechnique.h"
+
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Vec3d>
@@ -63,7 +66,13 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( void )
 :
-m_btBody( 0 )
+m_btBody( 0 ),
+
+
+m_multipass( false ),
+m_activeTechnique( 0 )
+
+
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; i++ )
@@ -93,11 +102,20 @@ m_btBody( 0 )
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
+
+    selectTech = new VE_SceneGraph::SelectTechnique();
+    AddTechnique( selectTech );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
 :
-m_btBody( 0 )
+m_btBody( 0 ),
+
+
+m_multipass( false ),
+m_activeTechnique( 0 )
+
+
 {
     this->SetTranslationArray( trans );
     this->SetRotationArray( rot );
@@ -106,16 +124,28 @@ m_btBody( 0 )
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
+
+    selectTech = new VE_SceneGraph::SelectTechnique();
+    AddTechnique( selectTech );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
 :
 osg::PositionAttitudeTransform( dcs, copyop ),
-m_btBody( 0 )
+m_btBody( 0 ),
+
+
+m_multipass( false ),
+m_activeTechnique( 0 )
+
+
 {
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
+
+    selectTech = new VE_SceneGraph::SelectTechnique();
+    AddTechnique( selectTech );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
@@ -197,7 +227,7 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     rotateMat.get( quat );
     this->setAttitude( quat );
     this->setPivotPoint( osg::Vec3d( 0, 0, 0) );
-    #elif _OPENSG
+#elif _OPENSG
 #endif
 
     UpdatePhysicsTransform();
@@ -222,7 +252,7 @@ void DCS::SetScaleArray( std::vector< double > scaleArray )
 #elif _OPENSG
 #endif
 
-UpdatePhysicsTransform();
+    UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( double* trans )
@@ -281,7 +311,7 @@ gmtl::Matrix44d DCS::GetMat( void )
         std::cout << "DCS::GetMat()" << std::endl;
     }
 #elif _OPENSG
-    // GetVjMatrix
+    //GetVjMatrix
     cerr << " ERROR: DCS::GetMat is NOT implemented " << endl;
     exit( 1 );
 #endif
@@ -399,7 +429,7 @@ int DCS::GetNumChildren( void )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::string DCS::GetName( void )
+const std::string DCS::GetName()
 {
 #ifdef _OSG
     return this->getName().data();
@@ -454,14 +484,14 @@ osg::Node* DCS::GetChild( unsigned int position )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::ToggleDisplay(bool onOff)
+void DCS::ToggleDisplay( bool onOff )
 {
     std::string value = ( onOff == true ) ? "ON" : "OFF";
 
     ToggleDisplay( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::ToggleDisplay(std::string onOff)
+void DCS::ToggleDisplay( std::string onOff )
 {      
     if( onOff == "ON" )
     {
@@ -479,7 +509,7 @@ void DCS::ToggleDisplay(std::string onOff)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DCS::UpdatePhysicsTransform( void )
+void DCS::UpdatePhysicsTransform()
 {
     if( !m_btBody )
     {
@@ -545,4 +575,65 @@ void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor*
 
     traverse( node, nv );
 }
+////////////////////////////////////////////////////////////////////////////////
 #endif
+
+
+
+
+
+
+
+
+// -------------------------------------------------- //
+// --- This stuff is used for multipass rendering --- //
+// -------------------------------------------------- //
+
+////////////////////////////////////////////////////////////////////////////////
+void DCS::EnableMultiPass( bool state )
+{
+    m_multipass = state;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::SetTechnique( int i )
+{
+    m_activeTechnique = i;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::AddTechnique( VE_SceneGraph::Technique* tech )
+{
+    m_techniques.push_back( tech );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::InheritedTraverse( osg::NodeVisitor& nv )
+{
+    typedef osg::PositionAttitudeTransform inherited;
+    inherited::traverse( nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::traverse( osg::NodeVisitor& nv )
+{
+    //If multipass is not enabled, then go for default traversal
+    if( !m_multipass )
+    {
+        InheritedTraverse( nv );
+        return;
+    }
+    else
+    {
+        VE_SceneGraph::Technique* tech = m_techniques[ m_activeTechnique ];
+
+        if( tech )
+        {
+            tech->Traverse( nv, this );
+        }
+        else
+        {
+            if( nv.getTraversalMode() == osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+            {
+                InheritedTraverse( nv );
+            }
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

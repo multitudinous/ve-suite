@@ -49,7 +49,10 @@
 
 namespace VE_SceneGraph
 {
-class TransferPhysicsDataCallback;
+    class TransferPhysicsDataCallback;
+
+    class Technique;
+    class SelectTechnique;
 }
 
 // --- OSG Includes --- //
@@ -59,7 +62,7 @@ class TransferPhysicsDataCallback;
 
 namespace osg
 {
-class NodeVisitor;
+    class NodeVisitor;
 }
 #elif _OPENSG
 #endif
@@ -224,9 +227,9 @@ public:
     void SetbtRigidBody( btRigidBody* rigidBody );
    
 protected:
-    double m_Rotation[3];///<The rotation array
-    double m_Translation[3];///<The translation array
-    double m_Scale[3];///<The scale array
+    double m_Rotation[ 3 ];///<The rotation array
+    double m_Translation[ 3 ];///<The translation array
+    double m_Scale[ 3 ];///<The scale array
 
     btRigidBody* m_btBody;///<The rigid body to access the respective btTransform
 
@@ -237,6 +240,30 @@ private:
 
     osg::ref_ptr< TransferPhysicsDataCallback > m_udcb;///<The callback to update the sg node with physics data
 
+
+
+// -------------------------------------------------- //
+// --- This stuff is used for multipass rendering --- //
+// -------------------------------------------------- //
+public:
+    virtual void traverse( osg::NodeVisitor& nv );
+
+    void InheritedTraverse( osg::NodeVisitor& nv );
+
+    void EnableMultiPass( bool state );
+
+    void SetTechnique( int i );
+
+    void AddTechnique( VE_SceneGraph::Technique* technique );   
+
+private:
+    bool m_multipass;
+
+    int m_activeTechnique;
+
+    std::vector< VE_SceneGraph::Technique* > m_techniques;
+
+    VE_SceneGraph::SelectTechnique* selectTech;
 };
 
 //This is the callback class configured to handle transfering physics data back to the respective osg node
