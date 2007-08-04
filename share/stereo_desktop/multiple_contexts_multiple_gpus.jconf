@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/Volumes/data/TSVEG/VE_Suite/share/stereo_desktop/multiple_contexts.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_system name="Display System" version="3">
+         <number_of_pipes>2</number_of_pipes>
+         <pipes>:0.0</pipes>
+         <pipes>:0.1</pipes>
+         <use_swap_group>false</use_swap_group>
+      </display_system>
+      <display_window name="context1" version="5">
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>800</size>
+         <size>800</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+               <visual_id>-1</visual_id>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>0</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <num_sample_buffers>0</num_sample_buffers>
+               <num_samples>0</num_samples>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>true</border>
+         <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Desktop Display" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.2192</lower_left_corner>
+               <lower_left_corner>0.1524</lower_left_corner>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_right_corner>1.2192</lower_right_corner>
+               <lower_right_corner>0.1524</lower_right_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <upper_right_corner>1.2192</upper_right_corner>
+               <upper_right_corner>1.9812</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.2192</upper_left_corner>
+               <upper_left_corner>1.9812</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>25</sleep_time>
+      </display_window>
+      <user name="User1" version="1">
+         <head_position>VJHead</head_position>
+         <interocular_distance>0.069</interocular_distance>
+      </user>
+      <simulated_digital_device name="SimWandButtons" version="2">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_0</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 1" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 2" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 3" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 4" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 5" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_5</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 6" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 7" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 8" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+      <simulated_positional_device name="SimWandPos" version="3">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_NEGY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_POSY</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_POSX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>MOUSE_NEGX</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_9</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.5</initial_position>
+         <initial_position>-1.0</initial_position>
+         <initial_position>-2.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.02</translation_delta>
+         <rotation_delta>0.1</rotation_delta>
+         <translation_coordinate_system>1</translation_coordinate_system>
+         <rotation_coordinate_system>1</rotation_coordinate_system>
+         <device_host />
+      </simulated_positional_device>
+      <simulated_digital_device name="DigitalSystemControls" version="2">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_ESC</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+      <simulated_relative_position name="SimRelativePosition1" version="1">
+         <base_frame_proxy>Head Proxy</base_frame_proxy>
+         <relative_proxy>Wand Proxy</relative_proxy>
+         <device_host />
+      </simulated_relative_position>
+      <simulated_digital_device name="AppDigitalSim" version="2">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 0" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_Q</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 1" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_W</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 2" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_E</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="KeyPresses 3" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_R</key>
+            </key_modifier_pair>
+         </key_pair>
+         <device_host />
+      </simulated_digital_device>
+      <simulated_positional_device name="SimHeadPos" version="3">
+         <keyboard_mouse_proxy>SimKeyboard Proxy</keyboard_mouse_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_NONE</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>1.0668</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.09</translation_delta>
+         <rotation_delta>1.0</rotation_delta>
+         <translation_coordinate_system>1</translation_coordinate_system>
+         <rotation_coordinate_system>1</rotation_coordinate_system>
+         <device_host />
+      </simulated_positional_device>
+      <digital_proxy name="VJSystemStopKernelProxy" version="1">
+         <device>DigitalSystemControls</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="VJAppExitProxy" version="1">
+         <device>AppDigitalSim</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button5Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>5</unit>
+      </digital_proxy>
+      <digital_proxy name="Button4Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="Button3Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <digital_proxy name="Button2Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button1Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Button0Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <position_proxy name="Wand Proxy" version="1">
+         <device>SimWandPos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <position_proxy name="SimCamera Proxy" version="1">
+         <device>SimHeadPos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <alias name="VJWand" version="1">
+         <proxy>RelativeWand Proxy</proxy>
+      </alias>
+      <alias name="VJSystemStopKernel" version="1">
+         <proxy>VJSystemStopKernelProxy</proxy>
+      </alias>
+      <alias name="VJKeyboard" version="1">
+         <proxy>SimKeyboard Proxy</proxy>
+      </alias>
+      <alias name="VJHead" version="1">
+         <proxy>Head Proxy</proxy>
+      </alias>
+      <alias name="VJButton5" version="1">
+         <proxy>Button5Proxy</proxy>
+      </alias>
+      <alias name="VJButton4" version="1">
+         <proxy>Button4Proxy</proxy>
+      </alias>
+      <alias name="VJButton3" version="1">
+         <proxy>Button3Proxy</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Button2Proxy</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Button1Proxy</proxy>
+      </alias>
+      <alias name="VJButton0" version="1">
+         <proxy>Button0Proxy</proxy>
+      </alias>
+      <position_proxy name="RelativeWand Proxy" version="1">
+         <device>SimRelativePosition1</device>
+         <unit>0</unit>
+      </position_proxy>
+      <position_proxy name="Head Proxy" version="1">
+         <device>SimHeadPos</device>
+         <unit>0</unit>
+      </position_proxy>
+      <alias name="VJAppExit" version="1">
+         <proxy>VJAppExitProxy</proxy>
+      </alias>
+      <keyboard_mouse_proxy name="SimKeyboard Proxy" version="1">
+         <device>Keyboard KM Dev</device>
+      </keyboard_mouse_proxy>
+      <keyboard_mouse_device name="Keyboard KM Dev" version="1">
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <device_host />
+      </keyboard_mouse_device>
+      <alias name="VJButton6" version="1">
+         <proxy>Button6Proxy</proxy>
+      </alias>
+      <digital_proxy name="Button6Proxy" version="1">
+         <device>SimWandButtons</device>
+         <unit>6</unit>
+      </digital_proxy>
+      <display_window name="context2" version="5">
+         <origin>0</origin>
+         <origin>0</origin>
+         <size>800</size>
+         <size>800</size>
+         <pipe>1</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="3">
+               <visual_id>-1</visual_id>
+               <red_size>8</red_size>
+               <green_size>8</green_size>
+               <blue_size>8</blue_size>
+               <alpha_size>8</alpha_size>
+               <auxiliary_buffer_count>0</auxiliary_buffer_count>
+               <depth_buffer_size>16</depth_buffer_size>
+               <stencil_buffer_size>0</stencil_buffer_size>
+               <accum_red_size>1</accum_red_size>
+               <accum_green_size>1</accum_green_size>
+               <accum_blue_size>1</accum_blue_size>
+               <accum_alpha_size>1</accum_alpha_size>
+               <num_sample_buffers>0</num_sample_buffers>
+               <num_samples>0</num_samples>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>true</border>
+         <hide_mouse>false</hide_mouse>
+         <full_screen>false</full_screen>
+         <always_on_top>false</always_on_top>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Desktop Display" version="2">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <lower_left_corner>-1.2192</lower_left_corner>
+               <lower_left_corner>0.1524</lower_left_corner>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_right_corner>1.2192</lower_right_corner>
+               <lower_right_corner>0.1524</lower_right_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <upper_right_corner>1.2192</upper_right_corner>
+               <upper_right_corner>1.9812</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.2192</upper_left_corner>
+               <upper_left_corner>1.9812</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+         <keyboard_mouse_device_name>Keyboard KM Dev</keyboard_mouse_device_name>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>25</sleep_time>
+      </display_window>
+   </elements>
+</configuration>
+
