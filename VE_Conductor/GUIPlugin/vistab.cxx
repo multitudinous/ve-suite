@@ -872,7 +872,7 @@ void Vistab::_OnSelectVector(wxCommandEvent& WXUNUSED(event))
 {
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
 
-   if( _scalarSelection->GetSelection() == NULL )
+   if( _nScalarsInActiveDataset == 0 )
    {
       wxMessageBox( _("Scalar must be present"),_("Dataset Warning"), 
                       wxOK | wxICON_INFORMATION );
