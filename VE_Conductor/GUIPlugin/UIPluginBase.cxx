@@ -124,7 +124,8 @@ UIPluginBase::UIPluginBase() :
     m_selLinkCon( 0 ),
     m_selTag( 0 ),
     m_selTagCon( 0 ),
-    highlightFlag( false )
+    highlightFlag( false ),
+    serviceList( 0 )
 { 
     pos = wxPoint(0,0); //default position
 

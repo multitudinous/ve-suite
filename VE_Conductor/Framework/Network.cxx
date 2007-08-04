@@ -1944,22 +1944,22 @@ std::string Network::Save( std::string fileName )
     }
 
    //Write out the veUser info for the local user
-   VE_XML::User userInfo;
-   userInfo.SetUserId( "jaredabo" );
-   userInfo.SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
-   VE_XML::StateInfo* colorState = new VE_XML::StateInfo();
+   VE_XML::UserPtr userInfo = new VE_XML::User();
+   userInfo->SetUserId( "User" );
+   userInfo->SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
+   VE_XML::StateInfoPtr colorState = new VE_XML::StateInfo();
    ///Load the current preferences from the data buffer
-   std::map< std::string, VE_XML::Command > tempMap = 
+   std::map< std::string, VE_XML::CommandPtr > tempMap = 
        UserPreferencesDataBuffer::instance()->GetCommandMap();
-   std::map< std::string, VE_XML::Command >::iterator prefIter;
+   std::map< std::string, VE_XML::CommandPtr >::iterator prefIter;
    for( prefIter = tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
    {
-      colorState->AddState( new VE_XML::Command( prefIter->second ) );
+      colorState->AddState( prefIter->second );
    }
-   userInfo.SetStateInfo( colorState );
+   userInfo->SetStateInfo( colorState );
    
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-        &userInfo, "User" ) );
+        &(*userInfo), "User" ) );
    
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -2231,8 +2231,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
 
-    VE_XML::User userInfo = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLUserDataObject( "Network" );
-    if ( !userInfo.GetUserStateInfo() )
+    VE_XML::User userInfo = VE_Conductor::XMLDataBufferEngine::instance()->
+        GetXMLUserDataObject( "Network" );
+    
+    if( !userInfo.GetUserStateInfo() )
     {
         ///Color vector
         std::vector<double> backgroundColor;
@@ -2244,28 +2246,29 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
         dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-        VE_XML::Command* veCommand = new VE_XML::Command();
+        VE_XML::CommandPtr veCommand = new VE_XML::Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
-        UserPreferencesDataBuffer::instance()->SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), *veCommand );
-        delete veCommand;
+        UserPreferencesDataBuffer::instance()->
+            SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), veCommand );
     }
     // Create the command and data value pairs
-    VE_XML::Command colorCommand = UserPreferencesDataBuffer::instance()->
+    VE_XML::CommandPtr colorCommand = UserPreferencesDataBuffer::instance()->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
-   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( &colorCommand );
+    VE_Conductor::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( colorCommand );
 
-   m_selMod = -1;
-   m_selFrPort = -1; 
-   m_selToPort = -1; 
-   m_selLink = -1; 
-   m_selLinkCon = -1; 
-   m_selTag = -1; 
-   m_selTagCon = -1; 
-   xold = yold =0;
-   _fileProgress->Update( 100, _("Done") );
-   Refresh( true );
+    m_selMod = -1;
+    m_selFrPort = -1; 
+    m_selToPort = -1; 
+    m_selLink = -1; 
+    m_selLinkCon = -1; 
+    m_selTag = -1; 
+    m_selTagCon = -1; 
+    xold = yold =0;
+    _fileProgress->Update( 100, _("Done") );
+    Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

@@ -39,6 +39,7 @@
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Conductor/xpm/Nav_Bitmaps/x_left.xpm"
@@ -556,27 +557,27 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-   VE_XML::Command navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
-   if ( navPreferenceData.GetCommandName() == "NULL" )
+   VE_XML::CommandPtr navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
+   if ( navPreferenceData->GetCommandName() == "NULL" )
    {
       return;
    }
 
    double tempData;
-   navPreferenceData.GetDataValuePair( "CHANGE_TRANSLATION_STEP_SIZE" )->GetData( tempData );
+   navPreferenceData->GetDataValuePair( "CHANGE_TRANSLATION_STEP_SIZE" )->GetData( tempData );
    translationStepSize->SetValue( tempData );
-   navPreferenceData.GetDataValuePair( "CHANGE_ROTATION_STEP_SIZE" )->GetData( tempData );
+   navPreferenceData->GetDataValuePair( "CHANGE_ROTATION_STEP_SIZE" )->GetData( tempData );
    rotationStepSize->SetValue( tempData );
-   navPreferenceData.GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
+   navPreferenceData->GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
    headRotationChk->SetValue( tempData );
-   navPreferenceData.GetDataValuePair( "Z_ZERO_PLANE" )->GetData( tempData );
+   navPreferenceData->GetDataValuePair( "Z_ZERO_PLANE" )->GetData( tempData );
    subZeroChk->SetValue( tempData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
 {
-   VE_XML::Command navPreferenceData;
-   navPreferenceData.SetCommandName( std::string("Navigation_Data") );
+   VE_XML::CommandPtr navPreferenceData = new VE_XML::Command();
+   navPreferenceData->SetCommandName( std::string("Navigation_Data") );
    
    //////////////////////////////////////////////////////////////////
    VE_XML::DataValuePair* dataValuePair;
@@ -585,28 +586,28 @@ void NavigationPane::SetPreferenceNavigationData( void )
    dataValuePair->SetDataName( dataValueName );
    cIso_value = translationStepSize->GetValue();
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   navPreferenceData.AddDataValuePair( dataValuePair );
+   navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
    dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "CHANGE_ROTATION_STEP_SIZE";
    cIso_value = rotationStepSize->GetValue();
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   navPreferenceData.AddDataValuePair( dataValuePair );
+   navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
    dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "ROTATE_ABOUT_HEAD";
    cIso_value = headRotationChk->GetValue();
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   navPreferenceData.AddDataValuePair( dataValuePair );
+   navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
    dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
    dataValueName = "Z_ZERO_PLANE";
    cIso_value = subZeroChk->GetValue();
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   navPreferenceData.AddDataValuePair( dataValuePair );
+   navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
    
    UserPreferencesDataBuffer::instance()->SetCommand( "Navigation_Data", navPreferenceData );

@@ -48,17 +48,13 @@ StateInfo::~StateInfo()
    ClearState();
 }
 ////////////////////////////////////////////////////
-void StateInfo::AddState(VE_XML::Command* state)
+void StateInfo::AddState(VE_XML::CommandPtr state)
 {
    _stateInfo.push_back(state);
 }
 //////////////////////////////
 void StateInfo::ClearState()
 {
-   for ( size_t i = 0; i < _stateInfo.size(); ++i )
-   {
-      delete _stateInfo.at(i);
-   }
    _stateInfo.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,45 +82,36 @@ void StateInfo::_updateCommands()
 /////////////////////////////////////////////////////////////
 void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
 {
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE){
-      currentElement = dynamic_cast<DOMElement*>(xmlInput);
-   }
-
-   //get variables by tags
-   DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("Command"));
-
-   //we can have as many dvpairs as we want so get them all and populate the list
-   DOMElement* cmdsIn = 0;
-   unsigned int nCmdsIn = subElements->getLength();
-
-   size_t stateInfoSize = _stateInfo.size();
-   if( nCmdsIn && stateInfoSize)
-   {  
-         //clear out old dvpairs
-         for(size_t i = stateInfoSize -1; i > - 1;  i--){
-            delete _stateInfo.at(i);
-         }
-         _stateInfo.clear();
+    DOMElement* currentElement = 0;
+    if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+    {
+        currentElement = dynamic_cast<DOMElement*>(xmlInput);
     }
+
+    //get variables by tags
+    DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("Command"));
+
+    _stateInfo.clear();
+    //we can have as many dvpairs as we want so get them all and populate the list
+    DOMElement* cmdsIn = 0;
+    unsigned int nCmdsIn = subElements->getLength();
+
     //read in new commands
-    for(unsigned int i = 0; i < nCmdsIn; i++){
-      DOMElement* vecmdIn = dynamic_cast<DOMElement*>(subElements->item(i));
-      if(vecmdIn)
-      {
-         VE_XML::Command* Command = new VE_XML::Command();
-         Command->SetObjectFromXMLData(vecmdIn);
-         Command->SetOwnerDocument(_rootDocument);
-         _stateInfo.push_back(Command);
-      }
-   }
-   
+    for(unsigned int i = 0; i < nCmdsIn; i++)
+    {
+        DOMElement* vecmdIn = dynamic_cast<DOMElement*>(subElements->item(i));
+        if(vecmdIn)
+        {
+            VE_XML::CommandPtr command = new VE_XML::Command();
+            command->SetObjectFromXMLData(vecmdIn);
+            _stateInfo.push_back(command);
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* StateInfo::GetState(std::string name)
+VE_XML::CommandPtr StateInfo::GetState(std::string name)
 {
-   size_t nStates = _stateInfo.size();
-   for(unsigned int i = 0; i < nStates; i++)
+   for(size_t i = 0; i < _stateInfo.size(); i++)
    {
       if(_stateInfo.at(i)->GetCommandName() == name)
       {
@@ -134,12 +121,12 @@ VE_XML::Command* StateInfo::GetState(std::string name)
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* StateInfo::GetState(unsigned int index)
+VE_XML::CommandPtr StateInfo::GetState( size_t index)
 {
    return _stateInfo.at(index);
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::Command* > StateInfo::GetStateVector( void )
+std::vector< VE_XML::CommandPtr > StateInfo::GetStateVector( void )
 {
    return _stateInfo;
 }

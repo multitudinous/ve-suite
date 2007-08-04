@@ -32,8 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/DCS.h"
-
-#include "VE_Xplorer/SceneGraph/Technique.h"
 #include "VE_Xplorer/SceneGraph/SelectTechnique.h"
 
 // --- OSG Includes --- //
@@ -67,12 +65,8 @@ using namespace VE_SceneGraph;
 DCS::DCS( void )
 :
 m_btBody( 0 ),
-
-
 m_multipass( false ),
 m_activeTechnique( 0 )
-
-
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; i++ )

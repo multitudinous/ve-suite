@@ -185,12 +185,10 @@ void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
 {
-   serviceList = VE_Conductor::CORBAServiceList::instance();
-
-   VE_XML::Command bkColor( UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" ) );
-   if ( bkColor.GetCommandName() != "NULL" )
+   VE_XML::CommandPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
+   if ( bkColor->GetCommandName() != "NULL" )
    {
-      bkColor.GetDataValuePair( "Background Color" )->GetData( xplorerColor );
+      bkColor->GetDataValuePair( "Background Color" )->GetData( xplorerColor );
    }
 
    wxColourDialog colorDlg(this,NULL);
@@ -216,14 +214,14 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::Command* veCommand = new VE_XML::Command();
+      VE_XML::CommandPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 
+      serviceList = VE_Conductor::CORBAServiceList::instance();
       serviceList->SendCommandStringToXplorer( veCommand );
          
-      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
-      delete veCommand;
+      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

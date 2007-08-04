@@ -36,6 +36,8 @@
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/StateInfo.h"
+#include "VE_Open/XML/StateInfoPtr.h"
+#include "VE_Open/XML/User.h"
 
 #include "VE_Open/XML/Model/Link.h"
 
@@ -208,26 +210,26 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     }
     m_networkModelMap[ "Network" ] = networkModelVector;
     
-    if ( !objectVector.empty() )
+    if( !objectVector.empty() )
     {
-        VE_XML::User* userColor = 
+        VE_XML::UserPtr userColor = 
             dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
-        m_userMap[ "Network" ] = *userColor;
+        m_userMap[ "Network" ] = userColor;
         //Set user preferences
-        std::vector< VE_XML::Command* > tempStates = 
+        std::vector< VE_XML::CommandPtr > tempStates = 
             userColor->GetUserStateInfo()->GetStateVector();
-        std::map< std::string, VE_XML::Command > tempMap;
+        std::map< std::string, VE_XML::CommandPtr > tempMap;
         for ( size_t i = 0; i < tempStates.size(); ++i )
         {
-            VE_XML::Command* tempCommand = tempStates.at( i );
-            tempMap[ tempCommand->GetCommandName() ] = (*tempCommand); 
+            VE_XML::CommandPtr tempCommand = tempStates.at( i );
+            tempMap[ tempCommand->GetCommandName() ] = tempStates.at( i ); 
             //std::cout << " here " << tempCommand->GetCommandName() << std::endl;
         }
         UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
     }
     else
     {
-        m_userMap[ "Network" ] = VE_XML::User();
+        m_userMap[ "Network" ] = new VE_XML::User();
     }
     
 }
@@ -284,7 +286,7 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
    
     //Write out the veUser info for the local user
     nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-        &m_userMap[ "User" ], "User" ) );
+        &(*m_userMap[ "User" ]), "User" ) );
     
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -313,7 +315,7 @@ VE_XML::VE_Model::Model XMLDataBufferEngine::GetXMLModelDataObject( std::string 
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::User XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
 {
-    return m_userMap[ dataNumber ];
+    return (*m_userMap[ dataNumber ]);
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector( std::string dataNumber )

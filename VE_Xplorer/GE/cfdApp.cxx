@@ -223,24 +223,24 @@ void cfdApp::contextInit()
 	unsigned int unique_context_id = vrj::GlDrawManager::instance()->getCurrentContext();
 #endif
 
-   // --- Create new context specific scene viewer -- //
-   osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
+    // --- Create new context specific scene viewer -- //
+    osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
 
-	// Configure the new viewer
-   this->configSceneView( new_sv.get() );             
+    // Configure the new viewer
+    this->configSceneView( new_sv.get() );             
 
-	(*sceneViewer) = new_sv;
-   //This is important - if this is commented out then the screen goes black
-   new_sv->getGlobalStateSet()->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
-   new_sv->getGlobalStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::ON );
-   new_sv->getGlobalStateSet()->setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
-   //osg::ref_ptr< osg::LightModel > lightmodel = new osg::LightModel;
-   //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-   //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
-   // Add the tree to the scene viewer and set properties
-   new_sv->setSceneData(getScene());
-   new_sv->getState()->setContextID( unique_context_id );
-	new_sv->setFrameStamp( _frameStamp.get() );
+    (*sceneViewer) = new_sv;
+    //This is important - if this is commented out then the screen goes black
+    new_sv->getGlobalStateSet()->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
+    new_sv->getGlobalStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::ON );
+    new_sv->getGlobalStateSet()->setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
+    //osg::ref_ptr< osg::LightModel > lightmodel = new osg::LightModel;
+    //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
+    // Add the tree to the scene viewer and set properties
+    new_sv->setSceneData(getScene());
+    new_sv->getState()->setContextID( unique_context_id );
+    new_sv->setFrameStamp( _frameStamp.get() );
 
 	//**************************************************************************
 
@@ -278,22 +278,21 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
                                 osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT  );
 	newSceneViewer->init();
 	//newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-
+    newSceneViewer->getCamera()->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
 	//Needed for stereo to work.
 	newSceneViewer->setDrawBufferValue( GL_NONE );
 	//**************************************************************************
 
 	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
-   //newSceneViewer->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    newSceneViewer->getCullVisitor()->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
 void cfdApp::bufferPreDraw()
 {
-   //glClearColor(0.0, 0.0, 0.0, 0.0);
-   //glClear( GL_COLOR_BUFFER_BIT );
+    ;
 }
 #endif //_OSG
 ////////////////////////////////////////////////////////////////////////////////

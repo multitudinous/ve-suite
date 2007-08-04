@@ -292,14 +292,13 @@ viewlocPane( 0 )
 
         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
         dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-        VE_XML::Command* veCommand = new VE_XML::Command();
+        VE_XML::CommandPtr veCommand = new VE_XML::Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
 
         serviceList->SendCommandStringToXplorer( veCommand );
 
-        UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
-        delete veCommand;
+        UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -906,7 +905,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
       directory.Replace( _("\\"), _("/"), true );
       std::string tempDir = ConvertUnicode( directory.c_str() );
 		
-     SetRecentFile( wxFileName(dialog.GetPath()) );
+      SetRecentFile( wxFileName(dialog.GetPath()) );
 
       if ( tempDir.empty() )
       {
@@ -1741,23 +1740,26 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 {
-   //this is kinda confusing...thanks wx!!!
-   //wxColourData data;
-   //data.SetChooseFull(true);
-   VE_XML::Command bkColor( UserPreferencesDataBuffer::instance()->
-                                       GetCommand( "CHANGE_BACKGROUND_COLOR" ) );
-   if ( bkColor.GetCommandName() != "NULL" )
-   {
-      bkColor.GetDataValuePair( "Background Color" )->GetData( xplorerColor );
-   }
-   
-   xplorerWxColor->GetColour().Set( static_cast<unsigned char>(xplorerColor.at( 0 )), 
-                                     static_cast<unsigned char>(xplorerColor.at( 1 )), 
-                                     static_cast<unsigned char>(xplorerColor.at( 2 )), 
-                                     static_cast<unsigned char>(xplorerColor.at( 3 )) 
-                                    );
-   wxColourDialog colorDlg(this,xplorerWxColor);
-   colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
+    //this is kinda confusing...thanks wx!!!
+    //wxColourData data;
+    //data.SetChooseFull(true);
+    VE_XML::CommandPtr bkColor = UserPreferencesDataBuffer::instance()->
+        GetCommand( "CHANGE_BACKGROUND_COLOR" );
+    
+    if( bkColor->GetCommandName() != "NULL" )
+    {
+        bkColor->GetDataValuePair( "Background Color" )->GetData( xplorerColor );
+    }
+
+    xplorerWxColor->GetColour().Set( 
+        static_cast<unsigned char>(xplorerColor.at( 0 )), 
+        static_cast<unsigned char>(xplorerColor.at( 1 )), 
+        static_cast<unsigned char>(xplorerColor.at( 2 )), 
+        static_cast<unsigned char>(xplorerColor.at( 3 )) 
+        );
+    
+    wxColourDialog colorDlg(this,xplorerWxColor);
+    colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
 
    if (colorDlg.ShowModal() == wxID_OK)
    {
@@ -1773,14 +1775,13 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::Command* veCommand = new VE_XML::Command();
+      VE_XML::CommandPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 
       serviceList->SendCommandStringToXplorer( veCommand );
          
-      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", *veCommand );
-      delete veCommand;
+      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

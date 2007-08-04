@@ -52,7 +52,7 @@ XMLDataBufferEngine API
 #include <VE_Open/XML/Model/Network.h>
 #include <VE_Open/XML/Model/Tag.h>
 #include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/User.h>
+#include <VE_Open/XML/UserPtr.h>
 
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
@@ -112,7 +112,7 @@ private:
     ///Map
     std::map< std::string, VE_XML::VE_Model::Tag > m_tagMap;
     ///Map
-    std::map< std::string, VE_XML::User > m_userMap;
+    std::map< std::string, VE_XML::UserPtr > m_userMap;
 };
 }
 #endif //XML_DATA_BUFFER_ENGINE_H

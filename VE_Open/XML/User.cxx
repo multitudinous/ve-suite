@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include "VE_Open/XML/User.h"
 #include "VE_Open/XML/StateInfo.h"
 XERCES_CPP_NAMESPACE_USE
@@ -41,20 +40,14 @@ using namespace VE_XML;
 User::User()
 :XMLObject()
 {
-   _stateInfo = 0;
    _userId = std::string("User_0");
    _controlStatus = std::string("MASTER");
    SetObjectType("User");
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 User::~User()
 {
-   if ( _stateInfo )
-   {
-      delete _stateInfo;
-      _stateInfo = 0;
-   }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 User::User( const User& input )
@@ -63,31 +56,26 @@ User::User( const User& input )
    _userId = input._userId;
    _controlStatus = input._controlStatus;
    
-   _stateInfo = 0;
-   if ( input._stateInfo )
+   if( input.m_stateInfo )
    {
-      _stateInfo = new StateInfo( *(input._stateInfo) );
+      m_stateInfo = new StateInfo( *(input.m_stateInfo) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 User& User::operator=( const User& input)
 {
-   if ( this != &input )
-   {
-      XMLObject::operator =(input);
-      _userId = input._userId;
-      _controlStatus = input._controlStatus;
-      
-      if ( input._stateInfo )
-      {
-         if ( !_stateInfo )
-         {
-            _stateInfo = new StateInfo();
-         }
-         *_stateInfo = *(input._stateInfo);
-      }
-   }
-   return *this;
+    if( this != &input )
+    {
+        XMLObject::operator =(input);
+        _userId = input._userId;
+        _controlStatus = input._controlStatus;
+
+        if( input.m_stateInfo )
+        {
+            m_stateInfo = new StateInfo( *(input.m_stateInfo) );
+        }
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetUserId(std::string id)
@@ -100,9 +88,9 @@ void User::SetControlStatus(VEControlStatus cs)
    _controlStatus = cs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void User::SetStateInfo(VE_XML::StateInfo* userState)
+void User::SetStateInfo( VE_XML::StateInfoPtr userState )
 {
-   _stateInfo = userState;
+   m_stateInfo = userState;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string User::GetUserId()
@@ -115,39 +103,35 @@ User::VEControlStatus User::GetControlStatus()
    return _controlStatus;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::StateInfo* User::GetUserStateInfo()
+VE_XML::StateInfoPtr User::GetUserStateInfo()
 {
-   return _stateInfo;
+   return m_stateInfo;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetObjectFromXMLData(DOMNode* xmlInput)
 {
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast<DOMElement*>(xmlInput);
-   }
+    DOMElement* currentElement = 0;
+    if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+    {
+        currentElement = dynamic_cast<DOMElement*>(xmlInput);
+    }
    
-   if(currentElement)
-   {
-      GetAttribute( currentElement, "id", uuid );
-      GetAttribute( currentElement, "userID", _userId );
-      GetAttribute( currentElement, "veControlStatus", _controlStatus );
-      
-      if ( _stateInfo )
-      {
-         delete _stateInfo;
-      }
-      
-      DOMElement* stateInfoElement = 0;
-      stateInfoElement = GetSubElement( currentElement, "stateInfo", 0 );
-      if ( stateInfoElement )
-      {
-         _stateInfo = new StateInfo();
-         _stateInfo->SetObjectFromXMLData( stateInfoElement );
-         _stateInfo->SetOwnerDocument(_rootDocument);
-      }
-   }
+    if( !currentElement )
+    {
+        return;
+    }
+
+    GetAttribute( currentElement, "id", uuid );
+    GetAttribute( currentElement, "userID", _userId );
+    GetAttribute( currentElement, "veControlStatus", _controlStatus );
+
+    DOMElement* stateInfoElement = 0;
+    stateInfoElement = GetSubElement( currentElement, "stateInfo", 0 );
+    if( stateInfoElement )
+    {
+        m_stateInfo = new StateInfo();
+        m_stateInfo->SetObjectFromXMLData( stateInfoElement );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::_updateVEElement( std::string input )
@@ -155,10 +139,9 @@ void User::_updateVEElement( std::string input )
    SetAttribute( "userID", _userId );
    SetAttribute( "id", uuid );
    SetAttribute( "veControlStatus", _controlStatus );
-   if ( _stateInfo )
+   if( m_stateInfo )
    {
-      _stateInfo->SetOwnerDocument(_rootDocument);
-      _veElement->appendChild( _stateInfo->GetXMLData( "stateInfo" ) );
+       SetSubElement( "stateInfo", &(*m_stateInfo) );
    }
 }
 

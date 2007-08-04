@@ -323,7 +323,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             delete iconLocation;
             iconLocation = 0;
          }
-         iconLocation = new Point(  );
+         iconLocation = new Point();
          iconLocation->SetObjectFromXMLData( dataValueStringName );
       }
 

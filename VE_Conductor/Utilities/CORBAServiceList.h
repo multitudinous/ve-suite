@@ -44,6 +44,7 @@ CORBAServiceList API
 #include "VE_Conductor/Utilities/UI_i.h"
 
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
@@ -56,11 +57,6 @@ class PEThread;
 class Body_UI_i;
 class wxTextCtrl;
 class wxUpdateUIEvent;
-
-namespace VE_XML
-{
-   class Command;
-}
 
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
@@ -102,6 +98,9 @@ public:
    ///Set xplorer command string 
    ///\param command string containing command
    bool SendCommandStringToXplorer(  VE_XML::Command* veCommand  );
+   ///Set xplorer command string 
+   ///\param command string containing command
+   bool SendCommandStringToXplorer(  VE_XML::CommandPtr veCommand  );
    ///Set ce network string 
    ///\param network string containing network
    bool SendNetworkStringToCE( std::string network );

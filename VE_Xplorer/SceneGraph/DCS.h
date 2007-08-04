@@ -50,7 +50,6 @@
 namespace VE_SceneGraph
 {
     class TransferPhysicsDataCallback;
-
     class Technique;
     class SelectTechnique;
 }

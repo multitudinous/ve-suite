@@ -38,7 +38,7 @@ UserPreferencesDataBuffer API
 /*!\class VE_Conductor::UserPreferencesDataBuffer
 * 
 */
-#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
@@ -47,11 +47,6 @@ UserPreferencesDataBuffer API
 
 #include <map>
 #include <string>
-
-namespace VE_XML
-{
-   class Command;
-}
 
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
@@ -70,16 +65,16 @@ public:
     void CleanUp( void );
     ///Get Command with key
     ///The key MUST be the command name
-    VE_XML::Command& GetCommand( std::string commandKey );
+    VE_XML::CommandPtr GetCommand( std::string commandKey );
     ///set Command with key
-    void SetCommand( std::string commandKey, VE_XML::Command& command );
+    void SetCommand( std::string commandKey, VE_XML::CommandPtr command );
     ///Get all the commands
-    std::map< std::string, VE_XML::Command >& GetCommandMap( void );
+    std::map< std::string, VE_XML::CommandPtr >& GetCommandMap( void );
     ///Set all the commands
-    void SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap );
+    void SetCommandMap( std::map< std::string, VE_XML::CommandPtr >& tempMap );
 private:
     ///Mapp to hold all the preference data to be written to the ves file
-    std::map< std::string, VE_XML::Command > commandMap;
+    std::map< std::string, VE_XML::CommandPtr > commandMap;
     ///A mutex to protect variables accesses
     vpr::Mutex m_valueLock;  
 };

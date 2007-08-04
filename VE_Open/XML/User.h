@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef _XML_VE_USER_H_
 #define _XML_VE_USER_H_
 /*!\file User.h
@@ -39,10 +38,7 @@
 /*!\class VE_XML::User
  * This class manages information describing a user.
  */
-namespace VE_XML{
-   class StateInfo;
-}
-
+#include "VE_Open/XML/StateInfoPtr.h"
 #include <xercesc/dom/DOM.hpp>
 
 #include <iostream>
@@ -72,20 +68,20 @@ public:
    
    ///Set the users ID
    ///\param id String to uniquely identify the user
-   void SetUserId(std::string id);
+   void SetUserId( std::string id );
    ///Set the control status of the user
    ///\param cs The control status.
-   void SetControlStatus(VEControlStatus cs);
+   void SetControlStatus( VEControlStatus cs );
    ///Set the state information for this user
    ///\param userState The StateInfo for this user.
-   void SetStateInfo(VE_XML::StateInfo* userState);
+   void SetStateInfo( VE_XML::StateInfoPtr userState );
 
    ///Return the user id
    std::string GetUserId();
    ///Return the VEControlStatus of this user
    VEControlStatus GetControlStatus();
    ///Return the StateInfo for this user.
-   VE_XML::StateInfo* GetUserStateInfo();
+   VE_XML::StateInfoPtr GetUserStateInfo();
 
    ///Set the data for this object from an XML element
    ///\param xmlInput The input XML element
@@ -96,7 +92,7 @@ protected:
    ///\param tagName The tagName for this element.
    virtual void _updateVEElement( std::string tagName );
    std::string _userId;///<The users unique identification
-   VE_XML::StateInfo* _stateInfo;///<The StateInfo for this user.
+   VE_XML::StateInfoPtr m_stateInfo;///<The StateInfo for this user.
    VEControlStatus _controlStatus;///<The VEControlStatus of this user.
 };
 template<>
