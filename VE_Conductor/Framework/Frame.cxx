@@ -1332,38 +1332,43 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 	   wxString("Enter filename (.apw):", wxConvUTF8),
 	   wxString("Save Flowsheet", wxConvUTF8),
 	   wxString("", wxConvUTF8),wxOK|wxCANCEL);
-   if ( newDataSetName.ShowModal() == wxID_OK )
-   {
-	   Log("Saving Simulation...\n");
-	   saveFileName.ClearExt();
-	   saveFileName.SetName( newDataSetName.GetValue() ); 
-	   //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-	   VE_XML::Command returnState;
-	   returnState.SetCommandName("saveAsSimulation");
-	   VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-	   data->SetData("NetworkQuery", "saveAsSimulation" );
-	   data = returnState.GetDataValuePair(-1);
-	   data->SetData("SaveFileName",  ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+    if( newDataSetName.ShowModal() != wxID_OK )
+    {
+        return;
+    }
 
-	   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-	   VE_XML::XMLReaderWriter commandWriter;
-	   std::string status="returnString";
-	   commandWriter.UseStandaloneDOMDocumentManager();
-	   commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	   //Get results
-	   std::string nw_str = serviceList->Query( status );
-	   Log("Simulation Saved.\n");
+    Log("Saving Simulation...\n");
+    saveFileName.ClearExt();
+    saveFileName.SetName( newDataSetName.GetValue() ); 
+    //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-       VE_XML::CommandPtr aspenAPWFile = new VE_XML::Command();
-       aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
-       VE_XML::DataValuePair* data2 = returnState.GetDataValuePair(-1);
-       data2->SetData( "BKPFileName",  
-                      ConvertUnicode( saveFileName.GetFullName().c_str() ) );
-       UserPreferencesDataBuffer::instance()->
-           SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
-   }
+    VE_XML::Command returnState;
+    returnState.SetCommandName("saveAsSimulation");
+    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    data->SetData("NetworkQuery", "saveAsSimulation" );
+    data = returnState.GetDataValuePair(-1);
+    data->SetData("SaveFileName",  
+        ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+
+    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< VE_XML::XMLObject*, 
+        std::string >( &returnState, "vecommand" ));
+    VE_XML::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    //Get results
+    std::string nw_str = serviceList->Query( status );
+    Log("Simulation Saved.\n");
+
+    VE_XML::CommandPtr aspenAPWFile = new VE_XML::Command();
+    aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
+    data = returnState.GetDataValuePair(-1);
+    data->SetData( "BKPFileName",  
+        ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+    UserPreferencesDataBuffer::instance()->
+        SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
 }
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
