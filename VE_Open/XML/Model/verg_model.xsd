@@ -101,6 +101,7 @@
           <xs:element maxOccurs="unbounded" minOccurs="0" name="informationPackets" type="veParameterBlock"/>
           <xs:element name="geometry" type="CADNode"/>
           <xs:element maxOccurs="1" minOccurs="0" name="modelAttributes" type="vecommand"/>
+          <xs:element maxOccurs="1" minOccurs="0" name="modelSubNetwork" type="veNetwork" use="optional"/>
         </xs:sequence>
       </xs:restriction>
     </xs:complexContent>
@@ -117,7 +118,7 @@
           <xs:element maxOccurs="1" minOccurs="0" name="icon" type="xs:string"/>
           <xs:element name="modelDataId" type="xs:ID"/>
           <xs:element name="modelDataFile" type="xs:string"/>
-          <xs:element maxOccurs="1" minOccurs="0" name="subNetwork" type="veNetwork"/>
+          <xs:element maxOccurs="1" minOccurs="0" name="subNetwork" type="veNetwork" use="optional"/>
         </xs:sequence>
       </xs:restriction>
     </xs:complexContent>

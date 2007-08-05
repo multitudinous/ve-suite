@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Port.h"
@@ -38,6 +37,7 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
+#include "VE_Open/XML/Model/Network.h"
 
 #include <sstream>
 
@@ -109,47 +109,48 @@ Model::~Model()
 Model::Model( const Model& input )
 :XMLObject(input)
 {
-   modelName = input.modelName;
-   uniqueModelID = input.uniqueModelID;
-   iconFileName = input.iconFileName;
-   vendorUnit = input.vendorUnit;
-   iconScale = input.iconScale;
-   iconRotation = input.iconRotation;
-   iconMirror = input.iconMirror;
-   
-   for ( size_t i = 0; i < input.ports.size(); ++i )
-   {
-      ports.push_back( new Port( *(input.ports.at( i )) ) );
-   }
+    modelName = input.modelName;
+    uniqueModelID = input.uniqueModelID;
+    iconFileName = input.iconFileName;
+    vendorUnit = input.vendorUnit;
+    iconScale = input.iconScale;
+    iconRotation = input.iconRotation;
+    iconMirror = input.iconMirror;
+    m_subNetwork = input.m_subNetwork;
 
-   iconLocation = new Point( *(input.iconLocation) );
+    for ( size_t i = 0; i < input.ports.size(); ++i )
+    {
+        ports.push_back( new Port( *(input.ports.at( i )) ) );
+    }
 
-   for ( size_t i = 0; i < input.results.size(); ++i )
-   {
-      results.push_back( new Command( *(input.results.at( i )) ) );
-   }
+    iconLocation = new Point( *(input.iconLocation) );
 
-   for ( size_t i = 0; i < input.inputs.size(); ++i )
-   {
-      inputs.push_back( new Command( *(input.inputs.at( i )) ) );
-   }
+    for ( size_t i = 0; i < input.results.size(); ++i )
+    {
+        results.push_back( new Command( *(input.results.at( i )) ) );
+    }
 
-   for ( size_t i = 0; i < input.informationPackets.size(); ++i )
-   {
-      informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
-   }
+    for ( size_t i = 0; i < input.inputs.size(); ++i )
+    {
+        inputs.push_back( new Command( *(input.inputs.at( i )) ) );
+    }
 
-   geometry = 0;
-   if ( input.geometry )
-   {
-      geometry = new CADAssembly( *(input.geometry) );
-   }
+    for ( size_t i = 0; i < input.informationPackets.size(); ++i )
+    {
+        informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
+    }
 
-   modelAttribute = 0;
-   if ( input.modelAttribute )
-   {
-      modelAttribute = new Command( *(input.modelAttribute) );
-   }
+    geometry = 0;
+    if( input.geometry )
+    {
+        geometry = new CADAssembly( *(input.geometry) );
+    }
+
+    modelAttribute = 0;
+    if ( input.modelAttribute )
+    {
+        modelAttribute = new Command( *(input.modelAttribute) );
+    }
 }
 /////////////////////////////////////////////////////
 Model& Model::operator=( const Model& input)
@@ -165,6 +166,7 @@ Model& Model::operator=( const Model& input)
       iconScale = input.iconScale;
       iconRotation = input.iconRotation;
       iconMirror = input.iconMirror;
+      m_subNetwork = input.m_subNetwork;
       
       for ( size_t i = 0; i < ports.size(); ++i )
       {
@@ -250,157 +252,167 @@ void Model::SetIconFilename( std::string filename )
 ////////////////////////////////////////////////////////////
 void Model::SetObjectFromXMLData(DOMNode* element)
 {
-   DOMElement* currentElement = 0;
-   if( element->getNodeType() == DOMNode::ELEMENT_NODE )
-   {
-      currentElement = dynamic_cast< DOMElement* >( element );
-   }
+    DOMElement* currentElement = 0;
+    if( element->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast< DOMElement* >( element );
+    }
 
-   if( currentElement )
-   {
-       //Setup uuid for model element
-       {
-           std::string tempUuid;
-           VE_XML::XMLObject::GetAttribute(currentElement, "id", tempUuid);
-           if( !tempUuid.empty() )
-           {
-               uuid = tempUuid;
-           }
-       }
-      //get variables by tags
-      DOMElement* dataValueStringName = 0;
+    if( !currentElement )
+    {
+        return;
+    }   
 
-      {
-         dataValueStringName = GetSubElement( currentElement, "name", 0 );
-         if ( dataValueStringName )
-         {
+    //Setup uuid for model element
+    {
+        std::string tempUuid;
+        VE_XML::XMLObject::GetAttribute(currentElement, "id", tempUuid);
+        if( !tempUuid.empty() )
+        {
+            uuid = tempUuid;
+        }
+    }
+    //get variables by tags
+    DOMElement* dataValueStringName = 0;
+
+    {
+        dataValueStringName = GetSubElement( currentElement, "name", 0 );
+        if ( dataValueStringName )
+        {
             modelName = ExtractFromSimpleElement< std::string >( dataValueStringName );
             dataValueStringName = 0;            
-         }
-         else
-         {
+        }
+        else
+        {
             GetAttribute( currentElement, "name", modelName );
-         }
-      }
+        }
+    }
 
-      GetAttribute( currentElement, "vendorUnit", vendorUnit );
+    GetAttribute( currentElement, "vendorUnit", vendorUnit );
 
-      {
-         dataValueStringName = GetSubElement( currentElement, "ID", 0 );
-         if ( dataValueStringName )
-         {
+    {
+        dataValueStringName = GetSubElement( currentElement, "ID", 0 );
+        if ( dataValueStringName )
+        {
             uniqueModelID = ExtractFromSimpleElement< unsigned int >( dataValueStringName );
-         }
-         else
-         {
+        }
+        else
+        {
             std::string idString;
             GetAttribute( currentElement, "ID", idString );  
             std::istringstream inputStream( idString );
             inputStream >> uniqueModelID;
+        }
+    }
 
-         }
-      }
-
-      {
-         dataValueStringName = GetSubElement( currentElement, "icon", 0 );
-         if ( dataValueStringName )
-         {
+    {
+        dataValueStringName = GetSubElement( currentElement, "icon", 0 );
+        if ( dataValueStringName )
+        {
             iconFileName = ExtractFromSimpleElement< std::string >( dataValueStringName );
-         }
-         else
-         {
+        }
+        else
+        {
             iconFileName = std::string( "no_icon" );
-         }
-         GetAttribute( dataValueStringName, "iconScale", iconScale );  
-         GetAttribute( dataValueStringName, "iconRotation", iconRotation );    
-         GetAttribute( dataValueStringName, "iconMirror", iconMirror );          
-      }
+        }
+        GetAttribute( dataValueStringName, "iconScale", iconScale );  
+        GetAttribute( dataValueStringName, "iconRotation", iconRotation );    
+        GetAttribute( dataValueStringName, "iconMirror", iconMirror );          
+    }
 
-      {
-         dataValueStringName = GetSubElement( currentElement, "iconLocation", 0 );
-         if ( iconLocation )
-         {
+    {
+        dataValueStringName = GetSubElement( currentElement, "iconLocation", 0 );
+        if ( iconLocation )
+        {
             delete iconLocation;
             iconLocation = 0;
-         }
-         iconLocation = new Point();
-         iconLocation->SetObjectFromXMLData( dataValueStringName );
-      }
+        }
+        iconLocation = new Point();
+        iconLocation->SetObjectFromXMLData( dataValueStringName );
+    }
 
-      //get the geometry nodes
-      {
-         if ( currentElement->getElementsByTagName( xercesString("geometry") )->getLength() > 0 )
-         {
+    //get the geometry nodes
+    {
+        if ( currentElement->getElementsByTagName( xercesString("geometry") )->getLength() > 0 )
+        {
             dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
             if ( geometry )
             {
-               delete geometry;
-               geometry = 0;
+                delete geometry;
+                geometry = 0;
             }
             geometry = new CADAssembly("oops" );
             geometry->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
+        }
+    }
 
-      {
-         unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("ports") )->getLength();
+    {
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("ports") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfPortData; ++i )
-         {
+        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        {
             dataValueStringName = GetSubElement( currentElement, "ports", i );
             ports.push_back( new Port(  ) );
             ports.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
+        }
+    }
 
-      {
-         unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("results") )->getLength();
+    {
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("results") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfPortData; ++i )
-         {
+        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        {
             dataValueStringName = GetSubElement( currentElement, "results", i );
             results.push_back( new Command(  ) );
             results.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
+        }
+    }
 
-      {
-         unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("inputs") )->getLength();
+    {
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("inputs") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfPortData; ++i )
-         {
+        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        {
             dataValueStringName = GetSubElement( currentElement, "inputs", i );
             inputs.push_back( new Command(  ) );
             inputs.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
+        }
+    }
 
-      {
-         unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("informationPackets") )->getLength();
+    {
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("informationPackets") )->getLength();
 
-         for ( unsigned int i = 0; i < numberOfPortData; ++i )
-         {
+        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        {
             dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
             informationPackets.push_back( new ParameterBlock(  ) );
             informationPackets.back()->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
+        }
+    }
 
-      //get the model attribute nodes
-      {
-         if ( currentElement->getElementsByTagName( xercesString("modelAttributes") )->getLength() > 0 )
-         {
+    //get the model attribute nodes
+    {
+        if ( currentElement->getElementsByTagName( xercesString("modelAttributes") )->getLength() > 0 )
+        {
             dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
             if ( modelAttribute )
             {
-               delete modelAttribute;
-               modelAttribute = 0;
+                delete modelAttribute;
+                modelAttribute = 0;
             }
             modelAttribute = new Command();
             modelAttribute->SetObjectFromXMLData( dataValueStringName );
-         }
-      }
-   }   
+        }
+    }
+    //Get the subnetwork for this model
+    {
+        dataValueStringName = GetSubElement( currentElement, "modelSubNetwork", 0 );
+        if( dataValueStringName )
+        {
+            m_subNetwork = new Network();
+            m_subNetwork->SetObjectFromXMLData( dataValueStringName );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////
 std::string Model::GetModelName( void )
@@ -676,70 +688,76 @@ void Model::RemoveInformationPacket(std::string name )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::_updateVEElement( std::string input )
 {
-   // write all the elements according to verg_model.xsd
-   for ( size_t i = 0; i < ports.size(); ++i )
-   {
-      SetSubElement( "ports", ports.at( i ) );   
-   }
+    // write all the elements according to verg_model.xsd
+    for( size_t i = 0; i < ports.size(); ++i )
+    {
+        SetSubElement( "ports", ports.at( i ) );   
+    }
 
-   SetSubElement( "iconLocation", iconLocation );
-   SetAttribute( "name", modelName );
-   SetAttribute( "id", uuid );
-   
-   if ( vendorUnit.empty() )
-   {
-      vendorUnit = modelName;
-   }
-   SetAttribute( "vendorUnit", vendorUnit );
-   //SetSubElement( "name", modelName );
-   std::ostringstream dirStringStream;
-   dirStringStream << uniqueModelID;
-   SetAttribute( "ID", dirStringStream.str() );
-   //SetSubElement( "ID", uniqueModelID );
-   DOMElement* iconElement = SetSubElement( "icon", iconFileName );
+    SetSubElement( "iconLocation", iconLocation );
+    SetAttribute( "name", modelName );
+    SetAttribute( "id", uuid );
 
-   {
-      std::stringstream int2string;
-      int2string << iconScale;
-      iconElement->setAttribute( xercesString( "iconScale" ), xercesString( int2string.str().c_str() )  );
-   }
+    if( vendorUnit.empty() )
+    {
+        vendorUnit = modelName;
+    }
+    
+    SetAttribute( "vendorUnit", vendorUnit );
+    //SetSubElement( "name", modelName );
+    std::ostringstream dirStringStream;
+    dirStringStream << uniqueModelID;
+    SetAttribute( "ID", dirStringStream.str() );
+    //SetSubElement( "ID", uniqueModelID );
+    DOMElement* iconElement = SetSubElement( "icon", iconFileName );
+    ///
+    {
+        std::stringstream int2string;
+        int2string << iconScale;
+        iconElement->setAttribute( xercesString( "iconScale" ), xercesString( int2string.str().c_str() )  );
+    }
+    ///
+    {
+        std::stringstream int2string;
+        int2string << iconRotation;
+        iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() )  );      
+    }
+    ///
+    {
+        std::stringstream int2string;
+        int2string << iconMirror;
+        iconElement->setAttribute( xercesString( "iconMirror" ), xercesString( int2string.str().c_str() )  );      
+    }
 
-   {
-      std::stringstream int2string;
-      int2string << iconRotation;
-      iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() )  );      
-   }
+    for ( size_t i = 0; i < results.size(); ++i )
+    {
+        SetSubElement( "results", results.at( i ) );   
+    }
 
-   {
-      std::stringstream int2string;
-      int2string << iconMirror;
-      iconElement->setAttribute( xercesString( "iconMirror" ), xercesString( int2string.str().c_str() )  );      
-   }
-   
-   for ( size_t i = 0; i < results.size(); ++i )
-   {
-      SetSubElement( "results", results.at( i ) );   
-   }
+    for ( size_t i = 0; i < inputs.size(); ++i )
+    {
+        SetSubElement( "inputs", inputs.at( i ) );   
+    }
 
-   for ( size_t i = 0; i < inputs.size(); ++i )
-   {
-      SetSubElement( "inputs", inputs.at( i ) );   
-   }
+    for( size_t i = 0; i < informationPackets.size(); ++i )
+    {
+        SetSubElement( "informationPackets", informationPackets.at( i ) );   
+    }
 
-   for ( size_t i = 0; i < informationPackets.size(); ++i )
-   {
-      SetSubElement( "informationPackets", informationPackets.at( i ) );   
-   }
+    if( geometry )
+    {   
+        SetSubElement( "geometry", geometry );   
+    }
 
-   if ( geometry )
-   {   
-      SetSubElement( "geometry", geometry );   
-   }
+    if( modelAttribute )
+    {
+        SetSubElement( "modelAttributes", modelAttribute );   
+    }
 
-   if ( modelAttribute )
-   {
-      SetSubElement( "modelAttributes", modelAttribute );   
-   }
+    if( m_subNetwork )
+    {
+        SetSubElement( "modelSubNetwork", &(*m_subNetwork) );   
+    }   
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetVendorName( std::string vendorName )
@@ -790,4 +808,14 @@ void Model::SetIconMirror( int mirror )
 int Model::GetIconMirror( void )
 {
    return iconMirror;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetSubNetwork( VE_XML::VE_Model::NetworkPtr network )
+{
+    m_subNetwork = network;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::VE_Model::NetworkPtr Model::GetSubNetwork()
+{
+    return m_subNetwork;
 }

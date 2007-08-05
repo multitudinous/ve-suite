@@ -84,17 +84,21 @@ public:
    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
    
    ///Return the name of this command.
+   ///\return The command name of this element
    std::string GetCommandName();
 
    ///Get a specific DataValuePair by name.
    ///\param dataValueName The name of the DataValuePair to search for.
+   ///\return The dvp with the requested name
    VE_XML::DataValuePair* GetDataValuePair(std::string dataValueName);
    
    ///Get a DataValuePair at the index.
    ///\param index The index of the DataValuePair to return.
+   ///\return The dvp at the requested index
    VE_XML::DataValuePair* GetDataValuePair( int index );
 
    ///Return the number of DataValuePair s in this command.
+   ///\return The number of dvps stored in this command
    size_t GetNumberOfDataValuePairs();
 
 protected:
