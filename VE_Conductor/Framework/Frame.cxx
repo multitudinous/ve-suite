@@ -1358,8 +1358,8 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 
        VE_XML::CommandPtr aspenAPWFile = new VE_XML::Command();
        aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
-       VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-       data->SetData( "BKPFileName",  
+       VE_XML::DataValuePair* data2 = returnState.GetDataValuePair(-1);
+       data2->SetData( "BKPFileName",  
                       ConvertUnicode( saveFileName.GetFullName().c_str() ) );
        UserPreferencesDataBuffer::instance()->
            SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
