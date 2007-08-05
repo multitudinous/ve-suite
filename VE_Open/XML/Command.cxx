@@ -39,8 +39,7 @@ using namespace VE_XML;
 //Constructor       //
 //////////////////////
 Command::Command()
-:XMLObject(),
-_nDataValuePairs( 0 )
+:XMLObject()
 {
    _cmdName.empty();
    _dataValuePairs.clear();
@@ -51,10 +50,7 @@ Command::~Command()
 {
    for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
    {
-      //if ( _dataValuePairs.at(i) )
-      {
-         delete _dataValuePairs.at(i);
-      }
+       delete _dataValuePairs.at(i);
    }
    _dataValuePairs.clear();
    nameToDataValuePairMap.clear();
@@ -64,7 +60,6 @@ Command::Command( const Command& input )
 :XMLObject(input)
 {
    _cmdName =  input._cmdName;
-   _nDataValuePairs = input._nDataValuePairs;
    for ( size_t i = 0; i < input._dataValuePairs.size(); ++i )
    {
       _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
@@ -79,7 +74,6 @@ Command& Command::operator=( const Command& input)
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
       _cmdName =  input._cmdName;
-      _nDataValuePairs = input._dataValuePairs.size();
 
       for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
       {
@@ -88,7 +82,6 @@ Command& Command::operator=( const Command& input)
       _dataValuePairs.clear();
       nameToDataValuePairMap.clear();
 
-      _nDataValuePairs = input._dataValuePairs.size();
       for ( size_t i = 0; i < input._dataValuePairs.size(); ++i )
       {
          _dataValuePairs.push_back( new DataValuePair( (*(input._dataValuePairs.at(i))) ) );
@@ -97,14 +90,20 @@ Command& Command::operator=( const Command& input)
    }
    return *this;
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
 {
    _dataValuePairs.push_back(commandValuePair);
-   _nDataValuePairs =  _dataValuePairs.size() ;
    nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
 }
-/////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void Command::AddDataValuePair( VE_XML::DataValuePairPtr commandValuePair )
+{
+    //_dataValuePairs.push_back(commandValuePair);
+    //nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
+    std::cerr << " ERROR : Not implemented yet." << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( std::string input )
 {
    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
@@ -112,11 +111,8 @@ void Command::_updateVEElement( std::string input )
    //update functions below to get the ndvPairs before we can calculate _nChildren
 
    //Add code here to update the specific sub elements
-   //_updateCommandName();
    SetAttribute( "commandName", _cmdName );
    _updateDataValuePairs();
-
-   //_nChildren = 1 + _dataValuePairs.size();
 }
 ////////////////////////////////////
 void Command::_updateCommandName()
@@ -171,21 +167,17 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
       {
          //get variables by tags
          DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("parameter"));
-      
-
-         //we can have as many dvpairs as we want so get them all and populate the list
-         DOMElement* dataValuePairIn = 0;
-         unsigned int nDVPairsIn = subElements->getLength();
-         if( nDVPairsIn && _nDataValuePairs)
-         {  
             //clear out old dvpairs
-            for(size_t i = _nDataValuePairs -1; i > - 1;  i--){
-               delete _dataValuePairs.at(i);
+            for( size_t i = 0; i < _dataValuePairs.size(); ++i )
+            {
+                delete _dataValuePairs.at(i);
             }
             _dataValuePairs.clear();
             nameToDataValuePairMap.clear();
-         }
-         //read in new data value pairs
+            //we can have as many dvpairs as we want so get them all and populate the list
+            DOMElement* dataValuePairIn = 0;
+            unsigned int nDVPairsIn = subElements->getLength();
+            //read in new data value pairs
          for(unsigned int i = 0; i < nDVPairsIn; i++)
          {
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>(subElements->item(i));
@@ -199,8 +191,6 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
          }
       }
    }
-   _nDataValuePairs = _dataValuePairs.size() ;
-   //_nChildren = 1 + _dataValuePairs.size();
 }
 /////////////////////////////////////////////////////////////////////
 void Command::ExtractCmdNameFromElement(DOMElement* commandElement)

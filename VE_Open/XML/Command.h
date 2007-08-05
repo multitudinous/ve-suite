@@ -45,12 +45,7 @@
 #include <map>
 
 #include "VE_Open/XML/XMLObject.h"
-
-
-namespace VE_XML
-{
-   class DataValuePair;
-}
+#include "VE_Open/XML/DataValuePairPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -75,8 +70,11 @@ public:
 
    ///Add a data value pair for the command.
    ///\param commandValuePair The data value pair representing command information.
-   void AddDataValuePair(VE_XML::DataValuePair* commandValuePair);
-
+   void AddDataValuePair( VE_XML::DataValuePair* commandValuePair );
+   ///Add a data value pair for the command.
+   ///\param commandValuePair The data value pair representing command information.
+   void AddDataValuePair( VE_XML::DataValuePairPtr commandValuePair );
+   
    ///Utility function to extract a command name from an element.
    ///\param commandElement The command element.
    void ExtractCmdNameFromElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* commandElement);
@@ -108,7 +106,6 @@ protected:
    ///Internally update the DataValuePair s from the input XML data.
    void _updateDataValuePairs( void );
 
-   size_t _nDataValuePairs;///<The number of DataValuePair s in this command.
    std::string _cmdName;///<The name of this command.
    std::vector< VE_XML::DataValuePair* > _dataValuePairs;///<The list of DataValuePair s in this command.  
    std::map< std::string, VE_XML::DataValuePair* > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
