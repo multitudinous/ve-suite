@@ -1022,7 +1022,7 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 		image = image.Mirror(true);
 	else if(mirror == 2)
 		image = image.Mirror(false);
-	else if(mirror == 2)
+	else if(mirror == 3)
 	{
 		image = image.Mirror(true);
 		image = image.Mirror(false);
