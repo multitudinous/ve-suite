@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg GetArch osg_options VE_SUITE_VERSION vtk_options xerces_options')
+Import('ves_pkg baseEnv GetArch osg_options VE_SUITE_VERSION vtk_options xerces_options')
 
 lib_env = ves_pkg.getEnv().Copy()
 fpcFile = []
@@ -50,19 +50,24 @@ cppdom_pc = lib_env.ConfigBuilder(osgFileName,
 provides = "ves"
 arch = GetArch()
 inst_paths = {}
-inst_paths['base'] = os.path.abspath( lib_env['prefix'] )
-inst_paths['lib'] = pj(inst_paths['base'], lib_env['libdir'])
+inst_paths['base'] = pj('${fp_file_cwd}' ,'..' ,'..')
+#os.path.abspath( lib_env['prefix'] )
+inst_paths['lib'] = pj('${prefix}', lib_env['libdir'])
 #inst_paths['flagpoll'] = pj( lib_env['prefix'],lib_env['libdir'], 'flagpoll')
 #inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
-inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
-inst_paths['include'] = pj(inst_paths['base'], 'include')   
-ves_version_str = '1.0.2'
+inst_paths['bin'] = pj('${prefix}', 'bin')   
+inst_paths['include'] = pj('${prefix}', 'include')   
+ves_version_str = '%i.%i.%i'%VE_SUITE_VERSION
+if baseEnv[ 'Patented' ] == 'yes':
+    ves_defines = '-D_TAO -DVE_PATENTED -D_OSG -DVTK44'
+else:
+    ves_defines = '-D_TAO -D_OSG -DVTK44'
 # Build up substitution map
 submap = {
    '@provides@'                  : provides,
    '@prefix@'                    : inst_paths['base'],
    '@exec_prefix@'               : '${prefix}',
-   '@ves_cxxflags@'              : '-D_TAO -DVE_PATENTED -D_OSG -DVTK44',
+   '@ves_cxxflags@'              : ves_defines,
    '@includedir@'                : inst_paths['include'],
    '@ves_extra_cxxflags@'        : '',
    '@ves_extra_include_dirs@'    : '',
@@ -102,7 +107,7 @@ submap = {
    '@provides@'                  : provides,
    '@prefix@'                    : inst_paths['base'],
    '@exec_prefix@'               : '${prefix}',
-   '@vtk_cxxflags@'              : '-I${prefix}/include/vtk-${vtk_version} -DVTK44 -DVTK_STREAMS_FWD_ONLY',
+   '@vtk_cxxflags@'              : '-I${prefix}/include/vtk-${vtk_version} -DVTK_STREAMS_FWD_ONLY',
    '@includedir@'                : inst_paths['include'],
    '@ves_extra_cxxflags@'        : '',
    '@ves_extra_include_dirs@'    : '',
