@@ -65,6 +65,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "FileDir",
                  "ExtraVariables",
                  "AutoShutDown",
+                 "EnableVSync",
                  "RunDebugPrograms"]
     if saveLastConfig:
         ##Variables that only the main config stores.
@@ -132,6 +133,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                  "Xplorer": None,
                  "DesktopMode": None,
                  "AutoShutDown": None,
+                 "EnableVSync": None,
                  "RunDebugPrograms": None}
     ##Load these if it's loading the initial configuration.
     if loadLastConfig:

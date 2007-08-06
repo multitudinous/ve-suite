@@ -116,6 +116,7 @@ BASE_CONFIG = {"DependenciesDir": None,
                "Debug": False,
                "RecentFiles": RecentFiles([]),
                "AutoRunVes": False,
+               "EnableVSync": False,
                "ExtraVariables": "",
                "RunDebugPrograms": False}
 ##               "FileDir": DIRECTORY_DEFAULT}

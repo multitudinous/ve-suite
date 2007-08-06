@@ -200,11 +200,17 @@ class LauncherWindow(wx.Frame):
         menu.Append(501, "&Close File\tCtrl+W")
         self.prefSubMenu = wx.Menu()
         self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
+        """Show this menu on only pure posix system"""
+        if posix:
+            self.prefSubMenu.AppendCheckItem(603, "Enable VSync")
+            
         menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
         if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
             self.prefSubMenu.Enable(602, False)
         else:    
             self.prefSubMenu.Enable(602, True)
+
+            
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         ##Recent files as separated add-on
         ##menu.AppendSeparator()
@@ -477,6 +483,10 @@ class LauncherWindow(wx.Frame):
         ##AutoShutDown
         if self.prefSubMenu.IsEnabled(602):
             self.state.Edit("AutoShutDown", self.prefSubMenu.IsChecked(602))
+        ##Enable VSync
+        if self.prefSubMenu.IsEnabled(603):
+            self.state.Edit("EnableVSync", self.prefSubMenu.IsChecked(603))
+           
         ##Mode
         if self.rbMode.IsEnabled():
             modeChosen = self.rbMode.GetSelection()
@@ -563,6 +573,10 @@ class LauncherWindow(wx.Frame):
         ##AutoShutDown menu.
         confCheck = self.state.GetSurface("AutoShutDown")
         self.prefSubMenu.Check(602, confCheck)
+        ##Enable VSync
+        vSyncCheck = self.state.GetSurface("EnableVSync")
+        self.prefSubMenu.Check(603, vSyncCheck)
+        
 
         ##Loaded file name. Under work.
 ##        if self.state.GetSurface("VESFile"):
