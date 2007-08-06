@@ -25,8 +25,8 @@
  * -----------------------------------------------------------------
  * Date modified: $Date: 2007-08-04 16:47:31 -0500 (Sat, 04 Aug 2007) $
  * Version:       $Rev: 8566 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: TransferPhysicsDataCallback.h 8566 2007-08-04 21:47:31Z jbkoch $
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
