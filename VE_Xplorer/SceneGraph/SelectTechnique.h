@@ -45,11 +45,11 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
 public:
-    SelectTechnique();
+    SelectTechnique( VE_SceneGraph::DCS* dcs );
     ~SelectTechnique();
   
 protected:
-    virtual void DefinePasses();
+    virtual void DefinePasses( VE_SceneGraph::DCS* dcs );
 
 private:
 

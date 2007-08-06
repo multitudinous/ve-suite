@@ -71,7 +71,7 @@ protected:
 
     virtual osg::Node* GetOverrideChild( int );
 
-    virtual void DefinePasses() = 0;
+    //virtual void DefinePasses( VE_SceneGraph::DCS* dcs ) = 0;
 
     void TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
 

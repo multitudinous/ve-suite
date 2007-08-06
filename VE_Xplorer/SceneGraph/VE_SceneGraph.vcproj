@@ -275,6 +275,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TransferPhysicsDataCallback.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\UpdateIDOnChildrenVisitor.cxx"
 				>
 			</File>
@@ -392,6 +396,10 @@
 			</File>
 			<File
 				RelativePath=".\TextTexture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransferPhysicsDataCallback.h"
 				>
 			</File>
 			<File

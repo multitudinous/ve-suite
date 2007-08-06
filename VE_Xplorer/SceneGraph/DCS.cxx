@@ -30,14 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/DCS.h"
+#include "VE_Xplorer/SceneGraph/TransferPhysicsDataCallback.h"
 #include "VE_Xplorer/SceneGraph/SelectTechnique.h"
 
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Vec3d>
-#include <osg/Matrix>
 #include <osg/MatrixTransform>
 #include <osg/NodeVisitor>
 #elif _OPENSG
@@ -97,19 +98,15 @@ m_activeTechnique( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    selectTech = new VE_SceneGraph::SelectTechnique();
+    selectTech = new VE_SceneGraph::SelectTechnique( this );
     AddTechnique( selectTech );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
 :
 m_btBody( 0 ),
-
-
 m_multipass( false ),
 m_activeTechnique( 0 )
-
-
 {
     this->SetTranslationArray( trans );
     this->SetRotationArray( rot );
@@ -119,7 +116,7 @@ m_activeTechnique( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    selectTech = new VE_SceneGraph::SelectTechnique();
+    selectTech = new VE_SceneGraph::SelectTechnique( this );
     AddTechnique( selectTech );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,18 +124,14 @@ DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
 :
 osg::PositionAttitudeTransform( dcs, copyop ),
 m_btBody( 0 ),
-
-
 m_multipass( false ),
 m_activeTechnique( 0 )
-
-
 {
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    selectTech = new VE_SceneGraph::SelectTechnique();
+    selectTech = new VE_SceneGraph::SelectTechnique( this );
     AddTechnique( selectTech );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -535,48 +528,6 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
-TransferPhysicsDataCallback::TransferPhysicsDataCallback()
-{
-    btBody = 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-TransferPhysicsDataCallback::TransferPhysicsDataCallback( const TransferPhysicsDataCallback& input )
-:
-osg::Object( input ),
-osg::NodeCallback( input )
-{
-    btBody = 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-void TransferPhysicsDataCallback::SetbtRigidBody( btRigidBody* transform )
-{
-    btBody = transform;
-}
-////////////////////////////////////////////////////////////////////////////////
-void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
-{
-    osg::ref_ptr< VE_SceneGraph::DCS > dcs = static_cast< VE_SceneGraph::DCS* >( node );
-
-    if( dcs.valid() && btBody )
-    {
-        btQuaternion quat = btBody->getWorldTransform().getRotation();
-        dcs->setAttitude( osg::Quat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
-
-        btVector3 position = btBody->getWorldTransform().getOrigin();
-        dcs->setPosition( osg::Vec3d( position[0], position[ 1 ], position[ 2 ] ) );
-    }
-
-    traverse( node, nv );
-}
-////////////////////////////////////////////////////////////////////////////////
-#endif
-
-
-
-
-
-
 
 
 // -------------------------------------------------- //

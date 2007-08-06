@@ -33,6 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/SelectTechnique.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>
@@ -40,9 +41,9 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-SelectTechnique::SelectTechnique()
+SelectTechnique::SelectTechnique( VE_SceneGraph::DCS* dcs )
 {
-    ;
+    DefinePasses( dcs );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::~SelectTechnique()
@@ -50,10 +51,11 @@ SelectTechnique::~SelectTechnique()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SelectTechnique::DefinePasses()
+void SelectTechnique::DefinePasses( VE_SceneGraph::DCS* dcs )
 {
     //Implement pass #1
     {
+        /*
         char select_vertex_pass1[] =
             "varying vec3 ECPosition; \n"
             "varying vec3 LightDirection; \n"
@@ -96,17 +98,19 @@ void SelectTechnique::DefinePasses()
 
                 "gl_FragColor = vec4( Diffuse + Specular, 1.0 ); \n"
             "} \n";
+            */
 
-        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
-        osg::ref_ptr< osg::Program > program = new osg::Program;
+        osg::ref_ptr< osg::StateSet > stateset = dcs->getOrCreateStateSet();
+        //osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+        //osg::ref_ptr< osg::Program > program = new osg::Program;
 
-        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, select_vertex_pass1 );
-        program->addShader( vertex_shader.get() );
+        //osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, select_vertex_pass1 );
+        //program->addShader( vertex_shader.get() );
 
-        osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, select_fragment_pass1 );
-        program->addShader( fragment_shader.get() );
+        //osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, select_fragment_pass1 );
+        //program->addShader( fragment_shader.get() );
 
-        stateset->setAttributeAndModes( program.get() );
+        //stateset->setAttributeAndModes( program.get() );
 
         AddPass( stateset.get() );
     }

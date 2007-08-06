@@ -56,7 +56,6 @@ namespace VE_SceneGraph
 
 // --- OSG Includes --- //
 #ifdef _OSG
-#include <osg/Matrix>
 #include <osg/PositionAttitudeTransform>
 
 namespace osg
@@ -74,7 +73,6 @@ namespace osg
 #include <boost/lambda/lambda.hpp>
 
 // --- Bullet Includes --- //
-class btTransform;
 class btRigidBody;
 
 // --- C/C++ Libraries --- //
@@ -264,34 +262,6 @@ private:
 
     VE_SceneGraph::SelectTechnique* selectTech;
 };
-
-//This is the callback class configured to handle transfering physics data back to the respective osg node
-#ifdef _OSG
-class TransferPhysicsDataCallback : public osg::NodeCallback
-{
-public:
-    ///Constructor
-    TransferPhysicsDataCallback();
-
-    ///Destructor
-    virtual ~TransferPhysicsDataCallback(){;}
-
-    ///Copy constructor
-    TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );
-
-    ///Set the bullet rigid for this callback
-    ///\param transform bullet rigid body
-    void SetbtRigidBody( btRigidBody* transform );
-
-    ///Operator required by osg
-    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
-
-protected:
-    btRigidBody* btBody;///<Pointer to the bullet body
-
-};
-#elif _OPENSG
-#endif
 }
 
 #endif //DCS_H

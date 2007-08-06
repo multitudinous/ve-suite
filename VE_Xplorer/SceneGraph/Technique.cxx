@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/Technique.h"
-
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
 // --- OSG Includes --- //
@@ -91,7 +90,7 @@ void Technique::TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::DCS
     //Define passes if necessary
     if( m_passes.empty() )
     {
-        DefinePasses();
+        //DefinePasses( VE_SceneGraph::DCS* dcs );
     }
 
     //Special actions must be taken if the node visitor is actually a CullVisitor
