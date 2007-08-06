@@ -1017,13 +1017,17 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
    }
    iconFilename = path;
 	wxImage image(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
-	if(mirror > 0 && mirror < 3)
+	
+	if(mirror == 1)
+		image = image.Mirror(true);
+	else if(mirror == 2)
+		image = image.Mirror(false);
+	else if(mirror == 2)
 	{
-		if(mirror == 1)
-			image = image.Mirror(true);
-		else
-			image = image.Mirror(false);
+		image = image.Mirror(true);
+		image = image.Mirror(false);
 	}
+
 	image = image.Rotate((rotation*PI)/180, wxPoint(0,0));
 
 	//Implement Scale - scale the images to where the longest length is 40
