@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite"
-#define MyAppVerName "VE_Suite 1.0.6"
+#define MyAppName "VE-Suite"
+#define MyAppVerName "VE-Suite 1.1"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
@@ -34,14 +34,14 @@ ShowLanguageDialog=yes
 AlwaysRestart=false
 UninstallFilesDir={app}\bin
 UninstallRestartComputer=false
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp
 WizardImageStretch=false
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WindowVisible=true
-WizardImageBackColor=clGray
+WizardImageBackColor=clWhite
 ChangesAssociations=true
-BackColor=clBlack
-BackColor2=$0080ff
+BackColor=$a16502
+BackColor2=$1b84f7
 SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 
 [Types]
@@ -112,9 +112,9 @@ Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {
 ;Source: {#JUGGLERINSTHOME}\lib\MS*.DLL; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion overwritereadonly
+;Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion overwritereadonly
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; DestDir: {app}\bin\installerImages; DestName: velauncher_banner.bmp
-Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion
+;Source: {#VEHOME}\VE_Installer\installer\dist\MSVCR71.dll; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_TestSuite\simple.ves; DestDir: {app}\share\vesuite\examples\simple; Components: examples; Flags: overwritereadonly replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
@@ -134,8 +134,10 @@ Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe;
 [Run]
 Filename: {tmp}\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; WorkingDir: {tmp}; Description: Install VE-BuilderTools; StatusMsg: Installing VE-BuilderTools {#VEVERSION}_{#SVNVERSION}; Flags: postinstall; Components: buildertools; Tasks: 
 [_ISToolPreCompile]
-Name: .\buildVELauncher.exe.bat; Parameters: ; Flags: " abortonerror"
+Name: .\buildVELauncher.exe.bat; Parameters: 
 [_ISTool]
 UseAbsolutePaths=false
 LogFile=C:\devEnv\VE_Suite_1.0\VE_Installer\installer\compile.log
 LogFileAppend=false
+[UninstallDelete]
+Name: {app}; Type: filesandordirs

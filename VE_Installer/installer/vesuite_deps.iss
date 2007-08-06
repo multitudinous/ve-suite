@@ -21,13 +21,13 @@ OutputBaseFilename=vesuite_deps{#VEVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#VEHOME}\VE_Installer\installer
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageStretch=false
-WizardImageBackColor=clGray
-BackColor=clBlack
-BackColor2=$0080ff
+WizardImageBackColor=clWhite
+BackColor=$a16502
+BackColor2=$1b84f7
 SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
 
 [Languages]
