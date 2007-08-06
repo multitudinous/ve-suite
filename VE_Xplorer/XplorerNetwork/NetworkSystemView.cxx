@@ -55,6 +55,9 @@
 #include "VE_Xplorer/XplorerNetwork/UnsupportedComponent.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
+#include "VE_Xplorer/SceneGraph/Utilities/ComputeBoundsVisitor.h"
+#include <iostream>
+#include <fstream>
 
 using namespace VE_Xplorer;
 
@@ -107,7 +110,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	colorBlack->push_back(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
 	osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
 	shared_normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
-    
+	std::ofstream output ("scale.txt");
 	// now lets create a list of them
 	for ( size_t i = 0; i < objectVector.size(); ++i )
 	{
@@ -116,6 +119,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//add 3d blocks
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
+		
 		//osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
 		//text->UpdateText(model->GetModelName());
 		
@@ -135,6 +139,34 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//set the blocks name
 		loadedModel->setName(model->GetModelName());
+
+		//calculate the original size of the icon
+		VE_SceneGraph::Utilities::ComputeBoundsVisitor visitor;
+		loadedModel->accept(visitor);
+		osg::BoundingBox bounds = visitor.getBoundingBox();
+		float dx = bounds.xMax() - bounds.xMin();
+		float dy = bounds.yMax() - bounds.yMin();
+		float dz = bounds.zMax() - bounds.zMin();
+		output<<model->GetModelName()<<std::endl;
+		output<<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
+
+		//scale icon to 2d worksheet size
+		osg::ref_ptr<osg::Image> image = osgDB::readImageFile("2DIcons/"+model->GetIconFilename()+".jpg");
+		osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
+		output<<"width: "<<image->s()<<"height: "<<image->t()<<std::endl;
+		output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
+		
+		//scales
+		osg::Vec3 vec;
+		vec.set(image->s()/dx, image->s()/dy, image->t()/dz);
+		worksheetScaledModel->addChild(loadedModel.get());
+		worksheetScaledModel->setScale(vec);
+		
+		//problem with coords - wx has upper left origin
+		worksheetScaledModel->setPosition(osg::Vec3d(
+			worksheetScaledModel->getPosition().x() + (0.5*image->s()),
+			worksheetScaledModel->getPosition().y() ,
+			worksheetScaledModel->getPosition().z() + (0.5*image->t())));
 
 		//Put origin in the center of the model
 		//osg::ref_ptr<osg::AutoTransform> loadedModelNormalized = new osg::AutoTransform();
@@ -206,7 +238,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//Rotate the 3d comps 180 degrees around X axis
 		//corrects issue with initial model location
 		osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
-		rotatedComp->addChild(loadedModel.get());
+		//rotatedComp->addChild(loadedModel.get());
+		rotatedComp->addChild(worksheetScaledModel.get());
 		rotatedComp->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
 		//rotate/scale/mirror component
@@ -233,17 +266,18 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		reRotatedComp->setRotation(osg::Quat(osg::DegreesToRadians(rotation), osg::Vec3d(0.0, 1.0, 0.0)));
 
 		//move the text to the -y
-		osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
+		//osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
 		//textTrans->addChild(resultPane.get());
-		textTrans->setPosition(osg::Vec3d(0.0, 0.0, loadedModel.get()->getBound().radius()));
-		textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
+		//textTrans->setPosition(osg::Vec3d(0.0, 0.0, loadedModel.get()->getBound().radius()));
+		//textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
 		//Scale up 3D comps & text
 		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
 		scale->addChild(reRotatedComp.get());
 		//scale.get()->addChild(rotatedComp.get());
-		scale->addChild(textTrans.get());
-		scale->setScale(6.0f * iconScale);
+		//scale->addChild(textTrans.get());
+		//scale->setScale(6.0f * iconScale);
+		//scale->setScale(100);
 
 		//translate to comp with name to correct location
 		VE_XML::VE_Model::Point * iconLocation = model->GetIconLocation();
@@ -256,6 +290,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 0 - center.z(), (xyPair.second + 22) - center.y());
 		//osg::Vec3 centerTrans = osg::Vec3(xyPair.first + 20, xyPair.second + 25, 0 );
 		mModelTrans->addChild(scale.get());
+		//mModelTrans->addChild(reRotatedComp.get());
 		mModelTrans->setPosition(centerTrans);
 		mModelTrans->setName(model->GetModelName());
 		loadedModels->addChild(mModelTrans.get());	
@@ -278,7 +313,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		for ( size_t j = 0; j < numberOfPoints; j++ )
 		{
 			std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
-			//std::cout << "X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
+			std::cout << "X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
 			//(*vertices)[j].set(rawPoint.first, rawPoint.second, 0.0);
 			(*vertices)[j].set(rawPoint.first, 0.0, rawPoint.second);
 		}
