@@ -484,8 +484,9 @@ class LauncherWindow(wx.Frame):
         if self.prefSubMenu.IsEnabled(602):
             self.state.Edit("AutoShutDown", self.prefSubMenu.IsChecked(602))
         ##Enable VSync
-        if self.prefSubMenu.IsEnabled(603):
-            self.state.Edit("EnableVSync", self.prefSubMenu.IsChecked(603))
+        if posix:
+            if self.prefSubMenu.IsEnabled(603):
+                self.state.Edit("EnableVSync", self.prefSubMenu.IsChecked(603))
            
         ##Mode
         if self.rbMode.IsEnabled():
@@ -574,8 +575,9 @@ class LauncherWindow(wx.Frame):
         confCheck = self.state.GetSurface("AutoShutDown")
         self.prefSubMenu.Check(602, confCheck)
         ##Enable VSync
-        vSyncCheck = self.state.GetSurface("EnableVSync")
-        self.prefSubMenu.Check(603, vSyncCheck)
+        if posix:
+            vSyncCheck = self.state.GetSurface("EnableVSync")
+            self.prefSubMenu.Check(603, vSyncCheck)
         
 
         ##Loaded file name. Under work.
