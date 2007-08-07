@@ -76,7 +76,7 @@ namespace VE_TextureBased
             protected:
                osg::ref_ptr<cfdPBufferQuad> _pbq;
          };
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
          virtual void drawImplementation(osg::RenderInfo& temp) const ;
 #elif ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR<=2))
          virtual void drawImplementation(osg::State& state)const;

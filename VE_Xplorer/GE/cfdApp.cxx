@@ -283,9 +283,9 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	newSceneViewer->setDrawBufferValue( GL_NONE );
 	//**************************************************************************
 
-	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
+	//newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
-    newSceneViewer->getCullVisitor()->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    //newSceneViewer->getCullVisitor()->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -412,7 +412,7 @@ void cfdApp::latePreFrame( void )
     //don't move above function call
     _frameStamp->setFrameNumber( _frameNumber );
     _frameStamp->setReferenceTime( current_time );
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
     _frameStamp->setSimulationTime( current_time );
 #endif
    //This is a frame rate calculation
@@ -791,6 +791,14 @@ void cfdApp::draw()
 
     //Get the frustrum
     vrj::Frustum frustum = project->getFrustum();
+    vprDEBUG(vesDBG,3)  << "Frustum " << std::endl 
+        << frustum[vrj::Frustum::VJ_LEFT] << std::endl
+        << frustum[vrj::Frustum::VJ_RIGHT] << std::endl
+        << frustum[vrj::Frustum::VJ_BOTTOM] << std::endl
+        << frustum[vrj::Frustum::VJ_TOP] << std::endl
+        << frustum[vrj::Frustum::VJ_NEAR] << std::endl
+        << frustum[vrj::Frustum::VJ_FAR] << std::endl << vprDEBUG_FLUSH;
+
     sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
                                     frustum[vrj::Frustum::VJ_RIGHT],
                                     frustum[vrj::Frustum::VJ_BOTTOM],
@@ -808,9 +816,11 @@ void cfdApp::draw()
    
     gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
+    vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
     gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
     //copy the matrix
     osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
+    vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
     osg_proj_xform_mat->set( _vjMatrixLeft.mData );
 
     // set the view matrix
@@ -818,11 +828,13 @@ void cfdApp::draw()
     //profile the cull call
     {
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->cull",20);
+        //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         sv->cull();        
     }
     //profile the draw call
     {
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->draw",20);
+        //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         sv->draw();        
     }
     

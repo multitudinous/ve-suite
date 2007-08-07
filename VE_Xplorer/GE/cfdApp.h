@@ -54,7 +54,7 @@ const float SAMPLE_TIME = 1.0f;
 #ifdef _OSG
 
    #include <osg/Version>
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
    #include <osg/ref_ptr>
    #include <osg/Timer>
    #include <osg/LightModel>

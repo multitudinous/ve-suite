@@ -131,13 +131,24 @@ void TextTexture::_initializeFBO()
     _fbo->setViewport(0,0,_textureResolution[0],_textureResolution[1]);
 
     // set the camera to render before the main camera.
+#if (OSG_VERSION_MAJOR>=2)
+    _fbo->setRenderOrder(osg::Camera::PRE_RENDER);
+#else
     _fbo->setRenderOrder(osg::CameraNode::PRE_RENDER);
-
+#endif
     // tell the camera to use OpenGL frame buffer object where supported.
+#if (OSG_VERSION_MAJOR>=2)
+    _fbo->setRenderTargetImplementation(osg::Camera::FRAME_BUFFER_OBJECT);
+#else
     _fbo->setRenderTargetImplementation(osg::CameraNode::FRAME_BUFFER_OBJECT);
+#endif
 
+#if (OSG_VERSION_MAJOR>=2)
     // attach the texture and use it as the color buffer.
+    _fbo->attach(osg::Camera::COLOR_BUFFER, _texture.get());
+#else
     _fbo->attach(osg::CameraNode::COLOR_BUFFER, _texture.get());
+#endif
         
     // add subgraph to render
     _fbo->addChild(this);
@@ -165,7 +176,11 @@ void TextTexture::UpdateText(std::string newText)
    computeBound();
 }
 /////////////////////////////////////////////
+#if (OSG_VERSION_MAJOR>=2)
+osg::Camera* TextTexture::GetCameraNode()
+#else
 osg::CameraNode* TextTexture::GetCameraNode()
+#endif
 {
    if(_fbo.valid())
    {

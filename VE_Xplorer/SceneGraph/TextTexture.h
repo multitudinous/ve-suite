@@ -51,15 +51,15 @@
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Version>
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
-#include <osg/CameraNode>
+#if (OSG_VERSION_MAJOR>=2)
+#include <osg/Camera>
 #endif
 
 namespace osg
 {
    class Texture2D;
-#if ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-   class CameraNode;
+#if (OSG_VERSION_MAJOR>=2)
+   class Camera;
 #endif
 }
 
@@ -104,7 +104,11 @@ public:
    osg::Texture2D* GetTexture();
 
    ///Get the fbo
+#if (OSG_VERSION_MAJOR>=2)
+   osg::Camera* GetCameraNode();
+#else
    osg::CameraNode* GetCameraNode();
+#endif
    
 protected:
    ///Destructor
@@ -119,7 +123,11 @@ protected:
    std::string _font;///<The font file
    osg::ref_ptr<osgText::Text> _text;///<The text
    osg::ref_ptr<osg::Texture2D> _texture;///<The texture we create
+#if (OSG_VERSION_MAJOR>=2)
+   osg::ref_ptr<osg::Camera> _fbo;///<The off screen rendering node
+#else
    osg::ref_ptr<osg::CameraNode> _fbo;///<The off screen rendering node
+#endif
    //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
 
 };

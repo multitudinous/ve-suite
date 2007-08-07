@@ -51,7 +51,7 @@
 #include <osg/Drawable>
 
 #include <osg/Version>
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
 #include <osg/RenderInfo>
 #endif
 namespace osg
@@ -97,7 +97,7 @@ public:
    ///\param x The z resolution
    void SetTextureDimensions(unsigned int x,unsigned int y,unsigned int z);
    // of OpenGL primitives.
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
    virtual void drawImplementation(osg::RenderInfo& currentState) const;
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    virtual void drawImplementation(osg::State& currentState) const;
