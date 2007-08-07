@@ -187,8 +187,7 @@ class LauncherWindow(wx.Frame):
                                            " the current mode."))
         ##Build Launch button.
         self.bLaunch = wx.Button(panel, -1, "Launch VE Suite")
-        self.bLaunch.SetToolTip(wx.ToolTip("Run the programs you selected and" +
-                                           " close the Launcher."))
+
         ##Build menu bar
         menuBar = wx.MenuBar()
         menu = wx.Menu()
