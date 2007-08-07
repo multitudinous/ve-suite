@@ -362,7 +362,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
-   baseEnv.Append( CPPDEFINES = ['_OSG','VTK44'] )
+   baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    #baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )

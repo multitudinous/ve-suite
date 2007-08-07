@@ -13,6 +13,9 @@ sources = map(lambda s: pj('src', s),
                 sources)
 
 lib_env = ves_pkg.getEnv().Copy()
+
+#lib_env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'] )
+
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 
 if baseEnv['StaticOnly'] == "no":

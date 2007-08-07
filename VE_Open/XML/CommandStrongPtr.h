@@ -30,26 +30,26 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_DATA_VALUE_PAIR_WEAK_PTR_H
-#define VE_DATA_VALUE_PAIR_WEAK_PTR_H
+#ifndef VE_COMMAND_STRONG_PTR_H
+#define VE_COMMAND_STRONG_PTR_H
 
 #include <loki/StrongPtr.h>
 
 /**
- * \file
+* \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::DataValuePairWeakPtr.  To get the full 
- * declaration of VE_XML::DataValuePairWeakPtr
- * VE_Open/XML/DataValuePair.h must be included, too.
+ * VE_XML::CommandStrongPtr.  To get the full 
+ * declaration of VE_XML::CommandStrongPtr
+ * VE_Open/XML/Command.h must be included, too.
  */
 
 namespace VE_XML
 {
-   class DataValuePair;
-   /// Typedef for a SmartPtr type for the DataValuePair.
-   typedef Loki::StrongPtr< DataValuePair, false, Loki::LockableTwoRefCounts,
+    class Command;
+    /// Typedef for a SmartPtr type for the Command.
+    typedef Loki::StrongPtr< Command, true, Loki::LockableTwoRefCounts,
         Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong,
-        Loki::DeleteSingle > DataValuePairWeakPtr;
+        Loki::DeleteSingle > CommandStrongPtr;
 }
 #endif

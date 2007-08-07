@@ -33,8 +33,6 @@
 #ifndef VE_DATA_VALUE_PAIR_STRONG_PTR_H
 #define VE_DATA_VALUE_PAIR_STRONG_PTR_H
 
-#define LOKI_OBJECT_LEVEL_THREADING 1
-
 #include <loki/StrongPtr.h>
 
 /**
@@ -52,6 +50,6 @@ namespace VE_XML
     /// Typedef for a SmartPtr type for the DataValuePair.
     typedef Loki::StrongPtr< DataValuePair, true, Loki::LockableTwoRefCounts,
         Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong,
-        Loki::DeleteSingle >::type DataValuePairStrongPtr;
+        Loki::DeleteSingle > DataValuePairStrongPtr;
 }
 #endif
