@@ -791,13 +791,13 @@ void cfdApp::draw()
 
     //Get the frustrum
     vrj::Frustum frustum = project->getFrustum();
-    vprDEBUG(vesDBG,3)  << "Frustum " << std::endl 
+    /*vprDEBUG(vesDBG,3)  << "Frustum " << std::endl 
         << frustum[vrj::Frustum::VJ_LEFT] << std::endl
         << frustum[vrj::Frustum::VJ_RIGHT] << std::endl
         << frustum[vrj::Frustum::VJ_BOTTOM] << std::endl
         << frustum[vrj::Frustum::VJ_TOP] << std::endl
         << frustum[vrj::Frustum::VJ_NEAR] << std::endl
-        << frustum[vrj::Frustum::VJ_FAR] << std::endl << vprDEBUG_FLUSH;
+        << frustum[vrj::Frustum::VJ_FAR] << std::endl << vprDEBUG_FLUSH;*/
 
     sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
                                     frustum[vrj::Frustum::VJ_RIGHT],
@@ -816,11 +816,11 @@ void cfdApp::draw()
    
     gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-    vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
     gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
     //copy the matrix
     osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
-    vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
     osg_proj_xform_mat->set( _vjMatrixLeft.mData );
 
     // set the view matrix
@@ -828,7 +828,7 @@ void cfdApp::draw()
     //profile the cull call
     {
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->cull",20);
-        //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+        vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         sv->cull();        
     }
     //profile the draw call
