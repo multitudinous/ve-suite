@@ -305,13 +305,13 @@ void cfdPBufferQuad::_drawHardCodedTCoords(osg::State& state)const
 
 }
 ///////////////////////////////////////////////////////////////
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void cfdPBufferQuad::drawImplementation(osg::RenderInfo& renderState)const
 #elif ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR<=2))
 void cfdPBufferQuad::drawImplementation(osg::State& renderState)const
 #endif
 {
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
    osg::State& state = *(renderState.getState());
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    osg::State& state = renderState;

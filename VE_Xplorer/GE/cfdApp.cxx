@@ -412,7 +412,7 @@ void cfdApp::latePreFrame( void )
     //don't move above function call
     _frameStamp->setFrameNumber( _frameNumber );
     _frameStamp->setReferenceTime( current_time );
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
     _frameStamp->setSimulationTime( current_time );
 #endif
    //This is a frame rate calculation

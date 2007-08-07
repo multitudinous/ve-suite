@@ -131,7 +131,7 @@ public:
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
    virtual void drawImplementation(osg::RenderInfo& currentState) const;
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    virtual void drawImplementation(osg::State& currentState) const;
@@ -391,13 +391,13 @@ bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
    return false;
 }
 ////////////////////////////////////////////////////////////////////////
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void NURBSControlMesh::drawImplementation(osg::RenderInfo& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 void NURBSControlMesh::drawImplementation(osg::State& renderState) const
 #endif
 {
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
    osg::State& currentState = *(renderState.getState());
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    osg::State& currentState = renderState;
@@ -527,7 +527,7 @@ public:
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
    virtual void drawImplementation(osg::RenderInfo& currentState) const;
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    virtual void drawImplementation(osg::State& currentState) const;
@@ -563,7 +563,7 @@ NURBS::NURBSObject* NURBSTessellatedSurface::GetNURBSData()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void NURBSTessellatedSurface::drawImplementation(osg::RenderInfo& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 void NURBSTessellatedSurface::drawImplementation(osg::State& renderState) const

@@ -297,13 +297,13 @@ void TextureBasedVolumeSlices::_drawViewAlignedQuadSlices()const
    glPopMatrix();
 }
 /////////////////////////////////////////////////////////////////////////////////
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void TextureBasedVolumeSlices::drawImplementation(osg::RenderInfo& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 void TextureBasedVolumeSlices::drawImplementation(osg::State& renderState) const
 #endif
 { 
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
    osg::State& currentState = *(renderState.getState());
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    osg::State& currentState = renderState;

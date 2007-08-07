@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
 #include <osg/FrameStamp>
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 #include <osg/RenderInfo>
 #endif
 #include <osg/State>
@@ -86,7 +86,7 @@ void cfdCopyTo3DTextureStage::reset()
 //////////////////////////////////////////////////////////////////
 /*void cfdCopyTo3DTextureStage::draw(osg::State& state, 
                                osgUtil::RenderLeaf*& previous)*/
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void cfdCopyTo3DTextureStage::draw(osg::RenderInfo& renderInfo,
                                    osgUtil::RenderLeaf*& previous)
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
@@ -100,7 +100,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _texture->getTextureSize(_width,_height,_nSlices);
       _pbuffer->activate();
       //const unsigned int contextID = 0;
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
       const unsigned int  contextID = renderInfo.getContextID();
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 	  const unsigned int  contextID = state.getContextID();
@@ -124,7 +124,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _localState->setFrameStamp(_fs.get());*/
       for(unsigned int i = 1; i < _nSlices-1; i++)
       {
-#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>=2) || (OSG_VERSION_MAJOR>=2))
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
           RenderStage::draw(renderInfo,previous);
          _texture->copyTexSubImage3D(*renderInfo.getState()/*state*/,
                                   1,1,i,
