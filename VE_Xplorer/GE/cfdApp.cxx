@@ -283,9 +283,9 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 	newSceneViewer->setDrawBufferValue( GL_NONE );
 	//**************************************************************************
 
-	//newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
+	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
-    //newSceneViewer->getCullVisitor()->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    newSceneViewer->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation

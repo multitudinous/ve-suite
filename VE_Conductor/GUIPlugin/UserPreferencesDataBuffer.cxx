@@ -73,7 +73,7 @@ void UserPreferencesDataBuffer::SetCommand( std::string commandKey, VE_XML::Comm
     commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::CommandPtr >& UserPreferencesDataBuffer::GetCommandMap( void )
+std::map< std::string, VE_XML::CommandPtr > UserPreferencesDataBuffer::GetCommandMap( void )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     return commandMap;

@@ -66,7 +66,7 @@ void XMLDataBufferEngine::CleanUp( void )
     m_tagMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command& XMLDataBufferEngine::GetCommand( std::string commandKey )
+VE_XML::Command XMLDataBufferEngine::GetCommand( std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     std::map< std::string, VE_XML::Command >::iterator iter;
@@ -79,13 +79,13 @@ VE_XML::Command& XMLDataBufferEngine::GetCommand( std::string commandKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::SetCommand( std::string commandKey, 
-                                      VE_XML::Command& command )
+                                      VE_XML::Command command )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     m_commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::Command >& 
+std::map< std::string, VE_XML::Command > 
 XMLDataBufferEngine::GetCommandMap( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
@@ -93,7 +93,7 @@ XMLDataBufferEngine::GetCommandMap( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::SetCommandMap( std::map< std::string, 
-                                         VE_XML::Command >& tempMap )
+                                         VE_XML::Command > tempMap )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     m_commandMap = tempMap;
@@ -303,12 +303,14 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     m_networkModelMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Network XMLDataBufferEngine::GetXMLNetworkDataObject( std::string dataNumber )
+VE_XML::VE_Model::Network XMLDataBufferEngine::GetXMLNetworkDataObject(
+    std::string dataNumber )
 {
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Model XMLDataBufferEngine::GetXMLModelDataObject( std::string dataNumber )
+VE_XML::VE_Model::Model XMLDataBufferEngine::GetXMLModelDataObject( 
+    std::string dataNumber )
 {
     return m_modelMap[ dataNumber ];
 }
@@ -318,7 +320,8 @@ VE_XML::User XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
     return (*m_userMap[ dataNumber ]);
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector( std::string dataNumber )
+std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector( 
+    std::string dataNumber )
 {
     //std::vector< std::string > temp = m_networkModelMap[ dataNumber ];
     //std::cout << " size " << temp.size() << std::endl;

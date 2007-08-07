@@ -70,7 +70,7 @@ public:
     ///set Command with key
     void SetCommand( std::string commandKey, VE_XML::CommandPtr command );
     ///Get all the commands
-    std::map< std::string, VE_XML::CommandPtr >& GetCommandMap( void );
+    std::map< std::string, VE_XML::CommandPtr > GetCommandMap( void );
     ///Set all the commands
     void SetCommandMap( std::map< std::string, VE_XML::CommandPtr > tempMap );
 private:

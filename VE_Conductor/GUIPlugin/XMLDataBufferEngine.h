@@ -71,16 +71,16 @@ public:
     ///Get Command with key
     ///The key MUST be the command name
     ///\param commandKey command desired by the user
-    VE_XML::Command& GetCommand( std::string commandKey );
+    VE_XML::Command GetCommand( std::string commandKey );
     ///set Command with key
     ///\param commandKey key of the command desired
     ///\param command command to be stored
-    void SetCommand( std::string commandKey, VE_XML::Command& command );
+    void SetCommand( std::string commandKey, VE_XML::Command command );
     ///Get all the commands
-    std::map< std::string, VE_XML::Command >& GetCommandMap( void );
+    std::map< std::string, VE_XML::Command > GetCommandMap( void );
     ///Set all the commands
     ///\param tempMap the the map of commands when initialized by the user
-    void SetCommandMap( std::map< std::string, VE_XML::Command >& tempMap );
+    void SetCommandMap( std::map< std::string, VE_XML::Command > tempMap );
     ///Set data from CORBA receiver thread
     void SetXplorerData(){ ; }
     ///Load data 
