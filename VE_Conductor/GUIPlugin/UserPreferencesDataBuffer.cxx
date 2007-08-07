@@ -79,7 +79,7 @@ std::map< std::string, VE_XML::CommandPtr >& UserPreferencesDataBuffer::GetComma
     return commandMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::CommandPtr >& tempMap )
+void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::CommandPtr > tempMap )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     commandMap = tempMap;

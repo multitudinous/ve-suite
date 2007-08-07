@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_NURBS_LIBRARY"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_NURBS_LIBRARY;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -124,7 +124,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_NURBS_LIBRARY"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_NURBS_LIBRARY;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"

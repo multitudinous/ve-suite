@@ -30,6 +30,9 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
 #include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Model/Point.h"

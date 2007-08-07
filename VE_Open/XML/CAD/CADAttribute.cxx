@@ -30,12 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
 #include "VE_Open/XML/CAD/CADAttribute.h"
 #include "VE_Open/XML/CAD/CADMaterial.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Shader/Program.h"
+
 using namespace VE_XML::VE_Shader;
 using namespace VE_XML::VE_CAD;
 using namespace VE_XML;

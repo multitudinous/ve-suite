@@ -39,6 +39,7 @@
 #include <wx/brush.h>
 #include <wx/pen.h>
 #include <wx/dcclient.h>
+#include <wx/msw/winundef.h>
 
 using namespace VE_Conductor::GUI_Utilities;
 

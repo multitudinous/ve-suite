@@ -30,7 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
 #include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"

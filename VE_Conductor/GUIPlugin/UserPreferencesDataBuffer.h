@@ -72,7 +72,7 @@ public:
     ///Get all the commands
     std::map< std::string, VE_XML::CommandPtr >& GetCommandMap( void );
     ///Set all the commands
-    void SetCommandMap( std::map< std::string, VE_XML::CommandPtr >& tempMap );
+    void SetCommandMap( std::map< std::string, VE_XML::CommandPtr > tempMap );
 private:
     ///Mapp to hold all the preference data to be written to the ves file
     //std::map< std::string, VE_XML::CommandStrongPtr > commandMap;

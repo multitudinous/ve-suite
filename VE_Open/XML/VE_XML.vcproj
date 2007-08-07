@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(APR_UTIL_HOME)\include&quot;;&quot;$(APR_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_XML_LIBRARY"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_XML_LIBRARY;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -51,6 +51,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="4"
+				ShowIncludes="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -124,7 +125,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(APR_UTIL_HOME)\include&quot;;&quot;$(APR_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_XML_LIBRARY"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_XML_LIBRARY;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
