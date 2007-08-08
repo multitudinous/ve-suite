@@ -45,7 +45,8 @@ StateInfo::StateInfo()
 ///////////////////////////
 StateInfo::~StateInfo()
 {
-   ClearState();
+    ;
+    //ClearState();
 }
 ////////////////////////////////////////////////////
 /*void StateInfo::AddState(VE_XML::CommandPtr state)

@@ -1943,29 +1943,31 @@ std::string Network::Save( std::string fileName )
             iter->second.GetPlugin()->GetVEModel(), "veModel" ) );
     }
 
-   //Write out the veUser info for the local user
-   VE_XML::UserPtr userInfo = new VE_XML::User();
-   userInfo->SetUserId( "User" );
-   userInfo->SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
-   VE_XML::StateInfoPtr colorState = new VE_XML::StateInfo();
-   ///Load the current preferences from the data buffer
-   std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
-       UserPreferencesDataBuffer::instance()->GetCommandMap();
-   for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator prefIter = 
-        tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
-   {
-      colorState->AddState( prefIter->second );
-   }
-   userInfo->SetStateInfo( colorState );
-   
-   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-        &(*userInfo), "User" ) );
-   
-   VE_XML::XMLReaderWriter netowrkWriter;
-   netowrkWriter.UseStandaloneDOMDocumentManager();
-   netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+    {
+        //Write out the veUser info for the local user
+        VE_XML::UserPtr userInfo = new VE_XML::User();
+        userInfo->SetUserId( "User" );
+        userInfo->SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
+        VE_XML::StateInfoPtr colorState = new VE_XML::StateInfo();
+        ///Load the current preferences from the data buffer
+        std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
+            UserPreferencesDataBuffer::instance()->GetCommandMap();
+        for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator prefIter = 
+             tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
+        {
+            colorState->AddState( prefIter->second );
+        }
+        userInfo->SetStateInfo( colorState );
+        
+        nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+                                                                       &(*userInfo), "User" ) );
+        
+        VE_XML::XMLReaderWriter netowrkWriter;
+        netowrkWriter.UseStandaloneDOMDocumentManager();
+        netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+    }
 
-   return fileName;
+    return fileName;
 }
 ////////////////////////////////////////////////////////
 void Network::New( bool promptClearXplorer )
