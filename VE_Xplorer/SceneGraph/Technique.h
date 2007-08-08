@@ -62,20 +62,19 @@ public:
 
     const osg::StateSet* GetPassStateSet( int i ) const;
 
-    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
-        
-protected:
     void DirtyPasses();
+
+    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
+
+protected:
+    virtual void DefinePasses( VE_SceneGraph::DCS* dcs ) = 0;
 
     void AddPass( osg::StateSet* ss = 0 );
 
     virtual osg::Node* GetOverrideChild( int );
 
-    //virtual void DefinePasses( VE_SceneGraph::DCS* dcs ) = 0;
-
     void TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
 
-private:
     std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
 
 };

@@ -528,12 +528,9 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-
 // -------------------------------------------------- //
 // --- This stuff is used for multipass rendering --- //
 // -------------------------------------------------- //
-
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::EnableMultiPass( bool state )
 {
@@ -543,6 +540,16 @@ void DCS::EnableMultiPass( bool state )
 void DCS::SetTechnique( int i )
 {
     m_activeTechnique = i;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Technique* DCS::GetTechnique( int i )
+{
+    return m_techniques[ i ];
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Technique* DCS::GetActiveTechnique()
+{
+    return m_techniques[ m_activeTechnique ];
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::AddTechnique( VE_SceneGraph::Technique* tech )

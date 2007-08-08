@@ -34,15 +34,15 @@
 #define DCS_H
 
 /*!\file DCS.h
-*/
+ */
 
 /*!\class VE_SceneGraph::DCS
-*
-*/
+ *
+ */
 
 /*!\namespace VE_SceneGraph
-*
-*/
+ *
+ */
 
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/SceneNode.h"
@@ -237,8 +237,6 @@ private:
 
     osg::ref_ptr< TransferPhysicsDataCallback > m_udcb;///<The callback to update the sg node with physics data
 
-
-
 // -------------------------------------------------- //
 // --- This stuff is used for multipass rendering --- //
 // -------------------------------------------------- //
@@ -251,7 +249,11 @@ public:
 
     void SetTechnique( int i );
 
-    void AddTechnique( VE_SceneGraph::Technique* technique );   
+    VE_SceneGraph::Technique* GetTechnique( int i );
+
+    VE_SceneGraph::Technique* GetActiveTechnique();
+
+    void AddTechnique( VE_SceneGraph::Technique* technique );
 
 private:
     bool m_multipass;
