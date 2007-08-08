@@ -48,9 +48,14 @@ StateInfo::~StateInfo()
    ClearState();
 }
 ////////////////////////////////////////////////////
-void StateInfo::AddState(VE_XML::CommandPtr state)
+/*void StateInfo::AddState(VE_XML::CommandPtr state)
 {
    _stateInfo.push_back(state);
+}*/
+////////////////////////////////////////////////////
+void StateInfo::AddState(VE_XML::CommandWeakPtr state)
+{
+    _stateInfo.push_back(state);
 }
 //////////////////////////////
 void StateInfo::ClearState()
@@ -102,14 +107,14 @@ void StateInfo::SetObjectFromXMLData(DOMNode* xmlInput)
         DOMElement* vecmdIn = dynamic_cast<DOMElement*>(subElements->item(i));
         if(vecmdIn)
         {
-            VE_XML::CommandPtr command = new VE_XML::Command();
+            VE_XML::CommandWeakPtr command = new VE_XML::Command();
             command->SetObjectFromXMLData(vecmdIn);
             _stateInfo.push_back(command);
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::CommandPtr StateInfo::GetState(std::string name)
+VE_XML::CommandWeakPtr StateInfo::GetState(std::string name)
 {
    for(size_t i = 0; i < _stateInfo.size(); i++)
    {
@@ -121,12 +126,12 @@ VE_XML::CommandPtr StateInfo::GetState(std::string name)
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::CommandPtr StateInfo::GetState( size_t index)
+VE_XML::CommandWeakPtr StateInfo::GetState( size_t index)
 {
    return _stateInfo.at(index);
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::CommandPtr > StateInfo::GetStateVector( void )
+std::vector< VE_XML::CommandWeakPtr > StateInfo::GetStateVector( void )
 {
    return _stateInfo;
 }

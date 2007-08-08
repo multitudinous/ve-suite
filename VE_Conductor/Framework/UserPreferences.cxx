@@ -185,7 +185,7 @@ void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
 {
-   VE_XML::CommandPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
+   VE_XML::CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
    if ( bkColor->GetCommandName() != "NULL" )
    {
       bkColor->GetDataValuePair( "Background Color" )->GetData( xplorerColor );
@@ -214,7 +214,7 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::CommandPtr veCommand = new VE_XML::Command();
+      VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 

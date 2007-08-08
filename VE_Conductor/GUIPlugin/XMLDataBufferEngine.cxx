@@ -216,12 +216,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
         m_userMap[ "Network" ] = userColor;
         //Set user preferences
-        std::vector< VE_XML::CommandPtr > tempStates = 
+        std::vector< VE_XML::CommandWeakPtr > tempStates = 
             userColor->GetUserStateInfo()->GetStateVector();
-        std::map< std::string, VE_XML::CommandPtr > tempMap;
+        std::map< std::string, VE_XML::CommandWeakPtr > tempMap;
         for ( size_t i = 0; i < tempStates.size(); ++i )
         {
-            VE_XML::CommandPtr tempCommand = tempStates.at( i );
+            VE_XML::CommandWeakPtr tempCommand = tempStates.at( i );
             tempMap[ tempCommand->GetCommandName() ] = tempStates.at( i ); 
             //std::cout << " here " << tempCommand->GetCommandName() << std::endl;
         }

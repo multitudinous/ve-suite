@@ -82,6 +82,7 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/CommandWeakPtr.h"
 
 // --- wxWidgets Includes --- //
 #include <wx/image.h>
@@ -292,7 +293,7 @@ viewlocPane( 0 )
 
         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
         dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-        VE_XML::CommandPtr veCommand = new VE_XML::Command();
+        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
 
@@ -1140,7 +1141,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     { 
         network->Load( nw_str, true );
         Log("Simulation Opened.\n");
-        VE_XML::CommandPtr aspenBKPFile = new VE_XML::Command();
+        VE_XML::CommandWeakPtr aspenBKPFile = new VE_XML::Command();
         aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
         VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
         data->SetData( "BKPFileName",  
@@ -1362,7 +1363,7 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
     std::string nw_str = serviceList->Query( status );
     Log("Simulation Saved.\n");
 
-    VE_XML::CommandPtr aspenAPWFile = new VE_XML::Command();
+    VE_XML::CommandWeakPtr aspenAPWFile = new VE_XML::Command();
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
     data = returnState.GetDataValuePair(-1);
     data->SetData( "BKPFileName",  
@@ -1767,7 +1768,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
     //this is kinda confusing...thanks wx!!!
     //wxColourData data;
     //data.SetChooseFull(true);
-    VE_XML::CommandPtr bkColor = UserPreferencesDataBuffer::instance()->
+    VE_XML::CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
     
     if( bkColor->GetCommandName() != "NULL" )
@@ -1799,7 +1800,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       // Create the command and data value pairs
       VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::CommandPtr veCommand = new VE_XML::Command();
+      VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 

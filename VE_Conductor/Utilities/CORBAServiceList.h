@@ -44,7 +44,7 @@ CORBAServiceList API
 #include "VE_Conductor/Utilities/UI_i.h"
 
 #include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/CommandPtr.h"
+#include "VE_Open/XML/CommandWeakPtr.h"
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
@@ -100,7 +100,7 @@ public:
    bool SendCommandStringToXplorer(  VE_XML::Command* veCommand  );
    ///Set xplorer command string 
    ///\param command string containing command
-   bool SendCommandStringToXplorer(  VE_XML::CommandPtr veCommand  );
+   bool SendCommandStringToXplorer(  VE_XML::CommandWeakPtr veCommand  );
    ///Set ce network string 
    ///\param network string containing network
    bool SendNetworkStringToCE( std::string network );

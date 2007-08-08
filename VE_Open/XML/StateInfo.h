@@ -44,7 +44,8 @@
 #include <string>
 
 #include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/CommandPtr.h"
+//#include "VE_Open/XML/CommandPtr.h"
+#include "VE_Open/XML/CommandWeakPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -65,8 +66,11 @@ public:
    
    ///Add new state information.
    ///\param state The new state to add which is held in a Command object.
-   void AddState(VE_XML::CommandPtr state);
-
+   //void AddState(VE_XML::CommandPtr state);
+   ///Add new state information.
+   ///\param state The new state to add which is held in a Command object.
+   void AddState( VE_XML::CommandWeakPtr state );
+   
    ///Clear all current state information.
    void ClearState();
    
@@ -76,12 +80,12 @@ public:
 
    ///Get a state based on the name.
    ///\param name The name of the state to search for
-   VE_XML::CommandPtr GetState(std::string name);
+   VE_XML::CommandWeakPtr GetState(std::string name);
    ///Get the state based on an index
    ///\param index The index to search for.
-   VE_XML::CommandPtr GetState( size_t index);
+   VE_XML::CommandWeakPtr GetState( size_t index);
    ///Get the vector of states for this user
-   std::vector< VE_XML::CommandPtr > GetStateVector( void );
+   std::vector< VE_XML::CommandWeakPtr > GetStateVector( void );
 
 protected:
    ///Internally update the XML data.
@@ -90,7 +94,7 @@ protected:
    ///Internally update the Command list.
    void _updateCommands();
 
-   std::vector<VE_XML::CommandPtr> _stateInfo;///<The Command list holding state information.
+   std::vector<VE_XML::CommandWeakPtr> _stateInfo;///<The Command list holding state information.
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, StateInfo* val)

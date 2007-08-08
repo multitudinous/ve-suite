@@ -39,7 +39,7 @@
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/CommandPtr.h"
+#include "VE_Open/XML/CommandWeakPtr.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Conductor/xpm/Nav_Bitmaps/x_left.xpm"
@@ -557,7 +557,7 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-   VE_XML::CommandPtr navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
+   VE_XML::CommandWeakPtr navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
    if ( navPreferenceData->GetCommandName() == "NULL" )
    {
       return;
@@ -576,7 +576,7 @@ void NavigationPane::UpdateNavigationData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
 {
-   VE_XML::CommandPtr navPreferenceData = new VE_XML::Command();
+   VE_XML::CommandWeakPtr navPreferenceData = new VE_XML::Command();
    navPreferenceData->SetCommandName( std::string("Navigation_Data") );
    
    //////////////////////////////////////////////////////////////////

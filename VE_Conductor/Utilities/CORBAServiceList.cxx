@@ -33,7 +33,7 @@
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
+//#include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 
 #include "VE_Conductor/Utilities/OrbThread.h"
@@ -457,7 +457,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
    return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::CommandPtr veCommand )
+bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::CommandWeakPtr veCommand )
 {
     //Calling function is responsible for the command memory
     if( !IsConnectedToXplorer() )
@@ -479,14 +479,14 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::CommandPtr veCommand 
     if ( !CORBA::is_nil( vjobs.in() ) && !xmlDocument.empty() )
     {
         try
-    {
-        // CORBA releases the allocated memory so we do not have to
-        vjobs->SetCommandString( xmlDocument.c_str() );
-    }
+        {
+            // CORBA releases the allocated memory so we do not have to
+            vjobs->SetCommandString( xmlDocument.c_str() );
+        }
         catch ( ... )
-    {
+        {
             return false;
-    }      
+        }      
     }
     return true;
 }

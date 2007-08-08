@@ -1949,10 +1949,10 @@ std::string Network::Save( std::string fileName )
    userInfo->SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
    VE_XML::StateInfoPtr colorState = new VE_XML::StateInfo();
    ///Load the current preferences from the data buffer
-   std::map< std::string, VE_XML::CommandPtr > tempMap = 
+   std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
        UserPreferencesDataBuffer::instance()->GetCommandMap();
-   std::map< std::string, VE_XML::CommandPtr >::iterator prefIter;
-   for( prefIter = tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
+   for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator prefIter = 
+        tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
    {
       colorState->AddState( prefIter->second );
    }
@@ -2246,14 +2246,14 @@ void Network::CreateNetwork( std::string xmlNetwork )
 
         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
         dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-        VE_XML::CommandPtr veCommand = new VE_XML::Command();
+        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
         UserPreferencesDataBuffer::instance()->
             SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), veCommand );
     }
     // Create the command and data value pairs
-    VE_XML::CommandPtr colorCommand = UserPreferencesDataBuffer::instance()->
+    VE_XML::CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
     VE_Conductor::CORBAServiceList::instance()->
