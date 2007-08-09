@@ -132,10 +132,11 @@ m_activeTechnique( "Default" )
 DCS::~DCS()
 {
     //Delete techniques in map
-    std::map< std::string, VE_SceneGraph::Technique* >::iterator itr;
-    for( itr = m_techniques.begin(); itr != m_techniques.end(); )
+    for( std::map< std::string, VE_SceneGraph::Technique* >::iterator 
+        itr = m_techniques.begin(); itr != m_techniques.end(); )
     {
-        m_techniques.erase( itr++ );
+        VE_SceneGraph::Technique* tempTech = *iter;
+        delete tempTech;
     }
 
     m_techniques.clear();

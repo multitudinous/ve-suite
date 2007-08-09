@@ -1948,7 +1948,7 @@ std::string Network::Save( std::string fileName )
         VE_XML::UserPtr userInfo = new VE_XML::User();
         userInfo->SetUserId( "User" );
         userInfo->SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
-        VE_XML::StateInfoPtr colorState = new VE_XML::StateInfo();
+        VE_XML::StateInfoWeakPtr colorState = new VE_XML::StateInfo();
         ///Load the current preferences from the data buffer
         std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
             UserPreferencesDataBuffer::instance()->GetCommandMap();
