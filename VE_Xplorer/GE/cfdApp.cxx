@@ -762,16 +762,8 @@ void cfdApp::draw()
     unsigned x_size = unsigned( vp_sx*float( w_width) );
     unsigned y_size = unsigned( vp_sy*float( w_height) );
 
-    //Should these commented out
-    //sv->setCalcNearFar(false);
-    //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
     sv->setViewport(ll_x, ll_y, x_size, y_size);
-    //This causes problems in multi threaded rendering environments
-    //sv->getRenderStage()->setClearMask(GL_NONE);
 
-    //Get the view matrix and the frustrum form the draw manager
-    //vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
-    //vprASSERT(drawMan != NULL);
 #if __VJ_version >= 2003000
     vrj::opengl::UserData* userData = gl_manager->currentUserData();
 #else
