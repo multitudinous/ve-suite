@@ -116,7 +116,6 @@ captureNextFrameForWeb( false )
    filein_name.erase();// = 0;
    isCluster = false;
 #ifdef _OSG
-   //osg::Referenced::instance()->setThreadSafeRefUnref(true);
    osg::Referenced::setThreadSafeReferenceCounting(true);
    osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
    _frameStamp = new osg::FrameStamp;
@@ -817,7 +816,7 @@ void cfdApp::draw()
     //profile the cull call
     {
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->cull",20);
-        vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+        //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         sv->cull();        
     }
     //profile the draw call
@@ -860,12 +859,17 @@ void cfdApp::update( void )
 
     // Set up the time and frame number so time dependant things (animations, particle system)
     // function correctly
-    mUpdateVisitor->setTraversalNumber( _frameNumber );//getFrameNumber() ); // I'm not sure if this is nessisary
+    mUpdateVisitor->setTraversalNumber( _frameNumber );
     //mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
 
     // update the scene by traversing it with the the update visitor which will
     // call all node update callbacks and animations. This is equivalent to calling
     // SceneView::update
     getScene()->accept(*mUpdateVisitor);
+    // now force a recompute of the bounding volume while we are still in
+    // the read/write app phase, this should prevent the need to recompute
+    // the bounding volumes from within the cull traversal which may be
+    // multi-threaded.
+    getScene()->getBound();
 }
 #endif //_OSG

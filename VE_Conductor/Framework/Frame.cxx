@@ -883,81 +883,96 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 {
-   wxFileDialog dialog
-                  (
-                     this,
-                     _T("Open File dialog"),
-                     _T(""),
-                     fname,
-                     _T("Network files (*.ves)|*.ves"),
-                     wxOPEN|wxFILE_MUST_EXIST
-                  );
-   
-   if (dialog.ShowModal() == wxID_OK)
-   {
-      wxFileName vesFileName( dialog.GetPath() );
-      bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
-      if ( !success )
-      {
-         wxMessageBox( _("Can't open a VES file on another drive."), 
-                       _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-         return;
-      }
-      
-      SetTitle(vesFileName.GetFullName());
-      
-      directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
-      //change conductor working dir
-      ::wxSetWorkingDirectory( directory );
-      directory.Replace( _("\\"), _("/"), true );
-      std::string tempDir = ConvertUnicode( directory.c_str() );
-		
-      SetRecentFile( wxFileName(dialog.GetPath()) );
+    wxFileDialog dialog
+              (
+                 this,
+                 _T("Open File dialog"),
+                 _T(""),
+                 fname,
+                 _T("Network files (*.ves)|*.ves"),
+                 wxOPEN|wxFILE_MUST_EXIST
+              );
 
-      if ( tempDir.empty() )
-      {
-         tempDir = "./";
-      }
-      //Send Command to change xplorer working dir
-      // Create the command and data value pairs
-      VE_XML::DataValuePair* dataValuePair = 
-                        new VE_XML::DataValuePair(  std::string("STRING") );
-      dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-      VE_XML::Command* veCommand = new VE_XML::Command();
-      veCommand->SetCommandName( std::string("Change Working Directory") );
-      veCommand->AddDataValuePair( dataValuePair );
-      serviceList->SendCommandStringToXplorer( veCommand );
-      delete veCommand;
-      
-      //Clear the viewpoints data
-      //Since the data is "managed" by Xplorer we need to notify 
-      //Xplorer when we load a new ves file to clear viewpoints since
-      //They don't go with the new data.
+    if( dialog.ShowModal() != wxID_OK )
+    {
+        return;
+    }
 
-      //Dummy data that isn't used but I don't know if a command will work
-      //w/o a DVP 
-      VE_XML::DataValuePair* dvp = 
-                        new VE_XML::DataValuePair(  std::string("STRING") );
-      dvp->SetData( "Clear Quat Data", tempDir );
-      VE_XML::Command* vec = new VE_XML::Command();
-      vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
-      vec->AddDataValuePair( dvp );
-      serviceList->SendCommandStringToXplorer( vec );
-      delete vec;
+    wxFileName vesFileName( dialog.GetPath() );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    if( !success )
+    {
+        wxMessageBox( _("Can't open a VES file on another drive."), 
+                      _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+        return;
+    }
 
-      //Reloading plugins
-      av_modules->ResetPluginTree();
+    SetTitle(vesFileName.GetFullName());
 
-      //Now laod the xml data now that we are in the correct directory
-      fname=dialog.GetFilename();
-      network->Load( ConvertUnicode( fname.c_str() ), true );
-      wxCommandEvent event;
-      SubmitToServer( event );
-      if( recordScenes )
-      {
-          recordScenes->_buildPage();
-      }
-   }
+    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+    //change conductor working dir
+    ::wxSetWorkingDirectory( directory );
+    directory.Replace( _("\\"), _("/"), true );
+    std::string tempDir = ConvertUnicode( directory.c_str() );
+
+    SetRecentFile( wxFileName(dialog.GetPath()) );
+
+    if( tempDir.empty() )
+    {
+        tempDir = "./";
+    }
+    //Send Command to change xplorer working dir
+    // Create the command and data value pairs
+    VE_XML::DataValuePair* dataValuePair = 
+    new VE_XML::DataValuePair(  std::string("STRING") );
+    dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
+    VE_XML::Command* veCommand = new VE_XML::Command();
+    veCommand->SetCommandName( std::string("Change Working Directory") );
+    veCommand->AddDataValuePair( dataValuePair );
+    serviceList->SendCommandStringToXplorer( veCommand );
+    delete veCommand;
+
+    //Clear the viewpoints data
+    //Since the data is "managed" by Xplorer we need to notify 
+    //Xplorer when we load a new ves file to clear viewpoints since
+    //They don't go with the new data.
+
+    //Dummy data that isn't used but I don't know if a command will work
+    //w/o a DVP 
+    VE_XML::DataValuePair* dvp = 
+    new VE_XML::DataValuePair(  std::string("STRING") );
+    dvp->SetData( "Clear Quat Data", tempDir );
+    VE_XML::Command* vec = new VE_XML::Command();
+    vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+    vec->AddDataValuePair( dvp );
+    serviceList->SendCommandStringToXplorer( vec );
+    delete vec;
+
+    //Reloading plugins
+    av_modules->ResetPluginTree();
+
+    //Now laod the xml data now that we are in the correct directory
+    fname=dialog.GetFilename();
+    network->Load( ConvertUnicode( fname.c_str() ), true );
+    wxCommandEvent event;
+    SubmitToServer( event );
+    if( recordScenes )
+    {
+        recordScenes->_buildPage();
+    }
+
+    ///This code will be moved in the future. It is Aspen specific code.
+    VE_XML::CommandWeakPtr aspenBKPFile = 
+        UserPreferencesDataBuffer::instance()->
+        GetCommand( "Aspen_Plus_Preferences" );
+    if( aspenBKPFile->GetCommandName() != "NULL" )
+    {
+        VE_XML::DataValuePairPtr bkpPtr = 
+            aspenBKPFile->GetDataValuePair( "BKPFileName" );
+        std::string bkpFilename;
+        bkpPtr->GetData( bkpFilename );
+        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile(wxFileName vesFileName)
@@ -1161,9 +1176,9 @@ void AppFrame::OpenSimulation( wxString simName )
     bkpFileName.SetName( simName); 
 
     VE_XML::Command returnState;
-    returnState.SetCommandName("getNetwork");
+    returnState.SetCommandName("openSimulation");
     VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
-    data->SetData("NetworkQuery", "getNetwork" );
+    data->SetData("AspenPlus", "openSimulation" );
     data = returnState.GetDataValuePair(-1);
     data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
 
