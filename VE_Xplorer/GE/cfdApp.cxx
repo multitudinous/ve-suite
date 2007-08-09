@@ -140,7 +140,10 @@ captureNextFrameForWeb( false )
    light_source_0->setLocalStateSetModes( osg::StateAttribute::ON );
 
    light_model_0->setAmbientIntensity( osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-
+   // get correct specular lighting across pipes
+   // see http://www.ds.arch.tue.nl/General/Staff/Joran/osg/osg_specular_problem.htm   
+   light_model_0->setLocalViewer(true);
+   
    _tbvHandler = 0;
    _pbuffer = 0;
    _frameNumber = 0;
@@ -225,6 +228,7 @@ void cfdApp::contextInit()
 
     // --- Create new context specific scene viewer -- //
     osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
+    new_sv->setThreadSafeRefUnref( true );
 
     // Configure the new viewer
     this->configSceneView( new_sv.get() );             
@@ -304,14 +308,6 @@ void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 void cfdApp::initScene( void )
 {
     vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;   
-# ifdef _OPENMP
-   std::cout << "\n\n\n";
-   std::cout << "|===================================================================|" << std::endl;
-   std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
-   std::cout << "|===================================================================|" << std::endl;
-   std::cout << "|                                                                   |" << std::endl;
-# endif // _OPENMP
-
    //Initialize all the XML objects
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_XML::VE_Shader::ShaderCreator());
@@ -324,7 +320,6 @@ void cfdApp::initScene( void )
    // define the rootNode, worldDCS, and lighting
    //VE_SceneGraph::SceneManager::instance()->Initialize( this->filein_name );
    VE_SceneGraph::SceneManager::instance()->InitScene();
-
 
    this->getScene()->addChild( light_source_0.get() );
 
@@ -499,7 +494,9 @@ void cfdApp::contextPostDraw()
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::contextPostDraw", 20 );
    //if(_tbvHandler)
-     _tbvHandler->PingPongTextures();
+    _tbvHandler->PingPongTextures();
+    //here for testing...
+    glFinish();
 }
 #endif//_OSG
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -872,7 +869,7 @@ void cfdApp::update( void )
     // Set up the time and frame number so time dependant things (animations, particle system)
     // function correctly
     mUpdateVisitor->setTraversalNumber( _frameNumber );//getFrameNumber() ); // I'm not sure if this is nessisary
-    mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
+    //mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
 
     // update the scene by traversing it with the the update visitor which will
     // call all node update callbacks and animations. This is equivalent to calling

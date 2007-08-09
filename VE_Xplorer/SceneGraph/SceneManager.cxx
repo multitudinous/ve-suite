@@ -126,6 +126,7 @@ void SceneManager::InitScene( void )
 
    this->rootNode = new VE_SceneGraph::Group();
    this->rootNode->SetName( "Root Node" );
+   rootNode->setThreadSafeRefUnref( true );
 
    this->worldDCS = new VE_SceneGraph::DCS();
    this->worldDCS->SetName( "World DCS" );
