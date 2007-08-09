@@ -131,7 +131,14 @@ m_activeTechnique( "Default" )
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
 {
-    ;
+    //Delete techniques in map
+    std::map< std::string, VE_SceneGraph::Technique* >::iterator itr;
+    for( itr = m_techniques.begin(); itr != m_techniques.end(); )
+    {
+        m_techniques.erase( itr++ );
+    }
+
+    m_techniques.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 double* DCS::GetVETranslationArray( void )
@@ -524,8 +531,6 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    
-
     if( m_activeTechnique == "Default" )
     {
         InheritedTraverse( nv );
