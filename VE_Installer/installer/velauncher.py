@@ -1075,7 +1075,6 @@ if not CommandLine(opts, args, previousState).AutoLaunched():
     frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
 app.MainLoop()
 ##Command Line Check, then Window Boot (if necessary)
-del config
 del app
 """
 app = wx.PySimpleApp()
