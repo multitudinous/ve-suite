@@ -132,8 +132,8 @@ UIPluginBase::UIPluginBase() :
     name = wxString( "DefaultPlugin", wxConvUTF8 );
 
     wxImage my_img( square_xpm );
-    icon_w = static_cast< int >( my_img.GetWidth()*0.30f );
-    icon_h = static_cast< int >( my_img.GetHeight()*0.30f );
+    icon_w = static_cast< int >( my_img.GetWidth());//*0.30f );
+    icon_h = static_cast< int >( my_img.GetHeight());//*0.30f );
     my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
 
     n_pts = 4;

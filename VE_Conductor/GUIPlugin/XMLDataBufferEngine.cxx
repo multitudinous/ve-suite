@@ -221,8 +221,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::map< std::string, VE_XML::CommandWeakPtr > tempMap;
         for ( size_t i = 0; i < tempStates.size(); ++i )
         {
-            VE_XML::CommandWeakPtr tempCommand = tempStates.at( i );
-            tempMap[ tempCommand->GetCommandName() ] = tempStates.at( i ); 
+            //VE_XML::CommandWeakPtr tempCommand = tempStates.at( i );
+            tempMap[ tempStates.at( i )->GetCommandName() ] = tempStates.at( i ); 
             //std::cout << " here " << tempCommand->GetCommandName() << std::endl;
         }
         UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );

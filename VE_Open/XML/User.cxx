@@ -47,7 +47,6 @@ User::User()
 ////////////////////////////////////////////////////////////////////////////////
 User::~User()
 {
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 User::User( const User& input )
@@ -88,7 +87,7 @@ void User::SetControlStatus(VEControlStatus cs)
    _controlStatus = cs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void User::SetStateInfo( VE_XML::StateInfoPtr userState )
+void User::SetStateInfo( VE_XML::StateInfoWeakPtr userState )
 {
    m_stateInfo = userState;
 }
@@ -103,7 +102,7 @@ User::VEControlStatus User::GetControlStatus()
    return _controlStatus;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::StateInfoPtr User::GetUserStateInfo()
+VE_XML::StateInfoWeakPtr User::GetUserStateInfo()
 {
    return m_stateInfo;
 }

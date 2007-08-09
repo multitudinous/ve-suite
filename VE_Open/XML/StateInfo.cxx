@@ -33,6 +33,8 @@
 
 #include "VE_Open/XML/StateInfo.h"
 #include "VE_Open/XML/Command.h"
+#include <algorithm>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 
@@ -134,7 +136,9 @@ VE_XML::CommandWeakPtr StateInfo::GetState( size_t index)
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< VE_XML::CommandWeakPtr > StateInfo::GetStateVector( void )
 {
-   return _stateInfo;
+	std::vector< VE_XML::CommandWeakPtr > tempVec(_stateInfo.size());
+	std::copy( _stateInfo.begin(), _stateInfo.end(), tempVec.begin() );
+	return tempVec;
 }
 ///////////////////////////////////////////////////// 
 StateInfo::StateInfo( const StateInfo& input)
