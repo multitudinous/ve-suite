@@ -37,7 +37,6 @@
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/CADEntity.h"
 #include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
-#include "VE_Xplorer/SceneGraph/Technique.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h"
 
@@ -222,7 +221,6 @@ void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID,
                                              <<foundAttribute->first
                                              <<std::endl<< vprDEBUG_FLUSH;
                    GetAssembly(nodeID)->setStateSet(foundAttribute->second.get());
-                   GetAssembly(nodeID)->GetActiveTechnique()->DirtyPasses();
                    return;
                 }
                 else if(nodeType == "Part")
@@ -231,7 +229,6 @@ void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID,
                                              <<foundAttribute->first
                                              <<std::endl<< vprDEBUG_FLUSH;
                    GetPart(nodeID)->GetDCS()->setStateSet(foundAttribute->second.get());
-                   GetPart(nodeID)->GetDCS()->GetActiveTechnique()->DirtyPasses();
                    vprDEBUG(vesDBG,1) <<"|\tvalid: "
                                              <<foundAttribute->first<<std::endl
                                              << vprDEBUG_FLUSH;
@@ -245,8 +242,6 @@ void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID,
                                              << vprDEBUG_FLUSH;
                    GetClone(nodeID)->
                        GetClonedGraph()->setStateSet(foundAttribute->second.get());
-                   GetClone(nodeID)->
-                       GetClonedGraph()->GetActiveTechnique()->DirtyPasses();
                    return;
                 }
             }

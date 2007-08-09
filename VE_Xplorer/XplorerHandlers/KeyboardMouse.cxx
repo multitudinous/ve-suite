@@ -739,7 +739,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     if( selectedDCS.valid() )
     {
-        selectedDCS->EnableMultiPass( false );
+        selectedDCS->SetTechnique( "Default" );
     }
 
     if( listOfHits.empty() )
@@ -825,6 +825,6 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     selectedDCS = activeDCS;
 
-    selectedDCS->EnableMultiPass( true );
+    selectedDCS->SetTechnique( "Select" );
 }
 ////////////////////////////////////////////////////////////////////////////////

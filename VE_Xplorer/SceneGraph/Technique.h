@@ -44,7 +44,7 @@
 
 // --- C/C++ Libraries --- //
 #include <vector>
-//#include <string>
+#include <string>
 
 namespace VE_SceneGraph
 {
@@ -67,7 +67,7 @@ public:
     virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
 
 protected:
-    virtual void DefinePasses( VE_SceneGraph::DCS* dcs ) = 0;
+    virtual void DefinePasses() = 0;
 
     void AddPass( osg::StateSet* ss = 0 );
 

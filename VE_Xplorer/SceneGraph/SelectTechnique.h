@@ -49,8 +49,9 @@ public:
     ~SelectTechnique();
   
 protected:
-    virtual void DefinePasses( VE_SceneGraph::DCS* dcs );
+    virtual void DefinePasses();
 
+    VE_SceneGraph::DCS* m_dcs;
 private:
 
 };

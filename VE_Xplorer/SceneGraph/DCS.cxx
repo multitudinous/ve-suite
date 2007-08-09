@@ -66,8 +66,7 @@ using namespace VE_SceneGraph;
 DCS::DCS( void )
 :
 m_btBody( 0 ),
-m_multipass( false ),
-m_activeTechnique( 0 )
+m_activeTechnique( "Default" )
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; i++ )
@@ -98,15 +97,13 @@ m_activeTechnique( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    selectTech = new VE_SceneGraph::SelectTechnique( this );
-    AddTechnique( selectTech );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
 :
 m_btBody( 0 ),
-m_multipass( false ),
-m_activeTechnique( 0 )
+m_activeTechnique( "Default" )
 {
     this->SetTranslationArray( trans );
     this->SetRotationArray( rot );
@@ -116,23 +113,20 @@ m_activeTechnique( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    selectTech = new VE_SceneGraph::SelectTechnique( this );
-    AddTechnique( selectTech );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
 :
 osg::PositionAttitudeTransform( dcs, copyop ),
 m_btBody( 0 ),
-m_multipass( false ),
-m_activeTechnique( 0 )
+m_activeTechnique( "Default" )
 {
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    selectTech = new VE_SceneGraph::SelectTechnique( this );
-    AddTechnique( selectTech );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
@@ -528,48 +522,13 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
-// -------------------------------------------------- //
-// --- This stuff is used for multipass rendering --- //
-// -------------------------------------------------- //
-////////////////////////////////////////////////////////////////////////////////
-void DCS::EnableMultiPass( bool state )
-{
-    m_multipass = state;
-}
-////////////////////////////////////////////////////////////////////////////////
-void DCS::SetTechnique( int i )
-{
-    m_activeTechnique = i;
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Technique* DCS::GetTechnique( int i )
-{
-    return m_techniques[ i ];
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Technique* DCS::GetActiveTechnique()
-{
-    return m_techniques[ m_activeTechnique ];
-}
-////////////////////////////////////////////////////////////////////////////////
-void DCS::AddTechnique( VE_SceneGraph::Technique* tech )
-{
-    m_techniques.push_back( tech );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DCS::InheritedTraverse( osg::NodeVisitor& nv )
-{
-    typedef osg::PositionAttitudeTransform inherited;
-    inherited::traverse( nv );
-}
-////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    //If multipass is not enabled, then go for default traversal
-    if( !m_multipass )
+    
+
+    if( m_activeTechnique == "Default" )
     {
         InheritedTraverse( nv );
-        return;
     }
     else
     {
@@ -579,13 +538,32 @@ void DCS::traverse( osg::NodeVisitor& nv )
         {
             tech->Traverse( nv, this );
         }
-        else
-        {
-            if( nv.getTraversalMode() == osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
-            {
-                InheritedTraverse( nv );
-            }
-        }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::InheritedTraverse( osg::NodeVisitor& nv )
+{
+    typedef osg::PositionAttitudeTransform inherited;
+    inherited::traverse( nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::AddTechnique(  std::string name, VE_SceneGraph::Technique* technique  )
+{
+    m_techniques[ std::string( name ) ] = technique;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DCS::SetTechnique( std::string name )
+{
+    m_activeTechnique = name;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Technique* DCS::GetTechnique( std::string name )
+{
+    return m_techniques[ name ];
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Technique* DCS::GetActiveTechnique()
+{
+    return m_techniques[ m_activeTechnique ];
 }
 ////////////////////////////////////////////////////////////////////////////////

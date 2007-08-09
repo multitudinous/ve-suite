@@ -51,7 +51,6 @@ namespace VE_SceneGraph
 {
     class TransferPhysicsDataCallback;
     class Technique;
-    class SelectTechnique;
 }
 
 // --- OSG Includes --- //
@@ -78,6 +77,7 @@ class btRigidBody;
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
+#include <map>
 
 template< typename DATA_TYPE_OUT, typename DATA_TYPE_IN, unsigned ROWS, unsigned COLS >
 gmtl::Matrix< DATA_TYPE_OUT, ROWS, COLS >
@@ -245,24 +245,18 @@ public:
 
     void InheritedTraverse( osg::NodeVisitor& nv );
 
-    void EnableMultiPass( bool state );
+    void AddTechnique( std::string name, VE_SceneGraph::Technique* technique );
 
-    void SetTechnique( int i );
+    void SetTechnique( std::string name );
 
-    VE_SceneGraph::Technique* GetTechnique( int i );
+    VE_SceneGraph::Technique* GetTechnique( std::string name );
 
     VE_SceneGraph::Technique* GetActiveTechnique();
 
-    void AddTechnique( VE_SceneGraph::Technique* technique );
-
 private:
-    bool m_multipass;
+    std::string m_activeTechnique;
 
-    int m_activeTechnique;
-
-    std::vector< VE_SceneGraph::Technique* > m_techniques;
-
-    VE_SceneGraph::SelectTechnique* selectTech;
+    std::map< std::string, VE_SceneGraph::Technique* > m_techniques;
 };
 }
 

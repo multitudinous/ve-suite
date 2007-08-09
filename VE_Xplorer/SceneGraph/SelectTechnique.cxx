@@ -42,8 +42,10 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( VE_SceneGraph::DCS* dcs )
+:
+m_dcs( dcs )
 {
-    DefinePasses( dcs );
+    DefinePasses();
 }
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::~SelectTechnique()
@@ -51,11 +53,12 @@ SelectTechnique::~SelectTechnique()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SelectTechnique::DefinePasses( VE_SceneGraph::DCS* dcs )
+void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-        osg::ref_ptr< osg::StateSet > stateset = dcs->getOrCreateStateSet();
+        osg::ref_ptr< osg::StateSet > stateset = m_dcs->getStateSet();
+
         AddPass( stateset.get() );
     }
 
