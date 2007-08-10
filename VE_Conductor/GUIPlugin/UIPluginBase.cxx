@@ -66,6 +66,7 @@
 #include <wx/msgdlg.h>
 #include <wx/image.h>
 #include <wx/wx.h>
+
 #include <math.h>
 #include <wx/msgdlg.h>
 
@@ -134,14 +135,15 @@ UIPluginBase::UIPluginBase() :
     wxImage my_img( square_xpm );
     icon_w = static_cast< int >( my_img.GetWidth());//*0.30f );
     icon_h = static_cast< int >( my_img.GetHeight());//*0.30f );
-    my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+    //my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+	my_icon=new wxBitmap(my_img);
 
     n_pts = 4;
     poly = new wxPoint[n_pts];
     poly[0]=wxPoint(0,0);
-    poly[1]=wxPoint(icon_w,0);
-    poly[2]=wxPoint(icon_w,icon_h);
-    poly[3]=wxPoint(0,icon_h);
+    poly[1]=wxPoint(icon_w-1,0);
+    poly[2]=wxPoint(icon_w-1,icon_h-1);
+    poly[3]=wxPoint(0,icon_h-1);
 
     veModel = new Model();
     defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
@@ -1001,9 +1003,9 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
       n_pts = 4;
       
       poly[0]=wxPoint(0,0);
-      poly[1]=wxPoint(icon_w,0);
-      poly[2]=wxPoint(icon_w,icon_h);
-      poly[3]=wxPoint(0,icon_h);
+      poly[1]=wxPoint(icon_w-1,0);
+      poly[2]=wxPoint(icon_w-1,icon_h-1);
+      poly[3]=wxPoint(0,icon_h-1);
       return;
    }
 	//wxImage* my_img = new wxImage();
@@ -1017,6 +1019,7 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
    }
    iconFilename = path;
 	wxImage image(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
+	image.SetMaskColour(255, 255, 255);
 	
 	if(mirror == 1)
 		image = image.Mirror(true);
@@ -1030,20 +1033,6 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 
 	image = image.Rotate((rotation*PI)/180, wxPoint(0,0));
 
-	//Implement Scale - scale the images to where the longest length is 40
-	//while the smallest length is scaled accordingly
-	
-	/*if(image.GetWidth() > image.GetHeight())
-	{
-		icon_w = 40;
-		icon_h = 40 * image.GetHeight() / image.GetWidth();
-	}
-	else
-	{
-		icon_h = 40;
-		icon_w = 40 * image.GetWidth() / image.GetHeight();
-	}
-	*/
 	icon_w = image.GetWidth();
 	icon_h = image.GetHeight();
 
@@ -1051,19 +1040,17 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 	icon_w = static_cast< int >( icon_w * scale );
 	icon_h = static_cast< int >( icon_h * scale );
 	
-	//int icon_h = 40;
-	//int icon_w = 40;
-
 	delete my_icon;
-	my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
-	
+	//my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
+	my_icon=new wxBitmap(image);
+
 	
 	n_pts = 4;
 
 	poly[0]=wxPoint(0,0);
-	poly[1]=wxPoint(icon_w,0);
-	poly[2]=wxPoint(icon_w,icon_h);
-	poly[3]=wxPoint(0,icon_h);
+	poly[1]=wxPoint(icon_w-1,0);
+	poly[2]=wxPoint(icon_w-1,icon_h-1);
+	poly[3]=wxPoint(0,icon_h-1);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDClick( wxMouseEvent &event)

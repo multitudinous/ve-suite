@@ -133,9 +133,9 @@ DCS::~DCS()
 {
     //Delete techniques in map
     for( std::map< std::string, VE_SceneGraph::Technique* >::iterator 
-        itr = m_techniques.begin(); itr != m_techniques.end(); )
+        iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
     {
-        VE_SceneGraph::Technique* tempTech = *iter;
+		VE_SceneGraph::Technique* tempTech = iter->second;
         delete tempTech;
     }
 

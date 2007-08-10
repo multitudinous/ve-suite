@@ -55,6 +55,8 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/User.h"
 #include "VE_Open/XML/StateInfo.h"
+#include "VE_Open/XML/StateInfoWeakPtr.h"
+#include "VE_Open/XML/StateInfoPtr.h"
 
 #include "VE_Open/XML/CAD/CADAssembly.h"
 
@@ -1943,7 +1945,7 @@ std::string Network::Save( std::string fileName )
             iter->second.GetPlugin()->GetVEModel(), "veModel" ) );
     }
 
-    {
+    //{
         //Write out the veUser info for the local user
         VE_XML::UserPtr userInfo = new VE_XML::User();
         userInfo->SetUserId( "User" );
@@ -1958,14 +1960,14 @@ std::string Network::Save( std::string fileName )
             colorState->AddState( prefIter->second );
         }
         userInfo->SetStateInfo( colorState );
-        
+     //}       
         nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
                                                                        &(*userInfo), "User" ) );
         
         VE_XML::XMLReaderWriter netowrkWriter;
         netowrkWriter.UseStandaloneDOMDocumentManager();
         netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-    }
+
 
     return fileName;
 }

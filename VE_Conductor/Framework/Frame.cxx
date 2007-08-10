@@ -962,7 +962,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
-    VE_XML::CommandWeakPtr aspenBKPFile = 
+    /*VE_XML::CommandWeakPtr aspenBKPFile = 
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
@@ -972,7 +972,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
         OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8) );
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile(wxFileName vesFileName)
