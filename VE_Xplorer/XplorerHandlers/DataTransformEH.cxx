@@ -84,29 +84,32 @@ DataTransformEventHandler& DataTransformEventHandler::operator=(const DataTransf
 ///////////////////////////////////////////////////////////////////////
 void DataTransformEventHandler::Execute(VE_XML::XMLObject* xmlObject)
 {
-   try{
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* datasetName = command->GetDataValuePair("Parameter Block ID");     
-      VE_XML::DataValuePair* newTransform = command->GetDataValuePair("Transform");     
-		VE_SceneGraph::DCS* transform = 0;
-      transform = _activeModel->GetActiveDataSet()->GetDCS();
+    try
+    {
+        if( _activeModel )
+        {
+            VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
+            VE_XML::DataValuePair* datasetName = command->GetDataValuePair("Parameter Block ID");     
+            VE_XML::DataValuePair* newTransform = command->GetDataValuePair("Transform");     
+		    VE_SceneGraph::DCS* transform = 0;
+            transform = _activeModel->GetActiveDataSet()->GetDCS();
       
-      if( transform )
-      {
-         VE_XML::Transform* dataTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
-         transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-         transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-         transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-		 VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-         VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-         VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-      }
-      
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!!Invalid command passed to CADTransformEH!!"<<std::endl;
-   }
+            if( transform )
+            {
+                VE_XML::Transform* dataTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
+                transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+                transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+                transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
+		        VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+                VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+                VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
+            }
+        }
+    }
+    catch(...)
+    {
+        std::cout<<"Error!!!Invalid command passed to DataTransformEH!!"<<std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataTransformEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
