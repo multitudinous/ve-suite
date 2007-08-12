@@ -115,9 +115,10 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
       VE_XML::DataValuePair* veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
       VE_XML::VE_Model::Model* veModel = dynamic_cast< VE_XML::VE_Model::Model* >( veModelDVP->GetDataXMLObject() );
       size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
-      for ( size_t i = 0; i < numInfoPackets; ++i )
+      for ( size_t i = (numInfoPackets-1); i < numInfoPackets; ++i )
       {
          VE_XML::ParameterBlock* tempInfoPacket = veModel->GetInformationPacket( i );
+
          if ( tempInfoPacket->GetProperty( "VTK_DATA_FILE" ) )
          {
             // Assume only one model for now
@@ -126,6 +127,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
             {
                return;
             }
+
             //check to see if dataset is already on this particular model
             for ( size_t j = 0; j < _activeModel->GetNumberOfCfdDataSets(); ++j )
             {
@@ -135,6 +137,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                   continue;
                }
             }
+
             //If not already there lets create a new dataset
             _activeModel->CreateCfdDataSet();
 
@@ -241,7 +244,6 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
 
    vprDEBUG(vesDBG,1) << "Loading surface files from " 
       << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
-
 
    boost::filesystem::path dir_path( precomputedSurfaceDir );
 
