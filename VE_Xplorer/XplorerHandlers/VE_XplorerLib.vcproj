@@ -46,7 +46,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(BULLET_HOME)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
-				PreprocessorDefinitions="NDEBUG;_OSG;VE_XPLORER_LIBRARY;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;_WINDOWS;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_OPT;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
+				PreprocessorDefinitions="NDEBUG;_OSG;VE_XPLORER_LIBRARY;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;_WINDOWS;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_OPT;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;_WIN32_WINNT=0x400"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
