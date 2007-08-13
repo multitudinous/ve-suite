@@ -83,23 +83,23 @@ void CADMoveNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* movingNodeType = 
+      VE_XML::DataValuePairWeakPtr movingNodeType = 
           command->GetDataValuePair("Move Node Type");
    
       std::string nodeType;
       movingNodeType->GetData( nodeType );
 
-      VE_XML::DataValuePair* movingNode = 
+      VE_XML::DataValuePairWeakPtr movingNode = 
           command->GetDataValuePair("Move Node ID");
       std::string movingNodeID;
       movingNode->GetData( movingNodeID );
 
-      VE_XML::DataValuePair* oldParent = 
+      VE_XML::DataValuePairWeakPtr oldParent = 
           command->GetDataValuePair("Old Parent ID");
       std::string oldParentID;
       oldParent->GetData( oldParentID );
 
-      VE_XML::DataValuePair* newParent = 
+      VE_XML::DataValuePairWeakPtr newParent = 
           command->GetDataValuePair("New Parent ID");
       std::string newParentID;
       newParent->GetData( newParentID );

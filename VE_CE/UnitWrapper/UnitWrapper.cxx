@@ -144,21 +144,21 @@ char * UnitWrapper::GetStatusMessage (
    VE_XML::Command returnState;
 
    returnState.SetCommandName("statusmessage");
-   VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
    data->SetDataName("RETURN_STATE");
    data->SetDataType("UNSIGNED INT");
    data->SetDataValue(return_state);
+   returnState.AddDataValuePair( data );
 
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< VE_XML::XMLObject*, 
+        std::string >( &returnState, "vecommand" ) );
 
-   nodes.push_back( 
-         std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
-            );
    VE_XML::XMLReaderWriter commandWriter;
-   std::string status="returnString";
+   std::string status = "returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   return CORBA::string_dup(status.c_str());
+   return CORBA::string_dup( status.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 char * UnitWrapper::GetUserData (

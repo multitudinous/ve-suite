@@ -72,7 +72,7 @@ void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode(VE_XML::XMLObject
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* isovalue = command->GetDataValuePair("Number of Slice Planes");      
+      VE_XML::DataValuePairWeakPtr isovalue = command->GetDataValuePair("Number of Slice Planes");      
       unsigned int value;
       isovalue->GetData(value);
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes(value);

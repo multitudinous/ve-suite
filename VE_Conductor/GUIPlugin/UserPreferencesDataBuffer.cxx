@@ -66,6 +66,14 @@ VE_XML::CommandWeakPtr UserPreferencesDataBuffer::GetCommand(
     {
         return commandMap[ "NULL" ];
     }
+
+    ///check and make sure iter->second is valid first
+    if( !iter->second )
+    {
+        std::cerr << "Preference variable is NULL." << std::endl;
+        return commandMap[ "NULL" ];
+    }
+    
     return iter->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,9 +89,24 @@ std::map< std::string, VE_XML::CommandWeakPtr > UserPreferencesDataBuffer::GetCo
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     std::map< std::string, VE_XML::CommandWeakPtr > tempMap;
     for( std::map< std::string, VE_XML::CommandStrongPtr >::iterator 
-        iter = commandMap.begin(); iter != commandMap.end(); ++iter )
-    {
-        tempMap[ iter->first ] = iter->second;
+        iter = commandMap.begin(); iter != commandMap.end(); )
+    {        
+        if( iter->first == "NULL" )
+        {
+            ++iter;
+            continue;
+        }
+        
+        ///check and make sure iter->second is valid first
+        if( !iter->second )
+        {
+            commandMap.erase( iter++ );
+        }
+        else
+        {
+            tempMap[ iter->first ] = iter->second;
+            ++iter;
+        }
     }
     //std::copy( commandMap.begin(), commandMap.end(), tempMap.begin() );
     return tempMap;

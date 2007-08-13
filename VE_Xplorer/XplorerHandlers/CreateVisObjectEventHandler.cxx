@@ -701,26 +701,26 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    this->SetActiveVector( xmlObject );
    // Get the active object
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::DataValuePairWeakPtr scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
    VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
    
    std::string direction;
-   VE_XML::DataValuePair* directionDVP = objectCommand->GetDataValuePair( "Direction" );
+   VE_XML::DataValuePairWeakPtr directionDVP = objectCommand->GetDataValuePair( "Direction" );
    if ( directionDVP )
    {
       directionDVP->GetData( direction );
    }
    
    std::string planes;
-   VE_XML::DataValuePair* planesDVP = objectCommand->GetDataValuePair( "Number of Planes" );
+   VE_XML::DataValuePairWeakPtr planesDVP = objectCommand->GetDataValuePair( "Number of Planes" );
    if ( planesDVP )
    {
       planesDVP->GetData( planes );      
    }
    
    std::string advanced;
-   VE_XML::DataValuePair* advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
+   VE_XML::DataValuePairWeakPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
    if ( advancedDVP )
    {
       VE_XML::Command* advancedCommand = dynamic_cast< VE_XML::Command* >( advancedDVP->GetDataXMLObject() );
@@ -788,7 +788,7 @@ void CreateVisObjectEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 void CreateVisObjectEventHandler::SetActiveVector( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Vector" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Vector" );
    std::string activeVector;
    activeModelDVP->GetData( activeVector );
    
@@ -814,7 +814,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
 
    std::string activeScalarName;
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Scalar" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Scalar" );
    activeModelDVP->GetData( activeScalarName );   
    double scalarMin;
    activeModelDVP = command->GetDataValuePair( "Scalar Min" );
@@ -841,7 +841,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( VE_XML::XMLObject* xm
 void CreateVisObjectEventHandler::SetActiveDataSet( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Active Dataset" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Dataset" );
    std::string dataSetName;
    activeModelDVP->GetData( dataSetName );
 

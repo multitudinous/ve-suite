@@ -228,7 +228,7 @@ void cfdContourBase::UpdateCommand()
    cfdObjects::UpdateCommand();
 
    //Extract the specific commands from the overall command
-   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
    VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
 
    //Extract the plane position
@@ -243,7 +243,7 @@ void cfdContourBase::UpdateCommand()
       std::string preCalculatedFlag;
       activeModelDVP->GetData( preCalculatedFlag );
 
-      if ( preCalculatedFlag == "Use Nearest Precomputed Plane" )
+      if( preCalculatedFlag == "Use Nearest Precomputed Plane" )
       {
          SetPreCalcFlag( true );
       }

@@ -109,7 +109,7 @@ void WireframeEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model
 void WireframeEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
    
    unsigned int state = 0;
    activeModelDVP->GetData( state );

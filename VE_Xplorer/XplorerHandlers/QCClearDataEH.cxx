@@ -75,7 +75,7 @@ void QuatCamClearDataEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
       //This isn't used but I think we need to pass in something to the command
-      VE_XML::DataValuePair* velFile = command->GetDataValuePair("Clear Quat Data");      
+      VE_XML::DataValuePairWeakPtr velFile = command->GetDataValuePair("Clear Quat Data");      
       std::string clearCmdDummy;
       velFile->GetData(clearCmdDummy);
       VE_Xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();

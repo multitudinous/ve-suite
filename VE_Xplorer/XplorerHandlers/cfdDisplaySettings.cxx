@@ -69,7 +69,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    if ( commandType.compare( "Juggler_Display_Data" ) == 0)
    {
       // Get datavalue pair from current command
-      VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
+      VE_XML::DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
       double stereoToggle = commandData->GetDataValue();
       std::string newCommand = commandData->GetDataName();
 
@@ -116,7 +116,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
       std::vector< jccl::ConfigElementPtr > elements;
       oldCfg->getByType( "display_window", elements );
 
-      VE_XML::DataValuePair* desktopData = 
+      VE_XML::DataValuePairWeakPtr desktopData = 
                      veCommand->GetDataValuePair( "desktop_width" );
       double configXValue = desktopData->GetDataValue();
       desktopData = veCommand->GetDataValuePair( "desktop_height" );
@@ -261,7 +261,7 @@ std::map< std::string, double > cfdDisplaySettings::GetScreenCornerValues( void 
 void cfdDisplaySettings::ChangeDisplayElements( bool remove, 
                                jccl::ConfigElementPtr element )
 {
-   if ( configuration )
+   if( configuration )
    {
       delete configuration;
    }
@@ -276,7 +276,7 @@ void cfdDisplaySettings::ChangeDisplayElements( bool remove,
                << configuration->loadFromElementNode( elementsNode ) 
                << std::endl;
 
-   if ( remove )
+   if( remove )
    {
       jccl::ConfigManager::instance()->addConfigurationRemovals( configuration );
    }

@@ -94,12 +94,12 @@ void SoundActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       if(_activeModel)
       { 
          VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-         VE_XML::DataValuePair* soundStatus = command->GetDataValuePair( "Status" );
+         VE_XML::DataValuePairWeakPtr soundStatus = command->GetDataValuePair( "Status" );
          unsigned int onOff = 0;
          soundStatus->GetData(onOff);
 
          std::string name;
-         VE_XML::DataValuePair* soundName = command->GetDataValuePair( "Sound Name" );
+         VE_XML::DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
          soundName->GetData(name);
          (onOff==1)?_activeModel->ActivateSound(name):_activeModel->DeactivateSound(name);
       } 

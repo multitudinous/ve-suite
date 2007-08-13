@@ -321,12 +321,18 @@ void cfdExecutive::GetEverything( void )
       //send command to get results
       VE_XML::Command returnState;
       returnState.SetCommandName("Get XML Model Results");
-      VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+      
+      VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
       data->SetData("vendorUnit", modelIter->second->GetVendorName() );
-      data=returnState.GetDataValuePair(-1);
+      returnState.AddDataValuePair( data );      
+      
+      data= new VE_XML::DataValuePair();
       data->SetData("moduleName", iter->second );
-      data=returnState.GetDataValuePair(-1);
+      returnState.AddDataValuePair( data );   
+        
+      data= new VE_XML::DataValuePair();
       data->SetData("moduleId", static_cast< unsigned int >( iter->first ) );
+      returnState.AddDataValuePair( data );      
       
       std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
       nodes.push_back( 
@@ -515,14 +521,20 @@ void cfdExecutive::LoadDataFromCE( void )
           {
               VE_XML::Command returnState;
               returnState.SetCommandName("Get XML Model Results");
-              VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+              
+              VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();      
               data->SetData("moduleName", idMap->second );
-              data=returnState.GetDataValuePair(-1);
+              returnState.AddDataValuePair( data );
+              
+              data = new VE_XML::DataValuePair();
               data->SetData("vendorUnit", 
                     idToModel[ foundPlugin->first ]->GetVendorName() );
-              data=returnState.GetDataValuePair(-1);
+              returnState.AddDataValuePair( data );
+              
+              data = new VE_XML::DataValuePair();
               data->SetData("moduleId", 
                     static_cast< unsigned int >( idMap->first ) );
+              returnState.AddDataValuePair( data );
               
               std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
               nodes.push_back( std::pair< VE_XML::XMLObject*, 

@@ -41,6 +41,7 @@
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
 
 #include "VE_CE/Execute_Thread.h"
 #include "VE_CE/QueryThread.h"
@@ -811,7 +812,7 @@ char *  Body_Executive_i::Query (  const char * command
    size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
    for ( size_t i = 0; i < numDVP; ++i )
    {
-      VE_XML::DataValuePair* tempPair = tempCommand->GetDataValuePair( i );
+      VE_XML::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
       /*if ( tempPair->GetDataName() == "moduleName" )
       {
          tempPair->GetData( moduleName );
@@ -830,7 +831,7 @@ char *  Body_Executive_i::Query (  const char * command
          // the copy constructor is needed here because
          // the tempCommand owns the memory as well as the passcommand
          // each of these commands would then delete the same memory
-         passCommand.AddDataValuePair( new VE_XML::DataValuePair( *tempPair ) );
+         passCommand.AddDataValuePair( tempPair );
       }
    }
    //delete the object vector 

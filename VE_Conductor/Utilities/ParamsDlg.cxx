@@ -174,10 +174,13 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 	}
 
 
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName );
-	data = returnState.GetDataValuePair(-1);
+    returnState.AddDataValuePair( data );
+    
+	data = new VE_XML::DataValuePair();
 	data->SetData(std::string("ParamName"), ConvertUnicode( ParamChoice->GetStringSelection().c_str() ) );
+    returnState.AddDataValuePair( data );
 	
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -202,7 +205,7 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 	//output << "loop" << std::endl;
 	for(int j = 0; j < static_cast<int>(num); j++)
 	{
-		VE_XML::DataValuePair * pair = cmd->GetDataValuePair(j);
+		VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(j);
 		
 		//output<<j<<": " << pair->GetDataName().c_str()<<std::endl;
 		//if(pair->GetDataName() == "Name")
@@ -268,12 +271,18 @@ void ParamsDlg::SetButtonClick(wxCommandEvent& event)
 	std::string compName = ConvertUnicode( CompName.c_str() );
 	VE_XML::Command returnState;
 	returnState.SetCommandName("setParam");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    
+	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
 	data->SetData("ModuleName", compName);
-	data = returnState.GetDataValuePair(-1);
+    returnState.AddDataValuePair( data );
+    
+	data = new VE_XML::DataValuePair();
 	data->SetData("ParamName", ConvertUnicode( ParamChoice->GetStringSelection().c_str() ));
-	data = returnState.GetDataValuePair(-1);
+    returnState.AddDataValuePair( data );
+    
+	data = new VE_XML::DataValuePair();
 	data->SetData("ParamValue", ConvertUnicode( ValueEdit->GetValue().c_str() ));
+    returnState.AddDataValuePair( data );
 
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));

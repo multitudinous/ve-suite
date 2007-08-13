@@ -845,15 +845,18 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
    if ( !commandType.compare( "Streamline_Data" ) )   
    {
-      VE_XML::DataValuePair* commandData = veCommand->GetDataValuePair( 0 );
-      std::vector < long > commandIds;
+      VE_XML::DataValuePairWeakPtr commandData = 
+       veCommand->GetDataValuePair( 0 );
+      std::vector< long > commandIds;
       commandData->GetData( commandIds );
       std::string newCommand = commandData->GetDataName();
 
       if ( !newCommand.compare( "CHANGE_STREAMLINE_CURSOR" ) )
       {
-         vprDEBUG(vesDBG,1) << "this->id = " << commandData->GetDataName() << ", this->min = " << commandIds.at(1) 
-                   << ", this->max = " << commandIds.at(2) << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vesDBG,1) << "this->id = " << commandData->GetDataName() 
+            << ", this->min = " << commandIds.at(1) 
+            << ", this->max = " << commandIds.at(2) 
+            << std::endl << vprDEBUG_FLUSH;
 
          if ( commandIds.at(0) == NO_CURSOR )
          {

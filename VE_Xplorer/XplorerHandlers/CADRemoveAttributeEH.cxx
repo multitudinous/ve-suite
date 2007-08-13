@@ -81,9 +81,9 @@ void CADRemoveAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject
       std::cout<<"---Adding attribute to node---"<<std::endl;
       std::cout<<"CADRemoveAttributeEventHandler."<<std::endl;
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
-      VE_XML::DataValuePair* activeAttribute = command->GetDataValuePair("Attribute Name");
+      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      VE_XML::DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Attribute Name");
 
       m_cadHandler->RemoveAttributeFromNode(nodeID->GetDataString(),
                                             nodeType->GetDataString(),

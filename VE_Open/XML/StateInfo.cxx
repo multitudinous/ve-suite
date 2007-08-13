@@ -77,13 +77,11 @@ void StateInfo::_updateVEElement( std::string input )
 ////////////////////////////////////////////////////////////////////////////////
 void StateInfo::_updateCommands()
 {
-   size_t nCommands = _stateInfo.size();
-   for(size_t i = 0; i < nCommands;  i++)
+   for(size_t i = 0; i < _stateInfo.size();  i++)
    {
       _stateInfo.at(i)->SetOwnerDocument(_rootDocument);
       _veElement->appendChild( _stateInfo.at(i)->GetXMLData( "Command" ) );
    }
-   //_nChildren = static_cast< unsigned int>( nCommands );
 }
 /////////////////////////////////////////////////////////////
 //set the data from an string representing the xml         //

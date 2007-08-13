@@ -79,7 +79,7 @@ void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlob
 void ChangeBackgroundColorEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Background Color" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
    std::vector<double> color;
    activeModelDVP->GetData( color );
    if(!color.empty())

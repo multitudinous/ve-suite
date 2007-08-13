@@ -72,7 +72,7 @@ void TextureBasedBoundingBoxEventHandler::_operateOnNode(VE_XML::XMLObject* veXM
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* bboxFlag = command->GetDataValuePair( "BBox Flag" );
+      VE_XML::DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateBoundingBox((bboxFlag->GetUIntData()==1)?true:false);
       
    }

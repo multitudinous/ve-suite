@@ -159,7 +159,7 @@ void Wand::UpdateNavigation()
    
    if ( !commandType.compare( "Navigation_Data" ) )
    {
-      VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
+      VE_XML::DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
       this->cfdIso_value = commandData->GetDataValue();
       newCommand = commandData->GetDataName();
    }

@@ -81,7 +81,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* cadNode = command->GetDataValuePair("New Node");
+      VE_XML::DataValuePairWeakPtr cadNode = command->GetDataValuePair("New Node");
       std::string nodeType = dynamic_cast<VE_XML::VE_CAD::CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
 
       VE_XML::VE_CAD::CADNode* node = 0;

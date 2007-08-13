@@ -45,7 +45,9 @@
 #include <map>
 
 #include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/DataValuePairPtr.h"
+
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/DataValuePairStrongPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -70,10 +72,10 @@ public:
 
    ///Add a data value pair for the command.
    ///\param commandValuePair The data value pair representing command information.
-   void AddDataValuePair( VE_XML::DataValuePair* commandValuePair );
+   //void AddDataValuePair( VE_XML::DataValuePair* commandValuePair );
    ///Add a data value pair for the command.
    ///\param commandValuePair The data value pair representing command information.
-   void AddDataValuePair( VE_XML::DataValuePairPtr commandValuePair );
+   void AddDataValuePair( VE_XML::DataValuePairWeakPtr commandValuePair );
    
    ///Utility function to extract a command name from an element.
    ///\param commandElement The command element.
@@ -90,12 +92,12 @@ public:
    ///Get a specific DataValuePair by name.
    ///\param dataValueName The name of the DataValuePair to search for.
    ///\return The dvp with the requested name
-   VE_XML::DataValuePair* GetDataValuePair(std::string dataValueName);
+   VE_XML::DataValuePairWeakPtr GetDataValuePair(std::string dataValueName);
    
    ///Get a DataValuePair at the index.
    ///\param index The index of the DataValuePair to return.
    ///\return The dvp at the requested index
-   VE_XML::DataValuePair* GetDataValuePair( int index );
+   VE_XML::DataValuePairWeakPtr GetDataValuePair( size_t index );
 
    ///Return the number of DataValuePair s in this command.
    ///\return The number of dvps stored in this command
@@ -111,8 +113,8 @@ protected:
    void _updateDataValuePairs( void );
 
    std::string _cmdName;///<The name of this command.
-   std::vector< VE_XML::DataValuePair* > _dataValuePairs;///<The list of DataValuePair s in this command.  
-   std::map< std::string, VE_XML::DataValuePair* > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
+   std::vector< VE_XML::DataValuePairStrongPtr > _dataValuePairs;///<The list of DataValuePair s in this command.  
+   std::map< std::string, VE_XML::DataValuePairStrongPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Command* val)

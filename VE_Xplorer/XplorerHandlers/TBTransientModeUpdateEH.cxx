@@ -72,13 +72,13 @@ void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObje
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* playMode = command->GetDataValuePair("Mode");      
+      VE_XML::DataValuePairWeakPtr playMode = command->GetDataValuePair("Mode");      
       std::string mode;
       playMode->GetData(mode);
 
       if(mode == "Step")
       {
-         VE_XML::DataValuePair* playDirection = command->GetDataValuePair("Direction");      
+         VE_XML::DataValuePairWeakPtr playDirection = command->GetDataValuePair("Direction");      
          std::string direction;
          playDirection->GetData(direction);
          VE_TextureBased::cfdTextureBasedVizHandler::instance()->StepTransientVisualization(direction);

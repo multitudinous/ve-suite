@@ -110,7 +110,7 @@ void AxesLabelsEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* mode
 void AxesLabelsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Axes Labels" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Axes Labels" );
    std::vector< std::string > labels;
    activeModelDVP->GetData( labels );
    

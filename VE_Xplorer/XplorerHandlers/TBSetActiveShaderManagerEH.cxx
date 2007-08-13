@@ -69,7 +69,7 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(VE_XML::XMLO
    try
    {
 	  VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* activeSM = command->GetDataValuePair("Active Shader Manager");      
+      VE_XML::DataValuePairWeakPtr activeSM = command->GetDataValuePair("Active Shader Manager");      
 	  std::string value;
       activeSM->GetData(value);
 	  VE_TextureBased::cfdTextureBasedVizHandler::instance()->SetActiveShaderManager( value );
@@ -79,5 +79,4 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(VE_XML::XMLO
       std::cout<<"Invalid Model!!"<<std::endl;
       std::cout<<"TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode()"<<std::endl;
    }
-
 }

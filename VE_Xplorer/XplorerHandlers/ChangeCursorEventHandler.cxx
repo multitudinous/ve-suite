@@ -109,7 +109,7 @@ void ChangeCursorEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    //Grab the subdialog settings from streamlines to adjust cursor settings
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
    VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
    if ( objectCommand->GetCommandName() != "UPDATE_STREAMLINE_SETTINGS" )
    {
@@ -117,21 +117,21 @@ void ChangeCursorEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    }
 
    std::string direction;
-   VE_XML::DataValuePair* directionDVP = objectCommand->GetDataValuePair( "Cursor Direction" );
+   VE_XML::DataValuePairWeakPtr directionDVP = objectCommand->GetDataValuePair( "Cursor Direction" );
    if ( directionDVP )
    {
       directionDVP->GetData( direction );
    }
    
    std::string planes;
-   VE_XML::DataValuePair* planesDVP = objectCommand->GetDataValuePair( "Cursor Type" );
+   VE_XML::DataValuePairWeakPtr planesDVP = objectCommand->GetDataValuePair( "Cursor Type" );
    if ( planesDVP )
    {
       planesDVP->GetData( planes );      
    }
    
    unsigned int numPointsPerPlane = 2;
-   VE_XML::DataValuePair* pointsDVP = objectCommand->GetDataValuePair( "Number Of Points Per Plane" );
+   VE_XML::DataValuePairWeakPtr pointsDVP = objectCommand->GetDataValuePair( "Number Of Points Per Plane" );
    if ( pointsDVP )
    {
       pointsDVP->GetData( numPointsPerPlane );
@@ -140,7 +140,7 @@ void ChangeCursorEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    }
    
    double planeSize = 1;
-   VE_XML::DataValuePair* sizeDVP = objectCommand->GetDataValuePair( "Size" );
+   VE_XML::DataValuePairWeakPtr sizeDVP = objectCommand->GetDataValuePair( "Size" );
    if ( sizeDVP )
    {
       sizeDVP->GetData( planeSize );      
@@ -189,7 +189,7 @@ void ChangeCursorEventHandler::Execute( VE_XML::XMLObject* xmlObject )
    }
 
    /*std::string advanced;
-   VE_XML::DataValuePair* advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
+   VE_XML::DataValuePairWeakPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
    if ( advancedDVP )
    {
       VE_XML::Command* advancedCommand = dynamic_cast< VE_XML::Command* >( advancedDVP->GetDataXMLObject() );

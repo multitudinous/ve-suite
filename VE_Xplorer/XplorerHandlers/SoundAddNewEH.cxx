@@ -94,12 +94,12 @@ void SoundAddNewEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       if(_activeModel)
       { 
          VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-         VE_XML::DataValuePair* soundName = command->GetDataValuePair( "Sound Name" );
+         VE_XML::DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
          std::string guiName;
          soundName->GetData(guiName);
 
          std::string fileName;
-         VE_XML::DataValuePair* soundFile = command->GetDataValuePair( "Sound Filename" );
+         VE_XML::DataValuePairWeakPtr soundFile = command->GetDataValuePair( "Sound Filename" );
          soundFile->GetData(fileName);
          _activeModel->AddNewSound(guiName,fileName);
       } 

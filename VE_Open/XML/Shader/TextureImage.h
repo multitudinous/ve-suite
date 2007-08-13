@@ -45,15 +45,15 @@
 /*!\class VE_Shader::TextureImage
  * Class that stores an image in texture data.
  */
+
+#include "VE_Open/XML/CommandStrongPtr.h"
+
 namespace VE_XML
 {
-   class Command;
-}
-#include "VE_Open/XML/Command.h"
-
-namespace VE_XML{
-namespace VE_Shader{
-class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject{
+namespace VE_Shader
+{
+class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject
+{
 public:
    ///Constructor
    TextureImage();
@@ -157,7 +157,7 @@ protected:
    ///\param input The XML element information
    virtual void _updateVEElement(std::string input);
 
-   VE_XML::Command _textureDescription;///<Data package containing the information about the texture map.
+   VE_XML::CommandStrongPtr _textureDescription;///<Data package containing the information about the texture map.
    
 };
 }

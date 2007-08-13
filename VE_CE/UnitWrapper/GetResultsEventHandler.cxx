@@ -87,17 +87,18 @@ std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > o
       return std::string("NULL");
    }
    
-   for ( size_t i = 0; i < numInputs; ++i )
-   {
-      VE_XML::Command* tempResult = baseModel->GetResult( i );
-      VE_XML::DataValuePair* tempPair = resultsCommand.GetDataValuePair(-1);
-      tempPair->SetData( tempResult->GetCommandName(), tempResult );
-   }
+    for( size_t i = 0; i < numInputs; ++i )
+    {
+        VE_XML::Command* tempResult = baseModel->GetResult( i );
+        VE_XML::DataValuePairWeakPtr tempPair = new VE_XML::DataValuePair();
+        tempPair->SetData( tempResult->GetCommandName(), tempResult );
+        tempResult->AddDataValuePair( tempPair );
+    }
    
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back( 
-                    std::pair< VE_XML::XMLObject*, std::string >( &resultsCommand, "vecommand" ) 
-                    );
+   nodes.push_back( std::pair< VE_XML::XMLObject*, 
+        std::string >( &resultsCommand, "vecommand" ) );
+
    VE_XML::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();

@@ -240,15 +240,16 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObjec
                                     std::string& xmlData,
                                     std::string documentType )
 {
-   if ( !_domDocumentManager )
+   if( !_domDocumentManager )
    {
-      return;
+       return;
    }
+   
    ///If you wanted to return a string you can pass in returnString for xmlData
-   if ( xmlData.compare("returnString") )
+   if( xmlData.compare("returnString") )
    {
-      _domDocumentManager->SetOuputXMLFile(xmlData);
-      _domDocumentManager->SetWriteXMLFileOn();
+       _domDocumentManager->SetOuputXMLFile(xmlData);
+       _domDocumentManager->SetWriteXMLFileOn();
    }
 
    _domDocumentManager->CreateCommandDocument( documentType );
@@ -256,19 +257,20 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObjec
    
    /// should put in an assert to verify tagnames == nodes
    ///Loop over all the objects that are passed in
-   for ( size_t i = 0; i < nodes.size(); ++i )
+   for( size_t i = 0; i < nodes.size(); ++i )
    {   
-      nodes.at( i ).first->SetOwnerDocument( doc );
-      doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
+
+       nodes.at( i ).first->SetOwnerDocument( doc );
+       doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );  
    }
 
    if( !xmlData.compare("returnString") )
    {
-      xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
+       xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
    }
    else
    {
-      _domDocumentManager->WriteAndReleaseCommandDocument();
+       _domDocumentManager->WriteAndReleaseCommandDocument();
    }
    _domDocumentManager->UnLoadParser();
 }

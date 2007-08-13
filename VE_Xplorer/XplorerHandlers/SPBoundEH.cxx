@@ -98,14 +98,14 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
      
-      VE_XML::DataValuePair* coordinate = command->GetDataValuePair("Coordinate");      
+      VE_XML::DataValuePairWeakPtr coordinate = command->GetDataValuePair("Coordinate");      
       std::string boundCoordinate;
       coordinate->GetData( boundCoordinate );
 
       if(boundCoordinate == "All Bounds")
       {
          std::vector<double> allBoundaryData;
-         VE_XML::DataValuePair* bounds = command->GetDataValuePair("Bounds");
+         VE_XML::DataValuePairWeakPtr bounds = command->GetDataValuePair("Bounds");
          bounds->GetData(allBoundaryData);
          double databounds[6] = {0,0,0,0,0,0};
          _activeModel->GetActiveDataSet()->GetDataSet()->GetBounds(databounds);
@@ -126,13 +126,13 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       }
       else
       {
-         VE_XML::DataValuePair* minMaxDVP = command->GetDataValuePair("MinMax");      
+         VE_XML::DataValuePairWeakPtr minMaxDVP = command->GetDataValuePair("MinMax");      
          std::string minMaxUpdate;
          minMaxDVP->GetData(minMaxUpdate);
 
          if(minMaxUpdate != "Both")
          {
-            VE_XML::DataValuePair* value = command->GetDataValuePair("Value");      
+            VE_XML::DataValuePairWeakPtr value = command->GetDataValuePair("Value");      
             ///Get the percentage
             double alpha;
             value->GetData( alpha );
@@ -150,7 +150,7 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
          }
          else if(minMaxUpdate == "Both")
          {
-            VE_XML::DataValuePair* minValue = command->GetDataValuePair("Min Value");      
+            VE_XML::DataValuePairWeakPtr minValue = command->GetDataValuePair("Min Value");      
             double minAlpha;
             minValue->GetData( minAlpha );
             
@@ -166,7 +166,7 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
             VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue, 
                                                                                          boundCoordinate,
                                                                                          "Min");
-            VE_XML::DataValuePair* maxValue = command->GetDataValuePair("Max Value");      
+            VE_XML::DataValuePairWeakPtr maxValue = command->GetDataValuePair("Max Value");      
             double maxAlpha;
             maxValue->GetData( maxAlpha );
             

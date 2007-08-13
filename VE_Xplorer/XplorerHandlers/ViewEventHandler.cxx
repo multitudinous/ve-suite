@@ -79,15 +79,10 @@ void ViewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandl
 void ViewEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
     VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-    VE_XML::DataValuePair* viewDVP=command->GetDataValuePair("ViewID");
+    VE_XML::DataValuePairWeakPtr viewDVP=command->GetDataValuePair("ViewID");
 
     unsigned int view;
     viewDVP->GetData(view);
-
-    if( viewDVP )
-    {
-        return;
-    }
 
     if( view == 0 )
     {

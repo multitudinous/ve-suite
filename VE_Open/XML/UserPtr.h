@@ -49,7 +49,5 @@ namespace VE_XML
    class User;
    /// Typedef for a SmartPtr type for the User.
    typedef Loki::SmartPtrDef<User>::type UserPtr;
-   //typedef Loki::SmartPtr< User, Loki::RefCounted,
-	//   Loki::DisallowConversion, Loki::AssertCheck, Loki::HeapStorage > UserPtr;
 }
 #endif

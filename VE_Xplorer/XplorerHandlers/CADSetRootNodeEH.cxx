@@ -74,7 +74,7 @@ void CADSetRootNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* newRootNode = command->GetDataValuePair("Root Node ID");
+      VE_XML::DataValuePairWeakPtr newRootNode = command->GetDataValuePair("Root Node ID");
 
       std::string rootNodeID;
       newRootNode->GetData(rootNodeID);       

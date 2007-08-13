@@ -99,7 +99,7 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBas
 void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = 
+   VE_XML::DataValuePairWeakPtr activeModelDVP = 
       command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
    std::string viewData;
    activeModelDVP->GetData( viewData );

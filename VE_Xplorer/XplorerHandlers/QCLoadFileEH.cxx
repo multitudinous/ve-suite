@@ -75,7 +75,7 @@ void QuatCamLoadFileEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* velFile = command->GetDataValuePair("View Locations file");      
+      VE_XML::DataValuePairWeakPtr velFile = command->GetDataValuePair("View Locations file");      
       velFile->GetData(fileName);
       VE_Xplorer::cfdQuatCamHandler::instance()->LoadFromFile(fileName);
    }

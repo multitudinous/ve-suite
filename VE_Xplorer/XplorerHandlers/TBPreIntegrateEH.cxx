@@ -72,7 +72,7 @@ void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(VE_XML::XMLObjec
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* enable = command->GetDataValuePair("Recalculate Pre-Integration");      
+      VE_XML::DataValuePairWeakPtr enable = command->GetDataValuePair("Recalculate Pre-Integration");      
       unsigned int onOff;
       enable->GetData(onOff);
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);

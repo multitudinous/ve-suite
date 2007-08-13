@@ -339,8 +339,10 @@ void cfdPolyData::UpdateCommand()
    cfdObjects::UpdateCommand();
 
    //Extract the specific commands from the overall command
-   VE_XML::DataValuePair* activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = 
+    veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   VE_XML::Command* objectCommand = 
+    dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
 
    //Extract the isosurface value
    activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );

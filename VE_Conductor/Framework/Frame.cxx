@@ -296,10 +296,12 @@ viewlocPane( 0 )
         VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
-
+        ///Set the command on the buffer first so that a strong ptr is 
+        ///referencing the memory
+        UserPreferencesDataBuffer::instance()->SetCommand( 
+            "CHANGE_BACKGROUND_COLOR", veCommand );
+        
         serviceList->SendCommandStringToXplorer( veCommand );
-
-        UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1131,10 +1133,13 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 
     VE_XML::Command returnState;
     returnState.SetCommandName("getNetwork");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "getNetwork" );
-    data = returnState.GetDataValuePair(-1);
+    returnState.AddDataValuePair( data );
+    
+    data = new VE_XML::DataValuePair();
     data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1156,11 +1161,13 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     { 
         network->Load( nw_str, true );
         Log("Simulation Opened.\n");
+        ///
         VE_XML::CommandWeakPtr aspenBKPFile = new VE_XML::Command();
         aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
-        VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+        data = new VE_XML::DataValuePair();
         data->SetData( "BKPFileName",  
             ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+        aspenBKPFile->AddDataValuePair( data );
         UserPreferencesDataBuffer::instance()->
             SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
     }
@@ -1177,10 +1184,13 @@ void AppFrame::OpenSimulation( wxString simName )
 
     VE_XML::Command returnState;
     returnState.SetCommandName("openSimulation");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("AspenPlus", "openSimulation" );
-    data = returnState.GetDataValuePair(-1);
+    returnState.AddDataValuePair( data );
+    
+    data = new VE_XML::DataValuePair();
     data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1198,8 +1208,9 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
     Log("Show Simulation.\n");
     VE_XML::Command returnState;
     returnState.SetCommandName("showSimulation");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "showSimulation" );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1218,8 +1229,9 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
     Log("Hide Simulation.\n");
     VE_XML::Command returnState;
     returnState.SetCommandName("hideSimulation");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "hideSimulation" );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1238,8 +1250,9 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
     Log("Close Simulation.\n");
     VE_XML::Command returnState;
     returnState.SetCommandName("closeSimulation");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "closeSimulation" );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1258,8 +1271,9 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
     Log("Run Simulation.\n");
     VE_XML::Command returnState;
     returnState.SetCommandName("runNetwork");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "runNetwork" );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1277,8 +1291,9 @@ void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED(event) )
     Log("Run Simulation.\n");
     VE_XML::Command returnState;
     returnState.SetCommandName("stepNetwork");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "runNetwork" );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1324,8 +1339,9 @@ void AppFrame::SaveSimulation(wxCommandEvent& WXUNUSED(event))
     Log("Saving Simulation...\n");
     VE_XML::Command returnState;
     returnState.SetCommandName("saveSimulation");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "saveSimulation" );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1361,11 +1377,14 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 
     VE_XML::Command returnState;
     returnState.SetCommandName("saveAsSimulation");
-    VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
     data->SetData("NetworkQuery", "saveAsSimulation" );
-    data = returnState.GetDataValuePair(-1);
+    returnState.AddDataValuePair( data );
+    
+    data = new VE_XML::DataValuePair();
     data->SetData("SaveFileName",  
         ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+    returnState.AddDataValuePair( data );
 
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back(std::pair< VE_XML::XMLObject*, 
@@ -1380,9 +1399,10 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 
     VE_XML::CommandWeakPtr aspenAPWFile = new VE_XML::Command();
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
-    data = returnState.GetDataValuePair(-1);
+    data = new VE_XML::DataValuePair();
     data->SetData( "BKPFileName",  
         ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+    aspenAPWFile->AddDataValuePair( data );
     UserPreferencesDataBuffer::instance()->
         SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
 }

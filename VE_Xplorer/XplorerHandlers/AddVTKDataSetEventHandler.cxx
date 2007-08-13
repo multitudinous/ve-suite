@@ -112,7 +112,7 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
+      VE_XML::DataValuePairWeakPtr veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
       VE_XML::VE_Model::Model* veModel = dynamic_cast< VE_XML::VE_Model::Model* >( veModelDVP->GetDataXMLObject() );
       size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
       for ( size_t i = (numInfoPackets-1); i < numInfoPackets; ++i )

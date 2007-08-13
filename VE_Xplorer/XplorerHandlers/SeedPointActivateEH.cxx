@@ -102,8 +102,8 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
          _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
          ///what happens if texture is somehow added first? Is that possible?
          VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-         VE_XML::DataValuePair* seedPointsFlag = command->GetDataValuePair( "OnOff" );
-		   VE_XML::DataValuePair* activeDataset = command->GetDataValuePair( "Active Dataset" );
+         VE_XML::DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
+		   VE_XML::DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
 		   std::string datasetname;
 		   activeDataset->GetData(datasetname);
 		   //check to see if the seed points exist
@@ -112,18 +112,18 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
             VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
 		   }
 		 
-         //this seems to be a bad sequence of calls but we need to set the
-         //active dataset otherwise this set of calls goes in every seed pointEH
-         //as well as all the commands have to lug this extra info.
-         _activeModel->SetActiveDataSet(_activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname)));
-		   VE_SceneGraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
-         VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
-         
-		   seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
-         seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
-         seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
-		   VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
-      } 
+            //this seems to be a bad sequence of calls but we need to set the
+            //active dataset otherwise this set of calls goes in every seed pointEH
+            //as well as all the commands have to lug this extra info.
+            _activeModel->SetActiveDataSet(_activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname)));
+            VE_SceneGraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
+            VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
+
+            seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
+            seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
+            seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
+            VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
+        } 
    }
    catch(...)
    {

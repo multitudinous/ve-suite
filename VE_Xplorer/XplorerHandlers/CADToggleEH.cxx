@@ -53,20 +53,20 @@ CADToggleEventHandler::CADToggleEventHandler()
 :VE_EVENTS::CADEventHandler()
 {
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler::CADToggleEventHandler(const CADToggleEventHandler& rhs)
 :VE_EVENTS::CADEventHandler(rhs)
 {
    
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler::~CADToggleEventHandler()
 {
 }
 ///Equal operator
-//////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler& CADToggleEventHandler::operator=(const CADToggleEventHandler& rhs)
 {
    if(this != &rhs)
@@ -81,9 +81,9 @@ void CADToggleEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* toggleValue = command->GetDataValuePair("Toggle Value");
-      VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
+      VE_XML::DataValuePairWeakPtr toggleValue = command->GetDataValuePair("Toggle Value");
+      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
 
       //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))

@@ -72,7 +72,7 @@ void TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode(VE_XML::XMLObject*
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* isovalue = command->GetDataValuePair("Iso-Surface Value");      
+      VE_XML::DataValuePairWeakPtr isovalue = command->GetDataValuePair("Iso-Surface Value");      
       double value;
       isovalue->GetData(value);
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateIsosurface(value);

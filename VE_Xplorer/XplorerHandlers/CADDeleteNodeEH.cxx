@@ -81,9 +81,9 @@ void CADDeleteNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
    try
    {
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePair* parentID = command->GetDataValuePair("Parent ID");
-      VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
+      VE_XML::DataValuePairWeakPtr parentID = command->GetDataValuePair("Parent ID");
+      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
 
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Deleting node---"<<std::endl;

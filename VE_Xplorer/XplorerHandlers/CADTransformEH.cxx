@@ -83,11 +83,12 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
 
       VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
 
-      VE_XML::DataValuePair* nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePair* nodeType = command->GetDataValuePair("Node Type");
-      VE_XML::DataValuePair* newTransform = command->GetDataValuePair("Transform");
+      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      VE_XML::DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");
       
 		VE_SceneGraph::DCS* transform = 0;
+        
       if(nodeType->GetDataString() == std::string("Part"))
       {
          if(m_cadHandler->PartExists(nodeID->GetDataString()))

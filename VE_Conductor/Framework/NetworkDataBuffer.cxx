@@ -190,7 +190,7 @@ void NetworkDatabuffer::LoadVESData( std::string xmlNetwork )
     //if ( !objectVector.empty() )
     {
         //backgroundColor.clear();
-        VE_XML::User* userColor = new VE_XML::User();//dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
+        VE_XML::UserPtr userColor = new VE_XML::User();//dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
         //Set user preferences
         std::vector< VE_XML::Command* > tempStates = userColor->GetUserStateInfo()->GetStateVector();
         std::map< std::string, VE_XML::Command > tempMap;

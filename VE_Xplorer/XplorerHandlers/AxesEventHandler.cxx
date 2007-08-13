@@ -109,7 +109,7 @@ void AxesEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 void AxesEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Axes State" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Axes State" );
    
    unsigned int state = 0;
    activeModelDVP->GetData( state );

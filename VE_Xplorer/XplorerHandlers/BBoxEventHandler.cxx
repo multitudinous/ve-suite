@@ -109,7 +109,7 @@ void BBoxEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
 void BBoxEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Bounding Box State" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Bounding Box State" );
    
    unsigned int state = 0;
    activeModelDVP->GetData( state );

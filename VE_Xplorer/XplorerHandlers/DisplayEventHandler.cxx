@@ -79,7 +79,7 @@ void DisplayEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHa
 void DisplayEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-   VE_XML::DataValuePair* DVP;
+   VE_XML::DataValuePairWeakPtr DVP;
    unsigned int value;
 
    if(command->GetDataValuePair("FrameRateID"))

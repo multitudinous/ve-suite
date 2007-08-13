@@ -72,7 +72,7 @@ void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode(VE_XML::XML
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* playDuration = command->GetDataValuePair("Duration");      
+      VE_XML::DataValuePairWeakPtr playDuration = command->GetDataValuePair("Duration");      
       double value;
       playDuration->GetData(value);
 

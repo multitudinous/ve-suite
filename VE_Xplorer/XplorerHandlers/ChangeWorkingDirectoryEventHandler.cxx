@@ -80,7 +80,7 @@ void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlo
 void ChangeWorkingDirectoryEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
    std::string newWorkingDir;
    activeModelDVP->GetData( newWorkingDir );
    std::cout << newWorkingDir << std::endl;

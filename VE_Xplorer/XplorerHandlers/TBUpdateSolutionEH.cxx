@@ -74,11 +74,11 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(VE_XML::XMLObject* v
    try
    {
       VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePair* activeDataset = command->GetDataValuePair( "Active Dataset" );
+      VE_XML::DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
       std::string dataName;
       activeDataset->GetData( dataName );
 
-      VE_XML::DataValuePair* type = command->GetDataValuePair( "Data Type" );
+      VE_XML::DataValuePairWeakPtr type = command->GetDataValuePair( "Data Type" );
       std::string dataType;
       type->GetData( dataType );
 
@@ -92,10 +92,10 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(VE_XML::XMLObject* v
             
             double scalarRange[2] = {0.f,100.f};
 
-            VE_XML::DataValuePair* minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
+            VE_XML::DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
             minScalarRange->GetData( scalarRange[0] );
             
-            VE_XML::DataValuePair* maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
+            VE_XML::DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
             maxScalarRange->GetData( scalarRange[1] );
             //this is overkill
             float floatRange[2];

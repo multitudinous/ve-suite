@@ -59,12 +59,12 @@ VE_EVENTS::CADEventHandler( rhs )
 {
     ;
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler::~CADPhysicsPropertiesEventHandler()
 {
     ;
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler& CADPhysicsPropertiesEventHandler::operator=( const CADPhysicsPropertiesEventHandler& rhs )
 {
     if( this != &rhs )
@@ -74,14 +74,14 @@ CADPhysicsPropertiesEventHandler& CADPhysicsPropertiesEventHandler::operator=( c
 
     return *this;
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void CADPhysicsPropertiesEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObject )
 {
     try
     {
         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >(xmlObject);
-        VE_XML::DataValuePair* nodeID = command->GetDataValuePair( "Node ID" );
-        VE_XML::DataValuePair* nodeType = command->GetDataValuePair( "Node Type" );
+        VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {
@@ -111,4 +111,4 @@ void CADPhysicsPropertiesEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObj
         std::cout << "Error!!" << std::endl;
     }
 }
-///////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////

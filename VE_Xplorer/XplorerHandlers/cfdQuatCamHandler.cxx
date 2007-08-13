@@ -457,7 +457,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 
    if ( !commandType.compare( "ViewLoc_Data" ) )
    {
-      VE_XML::DataValuePair* commandData = command->GetDataValuePair( 0 );
+      VE_XML::DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
       
       ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
       std::vector< long > commandIds;

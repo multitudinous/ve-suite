@@ -515,7 +515,9 @@ Model* UIPluginBase::GetVEModel( void )
          {
             tempCommand = veModel->GetInput( -1 );
             tempCommand->SetCommandName( iteri->first );
-            tempCommand->GetDataValuePair( -1 )->SetData( iteri->first, *(iteri->second) );
+            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            dataDVP->SetData( iteri->first, *(iteri->second) );
+            tempCommand->AddDataValuePair( dataDVP );
          }
          else
          {
@@ -534,7 +536,9 @@ Model* UIPluginBase::GetVEModel( void )
          {
             tempCommand = veModel->GetInput( -1 );
             tempCommand->SetCommandName( iterd->first );
-            tempCommand->GetDataValuePair( -1 )->SetData( iterd->first, *(iterd->second) );
+            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            dataDVP->SetData( iterd->first, *(iterd->second) );
+            tempCommand->AddDataValuePair( dataDVP );
          }
          else
          {
@@ -553,7 +557,9 @@ Model* UIPluginBase::GetVEModel( void )
          {
             tempCommand = veModel->GetInput( -1 );
             tempCommand->SetCommandName( iters->first );
-            tempCommand->GetDataValuePair( -1 )->SetData( iters->first, *(iters->second) );
+            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            dataDVP->SetData( iters->first, *(iters->second) );
+            tempCommand->AddDataValuePair( dataDVP );
          }
          else
          {
@@ -572,7 +578,9 @@ Model* UIPluginBase::GetVEModel( void )
          {
             tempCommand = veModel->GetInput( -1 );
             tempCommand->SetCommandName( itervi->first );
-            tempCommand->GetDataValuePair( -1 )->SetData( itervi->first, *(itervi->second) );
+            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            dataDVP->SetData( itervi->first, *(itervi->second) );
+            tempCommand->AddDataValuePair( dataDVP );
          }
          else
          {
@@ -591,7 +599,9 @@ Model* UIPluginBase::GetVEModel( void )
          {
             tempCommand = veModel->GetInput( -1 );
             tempCommand->SetCommandName( itervd->first );
-            tempCommand->GetDataValuePair( -1 )->SetData( itervd->first, *(itervd->second) );
+            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            dataDVP->SetData( itervd->first, *(itervd->second) );
+            tempCommand->AddDataValuePair( dataDVP );
          }
          else
          {
@@ -610,7 +620,9 @@ Model* UIPluginBase::GetVEModel( void )
          {
             tempCommand = veModel->GetInput( -1 );
             tempCommand->SetCommandName( itervs->first );
-            tempCommand->GetDataValuePair( -1 )->SetData( itervs->first, *(itervs->second) );
+            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            dataDVP->SetData( itervs->first, *(itervs->second) );
+            tempCommand->AddDataValuePair( dataDVP );
          }
          else
          {
@@ -624,22 +636,62 @@ Model* UIPluginBase::GetVEModel( void )
    {
       Command* tempCommand = veModel->GetInput( -1 );
       tempCommand->SetCommandName( "EPRI TAG" );
-      tempCommand->GetDataValuePair( -1 )->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
+      
+      VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
+      tempCommand->AddDataValuePair( dataDVP );
 
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC00", financial_dlg->_cc00_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC01", financial_dlg->_cc01_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC02", financial_dlg->_cc02_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC03", financial_dlg->_cc03_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC04", financial_dlg->_cc04_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC05", financial_dlg->_cc05_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC06", financial_dlg->_cc06_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC07", financial_dlg->_cc07_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "CC08", financial_dlg->_cc08_d );
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC00", financial_dlg->_cc00_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC01", financial_dlg->_cc01_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC02", financial_dlg->_cc02_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC03", financial_dlg->_cc03_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC04", financial_dlg->_cc04_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC05", financial_dlg->_cc05_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC06", financial_dlg->_cc06_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC07", financial_dlg->_cc07_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "CC08", financial_dlg->_cc08_d );
+      tempCommand->AddDataValuePair( dataDVP );
 
-      tempCommand->GetDataValuePair( -1 )->SetData( "OM00", financial_dlg->_om00_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "OM01", financial_dlg->_om01_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "OM02", financial_dlg->_om02_d );
-      tempCommand->GetDataValuePair( -1 )->SetData( "OM03", financial_dlg->_om03_d );
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "OM00", financial_dlg->_om00_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "OM01", financial_dlg->_om01_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "OM02", financial_dlg->_om02_d );
+      tempCommand->AddDataValuePair( dataDVP );
+      
+      dataDVP = new VE_XML::DataValuePair();
+      dataDVP->SetData( "OM03", financial_dlg->_om03_d );
+      tempCommand->AddDataValuePair( dataDVP );
    }
 
    return veModel;
@@ -671,7 +723,7 @@ void UIPluginBase::SetVEModel( VE_XML::VE_Model::Model* tempModel )
       {
          for ( unsigned int k = 0; k < commandData->GetNumberOfDataValuePairs(); ++k )
          {
-            DataValuePair* tempData = commandData->GetDataValuePair( k );
+            DataValuePairWeakPtr tempData = commandData->GetDataValuePair( k );
             std::string dataName = tempData->GetDataName();
             std::string dataType = tempData->GetDataType();
             // to grab the data from the maps properly            
@@ -838,8 +890,9 @@ void UIPluginBase::ViewInputVariables( void )
         
         VE_XML::Command returnState;
         returnState.SetCommandName("getInputModuleParamList");
-        VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+        VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
         data->SetData(std::string("ModuleName"), compName);
+        returnState.AddDataValuePair( data );
         
         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
         nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -870,7 +923,7 @@ void UIPluginBase::ViewInputVariables( void )
         //output << objectVector.size()<<std::endl;
         //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
         VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-        VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+        VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
         /*std::vector< std::string > temp_vector;
         pair->GetData(temp_vector);
         
@@ -933,7 +986,7 @@ void UIPluginBase::GetDataTables( VE_XML::Command* inputCommand, std::vector< wx
 {
    for ( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
    {
-      VE_XML::DataValuePair* tempDVP = inputCommand->GetDataValuePair( j );
+      VE_XML::DataValuePairWeakPtr tempDVP = inputCommand->GetDataValuePair( j );
       std::string dataType = tempDVP->GetDataType();
       std::string dataName = tempDVP->GetDataName();
       std::string stringData = "empty";
@@ -1169,8 +1222,9 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getInputModuleParamList");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName);
+    returnState.AddDataValuePair( data );
 	
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1197,7 +1251,7 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 	//output << objectVector.size()<<std::endl;
 	//serviceList->GetMessageLog()->SetMessage(output.str().c_str());
 	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
 
@@ -1227,8 +1281,9 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getOutputModuleParamList");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName);
+    returnState.AddDataValuePair( data );
 	
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -1250,7 +1305,7 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
 	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
 	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
 

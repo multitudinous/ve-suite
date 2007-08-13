@@ -429,7 +429,9 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
 {
     //Calling function is responsible for the command memory
    if ( !IsConnectedToXplorer() )
-      return false;
+   {   
+       return false;
+   }
       
    //Now send the data to xplorer
    VE_XML::XMLReaderWriter netowrkWriter;

@@ -94,7 +94,7 @@ void DeleteObjectFromNetworkEventHandler::Execute( VE_XML::XMLObject* xmlObject 
 {
    // Get the active object
    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePair* activeModelDVP = command->GetDataValuePair( "Object ID" );   
+   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Object ID" );   
    unsigned int id = 0;
    activeModelDVP->GetData( id );
 

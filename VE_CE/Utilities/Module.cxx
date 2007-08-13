@@ -42,6 +42,8 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
+
 using namespace VE_CE::Utilities;
 using namespace VE_XML;
 
@@ -292,7 +294,7 @@ void Module::SetVEModel( VE_XML::VE_Model::Model* mod )
    ///Get feedback info
    for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
    {
-      VE_XML::DataValuePair* dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
+      VE_XML::DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
       if ( dvp )
       {
          unsigned int feedback;

@@ -48,10 +48,6 @@ Command::Command()
 ///////////////////////
 Command::~Command()
 {
-   for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
-   {
-       delete _dataValuePairs.at(i);
-   }
    _dataValuePairs.clear();
    nameToDataValuePairMap.clear();
 }
@@ -75,10 +71,6 @@ Command& Command::operator=( const Command& input)
       XMLObject::operator =(input);
       _cmdName =  input._cmdName;
 
-      for ( size_t i = 0; i < _dataValuePairs.size(); ++i )
-      {
-         delete _dataValuePairs.at(i);
-      }
       _dataValuePairs.clear();
       nameToDataValuePairMap.clear();
 
@@ -91,17 +83,16 @@ Command& Command::operator=( const Command& input)
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
+/*void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
 {
    _dataValuePairs.push_back(commandValuePair);
    nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-void Command::AddDataValuePair( VE_XML::DataValuePairPtr commandValuePair )
+void Command::AddDataValuePair( VE_XML::DataValuePairWeakPtr commandValuePair )
 {
-    //_dataValuePairs.push_back(commandValuePair);
-    //nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
-    std::cerr << " ERROR : Not implemented yet." << std::endl;
+    _dataValuePairs.push_back(commandValuePair);
+    nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( std::string input )
@@ -136,105 +127,93 @@ void Command::_updateDataValuePairs()
 /////////////////////////////////////////////////////////
 void Command::SetObjectFromXMLData(DOMNode* xmlInput)
 {
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast<DOMElement*>(xmlInput);
-   }
+    DOMElement* currentElement = 0;
+    if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+    {
+        currentElement = dynamic_cast<DOMElement*>(xmlInput);
+    }
    
-   if(currentElement)
-   {
-      //break down the element
-      {
-         //get variables by tags
-         DOMNodeList* subElements = 0;
-         subElements = currentElement->getElementsByTagName(xercesString("command"));
-         if ( subElements->getLength() > 0 )
-         {
+    if( !currentElement )
+    {
+        return;
+    }
+    //break down the element
+    {
+        //get variables by tags
+        DOMNodeList* subElements = 0;
+        subElements = currentElement->getElementsByTagName(xercesString("command"));
+        if ( subElements->getLength() > 0 )
+        {
             //should only be the name of the command
             DOMElement* name = dynamic_cast< DOMElement* >( subElements->item(0) );
-            //if(name)
-            {
-               ExtractCmdNameFromElement(name);
-            }
-         }
-         else
-         {
+            ExtractCmdNameFromElement(name);
+        }
+        else
+        {
             GetAttribute( currentElement, "commandName", _cmdName );
-         }
-      }
-      //break down the element
-      {
-         //get variables by tags
-         DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("parameter"));
-            //clear out old dvpairs
-            for( size_t i = 0; i < _dataValuePairs.size(); ++i )
-            {
-                delete _dataValuePairs.at(i);
-            }
-            _dataValuePairs.clear();
-            nameToDataValuePairMap.clear();
-            //we can have as many dvpairs as we want so get them all and populate the list
-            DOMElement* dataValuePairIn = 0;
-            unsigned int nDVPairsIn = subElements->getLength();
-            //read in new data value pairs
-         for(unsigned int i = 0; i < nDVPairsIn; i++)
-         {
+        }
+    }
+    //break down the element
+    {
+        //get variables by tags
+        DOMNodeList* subElements = currentElement->getElementsByTagName(xercesString("parameter"));
+        //clear out old dvpairs
+        _dataValuePairs.clear();
+        nameToDataValuePairMap.clear();
+        //we can have as many dvpairs as we want so get them all and populate the list
+        DOMElement* dataValuePairIn = 0;
+        unsigned int nDVPairsIn = subElements->getLength();
+        //read in new data value pairs
+        for( unsigned int i = 0; i < nDVPairsIn; ++i )
+        {
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>(subElements->item(i));
-            if( dvPairIn )
-            {
-               VE_XML::DataValuePair* veDvp = new VE_XML::DataValuePair();
-               veDvp->SetObjectFromXMLData(dvPairIn);
-               _dataValuePairs.push_back(veDvp);
-               nameToDataValuePairMap[ veDvp->GetDataName() ] = veDvp;
-            }
-         }
-      }
-   }
+            VE_XML::DataValuePairStrongPtr veDvp = new VE_XML::DataValuePair();
+            veDvp->SetObjectFromXMLData(dvPairIn);
+            _dataValuePairs.push_back(veDvp);
+            nameToDataValuePairMap[ veDvp->GetDataName() ] = veDvp;
+        }
+    }
 }
 /////////////////////////////////////////////////////////////////////
 void Command::ExtractCmdNameFromElement(DOMElement* commandElement)
 {
-   _cmdName = ExtractFromSimpleElement< std::string >( commandElement );
+    _cmdName = ExtractFromSimpleElement< std::string >( commandElement );
 }
 ///////////////////////////////////////
 std::string Command::GetCommandName()
 {
-   return _cmdName;
+    return _cmdName;
 }
 ///////////////////////////////////////
 void Command::SetCommandName( std::string name )
 {
-   _cmdName = name;
+    _cmdName = name;
 }
 //////////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* Command::GetDataValuePair(std::string dataValueName)
+VE_XML::DataValuePairWeakPtr Command::GetDataValuePair(std::string dataValueName)
 {
-   std::map< std::string, VE_XML::DataValuePair* >::iterator iter;
-   iter = nameToDataValuePairMap.find( dataValueName );
-   if ( iter != nameToDataValuePairMap.end() )
-   {
-      return iter->second;
-   }
-   return 0;
+    std::map< std::string, VE_XML::DataValuePairStrongPtr >::iterator iter;
+    iter = nameToDataValuePairMap.find( dataValueName );
+    if( iter != nameToDataValuePairMap.end() )
+    {
+        return iter->second;
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* Command::GetDataValuePair( int index )
+VE_XML::DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
 {
-   try
-   {
-      return _dataValuePairs.at(index);
-   }
-   catch (...)
-   {
-      if ( index >= 0 )
-      {
-         std::cerr << " Command::GetDataValuePair The element request is out of sequence."
-            << " Please ask for a lower number point or -1 to request new element." << std::endl;
-      }  
-      _dataValuePairs.push_back( new DataValuePair() );
-      return _dataValuePairs.back();
-   }
+    try
+    {
+        return _dataValuePairs.at(index);
+    }
+    catch( ... )
+    {
+        std::cerr << " Command::GetDataValuePair The element request is out of sequence."
+            << " Please ask for a lower number point." << std::endl;
+        
+        return 0;
+    }
 }
 ///////////////////////////////////////////////////
 size_t Command::GetNumberOfDataValuePairs()

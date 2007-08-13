@@ -76,10 +76,10 @@ void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode(VE_XML::XMLObject
       
       double scalarRange[2] = {0.f,100.f};
 
-      VE_XML::DataValuePair* minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
+      VE_XML::DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
       minScalarRange->GetData( scalarRange[0] );
             
-      VE_XML::DataValuePair* maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
+      VE_XML::DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
       maxScalarRange->GetData( scalarRange[1] );
       
       //this is overkill

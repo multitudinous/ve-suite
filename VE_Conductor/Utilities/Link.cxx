@@ -399,8 +399,9 @@ void Link::OnQueryStreamInputs(wxCommandEvent& event )
     
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getStreamInputModuleParamList");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName);
+    returnState.AddDataValuePair( data );
 	
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -426,7 +427,7 @@ void Link::OnQueryStreamInputs(wxCommandEvent& event )
 	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
     
 	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
     
@@ -450,8 +451,9 @@ void Link::OnQueryStreamOutputs(wxCommandEvent& event )
     
 	VE_XML::Command returnState;
 	returnState.SetCommandName("getStreamOutputModuleParamList");
-	VE_XML::DataValuePair* data = returnState.GetDataValuePair(-1);
+	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName);
+    returnState.AddDataValuePair( data );
 	
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
@@ -474,7 +476,7 @@ void Link::OnQueryStreamOutputs(wxCommandEvent& event )
 	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
 	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
 	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePair * pair = cmd->GetDataValuePair(0);
+	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
     

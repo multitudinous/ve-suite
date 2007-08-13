@@ -80,9 +80,9 @@ void CADPhysicsMeshEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObject )
     try
     {
         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >(xmlObject);
-        VE_XML::DataValuePair* nodeID = command->GetDataValuePair( "Node ID" );
-        VE_XML::DataValuePair* nodeType = command->GetDataValuePair( "Node Type" );
-        VE_XML::DataValuePair* meshType = command->GetDataValuePair( "Mesh Type" );
+        VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
+        VE_XML::DataValuePairWeakPtr meshType = command->GetDataValuePair( "Mesh Type" );
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {

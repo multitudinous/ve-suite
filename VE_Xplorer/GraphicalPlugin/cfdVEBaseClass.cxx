@@ -266,7 +266,7 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
    for ( size_t i = 0; i < numDVP; ++i )
    {
       VE_XML::Command* command = xmlModel->GetResult( i );
-      VE_XML::DataValuePair* tempPair = tempCommand->GetDataValuePair( i );
+      VE_XML::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
       VE_XML::Command* copyCommand = dynamic_cast< VE_XML::Command* >( tempPair->GetDataXMLObject() );
       *command = *copyCommand;
    }
