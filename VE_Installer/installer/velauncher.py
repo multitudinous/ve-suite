@@ -204,6 +204,7 @@ class LauncherWindow(wx.Frame):
             self.prefSubMenu.AppendCheckItem(603, "Enable VSync")
             
         menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
+
         if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
             self.prefSubMenu.Enable(602, False)
         else:    
@@ -252,7 +253,9 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 524)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 525)
-        self.Bind(wx.EVT_MENU, self.UpdateData, id = 601)
+        self.Bind(wx.EVT_MENU, self.UpdateData, id = 602)
+        if posix:
+            self.Bind(wx.EVT_MENU, self.UpdateData, id = 603)
 
         ##Layout format settings
         ##Create the overall layout box
