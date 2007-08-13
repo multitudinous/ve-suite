@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_SCENEGRAPH_LIBRARY;_OSG;BOOST_ALL_DYN_LINK;JUGGLER_DEBUG;LOKI_OBJECT_LEVEL_THREADING"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_SCENEGRAPH_LIBRARY;_OSG;BOOST_ALL_DYN_LINK;JUGGLER_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -126,7 +126,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_SCENEGRAPH_LIBRARY;_OSG;VTK44;BOOST_ALL_DYN_LINK;JUGGLER_OPT;LOKI_OBJECT_LEVEL_THREADING"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_SCENEGRAPH_LIBRARY;_OSG;VTK44;BOOST_ALL_DYN_LINK;JUGGLER_OPT;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

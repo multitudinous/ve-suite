@@ -49,7 +49,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_UTILS_LIBRARY;_TAO;LOKI_OBJECT_LEVEL_THREADING"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_UTILS_LIBRARY;_TAO;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib loki.lib libnspr4.lib"
+				AdditionalDependencies="xerces-c_2.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib libnspr4.lib"
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -142,7 +142,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_UTILS_LIBRARY;_TAO;_USRDLL;LOKI_OBJECT_LEVEL_THREADING"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_UTILS_LIBRARY;_TAO;_USRDLL;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -170,7 +170,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib loki_D.lib"
+				AdditionalDependencies="xerces-c_2d.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib"
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib_d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
