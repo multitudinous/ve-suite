@@ -51,7 +51,7 @@ public:
 protected:
     virtual void DefinePasses();
 
-    VE_SceneGraph::DCS* m_dcs;
+    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;
 private:
 
 };
