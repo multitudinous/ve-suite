@@ -165,12 +165,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2D.lib Library_d.lib"
+				AdditionalDependencies="osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2D.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\project_tao_osg_vep_d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\\Build\Win32\VC7.1\Debug&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\src\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\\Build\Win32\VC7.1\Debug&quot;"
 				IgnoreAllDefaultLibraries="false"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="true"
