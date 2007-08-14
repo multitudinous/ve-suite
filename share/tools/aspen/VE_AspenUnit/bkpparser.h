@@ -12,7 +12,7 @@
 #include <map>
 #include <utility>
 #include <sstream>
-#include "ASPENV21/CASIlib/CASI.h"
+#include "share/tools/aspen/CASIlib/CASI.h"
 #include "VE_Open/XML/Model/Network.h"
 
 namespace VE_Model
