@@ -62,11 +62,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="false"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2d.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2d.lib Library_d.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\UnitWrapperLib_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\src\Debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="0"
 				ImportLibrary="$(OutDir)\UnitWrapper_d.lib"
