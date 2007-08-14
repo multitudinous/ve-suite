@@ -182,7 +182,7 @@ void Tablet::UpdateNavigation()
             worldTrans[ 2 ] -= translationStepSize;
             center_point->mData[ 2 ] += translationStepSize;
         }
-        //CW rotation
+        //CCW rotation
         else if( cfdIso_value == YAW_CCW )        
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3d( 0, 0, 1 ) );
@@ -224,15 +224,16 @@ void Tablet::UpdateNavigation()
 
                 //Create translation from new rotated point and add original head offset to the newly found location
                 //Set world translation accordingly
-                worldTrans[0] = -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[0] );
-                worldTrans[1] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[1] );
+                worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
+                worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
 
-                center_point->mData[ 0 ] = -worldTrans[ 0 ];
-                center_point->mData[ 1 ] = -worldTrans[ 1 ];
+                double theta = osg::DegreesToRadians( rotationStepSize );
+                double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
+                center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
+                center_point->mData[ 1 ] = ( pos[ 0 ] * sin( theta ) ) + ( pos[ 1 ] * cos( theta ) );
             }
             else
             {
-                /*
                 //Get juggler Matrix of worldDCS
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
@@ -262,10 +263,9 @@ void Tablet::UpdateNavigation()
                 //Set world translation accordingly
                 worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
-                */
             }
         }
-        //CCWrotation
+        //CW rotation
         else if( cfdIso_value == YAW_CW  )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3d( 0, 0, 1 ) );
@@ -324,13 +324,14 @@ void Tablet::UpdateNavigation()
 #else
                 worldTrans[ 1 ] = ( rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
 #endif
-
-                center_point->mData[ 0 ] = -worldTrans[ 0 ];
-                center_point->mData[ 1 ] = -worldTrans[ 1 ];
+            
+                double theta = osg::DegreesToRadians( -rotationStepSize );
+                double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
+                center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
+                center_point->mData[ 1 ] = ( pos[ 0 ] * sin( theta ) ) + ( pos[ 1 ] * cos( theta ) );
             }
             else
             {
-                /*
                 //Get juggler Matrix of worldDCS
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
@@ -360,14 +361,12 @@ void Tablet::UpdateNavigation()
                 //Set world translation accordingly
                 worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
-                */
             }
         }
         else if( cfdIso_value == PITCH_DOWN )       
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3d( 1, 0, 0 ) );
 
-            /*
             //Get juggler Matrix of worldDCS
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
@@ -397,14 +396,11 @@ void Tablet::UpdateNavigation()
             //Set world translation accordingly
             worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
             worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
-            */
-
         }
         else if( cfdIso_value == PITCH_UP )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3d( 1, 0, 0 ) );
 
-            /*
             //Get juggler Matrix of worldDCS
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
@@ -434,14 +430,11 @@ void Tablet::UpdateNavigation()
             //Set world translation accordingly
             worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
             worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
-            */
-
         }
         else if( cfdIso_value == ROLL_CW )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3d( 0, 1, 0 ) );
 
-            /*
             //Get juggler Matrix of worldDCS
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
@@ -471,13 +464,11 @@ void Tablet::UpdateNavigation()
             //Set world translation accordingly
             worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
             worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
-            */
         }
         else if( cfdIso_value == ROLL_CCW )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3d( 0, 1, 0 ) );
 
-            /*
             //Get juggler Matrix of worldDCS
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
@@ -507,7 +498,6 @@ void Tablet::UpdateNavigation()
             //Set world translation accordingly
             worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
             worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
-            */
         }
     }
 
