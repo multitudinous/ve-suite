@@ -227,6 +227,8 @@ void Tablet::UpdateNavigation()
                 worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
 
+                //Calculate the new center_point position based off the swept rotation
+                // --- Might need to calculate this as if the head is the origin --- //
                 double theta = osg::DegreesToRadians( rotationStepSize );
                 double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
                 center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
@@ -282,15 +284,10 @@ void Tablet::UpdateNavigation()
 
                 gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
                 jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
-#ifdef _OSG
+
                 jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
                 jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
                 jugglerHeadPointTemp[ 2 ] = 0;
-#else
-                jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
-                jugglerHeadPointTemp[ 1 ] = 0;
-                jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[ 2 ];
-#endif
 
                 //Translate world dcs by distance that the head is away from the origin
                 gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -jugglerHeadPointTemp );
@@ -301,11 +298,7 @@ void Tablet::UpdateNavigation()
                 gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
 
                 //Create rotation matrix and juggler head vector
-#ifdef _OSG
                 gmtl::EulerAngleXYZd worldRotVecTemp( 0, 0, gmtl::Math::deg2Rad( -rotationStepSize ) );
-#else
-                gmtl::EulerAngleXYZd worldRotVecTemp( 0, gmtl::Math::deg2Rad( -rotationStepSize ), 0 );
-#endif
 
                 gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >( worldRotVecTemp );
                 gmtl::Vec4d newGlobalHeadPointVec;
@@ -319,12 +312,10 @@ void Tablet::UpdateNavigation()
                 //Create translation from new rotated point and add original head offset to the newly found location
                 //Set world translation accordingly
                 worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-#ifdef _OSG
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-#else
-                worldTrans[ 1 ] = ( rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
-#endif
-            
+
+                //Calculate the new center_point position based off the swept rotation
+                // --- Might need to calculate this as if the head is the origin --- //
                 double theta = osg::DegreesToRadians( -rotationStepSize );
                 double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
                 center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
