@@ -34,12 +34,12 @@
 #define TABLET_H
 
 /*!\file Tablet.h
-Tablet API
+  Tablet API
 */
 
 /*!\class VE_Xplorer::Tablet
 * A class to track the wand location, object translation,
-and virtual cursor location in virtual environment.
+  and virtual cursor location in virtual environment.
 */
 
 // --- VE-Suite Includes --- //
