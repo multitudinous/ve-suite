@@ -62,10 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgFXd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib loki_D.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgFXd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib"
 				OutputFile="$(OutDir)/VE_SceneGraphUtils_osg_vep_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(PRODUCER_HOME)\lib\win32&quot;;&quot;$(OPENTHREADS_HOME)\lib\win32&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(PRODUCER_HOME)\lib\win32&quot;;&quot;$(OPENTHREADS_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_SceneGraphUtils.pdb"
 				SubSystem="2"
