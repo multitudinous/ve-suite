@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-06-15 11:02:33 -0500 (Fri, 15 Jun 2007) $
- * Version:       $Rev: 8205 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: CenterPointJumpEventHandler.cxx 8205 2007-06-15 16:02:33Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
