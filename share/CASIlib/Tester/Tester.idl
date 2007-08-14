@@ -1,0 +1,29 @@
+// Tester.idl : type library source for Tester.exe
+
+// This file will be processed by the MIDL compiler to produce the
+// type library (Tester.tlb).
+
+[ uuid(9785C474-2A03-45A3-B89F-623E37D91CD4), version(1.0) ]
+library Tester
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	//  Primary dispatch interface for CTesterDoc
+	
+	[ uuid(CC1C21B3-16AB-463F-97FF-5AC47B0589EE) ]
+	dispinterface ITester
+	{
+		properties:
+			
+		methods:
+	};
+
+	//  Class information for CTesterDoc
+	
+	[ uuid(44686D56-282A-4FB8-AB9C-AC1D6FBE39DB) ]
+	coclass Tester
+	{
+		[default] dispinterface ITester;
+	};
+};

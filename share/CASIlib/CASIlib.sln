@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CASIlib", "CASIlib.vcproj", "{4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tester", "Tester\Tester.vcproj", "{DAA77159-8F63-46C9-BF83-106A0D893637}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD} = {4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD}.Debug|Win32.Build.0 = Debug|Win32
+		{4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD}.Release|Win32.ActiveCfg = Release|Win32
+		{4EB38BEB-B65E-480B-B5C9-1F8A4CC650CD}.Release|Win32.Build.0 = Release|Win32
+		{DAA77159-8F63-46C9-BF83-106A0D893637}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DAA77159-8F63-46C9-BF83-106A0D893637}.Debug|Win32.Build.0 = Debug|Win32
+		{DAA77159-8F63-46C9-BF83-106A0D893637}.Release|Win32.ActiveCfg = Release|Win32
+		{DAA77159-8F63-46C9-BF83-106A0D893637}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

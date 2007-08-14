@@ -1,0 +1,181 @@
+ ASPEN "12.1" DATETIME "09/01/2004  15:18:04:99" MACHINE "WIN32" SITEID "" USER 
+ "Administrator"                                                                
+ ? SETUP UNITS-SET SET1 ? \ UNITSET BASESET = MET (3 3 3 3 3 3 3 3 3 3 3 7 7 3  
+ 3 5 3 3 3 5 3 4 3 3 3 3 1 3 3 3 4 3 7 3 3 3 1 1 4 4 3 3 3 3 3 3 3 3 3 3 3 3 5  
+ 3 3 3 3 3 3 3 3 3 3 4 3 3 3 3 3 3 3 3 3 3 5 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3  
+ 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3) \                       
+ ? SETUP GLOBAL ? \ IN-UNITS INSET = SET1 \ \ COMMENTS COMMENTS = ( ";"         
+ ";Input Summary created by Aspen Plus Rel. 10.2.1 at 08:15:03 Fri Jul 19, 200" 
+ ";Directory N:\MyFiles\PED  Filename N:\MyFiles\PED\newfcmodel4.inp" ";" ) \ ? 
+ SETUP DESCRIP ? \ DESCRIP DESCRIP = (                                          
+ "GENERAL SIMULATION WITH METRIC UNITS : C, BAR, KG/HR,"                        
+ "KMOL/HR, MMKCAL/HR, CUM/HR. PROPERTY METHOD: NONE FLOW"                       
+ "BASIS FOR INPUT: MOLE STREAM REPORT COMPOSITION: MOLE FLOW" ) \ ? %M          
+ FLOWSHEET GLOBAL ? ; SET1 ; \ BLOCK BLKID = INTREF IN = (ANODEIN1 X) OUT =     
+ (ANODEIN2 X REF-ANOD X) \ \ BLOCK BLKID = ANODE IN = (O2-FLOW X ANODEIN2 X     
+ REF-ANOD X) OUT = (ANODEOUT X ANOD-HTR X) \ \ BLOCK BLKID = CATHHTR IN =       
+ (D-CATHIN X ANOD-HTR X) OUT = (CATHOUT X QOUT X) \ \ BLOCK BLKID = CATHSPL IN  
+ = (CATHIN X) OUT = (D-CATHIN X O2-FLOW X) \ ? COMPONENTS MAIN ? ; SET1 ; \     
+ COMPONENTS CID = CH4 ANAME = "CH4" / CID = O2 ANAME = "O2" / CID = N2 ANAME =  
+ "N2" / CID = CO ANAME = "CO" / CID = CO2 ANAME = "CO2" / CID = H2 ANAME = "H2" 
+ / CID = H2O ANAME = "H2O" / CID = AR ANAME = "AR" \ ? %M PROPERTIES MAIN ? \   
+ GPROPERTIES GOPSETNAME = PENG-ROB \ ? %M DATABANKS ? \ DATABANKS FILE-SYM-NAM  
+ = ( PURE10 AQUEOUS SOLIDS INORGANIC NOASPENP ) \ ? %M PROPERTIES PROP-DATA     
+ BI-PARAMS PRKIJ-1 ? ; SET1 ; \ PROP-LIST PARAMNAME = PRKIJ \ \ BPVAL           
+ PARAMNAME2 = PRKIJ CID1 = CH4 CID2 = N2 VALUE = .03110 <0> <0> / PARAMNAME2 =  
+ PRKIJ CID1 = CH4 CID2 = CO VALUE = .030 <0> <0> / PARAMNAME2 = PRKIJ CID1 =    
+ CH4 CID2 = CO2 VALUE = .09190 <0> <0> / PARAMNAME2 = PRKIJ CID1 = CH4 CID2 =   
+ H2 VALUE = .01560 <0> <0> / PARAMNAME2 = PRKIJ CID1 = CH4 CID2 = AR VALUE =    
+ .0230 <0> <0> / PARAMNAME2 = PRKIJ CID1 = O2 CID2 = N2 VALUE = -.01190 <0> <0> 
+ / PARAMNAME2 = PRKIJ CID1 = O2 CID2 = AR VALUE = .01040 <0> <0> / PARAMNAME2 = 
+ PRKIJ CID1 = N2 CID2 = CO VALUE = .03070 <0> <0> / PARAMNAME2 = PRKIJ CID1 =   
+ N2 CID2 = CO2 VALUE = -.0170 <0> <0> / PARAMNAME2 = PRKIJ CID1 = N2 CID2 = H2  
+ VALUE = .1030 <0> <0> / PARAMNAME2 = PRKIJ CID1 = N2 CID2 = AR VALUE =         
+ -.00260 <0> <0> / PARAMNAME2 = PRKIJ CID1 = N2 CID2 = CH4 VALUE =              
+ .03110 <0> <0> / PARAMNAME2 = PRKIJ CID1 = N2 CID2 = O2 VALUE =                
+ -.01190 <0> <0> / PARAMNAME2 = PRKIJ CID1 = CO CID2 = N2 VALUE =               
+ .03070 <0> <0> / PARAMNAME2 = PRKIJ CID1 = CO CID2 = H2 VALUE =                
+ .09190 <0> <0> / PARAMNAME2 = PRKIJ CID1 = CO CID2 = CH4 VALUE =               
+ .030 <0> <0> / PARAMNAME2 = PRKIJ CID1 = CO2 CID2 = N2 VALUE = -.0170 <0> <0>  
+ / PARAMNAME2 = PRKIJ CID1 = CO2 CID2 = H2 VALUE = -.16220 <0> <0> / PARAMNAME2 
+ = PRKIJ CID1 = CO2 CID2 = CH4 VALUE = .09190 <0> <0> / PARAMNAME2 = PRKIJ CID1 
+ = CO2 CID2 = H2O VALUE = .120 <0> <0> / PARAMNAME2 = PRKIJ CID1 = H2 CID2 = N2 
+ VALUE = .1030 <0> <0> / PARAMNAME2 = PRKIJ CID1 = H2 CID2 = CO VALUE =         
+ .09190 <0> <0> / PARAMNAME2 = PRKIJ CID1 = H2 CID2 = CO2 VALUE =               
+ -.16220 <0> <0> / PARAMNAME2 = PRKIJ CID1 = H2 CID2 = CH4 VALUE =              
+ .01560 <0> <0> / PARAMNAME2 = PRKIJ CID1 = H2O CID2 = CO2 VALUE =              
+ .120 <0> <0> / PARAMNAME2 = PRKIJ CID1 = AR CID2 = N2 VALUE = -.00260 <0> <0>  
+ / PARAMNAME2 = PRKIJ CID1 = AR CID2 = CH4 VALUE = .0230 <0> <0> / PARAMNAME2 = 
+ PRKIJ CID1 = AR CID2 = O2 VALUE = .01040 <0> <0> \ ? SETUP GLOBAL ? \          
+ STREAM-CLASS SCLASS = CONVEN \ ? HEATSTREAMS ANOD-HTR ? ? HEATSTREAMS QOUT ? ? 
+ HEATSTREAMS REF-ANOD ? ? STREAM MATERIAL ANODEIN1 ? ; SET1 ; \ SUBSTREAM SSID  
+ = MIXED TEMP = 700.0 <22> <4> PRES = 1.013250 <20> <5> FLOWBASE = MOLE TOTFLOW 
+ = 1.0 <-89> <3> BASIS = MOLE-FRAC \ \ MOLE-FLOW SSID1 = MIXED CID = H2 FLOW =  
+ 1.0 <-4> <0> \ ? STREAM MATERIAL CATHIN ? ; SET1 ; \ SUBSTREAM SSID = MIXED    
+ TEMP = 650.0 <22> <4> PRES = 1.013250 <20> <5> FLOWBASE = MOLE TOTFLOW =       
+ 9.52380952 <-89> <3> BASIS = MOLE-FRAC \ \ MOLE-FLOW SSID1 = MIXED CID = O2    
+ FLOW = .210 <-4> <0> / SSID1 = MIXED CID = N2 FLOW = .790 <-4> <0> \ ?         
+ PROP-SET MAIN PS-1 ? ; SET1 ; \ P1 ID = RHOMX UNITS = ( "KG/CUM" ) / ID = MUMX 
+ UNITS = ( "N-SEC/SQM" ) / ID = QVALNET UNITS = ( "MMKCAL/KG" ) / ID = KMX      
+ UNITS = ( "WATT/M-K" ) / ID = CPMX UNITS = ( "J/KG-K" ) / ID = PR \ \ P2       
+ SUBSTREAM = MIXED PHASE = (V) \ ? BLOCK SEP CATHSPL ? ; SET1 ; \ PARAM         
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = CH4 FRACS = 0.0 <0> <0> /     
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = O2 FRACS = .0010 <0> <0> /    
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = N2 FRACS = 0.0 <0> <0> /      
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = CO FRACS = 0.0 <0> <0> /      
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = CO2 FRACS = 0.0 <0> <0> /     
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = H2 FRACS = 0.0 <0> <0> /      
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = H2O FRACS = 0.0 <0> <0> /     
+ PARAM-STREAM = O2-FLOW SUBSTREAM = MIXED COMPS = AR FRACS = 0.0 <0> <0> \ ?    
+ BLOCK HEATER CATHHTR ? ; SET1 ; \ PARAM TEMP = 800.0 <22> <4> PRES = 0.0 <20>  
+ <5> \ ? BLOCK RGIBBS ANODE ? ; SET1 ; \ PARAM TEMP = 800.0 <22> <4> PRES = 0.0 
+ <20> <5> \ \ PROD-FRAC FRAC-CID = CH4 FRAC = 1.0 <0> <0> \ ? BLOCK RGIBBS      
+ INTREF ? ; SET1 ; \ PARAM TEMP = 800.0 <22> <4> PRES = 0.0 <20> <5> \ ?        
+ DESIGN-SPEC DS-1 ? ; SET1 ; \ DEFINE FVN = TREF FVN-VARTYPE = BLOCK-VAR        
+ FVN-BLOCK = INTREF FVN-SENTENCE = PARAM FVN-VARIABLE = TEMP \ \ DEFINE FVN =   
+ THX FVN-VARTYPE = BLOCK-VAR FVN-BLOCK = CATHHTR FVN-SENTENCE = PARAM           
+ FVN-VARIABLE = TEMP \ \ DEFINE FVN = QOUT FVN-VARTYPE = HEAT-DUTY FVN-STREAM = 
+ QOUT \ \ DEFINE FVN = H2IN FVN-VARTYPE = MOLE-FLOW FVN-STREAM = ANODEIN2       
+ FVN-SUBS = MIXED FVN-COMPONEN = H2 \ \ DEFINE FVN = H2OUT FVN-VARTYPE =        
+ MOLE-FLOW FVN-STREAM = ANODEOUT FVN-SUBS = MIXED FVN-COMPONEN = H2 \ \ DEFINE  
+ FVN = COIN FVN-VARTYPE = MOLE-FLOW FVN-STREAM = ANODEIN2 FVN-SUBS = MIXED      
+ FVN-COMPONEN = CO \ \ DEFINE FVN = COOUT FVN-VARTYPE = MOLE-FLOW FVN-STREAM =  
+ ANODEOUT FVN-SUBS = MIXED FVN-COMPONEN = CO \ \ DEFINE FVN = XH2 FVN-VARTYPE = 
+ MOLE-FRAC FVN-STREAM = ANODEOUT FVN-SUBS = MIXED FVN-COMPONEN = H2 \ \ DEFINE  
+ FVN = XH2O FVN-VARTYPE = MOLE-FRAC FVN-STREAM = ANODEOUT FVN-SUBS = MIXED      
+ FVN-COMPONEN = H2O \ \ DEFINE FVN = XCO FVN-VARTYPE = MOLE-FRAC FVN-STREAM =   
+ ANODEOUT FVN-SUBS = MIXED FVN-COMPONEN = CO \ \ DEFINE FVN = XCO2 FVN-VARTYPE  
+ = MOLE-FRAC FVN-STREAM = ANODEOUT FVN-SUBS = MIXED FVN-COMPONEN = CO2 \ \      
+ DEFINE FVN = XO2 FVN-VARTYPE = MOLE-FRAC FVN-STREAM = D-CATHIN FVN-SUBS =      
+ MIXED FVN-COMPONEN = O2 \ \ DEFINE FVN = TANODE FVN-VARTYPE = BLOCK-VAR        
+ FVN-BLOCK = ANODE FVN-SENTENCE = PARAM FVN-VARIABLE = TEMP \ \ SPEC EXPR1 =    
+ "QOUT" EXPR2 = "T" \ \ TOL-SPEC TOL = ".001" \ \ VARY 1 VARY-VARTYPE =         
+ BLOCK-VAR VARYBLOCK = ANODE VARYSENTENCE = PARAM VARYVARIABLE = TEMP \ \       
+ LIMITS LOWER = "300" UPPER = "2000" \ \ FORTRAN FORTRAN-EXEC = (               
+ "C        SET FARADAY'S CONSTANT" "F        FG=96487.0" "F        FKG=FG*1000" 
+ "C        DETERMINE IF H2 ONLY, OR CO & H2 REACTING"                           
+ "F        IF(COIN.EQ.0.0)THEN" "C        H2 ONLY"                              
+ "F        DGO=55.85*(TANODE+273.0)-247500.0" "F        EO=-DGO/2.0/FG"         
+ "F        DDG=ALOG((XH2O)/(XH2*(XO2**0.5)))"                                   
+ "F        DDG=DDG*8.314*(TANODE+273.0)" "F        DG=DGO+DDG"                  
+ "F        EN=-DG/2.0/FG" "F        ELSE" "C        H2 + CO REACTING"           
+ "F        DGO=141.299*(TANODE+273.0)-525388.0" "F        EO=-DGO/4.0/FG"       
+ "F        XXX=XH2O*XCO2" "F        YYY=XH2*XCO*XO2"                            
+ "F        DDG=ALOG((XXX)/YYY)" "F        DDG=DDG*8.314*(TANODE+273.0)"         
+ "F        DG=DGO+DDG" "F        EN=-DG/4.0/FG" "F        ENDIF"                
+ "C        CALCULATE TOTAL MOLAR FLUX OF REACTANTS" "F        H2=H2IN-H2OUT"    
+ "F        CO=COIN-COOUT" "F        DN=H2+CO"                                   
+ "C        AREA PER UNIT CELL - CM^2" "F        APCELL=305.0"                   
+ "C        CALCULATE OR SET NUMBER OF CELLS"                                    
+ "C        CELLS=INT(DN*2.0*FKG/(0.3*3600.0*APCELL))+1.0"                       
+ "F        CELLS=498.0" "C        CALCULATE TOTAL STACK AREA"                   
+ "F        TAREA=CELLS*APCELL"                                                  
+ "C        CALCULATE ELECTRON FLUX, CURRENT DENSITY, EXCHANGE CD"               
+ "F        FLUXH=DN/TAREA" "F        FLUXS=FLUXH/3600"                          
+ "F        CURR=FLUXS*2.0*FKG"                                                  
+ "F        CURRO=(-13595.0+15.0*(TANODE+273))/100.0/100.0"                      
+ "C        CALCULATE ANODE OVERPOTENTIAL" "F        IF(COIN.EQ.0.0)THEN"        
+ "F        ALOSS=(8.314*(TANODE+273)/2.0/FG/0.5)*ALOG(CURR/CURRO)"              
+ "F        ELSE"                                                                
+ "F        ALOSS=(8.314*(TANODE+273)/4.0/FG/0.5)*ALOG(CURR/CURRO)"              
+ "F        ENDIF"                                                               
+ "C        SET CELL PARAMETERS, CALCULATE TOTAL RESISTIVITY - OHM-CM^2"         
+ "F        ATHICK=0.15" "F        CTHICK=0.01" "F        ETHICK=0.001"          
+ "F        AA=0.00298" "F        CA=0.008144" "F        EA=0.00294"             
+ "F        AE=-1392.0" "F        CE=600.0" "F        EE=10350.0"                
+ "F        AR=ATHICK*AA*EXP(AE/(TANODE+273.0))"                                 
+ "F        CR=CTHICK*CA*EXP(CE/(TANODE+273.0))"                                 
+ "F        ER=ETHICK*EA*EXP(EE/(TANODE+273.0))" "F        RTOT=AR+CR+ER"        
+ "C        CALCULATE OHMIC OVERPOTENTIAL" "F        OLOSS=RTOT*CURR"            
+ "C        CALCULATE CONCENTRATION OVERPOTENTIAL"                               
+ "F        IF(COIN.EQ.0.0)THEN"                                                 
+ "F        CLOSS=-(8.314*(TANODE+273)/2.0/FG)*ALOG(1.0-CURR/4.0)"               
+ "F        ELSE"                                                                
+ "F        CLOSS=-(8.314*(TANODE+273)/4.0/FG)*ALOG(1.0-CURR/4.0)"               
+ "F        ENDIF" "C        CALCULATE TOTAL VOLTAGE LOSS"                       
+ "F        TLOSS=ALOSS+OLOSS+CLOSS" "C        CALCULATE OPERATING VOLTAGE"      
+ "F        E=EN-TLOSS"                                                          
+ "C        CALCULATE POWER DENSITY - W/CM^2, AND TOTAL POWER - W,KW"            
+ "F        TPDENS=E*CURR" "F        TPOWER=TPDENS*TAREA"                        
+ "F        TPOWER=TPOWER/1000" "C        SET TOTAL POWER TO UNITS OF MMKCAL/HR" 
+ "F        TPOWER=TPOWER/1163.09"                                               
+ "C        SET T=TPOWER, T IS THE SPEC VARIABLE" "F        T=TPOWER" ) \ ?      
+ CALCULATOR AIRIN ? ; SET1 ; \ DEFINE FVN = F1 FVN-VARTYPE = MOLE-FLOW          
+ FVN-STREAM = ANODEIN1 FVN-SUBS = MIXED FVN-COMPONEN = CH4 \ \ DEFINE FVN =     
+ AIRIN FVN-VARTYPE = STREAM-VAR FVN-STREAM = CATHIN FVN-SUBS = MIXED            
+ FVN-VARIABLE = MOLE-FLOW \ \ DEFINE FVN = F2 FVN-VARTYPE = MOLE-FLOW           
+ FVN-STREAM = ANODEIN1 FVN-SUBS = MIXED FVN-COMPONEN = H2 \ \ DEFINE FVN = F3   
+ FVN-VARTYPE = MOLE-FLOW FVN-STREAM = ANODEIN1 FVN-SUBS = MIXED FVN-COMPONEN =  
+ CO \ \ READ-VARS READ-VAR = (F1 F2 F3) \ \ WRITE-VARS WRITE-VAR = (AIRIN) \ \  
+ FORTRAN FORTRAN-EXEC = ( "C       CALCULATE AIR IN TO FUEL CELL"               
+ "C       NOTE:  NOT NECESSARY FOR SYSTEMS WITH SET OXIDANT FLOW RATES"         
+ "C       SET FC AIR-TO-FUEL RATIO" "F       AFRAT=5.5"                         
+ "C       CALCULATE STOICHIOMETRIC AMOUNT OF AIR NEEDED"                        
+ "F       AIR=(F1*2.0+F2*0.5+F3*0.5)/0.21"                                      
+ "C       SET ACTUAL AIR IN:  STOICH AIR * A/F RATIO" "F       AIRIN=AIR*AFRAT" 
+ ) \ ? CALCULATOR FCAIR ? ; SET1 ; \ DEFINE FVN = H2 FVN-VARTYPE = MOLE-FLOW    
+ FVN-STREAM = ANODEIN2 FVN-SUBS = MIXED FVN-COMPONEN = H2 \ \ DEFINE FVN = CO   
+ FVN-VARTYPE = MOLE-FLOW FVN-STREAM = ANODEIN2 FVN-SUBS = MIXED FVN-COMPONEN =  
+ CO \ \ DEFINE FVN = SO2FLO FVN-VARTYPE = MOLE-FLOW FVN-STREAM = O2-FLOW        
+ FVN-SUBS = MIXED FVN-COMPONEN = O2 \ \ DEFINE FVN = CATHIN FVN-VARTYPE =       
+ MOLE-FLOW FVN-STREAM = CATHIN FVN-SUBS = MIXED FVN-COMPONEN = O2 \ \ DEFINE    
+ FVN = FCIN FVN-VARTYPE = MOLE-FLOW FVN-STREAM = D-CATHIN FVN-SUBS = MIXED      
+ FVN-COMPONEN = O2 \ \ EXECUTE WHEN = BEFORE BLOCK-TYPE = BLOCK BLK-ID = ANODE  
+ \ \ FORTRAN FORTRAN-EXEC = (                                                   
+ "C         CALCULATE O2 FLOW BASED ON FUEL UTILIZATION"                        
+ "C         SET FUEL UTILIZATION FOR FUEL CELL" "F         FUELUT = 0.85"       
+ "C         CALCULATE O2 FLOW USING FUELUT, AND H2 AND CO FLOW,"                
+ "C         BASED UPON FULL CONVERSION (IE. H2O AND CO2)"                       
+ "F         SO2FLO=(H2+CO)*0.5*FUELUT"                                          
+ "C         SET O2 DEPLETED CATHODE FLOW STREAM" "F         FCIN=CATHIN-SO2FLO" 
+ ) \ ? CALCULATOR FCTEMP ? ; SET1 ; \ DEFINE FVN = TANODE FVN-VARTYPE =         
+ BLOCK-VAR FVN-BLOCK = ANODE FVN-SENTENCE = PARAM FVN-VARIABLE = TEMP \ \       
+ DEFINE FVN = TREF FVN-VARTYPE = BLOCK-VAR FVN-BLOCK = INTREF FVN-SENTENCE =    
+ PARAM FVN-VARIABLE = TEMP \ \ DEFINE FVN = THX FVN-VARTYPE = BLOCK-VAR         
+ FVN-BLOCK = CATHHTR FVN-SENTENCE = PARAM FVN-VARIABLE = TEMP \ \ READ-VARS     
+ READ-VAR = (TANODE) \ \ WRITE-VARS WRITE-VAR = (THX TREF) \ \ FORTRAN          
+ FORTRAN-EXEC = (                                                               
+ "C        SET TEMPERATURE OF INTERNAL REFORMER AND CATHODE HX"                 
+ "C        EQUAL TO ANODE TEMPERATURE" "F        TREF=TANODE"                   
+ "F        THX=TANODE" ) \ ? REPORT STREAM-REPOR ? ; SET1 ; \ OPTIONS MOLEFLOW  
+ = MOLEFLOW MOLEFRAC = MOLEFRAC PROPERTIES = (PS-1) \ "\@"                      
