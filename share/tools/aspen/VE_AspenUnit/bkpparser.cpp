@@ -1020,7 +1020,7 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"InputParams").c_str());
-	VE_XML::DataValuePair* inpParams=params.GetDataValuePair(-1);;
+	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	
 	for (i = 0; i < (int)cur_block.getNumInputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_block.getInputVarName(i)));
@@ -1051,7 +1051,7 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::s
 	properties.SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	VE_XML::DataValuePair* Props[propSize];
+	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j]=properties.GetDataValuePair(-1);
@@ -1150,7 +1150,7 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"OutputParams").c_str());
-	VE_XML::DataValuePair* inpParams=params.GetDataValuePair(-1);;
+	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	
 	for (i = 0; i < (int)cur_block.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_block.getOutputVarName(i)));
@@ -1181,7 +1181,7 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname, std::
 	properties.SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	VE_XML::DataValuePair* Props[propSize];
+	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j]=properties.GetDataValuePair(-1);
@@ -1282,7 +1282,7 @@ std::string BKPParser::GetStreamInputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"InputParams").c_str());
-	VE_XML::DataValuePair* inpParams=params.GetDataValuePair(-1);;
+	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	int test = (int)cur_stream.getNumInputVar();
 	for (i = 0; i < (int)cur_stream.getNumInputVar(); i++)
 		//paramList.push_back((char*)LPCTSTR(cur_stream.getStreamCompName(i)));
@@ -1314,7 +1314,7 @@ std::string BKPParser::GetStreamInputModuleParamProperties(std::string modname, 
 	properties.SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	VE_XML::DataValuePair* Props[propSize];
+	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j]=properties.GetDataValuePair(-1);
@@ -1413,7 +1413,7 @@ std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"OutputParams").c_str());
-	VE_XML::DataValuePair* inpParams=params.GetDataValuePair(-1);;
+	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	
 	for (i = 0; i < (int)cur_stream.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_stream.getOutputVarName(i)));
@@ -1444,7 +1444,7 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	properties.SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	VE_XML::DataValuePair* Props[propSize];
+	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j]=properties.GetDataValuePair(-1);

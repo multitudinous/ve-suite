@@ -166,7 +166,7 @@ char * Body_Unit_i::GetStatusMessage (
 	VE_XML::Command returnState;
 
 	returnState.SetCommandName("statusmessage");
-	VE_XML::DataValuePair* data=returnState.GetDataValuePair(-1);
+	VE_XML::DataValuePairWeakPtr data=returnState.GetDataValuePair(-1);
 	data->SetDataName("RETURN_STATE");
 	data->SetDataType("UNSIGNED INT");
 	data->SetDataValue(return_state);
@@ -490,7 +490,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -513,7 +513,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -535,7 +535,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -558,7 +558,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -581,7 +581,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -604,7 +604,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -626,7 +626,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -649,7 +649,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleProperties(VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -687,7 +687,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
 		unsigned int num = param->GetNumberOfDataValuePairs();
 		for (j=0; j<num; j++)
 		{
-			VE_XML::DataValuePair* curPair= param->GetDataValuePair("NodePath");
+			VE_XML::DataValuePairWeakPtr curPair= param->GetDataValuePair("NodePath");
 			CString nodepath = curPair->GetDataString().c_str();
 			curPair = param->GetDataValuePair("Value");
 			CString nodevalue = curPair->GetDataString().c_str();
@@ -706,7 +706,7 @@ void Body_Unit_i::SetParam (VE_XML::Command* cmd)
 
 	for (i=0; i < (int)num; i++)
 	{
-		VE_XML::DataValuePair* curPair= cmd->GetDataValuePair(i);
+		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="ParamName")
