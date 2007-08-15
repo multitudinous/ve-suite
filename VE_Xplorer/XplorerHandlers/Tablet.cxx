@@ -104,11 +104,13 @@ void Tablet::UpdateNavigation()
         return;
     }
 
+    osg::ref_ptr< VE_SceneGraph::DCS > world = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+
     osg::Quat rot_quat;
-    osg::Quat world_quat = activeDCS->getAttitude();
+    osg::Quat world_quat = world->getAttitude();
 
     double worldTrans[ 3 ];
-    double* tempWorldTrans = activeDCS->GetVETranslationArray();
+    double* tempWorldTrans = world->GetVETranslationArray();
     worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
     worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
     worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
@@ -153,19 +155,19 @@ void Tablet::UpdateNavigation()
             center_point->mData[ 1 ] -= translationStepSize;
         }
         //Backward translate
-        else if( cfdIso_value == NAV_BKWD ) 
+        else if( cfdIso_value == NAV_BKWD )
         { 
             worldTrans[ 1 ] -= translationStepSize;
             center_point->mData[ 1 ] += translationStepSize;
         }
         //Right translate
-        else if( cfdIso_value == NAV_RIGHT ) 
+        else if( cfdIso_value == NAV_RIGHT )
         { 
             worldTrans[ 0 ] += translationStepSize;
             center_point->mData[ 0 ] -= translationStepSize;
         }
         //Left translate
-        else if( cfdIso_value == NAV_LEFT ) 
+        else if( cfdIso_value == NAV_LEFT )
         { 
             worldTrans[ 0 ] -= translationStepSize;
             center_point->mData[ 0 ] += translationStepSize;
@@ -177,13 +179,13 @@ void Tablet::UpdateNavigation()
             center_point->mData[ 2 ] -= translationStepSize;
         }
         //Downward translate
-        else if( cfdIso_value == NAV_DOWN ) 
+        else if( cfdIso_value == NAV_DOWN )
         { 
             worldTrans[ 2 ] -= translationStepSize;
             center_point->mData[ 2 ] += translationStepSize;
         }
         //CCW rotation
-        else if( cfdIso_value == YAW_CCW )        
+        else if( cfdIso_value == YAW_CCW )   
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3d( 0, 0, 1 ) );
 
@@ -195,7 +197,7 @@ void Tablet::UpdateNavigation()
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
                 Matrix44d worldMat;
-                worldMat = activeDCS->GetMat();
+                worldMat = world->GetMat();
 
                 gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
                 jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
@@ -240,7 +242,7 @@ void Tablet::UpdateNavigation()
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
                 Matrix44d worldMat;
-                worldMat = activeDCS->GetMat();
+                worldMat = world->GetMat();
 
                 //Translate world dcs by distance that the head is away from the origin
                 gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -280,7 +282,7 @@ void Tablet::UpdateNavigation()
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
                 Matrix44d worldMat;
-                worldMat = activeDCS->GetMat();
+                worldMat = world->GetMat();
 
                 gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
                 jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
@@ -327,7 +329,7 @@ void Tablet::UpdateNavigation()
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
                 Matrix44d worldMat;
-                worldMat = activeDCS->GetMat();
+                worldMat = world->GetMat();
 
                 //Translate world dcs by distance that the head is away from the origin
                 gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -354,7 +356,7 @@ void Tablet::UpdateNavigation()
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
             }
         }
-        else if( cfdIso_value == PITCH_DOWN )       
+        else if( cfdIso_value == PITCH_DOWN )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3d( 1, 0, 0 ) );
 
@@ -362,7 +364,7 @@ void Tablet::UpdateNavigation()
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
             Matrix44d worldMat;
-            worldMat = activeDCS->GetMat();
+            worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
             gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -396,7 +398,7 @@ void Tablet::UpdateNavigation()
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
             Matrix44d worldMat;
-            worldMat = activeDCS->GetMat();
+            worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
             gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -430,7 +432,7 @@ void Tablet::UpdateNavigation()
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
             Matrix44d worldMat;
-            worldMat = activeDCS->GetMat();
+            worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
             gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -464,7 +466,7 @@ void Tablet::UpdateNavigation()
             //Note:: for pf we are in juggler land
             //       for osg we are in z up land
             Matrix44d worldMat;
-            worldMat = activeDCS->GetMat();
+            worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
             gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
@@ -509,8 +511,8 @@ void Tablet::UpdateNavigation()
 
     world_quat *= rot_quat;
 
-    activeDCS->SetTranslationArray( worldTrans );
-    activeDCS->SetQuat( world_quat );
+    world->SetTranslationArray( worldTrans );
+    world->SetQuat( world_quat );
 
     vprDEBUG( vesDBG,3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
