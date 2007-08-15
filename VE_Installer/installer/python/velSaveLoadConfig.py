@@ -66,6 +66,8 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "ExtraVariables",
                  "AutoShutDown",
                  "EnableVSync",
+                 "EnableDefWorkingDir",
+                 "DefaultWorkingDir",
                  "RunDebugPrograms"]
     if saveLastConfig:
         ##Variables that only the main config stores.
@@ -122,6 +124,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "OSGNotifyLevel": os.getenv("OSGNOTIFYLEVEL"),
                 "User": None,
                 "FileDir": None,
+                "DefaultWorkingDir": None,
                 "ExtraVariables": None}
     intReads = {"Mode": None,
                 "AddMode": None,
@@ -134,6 +137,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                  "DesktopMode": None,
                  "AutoShutDown": None,
                  "EnableVSync": None,
+                 "EnableDefWorkingDir": None,
                  "RunDebugPrograms": None}
     ##Load these if it's loading the initial configuration.
     if loadLastConfig:

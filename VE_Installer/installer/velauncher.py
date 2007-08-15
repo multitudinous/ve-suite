@@ -72,6 +72,7 @@ from velJconfDict import *
 from velClusterDict import *
 from velJconfWindow import *
 from velClusterWindow import *
+from velPrefWindow import *
 from velSettingWin import *
 from velServerAutoKillUnix import *
 from velServerAutoKillWin32 import *
@@ -159,8 +160,7 @@ class LauncherWindow(wx.Frame):
         ##Build Directory label.
         self.labelDirectory = wx.StaticText(panel, -1, "Working Directory:")
         ##Build Directory text ctrl.
-        self.txDirectory = wx.TextCtrl(panel, -1,
-                                       DIRECTORY_DEFAULT)
+        self.txDirectory = wx.TextCtrl(panel, -1, DIRECTORY_DEFAULT)
         self.txDirectory.SetToolTip(wx.ToolTip("The path of the" +
                                                " working directory."))
         ##Build Directory button.
@@ -197,20 +197,7 @@ class LauncherWindow(wx.Frame):
         self.ConstructRecentMenu()
         menu.AppendMenu(502, "Open &Recent File", self.recentMenu)
         menu.Append(501, "&Close File\tCtrl+W")
-        self.prefSubMenu = wx.Menu()
-        self.prefSubMenu.AppendCheckItem(602, "Auto Shutdown")
-        """Show this menu on only pure posix system"""
-        if posix:
-            self.prefSubMenu.AppendCheckItem(603, "Enable VSync")
-            
-        menu.AppendMenu(601, "&Preferences", self.prefSubMenu)
-
-        if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
-            self.prefSubMenu.Enable(602, False)
-        else:    
-            self.prefSubMenu.Enable(602, True)
-
-            
+        menu.Append(10000, "Pr&eferences\tCtrl+E")
         menu.Append(wx.ID_EXIT, "&Quit\tCtrl+Q")
         ##Recent files as separated add-on
         ##menu.AppendSeparator()
@@ -253,10 +240,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_MENU, self.CloseFiles, id = 501)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 524)
         self.Bind(wx.EVT_MENU, self.UpdateData, id = 525)
-        self.Bind(wx.EVT_MENU, self.UpdateData, id = 602)
-        if posix:
-            self.Bind(wx.EVT_MENU, self.UpdateData, id = 603)
-
+        self.Bind(wx.EVT_MENU, self.PrefOpen, id = 10000)
         ##Layout format settings
         ##Create the overall layout box
         rowSizer = wx.BoxSizer(wx.VERTICAL)
@@ -482,13 +466,6 @@ class LauncherWindow(wx.Frame):
         ##Tao Port
         if self.txTaoPort.IsEnabled():
             self.state.Edit("TaoPort", self.txTaoPort.GetValue())
-        ##AutoShutDown
-        if self.prefSubMenu.IsEnabled(602):
-            self.state.Edit("AutoShutDown", self.prefSubMenu.IsChecked(602))
-        ##Enable VSync
-        if posix:
-            if self.prefSubMenu.IsEnabled(603):
-                self.state.Edit("EnableVSync", self.prefSubMenu.IsChecked(603))
            
         ##Mode
         if self.rbMode.IsEnabled():
@@ -496,10 +473,6 @@ class LauncherWindow(wx.Frame):
             if modeChosen != self.state.GetBase("Mode"):
                 self.state.Edit("Mode", modeChosen)
                 react = True
-            if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
-                self.prefSubMenu.Enable(602, False)
-            else:    
-                self.prefSubMenu.Enable(602, True)                
         ##Auto-Run Ves Files Mode
         if self.autoRunVes.IsEnabled():
             self.state.Edit("AutoRunVes", self.autoRunVes.IsChecked())
@@ -546,16 +519,25 @@ class LauncherWindow(wx.Frame):
             self.bDirectory.SetToolTip(wx.ToolTip("Close this file."))
             self.bDirectory.Enable(self.state.IsEnabled("Directory"))
         else:
-            self.labelDirectory.SetLabel("Working Directory:")
-            self.txDirectory.SetValue(self.state.GetSurface("Directory"))
-            self.txDirectory.SetEditable(True)
-            self.txDirectory.SetBackgroundColour(wx.NullColour)
-            self.txDirectory.Enable(self.state.IsEnabled("Directory"))
-            self.bDirectory.SetLabel("Choose Working Directory")
-            self.bDirectory.SetToolTip(wx.ToolTip("Choose the working" +
-                                                  " directory for the" +
-                                                  " programs."))
-            self.bDirectory.Enable(self.state.IsEnabled("Directory"))
+            if self.state.GetSurface("EnableDefWorkingDir"):
+                self.labelDirectory.SetLabel("Working Directory:")
+                self.txDirectory.SetValue(self.state.GetSurface("DefaultWorkingDir"))
+                self.txDirectory.SetEditable(False)
+                self.txDirectory.SetBackgroundColour(wx.NullColour)
+                self.bDirectory.SetLabel("Working Directory")
+                self.bDirectory.Disable()
+            else:
+                self.labelDirectory.SetLabel("Working Directory:")
+                self.txDirectory.SetValue(self.state.GetSurface("Directory"))
+                self.txDirectory.SetEditable(True)
+                self.txDirectory.SetBackgroundColour(wx.NullColour)
+                self.txDirectory.Enable(self.state.IsEnabled("Directory"))
+                self.bDirectory.SetLabel("Choose Working Directory")
+                self.bDirectory.SetToolTip(wx.ToolTip("Choose the working" + 
+                                                      " directory for the" +
+                                                      " programs."))
+                self.bDirectory.Enable(self.state.IsEnabled("Directory"))
+
         ##TaoMachine
         self.txTaoMachine.SetValue(self.state.GetSurface("TaoMachine"))
         self.txTaoMachine.Enable(self.state.IsEnabled("TaoMachine"))
@@ -573,14 +555,7 @@ class LauncherWindow(wx.Frame):
         ##AutoRun Ves menu.
         self.autoRunVes.Enable(self.state.IsEnabled("AutoRunVes"))
         self.autoRunVes.Check(self.state.GetSurface("AutoRunVes"))
-        ##AutoShutDown menu.
-        confCheck = self.state.GetSurface("AutoShutDown")
-        self.prefSubMenu.Check(602, confCheck)
-        ##Enable VSync
-        if posix:
-            vSyncCheck = self.state.GetSurface("EnableVSync")
-            self.prefSubMenu.Check(603, vSyncCheck)
-        
+
 
         ##Loaded file name. Under work.
 ##        if self.state.GetSurface("VESFile"):
@@ -762,6 +737,11 @@ class LauncherWindow(wx.Frame):
         frame = SettingsWindow(self, self.state, position = position)
         frame.ShowModal()
 
+    def PrefOpen(self, event = None):
+        self.UpdateData()
+        prefWin = PrefWindow(self, self.state)
+        prefWin.ShowModal()
+        self.React()        
 
     def SpScreen(self):
         wx.MilliSleep(50)    
@@ -983,10 +963,10 @@ class LauncherWindow(wx.Frame):
             if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 launchInstance = Launch(self.state.GetLaunchSurface())
                 if v("NameServer"):
-                    if (self.prefSubMenu.IsChecked(602) and not windows):
+                    if (self.state.GetSurface("AutoShutDown") and not windows):
                         window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
                                                     conduct_Pid = launchInstance.GetConductorPid())
-                    elif (self.prefSubMenu.IsChecked(602) and windows):
+                    elif (self.state.GetSurface("AutoShutDown") and windows):
                         window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
                                                      conduct_Pid = launchInstance.GetConductorPid())
                     else:
@@ -1075,7 +1055,7 @@ LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
 app = wx.PySimpleApp()
 if not CommandLine(opts, args, previousState).AutoLaunched():
-    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+    Launchframe = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
 app.MainLoop()
 ##Command Line Check, then Window Boot (if necessary)
 del app
