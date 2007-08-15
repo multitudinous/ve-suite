@@ -668,6 +668,7 @@ void Model::RemoveInformationPacket( unsigned int i )
       {
          delete informationPackets.at( i );
          informationPackets.erase( iter );
+         return;
       }
    }
 }

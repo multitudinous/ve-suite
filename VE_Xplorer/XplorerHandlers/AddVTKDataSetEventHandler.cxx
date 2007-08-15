@@ -128,6 +128,20 @@ void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
                return;
             }
 
+            //Check to see if a dataset with same name has been loaded
+            for( size_t k = 0; k < (numInfoPackets-1); ++k )
+            {
+                if( tempInfoPacket->GetName() == veModel->GetInformationPacket( k )->GetName() )
+                {
+                    std::cerr << "ERROR: Dataset with same name already loaded. No dataset loaded.  "
+                              << "Please choose a different name for your dataset."<< std::endl;
+                    veModel->RemoveInformationPacket( numInfoPackets-1 );
+                    //Reset number of information packets
+                    numInfoPackets = veModel->GetNumberOfInformationPackets();
+                    return;
+                }
+            }
+
             //check to see if dataset is already on this particular model
             for ( size_t j = 0; j < _activeModel->GetNumberOfCfdDataSets(); ++j )
             {
