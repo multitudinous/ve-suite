@@ -1094,8 +1094,8 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 	icon_h = static_cast< int >( icon_h * scale );
 	
 	delete my_icon;
-	//my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
-	my_icon=new wxBitmap(image);
+	my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
+	//my_icon=new wxBitmap(image);
 
 	
 	n_pts = 4;
