@@ -482,7 +482,7 @@ class Launch:
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
             if self.settings["EnableVSync"]:
-                self.clusterScript += "export __GL_SYNC_TO_VBLANK=1\n"
+                self.clusterScript += "env __GL_SYNC_TO_VBLANK=1\n"
             self.WriteToClusterScript("PYTHONPATH")
             self.WriteToClusterScript("DISPLAY")
         else:
