@@ -246,15 +246,24 @@ cfdPBufferManager* cfdApp::GetPBuffer()
 ////////////////////////////////////////////////////////////////////////////////
 osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
 {
-    return static_cast< osgUtil::SceneView::Options >( 
-        osgUtil::SceneView::NO_SCENEVIEW_LIGHT | 
-        osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT );
+    return osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 {
-    vrj::OsgApp::configSceneView(newSceneViewer);
+    newSceneViewer->setDefaults( osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT );
     
+    // Set the timing information in the scene view. This has to be done
+    // only once per osgUtil::SceneView instance and should be done before
+    // calling osgUtil::SceneView::init().
+    newSceneViewer->setFrameStamp( _frameStamp.get());
+    
+    newSceneViewer->init();
+    newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+    
+    // Needed for stereo to work.
+    newSceneViewer->setDrawBufferValue(GL_NONE);
+
     newSceneViewer->getGlobalStateSet()->setAssociatedModes( 
         light_0.get(), osg::StateAttribute::ON );
         

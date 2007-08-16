@@ -186,6 +186,7 @@ public:
    void update();///< update the framestamp and traverse the scenegraph
 private:
     bool isCluster;///< are we in cluster mode
+    //   std::set<vpr::Int32> mThreadIDs;
 
     vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
     std::string filein_name;///< file name for something should be removed
