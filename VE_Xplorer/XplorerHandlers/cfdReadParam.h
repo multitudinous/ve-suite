@@ -71,7 +71,7 @@ class VE_XPLORER_EXPORTS cfdReadParam : public cfdGlobalBase
 {
 public:
    cfdReadParam();
-   ~cfdReadParam();
+   virtual ~cfdReadParam();
 
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray );

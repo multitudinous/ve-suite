@@ -72,7 +72,7 @@ public:
     cfdTeacher( std::string, VE_SceneGraph::DCS* );
 
     ///Destructor
-    ~cfdTeacher();
+    virtual ~cfdTeacher();
 
     // compare VjObs_i commandArray with its child's value
     virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray )

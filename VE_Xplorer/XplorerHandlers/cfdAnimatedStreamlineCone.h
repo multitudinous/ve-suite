@@ -57,7 +57,7 @@ public:
    ///Base constructor
    cfdAnimatedStreamlineCone( void );
    ///Destructor
-   ~cfdAnimatedStreamlineCone();
+   virtual ~cfdAnimatedStreamlineCone();
 
    //void Initialize();
    //void SetDirection( float [3]);

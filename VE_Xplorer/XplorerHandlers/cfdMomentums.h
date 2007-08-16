@@ -62,7 +62,7 @@ namespace VE_Xplorer
          ///\param xyz
          cfdMomentums( const int xyz );
          ///Destructor
-         ~cfdMomentums( void );
+         virtual ~cfdMomentums( void );
 
          ///Output an updated pfGeoSet.
          virtual void Update( void );

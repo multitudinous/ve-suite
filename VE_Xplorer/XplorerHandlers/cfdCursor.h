@@ -91,7 +91,7 @@ class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase
 {
 public:
    cfdCursor( vtkPolyData* , VE_SceneGraph::DCS* , VE_SceneGraph::Group* );
-   ~cfdCursor();
+   virtual ~cfdCursor();
 
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray*  );

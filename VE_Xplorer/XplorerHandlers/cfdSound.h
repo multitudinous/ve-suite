@@ -52,7 +52,7 @@ namespace VE_Xplorer
          ///\param rhs The cfdSound to copy
          cfdSound(const cfdSound& rhs);
          ///Destructor
-         virtual ~cfdSound();
+         ~cfdSound();
 
          ///Equal operator
          ///\param rhs The cfdSound to set equal to

@@ -78,7 +78,7 @@ namespace VE_Xplorer
          ///Constructor
          cfdScalarBarActor( std::string, VE_SceneGraph::Group* );
          ///Destructor
-         ~cfdScalarBarActor();
+         virtual ~cfdScalarBarActor();
 
    ///Compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );

@@ -57,7 +57,7 @@ public:
    ///Constructor
    cfdSoundHandler( std::string );
    ///Destructor
-   ~cfdSoundHandler();
+   virtual ~cfdSoundHandler();
 
    ///Used to read parameter file and configure objects
    void CreateObjects( void );

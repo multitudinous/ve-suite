@@ -62,7 +62,7 @@ namespace VE_Xplorer
          ///\param numSteps
          cfdPresetMomentum( const int xyz, int numSteps = 10 );
          ///Destructor
-         ~cfdPresetMomentum( void );
+         virtual ~cfdPresetMomentum( void );
 
          ///Update the position, x, and normal direction to cut. Output a updated pfGeoSet.  
          virtual void Update( void );

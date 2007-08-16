@@ -63,7 +63,7 @@ namespace VE_Xplorer
          cfdPolyData( float op_val = 1.0 );
 
          ///Destructor.
-         ~cfdPolyData();
+         virtual ~cfdPolyData();
 
          ///Update.
          virtual void Update( void );

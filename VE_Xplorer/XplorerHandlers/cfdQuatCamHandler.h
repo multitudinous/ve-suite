@@ -207,7 +207,7 @@ private:
    //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
    cfdQuatCamHandler( void );
 
-   ~cfdQuatCamHandler( void );// Never gets called, don't implement
+   virtual ~cfdQuatCamHandler( void );// Never gets called, don't implement
    vprSingletonHeader( cfdQuatCamHandler );
 };
 }

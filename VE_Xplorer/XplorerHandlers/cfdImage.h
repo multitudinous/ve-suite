@@ -77,7 +77,7 @@ namespace VE_Xplorer
              double *origin, double *spacing );
          
          ///Destructor.
-         ~cfdImage( );
+         virtual ~cfdImage( );
 
          ///Compare VjObs_i commandArray with its child's value.
          ///\param commandArray

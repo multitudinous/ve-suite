@@ -63,7 +63,7 @@ namespace VE_Xplorer
          ///Constructor
          cfd1DTextInput( void );
          ///Destructor
-         ~cfd1DTextInput( void );
+         virtual ~cfd1DTextInput( void );
          ///get the Performer DCS (may need to remove)
          VE_SceneGraph::DCS* getpfDCS( void );
          ///set transform values.

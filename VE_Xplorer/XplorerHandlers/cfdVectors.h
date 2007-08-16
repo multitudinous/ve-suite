@@ -60,7 +60,7 @@ public:
    cfdVectors( const int xyz );
 
    ///Destructor
-   ~cfdVectors();
+   virtual ~cfdVectors();
 
    ///Virtual update function
    virtual void Update( void );

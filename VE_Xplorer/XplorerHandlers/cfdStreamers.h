@@ -71,7 +71,7 @@ public:
    cfdStreamers( void );
 
    ///Destructor
-   ~cfdStreamers();
+   virtual ~cfdStreamers();
 
    // compare VjObs_i commandArray with its child's value
    //virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );

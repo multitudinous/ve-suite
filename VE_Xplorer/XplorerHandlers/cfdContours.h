@@ -50,18 +50,18 @@ namespace VE_Xplorer
 // A class that generates contour plots on multiple planes of data.
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
-   {
-      public:
-         ///Constructor
-         cfdContours( const int xyz );
-         ///Destructor
-         ~cfdContours();
-         ///Update the event
-         virtual void Update( void );
-         
-      private:
-         int xyz;///<The value of the contour to display.
-   };
+class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
+{
+public:
+    ///Constructor
+    cfdContours( const int xyz );
+    ///Destructor
+    virtual ~cfdContours();
+    ///Update the event
+    virtual void Update( void );
+
+private:
+    int xyz;///<The value of the contour to display.
+};
 }
 #endif

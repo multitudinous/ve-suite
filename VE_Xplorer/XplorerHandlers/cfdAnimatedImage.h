@@ -85,7 +85,7 @@ namespace VE_Xplorer
          ///\param param
          cfdAnimatedImage( std::string param);
          ///Destructor
-         ~cfdAnimatedImage();
+         virtual ~cfdAnimatedImage();
   
          ///compare VjObs_i commandArray with its child's value
          ///\param commandArray

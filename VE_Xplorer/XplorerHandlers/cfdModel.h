@@ -136,7 +136,7 @@ class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
 {
 public:
    cfdModel( VE_SceneGraph::DCS* );
-   ~cfdModel();
+   virtual ~cfdModel();
 
    ///PreFrame callback to update the model based on commands from
    ///VE-Conductor

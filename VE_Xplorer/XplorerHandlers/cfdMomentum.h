@@ -61,7 +61,7 @@ namespace VE_Xplorer
          ///Initialize the VTK objects and pipeline.
          cfdMomentum( void );
          ///Destructor
-         ~cfdMomentum( void );
+         virtual ~cfdMomentum( void );
 
          ///Update the position, x, and normal direction to cut.
          ///Output a updated pfGeoSet. 

@@ -63,7 +63,7 @@ namespace VE_Xplorer
 		  ///Constructor
          cfdVector( );
 		 ///Destructor
-         ~cfdVector( );
+         virtual ~cfdVector( );
   
          /* Update the position, x, and normal direction to cut.
          Output a updated pfGeoSet.  */

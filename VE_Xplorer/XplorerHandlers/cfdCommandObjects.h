@@ -54,7 +54,7 @@ namespace VE_Xplorer
          ///Base Constructor
          cfdCommandObjects ();
          ///Destructor
-         ~cfdCommandObjects ();
+         virtual ~cfdCommandObjects ();
 
          // pure virtual int functions to be specified in concrete implementations
 

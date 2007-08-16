@@ -69,7 +69,7 @@ public:
    cfdIsosurface( int step = 10 );
 
    ///Destructor.
-   ~cfdIsosurface( );
+   virtual ~cfdIsosurface();
 
    ///Update the isosurface.
    virtual void Update( void );

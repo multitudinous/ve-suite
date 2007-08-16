@@ -60,7 +60,7 @@ namespace VE_Xplorer
          ///\param numSteps
          cfdPresetVector( const int xyz, const int numSteps = 10 );
          ///Destructor
-         ~cfdPresetVector();
+         virtual ~cfdPresetVector();
          ///Update the preset vectors
          virtual void Update( void );
 
