@@ -476,7 +476,7 @@ class Launch:
         """Writes the cluster script section before the environment setting."""
         if unix:
             ssh_cmd = os.popen("whereis ssh").readline().split()[1]
-            self.clusterScript = "#!/bin/sh\n"
+            self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
