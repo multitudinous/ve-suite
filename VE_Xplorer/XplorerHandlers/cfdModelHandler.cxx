@@ -108,7 +108,7 @@ using namespace VE_TextureBased;
 #include <direct.h>
 #endif 
 
-vprSingletonImpLifetime( VE_Xplorer::cfdModelHandler, 110 );
+vprSingletonImpLifetime( VE_Xplorer::cfdModelHandler, 11 );
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;

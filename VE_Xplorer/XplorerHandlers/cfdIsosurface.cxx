@@ -97,8 +97,6 @@ cfdIsosurface::cfdIsosurface( int numsteps )
 
 cfdIsosurface::~cfdIsosurface()
 {
-   this->filter->Delete();
-   this->mapper->Delete();
 #ifdef USE_OMP
    for(int i = 0; this->nData; i++ )
    {
@@ -110,6 +108,8 @@ cfdIsosurface::~cfdIsosurface()
    this->contour->Delete();
    this->normals->Delete();
 #endif
+   this->filter->Delete();
+   this->mapper->Delete();
 }
 
 void cfdIsosurface::Update()

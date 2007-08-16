@@ -72,7 +72,7 @@ XERCES_CPP_NAMESPACE_USE
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-vprSingletonImpLifetime( VE_Xplorer::cfdExecutive, 150 );
+vprSingletonImpLifetime( VE_Xplorer::cfdExecutive, 15 );
 
 void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
