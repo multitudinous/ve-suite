@@ -481,7 +481,7 @@ class Launch:
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
-            if self.state.GetSurface("EnableVSync") == True:
+            if self.settings["EnableVSync"]:
                 self.clusterScript += "export __GL_SYNC_TO_VBLANK=1\n"
             self.WriteToClusterScript("PYTHONPATH")
             self.WriteToClusterScript("DISPLAY")
