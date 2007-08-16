@@ -89,8 +89,15 @@ def SaveConfig(name, state, saveLastConfig = False):
         if state.GetBase(var) != None:
             config.WriteInt(var, state.GetBase(var))
     ##Redo the Jconf/Cluster configs
+    ##Jump to the Global JconfList
+    path = '../%s' % DEFAULT_CONFIG
+    config.SetPath(path)
     config.DeleteGroup(JCONF_CONFIG)
     state.GetBase("JconfDict").WriteConfig()
+    
+     ##Back to the own configuration  
+    path = '../%s' % name
+    config.SetPath(path)
     config.DeleteGroup(CLUSTER_CONFIG)
     state.GetBase("ClusterDict").WriteConfig()
     ##Return to default config
@@ -189,10 +196,19 @@ def LoadConfig(name, state, loadLastConfig = False):
                 print 'ERROR! Saved boolean var not "True" or "False".'
                 result = False
             state.Edit(var, result)
+
     ##Set Jconf dictionary.
+    ##Jump to the Global JconfList
+    path = '../%s' % DEFAULT_CONFIG
+    config.SetPath(path)
+    
     if config.Exists(JCONF_CONFIG):
         state.Edit("JconfDict", JconfDict())
     ##Set Cluster list.
+    ##Back to the own configuration  
+    path = '../%s' % name
+    config.SetPath(path)
+    
     if config.Exists(CLUSTER_CONFIG):
         state.Edit("ClusterDict", ClusterDict())
     ##Set RecentFiles list.

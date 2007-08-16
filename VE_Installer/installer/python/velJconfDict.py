@@ -60,7 +60,7 @@ class JconfDict(VelDict):
 
     def ReadEntries(self):
         entries = {}
-        config = wx.Config.Get()
+        config = wx.ConfigBase.Get()
         config.SetPath(JCONF_CONFIG)
         step = config.GetFirstEntry()
         while (step[0]):

@@ -153,7 +153,10 @@ class JconfWindow(wx.Dialog):
 ##            f = os.path.join(f, JUGGLER_FOLDER, "configFiles")
 ##        else:
 ##            f = VELAUNCHER_DIR
-        f = self.state.GetSurface("Directory")
+        if self.state.GetSurface("EnableDefWorkingDir"):
+            f = self.state.GetSurface("DefaultWorkingDir")
+        else:    
+            f = self.state.GetSurface("Directory")
         dlg = wx.FileDialog(self,
                             "Choose a configuration file.",
                             defaultDir = f,
