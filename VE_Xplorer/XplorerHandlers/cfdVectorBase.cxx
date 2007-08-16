@@ -93,8 +93,8 @@ cfdVectorBase::cfdVectorBase()
 
 cfdVectorBase::~cfdVectorBase()
 {
-   vprDEBUG(vesDBG,2) << "cfdVectorBase destructor"
-                          << std::endl  << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdVectorBase destructor"
+   //                       << std::endl  << vprDEBUG_FLUSH;
 
    tfilter->Delete();
    tfilter = 0;

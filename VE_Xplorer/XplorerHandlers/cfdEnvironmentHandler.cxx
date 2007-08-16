@@ -167,7 +167,7 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 
    //if(VE_Xplorer::cfdQuatCamHandler::instance())
    {
-      VE_Xplorer::cfdQuatCamHandler::instance()->CleanUp();
+      //VE_Xplorer::cfdQuatCamHandler::instance()->CleanUp();
    }
 
    /*if ( this->_soundHandler )
@@ -199,7 +199,7 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
    }
 
    //Delete all the devices in DeviceHandler
-   VE_Xplorer::DeviceHandler::instance()->CleanUp();
+   //VE_Xplorer::DeviceHandler::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )

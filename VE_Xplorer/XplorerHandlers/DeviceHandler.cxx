@@ -99,16 +99,11 @@ m_jump( 10.0f )
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::CleanUp()
-{
     //Delete devices in map
-    std::map< std::string, VE_Xplorer::Device* >::iterator itr;
-    for( itr = devices.begin(); itr != devices.end(); )
+    for( std::map< std::string, VE_Xplorer::Device* >::iterator 
+        itr = devices.begin(); itr != devices.end(); ++itr )
     {
-        devices.erase( itr++ );
+        delete itr->second;
     }
 
     devices.clear();

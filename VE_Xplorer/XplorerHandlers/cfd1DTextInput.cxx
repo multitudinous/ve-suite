@@ -54,8 +54,8 @@ cfd1DTextInput::cfd1DTextInput( void ):DCS()
 
 cfd1DTextInput::~cfd1DTextInput( void )
 {
-   vprDEBUG(vesDBG,2) << "cfd1DTextInput Destructor: doing nothing" 
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfd1DTextInput Destructor: doing nothing" 
+   //                       << std::endl << vprDEBUG_FLUSH;
 }
 
 VE_SceneGraph::DCS* cfd1DTextInput::getpfDCS( void )

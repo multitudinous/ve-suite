@@ -80,7 +80,7 @@ private:
     vprSingletonHeader( DeviceHandler );
 public:
     ///Delete existing devices
-    void CleanUp();
+    //void CleanUp();
 
     ///Execute navigation commands from active device
     void ExecuteCommands();

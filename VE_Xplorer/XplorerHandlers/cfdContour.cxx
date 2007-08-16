@@ -102,8 +102,8 @@ cfdContour::cfdContour()
 
 cfdContour::~cfdContour()
 {
-   vprDEBUG(vesDBG,2) << "cfdContour destructor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdContour destructor"
+    //                      << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP
    for ( int i=0; i<this->nData; i++ )
    {

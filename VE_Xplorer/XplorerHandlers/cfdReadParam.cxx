@@ -73,12 +73,12 @@ cfdReadParam::~cfdReadParam()
    {
       for (int i=0; i < temp; i++)
       {
-         vprDEBUG(vesDBG,2) << "\tcfdReadParam:Deleting dataSet " << i 
-                                << std::endl << vprDEBUG_FLUSH;
+         //vprDEBUG(vesDBG,2) << "\tcfdReadParam:Deleting dataSet " << i 
+         //                       << std::endl << vprDEBUG_FLUSH;
          delete this->dataSets[ i ];
       }
-      vprDEBUG(vesDBG,2) << "\tcfdReadParam:clearing dataSets"
-                             << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2) << "\tcfdReadParam:clearing dataSets"
+      //                       << std::endl << vprDEBUG_FLUSH;
       this->dataSets.clear();
    }
 

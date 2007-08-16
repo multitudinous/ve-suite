@@ -90,10 +90,8 @@ public:
    //Constructors
    //cfdQuatCamHandler( VE_SceneGraph::DCS* , cfdNavigate*, std::string );
 
-   //Destructor
-   //~cfdQuatCamHandler();
    ///Singleton cleanup
-   void CleanUp( void );
+   //void CleanUp( void );
 
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
@@ -209,7 +207,7 @@ private:
    //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
    cfdQuatCamHandler( void );
 
-   ~cfdQuatCamHandler( void ){ ; }// Never gets called, don't implement
+   ~cfdQuatCamHandler( void );// Never gets called, don't implement
    vprSingletonHeader( cfdQuatCamHandler );
 };
 }

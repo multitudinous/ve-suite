@@ -235,7 +235,7 @@ cfdImage::cfdImage ( std::string filename, int resx, int resy, int dim, double *
 
 cfdImage::~cfdImage()
 {
-   vprDEBUG(vesDBG, 1) << "CFDIMAGE DESTRUCTOR\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG, 1) << "CFDIMAGE DESTRUCTOR\n" << vprDEBUG_FLUSH;
    if (this->bmpReader != NULL ) this->bmpReader->Delete();
    if (this->imgReader != NULL ) this->imgReader->Delete();
    if (this->plane != NULL )     this->plane->Delete();

@@ -68,7 +68,7 @@ cfdObjectHandler::cfdObjectHandler( )
    _active = false; 
 }
 
-cfdObjectHandler::~cfdObjectHandler( )
+cfdObjectHandler::~cfdObjectHandler()
 {
    ;
 }

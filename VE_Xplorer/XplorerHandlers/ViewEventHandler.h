@@ -52,32 +52,32 @@ namespace VE_Xplorer
 
 namespace VE_EVENTS
 {
-   class ViewEventHandler:public EventHandler
-   {
-      public:
-         //Constructor
-         ViewEventHandler();
+class ViewEventHandler:public EventHandler
+{
+public:
+    //Constructor
+    ViewEventHandler();
 
-         //Copy Constructor
-         ViewEventHandler(const ViewEventHandler& ceh);
+    //Copy Constructor
+    ViewEventHandler(const ViewEventHandler& ceh);
 
-         //Destructor
-         virtual ~ViewEventHandler();
+    //Destructor
+    virtual ~ViewEventHandler();
 
-         //Set the cfdModel
-         //param model The cfdModelHandler to execute the Command on
-         void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
-   
-         //Exectute the event
-         //param xmlObject The current xmlObject event.
-         void Execute(VE_XML::XMLObject* command); 
+    //Set the cfdModel
+    //param model The cfdModelHandler to execute the Command on
+    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
 
-         //Equal operator
-         ViewEventHandler& operator=(const ViewEventHandler& rhs);
-   
-      protected:
+    //Exectute the event
+    //param xmlObject The current xmlObject event.
+    void Execute(VE_XML::XMLObject* command); 
 
-   };
+    //Equal operator
+    ViewEventHandler& operator=(const ViewEventHandler& rhs);
+
+protected:
+
+};
 }
 
 #endif//TRACKBALL_EVENT_HANDLER_H

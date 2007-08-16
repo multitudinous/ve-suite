@@ -155,8 +155,8 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
 
 cfdPlanes::~cfdPlanes()
 {
-   vprDEBUG(vesDBG,2) << " cfdPlanes destructor" 
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << " cfdPlanes destructor" 
+   //                       << std::endl << vprDEBUG_FLUSH;
 
    if ( this->numPlanes > 0 )
    {

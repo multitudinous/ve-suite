@@ -94,8 +94,8 @@ cfdContourBase::cfdContourBase()
 
 cfdContourBase::~cfdContourBase()
 {
-   vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
-                          << std::endl  << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
+    //                      << std::endl  << vprDEBUG_FLUSH;
 
    //this->filter->Delete();
    //this->filter = NULL;

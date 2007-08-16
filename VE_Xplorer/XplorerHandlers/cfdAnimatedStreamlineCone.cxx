@@ -67,8 +67,8 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
 {
-   vprDEBUG(vesDBG,2) << "cfdAnimatedStreamlineCone destructor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdAnimatedStreamlineCone destructor"
+   //                       << std::endl << vprDEBUG_FLUSH;
 
    this->mapper->Delete();
    this->polydata->Delete();

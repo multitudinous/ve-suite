@@ -80,8 +80,8 @@ cfdPolyData::cfdPolyData( float op_val )
 
 cfdPolyData::~cfdPolyData()
 {
-   vprDEBUG(vesDBG,2) << "cfdPolyData destructor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdPolyData destructor"
+   //                       << std::endl << vprDEBUG_FLUSH;
 
    this->map->Delete();
    warper->Delete();

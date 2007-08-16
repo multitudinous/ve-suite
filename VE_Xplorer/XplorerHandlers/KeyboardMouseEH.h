@@ -54,32 +54,32 @@ namespace VE_Xplorer
 
 namespace VE_EVENTS
 {
-   class KeyboardMouseEventHandler:public EventHandler
-   {
-      public:
-         //Constructor
-         KeyboardMouseEventHandler();
+class KeyboardMouseEventHandler:public EventHandler
+{
+public:
+    //Constructor
+    KeyboardMouseEventHandler();
 
-         //Copy Constructor
-         KeyboardMouseEventHandler(const KeyboardMouseEventHandler& ceh);
+    //Copy Constructor
+    KeyboardMouseEventHandler(const KeyboardMouseEventHandler& ceh);
 
-         //Destructor
-         virtual ~KeyboardMouseEventHandler();
+    //Destructor
+    virtual ~KeyboardMouseEventHandler();
 
-         //Set the cfdModel
-         //param model The cfdModelHandler to execute the Command on
-         void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
-   
-         //Exectute the event
-         //param xmlObject The current xmlObject event.
-         void Execute(VE_XML::XMLObject* command); 
+    //Set the cfdModel
+    //param model The cfdModelHandler to execute the Command on
+    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
 
-         //Equal operator
-         KeyboardMouseEventHandler& operator=(const KeyboardMouseEventHandler& rhs);
-   
-      protected:
+    //Exectute the event
+    //param xmlObject The current xmlObject event.
+    void Execute(VE_XML::XMLObject* command); 
 
-   };
+    //Equal operator
+    KeyboardMouseEventHandler& operator=(const KeyboardMouseEventHandler& rhs);
+
+protected:
+
+};
 }
 
 #endif//KEYBOARD_MOUSE_EVENT_HANDLER_H

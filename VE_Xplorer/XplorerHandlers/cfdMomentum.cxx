@@ -106,8 +106,8 @@ cfdMomentum::cfdMomentum( )
 
 cfdMomentum::~cfdMomentum()
 {
-   vprDEBUG(vesDBG,2) << "cfdMomentum destructor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdMomentum destructor"
+   //                       << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
    for( int i = 0; i < this->nData; i++ )

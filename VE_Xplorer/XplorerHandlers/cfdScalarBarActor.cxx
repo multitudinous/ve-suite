@@ -101,8 +101,8 @@ cfdScalarBarActor::cfdScalarBarActor( std::string param, VE_SceneGraph::Group* r
  
 cfdScalarBarActor::~cfdScalarBarActor()
 {
-   vprDEBUG(vesDBG,2) << "deconstructing cfdScalarBarActor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "deconstructing cfdScalarBarActor"
+   //                       << std::endl << vprDEBUG_FLUSH;
 
    /*for ( int i=0; i<this->numTextLabels; i++ )
    {
@@ -128,21 +128,21 @@ cfdScalarBarActor::~cfdScalarBarActor()
       << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
 */
-   vprDEBUG(vesDBG,2) << "   titleScalar->Delete()"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "   titleScalar->Delete()"
+   //                       << std::endl << vprDEBUG_FLUSH;
    this->titleScalar->Delete();
 
-   vprDEBUG(vesDBG,2) << "   lut->Delete()" 
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "   lut->Delete()" 
+   //                       << std::endl << vprDEBUG_FLUSH;
    this->lut->Delete();
    this->lut = NULL;
 
-   vprDEBUG(vesDBG,2) << "   pfDelete( scalarBar )"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "   pfDelete( scalarBar )"
+   //                       << std::endl << vprDEBUG_FLUSH;
    //delete this->scalarBar;
 
-   vprDEBUG(vesDBG,2) << "   finished deconstructing cfdScalarBarActor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "   finished deconstructing cfdScalarBarActor"
+   //                       << std::endl << vprDEBUG_FLUSH;
    
    if ( _readParam )
       delete _readParam;

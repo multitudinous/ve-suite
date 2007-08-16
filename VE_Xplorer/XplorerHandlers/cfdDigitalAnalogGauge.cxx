@@ -142,8 +142,8 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
 
 cfdDigitalAnalogGauge::~cfdDigitalAnalogGauge( void )
 {
-   vprDEBUG(vesDBG,2) << "cfdDigitalAnalogGauge Destructor" 
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdDigitalAnalogGauge Destructor" 
+   //                       << std::endl << vprDEBUG_FLUSH;
    this->movingArrow->Delete();
    this->arrowMapper->Delete();
    this->arrowTransform->Delete();

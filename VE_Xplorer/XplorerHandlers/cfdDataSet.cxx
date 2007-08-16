@@ -167,24 +167,24 @@ cfdDataSet::~cfdDataSet()
    {
       delete this->x_planes;
       this->x_planes = NULL;
-      vprDEBUG(vesDBG,1) << "deleting this->x_planes" 
-                             << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,1) << "deleting this->x_planes" 
+      //                       << std::endl << vprDEBUG_FLUSH;
    }
 
    if ( this->y_planes != NULL ) 
    {
       delete this->y_planes;
       this->y_planes = NULL;
-      vprDEBUG(vesDBG,1) << "deleting this->y_planes" 
-                             << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,1) << "deleting this->y_planes" 
+      //                       << std::endl << vprDEBUG_FLUSH;
    }
    
    if ( this->z_planes != NULL ) 
    {
       delete this->z_planes;
       this->z_planes = NULL;
-      vprDEBUG(vesDBG,1) << "deleting this->z_planes" 
-                              << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,1) << "deleting this->z_planes" 
+      //                        << std::endl << vprDEBUG_FLUSH;
    }
   
    if ( this->precomputedDataSliceDir.c_str() != NULL )
@@ -207,8 +207,8 @@ cfdDataSet::~cfdDataSet()
 
    if ( this->fileName.c_str() != NULL )
    {
-      vprDEBUG(vesDBG,2) << "deleting filename " << this->fileName
-                             << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2) << "deleting filename " << this->fileName
+      //                       << std::endl << vprDEBUG_FLUSH;
       fileName.erase();//delete [] this->fileName;
       fileName.empty();//this->fileName = NULL;
    }
@@ -217,14 +217,14 @@ cfdDataSet::~cfdDataSet()
    {
       delete _vtkFHndlr;
       _vtkFHndlr = 0;
-      vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
    }
 
    if( m_externalFileLoader )
    {
       delete m_externalFileLoader;
       m_externalFileLoader = 0;
-      vprDEBUG(vesDBG,2) << "deleting m_externalFileLoader " << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2) << "deleting m_externalFileLoader " << std::endl << vprDEBUG_FLUSH;
    }
 }
 

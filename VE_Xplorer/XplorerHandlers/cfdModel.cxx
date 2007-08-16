@@ -115,8 +115,8 @@ cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
 ////////////////////////////////////////////////////////////////////////////////
 cfdModel::~cfdModel()
 {
-   vprDEBUG(vesDBG,2) << "cfdModel destructor"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdModel destructor"
+   //                       << std::endl << vprDEBUG_FLUSH;
 
  
   /* for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
@@ -140,8 +140,8 @@ cfdModel::~cfdModel()
       delete mVTKDataSets.at(i);
    }
    mVTKDataSets.clear();
-   vprDEBUG(vesDBG,2) << "deleting mVTKDataSets"
-      << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "deleting mVTKDataSets"
+   //   << std::endl << vprDEBUG_FLUSH;
 
    //texture data cleanup
 #ifdef _OSG
@@ -155,8 +155,8 @@ cfdModel::~cfdModel()
       delete mTextureDataSets.at(i);
    }
    mTextureDataSets.clear();
-   vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
-      << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
+   //   << std::endl << vprDEBUG_FLUSH;
 #endif
  
    //std::map<int,cfdDataSet*>::iterator foundPlugin;
@@ -182,8 +182,8 @@ cfdModel::~cfdModel()
    }
 */
 
-   vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
+   //                       << std::endl << vprDEBUG_FLUSH;
    _availableSounds.clear();
 
    if( m_cadHandler)

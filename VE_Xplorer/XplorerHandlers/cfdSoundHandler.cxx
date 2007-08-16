@@ -75,8 +75,8 @@ cfdSoundHandler::~cfdSoundHandler( void )
 
    if ( this->sounds.size() > 0 )
    {
-      vprDEBUG(vesDBG,2) << "deleting sounds"
-                             << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2) << "deleting sounds"
+      //                       << std::endl << vprDEBUG_FLUSH;
 
       for ( unsigned int i = 0; i < this->sounds.size(); i++ )
       {

@@ -105,8 +105,8 @@ cfdTeacher::~cfdTeacher( )
         m_currentScene = 0;
     }
     
-    vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
-        << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
+    //    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::CADEntityHelper* cfdTeacher::getpfNode( int i )

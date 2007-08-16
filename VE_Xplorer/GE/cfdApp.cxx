@@ -826,7 +826,7 @@ void cfdApp::update( void )
     // Set up the time and frame number so time dependant things (animations, particle system)
     // function correctly
     mUpdateVisitor->setTraversalNumber( _frameNumber );
-    //mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
+    mUpdateVisitor->setFrameStamp( _frameStamp.get() ); 
 
     // update the scene by traversing it with the the update visitor which will
     // call all node update callbacks and animations. This is equivalent to calling

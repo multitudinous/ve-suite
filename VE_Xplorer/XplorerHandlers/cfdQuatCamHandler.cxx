@@ -131,7 +131,7 @@ void cfdQuatCamHandler::SetNavigation(VE_Xplorer::cfdNavigate* nav)
    _nav = nav;
 }
 ///////////////////////////////////////
-void cfdQuatCamHandler::CleanUp( void )
+cfdQuatCamHandler::~cfdQuatCamHandler( void )
 {
    ///empty destrutor?
 }
