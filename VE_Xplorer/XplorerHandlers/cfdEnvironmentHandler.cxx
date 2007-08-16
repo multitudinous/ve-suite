@@ -153,15 +153,15 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 {
    if ( this->_readParam )
    {  
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->_readParam" << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2)  
+      //  << "|       deleting this->_readParam" << std::endl << vprDEBUG_FLUSH;
       delete this->_readParam;
    }
 
    if ( this->cursor )
    {  
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2)  
+      //  << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
       delete this->cursor;
    }
 
@@ -179,22 +179,22 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 
    if ( this->_teacher )
    {  
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2)  
+      //  << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
       delete this->_teacher;
    }
 
    if ( this->displaySettings )
    {
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->displaySettings" << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2)  
+      //  << "|       deleting this->displaySettings" << std::endl << vprDEBUG_FLUSH;
       delete this->displaySettings;
    }
 
    if ( this->display_information )
    {
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2)  
+      //  << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
       delete this->display_information;
    }
 

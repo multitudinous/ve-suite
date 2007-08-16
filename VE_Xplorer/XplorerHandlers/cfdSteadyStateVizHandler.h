@@ -112,7 +112,7 @@ private:
    //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
    //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
    ///Destructor
-   ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
+   ~cfdSteadyStateVizHandler( void );
    ///????
    vprSingletonHeader( cfdSteadyStateVizHandler );   
 
@@ -120,7 +120,7 @@ public:
    ///Initialize the sshandler claass
    void Initialize( std::string );
    ///Destructor functions since destructors don't get called yet
-   void CleanUp( void );
+   //void CleanUp( void );
    ///Called once by cfdApp to create any necessary objects
    void InitScene( void );
    ///The standard preframe function

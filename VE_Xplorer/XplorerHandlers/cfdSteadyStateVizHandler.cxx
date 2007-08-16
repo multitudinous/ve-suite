@@ -116,7 +116,7 @@ void cfdSteadyStateVizHandler::Initialize( std::string param )
    cursor = cfdEnvironmentHandler::instance()->GetCursor();
 }
 
-void cfdSteadyStateVizHandler::CleanUp( void )
+cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 {
    this->runIntraParallelThread = false;
 

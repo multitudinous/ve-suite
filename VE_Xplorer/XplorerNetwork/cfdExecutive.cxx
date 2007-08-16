@@ -165,8 +165,8 @@ std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::~cfdExecutive( void )
 {
-    vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
-                        << std::endl << vprDEBUG_FLUSH;
+   // vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
+   //                     << std::endl << vprDEBUG_FLUSH;
    this->runGetEverythingThread = false;
    delete m_avModules;
 
@@ -190,8 +190,8 @@ cfdExecutive::~cfdExecutive( void )
 
    delete ui_i;
    ui_i = 0;
-   vprDEBUG(vesDBG,2) << "|\tEnd Executive Destructor " 
-       << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vesDBG,2) << "|\tEnd Executive Destructor " 
+   //    << std::endl << vprDEBUG_FLUSH;
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::UnbindORB()
