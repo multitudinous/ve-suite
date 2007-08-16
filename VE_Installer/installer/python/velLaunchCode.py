@@ -476,13 +476,13 @@ class Launch:
         """Writes the cluster script section before the environment setting."""
         if unix:
             ssh_cmd = os.popen("whereis ssh").readline().split()[1]
-            self.clusterScript = "#!/bin/csh\n"
+            self.clusterScript = "#!/bin/sh\n"
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
             if self.settings["EnableVSync"]:
-                self.clusterScript += "env __GL_SYNC_TO_VBLANK=1\n"
+                self.clusterScript += "setenv __GL_SYNC_TO_VBLANK 1\n"
             self.WriteToClusterScript("PYTHONPATH")
             self.WriteToClusterScript("DISPLAY")
         else:
