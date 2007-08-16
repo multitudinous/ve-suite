@@ -515,8 +515,8 @@ CreateVisObjectEventHandler::~CreateVisObjectEventHandler()
    
    if ( this->z_momentum ) 
    {
-      vprDEBUG(vesDBG,2) 
-      << "deleting this->z_momentum" << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,2) 
+      //<< "deleting this->z_momentum" << std::endl << vprDEBUG_FLUSH;
       delete this->z_momentum;
    }
    
