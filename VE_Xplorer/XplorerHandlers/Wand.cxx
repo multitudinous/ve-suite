@@ -211,14 +211,14 @@ void Wand::UpdateNavigation()
         size_t rotIndex = 0;
 
         //if we want pitch
-        if( fabs( dir[ 0 ] ) < fabs( dir[ 2 ] ) )
+        /*if( fabs( dir[ 0 ] ) < fabs( dir[ 2 ] ) )
         {
             direction = dir[ 2 ];
             //dirIndex = 1;
             rotIndex = 0;
         }
         //else we get yaw
-        else
+        else*/
         {
             direction = dir[ 0 ];
             //dirIndex = 0;
@@ -237,7 +237,7 @@ void Wand::UpdateNavigation()
             //worldRot[ dirIndex ] -= rotationStepSize;
             osg::Vec3d tempVec( 0, 0, 0 );
             tempVec[ rotIndex ] = 1;
-            rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), tempVec );
+            rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
         }
 
         if( rotationFlag )

@@ -142,6 +142,9 @@ public:
    ///Get the pbuffer
    ///should remove this since pbuffer is a singleton
    VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
+   ///Override default vrj implementation
+   osgUtil::SceneView::Options getSceneViewDefaults();
+
 #elif _OPENSG
 #endif //_PERFORMER _OSG _OPENSG
   

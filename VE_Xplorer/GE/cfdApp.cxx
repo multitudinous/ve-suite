@@ -116,7 +116,7 @@ captureNextFrameForWeb( false )
    filein_name.erase();// = 0;
    isCluster = false;
 #ifdef _OSG
-   osg::Referenced::setThreadSafeReferenceCounting(true);
+   //osg::Referenced::setThreadSafeReferenceCounting(true);
    osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
    _frameStamp = new osg::FrameStamp;
    mUpdateVisitor = new osgUtil::UpdateVisitor();
@@ -216,47 +216,18 @@ osg::Group* cfdApp::getScene()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextInit()
 {
-    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-	//Override the vrj::OsgApp::contextInit() default functionality
-	//**************************************************************************
-#if __VJ_version >= 2003000
-	unsigned int unique_context_id = vrj::opengl::DrawManager::instance()->getCurrentContext();
-#else
-	unsigned int unique_context_id = vrj::GlDrawManager::instance()->getCurrentContext();
-#endif
+    vrj::OsgApp::contextInit();
+    
+    if ( !_pbuffer )
+    {
+        _pbuffer = new cfdPBufferManager();
+        _pbuffer->isSupported();
+    } 
 
-    // --- Create new context specific scene viewer -- //
-    osg::ref_ptr< osgUtil::SceneView > new_sv( new osgUtil::SceneView );
-    new_sv->setThreadSafeRefUnref( true );
-
-    // Configure the new viewer
-    this->configSceneView( new_sv.get() );             
-
-    (*sceneViewer) = new_sv;
-    //This is important - if this is commented out then the screen goes black
-    new_sv->getGlobalStateSet()->setAssociatedModes( light_0.get(), osg::StateAttribute::ON );
-    new_sv->getGlobalStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::ON );
-    new_sv->getGlobalStateSet()->setAttributeAndModes( light_model_0.get(), osg::StateAttribute::ON );
-    //osg::ref_ptr< osg::LightModel > lightmodel = new osg::LightModel;
-    //lightmodel->setAmbientIntensity(osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-    //new_sv->getGlobalStateSet()->setAttributeAndModes( lightmodel.get(), osg::StateAttribute::ON );
-    // Add the tree to the scene viewer and set properties
-    new_sv->setSceneData(getScene());
-    new_sv->getState()->setContextID( unique_context_id );
-    new_sv->setFrameStamp( _frameStamp.get() );
-
-	//**************************************************************************
-
-   /*if ( !_pbuffer )
-   {
-      _pbuffer = new cfdPBufferManager();
-      _pbuffer->isSupported();
-   } 
-
-   //if ( _tbvHandler )
-   {
-      _tbvHandler->SetPBuffer(_pbuffer);
-   }*/
+    //if ( _tbvHandler )
+    {
+        _tbvHandler->SetPBuffer(_pbuffer);
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextClose()
@@ -273,22 +244,30 @@ cfdPBufferManager* cfdApp::GetPBuffer()
     return _pbuffer;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
+{
+    return static_cast< osgUtil::SceneView::Options >( 
+        osgUtil::SceneView::NO_SCENEVIEW_LIGHT | 
+        osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT );
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 {
-	//Override the vrj::OsgApp::configSceneView() default functionality
-	//**************************************************************************
-	newSceneViewer->setDefaults( osgUtil::SceneView::NO_SCENEVIEW_LIGHT | 
-                                osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT  );
-	newSceneViewer->init();
-	//newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-    newSceneViewer->getCamera()->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-	//Needed for stereo to work.
-	newSceneViewer->setDrawBufferValue( GL_NONE );
-	//**************************************************************************
-
+    vrj::OsgApp::configSceneView(newSceneViewer);
+    
+    newSceneViewer->getGlobalStateSet()->setAssociatedModes( 
+        light_0.get(), osg::StateAttribute::ON );
+        
+    newSceneViewer->getGlobalStateSet()->setMode( 
+        GL_LIGHTING, osg::StateAttribute::ON );
+        
+    newSceneViewer->getGlobalStateSet()->setAttributeAndModes( 
+        light_model_0.get(), osg::StateAttribute::ON );
+    
 	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
-    newSceneViewer->setComputeNearFarMode( osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    newSceneViewer->setComputeNearFarMode( 
+        osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -716,116 +695,95 @@ void cfdApp::draw()
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::draw",20);
     glClear(GL_DEPTH_BUFFER_BIT);
+    
     // Users have reported problems with OpenGL reporting stack underflow
     // problems when the texture attribute bit is pushed here, so we push all
     // attributes *except* GL_TEXTURE_BIT.
     glPushAttrib(GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT);
     glPushAttrib(GL_TRANSFORM_BIT);
     glPushAttrib(GL_VIEWPORT_BIT);
-
+    
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-
+    
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
-
-    // The code below is commented out because it causes 
-    // problems with the cg shader code
-    // for more details please contact Gerrick
-    //glMatrixMode(GL_TEXTURE);
-    //glPushMatrix();
-
+    
     osg::ref_ptr<osgUtil::SceneView> sv;
     sv = (*sceneViewer);    // Get context specific scene viewer
     vprASSERT(sv.get() != NULL);
-
-#if __VJ_version >= 2003000
-    vrj::opengl::DrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
-    gl_manager = vrj::opengl::DrawManager::instance();
-#else
-    vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
-    gl_manager = vrj::GlDrawManager::instance();
-#endif
-
+    
+    // The OpenGL Draw Manager that we are rendering for.
+    //Get the view matrix and the frustrum form the draw manager
+    vrj::GlDrawManager* gl_manager =
+        dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
+    vprASSERT(gl_manager != NULL);
+    vrj::GlUserData* user_data = gl_manager->currentUserData();
+    
     // Set the up the viewport (since OSG clears it out)
     float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
     int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
-    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
-    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
-
-    //gl_manager->currentUserData()->getProjection()->getViewMatrix();
-
+    user_data->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+    user_data->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
+    
     // compute unsigned versions of the viewport info (for passing to glViewport)
-    unsigned ll_x = unsigned( vp_ox*float( w_width ) );
-    unsigned ll_y = unsigned( vp_oy*float( w_height) );
-    unsigned x_size = unsigned( vp_sx*float( w_width) );
-    unsigned y_size = unsigned( vp_sy*float( w_height) );
-
+    const unsigned int ll_x =
+        static_cast<unsigned int>(vp_ox * static_cast<float>(w_width));
+    const unsigned int ll_y =
+        static_cast<unsigned int>(vp_oy * static_cast<float>(w_height));
+    const unsigned int x_size =
+        static_cast<unsigned int>(vp_sx * static_cast<float>(w_width));
+    const unsigned int y_size =
+        static_cast<unsigned int>(vp_sy * static_cast<float>(w_height));
+    
+    //sv->setCalcNearFar(false);
+    sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
     sv->setViewport(ll_x, ll_y, x_size, y_size);
-
-#if __VJ_version >= 2003000
-    vrj::opengl::UserData* userData = gl_manager->currentUserData();
-#else
-    vrj::GlUserData* userData = gl_manager->currentUserData();
-#endif
-
-    // get the current projection
-#if __VJ_version < 2003000
-    vrj::Projection* project = userData->getProjection();
-#elif __VJ_version >= 2003008
-    vrj::ProjectionPtr project = userData->getProjection();
-#endif
-
-
+    
     //Get the frustrum
+    vrj::Projection* project = user_data->getProjection();
     vrj::Frustum frustum = project->getFrustum();
-    /*vprDEBUG(vesDBG,3)  << "Frustum " << std::endl 
-        << frustum[vrj::Frustum::VJ_LEFT] << std::endl
-        << frustum[vrj::Frustum::VJ_RIGHT] << std::endl
-        << frustum[vrj::Frustum::VJ_BOTTOM] << std::endl
-        << frustum[vrj::Frustum::VJ_TOP] << std::endl
-        << frustum[vrj::Frustum::VJ_NEAR] << std::endl
-        << frustum[vrj::Frustum::VJ_FAR] << std::endl << vprDEBUG_FLUSH;*/
-
     sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
-                                    frustum[vrj::Frustum::VJ_RIGHT],
-                                    frustum[vrj::Frustum::VJ_BOTTOM],
-                                    frustum[vrj::Frustum::VJ_TOP],
-                                    frustum[vrj::Frustum::VJ_NEAR],
-                                    frustum[vrj::Frustum::VJ_FAR]);
-
+                                     frustum[vrj::Frustum::VJ_RIGHT],
+                                     frustum[vrj::Frustum::VJ_BOTTOM],
+                                     frustum[vrj::Frustum::VJ_TOP],
+                                     frustum[vrj::Frustum::VJ_NEAR],
+                                     frustum[vrj::Frustum::VJ_FAR]);
+    
     //Allow trackball to grab frustum values to calculate FOVy
     cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
-                                                       frustum[vrj::Frustum::VJ_RIGHT],
-                                                       frustum[vrj::Frustum::VJ_TOP],
-                                                       frustum[vrj::Frustum::VJ_BOTTOM],
-                                                       frustum[vrj::Frustum::VJ_NEAR],
-                                                       frustum[vrj::Frustum::VJ_FAR]);
-   
+                                                        frustum[vrj::Frustum::VJ_RIGHT],
+                                                        frustum[vrj::Frustum::VJ_TOP],
+                                                        frustum[vrj::Frustum::VJ_BOTTOM],
+                                                        frustum[vrj::Frustum::VJ_NEAR],
+                                                        frustum[vrj::Frustum::VJ_FAR]);
+    
+    // Copy the view matrix
     gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-    //vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
-    gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+    gmtl::postMult(_vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>( 
+        gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
     //copy the matrix
     osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
-    //vprDEBUG(vesDBG,3) << std::endl << _vjMatrixLeft << std::endl << vprDEBUG_FLUSH;
     osg_proj_xform_mat->set( _vjMatrixLeft.mData );
-
-    // set the view matrix
-    sv->setViewMatrix(*(osg_proj_xform_mat.get()) );
+    sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
+    
+    //Draw the scene
+    // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
+    // should only be called by a single thread. The equivalent of calling
+    // osgUtil::SceneView::update() is in vrj::OsgApp::update().
     //profile the cull call
     {
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->cull",20);
-        //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         sv->cull();        
     }
     //profile the draw call
     {
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->draw",20);
-        //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
         sv->draw();        
     }
     
+    ///Screen capture code
     if( captureNextFrameForWeb ) 
     {
         //gl_manager->currentUserData()->getViewport()->isSimulator();
@@ -833,16 +791,13 @@ void cfdApp::draw()
         writeImageFileForWeb();
         captureNextFrameForWeb = false;
     }
-        
-    //glMatrixMode(GL_TEXTURE);
-    //glPopMatrix();
-
+    
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
-
+    
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
-
+    
     glPopAttrib();
     glPopAttrib();
     glPopAttrib();
