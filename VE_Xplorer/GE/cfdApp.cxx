@@ -156,16 +156,16 @@ void cfdApp::exit()
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
 
-    VE_SceneGraph::SceneManager::instance()->CleanUp();
-    cfdModelHandler::instance()->CleanUp();
-    cfdEnvironmentHandler::instance()->CleanUp();
-    cfdSteadyStateVizHandler::instance()->CleanUp();
+    //VE_SceneGraph::SceneManager::instance()->CleanUp();
+    //cfdModelHandler::instance()->CleanUp();
+    //cfdEnvironmentHandler::instance()->CleanUp();
+    //cfdSteadyStateVizHandler::instance()->CleanUp();
 
 #ifdef _OSG
-    cfdTextureBasedVizHandler::instance()->CleanUp();
+    //cfdTextureBasedVizHandler::instance()->CleanUp();
 #endif
 
-    cfdExecutive::instance()->CleanUp();
+    //cfdExecutive::instance()->CleanUp();
 }
 
 #ifdef _PERFORMER
@@ -715,11 +715,18 @@ void cfdApp::draw()
     
     // The OpenGL Draw Manager that we are rendering for.
     //Get the view matrix and the frustrum form the draw manager
+#if __VJ_version >= 2003000
+    vrj::opengl::DrawManager* gl_manager =
+        dynamic_cast<vrj::opengl::DrawManager*>(this->getDrawManager());
+    vprASSERT(gl_manager != NULL);
+    vrj::opengl::UserData* user_data = gl_manager->currentUserData();
+#else
     vrj::GlDrawManager* gl_manager =
         dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
     vprASSERT(gl_manager != NULL);
     vrj::GlUserData* user_data = gl_manager->currentUserData();
-    
+#endif
+        
     // Set the up the viewport (since OSG clears it out)
     float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
     int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
@@ -741,7 +748,11 @@ void cfdApp::draw()
     sv->setViewport(ll_x, ll_y, x_size, y_size);
     
     //Get the frustrum
+#if __VJ_version >= 2003000
+    vrj::ProjectionPtr project = user_data->getProjection();
+#else
     vrj::Projection* project = user_data->getProjection();
+#endif
     vrj::Frustum frustum = project->getFrustum();
     sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
                                      frustum[vrj::Frustum::VJ_RIGHT],

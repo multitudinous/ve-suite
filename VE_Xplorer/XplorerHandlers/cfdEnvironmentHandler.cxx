@@ -76,7 +76,7 @@
 #include <fstream>
 #include <cstdlib>
 
-vprSingletonImp( VE_Xplorer::cfdEnvironmentHandler );
+vprSingletonImpLifetime( VE_Xplorer::cfdEnvironmentHandler, 120 );
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -149,7 +149,7 @@ void cfdEnvironmentHandler::Initialize( void )
    this->objectHandler = cfdObjectHandler::instance();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::CleanUp( void )
+cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 {
    if ( this->_readParam )
    {  

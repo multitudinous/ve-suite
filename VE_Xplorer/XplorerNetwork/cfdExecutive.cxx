@@ -72,7 +72,7 @@ XERCES_CPP_NAMESPACE_USE
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-vprSingletonImp( VE_Xplorer::cfdExecutive );
+vprSingletonImpLifetime( VE_Xplorer::cfdExecutive, 150 );
 
 void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
@@ -157,13 +157,13 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    _eventHandlers[std::string("Plugin_Control")] = new VE_EVENTS::ReloadPluginsEventHandler();
    _eventHandlers[std::string("veNetwork Update")] = new VE_EVENTS::UpdateNetworkEventHandler();
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
 {
    return &_plugins;
 }
-///////////////////////////////////////////////////////////////////
-void cfdExecutive::CleanUp( void )
+////////////////////////////////////////////////////////////////////////////////
+cfdExecutive::~cfdExecutive( void )
 {
     vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
                         << std::endl << vprDEBUG_FLUSH;

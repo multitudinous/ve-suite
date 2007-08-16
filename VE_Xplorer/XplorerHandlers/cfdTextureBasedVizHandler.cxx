@@ -79,7 +79,7 @@
 #include "VE_Xplorer/TextureBased/cfdVectorVolumeVisHandler.h"
 #include "VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h"
 
-vprSingletonImp( VE_TextureBased::cfdTextureBasedVizHandler );
+vprSingletonImpLifetime( VE_TextureBased::cfdTextureBasedVizHandler, 140 );
 using namespace VE_TextureBased;
 using namespace VE_Xplorer;
 //////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 
 }
 ///////////////////////////////////////////////
-void cfdTextureBasedVizHandler::CleanUp( void )
+cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler( void )
 {
    if ( !_paramFile.empty() )
    {

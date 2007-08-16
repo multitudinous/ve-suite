@@ -108,7 +108,7 @@ using namespace VE_TextureBased;
 #include <direct.h>
 #endif 
 
-vprSingletonImp( VE_Xplorer::cfdModelHandler );
+vprSingletonImpLifetime( VE_Xplorer::cfdModelHandler, 110 );
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
@@ -162,13 +162,13 @@ cfdModelHandler::cfdModelHandler( void )
    _activeTDSet = 0;
 #endif
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdModelHandler::Initialize( std::string param )
 {
 	;
 }
-
-void cfdModelHandler::CleanUp( void )
+////////////////////////////////////////////////////////////////////////////////
+cfdModelHandler::~cfdModelHandler( void )
 {
    vprDEBUG(vesDBG,2) << "cfdModelHandler destructor"
                           << std::endl << vprDEBUG_FLUSH;

@@ -88,11 +88,11 @@ private:
    //cfdModelHandler(const cfdModelHandler& o) { ; }
    //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
    cfdModelHandler( void );
-   ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
+   ~cfdModelHandler( void );
    vprSingletonHeader( cfdModelHandler );   
 public:
    void Initialize( std::string );
-   void CleanUp( void );
+   //void CleanUp( void );
    void InitScene( void );
    void PreFrameUpdate( void );
 

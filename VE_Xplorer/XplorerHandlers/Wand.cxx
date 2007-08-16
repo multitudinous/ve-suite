@@ -628,14 +628,8 @@ void Wand::UpdateWandLocalDirection()
 {
     //Get the normalized direction relative to the juggler frame
     vjVec.set( 0.0f, 0.0f, -1.0f );
-    //vjMat = wand->getData();
     vjMat = convertTo< double >( wand->getData() );
-    /*
-    for( size_t i = 0; i < 16; ++i )
-    {
-        vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[ i ] );
-    }
-    */
+
     gmtl::xform( vjVec, vjMat, vjVec );
     gmtl::normalize( vjVec );
 
@@ -650,14 +644,8 @@ void Wand::UpdateWandGlobalLocation()
     //Transform wand point into global space get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
     gmtl::Point3d loc_temp, osgPointLoc;
-    //vjMat = wand->getData();
     vjMat = convertTo< double >( wand->getData() );
-    /*
-    for( size_t i = 0; i < 16; ++i )
-    {
-        vjMat.mData[ i ] = static_cast< double >( wand->getData().mData[ i ] );
-    }
-    */
+
     gmtl::setTrans( loc_temp, vjMat );
     osgPointLoc[ 0 ] =  loc_temp[ 0 ];
     osgPointLoc[ 1 ] = -loc_temp[ 2 ];

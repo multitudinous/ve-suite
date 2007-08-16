@@ -87,7 +87,7 @@ namespace VE_TextureBased
          void PreFrameUpdate( void );
          ///Update the frame number of the transient animation
          void UpdateTransientFrame();
-         void CleanUp( void );
+         //void CleanUp( void );
          void SetParameterFile(std::string paramFile);
          void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
          void SetWorldDCS( VE_SceneGraph::DCS* dcs);
@@ -216,7 +216,7 @@ namespace VE_TextureBased
          //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
          cfdTextureBasedVizHandler( void );
   
-         ~cfdTextureBasedVizHandler( void ){ ; }// Never gets called, don't implement
+         ~cfdTextureBasedVizHandler( void );
          vprSingletonHeader( cfdTextureBasedVizHandler );   
    };
 }

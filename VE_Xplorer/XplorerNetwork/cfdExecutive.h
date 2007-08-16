@@ -101,11 +101,11 @@ private:
    cfdExecutive( void ){;}
    
    // destructor
-   virtual ~cfdExecutive( void ){;}
+   virtual ~cfdExecutive( void );
    vprSingletonHeader( cfdExecutive );   
 public:
    void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
-   void CleanUp( void );
+   //void CleanUp( void );
    
    ///the Computational Engine
    Body::Executive* _exec;

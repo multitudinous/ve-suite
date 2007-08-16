@@ -68,7 +68,7 @@
 
 using namespace VE_SceneGraph;
 
-vprSingletonImp( SceneManager );
+vprSingletonImpLifetime( SceneManager, 100 );
 
 SceneManager::SceneManager( void )
 {
@@ -86,7 +86,7 @@ void SceneManager::Initialize( std::string param )
    _param = param;
 }
 ///////////////////////////////////////////////////
-void SceneManager::CleanUp( void )
+SceneManager::~SceneManager( void )
 {
    //Do nothing right now
    if( m_blueArrow )

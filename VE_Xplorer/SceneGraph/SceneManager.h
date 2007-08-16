@@ -84,7 +84,7 @@ public:
    void Initialize( std::string param );
 
    ///Acts as the destructor
-   void CleanUp();
+   //void CleanUp();
 
    ///Initialize the scene
    void InitScene();
@@ -131,7 +131,7 @@ private:
 
    ///Destructor
    ///Never gets called, don't implement
-   ~SceneManager(){;}
+   ~SceneManager();
 
    vprSingletonHeader( SceneManager );
 

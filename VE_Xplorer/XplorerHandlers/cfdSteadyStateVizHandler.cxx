@@ -83,7 +83,7 @@
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
 
-vprSingletonImp( VE_Xplorer::cfdSteadyStateVizHandler );
+vprSingletonImpLifetime( VE_Xplorer::cfdSteadyStateVizHandler, 130 );
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

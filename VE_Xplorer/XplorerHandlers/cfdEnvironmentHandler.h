@@ -85,7 +85,7 @@ private:
    cfdEnvironmentHandler( void );
 
    ///Destructor
-   ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
+   ~cfdEnvironmentHandler( void );
    vprSingletonHeader( cfdEnvironmentHandler );   
 
 public:
@@ -93,7 +93,7 @@ public:
    void Initialize();
 
    ///Clean up environment.
-   void CleanUp( void );
+   //void CleanUp( void );
 
    ///Initialize scene.
    void InitScene( void );
