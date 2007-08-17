@@ -332,3 +332,4 @@ void SeedPoints::PointsDrawable::drawImplementation(osg::State& currentState) co
 	glEnd();
 }
 #endif
+
