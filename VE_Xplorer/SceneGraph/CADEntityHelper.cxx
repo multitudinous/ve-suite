@@ -67,10 +67,8 @@
 #endif
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
-#ifdef VE_PATENTED
 #include <osgOQ/OcclusionQueryVisitor.h>
 #include <osgOQ/OcclusionQueryRoot.h>
-#endif
 // --- C/C++ Libraries --- //
 #include <sstream>
 #include <istream>
@@ -96,16 +94,13 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
     
     ///We deep copy nodes so that picking is accurate 
     ///and so that physics will work properly in the future
-#ifdef VE_PATENTED
     if( dynamic_cast< osgOQ::OcclusionQueryRoot* >( input.m_cadNode.get() ) )
     {
         m_cadNode = new osgOQ::OcclusionQueryRoot( 
             *static_cast< osgOQ::OcclusionQueryRoot* >( 
             input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
     }
-    else
-#endif
-    if( input.m_cadNode->asGroup() )
+    else if( input.m_cadNode->asGroup() )
     {
         m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), 
             osg::CopyOp::DEEP_COPY_NODES );
@@ -291,7 +286,6 @@ void CADEntityHelper::LoadFile( std::string filename,
     exit( 1 );
 #endif
 
-#ifdef VE_PATENTED 
     osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
     root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( tempCADNode.get() );
     if( !root.valid() && occlude ) //(m_cadNode->getNumParents() > 0) )
@@ -312,9 +306,6 @@ void CADEntityHelper::LoadFile( std::string filename,
     {
         m_cadNode = tempCADNode;   
     }
-#else
-    m_cadNode = tempCADNode;   
-#endif
     
     if( !isStream )
     {
@@ -332,7 +323,6 @@ void CADEntityHelper::LoadFile( std::string filename,
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::AddOccluderNodes()
 {
-#ifdef VE_PATENTED 
     osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
     root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( m_cadNode.get() );
     if( !root.valid() && (m_cadNode->getNumParents() > 0) )
@@ -350,5 +340,4 @@ void CADEntityHelper::AddOccluderNodes()
         m_cadNode = static_cast< osg::Node* >( root.get() );
         */
     }
-#endif
 }

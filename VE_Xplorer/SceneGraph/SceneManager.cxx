@@ -146,7 +146,6 @@ void SceneManager::InitScene( void )
    _logoSwitch->AddChild( _logoNode.get() );
    _logoSwitch->AddChild( networkDCS.get() );   
 
-#ifdef VE_PATENTED   
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
     m_oqc->setVisibilityThreshold( 500 );
@@ -157,7 +156,7 @@ void SceneManager::InitScene( void )
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes
-    m_oqc->setDebugDisplay( true );
+    //m_oqc->setDebugDisplay( true );
     // Sets the debug verbosity. Currently supported 'level' values:
     //    0 -- Verbosity is controlled by osg::notify.
     //    1 -- For each OQN in each frame, displays whether that node
@@ -166,7 +165,6 @@ void SceneManager::InitScene( void )
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
-#endif    
 
     rootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
@@ -307,16 +305,13 @@ void SceneManager::SetBackgroundColor(std::vector<double> color)
     m_clrNode->setClearColor( osg::Vec4( color.at(0), color.at(1), color.at(2), 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef VE_PATENTED
 osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
 {
     return m_oqc.get();
 }
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::ResetOcclusionQueryContext()
 {
-#ifdef VE_PATENTED
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
     m_oqc->setVisibilityThreshold( 500 );
@@ -327,7 +322,7 @@ void SceneManager::ResetOcclusionQueryContext()
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes
-    m_oqc->setDebugDisplay( true );
+    //m_oqc->setDebugDisplay( true );
     // Sets the debug verbosity. Currently supported 'level' values:
     //    0 -- Verbosity is controlled by osg::notify.
     //    1 -- For each OQN in each frame, displays whether that node
@@ -336,5 +331,4 @@ void SceneManager::ResetOcclusionQueryContext()
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
-#endif
 }
