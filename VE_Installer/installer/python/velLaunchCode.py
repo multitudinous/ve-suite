@@ -80,7 +80,13 @@ class Launch:
         self.debugOutput = []
         if self.settings["Debug"] and self.runOnce:
             self.inputSource = subprocess.PIPE
-            self.debugFile = open("debug.txt", 'w')
+            if posix:
+                ves_userName = os.popen("whoami").readline().split()[0]
+                vesDebugFileName = "debug." + ves_userName +".txt"
+                debugFileName = os.path.join('/','var', 'tmp', vesDebugFileName)
+            else:
+                debugFileName = "debug.txt"
+            self.debugFile = open(debugFileName, 'w') 
             self.outputDestination = self.debugFile
             print "Output written to %s" %self.debugFile.name
         else:
