@@ -173,6 +173,10 @@ void Wand::UpdateNavigation()
     {
         SetHeadRotationFlag( cfdIso_value );
     }
+    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )         
+    {
+        SetSubZeroFlag( cfdIso_value );
+    }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )         
     {
         for( unsigned int i = 0; i < 3; ++i )
