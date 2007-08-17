@@ -517,7 +517,7 @@ void cfdExecutive::LoadDataFromCE( void )
           idMap = _id_map.find( foundPlugin->first );
           //No need to call this function when execution is complete because it
           //is called in the get network call
-          if( pos3 != std::string::npos )
+          /*if( pos3 != std::string::npos )
           {
               VE_XML::Command returnState;
               returnState.SetCommandName("Get XML Model Results");
@@ -548,7 +548,7 @@ void cfdExecutive::LoadDataFromCE( void )
               _plugins[ foundPlugin->first ]->
                   SetModuleResults( tempResultString );
               delete tempResult;
-          }
+          }*/
           
          int dummyVar = 0;
          _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );

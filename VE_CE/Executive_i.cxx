@@ -1139,27 +1139,27 @@ ACE_THROW_SPEC ((
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::ClientMessage(const char *msg)
 {
-   std::cout << "CE Output = " << msg;
-	std::map<std::string, Body::UI_var>::iterator iter;
-	for(iter=uis_.begin(); iter!=uis_.end(); ) 
-	{
-      std::cout << msg << " to -> " << iter->first << std::endl;
-	   try 
-      {
-         iter->second->_non_existent();
-   	   iter->second->Raise(msg);
-         ++iter;
-	   }
-      catch (CORBA::Exception &) 
-      {
-         std::cout << iter->first <<" is obsolete." << std::endl;
-         // it seems this call should be blocked as we are messing with 
-         // a map that is used everywhere
-		   uis_.erase( iter++ );
-	   }
-      catch (...)
-      {
-         std::cout << "another kind of exception " << std::endl;
-      }
-   }
+    std::cout << "CE Output = " << msg;
+    for(  std::map<std::string, Body::UI_var>::iterator 
+        iter = uis_.begin(); iter!=uis_.end(); ) 
+    {
+        std::cout << msg << " to -> " << iter->first << std::endl;
+        try 
+        {
+            iter->second->_non_existent();
+            iter->second->Raise(msg);
+            ++iter;
+        }
+        catch (CORBA::Exception &) 
+        {
+            std::cout << iter->first <<" is obsolete." << std::endl;
+            // it seems this call should be blocked as we are messing with 
+            // a map that is used everywhere
+            uis_.erase( iter++ );
+        }
+        catch (...)
+        {
+            std::cout << "another kind of exception " << std::endl;
+        }
+    }
 }
