@@ -224,10 +224,7 @@ void cfdApp::contextInit()
         _pbuffer->isSupported();
     } 
 
-    //if ( _tbvHandler )
-    {
-        _tbvHandler->SetPBuffer(_pbuffer);
-    }
+    _tbvHandler->SetPBuffer(_pbuffer);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextClose()
@@ -251,19 +248,8 @@ osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 {
-    newSceneViewer->setDefaults( osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT );
+    vrj::OsgApp::configSceneView( newSceneViewer );
     
-    // Set the timing information in the scene view. This has to be done
-    // only once per osgUtil::SceneView instance and should be done before
-    // calling osgUtil::SceneView::init().
-    newSceneViewer->setFrameStamp( _frameStamp.get());
-    
-    newSceneViewer->init();
-    newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
-    
-    // Needed for stereo to work.
-    newSceneViewer->setDrawBufferValue(GL_NONE);
-
     newSceneViewer->getGlobalStateSet()->setAssociatedModes( 
         light_0.get(), osg::StateAttribute::ON );
         
@@ -480,7 +466,6 @@ void cfdApp::intraFrame()
 void cfdApp::contextPostDraw()
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::contextPostDraw", 20 );
-   //if(_tbvHandler)
     _tbvHandler->PingPongTextures();
     //here for testing...
     glFinish();
