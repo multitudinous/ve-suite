@@ -174,7 +174,7 @@
 				OutputFile="$(OutDir)\VE_Conductor_UtilitiesLib_d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VEConductorLib_d.pdb"
 				ImportLibrary="$(OutDir)\VE_Conductor_GUI_UtilitiesLib_d.lib"

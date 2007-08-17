@@ -173,7 +173,7 @@
 				OutputFile="$(OutDir)\VE_ConductorLib_d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VEConductorLib_d.pdb"
 				ImportLibrary="$(OutDir)\VE_ConductorLib_d.lib"
