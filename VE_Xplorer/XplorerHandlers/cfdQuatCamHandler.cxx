@@ -226,81 +226,82 @@ void cfdQuatCamHandler::WriteToFile(std::string fileName)
 
 void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 {
-   // this is for cluster mode so that the master has a chance to write
-   // the quat cam file and then one frame later all the slaves will
-   // read that file
-   if ( !onMasterNode  )
-   {
-      return;
-   }
-   quatCamDirName = fileName;
-   boost::filesystem::path dir_path( quatCamDirName,boost::filesystem::no_check  );
-   try
-   {
-      ( boost::filesystem::is_directory( dir_path ) );
-   }
-   catch ( const std::exception& ex )
-	{
-	   std::cout << ex.what() << std::endl;    
-	   return;
-	} 
+    // this is for cluster mode so that the master has a chance to write
+    // the quat cam file and then one frame later all the slaves will
+    // read that file
+    if ( !onMasterNode  )
+    {
+        return;
+    }
+    quatCamDirName = fileName;
+    boost::filesystem::path dir_path( quatCamDirName, 
+        boost::filesystem::no_check );
 
-   char textLine [ 256 ];
-   double transpts[3];
-   Matrix44d temp;
+    try
+    {
+        boost::filesystem::is_directory( dir_path );
+    }
+    catch( const std::exception& ex )
+    {
+        std::cout << ex.what() << std::endl;    
+        return;
+    } 
 
-   if ( !QuatCams.empty() )
-   {
-      for ( unsigned int i=0; i<QuatCams.size(); i++ )
-      {
-         delete QuatCams.at(i);
-      } 
-      QuatCams.clear();
-   }
+    char textLine [ 256 ];
+    double transpts[3];
+    Matrix44d temp;
 
-   if ( !flyThroughList.empty() )
-   {
-      flyThroughList.clear();
-   }
-   
-   std::ifstream inFile( fileName.c_str(), std::ios::in ); 
+    for( size_t i=0; i<QuatCams.size(); i++ )
+    {
+        delete QuatCams.at(i);
+    } 
+    QuatCams.clear();
+    flyThroughList.clear();
 
-   if ( fileIO::isFileReadable( fileName ) )
-   { 
-      std::cout<<"QuatCam File Was Opened Successfully"<<std::endl;
+    if( !fileIO::isFileReadable( fileName ) )
+    { 
+        std::ofstream newFile( fileName.c_str(), std::ios::out ); 
+        newFile.open( fileName.c_str(), std::ios::out );
+        newFile.close();
+        return;
+    }
 
-      if ( (char)inFile.peek() != '*' )
-      {
-         numQuatCams = 0;
-         return;
-      }
-      else if ( (char)inFile.peek() == '*' )
-      {
-         inFile.getline( textLine, 256 );   //skip past remainder of line
-         inFile >> numQuatCams;
-         inFile.getline( textLine, 256 );   //skip past remainder of line      
-         //std::cout << "Number of QuatCams: " << numQuatCams << std::endl;
+    std::ifstream inFile( fileName.c_str(), std::ios::in ); 
+    std::cout<<"QuatCam File Was Opened Successfully"<<std::endl;
 
-         for ( unsigned int i=0; i<numQuatCams; i++ )
-         {
-            for ( unsigned int j=0; j<4; j++ )
+    if( inFile.peek() != '*' )
+    {
+        return;
+    }
+    else if( inFile.peek() == '*' )
+    {
+        inFile.getline( textLine, 256 );   //skip past remainder of line
+        inFile >> numQuatCams;
+        inFile.getline( textLine, 256 );   //skip past remainder of line      
+        std::cout << "Number of QuatCams: " << numQuatCams << std::endl;
+
+        for( unsigned int i=0; i<numQuatCams; i++ )
+        {
+            for( unsigned int j=0; j<4; j++ )
             {
-               for ( unsigned int k=0; k<4; k++ )
-                  inFile >> temp[ j ][ k ];
+                for( unsigned int k=0; k<4; k++ )
+                {    
+                    inFile >> temp[ j ][ k ];
+                }
             }
             inFile.getline( textLine, 256 );   //skip past remainder of line            
 
-            for ( unsigned int k=0; k<3; k++ )
+            for( unsigned int k=0; k<3; k++ )
             {
-               inFile >> transpts[k];
+                inFile >> transpts[k];
             }
             inFile.getline( textLine, 256 );   //skip past remainder of line      
 
             QuatCams.push_back(new cfdQuatCam(temp, transpts));
-         } 
+        } 
 
-         if ( (char)inFile.peek() == '#' )
-         {
+        if( inFile.peek() == '#' )
+        {
             inFile.getline( textLine, 256 );   //skip past remainder of line
             inFile >> numFlyThroughs;
             inFile.getline( textLine, 256 );   //skip past remainder of line      
@@ -308,32 +309,26 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
 
             numPointsInFlyThrough = new unsigned int[numFlyThroughs];
             std::vector<int> tempPts;
-            int dummy;
-            for ( unsigned int i=0; i<numFlyThroughs; i++ )
+            int dummy = 0;
+            for( unsigned int i=0; i<numFlyThroughs; i++ )
             {
-               inFile >> numPointsInFlyThrough[i];
-               //std::cout<<"Number of points in FlyThrough " << i << " :" << numPointsInFlyThrough[i]<<std::endl;
+                inFile >> numPointsInFlyThrough[i];
+                //std::cout<<"Number of points in FlyThrough " << i 
+                //    << " :" << numPointsInFlyThrough[i]<<std::endl;
 
-               for ( unsigned int j=0; j<numPointsInFlyThrough[i]; j++)
-               {
-                  inFile >> dummy;
-                  tempPts.push_back(dummy);
-               }
-               flyThroughList.push_back(tempPts);
-               tempPts.clear();
+                for( unsigned int j=0; j<numPointsInFlyThrough[i]; j++)
+                {
+                    inFile >> dummy;
+                    tempPts.push_back(dummy);
+                }
+                flyThroughList.push_back(tempPts);
+                tempPts.clear();
             }
             delete [] numPointsInFlyThrough;
-         }
-      }   
-      inFile.close();
-      this->writeReadComplete = true;
-   }
-   else 
-   {
-     std::ofstream newFile( fileName.c_str(), std::ios::out ); 
-     newFile.open( fileName.c_str(), std::ios::out );
-      newFile.close();
-   }
+        }
+    }   
+    inFile.close();
+    this->writeReadComplete = true;
 }
 /////////////////////////////////////////////
 void cfdQuatCamHandler::ClearQuaternionData()
@@ -693,7 +688,7 @@ double cfdQuatCamHandler::getLinearDistance( gmtl::Vec3d vjVecLast, gmtl::Vec3d 
 int cfdQuatCamHandler::getNumLocs()
 {
    //this assumes there is only one flythrough!!!!--biv
-   return QuatCams.size();//this->numQuatCams;
+   return QuatCams.size();
 }
 
 std::vector< std::vector <int> > cfdQuatCamHandler::getFlyThroughs()
