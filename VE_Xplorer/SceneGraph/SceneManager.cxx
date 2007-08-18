@@ -148,11 +148,11 @@ void SceneManager::InitScene( void )
 
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
-    m_oqc->setVisibilityThreshold( 500 );
+    m_oqc->setVisibilityThreshold( 1000 );
     ///Number of verts
     m_oqc->setOccluderThreshold( 1000 );
     ///Specifies how many frames to wait before issuing another query    
-    m_oqc->setQueryFrameCount( 5 );
+    m_oqc->setQueryFrameCount( 3 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes
