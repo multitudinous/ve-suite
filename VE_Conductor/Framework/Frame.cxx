@@ -756,7 +756,7 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );
     //If the display mode is desktop then we will disconnect when exit is selected
     //and in other modes we will give the user the ability to exit
-    if( ( GetDisplayMode() != "Desktop" ) ||
+    if( ( GetDisplayMode() != "Desktop" ) &&
         ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
     {
         xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
