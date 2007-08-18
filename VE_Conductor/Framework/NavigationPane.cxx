@@ -100,7 +100,7 @@ NavigationPane::NavigationPane( wxWindow* parent )
    
    wxSize displaySize = ::wxGetDisplaySize();
 
-   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
+   wxRect dialogPosition( displaySize.GetWidth() - 675, displaySize.GetHeight() - 650, 575, 550 );
    /*wxRect dialogPosition( 2*displaySize.GetWidth()/3, bbox.GetBottomRight().y, 
                         displaySize.GetWidth()/3, 
                         .5*(displaySize.GetHeight()-displaySize.GetHeight()*0.0732421875) );*/
