@@ -74,6 +74,8 @@
 #include <istream>
 #include <string>
 
+#include <boost/filesystem/operations.hpp> 
+#include <boost/filesystem/path.hpp>
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -217,6 +219,13 @@ void CADEntityHelper::LoadFile( std::string filename,
     osg::ref_ptr< osg::Node > tempCADNode;
     if( !isStream )
     {
+		boost::filesystem::path fullPathFilename =
+		boost::filesystem::system_complete(boost::filesystem::path(filename.c_str(),
+		                                   boost::filesystem::native));
+		if( boost::filesystem::exists( fullPathFilename ) )
+		{
+			filename = fullPathFilename.native_file_string();
+		}
         if( osgDB::getLowerCaseFileExtension(filename) == "osg" )
         {
             osgDB::ReaderWriter *rw = osgDB::Registry::instance()->

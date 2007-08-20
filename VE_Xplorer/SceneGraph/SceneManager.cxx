@@ -66,6 +66,8 @@
 #include <istream>
 #include <sstream>
 
+#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+
 using namespace VE_SceneGraph;
 
 vprSingletonImpLifetime( SceneManager, 100 );
@@ -168,6 +170,20 @@ void SceneManager::InitScene( void )
 
     rootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
+
+	///Try to load the osgPT Polytans plugin to load all
+	///supported PolyTrans file types
+#ifdef _DEBUG
+	const std::string pluginName( "osgdb_PolyTransd.dll" );
+#else
+	const std::string pluginName( "osgdb_PolyTrans.dll" );
+#endif
+    bool loadedLib = osgDB::Registry::instance()->loadLibrary( pluginName );
+	if( !loadedLib )
+	{
+        vprDEBUG( vesDBG,2 ) << "Can't load plugin \"" 
+			<< pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Group* SceneManager::GetRootNode( void )
