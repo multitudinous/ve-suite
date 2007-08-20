@@ -54,6 +54,9 @@ setenv PATH ${TAO_HOME}/bin:${PATH}
 setenv PATH ${VJ_BASE_DIR}/bin:${VES_BASE_DIR}/bin:${PATH}
 setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
 
+# Setup python path to include wxPython if not installed with the OS
+setenv PYTHONPATH <location of wxPython site package>
+
 # Setup this to get access to fonts
 setenv OSG_FILE_PATH ${OSG_HOME}/share/OpenSceneGraph-Data:${VES_BASE_DIR}/share/vesuite
 
