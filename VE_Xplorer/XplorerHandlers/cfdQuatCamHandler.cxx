@@ -329,6 +329,10 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName)
     }   
     inFile.close();
     this->writeReadComplete = true;
+    
+    ///Now tell xplorer that new data is available 
+    ///for loading into conductor
+    _updateViewGUIPointData();
 }
 /////////////////////////////////////////////
 void cfdQuatCamHandler::ClearQuaternionData()
@@ -570,7 +574,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 /////////////////////////////////////////////////////
 void cfdQuatCamHandler::_updateViewGUIPointData()
 {
-    VE_XML::Command* viewPointGUIData = new VE_XML::Command( );
+    VE_XML::Command* viewPointGUIData = new VE_XML::Command();
     viewPointGUIData->SetCommandName( "VIEWPOINT_GUI_DATA" );
     size_t nViewPoints = this->QuatCams.size( );
 
@@ -584,7 +588,7 @@ void cfdQuatCamHandler::_updateViewGUIPointData()
         viewPointGUIData->AddDataValuePair( viewPointNames );
         name.clear( );
     }
-    VE_Xplorer::CommandHandler::instance( )->SetXMLCommand( viewPointGUIData );
+    VE_Xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
     delete viewPointGUIData;
 }
 // If a quat is active this will move the cam to the next location
