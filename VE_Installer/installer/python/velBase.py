@@ -43,7 +43,7 @@ unix = (name == "posix" or name == "mac")
 posix = (name == "posix")
 ##CFD_HOST_TYPE: Set below.
 ##Shell variables.
-UNIX_SHELL = getenv("SHELL", "/bin/sh") ##Shell program for the Shell mode
+UNIX_SHELL = getenv("SHELL", "/bin/csh") ##Shell program for the Shell mode
 ##Cluster variables.
 CLUSTER_ENABLED = True
 ##File/Folder settings.
@@ -75,7 +75,7 @@ else:
     from os import getuid ##Used for grabbing user id
     from pwd import getpwuid ##Used for grabbing user id
     userName = getpwuid(os.getuid())[0]
-    CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.%s.tsh" %(userName))
+    CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.%s.csh" %(userName))
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
 
 ##Config settings.

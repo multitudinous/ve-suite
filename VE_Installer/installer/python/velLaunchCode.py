@@ -482,13 +482,13 @@ class Launch:
         """Writes the cluster script section before the environment setting."""
         if unix:
             ssh_cmd = os.popen("whereis ssh").readline().split()[1]
-            self.clusterScript = "#!/bin/sh\n"
+            self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
             if self.settings["EnableVSync"]:
-                self.clusterScript += 'export __GL_SYNC_TO_VBLANK="1"\n'
+                self.clusterScript += 'setenv __GL_SYNC_TO_VBLANK "1"\n'
             self.WriteToClusterScript("PYTHONPATH")
             self.WriteToClusterScript("DISPLAY")
         else:
@@ -548,6 +548,9 @@ class Launch:
                     sys.exit(2)
                 return
             else:
+                ##Override whatever current shell type to C Shell" 
+                os.system("exec csh")
+                ##Now it's safe to run the C Shell commands"
                 os.system("source %s %s %s &" %(clusterFilePath,
                                                 nodeName,
                                                 nodeStatus))
@@ -921,7 +924,7 @@ class Launch:
             ##self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
             
             ##Since we hardcoded the shell type to be set to the bash shell, 
-            ##now we only use the bash commands.  
-            self.clusterScript += 'export %s="%s"\n' %(var, os.getenv(var))
+            ##now we only use the bash commands. 
+            self.clusterScript += 'setenv %s "%s"\n' %(var, os.getenv(var))
         elif windows:
             self.clusterScript += 'set %s=%s\n' %(var, os.getenv(var))
