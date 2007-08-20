@@ -72,7 +72,10 @@ class PrefWindow(wx.Dialog):
         self.cbEnableVSync = wx.CheckBox( self, 803, "Enable VSync", wx.DefaultPosition, wx.DefaultSize, 0 )
 
         #OK and Cancel button
-        self.bOk = wx.Button( self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+        if windows:
+            self.bOk = wx.Button( self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+        else:
+            self.bOk = wx.Button( self, wx.ID_OK, "Save", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bCancel = wx.Button( self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
 
 
@@ -102,8 +105,12 @@ class PrefWindow(wx.Dialog):
         boxSizerA.Add( sbSizerB, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
         boxSizerB = wx.BoxSizer( wx.HORIZONTAL )
 
-        boxSizerB.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
-        boxSizerB.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        if windows:
+            boxSizerB.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+            boxSizerB.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        else:
+            boxSizerB.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+            boxSizerB.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
         boxSizerA.Add( boxSizerB, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
         boxSizerA.SetSizeHints(self)

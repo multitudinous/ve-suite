@@ -98,8 +98,12 @@ class SettingsWindow(wx.Dialog):
         self.bEditJconf = wx.Button(self, -1, "Edit Configuration List", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Xplorer" +
                                               " configurations."))        
-        self.bOk = wx.Button(self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.bCancel = wx.Button(self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
+        #OK and Cancel button
+        if windows:
+            self.bOk = wx.Button( self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+        else:
+            self.bOk = wx.Button( self, wx.ID_OK, "Save", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.bCancel = wx.Button( self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
         
         ##Bind events.
         self.Bind(wx.EVT_LISTBOX, self.Refresh, self.chJconf)
@@ -145,8 +149,12 @@ class SettingsWindow(wx.Dialog):
         svSizer2.Add( hSizer3, 0, wx.ALIGN_CENTER, 5 )
         vSizer1.Add( svSizer2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
         hSizer4 = wx.BoxSizer( wx.HORIZONTAL )
-        hSizer4.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.ALL, 5 )    
-        hSizer4.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        if windows:
+            hSizer4.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.ALL, 5 )    
+            hSizer4.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        else:    
+            hSizer4.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.ALL, 5 )    
+            hSizer4.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
         vSizer1.Add( hSizer4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
         vSizerMain.Add( vSizer1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )            
                         

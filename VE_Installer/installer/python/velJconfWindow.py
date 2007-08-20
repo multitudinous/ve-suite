@@ -74,9 +74,12 @@ class JconfWindow(wx.Dialog):
         self.bRename.SetToolTip(wx.ToolTip("Rename a configuration listing."))
         self.bDelete = wx.Button(self, -1, "Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bDelete.SetToolTip(wx.ToolTip("Delete a configuration listing."))
-        self.bOk = wx.Button(self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.bCancel = wx.Button(self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
-        
+        #OK and Cancel button
+        if windows:
+            self.bOk = wx.Button( self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+        else:
+            self.bOk = wx.Button( self, wx.ID_OK, "Save", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.bCancel = wx.Button( self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )        
         self.UpdateDisplay(self.state.GetSurface("JconfSelection"), True)
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
@@ -101,8 +104,13 @@ class JconfWindow(wx.Dialog):
         vSizer1.Add( self.lblPath, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
         vSizer1.Add( self.display, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
         hSizer2 = wx.BoxSizer( wx.HORIZONTAL )
-        hSizer2.Add( self.bOk, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
-        hSizer2.Add( self.bCancel, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+
+        if windows:
+            hSizer2.Add( self.bOk, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+            hSizer2.Add( self.bCancel, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        else:
+            hSizer2.Add( self.bCancel, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+            hSizer2.Add( self.bOk, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
         vSizer1.Add( hSizer2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
         vSizerMain.Add( vSizer1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )           ##Set size, position.
  
