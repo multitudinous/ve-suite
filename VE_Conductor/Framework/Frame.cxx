@@ -290,19 +290,20 @@ viewlocPane( 0 )
     if( preferences->GetMode( "Use Preferred Background Color" ) )
     {
         xplorerColor = preferences->GetBackgroundColor();
-
-        VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
-        dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
-        veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-        veCommand->AddDataValuePair(dataValuePair);
-        ///Set the command on the buffer first so that a strong ptr is 
-        ///referencing the memory
-        UserPreferencesDataBuffer::instance()->SetCommand( 
-            "CHANGE_BACKGROUND_COLOR", veCommand );
-        
-        serviceList->SendCommandStringToXplorer( veCommand );
     }
+
+    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+    dataValuePair->SetData(std::string("Background Color"),xplorerColor);
+    VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+    veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
+    veCommand->AddDataValuePair(dataValuePair);
+    ///Set the command on the buffer first so that a strong ptr is 
+    ///referencing the memory
+    UserPreferencesDataBuffer::instance()->SetCommand( 
+        "CHANGE_BACKGROUND_COLOR", veCommand );
+    
+    serviceList->SendCommandStringToXplorer( veCommand );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
