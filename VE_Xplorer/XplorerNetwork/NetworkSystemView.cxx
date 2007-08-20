@@ -155,21 +155,21 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
 		//scale icon to 2d worksheet size
 		osg::ref_ptr<osg::Image> image = osgDB::readImageFile("2DIcons/"+model->GetIconFilename()+".jpg");
-		osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
+		//osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
 		output<<"width: "<<image->s()<<"height: "<<image->t()<<std::endl;
-		output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
+		//output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
 		
 		//scales
-		osg::Vec3 vec;
-		vec.set(image->s()/dx, image->s()/dy, image->t()/dz);
-		worksheetScaledModel->addChild(loadedModel.get());
-		worksheetScaledModel->setScale(vec);
+		//osg::Vec3 vec;
+		//vec.set(image->s()/dx, image->s()/dy, image->t()/dz);
+		//worksheetScaledModel->addChild(loadedModel.get());
+		//worksheetScaledModel->setScale(vec);
 		
 		//problem with coords - wx has upper left origin
-		worksheetScaledModel->setPosition(osg::Vec3d(
-			worksheetScaledModel->getPosition().x() + (0.5*image->s()),
-			worksheetScaledModel->getPosition().y() ,
-			worksheetScaledModel->getPosition().z() + (0.5*image->t())));
+		//worksheetScaledModel->setPosition(osg::Vec3d(
+		//	worksheetScaledModel->getPosition().x() + (0.5*image->s()),
+		//	worksheetScaledModel->getPosition().y() ,
+		//	worksheetScaledModel->getPosition().z() + (0.5*image->t())));
 
 		//Put origin in the center of the model
 		//osg::ref_ptr<osg::AutoTransform> loadedModelNormalized = new osg::AutoTransform();
@@ -241,8 +241,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//Rotate the 3d comps 180 degrees around X axis
 		//corrects issue with initial model location
 		osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
-		//rotatedComp->addChild(loadedModel.get());
-		rotatedComp->addChild(worksheetScaledModel.get());
+		rotatedComp->addChild(loadedModel.get());
+		//rotatedComp->addChild(worksheetScaledModel.get());
 		rotatedComp->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
 		//rotate/scale/mirror component
@@ -290,8 +290,9 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		osg::Vec3 center = mModelTrans.get()->getBound().center();
 		//20 and 28 should be replaced with conductor icon width and height respectively
 		//osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), (xyPair.second + 28) - center.y(), 0 - center.z());
-		osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 0 - center.z(), (xyPair.second + 22) - center.y());
+		//osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 0 - center.z(), (xyPair.second + 22) - center.y());
 		//osg::Vec3 centerTrans = osg::Vec3(xyPair.first + 20, xyPair.second + 25, 0 );
+		osg::Vec3 centerTrans = osg::Vec3(xyPair.first - center.x(), 0 - center.z(), xyPair.second - center.y());
 		mModelTrans->addChild(scale.get());
 		//mModelTrans->addChild(reRotatedComp.get());
 		mModelTrans->setPosition(centerTrans);
