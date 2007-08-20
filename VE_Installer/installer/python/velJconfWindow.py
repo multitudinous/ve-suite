@@ -51,70 +51,74 @@ class JconfWindow(wx.Dialog):
         NameChangeWarning(oldName, newName)
         OnClose(event)
     """
-    def __init__(self, parent, state, iD = wx.ID_ANY,
-                 title = "Xplorer Configurations"):
+    def __init__(self, parent, state, iD = wx.ID_ANY, title = "Xplorer Configurations"):
         """Sets up the Jconf window."""
-        wx.Dialog.__init__(self, parent, iD, title,
-                           style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+        wx.Dialog.__init__(self, parent, wx.ID_ANY, title,
+                           style = wx.DEFAULT_FRAME_STYLE ^ (wx.RESIZE_BORDER | 
+                                                             wx.MINIMIZE_BOX |
+                                                             wx.MAXIMIZE_BOX)
+                           | wx.TAB_TRAVERSAL)
         ##Data storage.
         self.state = state
         ##Build displays.
+        self.lblListBox = wx.StaticText(self, -1, "Xplorer Configurations:", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.lblPath = wx.StaticText(self, -1)
-        self.confList = wx.ListBox(self, -1, size=JCONF_LIST_DISPLAY_MIN_SIZE)
-        self.display = wx.TextCtrl(self, -1, style=wx.TE_READONLY)
-        self.display.SetBackgroundColour(BACKGROUND_COLOR)
+        self.confList = wx.ListBox(self, -1, wx.DefaultPosition, [150,150])
+        self.display = wx.TextCtrl(self, -1, "", wx.DefaultPosition, [80,-1], style=wx.TE_READONLY)
+        ##self.display.SetBackgroundColour(BACKGROUND_COLOR)
+
         ##Build buttons.
-        self.bAdd = wx.Button(self, -1, "Add")
+        self.bAdd = wx.Button(self, -1, "Add", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bAdd.SetToolTip(wx.ToolTip("Add a configuration listing."))
-        self.bRename = wx.Button(self, -1, "Rename")
+        self.bRename = wx.Button(self, -1, "Rename", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bRename.SetToolTip(wx.ToolTip("Rename a configuration listing."))
-        self.bDelete = wx.Button(self, -1, "Delete")
+        self.bDelete = wx.Button(self, -1, "Delete", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bDelete.SetToolTip(wx.ToolTip("Delete a configuration listing."))
-        bOk = wx.Button(self, -1, "Ok")
-        bOk.SetToolTip(wx.ToolTip("Return to Settings."))
+        self.bOk = wx.Button(self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.bCancel = wx.Button(self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
+        
         self.UpdateDisplay(self.state.GetSurface("JconfSelection"), True)
         ##Bind buttons.
         self.Bind(wx.EVT_BUTTON, self.AddNew, self.bAdd)
         self.Bind(wx.EVT_BUTTON, self.Delete, self.bDelete)
         self.Bind(wx.EVT_BUTTON, self.Rename, self.bRename)
-        self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
+        self.Bind(wx.EVT_BUTTON, self.OnOk, id = wx.ID_OK)
         self.Bind(wx.EVT_LISTBOX, self.UpdateData, self.confList)
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        ##self.Bind(wx.EVT_CLOSE, self.OnClose)
         ##Construct layout.
         ##Add/Rename/Delete buttons.
-        rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.AddMany([self.bAdd, VERTICAL_SPACE,
-                          self.bRename, VERTICAL_SPACE,
-                          self.bDelete])
-        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        ##List field + buttons.
-        columnSizer.Add(self.confList, 1, wx.EXPAND)
-        columnSizer.AddMany([HORIZONTAL_SPACE, rowSizer])
-        ##List field + Path display
-        rowSizer = wx.BoxSizer(wx.VERTICAL)
-        rowSizer.Add(wx.StaticText(self, -1, "Xplorer Configurations:"))
-        rowSizer.Add(columnSizer, 1, wx.EXPAND)
-        rowSizer.AddMany([VERTICAL_SPACE,
-                          self.lblPath])
-        rowSizer.Add(self.display, 0, wx.EXPAND)
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
-        mainSizer.Add(rowSizer, 1, wx.ALL | wx.EXPAND, BORDER)
-        mainSizer.Add(bOk, 0, wx.EXPAND)
-        ##Set size, position.
-        mainSizer.SetSizeHints(self)
-        self.SetSizer(mainSizer)
-        self.SetSize(INITIAL_JCONF_WINDOW_SIZE)
+        vSizerMain = wx.BoxSizer( wx.VERTICAL )
+        vSizer1 = wx.BoxSizer( wx.VERTICAL )
+        vSizer1.Add( self.lblListBox, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+        hSizer1 = wx.BoxSizer( wx.HORIZONTAL )
+        hSizer1.Add( self.confList, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.TOP, 5 )
+        vSizer2 = wx.BoxSizer( wx.VERTICAL )
+        vSizer2.Add( self.bAdd, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        vSizer2.Add( self.bRename, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        vSizer2.Add( self.bDelete, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        hSizer1.Add( vSizer2, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+        vSizer1.Add( hSizer1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+        vSizer1.Add( self.lblPath, 0, wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+        vSizer1.Add( self.display, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+        hSizer2 = wx.BoxSizer( wx.HORIZONTAL )
+        hSizer2.Add( self.bOk, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.ALL, 5 )
+        hSizer2.Add( self.bCancel, 0, wx.GROW|wx.ALIGN_CENTER_HORIZONTAL|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        vSizer1.Add( hSizer2, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+        vSizerMain.Add( vSizer1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )           ##Set size, position.
+ 
+        vSizerMain.SetSizeHints(self)
+        self.SetSizer(vSizerMain)
         self.CenterOnParent(wx.BOTH)
         ##Set the background color.
-        Style(self)
+        #Style(self)
 
     def UpdateData(self, event = None):
         """Updates the data to match recent user changes.
 
         Only covers selecting a new Jconf;
         the functions for adding/deleting one directly changes the data."""
-        currentSelection = self.confList.GetStringSelection()
-        self.state.Edit("JconfSelection", currentSelection)
+        #currentSelection = self.confList.GetStringSelection()
+        #self.state.Edit("JconfSelection", currentSelection)
         self.React()
         self.UpdateDisplay()
         return
@@ -128,14 +132,17 @@ class JconfWindow(wx.Dialog):
         if refreshList:
             self.confList.Clear()
             self.confList.Set(self.state.GetSurface("JconfDict").GetNames())
+            
             if selection in self.state.GetSurface("JconfDict").GetNames():
                 self.confList.SetStringSelection(selection)
             else:
                 self.confList.SetSelection(0)
+                
             self.bDelete.Enable(len(self.state.GetSurface("JconfDict")) > 1 and
                                 self.state.IsEnabled("JconfDict"))
             self.bAdd.Enable(self.state.IsEnabled("JconfDict"))
             self.confList.Enable(self.state.IsEnabled("JconfSelection"))
+            
         s = self.confList.GetStringSelection()
         f = self.state.GetSurface("JconfDict").GetPath(s)
         self.display.SetValue(f)
@@ -258,10 +265,16 @@ class JconfWindow(wx.Dialog):
         dlg.ShowModal()
         dlg.Destroy()
 
-    def OnClose(self, event):
-        """Closes JconfWindow."""
+
+    def OnOk(self, event):
+        """Save Changes and Closes JconfWindow."""
         selection = self.confList.GetStringSelection()
         if selection != "":
             self.state.Edit("JconfSelection", selection)
+        self.Hide()
+        self.Destroy()
+
+
+    def OnClose(self, event):
         self.Hide()
         self.Destroy()

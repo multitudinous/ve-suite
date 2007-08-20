@@ -52,97 +52,114 @@ class SettingsWindow(wx.Dialog):
         EditJconf([event])
         EditCluster([event])
         OnClose([event])"""
-    def __init__(self, parent,
-                 state, position = wx.DefaultPosition):
+    def __init__(self, parent, state, position = wx.DefaultPosition):
         """Creates the Settings window."""
         ##Set up data.
         self.state = state
         modeName = MODE_LIST[self.state.GetSurface("Mode")]
-        wx.Dialog.__init__(self, parent, -1, "%s Settings" %(modeName),
+        wx.Dialog.__init__(self, parent, -1, "%s Mode Settings" %(modeName),
                            pos = position,
-                           style = wx.DEFAULT_FRAME_STYLE &
-                           ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
-                           wx.MAXIMIZE_BOX))
+                           style = wx.DEFAULT_FRAME_STYLE ^ (wx.RESIZE_BORDER | 
+                                                             wx.MINIMIZE_BOX |
+                                                             wx.MAXIMIZE_BOX)
+                           | wx.TAB_TRAVERSAL)
         ##Jconf pull-down menu.
-        self.chJconf = wx.Choice(self, -1)
-        self.chJconf.SetToolTip(wx.ToolTip("Choose Xplorer's configuration."))
-        ##Edit Jconf button.
-        self.bEditJconf = wx.Button(self, -1, "Edit Configuration List")
-        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Xplorer" +
-                                              " configurations."))
+        
+        self.lblStBox1 = wx.StaticBox(self, -1, "Programs to launch" )
         ##Name Server checkbox.
-        self.cbNameServer = wx.CheckBox(self, -1, "Name Server")
+        self.cbNameServer = wx.CheckBox(self, -1, "Name Server", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cbNameServer.SetToolTip(wx.ToolTip("Run Name Server at Launch"))
         ##Conductor checkbox.
-        self.cbConductor = wx.CheckBox(self, -1, "Conductor")
+        self.cbConductor = wx.CheckBox(self, -1, "Conductor", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cbConductor.SetToolTip(wx.ToolTip("Run Conductor at Launch"))
         ##Xplorer checkbox.
-        self.cbXplorer = wx.CheckBox(self, -1, "Xplorer")
+        self.cbXplorer = wx.CheckBox(self, -1, "Xplorer", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cbXplorer.SetToolTip(wx.ToolTip("Run Xplorer at Launch"))
         ##Desktop checkbox.
-        self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode")
+        self.cbDesktop = wx.CheckBox(self, -1, "Desktop Mode", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.cbDesktop.SetToolTip(wx.ToolTip("Set Desktop Mode for" +
                                              " Conductor and Xplorer"))
+        
+        self.lblStBox2 = wx.StaticBox(self, -1, "Xplorer Configuration" )
         ##Xplorer Type radio box.
-        self.rbXplorer = wx.RadioBox(self, -1, "Xplorer Mode",
+        self.rbXplorer = wx.RadioBox(self, -1, "Mode",
                                      wx.DefaultPosition, wx.DefaultSize,
-                                     RADIO_XPLORER_LIST, 2, wx.RA_SPECIFY_COLS)
+                                     RADIO_XPLORER_LIST, 1, wx.RA_SPECIFY_ROWS)
         self.rbXplorer.SetToolTip(wx.ToolTip("Which Xplorer format do you" +
                                              " want to launch?"))
         ##Cluster button.
-        self.bCluster = wx.Button(self, -1, "Cluster Settings")
+        self.bCluster = wx.Button(self, -1, "Cluster Settings", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bCluster.SetToolTip(wx.ToolTip("Set the computers and extra" +
                                             " variables in the cluster."))
-        if not CLUSTER_ENABLED:
-            self.bCluster.Hide()
-        ##Set up OK button.
-        bOk = wx.Button(self, -1, "OK")
-        bOk.SetToolTip(wx.ToolTip("Return to the Launcher."))
-        ##Update Display
-        self.React()
+        ##Configuration Choice
+        self.chJconf = wx.Choice(self, -1, wx.DefaultPosition, [150,-1])
+        self.chJconf.SetToolTip(wx.ToolTip("Choose Xplorer's configuration."))
+        ##Edit Jconf button.
+        self.bEditJconf = wx.Button(self, -1, "Edit Configuration List", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.bEditJconf.SetToolTip(wx.ToolTip("Edit the list of Xplorer" +
+                                              " configurations."))        
+        self.bOk = wx.Button(self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.bCancel = wx.Button(self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
+        
         ##Bind events.
+        self.Bind(wx.EVT_LISTBOX, self.Refresh, self.chJconf)
+        self.Bind(wx.EVT_CHECKBOX, self.Refresh, self.cbXplorer)
+        self.Bind(wx.EVT_RADIOBOX, self.Refresh, self.rbXplorer)
+        self.Bind(wx.EVT_CHECKBOX, self.Refresh, self.cbConductor)
+        self.Bind(wx.EVT_CHECKBOX, self.Refresh, self.cbDesktop)
+        """
         self.Bind(wx.EVT_LISTBOX, self.UpdateData, self.chJconf)
         self.Bind(wx.EVT_CHECKBOX, self.UpdateData, self.cbXplorer)
         self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbXplorer)
         self.Bind(wx.EVT_CHECKBOX, self.UpdateData, self.cbConductor)
         self.Bind(wx.EVT_CHECKBOX, self.UpdateData, self.cbDesktop)
+        """
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.Bind(wx.EVT_BUTTON, self.OnClose, bOk)
+        self.Bind(wx.EVT_BUTTON, self.OnOk, id = wx.ID_OK)
         self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
         self.Bind(wx.EVT_BUTTON, self.EditCluster, self.bCluster)
+        
         ##Set sizers.
-        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        rowSizer = wx.BoxSizer(wx.VERTICAL)
-        ##Construct & insert the Jconf column.
-        rowSizer.Add(wx.StaticText(self, -1, "Xplorer configuration:"))
-        columnSizer.Add(self.chJconf, 1, wx.ALIGN_BOTTOM)
-        columnSizer.AddMany([HORIZONTAL_SPACE,
-                             self.bEditJconf])
-        rowSizer.Add(columnSizer, 0, wx.EXPAND)
-        ##Construct & insert the check box/radio box grid.
-        columnSizer = wx.BoxSizer(wx.HORIZONTAL)
-        columnSizer.Add(self.cbDesktop)
-        columnSizer.Add(HORIZONTAL_SPACE)
-        columnSizer.Add(self.bCluster)
-        gridSizer = wx.FlexGridSizer(3, 2,
-                                     VERTICAL_SPACE[1], HORIZONTAL_SPACE[0])
-        gridSizer.Add(self.cbNameServer)
-        gridSizer.Add((-1, self.bCluster.GetSize()[1]))
-        gridSizer.AddMany([self.cbConductor, columnSizer,
-                           self.cbXplorer, self.rbXplorer])
-        ##Insert the Programs to Launch grid.
-        rowSizer.AddMany([VERTICAL_SPACE,
-                          wx.StaticText(self, -1, "Programs to launch:"),
-                          VERTICAL_SPACE,
-                          gridSizer])
-        ##Set the main sizer, insert OK button.
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
-        mainSizer.Add(rowSizer, 0, wx.ALL | wx.EXPAND, BORDER)
-        mainSizer.Add(bOk, 1, wx.EXPAND)
-        mainSizer.SetSizeHints(self)
-        self.SetSizer(mainSizer)
+        vSizerMain = wx.BoxSizer( wx.VERTICAL )
+        vSizer1 = wx.BoxSizer( wx.VERTICAL )
+        svSizer1 = wx.StaticBoxSizer( self.lblStBox1, wx.VERTICAL )
+        svSizer1.Add( self.cbNameServer, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        hSizer1 = wx.BoxSizer( wx.HORIZONTAL )
+        hSizer1.Add( self.cbConductor, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        spacer1 = wx.StaticText(self, -1, "      ", wx.DefaultPosition, wx.DefaultSize, 0 )
+        hSizer1.Add( spacer1, 0, wx.ALIGN_CENTER, 5 )
+        hSizer1.Add( self.cbDesktop, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        svSizer1.Add( hSizer1, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+        svSizer1.Add( self.cbXplorer, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+        vSizer1.Add( svSizer1, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP, 5 )
+        spacer2 = wx.StaticText(self, -1, "", wx.DefaultPosition, [10,10], 0 )
+        vSizer1.Add( spacer2, 0, wx.ALIGN_CENTER, 5 )
+        svSizer2 = wx.StaticBoxSizer( self.lblStBox2, wx.VERTICAL )
+        hSizer2 = wx.BoxSizer( wx.HORIZONTAL )
+        hSizer2.Add( self.rbXplorer, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        hSizer2.Add( self.bCluster, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.TOP, 5 )
+        svSizer2.Add( hSizer2, 0, wx.ALIGN_CENTER_VERTICAL, 5 )
+        hSizer3 = wx.BoxSizer( wx.HORIZONTAL )
+        hSizer3.Add( self.chJconf, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        hSizer3.Add( self.bEditJconf, 0, wx.ALIGN_CENTER|wx.ALL, 5 )
+        svSizer2.Add( hSizer3, 0, wx.ALIGN_CENTER, 5 )
+        vSizer1.Add( svSizer2, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL, 5 )
+        hSizer4 = wx.BoxSizer( wx.HORIZONTAL )
+        hSizer4.Add( self.bOk, 0, wx.ALIGN_CENTER|wx.ALL, 5 )    
+        hSizer4.Add( self.bCancel, 0, wx.ALIGN_CENTER|wx.LEFT|wx.TOP|wx.BOTTOM, 5 )
+        vSizer1.Add( hSizer4, 0, wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL|wx.LEFT|wx.TOP, 5 )
+        vSizerMain.Add( vSizer1, 0, wx.ALIGN_CENTER|wx.ALL, 5 )            
+                        
+        vSizerMain.SetSizeHints(self)
+        self.SetSizer(vSizerMain)
+        #self.CenterOnParent(wx.BOTH)
         ##Set the background color.
-        Style(self)
+        #Style(self)
+        if not CLUSTER_ENABLED:
+            self.bCluster.Hide()
+        ##Set up OK button.
+        ##Update Display
+        self.React()
 
     def UpdateData(self, event = None):
         """Saves the user's input to the launcher's data variables."""
@@ -207,6 +224,46 @@ class SettingsWindow(wx.Dialog):
                              self.state.GetSurface("XplorerType") == "OSG-VEPC")
         return
 
+    def Refresh(self, event = None):
+        self.state.React(self.state.GetSurface("Xplorer") == False and
+                         self.state.GetSurface("Conductor") == False,
+                         "DesktopMode", False)        
+        """Changes settings to match the selected mode."""
+        ##Jconf
+        self.chJconf.Clear()
+        for name in self.state.GetSurface("JconfDict").GetNames():
+            self.chJconf.Append(name)
+        self.chJconf.SetStringSelection(self.state.GetSurface("JconfSelection"))
+        
+        self.chJconf.Enable(self.state.IsEnabled("JconfDict") and
+                            self.state.IsEnabled("JconfSelection") and
+                            self.cbXplorer.GetValue() == True)
+        
+        self.bEditJconf.Enable(self.state.IsEnabled("JconfDict") and
+                               self.cbXplorer.GetValue() == True)
+        ##Name Server
+        self.cbNameServer.SetValue(self.cbNameServer.GetValue())
+        self.cbNameServer.Enable(self.state.IsEnabled("NameServer"))
+        ##Conductor
+        self.cbConductor.SetValue(self.cbConductor.GetValue())
+        self.cbConductor.Enable(self.state.IsEnabled("Conductor"))
+        ##Xplorer
+        self.cbXplorer.SetValue(self.cbXplorer.GetValue())
+        self.cbXplorer.Enable(self.state.IsEnabled("Xplorer"))
+        ##Desktop Mode
+        self.cbDesktop.SetValue(self.cbDesktop.GetValue())
+        self.cbDesktop.Enable(self.state.IsEnabled("DesktopMode"))
+        ##Xplorer Type
+        self.rbXplorer.SetSelection(self.rbXplorer.GetSelection())
+        self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") and
+                              self.cbXplorer.GetValue() == True)
+        ##Cluster Node button
+        self.bCluster.Enable(CLUSTER_ENABLED and
+                             self.cbXplorer.GetValue() == True and
+                             self.rbXplorer.GetSelection() == 1)
+        return
+
+
     def EditJconf(self, event = None):
         """Brings up the Jconf editing window."""
         self.UpdateData()
@@ -220,10 +277,16 @@ class SettingsWindow(wx.Dialog):
         clusterWindow = ClusterWindow(self, self.state)
         clusterWindow.ShowModal()
         self.React()
+        
+    def OnOk(self, event = None):
+        """Sends current configuration back to parent & closes window."""
+        ##Close.
+        self.UpdateData()
+        self.Hide()
+        self.Destroy()        
 
     def OnClose(self, event = None):
         """Sends current configuration back to parent & closes window."""
         ##Close.
-        self.UpdateData()
         self.Hide()
         self.Destroy()

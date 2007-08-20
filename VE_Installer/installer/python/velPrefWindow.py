@@ -29,7 +29,7 @@
 # * Id:            $Id:  $
 # * -----------------------------------------------------------------
 # *
-# *************** <auto-copyright.pl END do not edit this line> ***************/
+# *************** <auto-copyright.pl END do not edit this line> ***************
 import wx
 import wx.grid
 import os
@@ -46,7 +46,10 @@ class PrefWindow(wx.Dialog):
 
     def __init__(self, parent, state, title = "Preferences"):
         wx.Dialog.__init__(self, parent, wx.ID_ANY, title,
-                           style = wx.DEFAULT_FRAME_STYLE | wx.TAB_TRAVERSAL)
+                           style = wx.DEFAULT_FRAME_STYLE ^ (wx.RESIZE_BORDER | 
+                                                             wx.MINIMIZE_BOX |
+                                                             wx.MAXIMIZE_BOX)
+                           | wx.TAB_TRAVERSAL)
         ##Data storage.
         self.state = state
         ##Prepare Panel
