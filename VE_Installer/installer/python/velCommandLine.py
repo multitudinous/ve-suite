@@ -37,6 +37,8 @@ from velBase import *
 from velLaunchCode import *
 from velModes import *
 from velCoveredConfig import *
+from velServerAutoKillUnix import *
+from velServerAutoKillWin32 import *
 from velServerKillWindow import *
 from velJconfDict import *
 from velClusterDict import *
@@ -147,7 +149,14 @@ class CommandLine:
         ##Show NameServer kill window if NameServer was started.
         if self.state.GetSurface("NameServer"):
             app = wx.PySimpleApp()
-            window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+            if (self.state.GetSurface("AutoShutDown") and not windows):
+                window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
+                                            conduct_Pid = launchInstance.GetConductorPid())
+            elif (self.state.GetSurface("AutoShutDown") and windows):
+                window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
+                                             conduct_Pid = launchInstance.GetConductorPid())
+            else:
+                window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
             app.MainLoop()
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
