@@ -102,7 +102,7 @@ class SettingsWindow(wx.Dialog):
         if windows:
             self.bOk = wx.Button( self, wx.ID_OK, "OK", wx.DefaultPosition, wx.DefaultSize, 0 )
         else:
-            self.bOk = wx.Button( self, wx.ID_OK, "Save", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.bOk = wx.Button( self, wx.ID_SAVE, "Save", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.bCancel = wx.Button( self, wx.ID_CANCEL, "Cancel", wx.DefaultPosition, wx.DefaultSize, 0 )
         
         ##Bind events.
@@ -119,7 +119,10 @@ class SettingsWindow(wx.Dialog):
         self.Bind(wx.EVT_CHECKBOX, self.UpdateData, self.cbDesktop)
         """
         self.Bind(wx.EVT_CLOSE, self.OnClose)
-        self.Bind(wx.EVT_BUTTON, self.OnOk, id = wx.ID_OK)
+        if windows:
+            self.Bind(wx.EVT_BUTTON, self.OnOk, id = wx.ID_OK)
+        else:
+            self.Bind(wx.EVT_BUTTON, self.OnOk, id = wx.ID_SAVE)
         self.Bind(wx.EVT_BUTTON, self.EditJconf, self.bEditJconf)
         self.Bind(wx.EVT_BUTTON, self.EditCluster, self.bCluster)
         
