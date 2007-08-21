@@ -378,7 +378,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
     if( GetDisplayMode() == "Tablet" )
     {
-        wx_log_splitter->SplitHorizontally( wx_nw_splitter, serviceList->GetMessageLog(), -100 );
+        wx_log_splitter->SplitHorizontally( serviceList->GetMessageLog(), wx_nw_splitter, -205 );
     }
 
     wx_nw_splitter->SplitVertically( av_modules, network, 140 );
@@ -432,7 +432,7 @@ void AppFrame::_detectDisplayAndCreate()
    if ( GetDisplayMode() == "Desktop")
    {
       _configureDesktop();
-      SetWindowStyle( wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+      SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
    }
    else if ( GetDisplayMode() == "Tablet")
    {
