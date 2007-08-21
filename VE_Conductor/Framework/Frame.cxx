@@ -404,7 +404,7 @@ void AppFrame::_configureDesktop()
    int displayWidth, displayHeight = 0;
    ::wxDisplaySize(&displayWidth,&displayHeight);
 
-   SetSize(wxSize(displayWidth,160/*displayHeight*0.0732421875*/));
+   SetSize(wxSize(displayWidth,195/*displayHeight*0.0732421875*/));
    SetPosition(wxPoint(0,0));
    //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
    //wxRegion desktopSize(0,0,displayWidth,displayHeight);
