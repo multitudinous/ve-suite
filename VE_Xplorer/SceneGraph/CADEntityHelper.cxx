@@ -219,6 +219,17 @@ void CADEntityHelper::LoadFile( std::string filename,
     osg::ref_ptr< osg::Node > tempCADNode;
     if( !isStream )
     {
+        ///Check for cached file when reloading file with ves file
+        //osgDB::fileExists( destFile );
+        //osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
+        //osgDB::getLowerCaseFileExtension(filename)
+        //std::string shortName = osgDB::getNameLessExtension( fName );
+        //ext = osgDB::getFileExtension( shortName );
+        std::string ptFileTest = ComputeIntermediateFileNameAndPath( filename );
+        if( !ptFileTest.empty() )
+        {
+            filename = ptFileTest;
+        }
 		boost::filesystem::path fullPathFilename =
 		boost::filesystem::system_complete(boost::filesystem::path(filename.c_str(),
 		                                   boost::filesystem::native));
@@ -226,6 +237,7 @@ void CADEntityHelper::LoadFile( std::string filename,
 		{
 			filename = fullPathFilename.native_file_string();
 		}
+        
         if( osgDB::getLowerCaseFileExtension(filename) == "osg" )
         {
             osgDB::ReaderWriter *rw = osgDB::Registry::instance()->
@@ -349,4 +361,35 @@ void CADEntityHelper::AddOccluderNodes()
         m_cadNode = static_cast< osg::Node* >( root.get() );
         */
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CADEntityHelper::
+    ComputeIntermediateFileNameAndPath( const std::string& srcFile ) const
+{
+	std::string intermediateFileNameAndPath = "";
+    std::string inFile;
+    inFile = srcFile;
+    
+    //then no filename was given by the user, so we'll use 
+    //the same filename as the file that was imported
+    int indexOfFirstDot = (int)( inFile.find_first_of( '.' ) );
+    if ( indexOfFirstDot > 0 )
+    {
+        intermediateFileNameAndPath = inFile.substr( 0, indexOfFirstDot );
+    }
+    
+    std::string objTest;
+    objTest = intermediateFileNameAndPath + ".obj";
+    if( osgDB::fileExists( objTest ) )
+    {
+        return objTest;
+    }
+    
+    objTest = intermediateFileNameAndPath + ".flt";
+    if( osgDB::fileExists( objTest ) )
+    {
+        return objTest;
+    }
+
+	return 0;
 }

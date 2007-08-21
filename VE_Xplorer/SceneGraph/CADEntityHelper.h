@@ -160,6 +160,10 @@ public:
     ///\param occlude Occlude the geom with osgOQ if desired
     void LoadFile( std::string filename, bool isStream = false, 
         bool occlude = false );
+    ///Used for working with PolyTrans
+    std::string ComputeIntermediateFileNameAndPath( 
+        const std::string& srcFile ) const;
+
 private:
 #ifdef _OSG
     ///Node representing the loaded in geometry file
