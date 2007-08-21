@@ -68,6 +68,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "EnableVSync",
                  "EnableDefWorkingDir",
                  "DefaultWorkingDir",
+                 "OSG_POLYTRANS_CONFIG_FILE",
                  "RunDebugPrograms"]
     if saveLastConfig:
         ##Variables that only the main config stores.
@@ -132,6 +133,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "User": None,
                 "FileDir": None,
                 "DefaultWorkingDir": None,
+                "OSG_POLYTRANS_CONFIG_FILE": None,
                 "ExtraVariables": None}
     intReads = {"Mode": None,
                 "AddMode": None,
