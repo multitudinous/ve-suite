@@ -72,7 +72,7 @@ vprSingletonImp( PhysicsSimulator );
 //#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
 
-//#define USE_CUSTOM_NEAR_CALLBACK 1
+#define USE_CUSTOM_NEAR_CALLBACK 1
 #define USE_SWEEP_AND_PRUNE 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
@@ -422,6 +422,11 @@ void PhysicsSimulator::SetIdle( bool state )
 void PhysicsSimulator::SetShootSpeed( float speed )
 {
     shoot_speed = speed;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PhysicsSimulator::GetIdle()
+{
+    return m_idle;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int PhysicsSimulator::GetDebugMode()

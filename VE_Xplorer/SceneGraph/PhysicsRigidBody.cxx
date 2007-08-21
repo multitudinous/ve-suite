@@ -109,7 +109,7 @@ void PhysicsRigidBody::apply( osg::Geode& geode )
 { 
     tri_mesh = new btTriangleMesh;
 
-    for( size_t i = 0; i < geode.getNumDrawables(); i++ )
+    for( size_t i = 0; i < geode.getNumDrawables(); ++i )
     {
         osg::TriangleIndexFunctor< TriIndexFunc > TIF;
         osg::ref_ptr< osg::Vec3Array > vertex_array;
@@ -121,7 +121,7 @@ void PhysicsRigidBody::apply( osg::Geode& geode )
 
         btVector3 v1, v2, v3;
 
-        for( size_t j = 0; j < TIF.triangleIndex.size() / 3; j++ )
+        for( size_t j = 0; j < TIF.triangleIndex.size() / 3; ++j )
         {
             tri_mesh->addTriangle( btVector3( vertex_array->at( TIF.triangleIndex.at( j * 3     ) ).x(),
 										      vertex_array->at( TIF.triangleIndex.at( j * 3     ) ).y(),

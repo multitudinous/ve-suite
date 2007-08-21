@@ -105,6 +105,9 @@ public:
     ///\param speed
     void SetShootSpeed( float speed );
 
+    ///Get whether physics is idle or not
+    bool GetIdle();
+
     int GetDebugMode();
 
     ///Adds a rigid body to the physics simulator
