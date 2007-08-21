@@ -12,3 +12,7 @@ launcherBundle.addFiles( jconfFile )
 fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
 fontBundle.addFiles( fontFile )
+
+ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite') )
+##fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
+ptConfigFile.addFiles( ['ptconfigfile.txt'] )
