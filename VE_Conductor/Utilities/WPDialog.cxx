@@ -90,37 +90,57 @@ void WPDialog::_buildGUI()
    
    wxBoxSizer* zdualSizer = new wxBoxSizer (wxHORIZONTAL);
    zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND); 
-   
+      
+   wxBoxSizer* spinnerXRowSizer = new wxBoxSizer(wxVERTICAL);
    numXPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
    numXPointsSpinner->SetValue(4);
+   wxStaticText* _spinnerXLabel = new wxStaticText(this, -1, wxT("X-Plane"));
+   //wxStaticBox* XspinnerGroup = new wxStaticBox(this, -1, wxT("X-Plane"));
+   //wxStaticBoxSizer* spinnerXRowSizer = new wxStaticBoxSizer(XspinnerGroup,wxVERTICAL);
+   
+   spinnerXRowSizer->Add(_spinnerXLabel,0,wxALIGN_CENTER);
+   spinnerXRowSizer->Add(numXPointsSpinner,0,wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxTOP,10);   
+
+   wxBoxSizer* spinnerYRowSizer = new wxBoxSizer(wxVERTICAL);
    numYPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
    numYPointsSpinner->SetValue(4);
+   wxStaticText* _spinnerYLabel = new wxStaticText(this, -1, wxT("Y-Plane"));
+   
+   spinnerYRowSizer->Add(_spinnerYLabel,0,wxALIGN_CENTER);
+   spinnerYRowSizer->Add(numYPointsSpinner,0,wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxTOP,10);  
+ 
+   wxBoxSizer* spinnerZRowSizer = new wxBoxSizer(wxVERTICAL);
    numZPointsSpinner = new wxSpinCtrl( static_cast< wxWindow* >( this ), WPDialog::DIMENSION_SPINNER_ID, 
                                        wxEmptyString, 
                                        wxDefaultPosition, wxDefaultSize, 
                                        wxSP_ARROW_KEYS, 1, 100, 4 );
    numZPointsSpinner->SetValue(1);
-   wxBoxSizer* spinnerRowSizer = new wxBoxSizer(wxHORIZONTAL);
-   spinnerRowSizer->Add( numXPointsSpinner, 0, wxALIGN_LEFT, 5 );
-   spinnerRowSizer->Add( numYPointsSpinner, 0, wxALIGN_LEFT, 5 );
-   spinnerRowSizer->Add( numZPointsSpinner, 0, wxALIGN_LEFT, 5 );
+   wxStaticText* _spinnerZLabel = new wxStaticText(this, -1, wxT("Z-Plane"));
    
-   wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
-   _addOKButton(buttonRowSizer);
+   spinnerZRowSizer->Add(_spinnerZLabel,0,wxALIGN_CENTER);
+   spinnerZRowSizer->Add(numZPointsSpinner,0,wxALIGN_CENTER_HORIZONTAL|wxBOTTOM|wxTOP,10); 
+
+   wxStaticBox* seedPointGroup = new wxStaticBox(this, -1, wxT("Seed Points"));
+   wxStaticBoxSizer* spinnerRowSizer = new wxStaticBoxSizer(seedPointGroup,wxHORIZONTAL);
+
+   spinnerRowSizer->Add( spinnerXRowSizer, 0, wxALIGN_LEFT, 5 );
+   spinnerRowSizer->Add( spinnerYRowSizer, 0, wxALIGN_LEFT, 5 );
+   spinnerRowSizer->Add( spinnerZRowSizer, 0, wxALIGN_LEFT, 5 );
    
+   wxButton* _closeButton = new wxButton( this, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+      
    mainSizer->Add(xdualSizer,1,wxALIGN_CENTER|wxEXPAND);  
    mainSizer->Add(ydualSizer,1,wxALIGN_CENTER|wxEXPAND);   
    mainSizer->Add(zdualSizer,1,wxALIGN_CENTER|wxEXPAND);   
    mainSizer->Add(spinnerRowSizer,1,wxALIGN_CENTER|wxEXPAND);   
    
-   mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER|wxEXPAND);
-   
+   mainSizer->Add(_closeButton, 0, wxALIGN_CENTER|wxALL, 5);
    _xBounds->Raise();
    _yBounds->Raise();
    _zBounds->Raise();

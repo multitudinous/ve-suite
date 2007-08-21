@@ -40,8 +40,8 @@
 #include "VE_Conductor/Utilities/DualSlider.h"
 
 #include <wx/spinctrl.h>
-
-
+#include <wx/stattext.h>
+#include <wx/button.h>
 namespace VE_Conductor
 {
 
