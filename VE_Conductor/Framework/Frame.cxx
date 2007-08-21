@@ -428,16 +428,20 @@ void AppFrame::_configureTablet()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplayAndCreate()
 { 
+   int displayWidth, displayHeight = 0;
+   ::wxDisplaySize(&displayWidth,&displayHeight);
    _detectDisplay();
    if ( GetDisplayMode() == "Desktop")
    {
       _configureDesktop();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+      SetMinSize( wxSize(displayWidth, 160) );
    }
    else if ( GetDisplayMode() == "Tablet")
    {
       _configureTablet();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+      SetMinSize( wxSize(displayWidth, 260) );
    }
    else
    {
