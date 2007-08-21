@@ -298,6 +298,7 @@ class Launch:
             sourceFile = file(clusterFilePath, 'w')
             sourceFile.write(self.clusterScript)
             sourceFile.close()
+            os.system("chmod 755 %s") % clusterFilePath 
             ##Master call
             print "***MASTER CALL: %s***" %self.settings["ClusterMaster"] ##TESTER
             self.ExecuteClusterScriptUnix(self.settings["ClusterMaster"],
@@ -309,7 +310,7 @@ class Launch:
                 self.ExecuteClusterScriptUnix(comp, clusterFilePath, "slave")
                 sleep(self.settings["SlaveWait"])
             ##Delete the cluster file afterwards.
-            print clusterFilePath
+            ##print clusterFilePath
             if not self.settings["Debug"]:
                 os.remove(clusterFilePath)
         ##Xplorer section
@@ -481,7 +482,7 @@ class Launch:
     def WriteClusterScriptPrefix(self):
         """Writes the cluster script section before the environment setting."""
         if unix:
-            ssh_cmd = os.popen("whereis ssh").readline().split()[1]
+            ssh_cmd = os.popen("which ssh").readline().split()[0]
             self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             ##Turn off comp's screen saver
@@ -548,12 +549,21 @@ class Launch:
                     sys.exit(2)
                 return
             else:
-                ##Override whatever current shell type to C Shell" 
-                os.system("exec csh")
-                ##Now it's safe to run the C Shell commands"
+                ##Print out the cluster Script for debugging purpose
+                print "Cluster Script:\n"
+                print "%s\n" % clusterFilePath
+                print "Node Name:\n"
+                print "%s\n" % nodeName
+                print "Node Status:\n"
+                print "%s\n" % nodeStatus
+                
+                os.system("./%s") % clusterFilePath
+                ##NOTICE: source bash commands within the C shell doesn't work 
+                """
                 os.system("source %s %s %s &" %(clusterFilePath,
                                                 nodeName,
                                                 nodeStatus))
+                """                                
                 return
         else:
             print "Error! Windows linking into Unix cluster function."

@@ -75,7 +75,7 @@ else:
     from os import getuid ##Used for grabbing user id
     from pwd import getpwuid ##Used for grabbing user id
     userName = getpwuid(os.getuid())[0]
-    CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.%s.csh" %(userName))
+    CLUSTER_FILE_PATH = join('/', 'var', 'tmp', "cluster.%s.sh" %(userName))
 TEMPLATE_PATH = join(VELAUNCHER_DIR, "clusterTemplate.txt")
 
 ##Config settings.
