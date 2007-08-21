@@ -219,25 +219,6 @@ void CADEntityHelper::LoadFile( std::string filename,
     osg::ref_ptr< osg::Node > tempCADNode;
     if( !isStream )
     {
-        ///Check for cached file when reloading file with ves file
-        //osgDB::fileExists( destFile );
-        //osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
-        //osgDB::getLowerCaseFileExtension(filename)
-        //std::string shortName = osgDB::getNameLessExtension( fName );
-        //ext = osgDB::getFileExtension( shortName );
-        std::string ptFileTest = ComputeIntermediateFileNameAndPath( filename );
-        if( !ptFileTest.empty() )
-        {
-            filename = ptFileTest;
-        }
-		boost::filesystem::path fullPathFilename =
-		boost::filesystem::system_complete(boost::filesystem::path(filename.c_str(),
-		                                   boost::filesystem::native));
-		if( boost::filesystem::exists( fullPathFilename ) )
-		{
-			filename = fullPathFilename.native_file_string();
-		}
-        
         if( osgDB::getLowerCaseFileExtension(filename) == "osg" )
         {
             osgDB::ReaderWriter *rw = osgDB::Registry::instance()->
@@ -275,8 +256,31 @@ void CADEntityHelper::LoadFile( std::string filename,
         }
         else
         {
-            tempCADNode = osgDB::readNodeFile( filename );
-        }
+ 			boost::filesystem::path fullPathFilename =
+			boost::filesystem::system_complete(boost::filesystem::path(filename.c_str(),
+											   boost::filesystem::native));
+			std::string fullPath;
+			if( boost::filesystem::exists( fullPathFilename ) )
+			{
+				fullPath = fullPathFilename.native_file_string();
+			}
+            tempCADNode = osgDB::readNodeFile( fullPath );
+			///Check for cached file when reloading file with ves file
+			//osgDB::fileExists( destFile );
+			//osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
+			//osgDB::getLowerCaseFileExtension(filename)
+			//std::string shortName = osgDB::getNameLessExtension( fName );
+			//ext = osgDB::getFileExtension( shortName );
+			if( !tempCADNode.valid() )
+			{
+				std::string ptFileTest = ComputeIntermediateFileNameAndPath( filename );
+				if( !ptFileTest.empty() )
+				{
+					fullPath = ptFileTest;
+				}
+				tempCADNode = osgDB::readNodeFile( fullPath );
+			}
+		}
     }
     else
     {
@@ -391,5 +395,6 @@ std::string CADEntityHelper::
         return objTest;
     }
 
-	return 0;
+	objTest.clear();
+	return objTest;
 }
