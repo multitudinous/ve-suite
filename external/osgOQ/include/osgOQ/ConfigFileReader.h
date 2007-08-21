@@ -24,12 +24,13 @@ PROPERTY6  VALUE 6 //COMMENT HERE
 
 #ifndef OSGOQ_CONFIG_FILE_READER_H
 #define OSGOQ_CONFIG_FILE_READER_H 1
+#include "osgOQ/ExportDeclaration.h"
 
 #include <string>
 #include <vector>
 
 
-class ConfigFileReader
+class OSGOQ_EXPORT ConfigFileReader
 {
 public:
 
