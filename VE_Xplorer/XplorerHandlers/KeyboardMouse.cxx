@@ -722,8 +722,8 @@ void KeyboardMouse::ProcessSelectionEvents()
     osgUtil::IntersectVisitor objectBeamIntersectVisitor;
     objectBeamIntersectVisitor.addLineSegment( beamLineSegment.get() );
 
-    //Add the IntersectVisitor to the root Node so that all all geometry will be
-    //checked and no transforms are done to the Line segement
+    //Add the IntersectVisitor to the root Node so that all geometry will be
+    //checked and no transforms are done to the line segement
     VE_SceneGraph::SceneManager::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
 
     osgUtil::IntersectVisitor::HitList beamHitList;
