@@ -237,9 +237,6 @@ public:
     void Log( const char* msg );
     void CloseVE();
 
-    void GetConfig(wxConfig* config);
-    void StoreConfig(wxConfig* config);
-
     ///Function to process command line args to conductor and specifically
     ///to load a ves file and set the working directory appropriatley for a
     ///particular application
@@ -260,9 +257,18 @@ protected:
     void _detectDisplayAndCreate();
     void _detectDisplay();
    
-    wxRect DetermineFrameSize( wxConfig* config );
-    void StoreFrameSize( wxRect rect, wxConfig* config );
-    void StoreRecentFile( wxConfig* config );
+    ///Get information about the size of conductor in tablet mode
+    wxRect DetermineTabletFrameSize();
+    ///Write the frame information about the size of conductor in tablet mode
+    void StoreFrameSize( wxRect rect );
+    ///Store gui specific data
+    void StoreConfig();
+    ///Store the files for the recent file menu
+    void StoreRecentFile();
+    ///Get the config to start off with
+    ///This must be called early
+    void GetConfig();
+    
     void CreateMenu();
     void ZoomIn( wxCommandEvent &event );
     void ZoomOut( wxCommandEvent &event );

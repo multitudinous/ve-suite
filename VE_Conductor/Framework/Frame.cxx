@@ -238,7 +238,7 @@ viewlocPane( 0 )
     //Initialize recent files menu
     m_recentVESFiles = new wxFileHistory();
     //This must go before preferences so that wxConfig is already loaded
-    GetConfig( NULL );
+    GetConfig();
     //This must go before CreateMenu so that we can configure the menu properly
     preferences = new UserPreferences( this, ::wxNewId(), 
                                        SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
@@ -316,9 +316,9 @@ AppFrame::~AppFrame()
     }
     
     //Store settings to wxConfig to be written out
-    StoreFrameSize(GetRect(), NULL);
-    StoreConfig(NULL);
-    StoreRecentFile(NULL);
+    StoreFrameSize( GetRect() );
+    StoreConfig();
+    StoreRecentFile();
     
     //We have to mannually destroy these to make sure that things shutdown 
     //properly with CORBA. There may be a possible way to get around this but
@@ -386,44 +386,44 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureDesktop()
 {
-   SetTitle( _("VE-Suite: www.vesuite.org") );
-   _treeView = new wxDialog(this, -1, _("Available Objects"), 
-                                 wxDefaultPosition, wxDefaultSize,
-                                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-//wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~ 
-//(wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));
-//|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
-   wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
+    SetTitle( _("VE-Suite: www.vesuite.org") );
+    _treeView = new wxDialog(this, -1, _("Available Objects"), 
+         wxDefaultPosition, wxDefaultSize,
+         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
+    //wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~ 
+    //(wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));
+    //|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
+    wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   _treeView->SetAutoLayout(true);
-   _treeView->SetSizer(treeViewSizer);
+    _treeView->SetAutoLayout(true);
+    _treeView->SetSizer(treeViewSizer);
 
-   _createTreeAndLogWindow(_treeView);
-   treeViewSizer->Add(wx_nw_splitter,1, wxALIGN_CENTER|wxEXPAND);
+    _createTreeAndLogWindow(_treeView);
+    treeViewSizer->Add(wx_nw_splitter,1, wxALIGN_CENTER|wxEXPAND);
 
-   int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
+    int displayWidth, displayHeight = 0;
+    ::wxDisplaySize(&displayWidth,&displayHeight);
 
-   SetSize(wxSize(displayWidth,195/*displayHeight*0.0732421875*/));
-   SetPosition(wxPoint(0,0));
-   //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
-   //wxRegion desktopSize(0,0,displayWidth,displayHeight);
-   //wxRegion xplorerWindownSize(%displayWidth,%displayHeight,xplorerWidth,xplorerHeight);
-   //if(desktopSize.Subtract(xplorerWindowSize))
-   //{
-   //   wxRegion frameShape = desktopSize;
-   //   SetShape(frameShape);
-   //}
-   //else
-   //{ 
-   //   SetSize(DetermineFrameSize(NULL));
-   //}
+    SetSize(wxSize(displayWidth,195/*displayHeight*0.0732421875*/));
+    SetPosition(wxPoint(0,0));
+    //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
+    //wxRegion desktopSize(0,0,displayWidth,displayHeight);
+    //wxRegion xplorerWindownSize(%displayWidth,%displayHeight,xplorerWidth,xplorerHeight);
+    //if(desktopSize.Subtract(xplorerWindowSize))
+    //{
+    //   wxRegion frameShape = desktopSize;
+    //   SetShape(frameShape);
+    //}
+    //else
+    //{ 
+    //   SetSize(DetermineFrameSize(NULL));
+    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureTablet()
 {
    _createTreeAndLogWindow(this);
-   SetSize(DetermineFrameSize(NULL));
+   SetSize( DetermineTabletFrameSize() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplayAndCreate()
@@ -433,15 +433,15 @@ void AppFrame::_detectDisplayAndCreate()
    _detectDisplay();
    if ( GetDisplayMode() == "Desktop")
    {
-      _configureDesktop();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-      SetMinSize( wxSize(displayWidth, 160) );
+      SetMinSize( wxSize( 260, 260) );
+      _configureDesktop();
    }
    else if ( GetDisplayMode() == "Tablet")
    {
-      _configureTablet();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-      SetMinSize( wxSize(displayWidth, 260) );
+      SetMinSize( wxSize( 260, 260) );
+      _configureTablet();
    }
    else
    {
@@ -453,142 +453,130 @@ void AppFrame::_detectDisplayAndCreate()
 ////////////////////////////////////////////////////////////////////////////////
 bool AppFrame::Show(bool value)
 {
-   bool status = false;
-   status = wxFrame::Show(value);
+    bool status = false;
+    status = wxFrame::Show( value );
 
-   if(_displayMode == "Desktop")
-   {
-      int displayWidth, displayHeight = 0;
-      ::wxDisplaySize(&displayWidth,&displayHeight);
-      std::cout<<"Width: "<<displayWidth<<" Height: "<<displayHeight<<std::endl;
-      wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
+    if( _displayMode == "Desktop" )
+    {
+        int displayWidth, displayHeight = 0;
+        ::wxDisplaySize(&displayWidth,&displayHeight);
+        //std::cout<<"Width: "<<displayWidth<<" Height: "<<displayHeight<<std::endl;
+        wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
-      wxRect dialogPosition( 2*displayWidth/3, 
+        wxRect dialogPosition( 2*displayWidth/3, 
                              bbox.GetBottomRight().y, 
                              displayWidth/3, 
                              (displayHeight-bbox.GetBottomRight().y)/2 
                            );
-      _treeView->SetSize( dialogPosition );
+        _treeView->SetSize( dialogPosition );
 
-      status = _treeView->Show();
-   }
-   return status;
+        status = _treeView->Show();
+    }
+    return status;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::GetConfig(wxConfig* config)
+void AppFrame::GetConfig()
 {
-   wxConfig* cfg = config;
-   if (!config)
-   { 
-      cfg = new wxConfig(wxTheApp->GetAppName());
-   }
-   //Do not let wx create a new wxConfig with Get calls
-   cfg->DontCreateOnDemand();
-   wxConfig::Set(cfg);
+    wxConfig* cfg = new wxConfig(wxTheApp->GetAppName());
+    //Do not let wx create a new wxConfig with Get calls
+    cfg->DontCreateOnDemand();
+    wxConfig::Set(cfg);
 
-   bool exist = false;
+    bool exist = false;
 
-   wxString key = FEATURE;
-   if( cfg->Exists(key) ) 
-   {
-      exist  = cfg->Read (key + _T("/") + F_FINANCIAL, &f_financial);
-      exist  = cfg->Read (key + _T("/") + F_GEOMETRY, &f_geometry);
-      exist  = cfg->Read (key + _T("/") + F_VISUALIZATION, &f_visualization);
-   }
-   else
-   {
-       f_financial = true;
-       f_geometry = true;
-       f_visualization = true;
-   }
+    wxString key = FEATURE;
+    if( cfg->Exists(key) ) 
+    {
+        exist  = cfg->Read( key + _T("/") + F_FINANCIAL, &f_financial);
+        exist  = cfg->Read( key + _T("/") + F_GEOMETRY, &f_geometry);
+        exist  = cfg->Read( key + _T("/") + F_VISUALIZATION, &f_visualization);
+    }
+    else
+    {
+        f_financial = true;
+        f_geometry = true;
+        f_visualization = true;
+    }
 
-   m_recentVESFiles->Load(*cfg);
+    m_recentVESFiles->Load(*cfg);
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::GetAppropriateSubDialogSize()
 {
-   int displayWidth= 0;
-   int displayHeight = 0;
+    int displayWidth= 0;
+    int displayHeight = 0;
 
-   ::wxDisplaySize(&displayWidth,&displayHeight);
-   if(_displayMode == "Desktop")
-   {
-      wxRect bbox = GetRect();
-      int xStart = lrint( 2.0f*displayWidth/3.0f );
-      int width = lrint( displayWidth/3.0f );
-      int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
-      return wxRect( xStart, 
-                     bbox.GetBottomRight().y, 
-                     width, 
-                     height 
-                   );
-   }
-   else
-   {
-      int xStart = lrint( 2.0f*displayWidth/3.0f );
-      int width = lrint( displayWidth/3.0f );
-      int height = lrint( 3*displayHeight/4.0f );
-      return wxRect( xStart, 
-                     0, 
-                     width, 
-                     height 
-                   );
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-wxRect AppFrame::DetermineFrameSize (wxConfig* config)
-{
-  const int minFrameWidth = 600;
-  const int minFrameHight = 400;
-  
-  wxRect rect;
-  wxSize scr = wxGetDisplaySize();
- 
-  wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
-  wxString key = LOCATION + wxString::Format(_("%d"), 0);
-  if( cfg->Exists(key) ) 
-  {
-      rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
-      rect.y = cfg->Read (key + _T("/") + LOCATION_Y, rect.y);
-      rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
-      rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
-  }
-  
-  // check for reasonable values (within screen)
-  rect.x = wxMin(abs (rect.x), (scr.x - minFrameWidth));
-  rect.y = wxMin(abs (rect.y), (scr.y - minFrameHight));
-  rect.width = wxMax(abs (rect.width), (minFrameWidth));
-  rect.width = wxMin(abs (rect.width), (scr.x - rect.x));
-  rect.height = wxMax(abs (rect.height), (minFrameHight));
-  rect.height = wxMin(abs (rect.height), (scr.y - rect.y));
-  
-  return rect;
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StoreFrameSize( wxRect rect, wxConfig* config)
-{
-    // store size
-    wxConfig* cfg = config;
-    if (!config)
+    ::wxDisplaySize(&displayWidth,&displayHeight);
+    if(_displayMode == "Desktop")
     {
-      cfg = static_cast<wxConfig*>(wxConfig::Get());
+        wxRect bbox = GetRect();
+        int xStart = lrint( 2.0f*displayWidth/3.0f );
+        int width = lrint( displayWidth/3.0f );
+        int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
+        return wxRect( xStart, bbox.GetBottomRight().y, width, height );
+    }
+    else
+    {
+        int xStart = lrint( 2.0f*displayWidth/3.0f );
+        int width = lrint( displayWidth/3.0f );
+        int height = lrint( 3*displayHeight/4.0f );
+        return wxRect( xStart, 0, width, height );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+wxRect AppFrame::DetermineTabletFrameSize()
+{
+    const int minFrameWidth = 600;
+    const int minFrameHight = 400;
+
+    wxRect rect;
+    wxSize scr = wxGetDisplaySize();
+
+    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
+    wxString key = LOCATION + wxString::Format(_("%d"), 0);
+    if( cfg->Exists(key) ) 
+    {
+        rect.x = cfg->Read (key + _T("/") + LOCATION_X, &rect.x);
+        rect.y = cfg->Read (key + _T("/") + LOCATION_Y, &rect.y);
+        rect.width = cfg->Read (key + _T("/") + LOCATION_W, &rect.width);
+        rect.height = cfg->Read (key + _T("/") + LOCATION_H, &rect.height);
     }
 
-    wxString key = LOCATION + wxString::Format( _("%d"), m_frameNr);
+    ///check for reasonable values (within screen)
+    /*rect.x = wxMin( abs(rect.x), (scr.x - minFrameWidth));
+    rect.y = wxMin( abs(rect.y), (scr.y - minFrameHight));
+    rect.width = wxMax( abs(rect.width), (minFrameWidth));
+    rect.width = wxMin( abs(rect.width), (scr.x - rect.x));
+    rect.height = wxMax( abs(rect.height), (minFrameHight));
+    rect.height = wxMin( abs(rect.height), (scr.y - rect.y));*/
+
+    if( !preferences->GetMode( "Save Last Position and Size" ) )
+    {
+        rect.x = 0;
+        rect.y = 0;
+        rect.width = 500;
+        rect.height = 500;
+    }
+    
+    return rect;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::StoreFrameSize( wxRect rect )
+{
+    // store size
+    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
+
+    wxString key = LOCATION + wxString::Format( _("%d"), 0);
     cfg->Write(key + _T("/") + LOCATION_X, rect.x);
     cfg->Write(key + _T("/") + LOCATION_Y, rect.y);
     cfg->Write(key + _T("/") + LOCATION_W, rect.width);
     cfg->Write(key + _T("/") + LOCATION_H, rect.height);
 }
-///////////////////////////////////////////////////////////////////////////
-void AppFrame::StoreConfig(wxConfig* config)
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::StoreConfig()
 {
     //store config
-    wxConfig* cfg = config;
-    if (!config)
-    { 
-      cfg = static_cast<wxConfig*>(wxConfig::Get());
-    }
+    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
 
     wxString key = FEATURE;
     cfg->Write(key+_T("/") + F_FINANCIAL, f_financial);
@@ -596,14 +584,10 @@ void AppFrame::StoreConfig(wxConfig* config)
     cfg->Write(key+_T("/") + F_VISUALIZATION, f_visualization);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StoreRecentFile( wxConfig* config )
+void AppFrame::StoreRecentFile()
 {
     //store recent menus in config
-    wxConfig* cfg = config;
-    if (!config) 
-    {
-       cfg = static_cast<wxConfig*>(wxConfig::Get());
-    }
+    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
 
     m_recentVESFiles->Save(*cfg);
 }

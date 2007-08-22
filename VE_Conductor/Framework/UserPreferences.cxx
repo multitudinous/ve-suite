@@ -97,6 +97,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    wxPropertySheetDialog::Create( parent, id, caption, pos, size, style );
    ///Set the map
    preferenceMap[ "Interactive State" ] = false;
+   preferenceMap[ "Save Last Position and Size" ] = true;
    preferenceMap[ "Auto Launch Nav Pane" ] = false;
    preferenceMap[ "Use Preferred Background Color" ] = false;
    preferenceMap[ "Shut Down Xplorer Option" ] = false;
@@ -137,9 +138,11 @@ void UserPreferences::CreateControls()
     GetBookCtrl()->AddPage(panel, _("General"));
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
     panel->SetSizer(itemBoxSizer2);
-    wxString choices[1];
+    wxString choices[2];
     choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
-    prefChkBx = new wxCheckListBox( panel, ID_NAVIGATION_CHKBX, wxDefaultPosition, wxDefaultSize, 1, choices, 0, wxDefaultValidator, _("listBox") );
+    choices[ 1 ] = wxString( "Save Last Position and Size", wxConvUTF8 );
+    prefChkBx = new wxCheckListBox( panel, ID_NAVIGATION_CHKBX, wxDefaultPosition, wxDefaultSize, 2, choices, 0, wxDefaultValidator, _("listBox") );
+    prefChkBx->Check( 1, preferenceMap[ "Save Last Position and Size" ] );
     itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
     ///////////////////////////////////////
     panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);

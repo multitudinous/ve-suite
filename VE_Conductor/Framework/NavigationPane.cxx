@@ -67,6 +67,7 @@
 #include <wx/msgdlg.h>
 #include <wx/gdicmn.h>
 #include <wx/icon.h>
+#include <wx/config.h>
 
 
 #include <iostream>
@@ -100,11 +101,34 @@ NavigationPane::NavigationPane( wxWindow* parent )
    
    wxSize displaySize = ::wxGetDisplaySize();
 
-   wxRect dialogPosition( displaySize.GetWidth() - 675, displaySize.GetHeight() - 650, 575, 550 );
+   wxRect dialogPosition( displaySize.GetWidth() - 575, displaySize.GetHeight() - 550, 575, 550 );
    /*wxRect dialogPosition( 2*displaySize.GetWidth()/3, bbox.GetBottomRight().y, 
                         displaySize.GetWidth()/3, 
                         .5*(displaySize.GetHeight()-displaySize.GetHeight()*0.0732421875) );*/
-   this->SetSize( dialogPosition );
+
+   wxConfig* cfg = static_cast< wxConfig* >( wxConfig::Get() );
+   bool sizeFlag = false;
+   wxString key = _T("UserPreferences");
+   if ( cfg->Exists( key ) ) 
+   {
+       cfg->Read( key + _T("/") + _T( "Save Last Position and Size" ), &sizeFlag );
+   }
+   
+   wxRect rect;
+   rect = dialogPosition;
+   if( sizeFlag )
+   {
+       key = wxString( "NavigationPosition", wxConvUTF8 );
+       if( cfg->Exists( key ) ) 
+       {
+           cfg->Read(key + _T("/") + _T( "LocationX" ), &rect.x);
+           cfg->Read(key + _T("/") + _T( "LocationY" ), &rect.y);
+           cfg->Read(key + _T("/") + _T( "LocationW" ), &rect.width);
+           cfg->Read(key + _T("/") + _T( "LocationH" ), &rect.height);
+       }
+   }
+   
+   this->SetSize( rect );
    BuildPane();
 
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -128,10 +152,20 @@ NavigationPane::NavigationPane( wxWindow* parent )
 ////////////////////////////////////////////////////
 NavigationPane::~NavigationPane( void )
 {
-   if(_image1){
-      delete _image1;
-      _image1 = 0; 
-   }
+    wxRect rect = GetRect();
+    wxString key = wxString( "NavigationPosition", wxConvUTF8 );
+    wxConfig* cfg = static_cast< wxConfig* >( wxConfig::Get() );
+    cfg->Write( key + _T("/") + _T( "LocationX" ), rect.x);
+    cfg->Write( key + _T("/") + _T( "LocationY" ), rect.y);
+    cfg->Write( key + _T("/") + _T( "LocationW" ), rect.width);
+    cfg->Write( key + _T("/") + _T( "LocationH" ), rect.height);
+    
+    if(_image1)
+    {
+        delete _image1;
+        _image1 = 0; 
+    }
+   
    if(_image2){
       delete _image2;
       _image2 = 0; 
