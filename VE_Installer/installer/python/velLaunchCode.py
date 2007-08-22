@@ -692,6 +692,7 @@ class Launch:
         ##Set where VE-Suite pre-complied dependencies are installed
         ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_DEPS_DIR", str(self.settings["DependenciesDir"]))
+        self.EnvFill("OSG_POLYTRANS_CONFIG_FILE", "ptconfigfile.txt")
         ##Gets working directory
         ##NOTE: Receives this from the launcher.
         self.EnvFill("VE_WORKING_DIR", str(self.settings["Directory"]))
