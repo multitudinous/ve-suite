@@ -222,7 +222,7 @@ class LauncherWindow(wx.Frame):
         self.SetMenuBar(menuBar)
 
         ##Event bindings.
-        self.Bind(wx.EVT_CLOSE, self.OnClose)
+        ##self.Bind(wx.EVT_CLOSE, self.OnClose)
         self.Bind(wx.EVT_BUTTON, self.FileButtonBranch, self.bDirectory)
         self.Bind(wx.EVT_BUTTON, self.Launch, self.bLaunch)
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
@@ -947,8 +947,7 @@ class LauncherWindow(wx.Frame):
         ##Save data before launching.
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
-        self.OnClose()
-        
+        self.OnExit()
         if windows or unix:
             self.mutex = thread.allocate_lock()	
             try:
@@ -958,7 +957,6 @@ class LauncherWindow(wx.Frame):
             ##Go into the Launch
         else:
             self.SpScreen()
-            
         try:
             if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 launchInstance = Launch(self.state.GetLaunchSurface())
@@ -984,7 +982,16 @@ class LauncherWindow(wx.Frame):
             dlg.ShowModal()
             dlg.Destroy()
 
-        ##Close the Launcher
+    ##Close the Launcher
+    def OnExit(self, event=None):
+        self.Hide()
+        self.Destroy()
+        ##If a shell's launched, start it here, after cleanup.
+        if self.state.GetSurface("Shell") == True and self.launch == True:
+            launchInstance = Launch(self.state.GetLaunchSurface(),runOnce = False)
+            globalPath = launchInstance.GetPathEnv()
+            velShell.Start(self.state.GetSurface("ShellScript"), globalPath)                
+                    
     def OnClose(self, event=None):
         """Saves launcher's current configuration and quits the launcher.
 
@@ -994,12 +1001,8 @@ class LauncherWindow(wx.Frame):
         self.UpdateData()
         SaveConfig(DEFAULT_CONFIG, self.state, saveLastConfig = True)
         self.Hide()
-        self.Destroy()        
-        ##If a shell's launched, start it here, after cleanup.
-        if self.state.GetSurface("Shell") == True and self.launch == True:
-            launchInstance = Launch(self.state.GetLaunchSurface(),runOnce = False)
-            globalPath = launchInstance.GetPathEnv()
-            velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
+        self.Destroy()
+
 
 ##START MAIN PROGRAM
 ##Get & clean up command line arguments.
