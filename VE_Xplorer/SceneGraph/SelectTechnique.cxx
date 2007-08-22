@@ -73,17 +73,13 @@ void SelectTechnique::DefinePasses()
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
         osg::ref_ptr< osg::Material > material = new osg::Material();
         osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
-        osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc( GL_ONE, GL_ONE );
-
-        stateset->setAttribute( bf.get() );
-        stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
 
         linewidth->setWidth( 2.0f );
         material->setColorMode( osg::Material::OFF );
         material->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
         material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
         material->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        material->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 1.0f, 0.0f, 0.5f ) );
+        material->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
         
         stateset->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
