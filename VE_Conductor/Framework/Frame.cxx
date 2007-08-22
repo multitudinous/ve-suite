@@ -428,19 +428,19 @@ void AppFrame::_configureTablet()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplayAndCreate()
 { 
-   int displayWidth, displayHeight = 0;
-   ::wxDisplaySize(&displayWidth,&displayHeight);
    _detectDisplay();
    if ( GetDisplayMode() == "Desktop")
    {
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-      SetMinSize( wxSize( 260, 260) );
+      //Set min size so all buttons still show and message window displays at least one line
+      SetMinSize( wxSize( 700, 160) );
       _configureDesktop();
    }
    else if ( GetDisplayMode() == "Tablet")
    {
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-      SetMinSize( wxSize( 260, 260) );
+      //set min size so all buttons still show and message window displays three lines and canvas
+      SetMinSize( wxSize( 700, 260) );
       _configureTablet();
    }
    else
