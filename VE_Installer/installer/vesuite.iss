@@ -123,7 +123,8 @@ Source: {#VEHOME}\share\fonts\*.ttf; DestDir: {app}\share\vesuite\fonts; Flags: 
 Source: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; DestDir: {tmp}
 ;Source: {#VEHOME}\external\loki-0.1.6\include\*.h; DestDir: {app}\include\loki; Flags: recursesubdirs createallsubdirs; Components: vebuildenv
 ;Source: {#VEHOME}\external\loki-0.1.6\lib\*.lib; DestDir: {app}\lib\win32; Components: vebuildenv
-Source: {#SKEWMATRIXHOME}\bin\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: {#VEHOME}\share\ptconfigfile.txt; DestDir: {app}\share\vesuite; Flags: recursesubdirs createallsubdirs
 
 
 [Icons]
