@@ -2,8 +2,8 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define MyAppName "VE_Suite.1.0_Dependencies"
-#define MyAppVerName "VE_Suite.1.0_Dependencies"
+#define MyAppName "VE_Suite.1.1_Dependencies"
+#define MyAppVerName "VE_Suite.1.1_Dependencies"
 #define MyAppPublisher "Virtual Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 
@@ -40,7 +40,7 @@ Name: custom; Description: Custom installation; Flags: iscustom
 Name: full; Description: All pre-compiled dependencies
 Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
 Name: vecns; Description: VE-Conductor(GUI) and Name Server
-Name: custom; Description: Custom; Flags: iscustom
+
 
 [Components]
 Name: depsbuildenv; Description: Headers and Libs; Types: full
@@ -57,25 +57,11 @@ Name: apr; Description: Apache APR; Types: vexosg vecns full
 Source: {#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#APRUTILHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#APRICONVHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-Source: {#OSGHOME}\..\Producer\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
-Source: {#OSGHOME}\..\OpenThreads\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+;Source: {#OSGHOME}\..\Producer\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+;Source: {#OSGHOME}\..\OpenThreads\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#OSGHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
-;Source: {#VTKHOME}\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkexpat.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkFiltering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkfreetype.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkftgl.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkGraphics.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkHybrid.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkImaging.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkIO.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkjpeg.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkParallel.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkPatented.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkpng.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtkRendering.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
-;Source: {#VTKHOME}\bin\vtktiff.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
+
 Source: {#WXHOME}\lib\vc_dll\wxbase28d_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
 Source: {#WXHOME}\lib\vc_dll\wxmsw28d_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28d_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
@@ -149,9 +135,9 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
 Source: {#VEHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
 Source: {#OSGHOME}\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\..\3rdParty\bin\gdal*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\..\OpenThreads\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#OSGHOME}\..\Producer\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\..\3rdParty\bin\gdal*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\..\OpenThreads\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+;Source: {#OSGHOME}\..\Producer\bin\win32\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgdb_3dcd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgdb_3dsd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 ;Source: {#OSGHOME}\bin\osgdb_acd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
@@ -248,9 +234,9 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-depdom_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#OSGHOME}\..\Producer\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\..\OpenThreads\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\..\OpenSceneGraph-Data\fonts\*; DestDir: {app}\osg-fonts; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
+;Source: {#OSGHOME}\..\Producer\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#OSGHOME}\..\OpenThreads\lib\win32\*.lib; DestDir: {app}\lib\win32; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#OSGHOME}\..\OpenSceneGraph-Data\fonts\*; DestDir: {app}\osg-fonts; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
