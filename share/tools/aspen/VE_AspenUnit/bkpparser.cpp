@@ -999,7 +999,7 @@ std::string BKPParser::CreateNetwork( void )
    netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
    return fileName;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void BKPParser::StripCharacters( std::string& data, std::string character )
 {
    for ( size_t index = 0; index < data.length(); )
@@ -1009,7 +1009,7 @@ void BKPParser::StripCharacters( std::string& data, std::string character )
          data.erase( index, 1 );
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 //BLOCKS
 std::string BKPParser::GetInputModuleParams(std::string modname)
 {
@@ -1020,17 +1020,19 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"InputParams").c_str());
-	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	
 	for (i = 0; i < (int)cur_block.getNumInputVar(); i++)
-		paramList.push_back((char*)LPCTSTR(cur_block.getInputVarName(i)));
+	{	
+        paramList.push_back((char*)LPCTSTR(cur_block.getInputVarName(i)));
+    }
 
+	VE_XML::DataValuePairWeakPtr inpParams = new DataValuePair();
 	inpParams->SetData("params",paramList);
+    params.AddDataValuePair( inpParams );
+    
 	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-
-	nodes.push_back( 
-                  std::pair< VE_XML::XMLObject*, std::string >( &params, "vecommand" ) 
-                     );
+	nodes.push_back( std::pair< VE_XML::XMLObject*, 
+        std::string >( &params, "vecommand" ) );
 
 	VE_XML::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -1038,7 +1040,7 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 	commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return status;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::string paramName)
 {
 	CASI::CASIObj cur_block= aspendoc->getBlockByName(CString(modname.c_str()));
