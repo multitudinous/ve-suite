@@ -6,13 +6,13 @@
 #define MyAppVerName "VE-Suite 1.1"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define NameService "bin/NameService.bat"
-#define VEConductor "bin/VE-Conductor.bat"
-#define VEXplorerPF "bin/run.pf.bat"
-#define VEXplorerOSG "bin/run.osg.bat"
-#define VEXplorerOSGVEP "bin/run.osg.vep.bat"
-#define VEXplorerOSGVEPC "bin/run.osg.vep.cluster.bat"
-#define VESetupScript "setup.bat"
+;#define NameService "bin/NameService.bat"
+;#define VEConductor "bin/VE-Conductor.bat"
+;#define VEXplorerPF "bin/run.pf.bat"
+;#define VEXplorerOSG "bin/run.osg.bat"
+;#define VEXplorerOSGVEP "bin/run.osg.vep.bat"
+;#define VEXplorerOSGVEPC "bin/run.osg.vep.cluster.bat"
+;#define VESetupScript "setup.bat"
 #define VELauncher "velauncher.exe"
 
 [Setup]
@@ -73,7 +73,7 @@ Source: {#VEHOME}\bin\win32\WinClient_d.exe; DestDir: {app}\bin; Components: vec
 Source: {#VEHOME}\bin\win32\WinClient.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_d.exe; DestDir: {app}\bin; Components: vexplorer; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep.exe; DestDir: {app}\bin; Components: vexplorer; Flags: ignoreversion
-Source: {#VEHOME}\lib\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VEHOME}\lib\win32\*.dll; DestDir: {app}\lib\win32; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\bin\win32\WinServer_d.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinServer.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
@@ -121,8 +121,10 @@ Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; 
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; DestName: ve_logo.xpm
 Source: {#VEHOME}\share\fonts\*.ttf; DestDir: {app}\share\vesuite\fonts; Flags: recursesubdirs createallsubdirs
 Source: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; DestDir: {tmp}
-Source: {#VEHOME}\external\loki-0.1.6\include\*.h; DestDir: {app}\include\loki; Flags: recursesubdirs createallsubdirs; Components: vebuildenv
-Source: {#VEHOME}\external\loki-0.1.6\lib\*.lib; DestDir: {app}\lib\win32; Components: vebuildenv
+;Source: {#VEHOME}\external\loki-0.1.6\include\*.h; DestDir: {app}\include\loki; Flags: recursesubdirs createallsubdirs; Components: vebuildenv
+;Source: {#VEHOME}\external\loki-0.1.6\lib\*.lib; DestDir: {app}\lib\win32; Components: vebuildenv
+Source: {#SKEWMATRIXHOME}\bin\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
