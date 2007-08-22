@@ -93,9 +93,10 @@ public:
 
    enum
    {
-      ID_NAVIGATION_CHKBX,
-	  ID_BACKGROUND_COLOR_BUTTON,
-      ID_SHUTDOWN_XPLORER
+        ID_NAVIGATION_CHKBX,
+	    ID_BACKGROUND_COLOR_BUTTON,
+        ID_SHUTDOWN_XPLORER,
+        ID_CONDUCTOR_CHKBX
    };
 
    virtual ~UserPreferences();
@@ -111,13 +112,13 @@ public:
    /// Creates the controls and sizers
    void CreateControls();
 
-   ///Check to set map for navigation pane
-   void OnNavigationCheck( wxCommandEvent& event );
-   ///Check to set map for background color
-   void OnSetBackgroundColor( wxCommandEvent& event );
-   ///Check to set map for Xplorer shutdown option
-   void OnShutdownXplorer( wxCommandEvent& event );
-
+    ///Check to set map for navigation pane
+    void OnNavigationCheck( wxCommandEvent& event );
+    ///Check to set map for background color
+    void OnSetBackgroundColor( wxCommandEvent& event );
+    ///Check to set map for Xplorer shutdown option
+    void OnShutdownXplorer( wxCommandEvent& event );
+    void OnConductorCheck( wxCommandEvent& event );
    bool GetMode( std::string mode );
    void ReadConfiguration( void );
    void WriteConfiguration( void );

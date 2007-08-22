@@ -431,17 +431,17 @@ void AppFrame::_detectDisplayAndCreate()
    _detectDisplay();
    if ( GetDisplayMode() == "Desktop")
    {
+      _configureDesktop();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
       //Set min size so all buttons still show and message window displays at least one line
       SetMinSize( wxSize( 700, 160) );
-      _configureDesktop();
    }
    else if ( GetDisplayMode() == "Tablet")
    {
+      _configureTablet();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
       //set min size so all buttons still show and message window displays three lines and canvas
       SetMinSize( wxSize( 700, 260) );
-      _configureTablet();
    }
    else
    {
@@ -487,9 +487,9 @@ void AppFrame::GetConfig()
     wxString key = FEATURE;
     if( cfg->Exists(key) ) 
     {
-        exist  = cfg->Read( key + _T("/") + F_FINANCIAL, &f_financial);
-        exist  = cfg->Read( key + _T("/") + F_GEOMETRY, &f_geometry);
-        exist  = cfg->Read( key + _T("/") + F_VISUALIZATION, &f_visualization);
+        cfg->Read( key + _T("/") + F_FINANCIAL, &f_financial);
+        cfg->Read( key + _T("/") + F_GEOMETRY, &f_geometry);
+        cfg->Read( key + _T("/") + F_VISUALIZATION, &f_visualization);
     }
     else
     {
@@ -530,16 +530,16 @@ wxRect AppFrame::DetermineTabletFrameSize()
     const int minFrameHight = 400;
 
     wxRect rect;
-    wxSize scr = wxGetDisplaySize();
+    //wxSize scr = wxGetDisplaySize();
 
     wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
     wxString key = LOCATION + wxString::Format(_("%d"), 0);
     if( cfg->Exists(key) ) 
     {
-        rect.x = cfg->Read (key + _T("/") + LOCATION_X, &rect.x);
-        rect.y = cfg->Read (key + _T("/") + LOCATION_Y, &rect.y);
-        rect.width = cfg->Read (key + _T("/") + LOCATION_W, &rect.width);
-        rect.height = cfg->Read (key + _T("/") + LOCATION_H, &rect.height);
+        cfg->Read( key + _T("/") + LOCATION_X, &rect.x);
+        cfg->Read( key + _T("/") + LOCATION_Y, &rect.y);
+        cfg->Read( key + _T("/") + LOCATION_W, &rect.width);
+        cfg->Read( key + _T("/") + LOCATION_H, &rect.height);
     }
 
     ///check for reasonable values (within screen)
@@ -557,7 +557,7 @@ wxRect AppFrame::DetermineTabletFrameSize()
         rect.width = 500;
         rect.height = 500;
     }
-    
+  
     return rect;
 }
 ////////////////////////////////////////////////////////////////////////////////

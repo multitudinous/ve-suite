@@ -60,6 +60,7 @@
 using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
+    EVT_CHECKLISTBOX( ID_CONDUCTOR_CHKBX,           UserPreferences::OnConductorCheck )
     EVT_CHECKBOX    ( ID_NAVIGATION_CHKBX,          UserPreferences::OnNavigationCheck )
     EVT_BUTTON      ( ID_BACKGROUND_COLOR_BUTTON,   UserPreferences::OnSetBackgroundColor )
     EVT_CHECKBOX    ( ID_SHUTDOWN_XPLORER,          UserPreferences::OnShutdownXplorer )
@@ -141,7 +142,7 @@ void UserPreferences::CreateControls()
     wxString choices[2];
     choices[ 0 ] = wxString( "Interactive Mode", wxConvUTF8 );
     choices[ 1 ] = wxString( "Save Last Position and Size", wxConvUTF8 );
-    prefChkBx = new wxCheckListBox( panel, ID_NAVIGATION_CHKBX, wxDefaultPosition, wxDefaultSize, 2, choices, 0, wxDefaultValidator, _("listBox") );
+    prefChkBx = new wxCheckListBox( panel, ID_CONDUCTOR_CHKBX, wxDefaultPosition, wxDefaultSize, 2, choices, 0, wxDefaultValidator, _("listBox") );
     prefChkBx->Check( 1, preferenceMap[ "Save Last Position and Size" ] );
     itemBoxSizer2->Add( prefChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
     ///////////////////////////////////////
@@ -184,6 +185,17 @@ void UserPreferences::OnNavigationCheck( wxCommandEvent& event )
 {
    wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
    preferenceMap[ ConvertUnicode( mode.c_str() ) ] = event.IsChecked();
+}
+////////////////////////////////////////////////////////////////////////////////
+void UserPreferences::OnConductorCheck( wxCommandEvent& event )
+{
+    wxCheckListBox* tempList = dynamic_cast< wxCheckListBox* >( event.GetEventObject() );
+    int selection = event.GetSelection();
+    wxString mode = tempList->GetString( selection );
+    //std::cout << selection << " " << ConvertUnicode( event.GetString() ) << std::endl;
+    //tempList->IsChecked( selection );
+    //std::cout <<  tempList->IsChecked( selection ) << " " << ConvertUnicode( mode.c_str() ) << std::endl;
+    preferenceMap[ ConvertUnicode( mode.c_str() ) ] =  tempList->IsChecked( selection );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
@@ -267,10 +279,10 @@ void UserPreferences::ReadConfiguration( void )
     std::map< std::string, bool >::iterator iter;
     for ( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-        cfg->Read( key + 
+        bool exists = cfg->Read( key + 
                  _T("/") + 
                  wxString( iter->first.c_str(), wxConvUTF8 ), 
-                 &iter->second, false);
+                 &iter->second, false );
 
         if( iter->first == "Use Preferred Background Color" )
         {
