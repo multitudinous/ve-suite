@@ -240,7 +240,7 @@ void SelectTechnique::DefinePasses()
 
         stateset->setAttributeAndModes( program.get() );
 
-        //AddPass( stateset.get() );
+         //AddPass( stateset.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
