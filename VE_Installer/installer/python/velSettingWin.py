@@ -195,9 +195,13 @@ class SettingsWindow(wx.Dialog):
     def React(self):
         """Covers/uncovers data based on user input."""
         ##Disable DesktopMode if Xplorer & Conductor == False
-        self.state.React(self.state.GetSurface("Xplorer") == False and
-                         self.state.GetSurface("Conductor") == False,
-                         "DesktopMode", False)
+        #self.state.React(self.state.GetSurface("Xplorer") == False and
+        #                 self.state.GetSurface("Conductor") == False,
+        #                 "DesktopMode", False)
+        if self.state.GetSurface("DesktopMode"):
+            self.rbXplorer.SetSelection(0)
+            
+        
         self.UpdateDisplay()
         return
     
@@ -208,8 +212,8 @@ class SettingsWindow(wx.Dialog):
         for name in self.state.GetSurface("JconfDict").GetNames():
             self.chJconf.Append(name)
         self.chJconf.SetStringSelection(self.state.GetSurface("JconfSelection"))
-        self.chJconf.Enable(self.state.IsEnabled("JconfDict") and
-                            self.state.IsEnabled("JconfSelection") and
+        self.chJconf.Enable(self.state.IsEnabled("JconfDict") == True and
+                            self.state.IsEnabled("JconfSelection") == True and
                             self.state.GetSurface("Xplorer") == True)
         self.bEditJconf.Enable(self.state.IsEnabled("JconfDict") and
                                self.state.GetSurface("Xplorer") == True)
@@ -226,12 +230,17 @@ class SettingsWindow(wx.Dialog):
         self.cbDesktop.SetValue(self.state.GetSurface("DesktopMode"))
         self.cbDesktop.Enable(self.state.IsEnabled("DesktopMode"))
         ##Xplorer Type
-        self.rbXplorer.SetSelection(XPLORER_TYPE_LIST.index(self.state.GetSurface("XplorerType")))
-        self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") and
+        if self.state.GetSurface("DesktopMode"):
+            self.rbXplorer.SetSelection(0)
+        else:
+            self.rbXplorer.SetSelection(1)
+        self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") == True and
+                              self.state.GetSurface("DesktopMode") == False and
                               self.state.GetSurface("Xplorer") == True)
         ##Cluster Node button
         self.bCluster.Enable(CLUSTER_ENABLED and
                              self.state.GetSurface("Xplorer") == True and
+                             self.state.GetSurface("DesktopMode") == False and
                              self.state.GetSurface("XplorerType") == "OSG-VEPC")
         return
 
@@ -265,12 +274,17 @@ class SettingsWindow(wx.Dialog):
         self.cbDesktop.SetValue(self.cbDesktop.GetValue())
         self.cbDesktop.Enable(self.state.IsEnabled("DesktopMode"))
         ##Xplorer Type
-        self.rbXplorer.SetSelection(self.rbXplorer.GetSelection())
+        if self.cbDesktop.GetValue():
+                    self.rbXplorer.SetSelection(0)
+        else:
+            self.rbXplorer.SetSelection(self.rbXplorer.GetSelection())
         self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") and
+                              self.cbDesktop.GetValue() == False and
                               self.cbXplorer.GetValue() == True)
         ##Cluster Node button
         self.bCluster.Enable(CLUSTER_ENABLED and
                              self.cbXplorer.GetValue() == True and
+                             self.cbDesktop.GetValue() == False and
                              self.rbXplorer.GetSelection() == 1)
         return
 
