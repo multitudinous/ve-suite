@@ -445,24 +445,22 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     m_width = w;
     m_height = h;
 
+    //Need to add an if statement to test whether or not the xplorer window has a border
+    //If it does, then we need to take into account the border sizes
 #ifdef WIN32
-    int borderWidth = GetSystemMetrics( SM_CXFIXEDFRAME ) * 2;
-    int borderHeight = GetSystemMetrics( SM_CYFIXEDFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION );
+    //The thickness of the sizing border around the perimeter of a window that can be resized, in pixels.
+    //SM_CXSIZEFRAME is the width of the horizontal border.
+    //SM_CYSIZEFRAME is the height of the vertical border.
+    //SM_CYCAPTION is the height of a caption area, in pixels.
+    //SM_CYSMSIZE is the height of small caption buttons, in pixels.
 
-    /*
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << borderWidth << std::endl;
-    std::cout << borderHeight << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    */
+    //SM_CYSMSIZE > SM_CYCAPTION
+
+    int borderWidth = GetSystemMetrics( SM_CXSIZEFRAME ) * 2;
+    int borderHeight = GetSystemMetrics( SM_CYSIZEFRAME ) * 2 + GetSystemMetrics( SM_CYSMSIZE );
+
+    //RECT rect;
+    //GetWindowRect( , rect );
 
     m_width -= borderWidth;
     m_height -= borderHeight;
