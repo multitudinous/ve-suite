@@ -30,6 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 // --- VE-Suite Stuff --- //
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
@@ -439,6 +444,29 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 {
     m_width = w;
     m_height = h;
+
+#ifdef WIN32
+    int borderWidth = GetSystemMetrics( SM_CXFIXEDFRAME ) * 2;
+    int borderHeight = GetSystemMetrics( SM_CYFIXEDFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION );
+
+    /*
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << borderWidth << std::endl;
+    std::cout << borderHeight << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    */
+
+    m_width -= borderWidth;
+    m_height -= borderHeight;
+#endif
 
     m_aspectRatio = double( m_width ) / double( m_height );
 }

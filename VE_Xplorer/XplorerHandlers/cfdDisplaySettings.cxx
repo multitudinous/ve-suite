@@ -66,7 +66,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
       commandType = "wait";
    }
 
-   if ( commandType.compare( "Juggler_Display_Data" ) == 0)
+   if( commandType.compare( "Juggler_Display_Data" ) == 0 )
    {
       // Get datavalue pair from current command
       VE_XML::DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
