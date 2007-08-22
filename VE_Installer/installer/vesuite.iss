@@ -76,6 +76,8 @@ Source: {#VEHOME}\bin\win32\project_tao_osg_vep.exe; DestDir: {app}\bin; Compone
 Source: {#VEHOME}\lib\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#VEHOME}\bin\win32\WinServer_d.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinServer.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\VE_AspenUnit_d.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\VE_AspenUnit.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples

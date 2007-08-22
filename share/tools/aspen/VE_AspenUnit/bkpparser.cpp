@@ -1026,7 +1026,7 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
         paramList.push_back((char*)LPCTSTR(cur_block.getInputVarName(i)));
     }
 
-	VE_XML::DataValuePairWeakPtr inpParams = new DataValuePair();
+	VE_XML::DataValuePairWeakPtr inpParams = new VE_XML::DataValuePair();
 	inpParams->SetData("params",paramList);
     params.AddDataValuePair( inpParams );
     
