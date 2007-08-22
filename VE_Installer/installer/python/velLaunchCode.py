@@ -298,7 +298,13 @@ class Launch:
             sourceFile = file(clusterFilePath, 'w')
             sourceFile.write(self.clusterScript)
             sourceFile.close()
-            os.system("chmod 755 %s") % clusterFilePath 
+            os.system(("chmod 755 %s") % clusterFilePath)
+            ##On the debug mode, it will display the cluster script on a CRT
+            if self.settings["Debug"]:
+                print "***Cluster Script*****************************************************"
+                print "***Script File Location: %s" % clusterFilePath
+                os.system(("cat %s") % clusterFilePath)
+                print "**********************************************************************"
             ##Master call
             print "***MASTER CALL: %s***" %self.settings["ClusterMaster"] ##TESTER
             self.ExecuteClusterScriptUnix(self.settings["ClusterMaster"],
@@ -549,21 +555,7 @@ class Launch:
                     sys.exit(2)
                 return
             else:
-                ##Print out the cluster Script for debugging purpose
-                print "Cluster Script:\n"
-                print "%s\n" % clusterFilePath
-                print "Node Name:\n"
-                print "%s\n" % nodeName
-                print "Node Status:\n"
-                print "%s\n" % nodeStatus
-                
-                os.system("./%s") % clusterFilePath
-                ##NOTICE: source bash commands within the C shell doesn't work 
-                """
-                os.system("source %s %s %s &" %(clusterFilePath,
-                                                nodeName,
-                                                nodeStatus))
-                """                                
+                os.system(("%s %s %s &") % (clusterFilePath, nodeName, nodeStatus))
                 return
         else:
             print "Error! Windows linking into Unix cluster function."
