@@ -91,7 +91,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
 			CharacterSet="1"
