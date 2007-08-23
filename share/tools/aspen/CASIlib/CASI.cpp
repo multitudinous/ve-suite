@@ -212,7 +212,7 @@ namespace CASI
 		if (d>0)
 		{
 			ihcol=root.GetElements();
-			total = ihcol.GetCount();
+			//total = ihcol.GetCount();
 
 			for (i=0; i<d; i++)
 			{
