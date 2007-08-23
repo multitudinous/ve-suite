@@ -1056,8 +1056,9 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::s
 	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
-		Props[j]=properties.GetDataValuePair(-1);
+		Props[j] = new VE_XML::DataValuePair();
 		Props[j]->SetDataType("STRING");
+		properties.AddDataValuePair( Props[j] );
 	}
 	//CASI::Variable tempvar = cur_block.getOutputVarByName(paramName.c_str());
 	CASI::Variable tempvar = cur_block.getInputVarByName(CString(paramName.c_str()));
@@ -1152,14 +1153,15 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"OutputParams").c_str());
-	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	
 	for (i = 0; i < (int)cur_block.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_block.getOutputVarName(i)));
 
+	VE_XML::DataValuePairWeakPtr inpParams = new VE_XML::DataValuePair();
 	inpParams->SetData("params",paramList);
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    params.AddDataValuePair( inpParams );
 
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( &params, "vecommand" ) 
                      );
@@ -1186,8 +1188,9 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname, std::
 	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
-		Props[j]=properties.GetDataValuePair(-1);
+		Props[j] = new VE_XML::DataValuePair();
 		Props[j]->SetDataType("STRING");
+		properties.AddDataValuePair( Props[j] );
 	}
 	CASI::Variable tempvar = cur_block.getOutputVarByName(CString(paramName.c_str()));
 	j=0;
@@ -1284,15 +1287,16 @@ std::string BKPParser::GetStreamInputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"InputParams").c_str());
-	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	int test = (int)cur_stream.getNumInputVar();
 	for (i = 0; i < (int)cur_stream.getNumInputVar(); i++)
 		//paramList.push_back((char*)LPCTSTR(cur_stream.getStreamCompName(i)));
 		paramList.push_back((char*)LPCTSTR(cur_stream.getInputVarName(i)));
 
+	VE_XML::DataValuePairWeakPtr inpParams = new VE_XML::DataValuePair();
 	inpParams->SetData("params",paramList);
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    params.AddDataValuePair( inpParams );
 
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( &params, "vecommand" ) 
                      );
@@ -1319,8 +1323,9 @@ std::string BKPParser::GetStreamInputModuleParamProperties(std::string modname, 
 	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
-		Props[j]=properties.GetDataValuePair(-1);
+		Props[j] = new VE_XML::DataValuePair();
 		Props[j]->SetDataType("STRING");
+		properties.AddDataValuePair( Props[j] );
 	}
 	CASI::Variable tempvar = cur_stream.getInputVarByName(paramName.c_str());
 	//CASI::Variable tempvar = cur_stream.GetStreamComponentVarByName(CString(paramName.c_str()));
@@ -1415,14 +1420,15 @@ std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params.SetCommandName((modname+"OutputParams").c_str());
-	VE_XML::DataValuePairWeakPtr inpParams=params.GetDataValuePair(-1);;
 	
 	for (i = 0; i < (int)cur_stream.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_stream.getOutputVarName(i)));
 
+	VE_XML::DataValuePairWeakPtr inpParams = new VE_XML::DataValuePair();
 	inpParams->SetData("params",paramList);
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    params.AddDataValuePair( inpParams );
 
+	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
 	nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( &params, "vecommand" ) 
                      );
@@ -1449,8 +1455,9 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	VE_XML::DataValuePairWeakPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
-		Props[j]=properties.GetDataValuePair(-1);
+		Props[j] = new VE_XML::DataValuePair();
 		Props[j]->SetDataType("STRING");
+		properties.AddDataValuePair( Props[j] );
 	}
 	CASI::Variable tempvar = cur_stream.getOutputVarByName(CString(paramName.c_str()));
 	j=0;
