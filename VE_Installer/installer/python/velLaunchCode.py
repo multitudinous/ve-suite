@@ -491,6 +491,7 @@ class Launch:
             ssh_cmd = os.popen("which ssh").readline().split()[0]
             self.clusterScript = "#!/bin/csh\n"
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
+            self.clusterScript += "/bin/csh\n"
             ##Turn off comp's screen saver
             self.clusterScript += "xset -display :0.0" + \
                                   " -dpms s reset s off\n"
