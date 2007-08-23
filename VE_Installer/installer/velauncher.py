@@ -747,7 +747,8 @@ class LauncherWindow(wx.Frame):
         wx.MilliSleep(50)    
 
         if windows or unix:
-            self.mutex.acquire()
+            if not self.state.GetSurface("Debug"):
+                self.mutex.acquire()
             
         self.image = SPLASH_IMAGE
 
@@ -775,7 +776,8 @@ class LauncherWindow(wx.Frame):
         self.splash.OnCloseWindow()
         
         if windows or unix:
-            self.mutex.release()
+            if not self.state.GetSurface("Debug"):
+                self.mutex.release()
         
     def OnSplashExit(self, event=None):
         self.splash.Close(True)
@@ -946,16 +948,20 @@ class LauncherWindow(wx.Frame):
                 self.state.GetBase("RecentFiles").Add(v(fileVar))
         ##Save data before launching.
         self.OnClose()
-        
-        if windows or unix:
-            self.mutex = thread.allocate_lock()	
-            try:
-                thread.start_new_thread(self.SpScreen, ())
-            except:
-                pass
-            ##Go into the Launch
-        else:
-            self.SpScreen()
+        if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Shell":
+            if windows or unix:
+                if self.state.GetSurface("Debug"):
+                    self.SpScreen()
+                else:
+                    self.mutex = thread.allocate_lock()	
+                    try:
+                        thread.start_new_thread(self.SpScreen, ())
+                    except:
+                            pass
+            else:
+                self.SpScreen()
+
+       ##Go into the Launch
         try:
             if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 launchInstance = Launch(self.state.GetLaunchSurface())
