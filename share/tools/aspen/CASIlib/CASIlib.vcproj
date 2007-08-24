@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory="./share/tools/aspen/CASIlib/$(ConfigurationName)"
+			IntermediateDirectory="./$(ConfigurationName)"
 			ConfigurationType="4"
 			UseOfMFC="2"
 			CharacterSet="2"

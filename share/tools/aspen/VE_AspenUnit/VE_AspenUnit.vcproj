@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
-			IntermediateDirectory="./share/tools/aspen/VE_AspenUnit/$(ConfigurationName)"
+			IntermediateDirectory="./$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfMFC="2"
 			CharacterSet="0"
