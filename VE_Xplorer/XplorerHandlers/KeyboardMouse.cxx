@@ -149,8 +149,8 @@ void KeyboardMouse::UpdateSelection()
 void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 {
     //Be sure m_width and m_height are set before calling this function
-    double wc_x_trans_ratio = ( ( m_xmaxScreen - m_xminScreen ) ) / double( m_width );
-    double wc_y_trans_ratio = ( ( m_ymaxScreen - m_yminScreen ) ) / double( m_height );
+    double wc_x_trans_ratio = ( ( m_xmaxScreen - m_xminScreen ) ) / static_cast< double >( m_width );
+    double wc_y_trans_ratio = ( ( m_ymaxScreen - m_yminScreen ) ) / static_cast< double >( m_height );
 
     std::pair< double, double > screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
@@ -183,14 +183,10 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
     */
 
     double wandEndPoint[3];
-    double distance = 10000.0f;
+    double distance = m_farFrustum;
 
-    gmtl::Matrix44d vjHeadMat;// = m_head->getData();
+    gmtl::Matrix44d vjHeadMat;
     vjHeadMat = convertTo< double >( m_head->getData() );
-    /*for( size_t i = 0; i < 16; ++i )
-    {
-        vjHeadMat.mData[ i ] = static_cast< double >( m_head->getData().mData[i] );
-    }*/
 
     //Get juggler Matrix of worldDCS
     //Note:: for pf we are in juggler land
@@ -200,19 +196,21 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
 
     //We have to offset negative m_x because the view is being drawn for the m_leftFrustum 
     //eye which means the the frustums are being setup for the m_leftFrustum eye
-    jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[0] - ( 0.034 * 3.280839 );
+    jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[0] - ( 0.0345 * 3.2808399 );
     jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[2];
     jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[1];
 
+    startPoint->set( jugglerHeadPointTemp[0], jugglerHeadPointTemp[1], jugglerHeadPointTemp[2] );
+
     gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
+
+    //Get the vector
     gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
     //std::cout << vjVec << " = " << mousePosition << " - " << jugglerHeadPointTemp << std::endl;
     //gmtl::normalize( vjVec );
     //std::cout << vjVec << std::endl;
 
-    startPoint->set( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
-
-    for( int i = 0; i < 3; i++ )
+    for( int i = 0; i < 3; ++i )
     {
         wandEndPoint[i] = ( vjVec[i] * distance ); 
     }
@@ -232,9 +230,9 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     beamGeode->setName( "Laser" );
 
     osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
-    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
-    osg::ref_ptr< osg::StateSet > m_stateset = new osg::StateSet;
+    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
+    osg::ref_ptr< osg::StateSet > m_stateset = new osg::StateSet();
 
     vertices->push_back( startPoint );
     vertices->push_back( endPoint );
@@ -275,7 +273,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
         return;
     }
 
-    for( i = evt_queue.begin(); i != evt_queue.end(); i++ )
+    for( i = evt_queue.begin(); i != evt_queue.end(); ++i )
     {
         const gadget::EventType type = ( *i )->type();
 
@@ -307,7 +305,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 
         else if( type == gadget::MouseButtonPressEvent )
         {
-            gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast< gadget::MouseEvent >(*i);
+            gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
             m_button = mouse_evt->getButton();
             m_state = 1;
             m_x = mouse_evt->getX();
@@ -333,7 +331,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
         }
         else if( type == gadget::MouseButtonReleaseEvent )
         {
-            gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast< gadget::MouseEvent >(*i);
+            gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
             m_button = mouse_evt->getButton();
             m_state = 0;
             m_x = mouse_evt->getX();
@@ -352,7 +350,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
         }
         else if( type == gadget::MouseMoveEvent )
         {
-            gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast< gadget::MouseEvent >(*i);
+            gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
             m_x = mouse_evt->getX();
             m_y = mouse_evt->getY();
 
@@ -404,7 +402,7 @@ void KeyboardMouse::ProcessNavigationEvents()
     gmtl::Matrix44d accuRotation;
     gmtl::Matrix44d matrix;
 
-    for( int i = 0; i < 3; i++ )
+    for( int i = 0; i < 3; ++i )
     {
         //Get the current rotation matrix
         accuRotation[i][0] = m_currentTransform[i][0];
@@ -446,31 +444,25 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     m_height = h;
 
     //Need to add an if statement to test whether or not the xplorer window has a border
-    //If it does, then we need to take into account the border sizes
+    //If it does, then we need to take into account the border sizes on Windows
+    //We should probably request juggler to take this into account for Windows in the future
 #ifdef WIN32
     //The thickness of the sizing border around the perimeter of a window that can be resized, in pixels.
     //SM_CXSIZEFRAME is the width of the horizontal border.
     //SM_CYSIZEFRAME is the height of the vertical border.
     //SM_CYCAPTION is the height of a caption area, in pixels.
-    //SM_CYSMSIZE is the height of small caption buttons, in pixels.
-
-    //SM_CYSMSIZE > SM_CYCAPTION
 
     int borderWidth = GetSystemMetrics( SM_CXSIZEFRAME ) * 2;
-    int borderHeight = GetSystemMetrics( SM_CYSIZEFRAME ) * 2 + GetSystemMetrics( SM_CYSMSIZE );
-
-    //RECT rect;
-    //GetWindowRect( , rect );
+    int borderHeight = GetSystemMetrics( SM_CYSIZEFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION );
 
     m_width -= borderWidth;
     m_height -= borderHeight;
 #endif
 
-    m_aspectRatio = double( m_width ) / double( m_height );
+    m_aspectRatio = static_cast< double >( m_width ) / static_cast< double >( m_height );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, 
-    double n, double f )
+void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, double n, double f )
 {
     m_leftFrustum = l;
     m_rightFrustum = r;
@@ -488,35 +480,89 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b,
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-    VE_SceneGraph::DCS* switchNode = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
-
-    gmtl::Matrix44d matrix = switchNode->GetMat();
+    osg::Vec3d startPoint, endPoint;
+    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    osg::BoundingSphere bs = worldDCS->computeBound();
 
     //Get the selected objects and expand by their bounding box
-    double Theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
-    osg::BoundingSphere bs = switchNode->computeBound();
+    double distance;
+    double theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
 
-    double x = bs.center().x();
-    matrix.mData[12] -= x;
-
-    double y;
     if( m_aspectRatio <= 1.0f )
     {
-        y = ( bs.radius() / tan( Theta ) ) * m_aspectRatio;
+        distance = ( bs.radius() / tan( theta ) ) * m_aspectRatio;
     }
     else
     {
-        y = bs.radius() / tan( Theta );
+        distance = bs.radius() / tan( theta );
     }
 
-    matrix.mData[13] = y;
+    //Be sure m_width and m_height are set before calling this function
+    double wc_x_trans_ratio = ( ( m_xmaxScreen - m_xminScreen ) ) / static_cast< double >( m_width );
+    double wc_y_trans_ratio = ( ( m_ymaxScreen - m_yminScreen ) ) / static_cast< double >( m_height );
 
-    double z = bs.center().z();
-    matrix.mData[14] -= z;
+    std::pair< double, double > screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
-    //std::cout << z << " " << y << " " << x << std::endl;
-    switchNode->SetMat( matrix );
-    bs = switchNode->computeBound();
+    double transformedPosition[3];
+    double osgTransformedPosition[3];
+    transformedPosition[0] = m_xminScreen + ( ( m_width * 0.5 ) * screenRatios.first );
+    transformedPosition[1] = m_ymaxScreen - ( ( m_height * 0.5 ) * screenRatios.second );
+    transformedPosition[2] = m_zvalScreen;
+
+    transformedPosition[0] *= 3.2808399;
+    transformedPosition[1] *= 3.2808399;
+    transformedPosition[2] *= 3.2808399;
+
+    osgTransformedPosition[0] =  transformedPosition[0];
+    osgTransformedPosition[1] = -transformedPosition[2];
+    osgTransformedPosition[2] =  transformedPosition[1];
+
+    double wandEndPoint[3];
+
+    gmtl::Matrix44d vjHeadMat;
+    vjHeadMat = convertTo< double >( m_head->getData() );
+
+    //Get juggler Matrix of worldDCS
+    //Note:: for pf we are in juggler land
+    //       for osg we are in z up land
+    gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
+    jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+
+    //We have to offset negative m_x because the view is being drawn for the m_leftFrustum 
+    //eye which means the the frustums are being setup for the m_leftFrustum eye
+    jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[0] - ( 0.0345 * 3.2808399 );
+    jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[2];
+    jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[1];
+
+    startPoint.set( jugglerHeadPointTemp[0], jugglerHeadPointTemp[1], jugglerHeadPointTemp[2] );
+
+    gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
+
+    //Get the vector
+    gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
+
+    for( int i = 0; i < 3; ++i )
+    {
+        wandEndPoint[i] = ( vjVec[i] * distance ); 
+    }
+
+    endPoint.set( wandEndPoint[0], wandEndPoint[1], wandEndPoint[2] );
+
+    DrawLine( startPoint, endPoint );
+
+    gmtl::Matrix44d matrix = worldDCS->GetMat();
+
+    matrix.mData[12] = wandEndPoint[0];
+    matrix.mData[13] = wandEndPoint[1];
+    matrix.mData[14] = wandEndPoint[2];
+
+    matrix.mData[12] -= bs.center().x();
+    matrix.mData[13] -= bs.center().y();
+    matrix.mData[14] -= bs.center().z();
+
+    worldDCS->SetMat( matrix );
+
+    bs = worldDCS->computeBound();
     center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -551,10 +597,10 @@ void KeyboardMouse::NavMouse()
     }
     else if( m_state == 1 )
     {
-        m_currPos[0] = double( m_x ) / double( m_width );
-        m_currPos[1] = double( m_y ) / double( m_height );
-        m_prevPos[0] = double( m_x ) / double( m_width );
-        m_prevPos[1] = double( m_y ) / double( m_height );
+        m_currPos[0] = static_cast< double >( m_x ) / static_cast< double >( m_width );
+        m_currPos[1] = static_cast< double >( m_y ) / static_cast< double >( m_height );
+        m_prevPos[0] = static_cast< double >( m_x ) / static_cast< double >( m_width );
+        m_prevPos[1] = static_cast< double >( m_y ) / static_cast< double >( m_height );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -565,8 +611,8 @@ void KeyboardMouse::NavMotion()
         return;
     }
 
-    m_currPos[0] = double( m_x ) / double( m_width );
-    m_currPos[1] = double( m_y ) / double( m_height );
+    m_currPos[0] = static_cast< double >( m_x ) / static_cast< double >( m_width );
+    m_currPos[1] = static_cast< double >( m_y ) / static_cast< double >( m_height );
 
     double dx = m_currPos[0] - m_prevPos[0];
     double dy = m_currPos[1] - m_prevPos[1];
@@ -742,6 +788,8 @@ void KeyboardMouse::ProcessSelectionEvents()
 {
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
+
+    DrawLine( startPoint, endPoint );
 
     beamLineSegment->set( startPoint, endPoint );
 
