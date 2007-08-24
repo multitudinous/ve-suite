@@ -1750,17 +1750,12 @@ void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewRevision(wxCommandEvent& WXUNUSED(event))
 {
-    wxString svnrevision;
-    ::wxGetEnv( wxString( "SVN_VES_REVISION",wxConvUTF8 ), &svnrevision );
     std::ostringstream revNum;
     revNum << VES_MAJOR_VERSION << "." 
         << VES_MINOR_VERSION << "." 
         << VES_PATCH_VERSION << "." 
-#ifdef WIN32
-		<< svnrevision;
-#else
         << SVN_VES_REVISION;
-#endif    
+
 
     wxString tempNum = wxString("Current Revision: ", wxConvUTF8 ) + 
         wxString(revNum.str().c_str(), wxConvUTF8 );

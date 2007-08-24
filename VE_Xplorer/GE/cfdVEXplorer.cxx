@@ -56,11 +56,7 @@ int main(int argc, char* argv[])
         << VES_MAJOR_VERSION << "." 
         << VES_MINOR_VERSION << "." 
         << VES_PATCH_VERSION << "." 
-#ifdef WIN32
-		<< getenv( "SVN_VES_REVISION") <<std::endl
-#else
-        << SVN_VES_REVISION << std::endl
-#endif     
+		<< SVN_VES_REVISION << std::endl
 		<< "|-----------------------------------------------------------------|" 
         << std::endl;
     try

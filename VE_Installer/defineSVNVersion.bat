@@ -10,6 +10,10 @@ svnversion > version.txt
 
 REM Pipe the output into the env variable
 set /p SVN_VES_REVISION= < version.txt
+REM Drop the last "M" character...
+REM This occurs if the working version is
+REM different than the base version
+set SVN_VES_REVISION=%SVN_VES_REVISION:~0,-1%
 del version.txt
 
 echo %SVN_VES_REVISION%
