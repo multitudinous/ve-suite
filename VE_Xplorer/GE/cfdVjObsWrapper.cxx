@@ -82,9 +82,9 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    
    try
    {
-      vprDEBUG(vesDBG,0) 
-         << "naming_context->unbind for CORBA Object  " 
-         << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vesDBG,0) 
+         //<< "naming_context->unbind for CORBA Object  " 
+         //<< std::endl << vprDEBUG_FLUSH;
       if ( !CORBA::is_nil( naming_context ) )
          naming_context->unbind( name );
    }
