@@ -23,10 +23,10 @@
 # * Boston, MA 02111-1307, USA.
 # *
 # * -----------------------------------------------------------------
-# * Date modified: $Date: 2007-06-19 13:48:43 -0500 (Tue, 19 Jun 2007) $
-# * Version:       $Rev: 8225 $
-# * Author:        $Author: mikelem $
-# * Id:            $Id: velServerKillWindow.py 8225 2007-06-19 18:48:43Z mikelem $
+# * Date modified: $Date$
+# * Version:       $Rev$
+# * Author:        $Author$
+# * Id:            $Id$
 # * -----------------------------------------------------------------
 # *
 # *************** <auto-copyright.pl END do not edit this line> **************

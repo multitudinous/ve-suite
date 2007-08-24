@@ -8,5 +8,7 @@ set containingHeader = `find . \( -name "*.py" -or -name "*.cxx" -or -name "*.h"
 
 foreach file ( $containingHeader )
    echo "$file - Activate props"
+   dos2unix $file
    svn propset svn:keywords "Date Author Revision Id" $file
+   svn propset svn:eol-style native $file
 end
