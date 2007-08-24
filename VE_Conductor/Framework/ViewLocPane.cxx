@@ -36,6 +36,7 @@
 #include "VE_Open/XML/Command.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -171,11 +172,9 @@ void ViewLocPane::_onSaveStoredPointsFile(wxCommandEvent& event)
 //////////////////////////////
 void ViewLocPane::_buildPage()
 {
-   
-
 //*******Setting up the widgets for making and naming a new view point
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-  
+   
    wxString choices[] = { _("Choose a View Point" )};
    //scrollWindow = new wxScrolledWindow( this, -1, wxDefaultPosition, wxDefaultSize, wxHSCROLL | wxVSCROLL);
    int nUnitX=20;
@@ -242,22 +241,22 @@ void ViewLocPane::_buildPage()
 
     wxBoxSizer* _spinControlsSizer = new wxBoxSizer(wxVERTICAL);
     wxStaticText* _spinLabel = new wxStaticText(this, -1, wxT("Speed (ft/s)"));
-    
-    _spinSpeedControls = new wxSpinCtrl( this,
-    				VIEWLOC_SPEED_CONTROL_SPIN,
-				wxT("Point-to-Point Speed (~feet/second)"),
-    				wxDefaultPosition,
-				wxSize(90,45),
-    				wxSP_VERTICAL|wxSP_ARROW_KEYS,
-				1,
-				100,
-				20,
-				wxT("Point-to-Point Speed (~feet/second)")
-   	 			);
-				 //Adjust middle integer to value to change maximum speed 
-				 //Spin ctrl selcected over slider b/c user can select speed
-				 //with mouse, number pad, or arrow keys
 
+
+    _spinSpeedControls = new wxSpinCtrlDbl();
+    _spinSpeedControls->Create(	this,
+    				VIEWLOC_SPEED_CONTROL_SPIN,
+				wxEmptyString,
+				wxDefaultPosition,
+				wxDefaultSize,
+				wxSP_ARROW_KEYS,
+				0.0,
+				100.0,
+				0,
+				0.1,
+				wxSPINCTRLDBL_AUTODIGITS,
+				wxEmptyString);
+    
     _spinControlsSizer->Add(_spinSpeedControls,1,wxALIGN_CENTER|wxALIGN_TOP|wxALL,2);
     _spinControlsSizer->Add(_spinLabel,1,wxALIGN_CENTER);
 
@@ -564,6 +563,7 @@ void ViewLocPane::_onSpeedChange( wxSpinEvent& WXUNUSED(event) )
    commandInputs.push_back( _spinSpeedControls->GetValue() );
    commandInputs.push_back( 0 );
    SendCommandsToXplorer();
+
 }
 
 ///////////////////////////////////////

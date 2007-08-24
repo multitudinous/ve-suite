@@ -40,7 +40,8 @@
  * the controls for the view points and flythrough functionality
  */
 #include <wx/gdicmn.h>
-#include <wx/spinctrl.h>
+#include "VE_Builder/Utilities/gui/spinctld.h"
+//#include <wx/spinctrl.h>
 #include <wx/image.h>
 #include <wx/dialog.h>
 #include <wx/bmpbuttn.h>
@@ -74,6 +75,8 @@ namespace VE_XML
    class Command;
    class DataValuePair;
 }
+
+class wxSpinCtrlDbl;
 
 class ViewLocPane : public wxDialog
 {
@@ -149,7 +152,7 @@ protected:
    wxComboBox* _removevpfromflySel;
    wxComboBox* _deleteflySel;
    wxSlider* _speedCtrlSlider;
-   wxSpinCtrl* _spinSpeedControls;
+   wxSpinCtrlDbl* _spinSpeedControls;
    
    //the controls
    void _onLoad(wxCommandEvent& event);
