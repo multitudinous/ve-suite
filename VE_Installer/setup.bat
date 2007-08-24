@@ -89,3 +89,6 @@ set Path=%APR_HOME%\Release;%Path%
 set Path=%APR_UTIL_HOME%\Release;%Path%
 set Path=%APR_ICONV_HOME%\Release;%Path%
 set Path=%OPENAL_LIB_DIR%;%PATH%
+
+
+call %VE_SUITE_HOME%\VE_Installer\defineSVNVersion.bat

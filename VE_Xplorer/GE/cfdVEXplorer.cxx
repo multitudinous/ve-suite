@@ -39,6 +39,7 @@
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 
 #include <iostream>
+#include <cstdlib>
 #include <vpr/System.h>
 
 #include "VE_Xplorer/XplorerHandlers/cfdThread.h"
@@ -55,8 +56,12 @@ int main(int argc, char* argv[])
         << VES_MAJOR_VERSION << "." 
         << VES_MINOR_VERSION << "." 
         << VES_PATCH_VERSION << "." 
+#ifdef WIN32
+		<< getenv( "SVN_VES_REVISION") <<std::endl
+#else
         << SVN_VES_REVISION << std::endl
-        << "|-----------------------------------------------------------------|" 
+#endif     
+		<< "|-----------------------------------------------------------------|" 
         << std::endl;
     try
     {

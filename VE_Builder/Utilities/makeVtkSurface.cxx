@@ -120,7 +120,7 @@ int main( int argc, char *argv[] )
    {
       // set the active scalar...
       std::cout<<"Activating scalar :"<<std::endl;
-      activateScalar( dataset );
+      activateScalar( dynamic_cast<vtkDataSet*>(dataset) );
 
       float value = 0.0;
       std::cout << "Enter isosurface value: ";
@@ -154,7 +154,7 @@ int main( int argc, char *argv[] )
       std::cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
       std::cin >> deciVal;
 
-      surface = cfdGrid2Surface( filter1->GetOutputDataObject(0), deciVal );
+      surface = cfdGrid2Surface( dynamic_cast<vtkDataSet*>(filter1->GetOutputDataObject(0)), deciVal );
       std::cout<<"Num polys in surf :"<<surface->GetNumberOfPolys()<<std::endl;
       if ( surface == NULL )
          std::cout<<"No surface !!!! "<<std::endl;
@@ -174,7 +174,7 @@ int main( int argc, char *argv[] )
       std::cin >> deciVal;
       std::cin.ignore();
 
-      surface = cfdGrid2Surface( dataset, deciVal );
+      surface = cfdGrid2Surface( dynamic_cast<vtkDataSet*>(dataset), deciVal );
 
       int answer;
       std::string extension = fileIO::getExtension( outFileName );
