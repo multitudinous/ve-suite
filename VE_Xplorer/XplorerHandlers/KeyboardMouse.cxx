@@ -505,8 +505,8 @@ void KeyboardMouse::FrameAll()
 
     double transformedPosition[3];
     double osgTransformedPosition[3];
-    transformedPosition[0] = m_xminScreen + ( ( m_width * 0.5 ) * screenRatios.first );
-    transformedPosition[1] = m_ymaxScreen - ( ( m_height * 0.5 ) * screenRatios.second );
+    transformedPosition[0] = m_xminScreen + ( ( static_cast< double >( m_width ) * 0.5 ) * screenRatios.first );
+    transformedPosition[1] = m_ymaxScreen - ( ( static_cast< double >( m_height ) * 0.5 ) * screenRatios.second );
     transformedPosition[2] = m_zvalScreen;
 
     transformedPosition[0] *= 3.2808399;
@@ -541,9 +541,11 @@ void KeyboardMouse::FrameAll()
     //Get the vector
     gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
 
+    double scalar = distance / gmtl::length( vjVec );
+
     for( int i = 0; i < 3; ++i )
     {
-        wandEndPoint[i] = ( vjVec[i] * distance ); 
+        wandEndPoint[i] = ( vjVec[i] * scalar );
     }
 
     endPoint.set( wandEndPoint[0], wandEndPoint[1], wandEndPoint[2] );
@@ -556,9 +558,9 @@ void KeyboardMouse::FrameAll()
     matrix.mData[13] = wandEndPoint[1];
     matrix.mData[14] = wandEndPoint[2];
 
-    matrix.mData[12] -= bs.center().x();
-    matrix.mData[13] -= bs.center().y();
-    matrix.mData[14] -= bs.center().z();
+    //matrix.mData[12] -= bs.center().x();
+    //matrix.mData[13] -= bs.center().y();
+    //matrix.mData[14] -= bs.center().z();
 
     worldDCS->SetMat( matrix );
 
