@@ -374,9 +374,22 @@ std::string CADEntityHelper::
     std::string inFile;
     inFile = srcFile;
     
-    //then no filename was given by the user, so we'll use 
-    //the same filename as the file that was imported
-    int indexOfFirstDot = (int)( inFile.find_first_of( '.' ) );
+    //then no filename was given by the user, so we'll 
+    //use the same filename as the file that was imported
+    int indexOfFirstDot = (int)( inFile.find_last_of( '.' ) );
+    std::string tempExt( inFile.begin()+indexOfFirstDot+1, inFile.end() );
+    //See if the extension is only 1 char which would mean a ProE file
+    if( tempExt.size() == 1 )
+    {
+        //double check and make sure the extension is a digit
+        if( std::isdigit( tempExt.at( 0 ) ) )
+        {
+            //if so then grab the real index before the 3 space extension
+            indexOfFirstDot = 
+                (int)( inFile.find_last_of( '.', indexOfFirstDot - 1 ) );
+        }
+    }
+    
     if ( indexOfFirstDot > 0 )
     {
         intermediateFileNameAndPath = inFile.substr( 0, indexOfFirstDot );
