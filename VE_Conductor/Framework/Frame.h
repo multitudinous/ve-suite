@@ -188,7 +188,9 @@ public:
 
         //Always enum these last 
         OPEN_RECENT_CONNECTION_MENU,
-        v21ID_BASE_RECENT
+        v21ID_BASE_RECENT,
+        //Export menu
+        EXPORT_MENU_OPT
     };
 
     void FrameClose( wxCommandEvent& event );

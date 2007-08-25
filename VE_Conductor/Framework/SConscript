@@ -20,6 +20,7 @@ srcs = Split("""
    ../DefaultPlugin/DefaultPlugin_UI_Dialog.cxx
    MainToolBar.cxx
    UI_TeacherTab.cxx
+   ExportMenu.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()

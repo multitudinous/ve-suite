@@ -67,6 +67,7 @@
 #include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/Framework/MainToolBar.h"
+#include "VE_Conductor/Framework/ExportMenu.h"
 
 #include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
 #include "VE_Conductor/GUIPlugin/Module.h"
@@ -599,108 +600,110 @@ void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu() 
 {
-   menubar = new wxMenuBar;
-   file_menu = new wxMenu;
-   con_menu = new wxMenu;
-   run_menu = new wxMenu;
-   edit_menu = new wxMenu;
-   help_menu = new wxMenu;
+    menubar = new wxMenuBar;
+    file_menu = new wxMenu;
+    con_menu = new wxMenu;
+    run_menu = new wxMenu;
+    edit_menu = new wxMenu;
+    help_menu = new wxMenu;
 
-   file_menu->Append( wxID_NEW, _( "&New\tCtrl+N" ) );
-   file_menu->Append( wxID_OPEN, _( "&Open ..\tCtrl+O" ) );
+    file_menu->Append( wxID_NEW, _( "&New\tCtrl+N" ) );
+    file_menu->Append( wxID_OPEN, _( "&Open ..\tCtrl+O" ) );
 
-   file_menu->AppendSeparator();
+    file_menu->AppendSeparator();
 
-   file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
-   file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
-   file_menu->AppendSeparator();
-   file_menu->Append( wxID_PRINT_SETUP, _( "Print Set&up .." ) );
-   file_menu->Append( wxID_PREVIEW, _( "Print Pre&view\tCtrl+Shift+P" ) );
-   file_menu->Append( wxID_PRINT, _( "&Print ..\tCtrl+P" ) );
-   file_menu->AppendSeparator();
-   file_menu->Append( ID_PREFERENCES, _( "Preferences" ) );
-   file_menu->AppendSeparator();
-   file_menu->Append( CLEAR_RECENT_FILES, _( "&Clear File History" ) );
+    file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
+    file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
+    file_menu->AppendSeparator();
+    file_menu->Append( EXPORT_MENU_OPT, _( "Export" ), 
+        new ExportMenu(), _("Options") );
+    file_menu->AppendSeparator();
+    /*file_menu->Append( wxID_PRINT_SETUP, _( "Print Set&up .." ) );
+    file_menu->Append( wxID_PREVIEW, _( "Print Pre&view\tCtrl+Shift+P" ) );
+    file_menu->Append( wxID_PRINT, _( "&Print ..\tCtrl+P" ) );
+    file_menu->Enable( wxID_PRINT_SETUP, false );
+    file_menu->Enable( wxID_PREVIEW, false );	
+    file_menu->Enable( wxID_PRINT, false );
+    file_menu->AppendSeparator();*/
+    file_menu->Append( ID_PREFERENCES, _( "Preferences" ) );
+    file_menu->AppendSeparator();
+    file_menu->Append( CLEAR_RECENT_FILES, _( "&Clear File History" ) );
 
-   file_menu->AppendSeparator();
-   file_menu->Append( wxID_EXIT, _( "&Quit\tCtrl+Q" ) );
+    file_menu->AppendSeparator();
+    file_menu->Append( wxID_EXIT, _( "&Quit\tCtrl+Q" ) );
 
-   file_menu->Enable( wxID_PRINT_SETUP, false );
-   file_menu->Enable( wxID_PREVIEW, false );	
-   file_menu->Enable( wxID_PRINT, false );
+    //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
+    //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
+    //con_menu->AppendSeparator();
+    con_menu->Append( v21ID_SUBMIT, _( "Sub&mit Job\tCtrl+M" ) );
+    con_menu->Append( v21ID_LOAD, _( "&Load Job\tCtrl+L" ) );
 
-   //con_menu->Append(v21ID_CONNECT, _("&Connect to Executive\tCtrl+C"));
-   //con_menu->Append(v21ID_CONNECT_VE, _("Connect to VE"));
-   //con_menu->AppendSeparator();
-   con_menu->Append( v21ID_SUBMIT, _( "Sub&mit Job\tCtrl+M" ) );
-   con_menu->Append( v21ID_LOAD, _( "&Load Job\tCtrl+L" ) );
-   
-   //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
-   wxMenu * aspenMenu = new wxMenu();
-   aspenMenu->Append( QUERY_NETWORK, _( "Open Simulation" ) );
-   aspenMenu->Append( SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
-   aspenMenu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
-   aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
-   aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
-   aspenMenu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
-   aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
-   aspenMenu->Append( SAVE_SIMULATION, _("Save Simulation") );
-   aspenMenu->Append( SAVEAS_SIMULATION, _("SaveAs Simulation") );
-   con_menu->Append( ASPEN_CONNECTION_MENU,   _( "Aspen" ), aspenMenu, _("Aspen connection") );
+    //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
+    wxMenu * aspenMenu = new wxMenu();
+    aspenMenu->Append( QUERY_NETWORK, _( "Open Simulation" ) );
+    aspenMenu->Append( SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
+    aspenMenu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
+    aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
+    aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
+    aspenMenu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
+    aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
+    aspenMenu->Append( SAVE_SIMULATION, _("Save Simulation") );
+    aspenMenu->Append( SAVEAS_SIMULATION, _("SaveAs Simulation") );
+    con_menu->Append( ASPEN_CONNECTION_MENU,   _( "Aspen" ), aspenMenu, _("Aspen connection") );
 
-	//file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), aspenMenu, _("NOTHING") );
-
-
-   con_menu->AppendSeparator();
-   con_menu->Append( v21ID_DISCONNECT, _( "&Disconnect\tCtrl+d" ) );
-   con_menu->Append( v21ID_DISCONNECT_VE, _( "&Disconnect VE" ) );
-
-   //con_menu->Enable( v21ID_SUBMIT,false );
-   //con_menu->Enable( v21ID_LOAD, false );
-   con_menu->Enable( v21ID_DISCONNECT, false );
-   con_menu->Enable( v21ID_DISCONNECT_VE, false );
+    //file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), aspenMenu, _("NOTHING") );
 
 
-   run_menu->Append( v21ID_START_CALC, _( "Start Simulation" ) );
-   run_menu->Append( v21ID_STOP_CALC, _( "Stop Simulation" ) );
-   run_menu->Append( v21ID_PAUSE_CALC, _( "Pause Simulation" ) );
-   run_menu->Append( v21ID_RESUME_CALC, _( "Resume Simulation" ) );
-   run_menu->Append( v21ID_VIEW_RESULT, _( "View Results" ) );
-   // run_menu->Append( v21ID_GLOBAL_PARAM, _("Global Parameters"));
-   // run_menu->Append( v21ID_VIEW_FINANCIAL, _("View Financial Params"));
+    con_menu->AppendSeparator();
+    con_menu->Append( v21ID_DISCONNECT, _( "&Disconnect\tCtrl+d" ) );
+    con_menu->Append( v21ID_DISCONNECT_VE, _( "&Disconnect VE" ) );
 
-   run_menu->Enable(v21ID_START_CALC, false);
-   run_menu->Enable(v21ID_STOP_CALC, false);
-   run_menu->Enable(v21ID_PAUSE_CALC, false);
-   run_menu->Enable(v21ID_RESUME_CALC, false);
-   // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+    //con_menu->Enable( v21ID_SUBMIT,false );
+    //con_menu->Enable( v21ID_LOAD, false );
+    con_menu->Enable( v21ID_DISCONNECT, false );
+    con_menu->Enable( v21ID_DISCONNECT_VE, false );
 
-   //edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
-   //edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
-   //edit_menu->AppendSeparator();
-   edit_menu->Append(v21ID_ZOOMIN, _("Zoom &In\tCtrl+UP"));
-   edit_menu->Append(v21ID_ZOOMOUT, _("Zoom &Out\tCtrl+DOWN"));
-   //This is needed because on windows the scale must be 1 for the
-   //wxAutoBufferedPaintDC to work properly
+
+    run_menu->Append( v21ID_START_CALC, _( "Start Simulation" ) );
+    run_menu->Append( v21ID_STOP_CALC, _( "Stop Simulation" ) );
+    run_menu->Append( v21ID_PAUSE_CALC, _( "Pause Simulation" ) );
+    run_menu->Append( v21ID_RESUME_CALC, _( "Resume Simulation" ) );
+    run_menu->Append( v21ID_VIEW_RESULT, _( "View Results" ) );
+    // run_menu->Append( v21ID_GLOBAL_PARAM, _("Global Parameters"));
+    // run_menu->Append( v21ID_VIEW_FINANCIAL, _("View Financial Params"));
+
+    run_menu->Enable(v21ID_START_CALC, false);
+    run_menu->Enable(v21ID_STOP_CALC, false);
+    run_menu->Enable(v21ID_PAUSE_CALC, false);
+    run_menu->Enable(v21ID_RESUME_CALC, false);
+    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+
+    //edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
+    //edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
+    //edit_menu->AppendSeparator();
+    edit_menu->Append(v21ID_ZOOMIN, _("Zoom &In\tCtrl+UP"));
+    edit_menu->Append(v21ID_ZOOMOUT, _("Zoom &Out\tCtrl+DOWN"));
+    //This is needed because on windows the scale must be 1 for the
+    //wxAutoBufferedPaintDC to work properly
 #ifdef WIN32
-   edit_menu->Enable(v21ID_ZOOMIN, false);
-   edit_menu->Enable(v21ID_ZOOMOUT, false);
+    edit_menu->Enable(v21ID_ZOOMIN, false);
+    edit_menu->Enable(v21ID_ZOOMOUT, false);
 #endif
-   //edit_menu->Enable(v21ID_UNDO, false);
-   //edit_menu->Enable(v21ID_REDO, false);
+    //edit_menu->Enable(v21ID_UNDO, false);
+    //edit_menu->Enable(v21ID_REDO, false);
 
-   //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-   help_menu->Append (v21ID_HELP, _("&VE-Suite Help"));
-   help_menu->Append(v21ID_ABOUT, _("&About"));
-   help_menu->Append(v21ID_REVISION, _("&Revision"));
-   help_menu->Append(v21ID_CONTACTS, _("&Contacts"));
-   help_menu->Append(v21ID_PLATFORM, _("&Platform Info"));
-   //help_menu->AppendSeparator();
-   //help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
+    //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
+    help_menu->Append (v21ID_HELP, _("&VE-Suite Help"));
+    help_menu->Append(v21ID_ABOUT, _("&About"));
+    help_menu->Append(v21ID_REVISION, _("&Revision"));
+    help_menu->Append(v21ID_CONTACTS, _("&Contacts"));
+    help_menu->Append(v21ID_PLATFORM, _("&Platform Info"));
+    //help_menu->AppendSeparator();
+    //help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
 
-   //help_menu->Enable(wxID_HELP_CONTENTS, false);
-   //help_menu->Enable(v21ID_HELP, false);
-   //help_menu->Enable(wxID_ABOUT, true);
+    //help_menu->Enable(wxID_HELP_CONTENTS, false);
+    //help_menu->Enable(v21ID_HELP, false);
+    //help_menu->Enable(wxID_ABOUT, true);
 
     xplorerMenu = new wxMenu();
     xplorerDeviceMenu = new wxMenu();
@@ -726,7 +729,7 @@ void AppFrame::CreateMenu()
     xplorerView->Append( CHANGE_XPLORER_VIEW_CAD, _("CAD") );
     xplorerView->Append( CHANGE_XPLORER_VIEW_LOGO, _("Logo") );
 
-	xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
+    xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
     xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
     xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
     xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
@@ -737,12 +740,17 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-    xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            xplorerDeviceMenu,  _("Used to change device properties") );
-    xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-    xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),            xplorerDisplayMenu, _("Used to change display preferences") );
-    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               xplorerViewMenu,    _("Used to change the view") );
+    xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            
+        xplorerDeviceMenu,  _("Used to change device properties") );
+    xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   
+        xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
+    xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),           
+        xplorerDisplayMenu, _("Used to change display preferences") );
+    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               
+        xplorerViewMenu,    _("Used to change the view") );
     //add the view settings
-    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    xplorerView,        _("Used to change the view in xplorer") );
+    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    
+        xplorerView,        _("Used to change the view in xplorer") );
     //If the display mode is desktop then we will disconnect when exit is selected
     //and in other modes we will give the user the ability to exit
     if( ( GetDisplayMode() != "Desktop" ) &&
@@ -1649,7 +1657,6 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	         total_cccost += cccost;
 
 	         v_desc.push_back(wxString(iter->second.GetPlugin()->GetName()));
-	         //sprintf(buf,"%.2f", cccost);
             std::ostringstream dirStringStream;
             dirStringStream << std::setprecision(2) << cccost;
             std::string dirString = dirStringStream.str();
@@ -1666,7 +1673,6 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	         total_omcost += omcost;
 	
 	         v_desc2.push_back(wxString(iter->second.GetPlugin()->GetName()));
-	         //sprintf(buf,"%.2f", omcost);
             dirStringStream << std::setprecision(2) << omcost;
 	         v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
          }
@@ -1686,7 +1692,6 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       result_dlg->syngas->AddSeperator('+');
 
       v_desc.push_back( _("Total") );
-      //sprintf(buf,"%.2f", total_cccost);
       std::ostringstream dirStringStream;
       dirStringStream << std::setprecision(2) << total_cccost;
       std::string dirString = dirStringStream.str();
@@ -1706,7 +1711,6 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       result_dlg->syngas->AddSeperator('+');
 
       v_desc2.push_back( _("Total") );
-      //sprintf(buf,"%.2f", total_omcost);
       dirStringStream << std::setprecision(2) << total_omcost;
       v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
 
