@@ -32,14 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/XplorerHandlers/cfdQuatCam.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
-#ifdef _PERFORMER
-#include <vrj/Draw/Pf/PfUtil.h>
-#include <Performer/pf.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfNode.h>
-#include <Performer/pr/pfLinMath.h>
-#elif _OSG
+#ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 #include <osg/Vec3d>
@@ -49,7 +42,8 @@
 using namespace gmtl;
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
-
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdQuatCam::cfdQuatCam(gmtl::Matrix44d& m, double* worldTrans)
 {
    nextMatrix = m;
@@ -74,7 +68,7 @@ cfdQuatCam::cfdQuatCam(gmtl::Matrix44d& m, double* worldTrans)
 */
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::DCS* worldDCS)
 {
    for (int i=0; i<3; i++)
@@ -92,33 +86,23 @@ void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::DCS* worldDCS)
 
    set(LastPosQuat,unScaleInput);
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCam::MoveCam( double t )
 {
    TransLerp(t);
    RotSlerp(t);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCam::RotSlerp(double t)
 {  
    gmtl::slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCam::TransLerp(double t)
 {
    gmtl::lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
 }
-
-
-void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
-{
-   nav->worldTrans[0] = (double)vjVecCurrTrans[0];
-   nav->worldTrans[1] = (double)vjVecCurrTrans[1];
-   nav->worldTrans[2] = (double)vjVecCurrTrans[2];
-}
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
 {
    Matrix44d temp;
@@ -133,19 +117,19 @@ void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
    tempTrans[2] = vjVecCurrTrans[2];
    worldDCS->SetTranslationArray(tempTrans/*vjVecCurrTrans.getData()*/);
 }  
-
+////////////////////////////////////////////////////////////////////////////////
 gmtl::Matrix44d cfdQuatCam::GetMatrix( void )
 {
    return nextMatrix;
 } 
-
+////////////////////////////////////////////////////////////////////////////////
 gmtl::Vec3d cfdQuatCam::GetTrans( void )
 {
    return vjVecNextTrans;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 gmtl::Vec3d cfdQuatCam::GetLastTrans( void )
 {
    return vjVecLastTrans;
 }
-
+////////////////////////////////////////////////////////////////////////////////

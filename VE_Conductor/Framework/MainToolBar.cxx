@@ -242,7 +242,7 @@ void MainToolBar::CreateMainToolBar()
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnNew( wxCommandEvent& event )
 {
-    static_cast< AppFrame* >( GetParent() )->New( event );
+    static_cast< AppFrame* >( GetParent() )->NewCanvas( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnOpen( wxCommandEvent& event )

@@ -148,7 +148,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
     EVT_MENU( wxID_SAVEAS, AppFrame::SaveAs )
-    EVT_MENU( wxID_NEW, AppFrame::New )
+    EVT_MENU( wxID_NEW, AppFrame::NewCanvas )
     //This is probably a bug and needs to be fixed
     EVT_MENU( wxID_EXIT, AppFrame::FrameClose )
     EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences )
@@ -1421,7 +1421,7 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
         SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
 }
 ///////////////////////////////////////////////////////////////////////////
-void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED(event) )
 {
    SetTitle( _("VE-Suite: www.vesuite.org") );
    network->New( true );
@@ -1782,11 +1782,6 @@ void AppFrame::ViewPlatformInfo(wxCommandEvent& WXUNUSED(event))
                  wxOK | wxICON_INFORMATION );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CloseVE()
-{
-   ;
-}
-////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
 {
    if ( deviceProperties == 0 )
@@ -2095,7 +2090,7 @@ void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED(event) )
    preferences->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
 {
     wxDirDialog dialog( this, _T("Change Working Directory..."),
                          ::wxGetCwd(),
@@ -2108,13 +2103,15 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& WXUNUSED(event) )
     }
     
     wxFileName vesFileName( dialog.GetPath() );
-    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
-    if( !success )
+    if( !vesFileName.MakeRelativeTo( ::wxGetCwd() ) )
     {
         wxMessageBox( _("Can't change working directory to another drive."), 
                       _("Change Directory Error"), wxOK | wxICON_INFORMATION );
         return;
     }
+    
+    ///Clear the canvas then change the directory
+    NewCanvas( event );
     
     directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
     //change conductor working dir
@@ -2163,14 +2160,16 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 void AppFrame::OnInternalIdle()
 {
 	//only when not dragging
-   if ( network )
-   {
-      if( !network->IsDragging() )
-      {	
-         ///Servicelist is initialized before network...
-         serviceList->CheckORBWorkLoad();
-      }
-   }
+    if( !network )
+    {
+        return;
+    }
+    
+    if( !network->IsDragging() )
+    {	
+        ///Servicelist is initialized before network...
+        serviceList->CheckORBWorkLoad();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShutdownXplorerOptionOn()

@@ -64,11 +64,6 @@ namespace VE_SceneGraph
 
 namespace VE_Xplorer
 {
-   class cfdNavigate;
-}
-
-namespace VE_Xplorer
-{
    class VE_XPLORER_EXPORTS cfdQuatCam
    {
       public:
@@ -96,10 +91,6 @@ namespace VE_Xplorer
          ///Translation slerp.
          ///\param t 
          void TransLerp( double t);
-
-         ///Update translation
-         ///\param nav
-         void UpdateTrans( cfdNavigate* nav);
 
          ///Update rotation
          ///param worldDCS

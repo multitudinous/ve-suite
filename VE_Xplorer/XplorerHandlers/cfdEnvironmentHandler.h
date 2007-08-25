@@ -50,23 +50,21 @@ cfdEnvironmentHandler API
 
 namespace VE_Xplorer
 {
-	class cfdNavigate;
-   class cfdCursor;
-   class cfdCommandArray;
-   class cfdReadParam;
-   //class cfdSoundHandler;
-   class cfdTeacher;
-   //class cfdSoundHandler;
-   class cfdQuatCamHandler;
-   class cfdDisplaySettings;
+    class cfdCursor;
+    class cfdCommandArray;
+    class cfdReadParam;
+    //class cfdSoundHandler;
+    class cfdTeacher;
+    //class cfdSoundHandler;
+    class cfdQuatCamHandler;
+    class cfdDisplaySettings;
 
-   class DisplayInformation;
-
-   class cfdObjectHandler;
+    class DisplayInformation;
 }
+
 namespace VE_EVENTS
 {
-   class EventHandler;
+    class EventHandler;
 }
 
 class vtkPolyData;
@@ -177,14 +175,12 @@ private:
    //cfdSoundHandler* _soundHandler;///<Handle the sound.
    cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
-   #ifdef _OSG
+#ifdef _OSG
    DisplayInformation* display_information;///<???
-
-   cfdObjectHandler* objectHandler;///<Handle objects.
 
    ///Flag for active geometry picking.
    bool _activeGeomPicking;
-   #endif //_OSG
+#endif //_OSG
 
    cfdCursor* cursor;///<The cursor.
    std::string _param;///<Store parameters.

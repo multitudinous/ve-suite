@@ -35,7 +35,6 @@
 #include "VE_Xplorer/Utilities/fileIO.h"
 
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
-//#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
@@ -68,10 +67,6 @@
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
-
-#ifdef _OSG
-   #include "VE_Xplorer/XplorerHandlers/cfdObjectHandler.h"
-#endif
 
 /// C/C++ libraries
 #include <fstream>
@@ -112,7 +107,6 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    }
 
     display_information = 0;
-    this->objectHandler = 0;
     _activeGeomPicking = false;
 
    _readParam = 0;
@@ -159,7 +153,6 @@ void cfdEnvironmentHandler::Initialize( void )
    displaySettings = new cfdDisplaySettings();
 
    this->arrow = cfdModelHandler::instance()->GetArrow();
-   this->objectHandler = cfdObjectHandler::instance();
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
@@ -294,8 +287,6 @@ void cfdEnvironmentHandler::InitScene( void )
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
                                  VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
-
-   //this->objectHandler->Initialize( NULL );
 
    if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
    {

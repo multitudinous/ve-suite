@@ -27,7 +27,6 @@ sources = Split("""
    cfdModelHandler.cxx 
    cfdMomentum.cxx 
    cfdMomentums.cxx
-   cfdNavigate.cxx 
    cfdObjects.cxx 
    cfdPlanes.cxx 
    cfdPolyData.cxx 
@@ -72,7 +71,6 @@ sources = Split("""
    KeyboardMouse.cxx
    KeyboardMouseEH.cxx
    ModelCADHandler.cxx
-   cfdObjectHandler.cxx
    CreateVisObjectEventHandler.cxx
    ClearVisObjectsEventHandler.cxx
    ChangeCursorEventHandler.cxx
@@ -153,7 +151,6 @@ headers = Split("""
    cfdModelHandler.h 
    cfdMomentum.h 
    cfdMomentums.h
-   cfdNavigate.h 
    cfdObjects.h 
    cfdPlanes.h 
    cfdPolyData.h 
@@ -198,7 +195,6 @@ headers = Split("""
    KeyboardMouse.h
    KeyboardMouseEH.h
    ModelCADHandler.h
-   cfdObjectHandler.h
    CreateVisObjectEventHandler.h
    ClearVisObjectsEventHandler.h
    ChangeCursorEventHandler.h

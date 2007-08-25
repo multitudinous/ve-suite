@@ -57,7 +57,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdTextOutput.h"
 

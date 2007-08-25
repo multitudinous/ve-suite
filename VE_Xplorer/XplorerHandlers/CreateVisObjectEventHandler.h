@@ -64,7 +64,6 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdObjects;
    class cfdCommandArray;
-   class cfdNavigate;
    class cfdCursor;
    class cfdGraphicsObject;
    class cfdModel;

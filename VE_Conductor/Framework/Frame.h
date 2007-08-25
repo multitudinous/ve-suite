@@ -239,13 +239,24 @@ public:
     bool f_visualization;
 
     void Log( const char* msg );
-    void CloseVE();
 
     ///Function to process command line args to conductor and specifically
     ///to load a ves file and set the working directory appropriatley for a
     ///particular application
     void ProcessCommandLineArgs();
-
+    ///Clear the canvas to be ready for a new project
+    void NewCanvas( wxCommandEvent &event );
+    ///Open a VES file with the dialog
+    void Open( wxCommandEvent &event );
+    ///Save the VES file
+    void Save( wxCommandEvent &event );
+    ///Submit the current canvas to the CE
+    void SubmitToServer( wxCommandEvent &event );
+    ///Allow Xplorer shutdown option with user preferences
+    void ShutdownXplorerOptionOn( void );
+    ///Removes Xplorer shutdown option using user preferences
+    void ShutdownXplorerOptionOff( void );
+    
 protected:
     int m_frameNr;
     wxString fname;
@@ -254,7 +265,6 @@ protected:
 
     std::vector< wxFileName > recentFileArchive;
 
-protected:
     void _createTreeAndLogWindow( wxWindow* parent );
     void _configureDesktop();
     void _configureTablet();
@@ -283,16 +293,6 @@ protected:
     void OpenRecentFile( wxCommandEvent& event );
     ///Clear the recent file history menu
     void OnClearRecentFiles( wxCommandEvent& event );
-
-public:
-    void New( wxCommandEvent &event );
-    void Open( wxCommandEvent &event );
-    void Save( wxCommandEvent &event );
-    void SubmitToServer( wxCommandEvent &event );
-    ///Allow Xplorer shutdown option with user preferences
-    void ShutdownXplorerOptionOn( void );
-    ///Removes Xplorer shutdown option using user preferences
-    void ShutdownXplorerOptionOff( void );
 
 protected:
     void LoadFromServer( wxCommandEvent &event );

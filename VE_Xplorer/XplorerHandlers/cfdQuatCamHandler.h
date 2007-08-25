@@ -61,7 +61,6 @@ namespace VE_SceneGraph
 namespace VE_Xplorer
 {
    class cfdQuatCam;
-   class cfdNavigate;
    class cfdCommandArray;
    class cfdReadParam;
 }
@@ -87,27 +86,13 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdQuatCamHandler : public cfdGlobalBase
 {
 public:
-   //Constructors
-   //cfdQuatCamHandler( VE_SceneGraph::DCS* , cfdNavigate*, std::string );
-
-   ///Singleton cleanup
-   //void CleanUp( void );
-
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
-
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-
-   //void CreateObjects( void );
-
    ///Set the DCS 
    ///\param newDCS The new DCS
    void SetDCS( VE_SceneGraph::DCS* newDCS );
-
-   ///Set cfdNavigate
-   ///\param nav The new cfdNavigate
-   void SetNavigation(VE_Xplorer::cfdNavigate* nav);
    ///This function is for quatecam handler only
    ///This should be removed once the new animation code is in place
    void SetMasterNode( bool masterNode );
@@ -115,13 +100,13 @@ public:
    ///Clear out all the saved quaternions
    void ClearQuaternionData();
 
-   void LoadData( double*, VE_SceneGraph::DCS* );
+   void LoadData( VE_SceneGraph::DCS* );
 
    void WriteToFile( std::string );
 
    void LoadFromFile( std::string );
 
-   void Relocate( VE_SceneGraph::DCS* worldDCS, cfdNavigate* nav ); 
+   void Relocate( VE_SceneGraph::DCS* worldDCS ); 
 
    void RemoveViewPt( void );
 
@@ -172,7 +157,6 @@ private:
 
    cfdQuatCam* thisQuatCam;
    osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-   cfdNavigate* _nav;
    cfdReadParam* _readParam;
    std::string   _param;
    double t;

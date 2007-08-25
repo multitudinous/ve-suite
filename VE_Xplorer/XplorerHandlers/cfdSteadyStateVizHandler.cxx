@@ -54,7 +54,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCursor.h"
 #include "VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
@@ -112,7 +111,6 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 void cfdSteadyStateVizHandler::Initialize( std::string param )
 {
    _param = param;
-   //nav = cfdEnvironmentHandler::instance()->GetNavigate();
    cursor = cfdEnvironmentHandler::instance()->GetCursor();
 }
 
@@ -413,10 +411,6 @@ void cfdSteadyStateVizHandler::streamers( void )
       return;
    }
    
-   //this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
-   //this->_activeObject->SetNormal( this->nav->GetDirection() );
-   //this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
-
    if ( this->cursor->GetCursorID() == CUBE )
    {
       this->_activeObject->SetBoxSize( this->cur_box );

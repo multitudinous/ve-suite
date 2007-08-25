@@ -78,7 +78,6 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdObjects;
    class cfdCommandArray;
-   class cfdNavigate;
    class cfdCursor;
    class cfdGraphicsObject;
    class cfdModel;
@@ -205,7 +204,6 @@ private:
    bool changeGeometry;
    bool texturesActive;
    vtkPolyData*   lastSource;
-   cfdNavigate*   nav;
    cfdCursor*     cursor;
    // Stores data from cfdCursor
    // Variable will eventually be used to define bounding box
