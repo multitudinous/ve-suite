@@ -190,7 +190,9 @@ public:
         OPEN_RECENT_CONNECTION_MENU,
         v21ID_BASE_RECENT,
         //Export menu
-        EXPORT_MENU_OPT
+        EXPORT_MENU_OPT,
+        //change working dir
+        CHANGE_WORKING_DIRECTORY
     };
 
     void FrameClose( wxCommandEvent& event );
@@ -370,7 +372,10 @@ protected:
     ///Change the active device in xplorer
     ///\param event The wxCommand event
     void ChangeDevice( wxCommandEvent& event );
-         
+    ///Change the current working directory
+    ///\param event The wxCommand event
+    void OnChangeWorkingDirectory( wxCommandEvent& event );
+
 private:
     void ExitXplorer();
     void EnableCEGUIMenuItems();

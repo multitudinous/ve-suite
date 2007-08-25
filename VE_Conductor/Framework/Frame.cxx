@@ -94,6 +94,7 @@
 #include <wx/cmndata.h>
 #include <wx/colordlg.h>
 #include <wx/docview.h>
+#include <wx/dirdlg.h>
 
 #include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
@@ -153,7 +154,8 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ID_PREFERENCES, AppFrame::OnPreferences )
     EVT_MENU( CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
     EVT_MENU( wxID_OPEN, AppFrame::Open )
-
+    EVT_MENU( CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
+    
     EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
 
     EVT_MENU( v21ID_LOAD, AppFrame::LoadFromServer )
@@ -617,6 +619,8 @@ void AppFrame::CreateMenu()
     file_menu->AppendSeparator();
     file_menu->Append( EXPORT_MENU_OPT, _( "Export" ), 
         new ExportMenu(), _("Options") );
+    file_menu->AppendSeparator();
+    file_menu->Append( CHANGE_WORKING_DIRECTORY, _( "Change Working Directory" ) );
     file_menu->AppendSeparator();
     /*file_menu->Append( wxID_PRINT_SETUP, _( "Print Set&up .." ) );
     file_menu->Append( wxID_PREVIEW, _( "Print Pre&view\tCtrl+Shift+P" ) );
@@ -2089,6 +2093,43 @@ void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED(event) )
    wxRect dialogPosition( 100, 50, 500, 300 );
    preferences->SetSize( dialogPosition );
    preferences->ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& WXUNUSED(event) )
+{
+    wxDirDialog dialog( this, _T("Change Working Directory..."),
+                         ::wxGetCwd(),
+                         wxDD_DEFAULT_STYLE
+                         );
+    
+    if( dialog.ShowModal() != wxID_OK )
+    {
+        return;
+    }
+    
+    wxFileName vesFileName( dialog.GetPath() );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    if( !success )
+    {
+        wxMessageBox( _("Can't change working directory to another drive."), 
+                      _("Change Directory Error"), wxOK | wxICON_INFORMATION );
+        return;
+    }
+    
+    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+    //change conductor working dir
+    ::wxSetWorkingDirectory( directory );
+    directory.Replace( _("\\"), _("/"), true );
+    
+    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
+    VE_XML::CommandStrongPtr command = new VE_XML::Command();
+    std::string mode = ConvertUnicode( directory.c_str() );
+    dvp->SetData( std::string( "Change Working Directory" ), mode );
+    command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
+    command->AddDataValuePair( dvp );
+    
+    VE_Conductor::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
