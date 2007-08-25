@@ -66,54 +66,27 @@ public:
     ///\enum The enums for MainToolBar
     enum 
     {
-        EXPORT_SCREEN_SHOT,
+        EXPORT_SCREEN_SHOT=950,
         EXPORT_DOT_FILE
     };
 
 private:
-    ///Loads and stores the xpm images into a std::map for this toolbar
-    void LoadToolBarBitmaps();
-
     ///Adds the tools to the toolbar
     void CreateExportMenu();
 
     ///Handles event for new
     ///\param event The wxCommand event
-    void OnNew( wxCommandEvent& event );
+    void OnScreenShot( wxCommandEvent& event );
 
     ///Handles event for open
     ///\param event The wxCommand event
-    void OnOpen( wxCommandEvent& event );
+    void OnDOTFile( wxCommandEvent& event );
 
-    ///Handles event for save
-    ///\param event The wxCommand event
-    void OnSave( wxCommandEvent& event );
-
-    ///Handles events for changing xplorer device mode
-    ///\param event The wxCommand event
-    void OnChangeDeviceMode( wxCommandEvent& event );
-
-    ///Handles events for changing the centerpoint jump distance
-    ///\param event The wxCommand event
-    void OnChangeCenterPointJump( wxCommandEvent& event );
-    
-    ///Handles the event to unselect all objects in xplorer
-    ///\param event The wxCommand event
-    void OnUnselectObjects( wxCommandEvent& event );
-
-    ///Handles event for physics state
-    ///\param event The wxCommand event
-    void OnPhysicsState( wxCommandEvent& event );
-
-    ///Handles events for the physics simulation
-    ///\param event The wxCommand event
-    void OnPhysicsSimulation( wxCommandEvent& event );
-
-    ///Handles event for summit job
-    ///\param event The wxCommand event
-    void OnSummitJob( wxCommandEvent& event );
-
-    std::map< std::string, wxBitmap > m_toolbarBitmaps;///<A map that holds the bitmaps for this toolbar
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 
     DECLARE_EVENT_TABLE()
 };

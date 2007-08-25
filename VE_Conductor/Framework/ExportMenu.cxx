@@ -37,17 +37,22 @@
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/CommandStrongPtr.h"
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
 #include "VE_Open/XML/DataValuePair.h"
 
+#include <wx/filedlg.h>
+#include <wx/filename.h>
+#include <wx/msgdlg.h>
+
 BEGIN_EVENT_TABLE( ExportMenu, wxMenu )
-    EVT_MENU( EXPORT_SCREEN_SHOT, ExportMenu::OnNew )
-    EVT_MENU( EXPORT_DOT_FILE, ExportMenu::OnOpen )
+    EVT_MENU( EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
+    EVT_MENU( EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 ExportMenu::ExportMenu() : wxMenu()
 {
-    LoadToolBarBitmaps();
     CreateExportMenu();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -56,209 +61,76 @@ ExportMenu::~ExportMenu()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::LoadToolBarBitmaps()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::CreateExportMenu()
 {
-/*    SetBackgroundColour( wxColour( 255, 255, 255 ) );
-    SetToolBitmapSize( wxSize( 32, 32 ) );
-    SetToolSeparation( 10 );
-
-    AddTool( wxID_NEW, _( "" ), m_toolbarBitmaps[ "newBitmap" ], _( "New" ), wxITEM_NORMAL );
-    AddTool( wxID_OPEN, _( "" ), m_toolbarBitmaps[ "openBitmap" ], _( "Open" ), wxITEM_NORMAL );
-    AddTool( wxID_SAVE, _( "" ), m_toolbarBitmaps[ "saveBitmap" ], _( "Save" ), wxITEM_NORMAL );
-    AddSeparator();
-
-    AddTool( TOOLBAR_SELECTION, _( "" ), m_toolbarBitmaps[ "cursorBitmap" ], _( "Selection" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_WORLD_NAVIGATION, _( "" ), m_toolbarBitmaps[ "worldNavigationSelectBitmap" ], _( "World Navigation" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_OBJECT_NAVIGATION, _( "" ), m_toolbarBitmaps[ "objectNavigationBitmap" ], _( "Object Navigation" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_UNSELECT, _( "" ), m_toolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
-    AddSeparator();
-
-    AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_LARGE_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_BB_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "bbCenterPointBitmap" ], _( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
-    AddSeparator();
-
-    AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
-#ifdef WIN32
-    AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], m_toolbarBitmaps[ "resetDisabledBitmap" ], wxITEM_NORMAL, _( "Reset Simulation" ) );
-    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], m_toolbarBitmaps[ "pauseDisabledBitmap" ], wxITEM_CHECK, _( "Pause Simulation" ) );
-    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], m_toolbarBitmaps[ "playDisabledBitmap" ], wxITEM_CHECK, _( "Start Simulation" ) );
-    AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], m_toolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL, _( "Step Simulation" ) );
-#else
-    AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], _( "Reset Simulation" ), wxITEM_NORMAL );
-    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], _( "Pause Simulation" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], _( "Start Simulation" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], _( "Step Simulation" ), wxITEM_NORMAL );
-#endif
-    AddSeparator();
-
-    AddTool( TOOLBAR_SUMMIT_JOB, _( "" ), m_toolbarBitmaps[ "sendJobBitmap" ], _( "Submit Job" ), wxITEM_NORMAL );
-
-    Realize();
-
-    ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
-    ToggleTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, true );
-#ifdef WIN32
-    SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
-#endif
-
-    EnableTool( TOOLBAR_RESET, false );
-    EnableTool( TOOLBAR_PAUSE, false );
-    EnableTool( TOOLBAR_PLAY, false );
-    EnableTool( TOOLBAR_STEP, false );*/
+    Append( EXPORT_SCREEN_SHOT, _( "Screen Shot" ) );
+    Append( EXPORT_DOT_FILE, _( "OSG Graph File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnNew( wxCommandEvent& event )
+void ExportMenu::OnScreenShot( wxCommandEvent& event )
 {
-    //static_cast< AppFrame* >( GetParent() )->New( event );
-}
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnOpen( wxCommandEvent& event )
-{
-    //static_cast< AppFrame* >( GetParent() )->Open( event );
-}
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnSave( wxCommandEvent& event )
-{
-    //static_cast< AppFrame* >( GetParent() )->Save( event );
-}
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnChangeDeviceMode( wxCommandEvent& event )
-{
-/*    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
-
-    std::string mode;
-
-    if( event.GetId() == TOOLBAR_SELECTION )
+    wxFileDialog dialog( NULL, _T("Save Screen Shot..."),
+        ::wxGetCwd(),
+        _T("xploreScreenCap"),
+        _T("JPG Image (*.jpg)|*.jpg"),
+        wxFD_SAVE|wxFD_OVERWRITE_PROMPT
+     );
+    
+    if( dialog.ShowModal() != wxID_OK )
     {
-        mode = "Selection";
-
-        SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
+        return;
     }
-
-    else if( event.GetId() == TOOLBAR_WORLD_NAVIGATION )
+    
+    wxFileName vesFileName( dialog.GetPath() );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    if( !success )
     {
-        mode = "World Navigation";
-
-        SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );  
+        wxMessageBox( _("Can't save the screen capture on another drive."), 
+                      _("JPG Write Error"), wxOK | wxICON_INFORMATION );
+        return;
     }
-
-    else if( event.GetId() == TOOLBAR_OBJECT_NAVIGATION )
-    {
-        mode = "Object Navigation";
-
-        SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationSelectBitmap" ] );  
-    }
-
-    dvp->SetData( std::string( "Mode" ), mode );
-
-    command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
+    
+    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
+    VE_XML::CommandStrongPtr command = new VE_XML::Command();
+    std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
+    dvp->SetData( std::string( "Filename" ), mode );
+    command->SetCommandName( std::string( "SCREEN_SHOT" ) );
     command->AddDataValuePair( dvp );
 
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;*/
+    VE_Conductor::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnChangeCenterPointJump( wxCommandEvent& event )
+void ExportMenu::OnDOTFile( wxCommandEvent& event )
 {
-/*    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
-
-    std::string mode;
-
-    if( event.GetId() == TOOLBAR_SMALL_CENTERPOINT_JUMP )
+    wxFileDialog dialog( NULL, _T("Save OSG Graph File..."),
+                         ::wxGetCwd(),
+                         _T("osgGraph"),
+                         _T("DOT Graph (*.dot)|*.dot"),
+                         wxFD_SAVE|wxFD_OVERWRITE_PROMPT
+                         );
+    
+    if( dialog.ShowModal() != wxID_OK )
     {
-        mode = "Small";
-
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+        return;
     }
-
-    else if( event.GetId() == TOOLBAR_MEDIUM_CENTERPOINT_JUMP )
+    
+    wxFileName vesFileName( dialog.GetPath() );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    if( !success )
     {
-        mode = "Medium";
-
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+        wxMessageBox( _("Can't save the graph file on another drive."), 
+                      _("DOT Write Error"), wxOK | wxICON_INFORMATION );
+        return;
     }
-
-    else if( event.GetId() == TOOLBAR_LARGE_CENTERPOINT_JUMP )
-    {
-        mode = "Large";
-
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
-    }
-
-    else if( event.GetId() == TOOLBAR_BB_CENTERPOINT_JUMP )
-    {
-        mode = "Bounding Box";
-
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointSelectBitmap" ] );
-    }
-
-    dvp->SetData( std::string( "Mode" ), mode );
-
-    command->SetCommandName( std::string( "CHANGE_CENTERPOINT_MODE" ) );
+    
+    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
+    VE_XML::CommandStrongPtr command = new VE_XML::Command();
+    std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
+    dvp->SetData( std::string( "Filename" ), mode );
+    command->SetCommandName( std::string( "DOT_FILE" ) );
     command->AddDataValuePair( dvp );
-
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;*/
+    
+    VE_Conductor::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( command );
 }
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnUnselectObjects( wxCommandEvent& event )
-{
-   /* VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
-
-    SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
-
-    ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
-
-    command->SetCommandName( std::string( "UNSELECT_OBJECTS" ) );
-    command->AddDataValuePair( dvp );
-
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;*/
-}
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnPhysicsState( wxCommandEvent& event )
-{
-}
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnPhysicsSimulation( wxCommandEvent& event )
-{
-}
-////////////////////////////////////////////////////////////////////////////////
-void ExportMenu::OnSummitJob( wxCommandEvent& event )
-{
-//    static_cast< AppFrame* >( GetParent() )->SubmitToServer( event );
-}
-////////////////////////////////////////////////////////////////////////////////

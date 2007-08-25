@@ -886,7 +886,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
               (
                  this,
                  _T("Open File dialog"),
-                 _T(""),
+                 ::wxGetCwd(),
                  fname,
                  _T("Network files (*.ves)|*.ves"),
                  wxOPEN|wxFILE_MUST_EXIST
