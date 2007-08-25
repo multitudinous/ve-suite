@@ -71,10 +71,10 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
 {
     wxFileDialog dialog( NULL, _T("Save Screen Shot..."),
         ::wxGetCwd(),
-        _T("xploreScreenCap"),
+        _T("xploreScreenCap.jpg"),
         _T("JPG Image (*.jpg)|*.jpg"),
         wxFD_SAVE|wxFD_OVERWRITE_PROMPT
-     );
+        );
     
     if( dialog.ShowModal() != wxID_OK )
     {
@@ -104,12 +104,12 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
 void ExportMenu::OnDOTFile( wxCommandEvent& event )
 {
     wxFileDialog dialog( NULL, _T("Save OSG Graph File..."),
-                         ::wxGetCwd(),
-                         _T("osgGraph"),
-                         _T("DOT Graph (*.dot)|*.dot"),
-                         wxFD_SAVE|wxFD_OVERWRITE_PROMPT
-                         );
-    
+        ::wxGetCwd(),
+        _T("osgGraph.dot"),
+        _T("DOT Graph (*.dot)|*.dot"),
+        wxFD_SAVE|wxFD_OVERWRITE_PROMPT
+        );
+
     if( dialog.ShowModal() != wxID_OK )
     {
         return;
