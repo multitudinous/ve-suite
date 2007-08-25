@@ -58,6 +58,7 @@
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/XMLCreator.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
@@ -111,10 +112,9 @@ cfdApp::cfdApp( int argc, char* argv[] )
 #endif
 readyToWriteWebImage( false ),
 writingWebImageNow( false ),
-captureNextFrameForWeb( false )
+captureNextFrameForWeb( false ),
+isCluster( false )
 {
-   filein_name.erase();// = 0;
-   isCluster = false;
 #ifdef _OSG
    //osg::Referenced::setThreadSafeReferenceCounting(true);
    osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -302,7 +302,6 @@ void cfdApp::initScene( void )
    std::cout << "| ***************************************************************** |" << std::endl;
    _vjobsWrapper->InitCluster();
    // define the rootNode, worldDCS, and lighting
-   //VE_SceneGraph::SceneManager::instance()->Initialize( this->filein_name );
    VE_SceneGraph::SceneManager::instance()->InitScene();
 
    this->getScene()->addChild( light_source_0.get() );
@@ -312,7 +311,6 @@ void cfdApp::initScene( void )
 #endif
 
    // modelHandler stores the arrow and holds all data and geometry
-   //cfdModelHandler::instance()->Initialize( this->filein_name );
    cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdModelHandler::instance()->SetXMLCommand( _vjobsWrapper->GetXMLCommand() );
    cfdModelHandler::instance()->InitScene();
@@ -336,7 +334,7 @@ void cfdApp::initScene( void )
    cfdQuatCamHandler::instance()->SetMasterNode( _vjobsWrapper->IsMaster() );
    
    // create steady state visualization objects
-   cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
+   cfdSteadyStateVizHandler::instance()->Initialize( std::string() );
    cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdSteadyStateVizHandler::instance()->InitScene();
 
@@ -460,10 +458,11 @@ void cfdApp::latePreFrame( void )
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
    
-   /*if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "Stored Scenes" )
+   if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "SCREEN_SHOT" )
    {
        captureNextFrameForWeb = true;
-   }*/
+       _vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Filename" )->GetData( m_filename );
+   }
    vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -682,7 +681,7 @@ void cfdApp::writeImageFileForWeb()
     activeImage = imageList.begin() + 3;
     shot->copySubImage( 0, h, 0, (*activeImage).get() );
     //This would work, too:
-    osgDB::writeImageFile(*(shot.get()), "screenCap.jpg" );
+    osgDB::writeImageFile(*(shot.get()), m_filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG

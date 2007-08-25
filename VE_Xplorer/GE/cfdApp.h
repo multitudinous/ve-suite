@@ -189,7 +189,7 @@ private:
     //   std::set<vpr::Int32> mThreadIDs;
 
     vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
-    std::string filein_name;///< file name for something should be removed
+    std::string m_filename;///< file name for something should be removed
     double time_since_start;///< time to start
     int argc;///< command line args
     char** argv;///< command line args
