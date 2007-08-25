@@ -125,6 +125,7 @@ sources = Split("""
    Body_AMI_UIHandler_i.cxx
    LocalToWorldTransform.cxx
    CenterPointJumpEventHandler.cxx
+   ExportDOTFileEventHandler.cxx
 """)
 ##   DataSetFileEH.cxx
 ##   DataSetPrecomputeEH.cxx
@@ -250,6 +251,7 @@ headers = Split("""
    Body_AMI_UIHandler_i.h
    LocalToWorldTransform.h
    CenterPointJumpEventHandler.h
+   ExportDOTFileEventHandler.h
 """)
 ##   DataSetFileEH.h
 ##   DataSetPrecomputeEH.h

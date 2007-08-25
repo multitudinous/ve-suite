@@ -62,6 +62,7 @@
 #include "VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPBoundEH.h"
 #include "VE_Xplorer/XplorerHandlers/SPDimensionsEH.h"
+#include "VE_Xplorer/XplorerHandlers/ExportDOTFileEventHandler.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 
@@ -123,26 +124,38 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _seedPoints = new VE_Xplorer::SeedPoints(4,4,1);
    _seedPoints->Toggle(false);
    
-   ///add a transform for manipulation of the seed points to sync with the active dataset
+   ///add a transform for manipulation of the seed points 
+   ///to sync with the active dataset
    _seedPointsDCS = new VE_SceneGraph::DCS();
    _seedPointsDCS->SetName("Seed Points DCS");
    _seedPointsDCS->addChild(_seedPoints.get());
 
-   _eventHandlers[ std::string( "PHYSICS_SIMULATION" ) ] = new VE_EVENTS::PhysicsSimulationEventHandler();
-   _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = new VE_EVENTS::ViewEventHandler();
-   _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] = new VE_EVENTS::ChangeCursorEventHandler();
-   _eventHandlers[ std::string( "Stored Scenes" ) ] = new VE_EVENTS::StoredSceneEventHandler();
-   _eventHandlers[ std::string( "Change Working Directory" ) ] = new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
-   _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" ) ] = new VE_EVENTS::ChangeBackgroundColorEventHandler();
-   _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] = new VE_EVENTS::DisplayEventHandler();
-   _eventHandlers[ std::string( "Display Seed Points" ) ] = new VE_EVENTS::SeedPointActivateEventHandler();
-   _eventHandlers[ std::string( "Seed Points Bounds" ) ] = new VE_EVENTS::SeedPointBoundsEventHandler();
-   _eventHandlers[ std::string( "Seed Points Dimensions" ) ] = new VE_EVENTS::SeedPointDimensionsEventHandler();
+   _eventHandlers[ std::string( "PHYSICS_SIMULATION" ) ] = 
+       new VE_EVENTS::PhysicsSimulationEventHandler();
+   _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = 
+       new VE_EVENTS::ViewEventHandler();
+   _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] = 
+       new VE_EVENTS::ChangeCursorEventHandler();
+   _eventHandlers[ std::string( "Stored Scenes" ) ] = 
+       new VE_EVENTS::StoredSceneEventHandler();
+   _eventHandlers[ std::string( "Change Working Directory" ) ] = 
+       new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
+   _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" ) ] = 
+       new VE_EVENTS::ChangeBackgroundColorEventHandler();
+   _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] = 
+       new VE_EVENTS::DisplayEventHandler();
+   _eventHandlers[ std::string( "Display Seed Points" ) ] = 
+       new VE_EVENTS::SeedPointActivateEventHandler();
+   _eventHandlers[ std::string( "Seed Points Bounds" ) ] = 
+       new VE_EVENTS::SeedPointBoundsEventHandler();
+   _eventHandlers[ std::string( "Seed Points Dimensions" ) ] = 
+       new VE_EVENTS::SeedPointDimensionsEventHandler();
+   _eventHandlers[ std::string( "DOT_FILE" ) ] = 
+       new VE_EVENTS::ExportDOTFileEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
 {
-   std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    displaySettings = new cfdDisplaySettings();
 
    this->arrow = cfdModelHandler::instance()->GetArrow();
