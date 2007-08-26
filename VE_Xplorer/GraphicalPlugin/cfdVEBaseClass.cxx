@@ -38,7 +38,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 #include "VE_Xplorer/XplorerHandlers/CADAddNodeEH.h"
@@ -52,6 +51,8 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
+
+#include "VE_Xplorer/XplorerHandlers/Device.h"
 
 #include <fstream>
 #include <sstream>
@@ -68,7 +69,8 @@ using namespace VE_Util;
 // Constructor
 cfdVEBaseClass::cfdVEBaseClass( void ):
 xmlModel( 0 ),
-_onSceneGraph( false )
+_onSceneGraph( false ),
+m_device( 0 )
 {
    _network.empty();
 }
@@ -212,11 +214,11 @@ void cfdVEBaseClass::SetCursor( cfdCursor* input )
 
 // Set the pointer to the navigate class so that dynamic
 // objects can do custom features with the wand buttons
-void cfdVEBaseClass::SetNavigate( cfdNavigate* input )
+void cfdVEBaseClass::SetInteractionDevice( VE_Xplorer::Device* device )
 {
-   if ( input != NULL )
+   if ( device != NULL )
    {
-      _navigate = input;
+      m_device = device;
    }
    else
    {

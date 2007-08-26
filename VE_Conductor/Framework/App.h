@@ -29,22 +29,20 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef REIAPP_H
-#define REIAPP_H
+#ifndef ConductorApp_H
+#define ConductorApp_H
 /*!\file App.h
-REIApp API
+ConductorApp API
 */
-/*!\class REIApp
+/*!\class ConductorApp
 * 
 */
 #include <wx/app.h>
 
 class AppFrame;
 
-class REIApp : public wxApp
+class ConductorApp : public wxApp
 {
 public:
    virtual bool OnInit();
@@ -55,5 +53,5 @@ public:
    long id;
 };
 
-DECLARE_APP(REIApp)
+DECLARE_APP(ConductorApp)
 #endif

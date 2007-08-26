@@ -14,8 +14,11 @@ pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 runScripts = ['vesuiteReboot.sh',
               'vesuiteWake.sh',
               'vesuiteShutdown.sh',
-              'velauncher.sh'
-             ]
+              'velauncher.sh',
+              'clearCluster.sh', ]
+iconScripts = ['vesuiteConfig.sh',
+               'vesuiteGnomeConfig.sh',
+               'vesuiteKdeConfig.sh' ]
 
 launcherBundle.addFiles( runScripts )
 launcherBundle.addFiles( pyFile )
@@ -29,4 +32,4 @@ dclickFiles += sca_util.getFilesRecursiveByExt( pj(RootDir,'VE_Installer','insta
 dclickFiles = map(lambda s: pj('LinuxConfig', s), dclickFiles)
 
 linuxDClick.addFiles( dclickFiles )
-linuxDClick.addFiles( runScripts )
+linuxDClick.addFiles( iconScripts )

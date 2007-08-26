@@ -443,7 +443,11 @@ void NavigationPane::BuildPane( void )
    wxBoxSizer* miscGroup2 = new wxBoxSizer(wxHORIZONTAL);
    subZeroChk = new wxCheckBox( scrollWindow, SUB_ZERO_CHK, wxT("Lower Limit ( z = 0 )"));
 
-   subZeroChk->SetValue( false );
+   wxString key = wxString( "UserPreferences", wxConvUTF8 );
+   bool zLock = false;
+   wxConfig* cfg = static_cast< wxConfig* >( wxConfig::Get() );
+   cfg->Read(key + _T("/") + _T( "Navigation z=0 Lock" ), &zLock, false );
+   subZeroChk->SetValue( zLock );
    miscGroup2->Add( subZeroChk, 0, wxALL|wxALIGN_LEFT, 5 );
 
    // Add everything to static box sizer

@@ -136,7 +136,6 @@ private:
 
    wxButton* backgroundColorButton;///<To choose background color
 
-   wxString xplorerChoices[3];
    wxColourData* xplorerWxColor;
    std::vector<double> xplorerColor;
    //wxColour* colour;

@@ -43,11 +43,11 @@
 
 #include <iostream>
 
-IMPLEMENT_APP(REIApp);
+IMPLEMENT_APP(ConductorApp);
 
 XERCES_CPP_NAMESPACE_USE
 
-bool REIApp::OnInit()
+bool ConductorApp::OnInit()
 {
    try
    {
@@ -80,7 +80,7 @@ bool REIApp::OnInit()
    return true;
 }
 
-int REIApp::OnExit()
+int ConductorApp::OnExit()
 {
    delete wxConfigBase::Set((wxConfigBase *) NULL);
    XMLPlatformUtils::Terminate();

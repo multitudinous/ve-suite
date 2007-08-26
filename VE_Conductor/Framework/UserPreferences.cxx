@@ -102,6 +102,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
    preferenceMap[ "Auto Launch Nav Pane" ] = false;
    preferenceMap[ "Use Preferred Background Color" ] = false;
    preferenceMap[ "Shut Down Xplorer Option" ] = false;
+   preferenceMap[ "Navigation z=0 Lock" ] = false;
 
    ///Read from wxConfig
    ReadConfiguration();
@@ -132,6 +133,7 @@ void UserPreferences::CreateControls()
 
     wxCheckBox* backgroundColorChkBx = 0;
     wxCheckBox* navigationChkBx = 0;
+    wxCheckBox* zNavChkBx = 0;
     shutdownModeChkBx = 0;
        
     // Add page
@@ -156,22 +158,28 @@ void UserPreferences::CreateControls()
     colorSizer->Add(backgroundColorChkBx, 1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
     colorSizer->Add(backgroundColorButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     navigationChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Auto Launch Nav Pane"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    zNavChkBx = new wxCheckBox(panel, ID_NAVIGATION_CHKBX, wxT("Navigation z=0 Lock"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
     shutdownModeChkBx = new wxCheckBox(panel, ID_SHUTDOWN_XPLORER, wxT("Shut Down Xplorer Option"), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
 
+    wxString xplorerChoices[4];
     xplorerChoices[ 0 ] = wxString( "Use Preferred Background Color", wxConvUTF8 );
     xplorerChoices[ 1 ] = wxString( "Auto Launch Nav Pane", wxConvUTF8 );
     xplorerChoices[ 2 ] = wxString( "Shut Down Xplorer Option", wxConvUTF8 );
+    xplorerChoices[ 3 ] = wxString( "Navigation z=0 Lock", wxConvUTF8 );
 
     backgroundColorChkBx->SetValue( preferenceMap[ "Use Preferred Background Color" ] );
     backgroundColorChkBx->IsChecked();
     navigationChkBx->SetValue( preferenceMap[ "Auto Launch Nav Pane" ] );
     navigationChkBx->IsChecked();
+    zNavChkBx->SetValue( preferenceMap[ "Navigation z=0 Lock" ] );
+    zNavChkBx->IsChecked();
     shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
     shutdownModeChkBx->IsChecked();
 
     itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
     itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
     itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
+    itemBoxSizer3->Add( zNavChkBx, 0, wxALIGN_LEFT|wxALL|wxEXPAND, 5);
 
     ///////////////////////////////////////
     panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);

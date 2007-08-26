@@ -45,7 +45,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
 #include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandlers/cfdNavigate.h"
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"

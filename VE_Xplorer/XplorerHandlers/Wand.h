@@ -117,8 +117,6 @@ public:
     ///\param listOfHits A vector containing CAD hit in selection process
     void ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits );
 
-    //void DrawLine(osg::Vec3d start, osg::Vec3d end);
-
     ///Update the events done by wand
     void UpdateObjectHandler();
 
@@ -140,15 +138,13 @@ public:
 
     ///Transform direction from VRJuggler to OSG
     void UpdateWandLocalDirection();
-
-    //void UpdateWandLocalLocation( void ); 
-
+    
     ///Transform wand point into global space
     void UpdateWandGlobalLocation();
-
+    
     ///Find translation difference from last position to current
     void UpdateDeltaWandPosition();
-      
+    
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
@@ -160,10 +156,11 @@ protected:
     ///\param endPoint The end position
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
       
+    ///Roate about arbitrary axis 
+    void RotateAboutWand();
+    
 private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
-    gadget::DigitalInterface IHdigital[ 10 ]; ///<do not know what this does
-    gadget::DigitalInterface flyThrough[ 4 ]; ///<do not know what this does
     int buttonData[ 6 ]; ///<do not know what this does
 
     int cfdIso_value; ///<Value to translate
@@ -171,10 +168,6 @@ private:
     gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
 
-    gmtl::Vec3d  vjVec; ///<VRJuggler's vector position
-    gmtl::Vec3d  LastVec; ///<VRJuggler's last vector position
-
-    gmtl::Matrix44d vjMat; ///<Contains current translation matrix
     gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
     double dir[ 3 ]; ///<Direction of the wand
@@ -202,6 +195,12 @@ private:
     osg::ref_ptr< osg::Geode > beamGeode;///<do not know what this does
     osg::ref_ptr< osg::Geometry > beamGeometry;///<do not know what this does
     osg::ref_ptr< osg::LineSegment > beamLineSegment;///<do not know what this does
+    ///See if a button has been pushed
+    bool m_buttonPushed;
+    ///Quat used every frame to store and rotational increments
+    osg::Quat m_rotIncrement;
+    ///Array to hold work translation
+    double m_worldTrans[ 3 ];
 };
 }
 

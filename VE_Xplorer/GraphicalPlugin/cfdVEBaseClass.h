@@ -58,7 +58,7 @@ namespace VE_Xplorer
    class cfdModel;
    class cfdReadParam;
    class cfdCursor;
-   class cfdNavigate;
+   class Device;
    class cfdObjects;
    class cfdSoundHandler;
 }
@@ -126,7 +126,7 @@ public:
 
    void SetCursor( cfdCursor* );
 
-   void SetNavigate( cfdNavigate* );
+   void SetInteractionDevice( VE_Xplorer::Device* device );
 
    void SetSoundHandler( cfdSoundHandler* );
 
@@ -190,7 +190,7 @@ protected:
    std::string _objectName;
    osg::ref_ptr< VE_SceneGraph::DCS > _dcs;
    cfdCursor* _cursor;
-   cfdNavigate* _navigate;
+   VE_Xplorer::Device* m_device;
    cfdSoundHandler* soundHandler;
    
    VE_XML::VE_Model::Model* xmlModel;
