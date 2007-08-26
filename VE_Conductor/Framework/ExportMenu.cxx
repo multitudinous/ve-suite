@@ -82,6 +82,8 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
     }
     
     wxFileName vesFileName( dialog.GetPath() );
+    vesFileName.ClearExt();
+    vesFileName.SetExt( _("jpg") );
     bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
     if( !success )
     {
@@ -116,6 +118,8 @@ void ExportMenu::OnDOTFile( wxCommandEvent& event )
     }
     
     wxFileName vesFileName( dialog.GetPath() );
+    vesFileName.ClearExt();
+    vesFileName.SetExt( _("dot") );
     bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
     if( !success )
     {

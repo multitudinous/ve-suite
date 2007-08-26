@@ -872,8 +872,20 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       }
    }
    while ( answer == wxID_NO );
+
+   if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+   {
+       wxString tempMessage = _("Cannot write file ") + vesFileName.GetFullName() + _("?");
+       wxMessageDialog promptDlg( this, 
+                                  tempMessage, 
+                                  _("Overwrite File Warning"), 
+                                  wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
+                                  wxDefaultPosition);
+       promptDlg.ShowModal();
+       return;
+   }
    
-   if ( vesFileName.HasName() ) 
+   if( vesFileName.HasName() ) 
    {
       directory	= vesFileName.GetPath();
       fname = vesFileName.GetFullName();
