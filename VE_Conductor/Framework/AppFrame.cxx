@@ -295,7 +295,7 @@ viewlocPane( 0 )
         xplorerColor = preferences->GetBackgroundColor();
     }
 
-    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+    VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
     dataValuePair->SetData(std::string("Background Color"),xplorerColor);
     VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
     veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
@@ -938,14 +938,13 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    VE_XML::DataValuePair* dataValuePair = 
+    VE_XML::DataValuePairWeakPtr dataValuePair = 
     new VE_XML::DataValuePair(  std::string("STRING") );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-    VE_XML::Command* veCommand = new VE_XML::Command();
+    VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
     veCommand->SetCommandName( std::string("Change Working Directory") );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 
     //Clear the viewpoints data
     //Since the data is "managed" by Xplorer we need to notify 
@@ -954,14 +953,13 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
     //Dummy data that isn't used but I don't know if a command will work
     //w/o a DVP 
-    VE_XML::DataValuePair* dvp = 
-    new VE_XML::DataValuePair(  std::string("STRING") );
+    VE_XML::DataValuePairWeakPtr dvp = 
+        new VE_XML::DataValuePair(  std::string("STRING") );
     dvp->SetData( "Clear Quat Data", tempDir );
-    VE_XML::Command* vec = new VE_XML::Command();
+    VE_XML::CommandWeakPtr vec = new VE_XML::Command();
     vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
-    delete vec;
 
     //Reloading plugins
     av_modules->ResetPluginTree();
@@ -1045,25 +1043,23 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    VE_XML::DataValuePair* dataValuePair = 
+    VE_XML::DataValuePairWeakPtr dataValuePair = 
                   new VE_XML::DataValuePair(  std::string("STRING") );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-    VE_XML::Command* veCommand = new VE_XML::Command();
+    VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
     veCommand->SetCommandName( std::string("Change Working Directory") );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 
     //Dummy data that isn't used but I don't know if a command will work
     //w/o a DVP 
-    VE_XML::DataValuePair* dvp = 
+    VE_XML::DataValuePairWeakPtr dvp = 
                   new VE_XML::DataValuePair(  std::string("STRING") );
     dvp->SetData( "Clear Quat Data", tempDir );
-    VE_XML::Command* vec = new VE_XML::Command();
+    VE_XML::CommandWeakPtr vec = new VE_XML::Command();
     vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
-    delete vec;
 
     //Reloading plugins
     av_modules->ResetPluginTree();
@@ -1131,7 +1127,15 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    // If there is nothing on the CE
    if ( !nw_str.empty() )
    {
-      network->Load( nw_str, true );
+       network->Load( nw_str, true );
+       ///Submit job to xplorer
+       // Tell xplorer to ask ce for the new data
+       VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
+       dataValuePair->SetData(std::string("Load Data"),xplorerColor);
+       VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+       veCommand->SetCommandName(std::string("veNetwork Update"));
+       veCommand->AddDataValuePair(dataValuePair);
+       serviceList->SendCommandStringToXplorer( veCommand );
    }
    else
    {
@@ -1196,6 +1200,14 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
         aspenBKPFile->AddDataValuePair( data );
         UserPreferencesDataBuffer::instance()->
             SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
+        ///Submit job to xplorer
+        // Tell xplorer to ask ce for the new data
+        VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
+        dataValuePair->SetData(std::string("Load Data"),xplorerColor);
+        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+        veCommand->SetCommandName(std::string("veNetwork Update"));
+        veCommand->AddDataValuePair(dataValuePair);
+        serviceList->SendCommandStringToXplorer( veCommand );
     }
     else
     {    
@@ -1454,9 +1466,9 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
       // set the network
       serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
       // Tell xplorer to ask ce for the new data
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Load Data"),xplorerColor);
-      VE_XML::Command* veCommand = new VE_XML::Command();
+      VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("veNetwork Update"));
       veCommand->AddDataValuePair(dataValuePair);
       serviceList->SendCommandStringToXplorer( veCommand );
@@ -1851,7 +1863,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       xplorerColor.push_back(1.0);
 
       // Create the command and data value pairs
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
       VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
@@ -1866,8 +1878,8 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
-   VE_XML::Command* command = new VE_XML::Command();
+   VE_XML::DataValuePairWeakPtr DVP = new VE_XML::DataValuePair();
+   VE_XML::CommandWeakPtr command = new VE_XML::Command();
    
    std::string device;
 
@@ -1887,15 +1899,13 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
    command->AddDataValuePair( DVP );
 
    serviceList->SendCommandStringToXplorer( command );
-   
-   delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisplaySelection( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePair* DVP = new VE_XML::DataValuePair();
-   VE_XML::Command* command = new VE_XML::Command();
+   VE_XML::DataValuePairWeakPtr DVP = new VE_XML::DataValuePair();
+   VE_XML::CommandWeakPtr command = new VE_XML::Command();
 
    unsigned int value;
 
@@ -1915,8 +1925,6 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
    command->AddDataValuePair(DVP);
 
    serviceList->SendCommandStringToXplorer(command);
-   
-   delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewSelection( wxCommandEvent& event )
@@ -1980,7 +1988,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::JugglerSettings( wxCommandEvent& event )
 {
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = 
+   VE_XML::DataValuePairWeakPtr dataValuePair = 
                            new VE_XML::DataValuePair(  std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
    if ( event.GetId() == JUGGLER_STEREO )
@@ -1991,27 +1999,23 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
    {
       dataValuePair->SetDataValue( 0.0 );
    }
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
 
    serviceList->SendCommandStringToXplorer( veCommand );
-   
-   delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
-   VE_XML::DataValuePair* dataValuePair = 
+   VE_XML::DataValuePairWeakPtr dataValuePair = 
                            new VE_XML::DataValuePair( std::string("STRING") );
    dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
    veCommand->AddDataValuePair( dataValuePair );
    
    serviceList->SendCommandStringToXplorer( veCommand );
-   
-   delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnExitXplorer( wxCommandEvent& WXUNUSED(event) )
@@ -2057,14 +2061,13 @@ void AppFrame::ProcessCommandLineArgs( void )
    
    //Send Command to change xplorer working dir
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = 
+   VE_XML::DataValuePairWeakPtr dataValuePair = 
       new VE_XML::DataValuePair(  std::string("STRING") );
    dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("Change Working Directory") );
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
-   delete veCommand;
    
    //Now laod the xml data now that we are in the correct directory
    fname=vesFileName.GetFullName();
@@ -2143,7 +2146,7 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 {
-   VE_XML::DataValuePair* dataValuePair = 
+   VE_XML::DataValuePairWeakPtr dataValuePair = 
       new VE_XML::DataValuePair(  std::string("STRING") );
    if ( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
    {
@@ -2162,11 +2165,10 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
       dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
    }
    
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
    veCommand->SetCommandName( std::string("CHANGE_XPLORER_VIEW") );
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
-   delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnInternalIdle()
