@@ -206,6 +206,7 @@ opts.Add('prefix', 'Installation prefix', '/usr/local')
 opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
 opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
+opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
 opts.Add('validate', 'If "no", do not validate flagpoll packages. Should help speed up the build', 'yes')
 #opts.Add('tao', 'If true, use TAO in the build', 'no')
 ##Added options for velauncher build.

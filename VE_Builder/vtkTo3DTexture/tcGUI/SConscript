@@ -12,13 +12,20 @@ srcs = Split("""
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
 
+programName = 'vtkTo3DTexture'
+
 env = ves_pkg.getEnv().Copy()
+
+if env[ 'UseMPI' ] == 'yes':
+    baseEnv.Append( CPPDEFINES = ['USE_MPI'] )
+    programName += 'MPI'
+
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
             LIBS = ['VE_UtilLib'])
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 wxwidgets_options.apply( env )
 vtk_options.apply( env )
-prog = ves_pkg.createProgram('vtkTo3DTexture', env, 'bin')
+prog = ves_pkg.createProgram( programName, env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
