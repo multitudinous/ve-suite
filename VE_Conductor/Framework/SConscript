@@ -6,9 +6,9 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX RootDir vesSVNRevision')
 
 srcs = Split("""
-   App.cxx 
+   ConductorApp.cxx 
    Avail_Modules.cxx
-   Frame.cxx 
+   AppFrame.cxx 
    Network.cxx 
    DeviceProperties.cxx 
    NavigationPane.cxx 

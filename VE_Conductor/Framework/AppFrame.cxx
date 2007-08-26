@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
-#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/AppFrame.h"
 
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
@@ -57,7 +57,7 @@
 #include "VE_Conductor/GUIPlugin/FindDialog.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
 
-#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/ConductorApp.h"
 #include "VE_Conductor/Framework/UserPreferences.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
 #include "VE_Conductor/Framework/UI_TeacherTab.h"

@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 //Don't move Frame.h below MainToolBar.h
-#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/AppFrame.h"
 #include "VE_Conductor/Framework/MainToolBar.h"
 
 #include "VE_Conductor/xpm/ToolBar/NewDocumentButton.xpm"

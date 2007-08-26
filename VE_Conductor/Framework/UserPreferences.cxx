@@ -48,7 +48,7 @@
 //#include <iostream>
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
-#include "VE_Conductor/Framework/Frame.h"
+#include "VE_Conductor/Framework/AppFrame.h"
 
 #include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include "VE_Conductor/Framework/UserPreferences.h"

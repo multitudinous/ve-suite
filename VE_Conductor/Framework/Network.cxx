@@ -42,8 +42,7 @@
 #include "VE_Conductor/Utilities/ParamsDlg.h"
 #include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
 
-#include "VE_Conductor/Framework/Frame.h"
-#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/AppFrame.h"
 
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Point.h"

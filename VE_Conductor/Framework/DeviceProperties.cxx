@@ -33,8 +33,6 @@
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
 #include "VE_Conductor/Framework/DeviceProperties.h"
-#include "VE_Conductor/Framework/App.h"
-#include "VE_Conductor/Framework/Frame.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
