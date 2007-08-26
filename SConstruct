@@ -418,6 +418,7 @@ if not SConsAddons.Util.hasHelpFlag():
    veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
    veiFreezeSubdirs = pj(buildDir,'VE_Installer','installer', 'freezeCode')	
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
+   installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
    docsSubdirs = pj('#', 'share', 'docs', 'docbook')
    chlogSubdirs = pj('#', 'share', 'docs', 'changelog')
@@ -440,7 +441,8 @@ if not SConsAddons.Util.hasHelpFlag():
    else:
       ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
                   xplorerSubdirs, veiDistSubdirs, ceSubdirs, veiSubdirs, 
-                  shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs]
+                  shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs,
+		  installerSubdirs ]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:

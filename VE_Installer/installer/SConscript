@@ -20,7 +20,13 @@ iconScripts = ['vesuiteConfig.sh',
                'vesuiteGnomeConfig.sh',
                'vesuiteKdeConfig.sh' ]
 
+vessetupScripts = [ 'ves.setup.csh',
+                 'ves.setup.sh' ]
+
+vessetupScripts = map(lambda s: pj(RootDir,'VE_Installer', s), vessetupScripts)
+
 launcherBundle.addFiles( runScripts )
+launcherBundle.addFiles( vessetupScripts )
 launcherBundle.addFiles( pyFile )
 
 linuxDClick = ves_pkg.createFileBundle( pj('share','vesuite','misc' ) )
