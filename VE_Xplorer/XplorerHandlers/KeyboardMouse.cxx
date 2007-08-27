@@ -68,6 +68,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
+#include <osg/Point>
 #include <osg/LineSegment>
 #include <osg/NodeVisitor>
 #include <osg/BoundingBox>
@@ -480,11 +481,18 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, do
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-    osg::Vec3d startPoint, endPoint;
+    //Grab the current matrix
     osg::ref_ptr< VE_SceneGraph::DCS > worldDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    gmtl::Matrix44d matrix = worldDCS->GetMat();
+
+    //Move the current matrix to its original position
+    double position[3] = { 0, 0, 0 };
+    worldDCS->SetTranslationArray( position );
+
+    //Grab the bound and corresponding center values of the current matrix
     osg::BoundingSphere bs = worldDCS->computeBound();
 
-    //Get the selected objects and expand by their bounding box
+    //Calculate the distance needed to fit current bounding sphere inside viewing frustum
     double distance;
     double theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
 
@@ -497,7 +505,7 @@ void KeyboardMouse::FrameAll()
         distance = bs.radius() / tan( theta );
     }
 
-    //Be sure m_width and m_height are set before calling this function
+    //Transform the current matrix to the center of the juggler screen
     double wc_x_trans_ratio = ( ( m_xmaxScreen - m_xminScreen ) ) / static_cast< double >( m_width );
     double wc_y_trans_ratio = ( ( m_ymaxScreen - m_yminScreen ) ) / static_cast< double >( m_height );
 
@@ -517,53 +525,22 @@ void KeyboardMouse::FrameAll()
     osgTransformedPosition[1] = -transformedPosition[2];
     osgTransformedPosition[2] =  transformedPosition[1];
 
-    double wandEndPoint[3];
+    matrix.mData[12] = osgTransformedPosition[0];
+    matrix.mData[13] = osgTransformedPosition[1];
+    matrix.mData[14] = osgTransformedPosition[2];
 
-    gmtl::Matrix44d vjHeadMat;
-    vjHeadMat = convertTo< double >( m_head->getData() );
+    //Translate into the screen for the calculated distance
+    matrix.mData[13] += distance;
 
-    //Get juggler Matrix of worldDCS
-    //Note:: for pf we are in juggler land
-    //       for osg we are in z up land
-    gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
-    jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+    //Translate center of bounding volume to the center of the screen
+    matrix.mData[12] -= bs.center().x();
+    matrix.mData[13] -= bs.center().y();
+    matrix.mData[14] -= bs.center().z();
 
-    //We have to offset negative m_x because the view is being drawn for the m_leftFrustum 
-    //eye which means the the frustums are being setup for the m_leftFrustum eye
-    jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[0] - ( 0.0345 * 3.2808399 );
-    jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[2];
-    jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[1];
-
-    startPoint.set( jugglerHeadPointTemp[0], jugglerHeadPointTemp[1], jugglerHeadPointTemp[2] );
-
-    gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
-
-    //Get the vector
-    gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
-
-    double scalar = distance / gmtl::length( vjVec );
-
-    for( int i = 0; i < 3; ++i )
-    {
-        wandEndPoint[i] = ( vjVec[i] * scalar );
-    }
-
-    endPoint.set( wandEndPoint[0], wandEndPoint[1], wandEndPoint[2] );
-
-    DrawLine( startPoint, endPoint );
-
-    gmtl::Matrix44d matrix = worldDCS->GetMat();
-
-    matrix.mData[12] = wandEndPoint[0];
-    matrix.mData[13] = wandEndPoint[1];
-    matrix.mData[14] = wandEndPoint[2];
-
-    //matrix.mData[12] -= bs.center().x();
-    //matrix.mData[13] -= bs.center().y();
-    //matrix.mData[14] -= bs.center().z();
-
+    //Set the current matrix w/ the new matrix
     worldDCS->SetMat( matrix );
 
+    //Get the new center of the bounding sphere and set the center_point accordingly
     bs = worldDCS->computeBound();
     center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
 }
