@@ -388,14 +388,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdNavigate.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdObjectHandler.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdObjects.cxx"
 				>
 			</File>
@@ -591,6 +583,10 @@
 			</File>
 			<File
 				RelativePath=".\DisplayInformation.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\ExportDOTFileEventHandler.cxx"
 				>
 			</File>
 			<File
@@ -957,15 +953,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\cfdNavigate.h"
-				>
-			</File>
-			<File
 				RelativePath=".\cfdNotify.h"
-				>
-			</File>
-			<File
-				RelativePath=".\cfdObjectHandler.h"
 				>
 			</File>
 			<File
@@ -1114,6 +1102,10 @@
 			</File>
 			<File
 				RelativePath=".\EventHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ExportDOTFileEventHandler.h"
 				>
 			</File>
 			<File

@@ -26,7 +26,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -122,7 +121,6 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description=""
 				CommandLine=""
 			/>
 			<Tool
@@ -222,11 +220,15 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 			>
 			<File
-				RelativePath=".\App.cxx"
+				RelativePath=".\AppFrame.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\Avail_Modules.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\ConductorApp.cxx"
 				>
 			</File>
 			<File
@@ -242,7 +244,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Frame.cxx"
+				RelativePath=".\ExportMenu.cxx"
 				>
 			</File>
 			<File
@@ -287,11 +289,15 @@
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
 			<File
-				RelativePath=".\App.h"
+				RelativePath=".\AppFrame.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Avail_Modules.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ConductorApp.h"
 				>
 			</File>
 			<File
@@ -307,7 +313,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Frame.h"
+				RelativePath=".\ExportMenu.h"
 				>
 			</File>
 			<File

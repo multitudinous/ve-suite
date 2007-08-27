@@ -69,7 +69,9 @@
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include <osgOQ/OcclusionQueryVisitor.h>
 #include <osgOQ/OcclusionQueryRoot.h>
+
 // --- C/C++ Libraries --- //
+#include <cctype>
 #include <sstream>
 #include <istream>
 #include <string>

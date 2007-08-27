@@ -43,14 +43,7 @@
 // --- wxWidgets Includes --- //
 #include <wx/menu.h>
 
-// --- VE-Suite Includes --- //
-namespace VE_Conductor
-{
-    class CORBAServiceList;
-}
-
 // --- C/C++ Libraries --- //
-#include <map>
 #include <string>
 
 class ExportMenu : public wxMenu
