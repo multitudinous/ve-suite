@@ -68,7 +68,6 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
-#include <osg/Point>
 #include <osg/LineSegment>
 #include <osg/NodeVisitor>
 #include <osg/BoundingBox>
