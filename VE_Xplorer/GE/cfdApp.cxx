@@ -272,8 +272,11 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
     
 	newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
 
-    newSceneViewer->setComputeNearFarMode( 
-        osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    ///With this code in culling culs the near and far planes. I believe
+    ///we discovered this awhile ago buit removed the comments about it.
+    ///Please see cullvisitor for the possible settings for this function.
+    //newSceneViewer->setComputeNearFarMode( 
+    //    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -747,8 +750,6 @@ void cfdApp::draw()
     const unsigned int y_size =
         static_cast<unsigned int>(vp_sy * static_cast<float>(w_height));
     
-    //sv->setCalcNearFar(false);
-    sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
     sv->setViewport(ll_x, ll_y, x_size, y_size);
     
     //Get the frustrum

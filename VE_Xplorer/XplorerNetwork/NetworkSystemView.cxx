@@ -156,8 +156,11 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//scale icon to 2d worksheet size
 		osg::ref_ptr<osg::Image> image = osgDB::readImageFile("2DIcons/"+model->GetIconFilename()+".jpg");
 		//osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
-		output<<"width: "<<image->s()<<"height: "<<image->t()<<std::endl;
-		//output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
+        if( image.valid() )
+        {
+            output<<"width: "<<image->s()<<"height: "<<image->t()<<std::endl;
+            //output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
+        }
 		
 		//scales
 		//osg::Vec3 vec;
