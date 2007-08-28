@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article lang="en-US">
+<para>The new tools created to integrate VE-Suite will be described in this document. The assumptions are that users have access to Aspen and that they are familiar with general VE-Suite operations. </para>
+<para/>
+<para>To begin, the user launches VE-Suite through the normal modes that can be found in the VE-Suite documentation. The user then launches the VE-AspenUnit executable via VE-Launcher by dropping the .bat file used to run the VE-AspenUnit into the DOS shell. Once the VE-AspenUnit is launched, the querying of Aspen can begin.</para>
+<para/>
+<orderedlist>
+<listitem>
+<para>Choose ConnectionAspenOpen Simulation to run the Aspen Simulation:</para>
+</listitem>
+</orderedlist>
+<para/>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<para>Note: As shown above, various other operations are also available in VE-Suite. The resulting actions can be intuited from the menu names.</para>
+<para/>
+<orderedlist>
+<listitem>
+<para>Enter the Aspen .bkp file to be used:</para>
+</listitem>
+</orderedlist>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<orderedlist>
+<listitem>
+<para>Once the .bkp file is chosen, the user will then see a network diagram of the Aspen flowsheet similar to what is seen in Aspen:</para>
+</listitem>
+</orderedlist>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<orderedlist>
+<listitem>
+<para>Once the Aspen flowsheet is loaded, it is possible to work with Aspen through the VE-Suite right-click menus:</para>
+</listitem>
+</orderedlist>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<para>The Aspen unit operation name is shown below:</para>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<orderedlist>
+<listitem>
+<para>When the user chooses to investigate input variables, the parameters dialog allows any variable to be viewed for a specific unit operation and modified. This is also true for the results, except that the user is unable to change results.</para>
+</listitem>
+</orderedlist>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<para>Results:</para>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<orderedlist>
+<listitem>
+<para>Once the user changes an input, the flowsheet can be run in Aspen by selecting ConnectionAspenRun Simulation:</para>
+</listitem>
+</orderedlist>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+<para/>
+<para/>
+<para>Note: In addition to being able to run the Aspen flowsheet in traditional modes, there is also a 3D mode that can be viewed by selecting VE-Xplorer  Graphical View  Network:</para>
+<para/>
+<para>
+<inlinegraphic fileref="" width=""/>
+</para>
+</article>
