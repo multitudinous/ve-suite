@@ -150,8 +150,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		float dx = bounds.xMax() - bounds.xMin();
 		float dy = bounds.yMax() - bounds.yMin();
 		float dz = bounds.zMax() - bounds.zMin();
-		output<<model->GetModelName()<<std::endl;
-		output<<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
+		//output<<model->GetModelName()<<std::endl;
+		//output<<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
 
 		//scale icon to 2d worksheet size
 		osg::ref_ptr<osg::Image> image = osgDB::readImageFile("2DIcons/"+model->GetIconFilename()+".jpg");
@@ -320,7 +320,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		for ( size_t j = 0; j < numberOfPoints; j++ )
 		{
 			std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
-			std::cout << "X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
+			//std::cout << "links X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
 			//(*vertices)[j].set(rawPoint.first, rawPoint.second, 0.0);
 			(*vertices)[j].set(rawPoint.first, 0.0, rawPoint.second);
 		}

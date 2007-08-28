@@ -9,6 +9,13 @@ headers = Split("""
    moduleC.h
    VjObsC.h
    VjObsS.h
+   moduleC.inl
+   moduleI.cpp
+   moduleI.h
+   moduleS.inl
+   moduleS_T.h
+   moduleS_T.inl
+   moduleS_T.cpp
 """)
 
 sources = Split("""

@@ -58,10 +58,12 @@ inst_paths['lib'] = pj('${prefix}', lib_env['libdir'])
 inst_paths['bin'] = pj('${prefix}', 'bin')   
 inst_paths['include'] = pj('${prefix}', 'include')   
 ves_version_str = '%i.%i.%i'%VE_SUITE_VERSION
+
+ves_defines = '-D_TAO -D_OSG -DVTK44 -DLOKI_OBJECT_LEVEL_THREADING'
+
 if baseEnv[ 'Patented' ] == 'yes':
-    ves_defines = '-D_TAO -DVE_PATENTED -D_OSG -DVTK44'
-else:
-    ves_defines = '-D_TAO -D_OSG -DVTK44'
+    ves_defines += ' -DVE_PATENTED'
+
 # Build up substitution map
 submap = {
    '@provides@'                  : provides,
@@ -71,7 +73,7 @@ submap = {
    '@includedir@'                : inst_paths['include'],
    '@ves_extra_cxxflags@'        : '',
    '@ves_extra_include_dirs@'    : '',
-   '@ves_libs@'                  : '-lVE_TextureBasedLib_tao_osg_vep -lDataLoaderLib -lVE_UtilLib -lGUIPluginLib -lVE_XML -lGraphicalPlugin_tao_osg_vep -lTranslatorToVTKLib -lVE_XplorerNetworkLib_tao_osg_vep -lVE_XplorerLib_tao_osg_vep -lVE_OpenModuleLib -lVE_SceneGraph_tao_osg_vep',
+   '@ves_libs@'                  : '-lVE_TextureBasedLib_tao_osg_vep -lDataLoaderLib -lVE_UtilLib -lGUIPluginLib -lVE_XML -lGraphicalPlugin_tao_osg_vep -lTranslatorToVTKLib -lVE_XplorerNetworkLib_tao_osg_vep -lVE_XplorerLib_tao_osg_vep -lVE_OpenModuleLib -lVE_SceneGraph_tao_osg_vep -lloki.0.1.6 -losgOQ -lVE_CE_UnitWrapperLib',
    '@libdir@'                    : inst_paths['lib'],
    '@lib_subdir@'                : lib_env['libdir'],
    '@VERSION_MAJOR@'             : str(VE_SUITE_VERSION[0]),
