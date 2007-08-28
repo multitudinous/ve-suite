@@ -32,52 +32,55 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VIEW_EVENT_HANDLER_H
 #define VIEW_EVENT_HANDLER_H
+
 /*!\file ViewEventHandler.h
-  ViewEventHandler API
-  */
+ */
+
 /*!\class ViewEventHandler
  * Class for changing trackball properties in xplorer
  */
+
+// --- VE-Suite Includes
 #include "VE_Xplorer/XplorerHandlers/EventHandler.h"
 
 namespace VE_XML
 {
-   class XMLObject;
+    class XMLObject;
 }
 
 namespace VE_Xplorer
 {
-   class cfdGlobalBase;
+    class cfdGlobalBase;
 }
 
 namespace VE_EVENTS
 {
-class ViewEventHandler:public EventHandler
+class ViewEventHandler : public EventHandler
 {
 public:
     //Constructor
     ViewEventHandler();
 
     //Copy Constructor
-    ViewEventHandler(const ViewEventHandler& ceh);
+    ViewEventHandler( const ViewEventHandler& ceh );
 
     //Destructor
     virtual ~ViewEventHandler();
 
     //Set the cfdModel
     //param model The cfdModelHandler to execute the Command on
-    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
+    void SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler );
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute(VE_XML::XMLObject* command); 
+    void Execute( VE_XML::XMLObject* command ); 
 
     //Equal operator
-    ViewEventHandler& operator=(const ViewEventHandler& rhs);
+    ViewEventHandler& operator=( const ViewEventHandler& rhs );
 
 protected:
 
 };
 }
 
-#endif//TRACKBALL_EVENT_HANDLER_H
+#endif //VIEW_EVENT_HANDLER_H

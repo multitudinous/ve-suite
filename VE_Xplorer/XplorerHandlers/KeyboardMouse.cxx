@@ -544,6 +544,84 @@ void KeyboardMouse::FrameAll()
     center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::FrameSelection()
+{
+    if( selectedDCS.valid() )
+    {
+        //Grab the selected matrix    
+        gmtl::Matrix44d matrix = selectedDCS->GetMat();
+
+        //Convert the selected matrix to world space
+        osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
+        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), selectedDCS.get() );
+
+        m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
+        matrix = m_localToWorldTransform * matrix;
+
+        //Move the current matrix to its original position
+        double position[3] = { 0, 0, 0 };
+        selectedDCS->SetTranslationArray( position );
+
+        //Grab the bound and corresponding center values of the current matrix
+        osg::BoundingSphere bs = selectedDCS->computeBound();
+
+        //Calculate the distance needed to fit current bounding sphere inside viewing frustum
+        double distance;
+        double theta = ( m_fovy * 0.5f ) * PIDivOneEighty;
+
+        if( m_aspectRatio <= 1.0f )
+        {
+            distance = ( bs.radius() / tan( theta ) ) * m_aspectRatio;
+        }
+        else
+        {
+            distance = bs.radius() / tan( theta );
+        }
+
+        //Transform the current matrix to the center of the juggler screen
+        double wc_x_trans_ratio = ( ( m_xmaxScreen - m_xminScreen ) ) / static_cast< double >( m_width );
+        double wc_y_trans_ratio = ( ( m_ymaxScreen - m_yminScreen ) ) / static_cast< double >( m_height );
+
+        std::pair< double, double > screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
+
+        double transformedPosition[3];
+        double osgTransformedPosition[3];
+        transformedPosition[0] = m_xminScreen + ( ( static_cast< double >( m_width ) * 0.5 ) * screenRatios.first );
+        transformedPosition[1] = m_ymaxScreen - ( ( static_cast< double >( m_height ) * 0.5 ) * screenRatios.second );
+        transformedPosition[2] = m_zvalScreen;
+
+        transformedPosition[0] *= 3.2808399;
+        transformedPosition[1] *= 3.2808399;
+        transformedPosition[2] *= 3.2808399;
+
+        osgTransformedPosition[0] =  transformedPosition[0];
+        osgTransformedPosition[1] = -transformedPosition[2];
+        osgTransformedPosition[2] =  transformedPosition[1];
+
+        matrix.mData[12] = osgTransformedPosition[0];
+        matrix.mData[13] = osgTransformedPosition[1];
+        matrix.mData[14] = osgTransformedPosition[2];
+
+        //Translate into the screen for the calculated distance
+        matrix.mData[13] += distance;
+
+        //Translate center of bounding volume to the center of the screen
+        matrix.mData[12] -= bs.center().x();
+        matrix.mData[13] -= bs.center().y();
+        matrix.mData[14] -= bs.center().z();
+
+        //Set the current matrix w/ the new matrix
+        selectedDCS->SetMat( matrix );
+
+        //Get the new center of the bounding sphere and set the center_point accordingly
+        osg::Matrixd transform;
+        transform.set( ltwt->GetLocalToWorldTransform().getData() );
+
+        osg::Vec3d center = selectedDCS->getBound().center() * transform;
+        center_point->set( center.x(), center.y(), center.z() );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
 {
     if( m_key == gadget::KEY_R )

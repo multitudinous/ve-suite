@@ -1878,7 +1878,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePairWeakPtr DVP = new VE_XML::DataValuePair();
+   VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
    VE_XML::CommandWeakPtr command = new VE_XML::Command();
    
    std::string device;
@@ -1893,10 +1893,10 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
       device = "KeyboardMouse";
    }
 
-   DVP->SetData( std::string( "Device" ), device );
+   dvp->SetData( std::string( "Device" ), device );
    
    command->SetCommandName( std::string( "CHANGE_DEVICE" ) );
-   command->AddDataValuePair( DVP );
+   command->AddDataValuePair( dvp );
 
    serviceList->SendCommandStringToXplorer( command );
 }
@@ -1930,36 +1930,30 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
 void AppFrame::ViewSelection( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePair* DVP=new VE_XML::DataValuePair();
-   VE_XML::Command* command=new VE_XML::Command();
+   VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
+   VE_XML::CommandWeakPtr command = new VE_XML::Command();
    
-   long int value;
+   std::string view;
 
-   if(event.GetId() == FRAME_ALL)
+   if( event.GetId() == FRAME_ALL )
    {
-      value=0;
+      view = "Frame All";
    }
-   else if(event.GetId() == FRAME_SELECTION)
+   else if( event.GetId() == FRAME_SELECTION )
    {
-      value=1;
+      view = "Frame Selection";
    }
-   else if(event.GetId() == RESET)
+   else if( event.GetId() == RESET )
    {
-      value=2;
-   }
-   else
-   {
-      value=-1;
+      view = "Reset";
    }
 
-   DVP->SetData(std::string("ViewID"),value);
+   dvp->SetData( std::string( "View" ), view );
    
-   command->SetCommandName(std::string("VIEW_SELECTION"));
-   command->AddDataValuePair(DVP);
+   command->SetCommandName( std::string( "VIEW_SELECTION" ) );
+   command->AddDataValuePair( dvp );
 
-   serviceList->SendCommandStringToXplorer(command);
-   
-   delete command;
+   serviceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )

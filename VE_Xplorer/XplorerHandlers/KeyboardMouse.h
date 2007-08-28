@@ -109,8 +109,11 @@ public:
     ///\param f
     void SetFrustumValues( double l, double r, double t, double b, double n, double f );
 
-    ///Bring all objects into view
+    ///Fit the world bounding volume into the viewing frustum
     void FrameAll();
+
+    ///Fit the selected objects bounding volume into the viewing frustum
+    void FrameSelection();
 
     ///Resets the scene to original position
     void ResetTransforms();
