@@ -78,23 +78,20 @@ Source: {#VEHOME}\bin\win32\WinServer_d.exe; DestDir: {app}\bin; Components: nam
 Source: {#VEHOME}\bin\win32\WinServer.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\VE_AspenUnit_d.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\VE_AspenUnit.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\dist\velauncher.exe; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
+Source: {#VEHOME}\VE_Installer\installer\velauncher.exe; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
-Source: {#VEHOME}\VE_TestSuite\brick.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\simpleScalars\*.vti; DestDir: {app}\share\vesuite\examples\simple\simpleScalars; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs
+Source: {#VEHOME}\share\shaders\*.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples
+Source: {#VEHOME}\share\examples\simple\simpleScalars\*.vti; DestDir: {app}\share\vesuite\examples\simple\simpleScalars; Components: examples; Flags: recursesubdirs uninsremovereadonly replacesameversion createallsubdirs
 
-Source: {#VEHOME}\VE_TestSuite\gooch.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\toon.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\x-ray.vea; DestDir: {app}\share\vesuite\shaders\; Components: examples
-Source: {#VEHOME}\VE_TestSuite\2scl.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-Source: {#VEHOME}\VE_TestSuite\3scl2vec.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-Source: {#VEHOME}\VE_TestSuite\3scl.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-Source: {#VEHOME}\VE_TestSuite\eightCorners.stl; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-Source: {#VEHOME}\VE_TestSuite\Surface0.75.stl; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-Source: {#VEHOME}\VE_TestSuite\vtkPolyData.vtk; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-Source: {#VEHOME}\VE_TestSuite\SURFACE1\*; DestDir: {app}\share\vesuite\examples\simple\SURFACE1\; Components: examples; Flags: recursesubdirs
-Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\share\vesuite\examples\simple\POST_DATA1; Components: examples; Flags: recursesubdirs
-Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\share\vesuite\examples\simple\POST_DATA2; Components: examples; Flags: recursesubdirs
+Source: {#VEHOME}\share\examples\simple\2scl.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
+Source: {#VEHOME}\share\examples\simple\3scl2vec.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
+Source: {#VEHOME}\share\examples\simple\3scl.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
+Source: {#VEHOME}\share\examples\simple\eightCorners.stl; DestDir: {app}\share\vesuite\examples\simple; Components: examples
+Source: {#VEHOME}\share\examples\simple\Surface0.75.stl; DestDir: {app}\share\vesuite\examples\simple; Components: examples
+Source: {#VEHOME}\share\examples\simple\vtkPolyData.vtk; DestDir: {app}\share\vesuite\examples\simple; Components: examples
+Source: {#VEHOME}\share\examples\simple\SURFACE1\*; DestDir: {app}\share\vesuite\examples\simple\SURFACE1\; Components: examples; Flags: recursesubdirs
+Source: {#VEHOME}\share\examples\simple\POST_DATA1\*; DestDir: {app}\share\vesuite\examples\simple\POST_DATA1; Components: examples; Flags: recursesubdirs
+Source: {#VEHOME}\share\examples\simple\POST_DATA2\*; DestDir: {app}\share\vesuite\examples\simple\POST_DATA2; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_CE\*.h; DestDir: {app}\include\VE_CE; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Conductor\*.h; DestDir: {app}\include\VE_Conductor; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Xplorer\*.h; DestDir: {app}\include\VE_Xplorer; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
@@ -107,25 +104,27 @@ Source: {#VEHOME}\VE_Conductor\*.xpm; DestDir: {app}\include\VE_Conductor; Attri
 
 ;Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEHOME}\lib\win32\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-Source: {#VEHOME}/share/dualhead_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\dualhead_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
-Source: {#VEHOME}/share/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\stereo_desktop; Components: nameserver; Flags: recursesubdirs createallsubdirs
-Source: {#VEHOME}/share/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\vecr_configs; Components: nameserver; Flags: recursesubdirs createallsubdirs
+Source: {#VEHOME}/share/vrj_configs/dualhead_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\dualhead_configs; Components: nameserver; Flags: recursesubdirs
+Source: {#VEHOME}/share/vrj_configs/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\stereo_desktop; Components: nameserver; Flags: recursesubdirs
+Source: {#VEHOME}/share/vrj_configs/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\vecr_configs; Components: nameserver; Flags: recursesubdirs
 
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_document.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp; DestDir: {app}\bin\installerImages; DestName: velauncher_banner.bmp
-Source: {#VEHOME}\VE_TestSuite\simple.ves; DestDir: {app}\share\vesuite\examples\simple; Components: examples; Flags: overwritereadonly replacesameversion
+Source: {#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp; DestDir: {app}\bin\installerImages; DestName: velauncher_banner.bmp
+Source: {#VEHOME}\share\examples\simple\simple.ves; DestDir: {app}\share\vesuite\examples\simple; Components: examples; Flags: overwritereadonly replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
 Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; DestName: ve_logo.xpm
 Source: {#VEHOME}\share\fonts\*.ttf; DestDir: {app}\share\vesuite\fonts; Flags: recursesubdirs createallsubdirs
-Source: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; DestDir: {tmp}
+Source: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; DestDir: {tmp}; Components: ; Tasks: 
 Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 
-Source: {#VEHOME}\share\ptconfigfile.txt; DestDir: {app}\share\vesuite; Flags: recursesubdirs createallsubdirs
+Source: {#VEHOME}\share\ptconfigfile.txt; DestDir: {app}\share\vesuite
+Source: {#VEHOME}\external\vcredist_x86.exe; DestDir: {tmp}
+Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 
 
 [Icons]
@@ -137,6 +136,7 @@ Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe;
 ;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
 [Run]
 Filename: {tmp}\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; WorkingDir: {tmp}; Description: Install VE-BuilderTools; StatusMsg: Installing VE-BuilderTools {#VEVERSION}_{#SVNVERSION}; Flags: postinstall; Components: buildertools; Tasks: 
+Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1; StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
 [_ISToolPreCompile]
 Name: .\buildVELauncher.exe.bat; Parameters: 
 [_ISTool]

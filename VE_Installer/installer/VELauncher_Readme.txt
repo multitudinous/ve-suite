@@ -7,7 +7,7 @@ sites.
 See www.vesuite.org
 for information on obtaining VE-Suite's dependendcies.
 =========================================================================
-VE-Suite1.0.2 Launcher
+VE-Suite Launcher
 
 The VE-Suite Launcher lets you launch VE-Suite from multiple saved configurations.
 Features include:-Setting Dependencies, Working, and Builder directories.

@@ -7,7 +7,7 @@ for information on obtaining VE-Suites dependendcies.
 ======================================================================================
 NOTE:
 ======================================================================================
-VE-Suite_1.0*
+VE-Suite_1.1*
 
 This windows installer places components of VE-Suite on your computer.
 Five optional components are available from this installer:
