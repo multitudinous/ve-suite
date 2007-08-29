@@ -228,6 +228,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DataObjectHandler.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\fileIO.cxx"
 				>
 			</File>
@@ -262,6 +266,10 @@
 			</File>
 			<File
 				RelativePath=".\cleanVtk.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DataObjectHandler.h"
 				>
 			</File>
 			<File
