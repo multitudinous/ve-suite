@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConcreteLoader.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialHelper.cxx"
 				>
 			</File>
@@ -208,6 +212,14 @@
 			</File>
 			<File
 				RelativePath=".\OpacityVisitor.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\PerlinNoise.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\PerlinNoiseTexture.cxx"
 				>
 			</File>
 			<File
@@ -233,6 +245,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConcreteLoader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialHelper.h"
 				>
 			</File>
@@ -242,6 +258,14 @@
 			</File>
 			<File
 				RelativePath=".\OpacityVisitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PerlinNoise.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PerlinNoiseTexture.h"
 				>
 			</File>
 			<File
