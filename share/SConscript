@@ -3,11 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg')
-
-launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite','vrj_configs') )
-jconfFile = sca_util.getFilesRecursiveByExt( '.', ['.jconf'] )
-launcherBundle.addFiles( jconfFile )
+Import('ves_pkg buildDir')
 
 fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )

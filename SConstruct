@@ -453,7 +453,9 @@ if not SConsAddons.Util.hasHelpFlag():
    ## directory for dzr files
    ves_dirs += [pj( buildDir,'VE_Installer','mk')]
    ## directory for examples
-   ves_dirs += [pj( buildDir,'VE_TestSuite')]
+   ves_dirs += [pj( buildDir,'share','examples','simple')]
+   ves_dirs += [pj( buildDir,'share','vrj_configs')]
+   ves_dirs += [pj( buildDir,'share','shaders')]
 
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:

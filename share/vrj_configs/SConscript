@@ -1,0 +1,10 @@
+##sets up jconf files for stereo_desktop
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg buildDir')
+
+launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite','vrj_configs') )
+jconfFile = sca_util.getFilesRecursiveByExt( '.', ['.jconf'] )
+launcherBundle.addFiles( jconfFile )
