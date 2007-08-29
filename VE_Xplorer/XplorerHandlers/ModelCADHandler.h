@@ -189,6 +189,8 @@ protected:
     std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;
     ///ID for root CAD node id
     std::string m_rootCADNodeID;
+	///Attribute list mapping for all CAD
+	std::map<std::string, osg::ref_ptr< osg::StateSet> > m_globalAttributeList;
 #ifdef _OSG
     ///The map of node attributes.
     std::map< std::string, std::vector< 

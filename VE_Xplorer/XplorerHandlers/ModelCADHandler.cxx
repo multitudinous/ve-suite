@@ -63,6 +63,7 @@ ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
     m_assemblyList = rhs.m_assemblyList;
     m_rootCADNodeID = rhs.m_rootCADNodeID;
     m_nodeAttributes = rhs.m_nodeAttributes;
+	m_globalAttributeList = rhs.m_globalAttributeList;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::~ModelCADHandler()
@@ -86,6 +87,7 @@ ModelCADHandler::~ModelCADHandler()
     }
     m_cloneList.clear();
     m_nodeAttributes.clear();
+	m_globalAttributeList.clear();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler& 
@@ -98,6 +100,7 @@ ModelCADHandler::operator=( const ModelCADHandler& rhs )
         m_assemblyList = rhs.m_assemblyList;
         m_rootCADNodeID = rhs.m_rootCADNodeID;
         m_nodeAttributes = rhs.m_nodeAttributes;
+		m_globalAttributeList = rhs.m_globalAttributeList;
     }
     return *this;
 }
@@ -376,9 +379,18 @@ void ModelCADHandler::AddAttributeToNode(std::string nodeID,
 {
 #ifdef _OSG
     vprDEBUG(vesDBG,1) <<"|\tModelCADHandler::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
-    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = new VE_SceneGraph::Utilities::Attribute();
-    attribute->CreateStateSetFromAttribute(newAttribute);
-
+    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute;
+	std::map<std::string, osg::ref_ptr<osg::StateSet> >::iterator 
+		itr = m_globalAttributeList.find( newAttribute->GetAttributeName() ) ;
+	if( itr != m_globalAttributeList.end() )
+	{
+		attribute = dynamic_cast<VE_SceneGraph::Utilities::Attribute*>((*itr).second.get());
+	}
+	else
+	{
+	   attribute = new VE_SceneGraph::Utilities::Attribute();
+       attribute->CreateStateSetFromAttribute(newAttribute);
+	}
     std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
     attributeInfo.first = newAttribute->GetAttributeName();
     attributeInfo.second = attribute.get();
