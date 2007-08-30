@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib xerces-c_2d.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib TAO_Valuetyped.lib TAO_Messagingd.lib gdiplus.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_CodecFactoryd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib TAO_Valuetyped.lib TAO_Messagingd.lib gdiplus.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(ACE_ROOT)\lib&quot;"
@@ -155,7 +155,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib xerces-c_2.lib odbc32.lib odbccp32.lib TAO_BiDirGIOP.lib TAO_Valuetype.lib TAO_Messaging.lib gdiplus.lib"
+				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib xerces-c_2.lib odbc32.lib odbccp32.lib TAO_BiDirGIOP.lib TAO_Valuetype.lib TAO_Messaging.lib TAO_CodecFactory.lib gdiplus.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;;&quot;$(ACE_ROOT)\lib&quot;"
 				GenerateDebugInformation="true"
