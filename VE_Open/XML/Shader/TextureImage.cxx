@@ -188,13 +188,13 @@ void TextureImage::SetDimension(unsigned int dimension)
 ///////////////////////////////////////////////////////////////////////////
 void TextureImage::SetImageFile(std::string face,std::string imageFileName)
 {
-   if(face != "FRONT"||
-      face != "Positive X"||
-      face != "Negative X"||
-      face != "Positive Y"||
-      face != "Negative Y"||
-      face != "Positive Z"||
-      face != "Negative Z") 
+   if(face == "FRONT"||
+      face == "Positive X"||
+      face == "Negative X"||
+      face == "Positive Y"||
+      face == "Negative Y"||
+      face == "Positive Z"||
+      face == "Negative Z") 
    {
       VE_XML::DataValuePairWeakPtr faceImageData = _textureDescription->GetDataValuePair(face);
       if(!faceImageData)
@@ -269,7 +269,8 @@ void TextureImage::SetTextureImageType(std::string textureType)
                    "2D" ||
                    "3D" ||
                    "Cube" ||
-                   "Environment")
+                   "Environment" ||
+				   "Perlin Noise")
    {
       VE_XML::DataValuePairWeakPtr typeData = _textureDescription->GetDataValuePair(textureType);
       if(!typeData)
@@ -284,7 +285,8 @@ void TextureImage::SetTextureImageType(std::string textureType)
          SetDimension(2);
       else if(textureType == "3D" ||
              textureType == "Cube" ||
-             textureType == "Environment")
+             textureType == "Environment" ||
+			 textureType == "Perlin Noise" )
       {
          SetDimension(3);
       }

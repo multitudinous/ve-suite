@@ -44,7 +44,6 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdThread.h"
 #include "VE_Installer/include/VEConfig.h"
-
 using namespace VE_Xplorer;
 
 int main(int argc, char* argv[])

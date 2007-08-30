@@ -96,6 +96,10 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
+   catch( ... )
+   {
+	   std::cerr << "Unknown exception." << std::endl;
+   }
 
    //if ( !CORBA::is_nil( _orbPtr ) )
    //{

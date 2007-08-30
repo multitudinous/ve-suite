@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib libapr-1.lib libaprutil-1.lib"
+				AdditionalDependencies="xerces-c_2d.lib libapr-1_d.lib libaprutil-1_d.lib"
 				OutputFile="$(OutDir)/VE_XML_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(APR_HOME)\Debug&quot;;&quot;$(APR_UTIL_HOME)\Debug&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"

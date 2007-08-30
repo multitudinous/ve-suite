@@ -36,7 +36,6 @@
 #include "VE_Xplorer/XplorerHandlers/cfdStreamers.h"
 
 #include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
-
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>

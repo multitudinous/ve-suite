@@ -5,7 +5,7 @@
 #define MSVCVERSION "8.0_SP1"
 #define JUGGLERVERSION "2.2_SP1"
 #define VEHOME "D:\devEnv\VE-Suite_1.1"
-#define ACETAOHOME "D:\devEnv\VES-Deps_1.1\source\ACE_wrappers"
+#define ACETAOHOME "D:\devEnv\VES-Deps_1.1\source\ACE-5.5+TAO-1.5\ACE_wrappers"
 #define VTKHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\VTK_Pre-Compile_5.1"
 #define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_1.2_Pre-Compile_vc8.0"
 #define WXHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\WxWidgets_2.8.3_Pre-Compile_vc8.0"

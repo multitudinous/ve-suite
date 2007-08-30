@@ -390,6 +390,7 @@ void ModelCADHandler::AddAttributeToNode(std::string nodeID,
 	{
 	   attribute = new VE_SceneGraph::Utilities::Attribute();
        attribute->CreateStateSetFromAttribute(newAttribute);
+	   m_globalAttributeList[newAttribute->GetAttributeName()] = attribute.get();
 	}
     std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
     attributeInfo.first = newAttribute->GetAttributeName();

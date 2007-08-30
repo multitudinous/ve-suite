@@ -75,6 +75,7 @@
 #include <sstream>
 #include <istream>
 #include <string>
+#include <cctype>
 
 #include <boost/filesystem/operations.hpp> 
 #include <boost/filesystem/path.hpp>

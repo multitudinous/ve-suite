@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
+#include "VE_Xplorer/SceneGraph/Utilities/PerlinNoiseTexture.h"
 #ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>
@@ -294,6 +295,13 @@ void ShaderHelper::_extractTextureFromShader(VE_XML::VE_Shader::TextureImage tex
       _ss->setTextureAttributeAndModes(tUnit, textureCoordGeneration.get(),osg::StateAttribute::ON);
       
       genericTexture = textureCubeMap.get();
+   }
+   else if( textureType == "Perlin Noise")
+   {
+       PerlinNoiseTexture perlinNoise(64,64,64);
+       osg::ref_ptr<osg::Texture3D> texture3D = 
+			dynamic_cast<osg::Texture3D*>(perlinNoise.GetNoiseTexture());
+      genericTexture = texture3D.get(); 
    }
 
    if(genericTexture.valid())

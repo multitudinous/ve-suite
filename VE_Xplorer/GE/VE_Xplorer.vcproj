@@ -46,7 +46,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(BULLET_HOME)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VE_SUITE_HOME)\external\osgOQ\include&quot;"
-				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE;_OSG;VTK44;_WIN32;_TAO;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;_WIN32_WINNT=0x0400;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_OPT;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION=$(SVN_VES_REVISION)"
+				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE;_OSG;VTK44;_WIN32;_TAO;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;_WIN32_WINNT=0x0400;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_OPT;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION#$(SVN_VES_REVISION)"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -73,7 +73,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osg.lib osgUtil.lib osgDB.lib osgText.lib libnspr4.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib xerces-c_2.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="osg.lib osgUtil.lib osgDB.lib osgText.lib libnspr4.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_CodecFactory.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib xerces-c_2.lib opengl32.lib glu32.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_tao_osg_vep.exe"
 				LinkIncremental="1"
@@ -140,7 +140,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(BULLET_HOME)\src&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VE_SUITE_HOME)\external\osgOQ\include&quot;"
-				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION=$(SVN_VES_REVISION)"
+				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK;CPPDOM_DYN_LINK;JUGGLER_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION#&quot;$(SVN_VES_REVISION)&quot;"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				EnableFunctionLevelLinking="true"
@@ -165,7 +165,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib xerces-c_2D.lib"
+				AdditionalDependencies="osgd.lib osgUtild.lib osgDBd.lib osgTextd.lib libnspr4.lib vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib TAO_CodecFactoryd.lib xerces-c_2D.lib"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\project_tao_osg_vep_d.exe"
 				LinkIncremental="2"

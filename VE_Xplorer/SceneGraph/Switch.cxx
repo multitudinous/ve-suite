@@ -57,15 +57,7 @@ Switch::~Switch()
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::SetVal(int whichChildIsActive)
 {
-#ifdef _PERFORMER
-   if ( _switch )
-   {
-      if(whichChildIsActive == OFF)
-         _switch->setVal(-1);
-      else
-         _switch->setVal(whichChildIsActive);
-   }
-#elif _OSG
+#ifdef _OSG
    if(whichChildIsActive == OFF)
    {  
       this->setAllChildrenOff();
@@ -74,7 +66,7 @@ void Switch::SetVal(int whichChildIsActive)
    {   
       this->setSingleChildOn(whichChildIsActive);
    }
-#elif _OPENSG
+
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
