@@ -75,20 +75,20 @@ int main( int argc, char* argv[] )
     std::ostringstream vertexSource;
     
     vertexSource << std::endl << "varying vec3 lightPos;" << std::endl 
-        << "\t\varying vec3 objPos;" << std::endl
-        << "\t\varying vec3 eyePos;" << std::endl
-        << "\t\varying vec3 normal;" << std::endl
-        << "\t\varying vec2 texCoord;" << std::endl
-        << "\t\void main()" << std::endl
-        << "\t\{" << std::endl
-        << "\t\gl_Position=ftransform();" << std::endl
-        << "\t\objPos=gl_Vertex.xyz;" << std::endl
-        << "\t\eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);" << std::endl
-        << "\t\normal=vec3(gl_NormalMatrix*gl_Normal);" << std::endl
-        << "\t\lightPos=gl_LightSource[0].position.xyz;" << std::endl
-        << "\t\texCoord=gl_MultiTexCoord0.xy;" << std::endl
-        << "\t\//texCoord=gl_Vertex.xy;" << std::endl
-        << "\t\}" << std::endl;
+        << "\t\tvarying vec3 objPos;" << std::endl
+        << "\t\tvarying vec3 eyePos;" << std::endl
+        << "\t\tvarying vec3 normal;" << std::endl
+        << "\t\tvarying vec2 texCoord;" << std::endl
+        << "\t\tvoid main()" << std::endl
+        << "\t\t{" << std::endl
+        << "\t\tgl_Position=ftransform();" << std::endl
+        << "\t\tobjPos=gl_Vertex.xyz;" << std::endl
+        << "\t\teyePos=vec3(gl_ModelViewMatrix*gl_Vertex);" << std::endl
+        << "\t\tnormal=vec3(gl_NormalMatrix*gl_Normal);" << std::endl
+        << "\t\tlightPos=gl_LightSource[0].position.xyz;" << std::endl
+        << "\t\ttexCoord=gl_MultiTexCoord0.xy;" << std::endl
+        << "\t\t//texCoord=gl_Vertex.xy;" << std::endl
+        << "\t\t}" << std::endl;
 
     vertexShader->SetShaderSource( vertexSource.str() );
     
