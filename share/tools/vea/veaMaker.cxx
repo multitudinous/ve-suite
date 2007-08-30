@@ -74,7 +74,7 @@ int main( int argc, char* argv[] )
 
     std::ostringstream vertexSource;
     
-    vertexSource << std::endl << "varying vec3 lightPos;" << std::endl 
+    vertexSource << std::endl << "\t\tvarying vec3 lightPos;" << std::endl 
         << "\t\tvarying vec3 objPos;" << std::endl
         << "\t\tvarying vec3 eyePos;" << std::endl
         << "\t\tvarying vec3 normal;" << std::endl
@@ -97,7 +97,7 @@ int main( int argc, char* argv[] )
     VE_XML::VE_Shader::ShaderPtr fragmentShader  = new VE_XML::VE_Shader::Shader();
     fragmentShader->SetShaderType( "Fragment" );
     std::ostringstream fragmentSource;
-    fragmentSource << std::endl << "uniform vec3 ambientMaterial;" << std::endl
+    fragmentSource << std::endl << "\t\tuniform vec3 ambientMaterial;" << std::endl
         << "\t\tuniform vec3 diffuseMaterial;" << std::endl
         << "\t\tuniform vec3 specularMaterial;" << std::endl
         << "\t\tuniform float specularPower;" << std::endl

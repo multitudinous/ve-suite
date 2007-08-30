@@ -873,7 +873,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
    }
    while ( answer == wxID_NO );
 
-   if( !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+   if( vesFileName.FileExists() && !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
    {
        wxString tempMessage = _("Cannot write file ") + vesFileName.GetFullName() + _("?");
        wxMessageDialog promptDlg( this, 
