@@ -743,7 +743,6 @@ void CADNodeManagerDlg::_saveCADFile(wxCommandEvent& WXUNUSED(event))
    {
       VE_XML::XMLReaderWriter cadReader;
       cadReader.UseStandaloneDOMDocumentManager();
-      cadReader.WriteToFile();
         
       std::string tagName("VECADNode");
       CADTreeBuilder::TreeNodeData* rootCADNode =

@@ -1,0 +1,19 @@
+##Builds Exe_server
+import os, sys, string
+pj = os.path.join
+
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options')
+
+srcs = Split("""
+   veaMaker.cxx 
+""")
+
+env = ves_pkg.getEnv().Copy()
+env.Append(LIBS = ['VE_XML'])
+env.Append(LIBPATH = [ pj('#', buildDir, 'VE_Open','XML')])
+
+xerces_options.apply( env )
+ce_prog = ves_pkg.createProgram('veaMaker', env, 'bin')
+ce_prog.addSources( srcs )
+ce_prog.build()
+

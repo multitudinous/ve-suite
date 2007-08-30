@@ -70,7 +70,7 @@ void XMLReaderWriter::UseStandaloneDOMDocumentManager()
    }
 }
 //////////////////////////////
-void XMLReaderWriter::WriteToFile()
+/*void XMLReaderWriter::WriteToFile()
 {
    if(_domDocumentManager)
    {
@@ -84,7 +84,7 @@ void XMLReaderWriter::WriteToString()
    {
       _domDocumentManager->SetWriteXMLStringOn();
    }
-}
+}*/
 ////////////////////////////////////
 void XMLReaderWriter::ReadFromFile()
 {

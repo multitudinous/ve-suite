@@ -298,9 +298,7 @@ void TextureImage::SetTextureImageType(std::string textureType)
 //////////////////////////////////////////////////////
 void TextureImage::_updateVEElement(std::string input)
 {
-   //std::cout<<"Setting subelement..."<<std::endl;
-   SetSubElement("textureDescriptionData", &_textureDescription );
-   //std::cout<<"---done---"<<std::endl;
+   SetSubElement("textureDescriptionData", &(*_textureDescription) );
 }
 //////////////////////////////////////////////////////////
 void TextureImage::SetObjectFromXMLData(DOMNode* xmlInput)

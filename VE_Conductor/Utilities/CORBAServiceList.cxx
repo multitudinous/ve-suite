@@ -441,7 +441,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veCommand, "vecommand" ) );
    std::string xmlDocument( "returnString" );
-   netowrkWriter.WriteToString();
    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
    if ( !CORBA::is_nil( vjobs.in() ) && !xmlDocument.empty() )
@@ -475,7 +474,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::CommandWeakPtr veComm
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &(*veCommand), "vecommand" ) );
     std::string xmlDocument( "returnString" );
-    netowrkWriter.WriteToString();
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
     
     if ( !CORBA::is_nil( vjobs.in() ) && !xmlDocument.empty() )

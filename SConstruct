@@ -456,6 +456,7 @@ if not SConsAddons.Util.hasHelpFlag():
    ves_dirs += [pj( buildDir,'share','examples','simple')]
    ves_dirs += [pj( buildDir,'share','vrj_configs')]
    ves_dirs += [pj( buildDir,'share','shaders')]
+   ves_dirs += [pj( buildDir,'share','tools', 'vea')]
 
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:

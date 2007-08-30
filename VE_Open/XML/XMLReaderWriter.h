@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef XML_READER_WRITER_H
@@ -117,10 +115,10 @@ public:
    void ReadFromString();
 
    ///Work around for the conflict when exposing the DOMDocumentManager
-   void WriteToFile();
+   //void WriteToFile();
 
    ///Work around for the conflict when exposing the DOMDocumentManager
-   void WriteToString();
+   //void WriteToString();
    
    ///Get the active DOMDocumentManager.  
    VE_XML::DOMDocumentManager* GetDOMDocumentManager();

@@ -101,7 +101,6 @@ void BaseDialog::_sendCommandsToXplorer()
 
    VE_XML::XMLReaderWriter commandWriter;
    commandWriter.UseStandaloneDOMDocumentManager();
-   commandWriter.WriteToString();
    
    std::pair<VE_XML::Command*,std::string> nodeTagPair;
    nodeTagPair.first = newCommand;

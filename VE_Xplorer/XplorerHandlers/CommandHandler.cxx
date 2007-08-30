@@ -88,7 +88,6 @@ bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( inputCommand, "vecommand" ) );
     std::string xmlDocument( "returnString" );
-    netowrkWriter.WriteToString();
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
     if( !CORBA::is_nil( m_xplorer->_this() ) && !xmlDocument.empty() )
