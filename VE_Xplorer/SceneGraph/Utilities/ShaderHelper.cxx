@@ -203,7 +203,9 @@ void ShaderHelper::LoadGLSLProgram(VE_XML::VE_Shader::Program* glslProgram)
    {
       _createGLSLShader(glslProgram->GetVertexShader());
    }
-   
+   ///two-sided lighting hack until gl_FrontFacing works in glsl...
+   ///only works if the shader implements it though...
+   _ss->setMode(GL_VERTEX_PROGRAM_TWO_SIDE,osg::StateAttribute::ON);
 #elif _PERFORMER
    std::cout<<"Not implemented for Performer yet!!!"<<std::endl;
 #endif

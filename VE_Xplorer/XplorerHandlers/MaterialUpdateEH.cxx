@@ -106,10 +106,11 @@ void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
 
        values.push_back(rawMaterial->GetOpacity());
       _activeModel->GetModelCADHandler()->
-                                                UpdateMaterialComponent(nodeId->GetDataString(),
-                                                                                  rawMaterial->GetMaterialName(),
-                                                                                  rawComponent,
-                                                                                  rawMaterial->GetFace(),values);
+		  UpdateMaterialComponent(nodeId->GetDataString(),
+		                          rawMaterial->GetMaterialName(),
+								  rawComponent,
+								  rawMaterial->GetFace(),
+								  values);
       
    }
    catch(...)
