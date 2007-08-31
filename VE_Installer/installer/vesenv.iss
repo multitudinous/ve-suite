@@ -8,7 +8,7 @@
 #define ACETAOHOME "D:\devEnv\VES-Deps_1.1\source\ACE-5.5+TAO-1.5\ACE_wrappers"
 #define VTKHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\VTK_Pre-Compile_5.1"
 #define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_1.2_Pre-Compile_vc8.0"
-#define WXHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\WxWidgets_2.8.3_Pre-Compile_vc8.0"
+#define WXHOME "D:\devEnv\VES-Deps_1.1\source\wxWidgets-2.8.4"
 #define XERCESHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\Xerces-c_2.7_Pre-Compile"
 #define JUGGLERINSTHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\VRJuggler-2.2.0"
 #define COINHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\Coin-2.4.6-msvc8"
