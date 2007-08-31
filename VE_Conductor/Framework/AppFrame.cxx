@@ -892,6 +892,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       ///now write the file out from domdocument manager
       //wrtie to path
       std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
+      SetTitle( vesFileName.GetFullName() );
    }
 }
 
@@ -922,7 +923,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
         return;
     }
 
-    SetTitle(vesFileName.GetFullName());
+    SetTitle( vesFileName.GetFullName() );
 
     directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
     //change conductor working dir
