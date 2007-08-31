@@ -123,9 +123,9 @@ namespace CASI
 		int dotPos;
 	//	char* sbuf;
 		
-		CString curPath;	
+		::CString curPath;	
 
-		CString NodeName=NodePath;
+		::CString NodeName=NodePath;
 		cnode = root;
 		
 		do 

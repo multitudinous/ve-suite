@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_BiDirGIOP.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_ValueType.lib TAO_Messaging.lib xerces-c_2.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_BiDirGIOP.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_ValueType.lib TAO_Messaging.lib TAO_CodecFactory.lib xerces-c_2.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)/WinServer.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -163,7 +163,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_Valuetyped.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_Valuetyped.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_CodecFactoryd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib"
 				OutputFile="$(OutDir)/WinServer_d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
