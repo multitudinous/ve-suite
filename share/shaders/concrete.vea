@@ -12,6 +12,9 @@
          <value>1.0</value>
       </uniform>
       <shaderCode>
+          varying vec3 lightPos;
+          varying vec3 eyePos;
+          varying vec3 normal;
           varying float LightIntensity;
           varying vec3  MCposition;
           uniform float Scale;
@@ -20,10 +23,13 @@
           {
               vec3 ECposition = vec3(gl_ModelViewMatrix * gl_Vertex);
               MCposition      = vec3(gl_Vertex) * Scale;
-              vec3 tnorm      = normalize(vec3(gl_NormalMatrix * gl_Normal));
-              vec3 lightPos = gl_LightSource[0].position.xyz;
-              LightIntensity  = dot(normalize(lightPos - ECposition), tnorm);
+              normal      = normalize(vec3(gl_NormalMatrix * gl_Normal));
+	      eyePos=vec3(gl_ModelViewMatrix*gl_Vertex);
+              lightPos = gl_LightSource[0].position.xyz;
+              LightIntensity  = dot(normalize(lightPos - ECposition), normal);
               LightIntensity *= 1.5;
+              gl_FrontSecondaryColor=vec4(1.0);
+              gl_BackSecondaryColor=vec4(0.0);
               gl_Position     = ftransform();
           }
       </shaderCode>
@@ -71,6 +77,9 @@
         <value>1.0</value>
      </uniform>
      <shaderCode>
+        varying vec3 lightPos;
+        varying vec3 eyePos;
+        varying vec3 normal;
         varying float LightIntensity; 
         varying vec3  MCposition;
 
@@ -79,11 +88,24 @@
 
         void main()
         {
+	    float specularPower = 10.0;
             vec4  noisevec  = texture3D(Noise, NoiseScale * MCposition);
             float intensity = min(1.0, noisevec[3] * 18.0);
-            vec3  color     = vec3(intensity * LightIntensity);
-    
-            gl_FragColor    = vec4(color, 1.0);
+	    vec3 graniteColor = vec3(intensity * LightIntensity);
+
+           vec3 N=(step(gl_SecondaryColor.r,.5)== 1.0 )?-normalize(normal):normalize(normal);
+	  
+          vec3 L=normalize(lightPos);
+          float NDotL=max(dot(N,L),0.0);
+
+          vec3 V=normalize(eyePos);
+          vec3 R=reflect(V,N);
+          float RDotL=max(dot(R,L),0.0);
+
+          vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*graniteColor;
+          vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*graniteColor*NDotL;
+          vec3 TotalSpecular=gl_LightSource[0].specular.rgb*vec3(.1,.1,.1)*pow(RDotL,specularPower);
+	  gl_FragColor    = vec4(TotalAmbient+TotalDiffuse+TotalSpecular, 1.0);
          }
      </shaderCode>
   </fragmentShader>

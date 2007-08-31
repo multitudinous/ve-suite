@@ -4,16 +4,7 @@
    <name>Brick</name>
    <vertexShader>
       <type>Vertex</type>
-      <uniform>
-         <name>LightPosition</name>
-         <type>Float</type>
-         <size>3</size>
-         <value>10.0</value>
-         <value>10.0</value>
-         <value>10.0</value>
-      </uniform>
       <shaderCode>
-        uniform vec3 LightPosition;
         const float SpecularContribution = 0.3;
         const float DiffuseContribution  = 1.0 - SpecularContribution;
 
@@ -22,6 +13,7 @@
 
         void main(void)
         {
+            vec3 LightPosition = gl_LightSource[0].position.xyz;
             vec3 ecPosition = vec3 (gl_ModelViewMatrix * gl_Vertex);
             vec3 tnorm      = normalize(gl_NormalMatrix * gl_Normal);
             vec3 lightVec   = normalize(LightPosition - ecPosition);
