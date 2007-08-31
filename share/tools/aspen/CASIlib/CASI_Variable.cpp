@@ -1,5 +1,5 @@
 #pragma warning (disable: 4786)
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "CASI.h"
 
 namespace CASI

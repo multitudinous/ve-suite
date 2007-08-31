@@ -1,4 +1,4 @@
-#include "happ.h"
+#include <happ.h>
 
 #include <set>
 #include <vector>
@@ -186,7 +186,7 @@ namespace CASI
 	int getChildNum(IHNode &root);
 	void getChildNames(IHNode &root, std::vector<CString>& results);
 
-	CString variantToString(VARIANTARG& var);
+	::CString variantToString(VARIANTARG& var);
 
 	void stringToVariant(CString val, VARIANTARG& var);
 

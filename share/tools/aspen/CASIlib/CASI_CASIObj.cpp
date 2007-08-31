@@ -1,6 +1,8 @@
 #pragma warning (disable: 4786)
-#include "stdafx.h"
+//#include "stdafx.h"
 #include "CASI.h"
+
+#include <vector>
 
 namespace CASI
 {
@@ -65,7 +67,7 @@ namespace CASI
 		
 		//int lastDot;
 		slength;
-		std::vector<CString> results;
+		std::vector< ::CString > results;
 		int cur_ind;
 		for (i=0; i<total; i++)
 		{

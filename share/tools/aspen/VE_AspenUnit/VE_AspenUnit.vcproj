@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\tao\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\tools\aspen\CASIlib&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\tao\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\share\tools\aspen\CASIlib\aspenplus_2004&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
@@ -132,11 +132,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\tao\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\tools\aspen\CASIlib&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\tao\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\share\tools\aspen\CASIlib\aspenplus_2004&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -211,26 +211,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\VE_AspenUnit.cpp"
 				>
 			</File>
@@ -254,14 +234,6 @@
 			</File>
 			<File
 				RelativePath=".\CorbaUnitManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<File
