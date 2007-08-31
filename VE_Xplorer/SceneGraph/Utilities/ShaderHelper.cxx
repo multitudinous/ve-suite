@@ -248,14 +248,14 @@ void ShaderHelper::_extractTextureFromShader(VE_XML::VE_Shader::TextureImage tex
    unsigned int tUnit = textureImage.GetTextureUnit();
    unsigned int dimension = textureImage.GetDimension();
 
-   std::cout<<"Reading image file: "<<std::endl;
+   //std::cout<<"Reading image file: "<<std::endl;
    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile(textureImage.GetImageFile());
-   std::cout<<"Read image file: "<<std::endl;
+   //std::cout<<"Read image file: "<<std::endl;
    osg::ref_ptr<osg::Texture> genericTexture;
    std::string textureType("");
    textureImage.GetType(textureType);
 
-   std::cout<<"Extracting: "<<textureType<<std::endl;
+   //std::cout<<"Extracting: "<<textureType<<std::endl;
    if(textureType == "1D" )
    {
       osg::ref_ptr<osg::Texture1D> texture1D = new osg::Texture1D();
