@@ -236,8 +236,8 @@ void SceneManager::_createLogo()
       m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
       m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true, false );
       m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true, false );
-
-        char phong_vertex[]=
+      
+      char phong_vertex[]=
             "varying vec4 color; \n"
             "varying vec3 eyePos; \n"
             "varying vec3 lightPos; \n"

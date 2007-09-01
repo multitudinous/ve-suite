@@ -39,12 +39,14 @@ int main( int argc, char* argv[] )
 {
     if( (argc < 2) || (std::string( argv[ 1 ] ) == "--help") )
     {
-       std::cout << "Usage : " << argv[ 0 ] << " <filename_without_extension> " << std::endl;
-       std::cout << "* Note * The file must be an osg file type." << std::endl;
+       std::cout << "Usage : " << argv[ 0 ] << " <filename> " << std::endl;
        return 0;
     }
-    std::string filename = std::string( argv[ 1 ] ) + std::string( ".ive" );
-    std::ifstream osgFile( filename.c_str(), std::ios::binary );
+    std::string filename = std::string( argv[ 1 ] );
+    std::ifstream osgFile( filename.c_str() );
+    
+    size_t indexOfFirstDot = filename.find_last_of( '.' );
+    std::string shortName( filename.begin(), filename.begin() + indexOfFirstDot );
     /*
     // Sample for C++ File I/O binary file read
     
@@ -64,6 +66,7 @@ int main( int argc, char* argv[] )
     binary_file.write(reinterpret_cast<char *>(&p_Data),sizeof(WebSites));
     binary_file.close();
     */
+    
     if( !osgFile.good() )
     {
         std::cerr << filename << " could not be opened." << std::endl;
@@ -73,18 +76,24 @@ int main( int argc, char* argv[] )
     char lineData[ 1024 ];
 
     std::string outputFilename;
-    outputFilename = std::string( argv[ 1 ] ) + std::string( ".h" );
+    outputFilename = shortName + std::string( ".h" );
 
-    std::ofstream hFile( outputFilename.c_str() );
+    std::ofstream hFile( outputFilename.c_str(), std::ios::binary );
    
-    hFile << "#ifndef GETVESUITE_" << argv[ 1 ] << "_H" << std::endl
-         << "#define GETVESUITE_" << argv[ 1 ] << "_H" << std::endl
-         << std::endl
-         << "#include <string>" << std::endl
-         << std::endl
-         << "char* GetVESuite_" << argv[ 1 ] << "( void )" << std::endl
-         << "{" << std::endl
-         << "    char* osgData = 0;" << std::endl;
+    hFile << "#ifndef GETVESUITE_" << shortName << "_H" << std::endl
+        << "#define GETVESUITE_" << shortName << "_H" << std::endl
+        << "//Usage of this file" << std::endl
+        << "//std::istringstream tempStreamI( GetVESuite_whatever() );" << std::endl
+        << "//osg::ref_ptr< osg::Node > tempNode = osgDB::Registry::instance()->" << std::endl
+        << "//    getReaderWriterForExtension( \"ive\" )->readNode( tempStreamI ).getNode();" << std::endl
+        << "//osg::ref_ptr< osg::Image > tempImage = osgDB::Registry::instance()->" << std::endl
+        << "//    getReaderWriterForExtension( \"png\" )->readNode( tempStreamI ).getImage();" << std::endl
+        << std::endl
+        << "#include <string>" << std::endl
+        << std::endl
+        << "std::string GetVESuite_" << shortName << "( void )" << std::endl
+        << "{" << std::endl
+        << "    unsigned char osgData";
  
 
     //get size of binary file
@@ -96,13 +105,15 @@ int main( int argc, char* argv[] )
     char* dataBuffer = new char[ binaryFileSize ];
     osgFile.read( dataBuffer, binaryFileSize );
     osgFile.close();
-    
-    hFile << "    osgData = new char[ " << binaryFileSize << " ];" << std::endl;
-    hFile << "    osgData = { " << std::endl;
-    hFile << "        " << static_cast< unsigned int >( dataBuffer[ 0 ] );
+                    
+    hFile << "[ " << binaryFileSize << " ] = ";
+    hFile << "{ " << std::endl;
+    unsigned char temp = dataBuffer[ 0 ];
+    hFile << "        " << static_cast< unsigned int >( temp );
     for( size_t i = 1; i < binaryFileSize; ++i )
     {
-        hFile << "," << static_cast< unsigned int >( dataBuffer[ i ] );
+        temp = dataBuffer[ i ];
+        hFile << "," << static_cast< unsigned int >( temp );
         //This check is here because windows cannot handle strings larger than 16380
         if( !(i%16000) )
         {
@@ -110,8 +121,15 @@ int main( int argc, char* argv[] )
             hFile << "        ";
         }
     }
+
     hFile << std::endl << "        };" << std::endl;
-    hFile << "    return osgData;" << std::endl
+    hFile << "    std::string strOsgData;" << std::endl;
+    hFile << "    for( size_t i = 0; i < " << binaryFileSize << "; ++i )" << std::endl;
+    hFile << "    {" << std::endl;
+    hFile << "        strOsgData.push_back( static_cast< char >( osgData[ i ] ) );" << std::endl;
+    hFile << "    }" << std::endl;
+    
+    hFile << "    return strOsgData;" << std::endl
          << "}" << std::endl
          << "#endif" << std::endl
          << std::endl;
