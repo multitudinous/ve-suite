@@ -113,14 +113,17 @@ unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
    return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame, bool makeSlave)
+void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame, 
+                                                             bool forceUpdate)
 {
-   if(_tm)
-   {
-      _currentFrame = cFrame;
-      if(makeSlave)
-         _isSlave = true;
-   }
+    if(_tm)
+    {
+        _currentFrame = cFrame;
+        if( forceUpdate )
+        {
+            _update = true;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& state )const 

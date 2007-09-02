@@ -151,7 +151,7 @@ namespace VE_TextureBased
          void SetTextureManager(cfdTextureManager* tm);
          void SetDelayTime(double delayTime);
 
-         void SetCurrentFrame(unsigned int cFrame, bool makeSlave = true);
+         void SetCurrentFrame(unsigned int cFrame, bool forceUpdate = true);
          unsigned int GetCurrentFrame();
 
          void subload(const osg::Texture3D& texture,osg::State& state) const;

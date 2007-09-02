@@ -798,7 +798,6 @@ void cfdApp::draw()
         VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->draw",20);
         sv->draw();        
     }
-    
     ///Screen capture code
     if( captureNextFrameForWeb ) 
     {
