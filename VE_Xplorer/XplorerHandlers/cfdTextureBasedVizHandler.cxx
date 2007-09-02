@@ -388,7 +388,7 @@ void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction
 		  cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
         if(sShader)
         {
-           sShader->SetCurrentTransientTexture(curFrame,false);
+           sShader->SetCurrentTransientTexture(curFrame,true);
         }
      }
    }
