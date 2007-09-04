@@ -150,8 +150,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		float dx = bounds.xMax() - bounds.xMin();
 		float dy = bounds.yMax() - bounds.yMin();
 		float dz = bounds.zMax() - bounds.zMin();
-		//output<<model->GetModelName()<<std::endl;
-		//output<<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
+		//std::cout <<model->GetModelName()<<std::endl;
+		//std::cout <<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
 
 		//scale icon to 2d worksheet size
 		osg::ref_ptr<osg::Image> image = osgDB::readImageFile("2DIcons/"+model->GetIconFilename()+".jpg");
@@ -278,8 +278,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
 		//Scale up 3D comps & text
-		osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
-		scale->addChild(reRotatedComp.get());
+		//osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
+		//scale->addChild(reRotatedComp.get());
 		//scale.get()->addChild(rotatedComp.get());
 		//scale->addChild(textTrans.get());
 		//scale->setScale(6.0f * iconScale);
@@ -295,9 +295,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), (xyPair.second + 28) - center.y(), 0 - center.z());
 		//osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 0 - center.z(), (xyPair.second + 22) - center.y());
 		//osg::Vec3 centerTrans = osg::Vec3(xyPair.first + 20, xyPair.second + 25, 0 );
+        //std::cout << " center " << center.x() << " " << center.z() << " " << center.y() << std::endl;
 		osg::Vec3 centerTrans = osg::Vec3(xyPair.first - center.x(), 0 - center.z(), xyPair.second - center.y());
-		mModelTrans->addChild(scale.get());
-		//mModelTrans->addChild(reRotatedComp.get());
+		//mModelTrans->addChild(scale.get());
+		mModelTrans->addChild(reRotatedComp.get());
 		mModelTrans->setPosition(centerTrans);
 		mModelTrans->setName(model->GetModelName());
 		loadedModels->addChild(mModelTrans.get());	
@@ -309,7 +310,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	networkWriter.ReadXMLData( network, "Model", "veNetwork" );
 	objectVector = networkWriter.GetLoadedXMLObjects();
 	VE_XML::VE_Model::Network* veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
-	std::cout << veNetwork->GetNumberOfLinks() << std::endl;
+	//std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
 	osg::Geode* geode = new osg::Geode();
 	for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
 	{
@@ -340,12 +341,13 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	worldRotate->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
 
 	//center the world
-	osg::ref_ptr<osg::AutoTransform> worldTranslate = new osg::AutoTransform();
+	worldTranslate = new osg::AutoTransform();
 	worldTranslate->addChild(worldRotate.get());
-	osg::Vec3 worldCenter = worldRotate.get()->getBound().center();
+	//osg::Vec3 worldCenter = worldRotate.get()->getBound().center();
 	//osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0 - worldCenter.y(), 0 - worldCenter.z());
-	osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0, 0 - worldCenter.z());
-	worldTranslate->setPosition(worldTrans);
+	//osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0, 0 - worldCenter.z());
+    //std::cout << worldCenter.x() << " " << worldCenter.y() << std::endl;
+	//worldTranslate->setPosition(worldTrans);
 
     //Add phong shading to the geodes
     //osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();

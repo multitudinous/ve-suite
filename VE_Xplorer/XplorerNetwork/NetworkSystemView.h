@@ -40,6 +40,7 @@
 namespace osg
 {
    class Group;
+   class AutoTransform;
 }
 
 namespace VE_Xplorer
@@ -59,6 +60,8 @@ public:
    osg::ref_ptr< osg::Group > DrawNetwork( void );
 private:
 	std::string network;
+    osg::ref_ptr<osg::AutoTransform> worldTranslate;
+
 };
 }
 #endif
