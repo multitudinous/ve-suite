@@ -311,7 +311,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	objectVector = networkWriter.GetLoadedXMLObjects();
 	VE_XML::VE_Model::Network* veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
 	//std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
-	osg::Geode* geode = new osg::Geode();
+	osg::ref_ptr< osg::Geode > geode = new osg::Geode();
+    geode->setName( "Network Lines" );
 	for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
 	{
 		size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
@@ -333,7 +334,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		linesGeom->setColorArray(colorBlack.get());
 		geode->addDrawable(linesGeom);
 	}
-	loadedModels->addChild(geode);
+	loadedModels->addChild(geode.get());
 	
 	//rotate the world about the X to normalize the flowsheet
 	osg::ref_ptr<osg::AutoTransform> worldRotate = new osg::AutoTransform();

@@ -481,7 +481,7 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, do
 void KeyboardMouse::FrameAll()
 {
     //Grab the current matrix
-    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
     gmtl::Matrix44d matrix = worldDCS->GetMat();
 
     //Move the current matrix to its original position
@@ -510,6 +510,7 @@ void KeyboardMouse::FrameAll()
 
     std::pair< double, double > screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
+    //std::cout << screenRatios.first << " " << screenRatios.second << " " << distance << " " << bs.radius() << std::endl;
     double transformedPosition[3];
     double osgTransformedPosition[3];
     transformedPosition[0] = m_xminScreen + ( ( static_cast< double >( m_width ) * 0.5 ) * screenRatios.first );
@@ -536,6 +537,7 @@ void KeyboardMouse::FrameAll()
     matrix.mData[13] -= bs.center().y();
     matrix.mData[14] -= bs.center().z();
 
+    //std::cout << bs.center().x() << " " << bs.center().y() << " " << bs.center().z() << std::endl;
     //Set the current matrix w/ the new matrix
     worldDCS->SetMat( matrix );
 
