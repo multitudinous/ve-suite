@@ -371,7 +371,7 @@ void cfdApp::latePreFrame( void )
     //Used for framerate calculation as integers only
     static float lastTime=0.0f;
 
-    vprDEBUG(vesDBG,3)<<"cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3)<<"|cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
     //The calls below are order dependent so do not move them around
     //call the parent method
     _vjobsWrapper->GetUpdateClusterStateVariables();
@@ -466,12 +466,12 @@ void cfdApp::latePreFrame( void )
        captureNextFrameForWeb = true;
        _vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Filename" )->GetData( m_filename );
    }
-   vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << "|cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdApp::intraFrame()
 {
-   vprDEBUG(vesDBG,3) << " intraFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << "|intraFrame" << std::endl << vprDEBUG_FLUSH;
    // Do nothing here
    // Usually slows things down
 }
@@ -488,7 +488,7 @@ void cfdApp::contextPostDraw()
 void cfdApp::postFrame()
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::postFrame",20);
-    vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3) << "|postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
     //svUpdate = false;
@@ -508,7 +508,7 @@ void cfdApp::postFrame()
     cfdExecutive::instance()->PostFrameUpdate();
 
     this->_vjobsWrapper->GetCfdStateVariables();
-    vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3) << "|End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::writeImageFileForWeb()
