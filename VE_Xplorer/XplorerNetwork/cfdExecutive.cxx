@@ -210,17 +210,17 @@ void cfdExecutive::UnbindORB()
       }
       catch ( CosNaming::NamingContext::InvalidName& ex )
       {
-         vprDEBUG(vesDBG,1) << "|\tcfdExecutive : Invalid Name! " 
+         vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Invalid Name! " 
                                  << std::endl << vprDEBUG_FLUSH;
       }
       catch ( CosNaming::NamingContext::NotFound& ex )
       {
-         vprDEBUG(vesDBG,1) << "|\tcfdExecutive : Not Found! " 
+         vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Not Found! " 
                                  << std::endl << vprDEBUG_FLUSH;
       }
       catch ( CosNaming::NamingContext::CannotProceed& ex )
       {
-         vprDEBUG(vesDBG,1) << "|\tcfdExecutive : Cannot Proceed! " 
+         vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Cannot Proceed! " 
                                  << std::endl << vprDEBUG_FLUSH;
       }
    }
@@ -234,7 +234,7 @@ void cfdExecutive::GetNetwork( void )
    //output<<temp<<std::endl;
    //output.close();
    const std::string network = temp;
-   vprDEBUG(vesDBG,0) << "|\tNetwork String : " << network 
+   vprDEBUG(vesDBG,0) << "|\t\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;
 
    // Load from the nt file loaded through wx
@@ -277,7 +277,7 @@ void cfdExecutive::GetEverything( void )
         return;
     }
    
-   vprDEBUG(vesDBG,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
+   vprDEBUG(vesDBG,0) << "|\t\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
    GetNetwork();
 
    std::map< int, std::string >::iterator iter;
@@ -389,7 +389,7 @@ void cfdExecutive::GetEverything( void )
    //Set active model to null so that if the previous active model is deleted
    //that we don't get errors in our code other places.
    cfdModelHandler::instance()->SetActiveModel( 0 );
-   vprDEBUG(vesDBG,0) << "|\tDone Getting Network From Executive"
+   vprDEBUG(vesDBG,0) << "|\t\tDone Getting Network From Executive"
                           << std::endl << vprDEBUG_FLUSH;    
 }
 ///////////////////////////////////////////////////////////////////
@@ -400,7 +400,7 @@ void cfdExecutive::InitModules( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::PreFrameUpdate( void )
 {
-   vprDEBUG(vesDBG,3) << "|cfdExecutive::PreFrameUpdate"
+   vprDEBUG(vesDBG,3) << "|\tcfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
    //process the current command form the gui
@@ -413,7 +413,7 @@ void cfdExecutive::PreFrameUpdate( void )
          currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {
-            vprDEBUG(vesDBG,0) << "|\tExecuting: "<< tempCommand->GetCommandName() 
+            vprDEBUG(vesDBG,0) << "|\t\tExecuting: "<< tempCommand->GetCommandName() 
                                  << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
@@ -466,7 +466,7 @@ void cfdExecutive::PreFrameUpdate( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::PostFrameUpdate( void )
 {
-   vprDEBUG(vesDBG,3) << "|cfdExecutive::PostFrameUpdate"
+   vprDEBUG(vesDBG,3) << "|\tcfdExecutive::PostFrameUpdate"
                         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
