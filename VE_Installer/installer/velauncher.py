@@ -134,11 +134,12 @@ class LauncherWindow(wx.Frame):
     """
     def __init__(self, parent, ID, title, arguments, previousState = None):
         """Builds the launcher's window and loads the last configuration."""
+        ##Set the launcher's position at center.
         wx.Frame.__init__(self, parent, -1, title,
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~ (wx.RESIZE_BORDER | wx.RESIZE_BOX |
                           wx.MAXIMIZE_BOX))
-
+        self.Center()
         if previousState:
             self.state = previousState
         else:
@@ -218,6 +219,7 @@ class LauncherWindow(wx.Frame):
                                       kind = wx.ITEM_CHECK)
         menu.AppendItem(self.autoRunVes)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
+        menu.Append(530, "&Reset VE-Suite\tCtrl+R")
         menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
 
@@ -228,6 +230,7 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbMode)
         self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 520)
+        self.Bind(wx.EVT_MENU, self.ResetVESuite, id = 530)
         if not unix:
             self.Bind(wx.EVT_MENU, self.BuilderChange, id = 521)
         self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
@@ -444,6 +447,24 @@ class LauncherWindow(wx.Frame):
         else: ##If not, return False.
             return False        
 
+    def ResetVESuite(self, event = None):
+        ##Killall process in master cluster
+        os.system("killall project_tao_osg_vep")
+        os.system("killall Exe_server")
+        os.system("killall WinClient")
+        os.system("killall Naming_Service")
+
+        ##Killall process in salve clusters
+        newSlaveList = self.state.GetSurface("ClusterDict").GetNames()
+        for cluster in newSlaveList:
+            os.system(("ssh %s killall project_tao_osg_vep") % cluster)
+            os.system(("ssh %s killall Exe_server") % cluster)
+            os.system(("ssh %s killall WinClient") % cluster)
+            os.system(("ssh %s killall Naming_Service") % cluster)
+            os.system("killall sshd")
+            
+        print "Reset Completed!"
+        return
         
     def UpdateData(self, event = None, depDir = None):
         """Saves the user's input to the launcher's data.
