@@ -1,0 +1,23 @@
+##Builds idl skeleton files for veopen
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg', 'RootDir')
+env = ves_pkg.getEnv().Copy()
+
+launcherBundle = ves_pkg.createFileBundle( 'share' )
+##Move Docbook files to PREFIX(Install Directory) if it exists.
+docbookDirectory = pj(RootDir, 'share','docs','docbook','vesuite_docs')
+
+docsFile = sca_util.getFilesRecursiveByExt( '.', ['.pdf'] )
+docsFile += sca_util.getFilesRecursiveByExt( '.', ['.html'] )
+docsFile += sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
+docsFile += sca_util.getFilesRecursiveByExt( '.', ['.gif'] )
+
+if os.path.exists(docbookDirectory):
+    print "Docbook files found...\n"
+    launcherBundle.addFiles( docsFile )
+else:
+    print "Docbook files not found..."
+    print "If you want to generate the docbook files, please run \"scons docs\" option first."

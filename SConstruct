@@ -421,15 +421,16 @@ if not SConsAddons.Util.hasHelpFlag():
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
-   docsSubdirs = pj('#', 'share', 'docs', 'docbook')
+   docsSubdirs = pj('#', 'share', 'docs')
+   docbookSubdirs = pj('#', 'share', 'docs', 'docbook')
    chlogSubdirs = pj('#', 'share', 'docs', 'changelog')
    doxySubdirs = pj('#', 'share' , 'docs', 'doxygen')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    ##Set the Sconscript files to build.
    if 'docs' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ docsSubdirs ]
-      baseEnv.Alias('docs', docsSubdirs)
+      ves_dirs = [ docbookSubdirs ]
+      baseEnv.Alias('docs', docbookSubdirs)
    elif 'changelog' in COMMAND_LINE_TARGETS:
       ves_dirs = [ chlogSubdirs ]
       baseEnv.Alias('changelog', chlogSubdirs)
@@ -441,7 +442,7 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Alias('freeze', veiFreezeSubdirs)      
    else:
       ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
-                  xplorerSubdirs, veiDistSubdirs, ceSubdirs, veiSubdirs, 
+                  xplorerSubdirs, veiDistSubdirs, docsSubdirs, ceSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs,
 		  installerSubdirs ]
 
