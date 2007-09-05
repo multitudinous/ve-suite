@@ -59,7 +59,7 @@ else:
 
 ##NOTE: Do NOT put the suffixes of the filenames.
 srcs = Split("""
-   vesuite
+   vesuite_docs
 """)
 
 resolvedSrcs = map(lambda s: pj(baseDir, "xml_sources", "%s.tmp" %(s)), srcs)
