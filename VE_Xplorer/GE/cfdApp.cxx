@@ -359,7 +359,7 @@ void cfdApp::initScene( void )
 void cfdApp::preFrame( void )
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::preFrame",20);
-    vprDEBUG(vesDBG,3)<<"cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3)<<"|cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
     //Sets the worldDCS before it is synced
     cfdEnvironmentHandler::instance()->PreFrameUpdate();
 }

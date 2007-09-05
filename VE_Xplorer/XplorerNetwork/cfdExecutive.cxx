@@ -400,7 +400,7 @@ void cfdExecutive::InitModules( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::PreFrameUpdate( void )
 {
-   vprDEBUG(vesDBG,3) << " cfdExecutive::PreFrameUpdate"
+   vprDEBUG(vesDBG,3) << "|cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
    //process the current command form the gui
@@ -466,7 +466,7 @@ void cfdExecutive::PreFrameUpdate( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::PostFrameUpdate( void )
 {
-   vprDEBUG(vesDBG,3) << " cfdExecutive::PostFrameUpdate"
+   vprDEBUG(vesDBG,3) << "|cfdExecutive::PostFrameUpdate"
                         << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -486,7 +486,7 @@ void cfdExecutive::LoadDataFromCE( void )
    
    // store the statusString in order to perform multiple operations on it...
    std::string statusString = ui_i->GetStatusString();
-   vprDEBUG(vesDBG,3) << "cfdExecutive::PreFrameUpdate statusString = " << statusString 
+   vprDEBUG(vesDBG,3) << "|\tcfdExecutive::PreFrameUpdate statusString = " << statusString 
       << std::endl << vprDEBUG_FLUSH;
    
    // record position of some key phrases...
