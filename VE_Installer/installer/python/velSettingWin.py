@@ -187,8 +187,8 @@ class SettingsWindow(wx.Dialog):
                  "XplorerType": [self.rbXplorer,
                                  XPLORER_TYPE_LIST[self.rbXplorer.GetSelection()]]}
         for var in array:
-            if array[var][0].IsEnabled():
-                self.state.Edit(var, array[var][1])
+            ##if array[var][0].IsEnabled():
+            self.state.Edit(var, array[var][1])
         self.React()
         return
 
