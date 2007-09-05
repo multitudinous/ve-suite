@@ -77,6 +77,9 @@ public:
    ///Copy Construstor
    XMLObject( const XMLObject& );
    ///equal operator
+   ///These urls may be useful for future operations:
+   ///http://xml.apache.org/xerces-c/apiDocs/classDOMNode.html#z233_1
+   ///http://xml.apache.org/xerces-c/apiDocs/classDOMNode.html#z233_0
    XMLObject& operator= ( const XMLObject& );
 
 protected:
