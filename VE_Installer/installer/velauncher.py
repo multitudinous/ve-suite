@@ -219,7 +219,8 @@ class LauncherWindow(wx.Frame):
                                       kind = wx.ITEM_CHECK)
         menu.AppendItem(self.autoRunVes)
         menu.Append(523, "&Cluster Wait Times\tCtrl+C")
-        menu.Append(530, "&Reset VE-Suite\tCtrl+R")
+        if posix:
+            menu.Append(530, "&Reset VE-Suite\tCtrl+R")
         menuBar.Append(menu, "&Options")
         self.SetMenuBar(menuBar)
 
@@ -230,7 +231,8 @@ class LauncherWindow(wx.Frame):
         self.Bind(wx.EVT_BUTTON, self.Settings, self.bCustom)
         self.Bind(wx.EVT_RADIOBOX, self.UpdateData, self.rbMode)
         self.Bind(wx.EVT_MENU, self.DependenciesChange, id = 520)
-        self.Bind(wx.EVT_MENU, self.ResetVESuite, id = 530)
+        if posix:
+            self.Bind(wx.EVT_MENU, self.ResetVESuite, id = 530)
         if not unix:
             self.Bind(wx.EVT_MENU, self.BuilderChange, id = 521)
         self.Bind(wx.EVT_MENU, self.ChooseLoadConfig, id = 510)
