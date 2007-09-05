@@ -344,13 +344,13 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
    if( cfdModelHandler::instance()->GetXMLCommand() )
    {
-      vprDEBUG(vesDBG,3) << "Command Name : "
+      vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::LatePreFrameUpdate Command Name : "
                            << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                            << std::endl<< vprDEBUG_FLUSH;
       currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
-         vprDEBUG(vesDBG,1) << "Executing: "
+         vprDEBUG(vesDBG,1) << "|\tcfdEnvironmentHandler::LatePreFrameUpdate Executing: "
                               << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                               << std::endl<< vprDEBUG_FLUSH;
          currentEventHandler->second->SetGlobalBaseObject();

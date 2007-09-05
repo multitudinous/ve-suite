@@ -416,7 +416,7 @@ void cfdApp::latePreFrame( void )
       }
 
 #endif
-         
+
     VE_SceneGraph::SceneManager::instance()->PreFrameUpdate();
     ///////////////////////
     cfdModelHandler::instance()->PreFrameUpdate();
@@ -427,9 +427,9 @@ void cfdApp::latePreFrame( void )
     ///////////////////////
     cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
 
-    if ( cfdModelHandler::instance()->GetActiveModel() )
+    if( cfdModelHandler::instance()->GetActiveModel() )
     {
-        if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+        if( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
         {
             _tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
             _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());

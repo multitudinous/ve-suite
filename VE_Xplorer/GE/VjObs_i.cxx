@@ -681,10 +681,6 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 {
    vprDEBUG(vesDBG,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode " 
                            << isCluster << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
-                           << mStates.isLocal() << " " 
-                           << vpr::System::getHostname() 
-                           << std::endl << vprDEBUG_FLUSH;
     if ( !isCluster )
     {
         /*std::string commandString;
@@ -699,7 +695,11 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
         return;
     }
     VPR_PROFILE_GUARD_HISTORY("Get application data", 20 );
-   
+    vprDEBUG(vesDBG,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
+        << mStates.isLocal() << " " 
+        << vpr::System::getHostname() 
+        << std::endl << vprDEBUG_FLUSH;
+    
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
@@ -865,6 +865,11 @@ void VjObs_i::PreFrameUpdate( void )
         {
             cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
         }
+    }
+    ///If the command name is null
+    else if( !bufferCommand->GetCommandName().compare( "NULL" ) )
+    {
+        return;
     }
     else
     {
