@@ -14,8 +14,8 @@ frozenFile = ['velauncher']
 
 ##To freeze velauncher.py, please use "scons freeze" option first.
 if os.path.exists(frozenVelauncherCode):
-    print "Frozen launcher file found..."
+    print "Checking for Frozen launcher file... [OK]"
     launcherBundle.addFiles( frozenFile )
 else:
-    print "Frozen launcher file not found..."
-    print "If you want to freeze the launcher code, please run \"scons freeze\" option first."
+    print "Checking for Frozen launcher file... [NO]"
+    print "*** If you want to freeze the launcher code, please run \"scons freeze\" option first. ***"
