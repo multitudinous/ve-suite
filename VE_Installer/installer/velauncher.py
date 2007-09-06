@@ -457,13 +457,14 @@ class LauncherWindow(wx.Frame):
         os.system("killall Naming_Service")
 
         ##Killall process in salve clusters
-        newSlaveList = self.state.GetSurface("ClusterDict").GetNames()
-        for cluster in newSlaveList:
-            os.system(("ssh %s killall project_tao_osg_vep") % cluster)
-            os.system(("ssh %s killall Exe_server") % cluster)
-            os.system(("ssh %s killall WinClient") % cluster)
-            os.system(("ssh %s killall Naming_Service") % cluster)
-            os.system("killall sshd")
+        if (not self.state.GetSurface("DesktopMode")):
+            newSlaveList = self.state.GetSurface("ClusterDict").GetNames()
+            for cluster in newSlaveList:
+                os.system(("ssh %s killall project_tao_osg_vep") % cluster)
+                os.system(("ssh %s killall Exe_server") % cluster)
+                os.system(("ssh %s killall WinClient") % cluster)
+                os.system(("ssh %s killall Naming_Service") % cluster)
+                os.system("killall sshd")
             
         print "Reset Completed!"
         return
