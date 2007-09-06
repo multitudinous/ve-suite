@@ -41,7 +41,7 @@ freezeSrc = map(lambda s: pj(installerDistbaseDir, "%s.spec" %(s)), srcs)
 freezeTarget = map(lambda s: "%s" %(s), srcs)
 
 print "####################################"
-print "# Freezing Launcher Code..."       #
+print "# Freezing Launcher Code...        #"
 print "# Please wait... it takes a minute #"
 print "####################################\n"
 os.popen("python " + basePyinstallerDir + "/Configure.py")

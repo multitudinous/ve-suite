@@ -16,7 +16,7 @@ docsFile += sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
 docsFile += sca_util.getFilesRecursiveByExt( '.', ['.gif'] )
 
 if os.path.exists(docbookDirectory):
-    print "Docbook files found...\n"
+    print "Docbook files found..."
     launcherBundle.addFiles( docsFile )
 else:
     print "Docbook files not found..."
