@@ -116,7 +116,7 @@ captureNextFrameForWeb( false ),
 isCluster( false )
 {
 #ifdef _OSG
-   //osg::Referenced::setThreadSafeReferenceCounting(true);
+   osg::Referenced::setThreadSafeReferenceCounting(true);
    osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
    _frameStamp = new osg::FrameStamp;
    mUpdateVisitor = new osgUtil::UpdateVisitor();
@@ -216,8 +216,23 @@ osg::Group* cfdApp::getScene()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextInit()
 {
-    vrj::OsgApp::contextInit();
+    //vrj::OsgApp::contextInit();
     
+    const unsigned int unique_context_id =
+      vrj::GlDrawManager::instance()->getCurrentContext();
+
+    // --- Create new context specific scene viewer -- //
+    osg::ref_ptr<osgUtil::SceneView> new_sv(new osgUtil::SceneView);
+    this->configSceneView(new_sv.get());            // Configure the new viewer
+    new_sv->getState()->setContextID(unique_context_id);
+    // Add the tree to the scene viewer and set properties
+    {
+      vpr::Guard<vpr::Mutex> sv_guard(mValueLock);
+      new_sv->setSceneData(getScene());
+    }
+
+    (*sceneViewer) = new_sv;
+
     if ( !_pbuffer )
     {
         _pbuffer = new cfdPBufferManager();
