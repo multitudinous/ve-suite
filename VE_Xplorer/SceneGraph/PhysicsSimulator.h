@@ -65,7 +65,7 @@ namespace VE_SceneGraph
 
 class btDynamicsWorld;
 class btCollisionDispatcher;
-class btOverlappingPairCache;
+class btBroadphaseInterface;
 class btSequentialImpulseConstraintSolver;
 class btRigidBody;
 class btCollisionShape;
@@ -145,7 +145,7 @@ private:
     btDynamicsWorld* m_dynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
 
     btCollisionDispatcher* m_dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
-    btOverlappingPairCache* m_broadphase;///<Maintains objects with overlapping AABB
+    btBroadphaseInterface* m_broadphase;///<Maintains objects with overlapping AABB
     btSequentialImpulseConstraintSolver* m_solver;///<A physics solver which sequentially applies impulses
 };
 }

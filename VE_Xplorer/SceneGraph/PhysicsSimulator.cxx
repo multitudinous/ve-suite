@@ -72,12 +72,11 @@ vprSingletonImp( PhysicsSimulator );
 //#define USE_KINEMATIC_GROUND 1
 //#define USER_DEFINED_FRICTION_MODEL 1
 
-#define USE_CUSTOM_NEAR_CALLBACK 1
-#define USE_SWEEP_AND_PRUNE 1
+//#define USE_CUSTOM_NEAR_CALLBACK 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsSimulator::PhysicsSimulator( void )
+PhysicsSimulator::PhysicsSimulator()
 :
 m_dynamicsWorld( 0 ),
 m_dispatcher( 0 ),
@@ -92,7 +91,7 @@ shoot_speed( 50.0f )
     this->InitializePhysicsSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::ExitPhysics( void )
+void PhysicsSimulator::ExitPhysics()
 {
     if( this->m_dynamicsWorld )
     {
@@ -178,7 +177,7 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::InitializePhysicsSimulation( void )
+void PhysicsSimulator::InitializePhysicsSimulation()
 {
     m_dispatcher = new btCollisionDispatcher();
 
@@ -187,14 +186,10 @@ void PhysicsSimulator::InitializePhysicsSimulation( void )
 #else
 #endif
 
-#ifdef USE_SWEEP_AND_PRUNE
     btVector3 worldAabbMin( -10000, -10000, -10000 );
     btVector3 worldAabbMax( 10000, 10000, 10000 );
 
     m_broadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
-#else
-    m_broadphase=new btSimpleBroadphase;
-#endif
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
 #else
@@ -288,7 +283,7 @@ void PhysicsSimulator::ResetScene( void )
             colObj->activate();
 
             //Removed cached contact points
-            m_dynamicsWorld->getBroadphase()->cleanProxyFromPairs( colObj->getBroadphaseHandle() );
+			m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle() );
 
             btRigidBody* body = btRigidBody::upcast( colObj );
 
