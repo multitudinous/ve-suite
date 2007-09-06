@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
@@ -48,89 +49,88 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
+// --- OSG Includes --- //
 #include <osg/MatrixTransform>
 #include <osg/Group>
 
+// --- C/C++ Libraries --- //
 #include <iostream>
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-////////////////////////////////////////////////////////////////////////////
-//Constructor                                                             //
-////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
-:VE_EVENTS::EventHandler()
+:
+VE_EVENTS::EventHandler()
 {
-   ;
+    ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler(const SwitchXplorerViewEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler( const SwitchXplorerViewEventHandler& rhs )
+:
+VE_EVENTS::EventHandler( rhs )
 {
-   ;
+    ;
 }
-////////////////////////////////////////////////////////////////////////////////
-///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::~SwitchXplorerViewEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-///Equal operator
-////////////////////////////////////////////////////////////////////////////////
-SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=(const SwitchXplorerViewEventHandler& rhs)
+SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=( const SwitchXplorerViewEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      VE_EVENTS::SwitchXplorerViewEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        VE_EVENTS::SwitchXplorerViewEventHandler::operator=( rhs );
+    }
+
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void SwitchXplorerViewEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* model )
 {
-   ;
+    ;
 }
-//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePairWeakPtr activeModelDVP = 
-      command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
-   std::string viewData;
-   activeModelDVP->GetData( viewData );
-   if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 2 );
-      VE_SceneGraph::DCS  * tempDCS = SceneManager::instance()->GetNetworkDCS();
+    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+    VE_XML::DataValuePairWeakPtr activeModelDVP = 
+        command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
 
-      NetworkSystemView networkLayout( 
-        cfdExecutive::instance()->GetCurrentNetwork() );
-      if( tempDCS->GetNumChildren() >= 1 )
-      {
-         tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
-      }
-      
-      osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
-      if( tempGroup.valid() )
-      {
-          tempDCS->addChild( tempGroup.get() );
-      }
-   }
-   else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 0 );
-   }
-   else if( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 1 );
-   }
-   else
-   {
-      SceneManager::instance()->SetActiveSwitchNode( 0 );
-   }
+    std::string viewData;
+    activeModelDVP->GetData( viewData );
+    if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
+    {
+        SceneManager::instance()->SetActiveSwitchNode( 2 );
+        osg::ref_ptr< VE_SceneGraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
+        NetworkSystemView networkLayout( cfdExecutive::instance()->GetCurrentNetwork() );
+        if( tempDCS->GetNumChildren() >= 1 )
+        {
+            tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
+        }
+
+        osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
+        if( tempGroup.valid() )
+        {
+            tempDCS->addChild( tempGroup.get() );
+        }
+    }
+    else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
+    {
+        SceneManager::instance()->SetActiveSwitchNode( 0 );
+    }
+    else if( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
+    {
+        SceneManager::instance()->SetActiveSwitchNode( 1 );
+    }
+    else
+    {
+        SceneManager::instance()->SetActiveSwitchNode( 0 );
+    }
 }
+////////////////////////////////////////////////////////////////////////////////
