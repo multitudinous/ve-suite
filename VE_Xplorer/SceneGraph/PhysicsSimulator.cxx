@@ -88,17 +88,17 @@ shoot_speed( 50.0f )
 {
     head.init( "VJHead" );
 
-    this->InitializePhysicsSimulation();
+    InitializePhysicsSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-    if( this->m_dynamicsWorld )
+    if( m_dynamicsWorld )
     {
         //Remove the rigidbodies from the dynamics world and delete them
-        for( int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); i++ )
+        for( int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); ++i )
         {
-            btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
+            btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[ i ];
             m_dynamicsWorld->removeCollisionObject( obj );
 
             delete obj;
@@ -113,25 +113,25 @@ void PhysicsSimulator::ExitPhysics()
     //But, it looks like they are still hanging around, so delete them for now
 
     //Delete m_dispatcher
-    if( this->m_dispatcher )
+    if( m_dispatcher )
     {
-        delete this->m_dispatcher;
+        delete m_dispatcher;
     }
    
     //Delete m_broadphase
-    if( this->m_broadphase )
+    if( m_broadphase )
     {
-        delete this->m_broadphase;
+        delete m_broadphase;
     }
 
     //Delete m_solver
-    if( this->m_solver )
+    if( m_solver )
     {
-        delete this->m_solver;
+        delete m_solver;
     }
     //*************************************************************************//
 
-    for( unsigned int i = 0; i < box_vector.size(); i++ )
+    for( size_t i = 0; i < box_vector.size(); ++i )
     {
         delete box_vector.at( i );
     }
@@ -200,7 +200,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver );
     m_dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
-    //m_dynamicsWorld->setDebugDrawer(&debugDrawer);
+    //m_dynamicsWorld->setDebugDrawer( &debugDrawer );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
@@ -211,7 +211,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
         /*
         printf( "dt = %f: ", dt );
 
-        if ( m_dynamicsWorld )
+        if( m_dynamicsWorld )
         {
             //During m_idle mode, just run 1 simulation step maximum
             int maxSimSubSteps = m_idle ? 1 : 1;
@@ -244,33 +244,33 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::StepSimulation( void )
+void PhysicsSimulator::StepSimulation()
 {
     if( m_idle )
     {
-        m_dynamicsWorld->stepSimulation(  1.f / 60.f, 0  );
+        m_dynamicsWorld->stepSimulation(  1.0f / 60.0f, 0  );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulator::ResetScene( void )
+void PhysicsSimulator::ResetScene()
 {
     /*
 #ifdef SHOW_NUM_DEEP_PENETRATIONS
-    gNumDeepPenetrationChecks=0;
-    gNumGjkChecks=0;
+    gNumDeepPenetrationChecks = 0;
+    gNumGjkChecks = 0;
 #endif
     */
 
     if( m_dynamicsWorld )
     {
-        m_dynamicsWorld->stepSimulation( 1.f / 60.f, 0 );
+        m_dynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
     }
 
     int numObjects = m_dynamicsWorld->getNumCollisionObjects();
 
-    for( int i = 0; i < numObjects; i++ )
+    for( int i = 0; i < numObjects; ++i )
     {
-        btCollisionObject* colObj = m_dynamicsWorld->getCollisionObjectArray()[i];
+        btCollisionObject* colObj = m_dynamicsWorld->getCollisionObjectArray()[ i ];
         btRigidBody* body = btRigidBody::upcast( colObj );
 
         if( body && body->getMotionState() )
@@ -297,7 +297,7 @@ void PhysicsSimulator::ResetScene( void )
         /*
         //Quickly search some issue at a certain simulation frame, pressing space to reset
         int fixed = 18;
-        for( int i = 0; i < fixed; i++ )
+        for( int i = 0; i < fixed; ++i )
         {
             getDynamicsWorld()->stepSimulation( 1.0f / 60.0f, 1 );
         }
@@ -387,13 +387,13 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
         gadget::PositionData* head_pos;
         head_pos = head->getPositionData();
         btVector3 position;
-        position.setValue( head_pos->mPosData[0][3], head_pos->mPosData[1][3], head_pos->mPosData[2][3] );
+        position.setValue( head_pos->mPosData[ 0 ][ 3 ], head_pos->mPosData[ 1 ][ 3 ], head_pos->mPosData[ 2 ][ 3 ] );
         transform.setOrigin( position );
 
         btCollisionShape* box_shape = new btBoxShape( btVector3( 1.0f, 1.0f, 1.0f ) );
-        btRigidBody* body = this->CreateRigidBody( mass, transform, box_shape );
+        btRigidBody* body = CreateRigidBody( mass, transform, box_shape );
 
-        btVector3 lin_vel( destination[0]+position[0], destination[1]+position[1], destination[2]+position[2] );
+        btVector3 lin_vel( destination[ 0 ] + position[ 0 ], destination[ 1 ] + position[ 1 ], destination[ 2 ] + position[ 2 ] );
         lin_vel.normalize();
         lin_vel *= shoot_speed;
 
