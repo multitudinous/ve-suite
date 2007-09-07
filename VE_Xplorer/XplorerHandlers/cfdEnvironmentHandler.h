@@ -163,9 +163,11 @@ public:
    void DeactivateGeometryPicking( void );
 
    ///Get the seed points drawable
+   ///\return Get the seed points
    SeedPoints* GetSeedPoints();
 
    ///Get the seed points drawable
+   ///\return Return the DCS for the seed points
    VE_SceneGraph::DCS* GetSeedPointsDCS();
 
 private:

@@ -61,7 +61,7 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
-activeDCS( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode() ),
+m_activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ),
 selectedDCS( 0 ),
 device_mode( "World Navigation" ),
 center_point( 0, 2, 0 ),
@@ -80,7 +80,7 @@ m_jump( 10.0f )
     std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
     for( itr = devices.begin(); itr != devices.end(); itr++ )
     {
-        itr->second->SetActiveDCS( activeDCS.get() );
+        itr->second->SetActiveDCS( m_activeDCS.get() );
         itr->second->SetSelectedDCS( selectedDCS.get() );
         itr->second->SetCenterPoint( &center_point );
         itr->second->SetCenterPointThreshold( &m_threshold );
@@ -122,7 +122,7 @@ void DeviceHandler::ExecuteCommands()
             std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
             for( itr = devices.begin(); itr != devices.end(); itr++ )
             {
-                itr->second->SetActiveDCS( activeDCS.get() );
+                itr->second->SetActiveDCS( m_activeDCS.get() );
                 itr->second->SetSelectedDCS( selectedDCS.get() );
             }
 
@@ -155,17 +155,18 @@ void DeviceHandler::SetDeviceMode( std::string mode )
 
     if( device_mode == "World Navigation" )
     {
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
-        active_device->SetActiveDCS( activeDCS.get() );
+        m_activeDCS = VE_SceneGraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+        active_device->SetActiveDCS( m_activeDCS.get() );
     }
     else if( device_mode == "Object Navigation" )
     {
         if( selectedDCS.valid() )
         {
-            activeDCS = selectedDCS;
+            m_activeDCS = selectedDCS;
         }
 
-        active_device->SetActiveDCS( activeDCS.get() );
+        active_device->SetActiveDCS( m_activeDCS.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -188,24 +189,24 @@ void DeviceHandler::SetCenterPointJumpMode( std::string mode )
     }
     else if( mode == "Bounding Box" )
     {
-        m_jump = activeDCS->getBound().radius();
+        m_jump = m_activeDCS->getBound().radius();
         m_threshold = m_jump * 0.05;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
 {
-    activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
-    active_device->SetActiveDCS( activeDCS.get() );
+    m_activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    active_device->SetActiveDCS( m_activeDCS.get() );
 
     selectedDCS = 0;
-    active_device->SetSelectedDCS( selectedDCS.get() );
+    active_device->SetSelectedDCS( m_activeDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
 {
     //Update Device properties
-    this->ExecuteCommands();
+    ExecuteCommands();
 
     if ( device_mode == "World Navigation" || device_mode == "Object Navigation" )
     {
@@ -222,8 +223,8 @@ void DeviceHandler::ProcessDeviceEvents()
         active_device->UpdateSelection();
     }
 
-    //Get the active dcs from the active device
-    activeDCS = active_device->GetActiveDCS();
+    //Get the active dcs from the scenemanager
+    //m_activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
 
     //Get the selected dcs from the active device
     selectedDCS = active_device->GetSelectedDCS();

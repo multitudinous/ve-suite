@@ -105,9 +105,11 @@ public:
 
     ///Get a device
     ///\param device The device
+    ///\return Get the device being requested
     VE_Xplorer::Device* GetDevice( std::string device );
-
-    ///Get the active device
+    
+    ///Get active device
+    ///\return Get the active device
     VE_Xplorer::Device* GetActiveDevice();
 
 private:
@@ -115,7 +117,7 @@ private:
     std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
     VE_Xplorer::Device* active_device; ///<The active device
-    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<The active coordinate system
+    osg::ref_ptr< VE_SceneGraph::DCS > m_activeDCS;///<The active coordinate system
     osg::ref_ptr< VE_SceneGraph::DCS > selectedDCS;///<The selected coordinate system
     std::string device_mode; ///<Tells whether navigation or selection is active
     gmtl::Point3d center_point; ///<Do not know what this is

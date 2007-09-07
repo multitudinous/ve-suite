@@ -485,7 +485,8 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, do
 void KeyboardMouse::FrameAll()
 {
     //Grab the current matrix
-    osg::ref_ptr< VE_SceneGraph::DCS > activeSwitchDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    osg::ref_ptr< VE_SceneGraph::DCS > activeSwitchDCS = 
+        VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
     gmtl::Matrix44d matrix = activeSwitchDCS->GetMat();
 
     //Move the current matrix to its original position
@@ -495,10 +496,10 @@ void KeyboardMouse::FrameAll()
     //Grab the bound and corresponding center values of the current matrix
     osg::BoundingSphere bs = activeSwitchDCS->computeBound();
 
-    std::cout << "bs.radius: " << bs.radius() << std::endl;
-    std::cout << "bs.x: " << bs._center.x() << std::endl;
-    std::cout << "bs.y: " << bs._center.y() << std::endl;
-    std::cout << "bs.z: " << bs._center.z() << std::endl;
+    //std::cout << "bs.radius: " << bs.radius() << std::endl;
+    //std::cout << "bs.x: " << bs._center.x() << std::endl;
+    //std::cout << "bs.y: " << bs._center.y() << std::endl;
+    //std::cout << "bs.z: " << bs._center.z() << std::endl;
 
     //Calculate the distance needed to fit current bounding sphere inside viewing frustum
     double distance;

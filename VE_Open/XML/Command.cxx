@@ -209,8 +209,9 @@ VE_XML::DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
     }
     catch( ... )
     {
-        std::cerr << " Command::GetDataValuePair The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+        std::cerr << " Command::GetDataValuePair The element request "
+            << "is out of sequence. Please ask for a lower number point." 
+            << std::endl;
         
         return 0;
     }
