@@ -34,6 +34,8 @@
 #include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include "VE_Xplorer/XplorerHandlers/Device.h"
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 #include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
 #include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
@@ -132,5 +134,9 @@ void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
     {
         SceneManager::instance()->SetActiveSwitchNode( 0 );
     }
+
+    osg::ref_ptr< VE_SceneGraph::DCS > switchDCS = 
+        VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    VE_Xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS( switchDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

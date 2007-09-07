@@ -103,9 +103,12 @@ public:
     ///Process navigation and selection commands
     void ProcessDeviceEvents();
 
-    ///Get the current device
-    ///\param device The current active device
+    ///Get a device
+    ///\param device The device
     VE_Xplorer::Device* GetDevice( std::string device );
+
+    ///Get the active device
+    VE_Xplorer::Device* GetActiveDevice();
 
 private:
     std::map< std::string, VE_Xplorer::Device* > devices; ///<

@@ -61,7 +61,7 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
-activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ),
+activeDCS( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode() ),
 selectedDCS( 0 ),
 device_mode( "World Navigation" ),
 center_point( 0, 2, 0 ),
@@ -69,7 +69,7 @@ m_threshold( 0.5f ),
 m_jump( 10.0f )
 {
     //Move the world DCS forward a little bit
-    activeDCS->setPosition( osg::Vec3d( 0.0, 2.0, 0.0 ) );
+    //activeDCS->setPosition( osg::Vec3d( 0.0, 2.0, 0.0 ) );
 
     //Initialize Devices
     devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
@@ -155,7 +155,7 @@ void DeviceHandler::SetDeviceMode( std::string mode )
 
     if( device_mode == "World Navigation" )
     {
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
         active_device->SetActiveDCS( activeDCS.get() );
     }
     else if( device_mode == "Object Navigation" )
@@ -195,7 +195,7 @@ void DeviceHandler::SetCenterPointJumpMode( std::string mode )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
 {
-    activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
     active_device->SetActiveDCS( activeDCS.get() );
 
     selectedDCS = 0;
@@ -235,5 +235,10 @@ void DeviceHandler::ProcessDeviceEvents()
 VE_Xplorer::Device* DeviceHandler::GetDevice( std::string device )
 {
     return devices[ device ];
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_Xplorer::Device* DeviceHandler::GetActiveDevice()
+{
+    return active_device;
 }
 ////////////////////////////////////////////////////////////////////////////////

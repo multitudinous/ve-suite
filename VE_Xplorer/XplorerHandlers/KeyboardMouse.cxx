@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+// --- This will go away once the windowing patch for juggler is in --- //
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -82,7 +83,7 @@
 using namespace VE_Xplorer;
 
 const double OneEightyDivPI = 57.29577951;
-const double PIDivOneEighty = .0174532925;
+const double PIDivOneEighty = 0.0174532925;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
@@ -374,10 +375,11 @@ void KeyboardMouse::ProcessNavigationEvents()
     m_currentTransform = activeDCS->GetMat();
 
     //Convert to world space if not already in it
-    if( activeDCS->GetName() != "World DCS" )
+    std::string name = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->GetName();
+    if( activeDCS->GetName() !=  name )
     {
         osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
-        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), activeDCS.get() );
 
         m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
         m_currentTransform = m_localToWorldTransform * m_currentTransform;
@@ -417,7 +419,7 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix = matrix * m_deltaTransform * accuRotation;
 
     //Convert matrix back to local space after delta transform has been applied
-    if( activeDCS->GetName() != "World DCS" )
+    if( activeDCS->GetName() != name )
     {
         matrix = gmtl::invert( m_localToWorldTransform ) * matrix;
     }
@@ -443,6 +445,8 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     m_width = w;
     m_height = h;
 
+    // --- This will go away once the windowing patch for juggler is in --- //
+
     //Need to add an if statement to test whether or not the xplorer window has a border
     //If it does, then we need to take into account the border sizes on Windows
     //We should probably request juggler to take this into account for Windows in the future
@@ -454,7 +458,7 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 
     int borderWidth = GetSystemMetrics( SM_CXSIZEFRAME ) * 2;
     int borderHeight = GetSystemMetrics( SM_CYSIZEFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION );
-
+    	
     m_width -= borderWidth;
     m_height -= borderHeight;
 #endif
@@ -481,15 +485,20 @@ void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, do
 void KeyboardMouse::FrameAll()
 {
     //Grab the current matrix
-    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
-    gmtl::Matrix44d matrix = worldDCS->GetMat();
+    osg::ref_ptr< VE_SceneGraph::DCS > activeSwitchDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    gmtl::Matrix44d matrix = activeSwitchDCS->GetMat();
 
     //Move the current matrix to its original position
     double position[3] = { 0, 0, 0 };
-    worldDCS->SetTranslationArray( position );
+    activeSwitchDCS->SetTranslationArray( position );
 
     //Grab the bound and corresponding center values of the current matrix
-    osg::BoundingSphere bs = worldDCS->computeBound();
+    osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+
+    std::cout << "bs.radius: " << bs.radius() << std::endl;
+    std::cout << "bs.x: " << bs._center.x() << std::endl;
+    std::cout << "bs.y: " << bs._center.y() << std::endl;
+    std::cout << "bs.z: " << bs._center.z() << std::endl;
 
     //Calculate the distance needed to fit current bounding sphere inside viewing frustum
     double distance;
@@ -539,15 +548,16 @@ void KeyboardMouse::FrameAll()
 
     //std::cout << bs.center().x() << " " << bs.center().y() << " " << bs.center().z() << std::endl;
     //Set the current matrix w/ the new matrix
-    worldDCS->SetMat( matrix );
+    activeSwitchDCS->SetMat( matrix );
 
     //Get the new center of the bounding sphere and set the center_point accordingly
-    bs = worldDCS->computeBound();
+    bs = activeSwitchDCS->computeBound();
     center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameSelection()
 {
+    /*
     if( selectedDCS.valid() )
     {
         //Grab the selected matrix    
@@ -555,7 +565,7 @@ void KeyboardMouse::FrameSelection()
 
         //Convert the selected matrix to world space
         osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
-        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), selectedDCS.get() );
+        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), selectedDCS.get() );
 
         m_localToWorldTransform = ltwt->GetLocalToWorldTransform();
         matrix = m_localToWorldTransform * matrix;
@@ -622,6 +632,7 @@ void KeyboardMouse::FrameSelection()
         osg::Vec3d center = selectedDCS->getBound().center() * transform;
         center_point->set( center.x(), center.y(), center.z() );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
@@ -743,7 +754,7 @@ void KeyboardMouse::ResetTransforms()
     gmtl::Matrix44d matrix;
     center_point->mData[1] = matrix[1][3] = *m_threshold;
 
-    VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
+    VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( double dx, double dy )
@@ -879,7 +890,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected" 
                               << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
 
         //Move the center point to the center of all objects in the world
         osg::Vec3d worldCenter = activeDCS->getBound().center();
@@ -906,7 +917,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit Invalid object selected" 
                               << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
 
         //Move the center point to the center of all objects in the world
         osg::Vec3d worldCenter = activeDCS->getBound().center();
@@ -939,14 +950,15 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
                               << objectHit._geode->getParents().front()->getName() 
                               << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
     }    
 
-    if( activeDCS->GetName() != "World DCS" )
+    std::string name = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode()->GetName();
+    if( activeDCS->GetName() != name )
     {
         //Move the center point to the center of the selected object
         osg::ref_ptr< VE_Xplorer::LocalToWorldTransform > ltwt = 
-        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), activeDCS.get() );
+        new VE_Xplorer::LocalToWorldTransform( VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), activeDCS.get() );
 
         osg::Matrixd matrix;
         matrix.set( ltwt->GetLocalToWorldTransform().getData() );

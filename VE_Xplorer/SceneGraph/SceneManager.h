@@ -51,8 +51,17 @@
 #include "VE_Xplorer/SceneGraph/Group.h"
 #include "VE_Xplorer/SceneGraph/Switch.h"
 
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/ref_ptr>
+#include <osg/ClearNode>
+#endif
+
 #include <osgOQ/OcclusionQueryRoot.h>
 #include <osgOQ/OcclusionQueryContext.h>
+
+// --- VR Juggler Includes --- //
+#include <vpr/Util/Singleton.h>
 
 namespace VE_SceneGraph
 {
@@ -61,16 +70,6 @@ namespace VE_SceneGraph
    class Switch;
    class CADEntity;
 }
-
-#include <osg/ClearNode>
-
-// --- VR Juggler Includes --- //
-#include <vpr/Util/Singleton.h>
-
-// --- OSG Includes --- //
-#ifdef _OSG
-#include <osg/ref_ptr>
-#endif
 
 namespace VE_SceneGraph
 {
@@ -111,7 +110,7 @@ public:
    void PreFrameUpdate();
    ///Set the background color
    ///\param color the color to set the background color
-   void SetBackgroundColor( std::vector<double> color );
+   void SetBackgroundColor( std::vector< double > color );
    ///Reset the osgOQC node accessor
    ///Should be used when new ves files are loaded
    void ResetOcclusionQueryContext();

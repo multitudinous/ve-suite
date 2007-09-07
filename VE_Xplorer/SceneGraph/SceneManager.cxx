@@ -72,9 +72,9 @@ using namespace VE_SceneGraph;
 
 vprSingletonImpLifetime( SceneManager, 100 );
 
-SceneManager::SceneManager( void )
+SceneManager::SceneManager()
 {
-   this->_param.erase();
+   _param.erase();
 
    m_blueArrow = 0;
    m_greyArrow = 0;
@@ -88,7 +88,7 @@ void SceneManager::Initialize( std::string param )
    _param = param;
 }
 ///////////////////////////////////////////////////
-SceneManager::~SceneManager( void )
+SceneManager::~SceneManager()
 {
    //Do nothing right now
    if( m_blueArrow )
@@ -122,19 +122,19 @@ SceneManager::~SceneManager( void )
    }
 }
 
-void SceneManager::InitScene( void )
+void SceneManager::InitScene()
 {
    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
 
-   this->rootNode = new VE_SceneGraph::Group();
-   this->rootNode->SetName( "Root Node" );
+   rootNode = new VE_SceneGraph::Group();
+   rootNode->SetName( "Root Node" );
    rootNode->setThreadSafeRefUnref( true );
 
-   this->worldDCS = new VE_SceneGraph::DCS();
-   this->worldDCS->SetName( "World DCS" );
+   worldDCS = new VE_SceneGraph::DCS();
+   worldDCS->SetName( "World DCS" );
 
-   this->networkDCS  = new VE_SceneGraph::DCS();
-   this->networkDCS->SetName( "Network DCS" );
+   networkDCS  = new VE_SceneGraph::DCS();
+   networkDCS->SetName( "Network DCS" );
 
    m_clrNode = new osg::ClearNode();
    m_clrNode->setRequiresClear( true );
@@ -186,17 +186,17 @@ void SceneManager::InitScene( void )
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Group* SceneManager::GetRootNode( void )
+VE_SceneGraph::Group* SceneManager::GetRootNode()
 {
-   return this->rootNode.get();
+   return rootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* SceneManager::GetWorldDCS( void )
+VE_SceneGraph::DCS* SceneManager::GetWorldDCS()
 {
-   return this->worldDCS.get();
+   return worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* SceneManager::GetNetworkDCS( void )
+VE_SceneGraph::DCS* SceneManager::GetNetworkDCS()
 {
    return networkDCS.get();
 }
@@ -207,7 +207,6 @@ void SceneManager::ViewLogo( bool trueFalse )
    {
       SetActiveSwitchNode( 1 );
    }
-
    else
    {
       SetActiveSwitchNode( 0 );
@@ -224,8 +223,8 @@ void SceneManager::_createLogo()
    
    if( !_logoNode.valid() )
    {
-      double translation[3] = { -1.5, 5, 3.2 };
-      double scale[3] = { 0.0065, 0.0065, 0.0065 };
+      double translation[ 3 ] = { -1.5, 5, 3.2 };
+      double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
 
       _logoNode = new VE_SceneGraph::DCS();
       _logoNode->SetTranslationArray( translation );
@@ -297,17 +296,16 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
    _logoSwitch->SetVal( activeNode );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::PreFrameUpdate( void )
+void SceneManager::PreFrameUpdate()
 {
-   networkDCS->SetTranslationArray( worldDCS->GetVETranslationArray() );
-   networkDCS->SetRotationArray( worldDCS->GetRotationArray() );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode( void )
+VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode()
 {
    osg::Switch::ValueList boolList = _logoSwitch->getValueList();
    
-   for( size_t i = 0; i < boolList.size(); i++ )
+   for( size_t i = 0; i < boolList.size(); ++i )
    {
       if( boolList.at( i ) )
       {
@@ -316,9 +314,9 @@ VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode( void )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::SetBackgroundColor(std::vector<double> color)
+void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
-    m_clrNode->setClearColor( osg::Vec4( color.at(0), color.at(1), color.at(2), 1.0f ) );
+    m_clrNode->setClearColor( osg::Vec4( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
@@ -348,3 +346,4 @@ void SceneManager::ResetOcclusionQueryContext()
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
 }
+////////////////////////////////////////////////////////////////////////////////

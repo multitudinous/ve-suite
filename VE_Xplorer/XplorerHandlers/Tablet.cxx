@@ -230,7 +230,7 @@ void Tablet::UpdateNavigation()
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
 
                 //Calculate the new center_point position based off the swept rotation
-                // --- Might need to calculate this as if the head is the origin --- //
+                // --- If the head ever moves off of z = 0, that distance will have to be taken into account --- //
                 double theta = osg::DegreesToRadians( rotationStepSize );
                 double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
                 center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
@@ -317,7 +317,7 @@ void Tablet::UpdateNavigation()
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
 
                 //Calculate the new center_point position based off the swept rotation
-                // --- Might need to calculate this as if the head is the origin --- //
+                // --- If the head ever moves off of z = 0, that distance will have to be taken into account --- //
                 double theta = osg::DegreesToRadians( -rotationStepSize );
                 double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
                 center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
