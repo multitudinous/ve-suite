@@ -34,7 +34,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launchingbuilder1.jpg" />
+        <imagedata fileref="../veimages/launchingbuilder1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -46,7 +46,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launchingbuilder2.jpg" />
+        <imagedata fileref="../veimages/launchingbuilder2.jpg" />
       </imageobject>
     </mediaobject>
   </section>
@@ -312,7 +312,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/creatingtexturebased1.jpg" />
+        <imagedata fileref="../veimages/creatingtexturebased1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -344,7 +344,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/creatingtexturebased2.jpg" />
+        <imagedata fileref="../veimages/creatingtexturebased2.jpg" />
       </imageobject>
     </mediaobject>
 

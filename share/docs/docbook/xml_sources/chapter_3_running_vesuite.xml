@@ -21,7 +21,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/startingvesuite1.jpg" />
+        <imagedata fileref="../veimages/startingvesuite1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -100,7 +100,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/loadingdata1.jpg" />
+        <imagedata fileref="../veimages/loadingdata1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -111,7 +111,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/loadingdata2.jpg" />
+        <imagedata fileref="../veimages/loadingdata2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -120,7 +120,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/loadingdata3.jpg" />
+        <imagedata fileref="../veimages/loadingdata3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -135,7 +135,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/loadingdata4.jpg" />
+        <imagedata fileref="../veimages/loadingdata4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -144,7 +144,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/loadingdata5.jpg" />
+        <imagedata fileref="../veimages/loadingdata5.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -166,7 +166,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/loadingdata2.jpg" />
+          <imagedata fileref="../veimages/loadingdata2.jpg" />
         </imageobject>
       </mediaobject>
       
@@ -199,7 +199,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/visualizationsetup2.jpg" />
+          <imagedata fileref="../veimages/visualizationsetup2.jpg" />
         </imageobject>
       </mediaobject>
       
@@ -235,7 +235,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/material.jpg" />
+          <imagedata fileref="../veimages/material.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -245,7 +245,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/shading.jpg" />
+          <imagedata fileref="../veimages/shading.jpg" />
         </imageobject>
       </mediaobject>
       
@@ -267,7 +267,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/colorwheel1.jpg" />
+          <imagedata fileref="../veimages/colorwheel1.jpg" />
         </imageobject>
       </mediaobject>
       
@@ -281,7 +281,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/colorwheel2.jpg" />
+          <imagedata fileref="../veimages/colorwheel2.jpg" />
         </imageobject>
       </mediaobject>
       
@@ -292,7 +292,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/colorwheel3.jpg" />
+          <imagedata fileref="../veimages/colorwheel3.jpg" />
         </imageobject>
       </mediaobject>
       
@@ -338,7 +338,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/cadtree.jpg" />
+          <imagedata fileref="../veimages/cadtree.jpg" />
         </imageobject>
       </mediaobject>
     </section>
@@ -359,7 +359,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/navigation1.gif" />
+          <imagedata fileref="../veimages/navigation1.gif" />
         </imageobject>
       </mediaobject>
 
@@ -395,7 +395,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/navigation2.jpg" />
+          <imagedata fileref="../veimages/navigation2.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -403,7 +403,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/navigation3.jpg" />
+          <imagedata fileref="../veimages/navigation3.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -447,7 +447,7 @@
       
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/remotediagram.jpg" />
+          <imagedata fileref="../veimages/remotediagram.jpg" />
         </imageobject>
       </mediaobject>      
     </section>
@@ -461,7 +461,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/viewLocations.jpg" />
+        <imagedata fileref="../veimages/viewLocations.jpg" />
       </imageobject>
     </mediaobject>
 

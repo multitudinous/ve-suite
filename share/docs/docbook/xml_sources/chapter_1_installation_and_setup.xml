@@ -45,7 +45,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/windowsinstall.png" />
+        <imagedata fileref="../veimages/windowsinstall.png" />
       </imageobject>
     </mediaobject>
 
@@ -107,7 +107,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/runtimeenv1.jpg" />
+        <imagedata fileref="../veimages/runtimeenv1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -116,7 +116,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherbasics2.jpg" />
+        <imagedata fileref="../veimages/launcherbasics2.jpg" />
       </imageobject>
     </mediaobject>
 

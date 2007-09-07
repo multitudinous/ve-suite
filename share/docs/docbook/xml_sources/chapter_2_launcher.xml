@@ -79,7 +79,7 @@
     
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherbasics1.jpg" />
+        <imagedata fileref="../veimages/launcherbasics1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -95,7 +95,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherbasics2.jpg" />
+        <imagedata fileref="../veimages/launcherbasics2.jpg" />
       </imageobject>
     </mediaobject>
     
@@ -116,7 +116,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherbasics3.jpg" />
+        <imagedata fileref="../veimages/launcherbasics3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -238,7 +238,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherbasics4.jpg" />
+        <imagedata fileref="../veimages/launcherbasics4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -308,7 +308,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launchermodesettings1.jpg" />
+        <imagedata fileref="../veimages/launchermodesettings1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -351,7 +351,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launchermodesettings2.jpg" />
+        <imagedata fileref="../veimages/launchermodesettings2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -419,7 +419,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="veimages/unixcluster1.jpg" />
+            <imagedata fileref="../veimages/unixcluster1.jpg" />
           </imageobject>
         </mediaobject>
       </listitem>
@@ -438,7 +438,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="veimages/unixcluster2.jpg" />
+            <imagedata fileref="../veimages/unixcluster2.jpg" />
           </imageobject>
         </mediaobject>
       </listitem>
@@ -496,7 +496,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="veimages/windowscluster1.jpg" />
+            <imagedata fileref="../veimages/windowscluster1.jpg" />
           </imageobject>
         </mediaobject>
       </listitem>
@@ -522,7 +522,7 @@
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="veimages/windowscluster2.jpg" />
+            <imagedata fileref="../veimages/windowscluster2.jpg" />
           </imageobject>
         </mediaobject>
       </listitem>
@@ -658,7 +658,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample1.jpg" />
+        <imagedata fileref="../veimages/launcherexample1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -668,7 +668,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample2.jpg" />
+        <imagedata fileref="../veimages/launcherexample2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -680,7 +680,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample3.jpg" />
+        <imagedata fileref="../veimages/launcherexample3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -689,7 +689,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample4.jpg" />
+        <imagedata fileref="../veimages/launcherexample4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -699,7 +699,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample5.jpg" />
+        <imagedata fileref="../veimages/launcherexample5.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -710,7 +710,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample6.jpg" />
+        <imagedata fileref="../veimages/launcherexample6.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -718,7 +718,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample7.jpg" />
+        <imagedata fileref="../veimages/launcherexample7.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -727,7 +727,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/launcherexample8.jpg" />
+        <imagedata fileref="../veimages/launcherexample8.jpg" />
       </imageobject>
     </mediaobject>
 

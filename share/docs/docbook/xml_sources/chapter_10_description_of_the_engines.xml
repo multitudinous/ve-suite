@@ -9,7 +9,7 @@
 
   <mediaobject>
     <imageobject>
-      <imagedata fileref="veimages/descriptionofengines1.JPG" />
+      <imagedata fileref="../veimages/descriptionofengines1.jpg" />
     </imageobject>
   </mediaobject>
 
@@ -23,7 +23,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/conductorTri.jpg" />
+        <imagedata fileref="../veimages/conductorTri.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -125,7 +125,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="veimages/descriptionofengines2.JPG" />
+          <imagedata fileref="../veimages/descriptionofengines2.jpg" />
         </imageobject>
       </mediaobject>
     </section>
@@ -154,7 +154,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/compengTri.jpg" />
+        <imagedata fileref="../veimages/compengTri.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -267,7 +267,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/xplorerTri.jpg" />
+        <imagedata fileref="../veimages/xplorerTri.jpg" />
       </imageobject>
     </mediaobject>
   </section>

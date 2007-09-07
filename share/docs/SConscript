@@ -14,6 +14,7 @@ docsFile = sca_util.getFilesRecursiveByExt( '.', ['.pdf'] )
 docsFile += sca_util.getFilesRecursiveByExt( '.', ['.html'] )
 docsFile += sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
 docsFile += sca_util.getFilesRecursiveByExt( '.', ['.gif'] )
+docsFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
 
 if os.path.exists(docbookDirectory):
     print "Checking for Docbook files... [OK]"

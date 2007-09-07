@@ -25,7 +25,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/visualizationsetup1.jpg" />
+        <imagedata fileref="../veimages/visualizationsetup1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -36,7 +36,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/visualizationsetup2.jpg" />
+        <imagedata fileref="../veimages/visualizationsetup2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -57,13 +57,13 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/visualizationsetup3.jpg" />
+        <imagedata fileref="../veimages/visualizationsetup3.jpg" />
       </imageobject>
     </mediaobject>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/visualizationsetup4.jpg" />
+        <imagedata fileref="../veimages/visualizationsetup4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -93,7 +93,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/datasettransform.jpg" />
+        <imagedata fileref="../veimages/datasettransform.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -107,7 +107,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/visualizationsetup5.jpg" />
+        <imagedata fileref="../veimages/visualizationsetup5.jpg" />
       </imageobject>
     </mediaobject>
   </section>
@@ -117,7 +117,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/scalarplanes1.jpg" />
+        <imagedata fileref="../veimages/scalarplanes1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -132,7 +132,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/scalarplanes2.jpg" />
+        <imagedata fileref="../veimages/scalarplanes2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -141,7 +141,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/scalarplanes3.jpg" />
+        <imagedata fileref="../veimages/scalarplanes3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -152,7 +152,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/scalarplanes4.jpg" />
+        <imagedata fileref="../veimages/scalarplanes4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -167,7 +167,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/vectorplanes1.jpg" />
+        <imagedata fileref="../veimages/vectorplanes1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -177,7 +177,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/vectorplanes2.jpg" />
+        <imagedata fileref="../veimages/vectorplanes2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -186,7 +186,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/vectorplanes3.jpg" />
+        <imagedata fileref="../veimages/vectorplanes3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -197,7 +197,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/vectorplanes4.jpg" />
+        <imagedata fileref="../veimages/vectorplanes4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -211,7 +211,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/isosurfaces1.jpg" />
+        <imagedata fileref="../veimages/isosurfaces1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -220,7 +220,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/isosurfaces2.jpg" />
+        <imagedata fileref="../veimages/isosurfaces2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -231,7 +231,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/isosurfaces3.jpg" />
+        <imagedata fileref="../veimages/isosurfaces3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -241,7 +241,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/isosurfaces4.jpg" />
+        <imagedata fileref="../veimages/isosurfaces4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -259,7 +259,7 @@
 
     <mediaobject>
       <imageobject>
-	      <imagedata fileref="veimages/texturebasedmenu.jpg" />
+	      <imagedata fileref="../veimages/texturebasedmenu.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -268,7 +268,7 @@
 
     <mediaobject>
       <imageobject>
-	      <imagedata fileref="veimages/scalartoolswindow.jpg" />
+	      <imagedata fileref="../veimages/scalartoolswindow.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -279,7 +279,7 @@
 
     <mediaobject>
       <imageobject>
-	      <imagedata fileref="veimages/texturescalarrange.jpg" />
+	      <imagedata fileref="../veimages/texturescalarrange.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -289,7 +289,7 @@
 
     <mediaobject>
       <imageobject>
-	      <imagedata fileref="veimages/textureisosurface.gif" />
+	      <imagedata fileref="../veimages/textureisosurface.gif" />
       </imageobject>
     </mediaobject>
 
@@ -351,7 +351,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/polydatamenu.jpg" />
+        <imagedata fileref="../veimages/polydatamenu.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -361,7 +361,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/polydataregular.jpg" />
+        <imagedata fileref="../veimages/polydataregular.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -374,7 +374,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="veimages/polydatawarped.jpg" />
+        <imagedata fileref="../veimages/polydatawarped.jpg" />
       </imageobject>
     </mediaobject>
 
