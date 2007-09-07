@@ -724,8 +724,8 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
    StripCharacters( networkData, "\r" );
    
    //Obtain network chunk
-   //size_t networkBegin = networkData.find( std::string( "BLKID" ) );
-   size_t networkBegin = 0;
+   size_t networkBegin = networkData.find( std::string( "? SETUP MAIN ?" ) );
+   //size_t networkBegin = 0;
    //size_t networkEnd = networkData.find( std::string( "? PROPERTIES MAIN ?" ) );
    size_t networkEnd = networkData.find( std::string( "GRAPHICS_BACKUP" ) );
    std::string network;
