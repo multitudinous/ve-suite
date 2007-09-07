@@ -901,14 +901,15 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
    while( tagBegin < network.size()-1);
 }
 ///////////////////////////////////////////////////////////
-void BKPParser::CreateNetworkLinks( void )
+void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::Network* subNetwork, std::string hierName )
 {
 	// remove duplicate points
-	std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > >>::iterator hierPointsIter;
-	for ( hierPointsIter = linkPoints.begin(); hierPointsIter != linkPoints.end(); ++hierPointsIter )
-	{
+	//std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > >>::iterator hierPointsIter;
+	//for ( hierPointsIter = linkPoints.begin(); hierPointsIter != linkPoints.end(); ++hierPointsIter )
+	//{
 		std::map< std::string, std::vector< std::pair< float, float > > >::iterator pointsIter;
-		for ( pointsIter = linkPoints[hierPointsIter->first].begin(); pointsIter != linkPoints[hierPointsIter->first].end(); ++pointsIter )
+		//for ( pointsIter = linkPoints[hierPointsIter->first].begin(); pointsIter != linkPoints[hierPointsIter->first].end(); ++pointsIter )
+	   for ( pointsIter = linkPoints[hierName].begin(); pointsIter != linkPoints[hierName].end(); ++pointsIter )
 	   {
 		  //std::vector< std::pair< unsigned int, unsigned int > > tempPoints;
 		  std::vector< std::pair< float, float > > tempPoints;
@@ -934,11 +935,14 @@ void BKPParser::CreateNetworkLinks( void )
 	   std::map< std::string, std::string >::iterator iter;
 	   // create links for the network
 	   int counter = 0;
-	   for ( iter = inLinkToModel[hierPointsIter->first].begin(); iter != inLinkToModel[hierPointsIter->first].end(); ++iter )
+	   //for ( iter = inLinkToModel[hierPointsIter->first].begin(); iter != inLinkToModel[hierPointsIter->first].end(); ++iter )
+	   for ( iter = inLinkToModel[hierName].begin(); iter != inLinkToModel[hierName].end(); ++iter )
 	   {
 		  std::map< std::string, std::string >::iterator fromModel;
-		  fromModel = outLinkToModel[hierPointsIter->first].find( iter->first );
-		  if ( fromModel != outLinkToModel[hierPointsIter->first].end() )
+		  //fromModel = outLinkToModel[hierPointsIter->first].find( iter->first );
+		  //if ( fromModel != outLinkToModel[hierPointsIter->first].end() )
+		  fromModel = outLinkToModel[hierName].find( iter->first );
+		  if ( fromModel != outLinkToModel[hierName].end() )
 		  {
 			 //define link
 			 // these are unique remember...
@@ -948,50 +952,63 @@ void BKPParser::CreateNetworkLinks( void )
 
 			 std::string toModelName;
 			 std::string fromModelName;
-			 if(hierPointsIter->first == "0")
+			 //if(hierPointsIter->first == "0")
+			 if(hierName == "0")
 			 {
 				 toModelName = iter->second;
 				 fromModelName = fromModel->second;
 			 }
  			 else
 			 {
-				 toModelName = hierPointsIter->first + "." + iter->second;
-				 fromModelName = hierPointsIter->first + "." + fromModel->second;
+				 //toModelName = hierPointsIter->first + "." + iter->second;
+				 //fromModelName = hierPointsIter->first + "." + fromModel->second;
+				 toModelName = hierName + "." + iter->second;
+				 fromModelName = hierName + "." + fromModel->second;
 			 }
 
 			 int toPortId = counter++;
 			 int fromPortId = counter++;
 			 //int toModelId = models[hierPointsIter->first][ toModelName ];
 			 //int fromModelId = models[hierPointsIter->first][ fromModelName ];
-			 int toModelId = models[hierPointsIter->first][ iter->second ];
-			 int fromModelId = models[hierPointsIter->first][ fromModel->second ];
+			 //int toModelId = models[hierPointsIter->first][ iter->second ];
+			 //int fromModelId = models[hierPointsIter->first][ fromModel->second ];
+			 int toModelId = models[hierName][ iter->second ];
+			 int fromModelId = models[hierName][ fromModel->second ];
 			 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
 	         
 			 //Now we create a link
-			 VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+			 //VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+			 VE_XML::VE_Model::Link* xmlLink = subNetwork->GetLink( -1 );
 			 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
 			 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
 			 
 			 //xmlLink->SetLinkName(iter->first);
-			 if (hierPointsIter->first == "0")
+			 //if (hierPointsIter->first == "0")
+			 if (hierName == "0")
 				 xmlLink->SetLinkName(iter->first);
 			 else
-				 xmlLink->SetLinkName(hierPointsIter->first + "." + iter->first);
+				 //xmlLink->SetLinkName(hierPointsIter->first + "." + iter->first);
+				 xmlLink->SetLinkName(hierName + "." + iter->first);
 			 
 			 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
 			 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
 			 //Try to store link cons,
 			 //link cons are (x,y) wxpoint
 			 //here I store x in one vector and y in the other
-			 for ( size_t j = linkPoints[hierPointsIter->first][ fromPortName ].size(); j > 0 ; --j )
+			 /*for ( size_t j = linkPoints[hierPointsIter->first][ fromPortName ].size(); j > 0 ; --j )
 			 {
 				// I am not sure why we need to reverse the points but we do
 				xmlLink->GetLinkPoint( linkPoints[hierPointsIter->first][ fromPortName ].size() - j )->SetPoint( linkPoints[hierPointsIter->first][ fromPortName ].at( j - 1 ) );
+			 }*/
+			 for ( size_t j = linkPoints[hierName][ fromPortName ].size(); j > 0 ; --j )
+			 {
+				// I am not sure why we need to reverse the points but we do
+				xmlLink->GetLinkPoint( linkPoints[hierName][ fromPortName ].size() - j )->SetPoint( linkPoints[hierName][ fromPortName ].at( j - 1 ) );
 			 }
 		  }
 	   }
 //}
-	}
+//	}
 }
 ///////////////////////////////////////////////////////////////////////
 std::string BKPParser::CreateNetwork( void )
@@ -1012,7 +1029,8 @@ std::string BKPParser::CreateNetwork( void )
    veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( 200 ) );
 
    // Create links section
-   CreateNetworkLinks();
+   //CreateNetworkLinks();
+   //CreateNetworkLinks(veNetwork, "0");
 
    //  Models
    std::map< std::string, int >::iterator iter;
@@ -1078,7 +1096,18 @@ for ( hierPointsIter = models.begin(); hierPointsIter != models.end(); ++hierPoi
 			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[hierPointsIter->first][tempPort->GetModelName()][linkPoints[hierPointsIter->first][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints[hierPointsIter->first][tempPort->GetModelName()][linkPoints[hierPointsIter->first][tempPort->GetModelName()].size()-1].second - minY ) ) );
          }
       }
-      // temp data container for all the xmlobjects
+	  
+	  // Create embedded links
+	  // first test that it is a hierarchy block
+	  if(tempModel->GetIconFilename().find("HIERARCHY") != std::string::npos)
+	  {
+		  //subnets
+		VE_XML::VE_Model::Network * subnet = new VE_XML::VE_Model::Network();
+		CreateNetworkLinks(subnet, tempModel->GetModelName());
+		tempModel->SetSubNetwork(subnet);
+	  }
+      
+	  // temp data container for all the xmlobjects
       nodes.push_back( 
                   std::pair< VE_XML::XMLObject*, std::string >( tempModel, "veModel" ) 
                      );
