@@ -39,8 +39,8 @@ private:
 		bool hierarchical;
 	}BlockInfo;
 
-	std::map< std::string, BlockInfo> BlockInfoList;
-	std::map< std::string, std::map< std::string, BlockInfo > > HierarchicalBlockInfoList;
+	//std::map< std::string, BlockInfo> BlockInfoList;
+	std::map< std::string, std::map< std::string, BlockInfo > > BlockInfoList;
 	
 	typedef struct                                                     //struct that contain the stream id, type & coordinates
 	{	
@@ -55,14 +55,19 @@ private:
 	std::vector< std::string > streamIds;                                //vector of stream ids
 
    // link name, model name
-   std::map< std::string, std::string > inLinkToModel;
-   std::map< std::string, std::string > outLinkToModel;
+   //std::map< std::string, std::string > inLinkToModel;
+   //std::map< std::string, std::string > outLinkToModel;
+   std::map< std::string, std::map< std::string, std::string > > inLinkToModel;
+   std::map< std::string, std::map< std::string, std::string > > outLinkToModel;
    //container to hold link points with stream name
-   std::map< std::string, std::vector< std::pair< float, float > > > linkPoints;
+   //std::map< std::string, std::vector< std::pair< float, float > > > linkPoints;
+   std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > > > linkPoints;
    // model name with number
-   std::map< std::string, int > models;
+   //std::map< std::string, int > models;
+   std::map<std::string, std::map< std::string, int > >models;
    // model name with icon location
-   std::map< std::string, std::pair< float, float > > iconLocations;
+   //std::map< std::string, std::pair< float, float > > iconLocations;
+   std::map< std::string, std::map< std::string, std::pair< float, float > > > iconLocations;
    // stream name to port ids from and to
    std::map< std::string, std::pair< int, int > > streamPortIDS;
 
@@ -81,8 +86,10 @@ public:
 	void showAspen(bool);                 
 	void step();
 	int getNumComponents();                                            //returns total components
-	std::string getBlockType(std::string);                                     //returns the filename of component
-	std::string getBlockID(std::string);                                       //returns the filename of component
+	//std::string getBlockType(std::string);                                     //returns the filename of component
+	std::string getBlockType(std::string blockName, std::string flowsheetName = NULL); //returns the filename of component
+	//std::string getBlockID(std::string);                                       //returns the filename of component
+	std::string getBlockID(std::string blockName, std::string flowsheetName = NULL);                                      //returns the filename of component
 	float getXCoord(int);                                              //returns the x coordinates of component
 	float getYCoord(int);                                              //returns the y coordinates of component
 	float getStreamXCoord(int streamIndex, int coordIndex); //returns X coord of one point of stream

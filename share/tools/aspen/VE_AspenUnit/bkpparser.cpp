@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include <gdiplus.h>
 #include "bkpparser.h"
@@ -81,14 +80,22 @@ int BKPParser::getNumComponents()
 	return BlockInfoList.size(); //vectors are all same length
 }
 
-std::string BKPParser::getBlockType(std::string name)
+std::string BKPParser::getBlockType(std::string blockName, std::string flowsheetName)
 {
-	return BlockInfoList[name].type;
+	if(flowsheetName == "NULL")
+		//return BlockInfoList["Top_Sheet"][blockName].type;
+		return BlockInfoList["0"][blockName].type;
+	else
+		return BlockInfoList[flowsheetName][blockName].type;
 }
 
-std::string BKPParser::getBlockID(std::string name)
+std::string BKPParser::getBlockID(std::string blockName, std::string flowsheetName)
 {
-	return BlockInfoList[name].id;
+	if(flowsheetName == "NULL")
+		//return BlockInfoList["Top_Sheet"][blockName].id;
+		return BlockInfoList["0"][blockName].id;
+	else
+		return BlockInfoList[flowsheetName][blockName].id;
 }
 
 float BKPParser::getXCoord(int num)
@@ -134,13 +141,14 @@ int BKPParser::getStreamSize(int index)
 void BKPParser::ParseFile(const char * bkpFile)
 {
 	//Open file streams	
-	std::ifstream inFile (bkpFile, std::ios::binary);
+	std::ifstream inFile(bkpFile, std::ios::binary);
+
 	std::ifstream lutFile ("F:/ASPENV21/LUT.txt");
 	std::ofstream outFile("log.txt");
 	std::string discard;
 	
 	//make sure it is a valid file
-	if(!inFile)
+	if(!inFile.is_open())
 	{
 		std::cout<<"Error while opening File"<<std::endl;
 		return;
@@ -213,8 +221,7 @@ void BKPParser::ParseFile(const char * bkpFile)
 		getline(inFile, compName);
 		getline(inFile, compLib);
 		getline(inFile, compLibName);
-		std::cout<<compID<<std::endl;
-		if(compID.find(".") == std::string::npos)
+		/*if(compID.find(".") == std::string::npos)
 		{
 			//add new block to vector
 			std::stringstream tokenizer(compID);
@@ -228,27 +235,51 @@ void BKPParser::ParseFile(const char * bkpFile)
 			else
 				tempBlockInfo.hierarchical = true;
 			BlockInfoList[tempBlockInfo.id] = tempBlockInfo;
-		}
-		else
-		{
-			std::string tempHierarchyBlock;			
-			size_t  pos = compID.find(".", 0);
-			
-			//get the heirarchy block
-			std::string temp = compID.substr(0, pos);
-			compID.erase(0, pos + 1);
-			tempHierarchyBlock = temp;
-			tempBlockInfo.id = compID;
+		}*/
+		//else
+		//{
+			//std::string tempHierarchyBlock;
+			//size_t  pos = compID.find(".", 0);
 
+			//get the heirarchy block
+			//std::string temp = compID.substr(0, pos);
+			//compID.erase(0, pos + 1);
+			//tempHierarchyBlock = temp;
+			//tempBlockInfo.id = compID;
+
+			//remove newline
 			std::stringstream tokenizer(compLibName);
 			tokenizer >> tempBlockInfo.type;
 			
-			tempBlockInfo.hierarchical = false;
-			HierarchicalBlockInfoList[tempHierarchyBlock][tempBlockInfo.id] = tempBlockInfo;
+			if(compLibName.find("HIERARCHY") == std::string::npos)
+				tempBlockInfo.hierarchical = false;
+			else
+				tempBlockInfo.hierarchical = true;
 
-			hierfile << HierarchicalBlockInfoList.size()<< " : "<< HierarchicalBlockInfoList[tempHierarchyBlock].size()<<std::endl;
-			hierfile << "main: "<<tempHierarchyBlock<<" embedded: "<<tempBlockInfo.id<<std::endl;
-		}
+			if(compID.find(".") == std::string::npos)
+			{
+				std::stringstream tokenizer(compID);
+				tokenizer >> tempBlockInfo.id;  //remove newline
+				//tempBlockInfo.id = compID;
+				//HierarchicalBlockInfoList[tempHierarchyBlock][tempBlockInfo.id] = tempBlockInfo;
+				//BlockInfoList["Top_Sheet"][tempBlockInfo.id] = tempBlockInfo;
+				BlockInfoList["0"][tempBlockInfo.id] = tempBlockInfo;
+			}
+			else
+			{
+				//parse out the name of the hierarchy block
+				std::stringstream tokenizer(compID);
+				tokenizer >> compID;  //remove newline
+				size_t  pos = compID.find_last_of(".");
+				std::string temp = compID.substr(0, pos);
+				tempBlockInfo.id = compID.substr(pos+1, compID.size());
+				//HierarchicalBlockInfoList[tempHierarchyBlock][tempBlockInfo.id] = tempBlockInfo;
+				BlockInfoList[temp][tempBlockInfo.id] = tempBlockInfo;
+			}
+
+			//hierfile << HierarchicalBlockInfoList.size()<< " : "<< HierarchicalBlockInfoList[tempHierarchyBlock].size()<<std::endl;
+			//hierfile << "main: "<<tempHierarchyBlock<<" embedded: "<<tempBlockInfo.id<<std::endl;
+		//}
 		count++;
 	}
 	hierfile.close();
@@ -285,7 +316,12 @@ void BKPParser::ParseFile(const char * bkpFile)
 
 	//build network information
 	CreateNetworkInformation( networkData );
-	
+	////////////////////////Loop FOR Hierarchy///////////////////////////
+	//std::map< std::string, std::map< std::string, BlockInfo > >::reverse_iterator sheetIter;
+	std::map< std::string, std::map< std::string, BlockInfo > >::iterator sheetIter;
+//for (sheetIter = BlockInfoList.rbegin(); sheetIter != BlockInfoList.rend(); ++sheetIter)
+for (sheetIter = BlockInfoList.begin(); sheetIter != BlockInfoList.end(); ++sheetIter)
+{
 	//find first block
 	while(temp.compare(0, 5, "BLOCK", 0, 5)!= 0 && !inFile.eof())
 	{
@@ -296,7 +332,7 @@ void BKPParser::ParseFile(const char * bkpFile)
 	//Read graphic blocks
 	count =0;
 	std::string id, version, icon, flag, section, at, labelAt, scaleMod, annotation;
-	while(count < (int)BlockInfoList.size())
+	while(count < (int)BlockInfoList[sheetIter->first].size())
 	{
 		getline(inFile, id);
 		std::cout<<id<<std::endl;
@@ -346,8 +382,8 @@ void BKPParser::ParseFile(const char * bkpFile)
 		std::string tempIcon;
 		iconTokenizer >> tempIcon;
 		tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
-		BlockInfoList[tempBlockId].icon = tempIcon;
-		BlockInfoList[tempBlockId].scale = scale;// * 0.5f;
+		BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
+		BlockInfoList[sheetIter->first][tempBlockId].scale = scale;// * 0.5f;
 		
 		//find offset
 		float left=0, right=0, bottom=0, top=0; //coords
@@ -355,8 +391,8 @@ void BKPParser::ParseFile(const char * bkpFile)
 		float heightOffset = 0;
 		std::string tempEntry;
 		std::string tempParser;
-		outFile<<BlockInfoList[tempBlockId].type+" "+BlockInfoList[tempBlockId].icon<<std::endl;
-		while(tempEntry.find(BlockInfoList[tempBlockId].type+" "+BlockInfoList[tempBlockId].icon, 0) == std::string::npos && !inFile.eof())
+		outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
+		while(tempEntry.find(BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon, 0) == std::string::npos && !inFile.eof())
 		{
 			getline(lutFile, tempEntry);
 		}
@@ -376,57 +412,57 @@ void BKPParser::ParseFile(const char * bkpFile)
 
 		if(modifier == 0)
 		{
-			BlockInfoList[tempBlockId].rotation = 0.0f;
-			BlockInfoList[tempBlockId].mirror = 0;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
 			widthOffset = abs(left/iconWidth);
 			heightOffset = abs(top/iconHeight);
 		}
 		else if(modifier == 1)
 		{
-			BlockInfoList[tempBlockId].rotation = 0.0f;
-			BlockInfoList[tempBlockId].mirror = 1;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
 			widthOffset = abs(right/iconWidth);
 			heightOffset = abs(top/iconHeight);
 		}
 		else if(modifier == 2)
 		{
-			BlockInfoList[tempBlockId].rotation = 0.0f;
-			BlockInfoList[tempBlockId].mirror = 2;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
 			widthOffset = abs(left/iconWidth);
 			heightOffset = abs(bottom/iconHeight);
 		}
 		else if(modifier == 3)
 		{
-			BlockInfoList[tempBlockId].rotation = 90.0f;
-			BlockInfoList[tempBlockId].mirror = 0;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 90.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
 			widthOffset = abs(top/iconWidth);
 			heightOffset = abs(right/iconHeight);
 		}
 		else if(modifier == 4)
 		{
-			BlockInfoList[tempBlockId].rotation = 270.0f;
-			BlockInfoList[tempBlockId].mirror = 0;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
 			widthOffset = abs(bottom/iconWidth);
 			heightOffset = abs(left/iconHeight);
 		}
 		else if(modifier == 5)
 		{
-			BlockInfoList[tempBlockId].rotation = 0.0f;
-			BlockInfoList[tempBlockId].mirror = 3;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 3;
 			widthOffset = abs(right/iconWidth);
 			heightOffset = abs(bottom/iconHeight);
 		}
 		else if(modifier == 6)
 		{
-			BlockInfoList[tempBlockId].rotation = 270.0f;
-			BlockInfoList[tempBlockId].mirror = 2;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
 			widthOffset = abs(top/iconWidth);
 			heightOffset = abs(left/iconHeight);
 		}
 		else if(modifier == 7)
 		{
-			BlockInfoList[tempBlockId].rotation = 270.0f;
-			BlockInfoList[tempBlockId].mirror = 1;
+			BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
+			BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
 			widthOffset = abs(bottom/iconWidth);
 			heightOffset = abs(right/iconHeight);
 		}
@@ -445,7 +481,7 @@ void BKPParser::ParseFile(const char * bkpFile)
 		//invert Y axis - flowsheets are inverted
 		float scaledYCoords = -yCoords.back() * 100;
 		
-		CString iconPath = ("2DIcons/"+BlockInfoList[tempBlockId].type+"/"+BlockInfoList[tempBlockId].type+"."+BlockInfoList[tempBlockId].icon+".jpg").c_str();
+		CString iconPath = ("2DIcons/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
 		LPWSTR lpszW = new WCHAR[255];
 		LPTSTR lpStr = iconPath.GetBuffer( iconPath.GetLength() );
 		int nLen = MultiByteToWideChar(CP_ACP, 0,lpStr, -1, NULL, NULL);
@@ -461,20 +497,19 @@ void BKPParser::ParseFile(const char * bkpFile)
 
 		//iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords+200, scaledYCoords+200 );
 		//iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords + 500 - (0.25*width), scaledYCoords + 500 - (0.25*height) );
-		iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords - (width*widthOffset*BlockInfoList[tempBlockId].scale), scaledYCoords - (height*heightOffset*BlockInfoList[tempBlockId].scale) );
+		iconLocations[sheetIter->first][ tempBlockId ] = std::pair< float, float >( scaledXCoords - (width*widthOffset*BlockInfoList[sheetIter->first][tempBlockId].scale), scaledYCoords - (height*heightOffset*BlockInfoList[sheetIter->first][tempBlockId].scale) );
 		count++;
 	}
-	lutFile.close();
 	std::cout<<"Finished Reading Block Info"<<std::endl;
 
 	//locate minimum X - used for normalization
 	float minX = 0;
 	float minY = 0;
 	std::map< std::string, std::pair< float, float > >::iterator iter;
-	for (iter = iconLocations.begin(); iter != iconLocations.end(); iter++)
+	for (iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
 	{
-		float currentX = iconLocations[ iter->first ].first;
-		float currentY = iconLocations[ iter->first ].second;
+		float currentX = iconLocations[sheetIter->first][ iter->first ].first;
+		float currentY = iconLocations[sheetIter->first][ iter->first ].second;
 		if(currentX < minX)
 			minX = currentX;
 		if(currentY < minY)
@@ -589,7 +624,7 @@ void BKPParser::ParseFile(const char * bkpFile)
 				tester2<<" x: "<<scaledX<<" y: "<<scaledY;
 				//linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX+200, scaledY+200 ) );
 				//linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX + 1000, scaledY +1000 ) );
-				linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX, scaledY ) );
+				linkPoints[sheetIter->first][xy.streamId].push_back( std::pair< float, float >( scaledX, scaledY ) );
 			}
 			// add converted points for wx
 			xy.value.erase(xy.value.begin(),xy.value.end() );//empty temporary vector
@@ -611,29 +646,29 @@ void BKPParser::ParseFile(const char * bkpFile)
 	tester2.close();
 	//blocks
 	std::ofstream tester3 ("tester3.txt");
-	for(iter = iconLocations.begin(); iter != iconLocations.end(); iter++)
+	for(iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
 	{
-		iconLocations[ iter->first ].first = iconLocations[iter->first].first + normX;
-		iconLocations[ iter->first ].second = iconLocations[iter->first].second + normY;
+		iconLocations[sheetIter->first][ iter->first ].first = iconLocations[sheetIter->first][iter->first].first + normX;
+		iconLocations[sheetIter->first][ iter->first ].second = iconLocations[sheetIter->first][iter->first].second + normY;
 		//iconLocations[ iter->first ].first = iconLocations[iter->first].first;
 		//iconLocations[ iter->first ].second = iconLocations[iter->first].second;
-		tester3<<iter->first<<": x: "<<iconLocations[ iter->first ].first<<" y: "<<iconLocations[ iter->first ].second<<std::endl;
+		tester3<<iter->first<<": x: "<<iconLocations[sheetIter->first][ iter->first ].first<<" y: "<<iconLocations[sheetIter->first][ iter->first ].second<<std::endl;
 	}
 	tester3.close();
 
 	//streams
 	std::ofstream tester ("tester.txt");
 	std::map< std::string, std::vector< std::pair< float, float > > >::iterator iter2;
-	for(iter2 = linkPoints.begin(); iter2 != linkPoints.end(); iter2++)
+	for(iter2 = linkPoints[sheetIter->first].begin(); iter2 != linkPoints[sheetIter->first].end(); iter2++)
 	{
 		tester<<iter2->first<<":";
-		for(int element = 0; element < (int)linkPoints[ iter2->first ].size(); element++)
+		for(int element = 0; element < (int)linkPoints[sheetIter->first][ iter2->first ].size(); element++)
 		{
-			linkPoints[ iter2->first ][element].first = linkPoints[ iter2->first ][element].first + normX;
-			linkPoints[ iter2->first ][element].second = linkPoints[ iter2->first ][element].second + normY;
+			linkPoints[sheetIter->first][ iter2->first ][element].first = linkPoints[sheetIter->first][ iter2->first ][element].first + normX;
+			linkPoints[sheetIter->first][ iter2->first ][element].second = linkPoints[sheetIter->first][ iter2->first ][element].second + normY;
 			//linkPoints[ iter2->first ][element].first = linkPoints[ iter2->first ][element].first;
 			//linkPoints[ iter2->first ][element].second = linkPoints[ iter2->first ][element].second;
-			tester<<" x: "<< linkPoints[ iter2->first ][element].first<<" y: "<<(float)linkPoints[ iter2->first ][element].second;
+			tester<<" x: "<< linkPoints[sheetIter->first][ iter2->first ][element].first<<" y: "<<(float)linkPoints[sheetIter->first][ iter2->first ][element].second;
 		}
 		tester<<std::endl;
 	}
@@ -648,8 +683,8 @@ void BKPParser::ParseFile(const char * bkpFile)
 	std::cout<<"Writing log."<<std::endl;
 	count = 0;
 	int streamCount = 0;
-	outFile << BlockInfoList.size()<<std::endl;
-	while (count < (int)BlockInfoList.size())
+	outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
+	while (count < (int)BlockInfoList[sheetIter->first].size())
 	{
 		outFile << xCoords[count];
 		outFile << "\t";
@@ -673,7 +708,8 @@ void BKPParser::ParseFile(const char * bkpFile)
 		streamCount++;
 		count = 0;
 	}
-	
+}
+	lutFile.close();
 	std::cout<<"Parsing Completed!"<<std::endl;
 	inFile.close();
 	outFile.close();
@@ -686,228 +722,276 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
     StripCharacters( networkData, "\n" );
    // strip the <cr>
    StripCharacters( networkData, "\r" );
-   /// Add code the reads the block network info
-   /// Search for "? FLOWSHEET GLOBAL ?"
-   /// then grab all sections that start with \ and end with \ tempe
-   size_t networkBegin = networkData.find( std::string( "BLKID" ) );
-   size_t networkEnd = networkData.find( std::string( "? PROPERTIES MAIN ?" ) );
+   
+   //Obtain network chunk
+   //size_t networkBegin = networkData.find( std::string( "BLKID" ) );
+   size_t networkBegin = 0;
+   //size_t networkEnd = networkData.find( std::string( "? PROPERTIES MAIN ?" ) );
+   size_t networkEnd = networkData.find( std::string( "GRAPHICS_BACKUP" ) );
    std::string network;
    network.append( networkData, networkBegin, (networkEnd - networkBegin) );
    
-   size_t tag = 0;
-   size_t index = 0;
+   size_t tagBegin = 0;
+   size_t tagEnd = 0;
+   
    // create the maps and network connectivity
    std::string blockName;
+   std::string hierName = "0";
    std::string discard;
+   //find first entry either ? or / or ;
    do
    {
-      tag = network.find( std::string( "\\" ), index );
-      std::string blockData;
-      if ( tag != std::string::npos )
+	   //grab the first of all 3 types of indicators
+	   size_t semi = network.find("\;", tagEnd);
+	   size_t slash = network.find("\\", tagEnd);
+	   size_t question = network.find("\?", tagEnd);
+
+	   //check which one is first and go from there
+	   if (semi < slash && semi < question)
+	   {
+		   tagBegin = semi;
+		   tagEnd = network.find("\;", tagBegin + 1) + 1;
+	   }
+	   else if (slash < semi && slash < question)
+	   {
+		   tagBegin = slash;
+		   tagEnd = network.find("\\", tagBegin + 1) + 1;
+	   }
+	   else if (question < slash && question < semi)
+	   {
+		   tagBegin = question;
+		   tagEnd = network.find("\?", tagBegin + 1) + 1;
+	   }
+
+	   std::string blockData;
+      if ( tagBegin != std::string::npos && tagEnd != std::string::npos)
       {
-         blockData.append( network, index, (tag - index) );
+         blockData.append( network, tagBegin, (tagEnd - tagBegin) );
 		 //std::cout<<blockData<<std::endl;
-		 index = tag + 1;
-		 if(blockData.find(std::string("COMMENTS")) == std::string::npos  &&
-			blockData.find(std::string("FLOWSHEET")) == std::string::npos &&
-			blockData.find(std::string("DEF-STREAM")) == std::string::npos&&
-			blockData.find(std::string("CONNECT BLKID")) == std::string::npos)
-		 {
-			 std::stringstream networkToks(blockData);
-			 std::stringstream tempTokens(networkToks.str());
-			 //networkToks.str().clear();
-			 int toksCounter = 0;
-			 while (tempTokens >> discard)
-				 toksCounter++;
-
-			 std::vector< std::string >  vectorTokens;
-			 for ( int i = 0; i < toksCounter; ++i )
+		 tagBegin = tagEnd + 1;
+		 //if(blockData.find(std::string("COMMENTS")) == std::string::npos  &&
+		//	blockData.find(std::string("FLOWSHEET")) == std::string::npos &&
+		//	blockData.find(std::string("DEF-STREAM")) == std::string::npos&&
+		//	blockData.find(std::string("CONNECT BLKID")) == std::string::npos)
+		 //if(blockData.find(std::string("BLOCK BLKID")) != std::string::npos  ||
+		 //	blockData.find(std::string("BLOCK HIERARCHY")) != std::string::npos)
+		 //{
+			 if(blockData.find(std::string("BLOCK HIERARCHY")) != std::string::npos)
 			 {
-				 std::string token;
-				 networkToks >> token;
-				 vectorTokens.push_back( token );
+				 StripCharacters( blockData, "?" );
+				 StripCharacters( blockData, "\"" );
+				 std::stringstream networkToks(blockData);
+				 while(networkToks >> hierName);
 			 }
-	         
-			 // Now parse the vector of tokens...
-			 for ( size_t i = 0; i < vectorTokens.size(); ++i )
+			 else if(blockData.find(std::string("BLOCK BLKID")) != std::string::npos)
 			 {
-				// This is the block names
-				if ( (vectorTokens.at( i ) == std::string( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "BLKID" )) )
-				{
-				   blockName = vectorTokens.at( ++i );
-				   StripCharacters( blockName, "\"" );
-				   models[ blockName ] = index;
-				}
-				// this are the input links/streams that connect to this particular block
-				else if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "IN" )) )
-				{
-				   std::string tempStrem = vectorTokens.at( i+=2 );
-				   StripCharacters( tempStrem, "\"" );
-				   inLinkToModel[ tempStrem ] = blockName;
-				   //std::cout << tempStrem << std::endl;
-				   ++i;
-	               
-				   while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
-				   {
-					  tempStrem = vectorTokens.at( ++i );
-					  StripCharacters( tempStrem, "\"" );
-					  inLinkToModel[ tempStrem ] = blockName;
-					  ++i;
-				   }
-				}
-				// this are the output links/streams that connect to this particular block
-				else if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "OUT" )) )
-				{
-				   std::string tempStrem = vectorTokens.at( i+=2 );
-				   StripCharacters( tempStrem, "\"" );
-				   outLinkToModel[ tempStrem ] = blockName;
-				   ++i;
-	               
-				   while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
-				   {
-					  tempStrem = vectorTokens.at( ++i );
-					  StripCharacters( tempStrem, "\"" );
-					  outLinkToModel[ tempStrem ] = blockName;
-					  ++i;
-				   }             
-				}
-			 }
-          }
-		 //THIS IS USED TO GATHER HIERARCHY STREAM PORTS
-		 else if(blockData.find(std::string("CONNECT BLKID")) != std::string::npos)
-		 {
-			 //parse the entry into tokens
-			 std::stringstream networkToks(blockData);
-			 std::stringstream tempTokens(networkToks.str());
-			 //networkToks.str().clear();
-			 int toksCounter = 0;
-			 while (tempTokens >> discard)
+				 std::stringstream networkToks(blockData);
+				 std::stringstream tempTokens(networkToks.str());
+				 //networkToks.str().clear();
+				 int toksCounter = 0;
+				 while (tempTokens >> discard)
 				 toksCounter++;
+				 
+				 std::vector< std::string >  vectorTokens;
+				 for ( size_t i = 0; i < toksCounter; ++i )
+				 {
+					 std::string token;
+					 networkToks >> token;
+					 vectorTokens.push_back( token );
+				 }
 
-			std::vector< std::string >  vectorTokens;
-			for ( int i = 0; i < toksCounter; ++i )
-			{
-				std::string token;
-				networkToks >> token;
-				vectorTokens.push_back( token );
-			}
-			
-			//iterate through the tokens
-			for ( size_t i = 0; i < vectorTokens.size(); ++i )
-			{
-				// this are the input links/streams that connect to this particular block
-				if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "IN" )) )
-				{
-				   std::string tempStrem = vectorTokens.at( i+=2 );
-				   //if it has a "." it is the internal connection
-				   if(tempStrem.find(".") == std::string::npos)
-				   {
+				 // Now parse the vector of tokens...
+				 for ( size_t i = 0; i < vectorTokens.size(); ++i )
+				 {
+					// This is the block names
+					if ( (vectorTokens.at( i ) == std::string( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "BLKID" )) )
+					{
+					   blockName = vectorTokens.at( ++i );
+					   StripCharacters( blockName, "\"" );
+					   //if(blockName.find(".") == std::string::npos)
+					   //{
+						   //models["Top_Sheet"][blockName] = index;
+						   //models["0"][blockName] = tagBegin;
+						   models[hierName][blockName] = tagBegin;
+					   //}
+					   //else
+					   //{
+						   //size_t  pos = blockName.find_last_of(".", 0);
+						   //hierName = blockName.substr(0, pos);
+						   //std::string tempBlockName = blockName.substr(pos+1, blockName.size());
+						   //models[hierName][ tempBlockName ] = tagBegin;
+					   //}
+					}
+					// this are the input links/streams that connect to this particular block
+					else if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "IN" )) )
+					{
+					   std::string tempStrem = vectorTokens.at( i+=2 );
 					   StripCharacters( tempStrem, "\"" );
-					   inLinkToModel[ tempStrem ] = blockName;
+
+					   inLinkToModel[hierName][ tempStrem ] = blockName;
 					   ++i;
-					   
+				       
 					   while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
 					   {
 						  tempStrem = vectorTokens.at( ++i );
 						  StripCharacters( tempStrem, "\"" );
-						  inLinkToModel[ tempStrem ] = blockName;
+						  
+						  inLinkToModel[hierName][ tempStrem ] = blockName;
 						  ++i;
 					   }
-				   }
-				}
-				// this are the output links/streams that connect to this particular block
-				else if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "OUT" )) )
-				{
-				   std::string tempStrem = vectorTokens.at( i+=2 );
-				   //if it has a "." it is the internal connection
-				   if(tempStrem.find(".") == std::string::npos)
-				   {
+					}
+					// this are the output links/streams that connect to this particular block
+					else if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "OUT" )) )
+					{
+					   std::string tempStrem = vectorTokens.at( i+=2 );
 					   StripCharacters( tempStrem, "\"" );
-					   outLinkToModel[ tempStrem ] = blockName;
-					   ++i;
 					   
+					   outLinkToModel[hierName][ tempStrem ] = blockName;					   
+					   ++i;
+				       
 					   while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
 					   {
 						  tempStrem = vectorTokens.at( ++i );
 						  StripCharacters( tempStrem, "\"" );
-						  outLinkToModel[ tempStrem ] = blockName;
+						  outLinkToModel[hierName][ tempStrem ] = blockName;
 						  ++i;
-					   }  
-				   }
-				}
-			}
-		 }
+					   }             
+					}
+				 }
+			 }
+			 else if(blockData.find(std::string("CONNECT BLKID")) != std::string::npos)
+			 {
+				 StripCharacters( blockData, "\\" );
+				 std::stringstream networkToks(blockData);
+				 std::string token;
+
+				 //discard "CONNECT" "BLKID" "=" & "name"
+				 for( size_t i = 0; i < 4; i++)
+					 networkToks >> token;
+				 
+				 //populate vector with remaining tokens
+				 std::vector< std::string >  vectorTokens;
+				 while(networkToks >> token)
+					 vectorTokens.push_back( token );
+
+				 for ( size_t i = 0; i < vectorTokens.size(); ++i )
+				 {
+					// this are the input links/streams that connect to this particular block
+					if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "IN" )) )
+					{
+						if(vectorTokens.at( i+2 ).find("\"") == std::string::npos)
+						{
+							inLinkToModel[hierName][ vectorTokens.at( i+=2 ) ] = blockName;
+							++i;
+						}
+					}
+					// this are the output links/streams that connect to this particular block
+					else if ( (vectorTokens.at( i ) == std::string ( "=" )) && (vectorTokens.at( i - 1 ) == std::string( "OUT" )) )
+					{
+						if(vectorTokens.at( i+2 ).find("\"") == std::string::npos)
+						{
+							outLinkToModel[hierName][ vectorTokens.at( i+=2 ) ] = blockName;
+							++i;
+						}
+					}
+				 }
+			 }
 	   }
    }
-   while( tag != std::string::npos );
+   while( tagBegin < network.size()-1);
 }
 ///////////////////////////////////////////////////////////
 void BKPParser::CreateNetworkLinks( void )
 {
-   // remove duplicate points
-   std::map< std::string, std::vector< std::pair< float, float > > >::iterator pointsIter;
-   for ( pointsIter = linkPoints.begin(); pointsIter != linkPoints.end(); ++pointsIter )
-   {
-      //std::vector< std::pair< unsigned int, unsigned int > > tempPoints;
-      std::vector< std::pair< float, float > > tempPoints;
-      tempPoints = pointsIter->second;
-      std::vector< std::pair< float, float > >::iterator pairIter;
-      for ( pairIter = tempPoints.begin(); pairIter != tempPoints.end(); )
-      {
-         // need to remove duplicate points
-         std::vector< std::pair< float, float > >::iterator tempPairIter;
-         tempPairIter = std::find( pairIter+1, tempPoints.end(), *pairIter );
-         if ( tempPairIter != tempPoints.end() )
-         {
-            tempPoints.erase( tempPairIter );
-         }
-         else
-            ++pairIter;
-      }
-      pointsIter->second = tempPoints;
-   }
+	// remove duplicate points
+	std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > >>::iterator hierPointsIter;
+	for ( hierPointsIter = linkPoints.begin(); hierPointsIter != linkPoints.end(); ++hierPointsIter )
+	{
+		std::map< std::string, std::vector< std::pair< float, float > > >::iterator pointsIter;
+		for ( pointsIter = linkPoints[hierPointsIter->first].begin(); pointsIter != linkPoints[hierPointsIter->first].end(); ++pointsIter )
+	   {
+		  //std::vector< std::pair< unsigned int, unsigned int > > tempPoints;
+		  std::vector< std::pair< float, float > > tempPoints;
+		  tempPoints = pointsIter->second;
+		  std::vector< std::pair< float, float > >::iterator pairIter;
+		  for ( pairIter = tempPoints.begin(); pairIter != tempPoints.end(); )
+		  {
+			 // need to remove duplicate points
+			 std::vector< std::pair< float, float > >::iterator tempPairIter;
+			 tempPairIter = std::find( pairIter+1, tempPoints.end(), *pairIter );
+			 if ( tempPairIter != tempPoints.end() )
+			 {
+				tempPoints.erase( tempPairIter );
+			 }
+			 else
+				++pairIter;
+		  }
+		  pointsIter->second = tempPoints;
+	   }
+//std::map< std::string, std::map< std::string, std::string > >::iterator sheetIter;
+//for (sheetIter = inLinkToModel.begin(); sheetIter != inLinkToModel.end(); ++sheetIter)
+//{
+	   std::map< std::string, std::string >::iterator iter;
+	   // create links for the network
+	   int counter = 0;
+	   for ( iter = inLinkToModel[hierPointsIter->first].begin(); iter != inLinkToModel[hierPointsIter->first].end(); ++iter )
+	   {
+		  std::map< std::string, std::string >::iterator fromModel;
+		  fromModel = outLinkToModel[hierPointsIter->first].find( iter->first );
+		  if ( fromModel != outLinkToModel[hierPointsIter->first].end() )
+		  {
+			 //define link
+			 // these are unique remember...
+			 std::string toPortName = iter->first;
+			 // these are unique remember...
+			 std::string fromPortName = fromModel->first;
 
-   std::map< std::string, std::string >::iterator iter;
-   // create links for the network
-   int counter = 0;
-   for ( iter = inLinkToModel.begin(); iter != inLinkToModel.end(); ++iter )
-   {
-      std::map< std::string, std::string >::iterator fromModel;
-      fromModel = outLinkToModel.find( iter->first );
-      if ( fromModel != outLinkToModel.end() )
-      {
-         //define link
-         // these are unique remember...
-         std::string toPortName = iter->first;
-         // these are unique remember...
-         std::string fromPortName = fromModel->first;
-         std::string toModelName = iter->second;
-         std::string fromModelName = fromModel->second;
+			 std::string toModelName;
+			 std::string fromModelName;
+			 if(hierPointsIter->first == "0")
+			 {
+				 toModelName = iter->second;
+				 fromModelName = fromModel->second;
+			 }
+ 			 else
+			 {
+				 toModelName = hierPointsIter->first + "." + iter->second;
+				 fromModelName = hierPointsIter->first + "." + fromModel->second;
+			 }
 
-         int toPortId = counter++;
-         int fromPortId = counter++;
-         int toModelId = models[ toModelName ];
-         int fromModelId = models[ fromModelName ];
-         streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
-         
-		 //Now we create a link
-         VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
-         xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
-         xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
-         //xmlLink->SetLinkName("TEST");
-		 xmlLink->SetLinkName(iter->first);
-         *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
-         *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
-         //Try to store link cons,
-         //link cons are (x,y) wxpoint
-         //here I store x in one vector and y in the other
-         for ( size_t j = linkPoints[ fromPortName ].size(); j > 0 ; --j )
-         {
-            // I am not sure why we need to reverse the points but we do
-            xmlLink->GetLinkPoint( linkPoints[ fromPortName ].size() - j )->SetPoint( linkPoints[ fromPortName ].at( j - 1 ) );
-         }
-      }
-   }
+			 int toPortId = counter++;
+			 int fromPortId = counter++;
+			 //int toModelId = models[hierPointsIter->first][ toModelName ];
+			 //int fromModelId = models[hierPointsIter->first][ fromModelName ];
+			 int toModelId = models[hierPointsIter->first][ iter->second ];
+			 int fromModelId = models[hierPointsIter->first][ fromModel->second ];
+			 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
+	         
+			 //Now we create a link
+			 VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
+			 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
+			 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
+			 
+			 //xmlLink->SetLinkName(iter->first);
+			 if (hierPointsIter->first == "0")
+				 xmlLink->SetLinkName(iter->first);
+			 else
+				 xmlLink->SetLinkName(hierPointsIter->first + "." + iter->first);
+			 
+			 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
+			 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
+			 //Try to store link cons,
+			 //link cons are (x,y) wxpoint
+			 //here I store x in one vector and y in the other
+			 for ( size_t j = linkPoints[hierPointsIter->first][ fromPortName ].size(); j > 0 ; --j )
+			 {
+				// I am not sure why we need to reverse the points but we do
+				xmlLink->GetLinkPoint( linkPoints[hierPointsIter->first][ fromPortName ].size() - j )->SetPoint( linkPoints[hierPointsIter->first][ fromPortName ].at( j - 1 ) );
+			 }
+		  }
+	   }
+//}
+	}
 }
 ///////////////////////////////////////////////////////////////////////
 std::string BKPParser::CreateNetwork( void )
@@ -933,35 +1017,41 @@ std::string BKPParser::CreateNetwork( void )
    //  Models
    std::map< std::string, int >::iterator iter;
    int blockCount = 0;
-   for ( iter=models.begin(); iter!=models.end(); ++iter )
+   std::map<std::string, std::map< std::string, int > >::iterator hierPointsIter;
+for ( hierPointsIter = models.begin(); hierPointsIter != models.end(); ++hierPointsIter )
+{
+   for ( iter=models[hierPointsIter->first].begin(); iter!=models[hierPointsIter->first].end(); ++iter )
    {
-	   VE_XML::VE_Model::Model* tempModel = new VE_XML::VE_Model::Model();
+	  VE_XML::VE_Model::Model* tempModel = new VE_XML::VE_Model::Model();
       tempModel->SetModelID( iter->second );
-      tempModel->SetModelName( iter->first );
+	  if( hierPointsIter->first == "0")
+	      tempModel->SetModelName( iter->first );
+	  else
+		  tempModel->SetModelName( hierPointsIter->first + "." +iter->first );
       tempModel->SetVendorName( "ASPENUNIT" );
-	  tempModel->SetIconFilename(BlockInfoList[iter->first].type+"/"+BlockInfoList[iter->first].type+"."+BlockInfoList[iter->first].icon);
-	  tempModel->SetIconRotation(BlockInfoList[iter->first].rotation);
-	  tempModel->SetIconScale(BlockInfoList[iter->first].scale);
-	  tempModel->SetIconMirror(BlockInfoList[iter->first].mirror);
+	  tempModel->SetIconFilename(BlockInfoList[hierPointsIter->first][iter->first].type+"/"+BlockInfoList[hierPointsIter->first][iter->first].type+"."+BlockInfoList[hierPointsIter->first][iter->first].icon);
+	  tempModel->SetIconRotation(BlockInfoList[hierPointsIter->first][iter->first].rotation);
+	  tempModel->SetIconScale(BlockInfoList[hierPointsIter->first][iter->first].scale);
+	  tempModel->SetIconMirror(BlockInfoList[hierPointsIter->first][iter->first].mirror);
       blockCount++;
-	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations[ iter->first ].first, iconLocations[ iter->first ].second ) );
+	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations[hierPointsIter->first][ iter->first ].first, iconLocations[hierPointsIter->first][ iter->first ].second ) );
       std::map< std::string, std::string >::iterator iterStreams;
 
-	//search through input/output positions to find max X and max Y
-	double maxX = iconLocations[ iter->first ].first;// + 40.0;
-	double maxY = iconLocations[ iter->first ].second;// + 40.0;
-	double minX = iconLocations[ iter->first ].first;
-	double minY = iconLocations[ iter->first ].second;
+		//search through input/output positions to find max X and max Y
+		double maxX = iconLocations[hierPointsIter->first][ iter->first ].first;// + 40.0;
+		double maxY = iconLocations[hierPointsIter->first][ iter->first ].second;// + 40.0;
+		double minX = iconLocations[hierPointsIter->first][ iter->first ].first;
+		double minY = iconLocations[hierPointsIter->first][ iter->first ].second;
 
-	//40 is ICON size
-	//double dx = 40.0/(maxX-minX);
-	//double dy = 40.0/(maxY-minY);
-	double dx = 1;
-	double dy = 1;
-	std::cout<<"maxX: "<<maxX<<" minX: "<<minX<<" maxY: "<<maxY<<" minY: "<<minY<<std::endl;
+		//40 is ICON size
+		//double dx = 40.0/(maxX-minX);
+		//double dy = 40.0/(maxY-minY);
+		double dx = 1;
+		double dy = 1;
+		std::cout<<"maxX: "<<maxX<<" minX: "<<minX<<" maxY: "<<maxY<<" minY: "<<minY<<std::endl;
 
       // input ports
-      for ( iterStreams = inLinkToModel.begin(); iterStreams != inLinkToModel.end(); ++iterStreams )
+      for ( iterStreams = inLinkToModel[hierPointsIter->first].begin(); iterStreams != inLinkToModel[hierPointsIter->first].end(); ++iterStreams )
       {
          if ( iterStreams->second == iter->first )
          {
@@ -971,11 +1061,11 @@ std::string BKPParser::CreateNetwork( void )
             tempPort->SetModelName( iterStreams->first );
             tempPort->SetDataFlowDirection( std::string( "input" ) );
 			//tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[tempPort->GetModelName()][0].first-minX)*dx, (linkPoints[tempPort->GetModelName()][0].second-minY)*dy ) );
-			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[tempPort->GetModelName()][0].first - minX ), (linkPoints[tempPort->GetModelName()][0].second - minY ) ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[hierPointsIter->first][tempPort->GetModelName()][0].first - minX ), (linkPoints[hierPointsIter->first][tempPort->GetModelName()][0].second - minY ) ) );
 		 }
       }
       // output ports
-      for ( iterStreams = outLinkToModel.begin(); iterStreams != outLinkToModel.end(); ++iterStreams )
+      for ( iterStreams = outLinkToModel[hierPointsIter->first].begin(); iterStreams != outLinkToModel[hierPointsIter->first].end(); ++iterStreams )
       {
          if ( iterStreams->second == iter->first )
          {
@@ -985,7 +1075,7 @@ std::string BKPParser::CreateNetwork( void )
             tempPort->SetModelName( iterStreams->first );
             tempPort->SetDataFlowDirection( std::string( "output" ) );
 			//tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[tempPort->GetModelName()][linkPoints[tempPort->GetModelName()].size()-1].first-minX)*dx, (linkPoints[tempPort->GetModelName()][linkPoints[tempPort->GetModelName()].size()-1].second-minY)*dy ) );
-			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[tempPort->GetModelName()][linkPoints[tempPort->GetModelName()].size()-1].first - minX ), (linkPoints[tempPort->GetModelName()][linkPoints[tempPort->GetModelName()].size()-1].second - minY ) ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[hierPointsIter->first][tempPort->GetModelName()][linkPoints[hierPointsIter->first][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints[hierPointsIter->first][tempPort->GetModelName()][linkPoints[hierPointsIter->first][tempPort->GetModelName()].size()-1].second - minY ) ) );
          }
       }
       // temp data container for all the xmlobjects
@@ -993,6 +1083,7 @@ std::string BKPParser::CreateNetwork( void )
                   std::pair< VE_XML::XMLObject*, std::string >( tempModel, "veModel" ) 
                      );
    }
+}
    std::string fileName( "returnString" );
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
