@@ -6,7 +6,7 @@ import SConsAddons.Util as sca_util
 Import('ves_pkg', 'RootDir')
 env = ves_pkg.getEnv().Copy()
 
-launcherBundle = ves_pkg.createFileBundle( 'share' )
+launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 ##Move Docbook files to PREFIX(Install Directory) if it exists.
 docbookDirectory = pj(RootDir, 'share','docs','docbook','vesuite_docs')
 
