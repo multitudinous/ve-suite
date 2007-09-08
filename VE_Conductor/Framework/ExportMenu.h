@@ -59,13 +59,9 @@ public:
     ///\enum The enums for MainToolBar
     enum 
     {
-        EXPORT_SCREEN_SHOT=950,
+        EXPORT_SCREEN_SHOT=1950,
         EXPORT_DOT_FILE
     };
-
-private:
-    ///Adds the tools to the toolbar
-    void CreateExportMenu();
 
     ///Handles event for new
     ///\param event The wxCommand event
@@ -75,13 +71,18 @@ private:
     ///\param event The wxCommand event
     void OnDOTFile( wxCommandEvent& event );
 
+private:
+
+    ///Adds the tools to the toolbar
+    void CreateExportMenu();
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
 
-    DECLARE_EVENT_TABLE()
+    //DECLARE_EVENT_TABLE()
 };
 
 #endif //EXPORT_MENU_H

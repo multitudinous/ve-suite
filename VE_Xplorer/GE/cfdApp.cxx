@@ -256,10 +256,10 @@ cfdPBufferManager* cfdApp::GetPBuffer()
     return _pbuffer;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
+/*osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
 {
     return osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 {

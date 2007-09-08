@@ -44,10 +44,10 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 
-BEGIN_EVENT_TABLE( ExportMenu, wxMenu )
-    EVT_MENU( EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
-    EVT_MENU( EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
-END_EVENT_TABLE()
+/*BEGIN_EVENT_TABLE( ExportMenu, wxMenu )
+    EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
+    EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
+END_EVENT_TABLE()*/
 
 ////////////////////////////////////////////////////////////////////////////////
 ExportMenu::ExportMenu() : wxMenu()
@@ -62,8 +62,8 @@ ExportMenu::~ExportMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::CreateExportMenu()
 {
-    Append( EXPORT_SCREEN_SHOT, _( "Screen Shot" ) );
-    Append( EXPORT_DOT_FILE, _( "OSG Graph File" ) );
+    Append( ExportMenu::EXPORT_SCREEN_SHOT, _( "Screen Shot" ) );
+    Append( ExportMenu::EXPORT_DOT_FILE, _( "OSG Graph File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::OnScreenShot( wxCommandEvent& event )
