@@ -1,0 +1,15 @@
+prefix=@prefix@
+exec_prefix=${prefix}/bin
+share_dir=${prefix}/share
+man_dir=${prefix}/man
+
+Name: Xerces
+Description: 
+URL: 
+Version: @version@
+Provides: @provides@
+Requires: 
+Arch: @arch@
+Libs: @xerces_libs@
+Libs.private: 
+Cflags: @xerces_cxxflags@
