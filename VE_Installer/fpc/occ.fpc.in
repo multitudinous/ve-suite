@@ -3,7 +3,7 @@ exec_prefix=${prefix}/bin
 share_dir=${prefix}/share
 man_dir=${prefix}/man
 
-Name: Xerces
+Name: OpenCASCADE
 Description: 
 URL: 
 Version: @version@
