@@ -37,7 +37,7 @@
 #include "VE_Open/XML/ParameterBlock.h"
 #include "VE_Open/XML/CAD/CADNode.h"
 #include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/System.h"
 
 #include <sstream>
 
@@ -116,7 +116,7 @@ Model::Model( const Model& input )
     iconScale = input.iconScale;
     iconRotation = input.iconRotation;
     iconMirror = input.iconMirror;
-    m_subNetwork = input.m_subNetwork;
+    m_subSystem = new System( *input.m_subSystem );
 
     for ( size_t i = 0; i < input.ports.size(); ++i )
     {
@@ -166,7 +166,7 @@ Model& Model::operator=( const Model& input)
       iconScale = input.iconScale;
       iconRotation = input.iconRotation;
       iconMirror = input.iconMirror;
-      m_subNetwork = input.m_subNetwork;
+      m_subSystem = new System( *input.m_subSystem );
       
       for ( size_t i = 0; i < ports.size(); ++i )
       {
@@ -404,13 +404,13 @@ void Model::SetObjectFromXMLData(DOMNode* element)
             modelAttribute->SetObjectFromXMLData( dataValueStringName );
         }
     }
-    //Get the subnetwork for this model
+    //Get the subSystem for this model
     {
-        dataValueStringName = GetSubElement( currentElement, "modelSubNetwork", 0 );
+        dataValueStringName = GetSubElement( currentElement, "modelSubSystem", 0 );
         if( dataValueStringName )
         {
-            m_subNetwork = new Network();
-            m_subNetwork->SetObjectFromXMLData( dataValueStringName );
+            m_subSystem = new System();
+            m_subSystem->SetObjectFromXMLData( dataValueStringName );
         }
     }
 }
@@ -755,9 +755,9 @@ void Model::_updateVEElement( std::string input )
         SetSubElement( "modelAttributes", modelAttribute );   
     }
 
-    if( m_subNetwork )
+    if( m_subSystem )
     {
-        SetSubElement( "modelSubNetwork", &(*m_subNetwork) );   
+        SetSubElement( "modelSubSystem", &(*m_subSystem) );   
     }   
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -811,12 +811,12 @@ int Model::GetIconMirror( void )
    return iconMirror;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetSubNetwork( VE_XML::VE_Model::NetworkPtr network )
+void Model::SetSubSystem( VE_XML::VE_Model::SystemWeakPtr inputSystem )
 {
-    m_subNetwork = network;
+    m_subSystem = inputSystem;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::NetworkPtr Model::GetSubNetwork()
+VE_XML::VE_Model::SystemWeakPtr Model::GetSubSystem()
 {
-    return m_subNetwork;
+    return m_subSystem;
 }

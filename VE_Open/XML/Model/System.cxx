@@ -1,0 +1,171 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date: 2007-08-24 11:53:30 -0500 (Fri, 24 Aug 2007) $
+ * Version:       $Rev: 8827 $
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Open/XML/Model/System.h"
+#include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/Model.h"
+
+#include "VE_Open/XML/DataValuePair.h"
+
+XERCES_CPP_NAMESPACE_USE
+using namespace VE_XML;
+using namespace VE_XML::VE_Model;
+////////////////////////////////////////////////////////////////////////////////   
+//Constructor                             //
+////////////////////////////////////////////////////////////////////////////////   
+System::System()
+:XMLObject()
+{
+    SetObjectType("System");
+    SetObjectNamespace("Model");
+}
+////////////////////////////////////////////////////////////////////////////////   
+System::~System()
+{
+    m_models.clear();
+}
+////////////////////////////////////////////////////////////////////////////////   
+System::System( const System& input )
+:XMLObject(input)
+{
+    m_network = new Network( *(input.m_network) );
+   
+    for( size_t i = 0; i < input.m_models.size(); ++i )
+    {
+        m_models.push_back( new Model( *input.m_models.at( i ) ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////   
+System& System::operator=( const System& input)
+{
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =(input);
+        m_network = new Network( *input.m_network );
+        
+        m_models.clear();
+        for( size_t i = 0; i < input.m_models.size(); ++i )
+        {
+            m_models.push_back( new Model( *input.m_models.at( i ) ) );
+        }
+    }
+    return *this;
+}
+////////////////////////////////////////////////////////////////////////////////   
+void System::_updateVEElement( std::string input )
+{
+    // write all the elements according to verg_model.xsd
+    SetAttribute( "id", uuid );
+    SetSubElement( "network", &(*m_network) );   
+
+    for( size_t i = 0; i < m_models.size(); ++i )
+    {
+        SetSubElement( "model", &(*m_models.at( i )) );   
+    }
+}
+////////////////////////////////////////////////////////////////////////////////   
+void System::AddNetwork( NetworkWeakPtr inputNetwork )
+{
+    m_network = inputNetwork;
+}
+////////////////////////////////////////////////////////////////////////////////   
+NetworkWeakPtr System::GetNetwork()
+{
+    return m_network;
+}
+////////////////////////////////////////////////////////////////////////////////   
+void System::SetObjectFromXMLData(DOMNode* element)
+{
+    DOMElement* currentElement = 0;
+    if( element->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast< DOMElement* >( element );
+    }
+
+    if( !currentElement )
+    {
+        return;
+    }   
+    
+    //Setup uuid for model element
+    {
+        VE_XML::XMLObject::GetAttribute(currentElement, "id", uuid);
+    }
+
+    //get variables by tags
+    DOMElement* dataValueStringName = 0;
+    // for network
+    {
+        dataValueStringName = GetSubElement( currentElement, "network", 0 );
+        m_network = new Network();
+        m_network->SetObjectFromXMLData( dataValueStringName );
+        dataValueStringName = 0;            
+    }
+    // for models
+    {
+        unsigned int numberOfModels = 
+            currentElement->getElementsByTagName( 
+            xercesString("model") )->getLength();
+        for( unsigned int i = 0; i < numberOfModels; ++i )
+        {
+            dataValueStringName = GetSubElement( currentElement, "model", i );
+            m_models.push_back( new Model() );
+            m_models.back()->SetObjectFromXMLData( dataValueStringName );
+        }
+    }      
+}
+////////////////////////////////////////////////////////////////////////////////   
+ModelWeakPtr System::GetModel( size_t i )
+{
+    try
+    {
+        return m_models.at( i );
+    }
+    catch(...)
+    {
+        std::cerr << "System::GetModel value greater than number of tags present"
+            << std::endl;
+        return 0;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////   
+size_t System::GetNumberOfModels( void )
+{
+    return m_models.size();
+}
+////////////////////////////////////////////////////////////////////////////////   
+void System::AddModel( ModelWeakPtr inputModel )
+{
+    m_models.push_back( inputModel );
+}
+////////////////////////////////////////////////////////////////////////////////   

@@ -35,6 +35,7 @@
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/System.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/Model/TagPtr.h"
@@ -44,39 +45,47 @@ using namespace VE_XML::VE_Model;
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
 {
-   if ( objectType == "Link" )
-   {
-      return new Link();
-   }
-   else if ( objectType == "veModel" )
-   {
-      return new Model();
-   } 
-   else if ( objectType == "veNetwork" )
-   {
-      return new Network();
-   }
-   else if ( objectType == "Model" )
-   {
-      return new Model();
-   } 
-   else if ( objectType == "Network" )
-   {
-      return new Network();
-   }
-   else if ( objectType == "Point" )
-   {
-      return new Point();
-   }
-   else if ( objectType == "Port" )
-   {
-      return new Port();
-   }
-   else if ( objectType == "Tag" )
-   {
-      return new Tag();
-   }
-   return 0;
+    if ( objectType == "Link" )
+    {
+        return new Link();
+    }
+    else if ( objectType == "veModel" )
+    {
+        return new Model();
+    } 
+    else if ( objectType == "veNetwork" )
+    {
+        return new Network();
+    }
+    else if ( objectType == "Model" )
+    {
+        return new Model();
+    } 
+    else if ( objectType == "Network" )
+    {
+        return new Network();
+    }
+    else if ( objectType == "Point" )
+    {
+        return new Point();
+    }
+    else if ( objectType == "Port" )
+    {
+        return new Port();
+    }
+    else if ( objectType == "Tag" )
+    {
+        return new Tag();
+    }
+    else if ( objectType == "System" )
+    {
+        return new System();
+    }
+    else if ( objectType == "veSystem" )
+    {
+        return new System();
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObjectPtr 
@@ -125,7 +134,15 @@ ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
    {
       return new Tag(*dynamic_cast<Tag*>(objectToCopy));
    }
-   return 0;
+    else if ( objectType == "System" )
+    {
+        return new System(*dynamic_cast<System*>(objectToCopy));
+    }
+    else if ( objectType == "veSystem" )
+    {
+        return new System(*dynamic_cast<System*>(objectToCopy));
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::XMLObjectPtr 

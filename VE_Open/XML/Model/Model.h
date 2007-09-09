@@ -46,7 +46,8 @@
 #include <string>
 #include <vector>
 #include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Model/NetworkPtr.h"
+#include "VE_Open/XML/Model/SystemStrongPtr.h"
+#include "VE_Open/XML/Model/SystemWeakPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 
@@ -201,10 +202,10 @@ public:
     ///New interface for handling systems of systems
     ///Set the sub network for this model
     ///\param network The subnetwork for this model
-    void SetSubNetwork( VE_XML::VE_Model::NetworkPtr network );
+    void SetSubSystem( VE_XML::VE_Model::SystemWeakPtr inputSystem );
     ///Get the sub network for this model
     ///\return The subnetwork for this model
-    VE_XML::VE_Model::NetworkPtr GetSubNetwork();
+    VE_XML::VE_Model::SystemWeakPtr GetSubSystem();
     
 protected:
    ///Internally update the data.
@@ -234,7 +235,7 @@ private:
    ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
    unsigned int iconMirror;
    ///The sub network for this model
-   VE_XML::VE_Model::NetworkPtr m_subNetwork;
+   VE_XML::VE_Model::SystemStrongPtr m_subSystem;
 };
 }
 template<>
