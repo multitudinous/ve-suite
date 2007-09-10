@@ -315,6 +315,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Model\System.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Model\Tag.h"
 					>
 				</File>
@@ -344,6 +348,10 @@
 				</File>
 				<File
 					RelativePath=".\Model\Port.cxx"
+					>
+				</File>
+				<File
+					RelativePath=".\Model\System.cxx"
 					>
 				</File>
 				<File
