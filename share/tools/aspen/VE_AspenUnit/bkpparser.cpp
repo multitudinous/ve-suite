@@ -1034,7 +1034,7 @@ std::string BKPParser::CreateNetwork( void )
 
    // Create links section
    //CreateNetworkLinks();
-   //CreateNetworkLinks(veNetwork, "0");
+   CreateNetworkLinks(mainNetwork, "0");
 
    //  Models
    std::map< std::string, int >::iterator iter;
