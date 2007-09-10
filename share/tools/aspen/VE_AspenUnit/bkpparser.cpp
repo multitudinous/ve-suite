@@ -1107,7 +1107,7 @@ for ( hierPointsIter = models.begin(); hierPointsIter != models.end(); ++hierPoi
 	  if(tempModel->GetIconFilename().find("HIERARCHY") != std::string::npos)
 	  {
 		  //subnets
-		  VE_XML::VE_Model::NetworkWeakPtr subnet = new VE_XML::VE_Model::Network();
+		  VE_XML::VE_Model::NetworkStrongPtr subnet = new VE_XML::VE_Model::Network();
 		  CreateNetworkLinks(subnet, tempModel->GetModelName());
 		  
 		  VE_XML::VE_Model::SystemWeakPtr subSystem = new VE_XML::VE_Model::System();
