@@ -14,6 +14,7 @@
 #include <sstream>
 #include "share/tools/aspen/CASIlib/CASI.h"
 #include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/System.h"
 
 namespace VE_Model
 {
@@ -71,7 +72,7 @@ private:
    // stream name to port ids from and to
    std::map< std::string, std::pair< int, int > > streamPortIDS;
 
-   VE_XML::VE_Model::Network* veNetwork;
+   //VE_XML::VE_Model::Network* veNetwork;
    void StripCharacters( std::string& data, std::string character );   
 
 public:
@@ -101,7 +102,8 @@ public:
 	bool isOpen();
 
    //void CreateNetworkLinks( void );
-   void CreateNetworkLinks( VE_XML::VE_Model::Network* subNetwork, std::string hierName );
+   //void CreateNetworkLinks( VE_XML::VE_Model::Network* subNetwork, std::string hierName );
+   void CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork, std::string hierName );
    void CreateNetworkInformation( std::string networkData );
    std::string CreateNetwork( void );
    std::string GetInputModuleParamProperties(std::string modname, std::string paramName);

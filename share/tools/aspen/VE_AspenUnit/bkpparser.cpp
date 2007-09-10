@@ -20,7 +20,7 @@ using namespace Gdiplus;
 BKPParser::BKPParser()
 {
 	aspendoc = new CASI::CASIDocument();
-	veNetwork = new VE_XML::VE_Model::Network();
+	//veNetwork = new VE_XML::VE_Model::Network();
 }
 
 BKPParser::~BKPParser()
@@ -901,7 +901,7 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
    while( tagBegin < network.size()-1);
 }
 ///////////////////////////////////////////////////////////
-void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::Network* subNetwork, std::string hierName )
+void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork, std::string hierName )
 {
 	// remove duplicate points
 	//std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > >>::iterator hierPointsIter;
@@ -1017,16 +1017,20 @@ std::string BKPParser::CreateNetwork( void )
    // then put them all together and for a network string
    // Here we wshould loop over all of the following
    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   VE_XML::VE_Model::NetworkWeakPtr mainNetwork = new VE_XML::VE_Model::Network();
+   VE_XML::VE_Model::System* veSystem = new VE_XML::VE_Model::System();
    
-   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veNetwork, "veNetwork" ) );
+   nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veSystem, "veSystem" ) );
+   //nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( mainNetwork, "veNetwork" ) );
    
    // create default state info section
-   veNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
-   veNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", 1.0 );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( 20 ) );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( 20 ) );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( 200 ) );
-   veNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( 200 ) );
+   mainNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
+   mainNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", 1.0 );
+   mainNetwork->GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( 20 ) );
+   mainNetwork->GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( 20 ) );
+   mainNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( 200 ) );
+   mainNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( 200 ) );
+   veSystem->AddNetwork(mainNetwork);
 
    // Create links section
    //CreateNetworkLinks();
@@ -1040,7 +1044,8 @@ for ( hierPointsIter = models.begin(); hierPointsIter != models.end(); ++hierPoi
 {
    for ( iter=models[hierPointsIter->first].begin(); iter!=models[hierPointsIter->first].end(); ++iter )
    {
-	  VE_XML::VE_Model::Model* tempModel = new VE_XML::VE_Model::Model();
+	  //VE_XML::VE_Model::Model* tempModel = new VE_XML::VE_Model::Model();
+	  VE_XML::VE_Model::ModelWeakPtr tempModel = new VE_XML::VE_Model::Model();
       tempModel->SetModelID( iter->second );
 	  if( hierPointsIter->first == "0")
 	      tempModel->SetModelName( iter->first );
@@ -1102,15 +1107,22 @@ for ( hierPointsIter = models.begin(); hierPointsIter != models.end(); ++hierPoi
 	  if(tempModel->GetIconFilename().find("HIERARCHY") != std::string::npos)
 	  {
 		  //subnets
-		VE_XML::VE_Model::Network * subnet = new VE_XML::VE_Model::Network();
-		CreateNetworkLinks(subnet, tempModel->GetModelName());
-		tempModel->SetSubNetwork(subnet);
+		  VE_XML::VE_Model::NetworkWeakPtr subnet = new VE_XML::VE_Model::Network();
+		  CreateNetworkLinks(subnet, tempModel->GetModelName());
+		  
+		  VE_XML::VE_Model::SystemWeakPtr subSystem = new VE_XML::VE_Model::System();
+		  subSystem->AddNetwork(subnet);
+		  
+		  //tempModel->SetSubNetwork(subnet);
+		  tempModel->SetSubSystem(subSystem);
 	  }
+
+	  veSystem->AddModel(tempModel);
       
 	  // temp data container for all the xmlobjects
-      nodes.push_back( 
-                  std::pair< VE_XML::XMLObject*, std::string >( tempModel, "veModel" ) 
-                     );
+      //nodes.push_back( 
+      //            std::pair< VE_XML::XMLObject*, std::string >( tempModel, "veModel" ) 
+      //               );
    }
 }
    std::string fileName( "returnString" );
