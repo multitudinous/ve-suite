@@ -116,7 +116,10 @@ Model::Model( const Model& input )
     iconScale = input.iconScale;
     iconRotation = input.iconRotation;
     iconMirror = input.iconMirror;
-    m_subSystem = new System( *input.m_subSystem );
+    if( input.m_subSystem )
+    {
+        m_subSystem = new System( *input.m_subSystem );
+    }
 
     for ( size_t i = 0; i < input.ports.size(); ++i )
     {
@@ -166,7 +169,10 @@ Model& Model::operator=( const Model& input)
       iconScale = input.iconScale;
       iconRotation = input.iconRotation;
       iconMirror = input.iconMirror;
-      m_subSystem = new System( *input.m_subSystem );
+      if( input.m_subSystem )
+      {
+          m_subSystem = new System( *input.m_subSystem );
+      }
       
       for ( size_t i = 0; i < ports.size(); ++i )
       {
