@@ -104,7 +104,7 @@ void Tablet::UpdateNavigation()
         return;
     }
 
-    osg::ref_ptr< VE_SceneGraph::DCS > world = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+    osg::ref_ptr< VE_SceneGraph::DCS > world = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
 
     osg::Quat rot_quat;
     osg::Quat world_quat = world->getAttitude();
