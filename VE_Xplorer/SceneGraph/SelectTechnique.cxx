@@ -67,28 +67,38 @@ void SelectTechnique::DefinePasses()
         AddPass( stateset.get() );
     }
 
-    // implement pass #2
+    //Implement pass #2
     {
+        char vertexPass[] =
+            "varying vec3 Normal; \n"
+
+            "void main() \n"
+            "{ \n"
+                "gl_Position = ftransform(); \n"
+            "} \n";
+
+        char fragmentPass[] =
+            "void main() \n"
+            "{ \n"
+                "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
+            "} \n";
+
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+        osg::ref_ptr< osg::Program > program = new osg::Program;
+        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
+        osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-        osg::ref_ptr< osg::Material > material = new osg::Material();
         osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
 
+        program->addShader( vertex_shader.get() );
+        program->addShader( fragment_shader.get() );
+
         linewidth->setWidth( 2.0f );
-        material->setColorMode( osg::Material::OFF );
-        material->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        material->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        material->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
         
         stateset->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-        stateset->setAttributeAndModes( material.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
         stateset->setAttributeAndModes( polymode.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-
-        stateset->setMode( GL_LIGHTING, osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-        stateset->setTextureMode( 0, GL_TEXTURE_1D, osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF );
-        stateset->setTextureMode( 0, GL_TEXTURE_2D, osg::StateAttribute::OVERRIDE | osg::StateAttribute::OFF );
+        stateset->setAttributeAndModes( program.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
 
         AddPass( stateset.get() );
     }
