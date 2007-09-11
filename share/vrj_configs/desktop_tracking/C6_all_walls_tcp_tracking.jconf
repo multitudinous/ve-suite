@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/home/users/mccdo/vrjuggler-cvs/vrjuggler-2.2-svn/build-rhel4_32/instlinks/share/vrjuggler-2.1.26/test/Draw/OGL/wand/C6_all_walls_tcp.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <alias name="VJHead" version="1">
+         <proxy>ISenseHeadProxy</proxy>
+      </alias>
+      <alias name="VJWand" version="1">
+         <proxy>ISenseWandProxy</proxy>
+      </alias>
+      <digital_proxy name="Button0Proxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button1Proxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <digital_proxy name="Button2Proxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button3Proxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>3</unit>
+      </digital_proxy>
+      <digital_proxy name="Button4Proxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>4</unit>
+      </digital_proxy>
+      <digital_proxy name="Button5Proxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>5</unit>
+      </digital_proxy>
+      <position_proxy name="ISenseHeadProxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="head_proxy_transform" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="ISenseWandProxy" version="1">
+         <device>InterSenseAPI0</device>
+         <unit>1</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+               <post_rotation>90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <input_manager name="InputManager0" version="2">
+         <driver>IntersenseAPI_drv</driver>
+      </input_manager>
+      <intersense_api name="InterSenseAPI0" version="2">
+         <driver>/home/vr/vjconfig/C6/component/libisense</driver>
+         <port>/dev/ttyS0</port>
+         <stations>
+            <intersense_station name="head_station" version="1">
+               <enabled>true</enabled>
+               <station_index>1</station_index>
+               <use_digital>false</use_digital>
+               <use_analog>false</use_analog>
+               <digital_first>0</digital_first>
+               <digital_count>0</digital_count>
+               <analog_first>0</analog_first>
+               <analog_count>0</analog_count>
+            </intersense_station>
+         </stations>
+         <stations>
+            <intersense_station name="wand_station" version="1">
+               <enabled>true</enabled>
+               <station_index>0</station_index>
+               <use_digital>true</use_digital>
+               <use_analog>false</use_analog>
+               <digital_first>0</digital_first>
+               <digital_count>5</digital_count>
+               <analog_first>0</analog_first>
+               <analog_count>0</analog_count>
+            </intersense_station>
+         </stations>
+         <verbose>false</verbose>
+         <min>0.0</min>
+         <max>255.0</max>
+         <position_filters>
+            <position_transform_filter name="CHANGEME" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>90.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>-90.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host>Node(master)</device_host>
+      </intersense_api>
+   </elements>
+</configuration>
+
