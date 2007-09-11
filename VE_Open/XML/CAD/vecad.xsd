@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:verg="http://vrac.iastate.edu/~biv/docs/verg.xsd" xmlns:veshader="http://vrac.iastate.edu/~biv/docs/veshader.xsd" version="1.0">
-  <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/verg.xsd" />
-  <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/veshader.xsd" />
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:verg="http://www.vesuite.org/XMLSchema/verg.xsd" xmlns:veshader="http://www.vesuite.org/XMLSchema/veshader.xsd" version="1.0">
+  <xs:include schemaLocation="http://www.vesuite.org/XMLSchema/verg.xsd" />
+  <xs:include schemaLocation="http://www.vesuite.org/XMLSchema/veshader.xsd" />
   <xs:complexType name="CADNode">
     <xs:complexContent>
       <xs:restriction base="veXMLObject">

@@ -2,8 +2,8 @@
 <xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/XMLSchema.xsd"
   xmlns="http://tempuri.org/XMLSchema.xsd" xmlns:mstns="http://tempuri.org/XMLSchema.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/verg.xsd"/>
-  <xs:include schemaLocation="http://www.vrac.iastate.edu/~biv/docs/vecad.xsd"/>
+  <xs:include schemaLocation="http://www.vesuite.org/XMLSchema/verg.xsd"/>
+  <xs:include schemaLocation="http://www.vesuite.org/XMLSchema/vecad.xsd"/>
   <!--the original type of port-->
   <xs:complexType name="vePort">
     <xs:complexContent>
