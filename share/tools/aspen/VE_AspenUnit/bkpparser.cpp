@@ -904,111 +904,81 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
 void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork, std::string hierName )
 {
 	// remove duplicate points
-	//std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > >>::iterator hierPointsIter;
-	//for ( hierPointsIter = linkPoints.begin(); hierPointsIter != linkPoints.end(); ++hierPointsIter )
-	//{
-		std::map< std::string, std::vector< std::pair< float, float > > >::iterator pointsIter;
-		//for ( pointsIter = linkPoints[hierPointsIter->first].begin(); pointsIter != linkPoints[hierPointsIter->first].end(); ++pointsIter )
-	   for ( pointsIter = linkPoints[hierName].begin(); pointsIter != linkPoints[hierName].end(); ++pointsIter )
-	   {
-		  //std::vector< std::pair< unsigned int, unsigned int > > tempPoints;
-		  std::vector< std::pair< float, float > > tempPoints;
-		  tempPoints = pointsIter->second;
-		  std::vector< std::pair< float, float > >::iterator pairIter;
-		  for ( pairIter = tempPoints.begin(); pairIter != tempPoints.end(); )
-		  {
-			 // need to remove duplicate points
-			 std::vector< std::pair< float, float > >::iterator tempPairIter;
-			 tempPairIter = std::find( pairIter+1, tempPoints.end(), *pairIter );
-			 if ( tempPairIter != tempPoints.end() )
-			 {
-				tempPoints.erase( tempPairIter );
-			 }
-			 else
-				++pairIter;
-		  }
-		  pointsIter->second = tempPoints;
-	   }
-//std::map< std::string, std::map< std::string, std::string > >::iterator sheetIter;
-//for (sheetIter = inLinkToModel.begin(); sheetIter != inLinkToModel.end(); ++sheetIter)
-//{
-	   std::map< std::string, std::string >::iterator iter;
-	   // create links for the network
-	   int counter = 0;
-	   //for ( iter = inLinkToModel[hierPointsIter->first].begin(); iter != inLinkToModel[hierPointsIter->first].end(); ++iter )
-	   for ( iter = inLinkToModel[hierName].begin(); iter != inLinkToModel[hierName].end(); ++iter )
-	   {
-		  std::map< std::string, std::string >::iterator fromModel;
-		  //fromModel = outLinkToModel[hierPointsIter->first].find( iter->first );
-		  //if ( fromModel != outLinkToModel[hierPointsIter->first].end() )
-		  fromModel = outLinkToModel[hierName].find( iter->first );
-		  if ( fromModel != outLinkToModel[hierName].end() )
-		  {
-			 //define link
-			 // these are unique remember...
-			 std::string toPortName = iter->first;
-			 // these are unique remember...
-			 std::string fromPortName = fromModel->first;
+	std::map< std::string, std::vector< std::pair< float, float > > >::iterator pointsIter;
+	for ( pointsIter = linkPoints[hierName].begin(); pointsIter != linkPoints[hierName].end(); ++pointsIter )
+	{
+	  std::vector< std::pair< float, float > > tempPoints;
+	  tempPoints = pointsIter->second;
+	  std::vector< std::pair< float, float > >::iterator pairIter;
+	  for ( pairIter = tempPoints.begin(); pairIter != tempPoints.end(); )
+	  {
+		 // need to remove duplicate points
+		 std::vector< std::pair< float, float > >::iterator tempPairIter;
+		 tempPairIter = std::find( pairIter+1, tempPoints.end(), *pairIter );
+		 if ( tempPairIter != tempPoints.end() )
+		 {
+			tempPoints.erase( tempPairIter );
+		 }
+		 else
+			++pairIter;
+	  }
+	  pointsIter->second = tempPoints;
+	}
+	
+	std::map< std::string, std::string >::iterator iter;
+	// create links for the network
+	int counter = 0;
+	for ( iter = inLinkToModel[hierName].begin(); iter != inLinkToModel[hierName].end(); ++iter )
+	{
+	  std::map< std::string, std::string >::iterator fromModel;
+	  fromModel = outLinkToModel[hierName].find( iter->first );
+	  if ( fromModel != outLinkToModel[hierName].end() )
+	  {
+		 //define link
+		 // these are unique remember...
+		 std::string toPortName = iter->first;
+		 // these are unique remember...
+		 std::string fromPortName = fromModel->first;
 
-			 std::string toModelName;
-			 std::string fromModelName;
-			 //if(hierPointsIter->first == "0")
-			 if(hierName == "0")
-			 {
-				 toModelName = iter->second;
-				 fromModelName = fromModel->second;
-			 }
- 			 else
-			 {
-				 //toModelName = hierPointsIter->first + "." + iter->second;
-				 //fromModelName = hierPointsIter->first + "." + fromModel->second;
-				 toModelName = hierName + "." + iter->second;
-				 fromModelName = hierName + "." + fromModel->second;
-			 }
+		 std::string toModelName;
+		 std::string fromModelName;
+		 if(hierName == "0")
+		 {
+			 toModelName = iter->second;
+			 fromModelName = fromModel->second;
+		 }
+		 else
+		 {
+			 toModelName = hierName + "." + iter->second;
+			 fromModelName = hierName + "." + fromModel->second;
+		 }
 
-			 int toPortId = counter++;
-			 int fromPortId = counter++;
-			 //int toModelId = models[hierPointsIter->first][ toModelName ];
-			 //int fromModelId = models[hierPointsIter->first][ fromModelName ];
-			 //int toModelId = models[hierPointsIter->first][ iter->second ];
-			 //int fromModelId = models[hierPointsIter->first][ fromModel->second ];
-			 int toModelId = models[hierName][ iter->second ];
-			 int fromModelId = models[hierName][ fromModel->second ];
-			 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
-	         
-			 //Now we create a link
-			 //VE_XML::VE_Model::Link* xmlLink = veNetwork->GetLink( -1 );
-			 VE_XML::VE_Model::Link* xmlLink = subNetwork->GetLink( -1 );
-			 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
-			 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
-			 
-			 //xmlLink->SetLinkName(iter->first);
-			 //if (hierPointsIter->first == "0")
-			 if (hierName == "0")
-				 xmlLink->SetLinkName(iter->first);
-			 else
-				 //xmlLink->SetLinkName(hierPointsIter->first + "." + iter->first);
-				 xmlLink->SetLinkName(hierName + "." + iter->first);
-			 
-			 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
-			 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
-			 //Try to store link cons,
-			 //link cons are (x,y) wxpoint
-			 //here I store x in one vector and y in the other
-			 /*for ( size_t j = linkPoints[hierPointsIter->first][ fromPortName ].size(); j > 0 ; --j )
-			 {
-				// I am not sure why we need to reverse the points but we do
-				xmlLink->GetLinkPoint( linkPoints[hierPointsIter->first][ fromPortName ].size() - j )->SetPoint( linkPoints[hierPointsIter->first][ fromPortName ].at( j - 1 ) );
-			 }*/
-			 for ( size_t j = linkPoints[hierName][ fromPortName ].size(); j > 0 ; --j )
-			 {
-				// I am not sure why we need to reverse the points but we do
-				xmlLink->GetLinkPoint( linkPoints[hierName][ fromPortName ].size() - j )->SetPoint( linkPoints[hierName][ fromPortName ].at( j - 1 ) );
-			 }
-		  }
-	   }
-//}
-//	}
+		 int toPortId = counter++;
+		 int fromPortId = counter++;
+		 int toModelId = models[hierName][ iter->second ];
+		 int fromModelId = models[hierName][ fromModel->second ];
+		 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
+         
+		 //Now we create a link
+		 VE_XML::VE_Model::Link* xmlLink = subNetwork->GetLink( -1 );
+		 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
+		 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
+		 
+		 //if (hierName == "0")
+			 xmlLink->SetLinkName(iter->first);
+		 //else
+			 //xmlLink->SetLinkName(hierName + "." + iter->first);
+		 
+		 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
+		 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
+
+		 for ( size_t j = linkPoints[hierName][ fromPortName ].size(); j > 0 ; --j )
+		 {
+			// I am not sure why we need to reverse the points but we do
+			xmlLink->GetLinkPoint( linkPoints[hierName][ fromPortName ].size() - j )->SetPoint( linkPoints[hierName][ fromPortName ].at( j - 1 ) );
+		 }
+	  }
+   }
 }
 ///////////////////////////////////////////////////////////////////////
 std::string BKPParser::CreateNetwork( void )
@@ -1021,7 +991,6 @@ std::string BKPParser::CreateNetwork( void )
    VE_XML::VE_Model::System* veSystem = new VE_XML::VE_Model::System();
    
    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( veSystem, "veSystem" ) );
-   //nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( mainNetwork, "veNetwork" ) );
    
    // create default state info section
    mainNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
@@ -1032,105 +1001,140 @@ std::string BKPParser::CreateNetwork( void )
    mainNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( 200 ) );
    veSystem->AddNetwork(mainNetwork);
 
-   // Create links section
-   //CreateNetworkLinks();
    CreateNetworkLinks(mainNetwork, "0");
 
-   //  Models
-   std::map< std::string, int >::iterator iter;
-   int blockCount = 0;
-   std::map<std::string, std::map< std::string, int > >::iterator hierPointsIter;
-for ( hierPointsIter = models.begin(); hierPointsIter != models.end(); ++hierPointsIter )
-{
-   for ( iter=models[hierPointsIter->first].begin(); iter!=models[hierPointsIter->first].end(); ++iter )
+   // Loop over the top networks blocks
+   std::map< std::string, int >::iterator blockIter;
+   for ( blockIter = models["0"].begin(); blockIter != models["0"].end(); ++blockIter )
    {
-	  //VE_XML::VE_Model::Model* tempModel = new VE_XML::VE_Model::Model();
-	  VE_XML::VE_Model::ModelWeakPtr tempModel = new VE_XML::VE_Model::Model();
-      tempModel->SetModelID( iter->second );
-	  if( hierPointsIter->first == "0")
-	      tempModel->SetModelName( iter->first );
-	  else
-		  tempModel->SetModelName( hierPointsIter->first + "." +iter->first );
-      tempModel->SetVendorName( "ASPENUNIT" );
-	  tempModel->SetIconFilename(BlockInfoList[hierPointsIter->first][iter->first].type+"/"+BlockInfoList[hierPointsIter->first][iter->first].type+"."+BlockInfoList[hierPointsIter->first][iter->first].icon);
-	  tempModel->SetIconRotation(BlockInfoList[hierPointsIter->first][iter->first].rotation);
-	  tempModel->SetIconScale(BlockInfoList[hierPointsIter->first][iter->first].scale);
-	  tempModel->SetIconMirror(BlockInfoList[hierPointsIter->first][iter->first].mirror);
-      blockCount++;
-	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations[hierPointsIter->first][ iter->first ].first, iconLocations[hierPointsIter->first][ iter->first ].second ) );
-      std::map< std::string, std::string >::iterator iterStreams;
-
-		//search through input/output positions to find max X and max Y
-		double maxX = iconLocations[hierPointsIter->first][ iter->first ].first;// + 40.0;
-		double maxY = iconLocations[hierPointsIter->first][ iter->first ].second;// + 40.0;
-		double minX = iconLocations[hierPointsIter->first][ iter->first ].first;
-		double minY = iconLocations[hierPointsIter->first][ iter->first ].second;
-
-		//40 is ICON size
-		//double dx = 40.0/(maxX-minX);
-		//double dy = 40.0/(maxY-minY);
-		double dx = 1;
-		double dy = 1;
-		std::cout<<"maxX: "<<maxX<<" minX: "<<minX<<" maxY: "<<maxY<<" minY: "<<minY<<std::endl;
+	  VE_XML::VE_Model::ModelStrongPtr tempModel = new VE_XML::VE_Model::Model();
+	  tempModel->SetModelID( blockIter->second );
+	  tempModel->SetModelName( blockIter->first );
+	  tempModel->SetVendorName( "ASPENUNIT" );
+	  tempModel->SetIconFilename(BlockInfoList["0"][blockIter->first].type+"/"+BlockInfoList["0"][blockIter->first].type+"."+BlockInfoList["0"][blockIter->first].icon);
+	  tempModel->SetIconRotation(BlockInfoList["0"][blockIter->first].rotation);
+	  tempModel->SetIconScale(BlockInfoList["0"][blockIter->first].scale);
+	  tempModel->SetIconMirror(BlockInfoList["0"][blockIter->first].mirror);
+	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations["0"][ blockIter->first ].first, iconLocations["0"][ blockIter->first ].second ) );
+      
+	  double minX = iconLocations["0"][ blockIter->first ].first;
+	  double minY = iconLocations["0"][ blockIter->first ].second;
 
       // input ports
-      for ( iterStreams = inLinkToModel[hierPointsIter->first].begin(); iterStreams != inLinkToModel[hierPointsIter->first].end(); ++iterStreams )
+	  std::map< std::string, std::string >::iterator streamIter;
+      for ( streamIter = inLinkToModel["0"].begin(); streamIter != inLinkToModel["0"].end(); ++streamIter )
       {
-         if ( iterStreams->second == iter->first )
+         if ( streamIter->second == blockIter->first )
          {
 			 VE_XML::VE_Model::Port* tempPort = tempModel->GetPort(-1);
             // inputs are to ports
-            tempPort->SetPortNumber( streamPortIDS[ iterStreams->first ].first );
-            tempPort->SetModelName( iterStreams->first );
+            tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].first );
+            tempPort->SetModelName( streamIter->first );
             tempPort->SetDataFlowDirection( std::string( "input" ) );
-			//tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[tempPort->GetModelName()][0].first-minX)*dx, (linkPoints[tempPort->GetModelName()][0].second-minY)*dy ) );
-			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[hierPointsIter->first][tempPort->GetModelName()][0].first - minX ), (linkPoints[hierPointsIter->first][tempPort->GetModelName()][0].second - minY ) ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints["0"][tempPort->GetModelName()][0].first - minX ), (linkPoints["0"][tempPort->GetModelName()][0].second - minY ) ) );
 		 }
       }
       // output ports
-      for ( iterStreams = outLinkToModel[hierPointsIter->first].begin(); iterStreams != outLinkToModel[hierPointsIter->first].end(); ++iterStreams )
+      for ( streamIter = outLinkToModel["0"].begin(); streamIter != outLinkToModel["0"].end(); ++streamIter )
       {
-         if ( iterStreams->second == iter->first )
+         if ( streamIter->second == blockIter->first )
          {
 			 VE_XML::VE_Model::Port* tempPort = tempModel->GetPort(-1);
             // outputs are from ports
-            tempPort->SetPortNumber( streamPortIDS[ iterStreams->first ].second );
-            tempPort->SetModelName( iterStreams->first );
+            tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].second );
+            tempPort->SetModelName( streamIter->first );
             tempPort->SetDataFlowDirection( std::string( "output" ) );
-			//tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[tempPort->GetModelName()][linkPoints[tempPort->GetModelName()].size()-1].first-minX)*dx, (linkPoints[tempPort->GetModelName()][linkPoints[tempPort->GetModelName()].size()-1].second-minY)*dy ) );
-			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[hierPointsIter->first][tempPort->GetModelName()][linkPoints[hierPointsIter->first][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints[hierPointsIter->first][tempPort->GetModelName()][linkPoints[hierPointsIter->first][tempPort->GetModelName()].size()-1].second - minY ) ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints["0"][tempPort->GetModelName()][linkPoints["0"][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints["0"][tempPort->GetModelName()][linkPoints["0"][tempPort->GetModelName()].size()-1].second - minY ) ) );
          }
       }
-	  
-	  // Create embedded links
-	  // first test that it is a hierarchy block
-	  if(tempModel->GetIconFilename().find("HIERARCHY") != std::string::npos)
-	  {
-		  //subnets
-		  VE_XML::VE_Model::NetworkStrongPtr subnet = new VE_XML::VE_Model::Network();
-		  CreateNetworkLinks(subnet, tempModel->GetModelName());
-		  
-		  VE_XML::VE_Model::SystemWeakPtr subSystem = new VE_XML::VE_Model::System();
-		  subSystem->AddNetwork(subnet);
-		  
-		  //tempModel->SetSubNetwork(subnet);
-		  tempModel->SetSubSystem(subSystem);
-	  }
 
+	  //acquire sublinks
+	  //VE_XML::VE_Model::NetworkStrongPtr subnet = new VE_XML::VE_Model::Network();
+	  //CreateNetworkLinks(subnet, tempModel->GetModelName());
+
+	  //recursively parse subsystems of each block
+	  if(tempModel->GetIconFilename().find("HIERARCHY") != std::string::npos)
+		  ParseSubSystem(tempModel, blockIter->first);
+
+	  //create subsystem
+	  //VE_XML::VE_Model::SystemWeakPtr subSystem = new VE_XML::VE_Model::System();
+	  //subSystem->AddNetwork(subnet);
+	  //tempModel->SetSubSystem(subSystem);
+
+	  //attach model to top system
 	  veSystem->AddModel(tempModel);
-      
-	  // temp data container for all the xmlobjects
-      //nodes.push_back( 
-      //            std::pair< VE_XML::XMLObject*, std::string >( tempModel, "veModel" ) 
-      //               );
    }
-}
    std::string fileName( "returnString" );
    VE_XML::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
    netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
    return fileName;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+void BKPParser::ParseSubSystem(VE_XML::VE_Model::ModelStrongPtr model, std::string networkName)
+{
+	VE_XML::VE_Model::System* subSystem = new VE_XML::VE_Model::System();
+	VE_XML::VE_Model::NetworkStrongPtr subNetwork = new VE_XML::VE_Model::Network();
+	subSystem->AddNetwork(subNetwork);
+
+	CreateNetworkLinks(subNetwork, networkName);
+
+	// Loop over the top networks blocks
+	std::map< std::string, int >::iterator blockIter;
+	for ( blockIter = models[networkName].begin(); blockIter != models[networkName].end(); ++blockIter )
+	{
+		VE_XML::VE_Model::ModelStrongPtr tempModel = new VE_XML::VE_Model::Model();
+		tempModel->SetModelID( blockIter->second );
+		tempModel->SetModelName( blockIter->first );
+		tempModel->SetVendorName( "ASPENUNIT" );
+		tempModel->SetIconFilename(BlockInfoList[networkName][blockIter->first].type+"/"+BlockInfoList[networkName][blockIter->first].type+"."+BlockInfoList[networkName][blockIter->first].icon);
+		tempModel->SetIconRotation(BlockInfoList[networkName][blockIter->first].rotation);
+		tempModel->SetIconScale(BlockInfoList[networkName][blockIter->first].scale);
+		tempModel->SetIconMirror(BlockInfoList[networkName][blockIter->first].mirror);
+		tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations[networkName][ blockIter->first ].first, iconLocations[networkName][ blockIter->first ].second ) );
+
+		double minX = iconLocations[networkName][ blockIter->first ].first;
+		double minY = iconLocations[networkName][ blockIter->first ].second;
+
+		// input ports
+		std::map< std::string, std::string >::iterator streamIter;
+		for ( streamIter = inLinkToModel[networkName].begin(); streamIter != inLinkToModel[networkName].end(); ++streamIter )
+		{
+		 if ( streamIter->second == blockIter->first )
+		 {
+			 VE_XML::VE_Model::Port* tempPort = tempModel->GetPort(-1);
+			// inputs are to ports
+			tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].first );
+			tempPort->SetModelName( streamIter->first );
+			tempPort->SetDataFlowDirection( std::string( "input" ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[networkName][tempPort->GetModelName()][0].first - minX ), (linkPoints[networkName][tempPort->GetModelName()][0].second - minY ) ) );
+		 }
+		}
+		// output ports
+		for ( streamIter = outLinkToModel[networkName].begin(); streamIter != outLinkToModel[networkName].end(); ++streamIter )
+		{
+		 if ( streamIter->second == blockIter->first )
+		 {
+			 VE_XML::VE_Model::Port* tempPort = tempModel->GetPort(-1);
+			// outputs are from ports
+			tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].second );
+			tempPort->SetModelName( streamIter->first );
+			tempPort->SetDataFlowDirection( std::string( "output" ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints[networkName][tempPort->GetModelName()][linkPoints[networkName][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints[networkName][tempPort->GetModelName()][linkPoints[networkName][tempPort->GetModelName()].size()-1].second - minY ) ) );
+		 }
+		}
+
+	  //recursively parse subsystems of each block
+	  if(tempModel->GetIconFilename().find("HIERARCHY") != std::string::npos)
+		  ParseSubSystem(tempModel, networkName + "." + blockIter->first);
+
+	  //attach model to top system
+	  subSystem->AddModel(tempModel);
+	}
+	model->SetSubSystem(subSystem);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 void BKPParser::StripCharacters( std::string& data, std::string character )
 {

@@ -101,10 +101,9 @@ public:
 	int getStreamSize(int index);                           //returns the total number of points for a stream
 	bool isOpen();
 
-   //void CreateNetworkLinks( void );
-   //void CreateNetworkLinks( VE_XML::VE_Model::Network* subNetwork, std::string hierName );
    void CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork, std::string hierName );
    void CreateNetworkInformation( std::string networkData );
+   void ParseSubSystem(VE_XML::VE_Model::ModelStrongPtr model, std::string networkName);
    std::string CreateNetwork( void );
    std::string GetInputModuleParamProperties(std::string modname, std::string paramName);
    std::string GetInputModuleParams(std::string modname);
