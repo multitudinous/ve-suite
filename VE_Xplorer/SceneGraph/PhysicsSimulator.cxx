@@ -142,8 +142,8 @@ void PhysicsSimulator::ExitPhysics()
 //By default, Bullet will use its own nearcallback, but you can override it using m_dispatcher->setNearCallback()
 void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher& m_dispatcher, btDispatcherInfo& dispatchInfo )
 {
-    btCollisionObject* colObj0 = (btCollisionObject*)collisionPair.m_pProxy0->m_clientObject;
-    btCollisionObject* colObj1 = (btCollisionObject*)collisionPair.m_pProxy1->m_clientObject;
+    btCollisionObject* colObj0 = ( btCollisionObject* )collisionPair.m_pProxy0->m_clientObject;
+    btCollisionObject* colObj1 = ( btCollisionObject* )collisionPair.m_pProxy1->m_clientObject;
 
     if( m_dispatcher.needsCollision( colObj0, colObj1 ) )
     {
@@ -165,7 +165,7 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
 
             else
             {
-                //Continuous collision detection query, time of impact (toi)
+                //Continuous collision detection query, time of impact ( toi )
                 float toi = collisionPair.m_algorithm->calculateTimeOfImpact( colObj0, colObj1, dispatchInfo, &contactPointResult );
 
                 if( dispatchInfo.m_timeOfImpact > toi )
@@ -179,7 +179,8 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
-    m_dispatcher = new btCollisionDispatcher( 0 );
+    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+    m_dispatcher = new btCollisionDispatcher( collisionConfiguration );
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
     m_dispatcher->setNearCallback( customNearCallback );
@@ -193,11 +194,12 @@ void PhysicsSimulator::InitializePhysicsSimulation()
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
 #else
-    //Default constraint m_solver
-    m_solver = new btSequentialImpulseConstraintSolver;
+    //Default constraint solver
+    m_solver = new btSequentialImpulseConstraintSolver();
 #endif
 
     m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver );
+    //m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;
     m_dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
     //m_dynamicsWorld->setDebugDrawer( &debugDrawer );
@@ -283,7 +285,7 @@ void PhysicsSimulator::ResetScene()
             colObj->activate();
 
             //Removed cached contact points
-	    m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), 0 );
+            m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), 0 );
 
             btRigidBody* body = btRigidBody::upcast( colObj );
 
