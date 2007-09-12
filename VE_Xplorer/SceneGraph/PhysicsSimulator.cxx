@@ -179,8 +179,9 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    m_dispatcher = new btCollisionDispatcher( collisionConfiguration );
+    //btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+    //m_dispatcher = new btCollisionDispatcher( collisionConfiguration );
+    m_dispatcher = new btCollisionDispatcher();
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
     m_dispatcher->setNearCallback( customNearCallback );
@@ -285,7 +286,8 @@ void PhysicsSimulator::ResetScene()
             colObj->activate();
 
             //Removed cached contact points
-            m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), 0 );
+            //m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), 0 );
+            m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle() );
 
             btRigidBody* body = btRigidBody::upcast( colObj );
 
