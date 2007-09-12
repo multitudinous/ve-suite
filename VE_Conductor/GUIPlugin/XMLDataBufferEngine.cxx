@@ -40,6 +40,7 @@
 #include "VE_Open/XML/User.h"
 
 #include "VE_Open/XML/Model/Link.h"
+#include "VE_Open/XML/Model/System.h"
 
 #include <sstream>
 #include <algorithm>
@@ -130,17 +131,28 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     dataToObtain.push_back( std::make_pair( "Model", "veNetwork" ) );
     dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
     dataToObtain.push_back( std::make_pair( "XML", "User" ) );
+    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
     std::vector< VE_XML::XMLObject* >::iterator objectIter;
     std::vector< VE_XML::XMLObject* > objectVector = 
         networkWriter.GetLoadedXMLObjects();
+    VE_XML::VE_Model::System* tempSystem = 0;
     
     // we are expecting that a network will be found
     if ( !objectVector.empty() )
     {
-        m_networkMap[ "Network" ] = 
-            *dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
-        objectIter = objectVector.erase( objectVector.begin() );
+        tempSystem = 
+            dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
+        if( tempSystem )
+        {
+            m_networkMap[ "Network" ] = *(tempSystem->GetNetwork());
+        }
+        else
+        {
+            m_networkMap[ "Network" ] = 
+                *dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+            objectIter = objectVector.erase( objectVector.begin() );
+        }
     }
     else
     {
@@ -177,28 +189,51 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         toID.str("");
     }
         
-    // now lets create a list of them
-    std::ostringstream modelID;
-    for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
+    if( !tempSystem )
     {
-        VE_XML::VE_Model::Model* model = 
-            dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
-        if( !model )
+        // now lets create a list of them
+        std::ostringstream modelID;
+        for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            //if this object is not a model continue
-            ++objectIter;
-            continue;
-        }
-        objectIter = objectVector.erase( objectIter );
-        modelID << model->GetModelID();
-        m_modelMap[ modelID.str() ] = *model;
-        modelID.str("");
+            VE_XML::VE_Model::Model* model = 
+            dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
+            if( !model )
+            {
+                //if this object is not a model continue
+                ++objectIter;
+                continue;
+            }
+            objectIter = objectVector.erase( objectIter );
+            modelID << model->GetModelID();
+            m_modelMap[ modelID.str() ] = *model;
+            modelID.str("");
+        }        
+    }
+    else
+    {
+        // now lets create a list of them
+        std::ostringstream modelID;
+        std::vector< VE_XML::VE_Model::ModelWeakPtr >::iterator modelIter;
+        std::vector< VE_XML::VE_Model::ModelWeakPtr > modelVector;
+        modelVector = tempSystem->GetModels();
+        
+        for( modelIter = modelVector.begin(); modelIter != modelVector.end(); )
+        {
+            VE_XML::VE_Model::ModelWeakPtr model = *modelIter;
+
+            modelIter = modelVector.erase( modelIter );
+            modelID << model->GetModelID();
+            m_modelMap[ modelID.str() ] = *model;
+            modelID.str("");
+        }        
+        objectIter = objectVector.erase( objectVector.begin() );
     }
     //For the case where there are no links between models
     //Just grab all the models in the ves file
     //this is somewhat of a hack but the schema does not support anything else
     if( m_networkMap[ "Network" ].GetNumberOfLinks() == 0 )
     {
+        std::ostringstream modelID;
         std::map< std::string, VE_XML::VE_Model::Model >::iterator modelIter;
         for( modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
              ++modelIter )

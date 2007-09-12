@@ -169,3 +169,12 @@ void System::AddModel( ModelWeakPtr inputModel )
     m_models.push_back( inputModel );
 }
 ////////////////////////////////////////////////////////////////////////////////   
+std::vector< ModelWeakPtr > System::GetModels()
+{
+    std::vector< ModelWeakPtr > tempModels;
+    std::copy( m_models.begin(), 
+               m_models.end(), 
+               std::back_inserter( tempModels ) );
+    return tempModels;
+}
+////////////////////////////////////////////////////////////////////////////////   

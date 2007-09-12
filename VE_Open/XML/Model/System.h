@@ -71,6 +71,9 @@ public:
     ///\param i The i'th model you are after
     ///\return The model requested by the user
     ModelWeakPtr GetModel( size_t i );
+    ///Get all the models for this system
+    ///\return The vector of all the models
+    std::vector< ModelWeakPtr > GetModels();
     ///Get the total number of models
     ///\return The number of models
     size_t GetNumberOfModels( void );
