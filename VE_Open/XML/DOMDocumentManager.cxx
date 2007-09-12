@@ -205,7 +205,9 @@ void DOMDocumentManager::Load( const std::string inputCommand )
    }
    catch (...) 
    {
-      std::cout << "DOMDocumentManager::Load Unexpected Exception"  << std::endl;
+       std::cout << "DOMDocumentManager::Load Unexpected Exception"  
+            << std::endl;
+       std::cout << inputCommand  << std::endl;
       delete parser;
       parser = 0;
       delete errHandler;
