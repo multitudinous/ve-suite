@@ -143,7 +143,7 @@ void BKPParser::ParseFile(const char * bkpFile)
 	//Open file streams	
 	std::ifstream inFile(bkpFile, std::ios::binary);
 
-	std::ifstream lutFile ("F:/ASPENV21/LUT.txt");
+	std::ifstream lutFile ("LUT.txt");
 	std::ofstream outFile("log.txt");
 	std::string discard;
 	
@@ -392,6 +392,7 @@ for (sheetIter = BlockInfoList.begin(); sheetIter != BlockInfoList.end(); ++shee
 		std::string tempEntry;
 		std::string tempParser;
 		outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
+		std::string remove = BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon;
 		while(tempEntry.find(BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon, 0) == std::string::npos && !inFile.eof())
 		{
 			getline(lutFile, tempEntry);
