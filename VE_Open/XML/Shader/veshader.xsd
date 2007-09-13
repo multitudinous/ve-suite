@@ -3,7 +3,7 @@
    <xs:include schemaLocation="http://www.vesuite.org/XMLSchema/verg.xsd" />
    <xs:complexType name="Uniform">
       <xs:complexContent>
-         <xs:restriction base="veXMLObject">
+         <xs:extension base="veXMLObject">
             <xs:sequence>
                <xs:element name="type" type="xs:string" />
                <xs:element name="size" type="xs:unsignedInt" />
@@ -11,42 +11,42 @@
                <xs:element name="textureUnit" type="xs:unsignedInt" minOccurs="0" maxOccurs="1" />
                <xs:element name="value" type="xs:float" minOccurs="0" maxOccurs="4" />
             </xs:sequence>
-         </xs:restriction>
+         </xs:extension>
       </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="Shader">
       <xs:complexContent>
-         <xs:restriction base="veXMLObject">
+         <xs:extension base="veXMLObject">
             <xs:sequence>
                <xs:element name="type" type="xs:string" />
                <xs:element name="uniform" type="Uniform" maxOccurs="unbounded" minOccurs="0" />
                <xs:element name="shaderCode" type="xs:string" />
                <xs:element name="textureImage" type="TextureImage" minOccurs="0" maxOccurs="unbounded" />
             </xs:sequence>
-         </xs:restriction>
+         </xs:extension>
       </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="Program">
       <xs:complexContent>
-         <xs:restriction base="veXMLObject">
+         <xs:extension base="veXMLObject">
             <xs:sequence>
                <xs:element name="name" type="xs:string" />
                <xs:element name="vertexShader" type="Shader" maxOccurs="1" minOccurs="0" />
                <xs:element name="fragmentShader" type="Shader" />
             </xs:sequence>
-         </xs:restriction>
+         </xs:extension>
       </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="TextureImage">
       <xs:complexContent>
-         <xs:restriction base="veXMLObject">
+         <xs:extension base="veXMLObject">
             <xs:sequence>
                <xs:element name="textureDescriptionData" type="vecommand" />
                <xs:element name="textureUnit" type="xs:unsignedInt" />
                <xs:element name="dimension" type="xs:unsignedInt" />
                <xs:element name="textureType" type="xs:string" />
             </xs:sequence>
-         </xs:restriction>
+         </xs:extension>
       </xs:complexContent>
    </xs:complexType>
 </xs:schema>

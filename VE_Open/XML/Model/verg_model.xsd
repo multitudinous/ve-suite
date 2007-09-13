@@ -7,7 +7,7 @@
   <!--the original type of port-->
   <xs:complexType name="vePort">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element name="number" type="xs:unsignedInt"/>
           <xs:element name="name" type="xs:string"/>
@@ -16,13 +16,13 @@
           <xs:element maxOccurs="unbounded" minOccurs="1" name="portData" type="vecommand"/>
           <xs:element name="portType" type="xs:string"/>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!--a port split up to specifically contain data for drawing a network-->
   <xs:complexType name="vePortUI">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element name="number" type="xs:unsignedInt"/>
           <xs:element name="name" type="xs:string"/>
@@ -31,24 +31,23 @@
           <xs:element name="portType" type="xs:string"/>
           <xs:element name="portDataId" type="xs:ID"/>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!--port tht contains all the raw data for a port-->
   <xs:complexType name="vePortData">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element maxOccurs="unbounded" minOccurs="1" name="portData" type="vecommand"/>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!--link element to couple to models-->
   <xs:complexType name="veLink">
-    <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element name="fromModule" type="veDataValuePair"/>
           <xs:element name="toModule" type="veDataValuePair"/>
@@ -56,43 +55,43 @@
           <xs:element name="toPort" type="xs:unsignedInt"/>
           <xs:element maxOccurs="unbounded" minOccurs="2" name="linkPoints" type="vePoint"/>
         </xs:sequence>
-      </xs:restriction>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="veTag">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element name="tagText" type="xs:string"/>
           <xs:element maxOccurs="3" minOccurs="3" name="linkPoints" type="vePoint"/>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="veNetwork">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="veLink"/>
           <xs:element maxOccurs="6" minOccurs="6" name="conductorState" type="veDataValuePair"/>
           <xs:element maxOccurs="unbounded" minOccurs="0" name="tag" type="veTag"/>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="vePoint">
-    <xs:attribute name="xLocation" type="xs:unsignedInt" use="required"/>
-    <xs:attribute name="yLocation" type="xs:unsignedInt" use="required"/>
     <xs:complexContent>
-      <xs:restriction base="veXMLObject"> </xs:restriction>
+      <xs:extension base="veXMLObject">
+        <xs:attribute name="xLocation" type="xs:unsignedInt" use="required"/>
+        <xs:attribute name="yLocation" type="xs:unsignedInt" use="required"/>      
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!--the original type of model-->
   <xs:complexType name="veModel">
-    <xs:attribute name="vendorID" type="xs:ID" use="required"/>
-    <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element maxOccurs="unbounded" minOccurs="0" name="ports" type="vePort"/>
           <xs:element maxOccurs="1" minOccurs="1" name="iconLocation" type="vePoint"/>
@@ -103,34 +102,34 @@
             type="veParameterBlock"/>
           <xs:element name="geometry" type="CADNode"/>
           <xs:element maxOccurs="1" minOccurs="0" name="modelAttributes" type="vecommand"/>
-          <xs:element maxOccurs="1" minOccurs="0" name="modelSubSytem" type="veSystem"
-            use="optional"/>
+          <xs:element maxOccurs="1" minOccurs="0" name="modelSubSytem" type="veSystem"/>
         </xs:sequence>
-      </xs:restriction>
+        <xs:attribute name="vendorID" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!--model that contains data for drawing a model of a network-->
   <xs:complexType name="veModelUI">
-    <xs:attribute name="vendorID" type="xs:ID" use="required"/>
-    <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element maxOccurs="unbounded" minOccurs="0" name="ports" type="vePortUI"/>
           <xs:element maxOccurs="1" minOccurs="1" name="iconLocation" type="vePoint"/>
           <xs:element maxOccurs="1" minOccurs="0" name="icon" type="xs:string"/>
           <xs:element name="modelDataId" type="xs:ID"/>
           <xs:element name="modelDataFile" type="xs:string"/>
-          <xs:element maxOccurs="1" minOccurs="0" name="subSystem" type="veSystem" use="optional"
-          />
+          <xs:element maxOccurs="1" minOccurs="0" name="subSystem" type="veSystem"/>
         </xs:sequence>
-      </xs:restriction>
+        <xs:attribute name="vendorID" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!--model that contains raw data for computation-->
   <xs:complexType name="veModelData">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element maxOccurs="unbounded" minOccurs="0" name="ports" type="vePortData"/>
           <xs:element maxOccurs="unbounded" minOccurs="0" name="results" type="vecommand"/>
@@ -139,18 +138,18 @@
             type="veParameterBlock"/>
           <xs:element name="geometry" type="CADNode"/>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <!-- This is a system element that holds 1 network and n number of models -->
   <xs:complexType name="veSystem">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element type="veModel" maxOccurs="unbounded" minOccurs="1" name="model"> </xs:element>
           <xs:element type="veNetwork" minOccurs="1" maxOccurs="1" name="network"> </xs:element>
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 </xs:schema>

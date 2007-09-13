@@ -4,7 +4,7 @@
   <xs:include schemaLocation="http://www.vesuite.org/XMLSchema/veshader.xsd" />
   <xs:complexType name="CADNode">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" />
           <xs:element name="transform" type="veTransform" minOccurs="1" maxOccurs="1" />
@@ -16,7 +16,7 @@
         </xs:sequence>
         <xs:attribute name="visiblility" type="xs:boolean" />
         <xs:attribute name="physics" type="xs:boolean" />
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="CADAssembly">
@@ -46,7 +46,7 @@
   </xs:complexType>
   <xs:complexType name="CADMaterial">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:element name="kDiffuse" type="veFloatArray" maxOccurs="1" minOccurs="0" />
           <xs:element name="kAmbient" type="veFloatArray" maxOccurs="1" minOccurs="0" />
@@ -58,12 +58,12 @@
           <xs:element name="face" type="xs:string" />
           <xs:element name="colorMode" type="xs:string" />
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="CADAttribute">
     <xs:complexContent>
-      <xs:restriction base="veXMLObject">
+      <xs:extension base="veXMLObject">
         <xs:sequence>
           <xs:choice maxOccurs="1" minOccurs="1">
             <xs:element name="material" type="CADMaterial" />
@@ -72,7 +72,7 @@
           <xs:element name="type" type="xs:string" />
           <xs:element name="blending" type="xs:boolean" />
         </xs:sequence>
-      </xs:restriction>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:complexType name="CADNodeAnimation">
@@ -84,7 +84,7 @@
         <xs:attribute name="fileType" type="xs:string" />
         <xs:attribute name="playMode" type="xs:string" />
         <xs:attribute name="hasHeader" type="xs:boolean" />
-        <xs:attribute name="numHeaderLines" type="xs:unsignedInt" maxOccurs="unbounded" minOccurs="0" />
+        <xs:attribute name="numHeaderLines" type="xs:unsignedInt" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
