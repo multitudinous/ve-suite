@@ -185,7 +185,8 @@ class SettingsWindow(wx.Dialog):
                  "Conductor": [self.cbConductor, self.cbConductor.GetValue()],
                  "DesktopMode": [self.cbDesktop, self.cbDesktop.GetValue()],
                  "XplorerType": [self.rbXplorer,
-                                 XPLORER_TYPE_LIST[self.rbXplorer.GetSelection()]]}
+                                XPLORER_TYPE_LIST[self.rbXplorer.GetSelection()]]}
+
         for var in array:
             ##if array[var][0].IsEnabled():
             self.state.Edit(var, array[var][1])
@@ -233,7 +234,10 @@ class SettingsWindow(wx.Dialog):
         if self.state.GetSurface("DesktopMode"):
             self.rbXplorer.SetSelection(0)
         else:
-            self.rbXplorer.SetSelection(1)
+            if (self.state.GetSurface("XplorerType") == "OSG-VEP"):
+                self.rbXplorer.SetSelection(0)
+            else:
+                self.rbXplorer.SetSelection(1)
         self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") == True and
                               self.state.GetSurface("DesktopMode") == False and
                               self.state.GetSurface("Xplorer") == True)
@@ -274,10 +278,12 @@ class SettingsWindow(wx.Dialog):
         self.cbDesktop.SetValue(self.cbDesktop.GetValue())
         self.cbDesktop.Enable(self.state.IsEnabled("DesktopMode"))
         ##Xplorer Type
+        
         if self.cbDesktop.GetValue():
                     self.rbXplorer.SetSelection(0)
         else:
             self.rbXplorer.SetSelection(self.rbXplorer.GetSelection())
+            
         self.rbXplorer.Enable(self.state.IsEnabled("XplorerType") and
                               self.cbDesktop.GetValue() == False and
                               self.cbXplorer.GetValue() == True)
