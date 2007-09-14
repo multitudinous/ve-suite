@@ -786,16 +786,16 @@ class LauncherWindow(wx.Frame):
 
         if self.state.GetSurface("NameServer"):
             self.splash.SetText("Version 1.1", "Starting Name Server...")
-            wx.MilliSleep(1000)
+            wx.MilliSleep(500)
         if self.state.GetSurface("Xplorer"):
             self.splash.SetText("Version 1.1", "Starting Xplorer...")
-            wx.MilliSleep(1000)
+            wx.MilliSleep(500)
         if self.state.GetSurface("Conductor"):
             self.splash.SetText("Version 1.1", "Starting Conductor...")
             wx.MilliSleep(1000)
 
         self.splash.SetText("Version 1.1", "Preparing to Launch VE-Suite...")
-        wx.MilliSleep(2000)
+        wx.MilliSleep(1000)
         
         self.splash.OnCloseWindow()
         
@@ -1010,6 +1010,7 @@ class LauncherWindow(wx.Frame):
                                    wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+
 
     ##Close the Launcher
     def OnClose(self, event=None):

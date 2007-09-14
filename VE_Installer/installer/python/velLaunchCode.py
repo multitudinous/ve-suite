@@ -265,7 +265,7 @@ class Launch:
             sys.exit(2)
         ##Name Server section
         if self.settings["NameServer"]:
-            sleep(1)
+            sleep(3)
             print "Starting Name Server."
             exe = "Naming_Service"
             pids = []

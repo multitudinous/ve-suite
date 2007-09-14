@@ -35,7 +35,7 @@ import wx
 class VeSplashScreen(wx.Frame):
     def __init__(self, parent, ID=-1, title="",
                  style=wx.SIMPLE_BORDER | wx.FRAME_NO_TASKBAR | wx.STAY_ON_TOP,
-                 duration=1500, bitmapfile=""):
+                 duration=1000, bitmapfile=""):
 
         ### Loading bitmap
         self.bitmap = bmp = wx.Image(bitmapfile, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
