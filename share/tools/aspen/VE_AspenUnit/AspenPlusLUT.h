@@ -1,7 +1,7 @@
 #include <map>
 #include <string>
-#inlcude <utility>
-#inlcude <vector>
+#include <utility>
+#include <vector>
 
 std::map< std::pair< std::string, std::string >, std::vector< double > > GetAspenPlusLUT()
 {
