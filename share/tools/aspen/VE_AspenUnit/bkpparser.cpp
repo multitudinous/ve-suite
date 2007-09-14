@@ -15,6 +15,8 @@
 #include <iostream>
 #include <cmath>
 
+#include "AspenPlusLUT.h"
+
 using namespace Gdiplus;
 
 BKPParser::BKPParser()
@@ -143,7 +145,13 @@ void BKPParser::ParseFile(const char * bkpFile)
 	//Open file streams	
 	std::ifstream inFile(bkpFile, std::ios::binary);
 
-	std::ifstream lutFile ("LUT.txt");
+    std::map< std::pair< std::string, std::string >, std::vector< double > > lutMap;
+    std::map< std::pair< std::string, std::string >, std::vector< double > >::iterator lutMapIter;
+    std::vector< double > lutVector;
+    lutVector.resize( 6 );
+    
+    lutMap = GetAspenPlusLUT();
+	//std::ifstream lutFile ("LUT.txt");
 	std::ofstream outFile("log.txt");
 	std::string discard;
 	
@@ -319,398 +327,416 @@ void BKPParser::ParseFile(const char * bkpFile)
 	////////////////////////Loop FOR Hierarchy///////////////////////////
 	//std::map< std::string, std::map< std::string, BlockInfo > >::reverse_iterator sheetIter;
 	std::map< std::string, std::map< std::string, BlockInfo > >::iterator sheetIter;
-//for (sheetIter = BlockInfoList.rbegin(); sheetIter != BlockInfoList.rend(); ++sheetIter)
-for (sheetIter = BlockInfoList.begin(); sheetIter != BlockInfoList.end(); ++sheetIter)
-{
-	//find first block
-	while(temp.compare(0, 5, "BLOCK", 0, 5)!= 0 && !inFile.eof())
-	{
-		getline(inFile, temp);
-	}
-	std::cout<<"First Block Found"<<std::endl;
-	
-	//Read graphic blocks
-	count =0;
-	std::string id, version, icon, flag, section, at, labelAt, scaleMod, annotation;
-	while(count < (int)BlockInfoList[sheetIter->first].size())
-	{
-		getline(inFile, id);
-		std::cout<<id<<std::endl;
-		getline(inFile, version);
-		getline(inFile, icon);
+    //for (sheetIter = BlockInfoList.rbegin(); sheetIter != BlockInfoList.rend(); ++sheetIter)
+    for (sheetIter = BlockInfoList.begin(); sheetIter != BlockInfoList.end(); ++sheetIter)
+    {
+        //find first block
+        while(temp.compare(0, 5, "BLOCK", 0, 5)!= 0 && !inFile.eof())
+        {
+            getline(inFile, temp);
+        }
+        std::cout<<"First Block Found"<<std::endl;
+        
+        //Read graphic blocks
+        count =0;
+        std::string id, version, icon, flag, section, at, labelAt, scaleMod, annotation;
+        while(count < (int)BlockInfoList[sheetIter->first].size())
+        {
+            getline(inFile, id);
+            std::cout<<id<<std::endl;
+            getline(inFile, version);
+            getline(inFile, icon);
 
-		std::stringstream iconTokenizer(icon);
-		iconTokenizer >> discard;
-		
-		getline(inFile, flag);
-		getline(inFile, section);
-		getline(inFile, at);
-		getline(inFile, labelAt);
-		getline(inFile, temp);
-		//check for the optional line "Annotation"
-		if(temp.compare(0, 10, "Annotation", 0, 10)== 0)
-		{
-			annotation = temp;
-			getline(inFile, scaleMod);
-		}
-		else
-		{
-			scaleMod = temp;
-		}
+            std::stringstream iconTokenizer(icon);
+            iconTokenizer >> discard;
+            
+            getline(inFile, flag);
+            getline(inFile, section);
+            getline(inFile, at);
+            getline(inFile, labelAt);
+            getline(inFile, temp);
+            //check for the optional line "Annotation"
+            if(temp.compare(0, 10, "Annotation", 0, 10)== 0)
+            {
+                annotation = temp;
+                getline(inFile, scaleMod);
+            }
+            else
+            {
+                scaleMod = temp;
+            }
 
-		float scale;
-		int modifier;
-		std::stringstream scaleTokenizer(scaleMod);
-		scaleTokenizer >> discard; //discard "scale" string
-		scaleTokenizer >> scale;   //grab scale
-		scaleTokenizer >> discard; //discard "modifier" string
-		scaleTokenizer >> modifier;//grab modifier
+            float scale;
+            int modifier;
+            std::stringstream scaleTokenizer(scaleMod);
+            scaleTokenizer >> discard; //discard "scale" string
+            scaleTokenizer >> scale;   //grab scale
+            scaleTokenizer >> discard; //discard "modifier" string
+            scaleTokenizer >> modifier;//grab modifier
 
-		getline(inFile, temp); //dump next block header Should BE CHANGED - when next entry is important
-		
-		//parse id to use for searching		
-		std::stringstream idTokenizer(id);
-		idTokenizer >> discard;
-		std::string tempBlockId; 
-		idTokenizer >> tempBlockId;
+            getline(inFile, temp); //dump next block header Should BE CHANGED - when next entry is important
+            
+            //parse id to use for searching		
+            std::stringstream idTokenizer(id);
+            idTokenizer >> discard;
+            std::string tempBlockId; 
+            idTokenizer >> tempBlockId;
 
-		BlockInfo tempBlockInfo_2;
-		//sort the block id/type vector
-		int entryIncr = 0;
-		bool entryFound = false;
-		std::string iconType;
-		std::string tempIcon;
-		iconTokenizer >> tempIcon;
-		tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
-		BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
-		BlockInfoList[sheetIter->first][tempBlockId].scale = scale;// * 0.5f;
-		
-		//find offset
-		float left=0, right=0, bottom=0, top=0; //coords
-		float widthOffset = 0;
-		float heightOffset = 0;
-		std::string tempEntry;
-		std::string tempParser;
-		outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
-		std::string remove = BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon;
-		while(tempEntry.find(BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon, 0) == std::string::npos && !inFile.eof())
-		{
-			getline(lutFile, tempEntry);
-		}
-		lutFile.seekg(0);
-		outFile<<tempEntry<<std::endl;
-		//parse out percentage
-		std::stringstream entryParser (tempEntry);
-		for(int z = 0; z < 2; z++)
-			entryParser >> tempParser;
-		entryParser >> left;
-		entryParser >> right;
-		entryParser >> top;
-		entryParser >> bottom;
-		
-		float iconWidth = right - left;
-		float iconHeight = top - bottom;
+            BlockInfo tempBlockInfo_2;
+            //sort the block id/type vector
+            int entryIncr = 0;
+            bool entryFound = false;
+            std::string iconType;
+            std::string tempIcon;
+            iconTokenizer >> tempIcon;
+            tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
+            BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
+            BlockInfoList[sheetIter->first][tempBlockId].scale = scale;// * 0.5f;
+            
+            //find offset
+            float left=0, right=0, bottom=0, top=0; //coords
+            float widthOffset = 0;
+            float heightOffset = 0;
+            //std::string tempEntry;
+            //std::string tempParser;
+            outFile<<BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon<<std::endl;
+            //std::string remove = BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon;
+            std::pair< std::string, std::string > blockKey( BlockInfoList[sheetIter->first][tempBlockId].type, BlockInfoList[sheetIter->first][tempBlockId].icon );
+            lutMapIter = lutMap.find( blockKey );
+            if( lutMapIter != lutMap.end() )
+            {
+                lutVector = lutMapIter->second;
+                left = lutVector[ 0 ];
+                right = lutVector[ 1 ];
+                top = lutVector[ 2 ];
+                bottom = lutVector[ 3 ];
+            }
+            else
+            {
+                left = 0;
+                right = 0;
+                top = 0;
+                bottom = 0;
+            }
+            /*while(tempEntry.find(BlockInfoList[sheetIter->first][tempBlockId].type+" "+BlockInfoList[sheetIter->first][tempBlockId].icon, 0) == std::string::npos && !lutFile.eof())
+            {
+                getline(lutFile, tempEntry);
+            }
+            lutFile.seekg(0);
+            outFile<<tempEntry<<std::endl;
+            //parse out percentage
+            std::stringstream entryParser (tempEntry);
+            for(int z = 0; z < 2; z++)
+                entryParser >> tempParser;
+            entryParser >> left;
+            entryParser >> right;
+            entryParser >> top;
+            entryParser >> bottom;
+            */
+            
+            float iconWidth = right - left;
+            float iconHeight = top - bottom;
 
-		if(modifier == 0)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
-			widthOffset = abs(left/iconWidth);
-			heightOffset = abs(top/iconHeight);
-		}
-		else if(modifier == 1)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
-			widthOffset = abs(right/iconWidth);
-			heightOffset = abs(top/iconHeight);
-		}
-		else if(modifier == 2)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
-			widthOffset = abs(left/iconWidth);
-			heightOffset = abs(bottom/iconHeight);
-		}
-		else if(modifier == 3)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 90.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
-			widthOffset = abs(top/iconWidth);
-			heightOffset = abs(right/iconHeight);
-		}
-		else if(modifier == 4)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
-			widthOffset = abs(bottom/iconWidth);
-			heightOffset = abs(left/iconHeight);
-		}
-		else if(modifier == 5)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 3;
-			widthOffset = abs(right/iconWidth);
-			heightOffset = abs(bottom/iconHeight);
-		}
-		else if(modifier == 6)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
-			widthOffset = abs(top/iconWidth);
-			heightOffset = abs(left/iconHeight);
-		}
-		else if(modifier == 7)
-		{
-			BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
-			BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
-			widthOffset = abs(bottom/iconWidth);
-			heightOffset = abs(right/iconHeight);
-		}
+            if(modifier == 0)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                widthOffset = abs(left/iconWidth);
+                heightOffset = abs(top/iconHeight);
+            }
+            else if(modifier == 1)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
+                widthOffset = abs(right/iconWidth);
+                heightOffset = abs(top/iconHeight);
+            }
+            else if(modifier == 2)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
+                widthOffset = abs(left/iconWidth);
+                heightOffset = abs(bottom/iconHeight);
+            }
+            else if(modifier == 3)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 90.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                widthOffset = abs(top/iconWidth);
+                heightOffset = abs(right/iconHeight);
+            }
+            else if(modifier == 4)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
+                widthOffset = abs(bottom/iconWidth);
+                heightOffset = abs(left/iconHeight);
+            }
+            else if(modifier == 5)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 3;
+                widthOffset = abs(right/iconWidth);
+                heightOffset = abs(bottom/iconHeight);
+            }
+            else if(modifier == 6)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 2;
+                widthOffset = abs(top/iconWidth);
+                heightOffset = abs(left/iconHeight);
+            }
+            else if(modifier == 7)
+            {
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 270.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 1;
+                widthOffset = abs(bottom/iconWidth);
+                heightOffset = abs(right/iconHeight);
+            }
 
-		//parse location to create coordinates for blocks		
-		std::stringstream atTokenizer(at);
-		atTokenizer >> discard;
-		float xcoord, ycoord;
-		atTokenizer >> xcoord;
-		atTokenizer >> ycoord;
-		xCoords.push_back(xcoord);
-		yCoords.push_back(ycoord);
-		
-		//scaled up for icon spacing
-		float scaledXCoords = xCoords.back() * 100;
-		//invert Y axis - flowsheets are inverted
-		float scaledYCoords = -yCoords.back() * 100;
-		
-		CString iconPath = ("2DIcons/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
-		LPWSTR lpszW = new WCHAR[255];
-		LPTSTR lpStr = iconPath.GetBuffer( iconPath.GetLength() );
-		int nLen = MultiByteToWideChar(CP_ACP, 0,lpStr, -1, NULL, NULL);
-		MultiByteToWideChar(CP_ACP, 0, lpStr, -1, lpszW, nLen);
-		
-		GdiplusStartupInput gdiplusStartupInput;
-		ULONG_PTR gdiplusToken;
-		GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-		Image * image = new Image(lpszW);
-		float width = image->GetWidth();
-		float height = image->GetHeight();
-		GdiplusShutdown(gdiplusToken);
+            //parse location to create coordinates for blocks		
+            std::stringstream atTokenizer(at);
+            atTokenizer >> discard;
+            float xcoord, ycoord;
+            atTokenizer >> xcoord;
+            atTokenizer >> ycoord;
+            xCoords.push_back(xcoord);
+            yCoords.push_back(ycoord);
+            
+            //scaled up for icon spacing
+            float scaledXCoords = xCoords.back() * 100;
+            //invert Y axis - flowsheets are inverted
+            float scaledYCoords = -yCoords.back() * 100;
+            
+            CString iconPath = ("2DIcons/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
+            LPWSTR lpszW = new WCHAR[255];
+            LPTSTR lpStr = iconPath.GetBuffer( iconPath.GetLength() );
+            int nLen = MultiByteToWideChar(CP_ACP, 0,lpStr, -1, NULL, NULL);
+            MultiByteToWideChar(CP_ACP, 0, lpStr, -1, lpszW, nLen);
+            
+            GdiplusStartupInput gdiplusStartupInput;
+            ULONG_PTR gdiplusToken;
+            GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+            Image * image = new Image(lpszW);
+            float width = image->GetWidth();
+            float height = image->GetHeight();
+            GdiplusShutdown(gdiplusToken);
 
-		//iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords+200, scaledYCoords+200 );
-		//iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords + 500 - (0.25*width), scaledYCoords + 500 - (0.25*height) );
-		iconLocations[sheetIter->first][ tempBlockId ] = std::pair< float, float >( scaledXCoords - (width*widthOffset*BlockInfoList[sheetIter->first][tempBlockId].scale), scaledYCoords - (height*heightOffset*BlockInfoList[sheetIter->first][tempBlockId].scale) );
-		count++;
-	}
-	std::cout<<"Finished Reading Block Info"<<std::endl;
+            //iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords+200, scaledYCoords+200 );
+            //iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords + 500 - (0.25*width), scaledYCoords + 500 - (0.25*height) );
+            iconLocations[sheetIter->first][ tempBlockId ] = std::pair< float, float >( scaledXCoords - (width*widthOffset*BlockInfoList[sheetIter->first][tempBlockId].scale), scaledYCoords - (height*heightOffset*BlockInfoList[sheetIter->first][tempBlockId].scale) );
+            count++;
+        }
+        std::cout<<"Finished Reading Block Info"<<std::endl;
 
-	//locate minimum X - used for normalization
-	float minX = 0;
-	float minY = 0;
-	std::map< std::string, std::pair< float, float > >::iterator iter;
-	for (iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
-	{
-		float currentX = iconLocations[sheetIter->first][ iter->first ].first;
-		float currentY = iconLocations[sheetIter->first][ iter->first ].second;
-		if(currentX < minX)
-			minX = currentX;
-		if(currentY < minY)
-			minY = currentY;
-	}
+        //locate minimum X - used for normalization
+        float minX = 0;
+        float minY = 0;
+        std::map< std::string, std::pair< float, float > >::iterator iter;
+        for (iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
+        {
+            float currentX = iconLocations[sheetIter->first][ iter->first ].first;
+            float currentY = iconLocations[sheetIter->first][ iter->first ].second;
+            if(currentX < minX)
+                minX = currentX;
+            if(currentY < minY)
+                minY = currentY;
+        }
 
-	//
-	//Stream Info
-	//
+        //
+        //Stream Info
+        //
 
-	std::cout<<"Begin Reading Streams"<<std::endl;
-	//Gather stream information
-	std::string streamId, streamVersion, streamFlag, streamType, coordinates, tempR, tempR2;
-	bool newStream = true, routeOne = false;;
-	std::pair< float, float > tempCoords;
-	int routeCount = 0;
-	std::ofstream tester2 ("tester2.txt"); 
-	
-	//contiously read all stream info to the legend or viewport entry
-	while(temp.compare(0, 8, "VIEWPORT", 0, 8)!= 0 && temp.compare(0, 6, "LEGEND", 0, 6)!= 0 && !inFile.eof())
-	{
-		if(temp.compare(0, 6, "STREAM", 0, 6)== 0)//find "STREAM" entry
-		{
-			getline(inFile, streamId);
-			tester2<<streamId<<": ";
-			getline(inFile, streamVersion);
-			getline(inFile, streamFlag);
-			getline(inFile, streamType);
-			//Look for Stream type - needed for version 13.2
-			while(streamType.compare(0,4,"TYPE",0,4)!=0)
-				getline(inFile, streamType);
-			getline(inFile, temp);
-			routeCount = 0;
-			routeOne=false;
-			newStream = true;
-			
-			//Look for Routes
-			while(temp.compare(0, 6, "STREAM", 0, 6)!= 0 && temp.compare(0, 8, "VIEWPORT", 0, 8)!= 0 && temp.compare(0, 6, "LEGEND", 0, 6)!= 0 && routeCount <3 && streamId.find("#")==std::string::npos)
-			{
-				//look for ROUTE heading
-				if(temp.compare(0, 5, "ROUTE", 0, 5) == 0)
-				{
-					getline(inFile, temp);
-					routeCount ++;
-				}
-				//grab data
-				else if(temp.compare(0,2,"r ",0,2)==0)
-				{
-					while(temp.compare(0,5,"ROUTE",0,5)!=0 && temp.compare(0,2,"$ ",0,2)!=0 &&temp.compare(0,2,"At",0,2)!=0 && temp.compare(0,5,"Label")!=0)
-					{
-						//seems you only need first 2 routes
-						if(routeCount == 1 || routeCount ==2)
-						//if(routeCount == 1)
-						{
-							std::stringstream streamTokenizer(temp);
-							streamTokenizer >> tempR;
-							streamTokenizer >> tempR2;
-							streamTokenizer >> tempCoords.first;
-							streamTokenizer >> tempCoords.second;
+        std::cout<<"Begin Reading Streams"<<std::endl;
+        //Gather stream information
+        std::string streamId, streamVersion, streamFlag, streamType, coordinates, tempR, tempR2;
+        bool newStream = true, routeOne = false;;
+        std::pair< float, float > tempCoords;
+        int routeCount = 0;
+        std::ofstream tester2 ("tester2.txt"); 
+        
+        //contiously read all stream info to the legend or viewport entry
+        while(temp.compare(0, 8, "VIEWPORT", 0, 8)!= 0 && temp.compare(0, 6, "LEGEND", 0, 6)!= 0 && !inFile.eof())
+        {
+            if(temp.compare(0, 6, "STREAM", 0, 6)== 0)//find "STREAM" entry
+            {
+                getline(inFile, streamId);
+                tester2<<streamId<<": ";
+                getline(inFile, streamVersion);
+                getline(inFile, streamFlag);
+                getline(inFile, streamType);
+                //Look for Stream type - needed for version 13.2
+                while(streamType.compare(0,4,"TYPE",0,4)!=0)
+                    getline(inFile, streamType);
+                getline(inFile, temp);
+                routeCount = 0;
+                routeOne=false;
+                newStream = true;
+                
+                //Look for Routes
+                while(temp.compare(0, 6, "STREAM", 0, 6)!= 0 && temp.compare(0, 8, "VIEWPORT", 0, 8)!= 0 && temp.compare(0, 6, "LEGEND", 0, 6)!= 0 && routeCount <3 && streamId.find("#")==std::string::npos)
+                {
+                    //look for ROUTE heading
+                    if(temp.compare(0, 5, "ROUTE", 0, 5) == 0)
+                    {
+                        getline(inFile, temp);
+                        routeCount ++;
+                    }
+                    //grab data
+                    else if(temp.compare(0,2,"r ",0,2)==0)
+                    {
+                        while(temp.compare(0,5,"ROUTE",0,5)!=0 && temp.compare(0,2,"$ ",0,2)!=0 &&temp.compare(0,2,"At",0,2)!=0 && temp.compare(0,5,"Label")!=0)
+                        {
+                            //seems you only need first 2 routes
+                            if(routeCount == 1 || routeCount ==2)
+                            //if(routeCount == 1)
+                            {
+                                std::stringstream streamTokenizer(temp);
+                                streamTokenizer >> tempR;
+                                streamTokenizer >> tempR2;
+                                streamTokenizer >> tempCoords.first;
+                                streamTokenizer >> tempCoords.second;
 
-							if(routeCount == 1)
-							{
-								xy.value.push_back(tempCoords);
-								routeOne = true;
-							}
-							if(routeCount == 2)
-							{
-								tempXY.value.push_back(tempCoords);
-							}
-						}
-						else
-							std::cout << "ERROR: "<<routeCount<<std::endl;
-						getline(inFile, temp);
-					}
-				}
-				else 
-				{
-					getline(inFile, temp);
-				}
-			}
-			//put 2nd route entry data ahead of first in vector
-			int tempCount=0;
-			while(tempCount < (int)tempXY.value.size())
-			{
-				xy.value.insert(xy.value.begin(), tempXY.value[tempCount]);
-				tempCount++;
-			}
-			
-			std::stringstream idTokenizer(streamId);
-			idTokenizer >> discard;
-			idTokenizer >> xy.streamId;
-			
-			std::stringstream typeTokenizer(streamId);
-			typeTokenizer >> discard;
-			typeTokenizer >> xy.streamType;
-			
-			streamCoordList.push_back(xy); //add one streams values to vector      
-			
-			//Create map of stream names to points
-			for ( size_t k = 0; k < xy.value.size(); ++k )
-			{
-				//scaled up for icon spacing
-				//float scaledX = xy.value.at( k ).first * 40;
-				float scaledX = xy.value.at( k ).first * 100;
-				//invert Y axis - flowsheets are inverted
-				//float scaledY = -xy.value.at( k ).second * 40;
-				float scaledY = -xy.value.at( k ).second * 100;
-				if(scaledX < minX)
-					minX = scaledX;
-				if(scaledY < minY)
-					minY = scaledY;
-				tester2<<" x: "<<scaledX<<" y: "<<scaledY;
-				//linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX+200, scaledY+200 ) );
-				//linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX + 1000, scaledY +1000 ) );
-				linkPoints[sheetIter->first][xy.streamId].push_back( std::pair< float, float >( scaledX, scaledY ) );
-			}
-			// add converted points for wx
-			xy.value.erase(xy.value.begin(),xy.value.end() );//empty temporary vector
-			tempXY.value.erase(tempXY.value.begin(),tempXY.value.end() );//empty temporary vector
-		}
-		else 
-			getline(inFile, temp);
-		tester2<<std::endl;
-	}
+                                if(routeCount == 1)
+                                {
+                                    xy.value.push_back(tempCoords);
+                                    routeOne = true;
+                                }
+                                if(routeCount == 2)
+                                {
+                                    tempXY.value.push_back(tempCoords);
+                                }
+                            }
+                            else
+                                std::cout << "ERROR: "<<routeCount<<std::endl;
+                            getline(inFile, temp);
+                        }
+                    }
+                    else 
+                    {
+                        getline(inFile, temp);
+                    }
+                }
+                //put 2nd route entry data ahead of first in vector
+                int tempCount=0;
+                while(tempCount < (int)tempXY.value.size())
+                {
+                    xy.value.insert(xy.value.begin(), tempXY.value[tempCount]);
+                    tempCount++;
+                }
+                
+                std::stringstream idTokenizer(streamId);
+                idTokenizer >> discard;
+                idTokenizer >> xy.streamId;
+                
+                std::stringstream typeTokenizer(streamId);
+                typeTokenizer >> discard;
+                typeTokenizer >> xy.streamType;
+                
+                streamCoordList.push_back(xy); //add one streams values to vector      
+                
+                //Create map of stream names to points
+                for ( size_t k = 0; k < xy.value.size(); ++k )
+                {
+                    //scaled up for icon spacing
+                    //float scaledX = xy.value.at( k ).first * 40;
+                    float scaledX = xy.value.at( k ).first * 100;
+                    //invert Y axis - flowsheets are inverted
+                    //float scaledY = -xy.value.at( k ).second * 40;
+                    float scaledY = -xy.value.at( k ).second * 100;
+                    if(scaledX < minX)
+                        minX = scaledX;
+                    if(scaledY < minY)
+                        minY = scaledY;
+                    tester2<<" x: "<<scaledX<<" y: "<<scaledY;
+                    //linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX+200, scaledY+200 ) );
+                    //linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX + 1000, scaledY +1000 ) );
+                    linkPoints[sheetIter->first][xy.streamId].push_back( std::pair< float, float >( scaledX, scaledY ) );
+                }
+                // add converted points for wx
+                xy.value.erase(xy.value.begin(),xy.value.end() );//empty temporary vector
+                tempXY.value.erase(tempXY.value.begin(),tempXY.value.end() );//empty temporary vector
+            }
+            else 
+                getline(inFile, temp);
+            tester2<<std::endl;
+        }
 
-	std::cout<<"Finished Reading Streams"<<std::endl;
-	
-	//
-	//NORMALIZE FOR WX
-	//
-	float normX = fabs(minX);
-	float normY = fabs(minY);
-	tester2<<"NormX: "<<normX<<" NormY: "<<normY<<std::endl;
-	tester2.close();
-	//blocks
-	std::ofstream tester3 ("tester3.txt");
-	for(iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
-	{
-		iconLocations[sheetIter->first][ iter->first ].first = iconLocations[sheetIter->first][iter->first].first + normX;
-		iconLocations[sheetIter->first][ iter->first ].second = iconLocations[sheetIter->first][iter->first].second + normY;
-		//iconLocations[ iter->first ].first = iconLocations[iter->first].first;
-		//iconLocations[ iter->first ].second = iconLocations[iter->first].second;
-		tester3<<iter->first<<": x: "<<iconLocations[sheetIter->first][ iter->first ].first<<" y: "<<iconLocations[sheetIter->first][ iter->first ].second<<std::endl;
-	}
-	tester3.close();
+        std::cout<<"Finished Reading Streams"<<std::endl;
+        
+        //
+        //NORMALIZE FOR WX
+        //
+        float normX = fabs(minX);
+        float normY = fabs(minY);
+        tester2<<"NormX: "<<normX<<" NormY: "<<normY<<std::endl;
+        tester2.close();
+        //blocks
+        std::ofstream tester3 ("tester3.txt");
+        for(iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
+        {
+            iconLocations[sheetIter->first][ iter->first ].first = iconLocations[sheetIter->first][iter->first].first + normX;
+            iconLocations[sheetIter->first][ iter->first ].second = iconLocations[sheetIter->first][iter->first].second + normY;
+            //iconLocations[ iter->first ].first = iconLocations[iter->first].first;
+            //iconLocations[ iter->first ].second = iconLocations[iter->first].second;
+            tester3<<iter->first<<": x: "<<iconLocations[sheetIter->first][ iter->first ].first<<" y: "<<iconLocations[sheetIter->first][ iter->first ].second<<std::endl;
+        }
+        tester3.close();
 
-	//streams
-	std::ofstream tester ("tester.txt");
-	std::map< std::string, std::vector< std::pair< float, float > > >::iterator iter2;
-	for(iter2 = linkPoints[sheetIter->first].begin(); iter2 != linkPoints[sheetIter->first].end(); iter2++)
-	{
-		tester<<iter2->first<<":";
-		for(int element = 0; element < (int)linkPoints[sheetIter->first][ iter2->first ].size(); element++)
-		{
-			linkPoints[sheetIter->first][ iter2->first ][element].first = linkPoints[sheetIter->first][ iter2->first ][element].first + normX;
-			linkPoints[sheetIter->first][ iter2->first ][element].second = linkPoints[sheetIter->first][ iter2->first ][element].second + normY;
-			//linkPoints[ iter2->first ][element].first = linkPoints[ iter2->first ][element].first;
-			//linkPoints[ iter2->first ][element].second = linkPoints[ iter2->first ][element].second;
-			tester<<" x: "<< linkPoints[sheetIter->first][ iter2->first ][element].first<<" y: "<<(float)linkPoints[sheetIter->first][ iter2->first ][element].second;
-		}
-		tester<<std::endl;
-	}
-	tester.close();
+        //streams
+        std::ofstream tester ("tester.txt");
+        std::map< std::string, std::vector< std::pair< float, float > > >::iterator iter2;
+        for(iter2 = linkPoints[sheetIter->first].begin(); iter2 != linkPoints[sheetIter->first].end(); iter2++)
+        {
+            tester<<iter2->first<<":";
+            for(int element = 0; element < (int)linkPoints[sheetIter->first][ iter2->first ].size(); element++)
+            {
+                linkPoints[sheetIter->first][ iter2->first ][element].first = linkPoints[sheetIter->first][ iter2->first ][element].first + normX;
+                linkPoints[sheetIter->first][ iter2->first ][element].second = linkPoints[sheetIter->first][ iter2->first ][element].second + normY;
+                //linkPoints[ iter2->first ][element].first = linkPoints[ iter2->first ][element].first;
+                //linkPoints[ iter2->first ][element].second = linkPoints[ iter2->first ][element].second;
+                tester<<" x: "<< linkPoints[sheetIter->first][ iter2->first ][element].first<<" y: "<<(float)linkPoints[sheetIter->first][ iter2->first ][element].second;
+            }
+            tester<<std::endl;
+        }
+        tester.close();
 
 
-	//
-	// Log
-	//
+        //
+        // Log
+        //
 
-	//create a log file
-	std::cout<<"Writing log."<<std::endl;
-	count = 0;
-	int streamCount = 0;
-	outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
-	while (count < (int)BlockInfoList[sheetIter->first].size())
-	{
-		outFile << xCoords[count];
-		outFile << "\t";
-		outFile << yCoords[count];
-		outFile << "\n";
-		count ++;
-	}
-	count=0;
-	outFile << streamCoordList.size()<<std::endl;
-	while(streamCount < (int)streamCoordList.size())
-	{
-		outFile<<streamCoordList[streamCount].value.size()<<std::endl;
-		while(count < (int)streamCoordList[streamCount].value.size())
-		{	
-			outFile << streamCoordList[streamCount].value[count].first;
-			outFile << "\t";
-			outFile << streamCoordList[streamCount].value[count].second;
-			outFile << "\n";
-			count++;
-		}
-		streamCount++;
-		count = 0;
-	}
-}
-	lutFile.close();
+        //create a log file
+        std::cout<<"Writing log."<<std::endl;
+        count = 0;
+        int streamCount = 0;
+        outFile << BlockInfoList[sheetIter->first].size()<<std::endl;
+        while (count < (int)BlockInfoList[sheetIter->first].size())
+        {
+            outFile << xCoords[count];
+            outFile << "\t";
+            outFile << yCoords[count];
+            outFile << "\n";
+            count ++;
+        }
+        count=0;
+        outFile << streamCoordList.size()<<std::endl;
+        while(streamCount < (int)streamCoordList.size())
+        {
+            outFile<<streamCoordList[streamCount].value.size()<<std::endl;
+            while(count < (int)streamCoordList[streamCount].value.size())
+            {	
+                outFile << streamCoordList[streamCount].value[count].first;
+                outFile << "\t";
+                outFile << streamCoordList[streamCount].value[count].second;
+                outFile << "\n";
+                count++;
+            }
+            streamCount++;
+            count = 0;
+        }
+    }
+	//lutFile.close();
 	std::cout<<"Parsing Completed!"<<std::endl;
 	inFile.close();
 	outFile.close();
