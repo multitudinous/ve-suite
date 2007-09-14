@@ -2105,6 +2105,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
 #endif
    _fileProgress->Update( 35, _("start loading") );
 
+	size_t maxX = 0;
+	size_t maxY = 0;
     //Setup the links
     for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
     {
@@ -2129,6 +2131,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
             point.x = rawPoint.first;
             point.y = rawPoint.second;
             links.at( i ).SetPoint( &point );
+			if(point.x > maxX)
+				maxX = point.x;
+			if(point.y > maxY)
+				maxY = point.y;
         }
         // Create the polygon for links
         links.at( i ).CalcLinkPoly();
@@ -2267,6 +2273,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
     m_selTag = -1; 
     m_selTagCon = -1; 
     xold = yold =0;
+	SetVirtualSize(maxX+100, maxY+100);
     _fileProgress->Update( 100, _("Done") );
     Refresh( true );
 }
