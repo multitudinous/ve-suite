@@ -1040,70 +1040,86 @@ void UIPluginBase::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList 
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, float scale)
 {
-    //std::cout << "|\tUIPluginBase::SetImageIcon icon path = " << path << std::endl;
-   //Try and find default icons if needed
-   std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
-   if ( iter != defaultIconMap.end() )
-   {
-      iconFilename = path;
-      //now scale it up or down according to the specified scale
-      icon_w = iter->second.GetWidth();
-      icon_h = iter->second.GetHeight();
-      
-      delete my_icon;
-      my_icon = new wxBitmap( iter->second );
+    //Try and find default icons if needed
+    std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
+    if ( iter != defaultIconMap.end() )
+    {
+        iconFilename = path;
+        //now scale it up or down according to the specified scale
+        icon_w = iter->second.GetWidth();
+        icon_h = iter->second.GetHeight();
 
-      n_pts = 4;
-      
-      poly[0]=wxPoint(0,0);
-      poly[1]=wxPoint(icon_w-1,0);
-      poly[2]=wxPoint(icon_w-1,icon_h-1);
-      poly[3]=wxPoint(0,icon_h-1);
-      return;
-   }
-	//wxImage* my_img = new wxImage();
-	//bool exists = my_img->LoadFile(wxString(path.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
-	std::string fullPath = "2DIcons/" + path + ".jpg";
-	std::ifstream exists(fullPath.c_str());
-	double PI = 3.14159265;
-	if ( exists.fail() )
-	{	
-      return;
-   }
-   iconFilename = path;
-	wxImage image(wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG);
-	image.SetMaskColour(255, 255, 255);
-	
-	if(mirror == 1)
-		image = image.Mirror(true);
-	else if(mirror == 2)
-		image = image.Mirror(false);
-	else if(mirror == 3)
-	{
-		image = image.Mirror(true);
-		image = image.Mirror(false);
-	}
+        delete my_icon;
+        my_icon = new wxBitmap( iter->second );
 
-	image = image.Rotate((rotation*PI)/180, wxPoint(0,0));
+        n_pts = 4;
 
-	icon_w = image.GetWidth();
-	icon_h = image.GetHeight();
+        poly[0]=wxPoint(0,0);
+        poly[1]=wxPoint(icon_w-1,0);
+        poly[2]=wxPoint(icon_w-1,icon_h-1);
+        poly[3]=wxPoint(0,icon_h-1);
+        return;
+    }
 
-	//now scale it up or down according to the specified scale
-	icon_w = static_cast< int >( icon_w * scale );
-	icon_h = static_cast< int >( icon_h * scale );
-	
-	delete my_icon;
-	my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
-	//my_icon=new wxBitmap(image);
+    wxImage image;
+    //Try to find the default aspen icons
+    std::string fullPath = "2DIcons/" + path + ".jpg";
+    std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
+    std::map< std::string, char** >::iterator aspenIconIter;
+    aspenIconIter = aspenPlusIconMap.find( fullPath );
+    if( aspenIconIter != aspenPlusIconMap.end() )
+    {
+        wxImage xpmImage( aspenIconIter->second );
+        image = xpmImage;
+    }
+    else
+    {
+        //Now see if the user has any jpgs in 
+        //the 2DIcons directory for the application
+        std::ifstream exists(fullPath.c_str());
+        if( exists.fail() )
+        {	
+            return;
+        }
+        image.LoadFile( wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG );
+    }
+    iconFilename = path;
+    image.SetMaskColour(255, 255, 255);
 
-	
-	n_pts = 4;
+    if(mirror == 1)
+    {
+        image = image.Mirror(true);
+    }
+    else if(mirror == 2)
+    {
+        image = image.Mirror(false);
+    }
+    else if(mirror == 3)
+    {
+        image = image.Mirror(true);
+        image = image.Mirror(false);
+    }
 
-	poly[0]=wxPoint(0,0);
-	poly[1]=wxPoint(icon_w-1,0);
-	poly[2]=wxPoint(icon_w-1,icon_h-1);
-	poly[3]=wxPoint(0,icon_h-1);
+    double PI = 3.14159265;
+    image = image.Rotate((rotation*PI)/180, wxPoint(0,0));
+
+    icon_w = image.GetWidth();
+    icon_h = image.GetHeight();
+
+    //now scale it up or down according to the specified scale
+    icon_w = static_cast< int >( icon_w * scale );
+    icon_h = static_cast< int >( icon_h * scale );
+
+    delete my_icon;
+    my_icon=new wxBitmap(image.Scale(icon_w, icon_h));
+    //my_icon=new wxBitmap(image);
+
+    n_pts = 4;
+
+    poly[0]=wxPoint(0,0);
+    poly[1]=wxPoint(icon_w-1,0);
+    poly[2]=wxPoint(icon_w-1,icon_h-1);
+    poly[3]=wxPoint(0,icon_h-1);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDClick( wxMouseEvent &event)

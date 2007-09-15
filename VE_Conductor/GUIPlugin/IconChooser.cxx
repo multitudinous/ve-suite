@@ -38,7 +38,6 @@
 #include <wx/tokenzr.h>
 
 #include "VE_Conductor/GUIPlugin/UIPluginBase.h"
-#include "VE_Conductor/xpm/AspenPlus2DIcons/AspenPlus2DIcons.h"
 
 BEGIN_EVENT_TABLE(IconChooser,wxFrame)	
 	EVT_CLOSE(IconChooser::OnClose)
@@ -80,65 +79,67 @@ void IconChooser::CreateGUIControls()
 	//WxChoice = new wxChoice(WxPanel, 1003, wxPoint(220,3), wxSize(200,21), componentList, 0, wxDefaultValidator, wxT("Components"));
 	//WxChoice->SetSelection(-1);
 
-   {
-	WxMenuBar1 = new wxMenuBar();
-	wxMenu * AddMenu = new wxMenu(0);
-	AddMenu->Append(1005, wxT("Icon Directory"), wxT(""), wxITEM_NORMAL);
-	WxMenuBar1->Append(AddMenu, wxT("Add"));
-	SetMenuBar(WxMenuBar1);
+    {
+        WxMenuBar1 = new wxMenuBar();
+        wxMenu * AddMenu = new wxMenu(0);
+        AddMenu->Append(1005, wxT("Icon Directory"), wxT(""), wxITEM_NORMAL);
+        WxMenuBar1->Append(AddMenu, wxT("Add"));
+        SetMenuBar(WxMenuBar1);
 
-      int buttonCount = 4000;
-      std::vector< wxImage > defaultIcons;
-      defaultIcons.push_back( wxImage( contour_xpm ) );
-      iconPaths[buttonCount] = "contour.xpm";
-      //defaultIcons.push_back( wxImage( cad_tree_selected_xpm ) );
-      //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
-      //defaultIcons.push_back( wxImage( cad_tree_unselected_xpm ) );
-      //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
-      //defaultIcons.push_back( wxImage( cspline_xpm ) );
-      //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
-      defaultIcons.push_back( wxImage( isosurface_xpm ) );
-      iconPaths[buttonCount+1] = "isosurface.xpm";
-      defaultIcons.push_back( wxImage( ROItb_xpm ) );
-      iconPaths[buttonCount+2] = "isosurface.xpm";
-      //defaultIcons.push_back( wxImage( square_xpm ) );
-      //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
-      defaultIcons.push_back( wxImage( streamlines_xpm ) );
-      iconPaths[buttonCount+3] = "streamlines.xpm";
-      defaultIcons.push_back( wxImage( vector_xpm ) );
-      iconPaths[buttonCount+4] = "vector.xpm";
-      defaultIcons.push_back( wxImage( vectortb_xpm ) );
-      iconPaths[buttonCount+5] = "vectortb.xpm";
+        int buttonCount = 4000;
+        std::vector< wxImage > defaultIcons;
+        defaultIcons.push_back( wxImage( contour_xpm ) );
+        iconPaths[buttonCount] = "contour.xpm";
+        //defaultIcons.push_back( wxImage( cad_tree_selected_xpm ) );
+        //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
+        //defaultIcons.push_back( wxImage( cad_tree_unselected_xpm ) );
+        //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
+        //defaultIcons.push_back( wxImage( cspline_xpm ) );
+        //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
+        defaultIcons.push_back( wxImage( isosurface_xpm ) );
+        iconPaths[buttonCount+1] = "isosurface.xpm";
+        defaultIcons.push_back( wxImage( ROItb_xpm ) );
+        iconPaths[buttonCount+2] = "isosurface.xpm";
+        //defaultIcons.push_back( wxImage( square_xpm ) );
+        //iconPaths[buttonCount] = ConvertUnicode( iconPath.c_str() );
+        defaultIcons.push_back( wxImage( streamlines_xpm ) );
+        iconPaths[buttonCount+3] = "streamlines.xpm";
+        defaultIcons.push_back( wxImage( vector_xpm ) );
+        iconPaths[buttonCount+4] = "vector.xpm";
+        defaultIcons.push_back( wxImage( vectortb_xpm ) );
+        iconPaths[buttonCount+5] = "vectortb.xpm";
 
-      wxPanel* WxNoteBookPage = new wxPanel(WxNotebook);
-      WxNotebook->AddPage(WxNoteBookPage, wxString( _("Default Icons") ) );
-      
-      int hCount = 0;
-      int vCount = 0;
-      int xLoc = 0;
-      int yLoc = 0;
+        wxPanel* WxNoteBookPage = new wxPanel(WxNotebook);
+        WxNotebook->AddPage(WxNoteBookPage, wxString( _("Default Icons") ) );
 
-      for ( size_t i = 0; i < defaultIcons.size(); ++i )
-      {
-         //place the button and its label on the current page
-         xLoc = 60 * hCount;
-         yLoc = 80 * vCount;
-         //yLoc = 95 * vCount;
-         wxBitmapButton * tempButton = new wxBitmapButton(WxNoteBookPage, buttonCount, defaultIcons.at( i ), wxPoint(xLoc, yLoc));
-         tempButton->SetToolTip( _("Default Icon") );
-         Connect(buttonCount, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(IconChooser::WxButtonClick));
-         //wxStaticText * iconLabel = new wxStaticText(WxNoteBookPage, 9999, filename, wxPoint(xLoc, yLoc + 80), wxDefaultSize, 0, filename);
-         buttonCount++;
-         hCount++;
-         //set how many buttons can be placed horizonatally
-         //currently 10 buttons
-         if(hCount == 10)
-         {
-            hCount = 0;
-            vCount ++;
-         }
-      }
-   }
+        int hCount = 0;
+        int vCount = 0;
+        int xLoc = 0;
+        int yLoc = 0;
+
+        for ( size_t i = 0; i < defaultIcons.size(); ++i )
+        {
+            //place the button and its label on the current page
+            xLoc = 60 * hCount;
+            yLoc = 80 * vCount;
+            //yLoc = 95 * vCount;
+            wxBitmapButton * tempButton = new wxBitmapButton(WxNoteBookPage, buttonCount, defaultIcons.at( i ), wxPoint(xLoc, yLoc));
+            tempButton->SetToolTip( _("Default Icon") );
+            Connect(buttonCount, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(IconChooser::WxButtonClick));
+            //wxStaticText * iconLabel = new wxStaticText(WxNoteBookPage, 9999, filename, wxPoint(xLoc, yLoc + 80), wxDefaultSize, 0, filename);
+            buttonCount++;
+            hCount++;
+            //set how many buttons can be placed horizonatally
+            //currently 10 buttons
+            if(hCount == 10)
+            {
+                hCount = 0;
+                vCount ++;
+            }
+        }
+    }
+    
+    InitializeAspenIcons();
 
 	SetTitle(wxT("VE Icon Chooser"));
 	SetIcon(wxNullIcon);
@@ -194,101 +195,11 @@ void IconChooser::cancelButtonClick(wxCommandEvent& event)
 void IconChooser::AddIconsDir(wxString directory)
 {
 	//Parse the default directory structure
-    /*if( !wxDir::Exists( directory ) )
+    if( !wxDir::Exists( directory ) )
     {
         return;
-    }*/
-
-    //create the image for the button and scale it
-    ::wxInitAllImageHandlers();
-
-    wxString dirname;
-    wxString lastDirName;
-    wxString tempDirectory;
-    wxString filename;
-
-    int buttonCount = 2000;
-    int hCount = 0;
-    int vCount = 0;
-    int xLoc = 0;
-    int yLoc = 0;
-    maxRows = 6;
-    wxPanel* WxNoteBookPage = 0;
-	//button size and # of columns is fixed
-	SetSize(640, maxRows*80+125);
-	//WxPanel->SetSize(640, maxRows*80+50);
-	WxNotebook->SetSize(635, maxRows*80+25);
-	WxEdit->SetPosition(wxPoint(10, maxRows*80+30));
-	WxChoice->SetPosition(wxPoint(325, maxRows*80+30));
-	okButton->SetPosition(wxPoint(450, maxRows*80+30));
-	cancelButton->SetPosition(wxPoint(535, maxRows*80+30));
-
-    std::map< std::string, char** > tempIconMap = GetAspenPlusIconMap();
-
-    for( std::map< std::string, char** >::iterator 
-        iconMapIter = tempIconMap.begin();
-        iconMapIter != tempIconMap.end(); ++iconMapIter )
-    {
-        wxStringTokenizer tkz( wxString( iconMapIter->first.c_str(), wxConvUTF8), wxT("/") );
-        tempDirectory = tkz.GetNextToken();
-        lastDirName = dirname;
-        dirname = tkz.GetNextToken();
-        filename = tkz.GetNextToken();
-
-        //This will be true the first loop through
-        if( dirname != lastDirName )
-        {
-            WxNoteBookPage = new wxPanel( WxNotebook );
-            WxNotebook->AddPage( WxNoteBookPage, dirname );
-            hCount = 0;
-            vCount = 0;
-            xLoc = 0;
-            yLoc = 0;
-        }
-
-        //construct iconPath and place it in the map along with its event id
-        filename = filename.RemoveLast(4);
-        wxString iconPath = dirname+ wxString(_("/"))+filename;
-        iconPaths[ buttonCount ] = ConvertUnicode( iconPath.c_str() );
-
-        //wxStringInputStream tempIconStream( wxString( iconMapIter->second.c_str(), wxConvUTF8) );
-        wxImage jpeg( iconMapIter->second );
-        jpeg = jpeg.Scale(50, 70);
-
-        //place the button and its label on the current page
-        xLoc = 60 * hCount;
-        yLoc = 80 * vCount;
-        //yLoc = 95 * vCount;
-        wxBitmapButton * tempButton = new wxBitmapButton(WxNoteBookPage, buttonCount, jpeg, wxPoint(xLoc, yLoc));
-        tempButton->SetToolTip( filename );
-        Connect( buttonCount, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(IconChooser::WxButtonClick) );
-        //wxStaticText * iconLabel = new wxStaticText(WxNoteBookPage, 9999, filename, wxPoint(xLoc, yLoc + 80), wxDefaultSize, 0, filename);
-
-        buttonCount++;
-        hCount++;
-
-        //set how many buttons can be placed horizonatally
-        //currently 10 buttons
-        if( hCount == 10 )
-        {
-            hCount = 0;
-            vCount ++;
-        }
-
-		if( vCount > maxRows )
-        {
-            maxRows = vCount+1;
-	        //button size and # of columns is fixed
-	        SetSize(640, maxRows*80+125);
-	        //WxPanel->SetSize(640, maxRows*80+50);
-	        WxNotebook->SetSize(635, maxRows*80+25);
-	        WxEdit->SetPosition(wxPoint(10, maxRows*80+30));
-	        WxChoice->SetPosition(wxPoint(325, maxRows*80+30));
-	        okButton->SetPosition(wxPoint(450, maxRows*80+30));
-	        cancelButton->SetPosition(wxPoint(535, maxRows*80+30));
-        }
     }
-/*
+
    wxString dirname;
    wxDir parentDir (directory);
    bool isParentTrue = parentDir.GetFirst(&dirname);
@@ -356,7 +267,7 @@ void IconChooser::AddIconsDir(wxString directory)
 	  WxChoice->SetPosition(wxPoint(325, maxRows*80+30));
 	  okButton->SetPosition(wxPoint(450, maxRows*80+30));
 	  cancelButton->SetPosition(wxPoint(535, maxRows*80+30));
-   }*/
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconChooser::IconDirectoryClick(wxCommandEvent& event)
@@ -364,5 +275,99 @@ void IconChooser::IconDirectoryClick(wxCommandEvent& event)
 	WxDirDialog = new wxDirDialog(this);
 	WxDirDialog->ShowModal();
 	AddIconsDir(WxDirDialog->GetPath());
+}
+////////////////////////////////////////////////////////////////////////////////
+void IconChooser::InitializeAspenIcons()
+{
+    //create the image for the button and scale it
+    ::wxInitAllImageHandlers();
+    
+    wxString dirname;
+    wxString lastDirName;
+    wxString tempDirectory;
+    wxString filename;
+    
+    int buttonCount = 2000;
+    int hCount = 0;
+    int vCount = 0;
+    int xLoc = 0;
+    int yLoc = 0;
+    maxRows = 6;
+    wxPanel* WxNoteBookPage = 0;
+    //button size and # of columns is fixed
+    SetSize(640, maxRows*80+125);
+    //WxPanel->SetSize(640, maxRows*80+50);
+    WxNotebook->SetSize(635, maxRows*80+25);
+    WxEdit->SetPosition(wxPoint(10, maxRows*80+30));
+    WxChoice->SetPosition(wxPoint(325, maxRows*80+30));
+    okButton->SetPosition(wxPoint(450, maxRows*80+30));
+    cancelButton->SetPosition(wxPoint(535, maxRows*80+30));
+    
+    std::map< std::string, char** > tempIconMap = GetAspenPlusIconMap();
+    
+    for( std::map< std::string, char** >::iterator 
+         iconMapIter = tempIconMap.begin();
+         iconMapIter != tempIconMap.end(); ++iconMapIter )
+    {
+        wxStringTokenizer tkz( wxString( iconMapIter->first.c_str(), 
+            wxConvUTF8), wxT("/") );
+        tempDirectory = tkz.GetNextToken();
+        lastDirName = dirname;
+        dirname = tkz.GetNextToken();
+        filename = tkz.GetNextToken();
+        
+        //This will be true the first loop through
+        if( dirname != lastDirName )
+        {
+            WxNoteBookPage = new wxPanel( WxNotebook );
+            WxNotebook->AddPage( WxNoteBookPage, dirname );
+            hCount = 0;
+            vCount = 0;
+            xLoc = 0;
+            yLoc = 0;
+        }
+        
+        //construct iconPath and place it in the map along with its event id
+        filename = filename.RemoveLast(4);
+        wxString iconPath = dirname+ wxString(_("/"))+filename;
+        iconPaths[ buttonCount ] = ConvertUnicode( iconPath.c_str() );
+        
+        wxImage jpeg( iconMapIter->second );
+        jpeg = jpeg.Scale(50, 70);
+        
+        //place the button and its label on the current page
+        xLoc = 60 * hCount;
+        yLoc = 80 * vCount;
+        //yLoc = 95 * vCount;
+        wxBitmapButton * tempButton = new wxBitmapButton(WxNoteBookPage, 
+            buttonCount, jpeg, wxPoint(xLoc, yLoc));
+        tempButton->SetToolTip( filename );
+        Connect( buttonCount, wxEVT_COMMAND_BUTTON_CLICKED, 
+            wxCommandEventHandler(IconChooser::WxButtonClick) );
+        
+        buttonCount++;
+        hCount++;
+        
+        //set how many buttons can be placed horizonatally
+        //currently 10 buttons
+        if( hCount == 10 )
+        {
+            hCount = 0;
+            vCount ++;
+        }
+        
+        if( vCount > maxRows )
+        {
+            maxRows = vCount+1;
+            //button size and # of columns is fixed
+            SetSize(640, maxRows*80+125);
+            //WxPanel->SetSize(640, maxRows*80+50);
+            WxNotebook->SetSize(635, maxRows*80+25);
+            WxEdit->SetPosition(wxPoint(10, maxRows*80+30));
+            WxChoice->SetPosition(wxPoint(325, maxRows*80+30));
+            okButton->SetPosition(wxPoint(450, maxRows*80+30));
+            cancelButton->SetPosition(wxPoint(535, maxRows*80+30));
+        }
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
