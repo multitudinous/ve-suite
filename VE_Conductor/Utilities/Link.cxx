@@ -434,8 +434,10 @@ void Link::OnQueryStreamInputs(wxCommandEvent& event )
 	params->SetCompName(compName.c_str());
 	params->SetServiceList(serviceList);
 	params->SetDialogType("input");
-	for (int i=0; i < temp_vector.size(); i++) 
-		params->AppendList(temp_vector[i].c_str());
+	for( size_t i=0; i < temp_vector.size(); i++) 
+	{	
+        params->AppendList(temp_vector[i].c_str());
+    }
 	params->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -483,7 +485,7 @@ void Link::OnQueryStreamOutputs(wxCommandEvent& event )
 	params->SetCompName(compName.c_str());
 	params->SetServiceList(serviceList);
 	params->SetDialogType("output");
-	for (int i=0; i < temp_vector.size(); i++) 
+	for( size_t i=0; i < temp_vector.size(); i++) 
 		params->AppendList(temp_vector[i].c_str());
 	params->ShowModal();
 }

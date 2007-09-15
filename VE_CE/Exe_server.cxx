@@ -126,7 +126,8 @@ int main (int argc, char* argv[])
       } 
       catch( CosNaming::NamingContext::AlreadyBound& ex )
       {
-         naming_context->rebind( name, exec.in() );
+          naming_context->rebind( name, exec.in() );
+          std::cout << ex._info().c_str() << std::endl;
       }
       std::cout << " VE_CE : Registered to Naming Service" << std::endl;
       orb->run();

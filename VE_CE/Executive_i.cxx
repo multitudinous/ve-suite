@@ -923,9 +923,8 @@ void Body_Executive_i::RegisterUI (
    }
    catch (CORBA::Exception &ex) 
    {
-      //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
-      //std::cerr << ex._info<<std::endl;
-      std::cerr<<"Can't call UI name "<< tempName<< std::endl;
+       std::cerr<<"Can't call UI name "<< tempName 
+            << " " << ex._info().c_str() << std::endl;
       _mutex.release();
    }
    return;

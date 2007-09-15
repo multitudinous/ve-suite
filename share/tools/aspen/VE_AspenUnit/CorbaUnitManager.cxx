@@ -170,8 +170,10 @@ void CorbaUnitManager::RunORB()
       try {
          naming_context->bind(Unitname, unit.in());
       }
-      catch(CosNaming::NamingContext::AlreadyBound& ex){
+      catch(CosNaming::NamingContext::AlreadyBound& ex)
+      {
          naming_context->rebind(Unitname, unit.in());
+         std::cout << ex._info().c_str() << std::endl;
       }
 
       //Call the Executive CORBA call to register it to the Executive

@@ -1258,7 +1258,7 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 	params->SetCompName(compName.c_str());
 	params->SetServiceList(serviceList);
 	params->SetDialogType("input");
-	for (int i=0; i < temp_vector.size(); i++) 
+	for (size_t i=0; i < temp_vector.size(); i++) 
 		params->AppendList(temp_vector[i].c_str());
 	params->ShowModal();
 	
@@ -1312,7 +1312,7 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 	params->SetCompName(compName.c_str());
 	params->SetServiceList(serviceList);
 	params->SetDialogType("output");
-	for (int i=0; i < temp_vector.size(); i++) 
+	for (size_t i=0; i < temp_vector.size(); i++) 
 		params->AppendList(temp_vector[i].c_str());
 	params->ShowModal();
 	
@@ -1863,10 +1863,7 @@ void UIPluginBase::DrawPorts( bool flag, wxDC* dc )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::HighlightSelectedIcon( wxDC* dc )
 {
-    size_t i;
     wxPoint bport[5];
-    wxCoord xoff, yoff;
-    int num;
     wxPoint tempPoint  = pos;
     //minus 10 because the icon size seems to be smaller than the bbox size
     int tempHeight = GetBBox().GetHeight() - 10;

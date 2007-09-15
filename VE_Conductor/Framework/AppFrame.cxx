@@ -231,7 +231,7 @@ navPane( 0 ),
 viewlocPane( 0 )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
-    for( size_t i = 0; i < ::wxGetApp().argc; ++i )
+    for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
     {
         tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
@@ -1537,10 +1537,9 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    serviceList->IsConnectedToCE();
    EnableCEGUIMenuItems();
 
-   char* result;
+   char* result = 0;
    //char buf[80];
    std::map<int, Module>::iterator iter;
-   unsigned int i;
    std::vector<wxString> titles;
    //TextResultDialog * result_dlg;
    SummaryResultDialog * result_dlg = 0;
@@ -1558,7 +1557,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    result_dlg->syngas->Clear();
    result_dlg->syngas->AddRow(titles);
    */
-   if ( result_dlg )
+   if( result_dlg )
    {
       result_dlg->Destroy();
       result_dlg = 0;
@@ -1569,87 +1568,84 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    result_dlg->syngas->SetColTitles( titles );
    result_dlg->syngas->SetColAlignments( alignments );
 
-   //if (!CORBA::is_nil( network->exec.in() )) 
-   {
-      try 
-      {
-         for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
-         {
-	         //result = network->exec->GetModuleResult(iter->first);
-	
-	         if ( std::string(result) != "" ) 
+    try 
+    {
+        for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
+        {
+            //result = network->exec->GetModuleResult(iter->first);
+
+            if ( std::string(result) != "" ) 
             {
-              /* Package p;
-               p.SetSysId("linkresult.xml");
-               p.Load(result, strlen(result));
-
-               descs = p.GetInterfaceVector()[0].getStrings();
-               
-               // This may not be needed.
-               // this should be taken care of with previous statement
-               if ( descs.size() < 1 ) 
-                  continue;
-               
-               v_desc.clear();
-               v_value.clear();
-               wxString str;
-               str = iter->second.GetPlugin()->GetName();
-               str << _(" (") << iter->first << _(")");
-               result_dlg->NewTab( str );
-
-               for (i=0; i<descs.size(); i++) 
-               {
-	               std::string desc = descs[i];
-	               std::string value = p.GetInterfaceVector()[0].getString(descs[i]);
-
-                  if (desc.substr(0,3) == "***") 
-                  {
-                     desc = desc.substr(9,desc.size()-9);
-                  }
-
-                  v_desc.push_back( wxString( desc.c_str(), wxConvUTF8 ) );
-                  v_value.push_back( wxString( value.c_str(), wxConvUTF8 ) );
-               }
-
-               result_dlg->syngas->AddSeperator(' ');
-               result_dlg->syngas->AddSeperator('+');
-               result_dlg->syngas->AddSeperator(' ');
-               result_dlg->Set2Cols(v_desc, v_value);*/
-	         }
-         }
-    
-         //result = network->exec->GetModuleResult(-1); //Global result
-      
-         if (std::string(result)!="") 
-         {
-           /* Package p;
+            /* Package p;
             p.SetSysId("linkresult.xml");
             p.Load(result, strlen(result));
 
             descs = p.GetInterfaceVector()[0].getStrings();
+
+            // This may not be needed.
+            // this should be taken care of with previous statement
+            if ( descs.size() < 1 ) 
+            continue;
+
             v_desc.clear();
             v_value.clear();
-            //v_desc.push_back("Plant Results");
-            //v_value.push_back("   ");
-	         result_dlg->NewTab( wxT("Plant Results") );
+            wxString str;
+            str = iter->second.GetPlugin()->GetName();
+            str << _(" (") << iter->first << _(")");
+            result_dlg->NewTab( str );
 
-	         for (i=0; i<descs.size(); i++) 
+            for (i=0; i<descs.size(); i++) 
             {
-	            v_desc.push_back( wxString( descs[i].c_str(), wxConvUTF8 ) );
-	            v_value.push_back( wxString( (p.GetInterfaceVector()[0].getString(descs[i])).c_str(), wxConvUTF8 ) );
-	         }
-	         result_dlg->syngas->AddSeperator(' ');
-	         result_dlg->syngas->AddSeperator('+');
-	         result_dlg->syngas->AddSeperator(' ');
-	         result_dlg->Set2Cols(v_desc, v_value);*/
-         }
-      }
-      catch (CORBA::Exception &) 
-      {
-         std::cerr << "Maybe Computational Engine is down " << std::endl;
-         return;
-      }
-   }
+            std::string desc = descs[i];
+            std::string value = p.GetInterfaceVector()[0].getString(descs[i]);
+
+            if (desc.substr(0,3) == "***") 
+            {
+            desc = desc.substr(9,desc.size()-9);
+            }
+
+            v_desc.push_back( wxString( desc.c_str(), wxConvUTF8 ) );
+            v_value.push_back( wxString( value.c_str(), wxConvUTF8 ) );
+            }
+
+            result_dlg->syngas->AddSeperator(' ');
+            result_dlg->syngas->AddSeperator('+');
+            result_dlg->syngas->AddSeperator(' ');
+            result_dlg->Set2Cols(v_desc, v_value);*/
+            }
+        }
+
+        //result = network->exec->GetModuleResult(-1); //Global result
+
+        if (std::string(result)!="") 
+        {
+        /* Package p;
+        p.SetSysId("linkresult.xml");
+        p.Load(result, strlen(result));
+
+        descs = p.GetInterfaceVector()[0].getStrings();
+        v_desc.clear();
+        v_value.clear();
+        //v_desc.push_back("Plant Results");
+        //v_value.push_back("   ");
+        result_dlg->NewTab( wxT("Plant Results") );
+
+        for (i=0; i<descs.size(); i++) 
+        {
+        v_desc.push_back( wxString( descs[i].c_str(), wxConvUTF8 ) );
+        v_value.push_back( wxString( (p.GetInterfaceVector()[0].getString(descs[i])).c_str(), wxConvUTF8 ) );
+        }
+        result_dlg->syngas->AddSeperator(' ');
+        result_dlg->syngas->AddSeperator('+');
+        result_dlg->syngas->AddSeperator(' ');
+        result_dlg->Set2Cols(v_desc, v_value);*/
+        }
+    }
+    catch (CORBA::Exception &) 
+    {
+        std::cerr << "Maybe Computational Engine is down " << std::endl;
+        return;
+    }
    /*else 
    {
       titles.clear();

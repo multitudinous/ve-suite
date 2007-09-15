@@ -196,34 +196,39 @@ cfdExecutive::~cfdExecutive( void )
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::UnbindORB()
 {
-   if ( ui_i )
-   {
-      CosNaming::Name UIname(1);
-      UIname.length(1);
-      UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
-      vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
-                              << UIname[0].id << std::endl << vprDEBUG_FLUSH;
+    if( !ui_i )
+    {
+        return;
+    }
 
-      try
-      {
-         this->naming_context->unbind(UIname);
-      }
-      catch ( CosNaming::NamingContext::InvalidName& ex )
-      {
-         vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Invalid Name! " 
-                                 << std::endl << vprDEBUG_FLUSH;
-      }
-      catch ( CosNaming::NamingContext::NotFound& ex )
-      {
-         vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Not Found! " 
-                                 << std::endl << vprDEBUG_FLUSH;
-      }
-      catch ( CosNaming::NamingContext::CannotProceed& ex )
-      {
-         vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Cannot Proceed! " 
-                                 << std::endl << vprDEBUG_FLUSH;
-      }
-   }
+    CosNaming::Name UIname(1);
+    UIname.length(1);
+    UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
+    vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
+        << UIname[0].id << std::endl << vprDEBUG_FLUSH;
+
+    try
+    {
+        this->naming_context->unbind(UIname);
+    }
+    catch ( CosNaming::NamingContext::InvalidName& ex )
+    {
+        vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Invalid Name! " 
+            << ex._info().c_str() 
+            << std::endl << vprDEBUG_FLUSH;
+    }
+    catch ( CosNaming::NamingContext::NotFound& ex )
+    {
+        vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Not Found! " 
+            << ex._info().c_str() 
+            << std::endl << vprDEBUG_FLUSH;
+    }
+    catch ( CosNaming::NamingContext::CannotProceed& ex )
+    {
+        vprDEBUG(vesDBG,1) << "|\t\tcfdExecutive : Cannot Proceed! " 
+            << ex._info().c_str() 
+            << std::endl << vprDEBUG_FLUSH;
+    }
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::GetNetwork( void )

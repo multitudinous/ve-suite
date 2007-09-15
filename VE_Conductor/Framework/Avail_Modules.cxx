@@ -107,9 +107,9 @@ void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
 		lastid=id;
         id = GetFirstChild(id, cookie);
       
-		while (1)
+		while( 1 )
 		{
-			if (id<=0)
+			if( !id )
 			{
 				id=AppendItem( lastid,lnames[i], image1, image2, NULL );
 				SetItemImage(id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
@@ -130,47 +130,55 @@ void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
 ////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 {
-  ReiTreeItemData* item_data;
+    ReiTreeItemData* item_data;
 
-  selection = GetSelection();
-  if (selection<=0)
-    return;
+    selection = GetSelection();
+    if( !selection )
+    {  
+        return;
+    }
 
-  item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
-  if (item_data==NULL)
-    return;
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
+    if (item_data==NULL)
+    {
+        return;
+    }
 
-  ShowMenu(selection, event.GetPoint());
+    ShowMenu(selection, event.GetPoint());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
 {
-   selection = GetSelection();
-   if (selection<=0)
-      return;
+    selection = GetSelection();
+    if( !selection )
+    {   
+        return;
+    }
 
-   ReiTreeItemData* item_data;
-   item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
-   if ( item_data == NULL )
-      return;
+    ReiTreeItemData* item_data;
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
+    if ( item_data == NULL )
+    {
+        return;
+    }
 
-   wxClassInfo* info;
-   info = item_data->pl_clsi;
-   if ( info )
-   {
-      UIPluginBase* object;
-      object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
-      object->SetNetworkFrame( network );
-      object->SetDCScale( network->GetUserScale() );
-      network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
-   }
-   else
-   {
-      UIPluginBase* object = new DefaultPlugin();
-      object->SetNetworkFrame( network );
-      object->SetDCScale( network->GetUserScale() );
-      network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
-   }
+    wxClassInfo* info;
+    info = item_data->pl_clsi;
+    if ( info )
+    {
+        UIPluginBase* object;
+        object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
+        object->SetNetworkFrame( network );
+        object->SetDCScale( network->GetUserScale() );
+        network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
+    }
+    else
+    {
+        UIPluginBase* object = new DefaultPlugin();
+        object->SetNetworkFrame( network );
+        object->SetDCScale( network->GetUserScale() );
+        network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::ShowMenu(wxTreeItemId id, const wxPoint& pt)
@@ -274,12 +282,16 @@ void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
 
     title << wxT("Description for ") << GetItemText(selection);
 
-    if (selection<=0)
+    if( !selection )
+    {
         return;
+    }
 
     item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
-    if (item_data==NULL)
+    if( item_data==NULL )
+    {  
         return;
+    }
 
     pl = item_data->plugin;
     desc = pl->GetDesc();
@@ -289,7 +301,6 @@ void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
 {
-    char browser[1024];
     UIPluginBase* pl;
     wxString help;
     wxString fgroot;
@@ -298,23 +309,28 @@ void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
     ReiTreeItemData* item_data;
     item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
     if( !item_data )
+    {    
         return;
+    }
 
     pl = item_data->plugin;
-  /*fgroot = getenv("FGROOT");
-  
+    /*
+    fgroot = getenv("FGROOT");
+    char browser[1024];
+
 #ifdef WIN32
-  docdir=fgroot+"\\Framework\\doc";
-  help = fgroot+"\\"+pl->GetHelp();
-  FindExecutable("index.html", docdir.c_str(), browser);
+    docdir=fgroot+"\\Framework\\doc";
+    help = fgroot+"\\"+pl->GetHelp();
+    FindExecutable("index.html", docdir.c_str(), browser);
 #endif
-  cmd="\"";
-  cmd+=browser;
-  cmd+="\" \"";
-  cmd+=help;
-  cmd+="\"";
-  
-  ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);*/
+    cmd="\"";
+    cmd+=browser;
+    cmd+="\" \"";
+    cmd+=help;
+    cmd+="\"";
+
+    ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Avail_Modules::ResetPluginTree()

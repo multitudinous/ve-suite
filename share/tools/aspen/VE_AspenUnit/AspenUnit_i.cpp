@@ -192,7 +192,7 @@ char * Body_Unit_i::GetUserData (
   ))
 {
   // Add your implementation here
-	char * result;
+	char * result = 0;
 	return result;
 }
 
@@ -483,12 +483,11 @@ char* Body_Unit_i::handleSaveAs(VE_XML::Command* cmd)
 //BLOCKS
 char* Body_Unit_i::handleGetInputModuleParamList(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
@@ -506,12 +505,11 @@ char* Body_Unit_i::handleGetInputModuleParamList(VE_XML::Command* cmd)
 
 char* Body_Unit_i::handleGetInputModuleProperties(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for ( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
@@ -528,12 +526,11 @@ char* Body_Unit_i::handleGetInputModuleProperties(VE_XML::Command* cmd)
 
 char* Body_Unit_i::handleGetOutputModuleParamList(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
@@ -551,12 +548,11 @@ char* Body_Unit_i::handleGetOutputModuleParamList(VE_XML::Command* cmd)
 
 char* Body_Unit_i::handleGetOutputModuleProperties(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for ( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
@@ -574,12 +570,11 @@ char* Body_Unit_i::handleGetOutputModuleProperties(VE_XML::Command* cmd)
 //Streams
 char* Body_Unit_i::handleGetStreamInputModuleParamList(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for ( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
@@ -597,12 +592,11 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(VE_XML::Command* cmd)
 
 char* Body_Unit_i::handleGetStreamInputModuleProperties(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for ( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
@@ -619,12 +613,11 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(VE_XML::Command* cmd)
 
 char* Body_Unit_i::handleGetStreamOutputModuleParamList(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
@@ -642,12 +635,11 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(VE_XML::Command* cmd)
 
 char* Body_Unit_i::handleGetStreamOutputModuleProperties(VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
 	unsigned int modId;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
@@ -671,7 +663,6 @@ void Body_Unit_i::SetParams (CORBA::Long id,
   ))
 {
    //discard the id, it is not used;
-   unsigned int i,j;
    VE_XML::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
@@ -679,13 +670,13 @@ void Body_Unit_i::SetParams (CORBA::Long id,
    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
   
    //this part would need rewrite later
-   for (i=0; i<objectVector.size(); i++)
+   for( size_t i=0; i<objectVector.size(); i++)
    {
 		VE_XML::Command* param = dynamic_cast< VE_XML::Command* >( objectVector.at( i ) );
 		std::string paramName = param->GetCommandName();
 		
-		unsigned int num = param->GetNumberOfDataValuePairs();
-		for (j=0; j<num; j++)
+		size_t num = param->GetNumberOfDataValuePairs();
+		for (size_t j=0; j<num; j++)
 		{
 			VE_XML::DataValuePairWeakPtr curPair= param->GetDataValuePair("NodePath");
 			CString nodepath = curPair->GetDataString().c_str();
@@ -700,11 +691,10 @@ void Body_Unit_i::SetParams (CORBA::Long id,
 }
 void Body_Unit_i::SetParam (VE_XML::Command* cmd)
 {
-	unsigned int num = cmd->GetNumberOfDataValuePairs();
+	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;
-	int i;
 
-	for (i=0; i < (int)num; i++)
+	for( size_t i=0; i < num; i++)
 	{
 		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
