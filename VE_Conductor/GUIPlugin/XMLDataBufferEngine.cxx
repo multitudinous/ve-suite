@@ -184,7 +184,6 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
             networkModelVector.push_back( toID.str() );
         }
-        //std::cout << toID.str() << " " << fromID.str() << std::endl;
         fromID.str("");
         toID.str("");
     }
@@ -224,6 +223,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             modelIter = modelVector.erase( modelIter );
             modelID << model->GetModelID();
             m_modelMap[ modelID.str() ] = *model;
+            stringIter = std::find( networkModelVector.begin(), 
+                networkModelVector.end(), modelID.str() );
+            if( stringIter == networkModelVector.end() )
+            {
+                networkModelVector.push_back( modelID.str() );
+            }
             modelID.str("");
         }        
         objectIter = objectVector.erase( objectVector.begin() );
