@@ -96,4 +96,9 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
          return tempStr;
       }
 };
+//Form to get the function for aspen plus icons
+//GetVESuite_Valve_Valve_VALVE1
+#define GET_ICON_STREAM(name)  \
+    name();
+
 #endif
