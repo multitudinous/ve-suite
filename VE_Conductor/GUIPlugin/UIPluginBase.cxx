@@ -47,6 +47,7 @@
 #include "VE_Conductor/Utilities/DataSetLoaderUI.h"
 #include "VE_Conductor/GUIPlugin/vistab.h"
 #include "VE_Conductor/Utilities/SoundsPane.h"
+#include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
 
 // EPRI TAG
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"

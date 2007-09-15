@@ -48,8 +48,6 @@
 #include <map>
 #include <string>
 
-#include "VE_Conductor/xpm/AspenPlus2DIcons/AspenPlus2DIcons.h"
-
 #undef IconChooser_STYLE
 #define IconChooser_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 

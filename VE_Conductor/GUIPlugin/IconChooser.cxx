@@ -38,6 +38,7 @@
 #include <wx/tokenzr.h>
 
 #include "VE_Conductor/GUIPlugin/UIPluginBase.h"
+#include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
 
 BEGIN_EVENT_TABLE(IconChooser,wxFrame)	
 	EVT_CLOSE(IconChooser::OnClose)
