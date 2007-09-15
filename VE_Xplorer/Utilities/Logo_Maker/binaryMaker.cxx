@@ -42,11 +42,36 @@ int main( int argc, char* argv[] )
        std::cout << "Usage : " << argv[ 0 ] << " <filename> " << std::endl;
        return 0;
     }
-    std::string filename = std::string( argv[ 1 ] );
+    std::string filename = std::string( argv[ 1 ] );    
     std::ifstream osgFile( filename.c_str() );
+    if( !filename.compare( 0, 2, std::string( "./" ) ) )
+    {
+        filename = filename.erase( 0, 2 );
+    }
     
     size_t indexOfFirstDot = filename.find_last_of( '.' );
     std::string shortName( filename.begin(), filename.begin() + indexOfFirstDot );
+    //replace . / - with _
+    for ( size_t index = 0; index < shortName.length(); )
+    {
+        index = shortName.find( '.', index );
+        if ( index != std::string::npos )
+            shortName[ index ] = '_';
+    }
+    
+    for ( size_t index = 0; index < shortName.length(); )
+    {
+        index = shortName.find( '/', index );
+        if ( index != std::string::npos )
+            shortName[ index ] = '_';
+    }
+
+    for ( size_t index = 0; index < shortName.length(); )
+    {
+        index = shortName.find( '-', index );
+        if ( index != std::string::npos )
+            shortName[ index ] = '_';
+    }
     /*
     // Sample for C++ File I/O binary file read
     
