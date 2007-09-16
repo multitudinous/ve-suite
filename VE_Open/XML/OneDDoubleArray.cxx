@@ -43,7 +43,6 @@ using namespace VE_XML;
 OneDDoubleArray::OneDDoubleArray(unsigned int nElements)
 :XMLObject()
 {
-   _nElements  = nElements;
    // These should match the schema for min and max occurances 
    // of the float array
    minIndex = 1;
@@ -60,7 +59,6 @@ OneDDoubleArray::~OneDDoubleArray()
 OneDDoubleArray::OneDDoubleArray( const OneDDoubleArray& input )
 :XMLObject(input)
 {
-   _nElements = input._nElements;
    _array = input._array;
    minIndex = input.minIndex;
 }
@@ -71,7 +69,6 @@ OneDDoubleArray& OneDDoubleArray::operator=( const OneDDoubleArray& input)
    {
       //biv-- make sure to call the parent =
       XMLObject::operator =(input);
-      _nElements = input._nElements;
       _array = input._array;
       minIndex = input.minIndex;
    }
@@ -81,14 +78,12 @@ OneDDoubleArray& OneDDoubleArray::operator=( const OneDDoubleArray& input)
 void OneDDoubleArray::AddElementToArray(double value)
 {
    _array.push_back(value);
-   _nElements = static_cast< unsigned int >( _array.size() );
 }
 /////////////////////////////////////////////////////////////////
 void OneDDoubleArray::SetArray( std::vector< double > input )
 {
    _array.clear();
    _array = input;
-   _nElements = static_cast< unsigned int >( _array.size() );;
 }
 //////////////////////////////////////////////////
 double OneDDoubleArray::GetElement(unsigned int index)
@@ -134,7 +129,6 @@ void OneDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
    //this is currently maxed out at 4 in the schema but
    //we can adjust this to be larger if needed. Also it
    //has to be at least 2 elements according to the schema
-   //_nElements = xerces->();
    DOMElement* currentElement = 0;
    if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
    {
@@ -146,10 +140,8 @@ void OneDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
       _array.clear();
       
       // do we need to delete the old one or does xerces handle this???
-      //_nElements = xmlInput->getChildNodes()->getLength();
       DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("data"));
       XMLSize_t numNodes = nodeList->getLength();
-      _nElements = numNodes;
       if ( ( minIndex > numNodes ) )
       {
          std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" << 

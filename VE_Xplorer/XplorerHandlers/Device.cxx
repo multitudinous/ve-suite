@@ -31,9 +31,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Stuff --- //
+#include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
+
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
+
+#include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
+
+#include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/OneDDoubleArray.h"
 
 // --- OSG Stuff --- //
 #include <osg/LineSegment>
@@ -67,7 +75,34 @@ void Device::UpdateSelection()
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetVECommand( VE_XML::Command* command )
 {
-    ;
+    if( !command->GetDataValuePair( "SET_START_POSITION" ) )
+    {
+        return;
+    }
+    VE_XML::Command* viewPointGUIData = new VE_XML::Command();
+    viewPointGUIData->SetCommandName( "START_POSITION" );
+
+    VE_XML::DataValuePairWeakPtr quatStartPosition = new VE_XML::DataValuePair();
+    VE_XML::OneDDoubleArray* quatData = new VE_XML::OneDDoubleArray( 0 );
+    osg::Quat quat = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
+    quatData->AddElementToArray( quat[ 0 ] );
+    quatData->AddElementToArray( quat[ 1 ] );
+    quatData->AddElementToArray( quat[ 2 ] );
+    quatData->AddElementToArray( quat[ 3 ] );
+    quatStartPosition->SetData( "QUAT_START_POSITION", quatData );
+    viewPointGUIData->AddDataValuePair( quatStartPosition );
+
+    VE_XML::DataValuePairWeakPtr positionStartPosition = new VE_XML::DataValuePair();
+    VE_XML::OneDDoubleArray* positionsData = new VE_XML::OneDDoubleArray( 0 );
+    osg::Vec3d trans = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition();
+    positionsData->AddElementToArray( trans[ 0 ] );
+    positionsData->AddElementToArray( trans[ 1 ] );
+    positionsData->AddElementToArray( trans[ 2 ] );
+    positionStartPosition->SetData( "POSITION_START_POSITION", positionsData );
+    viewPointGUIData->AddDataValuePair( positionStartPosition );
+
+    VE_Xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
+    delete viewPointGUIData;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateCommand()

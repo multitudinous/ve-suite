@@ -95,6 +95,7 @@ bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
         try
         {
           //new way
+          //std::cout << xmlDocument << std::endl;
           m_xplorer->SetXplorerData( xmlDocument );
         }
         catch ( ... )

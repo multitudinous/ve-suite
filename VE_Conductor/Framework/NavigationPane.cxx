@@ -73,14 +73,15 @@
 #include <iostream>
 
 BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
-   EVT_MOUSE_EVENTS( NavigationPane::onMouse )
-   EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, NavigationPane::OnTransStepSlider)
-   EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, NavigationPane::OnRotStepSlider)
-   EVT_BUTTON        ( RESET_NAV_POSITION, NavigationPane::OnResetNavPosition)
-   EVT_CHECKBOX      ( HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
-   EVT_CHECKBOX      ( SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
-   //EVT_LEFT_UP(NavigationPane::onMouse)
-   EVT_IDLE( NavigationPane::OnIdle )
+    EVT_MOUSE_EVENTS( NavigationPane::onMouse )
+    EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, NavigationPane::OnTransStepSlider)
+    EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, NavigationPane::OnRotStepSlider)
+    EVT_BUTTON        ( STORE_START_POSITION, NavigationPane::OnStoreStartPosition)
+    EVT_BUTTON        ( RESET_NAV_POSITION, NavigationPane::OnResetNavPosition)
+    EVT_CHECKBOX      ( HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
+    EVT_CHECKBOX      ( SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
+    //EVT_LEFT_UP(NavigationPane::onMouse)
+    EVT_IDLE( NavigationPane::OnIdle )
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
@@ -434,10 +435,11 @@ void NavigationPane::BuildPane( void )
                                     wxT("Rotate About Users Head"));
    headRotationChk->SetValue( true );
    miscGroup->Add( headRotationChk, 1, wxALL|wxALIGN_LEFT, 5 );
-
+   ///Reset nav position button
    resetNavPosition = new wxButton(scrollWindow, RESET_NAV_POSITION,
                                     wxT("Reset Nav Position"));
    miscGroup->Add( resetNavPosition,1,wxALL|wxALIGN_LEFT, 5 );
+   
    miscGroup->Add( picSizer, 1, wxALIGN_RIGHT);
 
    wxBoxSizer* miscGroup2 = new wxBoxSizer(wxHORIZONTAL);
@@ -449,7 +451,11 @@ void NavigationPane::BuildPane( void )
    cfg->Read(key + _T("/") + _T( "Navigation z=0 Lock" ), &zLock, false );
    subZeroChk->SetValue( zLock );
    miscGroup2->Add( subZeroChk, 0, wxALL|wxALIGN_LEFT, 5 );
-
+   ///Store start position
+   wxButton* startButton = new wxButton(scrollWindow, STORE_START_POSITION,
+                                        wxT("Store Start Position"));
+   miscGroup2->Add( startButton, 1, wxALL|wxALIGN_LEFT, 5 );
+   
    // Add everything to static box sizer
    buttonStaticBoxSizer->Add( navCol,        4, wxALIGN_CENTER_HORIZONTAL      );
    buttonStaticBoxSizer->Add( stepSizeGroup, 2, wxALL|wxALIGN_LEFT|wxEXPAND, 5 );
@@ -589,27 +595,45 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
    if( IsShown() )
    {
       UpdateNavigationData();
+      UpdateXplorerData();
       UpdateWindowUI(wxUPDATE_UI_FROMIDLE);
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-   VE_XML::CommandWeakPtr navPreferenceData = UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
-   if ( navPreferenceData->GetCommandName() == "NULL" )
-   {
-      return;
-   }
+    VE_XML::CommandWeakPtr navPreferenceData = 
+        UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
+    if ( navPreferenceData->GetCommandName() == "NULL" )
+    {
+        return;
+    }
 
-   double tempData;
-   navPreferenceData->GetDataValuePair( "CHANGE_TRANSLATION_STEP_SIZE" )->GetData( tempData );
-   translationStepSize->SetValue( tempData );
-   navPreferenceData->GetDataValuePair( "CHANGE_ROTATION_STEP_SIZE" )->GetData( tempData );
-   rotationStepSize->SetValue( tempData );
-   navPreferenceData->GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
-   headRotationChk->SetValue( tempData );
-   navPreferenceData->GetDataValuePair( "Z_ZERO_PLANE" )->GetData( tempData );
-   subZeroChk->SetValue( tempData );
+    double tempData;
+    navPreferenceData->GetDataValuePair( "CHANGE_TRANSLATION_STEP_SIZE" )->GetData( tempData );
+    translationStepSize->SetValue( tempData );
+    navPreferenceData->GetDataValuePair( "CHANGE_ROTATION_STEP_SIZE" )->GetData( tempData );
+    rotationStepSize->SetValue( tempData );
+    navPreferenceData->GetDataValuePair( "ROTATE_ABOUT_HEAD" )->GetData( tempData );
+    headRotationChk->SetValue( tempData );
+    navPreferenceData->GetDataValuePair( "Z_ZERO_PLANE" )->GetData( tempData );
+    subZeroChk->SetValue( tempData );
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationPane::UpdateXplorerData( void )
+{
+    VE_XML::Command viewPointData = VE_Conductor::CORBAServiceList::instance()->
+        GetGUIUpdateCommands( "START_POSITION" );
+    //Hasn't updated yet
+    if( viewPointData.GetCommandName() == "NULL" )
+    {
+        return;
+    }
+
+    quatStartPoint = viewPointData.GetDataValuePair( "QUAT_START_POSITION" );
+    positionStartPoint = viewPointData.GetDataValuePair( "POSITION_START_POSITION" );
+    //Update preferences
+    SetPreferenceNavigationData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
@@ -647,6 +671,23 @@ void NavigationPane::SetPreferenceNavigationData( void )
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
+   if( quatStartPoint )
+   {
+       navPreferenceData->AddDataValuePair( quatStartPoint );
+   }
+   //////////////////////////////////////////////////////////////////
+   if( positionStartPoint )
+   {
+       navPreferenceData->AddDataValuePair( positionStartPoint );
+   }
    
-   UserPreferencesDataBuffer::instance()->SetCommand( "Navigation_Data", navPreferenceData );
+   UserPreferencesDataBuffer::instance()->
+       SetCommand( "Navigation_Data", navPreferenceData );
+}
+////////////////////////////////////////////////////////////////////////////////
+void NavigationPane::OnStoreStartPosition( wxCommandEvent& WXUNUSED(event) )
+{
+    dataValueName = "SET_START_POSITION";
+    cIso_value = 0;
+    SendCommandsToXplorer();
 }

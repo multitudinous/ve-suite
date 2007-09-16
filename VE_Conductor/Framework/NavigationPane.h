@@ -49,6 +49,9 @@ NavigationPane API
 #include <vector>
 #include <string>
 
+#include "VE_Open/XML/CommandStrongPtr.h"
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
+
 class wxCheckBox;
 class wxSlider;
 class wxButton;
@@ -98,7 +101,8 @@ public:
       ROT_STEP_SLIDER,
       HEAD_ROTATE_CHK,
       SUB_ZERO_CHK,
-      RESET_NAV_POSITION
+      RESET_NAV_POSITION,
+      STORE_START_POSITION
       //NONE= -1000
    };
 
@@ -132,11 +136,21 @@ public:
    ///Idle function
    //virtual void OnInternalIdle( void );
    void OnIdle( wxIdleEvent& event );
+   ///Store Start Position event handler
+   void OnStoreStartPosition( wxCommandEvent& event );
+   ///Get data back from xplorer
+   void UpdateXplorerData();
+
 protected:
    int _activeButton;
    wxScrolledWindow* scrollWindow;
 
    std::vector< VE_XML::Command* > commands;
+   
+   VE_XML::CommandStrongPtr startPoint;
+   VE_XML::DataValuePairStrongPtr quatStartPoint;
+   VE_XML::DataValuePairStrongPtr positionStartPoint;
+   
    int cId, cIso_value;
    std::string dataValueName;
 

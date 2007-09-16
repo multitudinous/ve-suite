@@ -84,7 +84,6 @@ protected:
    ///Internally update the data.
    ///\param tagName The tag name of this element.
    virtual void _updateVEElement( std::string tagName);
-   unsigned int _nElements;///<Length of this float array.
    std::vector<double> _array;///<Raw data.
 
 private:
