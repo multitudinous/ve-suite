@@ -30,20 +30,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <string>
-
 #include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
 #include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
 #include "VE_Xplorer/XplorerHandlers/Device.h"
 
+#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
+
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/OneDDoubleArray.h"
 
 #include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+
+#include <string>
 
 #ifdef WIN32
 #include <direct.h>
@@ -81,6 +86,19 @@ void NavigationDataEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
 {
    VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
    dynamic_cast< Device* >( _baseObject )->SetVECommand( command );
+
+   VE_XML::DataValuePairWeakPtr quatPosition = command->GetDataValuePair( "QUAT_START_POSITION" );
+   if( quatPosition )
+   {
+       VE_XML::OneDDoubleArray* data = dynamic_cast< VE_XML::OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
+       std::vector< double > tempQuat = data->GetArray();
+       osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
+       VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetQuat( quat );
+
+       quatPosition = command->GetDataValuePair( "POSITION_START_POSITION" );
+       data = dynamic_cast< VE_XML::OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
+       VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetTranslationArray( data->GetArray() );
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler& NavigationDataEventHandler::operator=(const NavigationDataEventHandler& rhs)

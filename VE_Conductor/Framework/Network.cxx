@@ -2270,6 +2270,14 @@ void Network::CreateNetwork( std::string xmlNetwork )
     VE_Conductor::CORBAServiceList::instance()->
         SendCommandStringToXplorer( colorCommand );
 
+    // Create the command and data value pairs
+    VE_XML::CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
+        GetCommand( "Navigation_Data" );
+    //startCommand->SetCommandName( "MOVE_TO_START_POSITION" );
+    VE_Conductor::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( startCommand );
+
+    //Reset values
     m_selMod = -1;
     m_selFrPort = -1; 
     m_selToPort = -1; 
