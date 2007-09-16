@@ -133,7 +133,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
 #ifdef WIN32
          ySize = static_cast< int >( configYValue - 195 ); 
 #else
-         ySize = static_cast< int >( configYValue - 195 );
+         ySize = static_cast< int >( configYValue - 160 );
 #endif
          elements.at(i)->setProperty(  "size", 1, ySize );
          elements.at(i)->setProperty(  "origin", 0, 0 );
