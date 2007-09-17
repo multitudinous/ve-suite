@@ -783,7 +783,7 @@ class LauncherWindow(wx.Frame):
     def SpScreen(self):
         wx.MilliSleep(50)    
 
-        self.mutex.acquire()
+        #self.mutex.acquire()
         
         self.image = SPLASH_IMAGE
 
@@ -810,7 +810,7 @@ class LauncherWindow(wx.Frame):
         
         self.splash.OnCloseWindow()
 
-        self.mutex.release()
+        #self.mutex.release()
         
     def OnSplashExit(self, event=None):
         self.splash.Close(True)
@@ -985,7 +985,7 @@ class LauncherWindow(wx.Frame):
             if windows or unix:
                 if self.state.GetSurface("Debug"):
                     print "Debug Launch Mode"
-                self.mutex = thread.allocate_lock()    
+                #self.mutex = thread.allocate_lock()    
                 try:
                     thread.start_new_thread(self.SpScreen, ())
                 except:
@@ -1020,6 +1020,9 @@ class LauncherWindow(wx.Frame):
                                    wx.OK)
             dlg.ShowModal()
             dlg.Destroy()
+	#block until splash screen returns
+	#while !self.mutex.acquire():
+	#	wx.MilliSleep(1000)
 
 
     ##Close the Launcher
