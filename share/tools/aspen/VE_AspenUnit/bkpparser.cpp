@@ -530,8 +530,8 @@ void BKPParser::ParseFile(const char * bkpFile)
         std::cout<<"Finished Reading Block Info"<<std::endl;
 
         //locate minimum X - used for normalization
-        float minX = 0;
-        float minY = 0;
+        float minX = 10000;
+        float minY = 10000;
         std::map< std::string, std::pair< float, float > >::iterator iter;
         for (iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
         {
@@ -667,16 +667,18 @@ void BKPParser::ParseFile(const char * bkpFile)
         //
         //NORMALIZE FOR WX
         //
-        float normX = fabs(minX);
-        float normY = fabs(minY);
+        //float normX = fabs(minX);
+        //float normY = fabs(minY);
+		float normX = minX;
+		float normY = minY;
         tester2<<"NormX: "<<normX<<" NormY: "<<normY<<std::endl;
         tester2.close();
         //blocks
         std::ofstream tester3 ("tester3.txt");
         for(iter = iconLocations[sheetIter->first].begin(); iter != iconLocations[sheetIter->first].end(); iter++)
         {
-            iconLocations[sheetIter->first][ iter->first ].first = iconLocations[sheetIter->first][iter->first].first + normX;
-            iconLocations[sheetIter->first][ iter->first ].second = iconLocations[sheetIter->first][iter->first].second + normY;
+            iconLocations[sheetIter->first][ iter->first ].first = iconLocations[sheetIter->first][iter->first].first - normX;
+            iconLocations[sheetIter->first][ iter->first ].second = iconLocations[sheetIter->first][iter->first].second - normY;
             //iconLocations[ iter->first ].first = iconLocations[iter->first].first;
             //iconLocations[ iter->first ].second = iconLocations[iter->first].second;
             tester3<<iter->first<<": x: "<<iconLocations[sheetIter->first][ iter->first ].first<<" y: "<<iconLocations[sheetIter->first][ iter->first ].second<<std::endl;
@@ -691,8 +693,8 @@ void BKPParser::ParseFile(const char * bkpFile)
             tester<<iter2->first<<":";
             for(int element = 0; element < (int)linkPoints[sheetIter->first][ iter2->first ].size(); element++)
             {
-                linkPoints[sheetIter->first][ iter2->first ][element].first = linkPoints[sheetIter->first][ iter2->first ][element].first + normX;
-                linkPoints[sheetIter->first][ iter2->first ][element].second = linkPoints[sheetIter->first][ iter2->first ][element].second + normY;
+                linkPoints[sheetIter->first][ iter2->first ][element].first = linkPoints[sheetIter->first][ iter2->first ][element].first - normX;
+                linkPoints[sheetIter->first][ iter2->first ][element].second = linkPoints[sheetIter->first][ iter2->first ][element].second - normY;
                 //linkPoints[ iter2->first ][element].first = linkPoints[ iter2->first ][element].first;
                 //linkPoints[ iter2->first ][element].second = linkPoints[ iter2->first ][element].second;
                 tester<<" x: "<< linkPoints[sheetIter->first][ iter2->first ][element].first<<" y: "<<(float)linkPoints[sheetIter->first][ iter2->first ][element].second;
