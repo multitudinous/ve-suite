@@ -35,14 +35,6 @@
 #include "VE_Xplorer/SceneGraph/DefaultTechnique.h"
 #include "VE_Xplorer/SceneGraph/DCS.h"
 
-// --- OSG Includes --- //
-#include <osg/BlendFunc>
-#include <osg/CameraNode>
-#include <osg/Texture2D>
-#include <osg/LineWidth>
-#include <osg/Material>
-#include <osg/PolygonMode>
-
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
