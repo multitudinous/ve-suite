@@ -204,12 +204,14 @@ class LauncherWindow(wx.Frame):
         ##menu.AppendSeparator()
         ##self.ConstructRecentMenu()
         menuBar.Append(menu, "&File")
+        
         menu = wx.Menu()
         menu.Append(510, "&Load\tCtrl+L")
         menu.Append(511, "&Save\tCtrl+S")
         menu.AppendSeparator()
         menu.Append(512, "&Delete\tCtrl+D")
         menuBar.Append(menu, "&Configurations")
+        
         menu = wx.Menu()
         menu.Append(520, "Choose De&pendencies\tCtrl+P")
         if not unix:
@@ -222,6 +224,11 @@ class LauncherWindow(wx.Frame):
         if posix:
             menu.Append(530, "&Reset VE-Suite\tCtrl+R")
         menuBar.Append(menu, "&Options")
+        
+        menu = wx.Menu()
+        menu.Append(560, "&About")
+        menuBar.Append(menu, "&Help")
+
         self.SetMenuBar(menuBar)
 
         ##Event bindings.
@@ -676,7 +683,7 @@ class LauncherWindow(wx.Frame):
 
     def ChooseLoadConfig(self, event = None):
         """Lets the user choose a configuration to load."""
-        message = "Please choose a\n" + "configuration to load."
+        message = "Please choose a configuration to load."
         choices = []
         config.SetPath("..")
         configEntry = config.GetFirstGroup()
@@ -698,13 +705,19 @@ class LauncherWindow(wx.Frame):
         ##Else ask the user to select a configuration.
         dlg = wx.SingleChoiceDialog(self, message, "Load Configuration",
                                     choices)
-        dlg.SetSelection(0)
+        ##Set temp index
+        tempCount = 0
+        ##while (not self.state.GetSurface("CurrentConfig") == choices[tempCount]):
+        ##    tempCount += 1
+
+        dlg.SetSelection(tempCount)
+        
         if dlg.ShowModal() == wx.ID_OK:
             choice = dlg.GetStringSelection()
             LoadConfig(choice, self.state)
+            self.state.Edit("CurrentConfig", choice)
             self.React()
         dlg.Destroy()
-
 
     def DeleteConfig(self, event = None):
         """Lets the user choose a confiuration to delete."""
@@ -770,10 +783,8 @@ class LauncherWindow(wx.Frame):
     def SpScreen(self):
         wx.MilliSleep(50)    
 
-        if windows or unix:
-            if not self.state.GetSurface("Debug"):
-                self.mutex.acquire()
-            
+        self.mutex.acquire()
+        
         self.image = SPLASH_IMAGE
 
         self.splash = VeSplashScreen(self, bitmapfile = self.image)
@@ -786,7 +797,7 @@ class LauncherWindow(wx.Frame):
 
         if self.state.GetSurface("NameServer"):
             self.splash.SetText("Version 1.1", "Starting Name Server...")
-            wx.MilliSleep(500)
+            wx.MilliSleep(1000)
         if self.state.GetSurface("Xplorer"):
             self.splash.SetText("Version 1.1", "Starting Xplorer...")
             wx.MilliSleep(500)
@@ -798,10 +809,8 @@ class LauncherWindow(wx.Frame):
         wx.MilliSleep(1000)
         
         self.splash.OnCloseWindow()
-        
-        if windows or unix:
-            if not self.state.GetSurface("Debug"):
-                self.mutex.release()
+
+        self.mutex.release()
         
     def OnSplashExit(self, event=None):
         self.splash.Close(True)
@@ -975,33 +984,34 @@ class LauncherWindow(wx.Frame):
         if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Shell":
             if windows or unix:
                 if self.state.GetSurface("Debug"):
-                    self.SpScreen()
-                else:
-                    self.mutex = thread.allocate_lock()	
-                    try:
-                        thread.start_new_thread(self.SpScreen, ())
-                    except:
-                            pass
-            else:
-                self.SpScreen()
-
+                    print "Debug Launch Mode"
+                self.mutex = thread.allocate_lock()    
+                try:
+                    thread.start_new_thread(self.SpScreen, ())
+                except:
+                    pass
+                
        ##Go into the Launch
         try:
-            if not (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
-                launchInstance = Launch(self.state.GetLaunchSurface())
-                if v("NameServer"):
-                    if (self.state.GetSurface("AutoShutDown") and not windows):
-                        window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
-                                                    conduct_Pid = launchInstance.GetConductorPid())
-                    elif (self.state.GetSurface("AutoShutDown") and windows):
-                        window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
-                                                     conduct_Pid = launchInstance.GetConductorPid())
-                    else:
-                        window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
-            else:
+            if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 if v("NameServer"):
                     launchInstance = Launch(self.state.GetLaunchSurface())
                     window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                    
+            else:
+                launchInstance = Launch(self.state.GetLaunchSurface())
+                if v("NameServer"):
+                    if (not v("Conductor")):
+                        window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                    else:
+                        if (self.state.GetSurface("AutoShutDown") and not windows):
+                            window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
+                                                        conduct_Pid = launchInstance.GetConductorPid())
+                        elif (self.state.GetSurface("AutoShutDown") and windows):
+                            window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
+                                                         conduct_Pid = launchInstance.GetConductorPid())
+                        else:
+                            window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
                              
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,

@@ -66,6 +66,7 @@ def SaveConfig(name, state, saveLastConfig = False):
                  "ExtraVariables",
                  "AutoShutDown",
                  "EnableVSync",
+                 "CurrentConfig",
                  "EnableDefWorkingDir",
                  "DefaultWorkingDir",
                  "RunDebugPrograms"]
@@ -132,6 +133,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "User": None,
                 "FileDir": None,
                 "DefaultWorkingDir": None,
+                "CurrentConfig": None,
                 "ExtraVariables": None}
     intReads = {"Mode": None,
                 "AddMode": None,
