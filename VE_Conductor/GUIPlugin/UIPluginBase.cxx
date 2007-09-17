@@ -1452,7 +1452,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
       veCommand = 0;
    }
 }
-///////////////////////////////////////////
+//////////////////////////////////////////////////////////
 void UIPluginBase::OnVisualization(wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )

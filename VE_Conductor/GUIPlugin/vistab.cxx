@@ -129,18 +129,19 @@ Vistab::Vistab(VjObs::Model_var activeModel )
    _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
    _availableSolutions["TEXTURE_VECTORS"].Add( _("") );
    _commandName = "VISUALIZATION_TAB";
-   SetActiveModel(activeModel);
-   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
-   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
-   _activeScalarRange = _originalScalarRanges[_activeScalarName];
-   
-
     m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
     m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
     m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON; 
     m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON; 
     m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON; 
     m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON; 
+   SetActiveModel(activeModel);
+   _activeScalarName = ConvertUnicode( _scalarSelection->GetStringSelection() );
+   _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
+   _activeScalarRange = _originalScalarRanges[_activeScalarName];
+   
+
+    
    //_vistabPosition = dynamic_cast<AppFrame*>(wxTheApp->GetTopWindow())->GetAppropriateSubDialogSize();
 }
 ///////////////////////////////////////////////////////////////////
@@ -171,6 +172,13 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _availableSolutions["TEXTURE_SCALARS"].Add( _("") );  
    _availableSolutions["TEXTURE_VECTORS"].Add( _("") ); 
 
+    m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
+    m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
+    m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON; 
+    m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON; 
+    m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON; 
+    m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON; 
+
    SetActiveModel(activeModel);
    Create(parent, id, caption, pos, wxDefaultSize, style);
    _commandName = "VISUALIZATION_TAB";
@@ -183,12 +191,7 @@ Vistab::Vistab(VjObs::Model_var activeModel,
    _activeVectorName = ConvertUnicode( _vectorSelection->GetStringSelection() );
    _activeScalarRange = _originalScalarRanges[_activeScalarName];
 
-    m_vistabButtonMap["Scalar Contour"] = CONTOUR_BUTTON;
-    m_vistabButtonMap["Vector Contour"] = VECTOR_BUTTON;
-    m_vistabButtonMap["Streamlines"] = STREAMLINE_BUTTON; 
-    m_vistabButtonMap["Isosurface"] = ISOSURFACE_BUTTON; 
-    m_vistabButtonMap["TBET"] = TEXTURE_BASED_BUTTON; 
-    m_vistabButtonMap["Polydata"] = POLYDATA_BUTTON; 
+   
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
@@ -706,12 +709,24 @@ void Vistab::_updateDatasetInformation(VjObs::Dataset datasetInfo )
    if(_nScalarsInActiveDataset)
    {
       _updateAvailableScalarMeshSolutions(datasetInfo.scalarVector);
+	  SetButtonStatus("All Scalar Operations",true);
+   }
+   else
+   {
+	   ///It there are no scalars, vectors probably won't work
+	   ///either...not sure of the logic on the xplorer side though
+       SetButtonStatus("All Scalar Operations",false);
    }
 
    _nVectorsInActiveDataset = datasetInfo.vectornames.length();
    if(_nVectorsInActiveDataset)
    {
       _updateAvailableSolutions("MESH_VECTORS",datasetInfo.vectornames);
+	  SetButtonStatus("All Vector Operations",true);
+   }
+   else
+   {
+	   SetButtonStatus("All Vector Operations",false);
    }
 }
 ///////////////////////////////////////////////////////////////////////////
@@ -1425,6 +1440,18 @@ void Vistab::SetButtonStatus(std::string buttonName, bool onOff)
         {
             itemToolBar3->EnableTool(buttonIterator->second,onOff);             
         }
+    }
+	else if(buttonName == "All Scalar Operations")
+    {
+		itemToolBar3->EnableTool(m_vistabButtonMap["Scalar Contour"],onOff);
+		itemToolBar3->EnableTool(m_vistabButtonMap["Isosurface"],onOff);
+        ///Is polydata really scalar dependent?
+		itemToolBar3->EnableTool(m_vistabButtonMap["Polydata"],onOff);
+    }
+	else if(buttonName == "All Vector Operations")
+    {
+		itemToolBar3->EnableTool(m_vistabButtonMap["Vector Contour"],onOff);
+		itemToolBar3->EnableTool(m_vistabButtonMap["Streamlines"],onOff);
     }
     else
     {
