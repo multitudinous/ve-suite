@@ -215,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DefaultTechnique.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\FindParentsVisitor.cxx"
 				>
 			</File>
@@ -336,6 +340,10 @@
 			</File>
 			<File
 				RelativePath=".\DCS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DefaultTechnique.h"
 				>
 			</File>
 			<File

@@ -34,6 +34,7 @@
 // --- VE-Suite Includes --- //
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/TransferPhysicsDataCallback.h"
+#include "VE_Xplorer/SceneGraph/DefaultTechnique.h"
 #include "VE_Xplorer/SceneGraph/SelectTechnique.h"
 
 // --- OSG Includes --- //
@@ -97,6 +98,7 @@ m_activeTechnique( "Default" )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
+    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
     AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +115,7 @@ m_activeTechnique( "Default" )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
+    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
     AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,6 +129,7 @@ m_activeTechnique( "Default" )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
+    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
     AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -532,18 +536,11 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    if( m_activeTechnique == "Default" )
-    {
-        InheritedTraverse( nv );
-    }
-    else
-    {
-        VE_SceneGraph::Technique* tech = m_techniques[ m_activeTechnique ];
+    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
 
-        if( tech )
-        {
-            tech->Traverse( nv, this );
-        }
+    if( technique )
+    {
+        technique->Traverse( nv, this );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

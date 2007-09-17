@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef SELECT_TECHNIQUE_H
-#define SELECT_TECHNIQUE_H
+#ifndef DEFAULT_TECHNIQUE_H
+#define DEFAULT_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
 #include "VE_Installer/include/VEConfig.h"
@@ -40,19 +40,20 @@
 
 namespace VE_SceneGraph
 {
-class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
+class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
 {
 public:
-    SelectTechnique( VE_SceneGraph::DCS* dcs );
-    ~SelectTechnique();
+    DefaultTechnique();
+    ~DefaultTechnique();
+
+    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
   
 protected:
     virtual void DefinePasses();
 
-    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;
 private:
 
 };
 }
 
-#endif //SELECT_TECHNIQUE_H
+#endif //DEFAULT_TECHNIQUE_H

@@ -30,29 +30,39 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef SELECT_TECHNIQUE_H
-#define SELECT_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include "VE_Xplorer/SceneGraph/DefaultTechnique.h"
+#include "VE_Xplorer/SceneGraph/DCS.h"
 
-#include "VE_Xplorer/SceneGraph/Technique.h"
+// --- OSG Includes --- //
+#include <osg/BlendFunc>
+#include <osg/CameraNode>
+#include <osg/Texture2D>
+#include <osg/LineWidth>
+#include <osg/Material>
+#include <osg/PolygonMode>
 
-namespace VE_SceneGraph
+using namespace VE_SceneGraph;
+
+////////////////////////////////////////////////////////////////////////////////
+DefaultTechnique::DefaultTechnique()
 {
-class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
-{
-public:
-    SelectTechnique( VE_SceneGraph::DCS* dcs );
-    ~SelectTechnique();
-  
-protected:
-    virtual void DefinePasses();
-
-    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;
-private:
-
-};
+    ;
 }
-
-#endif //SELECT_TECHNIQUE_H
+////////////////////////////////////////////////////////////////////////////////
+DefaultTechnique::~DefaultTechnique()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DefaultTechnique::Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs )
+{
+    dcs->InheritedTraverse( nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+void DefaultTechnique::DefinePasses()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
