@@ -230,6 +230,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AspenPlus2DIcons.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\contours.cxx"
 				>
 			</File>
@@ -344,6 +348,10 @@
 			</File>
 			<File
 				RelativePath=".\advancedvectors.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AspenPlus2DIcons.h"
 				>
 			</File>
 			<File
