@@ -820,11 +820,11 @@ class Launch:
                        os.path.join(str(os.getenv("VJ_BASE_DIR")), "bin")]
             
             
-            print "sysPath[0]: %s" % os.path.realpath(os.path.abspath(sys.executable))
+            ##print "sysPath[0]: %s" % os.path.realpath(os.path.abspath(sys.executable))
             ##Outdated paths.
             ##pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
             ##             os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")]
-            print "self.settings[builderdir]: %s" % self.settings["BuilderDir"] 
+            ##print "self.settings[builderdir]: %s" % self.settings["BuilderDir"] 
             if self.settings["BuilderDir"] != None:
                 pathList.append(os.path.join(str(self.settings["BuilderDir"]), "bin"))
             ##Append the custom dependencies list.
