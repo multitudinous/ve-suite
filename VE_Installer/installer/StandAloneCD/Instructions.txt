@@ -1,29 +1,23 @@
-To Make stand alone CD for VE_Suite:
+To Make stand alone DVD or CD for VE_Suite:
 
-1.  Copy the contents of the VE_Suite<ver> directory and the associated dependencies directory into a folder*.
-2.  Add the autorun.inf and VE_icon.ico files from the StandAloneCD directory to the folder**.
-3.  Add the models you wish to have on the CD somewhere in the folder***.
-4.  Write the contents of the folder onto a CD.
-
+Copy the contents of the VE_Suite<ver> directory and the associated dependencies directory into a folder*.
+Add the autorun.inf and VE_icon.ico files from the StandAloneCD directory to the folder**.
+Add the models you wish to have on the DVD/CD somewhere in the folder***.
+Write the contents of the folder onto a DVD/CD.
 
 *To fit on a CD this will need to be a version with no library or header files.  The best way to do this is to use the windows installers, deselecting the headers and libs options for both installs.  This generates all the necessary files.
 
-
 **Verify the directory name in the autorun.inf file matches the name for your VE_Suite version.
 
+***The models can be put anywhere on the DVD/CD, but the recommended location is:
 
-***The models can be put anywhere on the CD, but the recommended location is:
-
-(CD drive letter):\VE_Suite.1.0.3\exampleDatasets
+(CD drive letter):\VE-Suite_1.1.0\share\examples
 
 This keeps the models in the same location as the sample data sets.
 
-REMINDERS: 
-
-  Ensure that the contents of the folder will fit on a CD before writing!
-
-  When running VE_Suite from a CD, ensure that you have selected the working directory and dependencies directory located on the CD, otherwise the program will be unstable.  Also, only .ves (model) files located on the CD can be used.
-
+REMINDERS:
+  Ensure that the contents of the folder will fit on a DVD/CD before writing!
+  When running VE_Suite from DVD/CD CD, ensure that you have selected the working directory and dependencies directory located on the DVD/CD, otherwise the program will be unstable.  Also, only .ves (model) files located on the DVD/CD can be used.
 
 
 
