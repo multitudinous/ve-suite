@@ -203,9 +203,10 @@ class Launch:
                 print "***CLUSTER CALL: %s***" %(comp) ##TESTER
                 self.ExecuteClusterScript(comp)
                 sleep(self.settings["SlaveWait"])
-            ##Delete the cluster file afterwards.
-            if not self.settings["Debug"]:
-                os.remove(CLUSTER_FILE_PATH)
+            ##Delete the cluster file afterwards when VE_Suite is terminated.
+            ##To see the deletion code, please look at velServerKillWindow.py and
+            ##velServerAutoKill____.py
+
         ##Xplorer section
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
@@ -763,20 +764,21 @@ class Launch:
         if windows:
             ##Append OSG_FILE_PATH
             self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ';')
-            pathList = [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+            pathList = [
+                        os.path.join(os.path.join(VELAUNCHER_DIR,"bin")),
+                        os.path.join(os.path.join(VELAUNCHER_DIR,"lib")),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
-                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
-                        os.path.join(os.path.join(VELAUNCHER_DIR,"..\lib")),
-                        os.path.join(VELAUNCHER_DIR)]
+                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
+                        os.path.join(str(os.getenv("VE_DEPS_DIR")), "share")
+                        ]
             ##Outdated paths.
             ##pathList += [##os.path.join(str(os.getenv("VJ_DEPS_DIR")), "bin"),
             ##             os.path.join(VELAUNCHER_DIR, "bin")]
             if self.settings["BuilderDir"] != None:
-                pathList[:0] = [os.path.join(str(self.settings["BuilderDir"]),
-                                             "bin")]
+                pathList.append(os.path.join(str(self.settings["BuilderDir"]), "bin"))
             ##TEST to append 64-bit libraries:
             if architecture()[0] == "64bit":
-                pathList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
+                pathList.append(os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64"))
             ##Append the custom dependencies list.
             if architecture()[0] == "64bit":
                 libTag = "lib64"
@@ -801,39 +803,45 @@ class Launch:
             self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ':')
             ##Set name of library path
             libraryPath = "LD_LIBRARY_PATH"
-            lib = "lib"
             ##Update the library path
-            libList= [os.path.join(str(os.getenv("VJ_BASE_DIR")), lib),
+            libList= [os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib"),
                       os.path.join(VELAUNCHER_DIR),
-                      os.path.join(VELAUNCHER_DIR, '..', lib)]
+                      os.path.join(VELAUNCHER_DIR, '..', "lib")]
             ##Outdated paths.
             ##libList += [os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
             ##            os.path.join(VELAUNCHER_DIR, "bin")]
             ##TEST to append 64-bit libraries:
             if architecture()[0] == "64bit":
                 libList[:0]=[os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib64")]
+
             ##Update the path
             pathList= [os.path.join(VELAUNCHER_DIR),
+                       os.path.join(VELAUNCHER_DIR, '..', "lib"),
                        os.path.join(str(os.getenv("VJ_BASE_DIR")), "bin")]
+            
+            
+            print "sysPath[0]: %s" % os.path.realpath(os.path.abspath(sys.executable))
             ##Outdated paths.
             ##pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
             ##             os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin")]
+            print "self.settings[builderdir]: %s" % self.settings["BuilderDir"] 
             if self.settings["BuilderDir"] != None:
-                pathList[:0] = [os.path.join(str(self.settings["BuilderDir"]),
-                                             "bin")]
+                pathList.append(os.path.join(str(self.settings["BuilderDir"]), "bin"))
             ##Append the custom dependencies list.
             if architecture()[0] == "64bit":
                 libTag = "lib64"
             else:
                 libTag = "lib"
             for entry in self.settings["Dependencies"].GetNames():
-                pathList.append(os.path.join(entry, "bin"))
+                pathList.append(entry)
                 libList.append(os.path.join(entry, libTag))
-                libList.append(os.path.join(entry, "bin"))
+                libList.append(entry)
             ##Write the libraries & paths.
-            self.EnvAppend(libraryPath, libList, ':')
             self.EnvAppend("PATH", pathList, ':')
+            self.EnvAppend(libraryPath, libList, ':')
+            
             self.VeLauncherDir = str(VELAUNCHER_DIR)
+            print "VeLauncherDir: %s" % self.VeLauncherDir
             
         ##Update other vars listed.
         if self.settings["Cluster"]:
@@ -875,7 +883,7 @@ class Launch:
             for app in appendages:
                 self.debugOutput.append([app, None])
                 self.debugOutput.append(["\n", None])
-            self.debugOutput.append(["\n", None])
+            ##self.debugOutput.append(["\n", None])
 	    	
     def EnvFill(self, var, default, overwrite = False):
         """Overwrites env var in normal mode, ensures it's filled in dev mode.

@@ -47,12 +47,13 @@ class ServerAutoKillUnix(wx.Frame):
         __init__(pids, [parent, title])
         KillNameserver(event)
         OnClose(event)"""
-    def __init__(self, pids, conduct_Pid, parent = None, id = -1, title = ""):
+    def __init__(self, pids, conduct_Pid, settings, parent = None, id = -1, title = ""):
         """Creates the Server Shutdown Window"""
         wx.Frame.__init__(self, parent, id, title, size = (0, 0), 
                           style = wx.DEFAULT_FRAME_STYLE | wx.NO_FULL_REPAINT_ON_RESIZE) 
-
+        
         self.pids = pids
+        self.settings = settings
         self.c_Pid = str(conduct_Pid[0])
         self.Show()
         self.OnClose()
@@ -60,16 +61,21 @@ class ServerAutoKillUnix(wx.Frame):
         
     def KillNameServer(self):
         
-	    ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
-
-	    while (len(ps) <= 4):
-	        ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
-	        sleep(2)
-
-            killArray = ["kill"]
-            for pid in self.pids:
-                killArray.append(str(pid))
-                Popen(killArray)
+        ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
+        
+        while (len(ps) <= 4):
+            ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
+            sleep(2)
+        
+        killArray = ["kill"]
+        for pid in self.pids:
+            killArray.append(str(pid))
+            Popen(killArray)
+                
+        ##If cluster mode, delete the cluster script file at this point
+        if self.settings["Cluster"]:
+            if not self.settings["Debug"]:
+                os.remove(CLUSTER_FILE_PATH)                        
 
         	     
     def OnClose(self, event = None):

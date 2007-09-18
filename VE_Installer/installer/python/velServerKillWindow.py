@@ -46,8 +46,9 @@ class ServerKillWindow(wx.Frame):
         __init__(pids, [parent, title])
         KillNameserver(event)
         OnClose(event)"""
-    def __init__(self, pids, parent = None, title = "Shutdown Name Server"):
+    def __init__(self, pids, settings, parent = None, title = "Shutdown Name Server"):
         """Creates the Server Shutdown Window""" 
+        self.settings = settings
         wx.Frame.__init__(self, parent, wx.ID_ANY, title, wx.Point(0, 0),
                           style = wx.DEFAULT_FRAME_STYLE &
                           ~(wx.RESIZE_BORDER | wx.CLOSE_BOX | wx.MAXIMIZE_BOX))
@@ -82,11 +83,18 @@ class ServerKillWindow(wx.Frame):
                     win32api.CloseHandle(handle)
                 except:
                     pass
+                
         elif unix:
             killArray = ["kill"]
             for pid in self.pids:
                 killArray[len(killArray):] = [str(pid)]
             Popen(killArray)
+            
+            ##If cluster mode, delete the cluster script file at this point
+            if self.settings["Cluster"]:
+                if not self.settings["Debug"]:
+                    os.remove(CLUSTER_FILE_PATH)       
+            
         self.OnClose()
 
     def OnClose(self, event = None):

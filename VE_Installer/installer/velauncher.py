@@ -996,22 +996,25 @@ class LauncherWindow(wx.Frame):
             if (MODE_LIST[self.state.GetSurface("Mode")]) == "Computation":
                 if v("NameServer"):
                     launchInstance = Launch(self.state.GetLaunchSurface())
-                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
-                    
+                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(), 
+                                              settings = self.state.GetLaunchSurface())
             else:
                 launchInstance = Launch(self.state.GetLaunchSurface())
                 if v("NameServer"):
                     if (not v("Conductor")):
-                        window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                        window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
+                                                  settings = self.state.GetLaunchSurface())
                     else:
                         if (self.state.GetSurface("AutoShutDown") and not windows):
                             window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
-                                                        conduct_Pid = launchInstance.GetConductorPid())
+                                                        conduct_Pid = launchInstance.GetConductorPid(),
+                                                        settings = self.state.GetLaunchSurface())
                         elif (self.state.GetSurface("AutoShutDown") and windows):
                             window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
                                                          conduct_Pid = launchInstance.GetConductorPid())
                         else:
-                            window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                            window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
+                                                      settings = self.state.GetLaunchSurface())
                              
         except QuitLaunchError:
             dlg = wx.MessageDialog(self,
