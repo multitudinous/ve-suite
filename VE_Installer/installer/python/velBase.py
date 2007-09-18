@@ -36,6 +36,7 @@ import os.path ##Used for building paths.
 import wx ##Used for GUI
 import sys
 join = os.path.join
+import distutils.util
 
 ##Set up the system's ID.
 windows = (name == "nt")
@@ -190,7 +191,8 @@ def CFDHostType():
         cfdHostType = piped.read()[:-1]
         piped.close()
     return cfdHostType
-CFD_HOST_TYPE = CFDHostType()
+#CFD_HOST_TYPE = CFDHostType()
+CFD_HOST_TYPE = distutils.util.get_platform()
 
 class QuitLaunchError(Exception):
     """Defines error raised if user manually quits launch."""

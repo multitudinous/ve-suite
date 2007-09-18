@@ -56,6 +56,7 @@
           <xs:element maxOccurs="unbounded" minOccurs="2" name="linkPoints" type="vePoint"/>
         </xs:sequence>
         <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute use="optional" type="xs:string" name="type"/> 
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

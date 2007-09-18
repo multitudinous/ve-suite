@@ -148,6 +148,13 @@ void SceneManager::InitScene()
    _logoSwitch->AddChild( _logoNode.get() );
    _logoSwitch->AddChild( networkDCS.get() );   
 
+   ///World DCS
+   m_matrixStore[ 0 ] = gmtl::Matrix44d();
+   ///Logo DCS
+   m_matrixStore[ 1 ] = gmtl::Matrix44d();
+   ///Network DCS
+   m_matrixStore[ 2 ] = gmtl::Matrix44d();
+
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
     m_oqc->setVisibilityThreshold( 1000 );
@@ -293,7 +300,10 @@ void SceneManager::_createLogo()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )
 {
+    //GetActiveSwitchNode()->GetMat();
    _logoSwitch->SetVal( activeNode );
+   ///Now reset the dcs back to its former position so that the nav
+   ///information is defined on a per node basis.
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PreFrameUpdate()

@@ -65,56 +65,80 @@ namespace VE_Model
 class VE_MODEL_EXPORTS Link : public VE_XML::XMLObject
 {
 public:
-   ///Constructor
-   Link( );
-   ///Destructor
-   virtual ~Link();
-   ///Copy Constructor
-   Link( const Link& );
-   ///equal operator
-   Link& operator= ( const Link& );
-   
-   ///set the data from an string representing the xml
-   ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
-   
-   ///Get the portInfo for the fromPort.
-   VE_XML::DataValuePair* GetFromModule( void );
-   ///Get the portInfo for the toPort.
-   VE_XML::DataValuePair* GetToModule( void );
-   ///Get the portInfo for the fromPort.
-   long int* GetFromPort( void );
-   ///Get the portInfo for the toPort.
-   long int* GetToPort( void );
-   ///Get the i'th point for a link.
-   ///\param i The i'th point you are after.
-   Point* GetLinkPoint( unsigned int i );
-   ///Get the number of points used to define a link.
-   size_t GetNumberOfLinkPoints( void );
-   void SetLinkName( std::string name );
-   std::string GetLinkName( void );
+    ///Constructor
+    Link( );
+    ///Destructor
+    virtual ~Link();
+    ///Copy Constructor
+    Link( const Link& );
+    ///equal operator
+    Link& operator= ( const Link& );
+
+    ///set the data from an string representing the xml
+    ///\param xmlInput The input XML data.
+    virtual void SetObjectFromXMLData( 
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+
+    ///Get the portInfo for the fromPort.
+    ///\return The element with the information about the module being linked to
+    VE_XML::DataValuePair* GetFromModule( void );
+    ///Get the portInfo for the toPort.
+    ///\return The element with the information about the module being linked to
+    VE_XML::DataValuePair* GetToModule( void );
+    ///Get the portInfo for the fromPort.
+    ///\return The from port for the link
+    long int* GetFromPort( void );
+    ///Get the portInfo for the toPort.
+    ///\return The to port for the link
+    long int* GetToPort( void );
+    ///Get the i'th point for a link.
+    ///\param i The i'th point you are after.
+    Point* GetLinkPoint( unsigned int i );
+    ///Get the number of points used to define a link.
+    ///\return The number of points making up the link
+    size_t GetNumberOfLinkPoints( void );
+    ///Set the link name
+    ///\param name The name for the link
+    void SetLinkName( std::string name );
+    ///Get the link name
+    ///\return The link name in a string
+    std::string GetLinkName( void );
+    ///Set the link type
+    ///\param type The type of linke
+    void SetLinkType( std::string type );
+    ///Get the link type
+    ///\return The link type in a string
+    std::string GetLinkType();
 
 protected:
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName );
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
 
 private:
-   ///raw datatypes of Link that are specified in the verg_model.xsd file
-   std::vector< Point* > linkPoints;///<Vector of Points.
-   ///The data value pair will contain the model and port number of the appropriate port to be linked
-   std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > moduleInfo;///<The classes hold the fromPort in first and the toPort in second.
-   std::pair< long int, long int > portInfo;///<The classes hold the fromPort in first and the toPort in second.
-   std::string linkName;///<The name of the link.
+       ///raw datatypes of Link that are specified in the verg_model.xsd file
+    std::vector< Point* > linkPoints;///<Vector of Points.
+    ///The data value pair will contain the model and port 
+    ///number of the appropriate port to be linked
+    ///The classes hold the fromPort in first and the toPort in second.
+    std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > moduleInfo;
+    ///The classes hold the fromPort in first and the toPort in second.
+    std::pair< long int, long int > portInfo;
+    ///The name of the link.
+    std::string linkName;
+    ///The link type
+    std::string m_type;
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Link* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
+    const std::string subElementTagName, VE_Model::Link* val)
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = 
+        val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 

@@ -148,6 +148,9 @@ private:
     osg::ref_ptr< osg::ClearNode > m_clrNode;
     osg::ref_ptr<osgOQ::OcclusionQueryContext> m_oqc;
 
+   ///Map to store state information about each dcs
+   std::map< int, gmtl::Matrix44d > m_matrixStore;
+   
 protected:
    ///Create the model for the logo
    #ifdef _OSG

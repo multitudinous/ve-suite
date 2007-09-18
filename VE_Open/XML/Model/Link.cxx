@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/DataValuePair.h"
@@ -43,139 +42,145 @@ using namespace VE_XML::VE_Model;
 Link::Link()
 :XMLObject()
 {
-   linkName = "noName";
-   moduleInfo.first = new DataValuePair( "FLOAT" );
-   moduleInfo.second = new DataValuePair( "FLOAT" );
-   portInfo.first = 0;
-   portInfo.second = 0;
+    linkName = "noName";
+    moduleInfo.first = new DataValuePair( "FLOAT" );
+    moduleInfo.second = new DataValuePair( "FLOAT" );
+    portInfo.first = 0;
+    portInfo.second = 0;
 
-   SetObjectType( "Link" );
-   SetObjectNamespace( "Model" );
+    SetObjectType( "Link" );
+    SetObjectNamespace( "Model" );
 }
 ///////////////////////////////////
 Link::~Link()
 {
-   delete moduleInfo.first;
-   delete moduleInfo.second;
+    delete moduleInfo.first;
+    delete moduleInfo.second;
 
-   for ( size_t i = 0; i < linkPoints.size(); ++i )
-   {
-      delete linkPoints.at( i );
-   }
-   linkPoints.clear();
+    for ( size_t i = 0; i < linkPoints.size(); ++i )
+    {
+        delete linkPoints.at( i );
+    }
+    linkPoints.clear();
 }
 ///////////////////////////////////////////
 Link::Link( const Link& input )
 :XMLObject( input )
 {
-   linkName = input.linkName;
-   for ( size_t i = 0; i < input.linkPoints.size(); ++i )
-   {
-      linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
-   }
+    linkName = input.linkName;
+    m_type = input.m_type;
+    for ( size_t i = 0; i < input.linkPoints.size(); ++i )
+    {
+        linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
+    }
 
-   moduleInfo.first = new DataValuePair( *(input.moduleInfo.first) );
-   moduleInfo.second = new DataValuePair( *(input.moduleInfo.second) );
-   
-   portInfo = input.portInfo;
+    moduleInfo.first = new DataValuePair( *(input.moduleInfo.first) );
+    moduleInfo.second = new DataValuePair( *(input.moduleInfo.second) );
+
+    portInfo = input.portInfo;
 }
 /////////////////////////////////////////////////////
 Link& Link::operator=( const Link& input )
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-       linkName = input.linkName;
-      for ( size_t i = 0; i < linkPoints.size(); ++i )
-      {
-         delete linkPoints.at( i );
-      }
-      linkPoints.clear();
+    if ( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =(input);
+        linkName = input.linkName;
+        m_type = input.m_type;
+        for ( size_t i = 0; i < linkPoints.size(); ++i )
+        {
+            delete linkPoints.at( i );
+        }
+        linkPoints.clear();
 
-      for ( size_t i = 0; i < input.linkPoints.size(); ++i )
-      {
-         linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
-      }
+        for ( size_t i = 0; i < input.linkPoints.size(); ++i )
+        {
+            linkPoints.push_back( new Point( *(input.linkPoints.at( i )) ) );
+        }
 
-      *(moduleInfo.first) = *(input.moduleInfo.first);
-      *(moduleInfo.second) = *(input.moduleInfo.second);
-      portInfo = input.portInfo;
-	  linkName = input.linkName;
-   }
-   return *this;
+        *(moduleInfo.first) = *(input.moduleInfo.first);
+        *(moduleInfo.second) = *(input.moduleInfo.second);
+        portInfo = input.portInfo;
+        linkName = input.linkName;
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////
 void Link::SetLinkName( std::string name )
 {
-   linkName = name;
+    linkName = name;
 }
 ////////////////////////////////////////////////////////////
 std::string Link::GetLinkName( void )
 {
-   return linkName;
+    return linkName;
 }
 ///////////////////////////////////////
 void Link::_updateVEElement( std::string input )
 {
-   // write all the elements according to verg_model.xsd
-   SetAttribute( "name", linkName );
-   SetAttribute( "id", uuid );
-   SetSubElement( "fromModule", moduleInfo.first );
-   SetSubElement( "toModule", moduleInfo.second );
-   SetSubElement( "fromPort", portInfo.first );
-   SetSubElement( "toPort", portInfo.second );
-   for ( size_t i = 0; i < linkPoints.size(); ++i )
-   {
-      SetSubElement( "linkPoints", linkPoints.at( i ) );   
-   }
+    // write all the elements according to verg_model.xsd
+    SetAttribute( "name", linkName );
+    if( !m_type.empty() )
+    {
+        SetAttribute( "type", m_type );
+    }
+    SetAttribute( "id", uuid );
+    SetSubElement( "fromModule", moduleInfo.first );
+    SetSubElement( "toModule", moduleInfo.second );
+    SetSubElement( "fromPort", portInfo.first );
+    SetSubElement( "toPort", portInfo.second );
+    for ( size_t i = 0; i < linkPoints.size(); ++i )
+    {
+        SetSubElement( "linkPoints", linkPoints.at( i ) );   
+    }
 }
 ///////////////////////////////////////////////////
 DataValuePair* Link::GetFromModule( void )
 {
-   return moduleInfo.first;
+    return moduleInfo.first;
 }
 //////////////////////////////////////////
 DataValuePair* Link::GetToModule( void )
 {
-   return moduleInfo.second;
+    return moduleInfo.second;
 }
 ///////////////////////////////////////////////////
 long int* Link::GetFromPort( void )
 {
-   return &(portInfo.first);
+    return &(portInfo.first);
 }
 //////////////////////////////////////////
 long int* Link::GetToPort( void )
 {
-   return &(portInfo.second);
+    return &(portInfo.second);
 }
 /////////////////////////////////////
 Point* Link::GetLinkPoint( unsigned int i )
 {
-   try
-   {
-      return linkPoints.at( i );
-   }
-   catch (...)
-   {
-      if ( i > (linkPoints.size() + 1) )
-      {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         return 0;
-      }
-      else
-      {
-         linkPoints.push_back( new Point(  ) );
-         return linkPoints.back();
-      }
-   }
+    try
+    {
+        return linkPoints.at( i );
+    }
+    catch (...)
+    {
+        if ( i > (linkPoints.size() + 1) )
+        {
+            std::cerr << "The element request is out of sequence."
+                << " Please ask for a lower number point." << std::endl;
+            return 0;
+        }
+        else
+        {
+            linkPoints.push_back( new Point() );
+            return linkPoints.back();
+        }
+    }
 }
 /////////////////////////////////////
 size_t Link::GetNumberOfLinkPoints( void )
 {
-   return linkPoints.size();
+    return linkPoints.size();
 }
 ////////////////////////////////////////////////////////////
 void Link::SetObjectFromXMLData(DOMNode* element)
@@ -215,6 +220,10 @@ void Link::SetObjectFromXMLData(DOMNode* element)
                 linkName = "noName";
             }
          }
+      }
+	  //link type
+	  {
+          GetAttribute( currentElement, "type", m_type );
       }
       // for module location
       {
@@ -257,5 +266,14 @@ void Link::SetObjectFromXMLData(DOMNode* element)
       }
    }   
 }
-   
-
+////////////////////////////////////////////////////////////////////////////////
+void Link::SetLinkType( std::string type )
+{
+    m_type = type;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string Link::GetLinkType()
+{
+    return m_type;
+}
+////////////////////////////////////////////////////////////////////////////////
