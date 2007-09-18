@@ -376,6 +376,7 @@ class LauncherWindow(wx.Frame):
         types = "VES files (*.ves)|*.ves"
         if windows:
             types += "|Batch files (*.bat)|*.bat"
+            types += "|Executable files (*.exe)|*.exe"
         elif unix:
             types += "|Script files (*.sh;*.tsh)|*.sh;*.tsh"
         dlg = wx.FileDialog(self,
