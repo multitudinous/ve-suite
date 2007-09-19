@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Software_Development_Tools">
+  <title>Software Development Tools</title>
+
+  <para>subversion</para>
+
+  <para>svn tortoise</para>
+
+  <para>trac</para>
+
+  <para>bugzilla</para>
+
+  <para>phpBB</para>
+
+  <para>docbook</para>
+
+  <para>visual studio</para>
+
+  <para>gnu tools</para>
+
+  <para>ddd</para>
+
+  <para>DialogBlocks</para>
+
+  <para>Valgrind</para>
+
+  <para>openGL debuggers</para>
+
+  <para>py2exe</para>
+
+  <para>freeze</para>
+
+  <para>inno setup</para>
+
+  <para>rpm</para>
+
+  <para>dmg builder</para>
+</chapter>

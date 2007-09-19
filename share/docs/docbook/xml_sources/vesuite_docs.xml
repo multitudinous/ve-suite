@@ -91,13 +91,16 @@
     <xi:include href="chapter_10_description_of_the_engines.xml"
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
 
-    <xi:include href="chapter_11_software_development_documents.xml"
+    <xi:include href="chapter_11_trouble_shooting_guide.xml"
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
 
-    <xi:include href="chapter_12_software_development_tools.xml"
+    <xi:include href="chapter_12_software_development_documents.xml"
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
 
-    <xi:include href="chapter_13_testing_matrix.xml"
+    <xi:include href="chapter_13_software_development_tools.xml"
+                xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+    <xi:include href="chapter_14_testing_matrix.xml"
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
   </part>
 </book>

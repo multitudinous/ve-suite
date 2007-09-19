@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="Trouble_Shooting_Guide">
+  <title>Trouble Shooting Guide</title>
+
+  <section id="Trouble_Launching">
+    <title>Launching</title>
+
+
+<orderedlist>
+
+<listitem>
+<para>VE-Conductor comes up but I don't see graphics on any of the displays.</para>
+<orderedlist>
+<listitem>
+<para>Ensure that you correctly entered your password, when prompted, after launching on the master node.</para>
+</listitem>
+<listitem>
+<para>Ensure that Xplorer is selected on the Custom page of the launcher.</para>
+</listitem>
+<listitem>
+<para>Ensure that “Cluster” is selected on the Custom page of the launcher in the Xplorer Mode box.</para>
+</listitem>
+<listitem>
+<para>Ensure that all of the nodes launched. If you see any errors in the Conductor log stating “Unable to connect to VES Server” , one or more of the nodes did not connect properly. killall project_tao_osg_vep process on all nodes and restart velauncher.py.</para>
+</listitem>
+<listitem>
+<para>Ensure that the correct IP addresses are listed on the Cluster Nodes dialog of velauncher. Also ensure that the correct name is listed for the master (cavehead) in the MASTER field of the Cluster Nodes dialog.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>I see “Error: can't open display on device:”</para>
+<orderedlist>
+<listitem>
+<para>Issue the “xhost +” command on all the nodes of the cluster. For example, from the command line type “ssh drone1”. Then type “xhost +” (Note the space between xhost and +)</para>
+</listitem>
+<listitem>
+<para>Ensure that you have read permissions on the graphics card. ls -ltr /dev/nvidia*. If you don't have read permissions, ask the system admin to enable read permissions.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>I see and error “Could not connect to the Name Server...”</para>
+<orderedlist>
+<listitem>
+<para>Ensure that the correct IP address is listed on the CE name of the velauncher dialog (currently 10.10.20.241)</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>velauncher.py is not available in my shell</para>
+<orderedlist>
+<listitem>
+<para>This probably means that the environment for your account has not been setup properly; ask the system admin to double check the configuration of the user account environment.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+</orderedlist>
+</section>
+
+
+<section id="Trouble_Tracking">
+   <title>Tracking</title>
+
+<orderedlist>
+
+<listitem>
+<para>I don't see the head and the wand on the display of the master window</para>
+<orderedlist>
+<listitem>
+<para>Ensure that the Intersense tracker base station is turned on. In the cave, you should see blue light flashing on the above fixtures as you move the tracked glasses and/or the wand around.</para>
+</listitem>
+<listitem>
+<para>Ensure that trackd is NOT running. Check your processes to see if trackd is listed: ps -ef |grep trackd. If you see it running, try to kill the process. killall trackd. If trackd is still running, ask the system admin to issue the killall trackd command.</para>
+</listitem>
+<listitem>
+<para>Ensure that you have read permissions on the tracking device. ls -ltr /dev/ttyS2. If you don't have permission, ask the system admin to change the permissions on the device. chmod 777 /dev/ttyS2</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>I see the head and wand models in the display of the master BUT the graphics are not responding to my movements.</para>
+<orderedlist>
+<listitem>
+<para>Ensure that the wand and head tracking power switches are turned on. Should see a green light.</para>
+</listitem>
+<listitem>
+<para>Ensure that the devices are in range, indicated by the orange light on each device.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>My wand navigation is too slow/fast</para>
+<orderedlist>
+<listitem>
+<para>Change the translation and/or rotation step size on the Navigation pane on VE-Condutor. From the VE-Conductor menu, go to the VE-Xplorer menu and select “Navigation Pane”. Adjust the Translation and/or Rotation Step size slider/s until the desired navigation speeds are achieved.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>Rotations are around an arbitrary axis</para>
+<orderedlist>
+<listitem>
+<para>Change the rotations to be about the user's head. On the VE-Conductor main menu, goto VE-Xplorer menu, select Navigation pane. Ensure that the check box marked “Rotate About User's Head” is checked.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+</orderedlist>
+</section>
+
+<section id="Trouble_Sync">
+  <title>Sync</title>
+
+<orderedlist>
+
+<listitem>
+<para>My visualizations are not synced across walls of the cave.</para>
+<orderedlist>
+<listitem>
+<para>Have the system admin ensure that frame locking is enabled in the nvidia-settings panel.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+<listitem>
+<para>My logo animation is frozen until I mouse over the display on the master node.</para>
+<orderedlist>
+<listitem>
+<para>Frame locking is not setup properly. Ensure that the master node is NOT listed in the list of nodes to be frame locked.</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+</orderedlist>
+</section>
+
+<section id="Trouble_Flex Configurations">
+  <title>Flex Configurations</title>
+
+<orderedlist>
+
+<listitem>
+<para>Objects are skewed on the left and right wall</para>
+<orderedlist>
+<listitem>
+<para>Make sure you are using the proper configuration files for your configuration. Currently there are three config files: acenet_closed_tracked, acenet_45_tracked, acenet_3_wide_tracked. These are the configuration files for running with the cave closed, open to 45 degrees and fully open respectively. The files are located at /opt/vesuite/ in directories acenet_configs/ (closed), acenet_configs_45 (open 45 degrees) and acenet_configs_3_wide (fully open).</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+</orderedlist>
+</section>
+
+<section id="Trouble_General VE-Suite Help">
+  <title>General VE-Suite Help</title>
+
+<orderedlist>
+
+<listitem>
+<para>Online Resources</para>
+<orderedlist>
+<listitem>
+<para>Forums www.vesuite.org/forum</para>
+</listitem>
+<listitem>
+<para>Bugs <ulink url="https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/">https://subversion.vrac.iastate.edu/Subversion/TSVEG/Bugzilla/</ulink>
+</para>
+</listitem>
+</orderedlist>
+</listitem>
+
+</orderedlist>
+ </section>
+</chapter>
