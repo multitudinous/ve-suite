@@ -1136,13 +1136,8 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    {
        network->Load( nw_str, true );
        ///Submit job to xplorer
-       // Tell xplorer to ask ce for the new data
-       VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
-       dataValuePair->SetData(std::string("Load Data"),xplorerColor);
-       VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
-       veCommand->SetCommandName(std::string("veNetwork Update"));
-       veCommand->AddDataValuePair(dataValuePair);
-       serviceList->SendCommandStringToXplorer( veCommand );
+	   wxCommandEvent event;
+	   SubmitToServer( event );
    }
    else
    {
@@ -1208,13 +1203,8 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
         UserPreferencesDataBuffer::instance()->
             SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
         ///Submit job to xplorer
-        // Tell xplorer to ask ce for the new data
-        VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
-        dataValuePair->SetData(std::string("Load Data"),xplorerColor);
-        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
-        veCommand->SetCommandName(std::string("veNetwork Update"));
-        veCommand->AddDataValuePair(dataValuePair);
-        serviceList->SendCommandStringToXplorer( veCommand );
+		wxCommandEvent event;
+		SubmitToServer( event );
     }
     else
     {    
