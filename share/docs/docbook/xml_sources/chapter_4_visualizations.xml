@@ -384,4 +384,17 @@
     </para>
 
   </section>
+  
+  <section id="Converting_from_Fluent_to_VTU">
+    <title>Converting from Fluent (.cas) to VTU</title>
+
+    <para>You will need to write out a .cas file for the post-processed data from Fluent. 
+    Place it into your working directory. Open a Builder Shell from VE-Launcher. 
+    Be sure to set the working directory to the .cas file's directory. 
+    You can then convert the fluent output file to a VTU file with this command:</para>
+
+    <para><code>loaderToVtkd -singleFile [CAS filename] -o [working directory] -outFileName 
+    [name of output filename] -loader cas -w file</code></para>
+  </section>
+  
 </chapter>

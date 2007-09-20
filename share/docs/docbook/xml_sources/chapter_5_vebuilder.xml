@@ -239,6 +239,15 @@
     <para><code> loaderToVtkd –singleFile [AVS filename] –loader avs –o
     [working directory] –w file</code></para>
   </section>
+  
+  <section id="Displaying_FEA_Data">
+    <title>Displaying FEA Data</title>
+
+    <para>VE-Suite has the capability of displaying FEA datasets in the virtual environment much like CFD datasets. However, the FEA data is primarily displayed as a surface on the object(s) of interest.
+</para>
+
+    <para><To display FEA data from a FEA dataset, select the Polydata icon and select the desired scalar for the FEA data.</para>
+  </section>  
 
   <section id="creating_preprocess_data">
     <title>Creating Preprocessed Data</title>
