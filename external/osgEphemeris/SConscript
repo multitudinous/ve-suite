@@ -1,0 +1,48 @@
+##Builds loki
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options')
+openDir = os.path.abspath( pj(RootDir, 'external', 'osgEphemeris') )
+headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgEphemeris')  )
+sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgEphemerisLib' ) )
+headers = map(lambda s: pj('include','osgEphemeris', s), 
+                headers)
+sources = map(lambda s: pj('src', 'osgEphemerisLib', s), 
+                sources)
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS'] )
+osg_options. apply( lib_env )
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
+                                               installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('osgEphemeris', lib_env,
+                                      installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers, '..')
+lib.build()
+
+### Build the osgdb plugin
+#sourcesDB = sca_util.getSourcesRecursive( pj( openDir, 'src','osgdb_osgOQ') )
+#sourcesDB = map(lambda s: pj('src', 'osgdb_osgOQ', s), sourcesDB)
+
+#libDB_env = ves_pkg.getEnv().Copy()
+#libDB_env.Append( CPPPATH = [pj(openDir, 'include' )] )
+#libDB_env.Append( CPPDEFINES  = ['OSGOQ_EXPORTS'] )
+#libDB_env.Append( LIBS = ['osgOQ'] )
+#libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgOQ')] )
+#osg_options. apply( libDB_env )
+#if baseEnv['StaticOnly'] == "no":
+#   libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgOQ', libDB_env,
+#                                               installPrefix = LIBDIR)
+#else:
+#   libDB = ves_pkg.createStaticLibrary('osgdb_osgOQ', libDB_env,
+#                                      installPrefix = LIBDIR)
+#   
+#libDB.addSources(sourcesDB)
+#libDB.build()
