@@ -72,6 +72,7 @@ class DeviceProperties;
 #include <wx/frame.h>
 #include <wx/config.h>
 #include <wx/filename.h>
+#include <wx/notebook.h>
 
 class wxTextCtrl;
 class wxImage; 
@@ -214,6 +215,7 @@ public:
     MainToolBar* mainToolBar;///<The main toolbar
 
     Avail_Modules* av_modules;
+    wxNotebook* side_pane;
     Network* network;
 
     UI_Frame* m_frame;

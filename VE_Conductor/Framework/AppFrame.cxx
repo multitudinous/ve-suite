@@ -377,9 +377,23 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
     wx_nw_splitter->SetMinimumPaneSize( 1 );
 
-    av_modules = new Avail_Modules( wx_nw_splitter, Avail_Modules::TREE_CTRL, 
-        wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
-    network = new Network( wx_nw_splitter, -1 );
+	//create side pane - notebook
+    side_pane = new wxNotebook(wx_nw_splitter, -1 ,wxDefaultPosition, wxDefaultSize, wxNB_BOTTOM);
+	wxPanel * modPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
+    av_modules = new Avail_Modules( modPage, Avail_Modules::TREE_CTRL, 
+        wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );	
+    
+	//make module panel fill the notebook page
+	wxBoxSizer *sizerPanel = new wxBoxSizer(wxVERTICAL);
+    sizerPanel->Add(av_modules, 1, wxEXPAND);
+	modPage->SetSizer(sizerPanel);
+
+	//add the module panel to page
+    side_pane->AddPage(modPage, wxT("Modules"));
+
+	network = new Network( wx_nw_splitter, -1 );
+
+	//tells module panel where to send the selected module
     av_modules->SetNetwork( network );
 
     if( GetDisplayMode() == "Tablet" )
@@ -387,7 +401,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
         wx_log_splitter->SplitHorizontally( serviceList->GetMessageLog(), wx_nw_splitter, -205 );
     }
 
-    wx_nw_splitter->SplitVertically( av_modules, network, 140 );
+    wx_nw_splitter->SplitVertically( side_pane, network, 140 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureDesktop()
