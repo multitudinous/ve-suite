@@ -373,9 +373,10 @@ void cfdApp::initScene( void )
    this->_vjobsWrapper->GetCfdStateVariables();
    
    //Setup near and far plane
-   float near, far;
-   vrj::Projection::getNearFar( near, far );
-   vrj::Projection::setNearFar( near, far + 100000 );
+   float nearPlane;
+   float farPlane;
+   vrj::Projection::getNearFar( nearPlane, farPlane );
+   vrj::Projection::setNearFar( nearPlane, farPlane + 100000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
