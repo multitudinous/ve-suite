@@ -61,6 +61,7 @@ class Network;
 class ViewLocPane;
 class MainToolBar;
 class Avail_Modules;
+class HierarchyTree;
 class UI_TeacherTab;
 class NavigationPane;
 class StreamlinePane;
@@ -215,6 +216,7 @@ public:
     MainToolBar* mainToolBar;///<The main toolbar
 
     Avail_Modules* av_modules;
+    HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
     Network* network;
 

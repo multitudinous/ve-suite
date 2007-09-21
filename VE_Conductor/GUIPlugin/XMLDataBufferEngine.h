@@ -91,6 +91,8 @@ public:
     void NewVESData( bool promptClearXplorer );
     ///Get data
     VE_XML::VE_Model::Network GetXMLNetworkDataObject( std::string dataNumber );
+	///Get the network
+	std::map< std::string, VE_XML::VE_Model::Model > GetXMLModels();
     ///Get data
     VE_XML::VE_Model::Model GetXMLModelDataObject( std::string dataNumber );
     ///Get data

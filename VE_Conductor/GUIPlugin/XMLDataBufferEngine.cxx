@@ -349,6 +349,11 @@ VE_XML::VE_Model::Network XMLDataBufferEngine::GetXMLNetworkDataObject(
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::map< std::string, VE_XML::VE_Model::Model > XMLDataBufferEngine::GetXMLModels()
+{
+	return m_modelMap;
+}
+////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_Model::Model XMLDataBufferEngine::GetXMLModelDataObject( 
     std::string dataNumber )
 {

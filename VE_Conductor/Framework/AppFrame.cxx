@@ -56,10 +56,12 @@
 #include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
 #include "VE_Conductor/GUIPlugin/FindDialog.h"
 #include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+#include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
 
 #include "VE_Conductor/Framework/ConductorApp.h"
 #include "VE_Conductor/Framework/UserPreferences.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
+#include "VE_Conductor/Framework/HierarchyTree.h"
 #include "VE_Conductor/Framework/UI_TeacherTab.h"
 #include "VE_Conductor/Framework/DeviceProperties.h"
 #include "VE_Conductor/Framework/NavigationPane.h"
@@ -379,6 +381,8 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
 	//create side pane - notebook
     side_pane = new wxNotebook(wx_nw_splitter, -1 ,wxDefaultPosition, wxDefaultSize, wxNB_BOTTOM);
+	
+	//create module page
 	wxPanel * modPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
     av_modules = new Avail_Modules( modPage, Avail_Modules::TREE_CTRL, 
         wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );	
@@ -390,7 +394,21 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
 	//add the module panel to page
     side_pane->AddPage(modPage, wxT("Modules"));
+	
+	//create hierarchy page
+	wxPanel * hierPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
+	hierarchyTree = new HierarchyTree( hierPage, HierarchyTree::TREE_CTRL, 
+			wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
+	//make hierarchy panel fill the notebook page
+	sizerPanel = new wxBoxSizer(wxVERTICAL);
+	sizerPanel->Add(hierarchyTree, 1, wxEXPAND);
+	hierPage->SetSizer(sizerPanel);
+
+	//add the hierarchy panel to page
+	side_pane->AddPage(hierPage, wxT("Hierarchy"));
+
+	//add network to splitter
 	network = new Network( wx_nw_splitter, -1 );
 
 	//tells module panel where to send the selected module
@@ -1206,6 +1224,10 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     if( network->modules.empty() )
     { 
         network->Load( nw_str, true );
+
+		//create hierarchy page
+		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+
         Log("Simulation Opened.\n");
         ///
         VE_XML::CommandWeakPtr aspenBKPFile = new VE_XML::Command();
