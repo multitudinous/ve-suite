@@ -14,7 +14,7 @@ sources = map(lambda s: pj('src', 'osgEphemerisLib', s),
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS'] )
+lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS','_DARWIN'] )
 osg_options. apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,

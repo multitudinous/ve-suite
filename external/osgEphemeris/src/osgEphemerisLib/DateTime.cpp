@@ -192,7 +192,11 @@ double DateTime::getModifiedJulianDate() const
     // Get GMT first
     struct tm gmt = _tm;
     tzset();
-    gmt.tm_sec += timezone;
+#ifdef  _DARWIN
+    gmt.tm_sec += gmt.tm_gmtoff;           /* Seconds east of UTC.  */
+#else
+    gmt.tm_sec += timezone;         /* Seconds east of UTC.  */
+#endif
     mktime(&gmt);
 
     double day   =  (double)(gmt.tm_mday) +           // Day
@@ -242,7 +246,11 @@ DateTime DateTime::getGMT() const
     struct tm gmt = _tm;
 
     tzset();
-    gmt.tm_sec += timezone;
+#ifdef  _DARWIN
+    gmt.tm_sec += gmt.tm_gmtoff;           /* Seconds east of UTC.  */
+#else
+    gmt.tm_sec += timezone;         /* Seconds east of UTC.  */
+#endif
     mktime(&gmt);
 
     return DateTime(gmt);

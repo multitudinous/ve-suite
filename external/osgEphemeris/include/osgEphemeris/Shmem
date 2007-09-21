@@ -14,8 +14,11 @@
 #define __SHMEM_DEF
 
 #include <string>
+#ifdef _DARWIN
+#include <malloc/malloc.h>
+#else
 #include <malloc.h>
-
+#endif
 /** \class Shmem
     \brief A shared memory super class.
 
