@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform')
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgEphemeris') )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgEphemeris')  )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgEphemerisLib' ) )
@@ -14,13 +14,15 @@ sources = map(lambda s: pj('src', 'osgEphemerisLib', s),
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
-lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS','_DARWIN'] )
+lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS'] )
+if GetPlatform() == 'darwin':
+    lib_env.Append( CPPDEFINES  = ['_DARWIN'] )
 osg_options. apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
+    lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
                                                installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('osgEphemeris', lib_env,
+    lib = ves_pkg.createStaticLibrary('osgEphemeris', lib_env,
                                       installPrefix = LIBDIR)
    
 lib.addSources(sources)
