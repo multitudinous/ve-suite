@@ -290,8 +290,10 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
     ///With this code in culling culs the near and far planes. I believe
     ///we discovered this awhile ago buit removed the comments about it.
     ///Please see cullvisitor for the possible settings for this function.
-    //newSceneViewer->setComputeNearFarMode( 
-    //    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
+    //This defaults to setting the near and far plane based on the 
+    //bounding volume.
+    newSceneViewer->setComputeNearFarMode( 
+        osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -369,6 +371,11 @@ void cfdApp::initScene( void )
 
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
+   
+   //Setup near and far plane
+   float near, far;
+   vrj::Projection::getNearFar( near, far );
+   vrj::Projection::setNearFar( near, far + 100000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::preFrame( void )
@@ -483,13 +490,14 @@ void cfdApp::latePreFrame( void )
    }
    vprDEBUG(vesDBG,3) << "|cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdApp::intraFrame()
 {
    vprDEBUG(vesDBG,3) << "|intraFrame" << std::endl << vprDEBUG_FLUSH;
    // Do nothing here
    // Usually slows things down
 }
+////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
 void cfdApp::contextPostDraw()
 {
@@ -499,7 +507,7 @@ void cfdApp::contextPostDraw()
     glFinish();
 }
 #endif//_OSG
-/////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdApp::postFrame()
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::postFrame",20);
