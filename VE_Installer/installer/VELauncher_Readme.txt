@@ -10,7 +10,8 @@ for information on obtaining VE-Suite's dependendcies.
 VE-Suite Launcher
 
 The VE-Suite Launcher lets you launch VE-Suite from multiple saved configurations.
-Features include:-Setting Dependencies, Working, and Builder directories.
+Features include:
+-Setting Dependencies, Working, and Builder directories.
 -Preset modes for quick launching.
 -Can run the Launcher from the command line for quicker launches.
 -Cluster mode lets you start Xplorer on multiple computers from one.
@@ -76,7 +77,8 @@ be launched. You can also set up cluster nodes to call if you're running in
 cluster mode.
 
 Once you've chosen your settings, click the Launch button and wait. The Launcher
-will launch all the programs you chose and exit.
+will launch all the programs you chose and exit.
+
 ========================================================================
 Using VE-Suite Launcher, Clusters
 
