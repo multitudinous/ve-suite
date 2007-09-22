@@ -46,7 +46,11 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/ModelWeakPtr.h"
 #include "VE_Open/XML/DataValuePair.h"
+#include "VE_Open/XML/Model/SystemWeakPtr.h"
+#include "VE_Open/XML/Model/SystemStrongPtr.h"
+#include "VE_Open/XML/Model/System.h"
 
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 
@@ -240,7 +244,7 @@ void cfdExecutive::GetNetwork( void )
    //output.close();
    const std::string network = temp;
    vprDEBUG(vesDBG,0) << "|\t\tNetwork String : " << network 
-                          << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
@@ -254,20 +258,24 @@ void cfdExecutive::GetNetwork( void )
    // This logic also works for the case where a custom plugin doesn't exist because
    // there will be a default plugin that will be created just like there
    // is currently for conductor
+   std::vector< VE_XML::XMLObject* > currentModels;
    currentModels.clear();
    // do this for models
-   networkWriter.ReadXMLData( network, "Model", "veModel" );
+   networkWriter.ReadXMLData( network, "System", "veSystem" );
    currentModels = networkWriter.GetLoadedXMLObjects();
+   VE_XML::VE_Model::SystemWeakPtr tempSystem = 
+       dynamic_cast< VE_XML::VE_Model::System* >( currentModels.at( 0 ) );
 
-   //veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( currentModels.at( 0 ) );
 	veNetwork = network;
 
    // now lets create a list of them
    _id_map.clear();
    idToModel.clear();
-   for ( size_t i = 0; i < currentModels.size(); ++i )
+   std::vector< VE_XML::VE_Model::ModelWeakPtr > tempModels;
+   tempModels = tempSystem->GetModels();
+   for ( size_t i = 0; i < tempModels.size(); ++i )
    {
-      VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( currentModels.at( i ) );
+      VE_XML::VE_Model::ModelWeakPtr model = tempModels.at( i );
       _id_map[  model->GetModelID() ] = model->GetModelName();
       idToModel[ model->GetModelID() ] = model;
    }
@@ -319,7 +327,7 @@ void cfdExecutive::GetEverything( void )
          //_plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
          pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }
-      std::map< int, VE_XML::VE_Model::Model* >::iterator modelIter;
+      std::map< int, VE_XML::VE_Model::ModelStrongPtr >::iterator modelIter;
       // this call always returns something because it is up to date with the id map
       modelIter = idToModel.find( iter->first );
       _plugins[ iter->first ]->SetXMLModel( modelIter->second );

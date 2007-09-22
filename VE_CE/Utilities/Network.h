@@ -33,6 +33,9 @@
 #ifndef CE_UTILITIES_NETWORK_H
 #define CE_UTILITIES_NETWORK_H
 #include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Open/XML/Model/NetworkStrongPtr.h"
+
 #include "VE_Open/skel/moduleS.h"
 #include <string>
 #include <vector>
@@ -107,7 +110,7 @@ protected:
    /// easy access to modules from conductor ids.
    std::map< int, Module* > moduleIDMap;
    /// Holder of the network
-   VE_XML::VE_Model::Network* veNetwork;
+   VE_XML::VE_Model::NetworkStrongPtr veNetwork;
 };
 }
 }

@@ -38,9 +38,11 @@
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/ModelWeakPtr.h"
 #include "VE_Open/XML/Model/Port.h"
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/System.h"
 
 #include <set>
 #include <iostream>
@@ -83,62 +85,37 @@ int Network::parse( std::string xmlNetwork )
    networkWriter.ReadFromString();
 
    // do this for models
-   networkWriter.ReadXMLData( xmlNetwork, "Model", "veModel" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-
-   // now lets create a list of them
-   for ( size_t i = 0; i < objectVector.size(); ++i )
+   networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
+   std::vector< VE_XML::XMLObject* > objectVector = 
+       networkWriter.GetLoadedXMLObjects();
+   VE_XML::VE_Model::SystemStrongPtr tempSystem = 
+       dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
+   if( !tempSystem )
    {
-      VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
-      add_module( model->GetModelID(), model->GetModelName() );
-      GetModule( i )->SetVEModel( model );
+       std::cerr << "Improperly formated ves file." 
+            << "VES File Read Error" << std::endl;
+       return 0;
+   }
+   
+   std::vector< VE_XML::VE_Model::ModelWeakPtr > models = 
+       tempSystem->GetModels();
+   // now lets create a list of them
+   for ( size_t i = 0; i < models.size(); ++i )
+   {
+      add_module( models.at( i )->GetModelID(), 
+        models.at( i )->GetModelName() );
+      GetModule( i )->SetVEModel( models.at( i ) );
    }
 
    //read for the network info now
-   //this code must be second as the connections stuff assumes that the modules have already
-   // been created
-   networkWriter.ReadXMLData( xmlNetwork, "Model", "veNetwork" );
-   objectVector = networkWriter.GetLoadedXMLObjects();
+   //this code must be second as the connections stuff 
+   //assumes that the modules have already
+   //been created
+   //we are expecting that a network will be found
+   veNetwork = tempSystem->GetNetwork();
 
-   // do this for network
-   if ( veNetwork )
+   for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i ) 
    {
-      delete veNetwork;
-      veNetwork = 0;
-   }
-   // we are expecting that a network will be found
-   if ( !objectVector.empty() )
-   {
-      veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
-   }
-   else
-   {
-     std::cerr << "Improperly formated ves file." << "VES File Read Error" << std::endl;
-     return 0;
-   }
-
-   /*
-   veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
-   veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
-   veNetwork->GetDataValuePair( 2 )->GetData( (numPix.first) );
-   veNetwork->GetDataValuePair( 3 )->GetData( (numPix.second) );
-   veNetwork->GetDataValuePair( 4 )->GetData( (numUnit.first) );
-   veNetwork->GetDataValuePair( 5 )->GetData( (numUnit.second) );
-   */
-
-   for ( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i ) 
-   {
-
-      ///May want to do error checking here in the future
-      /*
-      if ( FrMod.find(*iter)==FrMod.end()  || ToMod.find(*iter)==FrMod.end()   ||
-           FrPort.find(*iter)==FrMod.end() || ToPort.find(*iter)==FrMod.end()) 
-      {
-         std::cerr << "Bad link found\n";
-         return  0;
-      }
-      */
-
       Connection* cn = new Connection( i );
       _connections.push_back( cn );
 
@@ -209,34 +186,33 @@ void Network::add_module( int m, std::string name )
 ////////////////////////////////////////////////////////////////////////////////
 std::string Network::GetNetworkString( void )
 {   
-   // Here we wshould loop over all of the following
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   //  Newtork
-   if ( !veNetwork )
-   {
-      return std::string( "" );
-   }
+    if( !veNetwork )
+    {
+        return std::string( "" );
+    }
+    
+    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
+        new VE_XML::VE_Model::System();
+    //  Models
+    for( size_t i = 0; i < _module_ptrs.size(); ++i )
+    {
+        tempSystem->AddModel( _module_ptrs.at( i )->GetVEModel() ); 
+    }
 
-   // Just push on the old network as ce can't modify the network
-   // it only uses the network. conductor modifies the network
-   nodes.push_back( 
-                     std::pair< VE_XML::XMLObject*, std::string >( 
-                     veNetwork, "veNetwork" ) 
-                  );
-
-   //  Models
-   for ( size_t i = 0; i < _module_ptrs.size(); ++i )
-   {
-      nodes.push_back( 
-                        std::pair< VE_XML::XMLObject*, std::string >( 
-                        _module_ptrs.at( i )->GetVEModel(), "veModel" ) 
-                     );
-   }
-
-   std::string fileName( "returnString" );
-   VE_XML::XMLReaderWriter netowrkWriter;
-   netowrkWriter.UseStandaloneDOMDocumentManager();
-   netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-   return fileName;
+    //  Newtork
+    tempSystem->AddNetwork( veNetwork );
+    
+    // Here we wshould loop over all of the following
+    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    // Just push on the old network as ce can't modify the network
+    // it only uses the network. conductor modifies the network
+    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+        &(*tempSystem), "veSystem" ) );
+        
+    std::string fileName( "returnString" );
+    VE_XML::XMLReaderWriter netowrkWriter;
+    netowrkWriter.UseStandaloneDOMDocumentManager();
+    netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
+    return fileName;
 }
 

@@ -37,6 +37,7 @@
 #include "VE_CE/Utilities/Connection.h"
 
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/ModelWeakPtr.h"
 #include "VE_Open/XML/Model/Port.h"
 
 #include "VE_Open/XML/Command.h"
@@ -76,7 +77,6 @@ Module::~Module ()
    }
    _oports.clear();
 
-   delete veModel;   
    inputs.clear();
    results.clear();
    ports.clear();
@@ -269,20 +269,14 @@ std::string Module::GetModuleName( void )
    return _name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Model* Module::GetVEModel( void )
+VE_XML::VE_Model::ModelWeakPtr Module::GetVEModel( void )
 {
    //Set the input, results, port data data structures
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetVEModel( VE_XML::VE_Model::Model* mod )
+void Module::SetVEModel( VE_XML::VE_Model::ModelWeakPtr mod )
 {
-   if ( veModel )
-   {
-      delete veModel;
-      veModel = 0;
-   }
-
    veModel = mod;
    //Set the name of this module
    _name = veModel->GetModelName();
@@ -295,7 +289,7 @@ void Module::SetVEModel( VE_XML::VE_Model::Model* mod )
    for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
    {
       VE_XML::DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
-      if ( dvp )
+      if( dvp )
       {
          unsigned int feedback;
          dvp->GetData( feedback );

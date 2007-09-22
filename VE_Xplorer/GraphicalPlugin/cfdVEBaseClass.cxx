@@ -78,11 +78,7 @@ m_device( 0 )
 // Destructor
 cfdVEBaseClass::~cfdVEBaseClass( void )
 {
-    std::cout << "cfdVEBaseClass deleted" <<std::endl;
-   if ( xmlModel )
-   {
-      delete xmlModel;
-   }
+    ;
 }
 //////////////////////////////////////////////////////////////////      
 void cfdVEBaseClass::InitializeNode( VE_SceneGraph::DCS* veworldDCS )
@@ -300,7 +296,7 @@ cfdModel* cfdVEBaseClass::GetCFDModel( void )
    return this->worldDCS.get();
 }*/
 //////////////////////////////////////////////////////////////////   
-void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::Model* tempModel )
+void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::ModelWeakPtr tempModel )
 {
    xmlModel = tempModel;
 
@@ -325,11 +321,11 @@ void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::Model* tempModel )
    }
 
    //process the information blocks
-   if ( xmlModel->GetNumberOfInformationPackets() > 0 )
+   if( xmlModel->GetNumberOfInformationPackets() > 0 )
    {
       VE_XML::DataValuePair* modelNode = new VE_XML::DataValuePair();
       modelNode->SetDataType( std::string("XMLOBJECT") );
-      modelNode->SetData("CREATE_NEW_DATASETS", xmlModel );
+      modelNode->SetData( "CREATE_NEW_DATASETS", new VE_XML::VE_Model::Model( *xmlModel ) );
       
       VE_XML::Command* dataCommand = new VE_XML::Command();
       dataCommand->AddDataValuePair( modelNode );

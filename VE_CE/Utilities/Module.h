@@ -33,6 +33,10 @@
 #ifndef CE_UTILITIES_MODULE_H
 #define CE_UTILITIES_MODULE_H
 #include "VE_Installer/include/VEConfig.h"
+
+#include "VE_Open/XML/Model/ModelStrongPtr.h"
+#include "VE_Open/XML/Model/ModelWeakPtr.h"
+
 #include "VE_Open/skel/moduleS.h"
 #include <vector>
 #include <string>
@@ -110,13 +114,17 @@ public:
    void SetResultsData( std::vector< VE_XML::XMLObject* > resultsData );
 
    ///Get the ID for the module
+   ///\return The module id
    int get_id();
    ///Get the modules name
+   ///\return The module name
    std::string GetModuleName( void );
    ///Get the VE_Model for this module
-   VE_XML::VE_Model::Model* GetVEModel( void );
+   ///\return The model for this module
+   VE_XML::VE_Model::ModelWeakPtr GetVEModel( void );
    ///Set the VE_Model for this module
-   void SetVEModel( VE_XML::VE_Model::Model* mod );
+   ///\param mod The model to add
+   void SetVEModel( VE_XML::VE_Model::ModelWeakPtr mod );
 
    int _need_execute;
    int _return_state;
@@ -124,11 +132,6 @@ public:
 
    //int _type;
    //int _category;
-
-   //Interface _inputs;
-   //Interface _geominputs;
-   //Interface _outputs;
-   //Interface _messages;
 
 private:
    //Input ports for the module
@@ -143,7 +146,7 @@ private:
    
    // The holder of the raw data for this class
    // This class is responsible for the memory management here
-   VE_XML::VE_Model::Model* veModel;
+   VE_XML::VE_Model::ModelStrongPtr veModel;
    //Container for input data
    std::vector< VE_XML::Command* > inputs;
    //Container for results data

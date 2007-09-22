@@ -62,6 +62,7 @@
 #include "VE_Open/XML/CAD/CADCreator.h"
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
+#include "VE_Open/XML/Model/Model.h"
 
 #include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
 

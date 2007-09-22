@@ -46,6 +46,9 @@ cfdExecutive API
 
 #include "VE_Xplorer/SceneGraph/Group.h"
 
+#include "VE_Open/XML/Model/ModelStrongPtr.h"
+#include "VE_Open/XML/Model/Model.h"
+
 #include <map>
 #include <string>
 #include <vector>
@@ -72,10 +75,6 @@ namespace VE_Xplorer
 namespace VE_XML
 {
    class XMLObject;
-   namespace VE_Model
-   {
-      class Model;
-   }
 }
 
 namespace VE_EVENTS
@@ -155,7 +154,6 @@ private:
    cfdInteractiveGeometry* _geometry;
    Body_UI_i* ui_i;
    osg::ref_ptr< VE_SceneGraph::Group > _masterNode;
-   std::vector< VE_XML::XMLObject* > currentModels;
 
    bool _doneWithCalculations;
    bool updateNetworkString;
@@ -163,7 +161,7 @@ private:
 
    // _name_map : maps a module id to it's module name.
    std::map< int, std::string> _id_map;
-   std::map< int, VE_XML::VE_Model::Model* > idToModel;
+   std::map< int, VE_XML::VE_Model::ModelStrongPtr > idToModel;
 
    // _name_map : maps a module name to it's module id.
    std::map<int, cfdVEBaseClass* > _plugins;

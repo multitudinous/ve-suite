@@ -42,6 +42,9 @@ cfdVEBaseClass API
 #include "VE_Xplorer/SceneGraph/DCS.h"
 #include "VE_Xplorer/SceneGraph/Group.h"
 
+#include "VE_Open/XML/Model/ModelWeakPtr.h"
+#include "VE_Open/XML/Model/ModelStrongPtr.h"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -56,7 +59,6 @@ namespace VE_SceneGraph
 namespace VE_Xplorer
 {
    class cfdModel;
-   class cfdReadParam;
    class cfdCursor;
    class Device;
    class cfdObjects;
@@ -66,10 +68,6 @@ namespace VE_Xplorer
 namespace VE_XML
 {
    class Command;
-   namespace VE_Model
-   {
-      class Model;
-   }
 }
 
 #include "VE_Installer/include/VEConfig.h"
@@ -143,7 +141,7 @@ public:
 
    ///Set the VE_Model to be used by this plugin
    ///\param tempModel Pointer to VE_Model
-   void SetXMLModel( VE_XML::VE_Model::Model* tempModel );
+   void SetXMLModel( VE_XML::VE_Model::ModelWeakPtr tempModel );
    ///Set current command whatever it is
    ///\param command Current command from conductor
    virtual void SetCurrentCommand( VE_XML::Command* command );
@@ -180,7 +178,6 @@ protected:
    cfdObjects* dataRepresentation;
 
    cfdModel* _model;
-   cfdReadParam* _readParam;
 
    std::string _param;
 
@@ -193,7 +190,7 @@ protected:
    VE_Xplorer::Device* m_device;
    cfdSoundHandler* soundHandler;
    
-   VE_XML::VE_Model::Model* xmlModel;
+   VE_XML::VE_Model::ModelStrongPtr xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
    std::map< std::string, cfdVEBaseClass* > ehMap;

@@ -47,6 +47,10 @@
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/System.h"
+#include "VE_Open/XML/Model/SystemStrongPtr.h"
+#include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/NetworkWeakPtr.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -1895,24 +1899,35 @@ std::string Network::Save( std::string fileName )
 {
     // Here we wshould loop over all of the following
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    //Newtork
-    veNetwork = VE_XML::VE_Model::Network();
-    //Need to delete network first
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &veNetwork, "veNetwork" ) );
+    ///Create the system
+    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
+        new VE_XML::VE_Model::System();
+    //Setup the network to populate
+    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = 
+        new VE_XML::VE_Model::Network();
+    tempSystem->AddNetwork( tempNetwork );
 
-    veNetwork.GetDataValuePair( -1 )->SetData( "m_xUserScale", userScale.first );
-    veNetwork.GetDataValuePair( -1 )->SetData( "m_yUserScale", userScale.second );
-    veNetwork.GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( numPix.first ) );
-    veNetwork.GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( numPix.second ) );
-    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
-    veNetwork.GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "m_xUserScale", userScale.first );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "m_yUserScale", userScale.second );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nPixX", static_cast< long int >( numPix.first ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nPixY", static_cast< long int >( numPix.second ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 
     //Update the links
     for( size_t i = 0; i < links.size(); ++i )
     {
-        VE_XML::VE_Model::Link* xmlLink = veNetwork.GetLink( -1 );
-        xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
-        xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
+        VE_XML::VE_Model::Link* xmlLink = tempNetwork->GetLink( -1 );
+        xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].
+            GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
+        xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].
+            GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
         *(xmlLink->GetFromPort()) = static_cast< long int >( links[i].GetFromPort() );
         *(xmlLink->GetToPort()) = static_cast< long int >( links[i].GetToPort() );
         xmlLink->SetLinkName( ConvertUnicode( links.at( i ).GetName().c_str() ) );
@@ -1932,7 +1947,7 @@ std::string Network::Save( std::string fileName )
     //Update the tags
     for( size_t i = 0; i < tags.size(); ++i )
     {
-        veNetwork.AddTag( tags.at( i ).GetVETagPtr() );
+        tempNetwork->AddTag( tags.at( i ).GetVETagPtr() );
     }
        
     //Models
@@ -1940,9 +1955,13 @@ std::string Network::Save( std::string fileName )
          iter!=modules.end(); ++iter )
     {
         iter->second.GetPlugin()->SetID( iter->first );
-        nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-            iter->second.GetPlugin()->GetVEModel(), "veModel" ) );
+        //nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+        //    iter->second.GetPlugin()->GetVEModel(), "veModel" ) );
+        tempSystem->AddModel( new VE_XML::VE_Model::Model( 
+            *(iter->second.GetPlugin()->GetVEModel()) ) );
     }
+    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+        &(*tempSystem), "veSystem" ) );
     
     //Write out the veUser info for the local user
     VE_XML::UserPtr userInfo = new VE_XML::User();
@@ -2073,7 +2092,9 @@ void Network::CreateNetwork( std::string xmlNetwork )
    _fileProgress->Update( 25, _("start loading") );
 
    // do this for network
-   veNetwork = VE_Conductor::XMLDataBufferEngine::instance()->GetXMLNetworkDataObject( "Network" );
+   VE_XML::VE_Model::Network veNetwork = 
+       VE_Conductor::XMLDataBufferEngine::instance()->
+       GetXMLNetworkDataObject( "Network" );
    
     // we are expecting that a network will be found
     /*if( !objectVector.empty() )
