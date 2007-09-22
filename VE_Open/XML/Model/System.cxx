@@ -133,14 +133,19 @@ void System::SetObjectFromXMLData(DOMNode* element)
     }
     // for models
     {
-        unsigned int numberOfModels = 
-            currentElement->getElementsByTagName( 
-            xercesString("model") )->getLength();
+        DOMNodeList* subElements = currentElement->
+            getElementsByTagName( xercesString("model") );
+        unsigned int numberOfModels = subElements->getLength();
+        
         for( unsigned int i = 0; i < numberOfModels; ++i )
         {
-            dataValueStringName = GetSubElement( currentElement, "model", i );
-            m_models.push_back( new Model() );
-            m_models.back()->SetObjectFromXMLData( dataValueStringName );
+            if( subElements->item( i )->getParentNode() == currentElement )
+            {
+                dataValueStringName = 
+                    static_cast< DOMElement* >( subElements->item( i ) );
+                m_models.push_back( new Model() );
+                m_models.back()->SetObjectFromXMLData( dataValueStringName );
+            }
         }
     }      
 }

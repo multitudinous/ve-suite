@@ -278,7 +278,8 @@ viewlocPane( 0 )
     //Try and load network from server if one is already present
     std::string nw_str = serviceList->GetNetwork();
     network->Load( nw_str, true );
-
+    //create hierarchy page
+    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
 
@@ -444,7 +445,7 @@ void AppFrame::_configureDesktop()
 #ifdef WIN32
     SetSize(wxSize(displayWidth,195/*displayHeight*0.0732421875*/));
 #else
-    SetSize(wxSize(displayWidth,160/*displayHeight*0.0732421875*/));
+    SetSize(wxSize(displayWidth,120/*displayHeight*0.0732421875*/));
 #endif
     SetPosition(wxPoint(0,0));
     //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
@@ -475,14 +476,14 @@ void AppFrame::_detectDisplayAndCreate()
       _configureDesktop();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
       //Set min size so all buttons still show and message window displays at least one line
-      SetMinSize( wxSize( 700, 160) );
+      SetMinSize( wxSize( 600, 100) );
    }
    else if ( GetDisplayMode() == "Tablet")
    {
       _configureTablet();
       SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
       //set min size so all buttons still show and message window displays three lines and canvas
-      SetMinSize( wxSize( 700, 260) );
+      SetMinSize( wxSize( 600, 260) );
    }
    else
    {
@@ -1006,6 +1007,8 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     //Now laod the xml data now that we are in the correct directory
     fname=dialog.GetFilename();
     network->Load( ConvertUnicode( fname.c_str() ), true );
+    //create hierarchy page
+    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
     wxCommandEvent event;
     SubmitToServer( event );
     if( recordScenes )
@@ -1105,6 +1108,8 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Now laod the xml data now that we are in the correct directory
     network->Load( ConvertUnicode( fname.c_str() ), true );
+    //create hierarchy page
+    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
     SubmitToServer( event );
     //Rebuild the teacher tab so that the new stored files are loaded
     if( recordScenes )
@@ -1146,6 +1151,8 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
    network->Load( nw_str, false );
+   //create hierarchy page
+   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
@@ -1167,6 +1174,8 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    if ( !nw_str.empty() )
    {
        network->Load( nw_str, true );
+       //create hierarchy page
+       hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
        ///Submit job to xplorer
 	   wxCommandEvent event;
 	   SubmitToServer( event );
@@ -1224,7 +1233,6 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     if( network->modules.empty() )
     { 
         network->Load( nw_str, true );
-
 		//create hierarchy page
 		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
 
@@ -2097,6 +2105,8 @@ void AppFrame::ProcessCommandLineArgs( void )
    // we submit after new to make sure that the ce and ge ar cleared
    wxCommandEvent event;
    network->Load( ConvertUnicode( fname.c_str() ), true );
+   //create hierarchy page
+   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
 }

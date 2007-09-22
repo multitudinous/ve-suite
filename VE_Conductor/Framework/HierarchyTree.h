@@ -59,36 +59,33 @@ public:
     ///Destructor
     virtual ~HierarchyTree();
 
-  enum
-  {
-      TreeCtrlIcon_File,
-      TreeCtrlIcon_FileSelected,
-      TreeCtrlIcon_Folder,
-      TreeCtrlIcon_FolderSelected,
-      TreeCtrlIcon_FolderOpened,
-      Module_Desc,
-      Module_Help,
-      Module_Add,
-      TREE_CTRL = 1000
-  };
+    enum
+    {
+        TreeCtrlIcon_File,
+        TreeCtrlIcon_FileSelected,
+        TreeCtrlIcon_Folder,
+        TreeCtrlIcon_FolderSelected,
+        TreeCtrlIcon_FolderOpened,
+        Module_Desc,
+        Module_Help,
+        Module_Add,
+        TREE_CTRL = 1000
+    };
 
-  void PopulateTree(std::map< std::string, VE_XML::VE_Model::Model > tree);
-  void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models);
-  void OnSelChanged(wxTreeEvent& event);
-  void CreateImageList(int size=16);
-  void SetNetwork(Network *nw) { network = nw; };
+    void PopulateTree(std::map< std::string, VE_XML::VE_Model::Model > tree);
+    void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models);
+    void OnSelChanged(wxTreeEvent& event);
+    void CreateImageList(int size=16);
+    void SetNetwork(Network *nw) { m_network = nw; };
+    
+protected:
+    int m_imageSize;
 
- protected:
-  
-  int m_imageSize;
+    wxTreeItemId m_rootId;
+    wxTreeItemId m_selection;
+    Network* m_network;
 
-  wxTreeItemId rootId;
-  wxTreeItemId selection;
-  Network* network;
-
-  DECLARE_EVENT_TABLE();
-
-
+    DECLARE_EVENT_TABLE();
 };
 
 #endif

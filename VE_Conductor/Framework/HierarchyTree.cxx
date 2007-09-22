@@ -52,13 +52,13 @@ HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id,
     const wxPoint& pos, const wxSize& size,long style)
 :
 wxTreeCtrl(parent, id, pos, size, style), 
-network(0)
+m_network(0)
 {
   
   int image1 = TreeCtrlIcon_Folder;
   int image2 = TreeCtrlIcon_FolderSelected;
   CreateImageList();
-  rootId = AddRoot( wxT( "Top Sheet" ), image1, image2, NULL );
+  m_rootId = AddRoot( wxT( "Top Sheet" ), image1, image2, NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree::~HierarchyTree()
@@ -109,7 +109,13 @@ void HierarchyTree::CreateImageList(int size)
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateTree(std::map< std::string, 
     VE_XML::VE_Model::Model > tree)
-{	
+{
+    ///Reset Tree
+    DeleteAllItems();
+    int image1 = TreeCtrlIcon_Folder;
+    int image2 = TreeCtrlIcon_FolderSelected;
+    m_rootId = AddRoot( wxT( "Top Sheet" ), image1, image2, NULL );
+    
 	std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
 	for(iter = tree.begin(); iter != tree.end(); iter++)
 	{
@@ -125,13 +131,13 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, 
     std::vector< VE_XML::VE_Model::ModelWeakPtr > models)
 {
-	for(int i = 0; i < models.size(); i++)
+	for(size_t i = 0; i < models.size(); i++)
 	{
 		wxTreeItemId leaf = AppendItem(parentLeaf, 
             wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ) );
 		if( models[i]->GetSubSystem() )
         {
-			PopulateLevel(leaf, models[i]->GetSubSystem()->GetModels());
+			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels() );
         }
 	}
 }
