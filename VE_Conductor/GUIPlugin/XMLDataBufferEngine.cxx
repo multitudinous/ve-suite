@@ -37,7 +37,6 @@
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/StateInfo.h"
 #include "VE_Open/XML/StateInfoPtr.h"
-#include "VE_Open/XML/User.h"
 
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/System.h"

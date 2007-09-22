@@ -53,6 +53,7 @@ XMLDataBufferEngine API
 #include <VE_Open/XML/Model/Tag.h>
 #include <VE_Open/XML/Command.h>
 #include <VE_Open/XML/UserPtr.h>
+#include "VE_Open/XML/User.h"
 
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor

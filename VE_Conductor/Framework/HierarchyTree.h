@@ -40,7 +40,6 @@ HierarchyTree API
 */
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/ModelWeakPtr.h"
-#include "VE_Open/XML/Model/System.h"
 #include <vector>
 #include <wx/image.h>
 #include <wx/imaglist.h>

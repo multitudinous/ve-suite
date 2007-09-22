@@ -36,6 +36,7 @@
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
+#include "VE_Open/XML/Model/System.h"
 
 #include <wx/intl.h>
 
