@@ -47,7 +47,8 @@ BEGIN_EVENT_TABLE(HierarchyTree, wxTreeCtrl)
   //EVT_TREE_SEL_CHANGED(TREE_CTRL, HierarchyTree::OnSelChanged)
 END_EVENT_TABLE()
    
-HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
+HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id, 
+    const wxPoint& pos, const wxSize& size,long style)
 :
 wxTreeCtrl(parent, id, pos, size, style), 
 network(0)
@@ -105,23 +106,31 @@ void HierarchyTree::CreateImageList(int size)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::PopulateTree(std::map< std::string, VE_XML::VE_Model::Model > tree)
+void HierarchyTree::PopulateTree(std::map< std::string, 
+    VE_XML::VE_Model::Model > tree)
 {	
 	std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
 	for(iter = tree.begin(); iter != tree.end(); iter++)
 	{
-		wxTreeItemId leaf = AppendItem(GetRootItem(), iter->second.GetModelName());
-		if(iter->second.GetSubSystem() != NULL)
+		wxTreeItemId leaf = AppendItem(GetRootItem(), 
+            wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ) );
+		if( iter->second.GetSubSystem() )
+        {
 			PopulateLevel(leaf, iter->second.GetSubSystem()->GetModels());
+        }
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models)
+void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, 
+    std::vector< VE_XML::VE_Model::ModelWeakPtr > models)
 {
 	for(int i = 0; i < models.size(); i++)
 	{
-		wxTreeItemId leaf = AppendItem(parentLeaf, models[i]->GetModelName());
-		if(models[i]->GetSubSystem() != NULL)
+		wxTreeItemId leaf = AppendItem(parentLeaf, 
+            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ) );
+		if( models[i]->GetSubSystem() )
+        {
 			PopulateLevel(leaf, models[i]->GetSubSystem()->GetModels());
+        }
 	}
 }

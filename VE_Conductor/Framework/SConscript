@@ -21,6 +21,7 @@ srcs = Split("""
    MainToolBar.cxx
    UI_TeacherTab.cxx
    ExportMenu.cxx
+   HierarchyTree.cxx
 """)
 
 env = ves_pkg.getEnv().Copy()
