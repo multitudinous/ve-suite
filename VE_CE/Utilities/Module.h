@@ -37,6 +37,7 @@
 
 #include "VE_Open/XML/Model/ModelStrongPtr.h"
 #include "VE_Open/XML/Model/ModelWeakPtr.h"
+#include "VE_Open/XML/Model/Model.h"
 
 #include <vector>
 #include <string>

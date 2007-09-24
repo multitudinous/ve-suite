@@ -48,6 +48,7 @@
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Model/SystemStrongPtr.h"
 #include "VE_Open/XML/Model/SystemWeakPtr.h"
+#include "VE_Open/XML/Model/System.h"
 
 #include <xercesc/dom/DOM.hpp>
 
