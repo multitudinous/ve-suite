@@ -942,7 +942,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
                               << parentNode->getDescriptions().at( 1 ) << std::endl 
                               << vprDEBUG_FLUSH;
 
-        activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
+        activeDCS = static_cast< VE_SceneGraph::DCS* >( parentNode.get() );
     }
     else
     {

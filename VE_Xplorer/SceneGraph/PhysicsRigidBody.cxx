@@ -105,6 +105,7 @@ PhysicsRigidBody::~PhysicsRigidBody()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+// --- Still need to multiply by the local to world accumulated transform, I think ? --- //
 void PhysicsRigidBody::apply( osg::Geode& geode )
 { 
     tri_mesh = new btTriangleMesh;
