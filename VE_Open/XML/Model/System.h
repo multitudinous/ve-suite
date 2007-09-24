@@ -46,8 +46,10 @@
 
 #include "VE_Open/XML/Model/ModelStrongPtr.h"
 #include "VE_Open/XML/Model/ModelWeakPtr.h"
+#include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/NetworkStrongPtr.h"
 #include "VE_Open/XML/Model/NetworkWeakPtr.h"
+#include "VE_Open/XML/Model/Network.h"
 
 #include <xercesc/dom/DOM.hpp>
 

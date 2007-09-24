@@ -33,10 +33,11 @@
 #ifndef CE_UTILITIES_NETWORK_H
 #define CE_UTILITIES_NETWORK_H
 #include "VE_Installer/include/VEConfig.h"
+#include "VE_Open/skel/moduleS.h"
 
 #include "VE_Open/XML/Model/NetworkStrongPtr.h"
 
-#include "VE_Open/skel/moduleS.h"
+
 #include <string>
 #include <vector>
 #include <map>
@@ -45,10 +46,6 @@
 namespace VE_XML
 {
    class Command;
-   namespace VE_Model
-   {
-      class Network;
-   }
 }
 
 namespace VE_CE
