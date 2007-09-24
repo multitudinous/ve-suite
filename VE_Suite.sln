@@ -311,8 +311,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ephemeris", "Ephemeris", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OcclusionQuery", "OcclusionQuery", "{EA7E8909-B5F5-45AB-9340-9D27BF685865}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE-Launcher", "VE_Installer\installer\VE-Launcher\VE-Launcher.vcproj", "{2A66A013-D378-49FC-98AC-A871CDC955E2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Builder_Tools_Debug|Win32 = Builder_Tools_Debug|Win32
@@ -855,18 +853,6 @@ Global
 		{B7191373-AF3D-49DE-880B-5A41A1629861}.VE-Suite_Debug|Win32.Build.0 = Debug|Win32
 		{B7191373-AF3D-49DE-880B-5A41A1629861}.VE-Suite_Release|Win32.ActiveCfg = Release|Win32
 		{B7191373-AF3D-49DE-880B-5A41A1629861}.VE-Suite_Release|Win32.Build.0 = Release|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Builder_Tools_Debug|Win32.ActiveCfg = Debug|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Builder_Tools_Debug|Win32.Build.0 = Debug|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Builder_Tools_Release|Win32.ActiveCfg = Release|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Builder_Tools_Release|Win32.Build.0 = Release|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Debug|Win32.Build.0 = Debug|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Release|Win32.ActiveCfg = Release|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.Release|Win32.Build.0 = Release|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.VE-Suite_Debug|Win32.ActiveCfg = Debug|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.VE-Suite_Debug|Win32.Build.0 = Debug|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.VE-Suite_Release|Win32.ActiveCfg = Release|Win32
-		{2A66A013-D378-49FC-98AC-A871CDC955E2}.VE-Suite_Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
