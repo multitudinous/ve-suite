@@ -2423,7 +2423,7 @@ void Network::SetSelectedModule(int mod)
 	m_selTag = -1; 
 	m_selTagCon = -1; 
 	m_selMod = mod;
-    modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
+    modules[mod].GetPlugin()->SetHighlightFlag( true );
 	Refresh(true);
 	///Update();
 }

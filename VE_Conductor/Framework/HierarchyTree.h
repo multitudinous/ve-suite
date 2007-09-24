@@ -66,26 +66,31 @@ public:
         TreeCtrlIcon_Folder,
         TreeCtrlIcon_FolderSelected,
         TreeCtrlIcon_FolderOpened,
-        Module_Desc,
-        Module_Help,
-        Module_Add,
-        TREE_CTRL = 1000
+		TREE_CTRL=1000
     };
 
     void PopulateTree(std::map< std::string, VE_XML::VE_Model::Model > tree);
-    void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models);
-    void OnSelChanged(wxTreeEvent& event);
     void CreateImageList(int size=16);
     void SetNetwork(Network *nw) { m_network = nw; };
-    
+    void Clear();
+
 protected:
     int m_imageSize;
-
+	void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models);
+	void OnSelChanged(wxTreeEvent& event);
+    
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
     Network* m_network;
 
     DECLARE_EVENT_TABLE();
+};
+
+class ModuleData : public wxTreeItemData
+{
+ public:
+  unsigned int modId;
+  std::string modName;
 };
 
 #endif

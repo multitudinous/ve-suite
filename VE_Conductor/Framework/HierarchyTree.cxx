@@ -40,12 +40,19 @@
 
 #include <wx/intl.h>
 
+#include "VE_Conductor/xpm/icon1.xpm"
+#include "VE_Conductor/xpm/icon2.xpm"
+#include "VE_Conductor/xpm/icon3.xpm"
+#include "VE_Conductor/xpm/icon4.xpm"
+#include "VE_Conductor/xpm/icon5.xpm"
+
 #ifdef WIN32
 #include <shellapi.h>
 #endif
 
 BEGIN_EVENT_TABLE(HierarchyTree, wxTreeCtrl)
   //EVT_TREE_SEL_CHANGED(TREE_CTRL, HierarchyTree::OnSelChanged)
+  EVT_TREE_SEL_CHANGED(TREE_CTRL, HierarchyTree::OnSelChanged)
 END_EVENT_TABLE()
    
 HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id, 
@@ -54,11 +61,10 @@ HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id,
 wxTreeCtrl(parent, id, pos, size, style), 
 m_network(0)
 {
-  
-  int image1 = TreeCtrlIcon_Folder;
-  int image2 = TreeCtrlIcon_FolderSelected;
   CreateImageList();
-  m_rootId = AddRoot( wxT( "Top Sheet" ), image1, image2, NULL );
+  m_rootId = AddRoot( wxT( "Top Sheet" ), 2, 3, NULL );
+  SetItemImage(m_rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+  SetItemFont(m_rootId, *wxITALIC_FONT);
 }
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree::~HierarchyTree()
@@ -68,7 +74,7 @@ HierarchyTree::~HierarchyTree()
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::CreateImageList(int size)
 {
-    /*if ( size == -1 )
+    if ( size == -1 )
     {
         SetImageList(NULL);
         return;
@@ -103,7 +109,7 @@ void HierarchyTree::CreateImageList(int size)
         }
     }
 
-    AssignImageList(images);*/
+    AssignImageList(images);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,15 +118,17 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 {
     ///Reset Tree
     DeleteAllItems();
-    int image1 = TreeCtrlIcon_Folder;
-    int image2 = TreeCtrlIcon_FolderSelected;
-    m_rootId = AddRoot( wxT( "Top Sheet" ), image1, image2, NULL );
+    m_rootId = AddRoot( wxT( "Top Sheet" ), 2, 3, NULL );
     
 	std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
 	for(iter = tree.begin(); iter != tree.end(); iter++)
 	{
+		ModuleData * modData = new ModuleData();
+		modData->modId = iter->second.GetModelID();
+		modData->modName = iter->second.GetModelName();
 		wxTreeItemId leaf = AppendItem(GetRootItem(), 
-            wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ) );
+            wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ), 0, 1, modData);
+		SetItemImage(leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
 		if( iter->second.GetSubSystem() )
         {
 			PopulateLevel(leaf, iter->second.GetSubSystem()->GetModels());
@@ -133,11 +141,31 @@ void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf,
 {
 	for(size_t i = 0; i < models.size(); i++)
 	{
+		ModuleData * modData = new ModuleData();
+		modData->modId = models[i]->GetModelID();
+		modData->modName = models[i]->GetModelName();
 		wxTreeItemId leaf = AppendItem(parentLeaf, 
-            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ) );
+            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ), 0, 1, modData);
+		SetItemImage(leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
 		if( models[i]->GetSubSystem() )
         {
 			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels() );
         }
+	}
+}
+/////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::Clear()
+{
+	DeleteAllItems();
+	m_rootId = AddRoot( wxT( "Top Sheet" ), 2, 3, NULL );
+}
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::OnSelChanged(wxTreeEvent& WXUNUSED(event))
+{
+	if(GetSelection() != m_rootId)
+	{
+		unsigned int test = ((ModuleData *)GetItemData(GetSelection()))->modId;
+		std::string test2 = ((ModuleData *)GetItemData(GetSelection()))->modName;
+	    m_network->SetSelectedModule(((ModuleData *)GetItemData(GetSelection()))->modId);
 	}
 }

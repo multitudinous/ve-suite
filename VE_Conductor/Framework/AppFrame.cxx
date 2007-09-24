@@ -414,6 +414,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 
 	//tells module panel where to send the selected module
     av_modules->SetNetwork( network );
+    hierarchyTree->SetNetwork( network );
 
     if( GetDisplayMode() == "Tablet" )
     {
@@ -1007,6 +1008,10 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     //Now laod the xml data now that we are in the correct directory
     fname=dialog.GetFilename();
     network->Load( ConvertUnicode( fname.c_str() ), true );
+	
+	//clear any current tree
+	hierarchyTree->Clear();
+
     //create hierarchy page
     hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
     wxCommandEvent event;
@@ -1108,7 +1113,11 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Now laod the xml data now that we are in the correct directory
     network->Load( ConvertUnicode( fname.c_str() ), true );
-    //create hierarchy page
+
+	//clear any current tree
+	hierarchyTree->Clear();
+    
+	//create hierarchy page
     hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
     SubmitToServer( event );
     //Rebuild the teacher tab so that the new stored files are loaded
@@ -1151,6 +1160,10 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
    network->Load( nw_str, false );
+   
+   //clear any current tree
+   hierarchyTree->Clear();
+   
    //create hierarchy page
    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
 }
@@ -1174,6 +1187,8 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    if ( !nw_str.empty() )
    {
        network->Load( nw_str, true );
+	   //clear any current tree
+	   hierarchyTree->Clear();
        //create hierarchy page
        hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
        ///Submit job to xplorer
@@ -1233,6 +1248,8 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     if( network->modules.empty() )
     { 
         network->Load( nw_str, true );
+		//clear any current tree
+		hierarchyTree->Clear();
 		//create hierarchy page
 		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
 
@@ -1488,6 +1505,8 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED(event) )
 {
+   //clear any current tree
+   hierarchyTree->Clear();
    SetTitle( _("VE-Suite: www.vesuite.org") );
    network->New( true );
 }
