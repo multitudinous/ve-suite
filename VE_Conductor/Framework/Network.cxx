@@ -229,7 +229,7 @@ void Network::OnMLeftDown(wxMouseEvent& event)
 
     //Clear selections
     //if (m_selMod >= 0)
-     UnSelectMod(dc);
+     UnSelectMod();
     //if (m_selLink >= 0)
 	 UnSelectLink(dc);
     if (m_selTag >= 0)
@@ -867,7 +867,7 @@ int Network::SelectMod( int x, int y, wxDC &dc )
     return m_selMod;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::UnSelectMod( wxDC& dc )
+void Network::UnSelectMod( )
 {
 	for( std::map<int, Module>::iterator iter = modules.begin(); 
         iter != modules.end(); ++iter )
@@ -2414,7 +2414,7 @@ bool Network::IsDragging()
 	return dragging;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::SetSelectedModule(int mod)
+void Network::SetSelectedModule(int modId)
 {
 	m_selFrPort = -1; 
 	m_selToPort = -1; 
@@ -2422,8 +2422,22 @@ void Network::SetSelectedModule(int mod)
 	m_selLinkCon = -1; 
 	m_selTag = -1; 
 	m_selTagCon = -1; 
-	m_selMod = mod;
+	m_selMod = modId;
     modules[ m_selMod ].GetPlugin()->SetHighlightFlag( true );
 	Refresh(true);
 	///Update();
+}
+/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void Network::HighlightCenter( int modId )
+{    
+    UnSelectMod();
+	//recenter the flowsheet around the icon
+    int xPix, yPix;
+    GetScrollPixelsPerUnit(&xPix, &yPix);
+    Scroll(modules[modId].GetPlugin()->GetBBox().GetX()/(xPix),
+    modules[modId].GetPlugin()->GetBBox().GetY()/(yPix));
+
+    //highlight the selected icon
+    SetSelectedModule(modId);
 }

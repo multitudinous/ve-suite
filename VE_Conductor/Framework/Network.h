@@ -123,7 +123,8 @@ public:
    //void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
    //void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
    bool IsDragging();
-   void SetSelectedModule(int mod);
+   void SetSelectedModule( int mod );
+   void HighlightCenter( int modId );
    std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
    
 protected:
@@ -137,7 +138,7 @@ protected:
 
    //Selection functions
    int SelectMod(int x, int y, wxDC& dc);
-   void UnSelectMod(wxDC& dc);
+   void UnSelectMod();
    int  SelectLink(int x, int y);
    void UnSelectLink(wxDC& dc);
    int SelectTag(int x, int y);

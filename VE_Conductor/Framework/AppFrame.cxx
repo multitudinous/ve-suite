@@ -1407,15 +1407,9 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
     fd->ShowModal();
 
     int selectedModulePos = fd->GetSelectedModulePos();
-
-    //recenter the flowsheet around the icon
-    int xPix, yPix;
-    network->GetScrollPixelsPerUnit(&xPix, &yPix);
-    network->Scroll(network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetX()/(xPix),
-    network->modules[moduleIDs[selectedModulePos]].GetPlugin()->GetBBox().GetY()/(yPix));
-
-    //highlight the selected icon
-    network->SetSelectedModule(moduleIDs[selectedModulePos]);
+	
+	//highlight and center block
+	network->HighlightCenter( moduleIDs[selectedModulePos] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveSimulation(wxCommandEvent& WXUNUSED(event))

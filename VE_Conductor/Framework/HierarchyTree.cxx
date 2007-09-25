@@ -169,9 +169,7 @@ void HierarchyTree::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 	{
         ModuleData* tempModData = 
             static_cast< ModuleData* >( GetItemData( GetSelection() ) );
-		unsigned int test = tempModData->modId;
-		std::string test2 = tempModData->modName;
-	    m_network->SetSelectedModule( tempModData->modId );
+	    m_network->HighlightCenter( tempModData->modId );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
