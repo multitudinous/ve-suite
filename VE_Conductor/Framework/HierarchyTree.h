@@ -69,12 +69,21 @@ public:
 		TREE_CTRL=1000
     };
 
+    ///Populate the tree
+    ///\param tree The tree to populate
     void PopulateTree(std::map< std::string, VE_XML::VE_Model::Model > tree);
+    ///Create image list of size
+    ///\param size Size of images
     void CreateImageList(int size=16);
+    ///Set the network to work with
+    ///\param nw Network to work with
     void SetNetwork(Network *nw) { m_network = nw; };
+    ///Clear the hierarchy tree
+    ///This is called by default by PopulateTree
     void Clear();
 
 protected:
+    ///The size of the images
     int m_imageSize;
 	void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models);
 	void OnSelChanged(wxTreeEvent& event);

@@ -312,7 +312,6 @@ viewlocPane( 0 )
         "CHANGE_BACKGROUND_COLOR", veCommand );
     
     serviceList->SendCommandStringToXplorer( veCommand );
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
@@ -384,7 +383,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     side_pane = new wxNotebook(wx_nw_splitter, -1 ,wxDefaultPosition, wxDefaultSize, wxNB_BOTTOM);
 	
 	//create module page
-	wxPanel * modPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
+	wxPanel* modPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
     av_modules = new Avail_Modules( modPage, Avail_Modules::TREE_CTRL, 
         wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );	
     
@@ -1008,9 +1007,6 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     //Now laod the xml data now that we are in the correct directory
     fname=dialog.GetFilename();
     network->Load( ConvertUnicode( fname.c_str() ), true );
-	
-	//clear any current tree
-	hierarchyTree->Clear();
 
     //create hierarchy page
     hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
@@ -1113,9 +1109,6 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Now laod the xml data now that we are in the correct directory
     network->Load( ConvertUnicode( fname.c_str() ), true );
-
-	//clear any current tree
-	hierarchyTree->Clear();
     
 	//create hierarchy page
     hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
@@ -1160,10 +1153,7 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
    network->Load( nw_str, false );
-   
-   //clear any current tree
-   hierarchyTree->Clear();
-   
+
    //create hierarchy page
    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
 }
@@ -1187,8 +1177,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    if ( !nw_str.empty() )
    {
        network->Load( nw_str, true );
-	   //clear any current tree
-	   hierarchyTree->Clear();
+       
        //create hierarchy page
        hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
        ///Submit job to xplorer
@@ -1248,8 +1237,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     if( network->modules.empty() )
     { 
         network->Load( nw_str, true );
-		//clear any current tree
-		hierarchyTree->Clear();
+
 		//create hierarchy page
 		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
 

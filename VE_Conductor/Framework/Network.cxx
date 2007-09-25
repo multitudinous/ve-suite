@@ -1824,9 +1824,9 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     modules[id].GetPlugin()->SetID(id);
     modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
     modules[id].GetPlugin()->SetDialogSize( frame->GetAppropriateSubDialogSize() );
-    //modules.push_back(mod);
     sbboxes.push_back(bbox);
-    //  for (i=0; i<modules.size(); i++)
+    ///Add vemodels to the hierarchy tree
+    /*************************************/
     //Setup the event handlers for the plugin
     PushEventHandler( modules[id].GetPlugin() );
     Refresh(true);
@@ -2423,7 +2423,7 @@ void Network::SetSelectedModule(int mod)
 	m_selTag = -1; 
 	m_selTagCon = -1; 
 	m_selMod = mod;
-    modules[mod].GetPlugin()->SetHighlightFlag( true );
+    modules[ m_selMod ].GetPlugin()->SetHighlightFlag( true );
 	Refresh(true);
 	///Update();
 }

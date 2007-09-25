@@ -69,17 +69,18 @@ m_network(0)
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree::~HierarchyTree()
 {
+    ;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::CreateImageList(int size)
 {
-    if ( size == -1 )
+    if( size == -1 )
     {
         SetImageList(NULL);
         return;
     }
-    if ( size == 0 )
+    
+    if( size == 0 )
         size = m_imageSize;
     else
         m_imageSize = size;
@@ -97,15 +98,16 @@ void HierarchyTree::CreateImageList(int size)
     icons[4] = wxIcon(icon5_xpm);
 
     int sizeOrig = icons[0].GetWidth();
-    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
+    for( size_t i = 0; i < WXSIZEOF(icons); ++i )
     {
-        if ( size == sizeOrig )
+        if( size == sizeOrig )
         {
             images->Add(icons[i]);
         }
         else
         {
-            images->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
+            images->Add( wxBitmap( 
+                wxBitmap( icons[i] ).ConvertToImage().Rescale( size, size ) ) );
         }
     }
 
@@ -117,17 +119,17 @@ void HierarchyTree::PopulateTree(std::map< std::string,
     VE_XML::VE_Model::Model > tree)
 {
     ///Reset Tree
-    DeleteAllItems();
-    m_rootId = AddRoot( wxT( "Top Sheet" ), 2, 3, NULL );
+    Clear();
     
-	std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
-	for(iter = tree.begin(); iter != tree.end(); iter++)
+	for( std::map< std::string, VE_XML::VE_Model::Model >::iterator 
+        iter = tree.begin(); iter != tree.end(); ++iter )
 	{
-		ModuleData * modData = new ModuleData();
+		ModuleData* modData = new ModuleData();
 		modData->modId = iter->second.GetModelID();
 		modData->modName = iter->second.GetModelName();
 		wxTreeItemId leaf = AppendItem(GetRootItem(), 
-            wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ), 0, 1, modData);
+            wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ),
+            0, 1, modData);
 		SetItemImage(leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
 		if( iter->second.GetSubSystem() )
         {
@@ -139,14 +141,15 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, 
     std::vector< VE_XML::VE_Model::ModelWeakPtr > models)
 {
-	for(size_t i = 0; i < models.size(); i++)
+	for( size_t i = 0; i < models.size(); ++i )
 	{
-		ModuleData * modData = new ModuleData();
+		ModuleData* modData = new ModuleData();
 		modData->modId = models[i]->GetModelID();
 		modData->modName = models[i]->GetModelName();
 		wxTreeItemId leaf = AppendItem(parentLeaf, 
-            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ), 0, 1, modData);
-		SetItemImage(leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ), 
+            0, 1, modData);
+		SetItemImage( leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
 		if( models[i]->GetSubSystem() )
         {
 			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels() );
@@ -162,10 +165,13 @@ void HierarchyTree::Clear()
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 {
-	if(GetSelection() != m_rootId)
+	if( GetSelection() != m_rootId )
 	{
-		unsigned int test = ((ModuleData *)GetItemData(GetSelection()))->modId;
-		std::string test2 = ((ModuleData *)GetItemData(GetSelection()))->modName;
-	    m_network->SetSelectedModule(((ModuleData *)GetItemData(GetSelection()))->modId);
+        ModuleData* tempModData = 
+            static_cast< ModuleData* >( GetItemData( GetSelection() ) );
+		unsigned int test = tempModData->modId;
+		std::string test2 = tempModData->modName;
+	    m_network->SetSelectedModule( tempModData->modId );
 	}
 }
+////////////////////////////////////////////////////////////////////////////////
