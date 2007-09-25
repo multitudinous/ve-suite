@@ -61,11 +61,6 @@ public:
 
     enum
     {
-        TreeCtrlIcon_File,
-        TreeCtrlIcon_FileSelected,
-        TreeCtrlIcon_Folder,
-        TreeCtrlIcon_FolderSelected,
-        TreeCtrlIcon_FolderOpened,
 		TREE_CTRL=1000
     };
 
@@ -75,6 +70,7 @@ public:
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList(int size=16);
+	void AddtoImageList(wxBitmap);
     ///Set the network to work with
     ///\param nw Network to work with
     void SetNetwork(Network *nw) { m_network = nw; };
@@ -91,6 +87,7 @@ protected:
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
     Network* m_network;
+	wxImageList *images;
 
     DECLARE_EVENT_TABLE();
 };

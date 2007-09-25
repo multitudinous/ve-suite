@@ -33,6 +33,7 @@
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
 #include "VE_Conductor/Framework/HierarchyTree.h"
+#include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -61,59 +62,24 @@ HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id,
 wxTreeCtrl(parent, id, pos, size, style), 
 m_network(0)
 {
-  CreateImageList();
-  m_rootId = AddRoot( wxT( "Top Sheet" ), 2, 3, NULL );
-  SetItemImage(m_rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+  images = new wxImageList(32, 32, TRUE);
+  AssignImageList(images);
+  AddtoImageList(wxIcon( icon3_xpm ));
+  AddtoImageList(wxIcon( icon4_xpm ));
+  AddtoImageList(wxIcon( icon5_xpm ));
+  m_rootId = AddRoot( wxT( "Top Sheet" ), 0, -1, NULL );
+  SetItemImage(m_rootId, 2, wxTreeItemIcon_Expanded);
   SetItemFont(m_rootId, *wxITALIC_FONT);
 }
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree::~HierarchyTree()
 {
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::CreateImageList(int size)
-{
-    if( size == -1 )
-    {
-        SetImageList(NULL);
-        return;
-    }
-    
-    if( size == 0 )
-        size = m_imageSize;
-    else
-        m_imageSize = size;
-
-    // Make an image list containing small icons
-    wxImageList *images = new wxImageList(size, size, TRUE);
-
-    // should correspond to TreeCtrlIcon_xxx enum
-    wxBusyCursor wait;
-    wxIcon icons[5];
-    icons[0] = wxIcon(icon1_xpm);
-    icons[1] = wxIcon(icon2_xpm);
-    icons[2] = wxIcon(icon3_xpm);
-    icons[3] = wxIcon(icon4_xpm);
-    icons[4] = wxIcon(icon5_xpm);
-
-    int sizeOrig = icons[0].GetWidth();
-    for( size_t i = 0; i < WXSIZEOF(icons); ++i )
-    {
-        if( size == sizeOrig )
-        {
-            images->Add(icons[i]);
-        }
-        else
-        {
-            images->Add( wxBitmap( 
-                wxBitmap( icons[i] ).ConvertToImage().Rescale( size, size ) ) );
-        }
-    }
-
-    AssignImageList(images);
+void HierarchyTree::AddtoImageList(wxBitmap icon)
+{    
+	images->Add(icon);
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateTree(std::map< std::string, 
     VE_XML::VE_Model::Model > tree)
@@ -127,14 +93,24 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 		ModuleData* modData = new ModuleData();
 		modData->modId = iter->second.GetModelID();
 		modData->modName = iter->second.GetModelName();
+		
+		//Add the icon to the image list
+		std::string fullPath = "2DIcons/" + iter->second.GetIconFilename() + ".jpg";
+		std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
+		std::map< std::string, char** >::iterator aspenIconIter;
+		aspenIconIter = aspenPlusIconMap.find( fullPath );
+		if( aspenIconIter != aspenPlusIconMap.end() )
+			AddtoImageList(wxBitmap(wxBitmap( aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+		else
+			AddtoImageList(wxIcon( icon1_xpm ));
+
 		wxTreeItemId leaf = AppendItem(GetRootItem(), 
             wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ),
-            0, 1, modData);
-		SetItemImage(leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+			images->GetImageCount()-1 , -1, modData);
+		SetItemImage(leaf, images->GetImageCount()-1);
+
 		if( iter->second.GetSubSystem() )
-        {
 			PopulateLevel(leaf, iter->second.GetSubSystem()->GetModels());
-        }
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////
@@ -146,21 +122,37 @@ void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf,
 		ModuleData* modData = new ModuleData();
 		modData->modId = models[i]->GetModelID();
 		modData->modName = models[i]->GetModelName();
+		
+		//Add the icon to the image list
+		std::string fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
+		std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
+		std::map< std::string, char** >::iterator aspenIconIter;
+		aspenIconIter = aspenPlusIconMap.find( fullPath );
+		if( aspenIconIter != aspenPlusIconMap.end() )
+			AddtoImageList(wxBitmap(wxBitmap( aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+		else
+			AddtoImageList(wxIcon( icon1_xpm ));
+
 		wxTreeItemId leaf = AppendItem(parentLeaf, 
             wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ), 
-            0, 1, modData);
-		SetItemImage( leaf, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
+			images->GetImageCount()-1 , -1, modData);
+		SetItemImage( leaf, images->GetImageCount()-1 );
+
 		if( models[i]->GetSubSystem() )
-        {
 			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels() );
-        }
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::Clear()
 {
-	DeleteAllItems();
-	m_rootId = AddRoot( wxT( "Top Sheet" ), 2, 3, NULL );
+  DeleteAllItems();
+  images->RemoveAll();
+  AddtoImageList(wxIcon( icon3_xpm ));
+  AddtoImageList(wxIcon( icon4_xpm ));
+  AddtoImageList(wxIcon( icon5_xpm ));
+  m_rootId = AddRoot( wxT( "Top Sheet" ), 0, 1, NULL );
+  SetItemImage(m_rootId, 2, wxTreeItemIcon_Expanded);
+  SetItemFont(m_rootId, *wxITALIC_FONT);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnSelChanged(wxTreeEvent& WXUNUSED(event))
