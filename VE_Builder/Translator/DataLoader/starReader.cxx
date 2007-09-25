@@ -412,6 +412,44 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          }
          // end cell type 11
 
+         // cell type 12 (6 vertex cell prism) 
+         else if ( cellType == 12 )
+         {
+            cellFile >> tempData;  //first entry on the second line
+
+            for ( size_t i = 0; i<6; ++i)
+            {
+               cellFile >> tempData;
+               vertList->InsertUniqueId(tempData-vShift);
+            }
+
+            cellFile.getline( tempLine, charSize );
+            // vertList->InsertUniqueId( tempData - vShift );
+            uGrid->InsertNextCell( VTK_CONVEX_POINT_SET, vertList );
+            vertList->Reset();
+            numStarCells++;
+            numVtkCells++;
+         }
+         // end cell type 12
+
+         // cell type 3 baffle/shell (not needed for translation)
+         // prevents screen output for this cell type
+         else if ( cellType == 3 )
+         {
+            cellFile.getline( tempLine, charSize );
+            if ( numberOfVertsPerCell > 8 )
+            {   
+               cellFile.getline( tempLine, charSize );
+            }
+               
+            if ( cellFile.peek() == '\n' )
+            {   
+               cellFile.getline( tempLine, charSize );
+            }
+
+         }
+         // end cell type 3
+
          else
          {
             std::cout << "Unsupported cell type " << cellType << " " << 
