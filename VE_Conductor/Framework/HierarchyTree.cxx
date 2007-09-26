@@ -87,6 +87,10 @@ void HierarchyTree::PopulateTree(std::map< std::string,
     ///Reset Tree
     Clear();
     
+    std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
+    std::map< std::string, char** >::iterator aspenIconIter;
+    std::string fullPath;
+
 	for( std::map< std::string, VE_XML::VE_Model::Model >::iterator 
         iter = tree.begin(); iter != tree.end(); ++iter )
 	{
@@ -95,14 +99,17 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 		modData->modName = iter->second.GetModelName();
 		
 		//Add the icon to the image list
-		std::string fullPath = "2DIcons/" + iter->second.GetIconFilename() + ".jpg";
-		std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
-		std::map< std::string, char** >::iterator aspenIconIter;
+		fullPath = "2DIcons/" + iter->second.GetIconFilename() + ".jpg";
 		aspenIconIter = aspenPlusIconMap.find( fullPath );
 		if( aspenIconIter != aspenPlusIconMap.end() )
-			AddtoImageList(wxBitmap(wxBitmap( aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+        {
+			AddtoImageList( wxBitmap( wxBitmap( 
+                aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+        }
 		else
+        {
 			AddtoImageList(wxIcon( icon1_xpm ));
+        }
 
 		wxTreeItemId leaf = AppendItem(GetRootItem(), 
             wxString( iter->second.GetModelName().c_str(), wxConvUTF8 ),
@@ -110,13 +117,19 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 		SetItemImage(leaf, images->GetImageCount()-1);
 
 		if( iter->second.GetSubSystem() )
+        {
 			PopulateLevel(leaf, iter->second.GetSubSystem()->GetModels());
+        }
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, 
     std::vector< VE_XML::VE_Model::ModelWeakPtr > models)
 {
+    std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
+    std::map< std::string, char** >::iterator aspenIconIter;
+    std::string fullPath;
+    
 	for( size_t i = 0; i < models.size(); ++i )
 	{
 		ModuleData* modData = new ModuleData();
@@ -124,14 +137,17 @@ void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf,
 		modData->modName = models[i]->GetModelName();
 		
 		//Add the icon to the image list
-		std::string fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
-		std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
-		std::map< std::string, char** >::iterator aspenIconIter;
+		fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
 		aspenIconIter = aspenPlusIconMap.find( fullPath );
 		if( aspenIconIter != aspenPlusIconMap.end() )
-			AddtoImageList(wxBitmap(wxBitmap( aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+		{	
+            AddtoImageList( wxBitmap( wxBitmap( 
+                aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+        }
 		else
-			AddtoImageList(wxIcon( icon1_xpm ));
+		{	
+            AddtoImageList(wxIcon( icon1_xpm ));
+        }
 
 		wxTreeItemId leaf = AppendItem(parentLeaf, 
             wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ), 
@@ -139,10 +155,12 @@ void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf,
 		SetItemImage( leaf, images->GetImageCount()-1 );
 
 		if( models[i]->GetSubSystem() )
+        {
 			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels() );
+        }
 	}
 }
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::Clear()
 {
   DeleteAllItems();
