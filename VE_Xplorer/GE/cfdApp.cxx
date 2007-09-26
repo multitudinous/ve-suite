@@ -568,7 +568,7 @@ void cfdApp::writeImageFileForWeb()
     cfdEnvironmentHandler::instance()->GetDesktopSize( w, h );
     int largeWidth = w * 2;
     int largeHeight = h * 2;
-    shot->allocateImage( largeWidth, largeHeight, 24, GL_RGB, GL_UNSIGNED_BYTE);
+    shot->allocateImage( largeWidth, largeHeight, 1, GL_RGB, GL_UNSIGNED_BYTE);
 
     ///Now lets create the scene
     osg::ref_ptr<osg::Node> subgraph = getScene();
@@ -593,7 +593,7 @@ void cfdApp::writeImageFileForWeb()
     {
         //Setup the image
         imageList.push_back( new osg::Image() );
-        imageList.back()->allocateImage(w, h, 24, GL_RGB, GL_UNSIGNED_BYTE);
+        imageList.back()->allocateImage(w, h, 1, GL_RGB, GL_UNSIGNED_BYTE);
         //Setup the cameras
         cameraList.push_back( new osg::CameraNode );
         cameraList.back()->setClearColor( oldcamera->getClearColor() );
