@@ -61,11 +61,20 @@ class ServerAutoKillUnix(wx.Frame):
         
     def KillNameServer(self):
         
-        ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
-        
-        while (len(ps) <= 4):
+        if posix:
             ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
-            sleep(2)
+        ##If not posix then it's mac
+        else:
+            ps = os.popen("ps -p " + self.c_Pid + " &").readlines()
+            
+        if posix:
+            while (len(ps) <= 4):
+                ps = os.popen("ps | grep " + self.c_Pid + " &").readline().split()
+                sleep(2)
+        else:
+            while (len(ps) >= 2):
+                ps = os.popen("ps -p " + self.c_Pid + " &").readlines()
+                sleep(2)
         
         killArray = ["kill"]
         for pid in self.pids:

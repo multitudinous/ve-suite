@@ -843,7 +843,7 @@ class Launch:
             self.EnvAppend(libraryPath, libList, ':')
             
             self.VeLauncherDir = str(VELAUNCHER_DIR)
-            print "VeLauncherDir: %s" % self.VeLauncherDir
+            ##print "VeLauncherDir: %s" % self.VeLauncherDir
             
         ##Update other vars listed.
         if self.settings["Cluster"]:
