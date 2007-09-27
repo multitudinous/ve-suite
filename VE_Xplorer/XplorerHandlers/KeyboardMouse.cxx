@@ -30,12 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-// --- This will go away once the windowing patch for juggler is in --- //
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 // --- VE-Suite Stuff --- //
 #include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
 
@@ -444,24 +438,6 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
 {
     m_width = w;
     m_height = h;
-
-    // --- This will go away once the windowing patch for juggler is in --- //
-
-    //Need to add an if statement to test whether or not the xplorer window has a border
-    //If it does, then we need to take into account the border sizes on Windows
-    //We should probably request juggler to take this into account for Windows in the future
-#ifdef WIN32
-    //The thickness of the sizing border around the perimeter of a window that can be resized, in pixels.
-    //SM_CXSIZEFRAME is the width of the horizontal border.
-    //SM_CYSIZEFRAME is the height of the vertical border.
-    //SM_CYCAPTION is the height of a caption area, in pixels.
-
-    int borderWidth = GetSystemMetrics( SM_CXSIZEFRAME ) * 2;
-    int borderHeight = GetSystemMetrics( SM_CYSIZEFRAME ) * 2 + GetSystemMetrics( SM_CYCAPTION );
-    	
-    m_width -= borderWidth;
-    m_height -= borderHeight;
-#endif
 
     m_aspectRatio = static_cast< double >( m_width ) / static_cast< double >( m_height );
 }
