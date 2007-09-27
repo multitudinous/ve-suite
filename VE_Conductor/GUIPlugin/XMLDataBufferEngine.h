@@ -98,15 +98,24 @@ public:
     VE_XML::VE_Model::Model GetXMLModelDataObject( std::string dataNumber );
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
+	///Get the map of all systems
+	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr > GetXMLSystemDataMap(
+		std::string id );
+	///Get a system
+	VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
     ///Get data
     VE_XML::User GetXMLUserDataObject( std::string dataNumber );
+	///Parse system for subsystems
+	void ParseSystem( VE_XML::VE_Model::SystemWeakPtr system );
         
 private:
     ///Map to store the command name and command for easy lookup by the user
     std::map< std::string, VE_XML::Command > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
-    ///Map
+    ///Map of systems
+    std::map< std::string, VE_XML::VE_Model::SystemStrongPtr > m_systemMap;
+    ///Map of networks - backwards compatibility
     std::map< std::string, VE_XML::VE_Model::Network > m_networkMap;
     //Map of model ids for the given network
     std::map< std::string, std::vector< std::string > > m_networkModelMap;

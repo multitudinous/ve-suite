@@ -135,7 +135,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     std::vector< VE_XML::XMLObject* >::iterator objectIter;
     std::vector< VE_XML::XMLObject* > objectVector = 
         networkWriter.GetLoadedXMLObjects();
-    VE_XML::VE_Model::System* tempSystem = 0;
+    VE_XML::VE_Model::System * tempSystem = 0;
     
     // we are expecting that a network will be found
     if ( !objectVector.empty() )
@@ -144,6 +144,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
         if( tempSystem )
         {
+			
+			m_systemMap[tempSystem->GetID()] = tempSystem;
             m_networkMap[ "Network" ] = *(tempSystem->GetNetwork());
         }
         else
@@ -270,7 +272,19 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     {
         m_userMap[ "Network" ] = new VE_XML::User();
     }
-    
+
+	if(tempSystem)
+	{
+		//Parse out the remaining subsystems
+		int modelCount = tempSystem->GetNumberOfModels();
+		for ( size_t j = 0; j < modelCount; j++ )
+		{
+			if(tempSystem->GetModel(j)->GetSubSystem())
+			{
+				ParseSystem(tempSystem->GetModel(j)->GetSubSystem());
+			}
+		}
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
@@ -370,4 +384,32 @@ std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector(
     //std::vector< std::string > temp = m_networkModelMap[ dataNumber ];
     //std::cout << " size " << temp.size() << std::endl;
     return m_networkModelMap[ dataNumber ];
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::VE_Model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(
+	std::string id )
+{
+	return m_systemMap[id];
+}
+////////////////////////////////////////////////////////////////////////////////
+std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >XMLDataBufferEngine::
+    GetXMLSystemDataMap( std::string id )
+{
+	return m_systemMap;
+}
+////////////////////////////////////////////////////////////////////////////////
+void XMLDataBufferEngine::ParseSystem( VE_XML::VE_Model::SystemWeakPtr system )
+{
+	//add the system to the map
+	m_systemMap[system->GetID()] = system;
+
+	//Parse out the subsystems
+	int modelCount = system->GetNumberOfModels();
+	for ( size_t j = 0; j < modelCount; j++ )
+	{
+		if(system->GetModel(j)->GetSubSystem())
+		{
+			ParseSystem(system->GetModel(j)->GetSubSystem());
+		}
+	}
 }
