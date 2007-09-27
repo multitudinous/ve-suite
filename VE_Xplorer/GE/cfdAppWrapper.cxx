@@ -80,40 +80,41 @@ void cfdAppWrapper::init( void )
 void cfdAppWrapper::init( void* )
 #endif
 {
-   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-   _cfdApp = new cfdApp( argc, argv );  // Delcare an instance of my application
-   _cfdApp->SetWrapper( _vjObsWrapper );
+    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+    _cfdApp = new cfdApp( argc, argv );  // Delcare an instance of my application
+    _cfdApp->SetWrapper( _vjObsWrapper );
 #if __VJ_version >= 2003000
-   kernel->init(argc, argv);
+    kernel->init(argc, argv);
 #elif __VJ_version == 2000003
 #endif
-   for ( int i = 1; i < argc; i++ )          // Configure the kernel
-   {
-      if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
-      {
-          //skip the resolutions
-         i = i + 2;
-      }
-      else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
-      {
-          //Skip the master computer name
-          i = i + 1;
-      }
-      else
-      {
-         kernel->loadConfigFile( argv[i] );  
-      }
-   }
-   kernel->start();                          // Start the kernel thread
+    for ( int i = 1; i < argc; ++i )          // Configure the kernel
+    {
+        if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
+        {
+            //skip the resolutions
+            i = i + 2;
+        }
+        else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
+        {
+            //Skip the master computer name
+            i = i + 1;
+        }
+        else
+        {
+            kernel->loadConfigFile( argv[i] );  
+        }
+    }
+    
+    kernel->start();                          // Start the kernel thread
 
-   kernel->setApplication( _cfdApp );    // Give application to kernel
-   
-   kernel->waitForKernelStop();              // Block until kernel stops
+    kernel->setApplication( _cfdApp );    // Give application to kernel
 
-   delete this->_cfdApp;
-   this->_cfdApp = NULL;
+    kernel->waitForKernelStop();              // Block until kernel stops
 
-   delete this->_vjObsWrapper;
-	this->_vjObsWrapper = NULL;
-   jugglerIsRunning = false;
+    delete this->_cfdApp;
+    this->_cfdApp = NULL;
+
+    delete this->_vjObsWrapper;
+    this->_vjObsWrapper = NULL;
+    jugglerIsRunning = false;
 }

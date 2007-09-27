@@ -141,9 +141,11 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
 
    // create the render to texture stage.
    osg::ref_ptr<cfdCopyTo3DTextureStage> rtts = new cfdCopyTo3DTextureStage;
+#ifdef _PBUFFER
    if(!_pbuffer->isCreated()){
       _pbuffer->initializePBuffer(_w,_h);
    }
+#endif
    // set up lighting.
    // currently ignore lights in the scene graph itself..
    // will do later.
@@ -152,8 +154,9 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    // set up the background color and clear mask.
    rtts->setClearColor(osg::Vec4(0.0f,0.0,0.0f,1.0f));
    rtts->setClearMask(previous_stage->getClearMask());
+#ifdef _PBUFFER
    rtts->setPBuffer(_pbuffer);
-
+#endif
    // set up to charge the same RenderStageLighting is the parent previous stage.
    rtts->setPositionalStateContainer(previous_stage->getPositionalStateContainer());
 

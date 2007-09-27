@@ -63,9 +63,9 @@ namespace VE_TextureBased
          virtual bool isSameKindAs(const osg::Object* obj) const { return dynamic_cast<const cfdCopyTo3DTextureStage*>(obj)!=0L; }
          virtual const char* libraryName() const { return ""; }
          virtual const char* className() const { return "cfdCopyTo3DTextureStage"; }
-
+#ifdef _PBUFFER
          inline void setPBuffer(cfdPBufferManager* pbuffer) { _pbuffer = pbuffer; }
-  
+#endif  
          void SetWhichSliceToUpdate(unsigned int whichSlice);
 
          //whichSlice corresponds to offset in the 3d texture
@@ -94,8 +94,9 @@ namespace VE_TextureBased
          osg::ref_ptr<osg::Texture3D> _texture;
          osg::ref_ptr<osg::State> _localState;
          osg::ref_ptr<osg::StateSet> _shader;
+#ifdef _PBUFFER
          cfdPBufferManager* _pbuffer;
-
+#endif
          unsigned int _whichSlice;
          unsigned int _whichDir;
          int _width;

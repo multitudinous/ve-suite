@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options')
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options GetPlatform')
 
 sources = Split("""
    cfd3DTextureCullCallback.cxx
@@ -77,11 +77,16 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = 'VE_UtilLib')
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
-lib_env.Append(LIBS = ['GLU','GL'])
-lib_env.ParseConfig('flagpoll vrjuggler --get-extra_libs --libs --cflags --atleast-version=%s'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll gmtl --libs --cflags Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 osg_options.apply( lib_env )
 vtk_options.apply( lib_env )
+
+if GetPlatform() != 'darwin':
+    lib_env.ParseConfig('flagpoll vrjuggler --cflags --libs --atleast-version=%s --get-extra_libs'%lib_env['VRJugglerVersion'])
+    lib_env.Append(LIBS = ['GLU','GL'])
+else:
+    lib_env.ParseConfig('flagpoll vrjuggler-opengl vrjuggler --cflags --libs --atleast-version=%s --get-vrj_ogl_libs'%lib_env['VRJugglerVersion'])     
+
 if baseEnv['StaticOnly'] == "no":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_TextureBasedLib%s' %(execOsgPatTag),
                                                         lib_env,

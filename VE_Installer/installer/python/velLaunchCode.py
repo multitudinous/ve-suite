@@ -263,7 +263,7 @@ class Launch:
                               "s", "reset", "s", "off"])
         except OSError:
             print "OS can not find \"xset\" command on your environment."
-            sys.exit(2)
+            #sys.exit(2)
         ##Name Server section
         if self.settings["NameServer"]:
             sleep(2)

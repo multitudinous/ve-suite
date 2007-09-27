@@ -39,6 +39,7 @@
 /*!\class VE_TextureBased::cfdPBufferManager
 *
 */
+#ifdef _PBUFFER
 #ifdef _OSG
 
 #include <osg/GL>
@@ -135,5 +136,6 @@ namespace VE_TextureBased
       int _w;
    };
 }
+#endif
 #endif
 #endif //_BIV_PBUFFER_MANAGER_H_

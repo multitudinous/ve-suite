@@ -84,7 +84,9 @@ const float SAMPLE_TIME = 1.0f;
 
       namespace VE_TextureBased
       {
+#ifdef _PBUFFER
          class cfdPBufferManager;
+#endif
          class cfdTextureBasedVizHandler;
       }
 #endif //_PERFORMER _OSG
@@ -139,9 +141,11 @@ public:
    virtual void contextInit( void );
    ///close a context
    virtual void contextClose( void );
+#ifdef _PBUFFER
    ///Get the pbuffer
    ///should remove this since pbuffer is a singleton
    VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
+#endif
    ///Override default vrj implementation
    //virtual osgUtil::SceneView::Options getSceneViewDefaults();
 
@@ -172,8 +176,10 @@ public:
 #ifdef _OSG
    bool svUpdate; ///< update sceneview
    VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;///< should be removed since this is a singleton
+#ifdef _PBUFFER
    //biv --may convert this to a singleton later
    VE_TextureBased::cfdPBufferManager* _pbuffer;///< should be removed since this is a singleton
+#endif
    osg::ref_ptr< osg::FrameStamp > _frameStamp;///<The framestamp to control animations
    osg::Timer _timer;///<The timer for framestamp
    osg::Timer_t _start_tick;///< The timer for framestamp

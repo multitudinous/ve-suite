@@ -43,13 +43,13 @@ using namespace VE_TextureBased;
 cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
 :osgUtil::RenderStage()
 {
-   _pbuffer = 0L;
    _texture = 0;
   
    _localState = new osg::State;
 
+#ifdef _PBUFFER
    _pbuffer = 0;
-
+#endif
    _width = 0;
    _height = 0;
    _nSlices = 0;
@@ -96,6 +96,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
 {
    if (_stageDrawnThisFrame) return;
 
+#ifdef _PBUFFER
    if(_pbuffer->isCreated()){
       _texture->getTextureSize(_width,_height,_nSlices);
       _pbuffer->activate();
@@ -144,5 +145,6 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _stageDrawnThisFrame =true;
       _pbuffer->deactivate();
    }
+#endif
 }
 #endif

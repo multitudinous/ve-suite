@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
+#ifdef _PBUFFER
+
 #include <cmath>
 #include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
 #ifdef WIN32
@@ -390,5 +392,5 @@ void cfdPBufferManager::deactivate()
 }
 #endif
 #endif
-
+#endif
    

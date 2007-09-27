@@ -145,7 +145,9 @@ isCluster( false )
    light_model_0->setLocalViewer(true);
    
    _tbvHandler = 0;
+#ifdef _PBUFFER
    _pbuffer = 0;
+#endif
    _frameNumber = 0;
 #endif
    this->argc = argc;
@@ -234,6 +236,7 @@ void cfdApp::contextInit()
 
     (*sceneViewer) = new_sv;
 
+#ifdef _PBUFFER
     if ( !_pbuffer )
     {
         _pbuffer = new cfdPBufferManager();
@@ -241,21 +244,26 @@ void cfdApp::contextInit()
     } 
 
     _tbvHandler->SetPBuffer(_pbuffer);
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::contextClose()
 {
+#ifdef _PBUFFER
    if(_pbuffer)
    {
       delete _pbuffer;
       _pbuffer = 0;
    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef _PBUFFER
 cfdPBufferManager* cfdApp::GetPBuffer()
 {
     return _pbuffer;
 }
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 /*osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
 {
