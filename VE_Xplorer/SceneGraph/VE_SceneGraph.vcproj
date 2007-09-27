@@ -263,14 +263,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SoundHandler.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\SoundNode.cxx"
-				>
-			</File>
-			<File
 				RelativePath=".\Switch.cxx"
 				>
 			</File>
@@ -396,14 +388,6 @@
 			</File>
 			<File
 				RelativePath=".\SelectTechnique.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SoundHandler.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SoundNode.h"
 				>
 			</File>
 			<File
