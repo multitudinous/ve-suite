@@ -64,7 +64,7 @@ private:
    /// Required so that vpr::Singleton can instantiate this class.
    /// friend class vpr::Singleton< UserPreferenceDataBuffer >;
    XMLDataBufferEngine( void );
-   ~XMLDataBufferEngine(){ ; } //Never gets called, don't implement until vrj2.2
+   ~XMLDataBufferEngine(){ ; } //Never called, don't implement until vrj2.2
    vprSingletonHeader( XMLDataBufferEngine );
 public:
     ///Desctructor call until vrj 2.2 is released
@@ -91,7 +91,8 @@ public:
     ///New 
     void NewVESData( bool promptClearXplorer );
     ///Get data
-    VE_XML::VE_Model::Network GetXMLNetworkDataObject( std::string dataNumber );
+    VE_XML::VE_Model::Network
+		GetXMLNetworkDataObject( std::string dataNumber );
 	///Get the network
 	std::map< std::string, VE_XML::VE_Model::Model > GetXMLModels();
     ///Get data
@@ -99,8 +100,8 @@ public:
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
 	///Get the map of all systems
-	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr > GetXMLSystemDataMap(
-		std::string id );
+	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >
+		GetXMLSystemDataMap();
 	///Get a system
 	VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
     ///Get data

@@ -393,7 +393,7 @@ VE_XML::VE_Model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >XMLDataBufferEngine::
-    GetXMLSystemDataMap( std::string id )
+    GetXMLSystemDataMap( )
 {
 	return m_systemMap;
 }
