@@ -254,7 +254,9 @@ LEGAL OPTIONS FOR VELAUNCHER:
 
 -g <config>, --config=<config>: Immediately runs VE-Suite using the named
                                 VE-Launcher configuration.
-
+                                (Use "help" to list your configurations,
+                                example: "-g help" or "--config=help")
+                                
 -w <dir>, --dir=<dir>: Set the Working directory to <dir>.
 
 -t <name>, --taomachine=<name>: Set TAOMACHINE to <name>.

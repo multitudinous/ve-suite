@@ -50,7 +50,8 @@ class CommandLine:
 
     Returns True if auto-launched,
     False if no launch, run GUI instead."""
-    def __init__(self, opts, arguments, previousState = None):
+    def __init__(self, opts, arguments, config, previousState = None):
+        self.myConfig = config
         if previousState:
             self.state = previousState
         else:
@@ -66,12 +67,43 @@ class CommandLine:
         ##Set Configuration & Dev mode.
         for opt, arg in opts:
             ##print opt, arg ##TESTER 
-            if opt in ('-g', "--config="):
+            if opt in ('-g', "--config"):
                 try:
                     LoadConfig(arg, self.state)
                     self.state.ChangeMode(MODE_LIST[self.state.GetSurface("Mode")])
+                    self.autoLaunch = True
                 except NonexistantConfigError, error:
-                    print "ERROR: Config '%s' doesn't exist. Aborting launch." % error.value
+                    if (arg == 'help'):
+                        print "**************************"
+                        print "*** Configuration List ***"
+                        print "**************************"
+                    else:
+                        print "ERROR: Config '%s' doesn't exist. Aborting launch." % error.value
+                        print "---------------------------------------------------"
+                        print "|  Here is the list of your saved configurations  |"
+                        print "---------------------------------------------------"
+                        
+                    choices = []
+                    config.SetPath("..")
+                    configEntry = config.GetFirstGroup()
+                    while (configEntry[0]):
+                        if configEntry[1] != DEFAULT_CONFIG:
+                            choices.append(configEntry[1])
+                        configEntry = config.GetNextGroup(configEntry[2])
+                    config.SetPath(DEFAULT_CONFIG)
+                    if len(choices) <= 0:
+                        print "You don't have any saved configurations."
+                    else:
+                        tempCount = 0;
+                        while (not (len(choices) == tempCount)):
+                               print " ---> %s " % choices[tempCount]
+                               tempCount += 1;
+
+                    if (arg == 'help'):
+                        print "**************************"
+                    else:
+                        print "---------------------------------------------------"
+                        
                     sys.exit(2)
             elif opt in ('-d', "--dev"):
                 devMode = True
@@ -100,7 +132,7 @@ class CommandLine:
                 self.state.Cover("NameServer", True, layer = COMMAND_LINE_LAYER)
             elif opt in ('-x', "--xplorer"):
                 self.state.Cover("Xplorer", True, layer = COMMAND_LINE_LAYER)
-            elif opt in ('-l', "--cluster="):
+            elif opt in ('-l', "--cluster"):
                 self.state.Cover("XplorerType", self.xplorerType(arg), layer = COMMAND_LINE_LAYER)
             elif opt in ('-s', "--shell"):
                 self.state.Cover("Shell", True, layer = COMMAND_LINE_LAYER)
@@ -108,11 +140,11 @@ class CommandLine:
 ##                self.state.Cover("DesktopMode", True, layer = COMMAND_LINE_LAYER)
             elif opt in ('-j', "--jconf="):
                 self.state.Cover("JconfDict", {"Default": arg}, layer = COMMAND_LINE_LAYER)
-            elif opt in ('-t', "--taomachine="):
+            elif opt in ('-t', "--taomachine"):
                 self.state.Cover("TaoMachine", arg, layer = COMMAND_LINE_LAYER)
-            elif opt in ('-p', "--port="):
+            elif opt in ('-p', "--port"):
                 self.state.Cover("TaoPort", arg, layer = COMMAND_LINE_LAYER)
-            elif opt in ('-w', "--dir="):
+            elif opt in ('-w', "--dir"):
                 self.state.Cover("Directory", arg, layer = COMMAND_LINE_LAYER)
 ##            elif opt in ('-m', "--master="):
 ##                self.state.Cover("ClusterMaster", arg, layer = COMMAND_LINE_LAYER)
@@ -145,21 +177,33 @@ class CommandLine:
             ##          " Wait until next version."
 
         ##Launch
-        launchInstance = Launch(self.state.GetLaunchSurface())
         ##Show NameServer kill window if NameServer was started.
         if self.state.GetSurface("NameServer"):
             app = wx.PySimpleApp()
-            if (self.state.GetSurface("AutoShutDown") and not windows):
-                window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
-                                            conduct_Pid = launchInstance.GetConductorPid())
-            elif (self.state.GetSurface("AutoShutDown") and windows):
-                window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
-                                             conduct_Pid = launchInstance.GetConductorPid())
+            launchInstance = Launch(self.state.GetLaunchSurface())
+            if (not self.state.GetSurface("Conductor")):
+                window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
+                                          settings = self.state.GetLaunchSurface())
             else:
-                window = ServerKillWindow(pids = launchInstance.GetNameserverPids())
+                if (self.state.GetSurface("AutoShutDown") and not windows):
+                    window = ServerAutoKillUnix(pids = launchInstance.GetNameserverPids(), 
+                                                conduct_Pid = launchInstance.GetConductorPid(),
+                                                settings = self.state.GetLaunchSurface())
+
+                elif (self.state.GetSurface("AutoShutDown") and windows):
+                    window = ServerAutoKillWin32(pids = launchInstance.GetNameserverPids(), 
+                                                 conduct_Pid = launchInstance.GetConductorPid())
+                else:
+                    window = ServerKillWindow(pids = launchInstance.GetNameserverPids(),
+                                              settings = self.state.GetLaunchSurface())
+            app.MainLoop()
+        else:
+            app = wx.PySimpleApp()
+            launchInstance = Launch(self.state.GetLaunchSurface())
             app.MainLoop()
         ##Launch the shell here, if needed.
         if self.state.GetSurface("Shell") == True:
+            launchInstance = Launch(self.state.GetLaunchSurface())
             globalPath = launchInstance.GetPathEnv()
             velShell.Start(self.state.GetSurface("ShellScript"), globalPath)
 
