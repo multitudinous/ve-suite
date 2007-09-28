@@ -98,6 +98,7 @@ typedef progress_streambuf< char > progbuf;
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Node>
+#include <osg/PositionAttitudeTransform>
 #include <osg/ref_ptr>
 
 namespace osg 
@@ -164,10 +165,17 @@ public:
     std::string ComputeIntermediateFileNameAndPath( 
         const std::string& srcFile ) const;
 
+    ///Process a ven file
+    ///\param directory Directory with txt patch files
+    ///\return The node for the surface
+    osg::Node* parseOCCNURBSFile( std::string directory );
+
 private:
 #ifdef _OSG
     ///Node representing the loaded in geometry file
     osg::ref_ptr< osg::Node > m_cadNode;
+    ///group node for ven
+    osg::ref_ptr< osg::PositionAttitudeTransform > m_venNode;
 #elif _OPENSG
 #endif
     ///The current state of two sided lighting for the node

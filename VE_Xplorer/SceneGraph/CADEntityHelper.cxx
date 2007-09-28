@@ -37,6 +37,15 @@
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
+#include "VE_Xplorer/Utilities/fileIO.h"
+
+#include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
+#include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NCurve.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
+#include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
+#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
+
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Fog>
@@ -257,6 +266,12 @@ void CADEntityHelper::LoadFile( std::string filename,
                     << filename << "'" << std::endl;
             }
         }
+        else if( osgDB::getLowerCaseFileExtension(filename) == "ven" )
+        {
+            ///Get directory to look for txt files
+            ///Load in txt files
+            ///get osg node
+        }
         else
         {
  			boost::filesystem::path fullPathFilename =
@@ -414,3 +429,45 @@ std::string CADEntityHelper::
 	objTest.clear();
 	return objTest;
 }
+////////////////////////////////////////////////////////////////////////////////
+osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
+{
+    std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
+    //std::string nurbsfile(argv[1]);
+    std::vector< std::string > patchFiles = 
+        VE_Util::fileIO::GetFilesInDirectory( directory,".txt");
+    size_t nPatches = patchFiles.size();
+    NURBS::Utilities::OCCNURBSFileReader patchReader;
+    
+    for( size_t i = 0; i < nPatches;i++)
+    {
+        NURBS::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
+        if(surface)
+        {
+            surface->SetInterpolationGridSize(10,"U");
+            surface->SetInterpolationGridSize(20,"V");
+            surface->Interpolate();
+            
+            osg::ref_ptr<NURBS::NURBSNode> renderablePatch = 
+                new NURBS::NURBSNode(surface);
+            nurbsPatches.push_back(renderablePatch.get());
+        }
+        else
+        {
+            std::cout<<"Could not open file: "<<patchFiles.at(i)<<std::endl;
+        }
+    }
+    
+    if(nurbsPatches.size())
+    {
+        m_venNode = 
+            new osg::PositionAttitudeTransform();
+        for(size_t i = 0; i < nurbsPatches.size(); i++)
+        {
+            m_venNode->addChild(nurbsPatches.at(i).get());
+        }
+        return m_venNode.get();
+    }
+    return 0;
+}
+////////////////////////////////////////////////////////////////////////////////

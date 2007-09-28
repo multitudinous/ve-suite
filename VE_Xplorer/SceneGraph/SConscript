@@ -21,8 +21,10 @@ else:
     lib_env.ParseConfig('flagpoll vrjuggler-opengl --atleast-version=%s --get-vrj_ogl_libs'%lib_env['VRJugglerVersion'])     
 
 lib_env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
-lib_env.Append(LIBS = ['VE_XML','osgOQ'])
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML'),pj('#',buildDir,'external','osgOQ')])
+lib_env.Append(LIBS = ['VE_XML','osgOQ','VE_UtilLib'])
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')
+                         ,pj('#',buildDir,'external','osgOQ')
+                         ,pj('#',buildDir,'VE_Xplorer','Utilities')])
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
