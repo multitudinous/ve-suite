@@ -82,6 +82,7 @@ else:
 
 ## setup the uuid for the build directory
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
+buildUUID = buildUUID.replace('/', '-')
 
 if ARGUMENTS.has_key("build_dir"):
    buildDir = ARGUMENTS["build_dir"]
@@ -369,6 +370,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
+
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
    baseEnv.BuildDir(buildDir, '.', duplicate = 0)
