@@ -76,7 +76,7 @@ public:
               int minSliderValue, int maxSliderValue,
               const wxPoint& point = wxDefaultPosition,
               const wxSize& size = wxDefaultSize, long style = wxSL_HORIZONTAL,
-              const wxString& name = "minMaxDualSlider" );
+              const wxString& name = wxT("minMaxDualSlider") );
    ///Destructor
    virtual ~DualSlider();
 
