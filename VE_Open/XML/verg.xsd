@@ -79,6 +79,22 @@
          </xs:extension>
       </xs:complexContent>
    </xs:complexType>
+   <xs:complexType name="veSound">
+      <xs:complexContent>
+         <xs:extension base="veXMLObject">
+            <xs:sequence>
+               <xs:element type="xs:double" name="gain"/>
+               <xs:element name="soundFile" type="xs:string"/>
+               <xs:element name="referenceDistance" type="xs:double"/>
+               <xs:element type="xs:boolean" name="active"/>
+               <xs:element name="loop" type="xs:boolean"/>
+               <xs:element name="rollOffFactor" type="xs:double"/>
+               <xs:element type="veTransform" name="transform"/> 
+            </xs:sequence>
+            <xs:attribute name="soundName" type="xs:string"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
    <xs:complexType name="veParameterBlock">
       <xs:complexContent>
          <xs:extension base="veXMLObject">
