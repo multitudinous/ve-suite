@@ -269,14 +269,31 @@ void CADEntityHelper::LoadFile( std::string filename,
         else if( osgDB::getLowerCaseFileExtension(filename) == "ven" )
         {
             ///Get directory to look for txt files
+            std::string venDirectory;
+            std::ifstream inputDirectory( filename.c_str() );
+            inputDirectory >> venDirectory;
             ///Load in txt files
+ 			/*boost::filesystem::path fullPathFilename =
+                boost::filesystem::system_complete(
+                boost::filesystem::path( filename.c_str(),
+                boost::filesystem::native) );
+            fullPathFilename.*/
+ 			boost::filesystem::path fullPathFilename =
+            boost::filesystem::system_complete(
+                    boost::filesystem::path( venDirectory.c_str(),
+                    boost::filesystem::native) );
+            //std::cout << venDirectory << " " 
+            //<< fullPathFilename.native_file_string() << std::endl;
+            tempCADNode = 
+                parseOCCNURBSFile( fullPathFilename.native_file_string() );
             ///get osg node
         }
         else
         {
  			boost::filesystem::path fullPathFilename =
-			boost::filesystem::system_complete(boost::filesystem::path(filename.c_str(),
-											   boost::filesystem::native));
+			boost::filesystem::system_complete(
+                boost::filesystem::path(filename.c_str(),
+                boost::filesystem::native));
 			std::string fullPath;
 			if( boost::filesystem::exists( fullPathFilename ) )
 			{
