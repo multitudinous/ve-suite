@@ -318,8 +318,8 @@ class Launch:
                 sleep(self.settings["SlaveWait"])
             ##Delete the cluster file afterwards.
             ##print clusterFilePath
-            if not self.settings["Debug"]:
-                os.remove(clusterFilePath)
+            ##if not self.settings["Debug"]:
+            ##    os.remove(clusterFilePath)
         ##Xplorer section
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
