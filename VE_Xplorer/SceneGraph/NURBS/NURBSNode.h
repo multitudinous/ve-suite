@@ -84,10 +84,10 @@ public:
    ///\param yPosition The y mouse position
    void SetMousePosition(float xPosition,float yPosition);
 
-   ///???
-   ///\param dx ???
-   ///\param dy ???
-   ///\param dz ???
+   ///Move a control point
+   ///\param dx Change in x position of the control point
+   ///\param dy Change in y position of the control point
+   ///\param dz Change in z position of the control point
    void MoveSelectedControlPoint(float dx,
                                  float dy,
                                  float dz);
@@ -102,6 +102,9 @@ public:
 
    ///Get selection status
    bool IsSelecting();
+
+   ///Determine if a control point is currently selected
+   bool IsControlPointSelected();
 
    ///compute the bounding box
    virtual osg::BoundingSphere computeBound()const;

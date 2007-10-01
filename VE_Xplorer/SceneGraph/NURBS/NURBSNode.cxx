@@ -54,7 +54,7 @@ class VE_NURBS_EXPORTS NURBSControlMesh: public osg::Drawable
 {
 public:
    ///Constructor
-   NURBSControlMesh(){}
+   NURBSControlMesh(){m_hasSelectedControlPoint = false;}
 
    NURBSControlMesh(std::vector<NURBS::ControlPoint>* controlPoints, 
                     unsigned int numU,
@@ -70,6 +70,7 @@ public:
       _modelViewMatrix = 0;
       _projectionMatrix = 0;
       _selectedControlPointIndex = -1;
+	  m_hasSelectedControlPoint = false;
    }
 
    ///Copy constructor
@@ -88,6 +89,7 @@ public:
       _inverseProjectionMatrix = controlMesh._inverseProjectionMatrix;
       _projectionMatrix = controlMesh._projectionMatrix;
       _selectedControlPointIndex = controlMesh._selectedControlPointIndex;
+	  m_hasSelectedControlPoint = controlMesh.m_hasSelectedControlPoint;
    }
 
    META_Object(VE_NURBS,NURBS::NURBSControlMesh)
@@ -128,6 +130,8 @@ public:
                                       float dy,
                                       float dz);
   
+   ///Get control point selection status
+   bool IsControlPointSelected();
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
@@ -164,6 +168,7 @@ protected:
    void _drawUVPoints()const;
 
    bool _selection;///<Flag for selecting ctrl points;
+   mutable bool m_hasSelectedControlPoint;///<True if a control point is selected
 
    bool _isSurface;///<Flag for determining NURBS type.
    mutable double* _projectionMatrix;///<The current projection matrix
@@ -312,14 +317,15 @@ void NURBSControlMesh::Selection()const
         glLoadMatrix(_modelViewMatrix);
         _drawUVPoints();
 
-     //pop the modelview matrix
-     glPopMatrix();
+    //pop the modelview matrix
+    glPopMatrix();
        
-     //returning to normal rendering mode
-     hits = glRenderMode(GL_RENDER);							
+    //returning to normal rendering mode
+    hits = glRenderMode(GL_RENDER);							
      
    if (hits != 0)												
    {
+	   m_hasSelectedControlPoint = true;
       _selectedControlPointIndex = selectionBuffer[3];									
       int depth = selectionBuffer[1];									
 
@@ -332,6 +338,10 @@ void NURBSControlMesh::Selection()const
             depth = selectionBuffer[loop*4+1];						
          }       
       }
+   }
+   else
+   {
+	   m_hasSelectedControlPoint = false;
    }
    //restoring the original projection matrix
    glMatrixMode(GL_PROJECTION);
@@ -357,6 +367,11 @@ void NURBSControlMesh::Selection()const
 void NURBSControlMesh::ResetSelection()
 {
    _selectedControlPointIndex = -1;
+}
+////////////////////////////////////////////////
+bool NURBSControlMesh::IsControlPointSelected( )
+{
+	return m_hasSelectedControlPoint;
 }
 //////////////////////////////////////////////////////////////
 bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
@@ -825,6 +840,11 @@ void NURBSNode::SetMousePosition(float xPosition,
    {
       _controlMeshDrawable->SetMousePosition(xPosition,yPosition);
    }
+}
+////////////////////////////////////////
+bool NURBSNode::IsControlPointSelected()
+{
+	return _controlMeshDrawable->IsControlPointSelected();
 }
 /////////////////////////////
 bool NURBSNode::IsSelecting()
