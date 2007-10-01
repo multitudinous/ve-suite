@@ -84,9 +84,11 @@ class ServerAutoKillUnix(wx.Frame):
         ##If cluster mode, delete the cluster script file at this point
         if self.settings["Cluster"]:
             if not self.settings["Debug"]:
-                os.remove(CLUSTER_FILE_PATH)                        
-
-        	     
+                if os.path.exists(CLUSTER_FILE_PATH):
+                    os.remove(CLUSTER_FILE_PATH)
+                else:
+                    print "%s not found" % CLUSTER_FILE_PATH
+                                    
     def OnClose(self, event = None):
         #Closes Server Shutdown Window
         self.Hide()
