@@ -85,6 +85,9 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 #include "VE_Open/XML/Model/ModelCreator.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/ModelPtr.h"
+#include "VE_Open/XML/Model/Tag.h"
+#include "VE_Open/XML/User.h"
 #include "VE_Open/XML/CommandWeakPtr.h"
 
 // --- wxWidgets Includes --- //

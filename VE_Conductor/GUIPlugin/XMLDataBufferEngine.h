@@ -38,7 +38,6 @@ XMLDataBufferEngine API
 /*!\class VE_Conductor::XMLDataBufferEngine
 * 
 */
-#include "VE_Open/XML/Command.h"
 
 //do this to remove compile warnings from linux platforms
 #undef _REENTRANT
@@ -48,12 +47,12 @@ XMLDataBufferEngine API
 #include <map>
 #include <string>
 
-#include <VE_Open/XML/Model/Model.h>
-#include <VE_Open/XML/Model/Network.h>
-#include <VE_Open/XML/Model/Tag.h>
-#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/Model/ModelPtr.h>
+#include <VE_Open/XML/Model/NetworkPtr.h>
+#include <VE_Open/XML/Model/SystemPtr.h>
+#include <VE_Open/XML/Model/TagPtr.h>
+#include <VE_Open/XML/CommandPtr.h>
 #include <VE_Open/XML/UserPtr.h>
-#include "VE_Open/XML/User.h"
 
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_Conductor
@@ -72,16 +71,16 @@ public:
     ///Get Command with key
     ///The key MUST be the command name
     ///\param commandKey command desired by the user
-    VE_XML::Command GetCommand( std::string commandKey );
+    VE_XML::CommandWeakPtr GetCommand( std::string commandKey );
     ///set Command with key
     ///\param commandKey key of the command desired
     ///\param command command to be stored
-    void SetCommand( std::string commandKey, VE_XML::Command command );
+    void SetCommand( std::string commandKey, VE_XML::CommandWeakPtr command );
     ///Get all the commands
-    std::map< std::string, VE_XML::Command > GetCommandMap( void );
+    std::map< std::string, VE_XML::CommandWeakPtr > GetCommandMap( void );
     ///Set all the commands
     ///\param tempMap the the map of commands when initialized by the user
-    void SetCommandMap( std::map< std::string, VE_XML::Command > tempMap );
+    void SetCommandMap( std::map< std::string, VE_XML::CommandWeakPtr > tempMap );
     ///Set data from CORBA receiver thread
     void SetXplorerData(){ ; }
     ///Load data 
@@ -91,12 +90,12 @@ public:
     ///New 
     void NewVESData( bool promptClearXplorer );
     ///Get data
-    VE_XML::VE_Model::Network
+    VE_XML::VE_Model::NetworkWeakPtr
 		GetXMLNetworkDataObject( std::string dataNumber );
 	///Get the network
-	std::map< std::string, VE_XML::VE_Model::Model > GetXMLModels();
+	std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > GetXMLModels();
     ///Get data
-    VE_XML::VE_Model::Model GetXMLModelDataObject( std::string dataNumber );
+    VE_XML::VE_Model::ModelWeakPtr GetXMLModelDataObject( std::string dataNumber );
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
 	///Get the map of all systems
@@ -105,27 +104,27 @@ public:
 	///Get a system
 	VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
     ///Get data
-    VE_XML::User GetXMLUserDataObject( std::string dataNumber );
+    VE_XML::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
 	///Parse system for subsystems
 	void ParseSystem( VE_XML::VE_Model::SystemWeakPtr system );
         
 private:
     ///Map to store the command name and command for easy lookup by the user
-    std::map< std::string, VE_XML::Command > m_commandMap;
+    std::map< std::string, VE_XML::CommandStrongPtr > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
     ///Map of systems
     std::map< std::string, VE_XML::VE_Model::SystemStrongPtr > m_systemMap;
     ///Map of networks - backwards compatibility
-    std::map< std::string, VE_XML::VE_Model::Network > m_networkMap;
+    std::map< std::string, VE_XML::VE_Model::NetworkStrongPtr > m_networkMap;
     //Map of model ids for the given network
     std::map< std::string, std::vector< std::string > > m_networkModelMap;
     ///Map
-    std::map< std::string, VE_XML::VE_Model::Model > m_modelMap;
+    std::map< std::string, VE_XML::VE_Model::ModelStrongPtr > m_modelMap;
     ///Map
-    std::map< std::string, VE_XML::VE_Model::Tag > m_tagMap;
+    std::map< std::string, VE_XML::VE_Model::TagStrongPtr > m_tagMap;
     ///Map
-    std::map< std::string, VE_XML::UserPtr > m_userMap;
+    std::map< std::string, VE_XML::UserStrongPtr > m_userMap;
 };
 }
 #endif //XML_DATA_BUFFER_ENGINE_H

@@ -39,7 +39,7 @@ HierarchyTree API
 * 
 */
 #include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelWeakPtr.h"
+#include "VE_Open/XML/Model/ModelPtr.h"
 #include <vector>
 #include <wx/image.h>
 #include <wx/imaglist.h>
@@ -66,7 +66,7 @@ public:
 
     ///Populate the tree
     ///\param tree The tree to populate
-    void PopulateTree(std::map< std::string, VE_XML::VE_Model::Model > tree);
+    void PopulateTree(std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > tree);
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList(int size=16);

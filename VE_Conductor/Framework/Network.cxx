@@ -47,10 +47,12 @@
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/Point.h"
 #include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/ModelPtr.h"
 #include "VE_Open/XML/Model/System.h"
-#include "VE_Open/XML/Model/SystemStrongPtr.h"
+#include "VE_Open/XML/Model/SystemPtr.h"
 #include "VE_Open/XML/Model/Network.h"
-#include "VE_Open/XML/Model/NetworkWeakPtr.h"
+#include "VE_Open/XML/Model/NetworkPtr.h"
+#include "VE_Open/XML/Model/Tag.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -2092,7 +2094,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
    _fileProgress->Update( 25, _("start loading") );
 
    // do this for network
-   VE_XML::VE_Model::Network veNetwork = 
+   VE_XML::VE_Model::NetworkWeakPtr veNetwork = 
        VE_Conductor::XMLDataBufferEngine::instance()->
        GetXMLNetworkDataObject( "Network" );
    
@@ -2113,15 +2115,15 @@ void Network::CreateNetwork( std::string xmlNetwork )
 #ifndef WIN32
    _fileProgress->Update( 30, _("start loading") );
    long int tempScaleInfo;
-   veNetwork.GetDataValuePair( 0 )->GetData( (userScale.first)  );
-   veNetwork.GetDataValuePair( 1 )->GetData( (userScale.second) );
-   veNetwork.GetDataValuePair( 2 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
+   veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
+   veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
    numPix.first = tempScaleInfo;
-   veNetwork.GetDataValuePair( 3 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
    numPix.second = tempScaleInfo;
-   veNetwork.GetDataValuePair( 4 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
    numUnit.first = tempScaleInfo;
-   veNetwork.GetDataValuePair( 5 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
 #endif
    _fileProgress->Update( 35, _("start loading") );
@@ -2129,25 +2131,25 @@ void Network::CreateNetwork( std::string xmlNetwork )
 	size_t maxX = 7000;
 	size_t maxY = 7000;
     //Setup the links
-    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
         links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
         links.at( i ).SetDCScale( &userScale );
         
-        links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
-        links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
+        links.at( i ).SetFromPort( *(veNetwork->GetLink( i )->GetFromPort()) );
+        links.at( i ).SetToPort( *(veNetwork->GetLink( i )->GetToPort()) );
 
         long moduleID;
-        veNetwork.GetLink( i )->GetFromModule()->GetData( moduleID );
+        veNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
         links.at( i ).SetFromModule( moduleID );
-        veNetwork.GetLink( i )->GetToModule()->GetData( moduleID );
+        veNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
         links.at( i ).SetToModule( moduleID );
 
-        size_t numberOfPoints = veNetwork.GetLink( i )->GetNumberOfLinkPoints();
+        size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
         for( size_t j = 0; j < numberOfPoints; ++j )
         {
             std::pair< unsigned int, unsigned int > rawPoint = 
-                veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
+                veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
             wxPoint point;
             point.x = rawPoint.first;
             point.y = rawPoint.second;
@@ -2166,8 +2168,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
         links.at( i ).CalcLinkPoly();
 
         links.at(i).SetName( wxString( 
-            veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
-        links.at(i).SetUUID( veNetwork.GetLink( i )->GetID() );
+            veNetwork->GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
+        links.at(i).SetUUID( veNetwork->GetLink( i )->GetID() );
 
         //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
         //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
@@ -2178,21 +2180,21 @@ void Network::CreateNetwork( std::string xmlNetwork )
         //serviceList->GetMessageLog()->SetMessage( "_\n" );
     }
 
-    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
         PushEventHandler( &links.at( i ) );
     }
 
     //Setup the tags
-    for( size_t i = 0; i < veNetwork.GetNumberOfTags(); ++i )
+    for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
     {
         tags.push_back( VE_Conductor::GUI_Utilities::Tag( this ) );
-        tags.at( i ).SetVETagPtr( veNetwork.GetTag( i ) );
+        tags.at( i ).SetVETagPtr( veNetwork->GetTag( i ) );
         // Create the polygon for tags
         tags.at( i ).CalcTagPoly();
     }
     
-    for( size_t i = 0; i < veNetwork.GetNumberOfTags(); ++i )
+    for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
     {
         PushEventHandler( &tags.at( i ) );
     }
@@ -2215,9 +2217,9 @@ void Network::CreateNetwork( std::string xmlNetwork )
     {
         _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
         ++i;
-        VE_XML::VE_Model::Model* model = new VE_XML::VE_Model::Model( 
+        VE_XML::VE_Model::ModelWeakPtr model =
             VE_Conductor::XMLDataBufferEngine::instance()->
-            GetXMLModelDataObject( *stringIter ) );
+            GetXMLModelDataObject( *stringIter );
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created
@@ -2251,7 +2253,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         modules[ num ].SetPlugin( tempPlugin );
         modules[ num ].GetPlugin()->SetID( num );
         modules[ num ].SetClassName( model->GetModelName() );
-        modules[ num ].GetPlugin()->SetVEModel( model );
+        modules[ num ].GetPlugin()->SetVEModel( new VE_XML::VE_Model::Model( *model ) );
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
         int polynum = modules[ num ].GetPlugin()->GetNumPoly();
@@ -2263,10 +2265,10 @@ void Network::CreateNetwork( std::string xmlNetwork )
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
 
-    VE_XML::User userInfo = VE_Conductor::XMLDataBufferEngine::instance()->
+    VE_XML::UserWeakPtr userInfo = VE_Conductor::XMLDataBufferEngine::instance()->
         GetXMLUserDataObject( "Network" );
     
-    if( !userInfo.GetUserStateInfo() )
+    if( !userInfo->GetUserStateInfo() )
     {
         ///Color vector
         std::vector<double> backgroundColor;

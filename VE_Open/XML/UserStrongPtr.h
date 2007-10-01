@@ -23,34 +23,33 @@
 * Boston, MA 02111-1307, USA.
 *
 * -----------------------------------------------------------------
-* Date modified: $Date$
-* Version:       $Rev$
+* Date modified: $Date: 2007-08-24 11:53:30 -0500 (Fri, 24 Aug 2007) $
+* Version:       $Rev: 8827 $
 * Author:        $Author$
 * Id:            $Id$
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef USER_PTR_H
-#define USER_PTR_H
+#ifndef VE_USER_STRONG_PTR_H
+#define VE_USER_STRONG_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <loki/StrongPtr.h>
 
 /**
- * \file
+* \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML:UserPtr.  To get the full 
- * declaration of VE_XML::UserPtr
+ * VE_XML::UserStrongPtr.  To get the full 
+ * declaration of VE_XML::UserStrongPtr
  * VE_Open/XML/User.h must be included, too.
  */
 
 namespace VE_XML
 {
-   class User;
-   /// Typedef for a SmartPtr type for the User.
-   typedef Loki::SmartPtrDef<User>::type UserPtr;
+    class User;
+    /// Typedef for a SmartPtr type for the User.
+    typedef Loki::StrongPtr< User, true, Loki::LockableTwoRefCounts,
+        Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong,
+        Loki::DeleteSingle > UserStrongPtr;
 }
-#include "VE_Open/XML/UserWeakPtr.h"
-#include "VE_Open/XML/UserStrongPtr.h"
-
 #endif

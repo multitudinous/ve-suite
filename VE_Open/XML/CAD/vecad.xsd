@@ -27,6 +27,7 @@
           <xs:element name="numChildren" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" default="0" />
         </xs:sequence>
         <xs:attribute name="associatedDataset" type="xs:string" />
+        <xs:attribute name="soundRef" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -36,6 +37,7 @@
         <xs:sequence>
           <xs:element name="fileName" type="xs:string" maxOccurs="1" />
         </xs:sequence>
+        <xs:attribute name="soundRef" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

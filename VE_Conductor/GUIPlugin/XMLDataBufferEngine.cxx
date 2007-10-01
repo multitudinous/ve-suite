@@ -40,6 +40,11 @@
 
 #include "VE_Open/XML/Model/Link.h"
 #include "VE_Open/XML/Model/System.h"
+#include "VE_Open/XML/Model/Model.h"
+#include "VE_Open/XML/Model/Network.h"
+#include "VE_Open/XML/Model/Tag.h"
+#include "VE_Open/XML/User.h"
+#include "VE_Open/XML/Command.h"
 
 #include <sstream>
 #include <algorithm>
@@ -51,8 +56,8 @@ vprSingletonImp( XMLDataBufferEngine );
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 { 
-   VE_XML::Command nullCommand;
-   nullCommand.SetCommandName( "NULL" );
+   VE_XML::CommandWeakPtr nullCommand = new VE_XML::Command();
+   nullCommand->SetCommandName( "NULL" );
    m_commandMap[ "NULL" ] = nullCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -66,10 +71,10 @@ void XMLDataBufferEngine::CleanUp( void )
     m_tagMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command XMLDataBufferEngine::GetCommand( std::string commandKey )
+VE_XML::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    std::map< std::string, VE_XML::Command >::iterator iter;
+    std::map< std::string, VE_XML::CommandStrongPtr >::iterator iter;
     iter = m_commandMap.find( commandKey );
     if ( iter == m_commandMap.end() )
     {
@@ -79,24 +84,28 @@ VE_XML::Command XMLDataBufferEngine::GetCommand( std::string commandKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::SetCommand( std::string commandKey, 
-                                      VE_XML::Command command )
+                                      VE_XML::CommandWeakPtr command )
 {
-    vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
+    //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     m_commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::Command > 
-XMLDataBufferEngine::GetCommandMap( void )
+std::map< std::string, VE_XML::CommandWeakPtr > 
+    XMLDataBufferEngine::GetCommandMap( void )
 {
-    vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    return m_commandMap;
+    //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
+    std::map< std::string, VE_XML::CommandWeakPtr > 
+        tempMap( m_commandMap.begin(), m_commandMap.end() );
+    return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::SetCommandMap( std::map< std::string, 
-                                         VE_XML::Command > tempMap )
+                                         VE_XML::CommandWeakPtr > tempMap )
 {
-    vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    m_commandMap = tempMap;
+    m_commandMap.clear();
+    //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
+    m_commandMap = std::map< std::string, VE_XML::CommandStrongPtr >( 
+        tempMap.begin(), tempMap.end() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
@@ -146,12 +155,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
 			
 			m_systemMap[tempSystem->GetID()] = tempSystem;
-            m_networkMap[ "Network" ] = *(tempSystem->GetNetwork());
+            m_networkMap[ "Network" ] = tempSystem->GetNetwork();
         }
         else
         {
             m_networkMap[ "Network" ] = 
-                *dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+                dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
             objectIter = objectVector.erase( objectVector.begin() );
         }
     }
@@ -167,11 +176,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     long moduleID = 0;
     std::ostringstream fromID;
     std::ostringstream toID;
-    for( size_t i = 0; i < m_networkMap[ "Network" ].GetNumberOfLinks(); ++i )
+    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = m_networkMap[ "Network" ];
+    for( size_t i = 0; i < tempNetwork->GetNumberOfLinks(); ++i )
     {
-        m_networkMap[ "Network" ].GetLink( i )->GetFromModule()->GetData( moduleID );
+        tempNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
         fromID << moduleID;
-        m_networkMap[ "Network" ].GetLink( i )->GetToModule()->GetData( moduleID );
+        tempNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
         toID << moduleID;
         
         stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), fromID.str() );
@@ -195,7 +205,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::ostringstream modelID;
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            VE_XML::VE_Model::Model* model = 
+            VE_XML::VE_Model::ModelWeakPtr model = 
             dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
             if( !model )
             {
@@ -205,7 +215,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             }
             objectIter = objectVector.erase( objectIter );
             modelID << model->GetModelID();
-            m_modelMap[ modelID.str() ] = *model;
+            m_modelMap[ modelID.str() ] = model;
             modelID.str("");
         }        
     }
@@ -223,7 +233,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 
             modelIter = modelVector.erase( modelIter );
             modelID << model->GetModelID();
-            m_modelMap[ modelID.str() ] = *model;
+            m_modelMap[ modelID.str() ] = model;
             stringIter = std::find( networkModelVector.begin(), 
                 networkModelVector.end(), modelID.str() );
             if( stringIter == networkModelVector.end() )
@@ -237,14 +247,14 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     //For the case where there are no links between models
     //Just grab all the models in the ves file
     //this is somewhat of a hack but the schema does not support anything else
-    if( m_networkMap[ "Network" ].GetNumberOfLinks() == 0 )
+    if( tempNetwork->GetNumberOfLinks() == 0 )
     {
         std::ostringstream modelID;
-        std::map< std::string, VE_XML::VE_Model::Model >::iterator modelIter;
-        for( modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
+        for( std::map< std::string, VE_XML::VE_Model::ModelStrongPtr >::iterator 
+            modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
              ++modelIter )
         {
-            modelID << modelIter->second.GetModelID();
+            modelID << modelIter->second->GetModelID();
             networkModelVector.push_back( modelID.str() );
             modelID.str("");
         }
@@ -253,7 +263,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     
     if( !objectVector.empty() )
     {
-        VE_XML::UserPtr userColor = 
+        VE_XML::UserWeakPtr userColor = 
             dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
         m_userMap[ "Network" ] = userColor;
         //Set user preferences
@@ -290,17 +300,17 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 {
     // Here we wshould loop over all of the following
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    //std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     //  Newtork
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-        &m_networkMap[ "Network" ], "veNetwork" ) );
+    //nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    //    &(*m_networkMap[ "Network" ]), "veNetwork" ) );
     //  Models
-    std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
-    for ( iter=m_modelMap.begin(); iter!=m_modelMap.end(); ++iter )
-    {
-        nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-            &iter->second, "veModel" ) );
-    }
+    //std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
+    //for ( iter=m_modelMap.begin(); iter!=m_modelMap.end(); ++iter )
+    //{
+    //    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    //        &iter->second, "veModel" ) );
+    //}
     //  tags
     /*for ( size_t i = 0; i < veTagVector.size(); ++i )
     {
@@ -338,13 +348,13 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
     }*/
    
     //Write out the veUser info for the local user
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    /*nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
         &(*m_userMap[ "User" ]), "User" ) );
     
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-    
+    */
     return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -356,26 +366,28 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     m_networkModelMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Network XMLDataBufferEngine::GetXMLNetworkDataObject(
+VE_XML::VE_Model::NetworkWeakPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
     std::string dataNumber )
 {
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::VE_Model::Model > XMLDataBufferEngine::GetXMLModels()
+std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > XMLDataBufferEngine::GetXMLModels()
 {
-	return m_modelMap;
+    std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > 
+        tempMap( m_modelMap.begin(), m_modelMap.end() );
+	return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Model XMLDataBufferEngine::GetXMLModelDataObject( 
+VE_XML::VE_Model::ModelWeakPtr XMLDataBufferEngine::GetXMLModelDataObject( 
     std::string dataNumber )
 {
     return m_modelMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::User XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
+VE_XML::UserWeakPtr XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
 {
-    return (*m_userMap[ dataNumber ]);
+    return m_userMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector( 

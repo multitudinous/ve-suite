@@ -53,4 +53,7 @@ namespace VE_Model
    typedef Loki::SmartPtrDef<Tag>::type TagPtr;
 }
 }
+#include "VE_Open/XML/Model/TagWeakPtr.h"
+#include "VE_Open/XML/Model/TagStrongPtr.h"
+
 #endif

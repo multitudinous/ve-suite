@@ -39,8 +39,8 @@
 * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::ModelWeakPtr.  To get the full 
- * declaration of VE_XML::ModelWeakPtr
+ * VE_XML::VE_Model::ModelWeakPtr.  To get the full 
+ * declaration of VE_XML::VE_Model::ModelWeakPtr
  * VE_Open/XML/Model/Model.h must be included, too.
  */
 

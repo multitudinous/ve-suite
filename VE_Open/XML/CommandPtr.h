@@ -50,4 +50,7 @@ namespace VE_XML
    /// Typedef for a SmartPtr type for the Command.
    typedef Loki::SmartPtrDef<Command>::type CommandPtr;
 }
+#include "VE_Open/XML/CommandWeakPtr.h"
+#include "VE_Open/XML/CommandStrongPtr.h"
+
 #endif
