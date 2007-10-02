@@ -101,7 +101,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	networkWriter.UseStandaloneDOMDocumentManager();
 	std::vector< VE_XML::XMLObject* > objectVector;
 	// do this for models
-	networkWriter.ReadXMLData( network, "Model", "veModel" );
+	//networkWriter.ReadXMLData( network, "Model", "veModel" );
+	networkWriter.ReadXMLData( network, "System", "veSystem" );
 	objectVector = networkWriter.GetLoadedXMLObjects();
     if( objectVector.empty() )
     {
@@ -114,13 +115,16 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
 	shared_normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
 	std::ofstream output ("scale.txt");
+	VE_XML::VE_Model::System * mainSystem = dynamic_cast < VE_XML::VE_Model::System * > ( objectVector.at( 0 ) );
 	// now lets create a list of them
-	for ( size_t i = 0; i < objectVector.size(); ++i )
+	//for ( size_t i = 0; i < objectVector.size(); ++i )
+	for ( size_t i = 0; i < mainSystem->GetModels().size(); ++i )
 	{
 		//_fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
-		VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
+		//VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
+		VE_XML::VE_Model::ModelWeakPtr model = mainSystem->GetModel(i);
 
-		//add 3d blocks
+        //add 3d blocks
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
 		
 		//osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
@@ -307,9 +311,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	}	
 	
 	//Streams	
-	networkWriter.ReadXMLData( network, "Model", "veNetwork" );
-	objectVector = networkWriter.GetLoadedXMLObjects();
-	VE_XML::VE_Model::Network* veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+	//networkWriter.ReadXMLData( network, "Model", "veNetwork" );
+	//objectVector = networkWriter.GetLoadedXMLObjects();
+	//VE_XML::VE_Model::Network* veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+	VE_XML::VE_Model::NetworkWeakPtr veNetwork = mainSystem->GetNetwork();
 	//std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
 	osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     geode->setName( "Network Lines" );
