@@ -218,7 +218,8 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
     if( beamGeode.valid() )
     {
-        VE_SceneGraph::SceneManager::instance()->GetRootNode()->removeChild( beamGeode.get() );
+        VE_SceneGraph::SceneManager::instance()->GetRootNode()->
+            removeChild( beamGeode.get() );
     }
 
     beamGeode = new osg::Geode();
@@ -242,14 +243,17 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     m_stateset->setAttribute( line_width.get() );
     line->setStateSet( m_stateset.get() );
 
-    line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
+    line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 
+        vertices->size() ) );
 
     beamGeode->addDrawable( line.get() );      
 
-    VE_SceneGraph::SceneManager::instance()->GetRootNode()->addChild( beamGeode.get() );
+    VE_SceneGraph::SceneManager::instance()->GetRootNode()->addChild( 
+        beamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetScreenCornerValues( std::map< std::string, double > values )
+void KeyboardMouse::
+    SetScreenCornerValues( std::map< std::string, double > values )
 {
     m_xminScreen = values[ "xmin" ];
     m_xmaxScreen = values[ "xmax" ];
@@ -705,10 +709,21 @@ void KeyboardMouse::SelMouse()
 {
     if( m_state == 1 )
     {
+        ///Set selection of any patches back to true
+        /*for(size_t i =0; i < _nPatches; i++)
+        {
+            _patches.at(i)->SetMousePosition(ea.getX(),ea.getY());
+            _patches.at(i)->SetSelectionStatus(true);
+        }*/
         return;
     }
     else if( m_state == 0 && m_button == gadget::MBUTTON1 )
     {
+        ///Set selection of any patches back to false
+        /*for(size_t i =0; i < _nPatches; i++)
+        {
+            _patches.at(i)->SetSelectionStatus(false);
+        }*/
         ProcessSelectionEvents();
     }
 }
@@ -723,6 +738,18 @@ void KeyboardMouse::SelMotion()
     if( m_button == gadget::MBUTTON1 )
     {
         //osg::ref_ptr< osg::Geometry > selection_rectangle = new osg::Geometry;
+        /*//x mouse move == X direction (left/right)
+        //y mouse move == Z direction (up/down)
+        dx = ea.getX() - _lastMousePosition[0];
+        dz = ea.getY() - _lastMousePosition[1];
+        if((fabs(dx) > .05)||(fabs(dz) > .05))
+        {
+            for(size_t i =0; i < _nPatches; i++)
+            {
+                _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
+            }
+            //UpdateLastMousePosition(ea.getX(),ea.getY());
+        }*/
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
