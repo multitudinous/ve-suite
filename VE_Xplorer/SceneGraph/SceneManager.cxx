@@ -72,88 +72,89 @@ using namespace VE_SceneGraph;
 
 vprSingletonImpLifetime( SceneManager, 100 );
 
+////////////////////////////////////////////////////////////////////////////////
 SceneManager::SceneManager()
 {
-   _param.erase();
+    _param.erase();
 
-   m_blueArrow = 0;
-   m_greyArrow = 0;
-   m_orangeArrow = 0;
-   m_veText = 0;
-   m_suiteText = 0;
+    m_blueArrow = 0;
+    m_greyArrow = 0;
+    m_orangeArrow = 0;
+    m_veText = 0;
+    m_suiteText = 0;
 }
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize( std::string param )
 {
-   _param = param;
+    _param = param;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 SceneManager::~SceneManager()
 {
-   //Do nothing right now
-   if( m_blueArrow )
-   {
-      delete m_blueArrow;
-      m_blueArrow = 0;
-   }
-	
-   if( m_greyArrow )
-   {
-      delete m_greyArrow;
-      m_greyArrow = 0;
-   }
+    //Do nothing right now
+    if( m_blueArrow )
+    {
+        delete m_blueArrow;
+        m_blueArrow = 0;
+    }
 
-   if( m_orangeArrow )
-   {
-      delete m_orangeArrow;
-      m_orangeArrow = 0;
-   }
+    if( m_greyArrow )
+    {
+        delete m_greyArrow;
+        m_greyArrow = 0;
+    }
 
-   if( m_veText )
-   {
-      delete m_veText;
-      m_veText = 0;
-   }
+    if( m_orangeArrow )
+    {
+        delete m_orangeArrow;
+        m_orangeArrow = 0;
+    }
 
-   if( m_suiteText )
-   {
-      delete m_suiteText;
-      m_suiteText = 0;
-   }
+    if( m_veText )
+    {
+        delete m_veText;
+        m_veText = 0;
+    }
+
+    if( m_suiteText )
+    {
+        delete m_suiteText;
+        m_suiteText = 0;
+    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void SceneManager::InitScene()
 {
-   std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
+    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
 
-   rootNode = new VE_SceneGraph::Group();
-   rootNode->SetName( "Root Node" );
-   rootNode->setThreadSafeRefUnref( true );
+    rootNode = new VE_SceneGraph::Group();
+    rootNode->SetName( "Root Node" );
+    rootNode->setThreadSafeRefUnref( true );
 
-   worldDCS = new VE_SceneGraph::DCS();
-   worldDCS->SetName( "World DCS" );
+    worldDCS = new VE_SceneGraph::DCS();
+    worldDCS->SetName( "World DCS" );
 
-   networkDCS  = new VE_SceneGraph::DCS();
-   networkDCS->SetName( "Network DCS" );
+    networkDCS  = new VE_SceneGraph::DCS();
+    networkDCS->SetName( "Network DCS" );
 
-   m_clrNode = new osg::ClearNode();
-   m_clrNode->setRequiresClear( true );
-   m_clrNode->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-   m_clrNode->setName( "Clear Node - Control ClearColor" );
-   
-   //Create the switch for our logo
-   _createLogo();
+    m_clrNode = new osg::ClearNode();
+    m_clrNode->setRequiresClear( true );
+    m_clrNode->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    m_clrNode->setName( "Clear Node - Control ClearColor" );
 
-   _logoSwitch->AddChild( worldDCS.get() );
-   _logoSwitch->AddChild( _logoNode.get() );
-   _logoSwitch->AddChild( networkDCS.get() );   
+    //Create the switch for our logo
+    _createLogo();
 
-   ///World DCS
-   m_matrixStore[ 0 ] = gmtl::Matrix44d();
-   ///Logo DCS
-   m_matrixStore[ 1 ] = gmtl::Matrix44d();
-   ///Network DCS
-   m_matrixStore[ 2 ] = gmtl::Matrix44d();
+    _logoSwitch->AddChild( worldDCS.get() );
+    _logoSwitch->AddChild( _logoNode.get() );
+    _logoSwitch->AddChild( networkDCS.get() );   
+
+    ///World DCS
+    m_matrixStore[ 0 ] = gmtl::Matrix44d();
+    ///Logo DCS
+    m_matrixStore[ 1 ] = gmtl::Matrix44d();
+    ///Network DCS
+    m_matrixStore[ 2 ] = gmtl::Matrix44d();
 
     m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
@@ -178,72 +179,74 @@ void SceneManager::InitScene()
     rootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
 
-	///Try to load the osgPT Polytans plugin to load all
-	///supported PolyTrans file types
+    ///Try to load the osgPT Polytans plugin to load all
+    ///supported PolyTrans file types
 #ifdef _DEBUG
-	const std::string pluginName( "osgdb_PolyTransd.dll" );
+    const std::string pluginName( "osgdb_PolyTransd.dll" );
 #else
-	const std::string pluginName( "osgdb_PolyTrans.dll" );
-#endif
+    const std::string pluginName( "osgdb_PolyTrans.dll" );
+#endif //_DEBUG
     bool loadedLib = osgDB::Registry::instance()->loadLibrary( pluginName );
-	if( !loadedLib )
-	{
+    if( !loadedLib )
+    {
         vprDEBUG( vesDBG,2 ) << "Can't load plugin \"" 
-			<< pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
-	}
+        << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::Group* SceneManager::GetRootNode()
 {
-   return rootNode.get();
+    return rootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* SceneManager::GetWorldDCS()
 {
-   return worldDCS.get();
+    return worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_SceneGraph::DCS* SceneManager::GetNetworkDCS()
 {
-   return networkDCS.get();
+    return networkDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::ViewLogo( bool trueFalse )
 {
-   if( trueFalse )
-   {
-      SetActiveSwitchNode( 1 );
-   }
-   else
-   {
-      SetActiveSwitchNode( 0 );
-   }
+    if( trueFalse )
+    {
+        SetActiveSwitchNode( 1 );
+    }
+    else
+    {
+        SetActiveSwitchNode( 0 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::_createLogo()
 {
 #ifdef _OSG
-   if( !_logoSwitch )
-   {
-      _logoSwitch = new VE_SceneGraph::Switch();   
-   }
-   
-   if( !_logoNode.valid() )
-   {
-      double translation[ 3 ] = { -1.5, 5, 3.2 };
-      double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
+    if( !_logoSwitch )
+    {
+        _logoSwitch = new VE_SceneGraph::Switch();   
+    }
 
-      _logoNode = new VE_SceneGraph::DCS();
-      _logoNode->SetTranslationArray( translation );
-      _logoNode->SetScaleArray( scale );
+    if( !_logoNode.valid() )
+    {
+        double translation[ 3 ] = { -1.7, 4.6, 3.1 };
+        osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
+        double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
 
-      m_blueArrow = new VE_SceneGraph::CADEntity( BlueArrow(), _logoNode.get(), true, false );
-      m_greyArrow = new VE_SceneGraph::CADEntity( GreyArrow(), _logoNode.get(), true, false );
-      m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
-      m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true, false );
-      m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true, false );
-      
-      char phong_vertex[]=
+        _logoNode = new VE_SceneGraph::DCS();
+        _logoNode->SetTranslationArray( translation );
+        _logoNode->SetQuat( quat );
+        _logoNode->SetScaleArray( scale );
+
+        //m_blueArrow = new VE_SceneGraph::CADEntity( BlueArrow(), _logoNode.get(), true, false );
+        //m_greyArrow = new VE_SceneGraph::CADEntity( GreyArrow(), _logoNode.get(), true, false );
+        //m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
+        m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true, false );
+        m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true, false );
+
+        char phong_vertex[]=
             "varying vec4 color; \n"
             "varying vec3 eyePos; \n"
             "varying vec3 lightPos; \n"
@@ -251,38 +254,38 @@ void SceneManager::_createLogo()
 
             "void main() \n"
             "{ \n"
-                 "gl_Position=ftransform(); \n"
+                "gl_Position=ftransform(); \n"
 
-                 "color=gl_Color; \n"
-                 "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-                 "lightPos=gl_LightSource[0].position.xyz; \n"
-                 "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
+                "color=gl_Color; \n"
+                "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+                "lightPos=gl_LightSource[0].position.xyz; \n"
+                "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
             "} \n";
 
         char phong_fragment[]=
-        "varying vec4 color; \n"
-        "varying vec3 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+            "varying vec4 color; \n"
+            "varying vec3 eyePos; \n"
+            "varying vec3 lightPos; \n"
+            "varying vec3 normal; \n"
 
-        "void main() \n"
-        "{ \n"   
-             "vec3 N=normalize(normal); \n"
-             "vec3 L=normalize(lightPos); \n"
-             "float NDotL=max(dot(N,L),0.0); \n"
+            "void main() \n"
+            "{ \n"   
+                "vec3 N=normalize(normal); \n"
+                "vec3 L=normalize(lightPos); \n"
+                "float NDotL=max(dot(N,L),0.0); \n"
 
-             "vec3 V=normalize(eyePos); \n"
-             "vec3 R=reflect(V,N); \n"
-             "float RDotL=max(dot(R,L),0.0); \n"
+                "vec3 V=normalize(eyePos); \n"
+                "vec3 R=reflect(V,N); \n"
+                "float RDotL=max(dot(R,L),0.0); \n"
 
-             "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
-             "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
-             "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
+                "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
+                "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
+                "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
 
-             "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
+                "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
 
-             "gl_FragColor=vec4(color,1.0); \n"
-        "} \n";
+                "gl_FragColor=vec4(color,1.0); \n"
+            "} \n";
 
         osg::ref_ptr< osg::StateSet > stateset = _logoNode->getOrCreateStateSet();
         osg::ref_ptr< osg::Program > program = new osg::Program;
@@ -294,16 +297,16 @@ void SceneManager::_createLogo()
         program->addShader( fragment_shader.get() );
 
         stateset->setAttribute( program.get() );
-   }
-#endif
+    }
+#endif //_OSG
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )
 {
     //GetActiveSwitchNode()->GetMat();
-   _logoSwitch->SetVal( activeNode );
-   ///Now reset the dcs back to its former position so that the nav
-   ///information is defined on a per node basis.
+    _logoSwitch->SetVal( activeNode );
+    ///Now reset the dcs back to its former position so that the nav
+    ///information is defined on a per node basis.
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PreFrameUpdate()

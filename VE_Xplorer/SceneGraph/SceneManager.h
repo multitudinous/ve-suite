@@ -65,10 +65,10 @@
 
 namespace VE_SceneGraph
 {
-   class DCS;
-   class Group;
-   class Switch;
-   class CADEntity;
+    class DCS;
+    class Group;
+    class Switch;
+    class CADEntity;
 }
 
 namespace VE_SceneGraph
@@ -76,86 +76,91 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS SceneManager //: public vpr::Singleton< SceneManager >
 {
 public:
-   ///???
-   ///\param param
-   void Initialize( std::string param );
+    ///???
+    ///\param param
+    void Initialize( std::string param );
 
-   ///Acts as the destructor
-   //void CleanUp();
+    ///Acts as the destructor
+    //void CleanUp();
 
-   ///Initialize the scene
-   void InitScene();
+    ///Initialize the scene
+    void InitScene();
 
-   ///Return the root node of the scenegraph
-   VE_SceneGraph::Group* GetRootNode();
+    ///Return the root node of the scenegraph
+    VE_SceneGraph::Group* GetRootNode();
 
-   ///Return the world DCS of the scenegraph
-   VE_SceneGraph::DCS* GetWorldDCS();
+    ///Return the world DCS of the scenegraph
+    VE_SceneGraph::DCS* GetWorldDCS();
 
-   ///Return the network DCS of the scenegraph
-   VE_SceneGraph::DCS* GetNetworkDCS();
+    ///Return the network DCS of the scenegraph
+    VE_SceneGraph::DCS* GetNetworkDCS();
 
-   ///Return the active switch node of the scenegraph
-   VE_SceneGraph::DCS* GetActiveSwitchNode();
-   ///Return the active switch node of the scenegraph
-   osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
-   ///Set the node on the switch node that is active
-   ///\param activeNode The node to activate
-   void SetActiveSwitchNode( int activeNode );
+    ///Return the active switch node of the scenegraph
+    VE_SceneGraph::DCS* GetActiveSwitchNode();
 
-   ///Switch the logo on and off
-   ///\param trueFalse Turn the logo on and off
-   void ViewLogo( bool trueFalse );
-   ///PreFrameUpdate call to sync DCS information across cluster
-   void PreFrameUpdate();
-   ///Set the background color
-   ///\param color the color to set the background color
-   void SetBackgroundColor( std::vector< double > color );
-   ///Reset the osgOQC node accessor
-   ///Should be used when new ves files are loaded
-   void ResetOcclusionQueryContext();
+    ///Return the active switch node of the scenegraph
+    osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
+
+    ///Set the node on the switch node that is active
+    ///\param activeNode The node to activate
+    void SetActiveSwitchNode( int activeNode );
+
+    ///Switch the logo on and off
+    ///\param trueFalse Turn the logo on and off
+    void ViewLogo( bool trueFalse );
+
+    ///PreFrameUpdate call to sync DCS information across cluster
+    void PreFrameUpdate();
+
+    ///Set the background color
+    ///\param color the color to set the background color
+    void SetBackgroundColor( std::vector< double > color );
+
+    ///Reset the osgOQC node accessor
+    ///Should be used when new ves files are loaded
+    void ResetOcclusionQueryContext();
        
 private:
-   //Required so that vpr::Singleton can instantiate this class
-   //Friend class vpr::Singleton< SceneManager >;
-   //SceneManager(const SceneManager& o){;}
-   //SceneManager& operator=(const SceneManager& o){;}
+    //Required so that vpr::Singleton can instantiate this class
+    //Friend class vpr::Singleton< SceneManager >;
+    //SceneManager(const SceneManager& o){;}
+    //SceneManager& operator=(const SceneManager& o){;}
 
-   ///Base Constructor
-   SceneManager();
+    ///Base Constructor
+    SceneManager();
 
-   ///Destructor
-   ///Never gets called, don't implement
-   ~SceneManager();
+    ///Destructor
+    ///Never gets called, don't implement
+    ~SceneManager();
 
-   vprSingletonHeader( SceneManager );
+    vprSingletonHeader( SceneManager );
 
-   std::string _param;///<
-   osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<The root node of our scenegraph
-   osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;///<The node which contains our logo
-   osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
-   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
-   osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
-   
-   //The logo
-   VE_SceneGraph::CADEntity* m_blueArrow;
-   VE_SceneGraph::CADEntity* m_greyArrow;
-   VE_SceneGraph::CADEntity* m_orangeArrow;
-   VE_SceneGraph::CADEntity* m_veText;///<Logo VE text
-   VE_SceneGraph::CADEntity* m_suiteText;///<Logo SUITE text
+    std::string _param;///<
+    osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<The root node of our scenegraph
+    osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;///<The node which contains our logo
+    osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
+    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
+    osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
+
+    //The logo
+    VE_SceneGraph::CADEntity* m_blueArrow;
+    VE_SceneGraph::CADEntity* m_greyArrow;
+    VE_SceneGraph::CADEntity* m_orangeArrow;
+    VE_SceneGraph::CADEntity* m_veText;
+    VE_SceneGraph::CADEntity* m_suiteText;
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
     osg::ref_ptr<osgOQ::OcclusionQueryContext> m_oqc;
 
-   ///Map to store state information about each dcs
-   std::map< int, gmtl::Matrix44d > m_matrixStore;
+    ///Map to store state information about each dcs
+    std::map< int, gmtl::Matrix44d > m_matrixStore;
    
 protected:
-   ///Create the model for the logo
-   #ifdef _OSG
-      void _createLogo();
-   #endif
+    ///Create the model for the logo
+#ifdef _OSG
+    void _createLogo();
+#endif
 
 };
 }
