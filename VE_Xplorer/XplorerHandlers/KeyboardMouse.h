@@ -151,7 +151,7 @@ private:
     void NavMouse();
 
     ///Navigation using the mouse
-    void NavMotion();
+    void NavMotion( std::pair< double, double > delta );
 
     ///Currently this does nothing
     void SelKeyboard();
@@ -160,7 +160,7 @@ private:
     void SelMouse();
 
     ///Currently this does nothing
-    void SelMotion();
+    void SelMotion( std::pair< double, double > delta );
 
     ///Do not know how to describe this
     ///\param dx The change in the x direction
@@ -207,8 +207,6 @@ private:
     double m_bottomFrustum;///<The bottom frustum value
     double m_nearFrustum;///<The near frustum value
     double m_farFrustum;///<The far frustum value
-    double m_currPos[2];///<The current mouse position
-    double m_prevPos[2];///<The previous mouse position
     double m_magnitude;///<The magnitude of the mouse movement
     double m_sensitivity;///<
 
@@ -217,6 +215,9 @@ private:
     double m_yminScreen;///<The minimum y position of the screen
     double m_ymaxScreen;///<The maximum y position of the screen
     double m_zvalScreen;///<The z position of the screen
+
+    std::pair< double, double > m_currPos;///<The current mouse position
+    std::pair< double, double > m_prevPos;///<The previous mouse position
 
     //Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
     //For gmtl::Matrix

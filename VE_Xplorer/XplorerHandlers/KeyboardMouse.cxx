@@ -110,17 +110,15 @@ m_zvalScreen( 0.0f ),
 m_magnitude( 0.0f ),
 m_sensitivity( 1.0e-06 ),
 
+m_currPos( 0, 0 ),
+m_prevPos( 0, 0 ),
+
 m_animate( false ),
 
 beamLineSegment( new osg::LineSegment )
 {
     m_keyboard.init( "VJKeyboard" );
     m_head.init( "VJHead" );
-
-    m_currPos[0] = 0.0f;
-    m_currPos[1] = 0.0f;
-    m_prevPos[0] = 0.0f;
-    m_prevPos[1] = 0.0f;
 
     gmtl::identity( m_deltaTransform );
     gmtl::identity( m_currentTransform );
@@ -354,15 +352,25 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             m_x = mouse_evt->getX();
             m_y = mouse_evt->getY();
 
-            //Navigation mode
-            if( mode == 0 )
+            if( m_state == 1 )
             {
-                NavMotion();
-            }
-            //Selection mode
-            else if( mode == 1 )
-            {
-                SelMotion();
+                m_currPos.first = static_cast< double >( m_x ) / static_cast< double >( m_width );
+                m_currPos.second = static_cast< double >( m_y ) / static_cast< double >( m_height );
+
+                std::pair< double, double > delta;
+                delta.first = m_currPos.first - m_prevPos.first;
+                delta.second = m_currPos.second - m_prevPos.second;
+
+                //Navigation mode
+                if( mode == 0 )
+                {
+                    NavMotion( delta );
+                }
+                //Selection mode
+                else if( mode == 1 )
+                {
+                    SelMotion( delta );
+                }
             }
         }
     }
@@ -648,27 +656,16 @@ void KeyboardMouse::NavMouse()
     }
     else if( m_state == 1 )
     {
-        m_currPos[0] = static_cast< double >( m_x ) / static_cast< double >( m_width );
-        m_currPos[1] = static_cast< double >( m_y ) / static_cast< double >( m_height );
-        m_prevPos[0] = static_cast< double >( m_x ) / static_cast< double >( m_width );
-        m_prevPos[1] = static_cast< double >( m_y ) / static_cast< double >( m_height );
+        m_currPos.first = static_cast< double >( m_x ) / static_cast< double >( m_width );
+        m_currPos.second = static_cast< double >( m_y ) / static_cast< double >( m_height );
+        m_prevPos.first = m_currPos.first;
+        m_prevPos.second = m_currPos.second;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::NavMotion()
+void KeyboardMouse::NavMotion( std::pair< double, double > delta )
 {
-    if( m_state == 0 )
-    {
-        return;
-    }
-
-    m_currPos[0] = static_cast< double >( m_x ) / static_cast< double >( m_width );
-    m_currPos[1] = static_cast< double >( m_y ) / static_cast< double >( m_height );
-
-    double dx = m_currPos[0] - m_prevPos[0];
-    double dy = m_currPos[1] - m_prevPos[1];
-
-    m_magnitude = sqrtf( dx * dx + dy * dy );
+    m_magnitude = sqrtf( delta.first * delta.first + delta.second * delta.second );
     if( m_magnitude < m_sensitivity )
     {
         return;
@@ -680,23 +677,23 @@ void KeyboardMouse::NavMotion()
         && ( m_y > 0.1f * m_height )
         && ( m_y < 0.9f * m_height ) )
     {
-        RotateView( dx, dy );
+        RotateView( delta.first, delta.second );
     }
     else if( m_button == gadget::MBUTTON3 )
     {
-        Zoom( dy );
+        Zoom( delta.second );
     }
     else if( m_button == gadget::MBUTTON2 )
     {
-        Pan( dx, dy );
+        Pan( delta.first, delta.second );
     }
     else if( m_button == gadget::MBUTTON1 )
     {
-        Twist( dx, dy );
+        Twist( delta.first, delta.second );
     }
 
-    m_prevPos[0] = m_currPos[0];
-    m_prevPos[1] = m_currPos[1];
+    m_prevPos.first = m_currPos.first;
+    m_prevPos.second = m_currPos.second;
 
     ProcessNavigationEvents();
 }
@@ -732,13 +729,8 @@ void KeyboardMouse::SelMouse()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SelMotion()
+void KeyboardMouse::SelMotion( std::pair< double, double > delta )
 {
-    if( !m_state )
-    {
-        return;
-    }
-
     if( m_button == gadget::MBUTTON1 )
     {
         //osg::ref_ptr< osg::Geometry > selection_rectangle = new osg::Geometry;
@@ -785,8 +777,8 @@ void KeyboardMouse::Twist( double dx, double dy )
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
 
-    double Theta = atan2f( m_prevPos[0] - 0.5, m_prevPos[1] - 0.5 );
-    double newTheta = atan2f( m_currPos[0] - 0.5, m_currPos[1] - 0.5 );
+    double Theta = atan2f( m_prevPos.first - 0.5, m_prevPos.second - 0.5 );
+    double newTheta = atan2f( m_currPos.first - 0.5, m_currPos.second - 0.5 );
     double angle = ( OneEightyDivPI ) * ( Theta - newTheta );
 
     Rotate( matrix[1][0], matrix[1][1], matrix[1][2], angle );
@@ -866,7 +858,7 @@ void KeyboardMouse::ProcessSelectionEvents()
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
 
-    DrawLine( startPoint, endPoint );
+    //DrawLine( startPoint, endPoint );
 
     beamLineSegment->set( startPoint, endPoint );
 
