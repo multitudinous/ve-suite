@@ -39,6 +39,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdModel.h"
 #include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
 
+#include "VE_Xplorer/SceneGraph/SetStateOnNURBSNodeVisitor.h"
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 #include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
 #include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
@@ -724,6 +725,9 @@ void KeyboardMouse::SelMouse()
         {
             _patches.at(i)->SetSelectionStatus(false);
         }*/
+        /*VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
+            VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
+            std::string("NULL") );*/
         ProcessSelectionEvents();
     }
 }
