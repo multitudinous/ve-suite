@@ -76,7 +76,6 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
    dataObjectHandler.OperateOnAllDatasetsInObject(dataObject);
    std::cout << "Geometry bounding box information..." << std::endl;
    boundsCallback->GetDataObjectBounds(bounds);
-   std::cout << "Geometry bounding box information..." << std::endl;
    std::cout << "\tx-min = \t" << bounds[0]
              << "\tx-max = \t" << bounds[1] << std::endl;
    std::cout << "\ty-min = \t" << bounds[2] 
