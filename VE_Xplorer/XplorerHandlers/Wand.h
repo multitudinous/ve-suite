@@ -144,6 +144,8 @@ public:
     
     ///Find translation difference from last position to current
     void UpdateDeltaWandPosition();
+    ///Get the plane equation constants normal to the wand in world space
+    double* GetPlaneEquationConstantsNormalToWand();
     
 protected:
     ///Set the start and end point
@@ -178,7 +180,8 @@ private:
 
     double translationStepSize; ///<Size of translation step
     double rotationStepSize; ///<Size of rotation step
-
+    ///Constants for the plane normal to the wand in world space
+    double m_planeConstants[ 4 ];
     int rotationFlag; ///<Rotation flag
     int subzeroFlag; ///<Zero plane flag
 

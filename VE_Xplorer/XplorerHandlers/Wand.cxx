@@ -671,3 +671,10 @@ void Wand::RotateAboutWand()
         -( rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
 }
 ////////////////////////////////////////////////////////////////////////////////
+double* Wand::GetPlaneEquationConstantsNormalToWand()
+{
+    ///Get wand pointing vector
+    ///Transform from juggler space to world space
+    ///Normalize vector
+    return m_planeConstants;
+}
