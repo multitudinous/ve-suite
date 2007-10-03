@@ -115,7 +115,7 @@ m_prevPos( 0, 0 ),
 
 m_animate( false ),
 
-beamLineSegment( new osg::LineSegment )
+m_beamLineSegment( new osg::LineSegment )
 {
     m_keyboard.init( "VJKeyboard" );
     m_head.init( "VJHead" );
@@ -215,14 +215,14 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
-    if( beamGeode.valid() )
+    if( m_beamGeode.valid() )
     {
         VE_SceneGraph::SceneManager::instance()->GetRootNode()->
-            removeChild( beamGeode.get() );
+            removeChild( m_beamGeode.get() );
     }
 
-    beamGeode = new osg::Geode();
-    beamGeode->setName( "Laser" );
+    m_beamGeode = new osg::Geode();
+    m_beamGeode->setName( "Laser" );
 
     osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
@@ -245,10 +245,10 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 
         vertices->size() ) );
 
-    beamGeode->addDrawable( line.get() );      
+    m_beamGeode->addDrawable( line.get() );      
 
     VE_SceneGraph::SceneManager::instance()->GetRootNode()->addChild( 
-        beamGeode.get() );
+        m_beamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::
@@ -308,6 +308,11 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             m_state = 1;
             m_x = mouse_evt->getX();
             m_y = mouse_evt->getY();
+
+            m_currPos.first = static_cast< double >( m_x ) / static_cast< double >( m_width );
+            m_currPos.second = static_cast< double >( m_y ) / static_cast< double >( m_height );
+            m_prevPos.first = m_currPos.first;
+            m_prevPos.second = m_currPos.second;
 
             //Navigation mode
             if( mode == 0 )
@@ -371,6 +376,9 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 {
                     SelMotion( delta );
                 }
+
+                m_prevPos.first = m_currPos.first;
+                m_prevPos.second = m_currPos.second;
             }
         }
     }
@@ -650,17 +658,7 @@ void KeyboardMouse::NavKeyboard()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMouse()
 {
-    if( m_state == 0 )
-    {
-        return;
-    }
-    else if( m_state == 1 )
-    {
-        m_currPos.first = static_cast< double >( m_x ) / static_cast< double >( m_width );
-        m_currPos.second = static_cast< double >( m_y ) / static_cast< double >( m_height );
-        m_prevPos.first = m_currPos.first;
-        m_prevPos.second = m_currPos.second;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMotion( std::pair< double, double > delta )
@@ -691,9 +689,6 @@ void KeyboardMouse::NavMotion( std::pair< double, double > delta )
     {
         Twist( delta.first, delta.second );
     }
-
-    m_prevPos.first = m_currPos.first;
-    m_prevPos.second = m_currPos.second;
 
     ProcessNavigationEvents();
 }
@@ -777,9 +772,9 @@ void KeyboardMouse::Twist( double dx, double dy )
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
 
-    double Theta = atan2f( m_prevPos.first - 0.5, m_prevPos.second - 0.5 );
+    double theta = atan2f( m_prevPos.first - 0.5, m_prevPos.second - 0.5 );
     double newTheta = atan2f( m_currPos.first - 0.5, m_currPos.second - 0.5 );
-    double angle = ( OneEightyDivPI ) * ( Theta - newTheta );
+    double angle = ( OneEightyDivPI ) * ( theta - newTheta );
 
     Rotate( matrix[1][0], matrix[1][1], matrix[1][2], angle );
 }
@@ -860,17 +855,17 @@ void KeyboardMouse::ProcessSelectionEvents()
 
     //DrawLine( startPoint, endPoint );
 
-    beamLineSegment->set( startPoint, endPoint );
+    m_beamLineSegment->set( startPoint, endPoint );
 
     osgUtil::IntersectVisitor objectBeamIntersectVisitor;
-    objectBeamIntersectVisitor.addLineSegment( beamLineSegment.get() );
+    objectBeamIntersectVisitor.addLineSegment( m_beamLineSegment.get() );
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
     VE_SceneGraph::SceneManager::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
 
     osgUtil::IntersectVisitor::HitList beamHitList;
-    beamHitList = objectBeamIntersectVisitor.getHitList( beamLineSegment.get() );
+    beamHitList = objectBeamIntersectVisitor.getHitList( m_beamLineSegment.get() );
 
     ProcessHit( beamHitList );
 }
@@ -878,7 +873,7 @@ void KeyboardMouse::ProcessSelectionEvents()
 void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 { 
     osgUtil::Hit objectHit;
-    selectedGeometry = 0;
+    m_selectedGeometry = 0;
 
     if( selectedDCS.valid() )
     {
@@ -929,8 +924,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     } 
 
     //Now find the id for the cad
-    selectedGeometry = objectHit._geode;
-    VE_SceneGraph::FindParentsVisitor parentVisitor( selectedGeometry.get() );
+    m_selectedGeometry = objectHit._geode;
+    VE_SceneGraph::FindParentsVisitor parentVisitor( m_selectedGeometry.get() );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
     {
@@ -945,7 +940,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     }
     else
     {
-        selectedGeometry = objectHit._geode;
+        m_selectedGeometry = objectHit._geode;
         vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name " 
                               << objectHit._geode->getParents().front()->getName() 
                               << std::endl << vprDEBUG_FLUSH;

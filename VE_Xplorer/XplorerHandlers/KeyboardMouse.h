@@ -230,9 +230,9 @@ private:
     gmtl::Matrix44d m_currentTransform;///<The current transform matrix being manipulated
     gmtl::Matrix44d m_localToWorldTransform;///<The matrix which transforms local coordinates to world
 
-    osg::ref_ptr< osg::Geode > beamGeode;///<
-    osg::ref_ptr< osg::Geode > selectedGeometry;///<The geometry being selected
-    osg::ref_ptr< osg::LineSegment > beamLineSegment;///<
+    osg::ref_ptr< osg::Geode > m_beamGeode;///<
+    osg::ref_ptr< osg::Geode > m_selectedGeometry;///<The geometry being selected
+    osg::ref_ptr< osg::LineSegment > m_beamLineSegment;///<
 
     gadget::KeyboardMouseInterface m_keyboard;///<VRJuggler's keyboard/mouse positional interface
     gadget::PositionInterface m_head;///<VRJuggler's head positional interface
