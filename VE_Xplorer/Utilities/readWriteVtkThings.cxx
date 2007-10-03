@@ -50,6 +50,8 @@
 #include <vtkUnstructuredGridWriter.h>
 #include <vtkXMLUnstructuredGridReader.h>
 #include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
+#include "VE_Xplorer/Utilities/DataObjectHandler.h"
+#include "VE_Xplorer/Utilities/ComputeDataObjectBoundsCallback.h"
 #include <vtkMultiGroupDataSet.h>
 
 using namespace VE_Util;
@@ -67,8 +69,16 @@ void VE_Util::printWhatItIs( vtkDataObject * dataSet )
 void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 {
    double bounds[6];
+   double xbounds[2] = {100000,-100000};
+   double ybounds[2] = {100000,-100000};
+   double zbounds[2] = {100000,-100000};
+   VE_Util::DataObjectHandler dataObjectHandler;
+   VE_Util::ComputeDataObjectBoundsCallback* boundsCallback = 
+	   new VE_Util::ComputeDataObjectBoundsCallback();
+   dataObjectHandler.SetDatasetOperatorCallback(boundsCallback);
+   dataObjectHandler.OperateOnAllDatasetsInObject(dataObject);
    std::cout << "Geometry bounding box information..." << std::endl;
-   if(dataObject->IsA("vtkMultiGroupDataSet"))
+   /*if(dataObject->IsA("vtkMultiGroupDataSet"))
    {
 	  try
 	  {
@@ -83,6 +93,18 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 			 {
 				 std::cout<<"Dataset: "<<j<<std::endl;
 				 dynamic_cast<vtkDataSet*>(mgd->GetDataSet(i,j))->GetBounds(bounds);
+				 if(bounds[0] < xbounds[0])
+					 xbounds[0] = bounds[0];
+                 if(bounds[1] > xbounds[1])
+					 xbounds[1] = bounds[1];
+				 if(bounds[2] < ybounds[0])
+					 ybounds[0] = bounds[2];
+				 if(bounds[3] > ybounds[1])
+					 ybounds[1] = bounds[2];
+				if(bounds[4] < zbounds[0])
+					zbounds[0] = bounds[4];
+                if(bounds[5] > zbounds[1])
+					zbounds[1] = bounds[5];
 			 }
 		 }
 	  }
@@ -94,9 +116,10 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
    else
    {
       dynamic_cast<vtkDataSet*>(dataObject)->GetBounds(bounds);
-   }
-	/*
-   std::cout << "Geometry bounding box information..." << std::endl;*/
+   }*/
+	/**/
+   boundsCallback->GetDataObjectBounds(bounds);
+   std::cout << "Geometry bounding box information..." << std::endl;
    std::cout << "\tx-min = \t" << bounds[0]
              << "\tx-max = \t" << bounds[1] << std::endl;
    std::cout << "\ty-min = \t" << bounds[2] 
@@ -104,6 +127,11 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
    std::cout << "\tz-min = \t" << bounds[4] 
              << "\tz-max = \t" << bounds[5] << std::endl;
 			 
+   if(boundsCallback)
+   {
+	   delete boundsCallback;
+	   boundsCallback = 0;
+   }
 }
 /////////////////////////////////////////////////////////////////////////////
 vtkDataObject* VE_Util::readVtkThing( std::string vtkFilename, int printFlag )

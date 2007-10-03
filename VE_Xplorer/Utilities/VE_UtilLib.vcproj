@@ -209,7 +209,7 @@
 	<Files>
 		<Filter
 			Name="src"
-			Filter=".cpp"
+			Filter=".cxx"
 			>
 			<File
 				RelativePath=".\cfdAccessoryFunctions.cxx"
@@ -228,11 +228,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComputeDataObjectBoundsCallback.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\ComputeMeanCellBBoxLengthCallback.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\ComputeVectorMagnitudeRangeCallback.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\DataObjectHandler.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\fileIO.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\GetNumberOfPointsCallback.cxx"
 				>
 			</File>
 			<File
@@ -269,11 +285,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ComputeDataObjectBoundsCallback.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ComputeMeanCellBBoxLengthCallback.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ComputeVectorMagnitudeRangeCallback.h"
+				>
+			</File>
+			<File
 				RelativePath=".\DataObjectHandler.h"
 				>
 			</File>
 			<File
 				RelativePath=".\fileIO.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GetNumberOfPointsCallback.h"
 				>
 			</File>
 			<File

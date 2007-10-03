@@ -77,6 +77,7 @@ public:
     ///on a vtkDataObject
     void OperateOnAllDatasetsInObject(vtkDataObject* dataObject);
     ///Set the operation to perform on each dataset in the vtkDataObject
+	///Caller is responsible for cleaning up DatasetOperatorCallback memory
     ///\param dsoCbk The DataSetOperatorCallback
     void SetDatasetOperatorCallback(DatasetOperatorCallback* dsoCbk);
 protected:

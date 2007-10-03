@@ -51,11 +51,7 @@ DataObjectHandler::DataObjectHandler()
 ///////////////////////////////////////
 DataObjectHandler::~DataObjectHandler()
 {
-    if(m_datasetOperator)
-    {
-        delete m_datasetOperator;
-	    m_datasetOperator = 0;
-    }
+
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::OperateOnAllDatasetsInObject(vtkDataObject* dataObject)
