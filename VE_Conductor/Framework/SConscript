@@ -23,6 +23,7 @@ srcs = Split("""
    ExportMenu.cxx
    HierarchyTree.cxx
 """)
+#EphemerisDialog.cxx
 
 env = ves_pkg.getEnv().Copy()
 env.Append( CPPDEFINES = [vesSVNRevision] )
