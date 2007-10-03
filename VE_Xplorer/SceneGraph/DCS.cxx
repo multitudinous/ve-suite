@@ -550,6 +550,16 @@ void DCS::InheritedTraverse( osg::NodeVisitor& nv )
     inherited::traverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DCS::DirtyTechniques()
+{
+    //Set properties in Devices
+    std::map< std::string, VE_SceneGraph::Technique* >::const_iterator itr;
+    for( itr = m_techniques.begin(); itr != m_techniques.end(); ++itr )
+    {
+        itr->second->DirtyPasses();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void DCS::AddTechnique(  std::string name, VE_SceneGraph::Technique* technique  )
 {
     m_techniques[ std::string( name ) ] = technique;

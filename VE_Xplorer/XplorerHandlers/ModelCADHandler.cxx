@@ -225,7 +225,7 @@ void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID,
                                              <<foundAttribute->first
                                              <<std::endl<< vprDEBUG_FLUSH;
                    GetAssembly(nodeID)->setStateSet(foundAttribute->second.get());
-                   GetAssembly(nodeID)->GetActiveTechnique()->DirtyPasses();
+                   GetAssembly(nodeID)->DirtyTechniques();
                    return;
                 }
                 else if(nodeType == "Part")
@@ -234,7 +234,7 @@ void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID,
                                              <<foundAttribute->first
                                              <<std::endl<< vprDEBUG_FLUSH;
                    GetPart(nodeID)->GetDCS()->setStateSet(foundAttribute->second.get());
-                   GetPart(nodeID)->GetDCS()->GetActiveTechnique()->DirtyPasses();
+                   GetPart(nodeID)->GetDCS()->DirtyTechniques();
                    vprDEBUG(vesDBG,1) <<"|\tvalid: "
                                              <<foundAttribute->first<<std::endl
                                              << vprDEBUG_FLUSH;
@@ -248,8 +248,7 @@ void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID,
                                              << vprDEBUG_FLUSH;
                    GetClone(nodeID)->
                        GetClonedGraph()->setStateSet(foundAttribute->second.get());
-                   GetClone(nodeID)->
-                       GetClonedGraph()->GetActiveTechnique()->DirtyPasses();
+                   GetClone(nodeID)->GetClonedGraph()->DirtyTechniques();
                    return;
                 }
             }
@@ -454,6 +453,15 @@ void ModelCADHandler::UpdateMaterialMode(std::string nodeID,
                 if(attribute.valid())
                 {
                     attribute->UpdateMaterialMode(type,mode);
+
+                    if( PartExists( nodeID ) )
+                    {
+                        GetPart( nodeID )->GetDCS()->DirtyTechniques();
+                    }
+                    else
+                    {
+                        GetAssembly( nodeID )->DirtyTechniques();
+                    }
                 }
                 else
                 {
@@ -498,6 +506,14 @@ void ModelCADHandler::UpdateMaterialComponent(std::string nodeID,
                 if( attribute.valid() )
                 {
                     attribute->UpdateMaterial(component, face, values);
+                    if( PartExists( nodeID ) )
+                    {
+                        GetPart( nodeID )->GetDCS()->DirtyTechniques();
+                    }
+                    else
+                    {
+                        GetAssembly( nodeID )->DirtyTechniques();
+                    }
                 }
                 else
                 {

@@ -245,6 +245,8 @@ public:
 
     void InheritedTraverse( osg::NodeVisitor& nv );
 
+    void DirtyTechniques();
+
     void AddTechnique( std::string name, VE_SceneGraph::Technique* technique );
 
     void SetTechnique( std::string name );
