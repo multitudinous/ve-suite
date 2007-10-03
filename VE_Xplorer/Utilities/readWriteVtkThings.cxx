@@ -69,55 +69,12 @@ void VE_Util::printWhatItIs( vtkDataObject * dataSet )
 void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 {
    double bounds[6];
-   double xbounds[2] = {100000,-100000};
-   double ybounds[2] = {100000,-100000};
-   double zbounds[2] = {100000,-100000};
    VE_Util::DataObjectHandler dataObjectHandler;
    VE_Util::ComputeDataObjectBoundsCallback* boundsCallback = 
 	   new VE_Util::ComputeDataObjectBoundsCallback();
    dataObjectHandler.SetDatasetOperatorCallback(boundsCallback);
    dataObjectHandler.OperateOnAllDatasetsInObject(dataObject);
    std::cout << "Geometry bounding box information..." << std::endl;
-   /*if(dataObject->IsA("vtkMultiGroupDataSet"))
-   {
-	  try
-	  {
-	     vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
-		 unsigned int nGroups = mgd->GetNumberOfGroups();
-		 unsigned int nDatasetsInGroup = 0;
-		 for(unsigned int i = 0; i < nGroups; i++)
-		 {
-			 std::cout<<"Group: "<<i<<std::endl;
-			 nDatasetsInGroup = mgd->GetNumberOfDataSets(i);
-			 for(unsigned int j = 0; j < nDatasetsInGroup; j++)
-			 {
-				 std::cout<<"Dataset: "<<j<<std::endl;
-				 dynamic_cast<vtkDataSet*>(mgd->GetDataSet(i,j))->GetBounds(bounds);
-				 if(bounds[0] < xbounds[0])
-					 xbounds[0] = bounds[0];
-                 if(bounds[1] > xbounds[1])
-					 xbounds[1] = bounds[1];
-				 if(bounds[2] < ybounds[0])
-					 ybounds[0] = bounds[2];
-				 if(bounds[3] > ybounds[1])
-					 ybounds[1] = bounds[2];
-				if(bounds[4] < zbounds[0])
-					zbounds[0] = bounds[4];
-                if(bounds[5] > zbounds[1])
-					zbounds[1] = bounds[5];
-			 }
-		 }
-	  }
-	  catch(...)
-	  {
-		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
-	  }
-   }
-   else
-   {
-      dynamic_cast<vtkDataSet*>(dataObject)->GetBounds(bounds);
-   }*/
-	/**/
    boundsCallback->GetDataObjectBounds(bounds);
    std::cout << "Geometry bounding box information..." << std::endl;
    std::cout << "\tx-min = \t" << bounds[0]
