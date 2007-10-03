@@ -44,11 +44,13 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node, 
-    bool selectedState, std::pair< double, double > mousePoint )
+    bool selectedState, std::pair< double, double > mousePoint, 
+    std::pair< double, double > mouseDelta)
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN ),
 m_mousePoint( mousePoint ),
-m_selectedState( selectedState )
+m_selectedState( selectedState ),
+m_mouseDelta( mouseDelta )
 {
     node->accept( *this );    
 }
@@ -71,8 +73,11 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
     {
         //process patches
         std::cout << " found a patch " << std::endl;
-        tempNode->SetMousePosition( m_mousePoint.first, m_mousePoint.second );
         tempNode->SetSelectionStatus( m_selectedState );
+        tempNode->SetMousePosition( m_mousePoint.first, m_mousePoint.second );
+        tempNode->MoveSelectedControlPoint( 
+            m_mouseDelta.first, 0, m_mouseDelta.second );
+       std::cout <<  tempNode->IsControlPointSelected() << std::endl;
     }
     else
     {

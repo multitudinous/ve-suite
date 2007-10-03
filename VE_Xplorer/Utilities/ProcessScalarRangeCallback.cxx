@@ -51,7 +51,7 @@ ProcessScalarRangeCallback::~ProcessScalarRangeCallback()
 ///////////////////////////////////////////////////////////////////////////
 void ProcessScalarRangeCallback::OperateOnDataset(vtkDataSet* dataset)
 {
-    // store actual range...
+/*    // store actual range...
     int ii = 0;
     double scalarRange[2] = {100000,-10000};
     for ( int i=0; i < dataset->GetPointData()->GetNumberOfArrays(); ++i )
@@ -85,11 +85,11 @@ void ProcessScalarRangeCallback::OperateOnDataset(vtkDataSet* dataset)
 
          ii++;
       }
-   }
+   }*/
 }
 //////////////////////////////////////////////////////////////////////////////////    
-unsigned int ProcessScalarRangeCallback::GetNumberOfParameters(bool isVector)
+/*unsigned int ProcessScalarRangeCallback::GetNumberOfParameters(bool isVector)
 {
-   return (isVector)?m_numberOfParameters[1]:m_numberOfParameters[0];
-}
+   return 1;//(isVector)?m_numberOfParameters[1]:m_numberOfParameters[0];
+}*/
 

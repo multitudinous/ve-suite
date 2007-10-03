@@ -29,8 +29,6 @@
  * Id:            $Id: ComputeDataObjectBoundsCallback.h 9200 2007-10-03 19:17:07Z biv $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef COUNT_NUMBER_OF_PARAMETERS_CALLBACK 
 #define  COUNT_NUMBER_OF_PARAMETERS_CALLBACK
@@ -48,6 +46,7 @@ class vtkDataSet;
 
 #include <vector>
 #include <string>
+#include <map>
 namespace VE_Util
 {
 class VE_UTIL_EXPORTS ProcessScalarRangeCallback:

@@ -308,9 +308,10 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             m_state = 1;
             m_x = mouse_evt->getX();
             m_y = mouse_evt->getY();
-
-            m_currPos.first = static_cast< double >( m_x ) / static_cast< double >( m_width );
-            m_currPos.second = static_cast< double >( m_y ) / static_cast< double >( m_height );
+            m_currPos.first = 
+                static_cast< double >( m_x ) / static_cast< double >( m_width );
+            m_currPos.second = 
+                static_cast< double >( m_y ) / static_cast< double >( m_height );
             m_prevPos.first = m_currPos.first;
             m_prevPos.second = m_currPos.second;
 
@@ -323,7 +324,9 @@ void KeyboardMouse::ProcessKBEvents( int mode )
                 if( m_animate )
                 {
                     gmtl::identity( m_deltaTransform );
-                    m_deltaTransform.mData[12] = m_deltaTransform.mData[13] = m_deltaTransform.mData[14] = 0.0f;
+                    m_deltaTransform.mData[12] = 
+                        m_deltaTransform.mData[13] = 
+                        m_deltaTransform.mData[14] = 0.0f;
                 }
             }
             //Selection mode
@@ -334,11 +337,17 @@ void KeyboardMouse::ProcessKBEvents( int mode )
         }
         else if( type == gadget::MouseButtonReleaseEvent )
         {
-            gadget::MouseEventPtr mouse_evt=boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+            gadget::MouseEventPtr mouse_evt = 
+                boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+                
             m_button = mouse_evt->getButton();
             m_state = 0;
             m_x = mouse_evt->getX();
             m_y = mouse_evt->getY();
+            m_currPos.first = 
+                static_cast< double >( m_x ) / static_cast< double >( m_width );
+            m_currPos.second = 
+                static_cast< double >( m_y ) / static_cast< double >( m_height );
 
             //Navigation mode
             if( mode == 0 )
@@ -350,17 +359,25 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             {
                 SelMouse();
             }
+            
+            m_prevPos.first = m_currPos.first;
+            m_prevPos.second = m_currPos.second;
         }
         else if( type == gadget::MouseMoveEvent )
         {
-            gadget::MouseEventPtr mouse_evt = boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
+            gadget::MouseEventPtr mouse_evt = 
+                boost::dynamic_pointer_cast< gadget::MouseEvent >( *i );
             m_x = mouse_evt->getX();
             m_y = mouse_evt->getY();
 
             if( m_state == 1 )
             {
-                m_currPos.first = static_cast< double >( m_x ) / static_cast< double >( m_width );
-                m_currPos.second = static_cast< double >( m_y ) / static_cast< double >( m_height );
+                m_currPos.first = 
+                    static_cast< double >( m_x ) / 
+                    static_cast< double >( m_width );
+                m_currPos.second = 
+                    static_cast< double >( m_y ) / 
+                    static_cast< double >( m_height );
 
                 std::pair< double, double > delta;
                 delta.first = m_currPos.first - m_prevPos.first;
@@ -658,12 +675,21 @@ void KeyboardMouse::NavKeyboard()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMouse()
 {
-    ;
+    if( m_state == 0 )
+    {
+        return;
+    }
+    else if( m_state == 1 )
+    {
+        return;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMotion( std::pair< double, double > delta )
 {
-    m_magnitude = sqrtf( delta.first * delta.first + delta.second * delta.second );
+    m_magnitude = 
+        sqrtf( delta.first * delta.first + delta.second * delta.second );
+        
     if( m_magnitude < m_sensitivity )
     {
         return;
@@ -703,23 +729,19 @@ void KeyboardMouse::SelMouse()
     if( m_state == 1 )
     {
         ///Set selection of any patches back to true
-        /*for(size_t i =0; i < _nPatches; i++)
-        {
-            _patches.at(i)->SetMousePosition(ea.getX(),ea.getY());
-            _patches.at(i)->SetSelectionStatus(true);
-        }*/
+        VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
+            VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
+            true, std::pair< double, double >( m_x, m_y ), 
+            std::pair< double, double >( 0, 0 ) );
         return;
     }
     else if( m_state == 0 && m_button == gadget::MBUTTON1 )
     {
         ///Set selection of any patches back to false
-        /*for(size_t i =0; i < _nPatches; i++)
-        {
-            _patches.at(i)->SetSelectionStatus(false);
-        }*/
-        /*VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
+        VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
             VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
-            std::string("NULL") );*/
+            false, std::pair< double, double >( m_x, m_y ), 
+            std::pair< double, double >( 0, 0 ) );
         ProcessSelectionEvents();
     }
 }
@@ -728,19 +750,9 @@ void KeyboardMouse::SelMotion( std::pair< double, double > delta )
 {
     if( m_button == gadget::MBUTTON1 )
     {
-        //osg::ref_ptr< osg::Geometry > selection_rectangle = new osg::Geometry;
-        /*//x mouse move == X direction (left/right)
-        //y mouse move == Z direction (up/down)
-        dx = ea.getX() - _lastMousePosition[0];
-        dz = ea.getY() - _lastMousePosition[1];
-        if((fabs(dx) > .05)||(fabs(dz) > .05))
-        {
-            for(size_t i =0; i < _nPatches; i++)
-            {
-                _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
-            }
-            //UpdateLastMousePosition(ea.getX(),ea.getY());
-        }*/
+        VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
+            VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
+            true, std::pair< double, double >( m_x, m_y ), delta );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

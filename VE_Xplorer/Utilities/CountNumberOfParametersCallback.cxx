@@ -48,18 +48,18 @@ CountNumberOfParametersCallback::CountNumberOfParametersCallback()
 CountNumberOfParametersCallback::~CountNumberOfParametersCallback()
 {
    m_scalarNames.clear();
-   m_vectorNames.clear()
+   m_vectorNames.clear();
 }
 ///////////////////////////////////////////////////////////////////////////
 void CountNumberOfParametersCallback::OperateOnDataset(vtkDataSet* dataset)
 {
    unsigned int numPtDataArrays = dataset->GetPointData()
                                               ->GetNumberOfArrays();
-   std::vector<std::string> name;
+   std::string name;
    // count the number of paraneters containing numComponents components...
    for ( unsigned int i=0; i < numPtDataArrays; i++ )
    {
-      vtkDataArray* array = dataset->GetPointData()->GetArray(i);
+      /*vtkDataArray* array = dataset->GetPointData()->GetArray(i);
 	  name = std::find(m_scalarNames.begin(),
                        m_scalarNames.end(),
                        array->GetName());
@@ -91,7 +91,7 @@ void CountNumberOfParametersCallback::OperateOnDataset(vtkDataSet* dataset)
       {
          m_numberOfParameters[0]++;
          m_scalarNames.push_back( std::string( array->GetName() ));
-      }
+      }*/
    }
    
 }

@@ -63,7 +63,8 @@ public:
     ///\param node The node to be traversed
     ///\param id The model's GUID
     SetStateOnNURBSNodeVisitor( osg::Node* node, bool selectedState, 
-        std::pair< double, double > mousePoint );
+        std::pair< double, double > mousePoint, 
+        std::pair< double, double > mouseDelta );
 
     ///Destructor
     virtual ~SetStateOnNURBSNodeVisitor( void );
@@ -77,6 +78,8 @@ private:
     bool m_selectedState;
     ///Mouse location
     std::pair< double, double > m_mousePoint;
+    ///Delta for the mouse to move
+    std::pair< double, double > m_mouseDelta;
 };
 }
 
