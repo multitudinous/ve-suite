@@ -674,7 +674,19 @@ void Wand::RotateAboutWand()
 double* Wand::GetPlaneEquationConstantsNormalToWand()
 {
     ///Get wand pointing vector
+    Matrix44d vjMat = convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
+    Matrix44d worldWandMat = 
+        VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
     ///Normalize vector
+    gmtl::Vec3d vjVec;
+    vjVec.set( 0.0f, 0.0f, -1.0f );
+    gmtl::xform( vjVec, worldWandMat, vjVec );
+    gmtl::normalize( vjVec );
+    ///Transform from juggler to osg...
+    m_planeConstants[0] =  vjVec[ 0 ];
+    m_planeConstants[1] = -vjVec[ 2 ];
+    m_planeConstants[2] =  vjVec[ 1 ];
+    m_planeConstants[3] =  4;
     return m_planeConstants;
 }
