@@ -68,16 +68,24 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         return;
     }
 
-    NURBS::NURBSNode* tempNode = dynamic_cast< NURBS::NURBSNode* >( tempGroup.get() );
+    NURBS::NURBSNode* tempNode = 
+        dynamic_cast< NURBS::NURBSNode* >( tempGroup.get() );
     if( tempNode )
     {
         //process patches
-        std::cout << " found a patch " << std::endl;
+        //std::cout << " found a patch " << std::endl;
         tempNode->SetSelectionStatus( m_selectedState );
-        tempNode->SetMousePosition( m_mousePoint.first, m_mousePoint.second );
-        tempNode->MoveSelectedControlPoint( 
-            m_mouseDelta.first, 0, m_mouseDelta.second );
-       std::cout <<  tempNode->IsControlPointSelected() << std::endl;
+        if( m_selectedState )
+        {    
+            tempNode->SetMousePosition( m_mousePoint.first, m_mousePoint.second );
+            //if( tempNode->IsControlPointSelected() )
+            {
+                tempNode->MoveSelectedControlPoint( 
+                    m_mouseDelta.first * 5, 0, -m_mouseDelta.second * 5);
+                std::cout <<  "Have a selected point " 
+                    << tempNode->IsControlPointSelected() << std::endl;
+            }
+        }
     }
     else
     {

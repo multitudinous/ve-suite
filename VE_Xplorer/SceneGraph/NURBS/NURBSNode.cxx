@@ -282,8 +282,8 @@ void NURBSControlMesh::_drawUVPoints()const
 void NURBSControlMesh::SetMousePosition(float xPosition,
                                         float yPosition)
 {
-   _mouse[0] = (xPosition+1.0)*.5;
-   _mouse[1] = (yPosition+1.0)*.5;
+   _mouse[0] = xPosition;//(xPosition+1.0)*.5;
+   _mouse[1] = yPosition;//(yPosition+1.0)*.5;
 }
 ////////////////////////////////////////
 void NURBSControlMesh::Selection()const											
@@ -307,7 +307,8 @@ void NURBSControlMesh::Selection()const
      //clear the projection matrix
      glLoadIdentity(); 
 
-     gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
+     //gluPickMatrix(viewport[2]*_mouse[0],viewport[3]*_mouse[1],
+     gluPickMatrix( _mouse[0],viewport[3] - _mouse[1],
 			           5.0,5.0,viewport);
      glMultMatrixd(_projectionMatrix);
       
