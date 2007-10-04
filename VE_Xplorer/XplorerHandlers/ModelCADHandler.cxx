@@ -50,11 +50,17 @@
 #include <vpr/System.h>
 
 #include <osg/BlendFunc>
+#include <osg/ClipPlane>
 using namespace VE_Xplorer;
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::ModelCADHandler(VE_SceneGraph::DCS* rootNode)
 {
     m_assemblyList["rootNode"] = rootNode;
+    m_clipPlane = new osg::ClipPlane();
+    //m_clipPlane->setClipPlane(1,0,0,-.5);
+    m_assemblyList["rootNode"]
+    ->getOrCreateStateSet()->setAttributeAndModes(m_clipPlane.get(),
+                                                                  osg::StateAttribute::OFF);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
@@ -65,6 +71,7 @@ ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
     m_rootCADNodeID = rhs.m_rootCADNodeID;
     m_nodeAttributes = rhs.m_nodeAttributes;
 	m_globalAttributeList = rhs.m_globalAttributeList;
+    m_clipPlane = new osg::ClipPlane(*rhs.m_clipPlane.get());
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::~ModelCADHandler()
@@ -104,6 +111,25 @@ ModelCADHandler::operator=( const ModelCADHandler& rhs )
 		m_globalAttributeList = rhs.m_globalAttributeList;
     }
     return *this;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+void ModelCADHandler::SetClipPlane(double a, double b, double c, double d)
+{
+    m_clipPlane->setClipPlane(a,b,c,d);
+}
+//////////////////////////////////////////////////////////////////
+void ModelCADHandler::ToggleClipPlane(bool onOff)
+{
+    if(onOff)
+    {
+        m_assemblyList["rootNode"]->getOrCreateStateSet()
+        ->setAssociatedModes(m_clipPlane.get(),osg::StateAttribute::ON);
+    }
+    else
+    {
+        m_assemblyList["rootNode"]->getOrCreateStateSet()
+           ->setAssociatedModes(m_clipPlane.get(),osg::StateAttribute::OFF);
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::SetRootCADNodeID(std::string rootNodeId )

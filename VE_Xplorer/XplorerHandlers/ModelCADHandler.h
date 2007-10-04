@@ -62,6 +62,10 @@ namespace VE_CAD
 }
 }
 #include <osg/StateSet>
+namespace osg
+{
+    class ClipPlane;
+}
 
 namespace VE_Xplorer
 {
@@ -171,6 +175,16 @@ public:
     ///The current graph
     std::string GetRootCADNodeID();
     
+    ///Set the clip plane equation
+    ///\param a X coefficient
+    ///\param b Y coefficient
+    ///\param c Z coefficient
+    ///\param d 
+    void SetClipPlane(double a, double b,
+                          double c, double d);
+    ///Turn the clip plane off or on
+    ///\param onOff The state of the ClipPlane
+    void ToggleClipPlane(bool onOff);
     ///Equal operator
     ///\param rhs The ModelCADHandler we are setting this one equal to.
     ModelCADHandler& operator=(const ModelCADHandler& rhs);
@@ -181,6 +195,8 @@ public:
     virtual void UpdateCommand(){ ; }
 
 protected:
+    ///The clipping plane for geometry
+    osg::ref_ptr<osg::ClipPlane> m_clipPlane;
     ///A list of the current parts.
     std::map< std::string, VE_SceneGraph::CADEntity* > m_partList;
     ///A list of the current assemblies.
