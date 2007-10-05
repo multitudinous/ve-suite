@@ -731,7 +731,7 @@ void KeyboardMouse::SelMouse()
         ///Set selection of any patches back to true
         VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
             VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
-            true, std::pair< double, double >( m_x, m_y ), 
+            true, false, m_currPos, 
             std::pair< double, double >( 0, 0 ) );
         return;
     }
@@ -740,7 +740,7 @@ void KeyboardMouse::SelMouse()
         ///Set selection of any patches back to false
         VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
             VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
-            false, std::pair< double, double >( m_x, m_y ), 
+            false, false, m_currPos, 
             std::pair< double, double >( 0, 0 ) );
         ProcessSelectionEvents();
     }
@@ -752,7 +752,7 @@ void KeyboardMouse::SelMotion( std::pair< double, double > delta )
     {
         VE_SceneGraph::SetStateOnNURBSNodeVisitor( 
             VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode(), 
-            true, std::pair< double, double >( m_x, m_y ), delta );
+            true, true, m_currPos, delta );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

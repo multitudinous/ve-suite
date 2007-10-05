@@ -61,8 +61,11 @@ class VE_SCENEGRAPH_EXPORTS SetStateOnNURBSNodeVisitor : public osg::NodeVisitor
 public:
     ///Constructor
     ///\param node The node to be traversed
-    ///\param id The model's GUID
+    ///\param selectedState The state of the selection process
+    ///\param dragState The state of the mouse true for dragging
+    ///\param mousePoint The mouse position is between 0,1
     SetStateOnNURBSNodeVisitor( osg::Node* node, bool selectedState, 
+        bool dragState,
         std::pair< double, double > mousePoint, 
         std::pair< double, double > mouseDelta );
 
@@ -76,6 +79,8 @@ public:
 private:
     ///Flag to set the selected state
     bool m_selectedState;
+    ///The drag state of the mouse
+    bool m_dragState;
     ///Mouse location
     std::pair< double, double > m_mousePoint;
     ///Delta for the mouse to move

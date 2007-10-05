@@ -1146,7 +1146,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     //Now laod the xml data now that we are in the correct directory
     //network->Load( ConvertUnicode( fname.c_str() ), true );
 CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-serviceList->GetMessageLog()->SetMessage( fname.c_str() );
+serviceList->GetMessageLog()->SetMessage( ConvertUnicode( fname.c_str() ).c_str() );
 	canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     
 	//create hierarchy page

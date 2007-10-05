@@ -223,7 +223,7 @@ void HierarchyTree::AddtoTree( UIPluginBase *cur_module )
 {
 	ModuleData* modData = new ModuleData();
 	modData->modId = cur_module->GetID();
-	modData->modName = cur_module->GetName();
+	modData->modName = ConvertUnicode( cur_module->GetName() );
 	//modData->systemId = id;
 
 	AppendItem(currentId, wxString( cur_module->GetName().c_str(), wxConvUTF8 )

@@ -44,13 +44,14 @@ using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node, 
-    bool selectedState, std::pair< double, double > mousePoint, 
+    bool selectedState, bool dragState, std::pair< double, double > mousePoint, 
     std::pair< double, double > mouseDelta)
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN ),
 m_mousePoint( mousePoint ),
 m_selectedState( selectedState ),
-m_mouseDelta( mouseDelta )
+m_mouseDelta( mouseDelta ),
+m_dragState( dragState )
 {
     node->accept( *this );    
 }
@@ -72,26 +73,25 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         dynamic_cast< NURBS::NURBSNode* >( tempGroup.get() );
     if( tempNode )
     {
-
         //process patches
         //std::cout << " found a patch " << std::endl;
         tempNode->SetSelectionStatus( m_selectedState );
-        if( m_selectedState )
-        {    
-            ///If the mouse position is between 0,1 this will map
-            ///the position to [-1,1]...otherwise it will map to junk
-            tempNode->SetMousePosition( -1.0 + m_mousePoint.first*2.0,
-                                        -1.0 + m_mousePoint.second*2.0);
-            //if( tempNode->IsControlPointSelected() )
-            {
-                ///I'm not sure where this goes but the control point can't be
-                ///moved before the selection code has be processed by GL, ie. draw
-                ///--biv
-                /*tempNode->MoveSelectedControlPoint( 
-                    m_mouseDelta.first * 5, 0, -m_mouseDelta.second * 5);*/
-                std::cout <<  "Have a selected point " 
-                    << tempNode->IsControlPointSelected() << std::endl;
-            }
+        if( !m_selectedState )
+        {
+            return;
+        }
+
+        if( m_dragState )
+        {
+            tempNode->MoveSelectedControlPoint( 
+                m_mouseDelta.first * 5, 0, -m_mouseDelta.second * 5);
+            std::cout <<  "Have a selected point " 
+                << tempNode->IsControlPointSelected() << std::endl;
+        }
+        else
+        {
+            tempNode->SetMousePosition( m_mousePoint.first,
+                                        m_mousePoint.second );
         }
     }
     else
