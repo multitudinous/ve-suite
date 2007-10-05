@@ -90,8 +90,8 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         }
         else
         {
-            tempNode->SetMousePosition( m_mousePoint.first,
-                                        m_mousePoint.second );
+            tempNode->SetMousePosition( -1.0 + m_mousePoint.first*2.0,
+                                        -1.0 + m_mousePoint.second*2.0 );
         }
     }
     else
