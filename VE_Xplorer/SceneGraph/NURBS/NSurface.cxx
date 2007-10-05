@@ -117,8 +117,15 @@ void NURBSSurface::_interpolateWithinRange(double umin,double umax,
             //dS/dU
             _surfDerivatives[1][0][v*_meshDimensions["U"]+ u] =surfaceInfo[1].at(0);
 
-            //ds/dudv
-            _surfDerivatives[1][1][v*_meshDimensions["U"]+ u] =surfaceInfo[1].at(1);
+            /*try---these aren't used for anything now
+            {
+               //ds/dudv
+               _surfDerivatives[1][1][v*_meshDimensions["U"]+ u] =surfaceInfo[1].at(1);
+            }
+            catch(...)
+            {
+                ///just means we have a lower degree surface (<3)
+            }*/
          }
          //uparam += _interpolationStepSize["U"];
          uparam = std::min(uparam + _interpolationStepSize["U"],umax);
@@ -201,8 +208,15 @@ void NURBSSurface::Interpolate()
             //dS/dV
             _surfDerivatives[1][0].push_back(surfaceInfo[1].at(0));
 
-            //ds/dudv
-            _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
+            /*try---these aren't used for anything now
+            {
+               //ds/dudv
+               _surfDerivatives[1][1].push_back(surfaceInfo[1].at(1));
+            }
+            catch(...)
+            {
+                //just means we have a lower degree (less than 3)surface
+            }*/
          }
          uparam += _interpolationStepSize["U"];
       }

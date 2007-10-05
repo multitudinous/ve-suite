@@ -263,6 +263,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SetStateOnNURBSNodeVisitor.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\Switch.cxx"
 				>
 			</File>
@@ -388,6 +392,10 @@
 			</File>
 			<File
 				RelativePath=".\SelectTechnique.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SetStateOnNURBSNodeVisitor.h"
 				>
 			</File>
 			<File
