@@ -43,7 +43,9 @@
 #include "VE_Open/XML/Model/Model.h"
 #include "VE_Open/XML/Model/Network.h"
 #include "VE_Open/XML/Model/Tag.h"
+#include "VE_Open/XML/Model/TagPtr.h"
 #include "VE_Open/XML/User.h"
+#include "VE_Open/XML/UserPtr.h"
 #include "VE_Open/XML/Command.h"
 
 #include <sstream>
@@ -155,6 +157,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
 			
 			m_systemMap[tempSystem->GetID()] = tempSystem;
+			//get the main systems id
+			topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
         }
         else
@@ -396,6 +400,11 @@ std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector(
     //std::vector< std::string > temp = m_networkModelMap[ dataNumber ];
     //std::cout << " size " << temp.size() << std::endl;
     return m_networkModelMap[ dataNumber ];
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string XMLDataBufferEngine::GetTopSystemId( )
+{
+	return topId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_Model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(

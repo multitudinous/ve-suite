@@ -68,6 +68,7 @@
 #include "VE_Conductor/Framework/Splitter.h"
 #include "VE_Conductor/Framework/ViewLocPane.h"
 #include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/Canvas.h"
 #include "VE_Conductor/Framework/MainToolBar.h"
 #include "VE_Conductor/Framework/ExportMenu.h"
 
@@ -228,7 +229,9 @@ f_geometry( true ),
 f_visualization( true ),
 xplorerMenu( 0 ),
 recordScenes( 0 ),
-network( 0 ),
+//network( 0 ),
+canvas( 0 ),
+hierarchyTree(),
 m_frame( 0 ),
 _treeView( 0 ),
 deviceProperties( 0 ),
@@ -280,9 +283,15 @@ viewlocPane( 0 )
 
     //Try and load network from server if one is already present
     std::string nw_str = serviceList->GetNetwork();
-    network->Load( nw_str, true );
+    //network->Load( nw_str, true );
+	if(!nw_str.empty())
+	{
+		canvas->PopulateNetworks( nw_str );
+	}
     //create hierarchy page
-    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+	hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+		GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+		GetTopSystemId());
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
 
@@ -334,8 +343,8 @@ AppFrame::~AppFrame()
     //We have to mannually destroy these to make sure that things shutdown 
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
-    network->Destroy();
-    network = 0;
+    //network->Destroy();
+    //network = 0;
     serviceList->CleanUp();
     serviceList = 0;
 
@@ -412,18 +421,23 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 	side_pane->AddPage(hierPage, wxT("Hierarchy"));
 
 	//add network to splitter
-	network = new Network( wx_nw_splitter, -1 );
+	//network = new Network( wx_nw_splitter, -1 );
+	canvas = new Canvas( wx_nw_splitter, -1 );
 
 	//tells module panel where to send the selected module
+	Network * network = canvas->GetActiveNetwork();
+    av_modules->SetFrame( this );
+    av_modules->SetCanvas( canvas );
     av_modules->SetNetwork( network );
-    hierarchyTree->SetNetwork( network );
+    hierarchyTree->SetCanvas( canvas );
 
     if( GetDisplayMode() == "Tablet" )
     {
         wx_log_splitter->SplitHorizontally( serviceList->GetMessageLog(), wx_nw_splitter, -205 );
     }
 
-    wx_nw_splitter->SplitVertically( side_pane, network, 140 );
+    //wx_nw_splitter->SplitVertically( side_pane, network, 140 );
+    wx_nw_splitter->SplitVertically( side_pane, canvas, 140 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureDesktop()
@@ -824,6 +838,8 @@ void AppFrame::CreateMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
 {
+	Network * network = canvas->GetActiveNetwork();
+
     if( network->GetUserScale()->first > 4 )
     {    
         return; // maximum zoom in x3
@@ -835,16 +851,24 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
     network->GetNumPix()->second += 1;
     
     int xpos, ypos;
-    network->GetViewStart( &xpos, &ypos );
+    /*network->GetViewStart( &xpos, &ypos );
     network->SetScrollbars( 
         network->GetNumPix()->first, network->GetNumPix()->second, 
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
-    network->Refresh(true);
+    network->Refresh(true);*/
+    canvas->GetViewStart( &xpos, &ypos );
+    canvas->SetScrollbars( 
+        network->GetNumPix()->first, network->GetNumPix()->second, 
+        network->GetNumUnit()->first, network->GetNumUnit()->second,
+        xpos, ypos );
+    canvas->Refresh(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
 {
+	Network * network = canvas->GetActiveNetwork();
+
     if( network->GetUserScale()->first < 0.2 )
     {   
         return; //minimum x-5
@@ -856,12 +880,18 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
     network->GetNumPix()->second -= 1;
 
     int xpos, ypos;
-    network->GetViewStart(&xpos, &ypos);
+    /*network->GetViewStart(&xpos, &ypos);
     network->SetScrollbars( 
         network->GetNumPix()->first, network->GetNumPix()->second, 
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
-    network->Refresh(true);
+    network->Refresh(true);*/
+    canvas->GetViewStart(&xpos, &ypos);
+    canvas->SetScrollbars( 
+        network->GetNumPix()->first, network->GetNumPix()->second, 
+        network->GetNumUnit()->first, network->GetNumUnit()->second,
+        xpos, ypos );
+    canvas->Refresh(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )
@@ -875,7 +905,7 @@ void AppFrame::Save( wxCommandEvent& event )
    {
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
+      //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
    }
 }
 
@@ -933,7 +963,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       fname = vesFileName.GetFullName();
       ///now write the file out from domdocument manager
       //wrtie to path
-      std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
+      //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
       SetTitle( vesFileName.GetFullName() );
    }
 }
@@ -1009,10 +1039,13 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
     //Now laod the xml data now that we are in the correct directory
     fname=dialog.GetFilename();
-    network->Load( ConvertUnicode( fname.c_str() ), true );
+    //network->Load( ConvertUnicode( fname.c_str() ), true );
+	canvas->PopulateNetworks(ConvertUnicode( fname.c_str() ));
 
     //create hierarchy page
-    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+		GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+		GetTopSystemId());
     wxCommandEvent event;
     SubmitToServer( event );
     if( recordScenes )
@@ -1111,10 +1144,15 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
-    network->Load( ConvertUnicode( fname.c_str() ), true );
+    //network->Load( ConvertUnicode( fname.c_str() ), true );
+CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+serviceList->GetMessageLog()->SetMessage( fname.c_str() );
+	canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     
 	//create hierarchy page
-    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+		GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+		GetTopSystemId());
     SubmitToServer( event );
     //Rebuild the teacher tab so that the new stored files are loaded
     if( recordScenes )
@@ -1155,10 +1193,13 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
    std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
-   network->Load( nw_str, false );
+   //network->Load( nw_str, false );
+   canvas->PopulateNetworks( nw_str );
 
    //create hierarchy page
-   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+	   GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+	   GetTopSystemId());
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
@@ -1179,10 +1220,13 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
    // If there is nothing on the CE
    if ( !nw_str.empty() )
    {
-       network->Load( nw_str, true );
+       //network->Load( nw_str, true );
+	   canvas->PopulateNetworks( nw_str );
        
        //create hierarchy page
-       hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+	   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+		   GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+		   GetTopSystemId());
        ///Submit job to xplorer
 	   wxCommandEvent event;
 	   SubmitToServer( event );
@@ -1237,12 +1281,17 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
         return;
     }
 
+	Network * network = canvas->GetActiveNetwork();
+
     if( network->modules.empty() )
     { 
-        network->Load( nw_str, true );
+        //network->Load( nw_str, true );
+		canvas->PopulateNetworks( nw_str );
 
 		//create hierarchy page
-		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+			GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+			GetTopSystemId());
 
         Log("Simulation Opened.\n");
         ///
@@ -1395,6 +1444,8 @@ void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 {
+	Network * network = canvas->GetActiveNetwork();
+
     Log("Find Block.\n");
     FindDialog * fd = new FindDialog(this);
     std::map<int, Module>::iterator iter;
@@ -1493,13 +1544,16 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED(event) )
    //clear any current tree
    hierarchyTree->Clear();
    SetTitle( _("VE-Suite: www.vesuite.org") );
-   network->New( true );
+   //network->New( true );
+   canvas->New( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
    EnableCEGUIMenuItems();
    
+   Network * network = canvas->GetActiveNetwork();
+
    std::string nw_str = network->Save( std::string( "returnString" ) );
    // write the domdoc to the string above
    try 
@@ -1576,6 +1630,8 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
+   Network * network = canvas->GetActiveNetwork();
+
    serviceList->IsConnectedToCE();
    EnableCEGUIMenuItems();
 
@@ -2108,9 +2164,12 @@ void AppFrame::ProcessCommandLineArgs( void )
    fname=vesFileName.GetFullName();
    // we submit after new to make sure that the ce and ge ar cleared
    wxCommandEvent event;
-   network->Load( ConvertUnicode( fname.c_str() ), true );
+   //network->Load( ConvertUnicode( fname.c_str() ), true );
+   canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
    //create hierarchy page
-   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->GetXMLModels());
+   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
+	   GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+	   GetTopSystemId());
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
 }
@@ -2210,6 +2269,8 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnInternalIdle()
 {
+    Network * network = canvas->GetActiveNetwork();
+	
 	//only when not dragging
     if( !network )
     {
@@ -2232,4 +2293,9 @@ void AppFrame::ShutdownXplorerOptionOn()
 void AppFrame::ShutdownXplorerOptionOff()
 {
     xplorerMenu->Remove( XPLORER_EXIT );
+}
+////////////////////////////////////////////////////////////////////////////////
+HierarchyTree * AppFrame::GetHierarchyTree()
+{
+	return hierarchyTree;
 }

@@ -31,7 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "VE_Conductor/Framework/AppFrame.h"
+#include "VE_Conductor/Framework/Canvas.h"
 #include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/HierarchyTree.h"
 #include "VE_Conductor/Framework/Avail_Modules.h"
 #include "VE_Conductor/Framework/PluginLoader.h"
 #include "VE_Conductor/GUIPlugin/StringParse.h"
@@ -64,9 +67,9 @@ END_EVENT_TABLE()
 Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
 :
 wxTreeCtrl(parent, id, pos, size, style), 
-network(0)
+network(0),
+canvas(0)
 {
-  
   int image1 = TreeCtrlIcon_Folder;
   int image2 = TreeCtrlIcon_FolderSelected;
   CreateImageList();
@@ -168,16 +171,22 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
     {
         UIPluginBase* object;
         object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
-        object->SetNetworkFrame( network );
-        object->SetDCScale( network->GetUserScale() );
-        network->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
+        //object->SetNetworkFrame( canvas );
+        object->SetCanvas( canvas );
+        object->SetNetwork( network );
+		object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
+        canvas->GetActiveNetwork()->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
+		frame->GetHierarchyTree()->AddtoTree( object );
     }
     else
     {
         UIPluginBase* object = new DefaultPlugin();
-        object->SetNetworkFrame( network );
-        object->SetDCScale( network->GetUserScale() );
-        network->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
+        //object->SetNetworkFrame( canvas );
+        object->SetCanvas( canvas );
+        object->SetNetwork( network );
+		object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
+        canvas->GetActiveNetwork()->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
+		frame->GetHierarchyTree()->AddtoTree( object );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

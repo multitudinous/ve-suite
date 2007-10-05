@@ -43,6 +43,7 @@ Network API
 #include "VE_Conductor/Utilities/Tag.h"
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/GUIPlugin/Module.h"
+#include "VE_Open/XML/Model/SystemStrongPtr.h"
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>
@@ -64,12 +65,14 @@ namespace VE_Model
 }
 
 class AppFrame;
+class Canvas;
 
-class Network : public wxScrolledWindow, public wxThreadHelper
+//class Network : public wxScrolledWindow, public wxThreadHelper
+class Network : public wxEvtHandler, public wxThreadHelper
 {
 public:
    Network(){;}
-   Network(wxWindow* parent, int id );
+   //Network(wxWindow* parent, int id );
    virtual ~Network();
 
    enum 
@@ -112,6 +115,7 @@ public:
    ///always want this action
    void Load( std::string xmlNetwork, bool promptClearXplorer );
    void CreateNetwork( std::string xmlNetwork );
+   void LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, wxWindow * frame, Canvas * parent );
    ///Clear the deisgn canvas and xplorer objects if desired
    void New( bool clearXplorer = false );
    ///Acessors
@@ -126,6 +130,10 @@ public:
    void SetSelectedModule( int mod );
    void HighlightCenter( int modId );
    std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
+   //void ReDraw(wxDC &dc);
+   void DrawNetwork(wxDC &dc);
+   void PushAllEvents( );
+   void RemoveAllEvents( );
    
 protected:
    //Draw functions
@@ -134,7 +142,6 @@ protected:
    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
    //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
    //void DrawTag( VE_Conductor::GUI_Utilities::Tag *t, bool flag);
-   void ReDraw(wxDC &dc);
 
    //Selection functions
    int SelectMod(int x, int y, wxDC& dc);
@@ -209,7 +216,7 @@ private:
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
    //VE_XML::VE_Model::Network veNetwork;
    ///Parent window pointer to the splitter in AppFrame
-   wxWindow* parent;
+   Canvas* parent;
    ///wxframe pointer for frame.cxx
    AppFrame* frame;
    ///User scale

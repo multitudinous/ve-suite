@@ -48,7 +48,6 @@
 #include "VE_Conductor/GUIPlugin/vistab.h"
 #include "VE_Conductor/Utilities/SoundsPane.h"
 #include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
-
 // EPRI TAG
 #include "VE_Conductor/GUIPlugin/FinancialDialog.h"
 #include "VE_Open/XML/Model/Model.h"
@@ -107,7 +106,9 @@ IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
 
 /////////////////////////////////////////////////////////////////////////////
 UIPluginBase::UIPluginBase() :
-    networkFrame( 0 ),
+    //networkFrame( 0 ),
+    network( 0 ),
+    canvas( 0 ),
     dlg( 0 ), 
     result_dlg( 0 ),
     port_dlg( 0 ),
@@ -216,9 +217,19 @@ UIPluginBase::~UIPluginBase()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SetNetworkFrame( wxScrolledWindow* networkFrame )
+//void UIPluginBase::SetNetworkFrame( wxScrolledWindow* networkFrame )
+//{
+//   this->networkFrame = networkFrame;
+//}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetCanvas( wxScrolledWindow * canvas )
 {
-   this->networkFrame = networkFrame;
+   this->canvas = canvas;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetNetwork( wxEvtHandler * network )
+{
+   this->network = network;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetID(int id)
@@ -826,7 +837,7 @@ void UIPluginBase::SetVEModel( VE_XML::VE_Model::Model* tempModel )
       }
       else
       {
-         wxMessageDialog( networkFrame, _("Improperly formated ves file."), 
+         wxMessageDialog( canvas, _("Improperly formated ves file."), 
                   _("VES File Read Error"), wxOK | wxICON_ERROR, wxDefaultPosition );
       }
    }
@@ -1126,8 +1137,8 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
 void UIPluginBase::OnDClick( wxMouseEvent &event)
 {
    // This function opens a plugins dialog when double clicked on the design canvas
-   wxClientDC dc( networkFrame );
-   networkFrame->DoPrepareDC( dc );
+   wxClientDC dc( canvas );
+   canvas->DoPrepareDC( dc );
    dc.SetUserScale( userScale->first, userScale->second );
    wxPoint evtpos = event.GetLogicalPosition( dc );
    //If this is not the plugin then move on to the next one
@@ -1216,7 +1227,7 @@ void  UIPluginBase::OnShowAspenName(wxCommandEvent& event )
 	wxString title;
 	title << wxT("Aspen Name");
 	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
-	wxMessageDialog( networkFrame, desc, title).ShowModal();
+	wxMessageDialog( canvas, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
@@ -1224,7 +1235,7 @@ void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
 	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
 	UIPluginBase* tempPlugin = this;
-    IconChooser* chooser = new IconChooser( networkFrame );
+    IconChooser* chooser = new IconChooser( canvas );
 	chooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
 	chooser->SetPlugin(tempPlugin);
     //chooser->SetSize( dialogSize );
@@ -1256,7 +1267,7 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 	wxString title( compName.c_str(),wxConvUTF8);
 	//TextResultDialog * results = new TextResultDialog(this, title);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg* params = new ParamsDlg(networkFrame);
+	ParamsDlg* params = new ParamsDlg(canvas);
 	//params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
@@ -1314,7 +1325,7 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 	std::string nw_str = serviceList->Query( status );
 	wxString title( compName.c_str(),wxConvUTF8);
 	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg * params = new ParamsDlg(networkFrame);
+	ParamsDlg * params = new ParamsDlg(canvas);
 	//params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
 	VE_XML::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
@@ -1351,7 +1362,7 @@ void UIPluginBase::OnShowDesc(wxCommandEvent& event )
 
     desc = GetDesc();
 
-    wxMessageDialog( networkFrame, desc, title).ShowModal();
+    wxMessageDialog( canvas, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnParaView(wxCommandEvent& WXUNUSED(event))
@@ -1398,7 +1409,7 @@ void UIPluginBase::OnGeometry(wxCommandEvent& event )
    if( !cadDialog )
    {
       cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
-                                                               networkFrame, ::wxNewId() );
+                                                               canvas, ::wxNewId() );
 
       cadDialog->SetSize( dialogSize );
    }
@@ -1427,7 +1438,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
     
     // Here we launch a dialog for a specific plugins input values
    VE_XML::VE_Model::Model* veModel = GetModel();
-   DataSetLoaderUI dataSetLoaderDlg( networkFrame, ::wxNewId(), 
+   DataSetLoaderUI dataSetLoaderDlg( canvas, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
    dataSetLoaderDlg.SetSize( dialogSize );
@@ -1488,7 +1499,7 @@ void UIPluginBase::OnVisualization(wxCommandEvent& event )
 
    if(!vistab)
    {
-      vistab = new Vistab (activeCORBAModel,networkFrame,
+      vistab = new Vistab (activeCORBAModel,canvas,
                        SYMBOL_VISTAB_IDNAME,
                        wxString(activeXMLModel->GetModelName().c_str(),wxConvUTF8),
                        SYMBOL_VISTAB_POSITION,
@@ -1579,7 +1590,7 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
     SetPluginNameDialog();   
-    networkFrame->Refresh( true );
+    canvas->Refresh( true );
 }
 //////////////////////////////////////////////////
 void UIPluginBase::OnModelSounds(wxCommandEvent& event)
@@ -1604,8 +1615,8 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
 {
     // This function opens a plugins dialog when 
     // double clicked on the design canvas
-    wxClientDC dc( networkFrame );
-    networkFrame->DoPrepareDC( dc );
+    wxClientDC dc( canvas );
+    canvas->DoPrepareDC( dc );
     dc.SetUserScale( userScale->first, userScale->second );
     wxPoint evtpos = event.GetLogicalPosition( dc );
     //If this is not the plugin then move on to the next one
@@ -1617,12 +1628,12 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     
     actionPoint = evtpos;
 	highlightFlag = true;
-	networkFrame->Refresh( true );
+	canvas->Refresh( true );
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );
     setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
-    networkFrame->GetEventHandler()->ProcessEvent( setActivePluginId );
+    canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
 
     wxString menuName = name + wxString( " Menu", wxConvUTF8 );
     wxMenu pop_menu( menuName );
@@ -1698,7 +1709,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     pop_menu.Enable(DEL_MOD, true);
 
     //pop_menu.SetClientData( &id );
-    networkFrame->PopupMenu(&pop_menu, event.GetPosition());
+    canvas->PopupMenu(&pop_menu, event.GetPosition());
 
     m_selFrPort = -1; 
     m_selToPort = -1; 
@@ -1707,7 +1718,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     m_selTag = -1; 
     m_selTagCon = -1; 
     //xold = yold =0;
-    networkFrame->Refresh( true );
+    canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& event )
@@ -1734,7 +1745,7 @@ bool UIPluginBase::CheckID()
 ////////////////////////////////////////////////////////////////////////////////
 bool UIPluginBase::SetActiveModel()
 {
-    // Create the command and data value pairs
+/*    // Create the command and data value pairs
     VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
@@ -1747,6 +1758,8 @@ bool UIPluginBase::SetActiveModel()
     //Clean up memory
     delete veCommand;
     return connected;
+	*/
+	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDialogSize( wxRect dialogSize )
@@ -1765,7 +1778,7 @@ void UIPluginBase::OnDelMod(wxCommandEvent& event )
     //Now delete the plugin from the module and then remove from the map
     ///This is so that we find the right eventhandler to pop rather than
     ///popping the last one
-    networkFrame->RemoveEventHandler( this );
+//    networkFrame->RemoveEventHandler( this );
     
     ///Now send the erased module to xplorer to delete it as well
     VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
@@ -1775,10 +1788,11 @@ void UIPluginBase::OnDelMod(wxCommandEvent& event )
     veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
     veCommand->AddDataValuePair( dataValuePair );
     bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+
     //Clean up memory
     delete veCommand;
     event.SetClientData( &id );
-    ::wxPostEvent( networkFrame, event );
+    ::wxPostEvent( network, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDCScale( std::pair< double, double >* scale )
@@ -1929,7 +1943,7 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
         outputPort.push_back( port );
     }
     port->SetPortNumber( outputPort.size() + inputPort.size() );
-    networkFrame->Refresh( true );
+    canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DeletePort( wxCommandEvent& event )
@@ -1979,9 +1993,9 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
     if( tempPort )
     {
         event.SetClientData( tempPort );
-        ::wxPostEvent( networkFrame, event );
+        ::wxPostEvent( network, event );
     }
-    networkFrame->Refresh( true );
+    canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 double UIPluginBase::computenorm( wxPoint pt1, wxPoint pt2 )

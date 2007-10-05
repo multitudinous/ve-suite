@@ -228,6 +228,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Canvas.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ConductorApp.cxx"
 				>
 			</File>
@@ -298,6 +302,10 @@
 			</File>
 			<File
 				RelativePath=".\Avail_Modules.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Canvas.h"
 				>
 			</File>
 			<File

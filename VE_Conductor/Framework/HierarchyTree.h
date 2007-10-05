@@ -46,6 +46,7 @@ HierarchyTree API
 #include <wx/treectrl.h>
 
 class Network;
+class Canvas;
 class UIPluginBase;
 class PluginLoader;
 
@@ -66,14 +67,17 @@ public:
 
     ///Populate the tree
     ///\param tree The tree to populate
-    void PopulateTree(std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > tree);
+	void PopulateTree(std::map< std::string, VE_XML::VE_Model::
+		ModelWeakPtr > tree, std::string id);
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList(int size=16);
 	void AddtoImageList(wxBitmap);
     ///Set the network to work with
     ///\param nw Network to work with
-    void SetNetwork(Network *nw) { m_network = nw; };
+    void SetCanvas(Canvas *can) { m_canvas = can; };
+	//add a module to the tree
+	void AddtoTree( UIPluginBase *cur_module );
     ///Clear the hierarchy tree
     ///This is called by default by PopulateTree
     void Clear();
@@ -81,12 +85,15 @@ public:
 protected:
     ///The size of the images
     int m_imageSize;
-	void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::ModelWeakPtr > models);
+	void PopulateLevel(wxTreeItemId parentLeaf, std::vector< VE_XML::VE_Model::
+		ModelWeakPtr > models, std::string id);
 	void OnSelChanged(wxTreeEvent& event);
+	void OnExpanded(wxTreeEvent& WXUNUSED(event));
     
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
-    Network* m_network;
+    wxTreeItemId currentId;
+    Canvas* m_canvas;
 	wxImageList *images;
 
     DECLARE_EVENT_TABLE();
@@ -97,6 +104,8 @@ class ModuleData : public wxTreeItemData
  public:
   unsigned int modId;
   std::string modName;
+  std::string systemId;
+  std::string subSystemId;
 };
 
 #endif

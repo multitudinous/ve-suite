@@ -102,6 +102,8 @@ public:
 	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >
 		GetXMLSystemDataMap();
 	///Get a system
+	std::string GetTopSystemId( );
+	///Get a system
 	VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
     ///Get data
     VE_XML::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
@@ -125,6 +127,8 @@ private:
     std::map< std::string, VE_XML::VE_Model::TagStrongPtr > m_tagMap;
     ///Map
     std::map< std::string, VE_XML::UserStrongPtr > m_userMap;
+	//Top most id
+	std::string topId;
 };
 }
 #endif //XML_DATA_BUFFER_ENGINE_H

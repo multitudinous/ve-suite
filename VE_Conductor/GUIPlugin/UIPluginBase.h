@@ -223,7 +223,9 @@ public:
    void OnDClick( wxMouseEvent &event);
    ///Set the network wxFrame that this plugin is associated with so that
    ///the plugin can draw and capture the appropriate events
-   void SetNetworkFrame( wxScrolledWindow* networkFrame );
+   //void SetNetworkFrame( wxScrolledWindow* networkFrame );
+   void SetCanvas( wxScrolledWindow* canvas );
+   void SetNetwork( wxEvtHandler* network );
    ///Set the corba servicelist so that the plugin can talk with the graphical
    ///engine
    void SetCORBAService( VE_Conductor::CORBAServiceList* serviceList );
@@ -346,7 +348,9 @@ protected:
    
    std::map< std::string, wxImage > defaultIconMap;
    
-   wxScrolledWindow* networkFrame;
+   //wxScrolledWindow* networkFrame;
+   wxScrolledWindow* canvas;
+   wxEvtHandler* network;
    SoundsPane* _soundsDlg;
    Vistab* vistab;
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;

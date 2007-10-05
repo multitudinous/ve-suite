@@ -58,6 +58,7 @@ namespace VE_Conductor
 class UI_Frame;
 class Splitter;
 class Network;
+class Canvas;
 class ViewLocPane;
 class MainToolBar;
 class Avail_Modules;
@@ -218,7 +219,8 @@ public:
     Avail_Modules* av_modules;
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
-    Network* network;
+    //Network* network;
+    Canvas* canvas;
 
     UI_Frame* m_frame;
 
@@ -260,6 +262,7 @@ public:
     void ShutdownXplorerOptionOn( void );
     ///Removes Xplorer shutdown option using user preferences
     void ShutdownXplorerOptionOff( void );
+	HierarchyTree * GetHierarchyTree();
     
 protected:
     int m_frameNr;

@@ -32,8 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/Canvas.h"
 #include "VE_Conductor/Framework/HierarchyTree.h"
 #include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
+#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
 
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
@@ -52,15 +54,15 @@
 #endif
 
 BEGIN_EVENT_TABLE(HierarchyTree, wxTreeCtrl)
-  //EVT_TREE_SEL_CHANGED(TREE_CTRL, HierarchyTree::OnSelChanged)
-  EVT_TREE_SEL_CHANGED(TREE_CTRL, HierarchyTree::OnSelChanged)
+  EVT_TREE_SEL_CHANGED( TREE_CTRL, HierarchyTree::OnSelChanged )
+  EVT_TREE_ITEM_EXPANDING( TREE_CTRL, HierarchyTree::OnExpanded )
 END_EVENT_TABLE()
    
 HierarchyTree::HierarchyTree(wxWindow *parent, const wxWindowID id, 
     const wxPoint& pos, const wxSize& size,long style)
 :
 wxTreeCtrl(parent, id, pos, size, style), 
-m_network(0)
+m_canvas(0)
 {
   images = new wxImageList(32, 32, TRUE);
   AssignImageList(images);
@@ -68,6 +70,7 @@ m_network(0)
   AddtoImageList(wxIcon( icon4_xpm ));
   AddtoImageList(wxIcon( icon5_xpm ));
   m_rootId = AddRoot( wxT( "Top Sheet" ), 0, -1, NULL );
+  currentId = m_rootId;
   SetItemImage(m_rootId, 2, wxTreeItemIcon_Expanded);
   SetItemFont(m_rootId, *wxITALIC_FONT);
 }
@@ -82,7 +85,7 @@ void HierarchyTree::AddtoImageList(wxBitmap icon)
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateTree(std::map< std::string, 
-    VE_XML::VE_Model::ModelWeakPtr > tree)
+								 VE_XML::VE_Model::ModelWeakPtr > tree, std::string id)
 {
     ///Reset Tree
     Clear();
@@ -97,6 +100,15 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 		ModuleData* modData = new ModuleData();
 		modData->modId = iter->second->GetModelID();
 		modData->modName = iter->second->GetModelName();
+		modData->systemId = id;
+		if(iter->second->GetSubSystem())
+		{
+			modData->subSystemId = iter->second->GetSubSystem()->GetID();
+		}
+		else
+		{
+			modData->subSystemId = -1;
+		}
 		
 		//Add the icon to the image list
 		fullPath = "2DIcons/" + iter->second->GetIconFilename() + ".jpg";
@@ -111,20 +123,22 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 			AddtoImageList(wxIcon( icon1_xpm ));
         }
 
-		wxTreeItemId leaf = AppendItem(GetRootItem(), 
+		wxTreeItemId leaf = AppendItem(m_rootId, 
             wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
 			images->GetImageCount()-1 , -1, modData);
 		SetItemImage(leaf, images->GetImageCount()-1);
 
 		if( iter->second->GetSubSystem() )
         {
-			PopulateLevel(leaf, iter->second->GetSubSystem()->GetModels());
+			PopulateLevel(leaf, iter->second->GetSubSystem()->GetModels(),
+				iter->second->GetSubSystem()->GetID());
         }
 	}
+	currentId = m_rootId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, 
-    std::vector< VE_XML::VE_Model::ModelWeakPtr > models)
+   std::vector< VE_XML::VE_Model::ModelWeakPtr > models, std::string id)
 {
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
@@ -135,6 +149,15 @@ void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf,
 		ModuleData* modData = new ModuleData();
 		modData->modId = models[i]->GetModelID();
 		modData->modName = models[i]->GetModelName();
+		modData->systemId = id;
+		if(models[i]->GetSubSystem())
+		{
+			modData->subSystemId = models[i]->GetSubSystem()->GetID();
+		}
+		else
+		{
+			modData->subSystemId = -1;
+		}
 		
 		//Add the icon to the image list
 		fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
@@ -156,7 +179,8 @@ void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf,
 
 		if( models[i]->GetSubSystem() )
         {
-			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels() );
+			PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels(),
+				models[i]->GetSubSystem()->GetID() );
         }
 	}
 }
@@ -178,8 +202,30 @@ void HierarchyTree::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 	if( GetSelection() != m_rootId )
 	{
         ModuleData* tempModData = 
-            static_cast< ModuleData* >( GetItemData( GetSelection() ) );
-	    m_network->HighlightCenter( tempModData->modId );
+            static_cast< ModuleData* >( this->GetItemData( GetSelection() ) );
+		m_canvas->SetActiveNetwork( tempModData->systemId);
+	    m_canvas->GetActiveNetwork()->HighlightCenter( tempModData->modId );
+		currentId = this->GetItemParent( this->GetSelection() );
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::OnExpanded(wxTreeEvent& WXUNUSED(event))
+{
+	/*if( GetSelection() != m_rootId )
+	{
+        ModuleData* tempModData = 
+            static_cast< ModuleData* >( GetItemData( GetSelection() ) );
+	    m_canvas->SetActiveNetwork( tempModData->subSystemId );
+	}*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::AddtoTree( UIPluginBase *cur_module )
+{
+	ModuleData* modData = new ModuleData();
+	modData->modId = cur_module->GetID();
+	modData->modName = cur_module->GetName();
+	//modData->systemId = id;
+
+	AppendItem(currentId, wxString( cur_module->GetName().c_str(), wxConvUTF8 )
+		, -1 , -1, modData);
+}
