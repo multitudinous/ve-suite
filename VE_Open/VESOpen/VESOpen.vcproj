@@ -25,7 +25,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setupXP.bat&#x0D;&#x0A;echo C++ stubs. . .&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
+				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;echo C++ stubs. . .&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setupXP.bat&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
+				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/VE_Open/skel -GI $(VE_SUITE_HOME)/VE_Open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
