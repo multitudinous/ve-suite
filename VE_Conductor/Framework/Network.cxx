@@ -135,6 +135,8 @@ isLoading( false )
    //SetBackgroundColour(*wxWHITE);
    //This is for the paint buffer
    //SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+   systemPtr = XMLDataBufferEngine::instance()->GetXMLSystemDataObject( 
+        XMLDataBufferEngine::instance()->GetTopSystemId() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -1788,6 +1790,16 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     parent->PushEventHandler( modules[id].GetPlugin() );
     parent->Refresh(true);
     //Update();
+    
+    //Models
+    for( std::map< int, Module >::iterator iter = modules.begin(); 
+         iter!=modules.end(); ++iter )
+    {
+        iter->second.GetPlugin()->SetID( iter->first );
+        systemPtr->AddModel( new VE_XML::VE_Model::Model( 
+                *(iter->second.GetPlugin()->GetVEModel()) ) );
+    }
+    
     while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 ////////////////////////////////////////
@@ -1852,9 +1864,9 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 //////////////////////////////////////////////
 //////// Save and Load Functions /////////////
 //////////////////////////////////////////////
-std::string Network::Save( std::string fileName )
+ /*std::string Network::Save( std::string fileName )
 {
- /*   // Here we wshould loop over all of the following
+   // Here we wshould loop over all of the following
     std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     ///Create the system
     VE_XML::VE_Model::SystemStrongPtr tempSystem = 
@@ -1941,9 +1953,9 @@ std::string Network::Save( std::string fileName )
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
 
-    return fileName;*/
+    return fileName;
 	return "removethisfunction";
-}
+}*/
 ////////////////////////////////////////////////////////
 void Network::New( bool promptClearXplorer )
 {
@@ -2275,7 +2287,6 @@ void Network::CreateNetwork( std::string xmlNetwork )
 ////////////////////////////////////////////////////////
 void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * parent )
 {	
-   //this->frame = dynamic_cast< AppFrame* >( frame->GetParent()->GetParent() );
    this->parent = parent;
    modules.clear();
    links.clear();
@@ -2287,6 +2298,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
    GetNumPix()->second = 10;
    isDataSet = false;
    dragging = false;
+   systemPtr = system;
    
    // do this for network
    VE_XML::VE_Model::Network veNetwork = *(system->GetNetwork());

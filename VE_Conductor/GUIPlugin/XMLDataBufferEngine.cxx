@@ -61,6 +61,13 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
    VE_XML::CommandWeakPtr nullCommand = new VE_XML::Command();
    nullCommand->SetCommandName( "NULL" );
    m_commandMap[ "NULL" ] = nullCommand;
+
+    //Setup default system
+    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
+       new VE_XML::VE_Model::System();
+    m_systemMap[tempSystem->GetID()] = tempSystem;
+    //get the main systems id
+    topId = tempSystem->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::CleanUp( void )
@@ -146,7 +153,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     std::vector< VE_XML::XMLObject* >::iterator objectIter;
     std::vector< VE_XML::XMLObject* > objectVector = 
         networkWriter.GetLoadedXMLObjects();
-    VE_XML::VE_Model::System * tempSystem = 0;
+    VE_XML::VE_Model::SystemStrongPtr tempSystem = 0;
     
     // we are expecting that a network will be found
     if ( !objectVector.empty() )
@@ -304,61 +311,21 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 {
     // Here we wshould loop over all of the following
-    //std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    //  Newtork
-    //nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-    //    &(*m_networkMap[ "Network" ]), "veNetwork" ) );
-    //  Models
-    //std::map< std::string, VE_XML::VE_Model::Model >::iterator iter;
-    //for ( iter=m_modelMap.begin(); iter!=m_modelMap.end(); ++iter )
-    //{
-    //    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-    //        &iter->second, "veModel" ) );
-    //}
-    //  tags
-    /*for ( size_t i = 0; i < veTagVector.size(); ++i )
-    {
-        delete veTagVector.at( i );
-    }
-    veTagVector.clear();
-    
-    for ( size_t i = 0; i < tags.size(); ++i )
-    {
-        std::pair< unsigned int, unsigned int > pointCoords;
-        
-        veTagVector.push_back( new VE_Model::Tag( doc ) );
-        
-        veTagVector.back()->SetTagText( tags.back().text.c_str() );
-        
-        pointCoords.first = tags.back().cons[0].x;
-        pointCoords.second = tags.back().cons[0].y;
-        veTagVector.back()->GetTagPoint( 0 )->SetPoint( pointCoords );
-        
-        pointCoords.first = tags.back().cons[1].x;
-        pointCoords.second = tags.back().cons[1].y;
-        veTagVector.back()->GetTagPoint( 1 )->SetPoint( pointCoords );
-        
-        pointCoords.first = tags.back().box.x;
-        pointCoords.second = tags.back().box.y;
-        veTagVector.back()->GetTagPoint( 2 )->SetPoint( pointCoords );
-    }
-    
-    for ( size_t i = 0; i < tags.size(); ++i )
-    {
-        doc->getDocumentElement()->appendChild
-        ( 
-          veTagVector.at( i )->GetXMLData( "veTag" )
-          );
-    }*/
-   
+    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
     //Write out the veUser info for the local user
-    /*nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-        &(*m_userMap[ "User" ]), "User" ) );
+    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+            &(*m_systemMap[ topId]), "veSystem" ) );
+    //Write out the veUser info for the local user
+    if( !m_userMap.empty() )
+    {
+        nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+            &(*m_userMap[ "User" ]), "User" ) );
+    }
     
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
-    */
+    
     return fileName;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -107,7 +107,7 @@ public:
     void AddTag(int x, int y, wxString text);
        
    //Save and Load the network
-   std::string Save( std::string fileName );
+   //std::string Save( std::string fileName );
    ///Load calls new when loading the network
    ///this also calls delete objects on xplorer but the user may not 
    ///always want this action
@@ -211,7 +211,8 @@ private:
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
-   //VE_XML::VE_Model::Network veNetwork;
+   ///System for this network
+   VE_XML::VE_Model::SystemStrongPtr systemPtr;
    ///Parent window pointer to the splitter in AppFrame
    Canvas* parent;
    ///wxframe pointer for frame.cxx

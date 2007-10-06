@@ -1554,8 +1554,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
    EnableCEGUIMenuItems();
    
    Network * network = canvas->GetActiveNetwork();
-
-   std::string nw_str = network->Save( std::string( "returnString" ) );
+   std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( std::string( "returnString" ) );
    // write the domdoc to the string above
    try 
    {
