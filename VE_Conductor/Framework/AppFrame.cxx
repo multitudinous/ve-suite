@@ -116,38 +116,6 @@ using namespace VE_XML;
 using namespace VE_XML::VE_CAD;
 using namespace VE_Shader;
 
-#ifdef WIN32
-#include <shellapi.h>
-#include <math.h>
-/* Win32 doesn't seem to have these functions.
-** Therefore implement inline versions of these functions here.
-*/
-__inline long int
-lrint( double flt )
-{
-    int intgr;
-    _asm
-    {
-        fld flt
-        fistp intgr
-    };
-
-    return intgr ;
-}
-
-__inline long int
-lrintf( float flt )
-{
-    int intgr;
-    _asm
-    {
-        fld flt
-        fistp intgr
-    };
-
-    return intgr ;
-}
-#endif
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
@@ -560,29 +528,6 @@ void AppFrame::GetConfig()
 
     m_recentVESFiles->Load(*cfg);
 }
-////////////////////////////////////////////////////////////////////////////////
-/*wxRect AppFrame::GetAppropriateSubDialogSize()
-{
-    int displayWidth= 0;
-    int displayHeight = 0;
-
-    ::wxDisplaySize(&displayWidth,&displayHeight);
-    if( GetDisplayMode() == std::string( "Desktop" ) )
-    {
-        wxRect bbox = GetRect();
-        int xStart = lrint( 2.0f*displayWidth/3.0f );
-        int width = lrint( displayWidth/3.0f );
-        int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
-        return wxRect( xStart, bbox.GetBottomRight().y, width, height );
-    }
-    else
-    {
-        int xStart = lrint( 2.0f*displayWidth/3.0f );
-        int width = lrint( displayWidth/3.0f );
-        int height = lrint( 3*displayHeight/4.0f );
-        return wxRect( xStart, 0, width, height );
-    }
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::DetermineTabletFrameSize()
 {
@@ -1457,7 +1402,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
     for( std::map<int, Module>::iterator iter=network->modules.begin(); 
         iter!=network->modules.end(); iter++)
     {
-        moduleNames.push_back(network->modules[ iter->first ].GetClassName() );
+        moduleNames.push_back(network->modules[ iter->first ].GetModuleClassName() );
         moduleIDs.push_back( network->modules[ iter->first ].GetPlugin()->
             GetVEModel()->GetModelID());
     }
