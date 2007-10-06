@@ -233,6 +233,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             objectIter = objectVector.erase( objectIter );
             modelID << model->GetModelID();
             m_modelMap[ modelID.str() ] = model;
+            m_systemMap[ topId ]->AddModel( model );
             modelID.str("");
         }        
     }

@@ -205,19 +205,25 @@ Network* Canvas::GetActiveNetwork()
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::SetActiveNetwork(std::string id)
 {
+    //std::cout << activeId << " " << previousId << " " << id << std::endl;
+
+    if( id == activeId )
+    {
+        return;
+    }
+    
 	this->activeId = id;
-	if( this->previousId != this->activeId )
-	{
-		if( this->previousId != "-1" )
-		{
-			RemoveEventHandler( networks[this->previousId] );
-			networks[this->previousId]->RemoveAllEvents();
-		}
-		PushEventHandler( networks[this->activeId] );
-		networks[this->activeId]->PushAllEvents();
-		this->previousId = this->activeId;
-		Refresh(true);
-	}
+
+    if( this->previousId != "-1" )
+    {
+        RemoveEventHandler( networks[this->previousId] );
+        networks[this->previousId]->RemoveAllEvents();
+    }
+    
+    PushEventHandler( networks[this->activeId] );
+    networks[this->activeId]->PushAllEvents();
+    this->previousId = this->activeId;
+    Refresh(true);
 }
 //////////////////////////////////////////////////////////////////////////////
 void Canvas::DrawNetwork(wxDC &dc, std::string id)
@@ -230,6 +236,7 @@ void Canvas::New( bool promptClearXplorer )
 	this->previousId = "-1";
 	RemoveEventHandler( networks[this->activeId] );
 	networks[this->activeId]->RemoveAllEvents();
+    activeId = "NULL";
 	networks.clear();
 	Refresh( true );
 }
@@ -268,4 +275,6 @@ void Canvas::CleanUpNetworks()
         delete iter->second;
     }
     networks.clear();
+    activeId = "NULL";
+    previousId = "-1";
 }
