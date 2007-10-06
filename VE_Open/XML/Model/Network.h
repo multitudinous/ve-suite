@@ -91,11 +91,11 @@ public:
     ///Get the total number of links
     size_t GetNumberOfTags( void );
     ///Add a tag to the network
-    ///\param newLink The new tag to be added
-    void AddTag( TagPtr newLink );
-    ///Remove the link from the network
-    ///\param oldLink The link to be removed
-    void RemoveTag( TagPtr oldLink );
+    ///\param newTag The new tag to be added
+    void AddTag( TagPtr newTag );
+    ///Remove the tag from the network
+    ///\param oldTag The tag to be removed
+    void RemoveTag( TagPtr oldTag );
     ///Remove a link from the network
     ///\param oldLink The link to be removed
     void RemoveLink( Link* oldLink );

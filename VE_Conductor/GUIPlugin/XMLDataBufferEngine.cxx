@@ -293,6 +293,10 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     {
         m_userMap[ "Network" ] = new VE_XML::User();
     }
+    
+    m_userMap[ "Network" ]->SetUserId( "User" );
+    m_userMap[ "Network" ]->SetControlStatus( 
+        VE_XML::User::VEControlStatus( "MASTER" ) );
 
 	if(tempSystem)
 	{
@@ -315,12 +319,32 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
     //Write out the veUser info for the local user
     nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
             &(*m_systemMap[ topId]), "veSystem" ) );
+    
     //Write out the veUser info for the local user
-    if( !m_userMap.empty() )
+    VE_XML::StateInfoWeakPtr colorState = new VE_XML::StateInfo();
+    ///Load the current preferences from the data buffer
+    std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
+        UserPreferencesDataBuffer::instance()->GetCommandMap();
+    std::cout << tempMap.size() << std::endl;
+    for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator prefIter = 
+         tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
     {
-        nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
-            &(*m_userMap[ "User" ]), "User" ) );
+        colorState->AddState( prefIter->second );
     }
+
+    if( m_userMap.empty() )
+    {
+        m_userMap[ "Network" ] = new VE_XML::User();
+        m_userMap[ "Network" ]->SetUserId( "User" );
+        m_userMap[ "Network" ]->SetControlStatus( 
+            VE_XML::User::VEControlStatus( "MASTER" ) );
+    }
+    m_userMap[ "Network" ]->SetStateInfo( colorState );
+
+    
+    //Write out the veUser info for the local user
+    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+        &(*m_userMap[ "Network" ]), "User" ) );
     
     VE_XML::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();

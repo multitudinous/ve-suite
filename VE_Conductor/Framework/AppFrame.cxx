@@ -1968,7 +1968,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       // Create the command and data value pairs
       VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+      VE_XML::CommandStrongPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 
