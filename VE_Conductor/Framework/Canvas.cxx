@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Framework/Canvas.h"
-#include "VE_Conductor/Framework/AppFrame.h"
 #include "VE_Open/XML/Model/System.h"
 #include "VE_Open/XML/Model/SystemStrongPtr.h"
 #include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
@@ -48,7 +47,8 @@ END_EVENT_TABLE()
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas(wxWindow* parent, int id)
   :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
-		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
+		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE),
+blankNetwork( 0 )
 {
    userScale.first=1;
    userScale.second=1;
@@ -58,8 +58,7 @@ Canvas::Canvas(wxWindow* parent, int id)
    SetBackgroundColour(*wxWHITE);
    //This is for the paint buffer
    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-   blankNetwork = new Network();
-   this->frame = parent;
+   blankNetwork = new Network( this );
    this->previousId.assign("-1");
    Refresh(true);
 }
@@ -81,8 +80,8 @@ void Canvas::PopulateNetworks( std::string xmlNetwork )
 	// iterate through the systems
 	for( iter = systems.begin(); iter != systems.end(); iter++ )
 	{
-		Network * tempNetwork = new Network();
-		tempNetwork->LoadSystem(iter->second, frame, this);
+		Network* tempNetwork = new Network( this );
+		tempNetwork->LoadSystem(iter->second, this);
 		networks[iter->first] = tempNetwork;
 	}
 	this->SetActiveNetwork( VE_Conductor::XMLDataBufferEngine::instance()->
@@ -238,8 +237,7 @@ std::string Canvas::Save( std::string fileName )
     return fileName;*/
 	return "temp";
 }
-
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Canvas::New( bool promptClearXplorer )
 {
 	this->previousId = "-1";
@@ -247,4 +245,28 @@ void Canvas::New( bool promptClearXplorer )
 	networks[this->activeId]->RemoveAllEvents();
 	networks.clear();
 	Refresh( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+wxRect Canvas::GetAppropriateSubDialogSize()
+{
+    int displayWidth= 0;
+    int displayHeight = 0;
+    
+    ::wxDisplaySize(&displayWidth,&displayHeight);
+    /*if( GetDisplayMode() == std::string( "Desktop" ) )
+    {
+        wxRect bbox = GetRect();
+        int xStart = lrint( 2.0f*displayWidth/3.0f );
+        int width = lrint( displayWidth/3.0f );
+        int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
+        return wxRect( xStart, bbox.GetBottomRight().y, width, height );
+    }
+    else*/
+    {
+        int xStart = lrint( 2.0f*displayWidth/3.0f );
+        int width = lrint( displayWidth/3.0f );
+        int height = lrint( 3*displayHeight/4.0f );
+        //int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
+        return wxRect( xStart, 0, width, height );
+    }
 }

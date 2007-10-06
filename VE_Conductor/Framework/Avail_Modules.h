@@ -45,7 +45,6 @@ Avail_Modules API
 
 class AppFrame;
 class Canvas;
-class Network;
 class UIPluginBase;
 class PluginLoader;
 
@@ -83,7 +82,6 @@ public:
   void Instantiate(wxTreeEvent& event);
   void SetFrame(AppFrame *frm) { frame = frm; };
   void SetCanvas(Canvas *can) { canvas = can; };
-  void SetNetwork(Network *nw) { network = nw; };
   ///Get the new plugin tree after reseting it
   void ResetPluginTree( void );
 
@@ -99,7 +97,6 @@ public:
   wxTreeItemId selection;
   AppFrame * frame;
   Canvas* canvas;
-  Network* network;
 
   DECLARE_EVENT_TABLE();
 

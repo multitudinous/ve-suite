@@ -67,12 +67,10 @@ namespace VE_Model
 class AppFrame;
 class Canvas;
 
-//class Network : public wxScrolledWindow, public wxThreadHelper
-class Network : public wxEvtHandler, public wxThreadHelper
+class Network : public wxEvtHandler
 {
 public:
-   Network(){;}
-   //Network(wxWindow* parent, int id );
+   Network(wxWindow* parent);
    virtual ~Network();
 
    enum 
@@ -115,14 +113,13 @@ public:
    ///always want this action
    void Load( std::string xmlNetwork, bool promptClearXplorer );
    void CreateNetwork( std::string xmlNetwork );
-   void LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, wxWindow * frame, Canvas * parent );
+   void LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * parent );
    ///Clear the deisgn canvas and xplorer objects if desired
    void New( bool clearXplorer = false );
    ///Acessors
    std::pair< double, double >* GetUserScale( void );
    std::pair< unsigned int, unsigned int >* GetNumPix( void );
    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
-   virtual void* Entry();
    
    //void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
    //void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
@@ -218,7 +215,7 @@ private:
    ///Parent window pointer to the splitter in AppFrame
    Canvas* parent;
    ///wxframe pointer for frame.cxx
-   AppFrame* frame;
+   //AppFrame* frame;
    ///User scale
    /// first = x scale
    /// second = y scale

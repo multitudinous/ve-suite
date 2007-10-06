@@ -67,7 +67,6 @@ END_EVENT_TABLE()
 Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
 :
 wxTreeCtrl(parent, id, pos, size, style), 
-network(0),
 canvas(0)
 {
   int image1 = TreeCtrlIcon_Folder;
@@ -173,7 +172,7 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
         object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
         //object->SetNetworkFrame( canvas );
         object->SetCanvas( canvas );
-        object->SetNetwork( network );
+        object->SetNetwork( canvas->GetActiveNetwork() );
 		object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
         canvas->GetActiveNetwork()->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
 		frame->GetHierarchyTree()->AddtoTree( object );
@@ -183,7 +182,7 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
         UIPluginBase* object = new DefaultPlugin();
         //object->SetNetworkFrame( canvas );
         object->SetCanvas( canvas );
-        object->SetNetwork( network );
+        object->SetNetwork( canvas->GetActiveNetwork() );
 		object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
         canvas->GetActiveNetwork()->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
 		frame->GetHierarchyTree()->AddtoTree( object );

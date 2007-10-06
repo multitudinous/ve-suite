@@ -106,9 +106,7 @@ BEGIN_EVENT_TABLE(Network, wxEvtHandler)
     EVT_MENU( Link::DEL_LINK, Network::OnDelLink )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-/*Network::Network(wxWindow* parent, int id)
-  :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
-		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE),
+Network::Network( wxWindow* parent ):
 tryingLink( false ),
 isLoading( false )
 {
@@ -116,12 +114,12 @@ isLoading( false )
    links.clear();
    userScale.first=1;
    userScale.second=1;
-   GetNumUnit()->first=700;
+   /*GetNumUnit()->first=700;
    GetNumUnit()->second=700;
    GetNumPix()->first = 10;
    GetNumPix()->second = 10;
    SetScrollRate( 10, 10 );
-   SetVirtualSize( 7000, 7000 );
+   SetVirtualSize( 7000, 7000 );*/
    //SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
    m_selMod = -1;
    m_selFrPort = -1; 
@@ -131,15 +129,13 @@ isLoading( false )
    m_selTag = -1; 
    m_selTagCon = -1; 
    xold = yold =0;
-//   this->parent = parent;
+   this->parent = dynamic_cast< Canvas* >( parent );
    isDataSet = false;
-   frame = dynamic_cast< AppFrame* >( frame->GetParent()->GetParent() );
    dragging = false;
-   SetBackgroundColour(*wxWHITE);
+   //SetBackgroundColour(*wxWHITE);
    //This is for the paint buffer
-   SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-
-}*/
+   //SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+}
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
 {
@@ -1784,7 +1780,7 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
 
     modules[id].GetPlugin()->SetID(id);
     modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
-    modules[id].GetPlugin()->SetDialogSize( frame->GetAppropriateSubDialogSize() );
+    modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     sbboxes.push_back(bbox);
     ///Add vemodels to the hierarchy tree
     /*************************************/
@@ -2277,9 +2273,9 @@ void Network::CreateNetwork( std::string xmlNetwork )
 	*/
 }
 ////////////////////////////////////////////////////////
-void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, wxWindow * frame, Canvas * parent )
+void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * parent )
 {	
-   this->frame = dynamic_cast< AppFrame* >( frame->GetParent()->GetParent() );
+   //this->frame = dynamic_cast< AppFrame* >( frame->GetParent()->GetParent() );
    this->parent = parent;
    modules.clear();
    links.clear();
@@ -2397,7 +2393,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, wxWindow * f
 //        PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
-        tempPlugin->SetDialogSize( this->frame->GetAppropriateSubDialogSize() );
+        tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
         if ( model->GetIconFilename() != "DefaultPlugin" )
         {   
             tempPlugin->SetImageIcon( model->GetIconFilename(), 
@@ -2547,14 +2543,6 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
    }
 
    return tempPoint;
-}
-////////////////////////////////////////////////////////////////////////////////
-void* Network::Entry( void )
-{
-   isLoading = true;
-   this->CreateNetwork( tempXMLNetworkData );
-   isLoading = false;
-   return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetIDOnAllActiveModules( void )

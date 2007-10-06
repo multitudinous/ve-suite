@@ -258,7 +258,6 @@ viewlocPane( 0 )
                                        SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
     //This must be configured before the menu is created so that the menus for
     //shutdown are configured correctly
-    _displayMode = "Tablet";
     _detectDisplayAndCreate();
 
     CreateMenu();
@@ -359,6 +358,9 @@ std::string AppFrame::GetDisplayMode()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplay()
 {
+    //Set this by default
+    _displayMode = "Tablet";
+
     for( int i = 1; i < wxTheApp->argc; ++i )
     {
         if( ConvertUnicode( wxTheApp->argv[i] ) == std::string( "-VESDesktop" ) )
@@ -428,7 +430,6 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 	Network * network = canvas->GetActiveNetwork();
     av_modules->SetFrame( this );
     av_modules->SetCanvas( canvas );
-    av_modules->SetNetwork( network );
     hierarchyTree->SetCanvas( canvas );
 
     if( GetDisplayMode() == "Tablet" )
@@ -515,7 +516,7 @@ bool AppFrame::Show(bool value)
     bool status = false;
     status = wxFrame::Show( value );
 
-    if( _displayMode == "Desktop" )
+    if( GetDisplayMode() == "Desktop" )
     {
         int displayWidth, displayHeight = 0;
         ::wxDisplaySize(&displayWidth,&displayHeight);
@@ -560,13 +561,13 @@ void AppFrame::GetConfig()
     m_recentVESFiles->Load(*cfg);
 }
 ////////////////////////////////////////////////////////////////////////////////
-wxRect AppFrame::GetAppropriateSubDialogSize()
+/*wxRect AppFrame::GetAppropriateSubDialogSize()
 {
     int displayWidth= 0;
     int displayHeight = 0;
 
     ::wxDisplaySize(&displayWidth,&displayHeight);
-    if(_displayMode == "Desktop")
+    if( GetDisplayMode() == std::string( "Desktop" ) )
     {
         wxRect bbox = GetRect();
         int xStart = lrint( 2.0f*displayWidth/3.0f );
@@ -581,7 +582,7 @@ wxRect AppFrame::GetAppropriateSubDialogSize()
         int height = lrint( 3*displayHeight/4.0f );
         return wxRect( xStart, 0, width, height );
     }
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::DetermineTabletFrameSize()
 {

@@ -41,12 +41,13 @@ public:
    std::pair< double, double > userScale;
    std::string Save( std::string fileName );
    void New( bool promptClearXplorer );
+   ///Get the correct size for sub dialogs
+   wxRect GetAppropriateSubDialogSize();
 
 protected:
 
 private:
    std::map < std::string, Network * > networks;
-   wxWindow * frame;
    Network * blankNetwork;
    std::string activeId;
    std::string previousId;

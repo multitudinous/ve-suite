@@ -208,7 +208,7 @@ public:
     std::string GetDisplayMode();
 
     ///Get an appropriate size for sub dialogs
-    wxRect GetAppropriateSubDialogSize();
+    //wxRect GetAppropriateSubDialogSize();
 
     Splitter* wx_log_splitter;
     wxSplitterWindow* wx_ve_splitter;

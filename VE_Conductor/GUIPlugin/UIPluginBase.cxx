@@ -1745,7 +1745,7 @@ bool UIPluginBase::CheckID()
 ////////////////////////////////////////////////////////////////////////////////
 bool UIPluginBase::SetActiveModel()
 {
-/*    // Create the command and data value pairs
+    // Create the command and data value pairs
     VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
@@ -1758,8 +1758,6 @@ bool UIPluginBase::SetActiveModel()
     //Clean up memory
     delete veCommand;
     return connected;
-	*/
-	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDialogSize( wxRect dialogSize )
