@@ -1402,7 +1402,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
     for( std::map<int, Module>::iterator iter=network->modules.begin(); 
         iter!=network->modules.end(); iter++)
     {
-        moduleNames.push_back(network->modules[ iter->first ].GetModuleClassName() );
+        moduleNames.push_back( network->modules[ iter->first ].GetClassName() );
         moduleIDs.push_back( network->modules[ iter->first ].GetPlugin()->
             GetVEModel()->GetModelID());
     }

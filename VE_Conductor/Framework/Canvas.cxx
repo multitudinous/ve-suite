@@ -154,12 +154,12 @@ void Canvas::PopulateNetworks( std::string xmlNetwork )
 	VE_Conductor::XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 	
 	//get the map count
-	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr>::iterator iter;
 	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr> systems =
 		VE_Conductor::XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
 
 	// iterate through the systems
-	for( iter = systems.begin(); iter != systems.end(); iter++ )
+	for( std::map< std::string, VE_XML::VE_Model::SystemStrongPtr>::iterator 
+        iter = systems.begin(); iter != systems.end(); iter++ )
 	{
 		Network* tempNetwork = new Network( this );
 		tempNetwork->LoadSystem(iter->second, this);
@@ -206,9 +206,9 @@ Network* Canvas::GetActiveNetwork()
 void Canvas::SetActiveNetwork(std::string id)
 {
 	this->activeId = id;
-	if(this->previousId.compare(this->activeId) != 0)
+	if( this->previousId != this->activeId )
 	{
-		if(this->previousId.compare("-1") != 0)
+		if( this->previousId != "-1" )
 		{
 			RemoveEventHandler( networks[this->previousId] );
 			networks[this->previousId]->RemoveAllEvents();

@@ -78,6 +78,7 @@ void XMLDataBufferEngine::CleanUp( void )
     m_networkModelMap.clear();
     m_userMap.clear();
     m_tagMap.clear();
+    m_systemMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
@@ -162,7 +163,6 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
         if( tempSystem )
         {
-			
 			m_systemMap[tempSystem->GetID()] = tempSystem;
 			//get the main systems id
 			topId = tempSystem->GetID();
@@ -170,9 +170,15 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         }
         else
         {
+            tempSystem = new VE_XML::VE_Model::System();
+			m_systemMap[tempSystem->GetID()] = tempSystem;
+			topId = tempSystem->GetID();
+            
             m_networkMap[ "Network" ] = 
                 dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+            tempSystem->AddNetwork( m_networkMap[ "Network" ] );
             objectIter = objectVector.erase( objectVector.begin() );
+            tempSystem = 0;
         }
     }
     else
