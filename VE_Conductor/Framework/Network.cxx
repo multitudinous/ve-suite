@@ -631,6 +631,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
     {  
         if( i == m_selTag )
         {
+            systemPtr->GetNetwork()->RemoveTag( iter->GetVETagPtr() );
             iter = tags.erase( iter );
             m_selTag=-1;
             break;
@@ -1726,6 +1727,8 @@ void Network::AddTag(int x, int y, wxString text)
    t.GetBoundingBox()->height = h;
    t.CalcTagPoly();
    tags.push_back(t);
+
+   systemPtr->GetNetwork()->AddTag( t.GetVETagPtr() );
 
    //Pop the tag event handlers to clear these event handlers
    //for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 

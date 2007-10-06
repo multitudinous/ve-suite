@@ -76,6 +76,8 @@ public:
     void New( bool promptClearXplorer );
     ///Get the correct size for sub dialogs
     wxRect GetAppropriateSubDialogSize();
+    ///Delete and remove the network event handlers
+    void CleanUpNetworks();
 
 protected:
 

@@ -61,32 +61,65 @@ END_EVENT_TABLE()
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas(wxWindow* parent, int id)
   :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
-		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
+		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE),
+previousId("-1")
 {
-    userScale.first=1;
-    userScale.second=1;
-    SetScrollRate( 10, 10 );
-    SetVirtualSize( 7000, 7000 );
-    //this->parent = parent;
+    userScale.first = 1;
+    userScale.second = 1;
+    std::pair< long int, long int > numPix;
+    numPix.first = 7000;
+    numPix.second = 7000;
+    std::pair< long int, long int > numUnit;
+    numUnit.first = 10;
+    numUnit.second = 10;
+    SetScrollRate( numUnit.first, numUnit.second );
+    SetVirtualSize( numPix.first, numPix.second );
+
     SetBackgroundColour(*wxWHITE);
     //This is for the paint buffer
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-    activeId = "Default";
-    networks[ "Default" ] = new Network( this );
+
+    ///Initialize tope level network
+    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = 
+        new VE_XML::VE_Model::Network();
     XMLDataBufferEngine::instance()->GetXMLSystemDataObject( 
         XMLDataBufferEngine::instance()->GetTopSystemId() )->
-        AddNetwork( new VE_XML::VE_Model::Network() );
+        AddNetwork( tempNetwork );
+    
+    ///Set the default network
+    activeId = XMLDataBufferEngine::instance()->GetTopSystemId();
+    networks[ activeId ] = new Network( this );
+    ///Now set it active
+	this->SetActiveNetwork( VE_Conductor::XMLDataBufferEngine::instance()->
+        GetTopSystemId() );
 
-    this->previousId.assign("-1");
+    ///Set canvas parameters
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "m_xUserScale", userScale.first );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "m_yUserScale", userScale.second );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nPixX", static_cast< long int >( numPix.first ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nPixY", static_cast< long int >( numPix.second ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+
     Refresh(true);
 }
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
+    ;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::PopulateNetworks( std::string xmlNetwork )
 {
+    //Clean up the old
+    CleanUpNetworks();
+
 	//load
 	VE_Conductor::XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 	
@@ -193,4 +226,16 @@ wxRect Canvas::GetAppropriateSubDialogSize()
         //int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
         return wxRect( xStart, 0, width, height );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::CleanUpNetworks()
+{
+    for( std::map < std::string, Network* >::iterator iter = networks.begin();
+        iter != networks.end(); ++iter )
+    {
+        RemoveEventHandler( iter->second );
+        iter->second->RemoveAllEvents();
+        delete iter->second;
+    }
+    networks.clear();
 }

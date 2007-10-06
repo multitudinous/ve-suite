@@ -93,6 +93,12 @@ public:
     ///Add a tag to the network
     ///\param newLink The new tag to be added
     void AddTag( TagPtr newLink );
+    ///Remove the link from the network
+    ///\param oldLink The link to be removed
+    void RemoveTag( TagPtr oldLink );
+    ///Remove a link from the network
+    ///\param oldLink The link to be removed
+    void RemoveLink( Link* oldLink );
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.

@@ -252,3 +252,23 @@ void Network::AddTag( TagPtr newLink )
     tags.push_back( newLink );
 }
 ////////////////////////////////////////////////////////////////////////////////   
+void Network::RemoveTag( TagPtr oldLink )
+{
+    std::vector< TagPtr >::iterator iter;
+    iter = std::find( tags.begin(), tags.end(), oldLink );
+    if( iter != tags.end() )
+    {
+        tags.erase( iter );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////   
+void Network::RemoveLink( Link* oldLink )
+{
+    std::vector< Link* >::iterator iter;
+    iter = std::find( links.begin(), links.end(), oldLink );
+    if( iter != links.end() )
+    {
+        delete *iter;
+        links.erase( iter );
+    }
+}
