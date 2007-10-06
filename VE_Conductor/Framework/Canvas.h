@@ -48,7 +48,6 @@ protected:
 
 private:
    std::map < std::string, Network * > networks;
-   Network * blankNetwork;
    std::string activeId;
    std::string previousId;
    void DrawNetwork(wxDC &dc, std::string id);

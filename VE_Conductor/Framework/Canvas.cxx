@@ -47,8 +47,7 @@ END_EVENT_TABLE()
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas(wxWindow* parent, int id)
   :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
-		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE),
-blankNetwork( 0 )
+		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE)
 {
    userScale.first=1;
    userScale.second=1;
@@ -58,7 +57,8 @@ blankNetwork( 0 )
    SetBackgroundColour(*wxWHITE);
    //This is for the paint buffer
    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
-   blankNetwork = new Network( this );
+   activeId = "Default";
+   networks[ "Default" ] = new Network( this );
    this->previousId.assign("-1");
    Refresh(true);
 }
@@ -103,24 +103,23 @@ void Canvas::OnPaint(wxPaintEvent& paintEvent)
     dc.SetDeviceOrigin( -x * xpix, -y * ypix );
     dc.SetFont( GetFont() );
 	
-	if (!networks.empty())
+	if( !networks.empty() )
 	{
 		DrawNetwork(dc, this->activeId);
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-Network * Canvas::GetActiveNetwork()
+Network* Canvas::GetActiveNetwork()
 {
-	if (VE_Conductor::XMLDataBufferEngine::instance()
-		->GetXMLSystemDataMap().empty())
+    std::map < std::string, Network * >::iterator iter;
+    iter = networks.find( activeId );
+
+    if( iter != networks.end() )
 	{
-		return blankNetwork;
-	}
-	else
-	{
+        Refresh(true);
 		return networks[this->activeId];
 	}
-    Refresh(true);
+    return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::SetActiveNetwork(std::string id)
