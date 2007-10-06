@@ -40,6 +40,7 @@ UIPluginBase API
 */
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Open/XML/Model/Port.h"
+#include "VE_Open/XML/Model/ModelPtr.h"
 #include <vector>
 #include <map>
 #include <utility>
@@ -80,6 +81,7 @@ class GeometryDataBuffer;
 class SummaryResultDialog;
 class SoundsPane;
 class Vistab;
+class IconChooser;
 
 namespace VE_Conductor
 {
@@ -89,11 +91,6 @@ namespace VE_Conductor
 namespace VE_XML
 {
     class Command;
-namespace VE_Model
-{
-    class Model;
-    class Port;
-}
 }
 
 namespace VE_Conductor
@@ -183,11 +180,9 @@ public:
    void GeometryData();
    //This is the load function of the module, 
    ///unpack the input string and fill up the UI according to this
-   VE_XML::VE_Model::Model* GetVEModel( void );
+   VE_XML::VE_Model::ModelWeakPtr GetVEModel( void );
    ///Set the ve model
-   void SetVEModel( VE_XML::VE_Model::Model* tempModel );
-   ///Get the model constructed by the dialog
-   VE_XML::VE_Model::Model* GetModel( void );
+   void SetVEModel( VE_XML::VE_Model::ModelWeakPtr tempModel );
    ///method to start a dialog to ask the user for a plugin name so that the 
    ///name can be defined at run time
    void SetPluginNameDialog( void );
@@ -223,7 +218,6 @@ public:
    void OnDClick( wxMouseEvent &event);
    ///Set the network wxFrame that this plugin is associated with so that
    ///the plugin can draw and capture the appropriate events
-   //void SetNetworkFrame( wxScrolledWindow* networkFrame );
    void SetCanvas( wxScrolledWindow* canvas );
    void SetNetwork( wxEvtHandler* network );
    ///Set the corba servicelist so that the plugin can talk with the graphical
@@ -298,11 +292,13 @@ protected:
    GeometryDialog* geom_dlg;
    unsigned int id;
 
-   wxPoint pos; //The Position to draw Icon
+   ///The Position to draw Icon
+   wxPoint pos; 
    ///Point where the mouse event takes place with the right click menu
    wxPoint actionPoint;
 
-   VE_XML::VE_Model::Model* veModel;
+   ///Copy of the model element pointer
+   VE_XML::VE_Model::ModelStrongPtr m_veModel;
    ///Name seen by the user and rendered on the canvas
    wxString name;
 
@@ -348,11 +344,17 @@ protected:
    
    std::map< std::string, wxImage > defaultIconMap;
    
-   //wxScrolledWindow* networkFrame;
-   wxScrolledWindow* canvas;
-   wxEvtHandler* network;
+   ///The pointer to the canvas scrolled window
+   wxScrolledWindow* m_canvas;
+   ///The network event handler
+   wxEvtHandler* m_network;
+   ///The sound pane
    SoundsPane* _soundsDlg;
+   ///The icon chooser dialog
+   IconChooser* m_iconChooser;
+   ///The visualization tab
    Vistab* vistab;
+   
    VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
    int m_selFrPort; 
    int m_selToPort; 

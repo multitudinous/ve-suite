@@ -60,7 +60,7 @@ END_EVENT_TABLE()
 ///////////////
 //Constructor//
 ///////////////
-SoundsPane::SoundsPane( VE_XML::VE_Model::Model* activeModel )
+SoundsPane::SoundsPane( VE_XML::VE_Model::ModelWeakPtr activeModel )
 :
 wxDialog(NULL,-1, _("Sounds Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 
@@ -69,7 +69,7 @@ wxDialog(NULL,-1, _("Sounds Pane"),
    _soundCBox = 0;
    _loadButton = 0;
    _numSounds = 0;
-   _activeModel = activeModel;
+   m_activeModel = activeModel;
 
    _buildPage();
 }
@@ -140,7 +140,7 @@ void SoundsPane::_onLoadAndUpdate(wxCommandEvent& WXUNUSED(event))
             _soundCBox->Append(soundFileName.GetName());
 
             VE_XML::ParameterBlock* modelSounds = 0;
-            modelSounds = _activeModel->GetInformationPacket("Model Sounds");
+            modelSounds = m_activeModel->GetInformationPacket("Model Sounds");
             
             VE_XML::Command* veCommand = new VE_XML::Command();
             veCommand->SetCommandName("Add New Sound");
@@ -192,29 +192,26 @@ bool SoundsPane::_ensureSounds(wxString filename)
    return true;
 }
 ///////////////////////////////////////////////////////////////
-void SoundsPane::SetActiveModel(VE_XML::VE_Model::Model* model)
+void SoundsPane::SetActiveModel(VE_XML::VE_Model::ModelWeakPtr model)
 {
-   _activeModel = model;
-   if(_activeModel)
-   {
-      _updateSoundsInformationFromModel();
-   }
+    m_activeModel = model;
+    _updateSoundsInformationFromModel();
 }
 ////////////////////////////////////////////////////
 void SoundsPane::_updateSoundsInformationFromModel()
 {
-   if(!_activeModel)
+   if(!m_activeModel)
       return;
 
    _clearLoadedSounds();
    
    int numCheckboxes = 1;
    VE_XML::ParameterBlock* modelSounds = 0;
-   modelSounds = _activeModel->GetInformationPacket("Model Sounds");
+   modelSounds = m_activeModel->GetInformationPacket("Model Sounds");
    ///create the model sounds
    if(!modelSounds)
    {
-      modelSounds = _activeModel->GetInformationPacket(-1);
+      modelSounds = m_activeModel->GetInformationPacket(-1);
       modelSounds->SetName("Model Sounds");
    }
    _numSounds = modelSounds->GetNumberOfProperties();

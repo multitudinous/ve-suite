@@ -40,6 +40,8 @@ DataSetLoaderUI API
 */
 #include "VE_Installer/include/VEConfig.h"
 
+#include "VE_Open/XML/Model/ModelPtr.h"
+
 #include <wx/string.h>
 #include <wx/gdicmn.h>
 #include <wx/dialog.h>
@@ -61,10 +63,6 @@ class wxListBox;
 namespace VE_XML
 {
    class ParameterBlock;
-   namespace VE_Model
-   {
-      class Model;
-   }
 }
 ////@end forward declarations
 
@@ -107,7 +105,7 @@ public:
                      const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
                      const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
                      long style = SYMBOL_DATASETLOADERUI_STYLE, 
-                     VE_XML::VE_Model::Model* veModel = 0);
+                     VE_XML::VE_Model::ModelWeakPtr veModel = 0);
 
    enum
    {
@@ -139,7 +137,7 @@ public:
                   const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
                   const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
                   long style = SYMBOL_DATASETLOADERUI_STYLE, 
-                  VE_XML::VE_Model::Model* veModel = 0);
+                  VE_XML::VE_Model::ModelWeakPtr veModel = 0);
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -202,6 +200,7 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 
+private:
 ////@begin DataSetLoaderUI member variables
    wxComboBox* dataSetList;
    wxTextCtrl* dataSetTextEntry;
@@ -225,10 +224,8 @@ public:
 
    wxArrayString _availableDatasets;///<The list of datasets(should this be called something else?)
 ////@end DataSetLoaderUI member variables
-   VE_XML::VE_Model::Model* veModel;
+   VE_XML::VE_Model::ModelStrongPtr m_veModel;
    VE_XML::ParameterBlock* paramBlock;
-
-   VE_XML::VE_Model::Model* GetModel( void );
 
    int lastAddition;
 };

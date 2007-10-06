@@ -99,7 +99,7 @@ DataSetLoaderUI::DataSetLoaderUI( )
    paramBlock = 0;
 }
 
-DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::Model* veModel )
+DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::ModelWeakPtr veModel )
 {
    Create(parent, id, caption, pos, size, style, veModel );
 }
@@ -108,10 +108,10 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
  * DataSetLoaderUI creator
  */
 
-bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::Model* veModel )
+bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::ModelWeakPtr veModel )
 {
 ////@begin DataSetLoaderUI member initialisation
-   this->veModel = veModel;
+   m_veModel = veModel;
    paramBlock = 0;
    lastAddition = -1;
    dataSetList = NULL;
@@ -318,15 +318,16 @@ void DataSetLoaderUI::CreateControls()
 ///////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::InitializeWidgets( void )
 {
-   if ( veModel )
+   if ( !m_veModel )
    {
-      size_t numParamBlocks = veModel->GetNumberOfInformationPackets();
+       return;
+   }
+      size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
 
       for ( size_t i = 0; i < numParamBlocks; ++i )
       {
-		  dataSetList->Append( wxString( veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
+		  dataSetList->Append( wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
       }
-   }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::SetTextCtrls( void )
@@ -631,7 +632,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event)
    // appropriate info
 
    wxString selection = dataSetList->GetStringSelection();
-std::cout<<wxConvCurrent->cWX2MB( selection )<<std::endl;
+    //std::cout<<wxConvCurrent->cWX2MB( selection )<<std::endl;
    if ( selection == wxString( _("Add Dataset") ) )
    {
       lastAddition = dataSetList->Append( _("Type new data block name here") );
@@ -649,14 +650,14 @@ std::cout<<wxConvCurrent->cWX2MB( selection )<<std::endl;
       return;
    }
 
-   size_t numParamBlocks = veModel->GetNumberOfInformationPackets();
-std::cout<<"NUMBER OF PACKETS: "<<numParamBlocks<<std::endl;
+   size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
+//std::cout<<"NUMBER OF PACKETS: "<<numParamBlocks<<std::endl;
    for ( size_t i = 0; i < numParamBlocks; ++i )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
-      if ( veModel->GetInformationPacket( i )->GetName() == tempStr )
+      if ( m_veModel->GetInformationPacket( i )->GetName() == tempStr )
       {
-         paramBlock = veModel->GetInformationPacket( i );
+         paramBlock = m_veModel->GetInformationPacket( i );
          EnableUI( true );
          SetTextCtrls();
          break;
@@ -689,7 +690,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
       dataSetList->Append(newDataSetName.GetValue());
       dataSetList->SetStringSelection(newDataSetName.GetValue());
       
-      paramBlock = veModel->GetInformationPacket( -1 );
+      paramBlock = m_veModel->GetInformationPacket( -1 );
       tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
       paramBlock->SetName( tempStr );
       paramBlock->SetBlockId( ::wxNewId() );
@@ -748,9 +749,4 @@ std::string DataSetLoaderUI::GetActiveDataSetName()
 VE_XML::ParameterBlock* DataSetLoaderUI::GetParamBlock()
 {
    return paramBlock;
-}
-/////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Model* DataSetLoaderUI::GetModel()
-{
-   return veModel;
 }

@@ -1445,17 +1445,19 @@ void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 {
-	Network * network = canvas->GetActiveNetwork();
+	Network* network = canvas->GetActiveNetwork();
 
     Log("Find Block.\n");
-    FindDialog * fd = new FindDialog(this);
-    std::map<int, Module>::iterator iter;
+    FindDialog* fd = new FindDialog(this);
     std::vector< std::string > moduleNames;
     std::vector< unsigned int > moduleIDs;
-    for (iter=network->modules.begin(); iter!=network->modules.end(); iter++)
+    
+    for( std::map<int, Module>::iterator iter=network->modules.begin(); 
+        iter!=network->modules.end(); iter++)
     {
-        moduleNames.push_back(network->modules[iter->first].GetClassName());
-        moduleIDs.push_back(network->modules[iter->first].GetPlugin()->GetModel()->GetModelID());
+        moduleNames.push_back(network->modules[ iter->first ].GetClassName() );
+        moduleIDs.push_back( network->modules[ iter->first ].GetPlugin()->
+            GetVEModel()->GetModelID());
     }
 
     fd->SetModuleList(moduleNames);

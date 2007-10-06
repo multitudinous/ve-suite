@@ -43,6 +43,8 @@
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
 
+#include "VE_Open/XML/Model/ModelPtr.h"
+
 class wxCheckListBox;
 class wxButton;
 
@@ -53,17 +55,12 @@ class wxButton;
 namespace VE_XML
 {
 class Command;
-
-namespace VE_Model
-{
-    class Model;
-}
 }
 
 class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
-    SoundsPane( VE_XML::VE_Model::Model* model );
+    SoundsPane( VE_XML::VE_Model::ModelWeakPtr model );
     virtual ~SoundsPane(){;}
 
     enum SOUNDS_TAB_IDS
@@ -76,7 +73,7 @@ public:
 
     ///Set the active VE_XML::VE_Model::Model
     ///\param model The active model;
-    void SetActiveModel(VE_XML::VE_Model::Model* model);
+    void SetActiveModel(VE_XML::VE_Model::ModelWeakPtr model);
 
 protected:
     void _buildPage();
@@ -86,7 +83,7 @@ protected:
     wxButton* _loadButton;
 
     unsigned int _numSounds;///<The number of sounds
-    VE_XML::VE_Model::Model* _activeModel;///<The current model;
+    VE_XML::VE_Model::ModelStrongPtr m_activeModel;///<The current model;
     wxArrayString _loadedSounds;///<The sounds loaded already;
 
     ///Update the current sound information from a given VE_Model
