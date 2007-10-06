@@ -1783,23 +1783,17 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     modules[id].GetPlugin()->SetID(id);
     modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
+
+    ///Add the plugin model pointer to the respective system
+    systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
+    
     sbboxes.push_back(bbox);
     ///Add vemodels to the hierarchy tree
     /*************************************/
     //Setup the event handlers for the plugin
     parent->PushEventHandler( modules[id].GetPlugin() );
     parent->Refresh(true);
-    //Update();
-    
-    //Models
-    for( std::map< int, Module >::iterator iter = modules.begin(); 
-         iter!=modules.end(); ++iter )
-    {
-        iter->second.GetPlugin()->SetID( iter->first );
-        systemPtr->AddModel( new VE_XML::VE_Model::Model( 
-                *(iter->second.GetPlugin()->GetVEModel()) ) );
-    }
-    
+
     while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
 }
 ////////////////////////////////////////

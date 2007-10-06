@@ -906,7 +906,8 @@ void AppFrame::Save( wxCommandEvent& event )
    {
       ///now write the file out from domdocument manager
       //wrtie to path
-      //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
+       //std::string data = network->Save( );
+       std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
    }
 }
 
@@ -965,6 +966,7 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
       ///now write the file out from domdocument manager
       //wrtie to path
       //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
+      std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
       SetTitle( vesFileName.GetFullName() );
    }
 }
@@ -1553,33 +1555,35 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-   EnableCEGUIMenuItems();
+    EnableCEGUIMenuItems();
    
-   Network * network = canvas->GetActiveNetwork();
-   std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( std::string( "returnString" ) );
-   // write the domdoc to the string above
-   try 
-   {
-      //first make sure all the units have been initialized with the current
-      //ids to get an active xml model
-      network->SetIDOnAllActiveModules();
-      //Now that we have an active xml model in all units
-      // set the network
-      serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
-      // Tell xplorer to ask ce for the new data
-      VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
-      dataValuePair->SetData(std::string("Load Data"),xplorerColor);
-      VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
-      veCommand->SetCommandName(std::string("veNetwork Update"));
-      veCommand->AddDataValuePair(dataValuePair);
-      serviceList->SendCommandStringToXplorer( veCommand );
-      //enable the menus now
-      run_menu->Enable( v21ID_START_CALC, true );
-   }
-   catch ( CORBA::Exception& ) 
-   {
-      Log("no exec found!\n");
-   }
+    std::string nw_str = XMLDataBufferEngine::instance()->
+        SaveVESData( std::string( "returnString" ) );
+    // write the domdoc to the string above
+    try 
+    {
+        //first make sure all the units have been initialized with the current
+        //ids to get an active xml model
+        Network * network = canvas->GetActiveNetwork();
+        network->SetIDOnAllActiveModules();
+        //Now that we have an active xml model in all units
+        // set the network
+        serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
+        // Tell xplorer to ask ce for the new data
+        VE_XML::DataValuePairWeakPtr dataValuePair = 
+            new VE_XML::DataValuePair();
+        dataValuePair->SetData(std::string("Load Data"),xplorerColor);
+        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+        veCommand->SetCommandName(std::string("veNetwork Update"));
+        veCommand->AddDataValuePair(dataValuePair);
+        serviceList->SendCommandStringToXplorer( veCommand );
+        //enable the menus now
+        run_menu->Enable( v21ID_START_CALC, true );
+    }
+    catch ( CORBA::Exception& ) 
+    {
+        Log("no exec found!\n");
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
