@@ -39,15 +39,16 @@
 using namespace VE_Conductor::GUI_Utilities;
 
 ////////////////////////////////////////////////
-Module::Module( void )
+Module::Module( void ):
+    pl_mod( 0 ),
+    canvas( 0 )
 {
-   pl_mod = 0;
-   canvas = 0;
+    ;
 }
 ////////////////////////////////////////////////
 Module::~Module( void )
 {
-   if ( pl_mod )
+   if( pl_mod )
    {
       delete pl_mod;
       pl_mod = 0;
@@ -58,7 +59,7 @@ Module::Module( const Module& input )
 {
    pl_mod = 0;
    poly = input.poly; 
-   cls_name = input.cls_name;
+   //cls_name = input.cls_name;
    canvas = input.canvas;
    //links = input.links;
 }
@@ -69,7 +70,7 @@ Module& Module::operator= ( const Module& input )
    {
       pl_mod = 0;
       poly = input.poly; 
-      cls_name = input.cls_name;
+      //cls_name = input.cls_name;
       canvas = input.canvas;
       // we can do this because it is a vector of actual instances
       //links.clear();
@@ -112,20 +113,20 @@ void Module::RemoveLink( size_t i )
    }
 }*/
 ////////////////////////////////////////////////
-std::string Module::GetClassName( void )
+/*std::string Module::GetClassName( void )
 {
    return cls_name;
-}
+}*/
 ////////////////////////////////////////////////
 VE_Conductor::GUI_Utilities::Polygon* Module::GetPolygon( void )
 {
    return &(poly);
 }
-////////////////////////////////////////////////
+/*////////////////////////////////////////////////
 void Module::SetClassName( std::string newClassname )
 {
    cls_name = newClassname;
-}
+}*/
 ////////////////////////////////////////////////
 void Module::SetPlugin( UIPluginBase* newPlugin )
 {

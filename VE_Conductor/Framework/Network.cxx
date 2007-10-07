@@ -1781,8 +1781,8 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     *(newPolygon.GetPolygon()) = tmpPoly;
 
     newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
-    modules[id].SetClassName( cls_name );
 
+    modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID(id);
     modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
@@ -2416,7 +2416,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
         modules[ num ] = temp_mod;
         modules[ num ].SetPlugin( tempPlugin );
         modules[ num ].GetPlugin()->SetID( num );
-        modules[ num ].SetClassName( model->GetModelName() );
+        //modules[ num ].SetClassName( model->GetModelName() );
         modules[ num ].GetPlugin()->SetVEModel( model );
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
@@ -2561,7 +2561,7 @@ void Network::SetIDOnAllActiveModules( void )
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
    {
-      std::string moduleName = ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() );//GetClassName();
+      std::string moduleName = ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() );
       int moduleId = iter->first;
       serviceList->SetID( moduleId, moduleName );
    }

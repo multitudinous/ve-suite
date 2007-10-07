@@ -45,8 +45,6 @@ Module API
 #include "VE_Conductor/Utilities/Polygon.h"
 #include "VE_Conductor/Utilities/Link.h"
 
-#include "VE_Installer/include/VEConfig.h"
-
 class wxWindow;
 class UIPluginBase;
 
@@ -73,13 +71,13 @@ public:
    //void RemoveLink( size_t i );
    //std::vector< Link >* GetLinks( void );
    //size_t GetNumberOfLinks( void );
-   std::string GetClassName( void );
-   void SetClassName( std::string newClassname );
+   //std::string GetClassName( void );
+   ///void SetClassName( std::string newClassname );
    Polygon* GetPolygon( void );
    UIPluginBase* GetPlugin( void );
    void SetPlugin( UIPluginBase* newPlugin );
 protected:
-	std::string cls_name;
+	//std::string cls_name;
 
 private:
    UIPluginBase* pl_mod;
