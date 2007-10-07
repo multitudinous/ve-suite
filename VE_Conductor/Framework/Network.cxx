@@ -672,6 +672,7 @@ void Network::OnDelLink(wxCommandEvent& event )
     {
         if( iter->GetUUID() == *selLink )
         {
+            systemPtr->GetNetwork()->RemoveLink( iter->GetLink() );
             iter = links.erase( iter );
             break;
         }
@@ -2298,65 +2299,32 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
    systemPtr = system;
    
    // do this for network
-   VE_XML::VE_Model::Network veNetwork = *(system->GetNetwork());
+   VE_XML::VE_Model::NetworkStrongPtr veNetwork = system->GetNetwork();
    
 //This is needed because on windows the scale must be 1 for the
 //wxAutoBufferedPaintDC to work properly
 #ifndef WIN32
    long int tempScaleInfo;
-   veNetwork.GetDataValuePair( 0 )->GetData( (userScale.first)  );
-   veNetwork.GetDataValuePair( 1 )->GetData( (userScale.second) );
-   veNetwork.GetDataValuePair( 2 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
+   veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
+   veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
    numPix.first = tempScaleInfo;
-   veNetwork.GetDataValuePair( 3 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
    numPix.second = tempScaleInfo;
-   veNetwork.GetDataValuePair( 4 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
    numUnit.first = tempScaleInfo;
-   veNetwork.GetDataValuePair( 5 )->GetData( tempScaleInfo );
+   veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
 #endif
 	size_t maxX = 7000;
 	size_t maxY = 7000;
     //Setup the links
-    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
+    for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
         links.push_back( VE_Conductor::GUI_Utilities::Link( parent ) );
-        links.at( i ).SetDCScale( &userScale );
-        
-        links.at( i ).SetFromPort( *(veNetwork.GetLink( i )->GetFromPort()) );
-        links.at( i ).SetToPort( *(veNetwork.GetLink( i )->GetToPort()) );
-
-        long moduleID;
-        veNetwork.GetLink( i )->GetFromModule()->GetData( moduleID );
-        links.at( i ).SetFromModule( moduleID );
-        veNetwork.GetLink( i )->GetToModule()->GetData( moduleID );
-        links.at( i ).SetToModule( moduleID );
-
-        size_t numberOfPoints = veNetwork.GetLink( i )->GetNumberOfLinkPoints();
-        for( size_t j = 0; j < numberOfPoints; ++j )
-        {
-            std::pair< unsigned int, unsigned int > rawPoint = 
-                veNetwork.GetLink( i )->GetLinkPoint( j )->GetPoint();
-            wxPoint point;
-            point.x = rawPoint.first;
-            point.y = rawPoint.second;
-            links.at( i ).SetPoint( &point );
-			if( point.x > maxX )
-			{	
-                maxX = point.x + 100;
-            }
-            
-			if( point.y > maxY )
-            {
-                maxY = point.y + 100;
-            }
-        }
-        // Create the polygon for links
-        links.at( i ).CalcLinkPoly();
-
-        links.at(i).SetName( wxString( 
-            veNetwork.GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
-        links.at(i).SetUUID( veNetwork.GetLink( i )->GetID() );
+        links.back().SetDCScale( &userScale );
+        links.back().SetLink( veNetwork->GetLink( i ) );
+        ///Need to somehow get max and maxy from links here
     }
 
 //    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
@@ -2365,10 +2333,10 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
 //    }
 
     //Setup the tags
-    for( size_t i = 0; i < veNetwork.GetNumberOfTags(); ++i )
+    for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
     {
         tags.push_back( VE_Conductor::GUI_Utilities::Tag( parent ) );
-        tags.at( i ).SetVETagPtr( veNetwork.GetTag( i ) );
+        tags.at( i ).SetVETagPtr( veNetwork->GetTag( i ) );
         // Create the polygon for tags
         tags.at( i ).CalcTagPoly();
     }

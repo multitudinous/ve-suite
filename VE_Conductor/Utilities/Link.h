@@ -51,6 +51,14 @@ Link API
 
 class wxScrolledWindow;
 
+namespace VE_XML
+{
+namespace VE_Model
+{
+    class Link;
+}
+}
+
 namespace VE_Conductor
 {
 namespace GUI_Utilities
@@ -128,7 +136,11 @@ public:
    void SetHighlightFlag( bool flag );
    ///Draw link
    void DrawLink( wxDC* dc );
-
+   ///Set VE_XML::VE_Model::Link
+   void SetLink( VE_XML::VE_Model::Link* inputLink );
+   ///Get VE_XML::VE_Model::Link
+   VE_XML::VE_Model::Link* GetLink();
+   
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
     void OnShowAspenName( wxCommandEvent& event );
@@ -183,6 +195,8 @@ private:
     /// first = x scale
     /// second = y scale
     std::pair< double, double >* userScale;
+    ///The XML Link rep
+    VE_XML::VE_Model::Link* m_veLink;
     
     std::string ConvertUnicode( const wxChar* data )
     {

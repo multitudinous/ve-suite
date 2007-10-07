@@ -78,7 +78,8 @@ To_mod( 1000000 ),
 Fr_port( 1000000 ),
 To_port( 1000000 ),
 networkFrame( designCanvas ),
-userScale( 0 )
+userScale( 0 ),
+m_veLink( 0 )
 {
     double a = atan(3.0/10.0);
     double b = -a;
@@ -106,7 +107,10 @@ Link::Link( const Link& input )
     cosb = input.cosb;
     sina = input.sina; 
     cosa = input.cosa;
-    
+    if( input.m_veLink )
+    {
+        m_veLink = new VE_XML::VE_Model::Link( *(input.m_veLink) );
+    }
     cons = input.cons;
     poly = input.poly;
     networkFrame = input.networkFrame;
@@ -129,7 +133,7 @@ Link& Link::operator= ( const Link& input )
         cosb = input.cosb;
         sina = input.sina; 
         cosa = input.cosa;
-        
+        m_veLink = new VE_XML::VE_Model::Link( *(input.m_veLink) );
         cons.clear();
         cons = input.cons;
         poly = input.poly;
@@ -521,7 +525,9 @@ void Link::OnDelLinkCon(wxCommandEvent& event )
     }
 
     networkFrame->Refresh(true);
-    //Update();
+
+    ///Update the link
+    GetLink();
 }
 /////////////////////////////////////////////////////
 void Link::OnDelLink(wxCommandEvent& event )
@@ -578,6 +584,9 @@ void Link::OnAddLinkCon(wxCommandEvent& event )
     m_selLinkCon = -1;
     
     networkFrame->Refresh(true);
+    
+    ///Update the link
+    GetLink();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnMRightDown( wxMouseEvent &event )
@@ -711,4 +720,66 @@ void Link::DrawLink( wxDC* dc )
     {
         DrawLinkCon( dc );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::SetLink( VE_XML::VE_Model::Link* inputLink )
+{
+    m_veLink = inputLink;
+    
+    SetFromPort( *(m_veLink->GetFromPort()) );
+    SetToPort( *(m_veLink->GetToPort()) );
+    
+    long moduleID;
+    m_veLink->GetFromModule()->GetData( moduleID );
+    SetFromModule( moduleID );
+    m_veLink->GetToModule()->GetData( moduleID );
+    SetToModule( moduleID );
+    
+    size_t numberOfPoints = m_veLink->GetNumberOfLinkPoints();
+    for( size_t j = 0; j < numberOfPoints; ++j )
+    {
+        std::pair< unsigned int, unsigned int > rawPoint = 
+            m_veLink->GetLinkPoint( j )->GetPoint();
+        wxPoint point;
+        point.x = rawPoint.first;
+        point.y = rawPoint.second;
+        SetPoint( &point );
+        /*if( point.x > maxX )
+        {	
+            maxX = point.x + 100;
+        }
+        
+        if( point.y > maxY )
+        {
+            maxY = point.y + 100;
+        }*/
+    }
+    // Create the polygon for links
+    CalcLinkPoly();
+    
+    SetName( wxString( m_veLink->GetLinkName().c_str(), wxConvUTF8) );
+    SetUUID( m_veLink->GetID() );    
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_XML::VE_Model::Link* Link::GetLink()
+{
+    //xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].
+    //                                   GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
+    //xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].
+    //                                 GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
+    //*(m_veLink->GetFromPort()) = static_cast< long int >( GetFromPort() );
+    //*(m_veLink->GetToPort()) = static_cast< long int >( GetToPort() );
+    //xmlLink->SetLinkName( ConvertUnicode( GetName().c_str() ) );
+    //xmlLink->SetID( GetUUID() );
+    
+    //Try to store link cons,
+    //link cons are (x,y) wxpoint
+    //here I store x in one vector and y in the other
+    for ( size_t j = 0; j < GetNumberOfPoints(); ++j )
+    {
+        m_veLink->GetLinkPoint( j )->SetPoint( 
+            std::pair< unsigned int, unsigned int >( 
+            GetPoint( j )->x, GetPoint( j )->y ) );
+    }
+    return m_veLink;
 }
