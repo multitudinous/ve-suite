@@ -81,14 +81,13 @@
 using namespace VE_Conductor::GUI_Utilities;
 using namespace VE_Conductor;
 
-//BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
 BEGIN_EVENT_TABLE(Network, wxEvtHandler)
     // see the docs on wxScrolledWindow for more info on this
     // Also see wxPaintEvent
     // overriding this function allows us to handle when things on redrawn
-//EVT_PAINT( Network::OnPaint )
+    //EVT_PAINT( Network::OnPaint )
     //This is necessary to erase the background
-//EVT_ERASE_BACKGROUND( Network::OnEraseBackground )
+    //EVT_ERASE_BACKGROUND( Network::OnEraseBackground )
     //See wxMoveEvent for info on this
     // Motion now only used for dragging
     EVT_MOTION( Network::OnMouseMove )
@@ -2553,7 +2552,6 @@ void Network::SetSelectedModule(int modId)
 	parent->Refresh(true);
 	///Update();
 }
-/////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 void Network::HighlightCenter( int modId )
 {    
@@ -2567,7 +2565,7 @@ void Network::HighlightCenter( int modId )
     //highlight the selected icon
     SetSelectedModule(modId);
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::PushAllEvents( )
 {
 	for( size_t i = 0; i < links.size(); ++i )
@@ -2585,7 +2583,7 @@ void Network::PushAllEvents( )
 		parent->PushEventHandler( iter->second.GetPlugin() );
 	}
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Network::RemoveAllEvents( )
 {
 	for( size_t i = 0; i < links.size(); ++i )

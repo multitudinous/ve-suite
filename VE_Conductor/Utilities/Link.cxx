@@ -133,7 +133,10 @@ Link& Link::operator= ( const Link& input )
         cosb = input.cosb;
         sina = input.sina; 
         cosa = input.cosa;
-        m_veLink = new VE_XML::VE_Model::Link( *(input.m_veLink) );
+        if( input.m_veLink )
+        {
+            m_veLink = new VE_XML::VE_Model::Link( *(input.m_veLink) );
+        }
         cons.clear();
         cons = input.cons;
         poly = input.poly;
