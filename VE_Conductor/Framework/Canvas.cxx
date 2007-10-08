@@ -117,11 +117,11 @@ previousId("-1")
         AddNetwork( tempNetwork );
     
     ///Set the default network
-    activeId = XMLDataBufferEngine::instance()->GetTopSystemId();
-    networks[ activeId ] = new Network( this );
+    activeId = "NULL";
+    networks[ XMLDataBufferEngine::instance()->GetTopSystemId() ] = 
+        new Network( this );
     ///Now set it active
-	this->SetActiveNetwork( VE_Conductor::XMLDataBufferEngine::instance()->
-        GetTopSystemId() );
+	this->SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
 
     ///Set canvas parameters
     tempNetwork->GetDataValuePair( -1 )->
