@@ -240,7 +240,7 @@ void Canvas::DrawNetwork(wxDC &dc, std::string id)
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::New( bool promptClearXplorer )
 {
-    if( this->previousId == "-1" )
+    if( this->activeId == "NULL" )
     {
         return;
     }
