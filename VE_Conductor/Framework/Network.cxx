@@ -140,31 +140,12 @@ isLoading( false )
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
 {
-    //Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
-    //     iter=links.begin(); iter!=links.end(); iter++ )
-    //{
-    //    RemoveEventHandler( &(*iter) );
-    //}
-	this->RemoveAllEvents();
-    links.clear();
+    ///We do not need to remove event handlers anymore because the 
+    ///Canvas class calls the remove functions whenever this is neccessary
     
-    //Pop the tag event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
-    //     iter=tags.begin(); iter!=tags.end(); iter++ )
-    //{
-    //    RemoveEventHandler( &(*iter) );
-    //}
-	this->RemoveAllEvents();
+    //this->RemoveAllEvents();
+    links.clear();
     tags.clear();
-
-    //Pop the plugin event handlers to clear these event handlers
-    //for( std::map< int, Module >::iterator iter = modules.begin(); 
-    //     iter!=modules.end(); iter++)
-    //{
-    //    RemoveEventHandler( iter->second.GetPlugin() );
-    //}
-	this->RemoveAllEvents();
     modules.clear();
 }
 /////////////////////////////////////////////
@@ -2577,8 +2558,9 @@ void Network::PushAllEvents( )
     {
         parent->PushEventHandler( &tags.at( i ) );
     }
-	std::map< int, VE_Conductor::GUI_Utilities::Module >::iterator iter;
-	for( iter = modules.begin(); iter != modules.end(); iter++ )
+
+	for( std::map< int, VE_Conductor::GUI_Utilities::Module >::iterator iter
+        = modules.begin(); iter != modules.end(); iter++ )
     {
 		parent->PushEventHandler( iter->second.GetPlugin() );
 	}
@@ -2595,8 +2577,9 @@ void Network::RemoveAllEvents( )
     {
         parent->RemoveEventHandler( &tags.at( i ) );
     }
-	std::map< int, VE_Conductor::GUI_Utilities::Module >::iterator iter;
-	for( iter = modules.begin(); iter != modules.end(); iter++ )
+
+	for( std::map< int, VE_Conductor::GUI_Utilities::Module >::iterator iter
+        = modules.begin(); iter != modules.end(); iter++ )
     {
 		parent->RemoveEventHandler( iter->second.GetPlugin() );
 	}
