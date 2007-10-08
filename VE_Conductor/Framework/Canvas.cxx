@@ -147,8 +147,15 @@ Canvas::~Canvas()
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::PopulateNetworks( std::string xmlNetwork )
 {
+    if( xmlNetwork.empty() )
+    {
+        std::cout << 
+            " Canvas::PopulateNetworks network string is empty" << std::endl;
+        return;
+    }
+    
     //Clean up the old
-    CleanUpNetworks();
+    New( true );
 
 	//load
 	VE_Conductor::XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
@@ -233,11 +240,15 @@ void Canvas::DrawNetwork(wxDC &dc, std::string id)
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::New( bool promptClearXplorer )
 {
-	this->previousId = "-1";
+    if( this->previousId == "-1" )
+    {
+        return;
+    }
+    
 	RemoveEventHandler( networks[this->activeId] );
-	networks[this->activeId]->RemoveAllEvents();
-    activeId = "NULL";
-	networks.clear();
+    networks[this->activeId]->RemoveAllEvents();
+    CleanUpNetworks();
+
 	Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -270,8 +281,8 @@ void Canvas::CleanUpNetworks()
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
         iter != networks.end(); ++iter )
     {
-        RemoveEventHandler( iter->second );
-        iter->second->RemoveAllEvents();
+        //RemoveEventHandler( iter->second );
+        //iter->second->RemoveAllEvents();
         delete iter->second;
     }
     networks.clear();
