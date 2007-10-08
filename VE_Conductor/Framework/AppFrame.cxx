@@ -2221,7 +2221,11 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnInternalIdle()
 {
-    Network * network = canvas->GetActiveNetwork();
+    Network* network = 0;
+    if( canvas )
+    {
+        network = canvas->GetActiveNetwork();
+    }
 	
 	//only when not dragging
     if( !network )
