@@ -45,6 +45,9 @@ using namespace VE_Util;
 
 //////////////////////////////////////
 DataObjectHandler::DataObjectHandler()
+:m_numberOfPointDataArrays(0),
+m_numberOfCellDataArrays(0)
+
 {
     m_datasetOperator = 0;
 }
@@ -109,20 +112,19 @@ void DataObjectHandler::OperateOnAllDatasetsInObject(vtkDataObject* dataObject)
     }
 
 }
-////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::_convertCellDataToPointData(vtkDataSet* dataSet)
 {
-    ///either cast it to a dataset or iterate over all datasets
-    unsigned int numPtDataArrays = dataSet->GetPointData()
+    if(dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays)
+    {
+       m_numberOfPointDataArrays = dataSet->GetPointData()
                                         ->GetNumberOfArrays();
-    /*vprDEBUG(vesDBG,1) << "|\tnumPtDataArrays = " << numPtDataArrays
-                          << std::endl << vprDEBUG_FLUSH;
-*/
-    unsigned int numCellArrays = dataSet->GetCellData()->GetNumberOfArrays();
-  /*  vprDEBUG(vesDBG,1) << "|\tnumCellArrays = " << numCellArrays
-                          << std::endl << vprDEBUG_FLUSH;
-*/
-    if ( numCellArrays > 0 && numPtDataArrays == 0 )
+    }
+    if(dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays)
+    {
+       m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
+    }
+    if ( m_numberOfCellDataArrays > 0 && m_numberOfPointDataArrays  == 0 )
     {
         std::cout <<"|\tThe dataset has no point data -- "
                   << "will try to convert cell data to point data" << std::endl;
@@ -151,6 +153,11 @@ void DataObjectHandler::_convertCellDataToPointData(vtkDataSet* dataSet)
         }
     }
     return;
+}
+///////////////////////////////////////////////////////////////////////
+unsigned int DataObjectHandler::GetNumberOfDataArrays(bool isPointData)
+{
+    return (isPointData)?m_numberOfPointDataArrays:m_numberOfCellDataArrays;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::SetDatasetOperatorCallback(DatasetOperatorCallback* dsoCbk)

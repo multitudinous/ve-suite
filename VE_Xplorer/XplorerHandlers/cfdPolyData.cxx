@@ -165,7 +165,8 @@ void cfdPolyData::Update()
       vprDEBUG(vesDBG,2) << " diagonalLength = " << len
                              << std::endl << vprDEBUG_FLUSH;
 
-      int numPts = this->GetActiveDataSet()->GetDataSet()->GetNumberOfPoints();
+      ///this may need to be changed--biv
+      unsigned int numPts = this->GetActiveDataSet()->GetNumberOfPoints();
       vprDEBUG(vesDBG,2) << " numPts = " << numPts
                              << std::endl << vprDEBUG_FLUSH;
       float scaleFactor = 0.0;

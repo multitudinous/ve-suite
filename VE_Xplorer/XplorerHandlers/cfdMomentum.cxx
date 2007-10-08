@@ -131,7 +131,7 @@ void cfdMomentum::Update( void )
 /*
       // get the boundary of data set
       float bd[6];
-      this->GetActiveMeshedVolume()->GetDataSet()->GetBounds( bd );
+      this->GetActiveMeshedVolume()->GetDataSet()->GetWholeBoundingBox( bd );
 
       if ( this->origin[0] > bd[0] && this->origin[0] < bd[1] &&
            this->origin[1] > bd[2] && this->origin[1] < bd[3] &&

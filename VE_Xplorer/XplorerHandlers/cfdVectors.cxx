@@ -80,7 +80,7 @@ std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()-
      // this->planes->ConcatenateSelectedPlanes();
 
       double bd[6];
-      this->GetActiveDataSet()->GetDataSet()->GetBounds( bd );
+      this->GetActiveDataSet()->GetBounds( bd );
       vprDEBUG(vesDBG, 0) <<"d1:"<<bd[0]<<"d2:"<<bd[1]<<"d3:"<<bd[2]
           <<"d4:"<<bd[3]<<"d5:"<<bd[4]<<"d6:"<<bd[5]
           << std::endl << vprDEBUG_FLUSH;

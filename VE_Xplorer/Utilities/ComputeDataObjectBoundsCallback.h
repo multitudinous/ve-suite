@@ -65,6 +65,9 @@ public:
     ///\param  boundsv The bounding box as:\n
     /// min-x, max-x, min-y, max-y, min-z, max-z 
     void GetDataObjectBounds(double bounds[6]);
+
+    ///Get the diagonal of the calculated bbox
+    double GetDataObjectBoundsDiagonal();
 protected:
     double m_bounds[6];///<The bounds of the vtkDataObject;
 };

@@ -33,7 +33,7 @@
 #include <iostream>
 
 #include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
-#include <vtkDataSet.h>
+#include <vtkDataObject.h>
 #include <vtkPointData.h>
 #include <vtkContourFilter.h>
 #include <vtkPolyData.h>
@@ -45,7 +45,7 @@
 
 using namespace VE_Util;
 
-vtkPolyData * VE_Util::cfdGrid2Surface( vtkDataSet *dataSet, float deciVal )
+vtkPolyData * VE_Util::cfdGrid2Surface( vtkDataObject *dataSet, float deciVal )
 {
    //convert vtkDataSet to polydata
    vtkGeometryFilter *cFilter = vtkGeometryFilter::New();

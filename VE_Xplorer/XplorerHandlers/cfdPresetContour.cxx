@@ -107,30 +107,6 @@ void cfdPresetContour::Update( void )
       }
 
       CreatePlane();
-/*
-      this->cuttingPlane = new cfdCuttingPlane( 
-            this->GetActiveDataSet()->GetDataSet()->GetBounds(),
-            this->xyz, numSteps );
-
-      // insure that we are using correct bounds for the given data set...
-      this->cuttingPlane->SetBounds( 
-                  this->GetActiveDataSet()->GetDataSet()->GetBounds() );
-//std::cout<<"GETBOUNDS: "<<this->GetActiveDataSet()->GetDataSet()->GetBounds()<<std::endl;
-
-      this->cuttingPlane->Advance( this->requestedValue );
-      this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-      this->cutter->Update();
-
-      this->SetMapperInput( this->cutter->GetOutput() );
-//      this->SetMapperInput( polydata );
-
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                        ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                        ->GetLookupTable() );
-*/
-      //this->mapper->Update();
    }
    
    vtkActor* temp = vtkActor::New();

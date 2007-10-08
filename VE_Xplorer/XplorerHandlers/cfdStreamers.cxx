@@ -426,7 +426,7 @@ void cfdStreamers::UpdateCommand()
 void cfdStreamers::CreateSeedPoints( void )
 {
    double bounds[ 6 ];
-   GetActiveDataSet()->GetDataSet()->GetBounds(bounds);
+   GetActiveDataSet()->GetBounds(bounds);
    
    double xDiff = bounds[1] - bounds[0];
    double yDiff = bounds[3] - bounds[2];

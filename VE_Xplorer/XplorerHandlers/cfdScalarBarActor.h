@@ -124,7 +124,7 @@ namespace VE_Xplorer
    float GetTitleTextScale() const;
 
    ///Set/Get the text for the scalar bar
-   void SetVtkVectorText(char text[]);
+   void SetVtkVectorText(std::string text);
 
    ///Create the scalar bar and convert it into pfGeode
    void Execute();

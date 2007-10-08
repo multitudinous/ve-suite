@@ -50,7 +50,7 @@ void ComputeVectorMagnitudeRangeCallback::GetVectorMagnitudeRange(double*& vMagR
     vMagRange[0] = m_magnitudeRange[0];
     vMagRange[1] = m_magnitudeRange[1];
 }
-/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ComputeVectorMagnitudeRangeCallback::OperateOnDataset(vtkDataSet* dataset)
 {
 	double* range = 

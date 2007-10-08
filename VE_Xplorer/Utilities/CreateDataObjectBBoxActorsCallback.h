@@ -26,47 +26,48 @@
  * Date modified: $Date: 2007-06-15 11:06:13 -0500 (Fri, 15 Jun 2007) $
  * Version:       $Rev: 8206 $
  * Author:        $Author: biv $
- * Id:            $Id: ComputeDataObjectBoundsCallback.h 9200 2007-10-03 19:17:07Z biv $
+ * Id:            $Id: CreateDataObjectBBoxActorsCallback.h 9200 2007-10-03 19:17:07Z biv $
+ * -----------------------------------------------------------------
+ *
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PROCESS_SCALAR_RANGE_CALLBACK 
-#define PROCESS_SCALAR_RANGE_CALLBACK
-/*!\file ProcessScalarRangeCallback.h
-ProcessScalarRangeCallback API.
+#ifndef CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK 
+#define  CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK
+/*!\file CreateDataObjectBBoxActorsCallback.h
+CreateDataObjectBBoxActorsCallback API.
 */
 
-/*!\class VE_Util::ProcessScalarRangeCallback
+/*!\class VE_Util::CreateDataObjectBBoxActorsCallback
 *
 */
 class vtkDataSet;
+class vtkActor;
 
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Xplorer/Utilities/DataObjectHandler.h"
 
+
 #include <vector>
-#include <string>
-#include <map>
 namespace VE_Util
 {
-class VE_UTIL_EXPORTS ProcessScalarRangeCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+class VE_UTIL_EXPORTS CreateDataObjectBBoxActorsCallback:
+    public VE_Util::DataObjectHandler::DatasetOperatorCallback
 {
 public:    
     ///Constructor
-    ProcessScalarRangeCallback();
+    CreateDataObjectBBoxActorsCallback();
     ///Destructor
-    virtual ~ProcessScalarRangeCallback();
+    virtual ~CreateDataObjectBBoxActorsCallback();
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
     virtual void OperateOnDataset(vtkDataSet* dataset);
     
-    ///Get scalar range for a specified scalar
-    ///\param scalarName The name of the scalar to find the range
-    ///\param  range The scalar range
-    void GetScalarRange(std::string scalarName,double range[2]);
+    ///Get the actors representing the bounding boxes of the datasets
+    std::vector< vtkActor* > GetBBoxActors();
 protected:
-    std::map<std::string, double* > m_scalarRanges;///<The scalar names	
+    ///<The bounds of the vtkDataObject as vtkActors;
+    std::vector< vtkActor* > m_bboxActors;
 };
 }
 #endif

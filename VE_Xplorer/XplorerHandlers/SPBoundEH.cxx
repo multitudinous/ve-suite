@@ -108,7 +108,8 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
          VE_XML::DataValuePairWeakPtr bounds = command->GetDataValuePair("Bounds");
          bounds->GetData(allBoundaryData);
          double databounds[6] = {0,0,0,0,0,0};
-         _activeModel->GetActiveDataSet()->GetDataSet()->GetBounds(databounds);
+         //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+         _activeModel->GetActiveDataSet()->GetBounds(databounds);
          double newValue[6] = {0,0,0,0,0,0};
          newValue[0] = databounds[0] + allBoundaryData.at(0)*(databounds[1] - databounds[0]);
          newValue[1] = databounds[0] + allBoundaryData.at(1)*(databounds[1] - databounds[0]);
@@ -138,8 +139,9 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
             value->GetData( alpha );
             ///Get the dataset bounds
             double databounds[6] = {0,0,0,0,0,0};
-            _activeModel->GetActiveDataSet()->GetDataSet()->GetBounds(databounds);
-            
+            //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+		    _activeModel->GetActiveDataSet()->GetBounds(databounds);
+         
             //udpate the correct bound
             unsigned int index = (boundCoordinate=="X")?0:(boundCoordinate=="Y")?2:4;
             double newValue = 0;
@@ -156,8 +158,9 @@ void SeedPointBoundsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
             
             ///Get the dataset bounds
             double databounds[6] = {0,0,0,0,0,0};
-            _activeModel->GetActiveDataSet()->GetDataSet()->GetBounds(databounds);
-            
+            //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+		    _activeModel->GetActiveDataSet()->GetBounds(databounds);
+         
             //udpate the correct bound
             unsigned int index = (boundCoordinate=="X")?0:(boundCoordinate=="Y")?2:4;
 

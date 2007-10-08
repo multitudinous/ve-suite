@@ -80,11 +80,19 @@ public:
 	///Caller is responsible for cleaning up DatasetOperatorCallback memory
     ///\param dsoCbk The DataSetOperatorCallback
     void SetDatasetOperatorCallback(DatasetOperatorCallback* dsoCbk);
+
+    ///Get the number of cell or point data arrays
+    ///\param isPointData Return point or cell data array count
+    unsigned int GetNumberOfDataArrays(bool isPointData=true);
 protected:
     ///Convert the cell data to point data if it exists
     ///\param dataset The vtkDataSet
     void _convertCellDataToPointData(vtkDataSet* dataset);
 
+    ///<Number of point data arrays
+    unsigned int m_numberOfPointDataArrays;
+    ///<Number of cell data arrays
+    unsigned int m_numberOfCellDataArrays;
     DatasetOperatorCallback* m_datasetOperator;///<The DatasetOperatorCallback.
 };
 }

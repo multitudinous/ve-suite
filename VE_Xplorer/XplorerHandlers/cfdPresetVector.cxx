@@ -115,12 +115,12 @@ void cfdPresetVector::Update( void )
    else
    {
       this->cuttingPlane = new cfdCuttingPlane( 
-                  this->GetActiveDataSet()->GetDataSet()->GetBounds(),
+                  this->GetActiveDataSet()->GetBounds(),
                   xyz, numSteps );
 
       // insure that we are using correct bounds for the given data set...
       this->cuttingPlane->SetBounds( 
-            this->GetActiveDataSet()->GetDataSet()->GetBounds() );
+            this->GetActiveDataSet()->GetBounds() );
       this->cuttingPlane->Advance( this->requestedValue );
 
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );

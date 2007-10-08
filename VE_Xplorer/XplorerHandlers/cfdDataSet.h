@@ -57,6 +57,7 @@ class vtkPolyData;
 class vtkUnstructuredGrid;
 class vtkUnstructuredGridReader;
 class vtkDataSet;
+class vtkDataObject;
 
 namespace VE_Xplorer
 {
@@ -84,7 +85,7 @@ namespace VE_Builder
    class DataLoader;
 }
 #include "VE_Installer/include/VEConfig.h"
-
+#include "VE_Xplorer/Utilities/DataObjectHandler.h"
 #ifdef _OSG
 #include <osg/ref_ptr>
 #elif _PERFORMER
@@ -125,8 +126,8 @@ namespace VE_Xplorer
          //float GetLength();
 
          // Get the length of the diagonal of the bounding box of the average cell
-         void GetMeanCellLength( float &len );
-         float GetMeanCellLength();
+         //void GetMeanCellLength( float &len );
+         //float GetMeanCellLength();
 
          // Set/get the step length for streamline integration.
          void SetStepLength( float sLen );
@@ -149,7 +150,7 @@ namespace VE_Xplorer
          // Get the single piece original data.
          vtkUnstructuredGrid * GetUnsData();
          vtkPolyData * GetPolyData();
-         vtkDataSet * GetDataSet();
+         vtkDataObject * GetDataSet();
 
          void SetType();       // compute dataset type by looking at the file
          void SetType( int );  // manually set the dataset type
@@ -213,7 +214,8 @@ namespace VE_Xplorer
 
          void SetActualScalarRange( int, double * );
          void GetActualScalarRange( int, double * );
-         double * GetActualScalarRange( int );
+         double* GetActualScalarRange( int );
+         double* GetActualScalarRange(std::string name);
 
          // returns displayed range of active scalar
          double * GetDisplayedScalarRange();
@@ -263,15 +265,30 @@ namespace VE_Xplorer
         ///Get the scalar bar
         VE_Xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
 
+		///Get the bounds of the vtkDataObject contained in the cfdDataSet
+		///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
+		void GetBounds(double bounds[6]);
+
+        ///Get the bounds of the vtkDataObject contained in the cfdDataSet
+		///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
+		double* GetBounds();
+
+        ///Get the scalar range by name
+        ///\param scalarName The name of the scalar to get the range
+        double* GetScalarRange(std::string scalarName);
 		
+        ///Get the number of points
+        unsigned int GetNumberOfPoints();
 private:
+	     ///Operator callbacks for DataObjectHandler
+	     std::map<std::string, VE_Util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
          std::map< std::string, std::string > dataSetUUIDMap;
          
          double** actualScalarRange;
          double** displayedScalarRange;
 
          cfdDataSet* parent;
-
+         double m_bounds[6];///The bounding box data;
          int isNewlyActivated;
 
          int CountNumberOfParameters( const int numComponents );
@@ -295,7 +312,7 @@ private:
 
          vtkLookupTable* lut;    // Lookup table.
 
-         vtkDataSet* dataSet;    // Original piece of vtk data.
+         vtkDataObject* dataSet;    // Original piece of vtk data.
          int datasetType;         // used by gui to place in appropriate column
 
          int activeScalar;
@@ -317,8 +334,9 @@ private:
          std::vector< std::string > scalarName;
          std::vector< std::string > vectorName;
 
-         osg::ref_ptr< VE_SceneGraph::Geode > bboxGeode;
+         //osg::ref_ptr< VE_SceneGraph::Geode > bboxGeode;
          osg::ref_ptr< VE_SceneGraph::Geode > wireframeGeode;
+         osg::ref_ptr< VE_SceneGraph::Group > m_visualBBox;
          //VE_SceneGraph::cfdTempAnimation* animation;
 
 		osg::ref_ptr< VE_SceneGraph::DCS > dcs;
@@ -329,7 +347,8 @@ private:
          VE_Xplorer::DataSetAxis* dataSetAxes;
          VE_Xplorer::DataSetScalarBar* dataSetScalarBar;
          VE_Util::cfdVTKFileHandler* _vtkFHndlr;
-         int partOfTransientSeries;
+		 VE_Util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
+		 int partOfTransientSeries;
          //int intRange[2];
          VE_Builder::DataLoader* m_externalFileLoader;///<Translator interface
 

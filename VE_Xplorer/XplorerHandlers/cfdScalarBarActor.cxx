@@ -265,9 +265,9 @@ float cfdScalarBarActor::GetTitleTextScale() const
    return this->titleTextScale;
 }
 
-void cfdScalarBarActor::SetVtkVectorText( char text[] )
+void cfdScalarBarActor::SetVtkVectorText( std::string text )
 {
-   this->titleScalar->SetText( text );
+    this->titleScalar->SetText( text.c_str() );
 }
 
 void cfdScalarBarActor::Execute()
@@ -566,15 +566,7 @@ void cfdScalarBarActor::RefreshScalarBar()
       << std::endl << vprDEBUG_FLUSH;
 
    // give a name to display over the scalarBar
-   static char legend[50];
-   strcpy( legend, this->_activeDataSet->GetDataSet()
-                       ->GetPointData()->GetScalars()->GetName() );
-
-   vprDEBUG(vesDBG,1) << "RefreshScalarBar: " 
-                          << "desired scalar bar name: " << legend 
-                          << std::endl << vprDEBUG_FLUSH;
-
-   this->SetVtkVectorText( legend );
+   this->SetVtkVectorText( _activeDataSet->GetScalarName(_activeDataSet->GetActiveScalar()) );
 
    this->Execute();
 

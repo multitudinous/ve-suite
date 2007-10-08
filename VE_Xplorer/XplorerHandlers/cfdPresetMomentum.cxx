@@ -123,12 +123,12 @@ void cfdPresetMomentum::Update( void )
       CreatePlane();
 /*
       this->cuttingPlane = new cfdCuttingPlane( 
-            this->GetActiveDataSet()->GetDataSet()->GetBounds(),
+            this->GetActiveDataSet()->GetBounds(),
             this->xyz, numSteps );
  
      // insure that we are using correct bounds for the given data set...
       this->cuttingPlane->SetBounds( 
-            this->GetActiveDataSet()->GetDataSet()->GetBounds() );
+            this->GetActiveDataSet()->GetBounds() );
       this->cuttingPlane->Advance( this->requestedValue );
 
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );

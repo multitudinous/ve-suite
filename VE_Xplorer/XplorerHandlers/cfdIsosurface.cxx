@@ -155,9 +155,7 @@ void cfdIsosurface::Update()
    this->normals->Update();
 #endif
 
-   //this->mapper->SelectColorArray(  colorByScalar.c_str() );
-   double* tempRange = this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange();
-//   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars( colorByScalar.c_str() )->GetRange() );
+   double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
    this->mapper->SetScalarRange( minValue, maxValue );
 
    vtkLookupTable* lut = vtkLookupTable::New();

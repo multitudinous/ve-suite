@@ -319,18 +319,19 @@ void cfdContourBase::CreatePlane( void )
    if(!cuttingPlane)
    {
       cuttingPlane = new cfdCuttingPlane( 
-         GetActiveDataSet()->GetDataSet()->GetBounds(),
+          GetActiveDataSet()->GetBounds(),
          xyz, numSteps );
    }
    
 
    // insure that we are using correct bounds for the given data set...
    cuttingPlane->SetBounds( 
-         GetActiveDataSet()->GetDataSet()->GetBounds() );
+         GetActiveDataSet()->GetBounds() );
 
    cuttingPlane->Advance( requestedValue );
    cutter->SetCutFunction( cuttingPlane->GetPlane() );
-   cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+   //cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+   cutter->SetInput(0, GetActiveDataSet()->GetDataSet());
    //cutter->DebugOn();
    //cutter->Print( std::cout );
    cutter->Update();
@@ -342,7 +343,7 @@ void cfdContourBase::CreatePlane( void )
       std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
       std::cerr<<"Finding next closest plane"<<std::endl;
       int counter = 0;
-      while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys() < 1 ) || counter > 3 )//&&(this->TargetReduction > 0.0) )
+      while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys() < 1 ) || counter < 3 )//&&(this->TargetReduction > 0.0) )
       {
          if( requestedValue < 50 )
          {

@@ -123,7 +123,7 @@ void cfdContour::Update( void )
    {
 /*
       float bd[6];      // Boundary of the whole data sets.
-      this->GetActiveMeshedVolume()->GetDataSet()->GetBounds( bd );
+      this->GetActiveMeshedVolume()->GetDataSet()->GetWholeBoundingBox( bd );
       if (  this->center[0] > bd[0]-(this->box_size[1]-this->box_size[0])/2 
          && this->center[0] < bd[1]+(this->box_size[1]-this->box_size[0])/2 
          && this->center[1] > bd[2]-(this->box_size[3]-this->box_size[2])/2 

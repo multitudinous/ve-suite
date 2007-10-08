@@ -36,7 +36,7 @@
 *Grid to surface converting API
 */
 
-class vtkDataSet;
+class vtkDataObject;
 class vtkPolyData;
 
 #include "VE_Installer/include/VEConfig.h"
@@ -45,6 +45,6 @@ namespace VE_Util
 {
 // function declarations
    ///Reads in a grid (vtkDataSet) and returns it as a surface (vtkPolyData).
-VE_UTIL_EXPORTS vtkPolyData * cfdGrid2Surface( vtkDataSet *dataSet, float deciVal );
+VE_UTIL_EXPORTS vtkPolyData * cfdGrid2Surface( vtkDataObject *dataSet, float deciVal );
 }
 #endif
