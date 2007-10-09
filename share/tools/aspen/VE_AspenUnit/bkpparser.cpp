@@ -989,7 +989,7 @@ void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork,
 		 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
          
 		 //Now we create a link
-		 VE_XML::VE_Model::Link* xmlLink = subNetwork->GetLink( -1 );
+		 VE_XML::VE_Model::LinkWeakPtr xmlLink = subNetwork->GetLink( -1 );
 		 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
 		 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
 		 
