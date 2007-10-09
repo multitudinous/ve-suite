@@ -34,7 +34,7 @@
 #include <iostream>
 #include <string>
 
-#include "VE_Open/XML/CommandWeakPtr.h"
+#include "VE_Open/XML/CommandPtr.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/XMLReaderWriter.h"
 #include "VE_Open/XML/XMLObjectFactory.h"
@@ -42,7 +42,7 @@
 #include "VE_Open/XML/Shader/ShaderCreator.h"
 
 #include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/DataValuePairPtr.h"
 
 #include "VE_Open/XML/Shader/Shader.h"
 #include "VE_Open/XML/Shader/ShaderPtr.h"
