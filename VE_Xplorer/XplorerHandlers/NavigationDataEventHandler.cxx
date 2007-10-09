@@ -42,7 +42,7 @@
 #include "VE_Open/XML/XMLObject.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/DataValuePairPtr.h"
 #include "VE_Open/XML/OneDDoubleArray.h"
 
 #include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp

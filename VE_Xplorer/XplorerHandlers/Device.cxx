@@ -41,7 +41,7 @@
 #include "VE_Xplorer/SceneGraph/SceneManager.h"
 
 #include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/DataValuePairPtr.h"
 
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/OneDDoubleArray.h"
