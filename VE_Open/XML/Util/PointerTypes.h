@@ -58,7 +58,12 @@ namespace VE_XML
 {
 #ifdef _USE_LOKI_POINTERS
 
-   #define REGISTER_VE_STRONG_PTR(classtype, name)                              \
+   #define REGISTER_VE_PTR(classtype, name)                                     \
+    typedef Loki::StrongPtr< classtype, true, Loki::LockableTwoRefCounts,       \
+        Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong, \
+        Loki::DeleteSingle > name;                                              \
+
+   #define REGISTER_VE_SHARED_PTR(classtype, name)                              \
     typedef Loki::StrongPtr< classtype, true, Loki::LockableTwoRefCounts,       \
         Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong, \
         Loki::DeleteSingle > name;                                              \
@@ -69,26 +74,23 @@ namespace VE_XML
         Loki::DeleteSingle > name;                                              \
 
    #define REGISTER_VE_SCOPED_PTR(classtype, name)                              \
-    typedef Loki::StrongPtr< classtype, false, Loki::LockableTwoRefCounts,      \
-        Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong, \
-        Loki::DeleteSingle > name;                                              \
-
-   #define REGISTER_VE_PTR(classtype, name)                                     \
-    typedef Loki::SmartPtrDef<classtype>::type name;                            \
+    typedef Loki::SmartPtr<classtype, Loki::NoCopy, Loki::DisallowConversion,   \
+        Loki::DefaultSPStorage, LOKI_DEFAULT_CONSTNESS> name;                   \
 
 #else
 
-   #define REGISTER_VE_STRONG_PTR(classtype, name)    \
+   #define REGISTER_VE_PTR(classtype, name)           \
+    typedef boost::shared_ptr< classtype > name;      \
+
+   #define REGISTER_VE_SHARED_PTR(classtype, name)    \
     typedef boost::shared_ptr< classtype > name;      \
 
    #define REGISTER_VE_WEAK_PTR(classtype, name)      \
     typedef boost::weak_ptr< classtype > name;        \
 
    #define REGISTER_VE_SCOPED_PTR(classtype, name)    \
-    typedef boost::shared_ptr< classtype > name;      \
+    typedef boost::scoped_ptr< classtype > name;      \
 
-   #define REGISTER_VE_PTR(classtype, name)           \
-    typedef boost::intrusive_ptr< classtype > name;   \
 
 #endif
 

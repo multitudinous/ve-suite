@@ -33,7 +33,7 @@
 #ifndef USER_PTR_H
 #define USER_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <VE_Open/XML/Util/PointerTypes.h>
 
 /**
  * \file
@@ -48,9 +48,10 @@ namespace VE_XML
 {
    class User;
    /// Typedef for a SmartPtr type for the User.
-   typedef Loki::SmartPtrDef<User>::type UserPtr;
+   REGISTER_VE_PTR(User, UserPtr);
+   REGISTER_VE_SHARED_PTR(User, UserSharedPtr);
+   REGISTER_VE_WEAK_PTR(User, UserWeakPtr);
+   REGISTER_VE_SCOPED_PTR(User, UserScopedPtr);
 }
-#include "VE_Open/XML/UserWeakPtr.h"
-#include "VE_Open/XML/UserStrongPtr.h"
 
 #endif
