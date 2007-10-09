@@ -363,9 +363,18 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
 {
     //Erase all the maps
-    m_networkMap.clear();
-    m_modelMap.clear();
-    m_networkModelMap.clear();
+    CleanUp();
+    
+    VE_XML::CommandWeakPtr nullCommand = new VE_XML::Command();
+    nullCommand->SetCommandName( "NULL" );
+    m_commandMap[ "NULL" ] = nullCommand;
+    
+    //Setup default system
+    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
+        new VE_XML::VE_Model::System();
+    m_systemMap[ tempSystem->GetID() ] = tempSystem;
+    //get the main systems id
+    topId = tempSystem->GetID();    
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_Model::NetworkWeakPtr XMLDataBufferEngine::GetXMLNetworkDataObject(

@@ -51,6 +51,9 @@
 
 
 #include <wx/dcbuffer.h>
+#include <wx/msgdlg.h>
+
+
 #ifdef WIN32
 #include <cmath>
 /* Win32 doesn't seem to have these functions.
@@ -109,43 +112,18 @@ previousId("-1")
     //This is for the paint buffer
     SetBackgroundStyle(wxBG_STYLE_CUSTOM);
 
-    ///Initialize tope level network
-    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = 
-        new VE_XML::VE_Model::Network();
-    XMLDataBufferEngine::instance()->GetXMLSystemDataObject( 
-        XMLDataBufferEngine::instance()->GetTopSystemId() )->
-        AddNetwork( tempNetwork );
+    ///Create default network for the user to work with
+    CreateDefaultNetwork();
     
-    ///Set the default network
-    activeId = "NULL";
-    networks[ XMLDataBufferEngine::instance()->GetTopSystemId() ] = 
-        new Network( this );
-    ///Now set it active
-	this->SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
-
-    ///Set canvas parameters
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_xUserScale", userScale.first );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_yUserScale", userScale.second );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixX", static_cast< long int >( numPix.first ) );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixY", static_cast< long int >( numPix.second ) );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
-    tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
-
     Refresh(true);
 }
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
-    CleanUpNetworks();
+    //CleanUpNetworks();
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Canvas::PopulateNetworks( std::string xmlNetwork )
+void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 {
     if( xmlNetwork.empty() )
     {
@@ -245,6 +223,26 @@ void Canvas::New( bool promptClearXplorer )
         return;
     }
     
+    int answer = wxID_NO;
+    if( !promptClearXplorer )
+    {
+        wxMessageDialog promptDlg( this, 
+            _("Do you want to reset Xplorer?"), 
+            _("Reset Xplorer Warning"), 
+            wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
+            wxDefaultPosition);
+        answer = promptDlg.ShowModal();
+    }
+
+    if( ( answer == wxID_OK ) || ( promptClearXplorer ) )
+    {
+        for( std::map < std::string, Network* >::iterator iter = 
+            networks.begin(); iter != networks.end(); ++iter )
+        {
+            networks[this->activeId]->ClearXplorer();
+        }
+    }
+   
 	RemoveEventHandler( networks[this->activeId] );
     networks[this->activeId]->RemoveAllEvents();
     CleanUpNetworks();
@@ -288,4 +286,42 @@ void Canvas::CleanUpNetworks()
     networks.clear();
     activeId = "NULL";
     previousId = "-1";
+}
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::CreateDefaultNetwork()
+{
+    XMLDataBufferEngine::instance()->NewVESData( true );
+    ///Initialize tope level network
+    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = 
+        new VE_XML::VE_Model::Network();
+    XMLDataBufferEngine::instance()->GetXMLSystemDataObject( 
+        XMLDataBufferEngine::instance()->GetTopSystemId() )->
+        AddNetwork( tempNetwork );
+    
+    ///Set the default network
+    activeId = "NULL";
+    networks[ XMLDataBufferEngine::instance()->GetTopSystemId() ] = 
+        new Network( this );
+    ///Now set it active
+    this->SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
+    
+    ///Set canvas parameters
+    std::pair< long int, long int > numPix;
+    numPix.first = 7000;
+    numPix.second = 7000;
+    std::pair< long int, long int > numUnit;
+    numUnit.first = 10;
+    numUnit.second = 10;
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "m_xUserScale", userScale.first );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "m_yUserScale", userScale.second );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nPixX", static_cast< long int >( numPix.first ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nPixY", static_cast< long int >( numPix.second ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+    tempNetwork->GetDataValuePair( -1 )->
+        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 }

@@ -1093,8 +1093,8 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Now laod the xml data now that we are in the correct directory
     //network->Load( ConvertUnicode( fname.c_str() ), true );
-CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-serviceList->GetMessageLog()->SetMessage( ConvertUnicode( fname.c_str() ).c_str() );
+//CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+//serviceList->GetMessageLog()->SetMessage( ConvertUnicode( fname.c_str() ).c_str() );
 	canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     
 	//create hierarchy page
@@ -1142,7 +1142,7 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    std::string nw_str = serviceList->GetNetwork();
    EnableCEGUIMenuItems();
    //network->Load( nw_str, false );
-   canvas->PopulateNetworks( nw_str );
+   canvas->PopulateNetworks( nw_str, false );
 
    //create hierarchy page
    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
@@ -1497,6 +1497,7 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED(event) )
    SetTitle( _("VE-Suite: www.vesuite.org") );
    //network->New( true );
    canvas->New( true );
+   canvas->CreateDefaultNetwork();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )

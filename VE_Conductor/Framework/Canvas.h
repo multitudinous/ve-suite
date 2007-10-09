@@ -67,7 +67,7 @@ public:
     ///Set active network id from hierarchy tree
     void SetActiveNetwork(std::string id);
     ///Populate canvas with network string
-    void PopulateNetworks( std::string xmlNetwork );
+    void PopulateNetworks( std::string xmlNetwork, bool clearXplorer = true );
     ///User scale
     /// first = x scale
     /// second = y scale
@@ -78,6 +78,8 @@ public:
     wxRect GetAppropriateSubDialogSize();
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
+    ///Creates a default network for the user to work on a clean canvas
+    void CreateDefaultNetwork();
 
 protected:
 

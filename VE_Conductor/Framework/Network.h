@@ -129,9 +129,14 @@ public:
    std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
    //void ReDraw(wxDC &dc);
    void DrawNetwork(wxDC &dc);
-   void PushAllEvents( );
-   void RemoveAllEvents( );
-   
+   ///Push all the event handlers from the tags, plugins, and links onto canvas
+   void PushAllEvents();
+   ///Remove all of the event handlers from the tags, 
+   ///plugins, and links from the canvas
+   void RemoveAllEvents();
+   ///Clear the plugins from the xplorer environment
+   void ClearXplorer();
+
 protected:
    //Draw functions
    //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);

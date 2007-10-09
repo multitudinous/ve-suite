@@ -147,6 +147,7 @@ Network::~Network()
     links.clear();
     tags.clear();
     modules.clear();
+    sbboxes.clear();
 }
 /////////////////////////////////////////////
 ///////// Event Handlers ////////////////////
@@ -2421,6 +2422,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
     m_selTag = -1; 
     m_selTagCon = -1; 
     xold = yold =0;
+    
 	parent->SetVirtualSize( maxX, maxY );
 //    _fileProgress->Update( 100, _("Done") );
     parent->Refresh( true );
@@ -2584,3 +2586,23 @@ void Network::RemoveAllEvents( )
 		parent->RemoveEventHandler( iter->second.GetPlugin() );
 	}
 }
+////////////////////////////////////////////////////////////////////////////////
+void Network::ClearXplorer()
+{
+    for( std::map<int, Module>::iterator iter = 
+        modules.begin(); iter!=modules.end(); ++iter )
+    {
+        VE_XML::DataValuePair* dataValuePair = 
+        new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+        dataValuePair->SetDataName( "Object ID" );
+        dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
+        VE_XML::Command* veCommand = new VE_XML::Command();
+        veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
+        veCommand->AddDataValuePair( dataValuePair );
+        bool connected = VE_Conductor::CORBAServiceList::instance()->
+            SendCommandStringToXplorer( veCommand );
+        //Clean up memory
+        delete veCommand;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
