@@ -30,18 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/Tag.h"
-
-#include "VE_Open/XML/Model/Tag.h"
-#include "VE_Open/XML/Model/Point.h"
+#ifdef WIN32
+    #include <wx/msw/winundef.h>
+#endif
 
 #include <wx/scrolwin.h>
 #include <wx/brush.h>
 #include <wx/pen.h>
 #include <wx/dcclient.h>
-#ifdef WIN32
-    #include <wx/msw/winundef.h>
-#endif
+
+#include "VE_Conductor/Utilities/Tag.h"
+
+#include "VE_Open/XML/Model/Tag.h"
+#include "VE_Open/XML/Model/Point.h"
+
+
 
 using namespace VE_Conductor::GUI_Utilities;
 

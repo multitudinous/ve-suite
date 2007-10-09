@@ -39,10 +39,13 @@ Tag API
 *
 */
 #include "VE_Conductor/Utilities/Polygon.h"
-#include "VE_Conductor/Utilities/Link.h"
 #include "VE_Installer/include/VEConfig.h"
 
 #include "VE_Open/XML/Model/TagPtr.h"
+
+#ifdef WIN32
+    #include <wx/msw/winundef.h>
+#endif
 
 #include <wx/gdicmn.h>
 #include <wx/string.h>
