@@ -42,57 +42,114 @@
  * VE_Open/XML/Command.h must be included, too.
  */
 
-#define _USE_LOKI_POINTERS 1
 
-#ifdef _USE_LOKI_POINTERS
 #include <loki/StrongPtr.h>
 #include <loki/SmartPtr.h>
-#else
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#endif
 
 namespace VE_XML
 {
-#ifdef _USE_LOKI_POINTERS
 
-   #define REGISTER_VE_PTR(classtype, name)                                     \
-    typedef Loki::StrongPtr< classtype, true, Loki::LockableTwoRefCounts,       \
-        Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong, \
-        Loki::DeleteSingle > name;                                              \
+   // ClassPtrDef is the regular ptr class to use.
+   template
+   <
+      typename T,
+      bool Strong = true,
+      class OwnershipPolicy = Loki::LockableTwoRefCounts,
+      class ConversionPolicy = Loki::DisallowConversion,
+      template < class > class CheckingPolicy = Loki::AssertCheck,
+      template < class > class ResetPolicy = Loki::CantResetWithStrong,
+      template < class > class DeletePolicy = Loki::DeleteSingle
+   >
+   struct ClassPtrDef
+   {
+      typedef Loki::StrongPtr
+      <
+      T,
+      Strong,
+      OwnershipPolicy,
+      ConversionPolicy,
+      CheckingPolicy,
+      ResetPolicy,
+      DeletePolicy
+      >
+      type;
+   };
 
-   #define REGISTER_VE_SHARED_PTR(classtype, name)                              \
-    typedef Loki::StrongPtr< classtype, true, Loki::LockableTwoRefCounts,       \
-        Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong, \
-        Loki::DeleteSingle > name;                                              \
+   // SharedPtrDef is for using shared ptrs explicitly.
+   template
+   <
+      typename T,
+      bool Strong = true,
+      class OwnershipPolicy = Loki::LockableTwoRefCounts,
+      class ConversionPolicy = Loki::DisallowConversion,
+      template < class > class CheckingPolicy = Loki::AssertCheck,
+      template < class > class ResetPolicy = Loki::CantResetWithStrong,
+      template < class > class DeletePolicy = Loki::DeleteSingle
+   >
+   struct SharedPtrDef
+   {
+      typedef Loki::StrongPtr
+      <
+      T,
+      Strong,
+      OwnershipPolicy,
+      ConversionPolicy,
+      CheckingPolicy,
+      ResetPolicy,
+      DeletePolicy
+      >
+      type;
+   };
 
-   #define REGISTER_VE_WEAK_PTR(classtype, name)                                \
-    typedef Loki::StrongPtr< classtype, false, Loki::LockableTwoRefCounts,      \
-        Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong, \
-        Loki::DeleteSingle > name;                                              \
+   // WeakPtrDef used for getting around circular references only.
+   template
+   <
+      typename T,
+      bool Strong = false,
+      class OwnershipPolicy = Loki::LockableTwoRefCounts,
+      class ConversionPolicy = Loki::DisallowConversion,
+      template < class > class CheckingPolicy = Loki::AssertCheck,
+      template < class > class ResetPolicy = Loki::CantResetWithStrong,
+      template < class > class DeletePolicy = Loki::DeleteSingle
+   >
+   struct WeakPtrDef
+   {
+      typedef Loki::StrongPtr
+      <
+      T,
+      Strong,
+      OwnershipPolicy,
+      ConversionPolicy,
+      CheckingPolicy,
+      ResetPolicy,
+      DeletePolicy
+      >
+      type;
+   };
 
-   #define REGISTER_VE_SCOPED_PTR(classtype, name)                              \
-    typedef Loki::SmartPtr<classtype, Loki::NoCopy, Loki::DisallowConversion,   \
-        Loki::DefaultSPStorage, LOKI_DEFAULT_CONSTNESS> name;                   \
-
-#else
-
-   #define REGISTER_VE_PTR(classtype, name)           \
-    typedef boost::shared_ptr< classtype > name;      \
-
-   #define REGISTER_VE_SHARED_PTR(classtype, name)    \
-    typedef boost::shared_ptr< classtype > name;      \
-
-   #define REGISTER_VE_WEAK_PTR(classtype, name)      \
-    typedef boost::weak_ptr< classtype > name;        \
-
-   #define REGISTER_VE_SCOPED_PTR(classtype, name)    \
-    typedef boost::scoped_ptr< classtype > name;      \
-
-
-#endif
+   // Simple scoped ptr for use within functions only.  Very lightweight.
+   template
+    <
+        typename T,
+        template <class> class OwnershipPolicy = Loki::NoCopy,
+        class ConversionPolicy = Loki::DisallowConversion,
+        template <class> class CheckingPolicy = Loki::AssertCheck,
+        template <class> class StoragePolicy = Loki::DefaultSPStorage,
+        template<class> class ConstnessPolicy = LOKI_DEFAULT_CONSTNESS 
+    >
+    struct ScopedPtrDef
+    {
+        typedef Loki::SmartPtr
+        <
+            T,
+            OwnershipPolicy,
+            ConversionPolicy,
+            CheckingPolicy,
+            StoragePolicy,
+            ConstnessPolicy
+        >
+        type;
+    };
 
 }
 #endif

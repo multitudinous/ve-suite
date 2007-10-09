@@ -44,9 +44,7 @@
 #include <string>
 
 #include "VE_Open/XML/XMLObject.h"
-//#include "VE_Open/XML/CommandPtr.h"
-#include "VE_Open/XML/CommandWeakPtr.h"
-#include "VE_Open/XML/CommandStrongPtr.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -95,7 +93,7 @@ protected:
    ///Internally update the Command list.
    void _updateCommands();
 
-   std::vector<VE_XML::CommandStrongPtr> _stateInfo;///<The Command list holding state information.
+   std::vector<VE_XML::CommandPtr> _stateInfo;///<The Command list holding state information.
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, StateInfo* val)

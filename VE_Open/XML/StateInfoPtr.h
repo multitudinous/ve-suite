@@ -33,7 +33,7 @@
 #ifndef STATE_INFO_PTR_H
 #define STATE_INFO_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <VE_Open/XML/Util/PointerTypes.h>
 
 /**
  * \file
@@ -47,7 +47,10 @@
 namespace VE_XML
 {
    class StateInfo;
-   /// Typedef for a SmartPtr type for the StateInfo.
-   typedef Loki::SmartPtrDef<StateInfo>::type StateInfoPtr;
+   //Typedefs for various StateInfo SmartPtrs
+   typedef ClassPtrDef<StateInfo>::type  StateInfoPtr;
+   typedef SharedPtrDef<StateInfo>::type StateInfoSharedPtr;
+   typedef WeakPtrDef<StateInfo>::type   StateInfoWeakPtr;
+   typedef ScopedPtrDef<StateInfo>::type StateInfoScopedPtr;
 }
 #endif

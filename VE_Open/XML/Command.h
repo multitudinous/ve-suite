@@ -46,8 +46,7 @@
 
 #include "VE_Open/XML/XMLObject.h"
 
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
-#include "VE_Open/XML/DataValuePairStrongPtr.h"
+#include <VE_Open/XML/DataValuePairPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -113,8 +112,8 @@ protected:
    void _updateDataValuePairs( void );
 
    std::string _cmdName;///<The name of this command.
-   std::vector< VE_XML::DataValuePairStrongPtr > _dataValuePairs;///<The list of DataValuePair s in this command.  
-   std::map< std::string, VE_XML::DataValuePairStrongPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
+   std::vector< VE_XML::DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.  
+   std::map< std::string, VE_XML::DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Command* val)

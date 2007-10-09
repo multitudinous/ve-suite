@@ -167,7 +167,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
         for( unsigned int i = 0; i < nDVPairsIn; ++i )
         {
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>(subElements->item(i));
-            VE_XML::DataValuePairStrongPtr veDvp = new VE_XML::DataValuePair();
+            VE_XML::DataValuePairPtr veDvp = new VE_XML::DataValuePair();
             veDvp->SetObjectFromXMLData(dvPairIn);
             _dataValuePairs.push_back(veDvp);
             nameToDataValuePairMap[ veDvp->GetDataName() ] = veDvp;
@@ -192,7 +192,7 @@ void Command::SetCommandName( std::string name )
 //////////////////////////////////////////////////////////////////////////////
 VE_XML::DataValuePairWeakPtr Command::GetDataValuePair(std::string dataValueName)
 {
-    std::map< std::string, VE_XML::DataValuePairStrongPtr >::iterator iter;
+    std::map< std::string, VE_XML::DataValuePairPtr >::iterator iter;
     iter = nameToDataValuePairMap.find( dataValueName );
     if( iter != nameToDataValuePairMap.end() )
     {

@@ -33,7 +33,7 @@
 #ifndef VE_COMMAND_PTR_H
 #define VE_COMMAND_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <VE_Open/XML/Util/PointerTypes.h>
 
 /**
  * \file
@@ -48,9 +48,10 @@ namespace VE_XML
 {
    class Command;
    /// Typedef for a SmartPtr type for the Command.
-   typedef Loki::SmartPtrDef<Command>::type CommandPtr;
+   typedef ClassPtrDef<Command>::type  CommandPtr;
+   typedef SharedPtrDef<Command>::type CommandSharedPtr;
+   typedef WeakPtrDef<Command>::type   CommandWeakPtr;
+   typedef ScopedPtrDef<Command>::type CommandScopedPtr;
 }
-#include "VE_Open/XML/CommandWeakPtr.h"
-#include "VE_Open/XML/CommandStrongPtr.h"
 
 #endif

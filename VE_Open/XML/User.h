@@ -39,8 +39,6 @@
  * This class manages information describing a user.
  */
 #include "VE_Open/XML/StateInfoPtr.h"
-#include "VE_Open/XML/StateInfoWeakPtr.h"
-#include "VE_Open/XML/StateInfoStrongPtr.h"
 #include <xercesc/dom/DOM.hpp>
 
 #include <iostream>
@@ -94,7 +92,7 @@ protected:
    ///\param tagName The tagName for this element.
    virtual void _updateVEElement( std::string tagName );
    std::string _userId;///<The users unique identification
-   VE_XML::StateInfoStrongPtr m_stateInfo;///<The StateInfo for this user.
+   VE_XML::StateInfoPtr m_stateInfo;///<The StateInfo for this user.
    VEControlStatus _controlStatus;///<The VEControlStatus of this user.
 };
 template<>

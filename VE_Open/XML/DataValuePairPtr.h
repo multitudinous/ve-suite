@@ -33,7 +33,7 @@
 #ifndef VE_DATA_VALUE_PAIR_PTR_H
 #define VE_DATA_VALUE_PAIR_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <VE_Open/XML/Util/PointerTypes.h>
 
 /**
  * \file
@@ -48,6 +48,9 @@ namespace VE_XML
 {
    class DataValuePair;
    /// Typedef for a SmartPtr type for the DataValuePair.
-   typedef Loki::SmartPtrDef<DataValuePair>::type DataValuePairPtr;
+   typedef ClassPtrDef<DataValuePair>::type  DataValuePairPtr;
+   typedef SharedPtrDef<DataValuePair>::type DataValuePairSharedPtr;
+   typedef WeakPtrDef<DataValuePair>::type   DataValuePairWeakPtr;
+   typedef ScopedPtrDef<DataValuePair>::type DataValuePairScopedPtr;
 }
 #endif

@@ -48,10 +48,10 @@ namespace VE_XML
 {
    class User;
    /// Typedef for a SmartPtr type for the User.
-   REGISTER_VE_PTR(User, UserPtr);
-   REGISTER_VE_SHARED_PTR(User, UserSharedPtr);
-   REGISTER_VE_WEAK_PTR(User, UserWeakPtr);
-   REGISTER_VE_SCOPED_PTR(User, UserScopedPtr);
+   typedef ClassPtrDef<User>::type  UserPtr;
+   typedef SharedPtrDef<User>::type UserSharedPtr;
+   typedef WeakPtrDef<User>::type   UserWeakPtr;
+   typedef ScopedPtrDef<User>::type UserScopedPtr;
 }
 
 #endif

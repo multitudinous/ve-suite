@@ -35,7 +35,7 @@
 #include "VE_Open/XML/XMLObjectFactory.h"
 #include "VE_Open/XML/Command.h"
 #include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/DataValuePairPtr.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML::VE_Shader;
 using namespace VE_XML;

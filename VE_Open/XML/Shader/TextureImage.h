@@ -46,7 +46,7 @@
  * Class that stores an image in texture data.
  */
 
-#include "VE_Open/XML/CommandStrongPtr.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 namespace VE_XML
 {
@@ -157,7 +157,7 @@ protected:
    ///\param input The XML element information
    virtual void _updateVEElement(std::string input);
 
-   VE_XML::CommandStrongPtr _textureDescription;///<Data package containing the information about the texture map.
+   VE_XML::CommandPtr _textureDescription;///<Data package containing the information about the texture map.
    
 };
 }
