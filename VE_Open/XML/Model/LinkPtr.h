@@ -50,10 +50,10 @@ namespace VE_Model
 {
     class Link;
     /// Typedef for a SmartPtr type for the Link.
-    REGISTER_VE_PTR(Link, LinkPtr);
-    REGISTER_VE_SHARED_PTR(Link, LinkSharedPtr);
-    REGISTER_VE_WEAK_PTR(Link, LinkWeakPtr);
-    REGISTER_VE_SCOPED_PTR(Link, LinkScopedPtr);
+    typedef ClassPtrDef<Link>::type  LinkPtr;
+    typedef SharedPtrDef<Link>::type LinkSharedPtr;
+    typedef WeakPtrDef<Link>::type   LinkWeakPtr;
+    typedef ScopedPtrDef<Link>::type LinkScopedPtr;
 }
 }
 
