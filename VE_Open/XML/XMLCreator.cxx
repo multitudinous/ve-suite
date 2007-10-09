@@ -67,7 +67,7 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
    }
    else if ( objectType == "vecommand")
    {
-	   return new Command();
+      return new Command();
    }
    else if(objectType == "DataValuePair")
    {
@@ -133,7 +133,7 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObjectCopy(std::string objectType,
    }
    else if ( objectType == "vecommand")
    {
-	   return new Command(*dynamic_cast<Command*>(objectToCopy));
+      return new Command(*dynamic_cast<Command*>(objectToCopy));
    }
    else if(objectType == "DataValuePair")
    {
