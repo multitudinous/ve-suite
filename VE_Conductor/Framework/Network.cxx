@@ -1297,12 +1297,6 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
 
         if ( !found ) // no duplicate links are allowed
         {
-            //Pop the link event handlers to clear these event handlers
-            //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
-            //    iter=links.begin(); iter!=links.end(); iter++ )
-            //{
-            //    RemoveEventHandler( &(*iter) );
-            //}
 			this->RemoveAllEvents();
 
             wxPoint pos;
@@ -1316,14 +1310,9 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
             ln.CalcLinkPoly();
             links.push_back( ln );
             links.back().SetDCScale( &userScale );
-            VE_XML::VE_Model::Link object;
-            links.back().SetUUID( object.GetID() );
-
-            //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
-            //    iter=links.begin(); iter!=links.end(); iter++ )
-            //{
-            //    PushEventHandler( &(*iter) );
-            //}
+            
+            systemPtr->GetNetwork()->AddLink( links.back().GetLink() );
+            
 			this->PushAllEvents();
         }
     }

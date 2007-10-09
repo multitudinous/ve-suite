@@ -51,10 +51,6 @@ Network::Network(  )
 ////////////////////////////////////////////////////////////////////////////////   
 Network::~Network()
 {
-   for ( size_t i = 0; i < links.size(); ++i )
-   {
-      delete links.at( i );
-   }
    links.clear();
 
    for ( size_t i = 0; i < conductorState.size(); ++i )
@@ -91,10 +87,7 @@ Network& Network::operator=( const Network& input)
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =(input);
-        for( size_t i = 0; i < links.size(); ++i )
-        {
-            delete links.at( i );
-        }
+        
         links.clear();
 
         for( size_t i = 0; i < input.links.size(); ++i )
@@ -127,7 +120,7 @@ void Network::_updateVEElement( std::string input )
     // write all the elements according to verg_model.xsd
     for ( size_t i = 0; i < links.size(); ++i )
     {
-        SetSubElement( "link", links.at( i ) );   
+        SetSubElement( "link", &(*links.at( i )) );   
     }
 
     for ( size_t i = 0; i < conductorState.size(); ++i )
@@ -141,7 +134,7 @@ void Network::_updateVEElement( std::string input )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////   
-Link* Network::GetLink( int i )
+LinkWeakPtr Network::GetLink( int i )
 {
    try
    {
@@ -149,8 +142,7 @@ Link* Network::GetLink( int i )
    }
    catch (...)
    {
-      links.push_back( new Link(  ) );
-      return links.back();
+       ;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////   
@@ -196,7 +188,7 @@ void Network::SetObjectFromXMLData(DOMNode* element)
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "link", i );
-            links.push_back( new Link(  ) );
+            links.push_back( new Link() );
             links.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -262,13 +254,19 @@ void Network::RemoveTag( TagPtr oldLink )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////   
-void Network::RemoveLink( Link* oldLink )
+void Network::RemoveLink( LinkWeakPtr oldLink )
 {
-    std::vector< Link* >::iterator iter;
-    iter = std::find( links.begin(), links.end(), oldLink );
+    LinkSharedPtr tempPtr = oldLink;
+    std::vector< LinkSharedPtr >::iterator iter;
+    iter = std::find( links.begin(), links.end(), tempPtr );
     if( iter != links.end() )
     {
-        delete *iter;
         links.erase( iter );
     }
 }
+////////////////////////////////////////////////////////////////////////////////   
+void Network::AddLink( LinkWeakPtr newLink )
+{
+    links.push_back( newLink );
+}
+////////////////////////////////////////////////////////////////////////////////   

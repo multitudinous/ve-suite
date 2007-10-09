@@ -90,6 +90,7 @@ m_veLink( 0 )
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
     m_uuid = "notSet";
 	highlightFlag = false;
+    m_veLink = new VE_XML::VE_Model::Link();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -203,26 +204,33 @@ unsigned long Link::GetToModule( void )
 void Link::SetFromPort( unsigned int input )
 {
    Fr_port = input;
+    *(m_veLink->GetFromPort()) = static_cast< long int >( input );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetToPort( unsigned int input )
 {
    To_port = input;
+   *(m_veLink->GetToPort()) = static_cast< long int >( input );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetFromModule( unsigned long input )
 {
-   Fr_mod = input;
+    Fr_mod = input;
+    m_veLink->GetFromModule()->SetData( "FromModule", 
+        static_cast< long int >( Fr_mod ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetToModule( unsigned long input )
 {
-   To_mod = input;
+    To_mod = input;
+    m_veLink->GetToModule()->SetData( "ToModule", 
+        static_cast< long int >( To_mod ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetName(wxString name)
 {
 	linkName = name;
+    m_veLink->SetLinkName( ConvertUnicode( name.c_str() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString Link::GetName()
@@ -704,6 +712,7 @@ void Link::OnSetActiveLinkID( wxUpdateUIEvent& event )
 void Link::SetUUID( std::string uuid )
 {
     m_uuid = uuid;
+    m_veLink->SetID( m_uuid );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string Link::GetUUID()
@@ -725,7 +734,7 @@ void Link::DrawLink( wxDC* dc )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetLink( VE_XML::VE_Model::Link* inputLink )
+void Link::SetLink( VE_XML::VE_Model::LinkWeakPtr inputLink )
 {
     m_veLink = inputLink;
     
@@ -764,7 +773,7 @@ void Link::SetLink( VE_XML::VE_Model::Link* inputLink )
     SetUUID( m_veLink->GetID() );    
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::Link* Link::GetLink()
+VE_XML::VE_Model::LinkWeakPtr Link::GetLink()
 {
     //xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].
     //                                   GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
@@ -772,9 +781,9 @@ VE_XML::VE_Model::Link* Link::GetLink()
     //                                 GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
     //*(m_veLink->GetFromPort()) = static_cast< long int >( GetFromPort() );
     //*(m_veLink->GetToPort()) = static_cast< long int >( GetToPort() );
-    //xmlLink->SetLinkName( ConvertUnicode( GetName().c_str() ) );
-    //xmlLink->SetID( GetUUID() );
-    
+    //m_veLink->SetLinkName( ConvertUnicode( GetName().c_str() ) );
+    //m_veLink->SetID( m_uuid );
+
     //Try to store link cons,
     //link cons are (x,y) wxpoint
     //here I store x in one vector and y in the other

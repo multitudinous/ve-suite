@@ -44,20 +44,13 @@ Link API
 
 #include "VE_Installer/include/VEConfig.h"
 #include "VE_Conductor/Utilities/Polygon.h"
+#include "VE_Open/XML/Model/LinkPtr.h"
 
 #include <wx/gdicmn.h>
 #include <wx/dc.h>
 #include <wx/event.h>
 
 class wxScrolledWindow;
-
-namespace VE_XML
-{
-namespace VE_Model
-{
-    class Link;
-}
-}
 
 namespace VE_Conductor
 {
@@ -137,9 +130,9 @@ public:
    ///Draw link
    void DrawLink( wxDC* dc );
    ///Set VE_XML::VE_Model::Link
-   void SetLink( VE_XML::VE_Model::Link* inputLink );
+   void SetLink( VE_XML::VE_Model::LinkWeakPtr inputLink );
    ///Get VE_XML::VE_Model::Link
-   VE_XML::VE_Model::Link* GetLink();
+   VE_XML::VE_Model::LinkWeakPtr GetLink();
    
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
@@ -196,7 +189,7 @@ private:
     /// second = y scale
     std::pair< double, double >* userScale;
     ///The XML Link rep
-    VE_XML::VE_Model::Link* m_veLink;
+    VE_XML::VE_Model::LinkSharedPtr m_veLink;
     
     std::string ConvertUnicode( const wxChar* data )
     {

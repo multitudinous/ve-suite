@@ -46,15 +46,12 @@
 #include "VE_Open/XML/XMLObject.h"
 
 #include "VE_Open/XML/Model/TagPtr.h"
+#include "VE_Open/XML/Model/LinkPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 namespace VE_XML
 {
 class DataValuePair;
-namespace VE_Model
-{
-    class Link;
-}
 }
 
 namespace VE_XML
@@ -79,7 +76,7 @@ public:
 
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
-    Link* GetLink( int i );
+    LinkWeakPtr GetLink( int i );
     ///Get the total number of links
     size_t GetNumberOfLinks( void );
     ///Get the i'th link from the Network.
@@ -93,12 +90,15 @@ public:
     ///Add a tag to the network
     ///\param newTag The new tag to be added
     void AddTag( TagPtr newTag );
+    ///Add a Link to the network
+    ///\param newLink The new Link to be added
+    void AddLink( LinkWeakPtr newLink );
     ///Remove the tag from the network
     ///\param oldTag The tag to be removed
     void RemoveTag( TagPtr oldTag );
     ///Remove a link from the network
     ///\param oldLink The link to be removed
-    void RemoveLink( Link* oldLink );
+    void RemoveLink( LinkWeakPtr oldLink );
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
@@ -106,7 +106,7 @@ protected:
 
 private:
     ///raw datatypes of Network that are specified in the verg_model.xsd file
-    std::vector< Link* > links;///<Vector of Links.
+    std::vector< LinkSharedPtr > links;///<Vector of Links.
     std::vector< VE_XML::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
     ///The vector of tags for this network
     std::vector< TagPtr > tags;
