@@ -126,7 +126,7 @@ private:
     ///Map
     std::map< std::string, VE_XML::VE_Model::TagStrongPtr > m_tagMap;
     ///Map
-    std::map< std::string, VE_XML::UserStrongPtr > m_userMap;
+    std::map< std::string, VE_XML::UserSharedPtr > m_userMap;
 	//Top most id
 	std::string topId;
 };
