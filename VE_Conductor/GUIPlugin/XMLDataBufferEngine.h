@@ -91,28 +91,28 @@ public:
     void NewVESData( bool promptClearXplorer );
     ///Get data
     VE_XML::VE_Model::NetworkWeakPtr
-		GetXMLNetworkDataObject( std::string dataNumber );
-	///Get the network
-	std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > GetXMLModels();
+      GetXMLNetworkDataObject( std::string dataNumber );
+   ///Get the network
+   std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > GetXMLModels();
     ///Get data
     VE_XML::VE_Model::ModelWeakPtr GetXMLModelDataObject( std::string dataNumber );
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
-	///Get the map of all systems
-	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >
-		GetXMLSystemDataMap();
-	///Get a system
-	std::string GetTopSystemId( );
-	///Get a system
-	VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
+   ///Get the map of all systems
+   std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >
+      GetXMLSystemDataMap();
+   ///Get a system
+   std::string GetTopSystemId( );
+   ///Get a system
+   VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
     ///Get data
     VE_XML::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
-	///Parse system for subsystems
-	void ParseSystem( VE_XML::VE_Model::SystemWeakPtr system );
+   ///Parse system for subsystems
+   void ParseSystem( VE_XML::VE_Model::SystemWeakPtr system );
         
 private:
     ///Map to store the command name and command for easy lookup by the user
-    std::map< std::string, VE_XML::CommandStrongPtr > m_commandMap;
+    std::map< std::string, VE_XML::CommandPtr > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
     ///Map of systems
@@ -126,9 +126,9 @@ private:
     ///Map
     std::map< std::string, VE_XML::VE_Model::TagStrongPtr > m_tagMap;
     ///Map
-    std::map< std::string, VE_XML::UserSharedPtr > m_userMap;
-	//Top most id
-	std::string topId;
+    std::map< std::string, VE_XML::UserPtr > m_userMap;
+   //Top most id
+   std::string topId;
 };
 }
 #endif //XML_DATA_BUFFER_ENGINE_H

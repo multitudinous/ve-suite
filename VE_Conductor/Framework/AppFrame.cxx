@@ -89,7 +89,7 @@
 #include "VE_Open/XML/Model/ModelPtr.h"
 #include "VE_Open/XML/Model/Tag.h"
 #include "VE_Open/XML/User.h"
-#include "VE_Open/XML/CommandWeakPtr.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 // --- wxWidgets Includes --- //
 #include <wx/image.h>
@@ -1007,7 +1007,7 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-		VE_XML::DataValuePairStrongPtr bkpPtr = 
+		VE_XML::DataValuePairPtr bkpPtr = 
             aspenBKPFile->GetDataValuePair( "BKPFileName" );
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
@@ -1114,7 +1114,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-		VE_XML::DataValuePairStrongPtr bkpPtr = 
+		VE_XML::DataValuePairPtr bkpPtr = 
             aspenBKPFile->GetDataValuePair( "BKPFileName" );
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
@@ -1915,7 +1915,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       // Create the command and data value pairs
       VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::CommandStrongPtr veCommand = new VE_XML::Command();
+      VE_XML::CommandPtr veCommand = new VE_XML::Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 
@@ -2183,7 +2183,7 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
     directory.Replace( _("\\"), _("/"), true );
     
     VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::CommandStrongPtr command = new VE_XML::Command();
+    VE_XML::CommandPtr command = new VE_XML::Command();
     std::string mode = ConvertUnicode( directory.c_str() );
     dvp->SetData( std::string( "Change Working Directory" ), mode );
     command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );

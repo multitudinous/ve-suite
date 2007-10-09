@@ -84,7 +84,7 @@ void XMLDataBufferEngine::CleanUp( void )
 VE_XML::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    std::map< std::string, VE_XML::CommandStrongPtr >::iterator iter;
+    std::map< std::string, VE_XML::CommandPtr >::iterator iter;
     iter = m_commandMap.find( commandKey );
     if ( iter == m_commandMap.end() )
     {
@@ -114,7 +114,7 @@ void XMLDataBufferEngine::SetCommandMap( std::map< std::string,
 {
     m_commandMap.clear();
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    m_commandMap = std::map< std::string, VE_XML::CommandStrongPtr >( 
+    m_commandMap = std::map< std::string, VE_XML::CommandPtr >( 
         tempMap.begin(), tempMap.end() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -163,16 +163,16 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
         if( tempSystem )
         {
-			m_systemMap[tempSystem->GetID()] = tempSystem;
-			//get the main systems id
-			topId = tempSystem->GetID();
+         m_systemMap[tempSystem->GetID()] = tempSystem;
+         //get the main systems id
+         topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
         }
         else
         {
             tempSystem = new VE_XML::VE_Model::System();
-			m_systemMap[tempSystem->GetID()] = tempSystem;
-			topId = tempSystem->GetID();
+         m_systemMap[tempSystem->GetID()] = tempSystem;
+         topId = tempSystem->GetID();
             
             m_networkMap[ "Network" ] = 
                 dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
@@ -305,18 +305,18 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     m_userMap[ "Network" ]->SetControlStatus( 
         VE_XML::User::VEControlStatus( "MASTER" ) );
 
-	if(tempSystem)
-	{
-		//Parse out the remaining subsystems
-		int modelCount = tempSystem->GetNumberOfModels();
-		for ( size_t j = 0; j < modelCount; j++ )
-		{
-			if(tempSystem->GetModel(j)->GetSubSystem())
-			{
-				ParseSystem(tempSystem->GetModel(j)->GetSubSystem());
-			}
-		}
-	}
+   if(tempSystem)
+   {
+      //Parse out the remaining subsystems
+      int modelCount = tempSystem->GetNumberOfModels();
+      for ( size_t j = 0; j < modelCount; j++ )
+      {
+         if(tempSystem->GetModel(j)->GetSubSystem())
+         {
+            ParseSystem(tempSystem->GetModel(j)->GetSubSystem());
+         }
+      }
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
@@ -387,7 +387,7 @@ std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > XMLDataBufferEngine::Get
 {
     std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > 
         tempMap( m_modelMap.begin(), m_modelMap.end() );
-	return tempMap;
+   return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_Model::ModelWeakPtr XMLDataBufferEngine::GetXMLModelDataObject( 
@@ -411,33 +411,33 @@ std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector(
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLDataBufferEngine::GetTopSystemId( )
 {
-	return topId;
+   return topId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 VE_XML::VE_Model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(
-	std::string id )
+   std::string id )
 {
-	return m_systemMap[id];
+   return m_systemMap[id];
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >XMLDataBufferEngine::
     GetXMLSystemDataMap( )
 {
-	return m_systemMap;
+   return m_systemMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::ParseSystem( VE_XML::VE_Model::SystemWeakPtr system )
 {
-	//add the system to the map
-	m_systemMap[system->GetID()] = system;
+   //add the system to the map
+   m_systemMap[system->GetID()] = system;
 
-	//Parse out the subsystems
-	int modelCount = system->GetNumberOfModels();
-	for ( size_t j = 0; j < modelCount; j++ )
-	{
-		if(system->GetModel(j)->GetSubSystem())
-		{
-			ParseSystem(system->GetModel(j)->GetSubSystem());
-		}
-	}
+   //Parse out the subsystems
+   int modelCount = system->GetNumberOfModels();
+   for ( size_t j = 0; j < modelCount; j++ )
+   {
+      if(system->GetModel(j)->GetSubSystem())
+      {
+         ParseSystem(system->GetModel(j)->GetSubSystem());
+      }
+   }
 }

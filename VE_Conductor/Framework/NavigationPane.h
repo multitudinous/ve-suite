@@ -49,8 +49,8 @@ NavigationPane API
 #include <vector>
 #include <string>
 
-#include "VE_Open/XML/CommandStrongPtr.h"
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include <VE_Open/XML/CommandPtr.h>
+#include "VE_Open/XML/DataValuePairPtr.h"
 
 class wxCheckBox;
 class wxSlider;
@@ -147,9 +147,9 @@ protected:
 
    std::vector< VE_XML::Command* > commands;
    
-   VE_XML::CommandStrongPtr startPoint;
-   VE_XML::DataValuePairStrongPtr quatStartPoint;
-   VE_XML::DataValuePairStrongPtr positionStartPoint;
+   VE_XML::CommandPtr startPoint;
+   VE_XML::DataValuePairPtr quatStartPoint;
+   VE_XML::DataValuePairPtr positionStartPoint;
    
    int cId, cIso_value;
    std::string dataValueName;

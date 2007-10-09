@@ -36,8 +36,8 @@
 #include "VE_Conductor/Framework/ExportMenu.h"
 
 #include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/CommandStrongPtr.h"
-#include "VE_Open/XML/DataValuePairWeakPtr.h"
+#include "VE_Open/XML/CommandPtr.h"
+#include "VE_Open/XML/DataValuePairPtr.h"
 #include "VE_Open/XML/DataValuePair.h"
 
 #include <wx/filedlg.h>
@@ -92,7 +92,7 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
     }
     
     VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::CommandStrongPtr command = new VE_XML::Command();
+    VE_XML::CommandPtr command = new VE_XML::Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "SCREEN_SHOT" ) );
@@ -128,7 +128,7 @@ void ExportMenu::OnDOTFile( wxCommandEvent& event )
     }
     
     VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::CommandStrongPtr command = new VE_XML::Command();
+    VE_XML::CommandPtr command = new VE_XML::Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "DOT_FILE" ) );

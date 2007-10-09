@@ -39,8 +39,6 @@ UserPreferencesDataBuffer API
 * 
 */
 #include "VE_Open/XML/CommandPtr.h"
-#include "VE_Open/XML/CommandStrongPtr.h"
-#include "VE_Open/XML/CommandWeakPtr.h"
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
@@ -76,7 +74,7 @@ public:
     void SetCommandMap( std::map< std::string, VE_XML::CommandWeakPtr > tempMap );
 private:
     ///Mapp to hold all the preference data to be written to the ves file
-    std::map< std::string, VE_XML::CommandStrongPtr > commandMap;
+    std::map< std::string, VE_XML::CommandPtr > commandMap;
     //std::map< std::string, VE_XML::CommandPtr > commandMap;
     ///A mutex to protect variables accesses
     vpr::Mutex m_valueLock;  

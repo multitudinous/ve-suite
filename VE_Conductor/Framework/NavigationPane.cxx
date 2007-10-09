@@ -39,7 +39,7 @@
 #include "VE_Open/XML/DOMDocumentManager.h"
 #include "VE_Open/XML/DataValuePair.h"
 #include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/CommandWeakPtr.h"
+#include "VE_Open/XML/CommandPtr.h"
 
 #include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
 #include "VE_Conductor/xpm/Nav_Bitmaps/x_left.xpm"

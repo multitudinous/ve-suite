@@ -45,7 +45,7 @@ vprSingletonImp( UserPreferencesDataBuffer );
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferencesDataBuffer::UserPreferencesDataBuffer( void )
 { 
-   VE_XML::CommandStrongPtr nullCommand = new Command();
+   VE_XML::CommandPtr nullCommand = new Command();
    nullCommand->SetCommandName( "NULL" );
    commandMap[ "NULL" ] = nullCommand;
 }
@@ -60,7 +60,7 @@ VE_XML::CommandWeakPtr UserPreferencesDataBuffer::GetCommand(
     std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
-    std::map< std::string, VE_XML::CommandStrongPtr >::iterator iter;
+    std::map< std::string, VE_XML::CommandPtr >::iterator iter;
     iter = commandMap.find( commandKey );
     if( iter == commandMap.end() )
     {
@@ -88,7 +88,7 @@ std::map< std::string, VE_XML::CommandWeakPtr > UserPreferencesDataBuffer::GetCo
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     std::map< std::string, VE_XML::CommandWeakPtr > tempMap;
-    for( std::map< std::string, VE_XML::CommandStrongPtr >::iterator 
+    for( std::map< std::string, VE_XML::CommandPtr >::iterator 
         iter = commandMap.begin(); iter != commandMap.end(); )
     {        
         if( iter->first == "NULL" )
@@ -122,11 +122,11 @@ void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::Co
         commandMap[ iter->first ] = iter->second;
     }
     //std::copy( tempMap.begin(), tempMap.end(), commandMap.begin() );
-    std::map< std::string, VE_XML::CommandStrongPtr >::iterator iter;
+    std::map< std::string, VE_XML::CommandPtr >::iterator iter;
     iter = commandMap.find( "NULL" );
     if( iter == commandMap.end() )
     {
-        VE_XML::CommandStrongPtr nullCommand = new Command();
+        VE_XML::CommandPtr nullCommand = new Command();
         nullCommand->SetCommandName( "NULL" );
         commandMap[ "NULL" ] = nullCommand;
     }
