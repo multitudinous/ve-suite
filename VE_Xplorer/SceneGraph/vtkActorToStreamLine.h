@@ -25,8 +25,8 @@
  * -----------------------------------------------------------------
  * Date modified: $Date: 2007-06-15 11:06:13 -0500 (Fri, 15 Jun 2007) $
  * Version:       $Rev: 8206 $
- * Author:        $Author: mikelem $
- * Id:            $Id: vtkActorToOSG.h 8206 2007-06-15 16:06:13Z mikelem $
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
@@ -44,8 +44,6 @@
 
 namespace VE_SceneGraph
 {
-    //vtkActorToOSG - translates vtkActor to osg::Geode. If geode is NULL, new one will be created.
-    //Optional verbose parameter prints debugging and performance information.
     osg::ref_ptr< osg::Geode > vtkActorToStreamLine( vtkActor* actor, osg::ref_ptr< osg::Geode > geode = NULL, int verbose = 0 );
 
     osg::ref_ptr< osg::Geometry > ProcessPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );

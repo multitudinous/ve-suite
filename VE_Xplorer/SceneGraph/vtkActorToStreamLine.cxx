@@ -25,8 +25,8 @@
  * -----------------------------------------------------------------
  * Date modified: $Date: 2007-06-15 11:06:13 -0500 (Fri, 15 Jun 2007) $
  * Version:       $Rev: 8206 $
- * Author:        $Author: mikelem $
- * Id:            $Id: vtkActorToOSG.cxx 8206 2007-06-15 16:06:13Z mikelem $
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
@@ -46,7 +46,7 @@
 #include <osg/BlendFunc>
 #include <osg/Depth>
 
-// --- C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 
 using namespace VE_SceneGraph;
@@ -280,7 +280,7 @@ osg::ref_ptr< osg::Program > VE_SceneGraph::GetShader()
 
         "void main() \n"
         "{ \n"
-        "vec4 totalColor = ( 1.0 - pow( dot( texCoord, texCoord ), particleExp ) ) * color; \n"
+            "vec4 totalColor = ( 1.0 - pow( dot( texCoord, texCoord ), particleExp ) ) * color; \n"
 
             "gl_FragColor = totalColor; \n"
         "} \n";
