@@ -159,7 +159,7 @@ class Launch:
             sleep(1)
             print "Starting Name Server."
             #Checking existence of executable file first before calling it
-            exe = "Naming_Service.exe" + self.windowsSuffix
+            exe = "Naming_Service" + self.windowsSuffix
             pids = []
             try:
                 pids.append(subprocess.Popen(self.NameServiceCall(), 
