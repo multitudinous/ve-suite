@@ -44,6 +44,7 @@
 
 #include <osg/Vec3>
 #include <osg/BlendFunc>
+#include <osg/Depth>
 
 // --- C/C++ Libraries
 #include <iostream>
@@ -198,7 +199,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     geometry->setVertexArray( vertices.get() );
 
     geometry->setColorArray( colors.get() );
-    geometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE_SET );
+    geometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
     normals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
     geometry->setNormalArray( normals.get() );
@@ -207,27 +208,28 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     geometry->setTexCoordArray( 0, texcoord0.get() );
     geometry->setTexCoordArray( 1, texcoord1.get() );
 
-    //Create a geostate for this geoset
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
-    //If not opaque
-    //if( actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag )
-    //{
-        stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-        stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+    stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
 
-        osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-        bf->setSourceRGB( GL_ONE );
-        bf->setSourceAlpha( GL_ONE );
-        bf->setDestinationRGB( GL_ONE );
-        bf->setDestinationAlpha( GL_ONE );
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+    bf->setSourceRGB( GL_ONE );
+    bf->setSourceAlpha( GL_ONE );
+    bf->setDestinationRGB( GL_ONE );
+    bf->setDestinationAlpha( GL_ONE );
+    stateset->setAttribute( bf.get(), osg::StateAttribute::ON );
 
-        stateset->setAttribute( bf.get(), osg::StateAttribute::ON );
-    //}
+    osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+    depth->setWriteMask( false );
+    stateset->setAttribute( depth.get(), osg::StateAttribute::ON );
 
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-    stateset->setAttribute( GetShader().get() );
+    stateset->setAttribute( GetShader().get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.2 ) );
+    stateset->addUniform( parSize.get() );
 
     osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.1 ) );
     stateset->addUniform( parExp.get() );
@@ -249,11 +251,14 @@ osg::ref_ptr< osg::Program > VE_SceneGraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            //Billboard the quads.
-            "//vec3 pos = gl_Vertex.xyz; \n"
-            "//vec3 pos =  particleSize * //gl_Vertex.z *  \n"
-            "vec3 pos = ( gl_Vertex.x * vec3( gl_ModelViewMatrix[0][0], gl_ModelViewMatrix[1][0], gl_ModelViewMatrix[2][0] ) +  \n"
-            "             gl_Vertex.y * vec3( gl_ModelViewMatrix[0][1], gl_ModelViewMatrix[1][1], gl_ModelViewMatrix[2][1] ) ); \n"
+            //Billboard the quads
+            "vec3 pos = particleSize * \n"
+                      "( gl_Vertex.x * vec3( gl_ModelViewMatrix[0][0], \n"
+                                            "gl_ModelViewMatrix[1][0], \n"
+                                            "gl_ModelViewMatrix[2][0] ) +  \n"
+                        "gl_Vertex.y * vec3( gl_ModelViewMatrix[0][1],  \n"
+                                            "gl_ModelViewMatrix[1][1],  \n"
+                                            "gl_ModelViewMatrix[2][1] ) ); \n"
 
             //Move the quads along the line segment
             "float t = gl_Vertex.z; \n"
@@ -263,10 +268,8 @@ osg::ref_ptr< osg::Program > VE_SceneGraph::GetShader()
 
             //Set the variables
             "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
-            "//gl_Position = ftransform(); \n"
             "texCoord = gl_Vertex.xy; \n"
             "color = gl_Color; \n"
-
         "} \n";
 
     char fragmentPass[] =
@@ -277,7 +280,7 @@ osg::ref_ptr< osg::Program > VE_SceneGraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            "vec4 totalColor = ( 1.0 - pow( dot( texCoord, texCoord ), particleExp ) ) * color; \n"
+        "vec4 totalColor = ( 1.0 - pow( dot( texCoord, texCoord ), particleExp ) ) * color; \n"
 
             "gl_FragColor = totalColor; \n"
         "} \n";
