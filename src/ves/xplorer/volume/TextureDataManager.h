@@ -104,8 +104,9 @@ namespace VE_TextureBased
    /// Typedef for the singleton declaration.  This is necessary to make the
    /// singleton have one instance in a Windows DLL; the macro calls are 
    /// based upon recommendations from the MSDN documentation.
+#ifdef WIN32
    VE_TEXTURE_BASED_TEMPLATE_EXPORTS template class VE_TEXTURE_BASED_EXPORTS Singleton<TextureDataManager_t>;
-
+#endif
    /// Typedef for the singleton TextureDataManager.
    typedef Singleton<TextureDataManager_t> TextureDataManager;
 }
