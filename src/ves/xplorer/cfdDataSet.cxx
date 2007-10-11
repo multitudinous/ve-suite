@@ -37,24 +37,24 @@
    computation.
 */
 
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdPlanes.h"
-#include "VE_Xplorer/XplorerHandlers/DataSetAxis.h"
-#include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
+#include <VE_Xplorer/XplorerHandlers/DataSetAxis.h>
+#include <VE_Xplorer/XplorerHandlers/DataSetScalarBar.h>
 
-#include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
-#include "VE_Xplorer/Utilities/cfdVTKFileHandler.h"
-#include "VE_Xplorer/Utilities/ComputeVectorMagnitudeRangeCallback.h"
-#include "VE_Xplorer/Utilities/ComputeDataObjectBoundsCallback.h"
-#include "VE_Xplorer/Utilities/CountNumberOfParametersCallback.h"
-#include "VE_Xplorer/Utilities/GetNumberOfPointsCallback.h"
-#include "VE_Xplorer/Utilities/ProcessScalarRangeCallback.h"
-#include "VE_Xplorer/Utilities/ActiveDataInformationCallback.h"
-#include "VE_Xplorer/Utilities/CreateDataObjectBBoxActorsCallback.h"
-#include "VE_Builder/Translator/DataLoader/DataLoader.h"
+#include <VE_Xplorer/Utilities/cfdAccessoryFunctions.h>
+#include <VE_Xplorer/Utilities/fileIO.h>
+#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <VE_Xplorer/Utilities/cfdGrid2Surface.h>
+#include <VE_Xplorer/Utilities/cfdVTKFileHandler.h>
+#include <VE_Xplorer/Utilities/ComputeVectorMagnitudeRangeCallback.h>
+#include <VE_Xplorer/Utilities/ComputeDataObjectBoundsCallback.h>
+#include <VE_Xplorer/Utilities/CountNumberOfParametersCallback.h>
+#include <VE_Xplorer/Utilities/GetNumberOfPointsCallback.h>
+#include <VE_Xplorer/Utilities/ProcessScalarRangeCallback.h>
+#include <VE_Xplorer/Utilities/ActiveDataInformationCallback.h>
+#include <VE_Xplorer/Utilities/CreateDataObjectBBoxActorsCallback.h>
+#include <VE_Builder/Translator/DataLoader/DataLoader.h>
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -74,7 +74,7 @@
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 
 #include <iostream>
 #include <sstream>

@@ -31,17 +31,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/XplorerHandlers/Tablet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
-#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
-#include "VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h"
+#include <VE_Xplorer/XplorerHandlers/Tablet.h>
+#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
+#include <VE_Xplorer/XplorerHandlers/KeyboardMouse.h>
+#include <VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <VE_Xplorer/SceneGraph/SceneManager.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Xforms.h>

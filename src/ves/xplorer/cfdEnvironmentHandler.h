@@ -39,9 +39,9 @@ cfdEnvironmentHandler API
 * 
 */
 #include <vpr/Util/Singleton.h>
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/XplorerHandlers/SeedPoints.h"
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <VE_Installer/include/VEConfig.h>
+#include <VE_Xplorer/XplorerHandlers/SeedPoints.h>
+#include <VE_Xplorer/SceneGraph/DCS.h>
 #include <map>
 #include <vector>
 #include <osg/ref_ptr>

@@ -42,9 +42,9 @@ DataSetScalarBar API
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
 
 #include <osgSim/ScalarsToColors>
 #include <osgSim/ColorRange>

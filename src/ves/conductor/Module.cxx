@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/Module.h"
+#include <ves/conductor/Module.h>
 
-#include "ves/conductor/UIPluginBase.h"
+#include <ves/conductor/UIPluginBase.h>
 
 #include <wx/window.h>
 

@@ -38,9 +38,9 @@ cfdImage API
 /*!\class VE_Xplorer::cfdImage
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
+#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
 
 class vtkBMPReader;
 class vtkImageReader;

@@ -32,10 +32,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "veWebService_i.h"
+#include <veWebService_i.h>
 #include <iostream>
 #include <vpr/Sync/Guard.h>
-#include "cfdWebServices.h"
+#include <cfdWebServices.h>
   
 // Implementation skeleton constructor
 veWebService_i::veWebService_i (Body::Executive_ptr exec, std::string name)

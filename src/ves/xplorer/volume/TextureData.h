@@ -38,9 +38,9 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include "VE_Xplorer/TextureBased/ScalarData.h"
-#include "VE_Xplorer/TextureBased/VectorData.h"
-#include "VE_Xplorer/TextureBased/TimestepData.h"
+#include <VE_Xplorer/TextureBased/ScalarData.h>
+#include <VE_Xplorer/TextureBased/VectorData.h>
+#include <VE_Xplorer/TextureBased/TimestepData.h>
 
 #include <gmtl/Vec.h>
 #include <loki/SmartPtr.h>
@@ -48,7 +48,7 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_TextureBased
 {

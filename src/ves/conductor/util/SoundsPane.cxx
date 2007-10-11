@@ -31,14 +31,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "ves/conductor/util/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "ves/conductor/util/SoundsPane.h"
+#include <ves/conductor/util/SoundsPane.h>
 
-#include "ves/open/xml/model/Model.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/ParameterBlock.h"
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/ParameterBlock.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>

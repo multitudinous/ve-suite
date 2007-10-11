@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/HDFtoVTK/viewCells.h"
+#include <VE_Builder/Translator/HDFtoVTK/viewCells.h>
 
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>

@@ -80,7 +80,7 @@ namespace VE_Xplorer
    class cfdModel;
    class cfdGlobalBase;
 }
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 namespace VE_EVENTS
 {
 class VE_XPLORER_EXPORTS CreateVisObjectEventHandler: public EventHandler

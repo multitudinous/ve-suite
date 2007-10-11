@@ -33,13 +33,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "jdMAPReader.h"
+#include <jdMAPReader.h>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <sstream>
 
-#include "converter.h"
+#include <converter.h>
 
 #include <vtkPolyDataWriter.h>
 #include <vtkPolyData.h>      

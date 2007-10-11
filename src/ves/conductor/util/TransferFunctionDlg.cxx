@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/TransferFunctionDlg.h"
+#include <ves/conductor/util/TransferFunctionDlg.h>
 
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/XMLReaderWriter.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
 #include <wx/statbox.h>
 #include <wx/combobox.h>

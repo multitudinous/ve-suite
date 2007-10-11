@@ -33,11 +33,11 @@
 #ifndef PARAMSDLG_H
 #define PARAMSDLG_H
 
-#include "ves/conductor/util/CORBAServiceList.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/VEConfig.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/VEConfig.h>
 #include <iostream>
 #include <fstream>
 

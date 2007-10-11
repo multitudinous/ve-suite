@@ -33,8 +33,8 @@
 #ifndef _ADVANCEDISOSURFACES_H_
 #define _ADVANCEDISOSURFACES_H_
 
-#include "ves/conductor/util/DualSlider.h"
-#include "ves/conductor/util/spinctld.h"
+#include <ves/conductor/util/DualSlider.h>
+#include <ves/conductor/util/spinctld.h>
 
 ////@end includes
 #include <vector>
@@ -43,7 +43,7 @@
 
 #include <wx/dialog.h>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class wxListBox;
 class wxSpinCtrlDbl;

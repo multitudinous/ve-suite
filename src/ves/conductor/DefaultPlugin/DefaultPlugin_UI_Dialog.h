@@ -34,7 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DEFAULT_PLUGIN_UI_DIALOG_H
 #define DEFAULT_PLUGIN_UI_DIALOG_H
-#include "ves/conductor/UIDialog.h"
+#include <ves/conductor/UIDialog.h>
 #include "ves/VEConfig.h" 
 #include <vector>
 #include <string>

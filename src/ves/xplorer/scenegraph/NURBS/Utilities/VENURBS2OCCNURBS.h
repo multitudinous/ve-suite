@@ -37,9 +37,9 @@
   */
 /*!\class VENURBS2OCCNURBS
  */
-#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-#include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
-#include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
+#include <VE_Xplorer/SceneGraph/NURBS/NSurface.h>
+#include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>
+#include <VE_Xplorer/SceneGraph/NURBS/ControlPoint.h>
 #include <map>
 #include <vector>
 #include <iostream>

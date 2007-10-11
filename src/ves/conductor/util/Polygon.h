@@ -40,7 +40,7 @@ Polygon API
 */
 #include <vector>
 #include <wx/gdicmn.h>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_Conductor
 {
 namespace GUI_Utilities

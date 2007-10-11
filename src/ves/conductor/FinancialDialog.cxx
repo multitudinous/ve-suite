@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/FinancialDialog.h"
+#include <ves/conductor/FinancialDialog.h>
 
 #include <wx/button.h>
 #include <wx/radiobut.h>

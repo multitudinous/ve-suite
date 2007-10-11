@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/UserPreferencesDataBuffer.h"
+#include <ves/conductor/UserPreferencesDataBuffer.h>
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Command.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 #include <sstream>
 #include <algorithm>

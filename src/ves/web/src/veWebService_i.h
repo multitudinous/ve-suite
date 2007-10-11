@@ -35,7 +35,7 @@
 #ifndef VEWESERVICE_I_H_
 #define VEWESERVICE_I_H_
 
-#include "VE_Open/skel/moduleS.h"
+#include <VE_Open/skel/moduleS.h>
 //#include "moduleC.h"
 #include <string>
 #include <vector>

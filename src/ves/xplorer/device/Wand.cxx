@@ -31,16 +31,16 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/XplorerHandlers/Wand.h"
+#include <VE_Xplorer/XplorerHandlers/Wand.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
-#include "VE_Xplorer/SceneGraph/FindParentsVisitor.h"
+#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <VE_Xplorer/SceneGraph/FindParentsVisitor.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 // --- OSG Includes --- //
 #include <osg/LineSegment>

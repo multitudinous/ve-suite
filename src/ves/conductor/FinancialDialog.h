@@ -44,7 +44,7 @@ FinancialDialog API
 
 #include <string>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class wxRadioButton;
 class wxTextCtrl;

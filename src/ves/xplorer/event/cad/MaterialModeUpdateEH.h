@@ -39,12 +39,12 @@
  * CADMaterial event handling.
  */
 
-#include "VE_Xplorer/XplorerHandlers/AttributeEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/AttributeEventHandler.h>
 namespace VE_XML
 {
    class XMLObject;
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS MaterialModeUpdateEventHandler : public AttributeEventHandler{

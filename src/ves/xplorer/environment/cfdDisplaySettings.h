@@ -40,7 +40,7 @@ namespace jccl
 
 #include <utility>
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 /*!\file cfdDisplaySettings.h
   VE_XplorerHandlers Interface
   */

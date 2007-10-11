@@ -40,7 +40,7 @@
 
 #include <vtkActor.h>
 #include <vtkCellArray.h>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_SceneGraph
 {

@@ -41,7 +41,7 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/listbox.h>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class wxWindow;
 class wxDialog;

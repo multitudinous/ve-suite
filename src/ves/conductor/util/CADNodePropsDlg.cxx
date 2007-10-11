@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/conductor/util/CADNodePropsDlg.h"
+#include <ves/conductor/util/CADNodePropsDlg.h>
 #include <sstream>
 #include <wx/sizer.h>
 #include <wx/notebook.h>
@@ -57,25 +57,25 @@
 #include <wx/radiobox.h>
 
 #include <iostream>
-#include "ves/conductor/util/spinctld.h"
+#include <ves/conductor/util/spinctld.h>
 
-#include "ves/conductor/util/CADMaterialEditMenu.h"
-#include "ves/conductor/util/CADOpacitySliderDlg.h"
-#include "ves/conductor/util/TransformUI.h"
-#include "ves/conductor/util/CORBAServiceList.h"
+#include <ves/conductor/util/CADMaterialEditMenu.h>
+#include <ves/conductor/util/CADOpacitySliderDlg.h>
+#include <ves/conductor/util/TransformUI.h>
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/FloatArray.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
-#include "ves/open/xml/cad/CADNode.h"
-#include "ves/open/xml/cad/CADAttribute.h"
-#include "ves/open/xml/cad/CADMaterial.h"
-#include "ves/open/xml/cad/CADNodeAnimation.h"
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/cad/CADMaterial.h>
+#include <ves/open/xml/cad/CADNodeAnimation.h>
 
-#include "ves/open/xml/shader/Program.h"
+#include <ves/open/xml/shader/Program.h>
 
 using namespace VE_XML::VE_CAD;
 using namespace VE_XML::VE_Shader;

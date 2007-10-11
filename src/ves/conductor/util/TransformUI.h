@@ -46,7 +46,7 @@ TransformUI API
 #include <wx/sizer.h>
 
 #include <string>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 class DataSetLoaderUI;
 class wxSpinCtrlDbl;
 class wxCheckBox;

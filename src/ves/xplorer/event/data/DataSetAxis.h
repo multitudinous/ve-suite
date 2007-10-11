@@ -38,9 +38,9 @@ DataSetAxis API
 /*!\class VE_Xplorer::DataSetAxis
 *   Renders an axis for a given dataset
 */
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 
-#include "VE_Xplorer/SceneGraph/Group.h"
+#include <VE_Xplorer/SceneGraph/Group.h>
 
 #include <osg/Geode>
 

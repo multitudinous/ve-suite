@@ -36,7 +36,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "ves/conductor/ListTable.h"
+#include <ves/conductor/ListTable.h>
 
 #include <wx/window.h>
 

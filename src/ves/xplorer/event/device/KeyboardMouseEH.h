@@ -40,7 +40,7 @@
  * Class for changing KeyboardMouse properties in xplorer
  */
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 
 namespace VE_XML
 {

@@ -39,7 +39,7 @@
  * Class for changing background color in xplorer.
  */
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 namespace VE_XML
 {
    class XMLObject;

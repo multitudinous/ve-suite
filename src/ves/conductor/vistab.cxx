@@ -30,24 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/CORBAServiceList.h"
-#include "ves/conductor/util/TBToolBar.h"
-#include "ves/conductor/util/UI_TransientDialog.h"
-#include "ves/conductor/vectors.h"
-#include "ves/conductor/contours.h"
-#include "ves/conductor/streamlines.h"
-#include "ves/conductor/isosurfaces.h"
-#include "ves/conductor/polydata.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <ves/conductor/util/TBToolBar.h>
+#include <ves/conductor/util/UI_TransientDialog.h>
+#include <ves/conductor/vectors.h>
+#include <ves/conductor/contours.h>
+#include <ves/conductor/streamlines.h>
+#include <ves/conductor/isosurfaces.h>
+#include <ves/conductor/polydata.h>
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Model/Model.h"
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
-#include "ves/conductor/util/spinctld.h"
+#include <ves/conductor/util/spinctld.h>
 
-#include "ves/conductor/vistab.h"
+#include <ves/conductor/vistab.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
@@ -70,11 +70,11 @@
 #include <iostream>
 #include <string>
 ////@begin XPM images
-#include "ves/conductor/xpm/new_vector.xpm"
-#include "ves/conductor/xpm/contour.xpm"
-#include "ves/conductor/xpm/streamlines.xpm"
-#include "ves/conductor/xpm/isosurface.xpm"
-#include "ves/conductor/xpm/scalartb.xpm"
+#include <ves/conductor/xpm/new_vector.xpm>
+#include <ves/conductor/xpm/contour.xpm>
+#include <ves/conductor/xpm/streamlines.xpm>
+#include <ves/conductor/xpm/isosurface.xpm>
+#include <ves/conductor/xpm/scalartb.xpm>
 ////@end XPM images
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )

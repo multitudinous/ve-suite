@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_CE/Utilities/OPort.h"
-#include "VE_Open/XML/Command.h"
+#include <VE_CE/Utilities/OPort.h>
+#include <VE_Open/XML/Command.h>
 
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////

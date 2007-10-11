@@ -42,7 +42,7 @@ class vtkUnstructuredGridWriter;
 class vtkUnstructuredGrid;
 class vtkAppendFilter;
 
-#include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
+#include <VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
 namespace VE_Builder
 {

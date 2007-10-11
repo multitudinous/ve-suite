@@ -30,20 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_CE/Utilities/Module.h"
-#include "VE_CE/Utilities/OPort.h"
-#include "VE_CE/Utilities/IPort.h"
-#include "VE_CE/Utilities/Network.h"
-#include "VE_CE/Utilities/Connection.h"
+#include <VE_CE/Utilities/Module.h>
+#include <VE_CE/Utilities/OPort.h>
+#include <VE_CE/Utilities/IPort.h>
+#include <VE_CE/Utilities/Network.h>
+#include <VE_CE/Utilities/Connection.h>
 
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelWeakPtr.h"
-#include "VE_Open/XML/Model/Port.h"
+#include <VE_Open/XML/Model/Model.h>
+#include <VE_Open/XML/Model/ModelWeakPtr.h>
+#include <VE_Open/XML/Model/Port.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
-#include "VE_Open/XML/DataValuePairPtr.h"
+#include <VE_Open/XML/DataValuePairPtr.h>
 
 using namespace VE_CE::Utilities;
 using namespace VE_XML;

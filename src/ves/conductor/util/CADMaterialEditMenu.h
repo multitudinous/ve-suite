@@ -40,7 +40,7 @@
 /*!\class CADMaterialEditMenu
  * GUI class to edit CADMaterial s .
  */
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <wx/menu.h>
 namespace VE_Conductor
 {

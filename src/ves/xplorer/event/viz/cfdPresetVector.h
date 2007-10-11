@@ -42,7 +42,7 @@ cfdPresetVector API
 * the plane position and direction.
 */
 
-#include "VE_Xplorer/XplorerHandlers/cfdVectorBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdVectorBase.h>
 
 namespace VE_Xplorer
 {

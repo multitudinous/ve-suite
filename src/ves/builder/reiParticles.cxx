@@ -42,11 +42,11 @@
 #include <vtkDataSetAttributes.h>
 #include <vtkTransform.h>
 #include <vtkTransformPolyDataFilter.h>
-#include "reiParticles.h"
-#include "particle.h"
+#include <reiParticles.h>
+#include <particle.h>
 #include <iostream>
 #include <fstream>
-#include "converter.h"
+#include <converter.h>
 
 reiParticles::reiParticles( void ) {
    writer      = vtkPolyDataWriter::New();

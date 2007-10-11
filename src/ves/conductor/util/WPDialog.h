@@ -35,9 +35,9 @@
 
 
 #include <string> 
-#include "ves/VEConfig.h"
-#include "ves/conductor/util/BaseDialog.h"
-#include "ves/conductor/util/DualSlider.h"
+#include <ves/VEConfig.h>
+#include <ves/conductor/util/BaseDialog.h>
+#include <ves/conductor/util/DualSlider.h>
 
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>

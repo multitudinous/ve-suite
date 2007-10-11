@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_CE/Utilities/node_loop.h"
-#include "VE_CE/Utilities/node_module.h"
-#include "VE_CE/Utilities/Network.h"
-#include "VE_CE/Utilities/Module.h"
+#include <VE_CE/Utilities/node_loop.h>
+#include <VE_CE/Utilities/node_module.h>
+#include <VE_CE/Utilities/Network.h>
+#include <VE_CE/Utilities/Module.h>
 #include <iostream>
 #include <algorithm>
 

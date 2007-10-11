@@ -54,7 +54,7 @@ XMLDataBufferEngine API
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/UserPtr.h>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_Conductor
 {
 class VE_GUIPLUGINS_EXPORTS XMLDataBufferEngine

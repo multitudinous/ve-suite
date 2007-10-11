@@ -40,10 +40,10 @@ cfdDataSet API
 * or properties for virtual environment interactive 
 * computation.
 */
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
-#include "VE_Xplorer/SceneGraph/Switch.h"
-#include "VE_Xplorer/SceneGraph/Geode.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <VE_Xplorer/SceneGraph/Group.h>
+#include <VE_Xplorer/SceneGraph/Switch.h>
+#include <VE_Xplorer/SceneGraph/Geode.h>
 #ifdef USE_OMP
 #define MAX_DATA 20
 #endif
@@ -84,8 +84,8 @@ namespace VE_Builder
 {
    class DataLoader;
 }
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/Utilities/DataObjectHandler.h"
+#include <VE_Installer/include/VEConfig.h>
+#include <VE_Xplorer/Utilities/DataObjectHandler.h>
 #ifdef _OSG
 #include <osg/ref_ptr>
 #elif _PERFORMER

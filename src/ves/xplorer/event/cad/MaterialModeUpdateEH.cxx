@@ -30,15 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/FloatArray.h"
+#include <VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/DataValuePair.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/FloatArray.h>
 
-#include "VE_Open/XML/CAD/CADMaterial.h"
+#include <VE_Open/XML/CAD/CADMaterial.h>
 using namespace VE_EVENTS;
 ////////////////////////////////////////////////////////
 //Constructor                                         //

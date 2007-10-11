@@ -30,21 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/CORBAServiceList.h"
-#include "ves/conductor/util/Link.h"
-#include "ves/conductor/util/OrbThread.h"
-#include "ves/conductor/util/ParamsDlg.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <ves/conductor/util/Link.h>
+#include <ves/conductor/util/OrbThread.h>
+#include <ves/conductor/util/ParamsDlg.h>
 
-#include "ves/open/xml/model/Link.h"
-#include "ves/open/xml/model/Point.h"
-#include "ves/open/xml/model/Model.h"
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Model.h>
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/ParameterBlock.h"
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/User.h"
-#include "ves/open/xml/StateInfo.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/User.h>
+#include <ves/open/xml/StateInfo.h>
 
 #include <wx/window.h>
 #include <wx/brush.h>

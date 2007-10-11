@@ -41,7 +41,7 @@ cfdThread API
 
 #include <vpr/Thread/Thread.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_Xplorer
 {

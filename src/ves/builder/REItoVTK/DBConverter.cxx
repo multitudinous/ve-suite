@@ -36,7 +36,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "DBConverter.h"
+#include <DBConverter.h>
 
 #undef WANTASCII
 

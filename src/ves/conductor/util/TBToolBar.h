@@ -48,8 +48,8 @@ namespace VE_XML
 #include <vector>
 #include <string>
 
-#include "ves/conductor/util/BaseDialog.h"
-#include "ves/VEConfig.h"
+#include <ves/conductor/util/BaseDialog.h>
+#include <ves/VEConfig.h>
 class UI_TransientDialog;
 class wxArrayString;
 class wxToolBar;

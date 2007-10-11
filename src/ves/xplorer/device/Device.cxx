@@ -34,17 +34,17 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
+#include <VE_Xplorer/XplorerHandlers/CommandHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/Device.h"
+#include <VE_Xplorer/XplorerHandlers/Device.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <VE_Xplorer/SceneGraph/SceneManager.h>
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairPtr.h"
+#include <VE_Open/XML/DataValuePair.h>
+#include <VE_Open/XML/DataValuePairPtr.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/OneDDoubleArray.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/OneDDoubleArray.h>
 
 // --- OSG Stuff --- //
 #include <osg/LineSegment>

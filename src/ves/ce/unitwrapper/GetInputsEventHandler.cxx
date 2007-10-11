@@ -32,13 +32,13 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include "VE_CE/UnitWrapper/GetInputsEventHandler.h"
+#include <VE_CE/UnitWrapper/GetInputsEventHandler.h>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Model/Model.h"
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/XMLReaderWriter.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
+#include <VE_Open/XML/Model/Model.h>
 
 using namespace VE_CE;
 ////////////////////////////////////////////////////////////////////////////

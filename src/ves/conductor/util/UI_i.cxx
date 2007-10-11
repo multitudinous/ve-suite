@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/UI_i.h"
-#include "ves/conductor/util/OrbThread.h"
+#include <ves/conductor/util/UI_i.h>
+#include <ves/conductor/util/OrbThread.h>
 
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/model/Model.h"
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/model/Model.h>
   
 using namespace VE_XML;
 // Implementation skeleton constructor

@@ -39,8 +39,8 @@ CADOpacitySliderDlg API
 /*!\class VE_Conductor::GUI_Utilities::CADOpacitySliderDlg
 *
 */
-#include "ves/open/skel/VjObsC.h"
-#include "ves/VEConfig.h"
+#include <ves/open/skel/VjObsC.h>
+#include <ves/VEConfig.h>
 
 #include <string>
 #include <vector>

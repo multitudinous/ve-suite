@@ -38,9 +38,9 @@ DisplayInformation API
 /*!\class VE_Xplorer::DisplayInformation
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/SceneGraph/Switch.h"
+#include <VE_Xplorer/SceneGraph/Switch.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>

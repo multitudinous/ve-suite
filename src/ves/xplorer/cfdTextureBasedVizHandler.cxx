@@ -30,54 +30,54 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
+#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
-#include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h"
-#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
+#include <VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h>
+#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
+#include <VE_Xplorer/TextureBased/cfdTextureManager.h>
+#include <VE_Xplorer/TextureBased/cfdVolumeVisualization.h>
 
 
 #include <osg/State>
 //#include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
-#include "VE_Xplorer/XplorerHandlers/TBTransientDurationUpdateEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBTransientModeUpdateEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBIsosurfaceUpdateEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBIsosurfaceEnableEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBClipPlaneEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBBBoxEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBActivateEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBSliceNumberUpdateEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBPhongShadingEnableEH.h"
-#include "VE_Xplorer/XplorerHandlers/TBPreIntegrateEH.h"
+#include <VE_Xplorer/XplorerHandlers/TBTransientDurationUpdateEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBTransientModeUpdateEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBIsosurfaceUpdateEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBIsosurfaceEnableEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBClipPlaneEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBBBoxEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBActivateEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBSliceNumberUpdateEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBPhongShadingEnableEH.h>
+#include <VE_Xplorer/XplorerHandlers/TBPreIntegrateEH.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
+#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
+#include <VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h>
+#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
 
-#include "VE_Open/XML/Command.h"
+#include <VE_Open/XML/Command.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 #include <fstream>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-#include "VE_Xplorer/TextureBased/cfdScalarVolumeVisHandler.h"
-#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
-#include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
+#include <VE_Xplorer/TextureBased/cfdScalarVolumeVisHandler.h>
+#include <VE_Xplorer/TextureBased/cfdScalarShaderManager.h>
+#include <VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h>
 
-#include "VE_Xplorer/TextureBased/cfdVectorVolumeVisHandler.h"
-#include "VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h"
+#include <VE_Xplorer/TextureBased/cfdVectorVolumeVisHandler.h>
+#include <VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h>
 
 vprSingletonImpLifetime( VE_TextureBased::cfdTextureBasedVizHandler, 140 );
 using namespace VE_TextureBased;

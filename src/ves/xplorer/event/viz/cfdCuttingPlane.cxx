@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include <VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h>
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
 #include <vtkPlane.h>
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 
 using namespace VE_Xplorer;
 

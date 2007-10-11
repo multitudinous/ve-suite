@@ -38,7 +38,7 @@ UserPreferencesDataBuffer API
 /*!\class VE_Conductor::UserPreferencesDataBuffer
 * 
 */
-#include "ves/open/xml/CommandPtr.h"
+#include <ves/open/xml/CommandPtr.h>
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
@@ -48,7 +48,7 @@ UserPreferencesDataBuffer API
 #include <map>
 #include <string>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_Conductor
 {
 class VE_GUIPLUGINS_EXPORTS UserPreferencesDataBuffer

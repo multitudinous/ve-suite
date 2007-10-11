@@ -30,20 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/CADTransformEH.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
+#include <VE_Xplorer/XplorerHandlers/CADTransformEH.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
 
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
-#include "VE_Xplorer/SceneGraph/Clone.h"
+#include <VE_Xplorer/SceneGraph/CADEntity.h>
+#include <VE_Xplorer/SceneGraph/Clone.h>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/CAD/CADNode.h"
+#include <VE_Open/XML/Transform.h>
+#include <VE_Open/XML/FloatArray.h>
+#include <VE_Open/XML/CAD/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_CAD;

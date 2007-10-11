@@ -38,12 +38,12 @@ cfdTeacher API
 /*!\class VE_Xplorer::cfdTeacher
 * 
 */
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
 
 #include <vector>
 #include <string>
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 
 #ifdef _OSG
     #include <osg/ref_ptr>

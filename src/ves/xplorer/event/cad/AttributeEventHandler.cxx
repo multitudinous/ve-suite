@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/AttributeEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include <VE_Xplorer/XplorerHandlers/AttributeEventHandler.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
 
-#include "VE_Open/XML/XMLObject.h"
+#include <VE_Open/XML/XMLObject.h>
 #include <iostream>
 
 using namespace VE_EVENTS;

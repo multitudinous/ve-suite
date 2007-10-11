@@ -41,9 +41,9 @@ Module API
 #include <vector>
 #include <string>
 
-#include "ves/VEConfig.h"
-#include "ves/conductor/util/Polygon.h"
-#include "ves/conductor/util/Link.h"
+#include <ves/VEConfig.h>
+#include <ves/conductor/util/Polygon.h>
+#include <ves/conductor/util/Link.h>
 
 class wxWindow;
 class UIPluginBase;

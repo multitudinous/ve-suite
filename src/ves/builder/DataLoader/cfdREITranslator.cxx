@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/DataLoader/cfdREITranslator.h"
+#include <VE_Builder/Translator/DataLoader/cfdREITranslator.h>
 #include <vtkDataSet.h>
 #include <vtkImageData.h>
 #include <vtkDICOMImageReader.h>
@@ -42,9 +42,9 @@
 #include <vtkFloatArray.h>  // this code requires VTK4
 #include <vtkPointData.h>
 
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Builder/Translator/DataLoader/converter.h"      // for "letUsersAddParamsToField"
-#include "VE_Builder/Translator/DataLoader/gridConversion.h"
+#include <VE_Xplorer/Utilities/fileIO.h>
+#include <VE_Builder/Translator/DataLoader/converter.h"      // for "letUsersAddParamsToField>
+#include <VE_Builder/Translator/DataLoader/gridConversion.h>
 
 #include <iostream>
 

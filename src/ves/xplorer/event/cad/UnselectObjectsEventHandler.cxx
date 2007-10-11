@@ -31,14 +31,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>

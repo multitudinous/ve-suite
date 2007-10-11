@@ -30,29 +30,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
+#include <VE_Xplorer/XplorerHandlers/CADEventHandler.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
 
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
-#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
-#include "VE_Xplorer/SceneGraph/Clone.h"
-#include "VE_Xplorer/SceneGraph/UpdateIDOnChildrenVisitor.h"
+#include <VE_Xplorer/SceneGraph/CADEntity.h>
+#include <VE_Xplorer/SceneGraph/CADEntityHelper.h>
+#include <VE_Xplorer/SceneGraph/Clone.h>
+#include <VE_Xplorer/SceneGraph/UpdateIDOnChildrenVisitor.h>
 
-#include "VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h"
+#include <VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h>
 
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/FloatArray.h"
+#include <VE_Open/XML/CAD/CADNode.h>
+#include <VE_Open/XML/CAD/CADAssembly.h>
+#include <VE_Open/XML/CAD/CADAttribute.h>
+#include <VE_Open/XML/CAD/CADPart.h>
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/Transform.h>
+#include <VE_Open/XML/FloatArray.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 
 #include <boost/filesystem/path.hpp>
 #include <iostream>

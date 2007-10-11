@@ -38,7 +38,7 @@ cfdContours API
 /*!\class VE_Xplorer::cfdContours
 * 
 */
-#include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdContourBase.h>
 
 #include <string>
 

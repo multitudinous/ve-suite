@@ -33,8 +33,8 @@
 #ifndef _XPLORER_I_H_
 #define _XPLORER_I_H_
 
-#include "VE_Open/skel/moduleS.h"
-#include "VE_Xplorer/XplorerHandlers/Body_AMI_UIHandler_i.h"
+#include <VE_Open/skel/moduleS.h>
+#include <VE_Xplorer/XplorerHandlers/Body_AMI_UIHandler_i.h>
 
 #undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
@@ -44,7 +44,7 @@
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork.h>
 
-#include "VE_Xplorer/GE/cfdStateInfo.h"
+#include <VE_Xplorer/GE/cfdStateInfo.h>
 
 #include <vrj/vrjParam.h>
 #if __VJ_version <= 2000003
@@ -53,7 +53,7 @@
 
 #include <plugins/ApplicationDataManager/UserData.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_Xplorer
 {

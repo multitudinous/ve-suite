@@ -39,7 +39,7 @@
  * Base class for TextureBased Visualization event handling.
  */
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 namespace VE_XML
 {
    class XMLObject;
@@ -53,7 +53,7 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdModel;
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS TextureBasedEventHandler : public EventHandler{

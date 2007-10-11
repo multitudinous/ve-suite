@@ -33,7 +33,7 @@
 #ifndef JPG_DATA_H_
 #define JPG_DATA_H_
 
-#include "Variant.h"
+#include <Variant.h>
 
 #include <string>
 

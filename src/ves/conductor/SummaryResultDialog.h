@@ -38,9 +38,9 @@ SummaryResultDialog API
 /*!\class SummaryResultDialog
 * 
 */
-#include "ves/conductor/UIDialog.h"
-#include "ves/conductor/TexTable.h"
-#include "ves/VEConfig.h"
+#include <ves/conductor/UIDialog.h>
+#include <ves/conductor/TexTable.h>
+#include <ves/VEConfig.h>
 
 class wxButton;
 class wxNotebook;

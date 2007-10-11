@@ -41,7 +41,7 @@ cfdPresetMomentum API
 *  and direction selected. Update member function will update
 *  the plane position and direction.
 */
-#include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdContourBase.h>
 
 class vtkCutter;
 class vtkWarpVector;

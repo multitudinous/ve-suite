@@ -31,15 +31,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandlers/TBPhongShadingEnableEH.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
+#include <VE_Xplorer/XplorerHandlers/TBPhongShadingEnableEH.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
 
-#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
+#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;

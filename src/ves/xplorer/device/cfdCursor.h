@@ -39,9 +39,9 @@ cfdCursor API
 *  A class to build virtual cursors. Type of virtual
 *  cursor built are single point, arrow, and multiple points.
 */
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
-#include "VE_Xplorer/SceneGraph/Geode.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <VE_Xplorer/SceneGraph/Group.h>
+#include <VE_Xplorer/SceneGraph/Geode.h>
 
 namespace VE_SceneGraph
 {
@@ -83,7 +83,7 @@ namespace VE_XML
    class Command;
 }
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 
 namespace VE_Xplorer
 {

@@ -43,7 +43,7 @@ UIDialog API
 
 class wxWindow;
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {

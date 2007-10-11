@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/Polygon.h"
+#include <ves/conductor/util/Polygon.h>
 
 #include <cmath>
 #include <iostream>

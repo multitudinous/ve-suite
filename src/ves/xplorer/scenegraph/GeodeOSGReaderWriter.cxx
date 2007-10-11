@@ -32,9 +32,9 @@
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/Geode.h>
 
-#include "osgDB/Registry"
-#include "osgDB/Input"
-#include "osgDB/Output"
+#include <osgDB/Registry>
+#include <osgDB/Input>
+#include <osgDB/Output>
 
 using namespace osg;
 using namespace osgDB;

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/DataLoader/FluentTranslator.h"
+#include <VE_Builder/Translator/DataLoader/FluentTranslator.h>
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
 #include <vtkFLUENTReader.h>

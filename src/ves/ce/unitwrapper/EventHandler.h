@@ -45,7 +45,7 @@ namespace VE_XML
 {
    class XMLObject;
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 #include <string>
 #include <vector>
 

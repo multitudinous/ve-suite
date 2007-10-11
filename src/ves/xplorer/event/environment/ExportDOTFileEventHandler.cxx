@@ -31,12 +31,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandlers/ExportDOTFileEventHandler.h"
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
-#include "VE_Xplorer/SceneGraph/CreateGraphDOTVisitor.h"
+#include <VE_Xplorer/XplorerHandlers/ExportDOTFileEventHandler.h>
+#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <VE_Xplorer/SceneGraph/CreateGraphDOTVisitor.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;

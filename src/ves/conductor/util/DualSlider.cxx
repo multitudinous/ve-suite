@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/DualSlider.h"
+#include <ves/conductor/util/DualSlider.h>
 #include <wx/slider.h>
 #include <iostream>
 #include <cmath>

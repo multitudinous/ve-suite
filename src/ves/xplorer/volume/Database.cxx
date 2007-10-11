@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/TextureBased/Database.h"
+#include <VE_Xplorer/TextureBased/Database.h>
 
 /// The following is from the Loki::Singleton library.  This allows a windows
 /// DLL to have a Singleton with exactly one instance.  This example is

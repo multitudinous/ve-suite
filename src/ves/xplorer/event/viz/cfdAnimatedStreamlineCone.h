@@ -38,7 +38,7 @@ cfdAnimatedStreamlineCone API
 /*!\class VE_Xplorer::cfdAnimatedStreamlineCone
 * 
 */
-#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
+#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
 
 class vtkPolyDataMapper;
 class vtkPolyData;

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdWebServices.h"
+#include <cfdWebServices.h>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -42,19 +42,19 @@
 
 #include <orbsvcs/CosNamingC.h>
 
-#include "cfdExecutive.h"
-#include "veWebService_i.h"
-#include "cfdDCS.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
+#include <cfdExecutive.h>
+#include <veWebService_i.h>
+#include <cfdDCS.h>
+#include <cfdEnum.h>
+#include <cfdCommandArray.h>
 //#include "cfdVEAvailModules.h"
 //#include "cfdVEBaseClass.h"
 //#include "cfdModelHandler.h"
 //#include "cfdEnvironmentHandler.h"
 //#include "cfdThread.h"
 //#include "cfdPfSceneManagement.h"
-#include "package.h"
-#include "Network_Exec.h"
+#include <package.h>
+#include <Network_Exec.h>
 #include <mysql++.h>
 #include <sys/stat.h>
 #include <errno.h>

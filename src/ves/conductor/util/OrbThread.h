@@ -47,7 +47,7 @@ PEThread API
 
 class wxUpdateUIEvent;
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 class VE_CONDUCTOR_UTILS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
 {
 public:

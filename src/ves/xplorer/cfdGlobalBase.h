@@ -49,7 +49,7 @@ namespace VE_XML
    class Command;
 }
 
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_Xplorer
 {

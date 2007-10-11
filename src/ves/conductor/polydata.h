@@ -44,7 +44,7 @@
 
 #include <wx/dialog.h>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_XML
 {

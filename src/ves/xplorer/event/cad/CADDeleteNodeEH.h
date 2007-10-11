@@ -38,9 +38,9 @@
 /*!\class CADDeleteNodeEventHandler
  * Class for removing CADNode from the current tree.
  */
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/XplorerHandlers/CADEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/CADEventHandler.h>
 
 namespace VE_XML
 {

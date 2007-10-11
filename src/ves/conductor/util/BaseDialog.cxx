@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/BaseDialog.h"
+#include <ves/conductor/util/BaseDialog.h>
 
 #include <iostream>
 
@@ -39,10 +39,10 @@
 #include <wx/button.h>
 #include <wx/icon.h>
 
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/conductor/util/CORBAServiceList.h"
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/conductor/util/CORBAServiceList.h>
 
 //#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 using namespace VE_Conductor::GUI_Utilities;

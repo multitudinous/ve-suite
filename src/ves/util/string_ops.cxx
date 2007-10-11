@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/util/string_ops.h"
+#include <ves/util/string_ops.h>
 
 #include <sstream>
 

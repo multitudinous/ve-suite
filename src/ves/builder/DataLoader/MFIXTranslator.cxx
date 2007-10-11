@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Builder/Translator/DataLoader/MFIXTranslator.h"
+#include <VE_Builder/Translator/DataLoader/MFIXTranslator.h>
 #include <vtkDataSet.h>
 #include <vtkMFIXReader.h>
 #include <vtkUnstructuredGrid.h>

@@ -38,12 +38,12 @@
 /*!\class Vistab
 * 
 */
-#include "ves/open/skel/VjObsC.h"
+#include <ves/open/skel/VjObsC.h>
 
 #include <wx/toolbar.h>
 #include <wx/dialog.h>
 
-#include "ves/conductor/util/DualSlider.h"
+#include <ves/conductor/util/DualSlider.h>
 
 #include <vector>
 #include <map>
@@ -99,7 +99,7 @@ class wxButton;
 #endif
 
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class VE_GUIPLUGINS_EXPORTS Vistab: public wxDialog
 {    

@@ -33,7 +33,7 @@
 #ifndef _ENSIGHT_TRANSLATOR_H_
 #define _ENSIGHT_TRANSLATOR_H_
 
-#include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
+#include <VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
 namespace VE_Builder
 {

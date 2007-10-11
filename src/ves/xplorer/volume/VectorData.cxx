@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/TextureBased/VectorData.h"
+#include <VE_Xplorer/TextureBased/VectorData.h>
 
 namespace VE_TextureBased
 {

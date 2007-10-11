@@ -33,7 +33,7 @@
 
 #ifndef CAD_TREE_BUILDER
 #define CAD_TREE_BUILDER
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 /*!\file CADTreeBuilder.h
   CADTreeBuilder API
   */
@@ -41,8 +41,8 @@
  * Class for creating wxTreeCtrl and wxTreeItem from VE_XML::VE_CAD::CADNode.
  */
 
-#include "ves/open/xml/cad/CADNode.h"
-#include "ves/open/xml/cad/CADNodeTraverser.h"
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADNodeTraverser.h>
 
 #include <wx/treectrl.h>
 #include <wx/window.h>

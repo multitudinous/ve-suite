@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdAnimatedStreamlineCone.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
+#include <VE_Xplorer/XplorerHandlers/cfdAnimatedStreamlineCone.h>
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
+#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -44,7 +44,7 @@
 #include <vtkProperty.h>
 #include <vtkGenericCell.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

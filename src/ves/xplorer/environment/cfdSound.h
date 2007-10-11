@@ -40,7 +40,7 @@ cfdSound API
 */
 
 #include <snx/SoundHandle.h>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 namespace VE_Xplorer
 {
    class VE_XPLORER_EXPORTS cfdSound

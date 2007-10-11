@@ -41,9 +41,9 @@
 */
 
 // --- VE-Suite Stuff --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/XplorerHandlers/Device.h"
+#include <VE_Xplorer/XplorerHandlers/Device.h>
 
 // --- VRJuggler Stuff --- //
 #include <gadget/Type/KeyboardMouseInterface.h>

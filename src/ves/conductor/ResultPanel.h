@@ -40,7 +40,7 @@ ResultPanel API
 */
 #include <wx/dialog.h>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class wxTextCtrl;
 class wxStaticText;

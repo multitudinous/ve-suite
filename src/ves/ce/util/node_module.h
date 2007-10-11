@@ -34,8 +34,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_NODE_MODULE_H
 #define CE_UTILITIES_NODE_MODULE_H
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_CE/Utilities/node_base.h"
+#include <VE_Installer/include/VEConfig.h>
+#include <VE_CE/Utilities/node_base.h>
 #include <set>
 
 namespace VE_CE

@@ -47,8 +47,8 @@ namespace VE_Xplorer
 {
    class cfdModel;
 }
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS SeedPointDimensionsEventHandler : public VE_EVENTS::EventHandler

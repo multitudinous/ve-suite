@@ -35,7 +35,7 @@
 #ifndef CFD_WEBSERVICE_H
 #define CFD_WEBSERVICE_H
 
-#include "interface.h"
+#include <interface.h>
 
 #include <map>
 #include <string>

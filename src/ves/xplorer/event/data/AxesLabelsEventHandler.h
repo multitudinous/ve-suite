@@ -39,7 +39,7 @@
  * 
  */
 #include <map>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_XML
 {
@@ -51,7 +51,7 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdVEBaseClass;
 }
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 namespace VE_EVENTS
 {
 class VE_XPLORER_EXPORTS AxesLabelsEventHandler: public EventHandler

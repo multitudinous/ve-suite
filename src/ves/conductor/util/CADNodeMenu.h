@@ -38,7 +38,7 @@
 /*!\class CADNodeMenu
  * GUI class to manipulate CADNode s and the corresponding osg::Node.
  */
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <wx/menu.h>
 namespace VE_Conductor
 {

@@ -39,7 +39,7 @@
  * Base class for CADNode event handling.
  */
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 
 namespace VE_XML
 {
@@ -56,7 +56,7 @@ namespace VE_Xplorer
    class cfdModel;
    class ModelCADHandler;
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 #include <string>
 namespace VE_EVENTS
 {

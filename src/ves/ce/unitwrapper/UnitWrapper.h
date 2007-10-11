@@ -38,7 +38,7 @@
 
 #include <VE_Open/XML/Command.h>
 #include <VE_Open/XML/Model/Model.h>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 #include <vector>
 
 namespace VE_CE

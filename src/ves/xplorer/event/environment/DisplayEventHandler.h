@@ -38,7 +38,7 @@
 /*!\class DisplayEventHandler
  * Class for changing trackball properties in xplorer
  */
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 
 namespace VE_XML
 {

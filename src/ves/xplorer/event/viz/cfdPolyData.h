@@ -40,10 +40,10 @@ cfdPolyData API
 /*!\class VE_Xplorer::cfdPolyData
 * 
 */
-#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
+#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 class vtkPolyDataMapper;
 class vtkWarpVector;

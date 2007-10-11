@@ -45,7 +45,7 @@
  * Class that reads a NURBS patch file 
  * Created by the Star-2-OCC utility
  */
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 namespace NURBS
 {
    class NURBSSurface;

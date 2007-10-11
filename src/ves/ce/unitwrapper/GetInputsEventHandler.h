@@ -37,7 +37,7 @@
 /*!\class VE_CE::GetInputsEventHandler
  * Inputs for event handling.
  */
-#include "VE_CE/UnitWrapper/EventHandler.h"
+#include <VE_CE/UnitWrapper/EventHandler.h>
 
 namespace VE_XML
 {
@@ -47,7 +47,7 @@ namespace VE_XML
       class Model;
    }
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_CE
 {

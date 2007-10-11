@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/conductor/advancedvectors.h"
+#include <ves/conductor/advancedvectors.h>
 
 #include <wx/sizer.h>
 #include <wx/slider.h>

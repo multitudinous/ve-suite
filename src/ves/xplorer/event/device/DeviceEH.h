@@ -38,7 +38,7 @@
 /*!\class DeviceEventHandler
  * Class for changing the active device
  */
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 
 namespace VE_XML
 {

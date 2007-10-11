@@ -53,7 +53,7 @@ namespace VE_Model
    typedef Loki::SmartPtrDef<Model>::type ModelPtr;
 }
 }
-#include "ves/open/xml/model/ModelWeakPtr.h"
-#include "ves/open/xml/model/ModelStrongPtr.h"
+#include <ves/open/xml/model/ModelWeakPtr.h>
+#include <ves/open/xml/model/ModelStrongPtr.h>
 
 #endif

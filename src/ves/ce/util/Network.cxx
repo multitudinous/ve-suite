@@ -30,19 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_CE/Utilities/Network.h"
-#include "VE_CE/Utilities/Module.h"
-#include "VE_CE/Utilities/Connection.h"
+#include <VE_CE/Utilities/Network.h>
+#include <VE_CE/Utilities/Module.h>
+#include <VE_CE/Utilities/Connection.h>
 
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelWeakPtr.h"
-#include "VE_Open/XML/Model/Port.h"
-#include "VE_Open/XML/Model/Link.h"
-#include "VE_Open/XML/Model/Network.h"
-#include "VE_Open/XML/Model/System.h"
+#include <VE_Open/XML/XMLReaderWriter.h>
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/DataValuePair.h>
+#include <VE_Open/XML/Model/Model.h>
+#include <VE_Open/XML/Model/ModelWeakPtr.h>
+#include <VE_Open/XML/Model/Port.h>
+#include <VE_Open/XML/Model/Link.h>
+#include <VE_Open/XML/Model/Network.h>
+#include <VE_Open/XML/Model/System.h>
 
 #include <set>
 #include <iostream>

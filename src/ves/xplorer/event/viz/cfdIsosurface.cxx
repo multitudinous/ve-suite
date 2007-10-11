@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdIsosurface.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/DataSetScalarBar.h"
+#include <VE_Xplorer/XplorerHandlers/cfdIsosurface.h>
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <VE_Xplorer/XplorerHandlers/DataSetScalarBar.h>
 
 #include <vtkLookupTable.h>
 //#include <vtkUnstructuredGrid.h>
@@ -50,7 +50,7 @@
 #include <vtkPolyData.h>
 
 //#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 

@@ -37,7 +37,7 @@
     #include "wx/textctrl.h"
 #endif // WX_PRECOMP
 
-#include "spinctld.h"
+#include <spinctld.h>
 #include <math.h>
 
 #if wxMINOR_VERSION > 4

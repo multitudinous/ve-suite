@@ -39,12 +39,12 @@ cfdTextureBasedVizHandler API
 * 
 */
 #include <vpr/Util/Singleton.h>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <VE_Xplorer/SceneGraph/Group.h>
 
-#include "VE_Xplorer/XplorerHandlers/TextureBasedEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/TextureBasedEventHandler.h>
 
 #include <string>
 namespace VE_SceneGraph

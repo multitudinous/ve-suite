@@ -39,12 +39,12 @@
  * Activate the texture based visualization.
  */
 
-#include "VE_Xplorer/XplorerHandlers/TextureBasedEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/TextureBasedEventHandler.h>
 namespace VE_XML
 {
    class XMLObject;
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS TextureBasedActivateEventHandler : public TextureBasedEventHandler{

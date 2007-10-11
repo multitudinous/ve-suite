@@ -39,9 +39,9 @@ cfdQuatCam API
 /*!\class VE_Xplorer::cfdQuatCam
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
 
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>

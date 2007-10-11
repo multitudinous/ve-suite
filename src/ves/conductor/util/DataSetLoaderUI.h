@@ -38,9 +38,9 @@ DataSetLoaderUI API
 /*!\class DataSetLoaderUI
 * 
 */
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
-#include "ves/open/xml/model/ModelPtr.h"
+#include <ves/open/xml/model/ModelPtr.h>
 
 #include <wx/string.h>
 #include <wx/gdicmn.h>

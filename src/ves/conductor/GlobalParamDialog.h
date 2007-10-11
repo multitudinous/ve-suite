@@ -53,7 +53,7 @@ class wxStaticText;
 class wxBoxSizer;
 class wxStaticBoxSizer;
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class VE_GUIPLUGINS_EXPORTS GlobalParamDialog : public wxDialog
 {

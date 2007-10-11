@@ -39,9 +39,9 @@ DeviceHandler API
 * 
 */
 // --- VE-Suite Stuff --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
 
 // --- VR Juggler Stuff --- //
 #include <vpr/Util/Singleton.h>

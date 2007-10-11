@@ -40,8 +40,8 @@ cfd1DTextInput API
 */
 #include <string>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Geode.h"
+#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <VE_Xplorer/SceneGraph/Geode.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>

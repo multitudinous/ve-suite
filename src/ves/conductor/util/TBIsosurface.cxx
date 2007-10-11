@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/TBIsosurface.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/conductor/util/TBIsosurface.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>

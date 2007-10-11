@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "gridConversion.h"
+#include <gridConversion.h>
 
 #include <iostream>
 
-#include "vtkRectilinearGrid.h"
-#include "vtkStructuredGrid.h"
-#include "vtkUnstructuredGrid.h"
-#include "vtkIdList.h"
-#include "vtkGenericCell.h"
-#include "vtkPointData.h"
+#include <vtkRectilinearGrid.h>
+#include <vtkStructuredGrid.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkIdList.h>
+#include <vtkGenericCell.h>
+#include <vtkPointData.h>
 
 vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
 {

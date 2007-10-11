@@ -34,7 +34,7 @@
 #define _CFD_DICOM_TRANSLATOR_H_
 
 
-#include "VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h"
+#include <VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
 namespace VE_Builder{
 class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator: 

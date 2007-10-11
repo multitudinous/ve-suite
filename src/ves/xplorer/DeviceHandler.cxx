@@ -31,26 +31,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
+#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/KeyboardMouse.h"
-#include "VE_Xplorer/XplorerHandlers/Wand.h"
-#include "VE_Xplorer/XplorerHandlers/Tablet.h"
+#include <VE_Xplorer/XplorerHandlers/KeyboardMouse.h>
+#include <VE_Xplorer/XplorerHandlers/Wand.h>
+#include <VE_Xplorer/XplorerHandlers/Tablet.h>
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/DeviceEH.h"
-#include "VE_Xplorer/XplorerHandlers/DeviceModeEH.h"
-#include "VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h"
-#include "VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <VE_Xplorer/XplorerHandlers/DeviceEH.h>
+#include <VE_Xplorer/XplorerHandlers/DeviceModeEH.h>
+#include <VE_Xplorer/XplorerHandlers/UnselectObjectsEventHandler.h>
+#include <VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h>
+#include <VE_Xplorer/XplorerHandlers/KeyboardMouseEH.h>
+#include <VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <VE_Xplorer/SceneGraph/SceneManager.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 #include <osg/BoundingSphere>
 

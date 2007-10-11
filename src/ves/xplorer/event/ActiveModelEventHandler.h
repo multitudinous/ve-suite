@@ -41,7 +41,7 @@
  * Class for handling the active model change.
  */
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 namespace VE_XML
 {
    class XMLObject;

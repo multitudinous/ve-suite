@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "starReader.h"
+#include <starReader.h>
 
 #include <iostream>
 #include <fstream>
@@ -43,9 +43,9 @@
 #include <vtkCellType.h>
 #include <vtkIdList.h>
 
-#include "VE_Builder/Translator/DataLoader/converter.h"     // for "letUsersAddParamsToField"
-#include "VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <VE_Builder/Translator/DataLoader/converter.h"     // for "letUsersAddParamsToField>
+#include <VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue>
+#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
 
 using namespace VE_Util;
 using std::istringstream;

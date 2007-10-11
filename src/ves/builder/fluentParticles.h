@@ -42,7 +42,7 @@
 #include <cerrno>
 #include <cmath>
 #include <map>
-#include "fluentParticle.h"
+#include <fluentParticle.h>
 
 #include <vtkPolyDataWriter.h>
 #include <vtkPolyData.h>      

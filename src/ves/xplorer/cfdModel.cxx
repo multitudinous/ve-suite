@@ -30,36 +30,36 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdSound.h"
-#include "VE_Xplorer/XplorerHandlers/ModelCADHandler.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <VE_Xplorer/XplorerHandlers/cfdSound.h>
+#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
 
-#include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
-#include "VE_Xplorer/SceneGraph/Clone.h"
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
-#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
+#include <VE_Xplorer/SceneGraph/Utilities/Attribute.h>
+#include <VE_Xplorer/SceneGraph/Clone.h>
+#include <VE_Xplorer/SceneGraph/CADEntity.h>
+#include <VE_Xplorer/SceneGraph/CADEntityHelper.h>
 
-#include "VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h"
+#include <VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h>
 
-#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
+#include <VE_Xplorer/Utilities/cfdGrid2Surface.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/XMLCreator.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/XMLObjectFactory.h>
+#include <VE_Open/XML/XMLCreator.h>
 
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
+#include <VE_Open/XML/CAD/CADNode.h>
+#include <VE_Open/XML/CAD/CADAttribute.h>
+#include <VE_Open/XML/CAD/CADCreator.h>
 
-#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include <VE_Open/XML/Shader/ShaderCreator.h>
 
 #ifdef _OSG
 #include <osg/StateSet>
-#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
+#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
 using namespace VE_TextureBased;
 #endif
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
@@ -83,7 +83,7 @@ using namespace VE_TextureBased;
 
 #include <boost/bind.hpp>
 
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
+#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;

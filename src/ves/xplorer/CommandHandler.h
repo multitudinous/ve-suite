@@ -37,11 +37,11 @@
 /*!\class VE_Xplorer::CommandHandler
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
-#include "VE_Open/XML/Command.h"
+#include <VE_Open/XML/Command.h>
 
-#include "VE_Xplorer/XplorerHandlers/Xplorer_i.h"
+#include <VE_Xplorer/XplorerHandlers/Xplorer_i.h>
 
 #include <vpr/Util/Singleton.h>
 

@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/vistab.h"
-#include "ves/conductor/contours.h"
-#include "ves/conductor/advancedcontours.h"
-#include "ves/conductor/advancedvectors.h"
+#include <ves/conductor/vistab.h>
+#include <ves/conductor/contours.h>
+#include <ves/conductor/advancedcontours.h>
+#include <ves/conductor/advancedvectors.h>
 
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
@@ -49,8 +49,8 @@
 
 #include <iostream>
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Command.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 BEGIN_EVENT_TABLE( Contours, wxDialog )
 ////@begin Contours event table entries

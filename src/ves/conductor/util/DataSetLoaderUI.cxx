@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 
 ////@begin includes
@@ -51,12 +51,12 @@
 ////@end includes
 
 //#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include "ves/conductor/util/DataSetLoaderUI.h"
-#include "ves/conductor/util/TransformUI.h"
+#include <ves/conductor/util/DataSetLoaderUI.h>
+#include <ves/conductor/util/TransformUI.h>
 
-#include "ves/open/xml/ParameterBlock.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/model/Model.h"
+#include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <iostream>
 

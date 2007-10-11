@@ -39,7 +39,7 @@
 * 
 */
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <wx/dialog.h>
 
 #include <vector>

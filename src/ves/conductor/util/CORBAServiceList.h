@@ -39,12 +39,12 @@ CORBAServiceList API
 * 
 */
 #include <orbsvcs/CosNamingC.h>
-#include "ves/open/skel/moduleC.h"
-#include "ves/open/skel/VjObsC.h"
-#include "ves/conductor/util/UI_i.h"
+#include <ves/open/skel/moduleC.h>
+#include <ves/open/skel/VjObsC.h>
+#include <ves/conductor/util/UI_i.h>
 
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/CommandPtr.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT
@@ -58,7 +58,7 @@ class Body_UI_i;
 class wxTextCtrl;
 class wxUpdateUIEvent;
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_Conductor
 {
 class VE_CONDUCTOR_UTILS_EXPORTS CORBAServiceList //: public wxObject

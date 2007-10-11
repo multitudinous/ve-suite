@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/vistab.h"
-#include "ves/conductor/polydata.h"
+#include <ves/conductor/vistab.h>
+#include <ves/conductor/polydata.h>
 
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <wx/sizer.h>
 #include <wx/checkbox.h>

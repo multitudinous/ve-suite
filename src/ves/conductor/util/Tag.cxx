@@ -39,10 +39,10 @@
 #include <wx/pen.h>
 #include <wx/dcclient.h>
 
-#include "ves/conductor/util/Tag.h"
+#include <ves/conductor/util/Tag.h>
 
-#include "ves/open/xml/model/Tag.h"
-#include "ves/open/xml/model/Point.h"
+#include <ves/open/xml/model/Tag.h>
+#include <ves/open/xml/model/Point.h>
 
 
 

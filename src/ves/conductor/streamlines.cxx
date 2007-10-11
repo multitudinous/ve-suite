@@ -30,17 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/util/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "ves/conductor/advancedstreamlines.h"
+#include <ves/conductor/advancedstreamlines.h>
 
-#include "ves/conductor/streamlines.h"
-#include "ves/conductor/vistab.h"
-#include "ves/conductor/util/WPDialog.h"
+#include <ves/conductor/streamlines.h>
+#include <ves/conductor/vistab.h>
+#include <ves/conductor/util/WPDialog.h>
 
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Command.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>

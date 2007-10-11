@@ -43,7 +43,7 @@
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
 
-#include "ves/open/xml/model/ModelPtr.h"
+#include <ves/open/xml/model/ModelPtr.h>
 
 class wxCheckListBox;
 class wxButton;

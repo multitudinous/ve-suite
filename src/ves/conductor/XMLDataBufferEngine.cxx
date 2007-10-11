@@ -30,23 +30,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/XMLDataBufferEngine.h"
-#include "ves/conductor/UserPreferencesDataBuffer.h"
+#include <ves/conductor/XMLDataBufferEngine.h>
+#include <ves/conductor/UserPreferencesDataBuffer.h>
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/StateInfo.h"
-#include "ves/open/xml/StateInfoPtr.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/StateInfo.h>
+#include <ves/open/xml/StateInfoPtr.h>
 
-#include "ves/open/xml/Model/Link.h"
-#include "ves/open/xml/Model/System.h"
-#include "ves/open/xml/Model/Model.h"
-#include "ves/open/xml/Model/Network.h"
-#include "ves/open/xml/Model/Tag.h"
-#include "ves/open/xml/Model/TagPtr.h"
-#include "ves/open/xml/User.h"
-#include "ves/open/xml/UserPtr.h"
-#include "ves/open/xml/Command.h"
+#include <ves/open/xml/Model/Link.h>
+#include <ves/open/xml/Model/System.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/Model/Network.h>
+#include <ves/open/xml/Model/Tag.h>
+#include <ves/open/xml/Model/TagPtr.h>
+#include <ves/open/xml/User.h>
+#include <ves/open/xml/UserPtr.h>
+#include <ves/open/xml/Command.h>
 
 #include <sstream>
 #include <algorithm>

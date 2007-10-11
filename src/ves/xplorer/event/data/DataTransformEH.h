@@ -33,8 +33,8 @@
 #ifndef VE_DATA_TRANSFORM_EVENT_HANDLER_H
 #define VE_DATA_TRANSFORM_EVENT_HANDLER_H
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_XML
 {

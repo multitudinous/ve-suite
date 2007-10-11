@@ -30,15 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-#include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h>
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <VE_Xplorer/XplorerHandlers/cfdTeacher.h>
+#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
+#include <VE_Xplorer/SceneGraph/SceneManager.h>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 #include <string>
 

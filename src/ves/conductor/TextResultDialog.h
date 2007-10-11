@@ -41,9 +41,9 @@ TextResultDialog API
 * 
 */
 
-#include "ves/conductor/UIDialog.h"
+#include <ves/conductor/UIDialog.h>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <vector>
 
 class wxButton;

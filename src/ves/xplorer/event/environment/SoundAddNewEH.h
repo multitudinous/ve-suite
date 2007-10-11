@@ -39,7 +39,7 @@
  * Add a new sound.
  */
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 namespace VE_Xplorer
 {
 	class cfdModel;
@@ -48,7 +48,7 @@ namespace VE_XML
 {
    class XMLObject;
 }
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_EVENTS{
 	class VE_XPLORER_EXPORTS SoundAddNewEventHandler: public VE_EVENTS::EventHandler{

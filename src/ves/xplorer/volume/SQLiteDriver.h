@@ -33,8 +33,8 @@
 #ifndef JPG_SQLITE_DRIVER_H_
 #define JPG_SQLITE_DRIVER_H_
 
-#include "VE_Xplorer/TextureBased/DatabaseDriver.h"
-#include "VE_Xplorer/TextureBased/Data.h"
+#include <VE_Xplorer/TextureBased/DatabaseDriver.h>
+#include <VE_Xplorer/TextureBased/Data.h>
 
 #include <sqlite3.h>
 

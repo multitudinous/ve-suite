@@ -47,7 +47,7 @@ cfdMomentum API
 #define MAX_MOMENTUM 20
 #endif
 
-#include "VE_Xplorer/XplorerHandlers/cfdContourBase.h"
+#include <VE_Xplorer/XplorerHandlers/cfdContourBase.h>
 
 class vtkPlane;
 class vtkCutter;

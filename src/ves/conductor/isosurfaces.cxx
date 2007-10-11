@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/vistab.h"
-#include "ves/conductor/isosurfaces.h"
-#include "ves/conductor/advancedisosurface.h"
+#include <ves/conductor/vistab.h>
+#include <ves/conductor/isosurfaces.h>
+#include <ves/conductor/advancedisosurface.h>
 
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/conductor/util/spinctld.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/conductor/util/spinctld.h>
 
 #include <wx/sizer.h>
 #include <wx/checkbox.h>

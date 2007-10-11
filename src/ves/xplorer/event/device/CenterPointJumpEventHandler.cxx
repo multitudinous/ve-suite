@@ -30,15 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h"
+#include <VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
-#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
+#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
 
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/XMLObject.h>
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 
 #include <boost/filesystem/operations.hpp> //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>

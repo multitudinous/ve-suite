@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/conductor/DefaultPlugin/DefaultPlugin.h"
-#include "ves/conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
-#include "ves/open/xml/model/Point.h"
+#include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
+#include <ves/conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h>
+#include <ves/open/xml/model/Point.h>
 #include <iostream>
 
 #include <wx/dc.h>

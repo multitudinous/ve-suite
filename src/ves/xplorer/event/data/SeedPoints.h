@@ -35,7 +35,7 @@
 #ifdef _OSG
 #include <osg/Geode>
 #include <osg/Geometry>
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace osg
 {

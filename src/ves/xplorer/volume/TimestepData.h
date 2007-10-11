@@ -33,14 +33,14 @@
 #ifndef JPG_TIMESTEP_DATA_H_
 #define JPG_TIMESTEP_DATA_H_
 
-#include "VE_Xplorer/TextureBased/ScalarData.h"
-#include "VE_Xplorer/TextureBased/VectorData.h"
+#include <VE_Xplorer/TextureBased/ScalarData.h>
+#include <VE_Xplorer/TextureBased/VectorData.h>
 
 #include <gmtl/Vec.h>
 
 #include <limits>
 
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/include/VEConfig.h>
 
 namespace VE_TextureBased
 {

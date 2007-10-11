@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h"
-#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
+#include <VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h>
+#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <VE_Open/XML/Command.h>
+#include <VE_Open/XML/DataValuePair.h>
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////

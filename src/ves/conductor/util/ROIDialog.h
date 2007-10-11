@@ -41,9 +41,9 @@
  */
 
 #include <string>
-#include "ves/VEConfig.h"
-#include "ves/conductor/util/BaseDialog.h"
-#include "ves/conductor/util/DualSlider.h"
+#include <ves/VEConfig.h>
+#include <ves/conductor/util/BaseDialog.h>
+#include <ves/conductor/util/DualSlider.h>
 namespace VE_Conductor
 {
 namespace GUI_Utilities

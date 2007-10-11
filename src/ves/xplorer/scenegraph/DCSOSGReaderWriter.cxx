@@ -33,9 +33,9 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <osg/io_utils>
 
-#include "osgDB/Registry"
-#include "osgDB/Input"
-#include "osgDB/Output"
+#include <osgDB/Registry>
+#include <osgDB/Input>
+#include <osgDB/Output>
 
 using namespace osg;
 using namespace osgDB;

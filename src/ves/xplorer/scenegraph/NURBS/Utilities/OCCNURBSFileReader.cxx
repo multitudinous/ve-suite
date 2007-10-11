@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-#include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
-#include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
+#include <VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h>
+#include <VE_Xplorer/SceneGraph/NURBS/NSurface.h>
+#include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>
+#include <VE_Xplorer/SceneGraph/NURBS/ControlPoint.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
