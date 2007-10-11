@@ -394,11 +394,10 @@ if not SConsAddons.Util.hasHelpFlag():
    Export('PREFIX', 'LIBDIR', 'distDir')
 
    # Create the VE-Suite package
-   ves_pkg = sca_auto_dist.Package(name="VE-Suite-%s"%(buildUUID), version = "%i.%i.%i"%VE_SUITE_VERSION,
-                                 prefix=PREFIX, baseEnv=baseEnv)
-   configHeader = ves_pkg.createFileBundle('include' )
-   configHeader.addFiles( pj( 'VE_Installer','include','VEConfig.h' ) )
-
+   ves_pkg = sca_auto_dist.Package( name="VE-Suite-%s"%(buildUUID), 
+                                    version = "%i.%i.%i"%VE_SUITE_VERSION,
+                                    prefix=PREFIX, baseEnv=baseEnv)
+ 
    Export('ves_pkg')
       
    ## setup build log to aid in debugging remote builds

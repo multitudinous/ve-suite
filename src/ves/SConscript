@@ -1,4 +1,9 @@
-##Builds CE Libraries
+##Builds VE-Suite Libraries
+import os
+pj = os.path.join
+
+Import( "ves_pkg" )
+
 openSubdirs = Split("""
     builder
     ce
@@ -12,3 +17,6 @@ openSubdirs = Split("""
 for d in openSubdirs:
    #print " dir ", d
    SConscript( dirs = d )
+
+configHeader = ves_pkg.createFileBundle( pj( 'include', 'ves' ) )
+configHeader.addFiles( pj( 'VEConfig.h' ) )
