@@ -139,7 +139,7 @@ void Body_UI_i::Raise (
   ))
   {
     // Add your implementation here
-	
+   
     if (std::string(notification)!="")
     {
        logWindow->SetMessage( notification );
@@ -155,15 +155,15 @@ void Body_UI_i::SetXplorerData (
   ))
 {
     //std::cout << xplorerData << std::endl;
-	//Receive the data from Xplorer
-	std::string tempString( const_cast<char*>(xplorerData) );
+   //Receive the data from Xplorer
+   std::string tempString( const_cast<char*>(xplorerData) );
     VE_XML::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
-	networkReader.ReadXMLData( tempString, "Command", "vecommand" );
+   networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
     std::vector<VE_XML::XMLObject*> xmlObjects;
-	xmlObjects = networkReader.GetLoadedXMLObjects();
+   xmlObjects = networkReader.GetLoadedXMLObjects();
     
     //std::cout << xmlObjects.size() << std::endl;
     std::vector< VE_XML::XMLObject* >::iterator iter;
@@ -182,12 +182,12 @@ void Body_UI_i::SetXplorerData (
         //iter = xmlObjects.erase( iter );
         xmlObjects.clear();
     }
-	//logWindow->SetMessage( xplorerData );
+   //logWindow->SetMessage( xplorerData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetLogWindow( PEThread* logWindow )
 { 
-	  this->logWindow = logWindow;
+     this->logWindow = logWindow;
 }
 ///////////////////////////////////////////////////////////////////////////////
 VE_XML::Command Body_UI_i::GetXplorerData( std::string commandName )
@@ -200,5 +200,5 @@ VE_XML::Command Body_UI_i::GetXplorerData( std::string commandName )
     }
     VE_XML::Command temp = iter->second;
     m_commandNameMap.erase( iter );
-	return temp;
+   return temp;
 }
