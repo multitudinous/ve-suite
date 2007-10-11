@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <starReader.h>
+#include <ves/builder/DataLoader/starReader.h>
 
 #include <iostream>
 #include <fstream>
@@ -43,8 +43,8 @@
 #include <vtkCellType.h>
 #include <vtkIdList.h>
 
-#include <ves/builder/DataLoader/converter.h"     // for "letUsersAddParamsToField>
-#include <ves/xplorer/util/fileIO.h"        // for "getTagAndValue>
+#include <ves/builder/DataLoader/converter.h>     // for "letUsersAddParamsToField>
+#include <ves/xplorer/util/fileIO.h>       // for "getTagAndValue>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
 using namespace VE_Util;

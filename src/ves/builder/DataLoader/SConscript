@@ -41,8 +41,8 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', 'DataLoader', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBPATH = [pj('#', buildDir,'src','xplorer','util'),
-                          pj('#', buildDir, 'src','builder','cfdTranslatorToVTK') ],
+lib_env.Append(LIBPATH = [pj('#', buildDir,'src','ves','xplorer','util'),
+                          pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK') ],
                LIBS = ['ves_xplorer_util', 'ves_builder_translator_base'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 
@@ -67,9 +67,9 @@ srcs = Split("""
 #srcs = map(lambda s: pj('#', buildDir, 'src', 'ves', 'builder', 'DataLoader', s), srcs)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBPATH = [pj('#', buildDir, 'src','builder','util'),
-                      pj('#', buildDir, 'src','builder','cfdTranslatorToVTK'),
-                      pj('#', buildDir, 'src','builder','DataLoader') ],
+env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util'),
+                      pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),
+                      pj('#', buildDir, 'src','ves','builder','DataLoader') ],
            LIBS = ['ves_xplorer_util', 'ves_builder_dataloader', 'ves_builder_translator_base'])
 
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --cflags --libs'%env['BoostVersion'])

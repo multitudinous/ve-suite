@@ -14,7 +14,7 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_CE', 'Utilities', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'xplorer','util')],
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves','xplorer','util')],
                LIBS = ['ves_xplorer_util'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 vtk_options.apply( lib_env )

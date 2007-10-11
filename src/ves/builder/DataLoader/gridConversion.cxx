@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <gridConversion.h>
+#include <ves/builder/DataLoader/gridConversion.h>
 
 #include <iostream>
 

@@ -43,7 +43,7 @@
 #include <vtkPointData.h>
 
 #include <ves/xplorer/util/fileIO.h>
-#include <ves/builder/DataLoader/converter.h"      // for "letUsersAddParamsToField>
+#include <ves/builder/DataLoader/converter.h>      // for "letUsersAddParamsToField>
 #include <ves/builder/DataLoader/gridConversion.h>
 
 #include <iostream>
