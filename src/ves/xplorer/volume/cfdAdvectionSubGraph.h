@@ -54,7 +54,7 @@ namespace osg
 
 #include <osg/Group>
 #include <osg/Drawable>
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 namespace VE_TextureBased
 {

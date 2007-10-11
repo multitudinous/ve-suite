@@ -1,5 +1,5 @@
-#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
-#include "VE_Xplorer/TextureBased/TransferFunction.h"
+#include "ves/xplorer/volume/PreIntegrationTexture.h"
+#include "ves/xplorer/volume/TransferFunction.h"
 #include <iostream>
 #include <fstream>
 using namespace VE_TextureBased;

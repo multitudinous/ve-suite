@@ -41,7 +41,7 @@
  * Class defining slices for texture-based volume rendering .
  */
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>

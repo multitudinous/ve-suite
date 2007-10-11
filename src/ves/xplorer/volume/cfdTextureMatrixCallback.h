@@ -49,7 +49,7 @@ namespace osg
 }
 #include <osg/NodeCallback>
 #include <osg/Vec3f>
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 namespace VE_TextureBased
 {

@@ -34,7 +34,7 @@
 #include <osg/Texture1D>
 #include <osg/Image>
 #include <osg/State>
-#include "VE_Xplorer/TextureBased/cfdUpdateableOSGTexture1d.h"
+#include "ves/xplorer/volume/cfdUpdateableOSGTexture1d.h"
 #include <iostream>
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////

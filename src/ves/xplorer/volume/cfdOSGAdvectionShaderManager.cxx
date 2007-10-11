@@ -41,10 +41,10 @@
 //#include <sstream>
 
 #include <osg/Array>
-#include "VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h"
-#include "VE_Xplorer/TextureBased/cfdUpdateableOSGTexture1d.h"
-#include "VE_Xplorer/TextureBased/cfdSimpleTextureCallback.h"
-#include "VE_Xplorer/TextureBased/cfdUpdateParameterCallback.h"
+#include "ves/xplorer/volume/cfdOSGAdvectionShaderManager.h"
+#include "ves/xplorer/volume/cfdUpdateableOSGTexture1d.h"
+#include "ves/xplorer/volume/cfdSimpleTextureCallback.h"
+#include "ves/xplorer/volume/cfdUpdateParameterCallback.h"
 
 
 using namespace VE_TextureBased;

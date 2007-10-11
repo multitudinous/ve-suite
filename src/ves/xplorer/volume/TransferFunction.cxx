@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/TextureBased/TransferFunction.h"
+#include "ves/xplorer/volume/TransferFunction.h"
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////
 //Constructor                                           //

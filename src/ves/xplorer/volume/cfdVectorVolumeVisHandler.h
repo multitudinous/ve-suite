@@ -45,7 +45,7 @@ namespace osg
    class Group;
    class Texture3D;
 }
-#include "VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h"
+#include "ves/xplorer/volume/cfdVolumeVisNodeHandler.h"
 namespace VE_TextureBased
 {
    class cfdOSGAdvectionShaderManager;

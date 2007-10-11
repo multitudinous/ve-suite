@@ -52,7 +52,7 @@ struct ScalarRange
 {
    float range[2];
 };
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 namespace VE_TextureBased
 {

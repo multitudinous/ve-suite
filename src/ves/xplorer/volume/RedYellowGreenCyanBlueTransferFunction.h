@@ -42,8 +42,8 @@
  */
 #include <map>
 #include <vector>
-#include "VE_Xplorer/TextureBased/TransferFunction.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/xplorer/volume/TransferFunction.h"
+#include "ves/VEConfig.h"
 
 namespace VE_TextureBased
 {

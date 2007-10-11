@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/TextureBased/cfdSimpleTextureCallback.h"
+#include "ves/xplorer/volume/cfdSimpleTextureCallback.h"
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG

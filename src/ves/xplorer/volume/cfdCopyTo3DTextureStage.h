@@ -48,8 +48,8 @@
 #include <osg/FrameStamp>
 
 #include <osg/Version>
-#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/xplorer/volume/cfdPBufferManager.h"
+#include "ves/VEConfig.h"
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage:

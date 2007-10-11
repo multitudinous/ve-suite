@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/TextureBased/NoiseTexture2D.h"
+#include "ves/xplorer/volume/NoiseTexture2D.h"
 #include <iostream>
 #include <fstream>
 using namespace VE_TextureBased;

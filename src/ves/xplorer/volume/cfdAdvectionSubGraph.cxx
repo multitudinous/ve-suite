@@ -32,13 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
 #include <cmath>
-#include "VE_Xplorer/TextureBased/cfdAdvectionSubGraph.h"
-#include "VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h"
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
-#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
-#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
-#include "VE_Xplorer/TextureBased/cfdPBufferQuad.h"
+#include "ves/xplorer/volume/cfdAdvectionSubGraph.h"
+#include "ves/xplorer/volume/cfdOSGAdvectionShaderManager.h"
+#include "ves/xplorer/volume/cfdTextureManager.h"
+#include "ves/xplorer/volume/cfdPBufferManager.h"
+#include "ves/xplorer/volume/cfdVolumeVisualization.h"
+#include "ves/xplorer/volume/cfdTextureMatrixCallback.h"
+#include "ves/xplorer/volume/cfdPBufferQuad.h"
 
 #include <osg/Group>
 #include <osg/Geode>

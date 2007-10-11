@@ -58,7 +58,7 @@
 #endif
 #include <iostream>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 namespace VE_TextureBased
 {

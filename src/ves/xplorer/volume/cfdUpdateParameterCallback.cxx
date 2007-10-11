@@ -33,7 +33,7 @@
 #ifdef _OSG
 
 #include <iostream>
-#include "VE_Xplorer/TextureBased/cfdUpdateParameterCallback.h"
+#include "ves/xplorer/volume/cfdUpdateParameterCallback.h"
 #include <osg/NodeVisitor>
 using namespace VE_TextureBased;
 ////////////////////////////////////////////////////////

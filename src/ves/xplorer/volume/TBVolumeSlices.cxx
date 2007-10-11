@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
-#include "VE_Xplorer/TextureBased/bboxEdgeConstants.h"
+#include "ves/xplorer/volume/TBVolumeSlices.h"
+#include "ves/xplorer/volume/bboxEdgeConstants.h"
 #include <osg/Matrixf>  
 #include <osg/GL2Extensions>
 #include <osg/AlphaFunc>

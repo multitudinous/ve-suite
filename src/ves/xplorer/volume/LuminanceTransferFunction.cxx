@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 
-#include "VE_Xplorer/TextureBased/LuminanceTransferFunction.h"
-#include "VE_Xplorer/TextureBased/TransferFunction.h"
+#include "ves/xplorer/volume/LuminanceTransferFunction.h"
+#include "ves/xplorer/volume/TransferFunction.h"
 #include <iostream>
 #include <cmath>
 using namespace VE_TextureBased;

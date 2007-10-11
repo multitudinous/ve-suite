@@ -34,7 +34,7 @@
 #ifdef _PBUFFER
 
 #include <cmath>
-#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
+#include "ves/xplorer/volume/cfdPBufferManager.h"
 #ifdef WIN32
 // WGL_ARB_pbuffer
 static PFNWGLCREATEPBUFFERARBPROC  wglCreatePbufferARB;

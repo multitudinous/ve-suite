@@ -42,7 +42,7 @@
 /*!\class VE_TextureBased::TransferFunction
  * Abstract class defining a transfer function.
  */
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 namespace VE_TextureBased
 {
 class VE_TEXTURE_BASED_EXPORTS TransferFunction

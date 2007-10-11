@@ -75,10 +75,10 @@ namespace VE_TextureBased
 }
 
 
-#include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
-#include "VE_Xplorer/TextureBased/cfdUpdateableOSGTexture1d.h"
+#include "ves/xplorer/volume/cfdUpdateTextureCallback.h"
+#include "ves/xplorer/volume/cfdUpdateableOSGTexture1d.h"
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include <string>
 namespace VE_TextureBased
 {

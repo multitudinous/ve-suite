@@ -40,13 +40,13 @@
 #include <osg/TexMat>
 #include <osg/TexGen>
 #include <osg/AlphaFunc>
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
-#include "VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h"
-#include "VE_Xplorer/TextureBased/cfdSimpleTextureCallback.h"
-#include "VE_Xplorer/TextureBased/NoiseTexture2D.h"
-#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
-#include "VE_Xplorer/TextureBased/TransferFunction.h"
+#include "ves/xplorer/volume/cfdTextureManager.h"
+#include "ves/xplorer/volume/cfdUpdateTextureCallback.h"
+#include "ves/xplorer/volume/cfdOSGTransferShaderManager.h"
+#include "ves/xplorer/volume/cfdSimpleTextureCallback.h"
+#include "ves/xplorer/volume/NoiseTexture2D.h"
+#include "ves/xplorer/volume/PreIntegrationTexture.h"
+#include "ves/xplorer/volume/TransferFunction.h"
 using namespace VE_TextureBased;
 //the shader inline source
 static const char* volumeTransferFragSource = {

@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
-#include "VE_Xplorer/TextureBased/cfdTextureDataSet.h"
-#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/TextureBased/TBVolumeSlices.h"
+#include "ves/xplorer/volume/cfdTextureDataSet.h"
+#include "ves/xplorer/volume/cfdVolumeVisualization.h"
+#include "ves/xplorer/volume/cfdTextureManager.h"
+#include "ves/xplorer/volume/TBVolumeSlices.h"
 
 #include "VE_Xplorer/Utilities/fileIO.h"
 

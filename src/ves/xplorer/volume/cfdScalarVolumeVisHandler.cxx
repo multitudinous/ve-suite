@@ -32,12 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
 
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/TextureBased/cfdScalarVolumeVisHandler.h"
-#include "VE_Xplorer/TextureBased/cfdTextureMatrixCallback.h"
+#include "ves/xplorer/volume/cfdTextureManager.h"
+#include "ves/xplorer/volume/cfdScalarVolumeVisHandler.h"
+#include "ves/xplorer/volume/cfdTextureMatrixCallback.h"
 
-#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
-#include "VE_Xplorer/TextureBased/GreyScaleShaderManager.h"
+#include "ves/xplorer/volume/cfdScalarShaderManager.h"
+#include "ves/xplorer/volume/GreyScaleShaderManager.h"
 
 
 #include <osg/TexGen>

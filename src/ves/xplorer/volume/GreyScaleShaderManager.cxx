@@ -38,12 +38,12 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
-#include "VE_Xplorer/TextureBased/cfdUpdateTextureCallback.h"
-#include "VE_Xplorer/TextureBased/cfdScalarShaderManager.h"
-#include "VE_Xplorer/TextureBased/GreyScaleShaderManager.h"
-#include "VE_Xplorer/TextureBased/LuminanceTransferFunction.h"
-#include "VE_Xplorer/TextureBased/PreIntegrationTexture.h"
+#include "ves/xplorer/volume/cfdTextureManager.h"
+#include "ves/xplorer/volume/cfdUpdateTextureCallback.h"
+#include "ves/xplorer/volume/cfdScalarShaderManager.h"
+#include "ves/xplorer/volume/GreyScaleShaderManager.h"
+#include "ves/xplorer/volume/LuminanceTransferFunction.h"
+#include "ves/xplorer/volume/PreIntegrationTexture.h"
 using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////
