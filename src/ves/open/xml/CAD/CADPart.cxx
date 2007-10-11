@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/CAD/CADPart.h"
+#include "ves/open/xml/CAD/CADPart.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML::VE_CAD;
 ////////////////////////////////////////////////////////////

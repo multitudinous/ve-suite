@@ -43,7 +43,7 @@ namespace VE_XML
 {
    class XMLObject;
 }
-#include "VE_Open/XML/CreationEventHandler.h"
+#include "ves/open/xml/CreationEventHandler.h"
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_XML{

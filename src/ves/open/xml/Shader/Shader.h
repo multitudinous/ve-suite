@@ -33,7 +33,7 @@
 #ifndef VE_SHADER_H
 #define VE_SHADER_H
 
-#include "VE_Open/XML/XMLObject.h"
+#include "ves/open/xml/XMLObject.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>

@@ -30,14 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/Point.h"
-#include "VE_Open/XML/Model/Port.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/Model/System.h"
+#include "ves/open/xml/Model/Model.h"
+#include "ves/open/xml/Model/Point.h"
+#include "ves/open/xml/Model/Port.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/ParameterBlock.h"
+#include "ves/open/xml/CAD/CADNode.h"
+#include "ves/open/xml/CAD/CADAssembly.h"
+#include "ves/open/xml/Model/System.h"
 
 #include <sstream>
 

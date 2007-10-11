@@ -33,12 +33,12 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/Shader/Program.h"
+#include "ves/open/xml/CAD/CADAttribute.h"
+#include "ves/open/xml/CAD/CADMaterial.h"
+#include "ves/open/xml/Shader/ShaderCreator.h"
+#include "ves/open/xml/CAD/CADCreator.h"
+#include "ves/open/xml/XMLObjectFactory.h"
+#include "ves/open/xml/Shader/Program.h"
 
 using namespace VE_XML::VE_Shader;
 using namespace VE_XML::VE_CAD;

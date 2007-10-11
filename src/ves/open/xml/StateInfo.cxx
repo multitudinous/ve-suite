@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Open/XML/StateInfo.h"
-#include "VE_Open/XML/Command.h"
+#include "ves/open/xml/StateInfo.h"
+#include "ves/open/xml/Command.h"
 #include <algorithm>
 
 XERCES_CPP_NAMESPACE_USE

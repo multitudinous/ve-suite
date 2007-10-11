@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/Shader/TextureImage.h"
-#include "VE_Open/XML/Shader/Shader.h"
-#include "VE_Open/XML/Shader/Uniform.h"
-#include "VE_Open/XML/Shader/Program.h"
+#include "ves/open/xml/Shader/ShaderCreator.h"
+#include "ves/open/xml/Shader/TextureImage.h"
+#include "ves/open/xml/Shader/Shader.h"
+#include "ves/open/xml/Shader/Uniform.h"
+#include "ves/open/xml/Shader/Program.h"
 
 using namespace VE_XML::VE_Shader;
 ////////////////////////////////////////////////////////////////////////////

@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/CAD/CADNodeAnimation.h"
+#include "ves/open/xml/CAD/CADNodeAnimation.h"
 
 #include <xercesc/dom/DOM.hpp>
 using namespace VE_XML::VE_CAD;

@@ -45,7 +45,7 @@
 #include <string>
 #include <vector>
 #include <utility>
-#include "VE_Open/XML/XMLObject.h"
+#include "ves/open/xml/XMLObject.h"
 
 #include <xercesc/dom/DOM.hpp>
 

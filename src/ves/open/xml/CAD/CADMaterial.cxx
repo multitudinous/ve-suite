@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
+#include "ves/open/xml/CAD/CADMaterial.h"
+#include "ves/open/xml/CAD/CADCreator.h"
+#include "ves/open/xml/FloatArray.h"
+#include "ves/open/xml/XMLObjectFactory.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_CAD;

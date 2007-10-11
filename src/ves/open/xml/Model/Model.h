@@ -45,10 +45,10 @@
  */
 #include <string>
 #include <vector>
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Model/SystemStrongPtr.h"
-#include "VE_Open/XML/Model/SystemWeakPtr.h"
-#include "VE_Open/XML/Model/System.h"
+#include "ves/open/xml/XMLObject.h"
+#include "ves/open/xml/Model/SystemStrongPtr.h"
+#include "ves/open/xml/Model/SystemWeakPtr.h"
+#include "ves/open/xml/Model/System.h"
 
 #include <xercesc/dom/DOM.hpp>
 

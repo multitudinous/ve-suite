@@ -34,7 +34,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "VE_Open/XML/FloatArray.h"
+#include "ves/open/xml/FloatArray.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 ////////////////////////////////////////////////////

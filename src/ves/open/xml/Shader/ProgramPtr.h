@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer type
  * VE_XML::VE_Shader::ProgramPtr.  To get the full 
  * declaration of VE_XML::VE_Shader::Program
- * VE_Open/XML/Shader/Program.h must be included, too.
+ * ves/open/xml/Shader/Program.h must be included, too.
  */
 
 namespace VE_XML

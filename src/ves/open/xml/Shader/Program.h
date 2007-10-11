@@ -33,8 +33,8 @@
 #ifndef VE_PROGRAM_H
 #define VE_PROGRAM_H
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Shader/ShaderPtr.h"
+#include "ves/open/xml/XMLObject.h"
+#include "ves/open/xml/Shader/ShaderPtr.h"
 #include "VE_Installer/include/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>

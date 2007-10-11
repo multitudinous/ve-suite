@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/Shader/Uniform.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
+#include "ves/open/xml/Shader/Uniform.h"
+#include "ves/open/xml/Shader/ShaderCreator.h"
+#include "ves/open/xml/XMLObjectFactory.h"
 
 
 XERCES_CPP_NAMESPACE_USE

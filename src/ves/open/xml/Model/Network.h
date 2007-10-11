@@ -43,10 +43,10 @@
 #include <string>
 #include <vector>
 
-#include "VE_Open/XML/XMLObject.h"
+#include "ves/open/xml/XMLObject.h"
 
-#include "VE_Open/XML/Model/TagPtr.h"
-#include "VE_Open/XML/Model/LinkPtr.h"
+#include "ves/open/xml/Model/TagPtr.h"
+#include "ves/open/xml/Model/LinkPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 namespace VE_XML

@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
+#include "ves/open/xml/CAD/CADAssembly.h"
+#include "ves/open/xml/CAD/CADPart.h"
+#include "ves/open/xml/XMLObjectFactory.h"
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML::VE_CAD;

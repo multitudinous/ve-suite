@@ -43,8 +43,8 @@
 #include <vector>
 #include <string>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/CommandPtr.h"
+#include "ves/open/xml/XMLObject.h"
+#include "ves/open/xml/CommandPtr.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>

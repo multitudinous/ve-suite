@@ -33,7 +33,7 @@
 #ifndef CAD_NODE_ANIMATION_H
 #define CAD_NODE_ANIMATION_H
 
-#include "VE_Open/XML/XMLObject.h"
+#include "ves/open/xml/XMLObject.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 

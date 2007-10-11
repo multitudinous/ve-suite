@@ -41,8 +41,8 @@
  * Create XMLObject.
  */
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/CreationEventHandler.h"
+#include "ves/open/xml/XMLObject.h"
+#include "ves/open/xml/CreationEventHandler.h"
 namespace VE_XML{
 class VE_XML_EXPORTS XMLCreator: public CreationEventHandler{
 public:

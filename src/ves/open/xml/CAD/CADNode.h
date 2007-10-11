@@ -33,8 +33,8 @@
 #ifndef _CAD_NODE_H_
 #define _CAD_NODE_H_
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
+#include "ves/open/xml/XMLObject.h"
+#include "ves/open/xml/CAD/CADAttribute.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>

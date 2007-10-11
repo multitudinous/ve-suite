@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Open/XML/DOMDocumentManager.h"
-#include "VE_Open/XML/XMLObject.h"
+#include "ves/open/xml/DOMDocumentManager.h"
+#include "ves/open/xml/XMLObject.h"
 
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/PlatformUtils.hpp>

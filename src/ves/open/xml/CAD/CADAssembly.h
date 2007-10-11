@@ -33,7 +33,7 @@
 #ifndef _CAD_ASSEMBLY_H_
 #define _CAD_ASSEMBLY_H_
 #include <xercesc/dom/DOM.hpp>
-#include <VE_Open/XML/CAD/CADNode.h>
+#include <ves/open/xml/CAD/CADNode.h>
 #include <string>
 #include <vector>
 /*!\file CADAssembly.h

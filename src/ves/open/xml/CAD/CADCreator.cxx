@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/CAD/CADNodeAnimation.h"
+#include "ves/open/xml/CAD/CADCreator.h"
+#include "ves/open/xml/CAD/CADNode.h"
+#include "ves/open/xml/CAD/CADAssembly.h"
+#include "ves/open/xml/CAD/CADPart.h"
+#include "ves/open/xml/CAD/CADAttribute.h"
+#include "ves/open/xml/CAD/CADMaterial.h"
+#include "ves/open/xml/CAD/CADNodeAnimation.h"
 
 using namespace VE_XML::VE_CAD;
 //////////////////////////////////////////////////////////////////////

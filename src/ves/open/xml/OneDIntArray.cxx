@@ -34,7 +34,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "VE_Open/XML/OneDIntArray.h"
+#include "ves/open/xml/OneDIntArray.h"
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 ////////////////////////////////////////////////////
