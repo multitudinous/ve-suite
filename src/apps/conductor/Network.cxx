@@ -2595,3 +2595,12 @@ void Network::ClearXplorer()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Network::Update()
+{
+    //Models
+    for( std::map< int, Module >::iterator iter = modules.begin(); 
+         iter!=modules.end(); ++iter )
+    {
+        iter->second.GetPlugin()->GetVEModel();
+    }
+}

@@ -136,6 +136,8 @@ public:
    void RemoveAllEvents();
    ///Clear the plugins from the xplorer environment
    void ClearXplorer();
+   ///Update all the ve models
+   void Update();
 
 protected:
    //Draw functions

@@ -80,6 +80,8 @@ public:
     void CleanUpNetworks();
     ///Creates a default network for the user to work on a clean canvas
     void CreateDefaultNetwork();
+    ///Update all the network
+    void Update();
 
 protected:
 

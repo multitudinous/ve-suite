@@ -842,18 +842,21 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )
 {
-   //First time call save will be the same as SaveAs
-   if ( fname == wxString( "", wxConvUTF8) ) 
-   {
-      SaveAs( event );
-   }
-   else
-   {
-      ///now write the file out from domdocument manager
-      //wrtie to path
-       //std::string data = network->Save( );
-       std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
-   }
+    canvas->Update();
+
+    //First time call save will be the same as SaveAs
+    if ( fname == wxString( "", wxConvUTF8) ) 
+    {
+        SaveAs( event );
+    }
+    else
+    {
+        ///now write the file out from domdocument manager
+        //wrtie to path
+        //std::string data = network->Save( );
+        std::string nw_str = XMLDataBufferEngine::instance()->
+            SaveVESData( ConvertUnicode( fname.c_str() ) );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1504,6 +1507,8 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
     EnableCEGUIMenuItems();
    
+    canvas->Update();
+    
     std::string nw_str = XMLDataBufferEngine::instance()->
         SaveVESData( std::string( "returnString" ) );
     // write the domdoc to the string above

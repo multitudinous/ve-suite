@@ -325,3 +325,12 @@ void Canvas::CreateDefaultNetwork()
     tempNetwork->GetDataValuePair( -1 )->
         SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 }
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::Update()
+{
+    for( std::map < std::string, Network* >::iterator iter = networks.begin();
+         iter != networks.end(); ++iter )
+    {
+        iter->second->Update();
+    }
+}
