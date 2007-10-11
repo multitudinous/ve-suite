@@ -5,16 +5,16 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir')
 
-srcDir = os.path.abspath( pj(RootDir, 'VE_Conductor', 'GUIPlugin') )
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XML','VE_OpenModuleLib', 'VE_Conductor_Utilities'])
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Utilities'),
-                          pj('#', buildDir, 'VE_Conductor','Network'),
-                          pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML')])
+lib_env.Append(LIBPATH = [#pj('#', buildDir, 'VE_Conductor','Utilities'),
+                          #pj('#', buildDir, 'VE_Conductor','Network'),
+                          pj('#', buildDir, 'src', 'open','skel'),
+                        pj('#', buildDir, 'src', 'open','xml')])
 lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode vpr --libs --cflags')

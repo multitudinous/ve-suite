@@ -142,9 +142,9 @@ def CreateConfig(target, source, env):
 ################################################################################
 # Figure out what version of VE-Suite we're building
 def GetVESVersion():
-   "Gets the VE-Suite version from the VE_Installer/include/VEConfig.h header"
+   "Gets the VE-Suite version from the src/ves/VEConfig.h header"
 
-   contents = open( pj('VE_Installer','include','VEConfig.h'), 'r').read()
+   contents = open( pj('src','ves','VEConfig.h'), 'r').read()
    major = re.compile('.*(#define *VES_MAJOR_VERSION *(\d+)).*', re.DOTALL).sub(r'\2', contents)
    minor = re.compile('.*(#define *VES_MINOR_VERSION *(\d+)).*', re.DOTALL).sub(r'\2', contents)
    patch = re.compile('.*(#define *VES_PATCH_VERSION *(\d+)).*', re.DOTALL).sub(r'\2', contents)
@@ -363,7 +363,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
-   baseEnv.Append( CPPPATH = [pj('#',buildDir)] )
+   baseEnv.Append( CPPPATH = [pj('#',buildDir,'src')] )
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    #baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
@@ -407,15 +407,15 @@ if not SConsAddons.Util.hasHelpFlag():
       sys.stderr = sys.stdout
 
    ##Tack on path prefixes to subdirs specified above.
-   builderSubdirs=pj(buildDir, 'VE_Builder')
+   builderSubdirs=pj(buildDir, 'src', 'ves', 'builder')
    ##builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
-   openSubdirs = pj(buildDir,'VE_Open')
+   openSubdirs = pj(buildDir,'src', 'ves', 'open')
    ##openSubdirs = map(lambda s: pj(buildDir, s), openSubdirs)
-   conductorSubdirs = pj(buildDir, 'VE_Conductor')
+   conductorSubdirs = pj(buildDir, 'src', 'ves', 'conductor' )
    ##conductorSubdirs = map(lambda s: pj(buildDir, 'VE_Conductor', s), conductorSubdirs)
-   xplorerSubdirs = pj(buildDir, 'VE_Xplorer')
+   xplorerSubdirs = pj(buildDir, 'src', 'ves', 'xplorer')
    ##xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
-   ceSubdirs = pj(buildDir,'VE_CE')
+   ceSubdirs = pj(buildDir,'src', 'ves', 'ce')
    ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
    veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')

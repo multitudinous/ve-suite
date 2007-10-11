@@ -40,5 +40,5 @@ else:
                                                installPrefix = LIBDIR)
 
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Open', 'skel'))
+lib.addHeaders(headers,  pj( 'open', 'skel'))
 lib.build()

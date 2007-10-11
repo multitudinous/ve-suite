@@ -34,21 +34,21 @@
 #include <iostream>
 #include <string>
 
-#include "VE_Open/XML/CommandPtr.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/XMLCreator.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/Shader/ShaderCreator.h>
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairPtr.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
-#include "VE_Open/XML/Shader/Shader.h"
-#include "VE_Open/XML/Shader/ShaderPtr.h"
-#include "VE_Open/XML/Shader/Program.h"
-#include "VE_Open/XML/Shader/TextureImage.h"
-#include "VE_Open/XML/Shader/Uniform.h"
+#include <ves/open/xml/shader/Shader.h>
+#include <ves/open/xml/shader/ShaderPtr.h>
+#include <ves/open/xml/shader/Program.h>
+#include <ves/open/xml/shader/TextureImage.h>
+#include <ves/open/xml/shader/Uniform.h>
 
 XERCES_CPP_NAMESPACE_USE
 

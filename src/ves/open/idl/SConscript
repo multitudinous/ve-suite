@@ -8,37 +8,37 @@ env = baseEnv.Copy()
 ##env.Append(CPPPATH = [os.getcwd()])
 ##env.Append(CPPPATH = ['idl'])
 
-targetModule = [pj('#', buildDir,'VE_Open','skel','moduleS.h'), 
-                pj('#', buildDir,'VE_Open','skel','moduleC.h'),
-                pj('#', buildDir,'VE_Open','skel','moduleC.cpp'), 
-                pj('#', buildDir,'VE_Open','skel','moduleS.cpp'),
-                pj('#', buildDir,'VE_Open','skel','moduleC.inl'),
-                pj('#', buildDir,'VE_Open','skel','moduleI.cpp'),
-                pj('#', buildDir,'VE_Open','skel','moduleI.h'),
-                pj('#', buildDir,'VE_Open','skel','moduleS.inl'),
-                pj('#', buildDir,'VE_Open','skel','moduleS_T.cpp'),
-                pj('#', buildDir,'VE_Open','skel','moduleS_T.h'),
-                pj('#', buildDir,'VE_Open','skel','moduleS_T.inl')]
-targetVjObs = [pj('#', buildDir,'VE_Open','skel','VjObsS.h'), 
-               pj('#', buildDir,'VE_Open','skel','VjObsC.h'),
-               pj('#', buildDir,'VE_Open','skel','VjObsS.cpp'), 
-               pj('#', buildDir,'VE_Open','skel','VjObsC.cpp'),
-               pj('#', buildDir,'VE_Open','skel','VjObsC.inl'),
-               pj('#', buildDir,'VE_Open','skel','VjObsI.cpp'),
-               pj('#', buildDir,'VE_Open','skel','VjObsI.h'),
-               pj('#', buildDir,'VE_Open','skel','VjObsS.inl'),
-               pj('#', buildDir,'VE_Open','skel','VjObsS_T.cpp'),
-               pj('#', buildDir,'VE_Open','skel','VjObsS_T.h'),
-               pj('#', buildDir,'VE_Open','skel','VjObsS_T.inl')]
+targetModule = [pj('#', buildDir,'src','ves','open','skel','moduleS.h'), 
+                pj('#', buildDir,'src','ves','open','skel','moduleC.h'),
+                pj('#', buildDir,'src','ves','open','skel','moduleC.cpp'), 
+                pj('#', buildDir,'src','ves','open','skel','moduleS.cpp'),
+                pj('#', buildDir,'src','ves','open','skel','moduleC.inl'),
+                pj('#', buildDir,'src','ves','open','skel','moduleI.cpp'),
+                pj('#', buildDir,'src','ves','open','skel','moduleI.h'),
+                pj('#', buildDir,'src','ves','open','skel','moduleS.inl'),
+                pj('#', buildDir,'src','ves','open','skel','moduleS_T.cpp'),
+                pj('#', buildDir,'src','ves','open','skel','moduleS_T.h'),
+                pj('#', buildDir,'src','ves','open','skel','moduleS_T.inl')]
+targetVjObs = [pj('#', buildDir,'src','ves','open','skel','VjObsS.h'), 
+               pj('#', buildDir,'src','ves','open','skel','VjObsC.h'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsS.cpp'), 
+               pj('#', buildDir,'src','ves','open','skel','VjObsC.cpp'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsC.inl'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsI.cpp'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsI.h'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsS.inl'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsS_T.cpp'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsS_T.h'),
+               pj('#', buildDir,'src','ves','open','skel','VjObsS_T.inl')]
 
 taoPrefix=os.popen('flagpoll TAO --variable=prefix').read().strip()
 env.PrependENVPath( 'LD_LIBRARY_PATH',pj( taoPrefix,'lib'))
 env.PrependENVPath( 'PATH',pj( taoPrefix,'bin'))
 tao_idl ='tao_idl'
-idlCmd = '%s -o %s/VE_Open/skel -in -GC -GI  -I%s/VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=VE_Installer/include/VEConfig.h ${SOURCES}' %(tao_idl, buildDir, buildDir)
-srcs = [pj('#',buildDir,'VE_Open','idl','module.idl'), 
-        pj('#',buildDir,'VE_Open','idl','VjObs.idl')]
+idlCmd = '%s -o %s/VE_Open/skel -in -GC -GI  -I%s/VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h ${SOURCES}' %(tao_idl, buildDir, buildDir)
+srcs = [pj('#',buildDir,'src','ves','open','idl','module.idl'), 
+        pj('#',buildDir,'src','ves','open','idl','VjObs.idl')]
 bld = Builder(action = idlCmd)
 env.Append(BUILDERS = {'tao_idl': bld})
-env.tao_idl(targetModule, pj('#',buildDir,'VE_Open','idl','module.idl'))
-env.tao_idl(targetVjObs, pj('#',buildDir,'VE_Open','idl','VjObs.idl'))
+env.tao_idl(targetModule, pj('#',buildDir,'src','ves','open','idl','module.idl'))
+env.tao_idl(targetVjObs, pj('#',buildDir,'src','ves','open','idl','VjObs.idl'))

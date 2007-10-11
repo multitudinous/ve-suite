@@ -10,7 +10,7 @@ srcs = Split("""
 
 env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['VE_XML'])
-env.Append(LIBPATH = [ pj('#', buildDir, 'VE_Open','XML')])
+env.Append(LIBPATH = [ pj('#', buildDir,'src','ves', 'open', 'xml')])
 
 xerces_options.apply( env )
 ce_prog = ves_pkg.createProgram('veaMaker', env, 'bin')

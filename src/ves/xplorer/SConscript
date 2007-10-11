@@ -18,9 +18,9 @@ xplorerSubdirs = Split("""
 ##    SceneGraph/Utilities
 
 ##Run SConscript files in all of those folders.
-for d in xplorerSubdirs:
-   #print " dir ", d
-   SConscript( dirs = d )
+#for d in xplorerSubdirs:
+#   #print " dir ", d
+#   SConscript( dirs = d )
 
 #baseEnv[ 'cluster' ] = 'yes'
 #SConscript( dirs = "GE", build_dir=pj(buildDir,'VE_Xplorer','GE','cluster'))
