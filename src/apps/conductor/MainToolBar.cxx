@@ -32,47 +32,47 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 //Don't move Frame.h below MainToolBar.h
-#include "VE_Conductor/Framework/AppFrame.h"
-#include "VE_Conductor/Framework/MainToolBar.h"
+#include <app/conductor/AppFrame.h>
+#include <app/conductor/MainToolBar.h>
 
-#include "VE_Conductor/xpm/ToolBar/NewDocumentButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/OpenButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/SaveButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/CursorButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/CursorButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/WorldNavigationButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/WorldNavigationButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/ObjectNavigationButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/ObjectNavigationButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/UnselectButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/SmallCenterPointJumpButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/BBCenterPointJumpButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/BBCenterPointJumpButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/PauseButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/PauseButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/PauseButtonDisabled.xpm"
-#include "VE_Conductor/xpm/ToolBar/PhysicsButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/PhysicsButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/PlayButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/PlayButtonSelect.xpm"
-#include "VE_Conductor/xpm/ToolBar/PlayButtonDisabled.xpm"
-#include "VE_Conductor/xpm/ToolBar/ResetButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/ResetButtonDisabled.xpm"
-#include "VE_Conductor/xpm/ToolBar/SendJobButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/StepButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/StepButtonDisabled.xpm"
-#include "VE_Conductor/xpm/ToolBar/StopButton.xpm"
-#include "VE_Conductor/xpm/ToolBar/StopButtonSelect.xpm"
+#include <ves/conductor/xpm/ToolBar/NewDocumentButton.xpm>
+#include <ves/conductor/xpm/ToolBar/OpenButton.xpm>
+#include <ves/conductor/xpm/ToolBar/SaveButton.xpm>
+#include <ves/conductor/xpm/ToolBar/CursorButton.xpm>
+#include <ves/conductor/xpm/ToolBar/CursorButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/WorldNavigationButton.xpm>
+#include <ves/conductor/xpm/ToolBar/WorldNavigationButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/ObjectNavigationButton.xpm>
+#include <ves/conductor/xpm/ToolBar/ObjectNavigationButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/UnselectButton.xpm>
+#include <ves/conductor/xpm/ToolBar/SmallCenterPointJumpButton.xpm>
+#include <ves/conductor/xpm/ToolBar/SmallCenterPointJumpButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/MediumCenterPointJumpButton.xpm>
+#include <ves/conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm>
+#include <ves/conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/BBCenterPointJumpButton.xpm>
+#include <ves/conductor/xpm/ToolBar/BBCenterPointJumpButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/PauseButton.xpm>
+#include <ves/conductor/xpm/ToolBar/PauseButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/PauseButtonDisabled.xpm>
+#include <ves/conductor/xpm/ToolBar/PhysicsButton.xpm>
+#include <ves/conductor/xpm/ToolBar/PhysicsButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/PlayButton.xpm>
+#include <ves/conductor/xpm/ToolBar/PlayButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/PlayButtonDisabled.xpm>
+#include <ves/conductor/xpm/ToolBar/ResetButton.xpm>
+#include <ves/conductor/xpm/ToolBar/ResetButtonDisabled.xpm>
+#include <ves/conductor/xpm/ToolBar/SendJobButton.xpm>
+#include <ves/conductor/xpm/ToolBar/StepButton.xpm>
+#include <ves/conductor/xpm/ToolBar/StepButtonDisabled.xpm>
+#include <ves/conductor/xpm/ToolBar/StopButton.xpm>
+#include <ves/conductor/xpm/ToolBar/StopButtonSelect.xpm>
 
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )

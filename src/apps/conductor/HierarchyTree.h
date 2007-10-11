@@ -38,8 +38,8 @@ HierarchyTree API
 /*!\class HierarchyTree
 * 
 */
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelPtr.h"
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelPtr.h>
 #include <vector>
 #include <wx/image.h>
 #include <wx/imaglist.h>

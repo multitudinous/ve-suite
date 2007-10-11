@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "VE_Conductor/Framework/AppFrame.h"
+#include <app/conductor/AppFrame.h>
 
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
@@ -47,49 +47,49 @@
 #include <wx/config.h>
 #include <wx/msgdlg.h>
 
-#include "VE_Conductor/GUIPlugin/ResultPanel.h"
-#include "VE_Conductor/Utilities/OrbThread.h"
-#include "VE_Conductor/GUIPlugin/FinancialDialog.h"
-#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
-#include "VE_Conductor/GUIPlugin/TexTable.h"
-#include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
-#include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
-#include "VE_Conductor/GUIPlugin/FindDialog.h"
-#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
-#include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
+#include <ves/conductorResultPanel.h>
+#include <ves/conductor/util/OrbThread.h>
+#include <ves/conductorFinancialDialog.h>
+#include <ves/conductorTextResultDialog.h>
+#include <ves/conductorTexTable.h>
+#include <ves/conductorGlobalParamDialog.h>
+#include <ves/conductorSummaryResultDialog.h>
+#include <ves/conductorFindDialog.h>
+#include <ves/conductorUserPreferencesDataBuffer.h>
+#include <ves/conductorXMLDataBufferEngine.h>
 
-#include "VE_Conductor/Framework/ConductorApp.h"
-#include "VE_Conductor/Framework/UserPreferences.h"
-#include "VE_Conductor/Framework/Avail_Modules.h"
-#include "VE_Conductor/Framework/HierarchyTree.h"
-#include "VE_Conductor/Framework/UI_TeacherTab.h"
-#include "VE_Conductor/Framework/DeviceProperties.h"
-#include "VE_Conductor/Framework/NavigationPane.h"
-#include "VE_Conductor/Framework/Splitter.h"
-#include "VE_Conductor/Framework/ViewLocPane.h"
-#include "VE_Conductor/Framework/Network.h"
-#include "VE_Conductor/Framework/Canvas.h"
-#include "VE_Conductor/Framework/MainToolBar.h"
-#include "VE_Conductor/Framework/ExportMenu.h"
+#include <app/conductor/ConductorApp.h>
+#include <app/conductor/UserPreferences.h>
+#include <app/conductor/Avail_Modules.h>
+#include <app/conductor/HierarchyTree.h>
+#include <app/conductor/UI_TeacherTab.h>
+#include <app/conductor/DeviceProperties.h>
+#include <app/conductor/NavigationPane.h>
+#include <app/conductor/Splitter.h>
+#include <app/conductor/ViewLocPane.h>
+#include <app/conductor/Network.h>
+#include <app/conductor/Canvas.h>
+#include <app/conductor/MainToolBar.h>
+#include <app/conductor/ExportMenu.h>
 
-#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-#include "VE_Conductor/GUIPlugin/Module.h"
-#include "VE_Conductor/Utilities/Tag.h"
+#include <ves/conductor/util/CADNodeManagerDlg.h>
+#include <ves/conductorModule.h>
+#include <ves/conductor/util/Tag.h>
 
-#include "VE_Open/XML/DOMDocumentManager.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/XMLCreator.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/Model/ModelCreator.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelPtr.h"
-#include "VE_Open/XML/Model/Tag.h"
-#include "VE_Open/XML/User.h"
-#include "VE_Open/XML/CommandPtr.h"
+#include <ves/open/xml/DOMDocumentManager.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/model/ModelCreator.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/Tag.h>
+#include <ves/open/xml/User.h>
+#include <ves/open/xml/CommandPtr.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/image.h>
@@ -102,9 +102,9 @@
 #include <wx/docview.h>
 #include <wx/dirdlg.h>
 
-#include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
-#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include "VE_Installer/include/VEConfig.h"
+#include <VE_Installer/installer/installerImages/ve_icon64x64.xpm>
+#include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
+#include <ves/VEConfig.h>
 
 // --- C/C++ Libraries --- //
 #include <sstream>

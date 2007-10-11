@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/radiobut.h>
@@ -39,9 +39,9 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 
-#include "VE_Conductor/Framework/UI_TeacherTab.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <app/conductor/UI_TeacherTab.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <iostream>
 

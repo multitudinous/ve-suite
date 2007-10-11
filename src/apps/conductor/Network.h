@@ -38,12 +38,12 @@ Network API
 /*!\class Network
 * 
 */
-#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
-#include "VE_Conductor/Utilities/Link.h"
-#include "VE_Conductor/Utilities/Tag.h"
-#include "VE_Conductor/Utilities/Polygon.h"
-#include "VE_Conductor/GUIPlugin/Module.h"
-#include "VE_Open/XML/Model/SystemStrongPtr.h"
+#include <ves/conductorUIPluginBase.h>
+#include <ves/conductor/util/Link.h>
+#include <ves/conductor/util/Tag.h>
+#include <ves/conductor/util/Polygon.h>
+#include <ves/conductorModule.h>
+#include <ves/open/xml/model/SystemStrongPtr.h>
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>

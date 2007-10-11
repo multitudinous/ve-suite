@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
-#include "VE_Conductor/Framework/PluginLoader.h"
-#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
+#include <ves/conductorUIPluginBase.h>
+#include <app/conductor/PluginLoader.h>
+#include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
 #include <wx/hash.h>
 #include <wx/dynload.h>

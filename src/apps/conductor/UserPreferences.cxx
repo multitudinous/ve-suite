@@ -46,16 +46,16 @@
 
 
 //#include <iostream>
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "VE_Conductor/Framework/AppFrame.h"
+#include <app/conductor/AppFrame.h>
 
-#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include "VE_Conductor/Framework/UserPreferences.h"
-#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+#include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
+#include <app/conductor/UserPreferences.h>
+#include <ves/conductorUserPreferencesDataBuffer.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 using namespace VE_Conductor;
 

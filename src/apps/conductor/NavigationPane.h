@@ -49,8 +49,8 @@ NavigationPane API
 #include <vector>
 #include <string>
 
-#include <VE_Open/XML/CommandPtr.h>
-#include "VE_Open/XML/DataValuePairPtr.h"
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 class wxCheckBox;
 class wxSlider;

@@ -32,13 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 //Don't move Frame.h below ExportMenu.h
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Framework/ExportMenu.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <app/conductor/ExportMenu.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/CommandPtr.h"
-#include "VE_Open/XML/DataValuePairPtr.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <wx/filedlg.h>
 #include <wx/filename.h>

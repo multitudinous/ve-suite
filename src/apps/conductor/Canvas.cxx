@@ -30,24 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Framework/Canvas.h"
-#include "VE_Open/XML/Model/Link.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/System.h"
-#include "VE_Open/XML/Model/SystemStrongPtr.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/StateInfo.h"
-#include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
-#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
-#include "VE_Open/XML/DOMDocumentManager.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <app/conductor/Canvas.h>
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/model/SystemStrongPtr.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/StateInfo.h>
+#include <ves/conductorXMLDataBufferEngine.h>
+#include <ves/conductorUserPreferencesDataBuffer.h>
+#include <ves/open/xml/DOMDocumentManager.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
-#include "VE_Conductor/Framework/Network.h"
-#include "VE_Open/XML/Model/Tag.h"
-#include "VE_Open/XML/Model/TagPtr.h"
-#include "VE_Open/XML/User.h"
-#include "VE_Open/XML/UserPtr.h"
+#include <app/conductor/Network.h>
+#include <ves/open/xml/model/Tag.h>
+#include <ves/open/xml/model/TagPtr.h>
+#include <ves/open/xml/User.h>
+#include <ves/open/xml/UserPtr.h>
 
 
 #include <wx/dcbuffer.h>

@@ -30,11 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Framework/ViewLocPane.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <app/conductor/ViewLocPane.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 
 #include <iostream>

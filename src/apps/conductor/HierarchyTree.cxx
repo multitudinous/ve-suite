@@ -30,24 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Framework/Network.h"
-#include "VE_Conductor/Framework/Canvas.h"
-#include "VE_Conductor/Framework/HierarchyTree.h"
-#include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
-#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <app/conductor/Network.h>
+#include <app/conductor/Canvas.h>
+#include <app/conductor/HierarchyTree.h>
+#include <ves/conductorAspenPlus2DIcons.h>
+#include <ves/conductorUIPluginBase.h>
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/Model/System.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/model/System.h>
 
 #include <wx/intl.h>
 
-#include "VE_Conductor/xpm/icon1.xpm"
-#include "VE_Conductor/xpm/icon2.xpm"
-#include "VE_Conductor/xpm/icon3.xpm"
-#include "VE_Conductor/xpm/icon4.xpm"
-#include "VE_Conductor/xpm/icon5.xpm"
+#include <ves/conductor/xpm/icon1.xpm>
+#include <ves/conductor/xpm/icon2.xpm>
+#include <ves/conductor/xpm/icon3.xpm>
+#include <ves/conductor/xpm/icon4.xpm>
+#include <ves/conductor/xpm/icon5.xpm>
 
 #ifdef WIN32
 #include <shellapi.h>

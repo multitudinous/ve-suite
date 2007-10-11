@@ -30,41 +30,41 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Framework/Network.h"
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <app/conductor/Network.h>
 
-#include "VE_Conductor/GUIPlugin/PortDialog.h"
-#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
-#include "VE_Conductor/GUIPlugin/XMLDataBufferEngine.h"
+#include <ves/conductorPortDialog.h>
+#include <ves/conductorUserPreferencesDataBuffer.h>
+#include <ves/conductorXMLDataBufferEngine.h>
 
-#include "VE_Conductor/GUIPlugin/UIDialog.h"
-#include "VE_Conductor/Utilities/OrbThread.h"
-#include "VE_Conductor/Utilities/ParamsDlg.h"
-#include "VE_Conductor/DefaultPlugin/DefaultPlugin.h"
+#include <ves/conductorUIDialog.h>
+#include <ves/conductor/util/OrbThread.h>
+#include <ves/conductor/util/ParamsDlg.h>
+#include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
-#include "VE_Conductor/Framework/AppFrame.h"
-#include "VE_Conductor/Framework/Canvas.h"
+#include <app/conductor/AppFrame.h>
+#include <app/conductor/Canvas.h>
 
-#include "VE_Open/XML/Model/Link.h"
-#include "VE_Open/XML/Model/Point.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelPtr.h"
-#include "VE_Open/XML/Model/System.h"
-#include "VE_Open/XML/Model/Network.h"
-#include "VE_Open/XML/Model/NetworkPtr.h"
-#include "VE_Open/XML/Model/Tag.h"
-#include "VE_Open/XML/Model/TagPtr.h"
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/NetworkPtr.h>
+#include <ves/open/xml/model/Tag.h>
+#include <ves/open/xml/model/TagPtr.h>
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/User.h"
-#include "VE_Open/XML/StateInfo.h"
-#include "VE_Open/XML/StateInfoPtr.h"
-#include "VE_Open/XML/StateInfoPtr.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/User.h>
+#include <ves/open/xml/StateInfo.h>
+#include <ves/open/xml/StateInfoPtr.h>
+#include <ves/open/xml/StateInfoPtr.h>
 
-#include "VE_Open/XML/CAD/CADAssembly.h"
+#include <ves/open/xml/cad/CADAssembly.h>
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>

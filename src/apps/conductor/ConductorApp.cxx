@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Framework/AppFrame.h"
-#include "VE_Conductor/Framework/ConductorApp.h"
+#include <app/conductor/AppFrame.h>
+#include <app/conductor/ConductorApp.h>
 
 #include <wx/dirdlg.h>
 #include <wx/intl.h>

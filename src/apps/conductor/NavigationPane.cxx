@@ -30,34 +30,33 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include <ves/conductor/util/CORBAServiceList.h>
 
-#include "VE_Conductor/Framework/NavigationPane.h"
+#include <app/conductor/NavigationPane.h>
 
-#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+#include <ves/conductorUserPreferencesDataBuffer.h>
 
-#include "VE_Open/XML/DOMDocumentManager.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/CommandPtr.h"
+#include <ves/open/xml/DOMDocumentManager.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Conductor/xpm/Nav_Bitmaps/x_left.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/x_right.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/z_up.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/z_down.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/y_up.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/y_down.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/pitch_down.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/pitch_up.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/ccw_roll.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/cw_roll.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/yaw_ccw.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/yaw_cw.xpm"
-#include "VE_Conductor/xpm/Nav_Bitmaps/coordinates.xpm"
+#include <ves/conductor/xpm/Nav_Bitmaps/x_left.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/x_right.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/z_up.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/z_down.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/y_up.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/y_down.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/pitch_down.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/pitch_up.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/ccw_roll.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/cw_roll.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/yaw_ccw.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/yaw_cw.xpm>
+#include <ves/conductor/xpm/Nav_Bitmaps/coordinates.xpm>
 
-#include "VE_Installer/installer/installerImages/ve_icon64x64.xpm"
-#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
+#include <VE_Installer/installer/installerImages/ve_icon64x64.xpm>
+#include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
 
 #include <wx/checkbox.h>
 #include <wx/slider.h>
