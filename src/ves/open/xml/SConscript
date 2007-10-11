@@ -5,7 +5,7 @@ import SConsAddons.Util as sca_util
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR xerces_options RootDir')
-openDir = os.path.abspath( pj(RootDir, 'VE_Open', 'XML') )
+openDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'open', 'xml') )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
@@ -29,5 +29,5 @@ else:
                                                installPrefix = LIBDIR)
    
 lib.addSources( sources )
-lib.addHeaders(headers,  pj( 'VE_Open', 'XML'))
+lib.addHeaders( headers,  pj( 'ves', 'open', 'xml') )
 lib.build()

@@ -2,11 +2,8 @@
 openSubdirs = Split("""
     idl
     skel
-    XML
+    xml
 """)
-##    XML/Shader
-##    XML/CAD
-##    XML/Model
 
 ##Run SConscript files in all of those folders.
 for d in openSubdirs:
