@@ -57,8 +57,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/CAD/CADAssembly.h>
-		
+#include <ves/open/xml/cad/CADAssembly.h>
+
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 
 #include <wx/dc.h>
@@ -138,7 +138,7 @@ UIPluginBase::UIPluginBase() :
     icon_w = static_cast< int >( my_img.GetWidth());//*0.30f );
     icon_h = static_cast< int >( my_img.GetHeight());//*0.30f );
     //my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
-	my_icon=new wxBitmap(my_img);
+   my_icon=new wxBitmap(my_img);
 
     n_pts = 4;
     poly = new wxPoint[n_pts];
@@ -273,12 +273,12 @@ wxRect UIPluginBase::GetBBox()
 
    result.SetWidth(right-left+edge_size);
    result.SetHeight(bottom-top+edge_size);
-   return result;	
+   return result; 
 }
 ////////////////////////////////////////////////////////////////////////////////
 int UIPluginBase::GetNumPoly( void )
 {
-	return n_pts;
+   return n_pts;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::GetPoly( POLY& polygon )
@@ -291,23 +291,23 @@ void UIPluginBase::GetPoly( POLY& polygon )
 ////////////////////////////////////////////////////////////////////////////////
 int UIPluginBase::GetNumIports()
 {
-	return inputPort.size();
+   return inputPort.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::GetIPorts(PORT& iports)
 {
    for ( size_t i = 0; i <  inputPort.size(); ++i )
    {
-	   
+      
       iports[ i ] = (*inputPort.at( i ));
-	  /*
+     /*
       iports[ i ].GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
                                              );
       inputPort.at( i )->GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 0 ].x, ( poly[ 3 ].y / inputPort.size() ) * i ) 
                                             );
-											*/
+                                 */
       //iports[ i ].x = poly[ 0 ].x;
       //iports[ i ].y = (poly[ 3 ].y / inputPort.size() ) * i;
       //iports[ i ].x = inputPort.at( i )->GetPortLocation()->GetPoint().first;
@@ -317,7 +317,7 @@ void UIPluginBase::GetIPorts(PORT& iports)
 /////////////////////////////////////////////////////////////////////////////
 int UIPluginBase::GetNumOports()
 {
-	return outputPort.size();
+   return outputPort.size();
 }
 /////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::GetOPorts(PORT& oports)
@@ -325,14 +325,14 @@ void UIPluginBase::GetOPorts(PORT& oports)
    for ( size_t i = 0; i < outputPort.size(); ++i )
    {
       oports[ i ] = (*outputPort.at( i ));
-	  /*
+     /*
       oports[ i ].GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
                                              );
       outputPort.at( i )->GetPortLocation()->SetPoint( 
                std::pair< unsigned int, unsigned int >( poly[ 1 ].x, ( poly[ 3 ].y / outputPort.size() ) * i ) 
                                              );
-											 */
+                                  */
       //oports[ i ].x = outputPort.at( i )->GetPortLocation()->GetPoint().first;
       //oports[ i ].y = outputPort.at( i )->GetPortLocation()->GetPoint().second;
    }
@@ -344,7 +344,7 @@ void UIPluginBase::DrawIcon(wxDC* dc)
   //wxCoord xoff = pos.x;
   //wxCoord yoff = pos.y;
   //dc->DrawPolygon(n_pts, poly, xoff, yoff);
-	dc->DrawBitmap(*my_icon,pos.x, pos.y);
+   dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1053,7 +1053,7 @@ void UIPluginBase::SetImageIcon(std::string path, float rotation, int mirror, fl
         //the 2DIcons directory for the application
         std::ifstream exists(fullPath.c_str());
         if( exists.fail() )
-        {	
+        {   
             return;
         }
         image.LoadFile( wxString(fullPath.c_str(),wxConvUTF8), wxBITMAP_TYPE_JPEG );
@@ -1174,7 +1174,7 @@ void  UIPluginBase::OnShowResult(wxCommandEvent& event )
       UIDialog* hello = Result(NULL);
       
       if ( hello != NULL )
-	      hello->Show();*/
+         hello->Show();*/
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1186,135 +1186,135 @@ void  UIPluginBase::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 void  UIPluginBase::OnShowAspenName(wxCommandEvent& event )
 {  
     UIPLUGIN_CHECKID( event )
-	VE_XML::VE_Model::ModelWeakPtr veModel = GetVEModel();
-	wxString title;
-	title << wxT("Aspen Name");
-	wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
-	wxMessageDialog( m_canvas, desc, title).ShowModal();
+   VE_XML::VE_Model::ModelWeakPtr veModel = GetVEModel();
+   wxString title;
+   title << wxT("Aspen Name");
+   wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
+   wxMessageDialog( m_canvas, desc, title).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-	serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
-	UIPluginBase* tempPlugin = this;
+   serviceList->GetMessageLog()->SetMessage("Icon Chooser\n");
+   UIPluginBase* tempPlugin = this;
     if( !m_iconChooser )
     {
         m_iconChooser = new IconChooser( m_canvas );
     }
-	m_iconChooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
-	m_iconChooser->SetPlugin(tempPlugin);
+   m_iconChooser->AddIconsDir(wxString("2DIcons",wxConvUTF8));
+   m_iconChooser->SetPlugin(tempPlugin);
     //chooser->SetSize( dialogSize );
-	m_iconChooser->Show();
+   m_iconChooser->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 {  
     UIPLUGIN_CHECKID( event )
-	std::string compName = GetVEModel()->GetModelName();
+   std::string compName = GetVEModel()->GetModelName();
 
-	VE_XML::Command returnState;
-	returnState.SetCommandName("getInputModuleParamList");
-	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
-	data->SetData(std::string("ModuleName"), compName);
+   VE_XML::Command returnState;
+   returnState.SetCommandName("getInputModuleParamList");
+   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   data->SetData(std::string("ModuleName"), compName);
     returnState.AddDataValuePair( data );
-	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	VE_XML::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	
-	//Get results
-	std::string nw_str = serviceList->Query( status );
-	wxString title( compName.c_str(),wxConvUTF8);
-	//TextResultDialog * results = new TextResultDialog(this, title);
-	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg* params = new ParamsDlg(m_canvas);
-	//params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
-	VE_XML::XMLReaderWriter networkReader;
-	networkReader.UseStandaloneDOMDocumentManager();
-	networkReader.ReadFromString();
-	//serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
-	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	//std::ostringstream output;
-	//output << objectVector.size()<<std::endl;
-	//serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
-	std::vector< std::string > temp_vector;
-	pair->GetData(temp_vector);
+   
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   //Get results
+   std::string nw_str = serviceList->Query( status );
+   wxString title( compName.c_str(),wxConvUTF8);
+   //TextResultDialog * results = new TextResultDialog(this, title);
+   //QueryInputsDlg * results = new QueryInputsDlg(this);
+   ParamsDlg* params = new ParamsDlg(m_canvas);
+   //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
+   VE_XML::XMLReaderWriter networkReader;
+   networkReader.UseStandaloneDOMDocumentManager();
+   networkReader.ReadFromString();
+   //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
+   networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+   //std::ostringstream output;
+   //output << objectVector.size()<<std::endl;
+   //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
+   VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+   std::vector< std::string > temp_vector;
+   pair->GetData(temp_vector);
 
-	params->SetCompName(compName.c_str());
-	params->SetServiceList(serviceList);
-	params->SetDialogType("input");
-	for (size_t i=0; i < temp_vector.size(); i++) 
-		params->AppendList(temp_vector[i].c_str());
-	params->ShowModal();
-	
-	//serviceList->GetMessageLog()->SetMessage("gather");
-	//gather requested inputs
-	//std::vector< std::string > temp_vector2;
-	//for(int testing = 0; testing < results->GetDataSize(); testing++)
-	//	temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
-	
-	//serviceList->GetMessageLog()->SetMessage("submit or not");
-	//if it is submit launch request
-	//if(results->IsSubmit())
-	//	this->OnQueryInputModuleProperties(temp_vector2, compName);
+   params->SetCompName(compName.c_str());
+   params->SetServiceList(serviceList);
+   params->SetDialogType("input");
+   for (size_t i=0; i < temp_vector.size(); i++) 
+      params->AppendList(temp_vector[i].c_str());
+   params->ShowModal();
+   
+   //serviceList->GetMessageLog()->SetMessage("gather");
+   //gather requested inputs
+   //std::vector< std::string > temp_vector2;
+   //for(int testing = 0; testing < results->GetDataSize(); testing++)
+   // temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+   
+   //serviceList->GetMessageLog()->SetMessage("submit or not");
+   //if it is submit launch request
+   //if(results->IsSubmit())
+   // this->OnQueryInputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 {  
     UIPLUGIN_CHECKID( event )
-	std::string compName = GetVEModel()->GetModelName();
+   std::string compName = GetVEModel()->GetModelName();
 
-	VE_XML::Command returnState;
-	returnState.SetCommandName("getOutputModuleParamList");
-	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
-	data->SetData(std::string("ModuleName"), compName);
+   VE_XML::Command returnState;
+   returnState.SetCommandName("getOutputModuleParamList");
+   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   data->SetData(std::string("ModuleName"), compName);
     returnState.AddDataValuePair( data );
-	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	VE_XML::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	
-	//Get results
-	std::string nw_str = serviceList->Query( status );
-	wxString title( compName.c_str(),wxConvUTF8);
-	//QueryInputsDlg * results = new QueryInputsDlg(this);
-	ParamsDlg * params = new ParamsDlg(m_canvas);
-	//params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
-	VE_XML::XMLReaderWriter networkReader;
-	networkReader.UseStandaloneDOMDocumentManager();
-	networkReader.ReadFromString();
-	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
-	std::vector< std::string > temp_vector;
-	pair->GetData(temp_vector);
+   
+   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   
+   VE_XML::XMLReaderWriter commandWriter;
+   std::string status="returnString";
+   commandWriter.UseStandaloneDOMDocumentManager();
+   commandWriter.WriteXMLDocument( nodes, status, "Command" );
+   
+   //Get results
+   std::string nw_str = serviceList->Query( status );
+   wxString title( compName.c_str(),wxConvUTF8);
+   //QueryInputsDlg * results = new QueryInputsDlg(this);
+   ParamsDlg * params = new ParamsDlg(m_canvas);
+   //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
+   VE_XML::XMLReaderWriter networkReader;
+   networkReader.UseStandaloneDOMDocumentManager();
+   networkReader.ReadFromString();
+   networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+   std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+   VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+   std::vector< std::string > temp_vector;
+   pair->GetData(temp_vector);
 
-	params->SetCompName(compName.c_str());
-	params->SetServiceList(serviceList);
-	params->SetDialogType("output");
-	for (size_t i=0; i < temp_vector.size(); i++) 
-		params->AppendList(temp_vector[i].c_str());
-	params->ShowModal();
-	
-	//std::vector< std::string > temp_vector2;
-	//for(int testing = 0; testing < results->GetDataSize(); testing++)
-	//	temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
+   params->SetCompName(compName.c_str());
+   params->SetServiceList(serviceList);
+   params->SetDialogType("output");
+   for (size_t i=0; i < temp_vector.size(); i++) 
+      params->AppendList(temp_vector[i].c_str());
+   params->ShowModal();
+   
+   //std::vector< std::string > temp_vector2;
+   //for(int testing = 0; testing < results->GetDataSize(); testing++)
+   // temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
 
-	//if(results->IsSubmit())
-	//	this->OnQueryOutputModuleProperties(temp_vector2, compName);
+   //if(results->IsSubmit())
+   // this->OnQueryOutputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnShowDesc(wxCommandEvent& event )
@@ -1593,8 +1593,8 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     }
     
     actionPoint = evtpos;
-	highlightFlag = true;
-	m_canvas->Refresh( true );
+   highlightFlag = true;
+   m_canvas->Refresh( true );
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
     setActivePluginId.SetClientData( &id );
@@ -1604,7 +1604,7 @@ void UIPluginBase::OnMRightDown(wxMouseEvent& event)
     wxString menuName = name + wxString( " Menu", wxConvUTF8 );
     wxMenu pop_menu( menuName );
 
-    pop_menu.Append( SHOW_DESC, _("Show Module Description") );	
+    pop_menu.Append( SHOW_DESC, _("Show Module Description") );   
     pop_menu.Enable( SHOW_DESC, true);
     pop_menu.Append( SHOW_RESULT, _("Show Module Result") );
     //pop_menu.Enable( SHOW_RESULT, true);
