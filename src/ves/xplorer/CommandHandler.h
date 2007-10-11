@@ -37,7 +37,7 @@
 /*!\class VE_Xplorer::CommandHandler
 * 
 */
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #include <ves/open/xml/Command.h>
 

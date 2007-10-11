@@ -57,7 +57,7 @@
 #include <string>
 #include <vector>
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 namespace NURBS
 {
 namespace Utilities

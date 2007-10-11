@@ -38,7 +38,7 @@ cfdCuttingPlane API
 /*!\class VE_Xplorer::cfdCuttingPlane
 * 
 */
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 class vtkPlane;
 class vtkDataSet;
 

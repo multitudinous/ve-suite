@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_NETWORK_H
 #define CE_UTILITIES_NETWORK_H
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 
 #include <ves/open/xml/Model/NetworkStrongPtr.h>

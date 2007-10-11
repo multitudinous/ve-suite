@@ -41,7 +41,7 @@
 */
 
 // --- VE-Suite Stuff --- //
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #include <VE_Xplorer/XplorerHandlers/Device.h>
 

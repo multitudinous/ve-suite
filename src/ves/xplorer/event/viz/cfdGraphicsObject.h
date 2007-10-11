@@ -38,7 +38,7 @@ cfdGraphicsObject API
 /*!\class VE_Xplorer::cfdGraphicsObject
 * 
 */
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #include <VE_Xplorer/SceneGraph/Group.h>
 #include <VE_Xplorer/SceneGraph/Geode.h>

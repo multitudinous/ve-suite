@@ -53,7 +53,7 @@
 
 #include <plugins/ApplicationDataManager/UserData.h>
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_Xplorer
 {

@@ -84,7 +84,7 @@ namespace VE_Builder
 {
    class DataLoader;
 }
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <VE_Xplorer/Utilities/DataObjectHandler.h>
 #ifdef _OSG
 #include <osg/ref_ptr>

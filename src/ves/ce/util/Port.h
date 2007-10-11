@@ -37,7 +37,7 @@
 /*!\file VE_CE/Utilities/Port.h
  * VE-CE Port API
  */
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <vector>
 
 namespace VE_CE

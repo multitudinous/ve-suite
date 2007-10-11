@@ -37,7 +37,7 @@
 /* \file Connection.h
  * VE_CE Connection API
  */
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_CE
 {

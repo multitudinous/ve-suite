@@ -38,7 +38,7 @@
 
 //class vtkDataSet;
 class vtkDataObject;
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 namespace VE_Builder
 {
 class VE_BUILDER_EXPORTS cfdTranslatorToVTK

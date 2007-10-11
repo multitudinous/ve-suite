@@ -46,7 +46,7 @@ namespace VE_XML
 {
    class XMLObject;
 }
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS TextureBasedTransientModeUpdateEventHandler : public TextureBasedEventHandler{

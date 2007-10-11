@@ -51,7 +51,7 @@ namespace VE_Xplorer
 {
    class cfdGlobalBase;
 }
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_EVENTS
 {

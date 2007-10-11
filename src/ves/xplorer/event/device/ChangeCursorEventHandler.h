@@ -41,7 +41,7 @@
 //#include <string>
 //#include <vector>
 #include <map>
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 //#include <utility>
 
 namespace VE_XML

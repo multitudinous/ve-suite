@@ -33,7 +33,7 @@
 #ifndef JPG_SINGLETON_DLL_H_
 #define JPG_SINGLETON_DLL_H_
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {

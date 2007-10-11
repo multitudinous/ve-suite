@@ -56,7 +56,7 @@ namespace VE_Xplorer
    class cfdModel;
    class ModelCADHandler;
 }
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <string>
 namespace VE_EVENTS
 {

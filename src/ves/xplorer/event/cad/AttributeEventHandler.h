@@ -54,7 +54,7 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdModel;
 }
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_EVENTS{
 class VE_XPLORER_EXPORTS AttributeEventHandler : public EventHandler{

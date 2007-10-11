@@ -34,7 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_IPORT_H
 #define CE_UTILITIES_IPORT_H
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <ves/ce/util/Port.h>
 namespace VE_CE
 {

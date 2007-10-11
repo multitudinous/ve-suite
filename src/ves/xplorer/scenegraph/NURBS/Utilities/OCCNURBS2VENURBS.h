@@ -47,7 +47,7 @@
 #include <TColStd_Array2OfReal.hxx>
 #include <TColgp_Array2OfPnt.hxx>
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 namespace NURBS
 {
 namespace Utilities

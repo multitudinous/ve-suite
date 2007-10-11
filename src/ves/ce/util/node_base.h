@@ -34,7 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_NODE_BASE_H
 #define CE_UTILITIES_NODE_BASE_H
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <set>
 
 namespace VE_CE

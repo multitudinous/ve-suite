@@ -39,7 +39,7 @@ cfdCommandArray API
 * 
 */
 // cfdApp side variables declared in VjObs_i.h
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_Xplorer
 {

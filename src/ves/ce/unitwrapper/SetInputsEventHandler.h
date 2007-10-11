@@ -47,7 +47,7 @@ namespace VE_XML
       class Model;
    }
 }
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_CE
 {

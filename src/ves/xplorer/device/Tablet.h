@@ -43,7 +43,7 @@
 */
 
 // --- VE-Suite Includes --- //
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #include <VE_Xplorer/SceneGraph/DCS.h>
 

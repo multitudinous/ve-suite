@@ -39,7 +39,7 @@
  * Class for setting root CADNode cfdModel.
  */
 #include <VE_Xplorer/XplorerHandlers/CADEventHandler.h>
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_XML
 {

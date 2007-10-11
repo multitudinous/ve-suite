@@ -51,7 +51,7 @@ easily.But if we want to see the two different shape design or need to see
 the difference between the experiment results and the simulation results, 
 it is better to treat these two dataset as two different models.
 */
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 #include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
 

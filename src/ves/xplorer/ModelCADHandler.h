@@ -40,7 +40,7 @@ Mananger for the CAD associated with a cfdModel
 */
 #include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #include <map>
 #include <string>

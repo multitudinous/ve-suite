@@ -51,7 +51,7 @@ namespace VE_Xplorer
 
 #include <VE_Xplorer/XplorerHandlers/EventHandler.h>
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 namespace VE_EVENTS{
    class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler : public VE_EVENTS::EventHandler{

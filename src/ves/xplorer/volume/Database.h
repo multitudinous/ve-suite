@@ -36,7 +36,7 @@
 #include <VE_Xplorer/TextureBased/Data.h>
 #include <VE_Xplorer/TextureBased/DatabaseDriver.h>
 #include <VE_Xplorer/TextureBased/SingletonDLL.h>
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #define LOKI_SINGLETON_EXPORT VE_TEXTURE_BASED_EXPORTS
 #include <loki/Function.h>

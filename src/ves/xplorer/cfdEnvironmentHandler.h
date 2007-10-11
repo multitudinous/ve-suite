@@ -39,7 +39,7 @@ cfdEnvironmentHandler API
 * 
 */
 #include <vpr/Util/Singleton.h>
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 #include <VE_Xplorer/XplorerHandlers/SeedPoints.h>
 #include <VE_Xplorer/SceneGraph/DCS.h>
 #include <map>
