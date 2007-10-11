@@ -38,8 +38,7 @@
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/environment/cfdEnvironmentHandler.h>
-#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>

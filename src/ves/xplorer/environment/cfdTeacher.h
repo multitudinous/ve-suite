@@ -43,7 +43,7 @@ cfdTeacher API
 #include <vector>
 #include <string>
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 
 #ifdef _OSG
     #include <osg/ref_ptr>

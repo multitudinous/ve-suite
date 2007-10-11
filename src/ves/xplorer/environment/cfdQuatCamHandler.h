@@ -73,7 +73,7 @@ namespace VE_XML
 #include <vector>
 #include <map>
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/event/EventHandler.h>
 
 #ifdef _OSG
