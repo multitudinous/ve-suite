@@ -430,6 +430,7 @@ if not SConsAddons.Util.hasHelpFlag():
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
+   vesUtilSubdirs = pj( buildDir, 'src', 'ves', 'util')
    ##Set the Sconscript files to build.
    if 'docs' in COMMAND_LINE_TARGETS:
       ves_dirs = [ docbookSubdirs ]
@@ -448,7 +449,7 @@ if not SConsAddons.Util.hasHelpFlag():
                   xplorerSubdirs, veiDistSubdirs, docsSubdirs, ceSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs, 
                   osgEphemerisSubdirs,
-		  installerSubdirs ]
+		  installerSubdirs, vesUtilSubdirs ]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:
