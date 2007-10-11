@@ -58,7 +58,7 @@ VjObs_i API
 
 #include <vpr/IO/SerializableObject.h>
 
-#include <apps/xplorer/cfdStateInfo.h>
+#include <ves/xplorer/cfdStateInfo.h>
 
 namespace VE_Xplorer
 {

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <apps/xplorer/cfdVjObsWrapper.h>
+#include "cfdVjObsWrapper.h"
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>

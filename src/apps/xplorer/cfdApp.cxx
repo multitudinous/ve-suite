@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <apps/xplorer/cfdApp.h>
+#include "cfdApp.h"
 
 #ifdef _OSG
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
@@ -50,7 +50,7 @@
 
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <apps/xplorer/cfdVjObsWrapper.h>
+#include "cfdVjObsWrapper.h"
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/cfdDebug.h>
 

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <apps/xplorer/VjObs_i.h>
+#include "VjObs_i.h"
 
 #include <ves/open/xml/DOMDocumentManager.h>
 

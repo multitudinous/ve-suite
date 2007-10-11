@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <apps/xplorer/cfdAppWrapper.h>
-#include <apps/xplorer/cfdVjObsWrapper.h>
+#include "cfdAppWrapper.h"
+#include "cfdVjObsWrapper.h"
 
 #include <apps/ce/Executive_i.h>
 #include <orbsvcs/CosNamingC.h>

@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <apps/xplorer/cfdAppWrapper.h>
+#include "cfdAppWrapper.h"
 
-#include <apps/xplorer/cfdApp.h>
+#include "cfdApp.h"
 #include <ves/xplorer/cfdThread.h>
-#include <apps/xplorer/cfdVjObsWrapper.h>
+#include "cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
 
