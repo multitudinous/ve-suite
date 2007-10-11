@@ -30,15 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Conductor/GUIPlugin/IconChooser.h"
+#include "ves/conductor/IconChooser.h"
 
 #include <wx/dir.h>
 #include <wx/image.h>
 #include <wx/sstream.h>
 #include <wx/tokenzr.h>
 
-#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
-#include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
+#include "ves/conductor/UIPluginBase.h"
+#include "ves/conductor/AspenPlus2DIcons.h"
 
 BEGIN_EVENT_TABLE(IconChooser,wxFrame)	
 	EVT_CLOSE(IconChooser::OnClose)

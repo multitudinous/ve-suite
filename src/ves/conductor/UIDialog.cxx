@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/UIDialog.h"
+#include "ves/conductor/UIDialog.h"
 
 UIDialog::UIDialog(wxWindow* parent, int id, wxString title)
   :wxDialog( 

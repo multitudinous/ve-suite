@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/StringParse.h"
+#include "ves/conductor/StringParse.h"
 
 int get_tokens(char* s, std::vector<wxString> &toks, const char* delim)
 {

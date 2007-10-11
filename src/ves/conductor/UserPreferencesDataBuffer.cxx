@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/UserPreferencesDataBuffer.h"
+#include "ves/conductor/UserPreferencesDataBuffer.h"
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/Command.h"
 
 #include <sstream>
 #include <algorithm>

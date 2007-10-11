@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/TextResultDialog.h"
-#include "VE_Conductor/GUIPlugin/TexTable.h"
+#include "ves/conductor/TextResultDialog.h"
+#include "ves/conductor/TexTable.h"
 
 #include <iostream>
 

@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/vistab.h"
-#include "VE_Conductor/GUIPlugin/isosurfaces.h"
-#include "VE_Conductor/GUIPlugin/advancedisosurface.h"
+#include "ves/conductor/vistab.h"
+#include "ves/conductor/isosurfaces.h"
+#include "ves/conductor/advancedisosurface.h"
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
 #include <wx/sizer.h>

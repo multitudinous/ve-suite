@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/TexTable.h"
+#include "ves/conductor/TexTable.h"
 #include <iostream>
 
 #include <wx/window.h>

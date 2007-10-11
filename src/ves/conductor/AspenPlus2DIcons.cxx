@@ -1,4 +1,4 @@
-#include "VE_Conductor/GUIPlugin/AspenPlus2DIcons.h"
+#include "ves/conductor/AspenPlus2DIcons.h"
 
 #include <map>
 #include <string>

@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/PortDialog.h"
+#include "ves/conductor/PortDialog.h"
 #include <iostream>
 
 #include <wx/button.h>

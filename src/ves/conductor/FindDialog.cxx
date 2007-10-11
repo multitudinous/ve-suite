@@ -30,7 +30,7 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/FindDialog.h"
+#include "ves/conductor/FindDialog.h"
 
 #include <wx/stattext.h>
 #include <wx/choice.h>

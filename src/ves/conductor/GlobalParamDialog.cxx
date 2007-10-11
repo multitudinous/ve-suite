@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/GlobalParamDialog.h"
+#include "ves/conductor/GlobalParamDialog.h"
 
 #include <wx/textctrl.h>
 #include <wx/combobox.h>

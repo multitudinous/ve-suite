@@ -33,21 +33,21 @@
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 #include "VE_Conductor/Utilities/TBToolBar.h"
 #include "VE_Conductor/Utilities/UI_TransientDialog.h"
-#include "VE_Conductor/GUIPlugin/vectors.h"
-#include "VE_Conductor/GUIPlugin/contours.h"
-#include "VE_Conductor/GUIPlugin/streamlines.h"
-#include "VE_Conductor/GUIPlugin/isosurfaces.h"
-#include "VE_Conductor/GUIPlugin/polydata.h"
+#include "ves/conductor/vectors.h"
+#include "ves/conductor/contours.h"
+#include "ves/conductor/streamlines.h"
+#include "ves/conductor/isosurfaces.h"
+#include "ves/conductor/polydata.h"
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/Model/Model.h"
+#include "ves/open/xml/XMLReaderWriter.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
 
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
-#include "VE_Conductor/GUIPlugin/vistab.h"
+#include "ves/conductor/vistab.h"
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>

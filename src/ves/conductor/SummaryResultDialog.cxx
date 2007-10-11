@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/SummaryResultDialog.h"
+#include "ves/conductor/SummaryResultDialog.h"
 #include <iostream>
 
 #include <wx/stattext.h>

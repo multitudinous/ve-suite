@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/GUIPlugin/paraThread.h"
+#include "ves/conductor/paraThread.h"
 
 #include <wx/arrstr.h>
 #include <wx/utils.h>

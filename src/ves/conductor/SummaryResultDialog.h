@@ -38,8 +38,8 @@ SummaryResultDialog API
 /*!\class SummaryResultDialog
 * 
 */
-#include "VE_Conductor/GUIPlugin/UIDialog.h"
-#include "VE_Conductor/GUIPlugin/TexTable.h"
+#include "ves/conductor/UIDialog.h"
+#include "ves/conductor/TexTable.h"
 #include "VE_Installer/include/VEConfig.h"
 
 class wxButton;

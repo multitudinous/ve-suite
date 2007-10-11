@@ -38,7 +38,7 @@ UserPreferencesDataBuffer API
 /*!\class VE_Conductor::UserPreferencesDataBuffer
 * 
 */
-#include "VE_Open/XML/CommandPtr.h"
+#include "ves/open/xml/CommandPtr.h"
 
 //do this to remove compile warning from linux platforms
 #undef _REENTRANT

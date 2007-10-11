@@ -47,7 +47,7 @@ class wxBoxSizer;
 class wxStaticText;
 
 #include <vector>
-#include "VE_Conductor/GUIPlugin/ListTable.h"
+#include "ves/conductor/ListTable.h"
 
 #include "VE_Installer/include/VEConfig.h"
 

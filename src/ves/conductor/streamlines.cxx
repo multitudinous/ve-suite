@@ -32,15 +32,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Conductor/Utilities/CORBAServiceList.h"
 
-#include "VE_Conductor/GUIPlugin/advancedstreamlines.h"
+#include "ves/conductor/advancedstreamlines.h"
 
-#include "VE_Conductor/GUIPlugin/streamlines.h"
-#include "VE_Conductor/GUIPlugin/vistab.h"
+#include "ves/conductor/streamlines.h"
+#include "ves/conductor/vistab.h"
 #include "VE_Conductor/Utilities/WPDialog.h"
 
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/Command.h"
 #include <wx/sizer.h>
 #include <wx/checkbox.h>
 #include <wx/radiobox.h>
