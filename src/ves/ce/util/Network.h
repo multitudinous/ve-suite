@@ -35,7 +35,7 @@
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/Model/NetworkStrongPtr.h>
+#include <ves/open/xml/model/NetworkStrongPtr.h>
 
 
 #include <string>

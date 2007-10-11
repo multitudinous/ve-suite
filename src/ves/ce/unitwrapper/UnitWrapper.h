@@ -37,7 +37,7 @@
 #include <ves/open/moduleS.h>
 
 #include <ves/open/xml/Command.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/Model.h>
 #include <ves/VEConfig.h>
 #include <vector>
 

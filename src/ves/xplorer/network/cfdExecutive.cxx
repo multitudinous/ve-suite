@@ -45,12 +45,12 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
-#include <ves/open/xml/Model/Model.h>
-#include <ves/open/xml/Model/ModelWeakPtr.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelWeakPtr.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/Model/SystemWeakPtr.h>
-#include <ves/open/xml/Model/SystemStrongPtr.h>
-#include <ves/open/xml/Model/System.h>
+#include <ves/open/xml/model/SystemWeakPtr.h>
+#include <ves/open/xml/model/SystemStrongPtr.h>
+#include <ves/open/xml/model/System.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

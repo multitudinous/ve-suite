@@ -43,7 +43,7 @@
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/ParameterBlock.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <ves/xplorer/event/cfdDebug.h>
 

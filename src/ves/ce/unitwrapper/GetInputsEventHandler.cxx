@@ -38,7 +38,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/Model.h>
 
 using namespace VE_CE;
 ////////////////////////////////////////////////////////////////////////////

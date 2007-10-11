@@ -36,9 +36,9 @@
 #include <ves/ce/util/Network.h>
 #include <ves/ce/util/Connection.h>
 
-#include <ves/open/xml/Model/Model.h>
-#include <ves/open/xml/Model/ModelWeakPtr.h>
-#include <ves/open/xml/Model/Port.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelWeakPtr.h>
+#include <ves/open/xml/model/Port.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

@@ -39,8 +39,8 @@ UIPluginBase API
 * 
 */
 #include <ves/VEConfig.h>
-#include <ves/open/xml/Model/Port.h>
-#include <ves/open/xml/Model/ModelPtr.h>
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/ModelPtr.h>
 #include <vector>
 #include <map>
 #include <utility>

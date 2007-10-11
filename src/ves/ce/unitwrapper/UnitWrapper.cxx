@@ -32,20 +32,20 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <UnitWrapper.h>
 
-#include <ves/open/xml/Model/Network.h>
-#include <ves/open/xml/Model/Link.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/Model/Point.h>
-#include <ves/open/xml/Model/Port.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/Command.h>
 
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
 #include <ves/open/xml/CAD/CADCreator.h>
 #include <ves/open/xml/Shader/ShaderCreator.h>
-#include <ves/open/xml/Model/ModelCreator.h>
+#include <ves/open/xml/model/ModelCreator.h>
 
 // Event handlers
 #include <ves/ce/unitwrapper/SetInputsEventHandler.h>

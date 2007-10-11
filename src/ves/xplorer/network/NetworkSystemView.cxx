@@ -35,9 +35,9 @@
 #endif
 #include <ves/xplorer/network/NetworkSystemView.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/Model/Point.h>
-#include <ves/open/xml/Model/Network.h>
-#include <ves/open/xml/Model/Link.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/Link.h>
 
 #include <osgDB/ReadFile>
 #include <osgUtil/Optimizer>
@@ -53,7 +53,7 @@
 #include <osg/TexMat>
 #include <osg/StateSet>
 
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/Model.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
 #include <ves/xplorer/network/UnsupportedComponent.h>
 

@@ -50,8 +50,8 @@
 #include <ves/conductor/AspenPlus2DIcons.h>
 // EPRI TAG
 #include <ves/conductor/FinancialDialog.h>
-#include <ves/open/xml/Model/Model.h>
-#include <ves/open/xml/Model/Point.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

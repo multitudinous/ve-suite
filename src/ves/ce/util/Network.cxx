@@ -37,12 +37,12 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/Model/Model.h>
-#include <ves/open/xml/Model/ModelWeakPtr.h>
-#include <ves/open/xml/Model/Port.h>
-#include <ves/open/xml/Model/Link.h>
-#include <ves/open/xml/Model/Network.h>
-#include <ves/open/xml/Model/System.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelWeakPtr.h>
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 
 #include <set>
 #include <iostream>

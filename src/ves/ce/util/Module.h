@@ -35,9 +35,9 @@
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/Model/ModelStrongPtr.h>
-#include <ves/open/xml/Model/ModelWeakPtr.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/ModelStrongPtr.h>
+#include <ves/open/xml/model/ModelWeakPtr.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <vector>
 #include <string>

@@ -46,8 +46,8 @@ cfdExecutive API
 
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/open/xml/Model/ModelStrongPtr.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/ModelStrongPtr.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <map>
 #include <string>
