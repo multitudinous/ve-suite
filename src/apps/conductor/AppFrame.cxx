@@ -102,8 +102,8 @@
 #include <wx/docview.h>
 #include <wx/dirdlg.h>
 
-#include <VE_Installer/installer/installerImages/ve_icon64x64.xpm>
-#include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
+#include <ves/util/icons/ve_icon64x64.xpm>
+#include <ves/util/icons/ve_icon32x32.xpm>
 #include <ves/VEConfig.h>
 
 // --- C/C++ Libraries --- //

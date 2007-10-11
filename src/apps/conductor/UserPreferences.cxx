@@ -50,7 +50,7 @@
 
 #include "AppFrame.h"
 
-#include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
+#include <ves/util/icons/ve_icon32x32.xpm>
 #include "UserPreferences.h"
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 

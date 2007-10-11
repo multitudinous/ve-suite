@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/conductor/util/CORBAServiceList.h>
-
 #include "NavigationPane.h"
+
+#include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 
@@ -55,8 +55,10 @@
 #include <ves/conductor/xpm/Nav_Bitmaps/yaw_cw.xpm>
 #include <ves/conductor/xpm/Nav_Bitmaps/coordinates.xpm>
 
-#include <VE_Installer/installer/installerImages/ve_icon64x64.xpm>
-#include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
+#include <ves/xplorer/environment/cfdEnum.h>
+
+#include <ves/util/icons/ve_icon64x64.xpm>
+#include <ves/util/icons/ve_icon32x32.xpm>
 
 #include <wx/checkbox.h>
 #include <wx/slider.h>
@@ -94,8 +96,8 @@ using namespace VE_Conductor;
 ////////////////////////////////////////////////////////////////////////////////////////////////////  
 NavigationPane::NavigationPane( wxWindow* parent )
 :wxDialog( parent, -1, _("Navigation Pane"), 
-		  wxDefaultPosition, wxDefaultSize, 
-		  (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
+        wxDefaultPosition, wxDefaultSize, 
+        (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
 {
    _activeButton = NONE;
    
