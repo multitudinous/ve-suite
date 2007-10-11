@@ -46,11 +46,11 @@
 #include "ves/open/xml/ThreeDDoubleArray.h"
 #include "ves/open/xml/ThreeDIntArray.h"
 
-#include "ves/open/xml/CAD/CADNode.h"
-#include "ves/open/xml/CAD/CADAssembly.h"
-#include "ves/open/xml/CAD/CADPart.h"
-#include "ves/open/xml/CAD/CADClone.h"
-#include "ves/open/xml/CAD/CADAttribute.h"
+#include "ves/open/xml/cad/CADNode.h"
+#include "ves/open/xml/cad/CADAssembly.h"
+#include "ves/open/xml/cad/CADPart.h"
+#include "ves/open/xml/cad/CADClone.h"
+#include "ves/open/xml/cad/CADAttribute.h"
 */
 
 //////////////////////////////////////////////////////////

@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer type
  * VE_XML::VE_CAD::CADNode.  To get the full 
  * declaration of VE_XML::VE_CAD::CADNode
- * ves/open/xml/CAD/CADNode.h must be included, too.
+ * ves/open/xml/cad/CADNode.h must be included, too.
  */
 
 namespace VE_XML

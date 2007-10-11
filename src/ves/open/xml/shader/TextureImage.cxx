@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/Shader/TextureImage.h"
-#include "ves/open/xml/Shader/ShaderCreator.h"
+#include "ves/open/xml/shader/TextureImage.h"
+#include "ves/open/xml/shader/ShaderCreator.h"
 #include "ves/open/xml/XMLObjectFactory.h"
 #include "ves/open/xml/Command.h"
 #include "ves/open/xml/DataValuePair.h"

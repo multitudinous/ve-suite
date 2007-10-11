@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/Shader/Uniform.h"
-#include "ves/open/xml/Shader/ShaderCreator.h"
+#include "ves/open/xml/shader/Uniform.h"
+#include "ves/open/xml/shader/ShaderCreator.h"
 #include "ves/open/xml/XMLObjectFactory.h"
 
 

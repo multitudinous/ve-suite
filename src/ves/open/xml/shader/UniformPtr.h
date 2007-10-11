@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer type
  * VE_XML::VE_Shader::UniformPtr.  To get the full 
  * declaration of VE_XML::VE_Shader::Uniform
- * ves/open/xml/Shader/Uniform.h must be included, too.
+ * ves/open/xml/shader/Uniform.h must be included, too.
  */
 
 namespace VE_XML

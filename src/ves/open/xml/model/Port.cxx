@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/Model/Port.h"
-#include "ves/open/xml/Model/Point.h"
+#include "ves/open/xml/model/Port.h"
+#include "ves/open/xml/model/Point.h"
 #include "ves/open/xml/DataValuePair.h"
 #include <iostream>
 #include <sstream>

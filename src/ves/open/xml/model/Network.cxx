@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/Model/Network.h"
-#include "ves/open/xml/Model/Link.h"
-#include "ves/open/xml/Model/Tag.h"
+#include "ves/open/xml/model/Network.h"
+#include "ves/open/xml/model/Link.h"
+#include "ves/open/xml/model/Tag.h"
 
 #include "ves/open/xml/DataValuePair.h"
 

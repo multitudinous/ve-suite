@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer type
  * VE_XML::VE_CAD::CADAttribute.  To get the full 
  * declaration of VE_XML::VE_CAD::CADAttribute
- * ves/open/xml/CAD/CADAttribute.h must be included, too.
+ * ves/open/xml/cad/CADAttribute.h must be included, too.
  */
 
 namespace VE_XML

@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer type
  * VE_XML::VE_CAD::CADAssembly.  To get the full 
  * declaration of VE_XML::VE_CAD::CADAssembly
- * ves/open/xml/CAD/CADAssembly.h must be included, too.
+ * ves/open/xml/cad/CADAssembly.h must be included, too.
  */
 
 namespace VE_XML

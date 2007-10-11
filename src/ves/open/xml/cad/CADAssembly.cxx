@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/CAD/CADAssembly.h"
-#include "ves/open/xml/CAD/CADPart.h"
+#include "ves/open/xml/cad/CADAssembly.h"
+#include "ves/open/xml/cad/CADPart.h"
 #include "ves/open/xml/XMLObjectFactory.h"
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE

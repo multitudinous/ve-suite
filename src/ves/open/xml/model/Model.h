@@ -46,9 +46,9 @@
 #include <string>
 #include <vector>
 #include "ves/open/xml/XMLObject.h"
-#include "ves/open/xml/Model/SystemStrongPtr.h"
-#include "ves/open/xml/Model/SystemWeakPtr.h"
-#include "ves/open/xml/Model/System.h"
+#include "ves/open/xml/model/SystemStrongPtr.h"
+#include "ves/open/xml/model/SystemWeakPtr.h"
+#include "ves/open/xml/model/System.h"
 
 #include <xercesc/dom/DOM.hpp>
 

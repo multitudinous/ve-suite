@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/Model/ModelCreator.h"
+#include "ves/open/xml/model/ModelCreator.h"
 
-#include "ves/open/xml/Model/Link.h"
-#include "ves/open/xml/Model/Model.h"
-#include "ves/open/xml/Model/Network.h"
-#include "ves/open/xml/Model/System.h"
-#include "ves/open/xml/Model/Point.h"
-#include "ves/open/xml/Model/Port.h"
-#include "ves/open/xml/Model/TagPtr.h"
-#include "ves/open/xml/Model/Tag.h"
+#include "ves/open/xml/model/Link.h"
+#include "ves/open/xml/model/Model.h"
+#include "ves/open/xml/model/Network.h"
+#include "ves/open/xml/model/System.h"
+#include "ves/open/xml/model/Point.h"
+#include "ves/open/xml/model/Port.h"
+#include "ves/open/xml/model/TagPtr.h"
+#include "ves/open/xml/model/Tag.h"
 
 using namespace VE_XML::VE_Model;
 ////////////////////////////////////////////////////////////////////////////////

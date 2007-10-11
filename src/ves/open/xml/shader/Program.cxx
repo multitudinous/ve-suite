@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/Shader/Program.h"
-#include "ves/open/xml/Shader/Shader.h"
-#include "ves/open/xml/Shader/ShaderCreator.h"
+#include "ves/open/xml/shader/Program.h"
+#include "ves/open/xml/shader/Shader.h"
+#include "ves/open/xml/shader/ShaderCreator.h"
 #include "ves/open/xml/XMLObjectFactory.h"
 XERCES_CPP_NAMESPACE_USE
 

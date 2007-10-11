@@ -41,7 +41,7 @@
  * Include this file to get a forward declaration of the pointer type
  * VE_XML::VE_CAD::CADNodeAnimation.  To get the full 
  * declaration of VE_XML::VE_CAD::CADNodeAnimation
- * ves/open/xml/CAD/CADNodeAnimation.h must be included, too.
+ * ves/open/xml/cad/CADNodeAnimation.h must be included, too.
  */
 
 namespace VE_XML
