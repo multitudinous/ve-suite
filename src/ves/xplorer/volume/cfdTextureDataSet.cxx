@@ -36,7 +36,7 @@
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/TBVolumeSlices.h>
 
-#include "VE_Xplorer/Utilities/fileIO.h>
+#include <VE_Xplorer/Utilities/fileIO.h>
 
 #include <iostream>
 #include <fstream>

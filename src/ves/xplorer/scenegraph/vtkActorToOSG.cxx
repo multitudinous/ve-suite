@@ -42,7 +42,7 @@
 // workaround end
 
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
 #ifdef VTK44
 #define VTK4
 typedef double vtkReal;

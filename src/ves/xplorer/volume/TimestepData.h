@@ -33,8 +33,8 @@
 #ifndef JPG_TIMESTEP_DATA_H_
 #define JPG_TIMESTEP_DATA_H_
 
-#include <VE_Xplorer/TextureBased/ScalarData.h>
-#include <VE_Xplorer/TextureBased/VectorData.h>
+#include <ves/xplorer/volume/ScalarData.h>
+#include <ves/xplorer/volume/VectorData.h>
 
 #include <gmtl/Vec.h>
 

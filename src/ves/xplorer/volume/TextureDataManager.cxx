@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <VE_Xplorer/TextureBased/TextureDataManager.h>
-#include <VE_Xplorer/TextureBased/Database.h>
+#include <ves/xplorer/volume/TextureDataManager.h>
+#include <ves/xplorer/volume/Database.h>
 
 #include <sstream>
 

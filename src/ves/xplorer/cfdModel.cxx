@@ -55,7 +55,7 @@
 
 #ifdef _OSG
 #include <osg/StateSet>
-#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
+#include <ves/xplorer/volume/cfdTextureDataSet.h>
 using namespace VE_TextureBased;
 #endif
 

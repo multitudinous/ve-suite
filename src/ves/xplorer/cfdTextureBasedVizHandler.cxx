@@ -34,10 +34,10 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
-#include <VE_Xplorer/TextureBased/cfdVolumeVisNodeHandler.h>
-#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
-#include <VE_Xplorer/TextureBased/cfdTextureManager.h>
-#include <VE_Xplorer/TextureBased/cfdVolumeVisualization.h>
+#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
+#include <ves/xplorer/volume/cfdTextureDataSet.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdVolumeVisualization.h>
 
 
 #include <osg/State>
@@ -72,12 +72,12 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-#include <VE_Xplorer/TextureBased/cfdScalarVolumeVisHandler.h>
-#include <VE_Xplorer/TextureBased/cfdScalarShaderManager.h>
-#include <VE_Xplorer/TextureBased/cfdOSGTransferShaderManager.h>
+#include <ves/xplorer/volume/cfdScalarVolumeVisHandler.h>
+#include <ves/xplorer/volume/cfdScalarShaderManager.h>
+#include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
 
-#include <VE_Xplorer/TextureBased/cfdVectorVolumeVisHandler.h>
-#include <VE_Xplorer/TextureBased/cfdOSGAdvectionShaderManager.h>
+#include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
+#include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 
 vprSingletonImpLifetime( VE_TextureBased::cfdTextureBasedVizHandler, 140 );
 using namespace VE_TextureBased;

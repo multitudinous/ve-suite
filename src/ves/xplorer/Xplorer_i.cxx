@@ -50,7 +50,7 @@
 
 #ifdef _OSG
 #include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
-#include <VE_Xplorer/TextureBased/cfdVolumeVisualization.h>
+#include <ves/xplorer/volume/cfdVolumeVisualization.h>
 using namespace VE_TextureBased;
 #endif
 

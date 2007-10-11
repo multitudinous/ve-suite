@@ -85,8 +85,8 @@
 #include <ves/open/xml/Command.h>
 
 #ifdef _OSG
-#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
-#include <VE_Xplorer/TextureBased/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdTextureDataSet.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace VE_TextureBased;
 #endif
 #include <fstream>

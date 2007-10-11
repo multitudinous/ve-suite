@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <VE_Xplorer/TextureBased/SQLiteDriver.h>
-#include <VE_Xplorer/TextureBased/Database.h>
+#include <ves/xplorer/volume/SQLiteDriver.h>
+#include <ves/xplorer/volume/Database.h>
 
 #include <sqlite3.h>
 

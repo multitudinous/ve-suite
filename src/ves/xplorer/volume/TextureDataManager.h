@@ -33,8 +33,8 @@
 #ifndef JPG_TEXTURE_DATA_MANAGER_H_
 #define JPG_TEXTURE_DATA_MANAGER_H_
 
-#include <VE_Xplorer/TextureBased/SingletonDLL.h>
-#include <VE_Xplorer/TextureBased/TextureData.h>
+#include <ves/xplorer/volume/SingletonDLL.h>
+#include <ves/xplorer/volume/TextureData.h>
 #include <ves/VEConfig.h>
 
 #define LOKI_SINGLETON_EXPORT VE_TEXTURE_BASED_EXPORTS

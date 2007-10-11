@@ -38,7 +38,7 @@
 #include <ves/xplorer/event/DataSetScalarBar.h>
 #include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
 
-#include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
+#include <ves/xplorer/volume/cfdTextureDataSet.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
