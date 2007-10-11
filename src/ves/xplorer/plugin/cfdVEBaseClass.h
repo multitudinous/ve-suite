@@ -71,7 +71,7 @@ namespace VE_XML
    class Command;
 }
 
-#include <VE_Installer/include/VEConfig.h>
+#include <ves/VEConfig.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>
