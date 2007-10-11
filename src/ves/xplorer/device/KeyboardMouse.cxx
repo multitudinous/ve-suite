@@ -31,19 +31,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Stuff --- //
-#include <VE_Xplorer/XplorerHandlers/KeyboardMouse.h>
+#include <ves/xplorer/event/KeyboardMouse.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/LocalToWorldTransform.h>
+#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/LocalToWorldTransform.h>
 
-#include <VE_Xplorer/SceneGraph/SetStateOnNURBSNodeVisitor.h>
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/SceneGraph/FindParentsVisitor.h>
-#include <VE_Xplorer/SceneGraph/PhysicsSimulator.h>
-#include <VE_Xplorer/SceneGraph/Group.h>
+#include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/Group.h>
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>

@@ -43,7 +43,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>

@@ -43,7 +43,7 @@
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/XplorerHandlers/Device.h>
+#include <ves/xplorer/event/Device.h>
 
 // --- VRJuggler Stuff --- //
 #include <gadget/Type/KeyboardMouseInterface.h>

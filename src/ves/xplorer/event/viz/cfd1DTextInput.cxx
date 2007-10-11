@@ -31,14 +31,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <VE_Xplorer/XplorerHandlers/cfd1DTextInput.h>
+#include <ves/xplorer/event/cfd1DTextInput.h>
 
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkVectorText.h>
 #include <vtkProperty.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

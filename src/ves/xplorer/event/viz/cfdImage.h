@@ -40,7 +40,7 @@ cfdImage API
 */
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
+#include <ves/xplorer/event/cfdObjects.h>
 
 class vtkBMPReader;
 class vtkImageReader;

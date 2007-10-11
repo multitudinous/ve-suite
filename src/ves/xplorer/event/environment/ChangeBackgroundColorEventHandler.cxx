@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
-#include <VE_Xplorer/XplorerHandlers/DisplayInformation.h>
+#include <ves/xplorer/event/ChangeBackgroundColorEventHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/DisplayInformation.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

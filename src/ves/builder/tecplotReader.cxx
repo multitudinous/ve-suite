@@ -41,7 +41,7 @@
 #include <vtkUnstructuredGridWriter.h>
 #include <vtkCellType.h>
 #include <vtkFloatArray.h>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 #include <ves/builder/converter.h>
 tecplotReader::tecplotReader( )
 {

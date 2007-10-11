@@ -42,7 +42,7 @@ cfdVectorBase API
 *
 */
 
-#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
+#include <ves/xplorer/event/cfdObjects.h>
 
 class vtkGlyph3D;
 class vtkMultiGroupDataGeometryFilter;

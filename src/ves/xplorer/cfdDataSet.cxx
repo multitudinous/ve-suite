@@ -37,23 +37,23 @@
    computation.
 */
 
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
-#include <VE_Xplorer/XplorerHandlers/DataSetAxis.h>
-#include <VE_Xplorer/XplorerHandlers/DataSetScalarBar.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdPlanes.h>
+#include <ves/xplorer/event/DataSetAxis.h>
+#include <ves/xplorer/event/DataSetScalarBar.h>
 
-#include <VE_Xplorer/Utilities/cfdAccessoryFunctions.h>
-#include <VE_Xplorer/Utilities/fileIO.h>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
-#include <VE_Xplorer/Utilities/cfdGrid2Surface.h>
-#include <VE_Xplorer/Utilities/cfdVTKFileHandler.h>
-#include <VE_Xplorer/Utilities/ComputeVectorMagnitudeRangeCallback.h>
-#include <VE_Xplorer/Utilities/ComputeDataObjectBoundsCallback.h>
-#include <VE_Xplorer/Utilities/CountNumberOfParametersCallback.h>
-#include <VE_Xplorer/Utilities/GetNumberOfPointsCallback.h>
-#include <VE_Xplorer/Utilities/ProcessScalarRangeCallback.h>
-#include <VE_Xplorer/Utilities/ActiveDataInformationCallback.h>
-#include <VE_Xplorer/Utilities/CreateDataObjectBBoxActorsCallback.h>
+#include <ves/xplorer/util/cfdAccessoryFunctions.h>
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <ves/xplorer/util/cfdGrid2Surface.h>
+#include <ves/xplorer/util/cfdVTKFileHandler.h>
+#include <ves/xplorer/util/ComputeVectorMagnitudeRangeCallback.h>
+#include <ves/xplorer/util/ComputeDataObjectBoundsCallback.h>
+#include <ves/xplorer/util/CountNumberOfParametersCallback.h>
+#include <ves/xplorer/util/GetNumberOfPointsCallback.h>
+#include <ves/xplorer/util/ProcessScalarRangeCallback.h>
+#include <ves/xplorer/util/ActiveDataInformationCallback.h>
+#include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/builder/DataLoader/DataLoader.h>
 
 #include <vtkLookupTable.h>
@@ -74,7 +74,7 @@
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <iostream>
 #include <sstream>

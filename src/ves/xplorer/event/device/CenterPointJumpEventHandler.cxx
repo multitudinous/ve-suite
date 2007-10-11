@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <VE_Xplorer/XplorerHandlers/CenterPointJumpEventHandler.h>
+#include <ves/xplorer/event/CenterPointJumpEventHandler.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/DeviceHandler.h>
 
 
 #include <ves/open/xml/XMLObject.h>

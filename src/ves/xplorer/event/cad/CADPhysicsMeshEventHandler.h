@@ -50,7 +50,7 @@ namespace VE_CAD
     class CADNode;
 }
 
-#include <VE_Xplorer/XplorerHandlers/CADEventHandler.h>
+#include <ves/xplorer/event/CADEventHandler.h>
 
 #include <ves/VEConfig.h>
 

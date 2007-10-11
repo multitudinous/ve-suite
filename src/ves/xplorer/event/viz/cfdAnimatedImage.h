@@ -38,9 +38,9 @@ cfdAnimatedImage API
 /*!\class VE_Xplorer::cfdAnimatedImage
 * 
 */
-#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
+#include <ves/xplorer/event/cfdObjects.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 class vtkPolyDataMapper;
 class vtkPolyData;

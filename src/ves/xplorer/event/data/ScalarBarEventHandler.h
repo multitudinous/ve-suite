@@ -51,7 +51,7 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdVEBaseClass;
 }
-#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <ves/xplorer/event/EventHandler.h>
 namespace VE_EVENTS
 {
 class VE_XPLORER_EXPORTS ScalarBarEventHandler: public EventHandler

@@ -39,7 +39,7 @@
  * Turn on/off sound.
  */
 
-#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <ves/xplorer/event/EventHandler.h>
 namespace VE_Xplorer
 {
 	class cfdModel;

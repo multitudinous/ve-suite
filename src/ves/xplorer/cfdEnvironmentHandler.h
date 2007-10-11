@@ -40,8 +40,8 @@ cfdEnvironmentHandler API
 */
 #include <vpr/Util/Singleton.h>
 #include <ves/VEConfig.h>
-#include <VE_Xplorer/XplorerHandlers/SeedPoints.h>
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/event/SeedPoints.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 #include <map>
 #include <vector>
 #include <osg/ref_ptr>

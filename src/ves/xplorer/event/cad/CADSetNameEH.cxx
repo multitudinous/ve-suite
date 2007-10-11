@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/CADSetNameEH.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <ves/xplorer/event/CADSetNameEH.h>
+#include <ves/xplorer/event/cfdModel.h>
 
-#include <VE_Xplorer/SceneGraph/CADEntity.h>
-#include <VE_Xplorer/SceneGraph/CADEntityHelper.h>
-#include <VE_Xplorer/SceneGraph/Clone.h>
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/Clone.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

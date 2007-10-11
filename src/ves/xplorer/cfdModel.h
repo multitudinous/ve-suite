@@ -52,12 +52,12 @@ the difference between the experiment results and the simulation results,
 it is better to treat these two dataset as two different models.
 */
 #include <ves/VEConfig.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
-#include <VE_Xplorer/SceneGraph/Group.h>
-#include <VE_Xplorer/SceneGraph/Switch.h>
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/Switch.h>
 
 #include <string>
 #include <vector>

@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdContourBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h>
-#include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdContourBase.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdCuttingPlane.h>
+#include <ves/xplorer/event/cfdPlanes.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

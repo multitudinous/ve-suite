@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <VE_Xplorer/XplorerHandlers/ExportDOTFileEventHandler.h>
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/SceneGraph/CreateGraphDOTVisitor.h>
+#include <ves/xplorer/event/ExportDOTFileEventHandler.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CreateGraphDOTVisitor.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

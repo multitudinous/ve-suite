@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdCursor.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/SceneGraph/cfdDCS.h>
-#include <VE_Xplorer/SceneGraph/cfdGeode.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/SceneGraph/cfdGroup.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <ves/xplorer/event/cfdCursor.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/scenegraph/cfdDCS.h>
+#include <ves/xplorer/scenegraph/cfdGeode.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/scenegraph/cfdGroup.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdModel.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -68,7 +68,7 @@
 #define BOX_LENGTH 2.0f
 
 #include <gmtl/gmtl.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>

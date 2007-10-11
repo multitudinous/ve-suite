@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/CADAddNodeEH.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
+#include <ves/xplorer/event/CADAddNodeEH.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

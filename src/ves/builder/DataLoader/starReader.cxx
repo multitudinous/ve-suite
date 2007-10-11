@@ -44,8 +44,8 @@
 #include <vtkIdList.h>
 
 #include <ves/builder/DataLoader/converter.h"     // for "letUsersAddParamsToField>
-#include <VE_Xplorer/Utilities/fileIO.h"        // for "getTagAndValue>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <ves/xplorer/util/fileIO.h"        // for "getTagAndValue>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 using namespace VE_Util;
 using std::istringstream;

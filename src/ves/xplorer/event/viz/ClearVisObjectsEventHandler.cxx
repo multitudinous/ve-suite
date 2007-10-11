@@ -30,14 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/ClearVisObjectsEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/DataSetAxis.h>
+#include <ves/xplorer/event/ClearVisObjectsEventHandler.h>
+#include <ves/xplorer/event/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/DataSetAxis.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -47,7 +47,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/Model/Model.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <iostream>
 

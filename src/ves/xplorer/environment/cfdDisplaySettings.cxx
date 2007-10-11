@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h>
+#include <ves/xplorer/event/cfdDisplaySettings.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>

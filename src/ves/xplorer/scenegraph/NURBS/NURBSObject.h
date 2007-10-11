@@ -46,7 +46,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>
+#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
 
 namespace NURBS
 {

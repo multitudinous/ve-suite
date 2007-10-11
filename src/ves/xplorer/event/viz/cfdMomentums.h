@@ -39,7 +39,7 @@ cfdMomentums API
 *   A class that generates warped contour plots on multiple planes of data.
 */
 
-#include <VE_Xplorer/XplorerHandlers/cfdContourBase.h>
+#include <ves/xplorer/event/cfdContourBase.h>
 
 class vtkWarpVector;
 

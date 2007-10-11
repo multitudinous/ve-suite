@@ -30,26 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/Xplorer_i.h>
+#include <ves/xplorer/event/Xplorer_i.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdDisplaySettings.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdEnum.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #ifdef _OSG
-#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
 #include <VE_Xplorer/TextureBased/cfdVolumeVisualization.h>
 using namespace VE_TextureBased;
 #endif

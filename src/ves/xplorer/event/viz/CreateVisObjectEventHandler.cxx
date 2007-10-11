@@ -30,19 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/CreateVisObjectEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/Utilities/fileIO.h>
+#include <ves/xplorer/event/CreateVisObjectEventHandler.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/util/fileIO.h>
 
 #include "VE_Xplorer/XplorerHandlers/cfdPolyData.h"      
 #include "VE_Xplorer/XplorerHandlers/cfdIsosurface.h"    
 #include "VE_Xplorer/XplorerHandlers/cfdPresetContour.h" 
 #include "VE_Xplorer/XplorerHandlers/cfdContours.h"      
 #include "VE_Xplorer/XplorerHandlers/cfdMomentum.h"      
-#include <VE_Xplorer/XplorerHandlers/cfdPresetMomentum.h>
+#include <ves/xplorer/event/cfdPresetMomentum.h>
 #include "VE_Xplorer/XplorerHandlers/cfdMomentums.h"     
 #include "VE_Xplorer/XplorerHandlers/cfdVector.h"        
 #include "VE_Xplorer/XplorerHandlers/cfdPresetVector.h"  
@@ -51,17 +51,17 @@
 #include "VE_Xplorer/XplorerHandlers/cfdPolyData.h"      
 #include "VE_Xplorer/XplorerHandlers/cfdImage.h"         
 #include "VE_Xplorer/XplorerHandlers/cfdAnimatedImage.h" 
-#include <VE_Xplorer/XplorerHandlers/cfdAnimatedStreamlineCone.h>
-#include <VE_Xplorer/XplorerHandlers/cfdContour.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCursor.h>
-#include <VE_Xplorer/XplorerHandlers/cfdTextOutput.h>
+#include <ves/xplorer/event/cfdAnimatedStreamlineCone.h>
+#include <ves/xplorer/event/cfdContour.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/event/cfdCursor.h>
+#include <ves/xplorer/event/cfdTextOutput.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -71,7 +71,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/Model/Model.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
 

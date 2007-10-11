@@ -38,7 +38,7 @@ Mananger for the CAD associated with a cfdModel
 /*!\class VE_Xplorer::ModelCADHandler
 * 
 */
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
 
 #include <ves/VEConfig.h>
 

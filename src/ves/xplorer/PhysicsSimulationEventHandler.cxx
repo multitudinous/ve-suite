@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <VE_Xplorer/XplorerHandlers/PhysicsSimulationEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
+#include <ves/xplorer/event/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
 
-#include <VE_Xplorer/SceneGraph/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

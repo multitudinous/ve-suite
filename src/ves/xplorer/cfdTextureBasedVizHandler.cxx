@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
@@ -44,30 +44,30 @@
 //#include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
-#include <VE_Xplorer/XplorerHandlers/TBTransientDurationUpdateEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBTransientModeUpdateEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBIsosurfaceUpdateEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBIsosurfaceEnableEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBClipPlaneEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBBBoxEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBUpdateScalarRangeEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBUpdateSolutionEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBActivateEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBSetActiveShaderManagerEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBSliceNumberUpdateEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBPhongShadingEnableEH.h>
-#include <VE_Xplorer/XplorerHandlers/TBPreIntegrateEH.h>
+#include <ves/xplorer/event/TBTransientDurationUpdateEH.h>
+#include <ves/xplorer/event/TBTransientModeUpdateEH.h>
+#include <ves/xplorer/event/TBIsosurfaceUpdateEH.h>
+#include <ves/xplorer/event/TBIsosurfaceEnableEH.h>
+#include <ves/xplorer/event/TBClipPlaneEH.h>
+#include <ves/xplorer/event/TBBBoxEH.h>
+#include <ves/xplorer/event/TBUpdateScalarRangeEH.h>
+#include <ves/xplorer/event/TBUpdateSolutionEH.h>
+#include <ves/xplorer/event/TBActivateEH.h>
+#include <ves/xplorer/event/TBSetActiveShaderManagerEH.h>
+#include <ves/xplorer/event/TBSliceNumberUpdateEH.h>
+#include <ves/xplorer/event/TBPhongShadingEnableEH.h>
+#include <ves/xplorer/event/TBPreIntegrateEH.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdReadParam.h>
+#include <ves/xplorer/event/cfdGraphicsObject.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdModel.h>
 
 #include <ves/open/xml/Command.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 #include <fstream>
 #ifdef _PERFORMER
 #elif _OPENSG

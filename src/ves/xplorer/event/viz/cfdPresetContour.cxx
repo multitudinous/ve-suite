@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdPresetContour.h>
+#include <ves/xplorer/event/cfdPresetContour.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <ves/xplorer/event/cfdCuttingPlane.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdPlanes.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -49,7 +49,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

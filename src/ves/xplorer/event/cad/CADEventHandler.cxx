@@ -30,19 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/CADEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
+#include <ves/xplorer/event/CADEventHandler.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
 
-#include <VE_Xplorer/SceneGraph/CADEntity.h>
-#include <VE_Xplorer/SceneGraph/CADEntityHelper.h>
-#include <VE_Xplorer/SceneGraph/Clone.h>
-#include <VE_Xplorer/SceneGraph/UpdateIDOnChildrenVisitor.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/Clone.h>
+#include <ves/xplorer/scenegraph/UpdateIDOnChildrenVisitor.h>
 
-#include <VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/Utilities/MaterialInitializer.h>
 
 #include <ves/open/xml/CAD/CADNode.h>
 #include <ves/open/xml/CAD/CADAssembly.h>
@@ -52,7 +52,7 @@
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <boost/filesystem/path.hpp>
 #include <iostream>

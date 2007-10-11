@@ -33,21 +33,21 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include <VE_Xplorer/XplorerHandlers/CommandHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/QCClearDataEH.h>
-#include <VE_Xplorer/XplorerHandlers/QCLoadFileEH.h>
-#include <VE_Xplorer/Utilities/fileIO.h>
-#include <VE_Xplorer/XplorerHandlers/cfdQuatCam.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
+#include <ves/xplorer/event/CommandHandler.h>
+#include <ves/xplorer/event/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/QCClearDataEH.h>
+#include <ves/xplorer/event/QCLoadFileEH.h>
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/event/cfdQuatCam.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdReadParam.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDIntArray.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <cmath>
 #include <iostream>

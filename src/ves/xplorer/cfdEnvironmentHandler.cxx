@@ -30,40 +30,40 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
 
-#include <VE_Xplorer/Utilities/fileIO.h>
+#include <ves/xplorer/util/fileIO.h>
 
-#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdSoundHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCursor.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
-#include <VE_Xplorer/XplorerHandlers/cfdTeacher.h>
-#include <VE_Xplorer/XplorerHandlers/cfdSoundHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h>
-#include <VE_Xplorer/XplorerHandlers/ChangeCursorEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/StoredSceneEH.h>
-#include <VE_Xplorer/XplorerHandlers/ChangeWorkingDirectoryEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ChangeBackgroundColorEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/DisplayInformation.h>
-#include <VE_Xplorer/XplorerHandlers/DisplayEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ViewEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/PhysicsSimulationEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
-#include <VE_Xplorer/XplorerHandlers/KeyboardMouse.h>
-#include <VE_Xplorer/XplorerHandlers/SeedPointActivateEH.h>
-#include <VE_Xplorer/XplorerHandlers/SPBoundEH.h>
-#include <VE_Xplorer/XplorerHandlers/SPDimensionsEH.h>
-#include <VE_Xplorer/XplorerHandlers/ExportDOTFileEventHandler.h>
+#include <ves/xplorer/event/EventHandler.h>
+#include <ves/xplorer/event/cfdSoundHandler.h>
+#include <ves/xplorer/event/cfdCursor.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdReadParam.h>
+#include <ves/xplorer/event/cfdTeacher.h>
+#include <ves/xplorer/event/cfdSoundHandler.h>
+#include <ves/xplorer/event/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/cfdDisplaySettings.h>
+#include <ves/xplorer/event/ChangeCursorEventHandler.h>
+#include <ves/xplorer/event/StoredSceneEH.h>
+#include <ves/xplorer/event/ChangeWorkingDirectoryEventHandler.h>
+#include <ves/xplorer/event/ChangeBackgroundColorEventHandler.h>
+#include <ves/xplorer/event/DisplayInformation.h>
+#include <ves/xplorer/event/DisplayEventHandler.h>
+#include <ves/xplorer/event/ViewEventHandler.h>
+#include <ves/xplorer/event/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/event/DeviceHandler.h>
+#include <ves/xplorer/event/KeyboardMouse.h>
+#include <ves/xplorer/event/SeedPointActivateEH.h>
+#include <ves/xplorer/event/SPBoundEH.h>
+#include <ves/xplorer/event/SPDimensionsEH.h>
+#include <ves/xplorer/event/ExportDOTFileEventHandler.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

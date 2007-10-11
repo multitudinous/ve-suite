@@ -51,9 +51,9 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-#include <VE_Xplorer/Utilities/fileIO.h>
-#include <VE_Xplorer/Utilities/cfdGrid2Surface.h>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/cfdGrid2Surface.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 using namespace VE_Util;
 using namespace VE_Builder;

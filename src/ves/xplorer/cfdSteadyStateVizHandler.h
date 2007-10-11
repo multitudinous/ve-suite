@@ -40,7 +40,7 @@ cfdSteadyStateVizHandler API
 */
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 #include <vector>
 #include <map>

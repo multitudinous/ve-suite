@@ -32,11 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <string>
 
-#include <VE_Xplorer/XplorerHandlers/DisplayEventHandler.h>
+#include <ves/xplorer/event/DisplayEventHandler.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
-#include <VE_Xplorer/XplorerHandlers/DisplayInformation.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/DisplayInformation.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

@@ -44,9 +44,9 @@ Wand API
 // --- VE-Suite Includes
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/XplorerHandlers/Device.h>
+#include <ves/xplorer/event/Device.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>

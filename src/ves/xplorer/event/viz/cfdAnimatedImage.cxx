@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdAnimatedImage.h>
-#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
-#include <VE_Xplorer/XplorerHandlers/cfdImage.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdAnimatedImage.h>
+#include <ves/xplorer/event/cfdReadParam.h>
+#include <ves/xplorer/event/cfdImage.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <iostream>
 #include <fstream>

@@ -40,7 +40,7 @@ DisplayInformation API
 */
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/SceneGraph/Switch.h>
+#include <ves/xplorer/scenegraph/Switch.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>

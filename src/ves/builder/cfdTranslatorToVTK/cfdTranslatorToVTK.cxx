@@ -37,8 +37,8 @@
 #include <iomanip>
 
 #include <vtkDataObject.h>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
-#include <VE_Xplorer/Utilities/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <ves/xplorer/util/fileIO.h>
 using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructor                         //

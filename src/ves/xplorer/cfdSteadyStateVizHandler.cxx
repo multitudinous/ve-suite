@@ -36,7 +36,7 @@
 #include "VE_Xplorer/XplorerHandlers/cfdPresetContour.h" 
 #include "VE_Xplorer/XplorerHandlers/cfdContours.h"      
 #include "VE_Xplorer/XplorerHandlers/cfdMomentum.h"      
-#include <VE_Xplorer/XplorerHandlers/cfdPresetMomentum.h>
+#include <ves/xplorer/event/cfdPresetMomentum.h>
 #include "VE_Xplorer/XplorerHandlers/cfdMomentums.h"     
 #include "VE_Xplorer/XplorerHandlers/cfdVector.h"        
 #include "VE_Xplorer/XplorerHandlers/cfdPresetVector.h"  
@@ -45,38 +45,38 @@
 #include "VE_Xplorer/XplorerHandlers/cfdPolyData.h"      
 #include "VE_Xplorer/XplorerHandlers/cfdImage.h"         
 #include "VE_Xplorer/XplorerHandlers/cfdAnimatedImage.h" 
-#include <VE_Xplorer/XplorerHandlers/cfdAnimatedStreamlineCone.h>
-#include <VE_Xplorer/XplorerHandlers/cfdContour.h>
+#include <ves/xplorer/event/cfdAnimatedStreamlineCone.h>
+#include <ves/xplorer/event/cfdContour.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
-#include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCursor.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGraphicsObject.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdTextOutput.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/CreateVisObjectEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ClearVisObjectsEventHandler.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/cfdPlanes.h>
+#include <ves/xplorer/event/cfdCursor.h>
+#include <ves/xplorer/event/cfdGraphicsObject.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdTextOutput.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/CreateVisObjectEventHandler.h>
+#include <ves/xplorer/event/ClearVisObjectsEventHandler.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
 #include <boost/bind.hpp>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 //This is WAY down here to fix compile errors on IRIX
-#include <VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/event/cfdSteadyStateVizHandler.h>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>

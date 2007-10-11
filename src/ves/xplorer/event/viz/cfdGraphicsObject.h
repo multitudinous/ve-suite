@@ -40,9 +40,9 @@ cfdGraphicsObject API
 */
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/SceneGraph/Group.h>
-#include <VE_Xplorer/SceneGraph/Geode.h>
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/Geode.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 namespace VE_SceneGraph
 {

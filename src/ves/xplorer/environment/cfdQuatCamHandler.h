@@ -39,7 +39,7 @@ cfdQuatCamHandler API
 /*!\class VE_Xplorer::cfdQuatCamHandler
 * 
 */
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
@@ -73,8 +73,8 @@ namespace VE_XML
 #include <vector>
 #include <map>
 
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/EventHandler.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>

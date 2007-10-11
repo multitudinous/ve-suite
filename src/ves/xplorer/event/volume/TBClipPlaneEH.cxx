@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <VE_Xplorer/XplorerHandlers/TBClipPlaneEH.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/TBClipPlaneEH.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
 
 #include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>
 

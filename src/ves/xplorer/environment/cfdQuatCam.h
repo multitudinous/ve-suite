@@ -41,7 +41,7 @@ cfdQuatCam API
 */
 #include <ves/VEConfig.h>
 
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>

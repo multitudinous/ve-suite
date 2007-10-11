@@ -31,13 +31,13 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <VE_Xplorer/XplorerHandlers/Wand.h>
+#include <ves/xplorer/event/Wand.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
+#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/cfdEnum.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/SceneGraph/FindParentsVisitor.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 //#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
@@ -41,46 +41,46 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
-#include <VE_Xplorer/Utilities/fileIO.h>
+#include <ves/xplorer/util/fileIO.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/SceneGraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdVectorBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
-#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
-#include <VE_Xplorer/XplorerHandlers/cfdScalarBarActor.h>
+#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdVectorBase.h>
+#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/cfdReadParam.h>
+#include <ves/xplorer/event/cfdScalarBarActor.h>
 
-#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/CADTransformEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADAddNodeEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADDeleteNodeEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADAddAttributeEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADSetActiveAttributeEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADSetNameEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADSetRootNodeEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADToggleEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADRemoveAttributeEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADMoveNodeEventHandler.h>
+#include <ves/xplorer/event/EventHandler.h>
+#include <ves/xplorer/event/CADTransformEH.h>
+#include <ves/xplorer/event/CADAddNodeEH.h>
+#include <ves/xplorer/event/CADDeleteNodeEH.h>
+#include <ves/xplorer/event/CADAddAttributeEH.h>
+#include <ves/xplorer/event/CADSetActiveAttributeEH.h>
+#include <ves/xplorer/event/CADSetNameEH.h>
+#include <ves/xplorer/event/CADSetRootNodeEH.h>
+#include <ves/xplorer/event/CADToggleEH.h>
+#include <ves/xplorer/event/CADRemoveAttributeEH.h>
+#include <ves/xplorer/event/CADMoveNodeEventHandler.h>
 
-#include <VE_Xplorer/XplorerHandlers/ActiveModelEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/MaterialUpdateEH.h>
-#include <VE_Xplorer/XplorerHandlers/MaterialModeUpdateEH.h>
-#include <VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/BBoxEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/WireframeEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/AxesEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/AxesLabelsEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/ScalarBarEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/DataTransformEH.h>
-#include <VE_Xplorer/XplorerHandlers/SoundActivateEH.h>
-#include <VE_Xplorer/XplorerHandlers/SoundAddNewEH.h>
-#include <VE_Xplorer/XplorerHandlers/CADInitializePhysicsEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/CADPhysicsMeshEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/CADPhysicsPropertiesEventHandler.h>
+#include <ves/xplorer/event/ActiveModelEventHandler.h>
+#include <ves/xplorer/event/MaterialUpdateEH.h>
+#include <ves/xplorer/event/MaterialModeUpdateEH.h>
+#include <ves/xplorer/event/AddVTKDataSetEventHandler.h>
+#include <ves/xplorer/event/BBoxEventHandler.h>
+#include <ves/xplorer/event/WireframeEventHandler.h>
+#include <ves/xplorer/event/AxesEventHandler.h>
+#include <ves/xplorer/event/AxesLabelsEventHandler.h>
+#include <ves/xplorer/event/ScalarBarEventHandler.h>
+#include <ves/xplorer/event/DataTransformEH.h>
+#include <ves/xplorer/event/SoundActivateEH.h>
+#include <ves/xplorer/event/SoundAddNewEH.h>
+#include <ves/xplorer/event/CADInitializePhysicsEventHandler.h>
+#include <ves/xplorer/event/CADPhysicsMeshEventHandler.h>
+#include <ves/xplorer/event/CADPhysicsPropertiesEventHandler.h>
 
 #include <ves/open/xml/Command.h>
 

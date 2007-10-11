@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <VE_Xplorer/XplorerHandlers/SoundAddNewEH.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <ves/xplorer/event/SoundAddNewEH.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

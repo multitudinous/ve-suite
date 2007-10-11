@@ -34,11 +34,11 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include <VE_Xplorer/XplorerHandlers/CommandHandler.h>
+#include <ves/xplorer/event/CommandHandler.h>
 
-#include <VE_Xplorer/XplorerHandlers/Device.h>
+#include <ves/xplorer/event/Device.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/DataValuePairPtr.h>

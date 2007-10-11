@@ -31,10 +31,10 @@
  *
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/cfdSound.h>
+#include <ves/xplorer/event/cfdSound.h>
 #include <snx/sonix.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
-#include <VE_Xplorer/Utilities/fileIO.h>
+#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/util/fileIO.h>
 
 using namespace VE_Xplorer;
 ////////////////////

@@ -41,7 +41,7 @@
 
 #include <ves/open/xml/Command.h>
 
-#include <VE_Xplorer/XplorerHandlers/Xplorer_i.h>
+#include <ves/xplorer/event/Xplorer_i.h>
 
 #include <vpr/Util/Singleton.h>
 

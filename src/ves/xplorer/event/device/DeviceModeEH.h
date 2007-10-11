@@ -38,7 +38,7 @@
 /*!\class DeviceModeEventHandler
  * Class for changing between navigation and selection for the active device
  */
-#include <VE_Xplorer/XplorerHandlers/EventHandler.h>
+#include <ves/xplorer/event/EventHandler.h>
 
 namespace VE_XML
 {

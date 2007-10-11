@@ -30,14 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <VE_Xplorer/XplorerHandlers/NavigationDataEventHandler.h>
+#include <ves/xplorer/event/NavigationDataEventHandler.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
-#include <VE_Xplorer/XplorerHandlers/Device.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/DeviceHandler.h>
+#include <ves/xplorer/event/Device.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/SceneGraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

@@ -31,12 +31,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <VE_Xplorer/XplorerHandlers/SPDimensionsEH.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModel.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
-#include <VE_Xplorer/XplorerHandlers/SeedPoints.h>
-#include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
+#include <ves/xplorer/event/SPDimensionsEH.h>
+#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/SeedPoints.h>
+#include <ves/xplorer/event/cfdDataSet.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

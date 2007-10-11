@@ -46,7 +46,7 @@
 #include <ves/xplorer/scenegraph/NURBS/NURBSObject.h>
 #include <vector>
 #include <map>
-#include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>
+#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
 namespace NURBS
 {
 class Point;

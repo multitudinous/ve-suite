@@ -30,15 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <VE_Xplorer/XplorerHandlers/DisplayInformation.h>
+#include <ves/xplorer/event/DisplayInformation.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/cfdEnvironmentHandler.h>
 
-#include <VE_Xplorer/SceneGraph/SceneManager.h>
-#include <VE_Xplorer/SceneGraph/CADEntity.h>
-#include <VE_Xplorer/SceneGraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
-#include <VE_Xplorer/XplorerHandlers/WCS.h>
+#include <ves/xplorer/event/WCS.h>
 
 #include <osg/Geode>
 #include <osg/Geometry>

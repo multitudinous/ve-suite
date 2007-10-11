@@ -41,7 +41,7 @@ cfdContour API
 *   selected. Update member function will be update
 *   the position and direction as each "Update" being called.
 */
-#include <VE_Xplorer/XplorerHandlers/cfdContourBase.h>
+#include <ves/xplorer/event/cfdContourBase.h>
 
 class vtkPlane;
 class vtkCutter;

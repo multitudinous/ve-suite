@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/ActiveModelEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
+#include <ves/xplorer/event/ActiveModelEventHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

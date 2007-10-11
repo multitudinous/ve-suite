@@ -30,21 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
-#include <VE_Xplorer/SceneGraph/Utilities/Attribute.h>
-#include <VE_Xplorer/SceneGraph/Clone.h>
-#include <VE_Xplorer/SceneGraph/DCS.h>
-#include <VE_Xplorer/SceneGraph/CADEntity.h>
-#include <VE_Xplorer/SceneGraph/CADEntityHelper.h>
-#include <VE_Xplorer/SceneGraph/Technique.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/scenegraph/Utilities/Attribute.h>
+#include <ves/xplorer/scenegraph/Clone.h>
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/Technique.h>
 
-#include <VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/Utilities/OpacityVisitor.h>
 
 #include <ves/open/xml/CAD/CADNode.h>
 #include <ves/open/xml/CAD/CADAttribute.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>

@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <string>
-#include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
-#include <VE_Xplorer/XplorerHandlers/cfdCuttingPlane.h>
-#include <VE_Xplorer/Utilities/fileIO.h>
-#include <VE_Xplorer/Utilities/readWriteVtkThings.h>
+#include <ves/xplorer/event/cfdPlanes.h>
+#include <ves/xplorer/event/cfdCuttingPlane.h>
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
@@ -45,7 +45,7 @@
 #include <vtkAppendPolyData.h>
 #include <vtkCutter.h>
 
-#include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
+#include <ves/xplorer/event/cfdDebug.h>
 
 #include <sstream>
 

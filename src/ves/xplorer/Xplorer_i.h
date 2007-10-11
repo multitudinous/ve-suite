@@ -34,7 +34,7 @@
 #define _XPLORER_I_H_
 
 #include <ves/open/moduleS.h>
-#include <VE_Xplorer/XplorerHandlers/Body_AMI_UIHandler_i.h>
+#include <ves/xplorer/event/Body_AMI_UIHandler_i.h>
 
 #undef _REENTRANT
 #include <vpr/Sync/Mutex.h>

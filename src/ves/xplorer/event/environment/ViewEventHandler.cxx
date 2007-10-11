@@ -38,10 +38,10 @@
 #endif
 
 // --- VE-Suite Includes --- //
-#include <VE_Xplorer/XplorerHandlers/ViewEventHandler.h>
-#include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
-#include <VE_Xplorer/XplorerHandlers/KeyboardMouse.h>
+#include <ves/xplorer/event/ViewEventHandler.h>
+#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/DeviceHandler.h>
+#include <ves/xplorer/event/KeyboardMouse.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
