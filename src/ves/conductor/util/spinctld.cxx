@@ -33,15 +33,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef WX_PRECOMP
-    #include "wx/valtext.h"     // for wxTextValidator
-    #include "wx/textctrl.h"
+    #include <wx/valtext.h>     // for wxTextValidator
+    #include <wx/textctrl.h>
 #endif // WX_PRECOMP
 
-#include <spinctld.h>
+#include <ves/conductor/util/spinctld.h>
 #include <math.h>
 
 #if wxMINOR_VERSION > 4
-    #include "wx/math.h"
+    #include <wx/math.h>
 #else
 #if defined(__VISUALC__) || defined(__BORLANDC__) || defined(__WATCOMC__)
     #include <float.h>
