@@ -37,8 +37,8 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-#include "VE_Open/skel/moduleC.h"
-#include "VE_CE/Executive_i.h"
+#include <ves/open/skel/moduleC.h>
+#include <apps/ce/Executive_i.h>
 
 #include <iostream>
 

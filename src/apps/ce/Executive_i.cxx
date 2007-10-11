@@ -30,21 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Network/string_ops.h"
-#include "VE_CE/Executive_i.h"
+#include <ves/util/string_ops.h>
+#include <apps/ce/Executive_i.h>
 
-#include "VE_Open/XML/Model/ModelCreator.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/XMLCreator.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/DataValuePairPtr.h"
+#include <ves/open/xml/model/ModelCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
-#include "VE_CE/Execute_Thread.h"
-#include "VE_CE/QueryThread.h"
+#include <apps/ce/Execute_Thread.h>
+#include <apps/ce/QueryThread.h>
 
 #include <ace/OS.h>
 

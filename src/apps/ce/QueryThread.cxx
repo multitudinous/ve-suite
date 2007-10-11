@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ace/Task.h>
 #include <ace/OS.h>
-#include "VE_CE/QueryThread.h"
+#include <apps/ce/QueryThread.h>
 
 #include <iostream>
 
