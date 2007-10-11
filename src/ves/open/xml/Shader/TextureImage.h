@@ -34,7 +34,7 @@
 #define VE_TEXTURE_IMAGE_H
 
 #include "ves/open/xml/XMLObject.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <map>

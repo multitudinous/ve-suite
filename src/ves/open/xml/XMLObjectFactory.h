@@ -40,7 +40,7 @@
 #include <string>
 #include <map>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 /*!\file XMLObjectFactory.h
   Factory class for creating XMLObject 
   */

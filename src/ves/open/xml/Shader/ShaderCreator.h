@@ -44,7 +44,7 @@ namespace VE_XML
    class XMLObject;
 }
 #include "ves/open/xml/CreationEventHandler.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 namespace VE_XML{
 namespace VE_Shader{
