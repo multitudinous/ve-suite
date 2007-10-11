@@ -4,9 +4,9 @@ import SConsAddons.Util as sca_util
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options vtk_options RootDir buildDir xerces_options GetPlatform')
-openDir = os.path.abspath( pj(RootDir, 'VE_Xplorer', 'SceneGraph') )
-sources = sca_util.getSourcesRecursive( openDir )
-headers = sca_util.getHeadersRecursive( openDir )
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','scenegraph') )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
 
@@ -21,23 +21,22 @@ else:
     lib_env.ParseConfig('flagpoll vrjuggler-opengl --atleast-version=%s --get-vrj_ogl_libs'%lib_env['VRJugglerVersion'])     
 
 lib_env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
-lib_env.Append(LIBS = ['VE_XML','osgOQ','VE_UtilLib'])
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')
-                         ,pj('#',buildDir,'external','osgOQ')
-                         ,pj('#',buildDir,'VE_Xplorer','Utilities')])
+lib_env.Append(LIBS = ['ves_open_xml','osgOQ'])
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml')
+                         ,pj('#',buildDir,'external','osgOQ')])
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 #lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 
 if baseEnv['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraph%s' %(execOsgPatTag),
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_scenegraph%s' %(execOsgPatTag),
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createSharedLibrary('VE_SceneGraph%s' %(execOsgPatTag), lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_xplorer_scenegraph%s' %(execOsgPatTag), lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Xplorer', 'SceneGraph'))
+lib.addHeaders(headers,  pj( 'ves', 'xplorer', 'scenegraph'))
 lib.build()

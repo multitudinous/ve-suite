@@ -22,12 +22,12 @@ lib_env = ves_pkg.getEnv().Copy()
 
 #xerces_options.apply( lib_env )
 #wxwidgets_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_util',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('ves_util', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_util', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

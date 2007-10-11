@@ -4,23 +4,11 @@ pj = os.path.join
 Import('baseEnv buildDir')
 
 xplorerSubdirs = Split("""
-    Utilities  
-    SceneGraph
-    TextureBased
-    XplorerHandlers
-    GraphicalPlugin
-    XplorerNetwork
-    GE
+    scenegraph
 """)
-##    DefaultGraphicalPlugin
-##    SceneGraph/NURBS
-##    SceneGraph/NURBS/Utilities
-##    SceneGraph/Utilities
+
 
 ##Run SConscript files in all of those folders.
-#for d in xplorerSubdirs:
-#   #print " dir ", d
-#   SConscript( dirs = d )
-
-#baseEnv[ 'cluster' ] = 'yes'
-#SConscript( dirs = "GE", build_dir=pj(buildDir,'VE_Xplorer','GE','cluster'))
+for d in xplorerSubdirs:
+   #print " dir ", d
+   SConscript( dirs = d )
