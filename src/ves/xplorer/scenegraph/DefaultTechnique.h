@@ -34,9 +34,9 @@
 #define DEFAULT_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
-#include "VE_Xplorer/SceneGraph/Technique.h"
+#include <ves/xplorer/scenegraph/Technique.h>
 
 namespace VE_SceneGraph
 {

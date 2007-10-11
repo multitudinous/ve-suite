@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/SelectTechnique.h"
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <ves/xplorer/scenegraph/SelectTechnique.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>

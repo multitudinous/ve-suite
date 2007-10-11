@@ -45,7 +45,7 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
 #include <osg/NodeVisitor>

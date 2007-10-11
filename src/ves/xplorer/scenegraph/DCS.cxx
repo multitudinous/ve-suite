@@ -32,10 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/TransferPhysicsDataCallback.h"
-#include "VE_Xplorer/SceneGraph/DefaultTechnique.h"
-#include "VE_Xplorer/SceneGraph/SelectTechnique.h"
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/TransferPhysicsDataCallback.h>
+#include <ves/xplorer/scenegraph/DefaultTechnique.h>
+#include <ves/xplorer/scenegraph/SelectTechnique.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

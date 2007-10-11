@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Group.h"
+#include <ves/xplorer/scenegraph/Group.h>
 
 #include <osg/Group>
 #include <osg/Node>

@@ -45,7 +45,7 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/SceneNode.h"
+#include <ves/xplorer/scenegraph/SceneNode.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/PhysicsRigidBody.h"
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include <ves/xplorer/scenegraph/PhysicsRigidBody.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>

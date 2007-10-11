@@ -38,15 +38,15 @@
 #endif
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
-#include "VE_Xplorer/SceneGraph/Logo/BlueArrow.h"
-#include "VE_Xplorer/SceneGraph/Logo/GreyArrow.h"
-#include "VE_Xplorer/SceneGraph/Logo/OrangeArrow.h"
-#include "VE_Xplorer/SceneGraph/Logo/VE.h"
-#include "VE_Xplorer/SceneGraph/Logo/Suite.h"
+#include <ves/xplorer/scenegraph/Logo/BlueArrow.h>
+#include <ves/xplorer/scenegraph/Logo/GreyArrow.h>
+#include <ves/xplorer/scenegraph/Logo/OrangeArrow.h>
+#include <ves/xplorer/scenegraph/Logo/VE.h>
+#include <ves/xplorer/scenegraph/Logo/Suite.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -66,7 +66,7 @@
 #include <istream>
 #include <sstream>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_SceneGraph;
 

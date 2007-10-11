@@ -58,7 +58,7 @@
 //=========================================================================
 #ifdef _PERFORMER
 // vtkActorToPF.h will define VTK4 if VTK44 is defined
-#include "vtkActorToPF.h"
+#include <vtkActorToPF.h>
 
 // starting with vtk4.4, doubles replaced floats
 #ifdef VTK44
@@ -68,13 +68,13 @@ typedef float vtkReal;
 #endif
 
 #ifdef VTK4
-#include "vtkDataSet.h"
-#include "vtkPolyData.h"
-#include "vtkPointData.h"
-#include "vtkCellData.h"
-#include "vtkImageData.h"
-#include "vtkProperty.h"
-#include "vtkTexture.h"
+#include <vtkDataSet.h>
+#include <vtkPolyData.h>
+#include <vtkPointData.h>
+#include <vtkCellData.h>
+#include <vtkImageData.h>
+#include <vtkProperty.h>
+#include <vtkTexture.h>
 #endif
 #include <Performer/pr/pfTexture.h>
 #include <iostream>
@@ -136,7 +136,7 @@ pfGeode* VE_SceneGraph::vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbos
 void VE_SceneGraph::vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose) {
 
   // this could possibly be any type of DataSet, vtkActorToPF assumes polyData
-  if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), "vtkPolyData")) {
+  if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), <vtkPolyData")) {
     cerr << "ERROR! Actor must use a vtkPolyDataMapper." << endl;
     cerr << "If you are using a vtkDataSetMapper, use vtkGeometryFilter instead." << endl;
     gsets[0] = NULL;

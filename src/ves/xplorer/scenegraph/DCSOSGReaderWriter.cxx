@@ -30,7 +30,7 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <ves/xplorer/scenegraph/DCS.h>
 #include <osg/io_utils>
 
 #include "osgDB/Registry"

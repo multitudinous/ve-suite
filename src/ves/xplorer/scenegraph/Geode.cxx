@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Geode.h"
+#include <ves/xplorer/scenegraph/Geode.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pf/pfNode.h>
-#include "VE_Xplorer/SceneGraph/vtkActorToPF.h"
+#include <ves/xplorer/scenegraph/vtkActorToPF.h>
 #elif _OSG
-#include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
+#include <ves/xplorer/scenegraph/vtkActorToOSG.h>
 
 #include <osg/Geode>
 #include <osg/Node>

@@ -45,7 +45,7 @@
 */
 
 // --- VE-Suite Stuff --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 // --- OSG Stuff --- //
 #include <osg/ref_ptr>

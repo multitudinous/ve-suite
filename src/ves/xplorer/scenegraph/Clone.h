@@ -45,7 +45,7 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <ves/xplorer/scenegraph/DCS.h>
 
 namespace VE_SceneGraph
 {

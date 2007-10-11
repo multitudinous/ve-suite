@@ -93,7 +93,7 @@ private:
 typedef progress_streambuf< char > progbuf;
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

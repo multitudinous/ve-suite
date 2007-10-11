@@ -41,8 +41,8 @@
 //#include <strstream.h>
 // workaround end
 
-#include "VE_Xplorer/SceneGraph/vtkActorToOSG.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/scenegraph/vtkActorToOSG.h>
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h>
 #ifdef VTK44
 #define VTK4
 typedef double vtkReal;
@@ -71,7 +71,7 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::re
 	actor->GetMapper()->Update();
 
 	// this could possibly be any type of DataSet, vtkActorToOSG assumes polyData
-	if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), "vtkPolyData")) {
+	if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), <vtkPolyData")) {
 		std::cerr << "ERROR! Actor must use a vtkPolyDataMapper." << std::endl;
 		std::cerr << "If you are using a vtkDataSetMapper, use vtkGeometryFilter instead." << std::endl;
 		return NULL;

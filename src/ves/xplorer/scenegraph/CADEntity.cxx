@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
-#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
-#include "VE_Xplorer/SceneGraph/SceneNode.h"
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/SceneNode.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

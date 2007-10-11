@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/SceneNode.h"
+#include <ves/xplorer/scenegraph/SceneNode.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>

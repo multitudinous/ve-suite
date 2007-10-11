@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/PhysicsConstraint.h"
+#include <ves/xplorer/scenegraph/PhysicsConstraint.h>
 
 #include <osg/Geode>
 #include <osg/Geometry>

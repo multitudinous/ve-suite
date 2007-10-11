@@ -45,11 +45,11 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 //Should not have to include these here
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/PhysicsRigidBody.h"
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/PhysicsRigidBody.h>
 
 namespace VE_SceneGraph
 {

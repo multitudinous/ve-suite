@@ -31,8 +31,8 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/UpdateIDOnChildrenVisitor.h"
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <ves/xplorer/scenegraph/UpdateIDOnChildrenVisitor.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>

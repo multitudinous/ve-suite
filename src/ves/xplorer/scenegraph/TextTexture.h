@@ -46,7 +46,7 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/Geode.h"
+#include <ves/xplorer/scenegraph/Geode.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

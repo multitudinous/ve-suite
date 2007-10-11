@@ -31,7 +31,7 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/CreateGraphDOTVisitor.h"
+#include <ves/xplorer/scenegraph/CreateGraphDOTVisitor.h>
 
 #include <osg/Group>
 #include <osg/Node>

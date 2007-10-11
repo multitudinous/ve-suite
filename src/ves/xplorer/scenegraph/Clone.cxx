@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/Clone.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
+#include <ves/xplorer/scenegraph/Clone.h>
+#include <ves/xplorer/scenegraph/Group.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

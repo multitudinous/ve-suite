@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
-#include "VE_Xplorer/SceneGraph/TextTexture.h"
+#include <ves/xplorer/scenegraph/TextTexture.h>
 #include <osgText/Text>
 #include <osg/CameraNode>
 #include <osg/Texture2D>

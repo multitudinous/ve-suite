@@ -31,8 +31,8 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/SetStateOnNURBSNodeVisitor.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
+#include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
+#include <ves/xplorer/scenegraph/NURBS/NURBSNode.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>

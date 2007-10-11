@@ -31,20 +31,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/CADEntityHelper.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
-#include "VE_Xplorer/SceneGraph/Switch.h"
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/Switch.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
-#include "VE_Xplorer/Utilities/fileIO.h"
+#include "VE_Xplorer/Utilities/fileIO.h>
 
-#include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
-#include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NCurve.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
-#include "VE_Xplorer/SceneGraph/NURBS/Utilities/OCCNURBSFileReader.h"
+#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h>
+#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
+#include <ves/xplorer/scenegraph/NURBS/NCurve.h>
+#include <ves/xplorer/scenegraph/NURBS/NSurface.h>
+#include <ves/xplorer/scenegraph/NURBS/NURBSNode.h>
+#include <ves/xplorer/scenegraph/NURBS/Utilities/OCCNURBSFileReader.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -75,7 +75,7 @@
 #elif _OPENSG
 #endif
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <osgOQ/OcclusionQueryVisitor.h>
 #include <osgOQ/OcclusionQueryRoot.h>
 

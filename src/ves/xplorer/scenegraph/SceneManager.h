@@ -45,11 +45,11 @@
 */
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
-#include "VE_Xplorer/SceneGraph/Switch.h"
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/Switch.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

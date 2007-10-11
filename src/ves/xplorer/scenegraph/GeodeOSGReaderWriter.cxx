@@ -30,7 +30,7 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Geode.h"
+#include <ves/xplorer/scenegraph/Geode.h>
 
 #include "osgDB/Registry"
 #include "osgDB/Input"

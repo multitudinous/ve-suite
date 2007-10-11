@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/SceneGraph/TransferPhysicsDataCallback.h"
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <ves/xplorer/scenegraph/TransferPhysicsDataCallback.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btRigidBody.h>

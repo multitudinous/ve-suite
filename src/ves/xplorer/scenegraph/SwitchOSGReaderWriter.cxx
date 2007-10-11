@@ -30,7 +30,7 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Switch.h"
+#include <ves/xplorer/scenegraph/Switch.h>
 
 //C/C++ Libraries
 #include <iostream>
