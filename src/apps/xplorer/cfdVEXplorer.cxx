@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/GE/cfdAppWrapper.h"
-#include "VE_Xplorer/GE/cfdVjObsWrapper.h"
+#include <apps/xplorer/cfdAppWrapper.h>
+#include <apps/xplorer/cfdVjObsWrapper.h>
 
-#include "VE_CE/Executive_i.h"
+#include <apps/ce/Executive_i.h>
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 
@@ -42,8 +42,8 @@
 #include <cstdlib>
 #include <vpr/System.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdThread.h"
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/xplorer/cfdThread.h>
+#include <ves/VEConfig.h>
 using namespace VE_Xplorer;
 
 int main(int argc, char* argv[])

@@ -30,22 +30,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/GE/cfdVjObsWrapper.h"
+#include <apps/xplorer/cfdVjObsWrapper.h>
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
-#include "VE_Xplorer/XplorerHandlers/Xplorer_i.h" 
-#include "VE_Xplorer/GE/VjObs_i.h"     //added for corba stuff
+#include <apps/xplorer/Xplorer_i.h> 
+#include <apps/xplorer/VjObs_i.h>     //added for corba stuff
 
 
-#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/CommandHandler.h"
+#include <ves/xplorer/cfdCommandArray.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/CommandHandler.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
-#include "VE_Open/XML/Command.h"
+#include <ves/open/xml/Command.h>
 
 #include <iostream>
 #include <boost/concept_check.hpp>

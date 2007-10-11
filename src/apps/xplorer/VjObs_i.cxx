@@ -30,34 +30,33 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/GE/VjObs_i.h"
+#include <apps/xplorer/VjObs_i.h>
 
-#include "VE_Open/XML/DOMDocumentManager.h"
+#include <ves/open/xml/DOMDocumentManager.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdTeacher.h"
-#include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h"
-#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/environment/cfdTeacher.h>
+#include <ves/xplorer/environment/cfdQuatCamHandler.h>
+#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/environment/cfdEnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/environment/cfdDisplaySettings.h>
+#include <ves/xplorer/cfdCommandArray.h>
+#include <ves/xplorer/cfdDebug.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include <ves/xplorer/scenegraphh/SceneManager.h>
+#include <ves/xplorer/scenegraphh/CADEntity.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
 #ifdef _OSG
-#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
-#include "VE_Xplorer/TextureBased/cfdVolumeVisualization.h"
-#include "VE_Xplorer/TextureBased/cfdTextureManager.h"
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/volume/cfdVolumeVisualization.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
 
 using namespace VE_TextureBased;
 #endif

@@ -39,7 +39,7 @@ VjObs_i API
 /*!\class VE_Xplorer::VjObs_i
 *
 */
-#include "VE_Open/skel/VjObsS.h"
+#include <ves/open/skel/VjObsS.h>
 
 //do this to remove compile warning on linux platforms
 #undef _REENTRANT
@@ -58,7 +58,7 @@ VjObs_i API
 
 #include <vpr/IO/SerializableObject.h>
 
-#include "VE_Xplorer/GE/cfdStateInfo.h"
+#include <apps/xplorer/cfdStateInfo.h>
 
 namespace VE_Xplorer
 {

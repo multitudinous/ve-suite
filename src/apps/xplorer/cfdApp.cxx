@@ -30,41 +30,40 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/GE/cfdApp.h"
+#include <apps/xplorer/cfdApp.h>
 
 #ifdef _OSG
-#include "VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h"
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
 #endif
 
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/Utilities/fileIO.h"
+#include <ves/xplorer/util/fileIO.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
-#include "VE_Xplorer/SceneGraph/PhysicsSimulator.h"
+#include <ves/xplorer/scenegraphh/SceneManager.h>
+#include <ves/xplorer/scenegraphh/PhysicsSimulator.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdSteadyStateVizHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdQuatCamHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
+#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/environment/cfdQuatCamHandler.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/cfdDataSet.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
-#include "VE_Xplorer/GE/cfdVjObsWrapper.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
+#include <apps/xplorer/cfdVjObsWrapper.h>
+#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/cfdDebug.h>
 
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/XMLCreator.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/Model/ModelCreator.h"
-#include "VE_Open/XML/Model/Model.h"
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/Shader/ShaderCreator.h>
+#include <ves/open/xml/Model/ModelCreator.h>
+#include <ves/open/xml/Model/Model.h>
 
-#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
+#include <ves/xplorer/network/cfdExecutive.h>
 
 // Scene graph dependant headers
 #ifdef _OSG
@@ -88,7 +87,7 @@
 #endif
 
 #ifdef _OSG
-#include "VE_Xplorer/TextureBased/cfdPBufferManager.h"
+#include <ves/xplorer/volume/cfdPBufferManager.h>
 using namespace VE_TextureBased;
 #endif
 
