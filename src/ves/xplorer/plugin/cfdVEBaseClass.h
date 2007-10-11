@@ -39,8 +39,8 @@ cfdVEBaseClass API
 /*!\class ::cfdVEBaseClass
 *
 */
-#include <VE_Xplorer/SceneGraph/DCS.h>
-#include <VE_Xplorer/SceneGraph/Group.h>
+#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/Group.h>
 
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/ModelWeakPtr.h>

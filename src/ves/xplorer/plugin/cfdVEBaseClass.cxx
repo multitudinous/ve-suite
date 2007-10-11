@@ -33,7 +33,7 @@
 
 #include <ves/xplorer/plugincfdVEBaseClass.h>
 
-#include <VE_Xplorer/SceneGraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdDataSet.h>
