@@ -63,7 +63,7 @@ BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
    EVT_BUTTON           (ADD_ISOSURFACE_BUTTON,       Isosurfaces::_onAddIsosurface)
    EVT_BUTTON           (ADVANCED_ISOSURFACE_BUTTON,  Isosurfaces::_onAdvanced)
    EVT_COMMAND_SCROLL   (ISOSURFACE_SPINCTRL,         Isosurfaces::_onSpinner)
-   EVT_TEXT_ENTER		(ISOSURFACE_SPINCTRL,		  Isosurfaces::UpdateSlider )
+   EVT_TEXT_ENTER    (ISOSURFACE_SPINCTRL,        Isosurfaces::UpdateSlider )
 ////@end Isosurfaces event table entries
 END_EVENT_TABLE()
 Isosurfaces::Isosurfaces( )
@@ -77,7 +77,7 @@ Isosurfaces::Isosurfaces( wxWindow* parent, wxWindowID id,
                        const wxSize& size, long style )
 {
 
-	advancediso = 0;
+   advancediso = 0;
 
    Create(parent, id, caption, pos, size, style);
    wxSize displaySize = ::wxGetDisplaySize();
@@ -194,13 +194,13 @@ void Isosurfaces::SetScalarRange(std::string activeScalar, std::vector<double> s
    if( tempScalarName.compare(_activeScalar) )
    {
       tempScalarName = _activeScalar; 
-	  _isoSpinner->SetRange( _scalarRange.at(0), _scalarRange.at(1) );
+     _isoSpinner->SetRange( _scalarRange.at(0), _scalarRange.at(1) );
       _isoSpinner->SetValue( _scalarRange.at(0) );
       _isoSurfaceSlider->SetValue(0);
    }
 
-   	_minValue = _scalarRange.at(0);
-	_maxValue = _scalarRange.at(1);
+      _minValue = _scalarRange.at(0);
+   _maxValue = _scalarRange.at(1);
 } 
 ////////////////////////////////
 bool Isosurfaces::ShowToolTips()
@@ -303,15 +303,15 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 
    if(!advancediso)
    {
-		advancediso = new AdvancedIsosurface( this, SYMBOL_ADVANCEDISOSURFACES_IDNAME,
-									SYMBOL_ADVANCEDISOSURFACES_TITLE,
-									SYMBOL_ADVANCEDISOSURFACES_POSITION,
-									SYMBOL_ADVANCEDISOSURFACES_SIZE,
-									SYMBOL_ADVANCEDISOSURFACES_STYLE );
+      advancediso = new AdvancedIsosurface( this, SYMBOL_ADVANCEDISOSURFACES_IDNAME,
+                           SYMBOL_ADVANCEDISOSURFACES_TITLE,
+                           SYMBOL_ADVANCEDISOSURFACES_POSITION,
+                           SYMBOL_ADVANCEDISOSURFACES_SIZE,
+                           SYMBOL_ADVANCEDISOSURFACES_STYLE );
 
-		advancediso->SetActiveScalar( _activeScalar );
-		advancediso->SetScalarList( scalarlist );
-		advancediso->PopulateList( _scalarNames );
+      advancediso->SetActiveScalar( _activeScalar );
+      advancediso->SetScalarList( scalarlist );
+      advancediso->PopulateList( _scalarNames );
    }
 
    advancediso->SetSize(GetRect());
@@ -320,9 +320,9 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
 
    if (advancediso->ShowModal() == wxID_OK)
    {
-	  _minValue = advancediso->GetMinScalarValue();
-	  _maxValue = advancediso->GetMaxScalarValue();
-	  _activeScalar = advancediso->GetScalarName();
+     _minValue = advancediso->GetMinScalarValue();
+     _maxValue = advancediso->GetMaxScalarValue();
+     _activeScalar = advancediso->GetScalarName();
    }
 }
 //////////////////////////////////////////////////////
@@ -353,5 +353,5 @@ void Isosurfaces::InitializeScalarData( std::string activeScalar )
 ////////////////////////////////////////////////////////////
 void Isosurfaces::SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges )
 {
-	scalarlist = colorScalarRanges;
+   scalarlist = colorScalarRanges;
 }
