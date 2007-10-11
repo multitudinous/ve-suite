@@ -39,12 +39,12 @@ cfdVEBaseClass API
 /*!\class ::cfdVEBaseClass
 *
 */
-#include "VE_Xplorer/SceneGraph/DCS.h"
-#include "VE_Xplorer/SceneGraph/Group.h"
+#include "VE_Xplorer/SceneGraph/DCS.h>
+#include "VE_Xplorer/SceneGraph/Group.h>
 
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelWeakPtr.h"
-#include "VE_Open/XML/Model/ModelStrongPtr.h"
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelWeakPtr.h>
+#include <ves/open/xml/model/ModelStrongPtr.h>
 
 #include <string>
 #include <vector>
@@ -71,7 +71,7 @@ namespace VE_XML
    class Command;
 }
 
-#include "VE_Installer/include/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>

@@ -31,33 +31,32 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
+#include <ves/xplorer/plugincfdVEBaseClass.h>
 
-#include "VE_Xplorer/SceneGraph/CADEntity.h"
+#include "VE_Xplorer/SceneGraph/CADEntity.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdReadParam.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDataSet.h"
-#include "VE_Xplorer/XplorerHandlers/cfdSoundHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
-#include "VE_Xplorer/XplorerHandlers/CADAddNodeEH.h"
-#include "VE_Xplorer/XplorerHandlers/AddVTKDataSetEventHandler.h"
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/environment/cfdSoundHandler.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
+#include <ves/xplorer/event/cad/CADAddNodeEH.h>
+#include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 
-#include "VE_Xplorer/Utilities/fileIO.h"
+#include <ves/xplorer/util/fileIO.h>
 
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAssembly.h"
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAssembly.h>
 
-#include "VE_Xplorer/XplorerHandlers/Device.h"
+#include <ves/xplorer/device/Device.h>
 
 #include <fstream>
 #include <sstream>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
