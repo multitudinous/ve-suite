@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/SceneGraph/NURBS/NURBSNode.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-#include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h" 
+#include <ves/xplorer/scenegraph/NURBS/NURBSNode.h>
+#include <ves/xplorer/scenegraph/NURBS/NSurface.h>
+#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h> 
 #include <osg/Drawable>
 #include <osg/BoundingBox>
 #include <osg/BoundingSphere>

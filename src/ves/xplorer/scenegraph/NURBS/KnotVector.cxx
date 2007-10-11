@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "KnotVector.h"
+#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
 #include <iostream>
 #include <string>
 #include <cmath>

@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/NURBS/NSurface.h"
-#include "VE_Xplorer/SceneGraph/NURBS/ControlPoint.h"
-#include "VE_Xplorer/SceneGraph/NURBS/KnotVector.h"
+#include <ves/xplorer/scenegraph/NURBS/NSurface.h>
+#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h>
+#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
 #include <iostream>
 #include <cmath>
 

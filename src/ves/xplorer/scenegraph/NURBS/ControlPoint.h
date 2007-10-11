@@ -48,7 +48,7 @@
 /*!\namespace NURBS
  * NURBS API namespace.
  */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 #include <ostream>
 namespace NURBS

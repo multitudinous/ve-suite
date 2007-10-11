@@ -42,7 +42,7 @@
 /*!\class NURBS::NURBSObject
  * Base class defining a NURBS representation. 
  */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <vector>
 #include <map>
 #include <string>

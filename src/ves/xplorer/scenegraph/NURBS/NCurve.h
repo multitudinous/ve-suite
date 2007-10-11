@@ -42,8 +42,8 @@
 /*!\class NURBS::NURBSCurve
  * Class defining a NURBSCurve. 
  */
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NURBSObject.h"
+#include <ves/VEConfig.h>
+#include <ves/xplorer/scenegraph/NURBS/NURBSObject.h>
 #include <vector>
 #include <map>
 #include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>

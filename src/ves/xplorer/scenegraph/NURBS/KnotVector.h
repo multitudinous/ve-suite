@@ -43,7 +43,7 @@
  * Class defining a KnotVector for NURBS object.
  */
 
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <vector>
 #include <map>
 #include <string>

@@ -42,7 +42,7 @@
 /*!\class NURBS::NURBSSurface
  * Class defining a NURBSSurface. 
  */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <vector>
 #include <map>
 #include <VE_Xplorer/SceneGraph/NURBS/KnotVector.h>

@@ -38,8 +38,8 @@
 #include <osg/Group>
 #include <osg/BoundingSphere>
 
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/SceneGraph/NURBS/NURBSObject.h"
+#include <ves/VEConfig.h>
+#include <ves/xplorer/scenegraph/NURBS/NURBSObject.h>
 
 /*!\file NURBSNode.h
   NURBS Object OSG Renderer API
