@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerNetwork/cfdVEAvailModules.h"
+#include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <iostream>
 
 #include <fstream>

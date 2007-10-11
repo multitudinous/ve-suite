@@ -42,7 +42,7 @@ cfdVEPluginLoader API
 #include <vpr/DynLoad/LibraryFinder.h>
 
 #include <map>
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_Xplorer
 {
    class cfdVEBaseClass;

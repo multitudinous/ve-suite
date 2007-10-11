@@ -30,33 +30,33 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerNetwork/VE_i.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Xplorer/XplorerHandlers/cfdCommandArray.h"
-#include "VE_Xplorer/XplorerNetwork/cfdVEAvailModules.h"
-#include "VE_Xplorer/XplorerNetwork/UpdateNetworkEventHandler.h"
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdThread.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h"
+#include <ves/xplorer/network/VE_i.h>
+//#include <ves/xplorer/XplorerHandlers/cfdEnum.h>
+#include <ves/xplorer/cfdCommandArray.h>
+#include <ves/xplorer/network/cfdVEAvailModules.h>
+#include <ves/xplorer/network/UpdateNetworkEventHandler.h>
+#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/cfdThread.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/Model/ModelWeakPtr.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Model/SystemWeakPtr.h"
-#include "VE_Open/XML/Model/SystemStrongPtr.h"
-#include "VE_Open/XML/Model/System.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/Model/ModelWeakPtr.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Model/SystemWeakPtr.h>
+#include <ves/open/xml/Model/SystemStrongPtr.h>
+#include <ves/open/xml/Model/System.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
-#include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
-#include "VE_Xplorer/XplorerNetwork/ReloadPluginsEventHandler.h"
+#include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
+#include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
+#include <ves/xplorer/network/ReloadPluginsEventHandler.h>
 
 #include <iostream>
 #include <fstream>
@@ -70,8 +70,8 @@
 #include <xercesc/dom/DOM.hpp>
 XERCES_CPP_NAMESPACE_USE
 
-#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

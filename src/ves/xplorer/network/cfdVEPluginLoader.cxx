@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/XplorerNetwork/cfdVEPluginLoader.h"
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/network/cfdVEPluginLoader.h>
+#include <ves/xplorer/plugincfdVEBaseClass.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <iostream>
 

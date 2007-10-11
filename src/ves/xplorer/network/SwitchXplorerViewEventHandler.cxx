@@ -31,28 +31,28 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include "VE_Xplorer/XplorerNetwork/SwitchXplorerViewEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerHandlers/DeviceHandler.h"
-#include "VE_Xplorer/XplorerHandlers/Device.h"
+#include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/device/Device.h>
 
-#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
+#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/NetworkSystemView.h>
 
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
+#include <ves/xplorer/plugincfdVEBaseClass.h>
 
-#include "VE_Xplorer/SceneGraph/SceneManager.h"
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/Model/Model.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/Model/Model.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
 // --- OSG Includes --- //
 #include <osg/MatrixTransform>

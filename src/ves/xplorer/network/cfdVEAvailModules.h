@@ -39,8 +39,8 @@ cfdVEAvailModules API
 * 
 */
 
-#include "VE_Xplorer/XplorerNetwork/cfdVEPluginLoader.h"
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/xplorer/network/cfdVEPluginLoader.h>
+#include <ves/VEConfig.h>
 
 namespace VE_Xplorer
 {

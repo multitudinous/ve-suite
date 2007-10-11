@@ -30,22 +30,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerNetwork/DeleteObjectFromNetworkEventHandler.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModel.h"
-#include "VE_Xplorer/XplorerHandlers/cfdModelHandler.h"
-#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
+#include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/plugincfdVEBaseClass.h>
 
 
-#include "VE_Open/XML/XMLObject.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/Model/Model.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/ParameterBlock.h>
+#include <ves/open/xml/Model/Model.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
 #include <iostream>
 

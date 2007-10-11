@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/XplorerNetwork/ReloadPluginsEventHandler.h"
-#include "VE_Xplorer/XplorerNetwork/cfdExecutive.h"
-#include "VE_Xplorer/XplorerNetwork/cfdVEAvailModules.h"
+#include <ves/xplorer/network/ReloadPluginsEventHandler.h>
+#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/network/cfdVEAvailModules.h>
 
-#include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
+#include <ves/xplorer/cfdDebug.h>
 
-#include "VE_Open/XML/XMLObject.h"
+#include <ves/open/xml/XMLObject.h>
 
 #include <iostream>
 

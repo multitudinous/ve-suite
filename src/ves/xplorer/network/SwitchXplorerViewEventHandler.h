@@ -41,9 +41,9 @@
  */
 
 // --- VE-Suite Includes --- //
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <ves/xplorer/event/EventHandler.h>
 
 // --- C/C++ Libraries --- //
 #include <map>

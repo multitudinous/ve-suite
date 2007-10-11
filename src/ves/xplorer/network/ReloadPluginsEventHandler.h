@@ -39,7 +39,7 @@
  * Reload plugins for the network.
  */
 
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_XML
 {
@@ -50,7 +50,7 @@ namespace VE_Xplorer
    class cfdGlobalBase;
    class cfdVEBaseClass;
 }
-#include "VE_Xplorer/XplorerHandlers/EventHandler.h"
+#include <ves/xplorer/event/EventHandler.h>
 namespace VE_EVENTS
 {
 class VE_XPLORER_NETWORK_EXPORTS ReloadPluginsEventHandler: public EventHandler

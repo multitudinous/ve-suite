@@ -32,8 +32,8 @@
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef NETWORK_SYSTEM_VIEW_H
 #define NETWORK_SYSTEM_VIEW_H
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include <ves/VEConfig.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 
 #include <string>
 #include <osg/ref_ptr>

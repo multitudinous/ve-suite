@@ -33,11 +33,11 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include "VE_Xplorer/XplorerNetwork/NetworkSystemView.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Model/Point.h"
-#include "VE_Open/XML/Model/Network.h"
-#include "VE_Open/XML/Model/Link.h"
+#include <ves/xplorer/network/NetworkSystemView.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Model/Point.h>
+#include <ves/open/xml/Model/Network.h>
+#include <ves/open/xml/Model/Link.h>
 
 #include <osgDB/ReadFile>
 #include <osgUtil/Optimizer>
@@ -53,12 +53,12 @@
 #include <osg/TexMat>
 #include <osg/StateSet>
 
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Xplorer/SceneGraph/TextTexture.h"
-#include "VE_Xplorer/XplorerNetwork/UnsupportedComponent.h"
+#include <ves/open/xml/Model/Model.h>
+#include <ves/xplorer/scenegraph/TextTexture.h>
+#include <ves/xplorer/network/UnsupportedComponent.h>
 
-#include "VE_Xplorer/SceneGraph/Utilities/PhongLoader.h"
-#include "VE_Xplorer/SceneGraph/Utilities/ComputeBoundsVisitor.h"
+#include <ves/xplorer/scenegraph/Utilities/PhongLoader.h>
+#include <ves/xplorer/scenegraph/Utilities/ComputeBoundsVisitor.h>
 #include <iostream>
 #include <fstream>
 

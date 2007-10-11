@@ -39,15 +39,15 @@ cfdExecutive API
 * 
 */
 
-#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h"
+#include "VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <vpr/Util/Singleton.h>
 
-#include "VE_Xplorer/SceneGraph/Group.h"
+#include <ves/xplorer/scenegraph/Group.h>
 
-#include "VE_Open/XML/Model/ModelStrongPtr.h"
-#include "VE_Open/XML/Model/Model.h"
+#include <ves/open/xml/Model/ModelStrongPtr.h>
+#include <ves/open/xml/Model/Model.h>
 
 #include <map>
 #include <string>
