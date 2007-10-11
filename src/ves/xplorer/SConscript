@@ -1,7 +1,10 @@
 #!python
 import os, sys, string
 pj = os.path.join
-Import('baseEnv buildDir')
+import glob
+import SConsAddons.Util as sca_util
+
+Import('baseEnv buildDir RootDir ves_pkg execOsgPatTag vtk_options osg_options xerces_options LIBDIR')
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -14,3 +17,85 @@ xplorerSubdirs = Split("""
 for d in xplorerSubdirs:
    #print " dir ", d
    SConscript( dirs = d )
+
+sources = glob.glob(pj(RootDir, 'src','ves','xplorer','*.cxx'))
+headers = glob.glob(pj(RootDir, 'src','ves','xplorer','*.h'))
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','event') )
+event_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+event_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('event', s), event_plugin_srcs)
+headers += map(lambda s: pj('event', s), event_header_srcs)
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','DefaultGraphicalPlugin') )
+plugin_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+plugin_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('DefaultGraphicalPlugin', s), plugin_plugin_srcs)
+headers += map(lambda s: pj('DefaultGraphicalPlugin', s), plugin_header_srcs)
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','device') )
+device_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+device_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('device', s), device_plugin_srcs)
+headers += map(lambda s: pj('device', s), device_header_srcs)
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','environment') )
+env_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+env_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('environment', s), env_plugin_srcs)
+headers += map(lambda s: pj('environment', s), env_header_srcs)
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','network') )
+net_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+net_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('network', s), net_plugin_srcs)
+headers += map(lambda s: pj('network', s), net_header_srcs)
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','plugin') )
+base_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+base_header_srcs = sca_util.getHeadersRecursive( srcDir )
+sources += map(lambda s: pj('plugin', s), base_plugin_srcs)
+headers += map(lambda s: pj('plugin', s), base_header_srcs)
+
+print sources
+print headers
+
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['ves_open_xml',
+                   'ves_xplorer_scenegraph%s' %(execOsgPatTag),
+                   'ves_xplorer_util',
+                   'ves_xplorer_volume%s' %(execOsgPatTag),
+                   'ves_open_module'])
+
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
+                        pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
+                        pj('#', buildDir, 'src', 'ves', 'xplorer', 'volume'),
+                        pj('#', buildDir, 'src', 'ves', 'open', 'skel'),
+                        pj('#', buildDir, 'src', 'ves', 'open','xml')])
+
+lib_env.ParseConfig('flagpoll TAO \
+                          ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+                          TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
+                          TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
+                          --libs --cflags')
+lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
+
+vtk_options.apply( lib_env )
+osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+lib_env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
+lib_env.Append(LIBS = ['osgOQ'])
+lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
+if baseEnv['StaticLibs'] == "yes":
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer%s' %(execOsgPatTag),
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createSharedLibrary('ves_xplorer%s' %(execOsgPatTag), lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'ves', 'xplorer'))
+lib.build()

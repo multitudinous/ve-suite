@@ -34,9 +34,9 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include <ves/xplorer/event/CommandHandler.h>
+#include <ves/xplorer/CommandHandler.h>
 
-#include <ves/xplorer/event/Device.h>
+#include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

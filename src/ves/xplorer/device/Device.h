@@ -41,7 +41,7 @@ Device API
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 

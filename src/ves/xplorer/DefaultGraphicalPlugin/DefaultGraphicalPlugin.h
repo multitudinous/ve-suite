@@ -39,7 +39,7 @@ DefaultGraphicalPlugin API
 /*!\class ::DefaultGraphicalPlugin
 *
 */
-#include <ves/xplorer/plugincfdVEBaseClass.h>
+#include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
