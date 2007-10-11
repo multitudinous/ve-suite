@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h"
+#include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 
 #include <iostream>
 

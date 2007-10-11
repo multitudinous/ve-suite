@@ -39,9 +39,9 @@ DefaultGraphicalPlugin API
 /*!\class ::DefaultGraphicalPlugin
 *
 */
-#include "VE_Xplorer/GraphicalPlugin/cfdVEBaseClass.h"
+#include <ves/xplorer/plugincfdVEBaseClass.h>
 
-#include "VE_Xplorer/SceneGraph/DCS.h"
+#include <ves/xplorer/scenegraph/DCS.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>
