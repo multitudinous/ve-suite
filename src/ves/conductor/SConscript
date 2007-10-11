@@ -13,8 +13,8 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XML','VE_OpenModuleLib', 'VE_Conductor_Utilities'])
 lib_env.Append(LIBPATH = [#pj('#', buildDir, 'VE_Conductor','Utilities'),
                           #pj('#', buildDir, 'VE_Conductor','Network'),
-                          pj('#', buildDir, 'src', 'open','skel'),
-                        pj('#', buildDir, 'src', 'open','xml')])
+                          pj('#', buildDir, 'src', 'ves', 'open','skel'),
+                        pj('#', buildDir, 'src', 'ves', 'open','xml')])
 lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode vpr --libs --cflags')
