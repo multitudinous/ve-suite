@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/FloatArray.h"
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/FloatArray.h>
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 //////////////////////////

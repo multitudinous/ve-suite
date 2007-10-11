@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/model/Link.h"
-#include "ves/open/xml/model/Point.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/DataValuePair.h>
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 using namespace VE_XML::VE_Model;

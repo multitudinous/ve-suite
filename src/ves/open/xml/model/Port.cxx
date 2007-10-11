@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/model/Port.h"
-#include "ves/open/xml/model/Point.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/DataValuePair.h>
 #include <iostream>
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE

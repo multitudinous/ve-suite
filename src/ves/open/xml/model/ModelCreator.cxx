@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/model/ModelCreator.h"
+#include <ves/open/xml/model/ModelCreator.h>
 
-#include "ves/open/xml/model/Link.h"
-#include "ves/open/xml/model/Model.h"
-#include "ves/open/xml/model/Network.h"
-#include "ves/open/xml/model/System.h"
-#include "ves/open/xml/model/Point.h"
-#include "ves/open/xml/model/Port.h"
-#include "ves/open/xml/model/TagPtr.h"
-#include "ves/open/xml/model/Tag.h"
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/TagPtr.h>
+#include <ves/open/xml/model/Tag.h>
 
 using namespace VE_XML::VE_Model;
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
     {
         return new System();
     }
-    else if ( objectType == "veSystem" )
+    else if ( objectType == <vesystem" )
     {
         return new System();
     }
@@ -138,7 +138,7 @@ ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
     {
         return new System(*dynamic_cast<System*>(objectToCopy));
     }
-    else if ( objectType == "veSystem" )
+    else if ( objectType == <vesystem" )
     {
         return new System(*dynamic_cast<System*>(objectToCopy));
     }

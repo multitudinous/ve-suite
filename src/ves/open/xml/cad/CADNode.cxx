@@ -30,18 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/shader/Program.h"
-#include "ves/open/xml/cad/CADAssembly.h"
-#include "ves/open/xml/cad/CADMaterial.h"
-#include "ves/open/xml/cad/CADCreator.h"
-#include "ves/open/xml/cad/CADNodeAnimation.h"
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/shader/Program.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/cad/CADMaterial.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/cad/CADNodeAnimation.h>
 
-#include "ves/open/xml/XMLObjectFactory.h"
+#include <ves/open/xml/XMLObjectFactory.h>
 
-#include "ves/open/xml/shader/Shader.h"
-#include "ves/open/xml/shader/Program.h"
-#include "ves/open/xml/shader/ShaderCreator.h"
+#include <ves/open/xml/shader/Shader.h>
+#include <ves/open/xml/shader/Program.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
 
 #include <ctime>
 

@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/DOMDocumentManager.h"
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/DOMDocumentManager.h>
+#include <ves/open/xml/XMLObject.h>
 
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -275,7 +275,7 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg.xsd" ) );
    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg_model.xsd" ) );
    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "vecad.xsd" ) );
-   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "veshader.xsd" ) );
+   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( <veshader.xsd" ) );
 }
 /////////////////////////////////////////////////////
 std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )

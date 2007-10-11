@@ -30,24 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/XMLCreator.h"
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/XMLObject.h>
 
-#include "ves/open/xml/FloatArray.h"
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/OneDDoubleArray.h"
-#include "ves/open/xml/OneDIntArray.h"
-#include "ves/open/xml/OneDStringArray.h"
-#include "ves/open/xml/ParameterBlock.h" 
-#include "ves/open/xml/StateInfo.h"
-#include "ves/open/xml/ThreeDDoubleArray.h"
-#include "ves/open/xml/ThreeDIntArray.h"
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/TwoDDoubleArray.h"
-#include "ves/open/xml/TwoDIntArray.h" 
-#include "ves/open/xml/User.h" 
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/OneDDoubleArray.h>
+#include <ves/open/xml/OneDIntArray.h>
+#include <ves/open/xml/OneDStringArray.h>
+#include <ves/open/xml/ParameterBlock.h> 
+#include <ves/open/xml/StateInfo.h>
+#include <ves/open/xml/ThreeDDoubleArray.h>
+#include <ves/open/xml/ThreeDIntArray.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/TwoDDoubleArray.h>
+#include <ves/open/xml/TwoDIntArray.h> 
+#include <ves/open/xml/User.h> 
 
 using namespace VE_XML;
 /////////////////////////////////////////////////////////////////////////

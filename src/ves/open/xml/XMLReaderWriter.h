@@ -50,7 +50,7 @@ namespace VE_XML
    class DOMDocumentManager;
 }
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>

@@ -44,7 +44,7 @@
  */
 
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_XML
 {
 namespace VE_CAD{

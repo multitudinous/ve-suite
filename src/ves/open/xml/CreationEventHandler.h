@@ -41,7 +41,7 @@
  * Create XMLObject event handling.
  */
 
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/XMLObject.h>
 namespace VE_XML
 {
 class VE_XML_EXPORTS CreationEventHandler

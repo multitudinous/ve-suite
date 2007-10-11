@@ -34,8 +34,8 @@
 #include <iostream>
 #include <cstdlib>
 
-#include "ves/open/xml/TwoDDoubleArray.h"
-#include "ves/open/xml/OneDDoubleArray.h"
+#include <ves/open/xml/TwoDDoubleArray.h>
+#include <ves/open/xml/OneDDoubleArray.h>
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML;
 ////////////////////////////////////////////////////

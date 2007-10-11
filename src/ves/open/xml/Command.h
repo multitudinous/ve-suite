@@ -44,7 +44,7 @@
 #include <vector>
 #include <map>
 
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/XMLObject.h>
 
 #include <ves/open/xml/DataValuePairPtr.h>
 

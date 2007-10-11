@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/XMLReaderWriter.h"
-#include "ves/open/xml/DOMDocumentManager.h"
-#include "ves/open/xml/XMLObject.h"
-#include "ves/open/xml/XMLObjectFactory.h"
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/DOMDocumentManager.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/XMLObjectFactory.h>
 
 #include <iostream>
 using namespace VE_XML;

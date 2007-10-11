@@ -31,17 +31,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/FloatArray.h"
-#include "ves/open/xml/OneDDoubleArray.h"
-#include "ves/open/xml/TwoDDoubleArray.h"
-#include "ves/open/xml/ThreeDDoubleArray.h"
-#include "ves/open/xml/OneDIntArray.h"
-#include "ves/open/xml/TwoDIntArray.h"
-#include "ves/open/xml/ThreeDIntArray.h"
-#include "ves/open/xml/OneDStringArray.h"
-#include "ves/open/xml/XMLObjectFactory.h"
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/OneDDoubleArray.h>
+#include <ves/open/xml/TwoDDoubleArray.h>
+#include <ves/open/xml/ThreeDDoubleArray.h>
+#include <ves/open/xml/OneDIntArray.h>
+#include <ves/open/xml/TwoDIntArray.h>
+#include <ves/open/xml/ThreeDIntArray.h>
+#include <ves/open/xml/OneDStringArray.h>
+#include <ves/open/xml/XMLObjectFactory.h>
 
 #include <iostream>
 #include <sstream>

@@ -44,8 +44,8 @@
  */
 #include <string>
 #include <vector>
-#include "ves/open/xml/XMLObject.h"
-#include "ves/open/xml/model/PointPtr.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/model/PointPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 

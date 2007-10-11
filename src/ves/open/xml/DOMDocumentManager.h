@@ -41,7 +41,7 @@
 /*!\class VE_XML::DOMDocumentManager
  *This class manages the main documents for VE-Open.
  */
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>

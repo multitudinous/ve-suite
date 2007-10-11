@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_MATERIAL_H
 #define CAD_MATERIAL_H
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/XMLObject.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>

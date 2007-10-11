@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/XMLObject.h"
-#include "ves/open/xml/XMLCreator.h"
-#include "ves/open/xml/XMLObjectFactory.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/XMLObjectFactory.h>
 #include <sstream>
 #include <iomanip>
 

@@ -38,12 +38,12 @@
 /*!\class VE_XML::User
  * This class manages information describing a user.
  */
-#include "ves/open/xml/StateInfoPtr.h"
+#include <ves/open/xml/StateInfoPtr.h>
 #include <xercesc/dom/DOM.hpp>
 
 #include <iostream>
 
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/XMLObject.h>
 namespace VE_XML
 {
 class VE_XML_EXPORTS User : public XMLObject

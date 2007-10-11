@@ -43,7 +43,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 /*!\file XMLObject.h
   Base XML API
   */

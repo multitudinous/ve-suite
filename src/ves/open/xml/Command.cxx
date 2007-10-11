@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 XERCES_CPP_NAMESPACE_USE
 #include <iostream>
 using namespace VE_XML;

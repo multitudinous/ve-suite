@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/shader/TextureImage.h"
-#include "ves/open/xml/shader/ShaderCreator.h"
-#include "ves/open/xml/XMLObjectFactory.h"
-#include "ves/open/xml/Command.h"
-#include "ves/open/xml/DataValuePair.h"
-#include "ves/open/xml/DataValuePairPtr.h"
+#include <ves/open/xml/shader/TextureImage.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 XERCES_CPP_NAMESPACE_USE
 using namespace VE_XML::VE_Shader;
 using namespace VE_XML;

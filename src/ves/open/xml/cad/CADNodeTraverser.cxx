@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/open/xml/cad/CADNodeTraverser.h"
-#include "ves/open/xml/cad/CADAssembly.h"
-#include "ves/open/xml/cad/CADNode.h"
-#include "ves/open/xml/cad/CADPart.h"
+#include <ves/open/xml/cad/CADNodeTraverser.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
 #include <iostream>
 
 using namespace VE_XML::VE_CAD;

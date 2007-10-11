@@ -33,8 +33,8 @@
 #ifndef VE_TEXTURE_IMAGE_H
 #define VE_TEXTURE_IMAGE_H
 
-#include "ves/open/xml/XMLObject.h"
-#include "ves/VEConfig.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/VEConfig.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <map>
@@ -46,7 +46,7 @@
  * Class that stores an image in texture data.
  */
 
-#include "ves/open/xml/CommandPtr.h"
+#include <ves/open/xml/CommandPtr.h>
 
 namespace VE_XML
 {

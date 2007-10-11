@@ -30,27 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/open/xml/CreationEventHandler.h"
+#include <ves/open/xml/CreationEventHandler.h>
 /*
-#include "ves/open/xml/XMLObject.h"
-#include "ves/open/xml/Transform.h"
-#include "ves/open/xml/FloatArray.h"
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/FloatArray.h>
 
-#include "ves/open/xml/OneDDoubleArray.h"
-#include "ves/open/xml/OneDIntArray.h"
-#include "ves/open/xml/OneDStringArray.h"
+#include <ves/open/xml/OneDDoubleArray.h>
+#include <ves/open/xml/OneDIntArray.h>
+#include <ves/open/xml/OneDStringArray.h>
 
-#include "ves/open/xml/TwoDDoubleArray.h"
-#include "ves/open/xml/TwoDIntArray.h"
+#include <ves/open/xml/TwoDDoubleArray.h>
+#include <ves/open/xml/TwoDIntArray.h>
 
-#include "ves/open/xml/ThreeDDoubleArray.h"
-#include "ves/open/xml/ThreeDIntArray.h"
+#include <ves/open/xml/ThreeDDoubleArray.h>
+#include <ves/open/xml/ThreeDIntArray.h>
 
-#include "ves/open/xml/cad/CADNode.h"
-#include "ves/open/xml/cad/CADAssembly.h"
-#include "ves/open/xml/cad/CADPart.h"
-#include "ves/open/xml/cad/CADClone.h"
-#include "ves/open/xml/cad/CADAttribute.h"
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADClone.h>
+#include <ves/open/xml/cad/CADAttribute.h>
 */
 
 //////////////////////////////////////////////////////////

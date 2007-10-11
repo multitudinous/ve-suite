@@ -42,14 +42,14 @@
 #include <string>
 #include <vector>
 
-#include "ves/open/xml/XMLObject.h"
+#include <ves/open/xml/XMLObject.h>
 
-#include "ves/open/xml/model/ModelStrongPtr.h"
-#include "ves/open/xml/model/ModelWeakPtr.h"
-#include "ves/open/xml/model/Model.h"
-#include "ves/open/xml/model/NetworkStrongPtr.h"
-#include "ves/open/xml/model/NetworkWeakPtr.h"
-#include "ves/open/xml/model/Network.h"
+#include <ves/open/xml/model/ModelStrongPtr.h>
+#include <ves/open/xml/model/ModelWeakPtr.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/NetworkStrongPtr.h>
+#include <ves/open/xml/model/NetworkWeakPtr.h>
+#include <ves/open/xml/model/Network.h>
 
 #include <xercesc/dom/DOM.hpp>
 
