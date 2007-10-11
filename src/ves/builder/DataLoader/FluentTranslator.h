@@ -35,7 +35,7 @@
 #ifndef _FLUENT_TRANSLATOR_H_
 #define _FLUENT_TRANSLATOR_H_
 
-#include <VE_Builder/Translator/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
+#include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
 namespace VE_Builder
 {

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Builder/Translator/DataLoader/AVSTranslator.h>
+#include <ves/builder/DataLoader/AVSTranslator.h>
 #include <vtkDataSet.h>
 #include <vtkAVSucdReader.h>
 #include <vtkUnstructuredGrid.h>

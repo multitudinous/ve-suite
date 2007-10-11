@@ -41,8 +41,8 @@
 #include <vtkPointData.h>
 
 #include <VE_Xplorer/Utilities/fileIO.h>
-#include <VE_Builder/Translator/converter.h"      // for "letUsersAddParamsToField>
-#include <VE_Builder/Translator/gridConversion.h>
+#include <ves/builder/converter.h"      // for "letUsersAddParamsToField>
+#include <ves/builder/gridConversion.h>
 using namespace VE_Util;
 
 vtkStructuredGrid * reiReader( std::string reiFileName, int debug )

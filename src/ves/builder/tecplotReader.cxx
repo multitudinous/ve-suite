@@ -34,7 +34,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //works right now for the INEL Tecplot data
-#include <VE_Builder/Translator/tecplotReader.h>
+#include <ves/builder/tecplotReader.h>
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkStructuredGrid.h>
@@ -42,7 +42,7 @@
 #include <vtkCellType.h>
 #include <vtkFloatArray.h>
 #include <VE_Xplorer/Utilities/readWriteVtkThings.h>
-#include <VE_Builder/Translator/converter.h>
+#include <ves/builder/converter.h>
 tecplotReader::tecplotReader( )
 {
    uGrid = NULL;

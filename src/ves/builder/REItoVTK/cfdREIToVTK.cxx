@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Builder/Translator/REItoVTK/cfdREIToVTK.h>
-#include <VE_Builder/Translator/REItoVTK/DBConverter.h>
-#include <VE_Builder/Translator/REItoVTK/PPConverter.h>
+#include <ves/builder/REItoVTK/cfdREIToVTK.h>
+#include <ves/builder/REItoVTK/DBConverter.h>
+#include <ves/builder/REItoVTK/PPConverter.h>
 #include <vtkDataSet.h>
 #include <vtkImageData.h>
 #include <vtkDICOMImageReader.h>

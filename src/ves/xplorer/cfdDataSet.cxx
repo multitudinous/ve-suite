@@ -54,7 +54,7 @@
 #include <VE_Xplorer/Utilities/ProcessScalarRangeCallback.h>
 #include <VE_Xplorer/Utilities/ActiveDataInformationCallback.h>
 #include <VE_Xplorer/Utilities/CreateDataObjectBBoxActorsCallback.h>
-#include <VE_Builder/Translator/DataLoader/DataLoader.h>
+#include <ves/builder/DataLoader/DataLoader.h>
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>

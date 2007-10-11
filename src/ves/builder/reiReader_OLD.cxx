@@ -46,8 +46,8 @@
 #include <vtkGenericCell.h>
 
 #include <VE_Xplorer/fileIO.h>
-#include <VE_Builder/Translator/converter.h"      // for "letUsersAddParamsToField>
-#include <VE_Builder/Translator/convertToUnstructuredGrid.h>
+#include <ves/builder/converter.h"      // for "letUsersAddParamsToField>
+#include <ves/builder/convertToUnstructuredGrid.h>
 
 void filterThePointData( vtkPointData * filteredPD, vtkPointData * unfilteredPD, const int * mapVector )
 {

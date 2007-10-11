@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Builder/Translator/DataLoader/AnsysTranslator.h>
-#include <VE_Builder/Translator/DataLoader/ansysReader.h>
+#include <ves/builder/DataLoader/AnsysTranslator.h>
+#include <ves/builder/DataLoader/ansysReader.h>
 #include <vtkDataSet.h>
 #include <vtkUnstructuredGrid.h>
 

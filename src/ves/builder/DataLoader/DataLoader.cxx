@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Builder/Translator/DataLoader/DataLoader.h>
-#include <VE_Builder/Translator/DataLoader/FluentTranslator.h>
-#include <VE_Builder/Translator/DataLoader/MFIXTranslator.h>
-#include <VE_Builder/Translator/DataLoader/EnSightTranslator.h>
-#include <VE_Builder/Translator/DataLoader/AVSTranslator.h>
-#include <VE_Builder/Translator/DataLoader/cfdREITranslator.h>
-#include <VE_Builder/Translator/DataLoader/cfdDICOMTranslator.h>
-#include <VE_Builder/Translator/DataLoader/plot3dReader.h>
-#include <VE_Builder/Translator/DataLoader/StarCDTranslator.h>
-#include <VE_Builder/Translator/DataLoader/AnsysTranslator.h>
+#include <ves/builder/DataLoader/DataLoader.h>
+#include <ves/builder/DataLoader/FluentTranslator.h>
+#include <ves/builder/DataLoader/MFIXTranslator.h>
+#include <ves/builder/DataLoader/EnSightTranslator.h>
+#include <ves/builder/DataLoader/AVSTranslator.h>
+#include <ves/builder/DataLoader/cfdREITranslator.h>
+#include <ves/builder/DataLoader/cfdDICOMTranslator.h>
+#include <ves/builder/DataLoader/plot3dReader.h>
+#include <ves/builder/DataLoader/StarCDTranslator.h>
+#include <ves/builder/DataLoader/AnsysTranslator.h>
 
 #include <VE_Xplorer/Utilities/fileIO.h>
 #include <vtkDataObject.h>

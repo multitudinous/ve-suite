@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <VE_Builder/Translator/DataLoader/DataLoader.h>
+#include <ves/builder/DataLoader/DataLoader.h>
 ///////////////////////////////////////////////////////////////////
 //Example of how to read dicom files and create vtk files for the//
 //dicom data                                                     //

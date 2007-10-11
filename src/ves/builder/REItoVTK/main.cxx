@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <VE_Builder/Translator/REItoVTK/cfdREIToVTK.h>
+#include <ves/builder/REItoVTK/cfdREIToVTK.h>
 ///////////////////////////////////////////////////////////////////
 //Example of how to read REI files and create vtk files for the//
 //REI data                                                     //

@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Builder/Translator/DataLoader/StarCDTranslator.h>
-#include <VE_Builder/Translator/DataLoader/starReader.h>
+#include <ves/builder/DataLoader/StarCDTranslator.h>
+#include <ves/builder/DataLoader/starReader.h>
 #include <vtkDataSet.h>
 #include <vtkUnstructuredGrid.h>
 //#include <vtkCellDataToPointData.h>

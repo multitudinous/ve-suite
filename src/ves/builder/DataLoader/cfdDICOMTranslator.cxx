@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_Builder/Translator/DataLoader/cfdDICOMTranslator.h>
+#include <ves/builder/DataLoader/cfdDICOMTranslator.h>
 #include <vtkDataSet.h>
 #include <vtkImageData.h>
 #include <vtkDICOMImageReader.h>

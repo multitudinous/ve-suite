@@ -46,7 +46,7 @@
 #include <vtkStructuredGridGeometryFilter.h>
 #include <vtkAppendPolyData.h>
 
-#include <VE_Builder/Translator/DataLoader/plot3dReader.h>
+#include <ves/builder/DataLoader/plot3dReader.h>
 //#include <fstream>
 #include <string>
 #include <sstream>
