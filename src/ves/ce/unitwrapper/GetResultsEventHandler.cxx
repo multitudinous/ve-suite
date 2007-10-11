@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/ce/unitwrapper/GetResultsEventHandler.h>
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/Model/Model.h>
-#include <VE_Open/XML/XMLReaderWriter.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
 using namespace VE_CE;
 ////////////////////////////////////////////////////////////////////////////

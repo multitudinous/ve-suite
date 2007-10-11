@@ -38,9 +38,9 @@
 #include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
 
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>

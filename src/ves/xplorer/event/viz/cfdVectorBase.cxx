@@ -35,9 +35,9 @@
 #include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
 #include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <cmath>
 

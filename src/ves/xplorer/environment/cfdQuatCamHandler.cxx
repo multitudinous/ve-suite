@@ -43,9 +43,9 @@
 #include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
 #include <VE_Xplorer/XplorerHandlers/cfdCommandArray.h>
 #include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/OneDIntArray.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/OneDIntArray.h>
 
 #include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 

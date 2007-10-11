@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/ce/util/OPort.h>
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/Command.h>
 
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////

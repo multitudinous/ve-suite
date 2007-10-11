@@ -38,9 +38,9 @@
 #include <VE_Xplorer/XplorerHandlers/cfdPlanes.h>
 #include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <vtkPolyData.h>
 #include <vtkContourFilter.h>                // contour lines

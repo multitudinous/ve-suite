@@ -38,8 +38,8 @@
 #include <VE_Xplorer/XplorerHandlers/SeedPoints.h>
 #include <VE_Xplorer/XplorerHandlers/cfdDataSet.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <vtkDataSet.h>
 using namespace VE_EVENTS;

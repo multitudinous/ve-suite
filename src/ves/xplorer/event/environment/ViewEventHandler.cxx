@@ -43,9 +43,9 @@
 #include <VE_Xplorer/XplorerHandlers/DeviceHandler.h>
 #include <VE_Xplorer/XplorerHandlers/KeyboardMouse.h>
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp> //includes boost/filesystem/path.hpp

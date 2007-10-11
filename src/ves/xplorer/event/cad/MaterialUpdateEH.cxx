@@ -34,12 +34,12 @@
 #include <VE_Xplorer/XplorerHandlers/cfdModel.h>
 #include <VE_Xplorer/XplorerHandlers/ModelCADHandler.h>
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/FloatArray.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/FloatArray.h>
 
-#include <VE_Open/XML/CAD/CADMaterial.h>
+#include <ves/open/xml/CAD/CADMaterial.h>
 using namespace VE_EVENTS;
 ////////////////////////////////////////////////////////
 //Constructor                                         //

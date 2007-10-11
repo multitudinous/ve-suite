@@ -44,13 +44,13 @@
 
 #include <VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h>
 
-#include <VE_Open/XML/CAD/CADNode.h>
-#include <VE_Open/XML/CAD/CADAssembly.h>
-#include <VE_Open/XML/CAD/CADAttribute.h>
-#include <VE_Open/XML/CAD/CADPart.h>
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Transform.h>
-#include <VE_Open/XML/FloatArray.h>
+#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/CAD/CADAssembly.h>
+#include <ves/open/xml/CAD/CADAttribute.h>
+#include <ves/open/xml/CAD/CADPart.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/FloatArray.h>
 
 #include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 

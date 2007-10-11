@@ -36,8 +36,8 @@
 #include <VE_Xplorer/XplorerHandlers/cfdEnvironmentHandler.h>
 #include <VE_Xplorer/XplorerHandlers/cfdTeacher.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;

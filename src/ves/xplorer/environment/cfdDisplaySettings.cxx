@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <VE_Xplorer/XplorerHandlers/cfdDisplaySettings.h>
 
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 #include <jccl/RTRC/ConfigManager.h>
 #include <string>

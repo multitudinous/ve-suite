@@ -35,9 +35,9 @@
 #endif
 #include <VE_Xplorer/XplorerHandlers/CommandHandler.h>
 
-#include <VE_Open/XML/XMLReaderWriter.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 vprSingletonImp( VE_Xplorer::CommandHandler );
 

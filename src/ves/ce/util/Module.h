@@ -33,11 +33,11 @@
 #ifndef CE_UTILITIES_MODULE_H
 #define CE_UTILITIES_MODULE_H
 #include <VE_Installer/include/VEConfig.h>
-#include <VE_Open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
-#include <VE_Open/XML/Model/ModelStrongPtr.h>
-#include <VE_Open/XML/Model/ModelWeakPtr.h>
-#include <VE_Open/XML/Model/Model.h>
+#include <ves/open/xml/Model/ModelStrongPtr.h>
+#include <ves/open/xml/Model/ModelWeakPtr.h>
+#include <ves/open/xml/Model/Model.h>
 
 #include <vector>
 #include <string>

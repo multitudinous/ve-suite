@@ -36,14 +36,14 @@
 
 #include <VE_Xplorer/SceneGraph/CADEntity.h>
 
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/FloatArray.h>
-#include <VE_Open/XML/Transform.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/CAD/CADNode.h>
-#include <VE_Open/XML/CAD/CADPart.h>
-#include <VE_Open/XML/CAD/CADAssembly.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Transform.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/CAD/CADPart.h>
+#include <ves/open/xml/CAD/CADAssembly.h>
 
 #include <iostream>
 using namespace VE_EVENTS;

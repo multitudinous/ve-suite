@@ -48,8 +48,8 @@ cfdIsosurface API
 
 #include <VE_Xplorer/XplorerHandlers/cfdObjects.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 class vtkContourFilter;
 class vtkPolyDataNormals;

@@ -43,15 +43,15 @@
 
 #include <VE_Xplorer/Utilities/cfdGrid2Surface.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/XMLObjectFactory.h>
-#include <VE_Open/XML/XMLCreator.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
 
-#include <VE_Open/XML/CAD/CADNode.h>
-#include <VE_Open/XML/CAD/CADAttribute.h>
-#include <VE_Open/XML/CAD/CADCreator.h>
+#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/CAD/CADAttribute.h>
+#include <ves/open/xml/CAD/CADCreator.h>
 
-#include <VE_Open/XML/Shader/ShaderCreator.h>
+#include <ves/open/xml/Shader/ShaderCreator.h>
 
 #ifdef _OSG
 #include <osg/StateSet>

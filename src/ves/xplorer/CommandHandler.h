@@ -39,7 +39,7 @@
 */
 #include <VE_Installer/include/VEConfig.h>
 
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/Command.h>
 
 #include <VE_Xplorer/XplorerHandlers/Xplorer_i.h>
 

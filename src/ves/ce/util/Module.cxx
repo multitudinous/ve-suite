@@ -36,14 +36,14 @@
 #include <ves/ce/util/Network.h>
 #include <ves/ce/util/Connection.h>
 
-#include <VE_Open/XML/Model/Model.h>
-#include <VE_Open/XML/Model/ModelWeakPtr.h>
-#include <VE_Open/XML/Model/Port.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/Model/ModelWeakPtr.h>
+#include <ves/open/xml/Model/Port.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
-#include <VE_Open/XML/DataValuePairPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 using namespace VE_CE::Utilities;
 using namespace VE_XML;

@@ -32,20 +32,20 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <UnitWrapper.h>
 
-#include <VE_Open/XML/Model/Network.h>
-#include <VE_Open/XML/Model/Link.h>
-#include <VE_Open/XML/Model/Model.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/XMLReaderWriter.h>
-#include <VE_Open/XML/Model/Point.h>
-#include <VE_Open/XML/Model/Port.h>
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/Model/Network.h>
+#include <ves/open/xml/Model/Link.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Model/Point.h>
+#include <ves/open/xml/Model/Port.h>
+#include <ves/open/xml/Command.h>
 
-#include <VE_Open/XML/XMLObjectFactory.h>
-#include <VE_Open/XML/XMLCreator.h>
-#include <VE_Open/XML/CAD/CADCreator.h>
-#include <VE_Open/XML/Shader/ShaderCreator.h>
-#include <VE_Open/XML/Model/ModelCreator.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/CAD/CADCreator.h>
+#include <ves/open/xml/Shader/ShaderCreator.h>
+#include <ves/open/xml/Model/ModelCreator.h>
 
 // Event handlers
 #include <ves/ce/unitwrapper/SetInputsEventHandler.h>

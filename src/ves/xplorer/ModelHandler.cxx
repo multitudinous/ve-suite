@@ -82,7 +82,7 @@
 #include <VE_Xplorer/XplorerHandlers/CADPhysicsMeshEventHandler.h>
 #include <VE_Xplorer/XplorerHandlers/CADPhysicsPropertiesEventHandler.h>
 
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/Command.h>
 
 #ifdef _OSG
 #include <VE_Xplorer/TextureBased/cfdTextureDataSet.h>

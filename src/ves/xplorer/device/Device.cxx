@@ -40,11 +40,11 @@
 
 #include <VE_Xplorer/SceneGraph/SceneManager.h>
 
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/DataValuePairPtr.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/OneDDoubleArray.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/OneDDoubleArray.h>
 
 // --- OSG Stuff --- //
 #include <osg/LineSegment>

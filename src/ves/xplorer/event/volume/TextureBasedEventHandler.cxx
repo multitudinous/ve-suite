@@ -37,7 +37,7 @@
 #include <VE_Xplorer/XplorerHandlers/cfdModelHandler.h>
 #include <VE_Xplorer/XplorerHandlers/cfdTextureBasedVizHandler.h>
 
-#include <VE_Open/XML/XMLObject.h>
+#include <ves/open/xml/XMLObject.h>
 #include <iostream>
 
 using namespace VE_EVENTS;

@@ -34,15 +34,15 @@
 #include <ves/ce/util/Module.h>
 #include <ves/ce/util/Connection.h>
 
-#include <VE_Open/XML/XMLReaderWriter.h>
-#include <VE_Open/XML/XMLObject.h>
-#include <VE_Open/XML/DataValuePair.h>
-#include <VE_Open/XML/Model/Model.h>
-#include <VE_Open/XML/Model/ModelWeakPtr.h>
-#include <VE_Open/XML/Model/Port.h>
-#include <VE_Open/XML/Model/Link.h>
-#include <VE_Open/XML/Model/Network.h>
-#include <VE_Open/XML/Model/System.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/Model/ModelWeakPtr.h>
+#include <ves/open/xml/Model/Port.h>
+#include <ves/open/xml/Model/Link.h>
+#include <ves/open/xml/Model/Network.h>
+#include <ves/open/xml/Model/System.h>
 
 #include <set>
 #include <iostream>

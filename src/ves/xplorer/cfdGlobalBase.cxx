@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <VE_Xplorer/XplorerHandlers/cfdGlobalBase.h>
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/Command.h>
 
 #include <iostream>
 

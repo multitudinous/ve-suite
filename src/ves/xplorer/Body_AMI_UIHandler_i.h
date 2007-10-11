@@ -40,7 +40,7 @@
 *
 */
 
-#include <VE_Open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
 class Body_AMI_UIHandler_i: public virtual POA_Body::AMI_UIHandler
 {

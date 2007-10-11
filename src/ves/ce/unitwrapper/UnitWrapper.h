@@ -34,10 +34,10 @@
 #ifndef UNIT_WRAPPER_H_
 #define UNIT_WRAPPER_H_
 
-#include <VE_Open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/Model/Model.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/Model/Model.h>
 #include <VE_Installer/include/VEConfig.h>
 #include <vector>
 

@@ -33,9 +33,9 @@
 #ifndef CE_UTILITIES_NETWORK_H
 #define CE_UTILITIES_NETWORK_H
 #include <VE_Installer/include/VEConfig.h>
-#include <VE_Open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
-#include <VE_Open/XML/Model/NetworkStrongPtr.h>
+#include <ves/open/xml/Model/NetworkStrongPtr.h>
 
 
 #include <string>

@@ -41,8 +41,8 @@
 
 #include <VE_Xplorer/SceneGraph/Utilities/OpacityVisitor.h>
 
-#include <VE_Open/XML/CAD/CADNode.h>
-#include <VE_Open/XML/CAD/CADAttribute.h>
+#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/CAD/CADAttribute.h>
 
 #include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>

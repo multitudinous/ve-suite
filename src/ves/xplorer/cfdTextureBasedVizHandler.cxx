@@ -65,7 +65,7 @@
 #include <VE_Xplorer/XplorerHandlers/cfdEnum.h>
 #include <VE_Xplorer/XplorerHandlers/cfdModel.h>
 
-#include <VE_Open/XML/Command.h>
+#include <ves/open/xml/Command.h>
 
 #include <VE_Xplorer/XplorerHandlers/cfdDebug.h>
 #include <fstream>

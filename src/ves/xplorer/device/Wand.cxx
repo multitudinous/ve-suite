@@ -39,8 +39,8 @@
 #include <VE_Xplorer/SceneGraph/SceneManager.h>
 #include <VE_Xplorer/SceneGraph/FindParentsVisitor.h>
 
-#include <VE_Open/XML/Command.h>
-#include <VE_Open/XML/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 // --- OSG Includes --- //
 #include <osg/LineSegment>
