@@ -34,12 +34,12 @@
 #include <ves/xplorer/event/cfdSound.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 
-#include <ves/xplorer/scenegraph/Utilities/Attribute.h>
+#include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
-#include <ves/xplorer/scenegraph/Utilities/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
 #include <ves/xplorer/util/cfdGrid2Surface.h>
 

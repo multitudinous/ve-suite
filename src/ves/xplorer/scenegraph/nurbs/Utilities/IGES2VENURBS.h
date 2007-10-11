@@ -37,10 +37,10 @@
   */
 /*!\class IGES2VENURBS
  */
-#include <ves/xplorer/scenegraph/NURBS/Utilities/OCCNURBS2VENURBS.h>
-#include <ves/xplorer/scenegraph/NURBS/NSurface.h>
-#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
-#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h>
+#include <ves/xplorer/scenegraph/nurbs/util/OCCNURBS2VENURBS.h>
+#include <ves/xplorer/scenegraph/nurbs/NSurface.h>
+#include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
+#include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 
 #include <Geom_BSplineSurface.hxx>
 #include <TColStd_Array1OfReal.hxx>

@@ -42,7 +42,7 @@
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/UpdateIDOnChildrenVisitor.h>
 
-#include <ves/xplorer/scenegraph/Utilities/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 
 #include <ves/open/xml/CAD/CADNode.h>
 #include <ves/open/xml/CAD/CADAssembly.h>

@@ -39,7 +39,7 @@
 #include <osg/BoundingSphere>
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/scenegraph/NURBS/NURBSObject.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBSObject.h>
 
 /*!\file NURBSNode.h
   NURBS Object OSG Renderer API

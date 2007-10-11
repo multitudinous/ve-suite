@@ -39,12 +39,12 @@
 
 #include <ves/xplorer/util/fileIO.h>
 
-#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h>
-#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
-#include <ves/xplorer/scenegraph/NURBS/NCurve.h>
-#include <ves/xplorer/scenegraph/NURBS/NSurface.h>
-#include <ves/xplorer/scenegraph/NURBS/NURBSNode.h>
-#include <ves/xplorer/scenegraph/NURBS/Utilities/OCCNURBSFileReader.h>
+#include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
+#include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
+#include <ves/xplorer/scenegraph/nurbs/NCurve.h>
+#include <ves/xplorer/scenegraph/nurbs/NSurface.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
+#include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

@@ -57,8 +57,8 @@
 #include <ves/xplorer/scenegraph/TextTexture.h>
 #include <ves/xplorer/network/UnsupportedComponent.h>
 
-#include <ves/xplorer/scenegraph/Utilities/PhongLoader.h>
-#include <ves/xplorer/scenegraph/Utilities/ComputeBoundsVisitor.h>
+#include <ves/xplorer/scenegraph/util/PhongLoader.h>
+#include <ves/xplorer/scenegraph/util/ComputeBoundsVisitor.h>
 #include <iostream>
 #include <fstream>
 

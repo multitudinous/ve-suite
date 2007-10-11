@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/scenegraph/NURBS/Utilities/OCCNURBSFileReader.h>
-#include <ves/xplorer/scenegraph/NURBS/NSurface.h>
-#include <ves/xplorer/scenegraph/NURBS/KnotVector.h>
-#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h>
+#include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
+#include <ves/xplorer/scenegraph/nurbs/NSurface.h>
+#include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
+#include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>

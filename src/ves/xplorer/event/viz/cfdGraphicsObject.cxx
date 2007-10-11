@@ -35,7 +35,7 @@
 #include <ves/xplorer/event/cfdDataSet.h>
 #include <ves/xplorer/event/cfdStreamers.h>
 
-#include <ves/xplorer/scenegraph/Utilities/PhongLoader.h>
+#include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/event/cfdDebug.h>
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>

@@ -38,8 +38,8 @@
 
 #include <ves/xplorer/util/fileIO.h>
 
-#include <ves/xplorer/scenegraphh/SceneManager.h>
-#include <ves/xplorer/scenegraphh/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>

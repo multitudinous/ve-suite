@@ -32,7 +32,7 @@
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
-#include <ves/xplorer/scenegraph/NURBS/NURBSNode.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>

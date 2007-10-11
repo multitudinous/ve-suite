@@ -32,14 +32,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/scenegraph/Utilities/Attribute.h>
+#include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Technique.h>
 
-#include <ves/xplorer/scenegraph/Utilities/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
 #include <ves/open/xml/CAD/CADNode.h>
 #include <ves/open/xml/CAD/CADAttribute.h>

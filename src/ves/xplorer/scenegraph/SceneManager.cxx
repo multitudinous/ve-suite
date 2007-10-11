@@ -42,11 +42,11 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
-#include <ves/xplorer/scenegraph/Logo/BlueArrow.h>
-#include <ves/xplorer/scenegraph/Logo/GreyArrow.h>
-#include <ves/xplorer/scenegraph/Logo/OrangeArrow.h>
-#include <ves/xplorer/scenegraph/Logo/VE.h>
-#include <ves/xplorer/scenegraph/Logo/Suite.h>
+#include <ves/xplorer/scenegraph/logo/BlueArrow.h>
+#include <ves/xplorer/scenegraph/logo/GreyArrow.h>
+#include <ves/xplorer/scenegraph/logo/OrangeArrow.h>
+#include <ves/xplorer/scenegraph/logo/VE.h>
+#include <ves/xplorer/scenegraph/logo/Suite.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

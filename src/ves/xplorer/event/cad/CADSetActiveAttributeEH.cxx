@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/CADSetActiveAttributeEH.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/scenegraph/Utilities/Attribute.h>
+#include <ves/xplorer/scenegraph/util/Attribute.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

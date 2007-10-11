@@ -46,8 +46,8 @@
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/cfdDebug.h>
 
-#include <ves/xplorer/scenegraphh/SceneManager.h>
-#include <ves/xplorer/scenegraphh/CADEntity.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
