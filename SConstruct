@@ -407,7 +407,7 @@ if not SConsAddons.Util.hasHelpFlag():
       sys.stderr = sys.stdout
 
    ##Tack on path prefixes to subdirs specified above.
-   vesSubdirs=pj(buildDir, 'src', 'ves' )
+   vesSubdirs=pj(buildDir, 'src' )
    ##builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
    #openSubdirs = pj(buildDir,'src', 'ves', 'open')
    ##openSubdirs = map(lambda s: pj(buildDir, s), openSubdirs)

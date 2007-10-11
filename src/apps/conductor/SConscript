@@ -5,20 +5,19 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_options PREFIX RootDir vesSVNRevision')
 
-srcDir = os.path.abspath( pj(RootDir, 'VE_Conductor', 'Framework') )
+srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'conductor') )
 srcs = sca_util.getSourcesRecursive( srcDir )
-srcs += [pj( '..', 'DefaultPlugin', 'DefaultPlugin.cxx' )]
-srcs += [pj( '..', 'DefaultPlugin', 'DefaultPlugin_UI_Dialog.cxx' )]
+srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin.cxx' )]
+srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin_UI_Dialog.cxx' )]
 
 env = ves_pkg.getEnv().Copy()
 env.Append( CPPDEFINES = [vesSVNRevision] )
-env.Append(LIBS = ['VE_ConductorLib', 'GUIPlugin', 'VE_XML','VE_Conductor_Utilities',
-                   'VE_OpenModuleLib'])
-env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
-                        pj('#', buildDir, 'VE_Conductor','Utilities'),
-                        pj('#', buildDir, 'VE_Conductor','GUIPlugin'),
-                        pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML')])
+env.Append(LIBS = ['ves_util', 'ves_conductor_plugin', 'ves_open_xml',
+                   'ves_open_module'])
+env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','util'),
+                        pj('#', buildDir, 'src','ves','conductor'),
+                        pj('#', buildDir, 'src','ves','open','skel'),
+                        pj('#', buildDir, 'src','ves','open','xml')])
 
 env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
@@ -26,7 +25,7 @@ env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valu
                               TAO_Messaging TAO_Valuetype vpr --cflags --libs')
 xerces_options.apply( env )
 wxwidgets_options.apply( env )
-prog = ves_pkg.createProgram('WinClient', env, 'bin')
+prog = ves_pkg.createProgram('ves_conductor', env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
@@ -36,10 +35,10 @@ if GetPlatform() == "darwin":
    env.Append(BUILDERS = {'apple_rez': bld})
    if 'install' in COMMAND_LINE_TARGETS:
       conductorTarget = pj(PREFIX,'bin','Conductor')
-      winTarget = pj(PREFIX,'bin','WinClient')
+      winTarget = pj(PREFIX,'bin','ves_conductor')
    else:
-      conductorTarget = pj( '#', buildDir,'VE_Conductor','Framework','Conductor')
-      winTarget = pj( '#',buildDir,'VE_Conductor','Framework','WinClient')
+      conductorTarget = pj( '#', buildDir,'src', 'apps', 'conductor','Conductor')
+      winTarget = pj( '#',buildDir,'src', 'apps', 'conductor','ves_conductor')
 
    env.apple_rez( conductorTarget, winTarget)
    env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
