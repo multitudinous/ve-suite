@@ -35,7 +35,7 @@ taoPrefix=os.popen('flagpoll TAO --variable=prefix').read().strip()
 env.PrependENVPath( 'LD_LIBRARY_PATH',pj( taoPrefix,'lib'))
 env.PrependENVPath( 'PATH',pj( taoPrefix,'bin'))
 tao_idl ='tao_idl'
-idlCmd = '%s -o %s/VE_Open/skel -in -GC -GI  -I%s/VE_Open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h ${SOURCES}' %(tao_idl, buildDir, buildDir)
+idlCmd = '%s -o %s/src/ves/open/skel -in -GC -GI  -I%s/src/ves/open/idl -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h ${SOURCES}' %(tao_idl, buildDir, buildDir)
 srcs = [pj('#',buildDir,'src','ves','open','idl','module.idl'), 
         pj('#',buildDir,'src','ves','open','idl','VjObs.idl')]
 bld = Builder(action = idlCmd)

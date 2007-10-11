@@ -53,7 +53,7 @@ namespace VE_Model
    typedef Loki::SmartPtrDef<Network>::type NetworkPtr;
 }
 }
-#include "VE_Open/XML/Model/NetworkWeakPtr.h"
-#include "VE_Open/XML/Model/NetworkStrongPtr.h"
+#include "ves/open/xml/model/NetworkWeakPtr.h"
+#include "ves/open/xml/model/NetworkStrongPtr.h"
 
 #endif

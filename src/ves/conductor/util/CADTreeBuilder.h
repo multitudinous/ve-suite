@@ -29,23 +29,20 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef CAD_TREE_BUILDER
 #define CAD_TREE_BUILDER
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 /*!\file CADTreeBuilder.h
   CADTreeBuilder API
   */
 /*!\class VE_Conductor::GUI_Utilities::CADTreeBuilder
  * Class for creating wxTreeCtrl and wxTreeItem from VE_XML::VE_CAD::CADNode.
  */
-#include "VE_Installer/include/VEConfig.h"
 
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADNodeTraverser.h"
+#include "ves/open/xml/cad/CADNode.h"
+#include "ves/open/xml/cad/CADNodeTraverser.h"
 
 #include <wx/treectrl.h>
 #include <wx/window.h>

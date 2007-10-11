@@ -38,16 +38,16 @@
 /*!\class CADNodeManagerDialog
  * GUI class to manipulate CADNode tree.
  */
-#include "VE_Open/skel/VjObsC.h"
+#include "ves/open/skel/VjObsC.h"
 
 #include "wx/dialog.h"
 #include "wx/treectrl.h"
 #include "wx/window.h"
 #include "wx/button.h"
-#include "VE_Conductor/Utilities/CADTreeBuilder.h"
+#include "ves/conductor/util/CADTreeBuilder.h"
 
-#include "VE_Conductor/Utilities/CADNodePropsDlg.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/conductor/util/CADNodePropsDlg.h"
+#include "ves/VEConfig.h"
 
 class wxFileName;
 

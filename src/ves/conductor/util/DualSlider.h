@@ -33,7 +33,7 @@
 
 #ifndef VE_DUAL_SLIDER_H
 #define VE_DUAL_SLIDER_H
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 /*!\file DualSlider.h
   DualSlider API
   */

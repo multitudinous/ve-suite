@@ -44,7 +44,7 @@ Link API
 
 #include "ves/VEConfig.h"
 #include "ves/conductor/util/Polygon.h"
-#include "ves/xml/model/LinkPtr.h"
+#include "ves/open/xml/model/LinkPtr.h"
 
 #include <wx/gdicmn.h>
 #include <wx/dc.h>

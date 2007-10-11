@@ -38,13 +38,13 @@ Body_UI_i API
 /*!\class Body_UI_i
 * 
 */
-#include "VE_Open/skel/moduleS.h"
+#include "ves/open/skel/moduleS.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <map>
 
-#include "VE_Open/XML/Command.h"
+#include "ves/open/xml/Command.h"
 
 class PEThread;
 //class Network;
@@ -60,7 +60,7 @@ namespace VE_XML
 }
 
 //Class Body_UI_i
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
  public:

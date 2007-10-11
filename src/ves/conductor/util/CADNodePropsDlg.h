@@ -40,8 +40,8 @@ CADNodePropsDlg API
 *
 */
 #ifndef STAND_ALONE
-#include "VE_Open/skel/VjObsC.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/open/skel/VjObsC.h"
+#include "ves/VEConfig.h"
 #endif
 #include <vector>
 #include <string>

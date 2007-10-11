@@ -37,7 +37,7 @@
 
 #include <string>
 #include <vector>
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 VE_CONDUCTOR_EXPORTS bool string_to_int    (const std::string &str, int &result);
 VE_CONDUCTOR_EXPORTS bool string_to_double (const std::string &str, double &result);

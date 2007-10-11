@@ -29,10 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Network/string_ops.h"
+#include "ves/util/string_ops.h"
 
 #include <sstream>
 
