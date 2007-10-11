@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <UnitWrapper.h>
+#include <ves/ce/unitwrapper/UnitWrapper.h>
 
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/Link.h>

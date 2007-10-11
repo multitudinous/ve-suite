@@ -36,8 +36,8 @@
 #define CE_UTILITIES_OPORT_H
 #include <ves/VEConfig.h>
 #include <ves/ce/util/Port.h>
-#include <ves/open/moduleS.h>
-//#include "VE_Conductor/Framework/interface.h"
+#include <ves/open/skel/moduleS.h>
+
 namespace VE_XML
 {
    class Command;

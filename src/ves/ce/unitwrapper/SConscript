@@ -1,40 +1,31 @@
 ##Builds Unit Wrapper for ce units
 import os, sys, string
 pj = os.path.join
+import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR buildDir xerces_options')
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options RootDir')
 
-sources = Split("""
-   UnitWrapper.cxx
-   SetInputsEventHandler.cxx
-   GetInputsEventHandler.cxx
-   GetResultsEventHandler.cxx
-""")
-
-headers = Split("""
-   UnitWrapper.h
-   SetInputsEventHandler.h
-   GetInputsEventHandler.h
-   GetResultsEventHandler.h
-""")
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'ce', 'unitwrapper') )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_XML', 'VE_OpenModuleLib'])
-lib_env.Append(LIBPATH = [ pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML')])
+lib_env.Append(LIBS = ['ves_open_xml', 'ves_open_module'])
+lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src','ves','open','skel'),
+                        pj('#', buildDir, 'src','ves','open','xml')])
 
 lib_env.ParseConfig('flagpoll TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_CE_UnitWrapperLib',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_ce_unitwrapper',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_CE_UnitWrapperLib', lib_env,
+   lib = ves_pkg.createStaticLibrary('ves_ce_unitwrapper', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_CE', 'UnitWrapper'))
+lib.addHeaders(headers,  pj( 'ves', 'ce', 'unitwrapper'))
 lib.build()

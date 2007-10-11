@@ -34,7 +34,7 @@
 #ifndef UNIT_WRAPPER_H_
 #define UNIT_WRAPPER_H_
 
-#include <ves/open/moduleS.h>
+#include <ves/open/skel/moduleS.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
