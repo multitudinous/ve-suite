@@ -1,7 +1,7 @@
 #ifndef ASPEN_PLUS_2D_ICONS_H
 #define ASPEN_PLUS_2D_ICONS_H
 
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <map>
 #include <string>
 
