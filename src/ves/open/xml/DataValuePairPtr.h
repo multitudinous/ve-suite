@@ -33,7 +33,7 @@
 #ifndef VE_DATA_VALUE_PAIR_PTR_H
 #define VE_DATA_VALUE_PAIR_PTR_H
 
-#include <VE_Open/XML/Util/PointerTypes.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file

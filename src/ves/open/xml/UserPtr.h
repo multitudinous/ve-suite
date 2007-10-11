@@ -33,7 +33,7 @@
 #ifndef USER_PTR_H
 #define USER_PTR_H
 
-#include <VE_Open/XML/Util/PointerTypes.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
