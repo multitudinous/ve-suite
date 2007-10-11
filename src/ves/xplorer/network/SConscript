@@ -60,12 +60,12 @@ xerces_options.apply( lib_env )
 lib_env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
 lib_env.Append(LIBS = ['osgOQ'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_XplorerNetworkLib%s' %(execOsgPatTag),
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_XplorerNetworkLib%s' %(execOsgPatTag), lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_XplorerNetworkLib%s' %(execOsgPatTag), lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

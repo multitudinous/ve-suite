@@ -40,12 +40,12 @@ lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
 
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_Conductor_Utilities',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_Conductor_Utilities', lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_Conductor_Utilities', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

@@ -21,12 +21,12 @@ sources.pop(index)
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --cflags --libs'%lib_env['BoostVersion'])
 vtk_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_UtilLib',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_UtilLib', lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_UtilLib', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

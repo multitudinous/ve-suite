@@ -20,12 +20,12 @@ lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_
 
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_plugin',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('ves_conductor_plugin', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_conductor_plugin', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

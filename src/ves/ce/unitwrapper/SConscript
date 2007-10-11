@@ -18,12 +18,12 @@ lib_env.ParseConfig('flagpoll TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valu
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 xerces_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_ce_unitwrapper',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('ves_ce_unitwrapper', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_ce_unitwrapper', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

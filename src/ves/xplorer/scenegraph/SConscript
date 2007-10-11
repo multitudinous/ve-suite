@@ -30,12 +30,12 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 #lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraph%s' %(execOsgPatTag),
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_SceneGraph%s' %(execOsgPatTag), lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_SceneGraph%s' %(execOsgPatTag), lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

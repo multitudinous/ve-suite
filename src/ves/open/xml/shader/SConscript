@@ -32,12 +32,12 @@ lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML')])
 ##lib_env.ParseConfig('flagpoll xerces --libs --cflags')
 xerces_options.apply( lib_env )
 
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_ShaderLib',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_ShaderLib', lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_ShaderLib', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

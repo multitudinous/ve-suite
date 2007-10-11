@@ -20,12 +20,12 @@ else:
    lib_env.ParseConfig('flagpoll apr apr-util --libs --cflags' )
 
 xerces_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_open_xml',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('ves_open_xml', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_open_xml', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources( sources )

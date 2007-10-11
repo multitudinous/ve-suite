@@ -21,12 +21,12 @@ lib_env.Append(LIBS = ['VE_NURBSLib%s' %(execOsgPatTag)])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph','NURBS')])
 ##lib_env.ParseConfig('flagpoll osg --libs --cflags')
 osg_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_NURBSUtilsLib%s' %(execOsgPatTag),
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_NURBSUtilsLib%s' %(execOsgPatTag), lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_NURBSUtilsLib%s' %(execOsgPatTag), lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

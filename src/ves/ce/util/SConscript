@@ -17,12 +17,12 @@ lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'open','skel'),
 lib_env.ParseConfig('flagpoll TAO TAO_PortableServer TAO_Messaging TAO_Valuetype --libs --cflags')
 xerces_options.apply( lib_env )
 
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    vece_util_lib = ves_pkg.createStaticAndSharedLibrary('ves_ce_util',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   vece_util_lib = ves_pkg.createStaticLibrary('ves_ce_util', lib_env,
+   vece_util_lib = ves_pkg.createSharedLibrary('ves_ce_util', lib_env,
                                                installPrefix = LIBDIR)
    
 vece_util_lib.addSources(sources)

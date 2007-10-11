@@ -39,12 +39,12 @@ lib_env.Append(LIBS = ['VE_XMLLib', 'VE_ShaderLib'])
 lib_env.Append(LIBPATH = [  pj('#', buildDir, 'VE_Open','XML'),
                         pj('#', buildDir, 'VE_Open','XML','Shader')])
 xerces_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_CADLib',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_CADLib', lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_CADLib', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

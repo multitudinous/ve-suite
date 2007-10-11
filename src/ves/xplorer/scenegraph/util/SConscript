@@ -37,12 +37,12 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Open','XML')])
 lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('VE_SceneGraph_UtilitiesLib',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_SceneGraph_UtilitiesLib', lib_env,
+   lib = ves_pkg.createSharedLibrary('VE_SceneGraph_UtilitiesLib', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

@@ -18,11 +18,11 @@ lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS'] )
 if GetPlatform() == 'darwin':
     lib_env.Append( CPPDEFINES  = ['_DARWIN'] )
 osg_options. apply( lib_env )
-if baseEnv['StaticOnly'] == "no":
+if baseEnv['StaticLibs'] == "yes":
     lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
                                                installPrefix = LIBDIR)
 else:
-    lib = ves_pkg.createStaticLibrary('osgEphemeris', lib_env,
+    lib = ves_pkg.createSharedLibrary('osgEphemeris', lib_env,
                                       installPrefix = LIBDIR)
    
 lib.addSources(sources)
@@ -39,11 +39,11 @@ lib.build()
 #libDB_env.Append( LIBS = ['osgOQ'] )
 #libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgOQ')] )
 #osg_options. apply( libDB_env )
-#if baseEnv['StaticOnly'] == "no":
+#if baseEnv['StaticLibs'] == "yes":
 #   libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgOQ', libDB_env,
 #                                               installPrefix = LIBDIR)
 #else:
-#   libDB = ves_pkg.createStaticLibrary('osgdb_osgOQ', libDB_env,
+#   libDB = ves_pkg.createSharedLibrary('osgdb_osgOQ', libDB_env,
 #                                      installPrefix = LIBDIR)
 #   
 #libDB.addSources(sourcesDB)

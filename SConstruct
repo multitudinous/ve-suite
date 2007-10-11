@@ -204,7 +204,7 @@ wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", T
 opts.AddOption( wxwidgets_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
-opts.Add('StaticOnly', 'If not "no" then build only static library', 'no')
+opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
 opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
 opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
