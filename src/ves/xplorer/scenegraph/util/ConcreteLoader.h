@@ -42,7 +42,7 @@
  * a procedrual concrete shading glsl program.
  */
 #include <ves/VEConfig.h>
-#include <ves/scenegraph/Utilities/ShaderHelper.h>
+#include <ves/xplorer/scenegraph/util/ShaderHelper.h>
 #ifdef _OSG
 
 #include <string>

@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/scenegraph/Utilities/ConcreteLoader.h>
-#include <ves/scenegraph/Utilities/PerlinNoiseTexture.h>
+#include <ves/xplorer/scenegraph/util/ConcreteLoader.h>
+#include <ves/xplorer/scenegraph/util/PerlinNoiseTexture.h>
 #include <iostream>
 #include <sstream>
 #include <ves/open/xml/shader/Shader.h>

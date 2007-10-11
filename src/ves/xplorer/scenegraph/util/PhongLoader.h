@@ -42,7 +42,7 @@
  * a phong shading glsl program.
  */
 #include <ves/VEConfig.h>
-#include <ves/scenegraph/Utilities/ShaderHelper.h>
+#include <ves/xplorer/scenegraph/util/ShaderHelper.h>
 ///\todo This class still needs to be implemented for performer
 #ifdef _OSG
 

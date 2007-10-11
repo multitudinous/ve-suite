@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/scenegraph/Utilities/ShaderHelper.h>
-#include <ves/scenegraph/Utilities/PerlinNoiseTexture.h>
+#include <ves/xplorer/scenegraph/util/ShaderHelper.h>
+#include <ves/xplorer/scenegraph/util/PerlinNoiseTexture.h>
 #ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>

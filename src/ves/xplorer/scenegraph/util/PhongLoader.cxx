@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/scenegraph/Utilities/PhongLoader.h>
+#include <ves/xplorer/scenegraph/util/PhongLoader.h>
 
 #include <iostream>
 #include <sstream>

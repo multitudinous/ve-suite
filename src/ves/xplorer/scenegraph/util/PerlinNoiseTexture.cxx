@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/scenegraph/Utilities/PerlinNoiseTexture.h>
-#include <ves/scenegraph/Utilities/PerlinNoise.h>
+#include <ves/xplorer/scenegraph/util/PerlinNoiseTexture.h>
+#include <ves/xplorer/scenegraph/util/PerlinNoise.h>
 #include <osg/Texture3D>
 using namespace VE_SceneGraph::Utilities;
 /////////////////////////////////////////////////////////////////////

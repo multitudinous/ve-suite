@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/scenegraph/Utilities/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
 // --- OSG Stuff --- //
 #include <osg/Geode>

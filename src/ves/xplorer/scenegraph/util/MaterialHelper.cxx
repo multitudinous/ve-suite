@@ -38,7 +38,7 @@
 #elif _PERFORMER
 #endif
 
-#include <ves/scenegraph/Utilities/MaterialHelper.h>
+#include <ves/xplorer/scenegraph/util/MaterialHelper.h>
 
 #include <ves/open/xml/cad/CADMaterial.h>
 #include <ves/open/xmlFloatArray.h>
