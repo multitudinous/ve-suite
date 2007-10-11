@@ -32,11 +32,11 @@ lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --cflags --libs')
 
 if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_OpenModuleLib',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_open_module',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_OpenModuleLib', lib_env,
+   lib = ves_pkg.createStaticLibrary('ves_open_module', lib_env,
                                                installPrefix = LIBDIR)
 
 lib.addSources(sources)

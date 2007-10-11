@@ -21,11 +21,11 @@ else:
 
 xerces_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_XML',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_open_xml',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('VE_XML', lib_env,
+   lib = ves_pkg.createStaticLibrary('ves_open_xml', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources( sources )

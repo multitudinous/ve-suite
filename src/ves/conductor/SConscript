@@ -10,7 +10,7 @@ sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_XML','VE_OpenModuleLib', 'VE_Util'])
+lib_env.Append(LIBS = ['ves_open_xml','ves_open_module', 'ves_util'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'util'),
                           pj('#', buildDir, 'src', 'ves', 'open','skel'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
@@ -21,11 +21,11 @@ lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('GUIPlugin',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_plugin',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createStaticLibrary('GUIPlugin', lib_env,
+   lib = ves_pkg.createStaticLibrary('ves_conductor_plugin', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

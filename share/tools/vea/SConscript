@@ -9,7 +9,7 @@ srcs = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBS = ['VE_XML'])
+env.Append(LIBS = ['ves_open_xml'])
 env.Append(LIBPATH = [ pj('#', buildDir,'src','ves', 'open', 'xml')])
 
 xerces_options.apply( env )
