@@ -43,8 +43,8 @@
 
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
-#include <ves/open/xml/CAD/CADCreator.h>
-#include <ves/open/xml/Shader/ShaderCreator.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/model/ModelCreator.h>
 
 // Event handlers
