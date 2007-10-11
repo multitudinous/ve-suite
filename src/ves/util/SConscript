@@ -1,0 +1,35 @@
+##Builds VE_Conductor_UtilitiesLib
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir')
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'util') )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
+
+lib_env = ves_pkg.getEnv().Copy()
+#lib_env.Append(CPPPATH = pj('#', 'VE_Builder', 'Utilities', 'gui'))
+#lib_env.Append(LIBS = ['VE_ConductorLib', 'VE_XML','VE_OpenModuleLib' ])
+#lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Conductor','Network'),
+#                        pj('#', buildDir, 'VE_Open','skel'),
+#                        pj('#', buildDir, 'VE_Open','XML')])
+
+#lib_env.ParseConfig('flagpoll TAO TAO_Messaging TAO_Valuetype TAO_CosNaming TAO_BiDirGIOP --cflags --libs')
+#lib_env.ParseConfig('flagpoll vpr --cflags --libs')
+#lib_env.Append(CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
+
+#xerces_options.apply( lib_env )
+#wxwidgets_options.apply( lib_env )
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_util',
+                                                        lib_env,
+                                                        installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('ves_util', lib_env,
+                                               installPrefix = LIBDIR)
+   
+lib.addSources(sources)
+lib.addHeaders(headers,  pj( 'ves', 'util'))
+lib.build()

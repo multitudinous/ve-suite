@@ -407,15 +407,15 @@ if not SConsAddons.Util.hasHelpFlag():
       sys.stderr = sys.stdout
 
    ##Tack on path prefixes to subdirs specified above.
-   builderSubdirs=pj(buildDir, 'src', 'ves', 'builder')
+   vesSubdirs=pj(buildDir, 'src', 'ves' )
    ##builderSubdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), builderSubdirs)
-   openSubdirs = pj(buildDir,'src', 'ves', 'open')
+   #openSubdirs = pj(buildDir,'src', 'ves', 'open')
    ##openSubdirs = map(lambda s: pj(buildDir, s), openSubdirs)
-   conductorSubdirs = pj(buildDir, 'src', 'ves', 'conductor' )
+   #conductorSubdirs = pj(buildDir, 'src', 'ves', 'conductor' )
    ##conductorSubdirs = map(lambda s: pj(buildDir, 'VE_Conductor', s), conductorSubdirs)
-   xplorerSubdirs = pj(buildDir, 'src', 'ves', 'xplorer')
+   #xplorerSubdirs = pj(buildDir, 'src', 'ves', 'xplorer')
    ##xplorerSubdirs = map(lambda s: pj(buildDir, 'VE_Xplorer', s), xplorerSubdirs)
-   ceSubdirs = pj(buildDir,'src', 'ves', 'ce')
+   #ceSubdirs = pj(buildDir,'src', 'ves', 'ce')
    ##ceSubdirs = map(lambda s: pj(buildDir, s), ceSubdirs)
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
    veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
@@ -430,7 +430,7 @@ if not SConsAddons.Util.hasHelpFlag():
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-   vesUtilSubdirs = pj( buildDir, 'src', 'ves', 'util')
+   #vesUtilSubdirs = pj( buildDir, 'src', 'ves', 'util')
    ##Set the Sconscript files to build.
    if 'docs' in COMMAND_LINE_TARGETS:
       ves_dirs = [ docbookSubdirs ]
@@ -445,11 +445,9 @@ if not SConsAddons.Util.hasHelpFlag():
       ves_dirs = [ veiFreezeSubdirs ]
       baseEnv.Alias('freeze', veiFreezeSubdirs)      
    else:
-      ves_dirs = [openSubdirs, builderSubdirs, conductorSubdirs, 
-                  xplorerSubdirs, veiDistSubdirs, docsSubdirs, ceSubdirs, veiSubdirs, 
+      ves_dirs = [vesSubdirs, veiDistSubdirs, docsSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs, 
-                  osgEphemerisSubdirs,
-		  installerSubdirs, vesUtilSubdirs ]
+                  osgEphemerisSubdirs, installerSubdirs ]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:
