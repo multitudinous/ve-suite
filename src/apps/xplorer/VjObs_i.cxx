@@ -36,6 +36,7 @@
 
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>

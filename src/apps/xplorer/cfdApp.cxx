@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdApp.h"
+#include "cfdVjObsWrapper.h"
 
 #ifdef _OSG
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
@@ -50,7 +51,6 @@
 
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include "cfdVjObsWrapper.h"
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/cfdDebug.h>
 
@@ -59,9 +59,9 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/cad/CADCreator.h>
-#include <ves/open/xml/Shader/ShaderCreator.h>
-#include <ves/open/xml/Model/ModelCreator.h>
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/model/ModelCreator.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <ves/xplorer/network/cfdExecutive.h>
 

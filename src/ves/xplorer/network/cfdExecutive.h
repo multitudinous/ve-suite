@@ -39,7 +39,7 @@ cfdExecutive API
 * 
 */
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 
 #include <ves/VEConfig.h>
 #include <vpr/Util/Singleton.h>

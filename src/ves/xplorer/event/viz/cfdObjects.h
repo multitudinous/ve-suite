@@ -38,7 +38,7 @@ cfdObjects API
 /*!\class VE_Xplorer::cfdObjects
 * 
 */
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 
 #include <ves/xplorer/scenegraph/Geode.h>
 
