@@ -36,7 +36,7 @@
 
 #include "ves/open/xml/Command.h"
 #include "ves/open/xml/DataValuePair.h"
-#include "VE_Builder/Utilities/gui/spinctld.h"
+#include "ves/conductor/util/spinctld.h"
 
 #include <wx/sizer.h>
 #include <wx/checkbox.h>

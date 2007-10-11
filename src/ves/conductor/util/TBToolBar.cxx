@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/UI_TransientDialog.h"
+#include "ves/conductor/util/UI_TransientDialog.h"
 
-#include "VE_Conductor/Utilities/TBToolBar.h"
+#include "ves/conductor/util/TBToolBar.h"
 
 #include <wx/sizer.h>
 #include <wx/combobox.h>
@@ -44,19 +44,19 @@
 #include <wx/checkbox.h>
 #include <wx/button.h>
 
-#include "VE_Conductor/xpm/ROItb.xpm"
+#include "ves/conductor/xpm/ROItb.xpm"
 
-#include "VE_Conductor/xpm/cspline.xpm"
-#include "VE_Conductor/xpm/scalartb.xpm"
-#include "VE_Conductor/xpm/vectortb.xpm"
-#include "VE_Conductor/xpm/scalartb_bw.xpm"
+#include "ves/conductor/xpm/cspline.xpm"
+#include "ves/conductor/xpm/scalartb.xpm"
+#include "ves/conductor/xpm/vectortb.xpm"
+#include "ves/conductor/xpm/scalartb_bw.xpm"
 
-#include "VE_Conductor/Utilities/ROIDialog.h"
-#include "VE_Conductor/Utilities/ScalarToolsDlg.h"
-#include "VE_Conductor/Utilities/TransferFunctionDlg.h"
+#include "ves/conductor/util/ROIDialog.h"
+#include "ves/conductor/util/ScalarToolsDlg.h"
+#include "ves/conductor/util/TransferFunctionDlg.h"
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
 
 #include <iostream>
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)

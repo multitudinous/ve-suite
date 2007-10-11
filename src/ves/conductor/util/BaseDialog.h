@@ -40,9 +40,9 @@ BaseDialog API
 *
 */
 #ifndef STAND_ALONE
-#include "VE_Open/skel/VjObsC.h"
+#include "ves/open/skel/VjObsC.h"
 #endif
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include <vector>
 #include <string>
 #include <wx/window.h>

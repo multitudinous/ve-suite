@@ -36,9 +36,9 @@
 /*!\class UI_TransientDialog
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
-#include "VE_Conductor/Utilities/BaseDialog.h"
+#include "ves/conductor/util/BaseDialog.h"
 
 class wxSizer;
 class wxWindow;

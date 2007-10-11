@@ -30,16 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/UI_TransientDialog.h"
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"
-#include "VE_Builder/Utilities/gui/spinctld.h"
-#include "VE_Conductor/xpm/transientIcons/play.xpm"
-#include "VE_Conductor/xpm/transientIcons/next.xpm"
-#include "VE_Conductor/xpm/transientIcons/prev.xpm"
-#include "VE_Conductor/xpm/transientIcons/stop.xpm"
+#include "ves/conductor/util/UI_TransientDialog.h"
+#include "ves/xplorer/cfdEnum.h"
+#include "ves/conductor/util/spinctld.h"
+#include "ves/conductor/xpm/transientIcons/play.xpm"
+#include "ves/conductor/xpm/transientIcons/next.xpm"
+#include "ves/conductor/xpm/transientIcons/prev.xpm"
+#include "ves/conductor/xpm/transientIcons/stop.xpm"
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/Command.h"
 
 #include <wx/sizer.h>
 #include <wx/window.h>

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CADNODE_MENU_H
 #define CADNODE_MENU_H
@@ -40,7 +38,7 @@
 /*!\class CADNodeMenu
  * GUI class to manipulate CADNode s and the corresponding osg::Node.
  */
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include <wx/menu.h>
 namespace VE_Conductor
 {

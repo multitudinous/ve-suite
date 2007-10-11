@@ -34,7 +34,7 @@
 #define _ADVANCEDISOSURFACES_H_
 
 #include "ves/conductor/util/DualSlider.h"
-#include "VE_Builder/Utilities/gui/spinctld.h"
+#include "ves/conductor/util/spinctld.h"
 
 ////@end includes
 #include <vector>

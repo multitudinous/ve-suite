@@ -79,7 +79,7 @@ Differences to wxSpinCtrl:
 
 class wxTextCtrl;
 class wxSpinCtrlDblTextCtrl;
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 enum
 {
     wxSPINCTRLDBL_AUTODIGITS = -1  // try to autocalc the # of digits

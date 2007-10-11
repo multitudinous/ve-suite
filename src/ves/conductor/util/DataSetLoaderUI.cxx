@@ -50,13 +50,13 @@
 #include <wx/string.h>
 ////@end includes
 
-#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-#include "VE_Conductor/Utilities/DataSetLoaderUI.h"
-#include "VE_Conductor/Utilities/TransformUI.h"
+//#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
+#include "ves/conductor/util/DataSetLoaderUI.h"
+#include "ves/conductor/util/TransformUI.h"
 
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Model/Model.h"
+#include "ves/open/xml/ParameterBlock.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/model/Model.h"
 
 #include <iostream>
 
@@ -150,7 +150,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
    temp.SetHeight( temp.GetHeight() +1);
    temp.SetWidth( temp.GetWidth()+1 );
    SetSize( temp );
-   this->SetIcon( ve_icon32x32_xpm );
+   ///this->SetIcon( ve_icon32x32_xpm );
 ////@end DataSetLoaderUI creation
    return true;
 }

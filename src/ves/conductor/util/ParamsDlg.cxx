@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Conductor/Utilities/ParamsDlg.h"
+#include "ves/conductor/util/ParamsDlg.h"
 
 BEGIN_EVENT_TABLE(ParamsDlg,wxDialog)
 	EVT_CLOSE(ParamsDlg::OnClose)

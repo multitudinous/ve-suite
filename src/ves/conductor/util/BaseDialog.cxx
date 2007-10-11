@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/BaseDialog.h"
+#include "ves/conductor/util/BaseDialog.h"
 
 #include <iostream>
 
@@ -39,12 +39,12 @@
 #include <wx/button.h>
 #include <wx/icon.h>
 
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "ves/open/xml/XMLReaderWriter.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/conductor/util/CORBAServiceList.h"
 
-#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
+//#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 using namespace VE_Conductor::GUI_Utilities;
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -55,7 +55,7 @@ BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
 {
    //_vjObsPtr = 0;
    _commandName = "";
-   SetIcon( ve_icon32x32_xpm );
+   //SetIcon( ve_icon32x32_xpm );
 }
 /////////////////////////////////////////////////////
 BaseDialog::~BaseDialog()

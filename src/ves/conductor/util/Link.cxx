@@ -30,21 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Utilities/Link.h"
-#include "VE_Conductor/Utilities/OrbThread.h"
-#include "VE_Conductor/Utilities/ParamsDlg.h"
+#include "ves/conductor/util/CORBAServiceList.h"
+#include "ves/conductor/util/Link.h"
+#include "ves/conductor/util/OrbThread.h"
+#include "ves/conductor/util/ParamsDlg.h"
 
-#include "VE_Open/XML/Model/Link.h"
-#include "VE_Open/XML/Model/Point.h"
-#include "VE_Open/XML/Model/Model.h"
+#include "ves/open/xml/model/Link.h"
+#include "ves/open/xml/model/Point.h"
+#include "ves/open/xml/model/Model.h"
 
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/User.h"
-#include "VE_Open/XML/StateInfo.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/ParameterBlock.h"
+#include "ves/open/xml/XMLReaderWriter.h"
+#include "ves/open/xml/User.h"
+#include "ves/open/xml/StateInfo.h"
 
 #include <wx/window.h>
 #include <wx/brush.h>

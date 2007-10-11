@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Conductor/Utilities/CADNodeMenu.h"
-#include "VE_Open/XML/CAD/CADNode.h"
+#include "ves/conductor/util/CADNodeMenu.h"
+#include "ves/open/xml/cad/CADNode.h"
 using namespace VE_XML::VE_CAD;
 using namespace VE_Conductor::GUI_Utilities;
 XERCES_CPP_NAMESPACE_USE

@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Conductor/Utilities/WPDialog.h"
+#include "ves/conductor/util/WPDialog.h"
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/XMLReaderWriter.h"
 
 #include <wx/statbox.h>
 

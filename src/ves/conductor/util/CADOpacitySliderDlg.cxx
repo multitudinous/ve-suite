@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CADOpacitySliderDlg.h"
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Command.h"
+#include "ves/conductor/util/CADOpacitySliderDlg.h"
+#include "ves/conductor/util/CORBAServiceList.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/cad/CADMaterial.h"
+#include "ves/open/xml/XMLReaderWriter.h"
+#include "ves/open/xml/Command.h"
 #include <wx/slider.h>
 #include <wx/sizer.h>
 #include <wx/statbox.h>

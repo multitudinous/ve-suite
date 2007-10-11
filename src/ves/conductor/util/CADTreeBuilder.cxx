@@ -30,20 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CADTreeBuilder.h"
+#include "ves/conductor/util/CADTreeBuilder.h"
 
-#include "VE_Open/XML/CAD/CADNode.h" 
-#include "VE_Open/XML/CAD/CADPart.h" 
-#include "VE_Open/XML/CAD/CADAssembly.h" 
-#include "VE_Open/XML/CAD/CADNodeTraverser.h"
+#include "ves/open/xml/cad/CADNode.h" 
+#include "ves/open/xml/cad/CADPart.h" 
+#include "ves/open/xml/cad/CADAssembly.h" 
+#include "ves/open/xml/cad/CADNodeTraverser.h"
 
 #include <wx/imaglist.h>
 #include <wx/image.h>
 #include <wx/icon.h>
 
-#include "VE_Conductor/xpm/cad_tree_expanded.xpm"
-#include "VE_Conductor/xpm/cad_tree_selected.xpm"
-#include "VE_Conductor/xpm/cad_tree_unselected.xpm"
+#include "ves/conductor/xpm/cad_tree_expanded.xpm"
+#include "ves/conductor/xpm/cad_tree_selected.xpm"
+#include "ves/conductor/xpm/cad_tree_unselected.xpm"
 
 #include <string>
 

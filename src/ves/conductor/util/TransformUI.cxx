@@ -30,19 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "ves/conductor/util/CORBAServiceList.h"
 
-#include "VE_Conductor/Utilities/TransformUI.h"
-#include "VE_Conductor/Utilities/DataSetLoaderUI.h"
+#include "ves/conductor/util/TransformUI.h"
+#include "ves/conductor/util/DataSetLoaderUI.h"
 
-#include "VE_Builder/Utilities/gui/spinctld.h"
+#include "ves/conductor/util/spinctld.h"
 
-#include "VE_Open/XML/Transform.h"
-#include "VE_Open/XML/FloatArray.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/ParameterBlock.h"
-#include "VE_Open/XML/Model/Model.h"
+#include "ves/open/xml/Transform.h"
+#include "ves/open/xml/FloatArray.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/ParameterBlock.h"
+#include "ves/open/xml/model/Model.h"
 
 #include <wx/checkbox.h>
 

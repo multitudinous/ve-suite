@@ -33,7 +33,7 @@
 // OrbThread.cpp: implementation of the OrbThread class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "OrbThread.h"
+#include "ves/conductor/util/OrbThread.h"
 
 #include <ace/OS.h>
 #include <iostream>

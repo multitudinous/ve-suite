@@ -30,20 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
-#include "VE_Conductor/Utilities/CADNodeMenu.h"
-#include "VE_Conductor/Utilities/CADTreeBuilder.h"
-#include "VE_Conductor/Utilities/CADNodePropsDlg.h"
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "ves/conductor/util/CADNodeManagerDlg.h"
+#include "ves/conductor/util/CADNodeMenu.h"
+#include "ves/conductor/util/CADTreeBuilder.h"
+#include "ves/conductor/util/CADNodePropsDlg.h"
+#include "ves/conductor/util/CORBAServiceList.h"
 
-#include "VE_Open/XML/CAD/CADNode.h"
-#include "VE_Open/XML/CAD/CADAssembly.h"
-#include "VE_Open/XML/CAD/CADPart.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
+#include "ves/open/xml/cad/CADNode.h"
+#include "ves/open/xml/cad/CADAssembly.h"
+#include "ves/open/xml/cad/CADPart.h"
+#include "ves/open/xml/XMLReaderWriter.h"
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/Transform.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/Transform.h"
 
 #include <wx/sizer.h>
 #include <wx/statbox.h>

@@ -30,14 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/ScalarToolsDlg.h"
+#include "ves/conductor/util/ScalarToolsDlg.h"
 //#include "VE_Conductor/Framework/Frame.h"
 
 #include <wx/app.h>
 
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
+#include "ves/open/Command.h"
+#include "ves/open/DataValuePair.h"
+#include "ves/open/XMLReaderWriter.h"
 
 #include <wx/statbox.h>
 #include <wx/combobox.h>
