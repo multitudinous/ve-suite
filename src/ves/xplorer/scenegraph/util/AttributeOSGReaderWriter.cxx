@@ -32,9 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <ves/open/xml/shader/Uniform.h>
-#include <ves/xplroer/scenegraph/util/MaterialHelper.h>
-#include <ves/xplroer/scenegraph/util/ShaderHelper.h>
-#include <ves/xplroer/scenegraph/util/Attribute.h>
+#include <ves/xplorer/scenegraph/util/MaterialHelper.h>
+#include <ves/xplorer/scenegraph/util/ShaderHelper.h>
+#include <ves/xplorer/scenegraph/util/Attribute.h>
 
 //why is this needed
 #include <osg/Material>
