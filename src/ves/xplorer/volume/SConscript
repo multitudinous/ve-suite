@@ -9,6 +9,11 @@ srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','volume') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
+index = sources.index( pj('SQLiteDriver.cxx') )
+sources.pop(index)
+index = headers.index( pj('SQLiteDriver.h') )
+headers.pop(index)
+
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = 'ves_xplorer_util')
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'util')])
