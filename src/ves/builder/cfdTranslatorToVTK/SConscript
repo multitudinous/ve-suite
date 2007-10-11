@@ -14,19 +14,19 @@ headers = Split("""
 ##srcs = map(lambda s: pj('#', 'VE_CE', 'Utilities', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
-               LIBS = ['VE_UtilLib'])
+lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'xplorer','util')],
+               LIBS = ['ves_xplorer_util'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 vtk_options.apply( lib_env )
 
 if baseEnv['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('TranslatorToVTKLib',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_builder_translator_base',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createSharedLibrary('TranslatorToVTKLib', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_builder_translator_base', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Builder', 'Translator', 'cfdTranslatorToVTK'))
+lib.addHeaders(headers,  pj( 'ves', 'builder', 'cfdTranslatorToVTK'))
 lib.build()
