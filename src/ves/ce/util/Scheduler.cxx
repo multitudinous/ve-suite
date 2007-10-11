@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_CE/Utilities/Scheduler.h>
-#include <VE_CE/Utilities/Module.h>
-#include <VE_CE/Utilities/Network.h>
-#include <VE_CE/Utilities/OPort.h>
-#include <VE_CE/Utilities/IPort.h>
-#include <VE_CE/Utilities/Connection.h>
-#include <VE_CE/Utilities/node_module.h>
+#include <ves/ce/util/Scheduler.h>
+#include <ves/ce/util/Module.h>
+#include <ves/ce/util/Network.h>
+#include <ves/ce/util/OPort.h>
+#include <ves/ce/util/IPort.h>
+#include <ves/ce/util/Connection.h>
+#include <ves/ce/util/node_module.h>
 #include <iostream>
 #include <queue>
 

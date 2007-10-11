@@ -32,7 +32,7 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include <VE_CE/UnitWrapper/GetInputsEventHandler.h>
+#include <ves/ce/unitwrapper/GetInputsEventHandler.h>
 
 #include <VE_Open/XML/XMLObject.h>
 #include <VE_Open/XML/XMLReaderWriter.h>

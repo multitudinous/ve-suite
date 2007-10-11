@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_CE/Utilities/Port.h>
-#include <VE_CE/Utilities/Connection.h>
-#include <VE_CE/Utilities/Module.h>
+#include <ves/ce/util/Port.h>
+#include <ves/ce/util/Connection.h>
+#include <ves/ce/util/Module.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 Port::Port (int id, Module* m)

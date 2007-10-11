@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_CE/Utilities/node_base.h>
+#include <ves/ce/util/node_base.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 node_base::node_base(Network *n, int t)

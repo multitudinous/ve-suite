@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_CE/Utilities/Connection.h>
-#include <VE_CE/Utilities/IPort.h>
-#include <VE_CE/Utilities/OPort.h>
+#include <ves/ce/util/Connection.h>
+#include <ves/ce/util/IPort.h>
+#include <ves/ce/util/OPort.h>
 using namespace VE_CE::Utilities;
 
 Connection::Connection (int id)

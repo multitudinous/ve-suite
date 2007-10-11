@@ -35,7 +35,7 @@
 #ifndef CE_UTILITIES_NODE_LOOP_H
 #define CE_UTILITIES_NODE_LOOP_H
 #include <VE_Installer/include/VEConfig.h>
-#include <VE_CE/Utilities/node_base.h>
+#include <ves/ce/util/node_base.h>
 #include <set>
 #include <vector>
 

@@ -37,7 +37,7 @@
 /*!\class VE_CE::GetInputsEventHandler
  * Inputs for event handling.
  */
-#include <VE_CE/UnitWrapper/EventHandler.h>
+#include <ves/ce/unitwrapper/EventHandler.h>
 
 namespace VE_XML
 {

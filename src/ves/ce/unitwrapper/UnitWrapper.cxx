@@ -48,9 +48,9 @@
 #include <VE_Open/XML/Model/ModelCreator.h>
 
 // Event handlers
-#include <VE_CE/UnitWrapper/SetInputsEventHandler.h>
-#include <VE_CE/UnitWrapper/GetInputsEventHandler.h>
-#include <VE_CE/UnitWrapper/EventHandler.h>
+#include <ves/ce/unitwrapper/SetInputsEventHandler.h>
+#include <ves/ce/unitwrapper/GetInputsEventHandler.h>
+#include <ves/ce/unitwrapper/EventHandler.h>
 
 #include <sstream>
 ////////////////////////////////////////////////////////////////////////////////

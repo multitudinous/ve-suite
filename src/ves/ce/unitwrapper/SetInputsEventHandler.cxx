@@ -29,7 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_CE/UnitWrapper/SetInputsEventHandler.h>
+#include <ves/ce/unitwrapper/SetInputsEventHandler.h>
 
 #include <VE_Open/XML/XMLObject.h>
 #include <VE_Open/XML/Command.h>

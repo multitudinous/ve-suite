@@ -35,7 +35,7 @@
 #ifndef CE_UTILITIES_OPORT_H
 #define CE_UTILITIES_OPORT_H
 #include <VE_Installer/include/VEConfig.h>
-#include <VE_CE/Utilities/Port.h>
+#include <ves/ce/util/Port.h>
 #include <VE_Open/skel/moduleS.h>
 //#include "VE_Conductor/Framework/interface.h"
 namespace VE_XML

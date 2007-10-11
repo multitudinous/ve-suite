@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VE_CE/Utilities/Network.h>
-#include <VE_CE/Utilities/Module.h>
-#include <VE_CE/Utilities/Connection.h>
+#include <ves/ce/util/Network.h>
+#include <ves/ce/util/Module.h>
+#include <ves/ce/util/Connection.h>
 
 #include <VE_Open/XML/XMLReaderWriter.h>
 #include <VE_Open/XML/XMLObject.h>
