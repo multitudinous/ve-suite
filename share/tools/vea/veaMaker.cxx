@@ -39,7 +39,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
-#include <ves/open/xml/Shader/ShaderCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/DataValuePairPtr.h>
