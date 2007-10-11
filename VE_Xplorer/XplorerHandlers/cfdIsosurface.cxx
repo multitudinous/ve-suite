@@ -40,10 +40,10 @@
 //#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
 #include <vtkContourFilter.h>
-#include <vtkGeometryFilter.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
@@ -83,15 +83,15 @@ cfdIsosurface::cfdIsosurface( int numsteps )
    this->normals->SetInput( this->contour->GetOutput() );
 #endif
 
-   this->filter = vtkGeometryFilter::New();
+   this->filter = vtkMultiGroupDataGeometryFilter::New();
 #ifdef USE_OMP
    this->filter->SetInput( (vtkDataSet *)this->append->GetOutput() );
 #else
    this->filter->SetInput( (vtkDataSet *)this->normals->GetOutput() );
 #endif
 
-   this->mapper = vtkPolyDataMapper::New();
-   this->mapper->SetInput( this->filter->GetOutput() );
+   this->mapper = vtkMultiGroupPolyDataMapper::New();
+   this->mapper->SetInputConnection( this->filter->GetOutputPort() );
    this->mapper->SetColorModeToMapScalars();
 }
 
@@ -149,9 +149,12 @@ void cfdIsosurface::Update()
 
    this->contour->SetInput( this->GetActiveDataSet()->GetDataSet() );
    this->contour->SetValue( 0, this->value );
-   this->contour->Update();
+   //this->contour->Update();
    //do this to color the isosurface by a different color
-   contour->GetOutput()->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
+   filter->SetInputConnection(contour->GetOutputPort());
+
+   filter->Update();
+   filter->GetOutput()->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
    this->normals->Update();
 #endif
 

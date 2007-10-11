@@ -56,9 +56,10 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkCutter.h>
 #include <vtkPlane.h>
+#include <vtkCompositeDataPipeline.h>
 
 #include <vtkMultiGroupPolyDataMapper.h>
-
+#include <vtkMultiGroupDataGeometryFilter.h>
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
@@ -70,7 +71,7 @@ cfdContourBase::cfdContourBase()
                           << std::endl << vprDEBUG_FLUSH;
    deci = vtkDecimatePro::New();
    
-   //this->filter = vtkGeometryFilter::New();
+   this->filter = vtkMultiGroupDataGeometryFilter::New();
    cfilter = vtkContourFilter::New();              // for contourlines
    bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
    // turn clipping on to avoid unnecessary value generations with 
@@ -97,8 +98,8 @@ cfdContourBase::~cfdContourBase()
    //vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
     //                      << std::endl  << vprDEBUG_FLUSH;
 
-   //this->filter->Delete();
-   //this->filter = NULL;
+   this->filter->Delete();
+   this->filter = NULL;
 
    if(cfilter)
    {
@@ -330,20 +331,24 @@ void cfdContourBase::CreatePlane( void )
 
    cuttingPlane->Advance( requestedValue );
    cutter->SetCutFunction( cuttingPlane->GetPlane() );
-   //cutter->SetInput( GetActiveDataSet()->GetDataSet() );
-   cutter->SetInput(0, GetActiveDataSet()->GetDataSet());
-   //cutter->DebugOn();
-   //cutter->Print( std::cout );
-   cutter->Update();
+   cutter->SetInput(0,GetActiveDataSet()->GetDataSet());
+   /*cutter->Update();
+   filter->SetInputConnection(cutter->GetOutputPort());
 
-   vtkPolyData* polydata = cutter->GetOutput();
+   filter->Update();
+   
+   vtkPolyData* polydata = filter->GetOutput();//cutter->GetOutput();
+*/
+   vtkPolyData* polydata = ApplyGeometryFilter(cutter); 
 
    if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
    {
       std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
       std::cerr<<"Finding next closest plane"<<std::endl;
       int counter = 0;
-      while ( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys() < 1 ) || counter < 3 )//&&(this->TargetReduction > 0.0) )
+      while ( (polydata->GetNumberOfPoints()) < 1 ||
+		      (polydata->GetNumberOfPolys() < 1 ) || 
+			  counter < 3 )//&&(this->TargetReduction > 0.0) )
       {
          if( requestedValue < 50 )
          {
@@ -355,9 +360,10 @@ void cfdContourBase::CreatePlane( void )
          }
          cuttingPlane->Advance( requestedValue ); 
          cutter->SetCutFunction( cuttingPlane->GetPlane() );
-         cutter->SetInput( GetActiveDataSet()->GetDataSet() );
-         cutter->Update();
-         polydata = cutter->GetOutput();      
+         cutter->SetInput(GetActiveDataSet()->GetDataSet());
+         filter->SetInputConnection(cutter->GetOutputPort());
+         filter->Update();
+         polydata = filter->GetOutput();      
          //cutter->Print( std::cout );
          //std::cout << std::endl;
          //std::cout << std::endl;

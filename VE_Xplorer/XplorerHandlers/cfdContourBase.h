@@ -44,6 +44,7 @@ class vtkPolyData;
 class vtkPolyDataMapper;
 class vtkMultiGroupPolyDataMapper;
 class vtkGeometryFilter;
+class vtkMultiGroupDataGeometryFilter;
 class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
 class vtkDecimatePro;
@@ -92,7 +93,7 @@ public:
 protected:
    //vtkPolyDataMapper*   mapper;
    vtkMultiGroupPolyDataMapper* mapper;///<mapper.
-   //vtkGeometryFilter*   filter;
+   vtkMultiGroupDataGeometryFilter*   filter;
    vtkContourFilter*    cfilter;///<Contour filter.
    vtkBandedPolyDataContourFilter* bfilter;///<banded contour filter.
    vtkDecimatePro*      deci;///<decimator.

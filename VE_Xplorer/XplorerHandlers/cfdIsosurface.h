@@ -53,8 +53,8 @@ cfdIsosurface API
 
 class vtkContourFilter;
 class vtkPolyDataNormals;
-class vtkGeometryFilter;
-class vtkPolyDataMapper;
+class vtkMultiGroupDataGeometryFilter;
+class vtkMultiGroupPolyDataMapper;
 
 #include <string>
 
@@ -100,8 +100,8 @@ private:
    vtkPolyDataNormals *normals;///<Normals for vtk.
 #endif
 
-   vtkGeometryFilter *filter;///<Filter for vtk.
-   vtkPolyDataMapper *mapper;///<Mapper for vtk.
+   vtkMultiGroupDataGeometryFilter* filter;///<Filter for vtk.
+   vtkMultiGroupPolyDataMapper* mapper;///<Mapper for vtk.
 };
 }
 #endif

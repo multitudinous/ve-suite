@@ -43,6 +43,11 @@
 // VTK Includes
 #include <vtkPolyData.h>
 #include <vtkActor.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkGeometryFilter.h>
+#include <vtkPolyDataAlgorithm.h>
+#include <vtkCompositeDataPipeline.h>
+#include <vtkDemandDrivenPipeline.h>
 
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
@@ -57,6 +62,9 @@ cfdObjects::cfdObjects( void )
    this->vtkToPFDebug = 0;
    this->usePreCalcData = false;
    activeDataSet = 0;
+   m_multiGroupGeomFilter = vtkMultiGroupDataGeometryFilter::New();
+   m_geometryFilter = vtkGeometryFilter::New();
+
    //this->actor = NULL;
    //this->PDactor = NULL;
    //this->addTransientGeode = 0;
@@ -71,7 +79,8 @@ cfdObjects::cfdObjects( const cfdObjects& src)
 
 cfdObjects::~cfdObjects( void )
 {
-   //pfDelete( this->geode );
+    m_multiGroupGeomFilter->Delete();
+    m_geometryFilter->Delete();
 }
 
 void cfdObjects::SetObjectType( int type )
@@ -175,7 +184,46 @@ void cfdObjects::UpdateCommand()
 {
    ;
 }
+///////////////////////////////////////
+void cfdObjects::SetActiveVtkPipeline()
+{
+	if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
+    {
+        // we have to use a compsite pipeline
+        vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
+        vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
+        prototype->Delete();
+	}
+	else
+	{   // we have to use a compsite pipeline
+        vtkDemandDrivenPipeline* prototype = vtkDemandDrivenPipeline::New();
+        vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
+        prototype->Delete();
+	}
+}
+///////////////////////////////
+void cfdObjects::UpdateActors()
+{
 
+}
+/////////////////////////////////////////////////////////////////
+vtkPolyData* cfdObjects::ApplyGeometryFilter(vtkPolyDataAlgorithm* input)
+{
+	if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
+    {
+        m_multiGroupGeomFilter->SetInputConnection(input->GetOutputPort());
+        m_multiGroupGeomFilter->Update();
+		return m_multiGroupGeomFilter->GetOutput();
+	}
+	else
+	{
+        /*m_geometryFilter->SetInputConnection(input->GetOutputPort());
+        m_geometryFilter->Update();*/
+		input->Update();
+		return input->GetOutput();//m_geometryFilter->GetOutput();
+	}
+}
+/////////////////////////////////////////////
 cfdDataSet* cfdObjects::GetActiveDataSet()
 {
    return activeDataSet;

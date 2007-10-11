@@ -40,11 +40,11 @@
 #include <vtkPolyData.h>
 //#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
-#include <vtkGeometryFilter.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPolyDataWriter.h>
 #include <vtkPointData.h>
@@ -92,7 +92,7 @@ std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()-
         && this->origin[2] > (float)bd[4]-(this->box_size[5]-this->box_size[4])/2
         && this->origin[2] < (float)bd[5]+(this->box_size[5]-this->box_size[4])/2 )
       {
-         if ( this->box_size[0] != this->box_size[1] 
+        /* if ( this->box_size[0] != this->box_size[1] 
            && this->box_size[2] != this->box_size[3] 
            && this->box_size[4] != this->box_size[5] )
          {
@@ -102,12 +102,12 @@ std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()-
                 <<"c5:"<<this->box_size[4]<<"c6:"<<this->box_size[5]
                 << std::endl << vprDEBUG_FLUSH;
 
-            this->filter->SetExtent( this->box_size );
-            this->filter->ExtentClippingOn();
+            //--biv do we need this call ??this->filter->SetExtent( this->box_size );
+            //--biv do we need this call ??this->filter->ExtentClippingOn();
          }
          else
-            this->filter->ExtentClippingOff();
-
+            //--biv do we need this call ??this->filter->ExtentClippingOff();
+*/
          this->filter->Update();
       
          this->mapper->SetScalarRange( this->GetActiveDataSet()
@@ -153,7 +153,7 @@ std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()-
       //this->glyph->Update();  
       //this->glyph->Print( cout );
 
-      this->filter->ExtentClippingOff();
+      //--biv do we need this call ??this->filter->ExtentClippingOff();
       this->filter->Update();
       
       // Good Test code to see if you are actually getting streamlines
@@ -193,7 +193,7 @@ std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()-
    catch( std::bad_alloc )
    {
       mapper->Delete();
-      mapper = vtkPolyDataMapper::New();
+      mapper = vtkMultiGroupPolyDataMapper::New();
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVectors " 
                            << std::endl << vprDEBUG_FLUSH;
    }

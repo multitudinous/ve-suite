@@ -45,11 +45,11 @@
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
-#include <vtkGeometryFilter.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
@@ -127,7 +127,7 @@ cfdVector::cfdVector()
    this->filter->SetInput( this->glyph->GetOutput() );
 #endif
 
-   this->filter->ExtentClippingOn();
+  //biv--do we need this? this->filter->ExtentClippingOn();
 }
 
 cfdVector::~cfdVector()
@@ -226,7 +226,7 @@ void cfdVector::Update( void )
    catch( std::bad_alloc )
    {
       mapper->Delete();
-      mapper = vtkPolyDataMapper::New();
+      mapper = vtkMultiGroupPolyDataMapper::New();
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVector " 
                            << std::endl << vprDEBUG_FLUSH;
    }

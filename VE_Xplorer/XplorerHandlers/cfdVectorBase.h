@@ -45,8 +45,8 @@ cfdVectorBase API
 #include "VE_Xplorer/XplorerHandlers/cfdObjects.h"
 
 class vtkGlyph3D;
-class vtkGeometryFilter;
-class vtkPolyDataMapper;
+class vtkMultiGroupDataGeometryFilter;
+class vtkMultiGroupPolyDataMapper;
 class vtkMaskPoints;
 class vtkTriangleFilter;
 class vtkStripper;
@@ -106,8 +106,8 @@ public:
 
 protected:
    vtkGlyph3D*          glyph;
-   vtkGeometryFilter*   filter;
-   vtkPolyDataMapper*   mapper;
+   vtkMultiGroupDataGeometryFilter*   filter;
+   vtkMultiGroupPolyDataMapper*   mapper;
    vtkMaskPoints*       ptmask;
    vtkTriangleFilter*   tris;
    vtkStripper*         strip;

@@ -42,11 +42,11 @@
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
-#include <vtkGeometryFilter.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 
 using namespace VE_Xplorer;
@@ -125,7 +125,7 @@ void cfdPresetVector::Update( void )
 
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-      this->cutter->Update();
+      //this->filter->SetInputConnection(this->cutter->GetOutputPort());
 
       delete this->cuttingPlane;
       this->cuttingPlane = NULL;
@@ -170,7 +170,7 @@ void cfdPresetVector::Update( void )
    catch( std::bad_alloc )
    {
       mapper->Delete();
-      mapper = vtkPolyDataMapper::New();
+      mapper = vtkMultiGroupPolyDataMapper::New();
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetVectors " 
                            << std::endl << vprDEBUG_FLUSH;
    }

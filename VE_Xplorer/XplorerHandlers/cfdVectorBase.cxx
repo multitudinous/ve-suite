@@ -44,12 +44,12 @@
 #include "VE_Xplorer/XplorerHandlers/cfdDebug.h"
 
 #include <vtkPolyData.h>
-#include <vtkGeometryFilter.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkThresholdPoints.h>
 #include <vtkActor.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
@@ -69,15 +69,15 @@ cfdVectorBase::cfdVectorBase()
    this->glyph = vtkGlyph3D::New(); 
 
    tfilter = vtkThresholdPoints::New();
-   this->filter = vtkGeometryFilter::New();
-   this->filter->SetInput( this->glyph->GetOutput() );
+   this->filter = vtkMultiGroupDataGeometryFilter::New();
+   this->filter->SetInputConnection( this->glyph->GetOutputPort() );
 //   filter->GetOutput()->ReleaseDataFlagOn();
 
    this->tris = vtkTriangleFilter::New();
    this->strip = vtkStripper::New();
 
-   this->mapper = vtkPolyDataMapper::New();
-   this->mapper->SetInput( this->filter->GetOutput() );
+   this->mapper = vtkMultiGroupPolyDataMapper::New();
+   this->mapper->SetInputConnection( this->filter->GetOutputPort() );
    this->mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();   
 

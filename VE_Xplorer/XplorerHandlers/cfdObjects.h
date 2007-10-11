@@ -59,7 +59,9 @@ class vtkPolyData;
 class vtkActor;
 class vtkGlyph3D;
 class vtkMaskPoints;
-
+class vtkMultiGroupDataGeometryFilter;
+class vtkGeometryFilter;
+class vtkPolyDataAlgorithm;
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
@@ -90,6 +92,14 @@ namespace VE_Xplorer
 
          ///update the actor
          virtual void Update() = 0;
+
+		 ///Update the actors in the object
+		 void UpdateActors();
+
+		 ///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
+		 ///and the current dataset type
+		 ///\param input The input vtkPolyDataAlgorithm to process
+		 vtkPolyData* ApplyGeometryFilter(vtkPolyDataAlgorithm* input);
 
          ///Returnd geodes.
          std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > GetGeodes( void );
@@ -162,6 +172,9 @@ namespace VE_Xplorer
          ///\param x
          void SetGeodeFlag( bool x );
 
+		 ///Set active vtk pipelines 
+		 void SetActiveVtkPipeline();
+
          ///Flag for the geode flag.
          bool GetGeodeFlag( void );
 
@@ -173,10 +186,10 @@ namespace VE_Xplorer
 
          ///Selects the active dataset.
          ///\param dataset
-         void SetActiveDataSet( cfdDataSet * dataset );
+         void SetActiveDataSet( cfdDataSet* dataset );
 
          ///Gets the active dataset.
-         cfdDataSet * GetActiveDataSet( void );
+         cfdDataSet* GetActiveDataSet( void );
 
          //void ClearTransientVector( void );
          //static void SetVectorScale( float );
@@ -190,6 +203,11 @@ namespace VE_Xplorer
 
          std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;///<geode vector.
          vtkPolyData* pointSource;///<point source for vtk polydata.
+
+		 ///vtkMultiGroupGeometryFilter
+		 vtkMultiGroupDataGeometryFilter* m_multiGroupGeomFilter;
+		 ///vtkGeometryFilter
+		 vtkGeometryFilter* m_geometryFilter;
 
          bool updateFlag;///<flag for updating.
          int vtkToPFDebug;///<debugging for performer (may not be needed).
