@@ -32,7 +32,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "viewCells.h"
+#include <ves/xplorer/util/viewCells.h>
 #include <iostream>
 
 #include <vtkPoints.h>

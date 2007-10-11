@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/Utilities/ComputeVectorMagnitudeRangeCallback.h"
-#include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
+#include <ves/xplorer/utilComputeVectorMagnitudeRangeCallback.h>
+#include <ves/xplorer/utilcfdAccessoryFunctions.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 

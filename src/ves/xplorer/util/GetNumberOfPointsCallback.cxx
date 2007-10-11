@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/Utilities/GetNumberOfPointsCallback.h"
-#include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
+#include <ves/xplorer/utilGetNumberOfPointsCallback.h>
+#include <ves/xplorer/utilcfdAccessoryFunctions.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 

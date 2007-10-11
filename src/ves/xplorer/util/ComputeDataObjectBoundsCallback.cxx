@@ -33,7 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/Utilities/ComputeDataObjectBoundsCallback.h"
+#include <ves/xplorer/utilComputeDataObjectBoundsCallback.h>
 #include <vtkDataSet.h>
 #include <cmath>
 

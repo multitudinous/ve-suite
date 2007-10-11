@@ -33,7 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/Utilities/CreateDataObjectBBoxActorsCallback.h"
+#include <ves/xplorer/utilCreateDataObjectBBoxActorsCallback.h>
 #include <vtkDataSet.h>
 #include <vtkActor.h>
 #include <vtkOutlineFilter.h>

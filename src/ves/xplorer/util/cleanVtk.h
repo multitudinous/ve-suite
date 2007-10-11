@@ -37,7 +37,7 @@
 /*!\file cleanVTK.h
 cleanVTK API
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <string>
 
 class vtkPointSet;

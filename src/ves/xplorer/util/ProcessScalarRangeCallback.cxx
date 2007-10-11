@@ -33,7 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/Utilities/ProcessScalarRangeCallback.h"
+#include <ves/xplorer/utilProcessScalarRangeCallback.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <iostream>

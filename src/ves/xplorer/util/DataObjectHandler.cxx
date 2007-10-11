@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/Utilities/DataObjectHandler.h"
+#include <ves/xplorer/utilDataObjectHandler.h>
 
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>

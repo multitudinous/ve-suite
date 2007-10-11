@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
-#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
+#include <ves/xplorer/utilcfdGrid2Surface.h>
 #include <vtkDataObject.h>
 #include <vtkPointData.h>
 #include <vtkContourFilter.h>

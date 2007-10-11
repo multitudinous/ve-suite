@@ -44,7 +44,7 @@ cfdAccessoryFunctions API
 
 class vtkDataArray;
 class vtkDataSet;
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_Util
 {

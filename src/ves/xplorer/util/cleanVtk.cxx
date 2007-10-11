@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/Utilities/cleanVtk.h"
+#include <ves/xplorer/utilcleanVtk.h>
 
 #include <iostream>
 #include <fstream>

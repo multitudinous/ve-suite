@@ -33,7 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/Utilities/ActiveDataInformationCallback.h"
+#include <ves/xplorer/utilActiveDataInformationCallback.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 

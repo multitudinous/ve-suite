@@ -35,7 +35,7 @@
 /*!\file viewCells.h
 viewCells API
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 class vtkUnstructuredGrid;
 class vtkDataSet;

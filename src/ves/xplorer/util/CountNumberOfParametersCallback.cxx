@@ -33,7 +33,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/Utilities/CountNumberOfParametersCallback.h"
+#include <ves/xplorer/utilCountNumberOfParametersCallback.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <algorithm>

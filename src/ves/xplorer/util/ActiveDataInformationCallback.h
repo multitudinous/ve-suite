@@ -41,8 +41,8 @@ ActiveDataInformationCallback API.
 */
 class vtkDataSet;
 
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/Utilities/DataObjectHandler.h"
+#include <ves/VEConfig.h>
+#include <ves/xplorer/utilDataObjectHandler.h>
 
 #include <vector>
 #include <string>

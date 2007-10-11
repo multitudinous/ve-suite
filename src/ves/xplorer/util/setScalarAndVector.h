@@ -37,7 +37,7 @@
 /*!\file setScalarAndVector.h
 setScalarAndVector API
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 // class declarations
 class vtkDataSet;
