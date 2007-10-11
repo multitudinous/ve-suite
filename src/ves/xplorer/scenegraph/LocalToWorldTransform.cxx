@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/LocalToWorldTransform.h>
+#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Xforms.h>

@@ -33,7 +33,7 @@
 #include <iostream>
 #include <cstdlib>
 
-#include <ves/xplorer/utilreadWriteVtkThings.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
@@ -49,9 +49,9 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkUnstructuredGridWriter.h>
 #include <vtkXMLUnstructuredGridReader.h>
-#include <ves/xplorer/utilcfdVTKFileHandler.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
-#include <ves/xplorer/utilComputeDataObjectBoundsCallback.h>
+#include <ves/xplorer/util/cfdVTKFileHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
+#include <ves/xplorer/util/ComputeDataObjectBoundsCallback.h>
 #include <vtkMultiGroupDataSet.h>
 
 using namespace VE_Util;

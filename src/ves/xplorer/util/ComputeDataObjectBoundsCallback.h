@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef COMPUTE_DATAOBJECT_BOUNDS_CALLBACK 
 #define  COMPUTE_DATAOBJECT_BOUNDS_CALLBACK
@@ -44,7 +42,7 @@ ComputeDataObjectBoundsCallback API.
 class vtkDataSet;
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
 
 
 namespace VE_Util

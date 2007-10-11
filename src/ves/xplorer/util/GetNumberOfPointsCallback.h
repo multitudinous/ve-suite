@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GET_NUMBER_OF_POINTS_CALLBACK 
 #define  GET_NUMBER_OF_POINTS_CALLBACK
@@ -44,7 +42,7 @@ GetNumberOfPointsCallback API.
 class vtkDataSet;
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
 
 
 namespace VE_Util

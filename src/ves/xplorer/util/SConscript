@@ -5,7 +5,7 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR execOsgPatTag vtk_options RootDir')
 
-srcDir = os.path.abspath( pj(RootDir, 'VE_Xplorer', 'Utilities') )
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer', 'util') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
 
@@ -22,13 +22,13 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --cflags --libs'%lib_env['BoostVersion'])
 vtk_options.apply( lib_env )
 if baseEnv['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_UtilLib',
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_util',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createSharedLibrary('VE_UtilLib', lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_xplorer_util', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Xplorer', 'Utilities'))
+lib.addHeaders(headers,  pj( 'ves', 'xplorer', 'util'))
 lib.build()

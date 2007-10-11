@@ -29,8 +29,6 @@
  * Id:            $Id: CreateDataObjectBBoxActorsCallback.h 9200 2007-10-03 19:17:07Z biv $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK 
 #define  CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK
@@ -45,7 +43,7 @@ class vtkDataSet;
 class vtkActor;
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
 
 
 #include <vector>

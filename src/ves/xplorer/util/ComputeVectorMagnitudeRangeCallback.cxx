@@ -29,11 +29,9 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/utilComputeVectorMagnitudeRangeCallback.h>
-#include <ves/xplorer/utilcfdAccessoryFunctions.h>
+#include <ves/xplorer/util/ComputeVectorMagnitudeRangeCallback.h>
+#include <ves/xplorer/util/cfdAccessoryFunctions.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 

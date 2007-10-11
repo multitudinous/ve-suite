@@ -71,7 +71,7 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::re
 	actor->GetMapper()->Update();
 
 	// this could possibly be any type of DataSet, vtkActorToOSG assumes polyData
-	if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), <vtkPolyData")) {
+	if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), "vtkPolyData")) {
 		std::cerr << "ERROR! Actor must use a vtkPolyDataMapper." << std::endl;
 		std::cerr << "If you are using a vtkDataSetMapper, use vtkGeometryFilter instead." << std::endl;
 		return NULL;

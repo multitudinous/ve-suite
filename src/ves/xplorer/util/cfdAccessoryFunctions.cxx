@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/utilcfdAccessoryFunctions.h>
+#include <ves/xplorer/util/cfdAccessoryFunctions.h>
 #include <vtkGenericCell.h>
 #include <vtkDataSet.h>
 #include <vtkDataArray.h>

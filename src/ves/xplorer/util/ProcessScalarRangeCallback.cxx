@@ -29,11 +29,9 @@
  * Id:            $Id: ComputeDataObjectBoundsCallback.h 9200 2007-10-03 19:17:07Z biv $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/utilProcessScalarRangeCallback.h>
+#include <ves/xplorer/util/ProcessScalarRangeCallback.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <iostream>

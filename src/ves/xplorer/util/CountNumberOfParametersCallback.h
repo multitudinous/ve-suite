@@ -29,8 +29,6 @@
  * Id:            $Id: ComputeDataObjectBoundsCallback.h 9200 2007-10-03 19:17:07Z biv $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef COUNT_NUMBER_OF_PARAMETERS_CALLBACK 
 #define  COUNT_NUMBER_OF_PARAMETERS_CALLBACK
@@ -44,7 +42,7 @@ CountNumberOfParametersCallback API.
 class vtkDataSet;
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
 
 #include <vector>
 #include <string>

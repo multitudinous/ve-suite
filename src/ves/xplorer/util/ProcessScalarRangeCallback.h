@@ -42,7 +42,7 @@ ProcessScalarRangeCallback API.
 class vtkDataSet;
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
 
 #include <vector>
 #include <string>

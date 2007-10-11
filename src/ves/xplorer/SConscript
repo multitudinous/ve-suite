@@ -5,6 +5,8 @@ Import('baseEnv buildDir')
 
 xplorerSubdirs = Split("""
     scenegraph
+    volume
+    util
 """)
 
 

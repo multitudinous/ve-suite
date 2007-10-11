@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ACCESSORY_FUNCTIONS_H
 #define CFD_ACCESSORY_FUNCTIONS_H

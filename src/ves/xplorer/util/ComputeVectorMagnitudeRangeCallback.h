@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef COMPUTE_VECTOR_MAGNITUDE_RANGE_CALLBACK 
 #define  COMPUTE_VECTOR_MAGNITUDE_RANGE_CALLBACK
@@ -44,7 +42,7 @@ ComputeMeanCellBBoxLengthCallback API.
 class vtkDataSet;
 
 #include <ves/VEConfig.h>
-#include <ves/xplorer/utilDataObjectHandler.h>
+#include <ves/xplorer/util/DataObjectHandler.h>
 
 
 namespace VE_Util

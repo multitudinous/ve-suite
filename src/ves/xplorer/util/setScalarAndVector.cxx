@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/utilsetScalarAndVector.h>
+#include <ves/xplorer/util/setScalarAndVector.h>
 #include <iostream>
 
 #include <vtkDataSet.h>

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/utilcfdVTKFileHandler.h>
+#include <ves/xplorer/util/cfdVTKFileHandler.h>
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
 #include <vtkXMLFileReadTester.h>

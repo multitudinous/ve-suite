@@ -29,11 +29,9 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/utilComputeDataObjectBoundsCallback.h>
+#include <ves/xplorer/util/ComputeDataObjectBoundsCallback.h>
 #include <vtkDataSet.h>
 #include <cmath>
 

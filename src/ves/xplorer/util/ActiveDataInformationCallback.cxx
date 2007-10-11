@@ -29,11 +29,9 @@
  * Id:            $Id: ComputeDataObjectBoundsCallback.h 9200 2007-10-03 19:17:07Z biv $
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/utilActiveDataInformationCallback.h>
+#include <ves/xplorer/util/ActiveDataInformationCallback.h>
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 

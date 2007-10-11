@@ -29,11 +29,9 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/utilComputeMeanCellBBoxLengthCallback.h>
-#include <ves/xplorer/utilcfdAccessoryFunctions.h>
+#include <ves/xplorer/util/ComputeMeanCellBBoxLengthCallback.h>
+#include <ves/xplorer/util/cfdAccessoryFunctions.h>
 #include<vtkDataSet.h>
 
 

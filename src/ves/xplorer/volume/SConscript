@@ -1,82 +1,17 @@
 ##Builds VE_TextureBasedLib<tag>
 import os, sys, string
+import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options GetPlatform')
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir osg_options vtk_options GetPlatform RootDir')
 
-sources = Split("""
-   cfd3DTextureCullCallback.cxx
-   cfdAdvectionSubGraph.cxx
-   cfdCopyTo3DTextureStage.cxx
-   cfdOSGAdvectionShaderManager.cxx
-   cfdOSGPingPongTexture3d.cxx
-   cfdOSGShaderManager.cxx
-   cfdOSGTransferShaderManager.cxx
-   cfdPBufferManager.cxx
-   cfdPBufferQuad.cxx
-   cfdScalarShaderManager.cxx
-   cfdScalarVolumeVisHandler.cxx
-   cfdSimpleTextureCallback.cxx
-   cfdTextureDataSet.cxx
-   cfdTextureManager.cxx
-   cfdTextureMatrixCallback.cxx
-   cfdUpdateableOSGNoiseTexture3d.cxx
-   cfdUpdateableOSGTexture1d.cxx
-   cfdUpdateParameterCallback.cxx
-   cfdUpdateTextureCallback.cxx
-   cfdVectorVolumeVisHandler.cxx
-   cfdVolumeVisNodeHandler.cxx
-   cfdVolumeVisualization.cxx
-   GreyScaleShaderManager.cxx
-   TBVolumeSlices.cxx
-   LuminanceTransferFunction.cxx
-   PreIntegrationTexture.cxx
-   NoiseTexture2D.cxx
-   RedYellowGreenCyanBlueTransferFunction.cxx
-   TransferFunction.cxx
-""")
-
-headers = Split("""
-   cfd3DTextureCullCallback.h
-   cfdAdvectionSubGraph.h
-   cfdCopyTo3DTextureStage.h
-   cfdOSGAdvectionShaderManager.h
-   cfdOSGPingPongTexture3d.h
-   cfdOSGShaderManager.h
-   cfdOSGTransferShaderManager.h
-   cfdPBufferManager.h
-   cfdPBufferQuad.h
-   cfdScalarShaderManager.h
-   cfdScalarVolumeVisHandler.h
-   cfdSimpleTextureCallback.h
-   cfdTextureDataSet.h
-   cfdTextureManager.h
-   cfdTextureMatrixCallback.h
-   cfdUpdateableOSGNoiseTexture3d.h
-   cfdUpdateableOSGTexture1d.h
-   cfdUpdateParameterCallback.h
-   cfdUpdateTextureCallback.h
-   cfdVectorVolumeVisHandler.h
-   cfdVolumeVisNodeHandler.h
-   cfdVolumeVisualization.h
-   GreyScaleShaderManager.h
-   TBVolumeSlices.h
-   volumeRenderBasicShader.h
-   volumeRenderPhongShader.h
-   bboxEdgeConstants.h
-   RedYellowGreenCyanBlueTransferFunction.h
-   TransferFunction.h
-   PreIntegrationTexture.h
-   NoiseTexture2D.h
-   LuminanceTransferFunction.h
-   NoiseTexture2D.h
-""")
-
-##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), srcs)
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','volume') )
+sources = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = 'VE_UtilLib')
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')])
+#lib_env.Append(LIBS = 'VE_UtilLib')
+#lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')])
 lib_env.ParseConfig('flagpoll gmtl --libs --cflags Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 osg_options.apply( lib_env )
 vtk_options.apply( lib_env )
@@ -88,13 +23,13 @@ else:
     lib_env.ParseConfig('flagpoll vrjuggler-opengl vrjuggler --cflags --libs --atleast-version=%s --get-vrj_ogl_libs'%lib_env['VRJugglerVersion'])     
 
 if baseEnv['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('VE_TextureBasedLib%s' %(execOsgPatTag),
+   lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_volume%s' %(execOsgPatTag),
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createSharedLibrary('VE_TextureBasedLib%s' %(execOsgPatTag), lib_env,
+   lib = ves_pkg.createSharedLibrary('ves_xplorer_volume%s' %(execOsgPatTag), lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Xplorer', 'TextureBased'))
+lib.addHeaders(headers,  pj( 'ves', 'xplorer', 'volume'))
 lib.build()
