@@ -33,8 +33,8 @@
 #ifndef _XPLORER_I_H_
 #define _XPLORER_I_H_
 
-#include <ves/open/moduleS.h>
-#include <ves/xplorer/event/Body_AMI_UIHandler_i.h>
+#include <ves/open/skel/moduleS.h>
+#include <ves/xplorer/Body_AMI_UIHandler_i.h>
 
 #undef _REENTRANT
 #include <vpr/Sync/Mutex.h>
@@ -44,7 +44,7 @@
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork.h>
 
-#include <VE_Xplorer/GE/cfdStateInfo.h>
+#include <ves/xplorer/cfdStateInfo.h>
 
 #include <vrj/vrjParam.h>
 #if __VJ_version <= 2000003

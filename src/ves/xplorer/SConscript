@@ -57,8 +57,8 @@ base_header_srcs = sca_util.getHeadersRecursive( srcDir )
 sources += map(lambda s: pj('plugin', s), base_plugin_srcs)
 headers += map(lambda s: pj('plugin', s), base_header_srcs)
 
-print sources
-print headers
+#print sources
+#print headers
 
 
 lib_env = ves_pkg.getEnv().Copy()

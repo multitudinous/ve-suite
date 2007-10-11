@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/Xplorer_i.h>
+#include <ves/xplorer/Xplorer_i.h>
 
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/event/cfdQuatCamHandler.h>
-#include <ves/xplorer/event/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/event/cfdCommandArray.h>
 #include <ves/xplorer/event/cfdModel.h>
 #include <ves/xplorer/event/cfdDisplaySettings.h>
