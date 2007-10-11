@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/conductorUIPluginBase.h>
-#include <app/conductor/PluginLoader.h>
+#include <ves/conductor/UIPluginBase.h>
+#include "PluginLoader.h"
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
 #include <wx/hash.h>

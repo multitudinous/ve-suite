@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 //Don't move Frame.h below ExportMenu.h
 #include <ves/conductor/util/CORBAServiceList.h>
-#include <app/conductor/ExportMenu.h>
+#include "ExportMenu.h"
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/CommandPtr.h>

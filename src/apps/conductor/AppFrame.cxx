@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/CORBAServiceList.h>
 
-#include <app/conductor/AppFrame.h>
+#include "AppFrame.h"
 
 #include <wx/imaglist.h>
 #include <wx/artprov.h>
@@ -47,33 +47,33 @@
 #include <wx/config.h>
 #include <wx/msgdlg.h>
 
-#include <ves/conductorResultPanel.h>
+#include <ves/conductor/ResultPanel.h>
 #include <ves/conductor/util/OrbThread.h>
-#include <ves/conductorFinancialDialog.h>
-#include <ves/conductorTextResultDialog.h>
-#include <ves/conductorTexTable.h>
-#include <ves/conductorGlobalParamDialog.h>
-#include <ves/conductorSummaryResultDialog.h>
-#include <ves/conductorFindDialog.h>
-#include <ves/conductorUserPreferencesDataBuffer.h>
-#include <ves/conductorXMLDataBufferEngine.h>
+#include <ves/conductor/FinancialDialog.h>
+#include <ves/conductor/TextResultDialog.h>
+#include <ves/conductor/TexTable.h>
+#include <ves/conductor/GlobalParamDialog.h>
+#include <ves/conductor/SummaryResultDialog.h>
+#include <ves/conductor/FindDialog.h>
+#include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <ves/conductor/XMLDataBufferEngine.h>
 
-#include <app/conductor/ConductorApp.h>
-#include <app/conductor/UserPreferences.h>
-#include <app/conductor/Avail_Modules.h>
-#include <app/conductor/HierarchyTree.h>
-#include <app/conductor/UI_TeacherTab.h>
-#include <app/conductor/DeviceProperties.h>
-#include <app/conductor/NavigationPane.h>
-#include <app/conductor/Splitter.h>
-#include <app/conductor/ViewLocPane.h>
-#include <app/conductor/Network.h>
-#include <app/conductor/Canvas.h>
-#include <app/conductor/MainToolBar.h>
-#include <app/conductor/ExportMenu.h>
+#include "ConductorApp.h"
+#include "UserPreferences.h"
+#include "Avail_Modules.h"
+#include "HierarchyTree.h"
+#include "UI_TeacherTab.h"
+#include "DeviceProperties.h"
+#include "NavigationPane.h"
+#include "Splitter.h"
+#include "ViewLocPane.h"
+#include "Network.h"
+#include "Canvas.h"
+#include "MainToolBar.h"
+#include "ExportMenu.h"
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
-#include <ves/conductorModule.h>
+#include <ves/conductor/Module.h>
 #include <ves/conductor/util/Tag.h>
 
 #include <ves/open/xml/DOMDocumentManager.h>

@@ -48,11 +48,11 @@
 //#include <iostream>
 #include <ves/conductor/util/CORBAServiceList.h>
 
-#include <app/conductor/AppFrame.h>
+#include "AppFrame.h"
 
 #include <VE_Installer/installer/installerImages/ve_icon32x32.xpm>
-#include <app/conductor/UserPreferences.h>
-#include <ves/conductorUserPreferencesDataBuffer.h>
+#include "UserPreferences.h"
+#include <ves/conductor/UserPreferencesDataBuffer.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

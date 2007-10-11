@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <app/conductor/Splitter.h>
+#include "Splitter.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(Splitter, wxSplitterWindow)

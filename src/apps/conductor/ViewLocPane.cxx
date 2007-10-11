@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include <app/conductor/ViewLocPane.h>
+#include "ViewLocPane.h"
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 

@@ -7,8 +7,8 @@ Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir xerces_options wxwidgets_opt
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'conductor') )
 srcs = sca_util.getSourcesRecursive( srcDir )
-srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin.cxx' )]
-srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin_UI_Dialog.cxx' )]
+#srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin.cxx' )]
+#srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin_UI_Dialog.cxx' )]
 
 env = ves_pkg.getEnv().Copy()
 env.Append( CPPDEFINES = [vesSVNRevision] )

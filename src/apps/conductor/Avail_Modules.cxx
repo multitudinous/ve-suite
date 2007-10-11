@@ -31,14 +31,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include <app/conductor/AppFrame.h>
-#include <app/conductor/Canvas.h>
-#include <app/conductor/Network.h>
-#include <app/conductor/HierarchyTree.h>
-#include <app/conductor/Avail_Modules.h>
-#include <app/conductor/PluginLoader.h>
-#include <ves/conductorStringParse.h>
-#include <ves/conductorUIPluginBase.h>
+#include "AppFrame.h"
+#include "Canvas.h"
+#include "Network.h"
+#include "HierarchyTree.h"
+#include "Avail_Modules.h"
+#include "PluginLoader.h"
+#include <ves/conductor/StringParse.h>
+#include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
 #include <ves/open/xml/DataValuePair.h>

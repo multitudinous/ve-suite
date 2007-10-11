@@ -31,19 +31,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include <app/conductor/Network.h>
+#include "Network.h"
 
-#include <ves/conductorPortDialog.h>
-#include <ves/conductorUserPreferencesDataBuffer.h>
-#include <ves/conductorXMLDataBufferEngine.h>
+#include <ves/conductor/PortDialog.h>
+#include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <ves/conductor/XMLDataBufferEngine.h>
 
-#include <ves/conductorUIDialog.h>
+#include <ves/conductor/UIDialog.h>
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/util/ParamsDlg.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
-#include <app/conductor/AppFrame.h>
-#include <app/conductor/Canvas.h>
+#include "AppFrame.h"
+#include "Canvas.h"
 
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Point.h>

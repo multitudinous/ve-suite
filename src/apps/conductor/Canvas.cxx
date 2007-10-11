@@ -31,19 +31,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include <app/conductor/Canvas.h>
+#include "Canvas.h"
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/SystemStrongPtr.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/StateInfo.h>
-#include <ves/conductorXMLDataBufferEngine.h>
-#include <ves/conductorUserPreferencesDataBuffer.h>
+#include <ves/conductor/XMLDataBufferEngine.h>
+#include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/open/xml/DOMDocumentManager.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
-#include <app/conductor/Network.h>
+#include "Network.h"
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/TagPtr.h>
 #include <ves/open/xml/User.h>

@@ -38,11 +38,11 @@ Network API
 /*!\class Network
 * 
 */
-#include <ves/conductorUIPluginBase.h>
+#include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/util/Link.h>
 #include <ves/conductor/util/Tag.h>
 #include <ves/conductor/util/Polygon.h>
-#include <ves/conductorModule.h>
+#include <ves/conductor/Module.h>
 #include <ves/open/xml/model/SystemStrongPtr.h>
 
 #include <wx/event.h>

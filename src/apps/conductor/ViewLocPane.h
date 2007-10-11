@@ -40,7 +40,7 @@
  * the controls for the view points and flythrough functionality
  */
 #include <wx/gdicmn.h>
-#include <share/tools/builder/util/gui/spinctld.h>
+#include <ves/conductor/util/spinctld.h>
 //#include <wx/spinctrl.h>
 #include <wx/image.h>
 #include <wx/dialog.h>

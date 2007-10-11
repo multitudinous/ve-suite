@@ -39,7 +39,7 @@
 #include <wx/msgdlg.h>
 #include <wx/filename.h>
 
-#include <app/conductor/UI_TeacherTab.h>
+#include "UI_TeacherTab.h"
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 

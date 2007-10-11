@@ -31,11 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include <app/conductor/Network.h>
-#include <app/conductor/Canvas.h>
-#include <app/conductor/HierarchyTree.h>
-#include <ves/conductorAspenPlus2DIcons.h>
-#include <ves/conductorUIPluginBase.h>
+#include "Network.h"
+#include "Canvas.h"
+#include "HierarchyTree.h"
+#include <ves/conductor/AspenPlus2DIcons.h>
+#include <ves/conductor/UIPluginBase.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>

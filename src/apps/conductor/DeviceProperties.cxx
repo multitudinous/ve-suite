@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/conductor/util/CORBAServiceList.h>
 
-#include <app/conductor/DeviceProperties.h>
+#include "DeviceProperties.h"
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
