@@ -41,7 +41,7 @@
 #include <ves/xplorer/scenegraph/util/MaterialHelper.h>
 
 #include <ves/open/xml/cad/CADMaterial.h>
-#include <ves/open/xmlFloatArray.h>
+#include <ves/open/xml/FloatArray.h>
 #include <string>
 using namespace VE_XML::VE_CAD;
 using namespace VE_SceneGraph::Utilities;

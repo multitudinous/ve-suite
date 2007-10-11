@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
 #include <ves/xplorer/scenegraph/nurbs/NSurface.h>
-#include <ves/xplorer/scenegraph/NURBS/ControlPoint.h> 
+#include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 #include <osg/Drawable>
 #include <osg/BoundingBox>
 #include <osg/BoundingSphere>
