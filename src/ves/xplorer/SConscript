@@ -71,7 +71,7 @@ lib_env.Append(LIBS = ['ves_open_xml',
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer', 'volume'),
-                        pj('#', buildDir, 'src', 'ves', 'open', 'skel'),
+                        pj('#', buildDir, 'src', 'ves', 'open'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
 lib_env.ParseConfig('flagpoll TAO \

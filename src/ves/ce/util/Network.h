@@ -33,7 +33,7 @@
 #ifndef CE_UTILITIES_NETWORK_H
 #define CE_UTILITIES_NETWORK_H
 #include <ves/VEConfig.h>
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
 #include <ves/open/xml/model/NetworkStrongPtr.h>
 

@@ -39,8 +39,8 @@ CORBAServiceList API
 * 
 */
 #include <orbsvcs/CosNamingC.h>
-#include <ves/open/skel/moduleC.h>
-#include <ves/open/skel/VjObsC.h>
+#include <ves/open/moduleC.h>
+#include <ves/open/VjObsC.h>
 #include <ves/conductor/util/UI_i.h>
 
 #include <ves/open/xml/Command.h>

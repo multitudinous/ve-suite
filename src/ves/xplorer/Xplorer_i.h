@@ -33,7 +33,7 @@
 #ifndef _XPLORER_I_H_
 #define _XPLORER_I_H_
 
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 #include <ves/xplorer/Body_AMI_UIHandler_i.h>
 
 #undef _REENTRANT

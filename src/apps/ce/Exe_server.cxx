@@ -29,15 +29,13 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-#include <ves/open/skel/moduleC.h>
+#include <ves/open/moduleC.h>
 #include <apps/ce/Executive_i.h>
 
 #include <iostream>

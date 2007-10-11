@@ -36,7 +36,7 @@
 #include <ace/Task.h>
 #include <string>
 
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
 //class Body_Executive_i;
 ///??

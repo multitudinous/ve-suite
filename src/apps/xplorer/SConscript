@@ -21,16 +21,14 @@ env.Append(
                    #'VE_XplorerNetworkLib%s' %(execOsgPatTag),
                    #'GraphicalPlugin%s' %(execOsgPatTag)])
 
-env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
-                        pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
-                        pj('#', buildDir, 'VE_Xplorer','Utilities'),
-                        pj('#', buildDir, 'VE_Xplorer','TextureBased'),
-                        pj('#', buildDir, 'VE_Xplorer','GraphicalPlugin'),
-                        pj('#', buildDir, 'VE_Xplorer','XplorerNetwork'),
-                        pj('#', buildDir, 'VE_Builder','Translator','DataLoader'),
-                        pj('#', buildDir, 'VE_Builder','Translator','cfdTranslatorToVTK'),
-                        pj('#', buildDir, 'VE_Open','skel'),
-                        pj('#', buildDir, 'VE_Open','XML')])
+env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
+                        pj('#', buildDir, 'src','ves','xplorer','util'),
+                        pj('#', buildDir, 'src','ves','xplorer','volume'),
+                        pj('#', buildDir, 'src','ves','xplorer'),
+                        pj('#', buildDir, 'src','ves','builder','DataLoader'),
+                        pj('#', buildDir, 'src','ves','builder','cfdTranslatorToVTK'),
+                        pj('#', buildDir, 'src','ves','open'),
+                        pj('#', buildDir, 'src','ves','open','xml')])
 #disable profiling by default
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )

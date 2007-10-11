@@ -38,7 +38,7 @@ Body_UI_i API
 /*!\class Body_UI_i
 * 
 */
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 #include <iostream>
 #include <string>
 #include <vector>

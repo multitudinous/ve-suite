@@ -38,7 +38,7 @@
 /*!\class CADNodeManagerDialog
  * GUI class to manipulate CADNode tree.
  */
-#include <ves/open/skel/VjObsC.h>
+#include <ves/open/VjObsC.h>
 
 #include <wx/dialog.h>
 #include <wx/treectrl.h>

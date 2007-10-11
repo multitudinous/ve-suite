@@ -38,7 +38,7 @@
 /*!\class Vistab
 * 
 */
-#include <ves/open/skel/VjObsC.h>
+#include <ves/open/VjObsC.h>
 
 #include <wx/toolbar.h>
 #include <wx/dialog.h>

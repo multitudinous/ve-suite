@@ -43,7 +43,7 @@
 #include <ves/ce/util/OPort.h>
 using namespace VE_CE::Utilities;
 
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 //#include "VE_Conductor/Framework/package.h>
 #include <string>
 #include <vector>

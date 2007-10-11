@@ -29,15 +29,13 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef EXECUTE_THREAD_H
 #define EXECUTE_THREAD_H
 
 #include <ace/Task.h>
 
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
 class Body_Executive_i;
 

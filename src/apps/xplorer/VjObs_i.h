@@ -39,7 +39,7 @@ VjObs_i API
 /*!\class VE_Xplorer::VjObs_i
 *
 */
-#include <ves/open/skel/VjObsS.h>
+#include <ves/open/VjObsS.h>
 
 //do this to remove compile warning on linux platforms
 #undef _REENTRANT

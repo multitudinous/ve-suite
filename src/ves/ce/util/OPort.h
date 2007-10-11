@@ -29,14 +29,12 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CE_UTILITIES_OPORT_H
 #define CE_UTILITIES_OPORT_H
 #include <ves/VEConfig.h>
 #include <ves/ce/util/Port.h>
-#include <ves/open/skel/moduleS.h>
+#include <ves/open/moduleS.h>
 
 namespace VE_XML
 {
