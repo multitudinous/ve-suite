@@ -41,7 +41,7 @@ ListTable API
 
 #include <wx/listctrl.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 class wxWindow;
 
 #include <vector>

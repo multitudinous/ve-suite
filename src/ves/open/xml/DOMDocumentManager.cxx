@@ -275,7 +275,7 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg.xsd" ) );
    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg_model.xsd" ) );
    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "vecad.xsd" ) );
-   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( <veshader.xsd" ) );
+   root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "veshader.xsd" ) );
 }
 /////////////////////////////////////////////////////
 std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )

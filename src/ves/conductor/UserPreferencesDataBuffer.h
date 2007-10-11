@@ -48,7 +48,7 @@ UserPreferencesDataBuffer API
 #include <map>
 #include <string>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 namespace VE_Conductor
 {
 class VE_GUIPLUGINS_EXPORTS UserPreferencesDataBuffer

@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
-#include "VE_Conductor/Utilities/TBToolBar.h"
-#include "VE_Conductor/Utilities/UI_TransientDialog.h"
+#include "ves/conductor/util/CORBAServiceList.h"
+#include "ves/conductor/util/TBToolBar.h"
+#include "ves/conductor/util/UI_TransientDialog.h"
 #include "ves/conductor/vectors.h"
 #include "ves/conductor/contours.h"
 #include "ves/conductor/streamlines.h"
@@ -70,11 +70,11 @@
 #include <iostream>
 #include <string>
 ////@begin XPM images
-#include "VE_Conductor/xpm/new_vector.xpm"
-#include "VE_Conductor/xpm/contour.xpm"
-#include "VE_Conductor/xpm/streamlines.xpm"
-#include "VE_Conductor/xpm/isosurface.xpm"
-#include "VE_Conductor/xpm/scalartb.xpm"
+#include "ves/conductor/xpm/new_vector.xpm"
+#include "ves/conductor/xpm/contour.xpm"
+#include "ves/conductor/xpm/streamlines.xpm"
+#include "ves/conductor/xpm/isosurface.xpm"
+#include "ves/conductor/xpm/scalartb.xpm"
 ////@end XPM images
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )

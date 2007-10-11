@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "QueryInputsDlg.h"
+#include "ves/conductor/QueryInputsDlg.h"
 
 BEGIN_EVENT_TABLE(QueryInputsDlg,wxDialog)
 	EVT_CLOSE(QueryInputsDlg::OnClose)

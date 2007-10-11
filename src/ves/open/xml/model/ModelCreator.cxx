@@ -81,7 +81,7 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
     {
         return new System();
     }
-    else if ( objectType == <vesystem" )
+    else if ( objectType == "veSystem" )
     {
         return new System();
     }
@@ -138,7 +138,7 @@ ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
     {
         return new System(*dynamic_cast<System*>(objectToCopy));
     }
-    else if ( objectType == <vesystem" )
+    else if ( objectType == "veSystem" )
     {
         return new System(*dynamic_cast<System*>(objectToCopy));
     }

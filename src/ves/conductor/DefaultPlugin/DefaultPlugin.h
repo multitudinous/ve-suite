@@ -33,8 +33,8 @@
 #ifndef DefaultPlugin_H
 #define DefaultPlugin_H
 
-#include "VE_Conductor/GUIPlugin/UIPluginBase.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/conductor/UIPluginBase.h"
+#include "ves/VEConfig.h"
 #include <wx/image.h>
 
 class DefaultPlugin : public UIPluginBase

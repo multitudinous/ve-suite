@@ -38,7 +38,7 @@ UIPluginBase API
 /*!\class UIPluginBase
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include "ves/open/xml/Model/Port.h"
 #include "ves/open/xml/Model/ModelPtr.h"
 #include <vector>
@@ -50,16 +50,16 @@ UIPluginBase API
 #include <wx/object.h>
 #include <wx/icon.h>
 ///Default xpm's
-#include "VE_Conductor/xpm/contour.xpm"
-#include "VE_Conductor/xpm/cad_tree_selected.xpm"
-#include "VE_Conductor/xpm/cad_tree_unselected.xpm"
-#include "VE_Conductor/xpm/cspline.xpm"
-#include "VE_Conductor/xpm/isosurface.xpm"
-#include "VE_Conductor/xpm/ROItb.xpm"
-#include "VE_Conductor/xpm/square.xpm"
-#include "VE_Conductor/xpm/streamlines.xpm"
-#include "VE_Conductor/xpm/vector.xpm"
-#include "VE_Conductor/xpm/vectortb.xpm"
+#include "ves/conductor/xpm/contour.xpm"
+#include "ves/conductor/xpm/cad_tree_selected.xpm"
+#include "ves/conductor/xpm/cad_tree_unselected.xpm"
+#include "ves/conductor/xpm/cspline.xpm"
+#include "ves/conductor/xpm/isosurface.xpm"
+#include "ves/conductor/xpm/ROItb.xpm"
+#include "ves/conductor/xpm/square.xpm"
+#include "ves/conductor/xpm/streamlines.xpm"
+#include "ves/conductor/xpm/vector.xpm"
+#include "ves/conductor/xpm/vectortb.xpm"
 
 ///Forward declarations
 class wxPoint;

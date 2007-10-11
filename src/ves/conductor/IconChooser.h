@@ -33,7 +33,7 @@
 #ifndef ICONCHOOSER_H
 #define ICONCHOOSER_H
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 #include <wx/frame.h>
 #include <wx/dirdlg.h>

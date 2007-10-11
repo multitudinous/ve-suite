@@ -30,23 +30,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "ves/conductor/util/CORBAServiceList.h"
 
 #include "ves/conductor/UIPluginBase.h"
 
 #include <iostream>
-#include "VE_Conductor/Network/string_ops.h"
+#include "ves/util/string_ops.h"
 #include "ves/conductor/SummaryResultDialog.h"
 #include "ves/conductor/UIDialog.h"
 #include "ves/conductor/TextResultDialog.h"
 #include "ves/conductor/TexTable.h"
-#include "VE_Conductor/Utilities/OrbThread.h"
+#include "ves/conductor/util/OrbThread.h"
 #include "ves/conductor/IconChooser.h"
-#include "VE_Conductor/Utilities/ParamsDlg.h"
+#include "ves/conductor/util/ParamsDlg.h"
 #include "ves/conductor/paraThread.h"
-#include "VE_Conductor/Utilities/DataSetLoaderUI.h"
+#include "ves/conductor/util/DataSetLoaderUI.h"
 #include "ves/conductor/vistab.h"
-#include "VE_Conductor/Utilities/SoundsPane.h"
+#include "ves/conductor/util/SoundsPane.h"
 #include "ves/conductor/AspenPlus2DIcons.h"
 // EPRI TAG
 #include "ves/conductor/FinancialDialog.h"
@@ -59,7 +59,7 @@
 #include "ves/open/xml/XMLReaderWriter.h"
 #include "ves/open/xml/CAD/CADAssembly.h"
 		
-#include "VE_Conductor/Utilities/CADNodeManagerDlg.h"
+#include "ves/conductor/util/CADNodeManagerDlg.h"
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
@@ -67,7 +67,7 @@
 #include <wx/image.h>
 #include <wx/wx.h>
 
-#include <math.h>
+#include <cmath>
 #include <wx/msgdlg.h>
 
 #include <fstream>

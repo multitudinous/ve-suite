@@ -78,7 +78,7 @@ class wxButton;
 #define ID_BUTTON1 10008*/
 
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 class VE_GUIPLUGINS_EXPORTS Vectors: public wxDialog
 {    
 public:

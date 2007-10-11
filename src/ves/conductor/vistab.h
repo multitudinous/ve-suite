@@ -38,12 +38,12 @@
 /*!\class Vistab
 * 
 */
-#include "VE_Open/skel/VjObsC.h"
+#include "ves/open/skel/VjObsC.h"
 
 #include <wx/toolbar.h>
 #include <wx/dialog.h>
 
-#include "VE_Conductor/Utilities/DualSlider.h"
+#include "ves/conductor/util/DualSlider.h"
 
 #include <vector>
 #include <map>

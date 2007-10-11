@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/UI_TransientDialog.h"
+#include "ves/conductor/util/UI_TransientDialog.h"
 #include "ves/conductor/advancedstreamlines.h"
 
 #include <wx/sizer.h>

@@ -41,7 +41,7 @@
 #include <wx/statbox.h>
 #include <wx/msgdlg.h>
 
-#include "advancedisosurface.h"
+#include <ves/conductor/advancedisosurface.h>
 
 IMPLEMENT_DYNAMIC_CLASS( AdvancedIsosurface, wxDialog )
 

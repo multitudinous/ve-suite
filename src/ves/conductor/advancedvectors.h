@@ -39,9 +39,9 @@
 /*!\class AdvancedVectors
 * 
 */
-#include "VE_Conductor/Utilities/DualSlider.h"
+#include "ves/conductor/util/DualSlider.h"
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include <vector>
 
 #include <wx/dialog.h>

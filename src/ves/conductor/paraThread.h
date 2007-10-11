@@ -41,7 +41,7 @@
 #include <wx/thread.h>
 
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 class Network;
 

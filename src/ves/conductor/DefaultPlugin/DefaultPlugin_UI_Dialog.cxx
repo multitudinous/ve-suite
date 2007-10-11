@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
+#include "ves/conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h"
 
 #include <wx/radiobox.h>
 #include <wx/slider.h>

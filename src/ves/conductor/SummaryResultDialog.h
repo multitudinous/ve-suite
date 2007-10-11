@@ -40,7 +40,7 @@ SummaryResultDialog API
 */
 #include "ves/conductor/UIDialog.h"
 #include "ves/conductor/TexTable.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 class wxButton;
 class wxNotebook;

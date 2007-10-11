@@ -42,9 +42,9 @@ Link API
 #include <string>
 #include <utility>
 
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Conductor/Utilities/Polygon.h"
-#include "VE_Open/XML/Model/LinkPtr.h"
+#include "ves/VEConfig.h"
+#include "ves/conductor/util/Polygon.h"
+#include "ves/xml/model/LinkPtr.h"
 
 #include <wx/gdicmn.h>
 #include <wx/dc.h>

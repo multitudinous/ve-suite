@@ -33,7 +33,7 @@
 #ifndef _ADVANCEDISOSURFACES_H_
 #define _ADVANCEDISOSURFACES_H_
 
-#include "VE_Conductor/Utilities/DualSlider.h"
+#include "ves/conductor/util/DualSlider.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
 ////@end includes
@@ -43,7 +43,7 @@
 
 #include <wx/dialog.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 class wxListBox;
 class wxSpinCtrlDbl;

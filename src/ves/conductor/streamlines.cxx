@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Conductor/Utilities/CORBAServiceList.h"
+#include "ves/conductor/util/CORBAServiceList.h"
 
 #include "ves/conductor/advancedstreamlines.h"
 
 #include "ves/conductor/streamlines.h"
 #include "ves/conductor/vistab.h"
-#include "VE_Conductor/Utilities/WPDialog.h"
+#include "ves/conductor/util/WPDialog.h"
 
 
 #include "ves/open/xml/DataValuePair.h"

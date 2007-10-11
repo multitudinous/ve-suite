@@ -47,14 +47,14 @@ XMLDataBufferEngine API
 #include <map>
 #include <string>
 
-#include <VE_Open/XML/Model/ModelPtr.h>
-#include <VE_Open/XML/Model/NetworkPtr.h>
-#include <VE_Open/XML/Model/SystemPtr.h>
-#include <VE_Open/XML/Model/TagPtr.h>
-#include <VE_Open/XML/CommandPtr.h>
-#include <VE_Open/XML/UserPtr.h>
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/NetworkPtr.h>
+#include <ves/open/xml/model/SystemPtr.h>
+#include <ves/open/xml/model/TagPtr.h>
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/UserPtr.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 namespace VE_Conductor
 {
 class VE_GUIPLUGINS_EXPORTS XMLDataBufferEngine

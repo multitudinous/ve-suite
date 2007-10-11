@@ -43,7 +43,7 @@ TextResultDialog API
 
 #include "ves/conductor/UIDialog.h"
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 #include <vector>
 
 class wxButton;

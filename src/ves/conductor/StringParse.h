@@ -37,7 +37,7 @@
 
 #include <wx/string.h>
 #include <vector>
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 //This is the string parsing utilities
 VE_GUIPLUGINS_EXPORTS int get_tokens(char* s, std::vector< wxString > &toks, const char* delim);

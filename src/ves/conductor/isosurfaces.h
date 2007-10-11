@@ -40,7 +40,7 @@
 */
 #include <wx/dialog.h>
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 #include <vector>
 #include <map>

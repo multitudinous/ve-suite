@@ -44,7 +44,7 @@ TexTable API
 
 class wxWindow;
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 class VE_GUIPLUGINS_EXPORTS TexTable : public wxGrid
 {
