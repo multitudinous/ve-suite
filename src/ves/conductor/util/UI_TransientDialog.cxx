@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "ves/conductor/util/UI_TransientDialog.h"
-#include "ves/xplorer/cfdEnum.h"
+#include "ves/xplorer/environment/cfdEnum.h"
 #include "ves/conductor/util/spinctld.h"
 #include "ves/conductor/xpm/transientIcons/play.xpm"
 #include "ves/conductor/xpm/transientIcons/next.xpm"

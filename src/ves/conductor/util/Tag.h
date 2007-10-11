@@ -38,10 +38,10 @@ Tag API
 /*!\class Tag
 *
 */
-#include "VE_Conductor/Utilities/Polygon.h"
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/conductor/util/Polygon.h"
+#include "ves/VEConfig.h"
 
-#include "VE_Open/XML/Model/TagPtr.h"
+#include "ves/open/xml/model/TagPtr.h"
 
 #ifdef WIN32
     #include <wx/msw/winundef.h>

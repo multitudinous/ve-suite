@@ -35,9 +35,9 @@
 
 #include <wx/app.h>
 
-#include "ves/open/Command.h"
-#include "ves/open/DataValuePair.h"
-#include "ves/open/XMLReaderWriter.h"
+#include "ves/open/xml/Command.h"
+#include "ves/open/xml/DataValuePair.h"
+#include "ves/open/xml/XMLReaderWriter.h"
 
 #include <wx/statbox.h>
 #include <wx/combobox.h>

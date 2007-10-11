@@ -39,9 +39,9 @@ TBIsosurface API
 /*!\class TBIsosurface
 *
 */
-#include "VE_Conductor/Utilities/BaseDialog.h"
+#include "ves/conductor/util/BaseDialog.h"
 
-#include "VE_Installer/include/VEConfig.h"
+#include "ves/VEConfig.h"
 
 #include <vector>
 namespace VE_XML
