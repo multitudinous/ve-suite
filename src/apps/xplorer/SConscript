@@ -5,21 +5,21 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options vesSVNRevision RootDir')
 
-srcDir = os.path.abspath( pj(RootDir, 'VE_Xplorer', 'GE') )
+srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
 srcs = sca_util.getSourcesRecursive( srcDir )
 
 env = ves_pkg.getEnv().Copy()
 env.Append(
-            LIBS = ['VE_XML',
+            LIBS = ['ves_open_xml',
                    'DataLoaderLib',
                    'TranslatorToVTKLib',
-                   'VE_SceneGraph%s' %(execOsgPatTag),
-                   'VE_UtilLib',
-                   'VE_TextureBasedLib%s' %(execOsgPatTag),
-                   'VE_OpenModuleLib',
-                   'VE_XplorerLib%s' %(execOsgPatTag),
-                   'VE_XplorerNetworkLib%s' %(execOsgPatTag),
-                   'GraphicalPlugin%s' %(execOsgPatTag)])
+                   'ves_xplorer_scenegraph%s' %(execOsgPatTag),
+                   'ves_xplorer_util',
+                   'ves_xplorer_volume%s' %(execOsgPatTag),
+                   'ves_open_module',
+                   'ves_xplorer%s' %(execOsgPatTag)])#,
+                   #'VE_XplorerNetworkLib%s' %(execOsgPatTag),
+                   #'GraphicalPlugin%s' %(execOsgPatTag)])
 
 env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
@@ -49,11 +49,7 @@ env.ParseConfig('flagpoll TAO \
 env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-vrj-ogl-libs --libs --cflags'%env['VRJugglerVersion'])
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 env.ParseConfig('flagpoll bullet --libs --cflags')
-#opal_options.apply( env )
-#ode_options.apply( env )
-#opal_options.apply( env )
-#env.Append( CPPFLAGS = ['-ffriend-injection'] )
-#env.Append( LINKFLAGS = ['-ffriend-injection'] )
+
 prog = ves_pkg.createProgram('project%s' %(execOsgPatTag), env, 'bin')
 prog.addSources( srcs )
 prog.build()
