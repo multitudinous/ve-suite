@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/xplorer/volume/cfdUpdateTextureCallback.h"
+#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
 
 #ifdef _PERFORMER
 #elif _OPENSG
@@ -40,7 +40,7 @@
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <vpr/Util/Debug.h>
-#include "ves/xplorer/volume/cfdTextureManager.h"
+#include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //

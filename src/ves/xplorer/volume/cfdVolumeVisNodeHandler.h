@@ -56,7 +56,7 @@ namespace VE_TextureBased
    class cfdTextureManager;
    class cfdOSGShaderManager;
 }
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {

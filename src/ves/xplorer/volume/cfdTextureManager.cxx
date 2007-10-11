@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/xplorer/volume/cfdTextureManager.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h>
 
 #include <fstream>
 #include <cmath>

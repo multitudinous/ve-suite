@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
-#include "ves/xplorer/volume/cfd3DTextureCullCallback.h"
-#include "ves/xplorer/volume/cfdCopyTo3DTextureStage.h"
-#include "ves/xplorer/volume/cfdPBufferManager.h"
-#include "ves/xplorer/volume/cfdOSGPingPongTexture3d.h"
+#include <ves/xplorer/volume/cfd3DTextureCullCallback.h>
+#include <ves/xplorer/volume/cfdCopyTo3DTextureStage.h>
+#include <ves/xplorer/volume/cfdPBufferManager.h>
+#include <ves/xplorer/volume/cfdOSGPingPongTexture3d.h>
 #include <osg/Node>
 #include <osg/NodeVisitor>
 #include <osg/Texture3D>

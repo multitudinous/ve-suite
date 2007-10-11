@@ -49,7 +49,7 @@ namespace osg
    class State;
 }
 #include <osg/Texture3D>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGNoiseTexture3d 

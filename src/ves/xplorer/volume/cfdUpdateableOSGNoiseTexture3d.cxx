@@ -36,7 +36,7 @@
 #elif _OSG
 
 #include <osg/State>
-#include "ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h" 
+#include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h> 
 using namespace VE_TextureBased;
 ////////////////////////////////////////////////////////////////
 //Constructors                                                //

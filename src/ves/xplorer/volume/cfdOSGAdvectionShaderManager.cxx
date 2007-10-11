@@ -41,14 +41,14 @@
 //#include <sstream>
 
 #include <osg/Array>
-#include "ves/xplorer/volume/cfdOSGAdvectionShaderManager.h"
-#include "ves/xplorer/volume/cfdUpdateableOSGTexture1d.h"
-#include "ves/xplorer/volume/cfdSimpleTextureCallback.h"
-#include "ves/xplorer/volume/cfdUpdateParameterCallback.h"
+#include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
+#include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
+#include <ves/xplorer/volume/cfdSimpleTextureCallback.h>
+#include <ves/xplorer/volume/cfdUpdateParameterCallback.h>
 
 
 using namespace VE_TextureBased;
-//#include "cfdUpdateMatrixParameterCallback.h"
+//#include "cfdUpdateMatrixParameterCallback.h>
 #define PI  3.1416
 
 //the shader inline source

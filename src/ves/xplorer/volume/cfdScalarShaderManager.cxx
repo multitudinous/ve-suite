@@ -39,17 +39,17 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
-#include "ves/xplorer/volume/cfdTextureManager.h"
-#include "ves/xplorer/volume/cfdUpdateTextureCallback.h"
-#include "ves/xplorer/volume/cfdOSGTransferShaderManager.h"
-#include "ves/xplorer/volume/cfdScalarShaderManager.h"
-#include "ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h"
-#include "ves/xplorer/volume/PreIntegrationTexture.h"
-#include "ves/xplorer/volume/NoiseTexture2D.h"
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
+#include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
+#include <ves/xplorer/volume/cfdScalarShaderManager.h>
+#include <ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h>
+#include <ves/xplorer/volume/PreIntegrationTexture.h>
+#include <ves/xplorer/volume/NoiseTexture2D.h>
 using namespace VE_TextureBased;
 //the shader inline source
-#include "ves/xplorer/volume/volumeRenderBasicShader.h"
-#include "ves/xplorer/volume/volumeRenderPhongShader.h"
+#include <ves/xplorer/volume/volumeRenderBasicShader.h>
+#include <ves/xplorer/volume/volumeRenderPhongShader.h>
 ////////////////////////////////////////////////
 cfdScalarShaderManager::cfdScalarShaderManager()
 {

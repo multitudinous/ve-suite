@@ -42,7 +42,7 @@
 #ifdef _OSG
 
 #include <osg/Uniform>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback

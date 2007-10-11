@@ -49,7 +49,7 @@ namespace osg
    class NodeVisitor;
    class State;
 }
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {

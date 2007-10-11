@@ -45,7 +45,7 @@ namespace osg
 {
    class Shader;
 }
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 #include <string>
 namespace VE_TextureBased
 {

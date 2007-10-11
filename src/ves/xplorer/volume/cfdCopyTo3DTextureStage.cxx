@@ -37,7 +37,7 @@
 #endif
 #include <osg/State>
 #include <cassert>
-#include "ves/xplorer/volume/cfdCopyTo3DTextureStage.h"
+#include <ves/xplorer/volume/cfdCopyTo3DTextureStage.h>
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()

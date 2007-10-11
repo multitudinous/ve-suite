@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ves/xplorer/volume/TBVolumeSlices.h"
-#include "ves/xplorer/volume/bboxEdgeConstants.h"
+#include <ves/xplorer/volume/TBVolumeSlices.h>
+#include <ves/xplorer/volume/bboxEdgeConstants.h>
 #include <osg/Matrixf>  
 #include <osg/GL2Extensions>
 #include <osg/AlphaFunc>

@@ -40,7 +40,7 @@
 *
 */
 #ifdef _OSG
-#include "ves/xplorer/volume/cfdScalarShaderManager.h"
+#include <ves/xplorer/volume/cfdScalarShaderManager.h>
 namespace VE_TextureBased
 {
    class cfdTextureManager;

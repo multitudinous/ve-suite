@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 
-#include "ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h"
-#include "ves/xplorer/volume/TransferFunction.h"
+#include <ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h>
+#include <ves/xplorer/volume/TransferFunction.h>
 #include <iostream>
 using namespace VE_TextureBased;
 ////////////////////////////////////////////

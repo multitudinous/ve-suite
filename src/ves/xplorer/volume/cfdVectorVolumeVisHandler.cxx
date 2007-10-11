@@ -38,16 +38,16 @@
 #include <osg/Switch>
 #include <osg/Node>
 
-#include "ves/xplorer/volume/cfdAdvectionSubGraph.h"
-#include "ves/xplorer/volume/cfdVectorVolumeVisHandler.h"
-#include "ves/xplorer/volume/cfdOSGAdvectionShaderManager.h"
-#include "ves/xplorer/volume/cfdOSGTransferShaderManager.h"
-#include "ves/xplorer/volume/cfdPBufferManager.h"
-#include "ves/xplorer/volume/cfdTextureManager.h"
-#include "ves/xplorer/volume/cfdTextureMatrixCallback.h"
-#include "ves/xplorer/volume/cfdUpdateTextureCallback.h"
-#include "ves/xplorer/volume/cfd3DTextureCullCallback.h"
-#include "ves/xplorer/volume/cfdOSGPingPongTexture3d.h"
+#include <ves/xplorer/volume/cfdAdvectionSubGraph.h>
+#include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
+#include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
+#include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
+#include <ves/xplorer/volume/cfdPBufferManager.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
+#include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
+#include <ves/xplorer/volume/cfd3DTextureCullCallback.h>
+#include <ves/xplorer/volume/cfdOSGPingPongTexture3d.h>
 
 using namespace VE_TextureBased;
 //////////////////////////////////////////////////////

@@ -46,8 +46,8 @@ namespace osg{
    class State;
 }
 #include <vector>
-#include "ves/xplorer/volume/cfdOSGShaderManager.h"
-#include "ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h"
+#include <ves/xplorer/volume/cfdOSGShaderManager.h>
+#include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h>
 
 namespace VE_TextureBased
 {

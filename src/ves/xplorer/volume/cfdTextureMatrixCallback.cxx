@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 //class to update the texture matrix appropriately
 #ifdef _OSG
-#include "ves/xplorer/volume/cfdTextureMatrixCallback.h"
+#include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
 #include <osg/TexMat>
 #include <osg/Matrix>
 #include <osg/Node>

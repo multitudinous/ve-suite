@@ -50,15 +50,15 @@
 #endif
 ///////////////////////
 #ifdef WIN32
-#include "gl/wglext.h"
-#include "gl/glext.h"
+#include <gl/wglext.h>
+#include <gl/glext.h>
 #else
 #include <GL/glx.h>
 #include <vector>
 #endif
 #include <iostream>
 
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {

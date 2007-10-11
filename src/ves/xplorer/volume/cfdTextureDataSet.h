@@ -49,7 +49,7 @@ namespace VE_TextureBased
 #include <map>
 #include <iostream>
 #include <string>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_TextureBased
 {
 class VE_TEXTURE_BASED_EXPORTS TextureDataInfo

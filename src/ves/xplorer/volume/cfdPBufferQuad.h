@@ -51,7 +51,7 @@ namespace osg
    class State;
    class Texture3D;
 }
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 namespace VE_TextureBased
 {
    class VE_TEXTURE_BASED_EXPORTS cfdPBufferQuad : public osg::Drawable{

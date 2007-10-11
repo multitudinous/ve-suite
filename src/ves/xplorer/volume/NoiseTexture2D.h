@@ -42,7 +42,7 @@
  */
 #include <osg/Image>
 #include <osg/Texture2D>
-#include "ves/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_TextureBased
 {

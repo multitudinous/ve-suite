@@ -42,7 +42,7 @@
 *
 */
 #ifdef _OSG
-#include "ves/xplorer/volume/cfdOSGTransferShaderManager.h"
+#include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
 namespace VE_TextureBased
 {
    class cfdTextureManager;

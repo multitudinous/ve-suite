@@ -30,17 +30,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "ves/xplorer/volume/cfdVolumeVisualization.h"
+#include <ves/xplorer/volume/cfdVolumeVisualization.h>
 
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
 #include <iostream>
 
-#include "ves/xplorer/volume/cfdAdvectionSubGraph.h"
-#include "ves/xplorer/volume/cfdTextureMatrixCallback.h"
-#include "ves/xplorer/volume/cfdTextureManager.h"
-#include "ves/xplorer/volume/TBVolumeSlices.h"
+#include <ves/xplorer/volume/cfdAdvectionSubGraph.h>
+#include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/TBVolumeSlices.h>
 
 #include <osg/TexMat>
 #include <osg/BlendFunc>

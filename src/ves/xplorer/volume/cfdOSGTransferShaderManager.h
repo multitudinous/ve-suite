@@ -56,8 +56,8 @@ namespace VE_TextureBased
    class NoiseTexture2D;
 }
 
-#include "ves/xplorer/volume/cfdOSGShaderManager.h"
-#include "ves/xplorer/volume/cfdUpdateableOSGTexture1d.h"
+#include <ves/xplorer/volume/cfdOSGShaderManager.h>
+#include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
 
 #include <string>
 namespace VE_TextureBased
