@@ -21,7 +21,7 @@
  *                   Copyright (C) 2002  3Dlabs Inc. Ltd.               *
  *                                                                      *
  ************************************************************************/
-#include "VE_Xplorer/SceneGraph/Utilities/PerlinNoise.h"
+#include <ves/scenegraph/Utilities/PerlinNoise.h>
 #include <cmath>
 #include <cstdlib>
 

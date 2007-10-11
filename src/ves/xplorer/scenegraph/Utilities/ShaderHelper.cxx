@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
-#include "VE_Xplorer/SceneGraph/Utilities/PerlinNoiseTexture.h"
+#include <ves/scenegraph/Utilities/ShaderHelper.h>
+#include <ves/scenegraph/Utilities/PerlinNoiseTexture.h>
 #ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>
@@ -49,10 +49,10 @@
 
 #include <iostream>
 #include <sstream>
-#include "VE_Open/XML/Shader/Shader.h"
-#include "VE_Open/XML/Shader/Program.h"
-#include "VE_Open/XML/Shader/Uniform.h"
-#include "VE_Open/XML/Shader/TextureImage.h"
+#include <ves/open/xml/shader/Shader.h>
+#include <ves/open/xml/shader/Program.h>
+#include <ves/open/xml/shader/Uniform.h>
+#include <ves/open/xml/shader/TextureImage.h>
 using namespace VE_XML::VE_Shader;
 using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////

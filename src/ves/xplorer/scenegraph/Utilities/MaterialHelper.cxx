@@ -38,10 +38,10 @@
 #elif _PERFORMER
 #endif
 
-#include "VE_Xplorer/SceneGraph/Utilities/MaterialHelper.h"
+#include <ves/scenegraph/Utilities/MaterialHelper.h>
 
-#include "VE_Open/XML/CAD/CADMaterial.h"
-#include "VE_Open/XML/FloatArray.h"
+#include <ves/open/xml/cad/CADMaterial.h>
+#include <ves/open/xmlFloatArray.h>
 #include <string>
 using namespace VE_XML::VE_CAD;
 using namespace VE_SceneGraph::Utilities;

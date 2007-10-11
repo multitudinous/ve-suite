@@ -38,7 +38,7 @@ MaterialInitializer API
 /*!\class MaterialInitializer
 * 
 */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>

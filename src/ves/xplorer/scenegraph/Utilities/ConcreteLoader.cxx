@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_Xplorer/SceneGraph/Utilities/ConcreteLoader.h"
-#include "VE_Xplorer/SceneGraph/Utilities/PerlinNoiseTexture.h"
+#include <ves/scenegraph/Utilities/ConcreteLoader.h>
+#include <ves/scenegraph/Utilities/PerlinNoiseTexture.h>
 #include <iostream>
 #include <sstream>
-#include "VE_Open/XML/Shader/Shader.h"
-#include "VE_Open/XML/Shader/Program.h"
-#include "VE_Open/XML/Shader/Uniform.h"
+#include <ves/open/xml/shader/Shader.h>
+#include <ves/open/xml/shader/Program.h>
+#include <ves/open/xml/shader/Uniform.h>
 using namespace VE_XML::VE_Shader;
 using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////

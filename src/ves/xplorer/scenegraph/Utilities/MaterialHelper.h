@@ -41,7 +41,7 @@
  * Class that creates an OSG StateSet representing
  * a glsl program.
  */
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 ///\todo Still need to implement the performer side
 #ifdef _OSG

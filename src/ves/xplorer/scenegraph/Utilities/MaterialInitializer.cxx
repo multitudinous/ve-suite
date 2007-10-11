@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Xplorer/SceneGraph/Utilities/MaterialInitializer.h"
+#include <ves/scenegraph/Utilities/MaterialInitializer.h>
 
 // --- OSG Stuff --- //
 #include <osg/Geode>

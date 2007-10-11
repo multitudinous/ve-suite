@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VE_Open/XML/CAD/CADAttribute.h"
-#include "VE_Open/XML/Shader/Uniform.h"
-#include "VE_Xplorer/SceneGraph/Utilities/MaterialHelper.h"
-#include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
-#include "VE_Xplorer/SceneGraph/Utilities/Attribute.h"
+#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/shader/Uniform.h>
+#include <ves/scenegraph/Utilities/MaterialHelper.h>
+#include <ves/scenegraph/Utilities/ShaderHelper.h>
+#include <ves/scenegraph/Utilities/Attribute.h>
 
 //why is this needed
 #include <osg/Material>

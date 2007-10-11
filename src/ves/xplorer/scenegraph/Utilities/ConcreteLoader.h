@@ -41,8 +41,8 @@
  * Class that creates an OSG StateSet representing
  * a procedrual concrete shading glsl program.
  */
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
+#include <ves/VEConfig.h>
+#include <ves/scenegraph/Utilities/ShaderHelper.h>
 #ifdef _OSG
 
 #include <string>

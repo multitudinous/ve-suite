@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include "VE_Xplorer/SceneGraph/Utilities/ComputeBoundsVisitor.h"
+#include <ves/scenegraph/Utilities/ComputeBoundsVisitor.h>
 
 #include <osg/Transform>
 #include <osg/Drawable>

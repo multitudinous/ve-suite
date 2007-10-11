@@ -41,8 +41,8 @@
  * Class that creates an OSG StateSet representing
  * a phong shading glsl program.
  */
-#include "VE_Installer/include/VEConfig.h"
-#include "VE_Xplorer/SceneGraph/Utilities/ShaderHelper.h"
+#include <ves/VEConfig.h>
+#include <ves/scenegraph/Utilities/ShaderHelper.h>
 ///\todo This class still needs to be implemented for performer
 #ifdef _OSG
 

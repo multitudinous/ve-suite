@@ -50,7 +50,7 @@
 #include <osg/ref_ptr>
 #elif _OPENSG
 #endif
-#include "VE_Installer/include/VEConfig.h"
+#include <ves/VEConfig.h>
 
 namespace VE_XML{
 namespace VE_Shader
