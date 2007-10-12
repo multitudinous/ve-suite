@@ -40,7 +40,7 @@
  */
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/event/CADEventHandler.h>
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 
 namespace VE_XML
 {

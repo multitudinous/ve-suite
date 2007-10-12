@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADDeleteNodeEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -42,7 +42,7 @@
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
 using namespace VE_CAD;

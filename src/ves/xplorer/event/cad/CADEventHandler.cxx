@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/CADEventHandler.h>
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
@@ -44,10 +44,10 @@
 
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 
-#include <ves/open/xml/CAD/CADNode.h>
-#include <ves/open/xml/CAD/CADAssembly.h>
-#include <ves/open/xml/CAD/CADAttribute.h>
-#include <ves/open/xml/CAD/CADPart.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/cad/CADPart.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>

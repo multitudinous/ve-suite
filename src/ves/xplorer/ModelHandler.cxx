@@ -51,8 +51,8 @@
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/event/viz/cfdReadParam.h>
-#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
+//#include <ves/xplorer/event/viz/cfdReadParam.h>
+//#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/cad/CADTransformEH.h>
