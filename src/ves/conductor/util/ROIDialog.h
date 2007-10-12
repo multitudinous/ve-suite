@@ -44,9 +44,12 @@
 #include <ves/VEConfig.h>
 #include <ves/conductor/util/BaseDialog.h>
 #include <ves/conductor/util/DualSlider.h>
-namespace VE_Conductor
+
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS ROIDialog : public BaseDialog 
 {
@@ -145,6 +148,7 @@ protected:
    VE_Conductor::GUI_Utilities::DualSlider* _yBounds;///<DualSlider for y bounds
    VE_Conductor::GUI_Utilities::DualSlider* _zBounds;///<DualSlider for z bounds
 };
+}
 }
 }
 #endif// ROI_DIALOG_H

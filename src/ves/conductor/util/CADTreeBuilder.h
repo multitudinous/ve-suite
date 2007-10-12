@@ -49,14 +49,25 @@
 
 #include <vector>
 
-namespace VE_CAD
+namespace ves
+{
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
    class CADNode;
 }
+}
+}
+}
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
    class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_XML::VE_CAD::CADNodeTraverser
    {
@@ -161,6 +172,7 @@ namespace GUI_Utilities
       wxTreeCtrl* _treeCtrl; ///<The tree ctrl. 
       std::vector<wxTreeItemId> _parentList;///<The current parent node during traversal;
    };
+}
 }
 }
 #endif//CAD_TREE_BUILDER

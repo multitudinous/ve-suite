@@ -48,6 +48,12 @@ class wxSpinCtrlDbl;
 #include <wx/spinctrl.h>
 //Transient control ids
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
 public:
@@ -98,5 +104,8 @@ protected:
    void _onSetDuration(wxSpinEvent& event);
   DECLARE_EVENT_TABLE()
 };
+}
+}
+}
 #endif //_VE_UI_TRANSIENT_DIALOG_H_
 

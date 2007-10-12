@@ -40,11 +40,13 @@
  */
 #include <ves/VEConfig.h>
 #include <wx/menu.h>
-namespace VE_Conductor
-{
-namespace GUI_Utilities
-{
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS CADNodeMenu : public wxMenu{
 public:
    enum GEOMETRY_MENU_IDS
@@ -104,6 +106,7 @@ public:
 
 protected:
 };
+}
 }
 }
 #endif// CADNODE_MENU_H

@@ -51,21 +51,29 @@ class DataSetLoaderUI;
 class wxSpinCtrlDbl;
 class wxCheckBox;
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Transform;
    class DataValuePair;
    class ParameterBlock;
-   namespace VE_Model
+   namespace model
    {
       class Model;
    }
 }
+}
+}
 
-namespace VE_Conductor
+namespace ves
 {
-   namespace GUI_Utilities
-   {
+namespace conductor
+{
+namespace util
+{
       class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
       {
       public:
@@ -132,6 +140,7 @@ namespace VE_Conductor
 
          DECLARE_EVENT_TABLE()
       };
-   }
+}
+}
 }
 #endif //_TRANSFORM_UI_H

@@ -45,15 +45,21 @@ CADOpacitySliderDlg API
 #include <string>
 #include <vector>
 
-
-namespace VE_XML
+namespace ves
 {
-   namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+   namespace cad
    {
       class CADMaterial;
    }
    class DataValuePair;
 }
+}
+}
+
 #include <wx/dialog.h>
 class wxSlider;
 
@@ -65,12 +71,12 @@ class wxSlider;
  * GUI class to manipulate opacity of CADMaterial.
  */
 
-
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
 {
-
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS CADOpacitySliderDlg:public wxDialog
 {
 public:
@@ -114,6 +120,7 @@ protected:
 
    DECLARE_EVENT_TABLE()
 };
+}
 }
 }
 #endif// CAD_OPACITY_SLIDER_H

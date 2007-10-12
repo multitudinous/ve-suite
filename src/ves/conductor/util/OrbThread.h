@@ -48,6 +48,13 @@ PEThread API
 class wxUpdateUIEvent;
 
 #include <ves/VEConfig.h>
+
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
 {
 public:
@@ -64,4 +71,7 @@ protected:
    bool shutdown;
 DECLARE_EVENT_TABLE()
 };
+}
+}
+}
 #endif // !defined(AFX_ORBTHREAD_H__1A5E5D0F_8D34_4791_87BC_3C2CEB837A2F__INCLUDED_)

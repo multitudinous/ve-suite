@@ -51,21 +51,30 @@
 
 class wxFileName;
 
-namespace VE_CAD
+namspace ves
+{
+namspace open
+{
+namspace xml
+{
+   class DataValuePair;
+namespace cad
 {
    class CADNode;
    class CADAssembly;
 }
-namespace VE_XML
-{
-   class DataValuePair;
 }
+}
+}
+
 #include <string>
 #include <map>
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class CADTreeBuilder;
 
@@ -240,6 +249,7 @@ private:
    void _selectOnExpandCollapse(wxTreeEvent& event);
 
 };
+}
 }
 }
 #endif// CADNODE_MANAGER_DIALOG_H

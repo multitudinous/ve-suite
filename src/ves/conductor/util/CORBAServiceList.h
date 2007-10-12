@@ -59,7 +59,12 @@ class wxTextCtrl;
 class wxUpdateUIEvent;
 
 #include <ves/VEConfig.h>
-namespace VE_Conductor
+
+namespace ves
+{
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS CORBAServiceList //: public wxObject
 {
@@ -196,5 +201,7 @@ private:
     int peArgc;
     char** peArgv;
 };
+}
+}
 }
 #endif

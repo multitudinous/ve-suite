@@ -85,6 +85,12 @@ enum
     wxSPINCTRLDBL_AUTODIGITS = -1  // try to autocalc the # of digits
 };
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS wxSpinCtrlDbl: public wxControl
 {
 public:
@@ -219,5 +225,7 @@ private:
     //DECLARE_DYNAMIC_CLASS(wxSpinCtrlDbl)
     DECLARE_EVENT_TABLE()
 };
-
+}
+}
+}
 #endif  // __wxSPINCTRLDBL_H__

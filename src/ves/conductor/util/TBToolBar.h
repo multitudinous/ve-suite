@@ -50,23 +50,24 @@ namespace VE_XML
 
 #include <ves/conductor/util/BaseDialog.h>
 #include <ves/VEConfig.h>
+
 class UI_TransientDialog;
 class wxArrayString;
 class wxToolBar;
 class wxComboBox;
 class wxCheckBox;
 
-
 class ScalarToolsDialog;
 class TransferFunctionDialog;
-namespace VE_Conductor
-{
-   namespace GUI_Utilities
-   {
-      class ROIDialog;
-   }
 
-}
+class ROIDialog;
+
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
 {
 public:
@@ -147,4 +148,7 @@ protected:
    
    DECLARE_EVENT_TABLE()
 };
+}
+}
+}
 #endif// TEXTURE_BASED_TOOL_BAR_H

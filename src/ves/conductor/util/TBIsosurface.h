@@ -44,9 +44,16 @@ TBIsosurface API
 #include <ves/VEConfig.h>
 
 #include <vector>
-namespace VE_XML
+
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 class wxRadioButton;
@@ -63,6 +70,12 @@ class wxComboBox;
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public VE_Conductor::GUI_Utilities::BaseDialog
 {    
 public:
@@ -100,4 +113,7 @@ protected:
    DECLARE_EVENT_TABLE()
 
 };
+}
+}
+}
 #endif // TextureBasedIsosurfaceDlg_H_

@@ -46,6 +46,12 @@
 class wxComboBox;
 class wxCheckBox;
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS TransferFunctionDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
 public:
@@ -79,5 +85,7 @@ protected:
 
    DECLARE_EVENT_TABLE()
 };
-
+}
+}
+}
 #endif// TRANSFER_FUNCTION_DIALOG_H

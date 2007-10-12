@@ -51,12 +51,23 @@ class wxButton;
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
-
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class Command;
 }
+}
+}
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
@@ -112,4 +123,7 @@ protected:
 
     DECLARE_EVENT_TABLE()
 };
+}
+}
+}
 #endif //SOUNDS_PANE_H

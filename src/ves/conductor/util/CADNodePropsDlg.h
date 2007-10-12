@@ -62,18 +62,26 @@ class wxArrayString;
 class wxCheckBox;
 class wxRadioBox;
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class DataValuePair;
-   namespace VE_CAD
+   namespace cad
    {
       class CADNode;
    }
 }
+}
+}
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS CADNodePropertiesDlg : public wxDialog
 {
@@ -305,6 +313,7 @@ protected:
    }
    DECLARE_EVENT_TABLE()
 };
+}
 }
 }
 #endif//CAD_PROPERTIES_DIALOG_H

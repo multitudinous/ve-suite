@@ -50,6 +50,12 @@ class wxCheckBox;
 class wxButton;
 class wxSlider;
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
 {
 public:
@@ -168,5 +174,7 @@ protected:
 
    DECLARE_EVENT_TABLE()
 };
-
+}
+}
+}
 #endif// SCALAR_TOOLS_DIALOG_H

@@ -49,13 +49,22 @@ BaseDialog API
 #include <wx/sizer.h>
 #include <wx/dialog.h>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class DataValuePair;
 }
-namespace VE_Conductor
+}
+}
+
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS BaseDialog : public wxDialog
 {
@@ -107,6 +116,7 @@ protected:
    std::string _commandName;///<The name of the Command
    std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 };
+}
 }
 }
 #endif//BASE_DIALOG_H

@@ -54,9 +54,11 @@ Tag API
 
 class wxScrolledWindow;
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS Tag : public wxEvtHandler
 {
@@ -112,6 +114,7 @@ private:
         return tempStr;
     }
 };
+}
 }
 }
 #endif

@@ -60,10 +60,17 @@ class wxTextCtrl;
 class wxButton;
 class wxListBox;
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class ParameterBlock;
 }
+}
+}
+
 ////@end forward declarations
 
 /*!
@@ -91,6 +98,13 @@ namespace VE_XML
 /*!
  * DataSetLoaderUI class declaration
  */
+
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS DataSetLoaderUI: public wxDialog
 {    
     //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
@@ -229,6 +243,8 @@ private:
 
    int lastAddition;
 };
-
+}
+}
+}
 #endif
     // _DATASETLOADERUI_H_

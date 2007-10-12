@@ -49,18 +49,31 @@ Body_UI_i API
 class PEThread;
 //class Network;
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 	class XMLObject;
     class Command;
-	namespace VE_Model
+	namespace model
 	{
 		class Model;
 	}
 }
+}
+}
 
 //Class Body_UI_i
 #include <ves/VEConfig.h>
+
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
  public:
@@ -138,6 +151,7 @@ virtual void Raise (
   std::map<std::string, VE_XML::XMLObject*> m_objectToModel;
   std::map< std::string, VE_XML::Command > m_commandNameMap;
 };
-
-
+}
+}
+}
 #endif

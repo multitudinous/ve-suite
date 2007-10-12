@@ -45,9 +45,12 @@
 #include <wx/panel.h>
 #include <wx/slider.h>
 #include <map>
-namespace VE_Conductor
+
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS DualSlider: public wxPanel
 {
@@ -165,6 +168,7 @@ protected:
   
    DECLARE_EVENT_TABLE()
 };
+}
 }
 }
 #endif// VE_DUAL_SLIDER_H

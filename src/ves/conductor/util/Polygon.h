@@ -41,9 +41,12 @@ Polygon API
 #include <vector>
 #include <wx/gdicmn.h>
 #include <ves/VEConfig.h>
-namespace VE_Conductor
+
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS Polygon
 {
@@ -86,6 +89,7 @@ private:
    int intersect( Polygon l1, Polygon l2 );
    std::vector< wxPoint > poly;
 };
+}
 }
 }
 #endif

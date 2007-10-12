@@ -42,9 +42,12 @@
  */
 #include <ves/VEConfig.h>
 #include <wx/menu.h>
-namespace VE_Conductor
+
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
 
 class VE_CONDUCTOR_UTILS_EXPORTS CADMaterialEditMenu : public wxMenu{
@@ -70,6 +73,7 @@ public:
 
 protected:
 };
+}
 }
 }
 #endif// CADMATERIAL_EDIT_MENU_H

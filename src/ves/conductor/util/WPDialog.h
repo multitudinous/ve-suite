@@ -42,10 +42,12 @@
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
-namespace VE_Conductor
-{
 
-namespace GUI_Utilities
+namespace ves
+{
+namespace conductor
+{
+namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
 
@@ -185,6 +187,7 @@ protected:
    DECLARE_EVENT_TABLE()
 
 };
+}
 }
 }
 #endif  //_WP_DIALOG_H
