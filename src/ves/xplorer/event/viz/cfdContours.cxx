@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdContours.h>
+#include <ves/xplorer/event/viz/cfdContours.h>
 
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdPlanes.h>
-#include "VE_Xplorer/XplorerHandlers/cfdEnum.h"    // needed for cursorType
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdPlanes.h>
+#include <ves/xplorer/environment/cfdEnum.h>    // needed for cursorType
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -44,7 +44,7 @@
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

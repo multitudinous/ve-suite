@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/DataSetAxis.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 #include <osg/Node>
 #include <osg/Geode>

@@ -33,10 +33,10 @@
 // --- VE-Suite Stuff --- //
 #include <ves/xplorer/event/KeyboardMouse.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/LocalToWorldTransform.h>
 
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>

@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/cfdCommandObjects.h>
+#include <ves/xplorer/event/viz/cfdCommandObjects.h>
 #include <iostream>
 
 using namespace VE_Xplorer;

@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 //#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
@@ -46,13 +46,13 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdVectorBase.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdReadParam.h>
-#include <ves/xplorer/event/cfdScalarBarActor.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdVectorBase.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdReadParam.h>
+#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/CADTransformEH.h>

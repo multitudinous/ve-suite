@@ -46,7 +46,7 @@ cfdIsosurface API
 #include <vtkAppendPolyData.h>
 #endif
 
-#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

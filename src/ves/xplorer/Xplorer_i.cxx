@@ -34,13 +34,13 @@
 
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdDisplaySettings.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdDisplaySettings.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -49,7 +49,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #ifdef _OSG
-#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
 using namespace VE_TextureBased;
 #endif

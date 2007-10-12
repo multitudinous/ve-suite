@@ -30,14 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdVector.h>
+#include <ves/xplorer/event/viz/cfdVector.h>
 #ifdef USE_OMP
 #include <vtkAppendFilter.h>
 #include <omp.h>
 #endif
 
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -52,7 +52,7 @@
 #include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

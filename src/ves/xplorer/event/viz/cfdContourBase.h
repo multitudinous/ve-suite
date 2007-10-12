@@ -38,7 +38,7 @@ cfdContourBase API
 /*!\class VE_Xplorer::cfdContourBase
 * 
 */
-#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
 
 class vtkPolyData;
 class vtkPolyDataMapper;

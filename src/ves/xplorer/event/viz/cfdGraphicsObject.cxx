@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdGraphicsObject.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdStreamers.h>
+#include <ves/xplorer/event/viz/cfdGraphicsObject.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdStreamers.h>
 
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>
 #elif _OSG

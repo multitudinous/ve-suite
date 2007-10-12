@@ -37,8 +37,8 @@
    computation.
 */
 
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdPlanes.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/DataSetAxis.h>
 #include <ves/xplorer/event/DataSetScalarBar.h>
 
@@ -74,7 +74,7 @@
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 #include <iostream>
 #include <sstream>

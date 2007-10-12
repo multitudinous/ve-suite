@@ -83,7 +83,7 @@ namespace VE_XML
    class Command;
 }
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
 
 namespace VE_Xplorer
 {

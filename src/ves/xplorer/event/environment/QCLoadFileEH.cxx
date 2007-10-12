@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/QCLoadFileEH.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

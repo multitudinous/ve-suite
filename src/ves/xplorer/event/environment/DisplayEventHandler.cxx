@@ -34,8 +34,8 @@
 
 #include <ves/xplorer/event/DisplayEventHandler.h>
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
-#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
 #include <ves/xplorer/event/DisplayInformation.h>
 
 #include <ves/open/xml/XMLObject.h>

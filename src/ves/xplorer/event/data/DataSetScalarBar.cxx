@@ -32,10 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/DataSetScalarBar.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
 
 #include <osg/Node>
 #include <osg/Geode>

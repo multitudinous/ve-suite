@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
@@ -58,16 +58,16 @@
 #include <ves/xplorer/event/TBPhongShadingEnableEH.h>
 #include <ves/xplorer/event/TBPreIntegrateEH.h>
 
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdReadParam.h>
-#include <ves/xplorer/event/cfdGraphicsObject.h>
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdReadParam.h>
+#include <ves/xplorer/event/viz/cfdGraphicsObject.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
 
 #include <ves/open/xml/Command.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 #include <fstream>
 #ifdef _PERFORMER
 #elif _OPENSG

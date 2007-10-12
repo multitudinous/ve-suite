@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdPolyData.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdPolyData.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>
@@ -49,7 +49,7 @@
 #include <vtkSphereSource.h>
 #include <vtkPointData.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

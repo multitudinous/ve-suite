@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/ChangeWorkingDirectoryEventHandler.h>
-#include <ves/xplorer/event/cfdGlobalBase.h>
-#include <ves/xplorer/event/cfdTeacher.h>
-#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdTeacher.h>
+#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/XMLObject.h>

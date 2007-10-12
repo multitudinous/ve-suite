@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/AddVTKDataSetEventHandler.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -46,7 +46,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>

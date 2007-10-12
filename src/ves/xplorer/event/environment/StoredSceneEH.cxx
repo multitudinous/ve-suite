@@ -32,9 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/StoredSceneEH.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/cfdTeacher.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/viz/cfdTeacher.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

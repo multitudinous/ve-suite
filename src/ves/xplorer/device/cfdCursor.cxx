@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdCursor.h>
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdObjects.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdCursor.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -65,7 +65,7 @@
 #define BOX_LENGTH 2.0f
 
 #include <gmtl/gmtl.h>
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>

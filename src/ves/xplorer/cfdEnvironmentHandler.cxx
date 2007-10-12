@@ -30,24 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdEnvironmentHandler.h>
+#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
 
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/cfdSoundHandler.h>
-#include <ves/xplorer/event/cfdCursor.h>
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdReadParam.h>
-#include <ves/xplorer/event/cfdTeacher.h>
-#include <ves/xplorer/event/cfdSoundHandler.h>
-#include <ves/xplorer/event/cfdQuatCamHandler.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdDebug.h>
-#include <ves/xplorer/event/cfdDisplaySettings.h>
+#include <ves/xplorer/event/viz/cfdSoundHandler.h>
+#include <ves/xplorer/event/viz/cfdCursor.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdReadParam.h>
+#include <ves/xplorer/event/viz/cfdTeacher.h>
+#include <ves/xplorer/event/viz/cfdSoundHandler.h>
+#include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDisplaySettings.h>
 #include <ves/xplorer/event/ChangeCursorEventHandler.h>
 #include <ves/xplorer/event/StoredSceneEH.h>
 #include <ves/xplorer/event/ChangeWorkingDirectoryEventHandler.h>

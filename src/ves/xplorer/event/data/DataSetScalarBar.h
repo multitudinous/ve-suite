@@ -42,7 +42,7 @@ DataSetScalarBar API
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 

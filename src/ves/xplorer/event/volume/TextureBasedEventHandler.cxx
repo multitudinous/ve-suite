@@ -31,11 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/TextureBasedEventHandler.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdGlobalBase.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
-#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <iostream>

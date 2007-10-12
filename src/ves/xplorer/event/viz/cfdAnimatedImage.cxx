@@ -30,13 +30,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdAnimatedImage.h>
-#include <ves/xplorer/event/cfdReadParam.h>
-#include <ves/xplorer/event/cfdImage.h>
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdAnimatedImage.h>
+#include <ves/xplorer/event/viz/cfdReadParam.h>
+#include <ves/xplorer/event/viz/cfdImage.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 #include <iostream>
 #include <fstream>

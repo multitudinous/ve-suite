@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/UnselectObjectsEventHandler.h>
 
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
 #include <ves/xplorer/event/DeviceHandler.h>
 
 #include <ves/open/xml/XMLObject.h>

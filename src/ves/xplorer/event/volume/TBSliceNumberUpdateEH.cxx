@@ -32,9 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/TBSliceNumberUpdateEH.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdDataSet.h>
-#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 

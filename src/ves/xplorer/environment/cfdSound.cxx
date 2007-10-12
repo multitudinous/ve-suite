@@ -31,9 +31,9 @@
  *
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/cfdSound.h>
+#include <ves/xplorer/event/viz/cfdSound.h>
 #include <snx/sonix.h>
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 #include <ves/xplorer/util/fileIO.h>
 
 using namespace VE_Xplorer;

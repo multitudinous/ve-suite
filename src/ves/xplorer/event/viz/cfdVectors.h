@@ -42,7 +42,7 @@ cfdVectors API
 *
 */
 
-#include <ves/xplorer/event/cfdVectorBase.h>
+#include <ves/xplorer/event/viz/cfdVectorBase.h>
 
 namespace VE_Xplorer
 {

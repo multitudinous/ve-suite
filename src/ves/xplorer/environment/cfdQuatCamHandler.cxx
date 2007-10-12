@@ -34,20 +34,20 @@
     #define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/xplorer/event/CommandHandler.h>
-#include <ves/xplorer/event/cfdQuatCamHandler.h>
-#include <ves/xplorer/event/cfdModelHandler.h>
+#include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
+#include <ves/xplorer/event/viz/cfdModelHandler.h>
 #include <ves/xplorer/event/QCClearDataEH.h>
 #include <ves/xplorer/event/QCLoadFileEH.h>
 #include <ves/xplorer/util/fileIO.h>
-#include <ves/xplorer/event/cfdQuatCam.h>
-#include <ves/xplorer/event/cfdEnum.h>
-#include <ves/xplorer/event/cfdCommandArray.h>
-#include <ves/xplorer/event/cfdReadParam.h>
+#include <ves/xplorer/event/viz/cfdQuatCam.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDIntArray.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 
 #include <cmath>
 #include <iostream>

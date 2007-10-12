@@ -48,7 +48,7 @@ class vtkPolyData;
 class vtkRungeKutta45;
 class vtkPoints;
 
-#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
 
 namespace VE_Xplorer
 {

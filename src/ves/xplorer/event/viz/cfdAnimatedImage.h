@@ -38,7 +38,7 @@ cfdAnimatedImage API
 /*!\class VE_Xplorer::cfdAnimatedImage
 * 
 */
-#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 

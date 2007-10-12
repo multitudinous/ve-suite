@@ -33,8 +33,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/Wand.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
-#include <ves/xplorer/event/cfdEnum.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>

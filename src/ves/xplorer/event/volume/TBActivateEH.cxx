@@ -32,12 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/TBActivateEH.h>
-#include <ves/xplorer/event/cfdModel.h>
-#include <ves/xplorer/event/cfdDataSet.h>
+#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
 
-#include <ves/xplorer/event/cfdDebug.h>
+#include <ves/xplorer/event/viz/cfdDebug.h>
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////

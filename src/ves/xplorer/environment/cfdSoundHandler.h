@@ -40,7 +40,7 @@ cfdSoundHandler API
 
 #include <string>
 #include <vector>
-#include <ves/xplorer/event/cfdGlobalBase.h>
+#include <ves/xplorer/event/viz/cfdGlobalBase.h>
 
 namespace VE_Xplorer
 {
