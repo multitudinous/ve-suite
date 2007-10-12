@@ -55,20 +55,20 @@
 #include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/CADTransformEH.h>
-#include <ves/xplorer/event/CADAddNodeEH.h>
-#include <ves/xplorer/event/CADDeleteNodeEH.h>
-#include <ves/xplorer/event/CADAddAttributeEH.h>
-#include <ves/xplorer/event/CADSetActiveAttributeEH.h>
-#include <ves/xplorer/event/CADSetNameEH.h>
-#include <ves/xplorer/event/CADSetRootNodeEH.h>
-#include <ves/xplorer/event/CADToggleEH.h>
-#include <ves/xplorer/event/CADRemoveAttributeEH.h>
+#include <ves/xplorer/event/cad/CADTransformEH.h>
+#include <ves/xplorer/event/cad/CADAddNodeEH.h>
+#include <ves/xplorer/event/cad/CADDeleteNodeEH.h>
+#include <ves/xplorer/event/cad/CADAddAttributeEH.h>
+#include <ves/xplorer/event/cad/CADSetActiveAttributeEH.h>
+#include <ves/xplorer/event/cad/CADSetNameEH.h>
+#include <ves/xplorer/event/cad/CADSetRootNodeEH.h>
+#include <ves/xplorer/event/cad/CADToggleEH.h>
+#include <ves/xplorer/event/cad/CADRemoveAttributeEH.h>
 #include <ves/xplorer/event/CADMoveNodeEventHandler.h>
 
 #include <ves/xplorer/event/ActiveModelEventHandler.h>
-#include <ves/xplorer/event/MaterialUpdateEH.h>
-#include <ves/xplorer/event/MaterialModeUpdateEH.h>
+#include <ves/xplorer/event/cad/MaterialUpdateEH.h>
+#include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
 #include <ves/xplorer/event/AddVTKDataSetEventHandler.h>
 #include <ves/xplorer/event/BBoxEventHandler.h>
 #include <ves/xplorer/event/WireframeEventHandler.h>

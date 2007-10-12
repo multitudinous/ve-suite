@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/ChangeWorkingDirectoryEventHandler.h>
 #include <ves/xplorer/cfdGlobalBase.h>
-#include <ves/xplorer/event/viz/cfdTeacher.h>
+#include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

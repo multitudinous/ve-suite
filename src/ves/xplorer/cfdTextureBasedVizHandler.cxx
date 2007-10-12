@@ -60,7 +60,6 @@
 
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdModel.h>

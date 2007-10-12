@@ -40,7 +40,7 @@
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
-#include <ves/xplorer/event/viz/cfdTeacher.h>
+#include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/event/viz/cfdSoundHandler.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdDataSet.h>

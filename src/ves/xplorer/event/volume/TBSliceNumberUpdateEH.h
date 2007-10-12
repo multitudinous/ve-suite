@@ -39,7 +39,7 @@
  * Update the number of slice planes per brick.
  */
 
-#include <ves/xplorer/event/TextureBasedEventHandler.h>
+#include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
 namespace VE_XML
 {
    class XMLObject;

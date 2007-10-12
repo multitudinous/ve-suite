@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/AttributeEventHandler.h>
+#include <ves/xplorer/event/cad/AttributeEventHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/ModelHandler.h>

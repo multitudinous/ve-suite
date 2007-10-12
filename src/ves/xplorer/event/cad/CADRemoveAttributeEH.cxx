@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/CADRemoveAttributeEH.h>
+#include <ves/xplorer/event/cad/CADRemoveAttributeEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/xplorer/scenegraph/util/Attribute.h>

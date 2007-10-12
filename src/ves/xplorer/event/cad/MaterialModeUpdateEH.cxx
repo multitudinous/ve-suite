@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/MaterialModeUpdateEH.h>
+#include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/open/xml/XMLObject.h>
