@@ -41,6 +41,7 @@
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <iostream>
+#include <vtkCompositeDataPipeline.h>
 using namespace VE_Util;
 
 //////////////////////////////////////
