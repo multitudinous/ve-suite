@@ -33,10 +33,10 @@
 
 #include <ves/xplorer/event/TBUpdateSolutionEH.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/event/DataSetScalarBar.h>
-#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 

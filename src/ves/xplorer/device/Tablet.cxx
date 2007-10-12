@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/Tablet.h>
 #include <ves/xplorer/event/viz/cfdEnum.h>
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/event/DeviceHandler.h>
 #include <ves/xplorer/event/KeyboardMouse.h>
 #include <ves/xplorer/event/LocalToWorldTransform.h>

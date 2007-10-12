@@ -33,8 +33,8 @@
 
 #include <ves/xplorer/event/SPDimensionsEH.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
-#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/event/SeedPoints.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 

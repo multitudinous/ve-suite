@@ -74,7 +74,7 @@
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <iostream>
 #include <sstream>

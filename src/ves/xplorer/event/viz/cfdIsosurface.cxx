@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/viz/cfdIsosurface.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/DataSetScalarBar.h>
 
 #include <vtkLookupTable.h>
@@ -50,7 +50,7 @@
 #include <vtkPolyData.h>
 
 //#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 

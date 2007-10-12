@@ -59,7 +59,7 @@
 using namespace VE_TextureBased;
 #endif
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>

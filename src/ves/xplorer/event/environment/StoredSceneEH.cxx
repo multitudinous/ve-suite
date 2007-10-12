@@ -33,7 +33,7 @@
 
 #include <ves/xplorer/event/StoredSceneEH.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/event/viz/cfdTeacher.h>
 
 #include <ves/open/xml/Command.h>

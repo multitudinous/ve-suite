@@ -35,7 +35,7 @@
 #endif
 #include <ves/xplorer/event/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/QCClearDataEH.h>
 #include <ves/xplorer/event/QCLoadFileEH.h>
 #include <ves/xplorer/util/fileIO.h>
@@ -47,7 +47,7 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDIntArray.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <cmath>
 #include <iostream>

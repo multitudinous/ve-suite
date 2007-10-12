@@ -36,7 +36,7 @@
 #include <ves/xplorer/event/viz/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <iostream>
 #include <fstream>

@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/TBPhongShadingEnableEH.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 

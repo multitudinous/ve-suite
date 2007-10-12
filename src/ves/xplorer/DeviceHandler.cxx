@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/DeviceHandler.h>
 
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/event/KeyboardMouse.h>
 #include <ves/xplorer/event/Wand.h>

@@ -32,9 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/TBSetActiveShaderManagerEH.h>
-#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

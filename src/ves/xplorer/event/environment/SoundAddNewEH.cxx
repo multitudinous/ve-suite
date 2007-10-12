@@ -33,7 +33,7 @@
 
 #include <ves/xplorer/event/SoundAddNewEH.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

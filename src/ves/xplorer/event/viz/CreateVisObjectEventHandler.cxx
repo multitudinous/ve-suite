@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/CreateVisObjectEventHandler.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/util/fileIO.h>
 
@@ -53,12 +53,12 @@
 #include <ves/xplorer/event/viz/cfdAnimatedImage.h> 
 #include <ves/xplorer/event/viz/cfdAnimatedStreamlineCone.h>
 #include <ves/xplorer/event/viz/cfdContour.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/cfdEnum.h>
-#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/viz/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/event/viz/cfdCursor.h>
-#include <ves/xplorer/event/viz/cfdTextOutput.h>
+
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -71,7 +71,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 

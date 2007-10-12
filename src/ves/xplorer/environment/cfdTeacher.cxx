@@ -39,8 +39,8 @@
 
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdScalarBarActor.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <ves/xplorer/util/fileIO.h>
 

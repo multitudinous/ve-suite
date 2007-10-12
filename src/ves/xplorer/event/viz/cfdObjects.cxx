@@ -37,7 +37,7 @@
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 
 // Juggler Includes
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 #include <vpr/Sync/Guard.h>
 
 // VTK Includes

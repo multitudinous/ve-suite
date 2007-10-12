@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
 
 #include <ves/xplorer/util/fileIO.h>
 
@@ -44,9 +44,9 @@
 #include <ves/xplorer/event/viz/cfdSoundHandler.h>
 #include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/event/viz/cfdDisplaySettings.h>
 #include <ves/xplorer/event/ChangeCursorEventHandler.h>
 #include <ves/xplorer/event/StoredSceneEH.h>

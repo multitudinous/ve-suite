@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/ClearVisObjectsEventHandler.h>
-#include <ves/xplorer/event/viz/cfdSteadyStateVizHandler.h>
-#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
@@ -47,7 +47,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <iostream>
 

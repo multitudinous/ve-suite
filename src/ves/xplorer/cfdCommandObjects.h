@@ -40,7 +40,7 @@ cfdCommandObjects API
 /*!\class VE_Xplorer::cfdCommandObjects
 * 
 */
-#include <ves/xplorer/event/viz/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 namespace VE_Xplorer
 {
    class cfdCommandArray;

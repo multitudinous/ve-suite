@@ -58,16 +58,16 @@
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdTextOutput.h>
-#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+
+#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/CreateVisObjectEventHandler.h>
 #include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
@@ -77,7 +77,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 //This is WAY down here to fix compile errors on IRIX
-#include <ves/xplorer/event/viz/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/cfdSteadyStateVizHandler.h>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>

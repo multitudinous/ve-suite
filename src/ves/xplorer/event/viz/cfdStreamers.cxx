@@ -59,7 +59,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

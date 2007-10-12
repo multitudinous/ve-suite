@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/ActiveModelEventHandler.h>
-#include <ves/xplorer/event/viz/cfdGlobalBase.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

@@ -35,7 +35,7 @@
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -65,7 +65,7 @@
 #define BOX_LENGTH 2.0f
 
 #include <gmtl/gmtl.h>
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>

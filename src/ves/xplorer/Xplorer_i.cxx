@@ -49,7 +49,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #ifdef _OSG
-#include <ves/xplorer/event/viz/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/cfdTextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
 using namespace VE_TextureBased;
 #endif

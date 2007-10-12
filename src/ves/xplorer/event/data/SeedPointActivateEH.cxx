@@ -34,9 +34,9 @@
 #include <ves/xplorer/event/SeedPointActivateEH.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/viz/cfdEnvironmentHandler.h>
+#include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/event/SeedPoints.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

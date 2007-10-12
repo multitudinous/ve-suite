@@ -44,7 +44,7 @@
 #include <vtkProperty.h>
 #include <vtkGenericCell.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;

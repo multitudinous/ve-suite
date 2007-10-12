@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/event/DeviceEH.h>
 
-#include <ves/xplorer/event/viz/cfdGlobalBase.h>
+#include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/event/DeviceHandler.h>
 
 

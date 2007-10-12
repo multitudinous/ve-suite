@@ -36,7 +36,7 @@
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
-#include <ves/xplorer/event/viz/cfdDebug.h>
+#include <ves/xplorer/cfdDebug.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

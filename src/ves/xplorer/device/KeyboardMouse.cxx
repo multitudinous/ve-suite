@@ -33,8 +33,8 @@
 // --- VE-Suite Stuff --- //
 #include <ves/xplorer/event/KeyboardMouse.h>
 
-#include <ves/xplorer/event/viz/cfdDebug.h>
-#include <ves/xplorer/event/viz/cfdModelHandler.h>
+#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/LocalToWorldTransform.h>
