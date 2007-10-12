@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VE_NETWORK_H_
-#define _VE_NETWORK_H_
+#ifndef NETWORK_H_
+#define NETWORK_H_
 /*!\file Network.h
   *System Network API
   */
@@ -49,16 +49,27 @@
 #include <ves/open/xml/model/LinkPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
-namespace VE_XML
+
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class DataValuePair;
 }
+}
+}
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS Network : public VE_XML::XMLObject
+namespace xml
+{
+namespace model
+{
+class VE_MODEL_EXPORTS Network : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
@@ -81,7 +92,7 @@ public:
     size_t GetNumberOfLinks( void );
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
-    VE_XML::DataValuePair* GetDataValuePair( int i );
+    ves::open::xml::DataValuePair* GetDataValuePair( int i );
     ///Get the i'th tag from the Network.
     ///\param i The i'th tag you are after.
     TagPtr GetTag( size_t i );
@@ -107,13 +118,16 @@ protected:
 private:
     ///raw datatypes of Network that are specified in the verg_model.xsd file
     std::vector< LinkSharedPtr > links;///<Vector of Links.
-    std::vector< VE_XML::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
+    std::vector< ves::open::xml::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
     ///The vector of tags for this network
     std::vector< TagPtr > tags;
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Network* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::model::Network* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -122,4 +136,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
 }
 }
 
-#endif// _VE_NETWORK_H_
+#endif// NETWORK_H_

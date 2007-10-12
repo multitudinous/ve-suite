@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _XML_VE_POINT_H_
-#define _XML_VE_POINT_H_
+#ifndef XML_POINT_H_
+#define XML_POINT_H_
 /*!\file Point.h
   2D Point API
   */
@@ -47,11 +47,15 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS Point : public VE_XML::XMLObject
+namespace xml
+{
+namespace model
+{
+class VE_MODEL_EXPORTS Point : public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -84,8 +88,11 @@ protected:
    std::pair< unsigned int, unsigned int > point;///<Raw data.
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Point* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::model::Point* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -93,4 +100,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    return childElement;
 }
 }
-#endif// _XML_VE_POINT_H_
+#endif// XML_POINT_H_

@@ -37,8 +37,8 @@
 #include <iostream>
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
-using namespace VE_XML::VE_Model;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
@@ -181,7 +181,7 @@ std::string Port::GetPortType( void )
    return portType;
 }
 /////////////////////////////////////
-std::vector< VE_XML::DataValuePair* > Port::GetPortData( void )
+std::vector< ves::open::xml::DataValuePair* > Port::GetPortData( void )
 {
    return portData;
 }

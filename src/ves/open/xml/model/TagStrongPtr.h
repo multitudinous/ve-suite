@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_TAG_STRONG_PTR_H
-#define VE_TAG_STRONG_PTR_H
+#ifndef TAG_STRONG_PTR_H
+#define TAG_STRONG_PTR_H
 
 #include <loki/StrongPtr.h>
 
@@ -44,15 +44,21 @@
  * VE_Open/XML/Model/Tag.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
     class Tag;
     /// Typedef for a SmartPtr type for the Network.
     typedef Loki::StrongPtr< Tag, true, Loki::LockableTwoRefCounts,
         Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong,
         Loki::DeleteSingle > TagStrongPtr;
+}
+}
 }
 }
 #endif

@@ -39,18 +39,29 @@
  * Create Model Objects.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class XMLObject;
 }
+}
+}
+
 #include <ves/open/xml/CreationEventHandler.h>
 #include <ves/open/xml/XMLObjectPtr.h>
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS ModelCreator : public VE_XML::CreationEventHandler
+namespace xml
+{
+namespace model
+{
+class VE_MODEL_EXPORTS ModelCreator : public ves::open::xml::CreationEventHandler
 {
 public:
    ///Constructor
@@ -61,24 +72,25 @@ public:
 
    ///Create a new XMLObject.
    ///\param objectType The type of object to create.
-   virtual VE_XML::XMLObject* CreateNewXMLObject( std::string objectType );
+   virtual ves::open::xml::XMLObject* CreateNewXMLObject( std::string objectType );
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual VE_XML::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
+   virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
     
    ///Create a copy of a new CAD object
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy.
-   virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy(std::string objectType,ves::open::xml::XMLObject* objectToCopy);
    ///Create a copy of a new CAD object
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy.
-   virtual VE_XML::XMLObjectPtr CreateNewXMLObjectCopySmart( std::string objectType, VE_XML::XMLObjectPtr objectToCopy);
+   virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy);
 protected:
 };
 }
 }
-
+}
+}
 #endif// MODEL_CREATOR_H
 
 

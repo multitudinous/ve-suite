@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_MODEL_STRONG_PTR_H
-#define VE_MODEL_STRONG_PTR_H
+#ifndef MODEL_STRONG_PTR_H
+#define MODEL_STRONG_PTR_H
 
 #include <loki/StrongPtr.h>
 
@@ -44,15 +44,21 @@
  * VE_Open/XML/Model/Model.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
     class Model;
     /// Typedef for a SmartPtr type for the Model.
     typedef Loki::StrongPtr< Model, true, Loki::LockableTwoRefCounts,
         Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong,
         Loki::DeleteSingle > ModelStrongPtr;
+}
+}
 }
 }
 #endif

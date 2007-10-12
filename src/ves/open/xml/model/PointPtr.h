@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_POINT_PTR_H
-#define VE_POINT_PTR_H
+#ifndef POINT_PTR_H
+#define POINT_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -44,13 +44,19 @@
  * VE_Open/XML/Model/Point.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
    class Point;
    /// Typedef for a SmartPtr type for the Tag.
    typedef Loki::SmartPtrDef<Point>::type PointPtr;
+}
+}
 }
 }
 #endif

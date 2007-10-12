@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_XML_VE_MODEL_NETWORK_PTR_H
-#define VE_XML_VE_MODEL_NETWORK_PTR_H
+#ifndef XML_MODEL_NETWORK_PTR_H
+#define XML_MODEL_NETWORK_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -44,13 +44,19 @@
  * VE_Open/XML/Model/Network.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
    class Network;
    /// Typedef for a SmartPtr type for the Network.
    typedef Loki::SmartPtrDef<Network>::type NetworkPtr;
+}
+}
 }
 }
 #include <ves/open/xml/model/NetworkWeakPtr.h>

@@ -34,8 +34,8 @@
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/DataValuePair.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
-using namespace VE_XML::VE_Model;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
@@ -197,7 +197,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
         //Setup uuid for model element
         {
            std::string tempUuid;
-           VE_XML::XMLObject::GetAttribute(currentElement, "id", tempUuid);
+           ves::open::xml::XMLObject::GetAttribute(currentElement, "id", tempUuid);
            if( !tempUuid.empty() )
            {
                uuid = tempUuid;
@@ -233,7 +233,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
             delete moduleInfo.first;
             moduleInfo.first = 0;
          }
-         moduleInfo.first = new VE_XML::DataValuePair( "FLOAT" );
+         moduleInfo.first = new ves::open::xml::DataValuePair( "FLOAT" );
          moduleInfo.first->SetObjectFromXMLData( dataValueStringName );
       }
       // for module location
@@ -244,7 +244,7 @@ void Link::SetObjectFromXMLData(DOMNode* element)
             delete moduleInfo.second;
             moduleInfo.second = 0;
          }
-         moduleInfo.second = new VE_XML::DataValuePair( "FLOAT" );
+         moduleInfo.second = new ves::open::xml::DataValuePair( "FLOAT" );
          moduleInfo.second->SetObjectFromXMLData( dataValueStringName );
       }
 

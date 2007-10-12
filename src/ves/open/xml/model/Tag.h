@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VE_Tag_H_
-#define _VE_Tag_H_
+#ifndef Tag_H_
+#define Tag_H_
 /*!\file Tag.h
   *Data ports API
   */
@@ -49,12 +49,15 @@
 
 #include <xercesc/dom/DOM.hpp>
 
-
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS Tag : public VE_XML::XMLObject
+namespace xml
+{
+namespace model
+{
+class VE_MODEL_EXPORTS Tag : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
@@ -93,9 +96,12 @@ private:
    std::string tagText;///<string that contains text for the tag
 };
 }
+}
+}
+}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-    const std::string subElementTagName, VE_Model::Tag* val)
+	const std::string subElementTagName, ves::open::xml::model::Tag* val)
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( 
@@ -104,4 +110,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
     return childElement;
 }
 }
-#endif// _VE_Tag_H_
+#endif// Tag_H_

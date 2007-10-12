@@ -44,9 +44,13 @@
  * VE_Open/XML/Model/Link.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
     class Link;
     /// Typedef for a SmartPtr type for the Link.
@@ -56,5 +60,6 @@ namespace VE_Model
     typedef ScopedPtrDef<Link>::type LinkScopedPtr;
 }
 }
-
+}
+}
 #endif

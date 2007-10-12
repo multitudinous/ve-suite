@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_XML_VE_MODEL_MODEL_H_
-#define VE_XML_VE_MODEL_MODEL_H_
+#ifndef XML_MODEL_H_
+#define XML_MODEL_H_
 /*!\file Model.h
   *Model API
   */
@@ -52,30 +52,39 @@
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class DataValuePair;
    class Command;
    class ParameterBlock;
-   namespace VE_Model
+   namespace model
    {
       class Port;
       class Point;
    }
-   namespace VE_CAD
+   namespace cad
    {
      class CADNode;
      class CADAssembly;
    }
 
 }
+}
+}
 
-
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS Model : public VE_XML::XMLObject
+namespace xml
+{
+namespace model
+{
+class VE_MODEL_EXPORTS Model : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
@@ -130,23 +139,23 @@ public:
     Point* GetIconLocation( void );
     ///Get results data
     ///\return The ith result stored as a command
-    VE_XML::Command* GetResult(int i );
+    ves::open::xml::Command* GetResult(int i );
     ///Get results data
     ///\return The number of results in this model
     size_t GetNumberOfResults( void );
     ///Get input data
     ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
     ///\return The ith input in this model
-    VE_XML::Command* GetInput( int i );
+    ves::open::xml::Command* GetInput( int i );
 
     ///Get the input variable by name
     ///\param inputName Then name of the input to retrieve
     ///\return The input with the given name
-    VE_XML::Command* GetInput(std::string inputName);
+    ves::open::xml::Command* GetInput(std::string inputName);
 
     ///Allocate another input block for use
     ///\return The new input
-    VE_XML::Command* GetInput( void );
+    ves::open::xml::Command* GetInput( void );
     ///Get number of input data
     ///\return The total number of inputs
     size_t GetNumberOfInputs( void );
@@ -164,19 +173,19 @@ public:
     void RemovePort( unsigned int i );
     ///Remove the selected port for the model.
     ///\param removePort The port you are after.
-    void RemovePort( VE_XML::VE_Model::Port* removePort );
+    void RemovePort( ves::open::xml::model::Port* removePort );
     ///Get the i'th information packet for a model.
     ///\param i The i'th packet you are after.
-    VE_XML::ParameterBlock* GetInformationPacket( int i );
+    ves::open::xml::ParameterBlock* GetInformationPacket( int i );
 
     ///Get the named information packet for a model.
     ///\param name The name of the packet you are after.
-    VE_XML::ParameterBlock* GetInformationPacket( std::string name);
+    ves::open::xml::ParameterBlock* GetInformationPacket( std::string name);
 
     ///Get info packets data
     size_t GetNumberOfInformationPackets( void );
     ///Get the geometry for the model.
-    VE_XML::VE_CAD::CADNode* GetGeometry( void );
+    ves::open::xml::cad::CADNode* GetGeometry( void );
     ///Remove the i'th information packet for a model.
     ///\param i The i'th packet you are after.
     void RemoveInformationPacket( unsigned int i );
@@ -187,7 +196,7 @@ public:
 
     ///Add a geometry node and return it
     /// if there is already geometry then the function will return that pointer
-    VE_XML::VE_CAD::CADNode* AddGeometry( void );
+    ves::open::xml::cad::CADNode* AddGeometry( void );
     ///Delete the geometry for this model
     void DeleteGeometry( void );
     ///Set the vendor name on the model
@@ -195,18 +204,18 @@ public:
     ///Get the vendor name of the model
     std::string GetVendorName( void );
     ///Add a model attribute
-    void SetModelAttribute( VE_XML::Command* modelAttribute );
+    void SetModelAttribute( ves::open::xml::Command* modelAttribute );
     ///Get model attributes
     ///\return The model attributes used by third party solvers
-    VE_XML::Command* GetModelAttribute( void );
+    ves::open::xml::Command* GetModelAttribute( void );
 
     ///New interface for handling systems of systems
     ///Set the sub network for this model
     ///\param network The subnetwork for this model
-    void SetSubSystem( VE_XML::VE_Model::SystemWeakPtr inputSystem );
+    void SetSubSystem( ves::open::xml::model::SystemWeakPtr inputSystem );
     ///Get the sub network for this model
     ///\return The subnetwork for this model
-    VE_XML::VE_Model::SystemWeakPtr GetSubSystem();
+    ves::open::xml::model::SystemWeakPtr GetSubSystem();
     
 protected:
    ///Internally update the data.
@@ -221,26 +230,29 @@ private:
    std::vector< Port* > ports;///<The vector port data if any for a model.
    Point* iconLocation;///<The icon location point container.
    ///The data value pair will contain all the results for a paticular model
-   std::vector< VE_XML::Command* > results;///<The classes hold the results for the model.
+   std::vector< ves::open::xml::Command* > results;///<The classes hold the results for the model.
    ///The data value pair will contain the model inputs for the model
-   std::vector< VE_XML::Command* > inputs;///<The classes hold the inputs for the model.
+   std::vector< ves::open::xml::Command* > inputs;///<The classes hold the inputs for the model.
    ///The parameter block holds all the data the was formerly stored in the param file
-   std::vector< VE_XML::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
+   std::vector< ves::open::xml::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
    ///The CADNode contains the tree structure for the geometry
-   VE_XML::VE_CAD::CADAssembly* geometry;///<The classes hold the geometry for the model.
+   ves::open::xml::cad::CADAssembly* geometry;///<The classes hold the geometry for the model.
    ///The vendor name for the model
    std::string vendorUnit;///<The string that stores the unit name that this model maps to
-   VE_XML::Command* modelAttribute;///<The structure that stores all of the model attributes
+   ves::open::xml::Command* modelAttribute;///<The structure that stores all of the model attributes
    float iconScale;///<The icon scale to set the right size for conductor and xplorer
    float iconRotation;///<The icon rotation for conductor and xplorer
    ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
    unsigned int iconMirror;
    ///The sub network for this model
-   VE_XML::VE_Model::SystemStrongPtr m_subSystem;
+   ves::open::xml::model::SystemStrongPtr m_subSystem;
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_Model::Model* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::model::Model* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -248,4 +260,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    return childElement;
 }
 }
-#endif// _VE_MODEL_H_
+#endif// MODEL_H_

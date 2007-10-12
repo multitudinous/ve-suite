@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_SYSTEM_H
-#define VE_SYSTEM_H
+#ifndef SYSTEM_H
+#define SYSTEM_H
 /*!\file System.h
   *System System API
   */
@@ -53,11 +53,15 @@
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS System : public VE_XML::XMLObject
+namespace xml
+{
+namespace model
+{
+class VE_MODEL_EXPORTS System : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
@@ -105,9 +109,12 @@ private:
     std::vector< ModelStrongPtr > m_models;
 };
 }
+}
+}
+}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-    const std::string subElementTagName, VE_Model::System* val)
+	const std::string subElementTagName, ves::open::xml::model::System* val)
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = 
@@ -117,4 +124,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
 }
 }
 
-#endif// VE_SYSTEM_H
+#endif// SYSTEM_H

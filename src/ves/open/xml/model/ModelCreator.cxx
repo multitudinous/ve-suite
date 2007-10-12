@@ -41,9 +41,9 @@
 #include <ves/open/xml/model/TagPtr.h>
 #include <ves/open/xml/model/Tag.h>
 
-using namespace VE_XML::VE_Model;
+using namespace ves::open::xml::model;
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
+ves::open::xml::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
 {
     if ( objectType == "Link" )
     {
@@ -88,7 +88,7 @@ VE_XML::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObjectPtr 
+ves::open::xml::XMLObjectPtr 
 ModelCreator::CreateNewXMLObjectSmart( std::string objectType )
 {
     if ( objectType == "Tag" )
@@ -98,9 +98,9 @@ ModelCreator::CreateNewXMLObjectSmart( std::string objectType )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* 
+ves::open::xml::XMLObject* 
 ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
-    VE_XML::XMLObject* objectToCopy )
+    ves::open::xml::XMLObject* objectToCopy )
 {
    if ( objectType == "Link" )
    {
@@ -145,9 +145,9 @@ ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObjectPtr 
+ves::open::xml::XMLObjectPtr 
 ModelCreator::CreateNewXMLObjectCopySmart( std::string objectType,
-    VE_XML::XMLObjectPtr objectToCopy )
+    ves::open::xml::XMLObjectPtr objectToCopy )
 {
     if ( objectType == "Tag" )
     {

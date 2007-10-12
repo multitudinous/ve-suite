@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VE_LINK_H_
-#define _VE_LINK_H_
+#ifndef LINK_H_
+#define LINK_H_
 /*!\file Link.h
   *Data ports API
   */
@@ -49,20 +49,30 @@
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class DataValuePair;
-   namespace VE_Model
+   namespace model
    {
       class Point;
    }
 }
+}
+}
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
 {
-class VE_MODEL_EXPORTS Link : public VE_XML::XMLObject
+namespace xml
+{
+namespace model
+{
+	class VE_MODEL_EXPORTS Link : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
@@ -81,10 +91,10 @@ public:
 
     ///Get the portInfo for the fromPort.
     ///\return The element with the information about the module being linked to
-    VE_XML::DataValuePair* GetFromModule( void );
+    ves::open::xml::DataValuePair* GetFromModule( void );
     ///Get the portInfo for the toPort.
     ///\return The element with the information about the module being linked to
-    VE_XML::DataValuePair* GetToModule( void );
+    ves::open::xml::DataValuePair* GetToModule( void );
     ///Get the portInfo for the fromPort.
     ///\return The from port for the link
     long int* GetFromPort( void );
@@ -121,7 +131,7 @@ private:
     ///The data value pair will contain the model and port 
     ///number of the appropriate port to be linked
     ///The classes hold the fromPort in first and the toPort in second.
-    std::pair< VE_XML::DataValuePair*, VE_XML::DataValuePair* > moduleInfo;
+    std::pair< ves::open::xml::DataValuePair*, ves::open::xml::DataValuePair* > moduleInfo;
     ///The classes hold the fromPort in first and the toPort in second.
     std::pair< long int, long int > portInfo;
     ///The name of the link.
@@ -132,7 +142,7 @@ private:
 }
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-    const std::string subElementTagName, VE_Model::Link* val)
+	const std::string subElementTagName, ves::open::xml::model::Link* val)
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = 
@@ -141,5 +151,6 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
     return childElement;
 }
 }
-
-#endif// _VE_LINK_H_
+}
+}
+#endif// LINK_H_

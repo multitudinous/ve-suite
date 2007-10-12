@@ -37,8 +37,8 @@
 #include <ves/open/xml/DataValuePair.h>
 
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
-using namespace VE_XML::VE_Model;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 ////////////////////////////////////////////////////////////////////////////////   
 //Constructor                             //
 ////////////////////////////////////////////////////////////////////////////////   
@@ -119,7 +119,7 @@ void System::SetObjectFromXMLData(DOMNode* element)
     
     //Setup uuid for model element
     {
-        VE_XML::XMLObject::GetAttribute(currentElement, "id", uuid);
+        ves::open::xml::XMLObject::GetAttribute(currentElement, "id", uuid);
     }
 
     //get variables by tags

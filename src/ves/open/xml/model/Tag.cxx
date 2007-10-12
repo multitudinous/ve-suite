@@ -34,8 +34,8 @@
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/Point.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
-using namespace VE_XML::VE_Model;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
@@ -159,7 +159,7 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
     
     //Setup uuid for model element
     {
-        VE_XML::XMLObject::GetAttribute(currentElement, "id", uuid);
+        ves::open::xml::XMLObject::GetAttribute(currentElement, "id", uuid);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_SYSTEM_WEAK_PTR_H
-#define VE_SYSTEM_WEAK_PTR_H
+#ifndef SYSTEM_WEAK_PTR_H
+#define SYSTEM_WEAK_PTR_H
 
 #include <loki/StrongPtr.h>
 
@@ -44,15 +44,21 @@
  * VE_Open/XML/Model/System.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
     class System;
     /// Typedef for a SmartPtr type for the System.
     typedef Loki::StrongPtr< System, false, Loki::LockableTwoRefCounts,
         Loki::DisallowConversion, Loki::AssertCheck, Loki::CantResetWithStrong,
         Loki::DeleteSingle > SystemWeakPtr;
+}
+}
 }
 }
 #endif

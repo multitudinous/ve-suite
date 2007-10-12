@@ -42,9 +42,9 @@
 #include <sstream>
 
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML::VE_Model;
+using namespace ves::open::xml;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml::model;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
@@ -272,7 +272,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
     //Setup uuid for model element
     {
         std::string tempUuid;
-        VE_XML::XMLObject::GetAttribute(currentElement, "id", tempUuid);
+		ves::open::xml::XMLObject::GetAttribute(currentElement, "id", tempUuid);
         if( !tempUuid.empty() )
         {
             uuid = tempUuid;
@@ -498,7 +498,7 @@ Command* Model::GetInput( int i )
    }
 }
 ////////////////////////////////////////////////////////////
-VE_XML::Command* Model::GetInput( void )
+ves::open::xml::Command* Model::GetInput( void )
 {
    inputs.push_back( new Command() );
    return inputs.back();
@@ -558,7 +558,7 @@ void Model::RemovePort( unsigned int i )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::RemovePort( VE_XML::VE_Model::Port* removePort )
+void Model::RemovePort( ves::open::xml::model::Port* removePort )
 {
     for( std::vector< Port* >::iterator iter = ports.begin(); 
         iter != ports.end(); ++iter )
@@ -600,10 +600,10 @@ size_t Model::GetNumberOfOutputPorts( void )
    return outputPorts.size();
 }*/
 //////////////////////////////////////////////////////////////////////
-VE_XML::ParameterBlock* Model::GetInformationPacket( std::string name)
+ves::open::xml::ParameterBlock* Model::GetInformationPacket( std::string name)
 {
 
-   for(std::vector<VE_XML::ParameterBlock*>::iterator iter = informationPackets.begin();
+   for(std::vector<ves::open::xml::ParameterBlock*>::iterator iter = informationPackets.begin();
       iter != informationPackets.end(); ++iter)
    {
       if((*iter)->GetName() == name)
@@ -667,7 +667,7 @@ void Model::DeleteGeometry( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::RemoveInformationPacket( unsigned int i )
 {
-   std::vector< VE_XML::ParameterBlock* >::iterator iter;
+   std::vector< ves::open::xml::ParameterBlock* >::iterator iter;
    for ( iter = informationPackets.begin(); iter != informationPackets.end(); ++iter )
    {
       if ( informationPackets.at( i ) == (*iter) )
@@ -681,7 +681,7 @@ void Model::RemoveInformationPacket( unsigned int i )
 //////////////////////////////////////////////////////
 void Model::RemoveInformationPacket(std::string name )
 {
-   for(std::vector<VE_XML::ParameterBlock*>::iterator iter = informationPackets.begin();
+   for(std::vector<ves::open::xml::ParameterBlock*>::iterator iter = informationPackets.begin();
       iter != informationPackets.end(); ++iter)
    {
       if((*iter)->GetName() == name)
@@ -777,12 +777,12 @@ std::string Model::GetVendorName( void )
    return vendorUnit;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetModelAttribute( VE_XML::Command* modelAttribute )
+void Model::SetModelAttribute( ves::open::xml::Command* modelAttribute )
 {
    this->modelAttribute = modelAttribute;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* Model::GetModelAttribute( void )
+ves::open::xml::Command* Model::GetModelAttribute( void )
 {
    return this->modelAttribute;
 }
@@ -817,12 +817,12 @@ int Model::GetIconMirror( void )
    return iconMirror;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetSubSystem( VE_XML::VE_Model::SystemWeakPtr inputSystem )
+void Model::SetSubSystem( ves::open::xml::model::SystemWeakPtr inputSystem )
 {
     m_subSystem = inputSystem;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::SystemWeakPtr Model::GetSubSystem()
+ves::open::xml::model::SystemWeakPtr Model::GetSubSystem()
 {
     return m_subSystem;
 }

@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_TAG_PTR_H
-#define VE_TAG_PTR_H
+#ifndef TAG_PTR_H
+#define TAG_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -44,13 +44,19 @@
  * VE_Open/XML/Model/Tag.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
    class Tag;
    /// Typedef for a SmartPtr type for the Tag.
    typedef Loki::SmartPtrDef<Tag>::type TagPtr;
+}
+}
 }
 }
 #include <ves/open/xml/model/TagWeakPtr.h>
