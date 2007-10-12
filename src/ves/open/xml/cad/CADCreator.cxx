@@ -38,9 +38,10 @@
 #include <ves/open/xml/cad/CADMaterial.h>
 #include <ves/open/xml/cad/CADNodeAnimation.h>
 
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
+
 //////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
+ves::open::xml::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
 {
    if(objectType == "CADAssembly")
    {
@@ -65,8 +66,8 @@ VE_XML::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
    return 0;
 }
 //////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* CADCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                     VE_XML::XMLObject* objectToCopy)
+ves::open::xml::XMLObject* CADCreator::CreateNewXMLObjectCopy(std::string objectType,
+                                                     ves::open::xml::XMLObject* objectToCopy)
 {
    if(objectType == "CADAssembly")
    {

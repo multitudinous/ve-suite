@@ -41,15 +41,29 @@
  * Create CAD Objects.
  */
 
-namespace VE_XML
+namespace ves
 {
+namespace open
+{
+namespace xml
+{
+
    class XMLObject;
 }
+}
+}
+
 #include <ves/open/xml/CreationEventHandler.h>
-namespace VE_XML
+
+namespace ves
 {
-namespace VE_CAD{
-class VE_CAD_EXPORTS CADCreator : public VE_XML::CreationEventHandler{
+namespace open
+{
+namespace xml
+{
+namespace cad
+{
+class VE_CAD_EXPORTS CADCreator : public ves::open::xml::CreationEventHandler{
 public:
    ///Constructor
    CADCreator(){}
@@ -59,14 +73,16 @@ public:
 
    ///Create a new XMLObject.
    ///\param objectType The type of object to create.
-   virtual VE_XML::XMLObject* CreateNewXMLObject(std::string objectType);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
    
    ///Create a copy of a new CAD object
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy.
-   virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy(std::string objectType,ves::open::xml::XMLObject* objectToCopy);
 protected:
 };
+}
+}
 }
 }
 #endif// CAD_CREATOR_H

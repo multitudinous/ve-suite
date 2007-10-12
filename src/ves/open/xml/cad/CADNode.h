@@ -51,19 +51,29 @@
  * Contains nodes for creating/managing a CAD hierarchy.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Transform;
 }
+}
+}
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
 class CADAssembly;
 class CADNodeAnimation;
 
-class VE_CAD_EXPORTS CADNode: public VE_XML::XMLObject
+class VE_CAD_EXPORTS CADNode: public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -85,11 +95,11 @@ public:
 
    ///Set the transform for this node.
    ///\param transform The transform of this node.
-   void SetTransform(VE_XML::Transform* transform);
+   void SetTransform(ves::open::xml::Transform* transform);
 
    ///Add an attribute for this node.
    ///\param attribute A new attribute for this node.
-   void AddAttribute(VE_CAD::CADAttribute attribute);
+   void AddAttribute(ves::open::xml::cad::CADAttribute attribute);
 
    ///Add an animation file for this CADNode.
    ///\param animationFileName The path to the animation file.
@@ -117,7 +127,7 @@ public:
    bool GetVisibility();
  
    ///Get the active attribute
-   VE_XML::VE_CAD::CADAttribute& GetActiveAttribute();
+   ves::open::xml::cad::CADAttribute& GetActiveAttribute();
 
    ///Get the node type. 
    ///Valid types currently are Node,Assembly,Part and Clone
@@ -166,23 +176,23 @@ public:
    std::string GetPhysicsMesh();
 
    ///Get the transform of this CAD node.
-   VE_XML::Transform* GetTransform();
+   ves::open::xml::Transform* GetTransform();
 
    ///Get an attribute of this CAD node by a name
    ///\param name The name of the attribute to find.
-  VE_XML::VE_CAD::CADAttribute& GetAttribute(std::string name);
+   ves::open::xml::cad::CADAttribute& GetAttribute(std::string name);
   
     ///Get an attribute of this CAD node by a name
    ///\param index The index of the attribute to find.
-  VE_XML::VE_CAD::CADAttribute& GetAttribute(unsigned int index);
+   ves::open::xml::cad::CADAttribute& GetAttribute(unsigned int index);
 
    ///There is probably only one of these but internally we keep a vector of them
    ///\param name The reference name of the animation to find.
-  VE_XML::VE_CAD::CADNodeAnimation& GetAnimation(std::string name);
+   ves::open::xml::cad::CADNodeAnimation& GetAnimation(std::string name);
 
    ///There is probably only one of these but internally we keep a vector of them
    ///\param index The animation file index in the list.
-  VE_XML::VE_CAD::CADNodeAnimation& GetAnimation(unsigned int index);
+   ves::open::xml::cad::CADNodeAnimation& GetAnimation(unsigned int index);
 
    ///Get the CADNodeAnimation for this CADNode.
    size_t GetNumberOfAnimations();
@@ -213,9 +223,9 @@ protected:
    std::string m_activeAttributeName;///<The name of the active attribute.
    //unsigned int _uID;///<A "unique" id for the node.
    std::string  m_parent;  ///< Parent node ID.
-   VE_XML::Transform* m_transform; ///< Transform for the node.
-   std::vector<VE_CAD::CADAttribute> m_attributeList;///<A list of attributes for this node
-   std::vector<VE_CAD::CADNodeAnimation> m_animations;//<A list of animation path files for this node.
+   ves::open::xml::Transform* m_transform; ///< Transform for the node.
+   std::vector<ves::open::xml::cad::CADAttribute> m_attributeList;///<A list of attributes for this node
+   std::vector<ves::open::xml::cad::CADNodeAnimation> m_animations;//<A list of animation path files for this node.
    std::string m_name;///< The name of this node.
    std::string m_type;///< The type of node;
    bool m_visibility;///<Node visibilty.
@@ -227,8 +237,11 @@ protected:
    std::string m_physicsMesh;///<Node physics mesh.
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADNode* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADNode* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

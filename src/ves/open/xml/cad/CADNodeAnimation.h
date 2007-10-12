@@ -44,12 +44,15 @@
  * This class holds data for describing animations for a CADNode.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
 {
-
-class VE_CAD_EXPORTS CADNodeAnimation: public VE_XML::XMLObject
+namespace xml
+{
+namespace cad
+{
+class VE_CAD_EXPORTS CADNodeAnimation: public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -125,8 +128,11 @@ protected:
    unsigned int _numberOfHeaderLines;///<The number of line in the header
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADNodeAnimation* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADNodeAnimation* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

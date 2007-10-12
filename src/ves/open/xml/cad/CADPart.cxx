@@ -32,12 +32,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/open/xml/cad/CADPart.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML::VE_CAD;
+
+using namespace ves::open::xml::cad;
+
 ////////////////////////////////////////////////////////////
 //Constructor                                             //
 ////////////////////////////////////////////////////////////
 CADPart::CADPart(std::string name)
-:VE_XML::VE_CAD::CADNode(name)
+:ves::open::xml::cad::CADNode(name)
 {
    m_cadFileName = std::string("CADFile");
    m_type = std::string("Part");
@@ -73,7 +75,7 @@ void CADPart::_updateVEElement(std::string input)
 {
    //How is this going to work???
    //Get the base elements from CADNode
-   VE_XML::VE_CAD::CADNode::_updateVEElement(input);
+   ves::open::xml::cad::CADNode::_updateVEElement(input);
 
    _updateCADFileName();
 }
@@ -90,7 +92,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
    if(currentElement)
    {
       //populate the base elements in node
-      VE_XML::VE_CAD::CADNode::SetObjectFromXMLData(currentElement);
+      ves::open::xml::cad::CADNode::SetObjectFromXMLData(currentElement);
 
       //break down the element
       {
@@ -104,7 +106,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
 }
 ////////////////////////////////////////////////
 CADPart::CADPart(const CADPart& rhs, bool clone)
-:VE_XML::VE_CAD::CADNode(rhs,clone)
+:ves::open::xml::cad::CADNode(rhs,clone)
 {
    m_cadFileName = rhs.m_cadFileName;
 }
@@ -113,7 +115,7 @@ CADPart& CADPart::operator=(const CADPart& rhs)
 {
    if ( this != &rhs )
    {
-      VE_XML::VE_CAD::CADNode::operator =(rhs);
+      ves::open::xml::cad::CADNode::operator =(rhs);
       m_cadFileName = rhs.m_cadFileName;
    }
    return *this;

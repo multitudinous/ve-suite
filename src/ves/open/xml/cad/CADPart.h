@@ -44,10 +44,17 @@
 #include <string>
 
 XERCES_CPP_NAMESPACE_USE
-namespace VE_XML
+
+
+namespace ves
 {
-namespace VE_CAD{
-class VE_CAD_EXPORTS CADPart: public VE_XML::VE_CAD::CADNode{
+namespace open
+{
+namespace xml
+{
+namespace cad
+{
+	class VE_CAD_EXPORTS CADPart: public ves::open::xml::cad::CADNode{
 public:
    ///Constructor
    ///\param name The name of the part
@@ -87,8 +94,11 @@ protected:
    std::string m_cadFileName; ///<The name of the CAD file on disk
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADPart* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADPart* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

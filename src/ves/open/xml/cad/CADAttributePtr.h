@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_CAD_ATTRIBUTE_PTR_H
-#define VE_CAD_ATTRIBUTE_PTR_H
+#ifndef CAD_ATTRIBUTE_PTR_H
+#define CAD_ATTRIBUTE_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -44,14 +44,20 @@
  * ves/open/xml/cad/CADAttribute.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
    class CADAttribute;
    /// Typedef for a SmartPtr type for the CADAttribute.
    typedef Loki::SmartPtrDef<CADAttribute>::type CADAttributePtr;
 }
 }
-#endif//VE_CAD_ATTRIBUTE_PTR_H
+}
+}
+#endif//CAD_ATTRIBUTE_PTR_H
 

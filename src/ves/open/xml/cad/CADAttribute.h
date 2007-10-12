@@ -44,20 +44,31 @@
  * This class holds data for describing attributes for a CADNode.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
+{
+namespace xml
+{
+namespace shade
 {
    class Program;
 }
 }
-namespace VE_XML
+}
+}
+
+namespace ves
 {
-namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
 class CADMaterial;
 
-class VE_CAD_EXPORTS CADAttribute: public VE_XML::XMLObject
+class VE_CAD_EXPORTS CADAttribute: public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -71,11 +82,11 @@ public:
 
    ///Set the material for this node.
    ///\param material The material of this node.
-   void SetMaterial(VE_XML::VE_CAD::CADMaterial material);
+   void SetMaterial(ves::open::xml::cad::CADMaterial material);
 
    ///Set the GLSL program for this node.
    ///\param glslProgram The GLSL program.
-   void SetProgram( VE_XML::VE_Shader::Program glslProgram);
+   void SetProgram( ves::open::xml::shader::Program glslProgram);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -94,10 +105,10 @@ public:
    std::string GetAttributeType();
 
    ///Get the material of this CAD node
-   VE_XML::VE_CAD::CADMaterial* GetMaterial();
+   ves::open::xml::cad::CADMaterial* GetMaterial();
   
    ///Get the GLSL program for this node.
-   VE_XML::VE_Shader::Program* GetGLSLProgram();
+   ves::open::xml::shader::Program* GetGLSLProgram();
 
    ///Get the name of a specific attribute.
    std::string GetAttributeName();
@@ -118,12 +129,15 @@ protected:
 
    bool _blending;///<Enable or disable blending;
 
-   VE_XML::VE_CAD::CADMaterial* _material; ///< Material for this node.
-   VE_XML::VE_Shader::Program* _glslProgram;///<The glsl program.
+   ves::open::xml::cad::CADMaterial* _material; ///< Material for this node.
+   ves::open::xml::shader::Program* _glslProgram;///<The glsl program.
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADAttribute* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADAttribute* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

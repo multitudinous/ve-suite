@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_CADNODE_ANIMATION_PTR_H
-#define VE_CADNODE_ANIMATION_PTR_H
+#ifndef CADNODE_ANIMATION_PTR_H
+#define CADNODE_ANIMATION_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -44,14 +44,20 @@
  * ves/open/xml/cad/CADNodeAnimation.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
    class CADNodeAnimation;
    /// Typedef for a SmartPtr type for the CADNodeAnimation.
    typedef Loki::SmartPtrDef<CADNodeAnimation>::type CADNodeAnimationPtr;
 }
 }
-#endif//VE_CADNODE_ANIMATION_PTR_H
+}
+}
+#endif//CADNODE_ANIMATION_PTR_H
 

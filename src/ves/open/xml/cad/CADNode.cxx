@@ -46,16 +46,18 @@
 #include <ctime>
 
 #include <apr_uuid.h>
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML::VE_Shader;
-using namespace VE_XML;
+
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml::shader;
+using namespace ves::open::xml;
+
 
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
 CADNode::CADNode(std::string name)
 :
-VE_XML::XMLObject()
+ves::open::xml::XMLObject()
 {
    m_name = name;
    m_parent = "";
@@ -117,17 +119,17 @@ void CADNode::SetParent(std::string parent)
    m_parent = parent;
 }
 ///////////////////////////////////////////////////////
-void CADNode::SetTransform(VE_XML::Transform* transform)
+void CADNode::SetTransform(ves::open::xml::Transform* transform)
 {
    if(m_transform)
    {
       delete m_transform;
       m_transform = 0;
    }
-   m_transform = new VE_XML::Transform(*transform);
+   m_transform = new ves::open::xml::Transform(*transform);
 }
 ///////////////////////////////////////////////////////////
-void CADNode::AddAttribute(VE_XML::VE_CAD::CADAttribute attribute)
+void CADNode::AddAttribute(ves::open::xml::cad::CADAttribute attribute)
 {
    m_attributeList.push_back(attribute);
 }
@@ -221,12 +223,12 @@ std::string CADNode::GetParent()
    return m_parent;
 }
 //////////////////////////////////////////
-VE_XML::Transform* CADNode::GetTransform()
+ves::open::xml::Transform* CADNode::GetTransform()
 {
    return m_transform;
 }
 ///////////////////////////////////////////////////////////////////////
-VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
+ves::open::xml::cad::CADAttribute& CADNode::GetAttribute(unsigned int index)
 {
    try
    {
@@ -242,7 +244,7 @@ VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(unsigned int index)
    return m_attributeList.at(0);;
 }
 /////////////////////////////////////////////////////////////////////
-VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
+ves::open::xml::cad::CADAttribute& CADNode::GetAttribute(std::string name)
 {
    size_t nAttributes = m_attributeList.size();
    for(size_t i = 0; i < nAttributes; i++)
@@ -254,7 +256,7 @@ VE_XML::VE_CAD::CADAttribute& CADNode::GetAttribute(std::string name)
    }
 }
 ///////////////////////////////////////////////////////////
-VE_XML::VE_CAD::CADAttribute& CADNode::GetActiveAttribute()
+ves::open::xml::cad::CADAttribute& CADNode::GetActiveAttribute()
 {
    return GetAttribute(m_activeAttributeName);
 }
@@ -343,7 +345,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
          {
             if(currentElement->getAttributeNode(xercesString("visibility")))
             {
-               dynamic_cast<VE_XML::XMLObject*>(this)->GetAttribute(currentElement,"visibility",m_visibility);
+               dynamic_cast<ves::open::xml::XMLObject*>(this)->GetAttribute(currentElement,"visibility",m_visibility);
             }
             else
             {
@@ -352,7 +354,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 
             if( currentElement->getAttributeNode( xercesString( "physics" ) ) )
             {
-               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "physics", m_physics );
+               dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "physics", m_physics );
             }
             else
             {
@@ -361,7 +363,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 
             if( currentElement->getAttributeNode( xercesString( "mass" ) ) )
             {
-               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "mass", m_mass );
+               dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "mass", m_mass );
             }
             else
             {
@@ -370,7 +372,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 
             if( currentElement->getAttributeNode( xercesString( "friction" ) ) )
             {
-               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "friction", m_friction );
+               dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "friction", m_friction );
             }
             else
             {
@@ -379,7 +381,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 
             if( currentElement->getAttributeNode( xercesString( "restitution" ) ) )
             {
-               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "restitution", m_restitution );
+               dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "restitution", m_restitution );
             }
             else
             {
@@ -388,7 +390,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
 
             if( currentElement->getAttributeNode( xercesString( "physics mesh" ) ) )
             {
-               dynamic_cast< VE_XML::XMLObject* >( this )->GetAttribute( currentElement, "physics mesh", m_physicsMesh );
+               dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "physics mesh", m_physicsMesh );
             }
             else
             {
@@ -405,11 +407,11 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode)
             DOMElement* idNode = GetSubElement(currentElement,std::string("nodeID"),0);
             if(idNode)
             {
-               VE_XML::XMLObject::SetID(ExtractFromSimpleElement< unsigned int >(idNode) );
+               ves::open::xml::XMLObject::SetID(ExtractFromSimpleElement< unsigned int >(idNode) );
             }
             else
             {
-               VE_XML::XMLObject::GetAttribute(currentElement, "id",uuid);
+               ves::open::xml::XMLObject::GetAttribute(currentElement, "id",uuid);
             }
             DOMElement* typeNode = GetSubElement(currentElement,std::string("type"),0);
             if(typeNode)
@@ -496,7 +498,7 @@ std::vector<CADAttribute> CADNode::GetAttributeList()
    return m_attributeList;
 }
 ///////////////////////////////////////////////////////////////////
-VE_XML::VE_CAD::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
+ves::open::xml::cad::CADNodeAnimation& CADNode::GetAnimation(unsigned int index)
 {
    try
    {
@@ -527,14 +529,14 @@ size_t CADNode::GetNumberOfAnimations()
 }
 ///////////////////////////////////////////////
 CADNode::CADNode(const CADNode& rhs,bool clone)
-:VE_XML::XMLObject(rhs)
+:ves::open::xml::XMLObject(rhs)
 {
    m_parent = "";
    m_transform = 0;;
 
    if(rhs.m_transform)
    {
-      m_transform = new VE_XML::Transform(*rhs.m_transform);
+      m_transform = new ves::open::xml::Transform(*rhs.m_transform);
    }
    else
    {

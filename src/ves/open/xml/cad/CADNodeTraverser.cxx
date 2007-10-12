@@ -37,7 +37,8 @@
 #include <ves/open/xml/cad/CADPart.h>
 #include <iostream>
 
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::cad;
+
 ////////////////////////////////////
 //Constructors                    //
 ////////////////////////////////////
@@ -109,7 +110,7 @@ void CADNodeTraverser::_traverseNode(CADNode* cNode,void* currentParent)
   
 
    if(cNode->GetNodeType() == std::string("Assembly")){
-     VE_XML::VE_CAD::CADAssembly* assembly = dynamic_cast<VE_CAD::CADAssembly*>(cNode);
+	   ves::open::xml::cad::CADAssembly* assembly = dynamic_cast<ves::open::xml::cad::CADAssembly*>(cNode);
       if(assembly)
       {
          unsigned int nChildren = assembly->GetNumberOfChildren();

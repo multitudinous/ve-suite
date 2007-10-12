@@ -47,11 +47,16 @@
  * this is more of an organization node.
  */
 XERCES_CPP_NAMESPACE_USE
-namespace VE_XML
+
+namespace ves
 {
-namespace VE_CAD
+namespace open
 {
-class VE_CAD_EXPORTS CADAssembly: public VE_XML::VE_CAD::CADNode{
+namespace xml
+{
+namespace cad
+{
+	class VE_CAD_EXPORTS CADAssembly: public ves::open::xml::cad::CADNode{
 public:
    ///Constructor
    ///\param name Name of the assembly.
@@ -64,7 +69,7 @@ public:
 
    ///Add a child to this assembly
    ///\param node The node to add to the assembly
-   void AddChild(VE_XML::VE_CAD::CADNode* node);
+   void AddChild(ves::open::xml::cad::CADNode* node);
 
    ///Set the object from XML data
    ///\param xmlNode Node to set this object from
@@ -82,7 +87,7 @@ public:
    ///\param node The pointer of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails
    ///\todo This function is NOT implemented yet and will ALWAYS return false!!!
-   bool RemoveChild(VE_XML::VE_CAD::CADNode node);
+   bool RemoveChild(ves::open::xml::cad::CADNode node);
 
    ///\param whichChildID The ID of the node to remove from this assembly
    ///Remove child from the assembly returns true for success false if fails 
@@ -92,11 +97,11 @@ public:
    unsigned int GetNumberOfChildren();
 
    ///Get a specified child of this assembly
-   VE_XML::VE_CAD::CADNode* GetChild(unsigned int whichChild);
+   ves::open::xml::cad::CADNode* GetChild(unsigned int whichChild);
 
    ///Get a child by a name
    ///\param name The of the child name to search for.
-   VE_XML::VE_CAD::CADNode* GetChild(std::string name);
+   ves::open::xml::cad::CADNode* GetChild(std::string name);
    
    ///Copy constructor
    //\param rhs The CADPart to copy
@@ -118,13 +123,16 @@ protected:
    unsigned int m_numChildren; ///<number of children in this assembly
    ///\typedef ChildList
    /// A vector of VE_XML::VE_CAD::CADNode s
-   typedef std::vector<VE_XML::VE_CAD::CADNode*> ChildList; 
+   typedef std::vector<ves::open::xml::cad::CADNode*> ChildList; 
    ChildList m_children; ///<A list of the children
    std::string m_associatedDataset;///<The dataset associated with this CADNode
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_CAD::CADAssembly* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADAssembly* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

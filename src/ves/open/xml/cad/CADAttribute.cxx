@@ -40,9 +40,9 @@
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/shader/Program.h>
 
-using namespace VE_XML::VE_Shader;
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML;
+using namespace ves::open::xml::shader;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 /////////////////////////////////////////////////////////////////////////////////////
 //Constructor                                                                      //
 /////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ void CADAttribute::SetAttributeType(std::string attributeType)
    _attributeType = attributeType;
 }
 /////////////////////////////////////////////////////////////
-void CADAttribute::SetMaterial(VE_XML::VE_CAD::CADMaterial material)
+void CADAttribute::SetMaterial(ves::open::xml::cad::CADMaterial material)
 {
    if(_material)
    {
@@ -110,7 +110,7 @@ void CADAttribute::SetMaterial(VE_XML::VE_CAD::CADMaterial material)
    _attributeType = std::string("Material");
 }
 //////////////////////////////////////////////////////////////
-void CADAttribute::SetProgram(VE_Shader::Program glslProgram)
+void CADAttribute::SetProgram(ves::open::xml::shader::Program glslProgram)
 {
    if(_glslProgram)
    {
@@ -188,12 +188,12 @@ std::string CADAttribute::GetAttributeType()
    return _attributeType;
 }
 ////////////////////////////////////////////////
-VE_XML::VE_CAD::CADMaterial* CADAttribute::GetMaterial()
+ves::open::xml::cad::CADMaterial* CADAttribute::GetMaterial()
 {
    return _material;
 }
 //////////////////////////////////////////////////
-VE_Shader::Program* CADAttribute::GetGLSLProgram()
+ves::open::xml::shader::Program* CADAttribute::GetGLSLProgram()
 {
    return _glslProgram;
 }

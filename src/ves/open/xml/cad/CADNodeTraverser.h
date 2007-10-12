@@ -45,9 +45,16 @@
 
 
 #include <ves/VEConfig.h>
-namespace VE_XML
+
+
+namespace ves
 {
-namespace VE_CAD{
+namespace open
+{
+namespace xml
+{
+namespace cad
+{
    class CADNode;
    class VE_CAD_EXPORTS CADNodeTraverser
    {
@@ -120,6 +127,8 @@ namespace VE_CAD{
       CADNodeTraverser::CADNodeTraverseCallback* _preFunc;///<The pre traverse callback.
       CADNodeTraverser::CADNodeTraverseCallback* _postFunc;///<The post node traverse callback.
    };
+}
+}
 }
 }
 #endif// _CFD_NODE_TRAVERSER_H_

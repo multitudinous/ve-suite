@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_CAD_PART_PTR_H
-#define VE_CAD_PART_PTR_H
+#ifndef CAD_PART_PTR_H
+#define CAD_PART_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -44,14 +44,20 @@
  * ves/open/xml/cad/CADNode.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
    class CADPart;
    /// Typedef for a SmartPtr type for the CADNode.
    typedef Loki::SmartPtrDef<CADPart>::type CADPartPtr;
 }
 }
-#endif//VE_CAD_PART_PTR_H
+}
+}
+#endif//CAD_PART_PTR_H
 
