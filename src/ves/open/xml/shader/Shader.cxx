@@ -39,14 +39,14 @@
 #include <ves/open/xml/shader/ShaderCreator.h>
 
 
-using namespace VE_XML::VE_Shader;
-using namespace VE_XML;
+using namespace ves::open::xml::shader;
+using namespace ves::open::xml;
 XERCES_CPP_NAMESPACE_USE
 ////////////////////////////////////////////////////////////////////////
 //Constructor                                                         //
 ////////////////////////////////////////////////////////////////////////
 Shader::Shader()
-:VE_XML::XMLObject()
+:ves::open::xml::XMLObject()
 {
    _shaderType = std::string("Vertex");
    _shaderSource = std::string("");

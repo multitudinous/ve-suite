@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_SHADER_H
-#define VE_SHADER_H
+#ifndef SHADER_H
+#define SHADER_H
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/VEConfig.h>
@@ -47,20 +47,30 @@
  * Class that stores an data and information neccessary to create a glsl shader.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
+{
+namespace xml
+{
+namespace shader
 {
    class TextureImage;
    class Uniform;
 }
 }
+}
+}
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
 {
-class VE_SHADER_EXPORTS Shader:public VE_XML::XMLObject
+namespace xml
+{
+namespace shader
+{
+class VE_SHADER_EXPORTS Shader:public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -146,8 +156,11 @@ protected:
 
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Shader* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Shader* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -155,4 +168,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    return childElement;
 }
 }
-#endif//VE_SHADER_H
+#endif//SHADER_H

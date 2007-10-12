@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_PROGRAM_PTR_H_
-#define _VE_PROGRAM_PTR_H_
+#ifndef PROGRAM_PTR_H_
+#define PROGRAM_PTR_H_
 
 #include <loki/SmartPtr.h>
 
@@ -44,13 +44,19 @@
  * ves/open/xml/shader/Program.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
+{
+namespace xml
+{
+namespace shader
 {
    class Program;
    /// Typedef for a SmartPtr type for the Program.
    typedef Loki::SmartPtrDef<Program>::type ProgramPtr;
+}
+}
 }
 }
 #endif

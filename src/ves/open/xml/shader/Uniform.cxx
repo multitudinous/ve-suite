@@ -36,13 +36,13 @@
 
 
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML::VE_Shader;
-using namespace VE_XML;
+using namespace ves::open::xml::shader;
+using namespace ves::open::xml;
 //////////////////////////////////////////////////////////////////////////
 ///Constructor                                                          //
 //////////////////////////////////////////////////////////////////////////
 Uniform::Uniform()
-:VE_XML::XMLObject()
+:ves::open::xml::XMLObject()
 {
    _type = std::string("float");
    _variableSize = 0; 
@@ -67,7 +67,7 @@ Uniform::~Uniform()
 //Copy constructor                 //
 /////////////////////////////////////
 Uniform:: Uniform(const Uniform& rhs)
-:VE_XML::XMLObject(rhs)
+:ves::open::xml::XMLObject(rhs)
 {
    _type = std::string("float");
    _variableSize = 0; 

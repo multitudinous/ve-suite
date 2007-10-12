@@ -37,8 +37,8 @@
 #include <ves/open/xml/XMLObjectFactory.h>
 XERCES_CPP_NAMESPACE_USE
 
-using namespace VE_XML::VE_Shader;
-using namespace VE_XML;
+using namespace ves::open::xml::shader;
+using namespace ves::open::xml;
 //////////////////////////////////////////////////////////////////////////
 //Constructor                                                           //
 //////////////////////////////////////////////////////////////////////////

@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_TEXTURE_IMAGE_H
-#define VE_TEXTURE_IMAGE_H
+#ifndef TEXTURE_IMAGE_H
+#define TEXTURE_IMAGE_H
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/VEConfig.h>
@@ -48,11 +48,15 @@
 
 #include <ves/open/xml/CommandPtr.h>
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
 {
-class VE_SHADER_EXPORTS TextureImage:public VE_XML::XMLObject
+namespace xml
+{
+namespace shader
+{
+class VE_SHADER_EXPORTS TextureImage:public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -157,12 +161,15 @@ protected:
    ///\param input The XML element information
    virtual void _updateVEElement(std::string input);
 
-   VE_XML::CommandPtr _textureDescription;///<Data package containing the information about the texture map.
+   ves::open::xml::CommandPtr _textureDescription;///<Data package containing the information about the texture map.
    
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::TextureImage* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::TextureImage* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -170,4 +177,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    return childElement;
 }
 }
-#endif//VE_TEXTURE_IMAGE_H
+#endif//TEXTURE_IMAGE_H

@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_TEXTUREIMAGE_PTR_H_
-#define _VE_TEXTUREIMAGE_PTR_H_
+#ifndef TEXTUREIMAGE_PTR_H_
+#define TEXTUREIMAGE_PTR_H_
 
 #include <loki/SmartPtr.h>
 
@@ -44,13 +44,19 @@
  * ves/open/xml/shader/TextureImage.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
+{
+namespace xml
+{
+namespace shader
 {
    class TextureImage;
    /// Typedef for a SmartPtr type for the TextureImage.
    typedef Loki::SmartPtrDef<TextureImage>::type TextureImagePtr;
+}
+}
 }
 }
 #endif

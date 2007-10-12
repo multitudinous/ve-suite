@@ -39,16 +39,29 @@
  * Create Objects within the VE_Shader namespace.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class XMLObject;
 }
+}
+}
+
 #include <ves/open/xml/CreationEventHandler.h>
 #include <ves/VEConfig.h>
 
-namespace VE_XML{
-namespace VE_Shader{
-class VE_SHADER_EXPORTS ShaderCreator : public VE_XML::CreationEventHandler{
+namespace ves
+{
+namespace open
+{
+namespace xml
+{
+namespace shader
+{
+class VE_SHADER_EXPORTS ShaderCreator : public ves::open::xml::CreationEventHandler{
 public:
    ///Constructor
    ShaderCreator(){}
@@ -58,14 +71,18 @@ public:
 
    ///Create a new XMLObject.
    ///\param objectType The type of object to create.
-   virtual VE_XML::XMLObject* CreateNewXMLObject(std::string objectType);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
    
    ///Create a copy of a new CAD object
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy.
-   virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,VE_XML::XMLObject* objectToCopy);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
+   virtual ::XMLObject* CreateNewXMLObjectCopy(std::string objectType,::XMLObject* objectToCopy);
 protected:
 };
+}
+}
 }
 }
 #endif// SHADER_CREATOR_H

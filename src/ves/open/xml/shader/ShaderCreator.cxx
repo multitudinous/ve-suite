@@ -36,9 +36,9 @@
 #include <ves/open/xml/shader/Uniform.h>
 #include <ves/open/xml/shader/Program.h>
 
-using namespace VE_XML::VE_Shader;
+using namespace ves::open::xml::shader;
 ////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
+ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
 {
    if(objectType == "Program")
    {
@@ -59,8 +59,8 @@ VE_XML::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* ShaderCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                  VE_XML::XMLObject* objectToCopy)
+ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObjectCopy(std::string objectType,
+                                                  ves::open::xml::XMLObject* objectToCopy)
 {
    if(objectType == "Program")
    {

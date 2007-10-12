@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_UNIFORM_H_
-#define _VE_UNIFORM_H_
+#ifndef UNIFORM_H_
+#define UNIFORM_H_
 #include <ves/open/xml/XMLObject.h>
 #include <ves/VEConfig.h>
 #include <xercesc/dom/DOM.hpp>
@@ -49,11 +49,15 @@
  * Contains classes that describe GLSL shaders and programs.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
 {
-class VE_SHADER_EXPORTS Uniform : public VE_XML::XMLObject
+namespace xml
+{
+namespace shader
+{
+class VE_SHADER_EXPORTS Uniform : public ves::open::xml::XMLObject
 {
 public:
    ///Constructor
@@ -133,8 +137,11 @@ protected:
    unsigned int _textureUnit;///<Optional texture unit if the data is a sampler.
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Uniform* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Uniform* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -142,4 +149,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    return childElement;
 }
 }
-#endif //_VE_UNIFORM_H_
+#endif //UNIFORM_H_

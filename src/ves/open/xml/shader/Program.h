@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_PROGRAM_H
-#define VE_PROGRAM_H
+#ifndef PROGRAM_H
+#define PROGRAM_H
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/shader/ShaderPtr.h>
@@ -47,11 +47,15 @@
  * Class that stores an data and information neccessary to create a glsl Program program.
  */
 
-namespace VE_XML
+namespace ves
 {
-namespace VE_Shader
+namespace open
 {
-class VE_SHADER_EXPORTS Program:public VE_XML::XMLObject{
+namespace xml
+{
+namespace shader
+{
+	class VE_SHADER_EXPORTS Program:public ves::open::xml::XMLObject{
 public:
    ///Constructor
    Program();
@@ -64,12 +68,12 @@ public:
 
    ///Set the vertex shader for this program
    ///\param vertShader The vertex shader.
-   void SetVertexShader(VE_Shader::ShaderPtr vertShader);
+   void SetVertexShader(ves::open::xml::shader::ShaderPtr vertShader);
 
    
    ///Set the fragment shader for this program
    ///\param fragShader The fragment shader.
-   void SetFragmentShader(VE_Shader::ShaderPtr fragShader);
+   void SetFragmentShader(ves::open::xml::shader::ShaderPtr fragShader);
 
    ///Set the name of the glsl program
    ///\param name The name of the program.
@@ -80,10 +84,10 @@ public:
    void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
 
    ///Get the fragment shader.
-   VE_Shader::ShaderPtr GetFragmentShader();
+   ves::open::xml::shader::ShaderPtr GetFragmentShader();
 
    ///Get the vertex shader.
-   VE_Shader::ShaderPtr GetVertexShader();
+   ves::open::xml::shader::ShaderPtr GetVertexShader();
 
    ///Get the name of the program.
    std::string GetProgramName();
@@ -100,12 +104,15 @@ protected:
    void _updateProgramName();
 
    std::string _name;///< The program name.
-   VE_Shader::ShaderPtr _vertexShader;///< The vertex shader.
-   VE_Shader::ShaderPtr _fragmentShader;///< The fragment shader.
+   ves::open::xml::shader::ShaderPtr _vertexShader;///< The vertex shader.
+   ves::open::xml:shader::ShaderPtr _fragmentShader;///< The fragment shader.
 };
 }
+}
+}
+}
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::VE_Shader::Program* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Program* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -113,4 +120,4 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    return childElement;
 }
 }
-#endif //VE_PROGRAM_H
+#endif //PROGRAM_H
