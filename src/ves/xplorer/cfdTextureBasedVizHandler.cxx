@@ -44,19 +44,19 @@
 //#include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
-#include <ves/xplorer/event/TBTransientDurationUpdateEH.h>
-#include <ves/xplorer/event/TBTransientModeUpdateEH.h>
-#include <ves/xplorer/event/TBIsosurfaceUpdateEH.h>
-#include <ves/xplorer/event/TBIsosurfaceEnableEH.h>
-#include <ves/xplorer/event/TBClipPlaneEH.h>
-#include <ves/xplorer/event/TBBBoxEH.h>
-#include <ves/xplorer/event/TBUpdateScalarRangeEH.h>
-#include <ves/xplorer/event/TBUpdateSolutionEH.h>
-#include <ves/xplorer/event/TBActivateEH.h>
-#include <ves/xplorer/event/TBSetActiveShaderManagerEH.h>
-#include <ves/xplorer/event/TBSliceNumberUpdateEH.h>
-#include <ves/xplorer/event/TBPhongShadingEnableEH.h>
-#include <ves/xplorer/event/TBPreIntegrateEH.h>
+#include <ves/xplorer/event/volume/TBTransientDurationUpdateEH.h>
+#include <ves/xplorer/event/volume/TBTransientModeUpdateEH.h>
+#include <ves/xplorer/event/volume/TBIsosurfaceUpdateEH.h>
+#include <ves/xplorer/event/volume/TBIsosurfaceEnableEH.h>
+#include <ves/xplorer/event/volume/TBClipPlaneEH.h>
+#include <ves/xplorer/event/volume/TBBBoxEH.h>
+#include <ves/xplorer/event/volume/TBUpdateScalarRangeEH.h>
+#include <ves/xplorer/event/volume/TBUpdateSolutionEH.h>
+#include <ves/xplorer/event/volume/TBActivateEH.h>
+#include <ves/xplorer/event/volume/TBSetActiveShaderManagerEH.h>
+#include <ves/xplorer/event/volume/TBSliceNumberUpdateEH.h>
+#include <ves/xplorer/event/volume/TBPhongShadingEnableEH.h>
+#include <ves/xplorer/event/volume/TBPreIntegrateEH.h>
 
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdCommandArray.h>

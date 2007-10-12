@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/TBActivateEH.h>
+#include <ves/xplorer/event/volume/TBActivateEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/event/ModelCADHandler.h>

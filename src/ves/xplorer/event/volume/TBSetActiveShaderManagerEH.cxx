@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/TBSetActiveShaderManagerEH.h>
+#include <ves/xplorer/event/volume/TBSetActiveShaderManagerEH.h>
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/cfdDebug.h>
