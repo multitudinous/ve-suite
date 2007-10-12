@@ -44,7 +44,7 @@ Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : UIName_(name), executive_(Body::Executive::_duplicate(exec))
 {
     UIName_=name;
-    m_commandNameMap[ "NULL" ] = VE_XML::Command();
+    m_commandNameMap[ "NULL" ] = ves::open::xml::Command();
     m_commandNameMap[ "NULL" ].SetCommandName( "NULL" );
 }
   
@@ -157,22 +157,22 @@ void Body_UI_i::SetXplorerData (
     //std::cout << xplorerData << std::endl;
    //Receive the data from Xplorer
    std::string tempString( const_cast<char*>(xplorerData) );
-    VE_XML::XMLReaderWriter networkReader;
+   ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
    networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
-    std::vector<VE_XML::XMLObject*> xmlObjects;
+    std::vector<ves::open::xml::XMLObject*> xmlObjects;
    xmlObjects = networkReader.GetLoadedXMLObjects();
     
     //std::cout << xmlObjects.size() << std::endl;
-    std::vector< VE_XML::XMLObject* >::iterator iter;
+    std::vector< ves::open::xml::XMLObject* >::iterator iter;
     //Not sure why this is not working...
     //for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
     {
         //iter
        //  VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
-        VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( xmlObjects.at( 0 ) );
+        ves::open::xml::Command* temp = dynamic_cast< ves::open::xml::Command* >( xmlObjects.at( 0 ) );
         if( !temp )
         {
             std::cout << " bad stuff " << std::endl;
@@ -190,15 +190,15 @@ void Body_UI_i::SetLogWindow( PEThread* logWindow )
      this->logWindow = logWindow;
 }
 ///////////////////////////////////////////////////////////////////////////////
-VE_XML::Command Body_UI_i::GetXplorerData( std::string commandName )
+ves::open::xml::Command Body_UI_i::GetXplorerData( std::string commandName )
 {
-    std::map< std::string, VE_XML::Command >::iterator iter;
+    std::map< std::string, ves::open::xml::Command >::iterator iter;
     iter = m_commandNameMap.find( commandName );
     if( iter == m_commandNameMap.end() )
     {
         return m_commandNameMap[ "NULL" ];
     }
-    VE_XML::Command temp = iter->second;
+    ves::open::xml::Command temp = iter->second;
     m_commandNameMap.erase( iter );
    return temp;
 }

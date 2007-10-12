@@ -99,7 +99,7 @@ DataSetLoaderUI::DataSetLoaderUI( )
    paramBlock = 0;
 }
 
-DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::ModelWeakPtr veModel )
+DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
 {
    Create(parent, id, caption, pos, size, style, veModel );
 }
@@ -108,7 +108,7 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
  * DataSetLoaderUI creator
  */
 
-bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, VE_XML::VE_Model::ModelWeakPtr veModel )
+bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
 {
 ////@begin DataSetLoaderUI member initialisation
    m_veModel = veModel;
@@ -345,7 +345,7 @@ void DataSetLoaderUI::SetTextCtrls( void )
       size_t numProperties = paramBlock->GetNumberOfProperties();
       for ( size_t i = 0; i < numProperties; ++i )
       {
-         VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( i );
+         ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( i );
          if ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
          {
             //clear...then append
@@ -430,7 +430,7 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED(event) )
       wxString relativeDataSetPath( datasetFilename.GetFullPath() );
       relativeDataSetPath.Replace( _("\\"), _("/"), true );
       dataSetTextEntry->SetValue( relativeDataSetPath );
-      VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
+      ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
       if ( !tempDVP )
       {
          tempDVP = paramBlock->GetProperty( -1 );
@@ -469,7 +469,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
          wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
          relativeSurfaceDirPath.Replace( _("\\"), _("/"), true );
          surfaceDataText->SetValue( relativeSurfaceDirPath );
-         VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
+         ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
          if ( !tempDVP )
          {
             tempDVP = paramBlock->GetProperty( -1 );
@@ -482,7 +482,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
          wxString relativePrecomputedDirPath( surfaceDir.GetPath() );
          relativePrecomputedDirPath.Replace( _("\\"), _("/"), true );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
-         VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
+         ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
          if ( !tempDVP )
          {
             tempDVP = paramBlock->GetProperty( -1 );
@@ -514,7 +514,7 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED(event) )
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
    //wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
    //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
-   VE_Conductor::GUI_Utilities::TransformUI* transformPanel = new VE_Conductor::GUI_Utilities::TransformUI( &transformDialog, _("Transform Input"), paramBlock->GetTransform());
+   ves::conductor::util::TransformUI* transformPanel = new ves::conductor::util::TransformUI( &transformDialog, _("Transform Input"), paramBlock->GetTransform());
 
    if ( paramBlock )
    {
@@ -523,7 +523,7 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED(event) )
    }
    else
    {
-      mainSizer->Add( new VE_Conductor::GUI_Utilities::TransformUI( &transformDialog, _("Transform Input"), 0 ), 
+	   mainSizer->Add( new ves::conductorL::util::TransformUI( &transformDialog, _("Transform Input"), 0 ), 
                   -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
    }
 
@@ -590,7 +590,7 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED(event) )
    std::set< wxString >::iterator iter;
    for ( iter = textureDirs.begin(); iter != textureDirs.end(); ++iter )
    {
-      VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( -1 );
+      ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( -1 );
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( (*iter).c_str() ) ) );
       tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", tempStr );
       wxString* dirString = new wxString( (*iter) );
@@ -610,7 +610,7 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED(event) )
    size_t numProperties = paramBlock->GetNumberOfProperties();
    for ( size_t i = 0; i < numProperties; ++i )
    {
-      VE_XML::DataValuePair* tempDVP = paramBlock->GetProperty( i );
+      ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( i );
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( itemListBox24->GetStringSelection().c_str() ) ) );
       if ( ( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" ) && 
             ( tempDVP->GetDataString() == tempStr ) 
@@ -746,7 +746,7 @@ std::string DataSetLoaderUI::GetActiveDataSetName()
    return paramBlock->GetName();
 }
 /////////////////////////////////////////////////////////////
-VE_XML::ParameterBlock* DataSetLoaderUI::GetParamBlock()
+ves::open::xml::ParameterBlock* DataSetLoaderUI::GetParamBlock()
 {
    return paramBlock;
 }

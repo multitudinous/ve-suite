@@ -105,17 +105,17 @@ void CADOpacitySliderDlg::_onSlider(wxScrollEvent& WXUNUSED(event))
    //_commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
     _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
 
-    VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+    ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
     nodeID->SetDataType("STRING");
     nodeID->SetData(std::string("Node ID"),_cadID);
     _instructions.push_back(nodeID);
 
-    VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+    ves::open::xml::DataValuePair* componentToUpdate = new ves::open::xml::DataValuePair();
     componentToUpdate->SetDataType("STRING");
     componentToUpdate->SetData("Material Component","Opacity");
     _instructions.push_back(componentToUpdate);
 
-    VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+    ves::open::xml::DataValuePair* materialToUpdate = new ves::open::xml::DataValuePair();
     materialToUpdate->SetDataType("XMLOBJECT");
     materialToUpdate->SetData("Material",_material);
     _instructions.push_back(materialToUpdate);
@@ -133,7 +133,7 @@ void CADOpacitySliderDlg::_clearInstructions()
 //////////////////////////////////////////////////
 void CADOpacitySliderDlg::_sendCommandsToXplorer()
 {
-   VE_XML::Command* opacityCommand = new VE_XML::Command();
+   ves::open::xml::Command* opacityCommand = new ves::open::xml::Command();
 
    for(size_t i =0; i < _instructions.size(); i++)
    {
@@ -144,7 +144,7 @@ void CADOpacitySliderDlg::_sendCommandsToXplorer()
    {
       try
       {
-         VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(opacityCommand);
+		  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer(opacityCommand);
       }
       catch ( ... )
       {

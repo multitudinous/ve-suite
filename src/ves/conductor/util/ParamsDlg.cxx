@@ -151,7 +151,7 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 {
    std::string compName = ConvertUnicode( CompName.c_str() );
 
-   VE_XML::Command returnState;
+   ves::open::xml::Command returnState;
    
    //Block
    if(!DialogType.compare(wxT("input")))
@@ -174,30 +174,30 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
    }
 
 
-   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
    data->SetData(std::string("ModuleName"), compName );
     returnState.AddDataValuePair( data );
     
-   data = new VE_XML::DataValuePair();
+   data = new ves::open::xml::DataValuePair();
    data->SetData(std::string("ParamName"), ConvertUnicode( ParamChoice->GetStringSelection().c_str() ) );
     returnState.AddDataValuePair( data );
    
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
    
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
    std::string nw_str = serviceList->Query( status );
    //std::ofstream output("packet.txt");
    //output<<nw_str.c_str()<<std::endl;
-   VE_XML::XMLReaderWriter networkReader;
+   ves::open::xml::XMLReaderWriter networkReader;
    networkReader.UseStandaloneDOMDocumentManager();
    networkReader.ReadFromString();
    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-   VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+   ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
 
    unsigned int num = cmd->GetNumberOfDataValuePairs();     
    std::vector< std::string > dataName;
@@ -205,7 +205,7 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
    //output << "loop" << std::endl;
    for(int j = 0; j < static_cast<int>(num); j++)
    {
-      VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(j);
+      ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(j);
       
       //output<<j<<": " << pair->GetDataName().c_str()<<std::endl;
       //if(pair->GetDataName() == "Name")
@@ -269,25 +269,25 @@ void ParamsDlg::ParamChoiceSelected(wxCommandEvent& event )
 void ParamsDlg::SetButtonClick(wxCommandEvent& event)
 {  
    std::string compName = ConvertUnicode( CompName.c_str() );
-   VE_XML::Command returnState;
+   ves::open::xml::Command returnState;
    returnState.SetCommandName("setParam");
     
-   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
    data->SetData("ModuleName", compName);
     returnState.AddDataValuePair( data );
     
-   data = new VE_XML::DataValuePair();
+   data = new ves::open::xml::DataValuePair();
    data->SetData("ParamName", ConvertUnicode( ParamChoice->GetStringSelection().c_str() ));
     returnState.AddDataValuePair( data );
     
-   data = new VE_XML::DataValuePair();
+   data = new ves::open::xml::DataValuePair();
    data->SetData("ParamValue", ConvertUnicode( ValueEdit->GetValue().c_str() ));
     returnState.AddDataValuePair( data );
 
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
    
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -303,7 +303,7 @@ void ParamsDlg::SetCompName(const char * name)
    this->CompName = wxString(name,wxConvUTF8);
 }
 
-void ParamsDlg::SetServiceList(VE_Conductor::CORBAServiceList * serviceList)
+void ParamsDlg::SetServiceList(ves::conductor::util::CORBAServiceList * serviceList)
 {
    this->serviceList = serviceList;
 }

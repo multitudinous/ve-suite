@@ -561,12 +561,12 @@ void CADNodePropertiesDlg::_addAnimation(wxCommandEvent& event)
                   
                _commandName = std::string("CAD_ADD_ANIMATION_TO_NODE");
                   
-               VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+               ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
                nodeID->SetDataType("STRING");
                nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
                _instructions.push_back(nodeID);
       
-               VE_XML::DataValuePair* addAnimation = new VE_XML::DataValuePair();
+               ves::open::xml::DataValuePair* addAnimation = new ves::open::xml::DataValuePair();
                addAnimation->SetDataType("XMLOBJECT");
                addAnimation->SetData("Animation Info",
                                   &_cadNode->GetAnimation( ConvertUnicode( animationNameDlg.GetValue().GetData() ) ) );
@@ -715,17 +715,17 @@ void CADNodePropertiesDlg::_setActiveAttribute(wxListEvent& event)
       _cadNode->SetActiveAttribute( ConvertUnicode( attributeName.GetData() ) );
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
 
-      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
       nodeID->SetDataType("STRING");
       nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
 
-      VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* activeAttribute = new ves::open::xml::DataValuePair();
       activeAttribute->SetDataType("STRING");
       activeAttribute->SetData("Active Attribute",_cadNode->GetActiveAttribute().GetAttributeName());
       _instructions.push_back(activeAttribute);
 
-      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
       nodeType->SetDataType("STRING");
       nodeType->SetDataName(std::string("Node Type"));
       nodeType->SetDataString(_cadNode->GetNodeType());
@@ -744,17 +744,17 @@ void CADNodePropertiesDlg::_restoreDefaultAttribute(wxCommandEvent& event)
       ClearInstructions();
       _commandName = std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE");
 
-      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
       nodeID->SetDataType("STRING");
       nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
 
-      VE_XML::DataValuePair* activeAttribute = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* activeAttribute = new ves::open::xml::DataValuePair();
       activeAttribute->SetDataType("STRING");
       activeAttribute->SetData("Active Attribute","Default Attribute");
       _instructions.push_back(activeAttribute);
 
-      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
       nodeType->SetDataType("STRING");
       nodeType->SetDataName(std::string("Node Type"));
       nodeType->SetDataString(_cadNode->GetNodeType());
@@ -775,17 +775,17 @@ void CADNodePropertiesDlg::_removeAttribute(wxCommandEvent& event)
       _cadNode->RemoveAttribute(attributeName);
       _updateAvailableAttributes();
       
-      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
       nodeID->SetDataType("STRING");
       nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
 
-      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
       nodeType ->SetDataType("STRING");
       nodeType ->SetData("Node Type",_cadNode->GetNodeType());
       _instructions.push_back(nodeType );
       
-      VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* addAttribute = new ves::open::xml::DataValuePair();
       addAttribute->SetDataType("STRING");
       addAttribute->SetData("Attribute Name",attributeName);
       _instructions.push_back(addAttribute);
@@ -805,10 +805,10 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          std::stringstream nMaterials;
          nMaterials<<_nMaterials;
 
-         VE_XML::VE_CAD::CADAttribute newAttribute;
+         ves::open::xml::cad::CADAttribute newAttribute;
          newAttribute.SetAttributeType("Material");
          
-         VE_XML::VE_CAD::CADMaterial newMaterial;
+         ves::open::xml::cad::CADMaterial newMaterial;
          
          wxTextEntryDialog materialNameDlg(this, 
                                        _("New Material Name"),
@@ -832,12 +832,12 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
 
          _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
                         
-         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
          nodeID->SetDataType("STRING");
          nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
       
-         VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* addAttribute = new ves::open::xml::DataValuePair();
          addAttribute->SetDataType("XMLOBJECT");
          addAttribute->SetData("Attribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
          _instructions.push_back(addAttribute);
@@ -856,24 +856,24 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
          {
             {
                {
-                  VE_XML::VE_CAD::CADAttribute newAttribute;// = new CADAttribute();
+                  ves::open::xml::cad::CADAttribute newAttribute;// = new CADAttribute();
                   newAttribute.SetAttributeType("Program");
                   
                   wxFileName veaFileName( dialog.GetPath() );
                   veaFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
                   wxString veaFileNamePath( wxString( "./", wxConvUTF8 ) + veaFileName.GetFullPath() );
 
-                  VE_XML::XMLReaderWriter shaderLoader;
+                  ves::open::xml::XMLReaderWriter shaderLoader;
                   shaderLoader.UseStandaloneDOMDocumentManager();
                   shaderLoader.ReadFromFile();
                   shaderLoader.ReadXMLData( ConvertUnicode( veaFileNamePath ),"Shader","Program");
               
-                  VE_XML::VE_Shader::Program* loadedShader = 0;
+                  ves::open::xml::shader::Program* loadedShader = 0;
                   if(shaderLoader.GetLoadedXMLObjects().at(0))
                   {
                      try
                      {
-                        loadedShader = dynamic_cast<VE_XML::VE_Shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
+                        loadedShader = dynamic_cast<ves::open::xml::shader::Program*>(shaderLoader.GetLoadedXMLObjects().at(0));
                         if(AttributeExists(loadedShader->GetProgramName().c_str()))
                         {
                            wxMessageBox( _("Attribute with this name is already loaded."), 
@@ -888,12 +888,12 @@ void CADNodePropertiesDlg::_addAttribute(wxCommandEvent& WXUNUSED(event))
 
                         _commandName = std::string("CAD_ADD_ATTRIBUTE_TO_NODE");
                         
-                        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+                        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
                         nodeID->SetDataType("STRING");
                         nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
                         _instructions.push_back(nodeID);
       
-                        VE_XML::DataValuePair* addAttribute = new VE_XML::DataValuePair();
+                        ves::open::xml::DataValuePair* addAttribute = new ves::open::xml::DataValuePair();
                         addAttribute->SetDataType("XMLOBJECT");
                         addAttribute->SetData("Attribute",&_cadNode->GetAttribute(newAttribute.GetAttributeName()));
                         _instructions.push_back(addAttribute);
@@ -1014,17 +1014,17 @@ void CADNodePropertiesDlg::_updateTransform(wxSpinEvent& WXUNUSED(event))
 
       _commandName = std::string("CAD_TRANSFORM_UPDATE");
 
-      VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
       nodeID->SetDataType("STRING");
       nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
       _instructions.push_back(nodeID);
       
-      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* updateTransform = new ves::open::xml::DataValuePair();
       updateTransform->SetDataType("XMLOBJECT");
       updateTransform->SetData("Transform",_cadNode->GetTransform());
       _instructions.push_back(updateTransform);
 
-      VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
       nodeType->SetDataType("STRING");
       nodeType->SetDataName(std::string("Node Type"));
       nodeType->SetDataString(_cadNode->GetNodeType());
@@ -1041,18 +1041,18 @@ void CADNodePropertiesDlg::_updatePhysicsProperties( wxSpinEvent& event )
     {
         _commandName = std::string( "PHYSICS_PROPERTIES" );
 
-        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
         _instructions.push_back( nodeID );
 
-        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
         nodeType->SetDataType( "STRING" );
         nodeType->SetDataName(std::string( "Node Type" ) );
         nodeType->SetDataString( _cadNode->GetNodeType() );
         _instructions.push_back( nodeType );
 
-        VE_XML::DataValuePair* physicsPropertyValue = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePair* physicsPropertyValue = new ves::open::xml::DataValuePair();
         physicsPropertyValue->SetDataType( "DOUBLE" );
 
         if( event.GetId() == PHYSICS_MASS_ID )
@@ -1084,18 +1084,18 @@ void CADNodePropertiesDlg::_updatePhysicsMesh( wxCommandEvent& event )
     {
         _commandName = std::string( "PHYSICS_MESH" );
 
-        VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
         _instructions.push_back( nodeID );
 
-        VE_XML::DataValuePair* nodeType = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
         nodeType->SetDataType( "STRING" );
         nodeType->SetDataName(std::string( "Node Type" ) );
         nodeType->SetDataString( _cadNode->GetNodeType() );
         _instructions.push_back( nodeType );
 
-        VE_XML::DataValuePair* meshType = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePair* meshType = new ves::open::xml::DataValuePair();
         meshType->SetDataType( "STRING" );
         meshType->SetDataName( std::string( "Mesh Type" ) );
         meshType->SetDataString( ConvertUnicode( meshProperties->GetStringSelection() ) );
@@ -1144,17 +1144,17 @@ void CADNodePropertiesDlg::_showFaceSelectDialog(wxCommandEvent& WXUNUSED(event)
          ClearInstructions(); 
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
 
-         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
          nodeID->SetDataType("STRING");
          nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
 
-         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* componentToUpdate = new ves::open::xml::DataValuePair();
          componentToUpdate->SetDataType("STRING");
          componentToUpdate->SetData("Mode","Face");
          _instructions.push_back(componentToUpdate);
 
-         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* materialToUpdate = new ves::open::xml::DataValuePair();
          materialToUpdate->SetDataType("XMLOBJECT");
          materialToUpdate->SetData("Material", material);
          _instructions.push_back(materialToUpdate);
@@ -1207,17 +1207,17 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog(wxCommandEvent& WXUNUSED(e
          //_commandName = std::string("CAD_ATTRIBUTE_MATERIAL_COLOR_MODE");
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_MODE");
 
-         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
          nodeID->SetDataType("STRING");
          nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
 
-         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* componentToUpdate = new ves::open::xml::DataValuePair();
          componentToUpdate->SetDataType("STRING");
          componentToUpdate->SetData("Mode","Color");
          _instructions.push_back(componentToUpdate);
 
-         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* materialToUpdate = new ves::open::xml::DataValuePair();
          materialToUpdate->SetDataType("XMLOBJECT");
          materialToUpdate->SetData("Material",material);
          _instructions.push_back(materialToUpdate);
@@ -1234,7 +1234,7 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
    {
       CADAttribute* activeAttribute = &_cadNode->GetActiveAttribute();
       CADMaterial* material = activeAttribute->GetMaterial();
-      VE_XML::FloatArray* activeComponent = 0;
+      ves::open::xml::FloatArray* activeComponent = 0;
       std::string updateComponent = "";
 
       std::vector<double> currentColor;
@@ -1297,16 +1297,16 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
          ClearInstructions(); 
          _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
 
-         VE_XML::DataValuePair* nodeID = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
          nodeID->SetData(std::string("Node ID"),_cadNode->GetID());
          _instructions.push_back(nodeID);
 
-         VE_XML::DataValuePair* componentToUpdate = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* componentToUpdate = new ves::open::xml::DataValuePair();
          componentToUpdate->SetDataType("STRING");
          componentToUpdate->SetData("Material Component",updateComponent);
          _instructions.push_back(componentToUpdate);
 
-         VE_XML::DataValuePair* materialToUpdate = new VE_XML::DataValuePair();
+         ves::open::xml::DataValuePair* materialToUpdate = new ves::open::xml::DataValuePair();
          materialToUpdate->SetDataType("XMLOBJECT");
          materialToUpdate->SetData("Material",material);
          _instructions.push_back(materialToUpdate);
@@ -1322,7 +1322,7 @@ void CADNodePropertiesDlg::_showColorDialog(wxCommandEvent& event)
 void CADNodePropertiesDlg::_sendCommandsToXplorer()
 {
    //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
-   VE_XML::Command* cadCommand = new VE_XML::Command();
+   ves::open::xml::Command* cadCommand = new ves::open::xml::Command();
 
    for(size_t i =0; i < _instructions.size(); i++)
    {
@@ -1332,7 +1332,7 @@ void CADNodePropertiesDlg::_sendCommandsToXplorer()
    cadCommand->SetCommandName(_commandName);
    try
    {
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(cadCommand);
+	   ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer(cadCommand);
    }
    catch ( ... )
    {

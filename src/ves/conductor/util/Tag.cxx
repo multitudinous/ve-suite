@@ -50,7 +50,7 @@ using namespace ves::conductor::util;
 Tag::Tag( wxScrolledWindow* designCanvas )
 {
     canvas = designCanvas;
-    VE_XML::VE_Model::Tag temp;
+	ves::open::xml::model::Tag temp;
     uuid = temp.GetID();
 }
 ////////////////////////////////////////////////
@@ -95,7 +95,7 @@ wxString* Tag::GetTagText( void )
     return &(text);
 }
 ////////////////////////////////////////////////
-VE_Conductor::GUI_Utilities::Polygon* Tag::GetPolygon( void )
+ves::conductor::util::Polygon* Tag::GetPolygon( void )
 {
     return &(poly);
 }
@@ -214,7 +214,7 @@ void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
     dc.SetBrush(old_brush);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag )
+void Tag::SetVETagPtr( ves::open::xml::model::TagPtr inputTag )
 {
     text = wxString( inputTag->GetText().c_str(), wxConvUTF8 );
     cons[0].x = inputTag->GetPoint( 0 )->GetPoint().first;
@@ -226,25 +226,25 @@ void Tag::SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag )
     uuid = inputTag->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::TagPtr Tag::GetVETagPtr()
+ves::open::xml::model::TagPtr Tag::GetVETagPtr()
 {
-    VE_XML::VE_Model::TagPtr tagPtr = new VE_XML::VE_Model::Tag();
+	ves::open::xml::model::TagPtr tagPtr = new ves::open::xml::model::Tag();
     tagPtr->SetText( ConvertUnicode( text.c_str() ) );
     tagPtr->SetID( uuid );
     //Order is important below
-    VE_XML::VE_Model::PointPtr con0Ptr = new VE_XML::VE_Model::Point();
+	ves::open::xml::model::PointPtr con0Ptr = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > point0;
     point0.first = cons[0].x;
     point0.second = cons[0].y;
     con0Ptr->SetPoint( point0 );
     tagPtr->AddPoint( con0Ptr );
-    VE_XML::VE_Model::PointPtr con1Ptr = new VE_XML::VE_Model::Point();
+	ves::open::xml::model::PointPtr con1Ptr = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > point1;
     point1.first = cons[1].x;
     point1.second = cons[1].y;
     con1Ptr->SetPoint( point1 );
     tagPtr->AddPoint( con1Ptr );
-    VE_XML::VE_Model::PointPtr con2Ptr = new VE_XML::VE_Model::Point();
+	ves::open::xml::model::PointPtr con2Ptr = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > point2;
     point2.first = box.x;
     point2.second = box.y;

@@ -132,14 +132,14 @@ void TextureBasedIsosurfaceDlg::SetAvailableScalars(wxArrayString scalarNames)
 ////////////////////////////////////////////////////////////////////////
 void TextureBasedIsosurfaceDlg::_onUpdateIsoSurface( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::Command* newCommand = new VE_XML::Command();
+   ves::open::xml::Command* newCommand = new ves::open::xml::Command();
    newCommand->SetCommandName("UPDATE_ISOSURFACE_SETTINGS");
    
-   VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* isosurfaceValue = new ves::open::xml::DataValuePair();
    isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSurfaceSlider->GetValue())));
    newCommand->AddDataValuePair(isosurfaceValue);
 
-   VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* colorByScalar = new ves::open::xml::DataValuePair();
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
 

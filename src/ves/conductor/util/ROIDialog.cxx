@@ -145,19 +145,19 @@ void ROIDialog::ROIMinSliderCallback::SliderOperation()
 {
    _roidlg->SetCommandName("TB_ROI_UPDATE");
 
-   VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
    coordinate->SetDataType("STRING");
    coordinate->SetDataName(std::string("Coordinate"));
    coordinate->SetDataString(_direction);
    _roidlg->AddInstruction(coordinate);
 
-   VE_XML::DataValuePair* direction = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
    direction->SetDataType("STRING");
    direction->SetDataName(std::string("Direction"));
    direction->SetDataString("Positive");
    _roidlg->AddInstruction(direction);
 
-   VE_XML::DataValuePair* value = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair();
    value->SetData("ROI Value",static_cast<double>(_dualSlider->GetMinSliderValue())/100.0);
    _roidlg->AddInstruction(value);
 
@@ -168,19 +168,19 @@ void ROIDialog::ROIMinSliderCallback::SliderOperation()
 void ROIDialog::ROIMaxSliderCallback::SliderOperation()     
 {
    _roidlg->SetCommandName("TB_ROI_UPDATE");
-   VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
    coordinate->SetDataType("STRING");
    coordinate->SetDataName(std::string("Coordinate"));
    coordinate->SetDataString(_direction);
    _roidlg->AddInstruction(coordinate);
 
-   VE_XML::DataValuePair* direction = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
    direction->SetDataType("STRING");
    direction->SetDataName(std::string("Direction"));
    direction->SetDataString("Negative");
    _roidlg->AddInstruction(direction);
 
-   VE_XML::DataValuePair* value = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair();
    value->SetData("ROI Value",static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
    _roidlg->AddInstruction(value);
 
@@ -192,24 +192,24 @@ void ROIDialog::ROIBothMoveCallback::SliderOperation()
 {
    _roidlg->SetCommandName("TB_ROI_UPDATE");
 
-   VE_XML::DataValuePair* coordinate = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
    coordinate->SetDataType("STRING");
    coordinate->SetDataName(std::string("Coordinate"));
    coordinate->SetDataString(_direction);
    _roidlg->AddInstruction(coordinate);
 
-   VE_XML::DataValuePair* direction = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
    direction->SetDataType("STRING");
    direction->SetDataName(std::string("Direction"));
    direction->SetDataString("Both");
    _roidlg->AddInstruction(direction);
 
 
-   VE_XML::DataValuePair* minvalue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* minvalue = new ves::open::xml::DataValuePair();
    minvalue->SetData("ROI Min Value",static_cast<double>(_dualSlider->GetMinSliderValue())/100.0);
    _roidlg->AddInstruction(minvalue);
 
-   VE_XML::DataValuePair* maxvalue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* maxvalue = new ves::open::xml::DataValuePair();
    maxvalue->SetData("ROI Max Value",static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
    _roidlg->AddInstruction(maxvalue);
 
@@ -222,7 +222,7 @@ void ROIDialog::SetCommandName(std::string newName)
    _commandName = newName;
 }
 ///////////////////////////////////////////////////////////////////
-void ROIDialog::AddInstruction(VE_XML::DataValuePair* newInstruct)
+void ROIDialog::AddInstruction(ves::open::xml::DataValuePair* newInstruct)
 {
    _instructions.push_back(newInstruct);
 }

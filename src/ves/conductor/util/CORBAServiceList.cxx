@@ -311,7 +311,7 @@ void CORBAServiceList::CheckORBWorkLoad( void )
                 orb->perform_work();
             }
             
-            VE_XML::Command textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
+            ves::open::xml::Command textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
             if( textOutput.GetCommandName() != "NULL" )
             {
                 GetMessageLog()->SetMessage( textOutput.GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
@@ -425,7 +425,7 @@ void CORBAServiceList::CreateCORBAModule( void )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
+bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::Command* veCommand )
 {
     //Calling function is responsible for the command memory
     if( !IsConnectedToXplorer() )
@@ -434,12 +434,12 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
     }
 
     //Now send the data to xplorer
-    VE_XML::XMLReaderWriter netowrkWriter;
+    ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // New need to destroy document and send it
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< VE_XML::XMLObject*, 
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, 
         std::string >( veCommand, "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
@@ -461,7 +461,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::Command* veCommand )
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::CommandWeakPtr veCommand )
+bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::CommandWeakPtr veCommand )
 {
     //Calling function is responsible for the command memory
     if( !IsConnectedToXplorer() )
@@ -470,12 +470,12 @@ bool CORBAServiceList::SendCommandStringToXplorer( VE_XML::CommandWeakPtr veComm
     }
     
     //Now send the data to xplorer
-    VE_XML::XMLReaderWriter netowrkWriter;
+    ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     
     // New need to destroy document and send it
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( &(*veCommand), "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &(*veCommand), "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
     
@@ -530,7 +530,7 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
    return true;
 }
 ///////////////////////////////////////////////////////////////////////
-VE_XML::Command CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
+ves::open::xml::Command CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
 {
     return p_ui_i->GetXplorerData( commandName );
 }

@@ -90,7 +90,7 @@ m_veLink( 0 )
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
     m_uuid = "notSet";
 	highlightFlag = false;
-    m_veLink = new VE_XML::VE_Model::Link();
+	m_veLink = new ves::open::xml::model::Link();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -110,7 +110,7 @@ Link::Link( const Link& input )
     cosa = input.cosa;
     if( input.m_veLink )
     {
-        m_veLink = new VE_XML::VE_Model::Link( *(input.m_veLink) );
+		m_veLink = new ves::open::xml::model::Link( *(input.m_veLink) );
     }
     cons = input.cons;
     poly = input.poly;
@@ -136,7 +136,7 @@ Link& Link::operator= ( const Link& input )
         cosa = input.cosa;
         if( input.m_veLink )
         {
-            m_veLink = new VE_XML::VE_Model::Link( *(input.m_veLink) );
+			m_veLink = new ves::open::xml::model::Link( *(input.m_veLink) );
         }
         cons.clear();
         cons = input.cons;
@@ -238,7 +238,7 @@ wxString Link::GetName()
 	return linkName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Conductor::GUI_Utilities::Polygon* Link::GetPolygon( void )
+ves::conductor::util::Polygon* Link::GetPolygon( void )
 {
    return &(poly);
 }
@@ -359,7 +359,7 @@ void Link::OnShowLinkContent(wxCommandEvent& event )
     int mod = GetFromModule();
     int port = GetFromPort();
     
-    if ( !VE_Conductor::CORBAServiceList::instance()->IsConnectedToCE() )
+	if ( !ves::conductor::util::CORBAServiceList::instance()->IsConnectedToCE() )
     {
         return;
     }
@@ -370,7 +370,7 @@ void Link::OnShowLinkContent(wxCommandEvent& event )
     }
     catch ( CORBA::Exception& ) 
     {
-        VE_Conductor::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n");
+		ves::conductor::util::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n");
         return;
     }
     
@@ -412,37 +412,37 @@ void Link::OnQueryStreamInputs(wxCommandEvent& event )
 
 	std::string compName = ConvertUnicode( GetName().c_str() );
     
-	VE_XML::Command returnState;
+	ves::open::xml::Command returnState;
 	returnState.SetCommandName("getStreamInputModuleParamList");
-	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+	ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName);
     returnState.AddDataValuePair( data );
 	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
 	
-	VE_XML::XMLReaderWriter commandWriter;
+	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
 	commandWriter.WriteXMLDocument( nodes, status, "Command" );
 	
 	//Get results
-    CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+	CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
 	std::string nw_str = serviceList->Query( status );
 	wxString title( compName.c_str(),wxConvUTF8);
 	
 	ParamsDlg* params = new ParamsDlg( networkFrame );
 	params->SetIsBlock(false);
     //params->SetSize( dialogSize );
-	VE_XML::XMLReaderWriter networkReader;
+	ves::open::xml::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
 	
 	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
     
-	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+	ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+	ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
     
@@ -459,23 +459,23 @@ void Link::OnQueryStreamInputs(wxCommandEvent& event )
 void Link::OnQueryStreamOutputs(wxCommandEvent& event )
 {  
     UILINK_CHECKID( event )
-
-	CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+		
+	CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
 	//serviceList->GetMessageLog()->SetMessage( "QueryOutput" );
     
 	//UIPLUGIN_CHECKID( event )
 	std::string compName = ConvertUnicode( GetName().c_str() );
     
-	VE_XML::Command returnState;
+	ves::open::xml::Command returnState;
 	returnState.SetCommandName("getStreamOutputModuleParamList");
-	VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+	ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
 	data->SetData(std::string("ModuleName"), compName);
     returnState.AddDataValuePair( data );
 	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
 	
-	VE_XML::XMLReaderWriter commandWriter;
+	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
 	commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -487,13 +487,13 @@ void Link::OnQueryStreamOutputs(wxCommandEvent& event )
 	ParamsDlg * params = new ParamsDlg( networkFrame );
 	params->SetIsBlock(false);
     //params->SetSize( dialogSize );
-	VE_XML::XMLReaderWriter networkReader;
+	ves::open::xml::XMLReaderWriter networkReader;
 	networkReader.UseStandaloneDOMDocumentManager();
 	networkReader.ReadFromString();
 	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-	VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+	std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+	ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+	ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
 	std::vector< std::string > temp_vector;
 	pair->GetData(temp_vector);
     
@@ -559,11 +559,11 @@ void Link::OnDelLink(wxCommandEvent& event )
 void Link::OnAddLinkCon(wxCommandEvent& event )
 {  
     UILINK_CHECKID( event )
-    
-    VE_Conductor::GUI_Utilities::Polygon linkline;
+		
+	ves::conductor::util::Polygon linkline;
     *(linkline.GetPolygon()) = cons;
     
-    VE_Conductor::GUI_Utilities::Polygon Near;
+	ves::conductor::util::Polygon Near;
     linkline.nearpnt( action_point, Near );
     
     size_t i;
@@ -579,7 +579,7 @@ void Link::OnAddLinkCon(wxCommandEvent& event )
         }
     }
     
-    VE_Conductor::GUI_Utilities::Polygon temp;
+	ves::conductor::util::Polygon temp;
     for( size_t j=0; j < linkline.GetNumberOfPoints(); ++j )
     {
         temp.SetPoint( *(linkline.GetPoint( j )) );
@@ -734,7 +734,7 @@ void Link::DrawLink( wxDC* dc )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetLink( VE_XML::VE_Model::LinkWeakPtr inputLink )
+void Link::SetLink( ves::open::xml::model::LinkWeakPtr inputLink )
 {
     m_veLink = inputLink;
     
@@ -773,7 +773,7 @@ void Link::SetLink( VE_XML::VE_Model::LinkWeakPtr inputLink )
     SetUUID( m_veLink->GetID() );    
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::LinkWeakPtr Link::GetLink()
+ves::open::xml::model::LinkWeakPtr Link::GetLink()
 {
     //xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].
     //                                   GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );

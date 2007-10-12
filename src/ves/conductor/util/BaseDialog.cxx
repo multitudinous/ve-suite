@@ -88,7 +88,7 @@ void BaseDialog::_addCancelButton(wxSizer* buttonRowSizer)
 void BaseDialog::_sendCommandsToXplorer()
 {
    //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
-   VE_XML::Command* newCommand = new VE_XML::Command();
+	ves::open::xml::Command* newCommand = new ves::open::xml::Command();
 
    for(size_t i =0; i < _instructions.size(); i++)
    {
@@ -99,13 +99,13 @@ void BaseDialog::_sendCommandsToXplorer()
 
    std::string commandString("returnString");
 
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    commandWriter.UseStandaloneDOMDocumentManager();
    
-   std::pair<VE_XML::Command*,std::string> nodeTagPair;
+   std::pair<ves::open::xml::Command*,std::string> nodeTagPair;
    nodeTagPair.first = newCommand;
    nodeTagPair.second = std::string("vecommand");
-   std::vector< std::pair<VE_XML::XMLObject*,std::string> > nodeToWrite;
+   std::vector< std::pair<ves::open::xml::XMLObject*,std::string> > nodeToWrite;
    nodeToWrite.push_back(nodeTagPair);
 
    commandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
@@ -121,7 +121,7 @@ void BaseDialog::_sendCommandsToXplorer()
          //std::cout<<tempDoc<<std::endl;
          // CORBA releases the allocated memory so we do not have to
          //_vjObsPtr->SetCommandString( tempDoc );
-         VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(newCommand);
+         lConductor::CORBAServiceList::instance()->SendCommandStringToXplorer(newCommand);
          delete newCommand;
       }
       catch ( ... )

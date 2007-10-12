@@ -164,11 +164,11 @@ void ScalarToolsDialog::ScalarToolsSliderCallback::SliderOperation()
    _scalarDlg->ClearInstructions();
    _scalarDlg->SetCommandName("TB_SCALAR_RANGE");
 
-   VE_XML::DataValuePair* minRangevalue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* minRangevalue = new ves::open::xml::DataValuePair();
    minRangevalue ->SetData("Mininum Scalar Range",static_cast<double>(_dualSlider->GetMinSliderValue())/100.0);
    _scalarDlg->AddInstruction(minRangevalue );
 
-   VE_XML::DataValuePair* maxRangevalue  = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* maxRangevalue  = new ves::open::xml::DataValuePair();
    maxRangevalue->SetData("Maximum Scalar Range",static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
    _scalarDlg->AddInstruction(maxRangevalue );
 
@@ -181,7 +181,7 @@ void ScalarToolsDialog::ScalarToolsStopSliderCallback::SliderOperation()
    _scalarDlg->ClearInstructions();
    _scalarDlg->SetCommandName("TB_FULL_PREINTEGRATE_UPDATE");
 
-   VE_XML::DataValuePair* fullUpdate = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* fullUpdate = new ves::open::xml::DataValuePair();
    unsigned int on = 1;
    fullUpdate ->SetData("Recalculate Pre-Integration",on);
    _scalarDlg->AddInstruction(fullUpdate );
@@ -208,20 +208,20 @@ void ScalarToolsDialog::_updateActiveScalar(wxCommandEvent& command)
    ClearInstructions();
 
    _commandName = "TB_ACTIVE_SOLUTION";
-  _activeScalar = _scalarSelection->GetValue();
-   VE_XML::DataValuePair* name = new VE_XML::DataValuePair();
+   _activeScalar = _scalarSelection->GetValue();
+   ves::open::xml::DataValuePair* name = new ves::open::xml::DataValuePair();
    name->SetData("Active Dataset", ConvertUnicode( _activeScalar.GetData() ) );
    _instructions.push_back(name);
 
-   VE_XML::DataValuePair* type = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* type = new ves::open::xml::DataValuePair();
    type->SetData("Data Type","Scalar");
    _instructions.push_back(type);
 
-   VE_XML::DataValuePair* minRangevalue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* minRangevalue = new ves::open::xml::DataValuePair();
    minRangevalue->SetData("Mininum Scalar Range",static_cast<double>(_scalarRange->GetMinSliderValue())/100.0);
    _instructions.push_back(minRangevalue );
 
-   VE_XML::DataValuePair* maxRangevalue  = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* maxRangevalue  = new ves::open::xml::DataValuePair();
    maxRangevalue->SetData("Maximum Scalar Range",static_cast<double>(_scalarRange->GetMaxSliderValue())/100.0);
    _instructions.push_back(maxRangevalue );
 
@@ -237,7 +237,7 @@ void ScalarToolsDialog::_updateActiveScalarShaderManager(wxCommandEvent& command
 
    _commandName = "TB_SET_ACTIVE_SHADER_MANAGER";
   
-   VE_XML::DataValuePair* name = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* name = new ves::open::xml::DataValuePair();
    name->SetData("Active Shader Manager", ConvertUnicode( _shaderManagerSelection->GetValue().GetData() ) );
    _instructions.push_back(name);
 
@@ -275,7 +275,7 @@ void ScalarToolsDialog::_onPreIntegrate(wxScrollEvent& command)
    _commandName = "TB_FULL_PREINTEGRATE_UPDATE";
    
    unsigned int on = 1;
-   VE_XML::DataValuePair* fullUpdate = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* fullUpdate = new ves::open::xml::DataValuePair();
    fullUpdate ->SetData("Recalculate Pre-Integration",on);
    AddInstruction(fullUpdate );
 
@@ -288,11 +288,11 @@ void ScalarToolsDialog::_onUpdateIsosurface(wxScrollEvent& command)
    ClearInstructions();
    _commandName = "TB_UPDATE_ISOSURFACE";
    
-   VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* isosurfaceValue = new ves::open::xml::DataValuePair();
    isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSlider->GetValue()/100.0)));
    _instructions.push_back(isosurfaceValue);
 
-   VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* colorByScalar = new ves::open::xml::DataValuePair();
    colorByScalar->SetData("Color By Scalar", ConvertUnicode( _colorByScalarName.GetData() ) );
    _instructions.push_back(colorByScalar);
 
@@ -305,7 +305,7 @@ void ScalarToolsDialog::_onUpdateNumberOfSlicePlanes(wxScrollEvent& command)
    ClearInstructions();
    _commandName = "TB_UPDATE_NUMBER_SLICE_PLANES";
    
-   VE_XML::DataValuePair* nPlanesValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* nPlanesValue = new ves::open::xml::DataValuePair();
    nPlanesValue->SetData("Number of Slice Planes",static_cast<unsigned int>((_numSlicesSlider->GetValue())));
    _instructions.push_back(nPlanesValue);
 
@@ -322,7 +322,7 @@ void ScalarToolsDialog::_onEnableIsoSurface(wxCommandEvent& command)
    ClearInstructions();
    _commandName = "TB_ISOSURFACE_ENABLE";
    
-   VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* isosurfaceValue = new ves::open::xml::DataValuePair();
    isosurfaceValue->SetData("Iso-Surface State",(_isosurfaceCheck->GetValue())?"On":"Off");
    _instructions.push_back(isosurfaceValue);
 
@@ -335,7 +335,7 @@ void ScalarToolsDialog::SetCommandName(std::string newName)
    _commandName = newName;
 }
 //////////////////////////////////////////////////////////////////////////
-void ScalarToolsDialog::AddInstruction(VE_XML::DataValuePair* newInstruct)
+void ScalarToolsDialog::AddInstruction(ves::open::xml::DataValuePair* newInstruct)
 {
    _instructions.push_back(newInstruct);
 }

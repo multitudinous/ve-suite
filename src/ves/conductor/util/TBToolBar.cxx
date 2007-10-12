@@ -68,7 +68,7 @@ END_EVENT_TABLE()
 using namespace ves::conductor::util;
 //////////////////////////////////////////////////////////////////
 TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
-:VE_Conductor::GUI_Utilities::BaseDialog(parent,id,"Texture-Based Tools")
+:ves::conductor::util::BaseDialog(parent,id,"Texture-Based Tools")
 {
    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -209,7 +209,7 @@ void TextureBasedToolBar::_buildGUI()
 
    ///the sub dialogs
    ///ROI Dialog
-   _roiDlg = new VE_Conductor::GUI_Utilities::ROIDialog(this,-1, "Volume Clipping Bounds" );
+   _roiDlg = new ves::conductor::util::ROIDialog(this,-1, "Volume Clipping Bounds" );
    //_roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
    _scalarToolsDlg = new ScalarToolsDialog(this,-1, "Scalar Tools" );
    _transferFunctionDlg = new TransferFunctionDialog(this,-1,"Transfer Functions");
@@ -314,7 +314,7 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
    
    if(_availableScalars.GetCount())
    {
-      VE_XML::DataValuePair* activateCommand = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
       activateCommand->SetDataType("STRING");
       activateCommand->SetDataName(std::string("Active Scalar"));
       activateCommand->SetDataString( ConvertUnicode( _availableScalars[0].GetData() ) );
@@ -323,7 +323,7 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
    }
    else if(_availableVectors.GetCount())
    {
-      VE_XML::DataValuePair* activateCommand = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
       activateCommand->SetDataType("STRING");
       activateCommand->SetDataName(std::string("Active Vector"));
       activateCommand->SetDataString( ConvertUnicode(_availableVectors[0].GetData()));

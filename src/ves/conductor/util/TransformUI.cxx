@@ -56,7 +56,7 @@ BEGIN_EVENT_TABLE( TransformUI,wxPanel)
    EVT_CHECKBOX( UNIFORM_SCALE,      TransformUI::UpdateUniformScale )
 END_EVENT_TABLE()
 
-TransformUI::TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform )
+TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::Transform* transform )
 :wxPanel( parent, TRANSFORM_PANEL_ID, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL)
 {
    this->transform = transform;
@@ -240,12 +240,12 @@ std::cout<<"YTRANSFORM :"<<temp.at(1)<<std::endl;
 
       
 
-      VE_XML::DataValuePair* paramBlockID = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* paramBlockID = new ves::open::xml::DataValuePair();
       paramBlockID->SetData(std::string("Parameter Block ID"), _id);
       _instructions.push_back(paramBlockID);
 //std::cout<<"NO"<<std::endl;}      
 std::cout<<"PARAMID :"<<_id<<std::endl;
-      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* updateTransform = new ves::open::xml::DataValuePair();
       updateTransform->SetData("Transform", _transform);
       _instructions.push_back(updateTransform);
 std::cout<<"TRANSFORM :"<<std::endl;
@@ -258,13 +258,13 @@ std::cout<<"TRANSFORM :"<<std::endl;
 //      _sendCommandsToXplorer();
 
       ///send command to xplorer
-      VE_XML::Command* veCommand = new VE_XML::Command();
+      ves::open::xml::Command* veCommand = new ves::open::xml::Command();
       veCommand->SetCommandName( "DATA_TRANSFORM_UPDATE" );
       veCommand->AddDataValuePair( paramBlockID );
       veCommand->AddDataValuePair( updateTransform );
    //   serviceList->SendCommandStringToXplorer( veCommand );
 
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+	  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
       //clean up memory
       delete veCommand;
@@ -276,7 +276,7 @@ void TransformUI::UpdateUniformScale(wxCommandEvent &event)
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void TransformUI::SetParamBlockTransform( VE_XML::Transform* transform )
+void TransformUI::SetParamBlockTransform( ves::open::xml::Transform* transform )
 {
    _transform = transform;
 }
