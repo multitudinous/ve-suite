@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <ves/xplorer/event/DisplayInformation.h>
+#include <ves/xplorer/environment/DisplayInformation.h>
 
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 
@@ -38,7 +38,7 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
-#include <ves/xplorer/event/WCS.h>
+#include <ves/xplorer/environment/WCS.h>
 
 #include <osg/Geode>
 #include <osg/Geometry>

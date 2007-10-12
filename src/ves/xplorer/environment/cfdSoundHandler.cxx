@@ -29,15 +29,12 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include <ves/xplorer/event/viz/cfdSoundHandler.h>
+#include <ves/xplorer/environment/cfdSoundHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/event/viz/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdReadParam.h>
+#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/util/fileIO.h>
-#include <ves/xplorer/event/viz/cfdSound.h>
+#include <ves/xplorer/environment/cfdSound.h>
 
 #include <iostream>
 #include <fstream>
@@ -49,7 +46,7 @@ using namespace VE_Util;
 cfdSoundHandler::cfdSoundHandler( std::string param )
 {
    _param = param;
-   this->_readParam = new cfdReadParam();
+   //this->_readParam = new cfdReadParam();
 
    if ( param.empty() )
       return;
@@ -71,7 +68,7 @@ cfdSoundHandler::cfdSoundHandler( std::string param )
 
 cfdSoundHandler::~cfdSoundHandler( void )
 {
-   delete this->_readParam;
+   //delete this->_readParam;
 
    if ( this->sounds.size() > 0 )
    {
@@ -106,7 +103,7 @@ std::vector< cfdSound* > cfdSoundHandler::GetSounds( void )
 }
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SOUNDS )
+  /* if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SOUNDS )
    {
       this->_readParam->convertDecimalToBinary( (long)
             commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
@@ -139,7 +136,7 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
       }      
 
       return true;
-   }
+   }*/
    return false;
 }
 

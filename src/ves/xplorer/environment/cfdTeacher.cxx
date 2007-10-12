@@ -30,15 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/viz/cfdTeacher.h>
+#include <ves/xplorer/environment/cfdTeacher.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/xplorer/event/viz/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
+#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdDebug.h>
 

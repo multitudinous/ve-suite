@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/viz/cfdQuatCam.h>
+#include <ves/xplorer/environment/cfdQuatCam.h>
 #ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>

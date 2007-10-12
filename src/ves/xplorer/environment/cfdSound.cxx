@@ -29,9 +29,8 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/viz/cfdSound.h>
+#include <ves/xplorer/environment/cfdSound.h>
 #include <snx/sonix.h>
 #include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/util/fileIO.h>
