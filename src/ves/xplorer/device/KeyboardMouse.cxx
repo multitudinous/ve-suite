@@ -35,9 +35,9 @@
 
 #include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/event/ModelCADHandler.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
+#include <ves/xplorer/event/LocalToWorldTransform.h>
 
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>

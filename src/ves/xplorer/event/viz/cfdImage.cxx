@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdImage.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
 

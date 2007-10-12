@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/DataSetAxis.h>
+#include <ves/xplorer/event/data/DataSetAxis.h>
 
 #include <ves/xplorer/cfdDebug.h>
 

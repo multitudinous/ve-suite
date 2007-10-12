@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdSound.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 
@@ -83,7 +83,7 @@ using namespace VE_TextureBased;
 
 #include <boost/bind.hpp>
 
-#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/cfdModel.h>
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;

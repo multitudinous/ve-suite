@@ -37,10 +37,10 @@
    computation.
 */
 
-#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
-#include <ves/xplorer/event/DataSetAxis.h>
-#include <ves/xplorer/event/DataSetScalarBar.h>
+#include <ves/xplorer/event/data/DataSetAxis.h>
+#include <ves/xplorer/event/data/DataSetScalarBar.h>
 
 #include <ves/xplorer/util/cfdAccessoryFunctions.h>
 #include <ves/xplorer/util/fileIO.h>

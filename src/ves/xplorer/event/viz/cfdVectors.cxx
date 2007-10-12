@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdVectors.h>
-#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 

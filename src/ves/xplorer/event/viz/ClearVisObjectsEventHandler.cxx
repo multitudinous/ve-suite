@@ -35,9 +35,9 @@
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/DataSetAxis.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/event/data/DataSetAxis.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

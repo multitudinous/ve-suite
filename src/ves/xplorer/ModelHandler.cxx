@@ -46,10 +46,10 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
-#include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
-#include <ves/xplorer/event/viz/cfdCommandArray.h>
+#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/xplorer/event/viz/cfdScalarBarActor.h>

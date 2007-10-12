@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/CADSetActiveAttributeEH.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 
 #include <ves/open/xml/XMLObject.h>

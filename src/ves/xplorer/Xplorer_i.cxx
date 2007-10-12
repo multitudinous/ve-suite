@@ -34,12 +34,12 @@
 
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/viz/cfdQuatCamHandler.h>
+#include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
-#include <ves/xplorer/event/viz/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/viz/cfdDisplaySettings.h>
-#include <ves/xplorer/event/viz/cfdDataSet.h>
+#include <ves/xplorer/cfdCommandArray.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/environment/cfdDisplaySettings.h>
+#include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

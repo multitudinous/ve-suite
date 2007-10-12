@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/CADPhysicsMeshEventHandler.h>
-#include <ves/xplorer/event/viz/cfdModel.h>
+#include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/event/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
