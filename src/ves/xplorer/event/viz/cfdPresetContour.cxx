@@ -62,9 +62,6 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    this->xyz = xyz;
    this->numSteps = numSteps;
    cuttingPlane = 0;
-   // set the cut function
-//   this->cutter = vtkCutter::New();
-   //this->polydata = vtkPolyData::New();
 }
 
 cfdPresetContour::~cfdPresetContour()
@@ -97,7 +94,6 @@ void cfdPresetContour::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      //this->mapper->Update();
    }
    else
    {
@@ -113,13 +109,6 @@ void cfdPresetContour::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-//temp->GetMapper()->GetInput()->Print( std::cout );
-//temp->GetMapper()->Update();
-   //geodes.push_back( new VE_SceneGraph::Geode() );
-   //geodes.back()->TranslateToGeode( temp );
-   //temp->Delete();
-   //this->updateFlag = true;
-
    try
    {
 		osg::ref_ptr< VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
@@ -135,13 +124,5 @@ void cfdPresetContour::Update( void )
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetContour" 
                            << std::endl << vprDEBUG_FLUSH;
    }
-
    temp->Delete();
-
-//   if ( cuttingPlane )
-//   {
-//      delete this->cuttingPlane;
-//      this->cuttingPlane = NULL;
-//   }
-
 }

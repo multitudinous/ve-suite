@@ -80,18 +80,14 @@ cfdIsosurface::cfdIsosurface( int numsteps )
 //   this->contour->UseScalarTreeOff();
 
    this->normals = vtkPolyDataNormals::New();
-   this->normals->SetInput( this->contour->GetOutput() );
 #endif
 
-   this->filter = vtkMultiGroupDataGeometryFilter::New();
+   
 #ifdef USE_OMP
    this->filter->SetInput( (vtkDataSet *)this->append->GetOutput() );
-#else
-   this->filter->SetInput( (vtkDataSet *)this->normals->GetOutput() );
 #endif
 
    this->mapper = vtkMultiGroupPolyDataMapper::New();
-   this->mapper->SetInputConnection( this->filter->GetOutputPort() );
    this->mapper->SetColorModeToMapScalars();
 }
 
@@ -108,12 +104,12 @@ cfdIsosurface::~cfdIsosurface()
    this->contour->Delete();
    this->normals->Delete();
 #endif
-   this->filter->Delete();
    this->mapper->Delete();
 }
 
 void cfdIsosurface::Update()
 {
+	SetActiveVtkPipeline();
    vprDEBUG(vesDBG, 1) <<"|\tcfdIsosurface::Update: FileName: "
       << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
@@ -149,13 +145,11 @@ void cfdIsosurface::Update()
 
    this->contour->SetInput( this->GetActiveDataSet()->GetDataSet() );
    this->contour->SetValue( 0, this->value );
-   //this->contour->Update();
-   //do this to color the isosurface by a different color
-   filter->SetInputConnection(contour->GetOutputPort());
-
-   filter->Update();
-   filter->GetOutput()->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
-   this->normals->Update();
+   
+   vtkPolyData* polydata = ApplyGeometryFilter(contour->GetOutputPort());
+   polydata->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
+   this->normals->SetInput(polydata);
+   this->mapper->SetInputConnection(normals->GetOutputPort());
 #endif
 
    double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
@@ -165,7 +159,6 @@ void cfdIsosurface::Update()
    lut->SetNumberOfColors( 256 );            //default is 256
    lut->SetHueRange( 2.0f/3.0f, 0.0f );      //a blue-to-red scale
    lut->SetTableRange( minValue, maxValue );
-   //lut->SetTableRange( tempRange );
    lut->Build();
    
    this->mapper->SetLookupTable( lut );

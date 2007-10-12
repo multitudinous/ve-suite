@@ -81,7 +81,6 @@ cfdContourBase::cfdContourBase()
    strip = vtkStripper::New();
    cutter = vtkCutter::New();
 
-   //mapper = vtkPolyDataMapper::New();
    mapper = vtkMultiGroupPolyDataMapper::New();
    mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();
@@ -331,21 +330,15 @@ void cfdContourBase::CreatePlane( void )
 
    cuttingPlane->Advance( requestedValue );
    cutter->SetCutFunction( cuttingPlane->GetPlane() );
-   cutter->SetInput(0,GetActiveDataSet()->GetDataSet());
-   /*cutter->Update();
-   filter->SetInputConnection(cutter->GetOutputPort());
-
-   filter->Update();
-   
-   vtkPolyData* polydata = filter->GetOutput();//cutter->GetOutput();
-*/
-   vtkPolyData* polydata = ApplyGeometryFilter(cutter); 
-
-   if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
+   cutter->SetInput(GetActiveDataSet()->GetDataSet());
+   vtkPolyData* polydata = ApplyGeometryFilter(cutter->GetOutputPort());
+   ///this is not working AT ALL!!!!
+   /*if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
    {
       std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
       std::cerr<<"Finding next closest plane"<<std::endl;
       int counter = 0;
+      ///Especially NOT this!!!! Should probably be changed to && but....
       while ( (polydata->GetNumberOfPoints()) < 1 ||
 		      (polydata->GetNumberOfPolys() < 1 ) || 
 			  counter < 3 )//&&(this->TargetReduction > 0.0) )
@@ -371,7 +364,7 @@ void cfdContourBase::CreatePlane( void )
          //std::cout << std::endl;
          counter += 1;      
       }    
-   }       
+   } */      
 
    SetMapperInput( polydata );
 

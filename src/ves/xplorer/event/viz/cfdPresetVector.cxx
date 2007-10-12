@@ -70,6 +70,7 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
+	SetActiveVtkPipeline();
    vprDEBUG(vesDBG,1) << "cfdPresetVector::ActiveDataSet = " 
                           << this->GetActiveDataSet() 
                           << std::endl << vprDEBUG_FLUSH;
@@ -125,23 +126,20 @@ void cfdPresetVector::Update( void )
 
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-      //this->filter->SetInputConnection(this->cutter->GetOutputPort());
 
       delete this->cuttingPlane;
       this->cuttingPlane = NULL;
 
       // get every nth point from the dataSet data
-      this->ptmask->SetInput( this->cutter->GetOutput() );
+	  this->ptmask->SetInput( ApplyGeometryFilter(this->cutter->GetOutputPort()) );
       this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
       this->ptmask->Update();      
 
       this->SetGlyphWithThreshold();
       this->SetGlyphAttributes();
       this->glyph->Update();
-      //this->glyph->Print( cout );
 
-      this->filter->Update();
-
+	  this->mapper->SetInputConnection(glyph->GetOutputPort());
       this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
@@ -155,10 +153,6 @@ void cfdPresetVector::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   //geodes.push_back( new VE_SceneGraph::Geode() );
-   //geodes.back()->TranslateToGeode( temp );
-   //temp->Delete();
-   //this->updateFlag = true;
 
    try
    {
@@ -174,7 +168,6 @@ void cfdPresetVector::Update( void )
       vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetVectors " 
                            << std::endl << vprDEBUG_FLUSH;
    }
-   //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
    temp->Delete();
 }
 

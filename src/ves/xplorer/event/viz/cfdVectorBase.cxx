@@ -70,14 +70,14 @@ cfdVectorBase::cfdVectorBase()
 
    tfilter = vtkThresholdPoints::New();
    this->filter = vtkMultiGroupDataGeometryFilter::New();
-   this->filter->SetInputConnection( this->glyph->GetOutputPort() );
+   //this->filter->SetInputConnection( this->glyph->GetOutputPort() );
 //   filter->GetOutput()->ReleaseDataFlagOn();
 
    this->tris = vtkTriangleFilter::New();
    this->strip = vtkStripper::New();
 
    this->mapper = vtkMultiGroupPolyDataMapper::New();
-   this->mapper->SetInputConnection( this->filter->GetOutputPort() );
+   //this->mapper->SetInputConnection( this->filter->GetOutputPort() );
    this->mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();   
 

@@ -61,7 +61,7 @@ class vtkGlyph3D;
 class vtkMaskPoints;
 class vtkMultiGroupDataGeometryFilter;
 class vtkGeometryFilter;
-class vtkPolyDataAlgorithm;
+class vtkAlgorithmOutput;
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
@@ -99,7 +99,7 @@ namespace VE_Xplorer
 		 ///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
 		 ///and the current dataset type
 		 ///\param input The input vtkPolyDataAlgorithm to process
-		 vtkPolyData* ApplyGeometryFilter(vtkPolyDataAlgorithm* input);
+		 vtkPolyData* ApplyGeometryFilter(vtkAlgorithmOutput* input);
 
          ///Returnd geodes.
          std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > GetGeodes( void );

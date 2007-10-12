@@ -45,7 +45,7 @@
 #include <vtkActor.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGeometryFilter.h>
-#include <vtkPolyDataAlgorithm.h>
+#include <vtkAlgorithmOutput.h>
 #include <vtkCompositeDataPipeline.h>
 #include <vtkDemandDrivenPipeline.h>
 
@@ -156,27 +156,6 @@ void cfdObjects::SetSourcePoints( vtkPolyData* pointSource )
 // Fix this
 bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
 {
-   /*if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
-   {
-      cfdObjects::SetParticleOption( 
-                               commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
-
-      vprDEBUG(vesDBG,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      //return true;
-   //}
-   //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SPHERE_SIZE )
-   //{
-      vprDEBUG(vesDBG,0) << " CHANGE_SPHERE_SIZE, value = " 
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      cfdObjects::SetParticleScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-
-      return true;
-   }*/
    return false;
 }
 
@@ -195,10 +174,8 @@ void cfdObjects::SetActiveVtkPipeline()
         prototype->Delete();
 	}
 	else
-	{   // we have to use a compsite pipeline
-        vtkDemandDrivenPipeline* prototype = vtkDemandDrivenPipeline::New();
-        vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
-        prototype->Delete();
+	{   
+        vtkAlgorithm::SetDefaultExecutivePrototype(0);
 	}
 }
 ///////////////////////////////
@@ -206,21 +183,18 @@ void cfdObjects::UpdateActors()
 {
 
 }
-/////////////////////////////////////////////////////////////////
-vtkPolyData* cfdObjects::ApplyGeometryFilter(vtkPolyDataAlgorithm* input)
+/////////////////////////////////////////////////////////////////////////
+vtkPolyData* cfdObjects::ApplyGeometryFilter(vtkAlgorithmOutput* input)
 {
 	if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
     {
-        m_multiGroupGeomFilter->SetInputConnection(input->GetOutputPort());
-        m_multiGroupGeomFilter->Update();
+        m_multiGroupGeomFilter->SetInputConnection(input);
 		return m_multiGroupGeomFilter->GetOutput();
 	}
 	else
 	{
-        /*m_geometryFilter->SetInputConnection(input->GetOutputPort());
-        m_geometryFilter->Update();*/
-		input->Update();
-		return input->GetOutput();//m_geometryFilter->GetOutput();
+        m_geometryFilter->SetInputConnection(input);
+		return m_geometryFilter->GetOutput();
 	}
 }
 /////////////////////////////////////////////
