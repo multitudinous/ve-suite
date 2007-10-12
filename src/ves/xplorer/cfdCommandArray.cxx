@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/cfdCommandArray.h>
+#include <ves/xplorer/cfdCommandArray.h>
 #include <iostream>
 
 using namespace VE_Xplorer;

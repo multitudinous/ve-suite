@@ -40,7 +40,7 @@ cfdPolyData API
 /*!\class VE_Xplorer::cfdPolyData
 * 
 */
-#include <ves/xplorer/event/cfdObjects.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
