@@ -50,6 +50,10 @@ class wxRadioButton;
 class wxTextCtrl;
 class wxButton;
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS FinancialDialog : public wxDialog
 {
  public:
@@ -135,5 +139,6 @@ class VE_GUIPLUGINS_EXPORTS FinancialDialog : public wxDialog
   
   DECLARE_EVENT_TABLE()  
 };
-
+}
+}
 #endif

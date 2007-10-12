@@ -45,6 +45,10 @@ class wxWindow;
 
 #include <ves/VEConfig.h>
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
 public:
@@ -56,5 +60,6 @@ public:
 protected:
    bool lock;
 };
-
+}
+}
 #endif

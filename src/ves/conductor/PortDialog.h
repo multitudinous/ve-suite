@@ -51,6 +51,10 @@ class wxStaticText;
 
 #include <ves/VEConfig.h>
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS PortDialog : public wxDialog
 {
  public:
@@ -66,7 +70,8 @@ class VE_GUIPLUGINS_EXPORTS PortDialog : public wxDialog
   void SetVal(const wxString &var, const wxString &val);
   //DECLARE_EVENT_TABLE()
 };
-
+}
+}
 #endif
 
 

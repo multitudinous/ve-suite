@@ -46,9 +46,15 @@
 
 #include <wx/dialog.h>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 class wxSlider;
@@ -62,6 +68,10 @@ class wxCheckBox;
 #define SYMBOL_ADVANCEDVECTORS_SIZE wxSize(400, 300)
 #define SYMBOL_ADVANCEDVECTORS_POSITION wxDefaultPosition
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS AdvancedVectors: public wxDialog
 {    
 
@@ -133,12 +143,13 @@ public:
 
 protected:
 
-   VE_Conductor::GUI_Utilities::DualSlider* vectorRange;
+	ves::conductor::util::DualSlider* vectorRange;
    wxSlider* _vectorScaleSlider;///<Slider widget for vector scale.
    wxSlider*   _vectorRatioSlider;///<Slider widget for vector ratio.
    wxCheckBox* _scaleByMagCheck;///<Check box widget for scale option.
    
 };
-
+}
+}
 #endif
     // _VECTORS_H_

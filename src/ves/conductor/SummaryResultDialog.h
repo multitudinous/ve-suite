@@ -49,6 +49,10 @@ class wxStaticText;
 
 #include <vector>
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
@@ -68,4 +72,6 @@ private:
 
    //DECLARE_EVENT_TABLE()
 };
+}
+}
 #endif

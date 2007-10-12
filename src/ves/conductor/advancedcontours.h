@@ -53,9 +53,15 @@
  */
 
 ////@begin forward declarations
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 class wxSlider;
@@ -78,6 +84,10 @@ class wxRadioBox;
 #define ID_SLIDER1 10002
 #define ID_SLIDER2 10003
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS AdvancedContours: public wxDialog
 {    
 
@@ -165,6 +175,7 @@ protected:
          return tempStr;
    }
 };
-
+}
+}
 #endif
     // _ADVANCEDCONTOURS_H_

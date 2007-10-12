@@ -47,6 +47,10 @@ class wxStaticText;
 class wxBoxSizer;
 class wxButton;
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS ResultPanel_Dialog : public wxDialog
 {
 public:
@@ -97,5 +101,6 @@ protected:
    wxTextCtrl* capital_cst;
    wxTextCtrl* elec_cst;
 };
-
+}
+}
 #endif

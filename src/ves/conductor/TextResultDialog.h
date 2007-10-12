@@ -50,6 +50,10 @@ class wxButton;
 class TexTable;
 //class wxString;
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
 {
  public:
@@ -62,7 +66,8 @@ class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
 
   //DECLARE_EVENT_TABLE()
 };
-
+}
+}
 #endif
 
 

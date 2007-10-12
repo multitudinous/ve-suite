@@ -60,6 +60,10 @@ class wxSpinCtrlDbl;
 #define wxCLOSE_BOX 0x1000
 #endif
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS AdvancedIsosurface: public wxDialog
 {    
     DECLARE_DYNAMIC_CLASS( AdvancedIsosurface )
@@ -141,6 +145,7 @@ protected:
       return tempStr;
    }
 };
-
+}
+}
 #endif
     // _ADVANCEDISOSURFACES_H_

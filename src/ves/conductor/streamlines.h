@@ -53,17 +53,26 @@
  */
 
 ////@begin forward declarations
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
    class DataValuePair;
 }
+}
+}
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
    class WPDialog;
+}
 }
 }
 
@@ -91,6 +100,10 @@ class wxButton;
 #define ID_BUTTON 10006
 #define ID_BUTTON1 10007*/
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS Streamlines: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Streamlines )
@@ -153,9 +166,9 @@ protected:
    wxSlider* _nPointsSlider;
    wxButton* itemButton13;
 
-   std::vector<VE_XML::DataValuePair*> _advancedSettings;///<The advanced settings.
-   std::vector<VE_XML::DataValuePair*> _streamlineInformation;///<The streamline setting data
-   std::vector< VE_XML::DataValuePair* > seedPointInformation;///<The streamline setting data
+   std::vector<ves::open::xml::DataValuePair*> _advancedSettings;///<The advanced settings.
+   std::vector<ves::open::xml::DataValuePair*> _streamlineInformation;///<The streamline setting data
+   std::vector<ves::open::xml::DataValuePair* > seedPointInformation;///<The streamline setting data
 
    double _streamSize;///<The size of the streamlines.
    unsigned int _nPointsPerPlane;///<The number of seed points.
@@ -173,13 +186,14 @@ protected:
    int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
 
-   VE_Conductor::GUI_Utilities::WPDialog* seedPointDialog;
+   ves::conductor::util::WPDialog* seedPointDialog;
    std::string ConvertUnicode( const wxChar* data )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
       return tempStr;
    }
 };
-
+}
+}
 #endif
     // _STREAMLINES_H_

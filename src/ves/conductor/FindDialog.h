@@ -52,6 +52,10 @@ class wxString;
 #undef FindDialog_STYLE
 #define FindDialog_STYLE wxCAPTION | wxSYSTEM_MENU | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS FindDialog : public wxDialog
 {	
 	public:
@@ -85,5 +89,6 @@ class VE_GUIPLUGINS_EXPORTS FindDialog : public wxDialog
 
 		DECLARE_EVENT_TABLE()
 };
-
+}
+}
 #endif

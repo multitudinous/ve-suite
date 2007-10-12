@@ -49,9 +49,15 @@
  */
 
 ////@begin forward declarations
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 class AdvancedVectors;
@@ -79,6 +85,11 @@ class wxButton;
 
 
 #include <ves/VEConfig.h>
+
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS Vectors: public wxDialog
 {    
 public:
@@ -161,7 +172,7 @@ public:
    wxButton*      itemButton17;
 ////@end Vectors member variables
 protected:
-   std::vector< VE_XML::Command* > commands;
+   std::vector< ves::open::xml::Command* > commands;
    int cId, cIso_value, cMin, cMax, cSc;
    std::vector< long > commandInputs;
 
@@ -169,6 +180,7 @@ protected:
 
     DECLARE_EVENT_TABLE()
 };
-
+}
+}
 #endif
     // _VECTORS_H_

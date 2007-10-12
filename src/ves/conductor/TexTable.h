@@ -46,6 +46,10 @@ class wxWindow;
 
 #include <ves/VEConfig.h>
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS TexTable : public wxGrid
 {
 public:
@@ -68,5 +72,6 @@ private:
    std::vector< int > m_align;
    std::vector< int > cols_width;
 };
-
+}
+}
 #endif

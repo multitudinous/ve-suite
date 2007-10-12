@@ -49,14 +49,20 @@
 #include <map>
 #include <string>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
    class DataValuePair;
 }
-namespace VE_Model
+namespace model
 {
    class Model;
+}
+}
 }
 
 class Contours;
@@ -101,6 +107,10 @@ class wxButton;
 
 #include <ves/VEConfig.h>
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS Vistab: public wxDialog
 {    
 public:
@@ -179,7 +189,7 @@ public:
 
    ///Send the current vistab data to xplorer.
    ///\param subDialogCommand The setting from any of the sub dialogs.
-   void SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand=0);
+   void SendUpdatedSettingsToXplorer(ves::open::xml::Command* subDialogCommand=0);
 
    ///Clear out the DataValuePair(s) of basic info about the vistab
    void ClearBaseInformation();
@@ -205,14 +215,14 @@ public:
    std::string GetActiveDatasetName();
 
    ///Get the scalar range sliders  
-   VE_Conductor::GUI_Utilities::DualSlider* GetScalarRangeControls();
+   ves::conductor::util::DualSlider* GetScalarRangeControls();
 
    //Vectors* vector;
    //Contours* contour;
    //Streamlines* streamline;
    //Isosurfaces* isosurface;
    //TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
-   VE_Conductor::GUI_Utilities::DualSlider* scalarRange;
+   ves::conductor::util::DualSlider* scalarRange;
 
    ///Make sure all the dataset check boxes are unchecked.\n
    ///This occurs when loading a new network
@@ -237,7 +247,7 @@ protected:
     *Class that allows the user to do operations based on the min slider events
     */
    class ScalarRangeMinSliderCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -255,7 +265,7 @@ protected:
     *This is caused by the slider buffer being reached.
     */
    class ScalarRangeBothMoveCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -273,7 +283,7 @@ protected:
     *Class that allows the user to do operations based on the max slider events
     */
    class ScalarRangeMaxSliderCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -405,12 +415,12 @@ protected:
    std::map<std::string,std::vector<double> > _originalScalarRanges;///<The scalar range for the active scalar
    std::vector<double> _activeScalarRange;///<The active scalars range.
 
-   std::vector<VE_XML::DataValuePair*> _vistabBaseInformation;///<The basic information from the vistab
-   std::vector<VE_XML::DataValuePair*> _vistabSpecificInformation;///<The specific information from specific vistab dialogs
+   std::vector<ves::open::xml::DataValuePair*> _vistabBaseInformation;///<The basic information from the vistab
+   std::vector<ves::open::xml::DataValuePair*> _vistabSpecificInformation;///<The specific information from specific vistab dialogs
 
    std::string _commandName;///<The name of the command to send back
 
-   std::vector< VE_XML::Command* > commands;
+   std::vector< ves::open::xml::Command* > commands;
    //VjObs_ptr xplorerPtr;
    std::vector< long > commandInputs;
    //DOMDocument* doc;
@@ -434,6 +444,7 @@ protected:
     std::map<std::string,VISTAB_IDS> m_vistabButtonMap;///<Mapping of names of buttons to enums.
     DECLARE_EVENT_TABLE()
 };
-
+}
+}
 #endif
     // _VE-SUITE_H_

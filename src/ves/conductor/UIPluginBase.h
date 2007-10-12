@@ -83,27 +83,36 @@ class SoundsPane;
 class Vistab;
 class IconChooser;
 
-namespace VE_Conductor
+namespace ves
+{
+namespace conductor
+{
+namespace util
 {
    class CORBAServiceList;
+    class CADNodeManagerDlg;
+}
+}
 }
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
     class Command;
 }
-
-namespace VE_Conductor
-{
-namespace GUI_Utilities
-{
-    class CADNodeManagerDlg;
 }
 }
 
 typedef std::vector< wxPoint > POLY;
-typedef std::vector< VE_XML::VE_Model::Port > PORT;
+typedef std::vector< ves::open::xml::model::Port > PORT;
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler//, public wxObject
 {
 public:
@@ -180,9 +189,9 @@ public:
    void GeometryData();
    //This is the load function of the module, 
    ///unpack the input string and fill up the UI according to this
-   VE_XML::VE_Model::ModelWeakPtr GetVEModel( void );
+   ves::open::xml::model::ModelWeakPtr GetVEModel( void );
    ///Set the ve model
-   void SetVEModel( VE_XML::VE_Model::ModelWeakPtr tempModel );
+   void SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel );
    ///method to start a dialog to ask the user for a plugin name so that the 
    ///name can be defined at run time
    void SetPluginNameDialog( void );
@@ -222,7 +231,7 @@ public:
    void SetNetwork( wxEvtHandler* network );
    ///Set the corba servicelist so that the plugin can talk with the graphical
    ///engine
-   void SetCORBAService( VE_Conductor::CORBAServiceList* serviceList );
+   void SetCORBAService( ves::conductor::util::CORBAServiceList* serviceList );
    ///Set the user scale to enable working with the dc
    void SetDCScale( std::pair< double, double >* scale );
    ///See if this plugin is selected
@@ -272,7 +281,7 @@ public:
 
    void SetDialogSize( wxRect dialogSize );
 protected:
-   void GetDataTables( VE_XML::Command* inputCommand, 
+   void GetDataTables( ves::open::xml::Command* inputCommand, 
                         std::vector< wxString >& tagNames, 
                         std::vector< wxString >& values );
 
@@ -298,7 +307,7 @@ protected:
    wxPoint actionPoint;
 
    ///Copy of the model element pointer
-   VE_XML::VE_Model::ModelStrongPtr m_veModel;
+   ves::open::xml::model::ModelStrongPtr m_veModel;
    ///Name seen by the user and rendered on the canvas
    wxString name;
 
@@ -309,8 +318,8 @@ protected:
    ///Port data info
    //int numberOfInputPorts;
    //int numberOfOutputPorts;
-   std::vector< VE_XML::VE_Model::Port* > inputPort;
-   std::vector< VE_XML::VE_Model::Port* > outputPort;
+   std::vector< ves::open::xml::model::Port* > inputPort;
+   std::vector< ves::open::xml::model::Port* > outputPort;
    
    //data storage types
    std::vector< wxString > v_desc;
@@ -332,7 +341,7 @@ protected:
    wxDialog* portsDialog;
    SummaryResultDialog* inputsDialog;
 
-   VE_Conductor::CORBAServiceList* serviceList;
+   ves::conductor::util::CORBAServiceList* serviceList;
 
    std::string ConvertUnicode( const wxChar* data )
    {
@@ -355,7 +364,7 @@ protected:
    ///The visualization tab
    Vistab* vistab;
    
-   VE_Conductor::GUI_Utilities::CADNodeManagerDlg* cadDialog;
+   ves::conductor::util::CADNodeManagerDlg* cadDialog;
    int m_selFrPort; 
    int m_selToPort; 
    int m_selLink; 
@@ -374,7 +383,8 @@ protected:
    DECLARE_DYNAMIC_CLASS( UIPluginBase )
    DECLARE_EVENT_TABLE()
 };
-
+}
+}
 #define UIPLUGIN_CHECKID(event)  \
     if( !CheckID() ) \
     { \

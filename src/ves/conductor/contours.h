@@ -50,10 +50,16 @@
  */
 
 ////@begin forward declarations
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
    class DataValuePair;
+}
+}
 }
 
 class wxRadioBox;
@@ -79,8 +85,10 @@ class wxButton;
 #define wxCLOSE_BOX 0x1000
 #endif
 
-
-
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS Contours: public wxDialog
 {    
     DECLARE_EVENT_TABLE()
@@ -182,8 +190,8 @@ protected:
    wxButton*      itemButton16;
    wxButton*      itemButton17;
 
-   std::vector<VE_XML::DataValuePair*> _advancedSettings;///<The advanced settings.
-   std::vector<VE_XML::DataValuePair*> _contourInformation;///<The countour setting data
+   std::vector<ves::open::xml::DataValuePair*> _advancedSettings;///<The advanced settings.
+   std::vector<ves::open::xml::DataValuePair*> _contourInformation;///<The countour setting data
 
    std::string _planeDirection;///<Store the value of the direction.
    std::string _planeType;///<The contour type.
@@ -205,6 +213,7 @@ protected:
          return tempStr;
    }
 };
-
+}
+}
 #endif
     // _CONTOURS_H_

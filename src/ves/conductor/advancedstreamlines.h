@@ -51,9 +51,15 @@
  */
 
 ////@begin forward declarations
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 //namespace VE_UI
@@ -87,7 +93,10 @@ class wxButton;
 
 ////@end control identifiers
 
-
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS AdvancedStreamlines: public wxDialog
 {    
     DECLARE_EVENT_TABLE()
@@ -182,6 +191,7 @@ protected:
    UI_TransientDialog* particleControls;
    AdvancedStreamlines* _particleParent;
 };
-
+}
+}
 #endif
     // _ADVANCEDSTREAMLINES_H_

@@ -45,6 +45,10 @@
 
 class Network;
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS paraThread : public wxThread  
 {
 public:
@@ -56,5 +60,6 @@ public:
  protected:
 	//Network* nw;
 };
-
+}
+}
 #endif

@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
-#define _VE_CONDUCTOR_GUI_UTILITIES_MODULE_
+#ifndef CONDUCTOR_GUI_UTILITIES_MODULE_
+#define CONDUCTOR_GUI_UTILITIES_MODULE_
 /*!\file Module.h
 Module API
 */
@@ -48,9 +48,9 @@ Module API
 class wxWindow;
 class UIPluginBase;
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS Module
 {

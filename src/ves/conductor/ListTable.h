@@ -46,6 +46,10 @@ class wxWindow;
 
 #include <vector>
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS ListTable : public wxListCtrl  
 {
 public:
@@ -64,5 +68,6 @@ protected:
 	int num_of_row;
 
 };
-
+}
+}
 #endif // !defined(AFX_LISTTABLE_H__745B1AA2_D560_41C1_AC10_748693B1A8EF__INCLUDED_)

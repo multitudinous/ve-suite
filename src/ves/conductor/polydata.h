@@ -46,9 +46,15 @@
 
 #include <ves/VEConfig.h>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 class wxRadioButton;
@@ -64,6 +70,10 @@ class wxStaticBox;
 #define SYMBOL_POLYDATA_SIZE wxSize(400, 300)
 #define SYMBOL_POLYDATA_POSITION wxDefaultPosition
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS Polydata: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
@@ -147,6 +157,7 @@ protected:
       return tempStr;
    }
 };
-
+}
+}
 #endif
     // _POLYDATA_H_

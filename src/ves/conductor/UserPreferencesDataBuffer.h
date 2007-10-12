@@ -49,7 +49,10 @@ UserPreferencesDataBuffer API
 #include <string>
 
 #include <ves/VEConfig.h>
-namespace VE_Conductor
+
+namespace ves
+{
+namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS UserPreferencesDataBuffer
 {
@@ -65,19 +68,20 @@ public:
     void CleanUp( void );
     ///Get Command with key
     ///The key MUST be the command name
-    VE_XML::CommandWeakPtr GetCommand( std::string commandKey );
+    ves::open::xml::CommandWeakPtr GetCommand( std::string commandKey );
     ///set Command with key
-    void SetCommand( std::string commandKey, VE_XML::CommandWeakPtr command );
+    void SetCommand( std::string commandKey, ves::open::xml::CommandWeakPtr command );
     ///Get all the commands
-    std::map< std::string, VE_XML::CommandWeakPtr > GetCommandMap( void );
+    std::map< std::string, ves::open::xml::CommandWeakPtr > GetCommandMap( void );
     ///Set all the commands
-    void SetCommandMap( std::map< std::string, VE_XML::CommandWeakPtr > tempMap );
+    void SetCommandMap( std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap );
 private:
     ///Mapp to hold all the preference data to be written to the ves file
-    std::map< std::string, VE_XML::CommandPtr > commandMap;
-    //std::map< std::string, VE_XML::CommandPtr > commandMap;
+    std::map< std::string, ves::open::xml::CommandPtr > commandMap;
+    //std::map< std::string, ves::open::xml::CommandPtr > commandMap;
     ///A mutex to protect variables accesses
     vpr::Mutex m_valueLock;  
 };
+}
 }
 #endif

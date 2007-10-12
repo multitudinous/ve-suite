@@ -44,10 +44,18 @@
 
 #include <vector>
 #include <map>
-namespace VE_XML
+
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
 }
+}
+}
+
 class AdvancedIsosurface;
 
 class wxRadioButton;
@@ -65,6 +73,10 @@ class Network;
 #define SYMBOL_ISOSURFACES_SIZE wxSize(400, 300)
 #define SYMBOL_ISOSURFACES_POSITION wxDefaultPosition
 
+namespace ves
+{
+namespace conductor
+{
 class VE_GUIPLUGINS_EXPORTS Isosurfaces: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
@@ -176,6 +188,7 @@ protected:
       return tempStr;
    }
 };
-
+}
+}
 #endif
     // _ISOSURFACES_H_
