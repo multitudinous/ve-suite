@@ -35,7 +35,7 @@
 /*!\file CORBAServiceList.h
 CORBAServiceList API
 */
-/*!\class VE_Conductor::CORBAServiceList
+/*!\class ves::conductor::util::CORBAServiceList
 * 
 */
 #include <orbsvcs/CosNamingC.h>
@@ -103,10 +103,10 @@ public:
     bool DisconnectFromCE( void );
     ///Set xplorer command string 
     ///\param command string containing command
-    bool SendCommandStringToXplorer(  VE_XML::Command* veCommand  );
+    bool SendCommandStringToXplorer(  ves::open::xml::Command* veCommand  );
     ///Set xplorer command string 
     ///\param command string containing command
-    bool SendCommandStringToXplorer(  VE_XML::CommandWeakPtr veCommand  );
+    bool SendCommandStringToXplorer(  ves::open::xml::CommandWeakPtr veCommand  );
     /*
     ///Set xplorer command string 
     ///\param command VE_XML::Command containing command
@@ -162,7 +162,7 @@ public:
     PEThread* GetMessageLog( void );
 
     ///Get the current commands from xplorer
-    VE_XML::Command GetGUIUpdateCommands( std::string commandName );
+    ves::open::xml::Command GetGUIUpdateCommands( std::string commandName );
 
     ///Call set id on all modules in the current network
     bool SetID( int moduleId, std::string moduleName );

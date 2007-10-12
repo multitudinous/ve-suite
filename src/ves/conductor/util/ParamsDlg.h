@@ -132,14 +132,14 @@ class VE_CONDUCTOR_UTILS_EXPORTS ParamsDlg : public wxDialog
 		void SetButtonClick(wxCommandEvent& event);
 		void AppendList(const char *);
 		void SetCompName(const char *);
-		void SetServiceList(VE_Conductor::CORBAServiceList *);
+		void SetServiceList(ves::conductor::util::CORBAServiceList *);
 		void SetDialogType(const char *);
 		void SetIsBlock(bool);
 	
 	private:
 		wxString CompName;
 		wxString DialogType;
-		VE_Conductor::CORBAServiceList * serviceList;
+		ves::conductor::util::CORBAServiceList * serviceList;
 
 		wxButton *SetButton;
 		wxTextCtrl *WxMemo3;

@@ -56,7 +56,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
+	class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public ves::conductor::util::BaseDialog 
 {
 public:
    ///Constructor
@@ -83,7 +83,7 @@ public:
 
    ///Add an instruction to send. This is for access in the callbacks.
    ///\param newInstruct The instruction to add to the Command.
-   void AddInstruction(VE_XML::DataValuePair* newInstruct);
+   void AddInstruction(ves::open::xml::DataValuePair* newInstruct);
 
    ///Set the active scalars
    ///\param The name of the scalars
@@ -93,7 +93,7 @@ protected:
     *Class that allows the user to do operations based on the min slider events
     */
    class ScalarToolsSliderCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+          public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -114,7 +114,7 @@ protected:
     *Class that allows the user to do operations based on the min slider events
     */
    class ScalarToolsStopSliderCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+          public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -170,7 +170,7 @@ protected:
    wxSlider* _numSlicesSlider;///<The number of slices slider.
    wxComboBox* _scalarSelection;///<The available scalars.
    wxComboBox* _shaderManagerSelection;///<The available shader manager.
-   VE_Conductor::GUI_Utilities::DualSlider* _scalarRange;///<DualSlider for x bounds
+   ves::conductor::util::DualSlider* _scalarRange;///<DualSlider for x bounds
 
    DECLARE_EVENT_TABLE()
 };

@@ -55,7 +55,7 @@
 
 #include <iostream>
 
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( Link, wxEvtHandler )
     EVT_RIGHT_DOWN( Link::OnMRightDown )

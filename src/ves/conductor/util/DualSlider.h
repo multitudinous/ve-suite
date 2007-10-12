@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef VE_DUAL_SLIDER_H
-#define VE_DUAL_SLIDER_H
+#ifndef DUAL_SLIDER_H
+#define DUAL_SLIDER_H
 #include <ves/VEConfig.h>
 /*!\file DualSlider.h
   DualSlider API
   */
-/*!\class VE_Conductor::GUI_Utilities::DualSlider
+/*!\class ves::conductor::util::DualSlider
  * widget containing two wxSliders(min/max). The sliders are free to move
  * EXCEPT that the min can never be higher than the max and the max
  * can never be lower than the min.
@@ -171,4 +171,4 @@ protected:
 }
 }
 }
-#endif// VE_DUAL_SLIDER_H
+#endif// DUAL_SLIDER_H

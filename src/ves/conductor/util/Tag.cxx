@@ -44,9 +44,7 @@
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/Point.h>
 
-
-
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 
 ////////////////////////////////////////////////
 Tag::Tag( wxScrolledWindow* designCanvas )

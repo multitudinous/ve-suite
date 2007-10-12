@@ -119,7 +119,7 @@ public:
                      const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
                      const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
                      long style = SYMBOL_DATASETLOADERUI_STYLE, 
-                     VE_XML::VE_Model::ModelWeakPtr veModel = 0);
+                     ves::open::xml::model::ModelWeakPtr veModel = 0);
 
    enum
    {
@@ -151,7 +151,7 @@ public:
                   const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
                   const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
                   long style = SYMBOL_DATASETLOADERUI_STYLE, 
-                  VE_XML::VE_Model::ModelWeakPtr veModel = 0);
+                  ves::open::xml::model::ModelWeakPtr veModel = 0);
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -186,7 +186,7 @@ public:
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
    std::string GetActiveDataSetName();
-   VE_XML::ParameterBlock* GetParamBlock();
+   ves::open::xml::ParameterBlock* GetParamBlock();
    
    ///Disable/enable the buttons
    ///\param flag Bool to control the ui.
@@ -238,8 +238,8 @@ private:
 
    wxArrayString _availableDatasets;///<The list of datasets(should this be called something else?)
 ////@end DataSetLoaderUI member variables
-   VE_XML::VE_Model::ModelStrongPtr m_veModel;
-   VE_XML::ParameterBlock* paramBlock;
+   ves::open::xml::model::ModelStrongPtr m_veModel;
+   ves::open::xml::ParameterBlock* paramBlock;
 
    int lastAddition;
 };

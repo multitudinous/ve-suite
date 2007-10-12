@@ -37,8 +37,8 @@
 /*!\file CADTreeBuilder.h
   CADTreeBuilder API
   */
-/*!\class VE_Conductor::GUI_Utilities::CADTreeBuilder
- * Class for creating wxTreeCtrl and wxTreeItem from VE_XML::VE_CAD::CADNode.
+/*!\class ves::conductor::util::CADTreeBuilder
+ * Class for creating wxTreeCtrl and wxTreeItem from ves::open::xml::cad::CADNode.
  */
 
 #include <ves/open/xml/cad/CADNode.h>
@@ -69,7 +69,7 @@ namespace conductor
 {
 namespace util
 {
-   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public VE_XML::VE_CAD::CADNodeTraverser
+   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public ves::open::xml::cad::CADNodeTraverser
    {
       public:
         
@@ -77,7 +77,7 @@ namespace util
          ///\param cadNode The root CADNode.
          ///\param parent The parent wxWindow
          ///\param id The ID for the tree control.
-         CADTreeBuilder(VE_XML::VE_CAD::CADNode* cadNode,wxWindowID id,wxWindow* parent);
+         CADTreeBuilder(ves::open::xml::cad::CADNode* cadNode,wxWindowID id,wxWindow* parent);
          
          ///Copy Constructor
          //CADTreeBuilder(const CADTreeBuilder& cfdNT);
@@ -97,7 +97,7 @@ namespace util
             ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
             ///\param node The CADNode that is currently being encountered.
             ///\param currentParent The CADNode that is the parent of the node being encountered.
-	         void Apply(CADNodeTraverser* sceneGraphBuilder,VE_XML::VE_CAD::CADNode* node,void* currentParent=0);
+	         void Apply(CADNodeTraverser* sceneGraphBuilder,ves::open::xml::cad::CADNode* node,void* currentParent=0);
          protected:
       };
 
@@ -114,11 +114,11 @@ namespace util
             ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
             ///\param node The CADNode that is currently being encountered.
             ///\param currentParent The CADNode that is the parent of the node being encountered.
-	         void Apply(CADNodeTraverser* sceneGraphBuilder,VE_XML::VE_CAD::CADNode* node,void* currentParent=0);
+	         void Apply(CADNodeTraverser* sceneGraphBuilder,ves::open::xml::cad::CADNode* node,void* currentParent=0);
          protected:
       };
 
-      /*!\class VE_XML::VE_CAD::CADTreeBuilder::TreeNodeData
+      /*!\class ves::open::xml::cad::CADTreeBuilder::TreeNodeData
        * Class to pair the CADNode with and item in the tree.
        */
       class VE_CONDUCTOR_UTILS_EXPORTS TreeNodeData : public wxTreeItemData
@@ -126,15 +126,15 @@ namespace util
       public:
          ///Constructor
          ///\param node The holder of the node data.
-         TreeNodeData(VE_XML::VE_CAD::CADNode* node);
+         TreeNodeData(ves::open::xml::cad::CADNode* node);
 
          ///Destructor
          virtual ~TreeNodeData();
             
          ///Get the CADNode.
-         VE_XML::VE_CAD::CADNode* GetNode(){return _cadNode;}
+         ves::open::xml::cad::CADNode* GetNode(){return _cadNode;}
       protected:
-         VE_XML::VE_CAD::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
+         ves::open::xml::cad::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
       };
 
       ///\param Pop the current parent.
@@ -152,7 +152,7 @@ namespace util
       
       ///Search the tree for a CADNode.
       ///\param name The name to search for.
-      VE_XML::VE_CAD::CADNode* GetCADNode(std::string name);
+	  ves::open::xml::cad::CADNode* GetCADNode(std::string name);
       
        ///Get the created root node.
       wxTreeCtrl* GetWXTreeCtrl();
@@ -165,7 +165,7 @@ namespace util
    protected:
       ///Create the image list.
       void _createImageList();
-      std::vector<VE_XML::VE_CAD::CADNode*> _nodeList;///<List of all the nodes in our tree.
+	  std::vector<ves::open::xml::cad::CADNode*> _nodeList;///<List of all the nodes in our tree.
       CADTreeBuilder::TreeGraphPreCallback* _treeCtrlCreator;///<The pre traverse callback that creates a wxTreeCtrl.
       CADTreeBuilder::TreeGraphPostCallback* _parentPopper;///<Pops the parent stack.
       wxWindow* _parentWindow;

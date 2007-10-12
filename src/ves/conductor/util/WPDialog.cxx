@@ -38,7 +38,7 @@
 
 #include <wx/statbox.h>
 
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE(WPDialog,BaseDialog)
 EVT_SPINCTRL(WPDialog::DIMENSION_SPINNER_ID,WPDialog::_updateDimensions)

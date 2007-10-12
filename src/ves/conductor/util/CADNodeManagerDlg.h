@@ -84,7 +84,7 @@ public:
    ///\param node The CADNode to manage with this dialog.
    ///\param parent The parent wxWindow.
    ///\param id The unique id for this window.
-   CADNodeManagerDlg(VE_XML::VE_CAD::CADNode* node, wxWindow* parent, int id);
+	CADNodeManagerDlg(ves::open::xml::cad::CADNode* node, wxWindow* parent, int id);
                        
    ///Destructor
    virtual ~CADNodeManagerDlg();
@@ -104,10 +104,10 @@ public:
 
    ///Set the root CADNode to display.
    ///\param rootNode The root CADNode to display.
-   void SetRootCADNode(VE_XML::VE_CAD::CADNode* rootNode);
+   void SetRootCADNode(ves::open::xml::cad::CADNode* rootNode);
 
    ///Get the root CADNode
-   VE_XML::VE_CAD::CADNode* GetRootCADNode();
+   ves::open::xml::cad::CADNode* GetRootCADNode();
 protected:
 
    ///Create the dialog
@@ -198,8 +198,8 @@ protected:
    ///\param parent The parent CADAssembly to add the CADNode to.
    ///\param childToAdd The CADNode to add
    ///\param parentTreeID The ID associated with the parent in the wxTreeCtrl
-   void _addNodeToParent(VE_XML::VE_CAD::CADAssembly* parent,
-                         VE_XML::VE_CAD::CADNode* childToAdd,
+   void _addNodeToParent(ves::open::xml::cad::CADAssembly* parent,
+                         ves::open::xml::cad::CADNode* childToAdd,
                          wxTreeItemId parentTreeID);
 
    
@@ -208,7 +208,7 @@ protected:
    ///\param childToAdd The CADNode to move
    ///\param oldParentTreeID The ID associated with the old parent in the wxTreeCtrl
    ///\param newParentTreeID The ID associated with the new parent in the wxTreeCtrl
-   void _moveNodeToNewParent( VE_XML::VE_CAD::CADNode* childToRemove,
+   void _moveNodeToNewParent( ves::open::xml::cad::CADNode* childToRemove,
                               wxTreeItemId oldParentTreeID,
                               wxTreeItemId newParentTreeID );
 
@@ -217,21 +217,21 @@ protected:
    wxButton* _saveButton;///<The button to save the current CADHierarchy.
    wxRect _geomPosition;///<The initial position of the dialog.
 
-   VE_Conductor::GUI_Utilities::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
+   ves::conductor::util::CADTreeBuilder::TreeNodeData* _activeTreeNode;///<The active tree item.
 
-   std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The DataValuePair s for the current command.
+   std::vector<ves::open::xml::DataValuePair*> _dataValuePairList;///<The DataValuePair s for the current command.
 
    std::map<std::string,bool> _toggleNodeOnOff;///Flag determining whether or not to display the selected CADNode.
    std::string _commandName;///<The command name.
 
    CADNodePropertiesDlg* _propsDlg;///<The Property dialog.
 
-   VE_XML::VE_CAD::CADNode* _activeCADNode;///<The active CADNode.
+   ves::open::xml::cad::CADNode* _activeCADNode;///<The active CADNode.
    
    bool _cloneFromSameFile;///<Flag for parent checking when cloning.
-   VE_XML::VE_CAD::CADNode* _rootNode;///<The active CADNode.
-   VE_Conductor::GUI_Utilities::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
-   std::map<wxString,VE_XML::VE_CAD::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
+   ves::open::xml::cad::CADNode* _rootNode;///<The active CADNode.
+   ves::conductor::util::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
+   std::map<wxString,ves::open::xml::cad::CADNode*> _loadedCAD;///<The list of CAD/VEG files already loaded.
    //wxButton* _loadButton;
    wxTreeItemId m_movingNode;///<The node that is being moved
    wxTreeItemId m_movingNodeParent;///<The parent of the node that is being moved

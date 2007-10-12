@@ -36,7 +36,7 @@
 /*!\file BaseDialog.h
 BaseDialog API
 */
-/*!\class VE_Conductor::GUI_Utilities::BaseDialog
+/*!\class ves::conductor::util::BaseDialog
 *
 */
 #ifndef STAND_ALONE
@@ -114,7 +114,7 @@ protected:
    }
 #endif
    std::string _commandName;///<The name of the Command
-   std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+   std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 };
 }
 }

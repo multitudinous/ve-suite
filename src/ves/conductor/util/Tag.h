@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_CONDUCTOR_GUI_UTILITIES_TAG_
-#define _VE_CONDUCTOR_GUI_UTILITIES_TAG_
+#ifndef CONDUCTOR_GUI_UTILITIES_TAG_
+#define CONDUCTOR_GUI_UTILITIES_TAG_
 /*!\file Tag.h
 Tag API
 */
@@ -83,9 +83,9 @@ public:
     wxRect* GetBoundingBox( void );
     ///Set the raw xml data to configure the tag
     ///\param inputTag The pointer to the class holding the tag data
-    void SetVETagPtr( VE_XML::VE_Model::TagPtr inputTag );
+    void SetVETagPtr( ves::open::xml::model::::TagPtr inputTag );
     ///Get the raw xml data to be written back out
-    VE_XML::VE_Model::TagPtr GetVETagPtr();
+    ves::open::xml::model::TagPtr GetVETagPtr();
     ///Calculate tag polygon to be drawn
     void CalcTagPoly( void );
     ///Draw functions

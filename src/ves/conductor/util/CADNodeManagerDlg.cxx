@@ -53,9 +53,9 @@
 #include <wx/filename.h>
 #include <wx/intl.h>
 
-using namespace VE_Conductor::GUI_Utilities;
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML;
+using namespace ves::conductor::util;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE(CADNodeManagerDlg,wxDialog)
    EVT_TREE_ITEM_COLLAPSING(TREE_ID, CADNodeManagerDlg::_selectOnExpandCollapse )

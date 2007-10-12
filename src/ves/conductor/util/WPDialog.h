@@ -70,12 +70,12 @@ public:
    void SendCommands();
 
    ///Add an instruction to send. This is for access in the callbacks.
-   void AddInstruction(VE_XML::DataValuePair* newInstruct);
+   void AddInstruction(ves::open::xml::DataValuePair* newInstruct);
    
    void SetCommand(std::string name){_commandName = name;}
    
    ///Get the seed point vector
-   std::vector< VE_XML::DataValuePair* > GetSeedPointDVPVector( void );
+   std::vector< ves::open::xml::DataValuePair* > GetSeedPointDVPVector( void );
    ///Callback used to set the dvp vector
    void SetVectorDVP( void );
    ///Transfer the seed points info from the window
@@ -95,7 +95,7 @@ protected:
    void _updateDimensions(wxSpinEvent& event);
 
    class WPMinSliderCallback: public
-   	VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   ves::conductor::util::DualSlider::SliderCallback
    {
       public:
       
@@ -120,7 +120,7 @@ protected:
 
 
    class WPBothMoveCallback: public
-   	VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   ves::conductor::util::DualSlider::SliderCallback
    {
       public:
       
@@ -146,7 +146,7 @@ protected:
 
 
    class WPMaxSliderCallback: public
-   	VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   ves::conductor::util::DualSlider::SliderCallback
    {
       public:
       
@@ -177,10 +177,10 @@ protected:
    virtual wxSizer* _buildSpecificWidgets();
    
    //
-   VE_Conductor::GUI_Utilities::DualSlider* _xBounds;
-   VE_Conductor::GUI_Utilities::DualSlider* _yBounds;
-   VE_Conductor::GUI_Utilities::DualSlider* _zBounds;
-   std::vector< VE_XML::DataValuePair* > seedPointDVP;
+   ves::conductor::util::DualSlider* _xBounds;
+   ves::conductor::util::DualSlider* _yBounds;
+   ves::conductor::util::DualSlider* _zBounds;
+   std::vector< ves::open::xml::DataValuePair* > seedPointDVP;
    wxSpinCtrl* numXPointsSpinner;
    wxSpinCtrl* numYPointsSpinner;
    wxSpinCtrl* numZPointsSpinner;

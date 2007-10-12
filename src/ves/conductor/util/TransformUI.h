@@ -35,7 +35,7 @@
 /*!\file TransformUI.h
 TransformUI API
 */
-/*!\class VE_Conductor::GUI_Utilities::TransformUI
+/*!\class ves::conductor::util::TransformUI
 * 
 */
 #include <wx/panel.h>
@@ -78,7 +78,7 @@ namespace util
       {
       public:
          ///Constructor
-         TransformUI( wxWindow* parent, wxString dialogName, VE_XML::Transform* transform );
+		  TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::Transform* transform );
          ///Destructor
          virtual ~TransformUI();
 
@@ -97,15 +97,15 @@ namespace util
          void UpdateUniformScale( wxCommandEvent& event );
 
          ///Get the current transform
-         //VE_XML::Transform* GetTransform( void );
+         //ves::open::xml::Transform* GetTransform( void );
 
          ///Get the current parameter block id
          void SetParamBlockID( std::string id );
          ///Get the current parameter block transform
-         void SetParamBlockTransform( VE_XML::Transform* transform );
+         void SetParamBlockTransform( ves::open::xml::Transform* transform );
 
       private:
-         VE_XML::Transform* transform;///<The Trasnform for the ui.
+         ves::open::xml::Transform* transform;///<The Trasnform for the ui.
 
          ///Transform panel controls
          wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
@@ -123,10 +123,10 @@ namespace util
          wxCheckBox* m_uniformScale;///<Uniform scaling checkbox
 
          std::string _commandName;///<The command name.
-         std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+         std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 
          std::string _id;///<parameter block id
-         VE_XML::Transform* _transform;///<parameter block transform
+         ves::open::xml::Transform* _transform;///<parameter block transform
 
          ///Send the Command back to VE-Xplorer.
          void _sendCommandsToXplorer();
@@ -136,7 +136,7 @@ namespace util
          double tempZ;///<The z scale value.
 
          DataSetLoaderUI* dataset;
-         VE_XML::ParameterBlock* paramBlock;
+         ves::open::xml::ParameterBlock* paramBlock;
 
          DECLARE_EVENT_TABLE()
       };

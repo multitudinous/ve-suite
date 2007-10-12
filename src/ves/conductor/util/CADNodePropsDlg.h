@@ -36,7 +36,7 @@
 /*!\file CADNodePropsDlg.h
 CADNodePropsDlg API
 */
-/*!\class VE_Conductor::GUI_Utilities::CADNodePropsDlg
+/*!\class ves::conductor::util::CADNodePropsDlg
 *
 */
 #ifndef STAND_ALONE
@@ -112,7 +112,7 @@ public:
    ///\param parent The parent window.
    ///\param id The ID for the dialog.
    ///\param node The CADNode to display properties of.
-   CADNodePropertiesDlg( wxWindow* parent, int id, VE_XML::VE_CAD::CADNode* node);
+   CADNodePropertiesDlg( wxWindow* parent, int id, ves::open::xml::cad::CADNode* node);
 
    ///Destructor
    virtual ~CADNodePropertiesDlg();
@@ -302,9 +302,9 @@ protected:
    double tempY;///<The y scale value.
    double tempZ;///<The z scale value.
 
-   VE_XML::VE_CAD::CADNode* _cadNode;///<The current CADNode.
+   ves::open::xml::cad::CADNode* _cadNode;///<The current CADNode.
 
-   std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+   std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 
    std::string ConvertUnicode( const wxChar* data )
    {

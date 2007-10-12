@@ -28,8 +28,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_UI_TRANSIENT_DIALOG_H_
-#define _VE_UI_TRANSIENT_DIALOG_H_
+#ifndef UI_TRANSIENT_DIALOG_H_
+#define UI_TRANSIENT_DIALOG_H_
 /*!\file UI_TransientDialog.h
 *UI_TransientDialog API
 */
@@ -54,7 +54,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public VE_Conductor::GUI_Utilities::BaseDialog 
+	class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public ves::conductor::util:BaseDialog 
 {
 public:
    UI_TransientDialog(int numTimeSteps,
@@ -107,5 +107,5 @@ protected:
 }
 }
 }
-#endif //_VE_UI_TRANSIENT_DIALOG_H_
+#endif //UI_TRANSIENT_DIALOG_H_
 

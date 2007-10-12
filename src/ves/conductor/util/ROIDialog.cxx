@@ -37,7 +37,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #include <wx/statbox.h>
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 ////////////////////////////////////////////////////////////////
 ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
 :BaseDialog(parent,id,title)

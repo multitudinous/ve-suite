@@ -46,7 +46,7 @@
 #include <wx/slider.h>
 #include <wx/choicdlg.h>
 #include <wx/filename.h>
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( ScalarToolsDialog, wxDialog )
    EVT_COMBOBOX(AVAILABLE_SCALARS,ScalarToolsDialog::_updateActiveScalar)

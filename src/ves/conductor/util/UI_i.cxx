@@ -38,7 +38,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
   
-using namespace VE_XML;
+using namespace ves::conductor::util;
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : UIName_(name), executive_(Body::Executive::_duplicate(exec))

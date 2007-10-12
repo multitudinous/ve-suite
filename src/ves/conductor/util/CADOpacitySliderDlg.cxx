@@ -41,8 +41,8 @@
 #include <wx/statbox.h>
 #include <wx/msgdlg.h>
 
-using namespace VE_XML::VE_CAD;
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::open::xml::cad;
+using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE(CADOpacitySliderDlg,wxDialog)
    EVT_COMMAND_SCROLL(OPACITY_SLIDER,CADOpacitySliderDlg::_onSlider)
 END_EVENT_TABLE()

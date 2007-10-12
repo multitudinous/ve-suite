@@ -77,9 +77,9 @@
 
 #include <ves/open/xml/shader/Program.h>
 
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML::VE_Shader;
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml::shader;
+using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE(CADNodePropertiesDlg,wxDialog)
    EVT_BUTTON(ADD_ANIMATION,CADNodePropertiesDlg::_addAnimation)
    EVT_BUTTON(ADD_ATTRIBUTE,CADNodePropertiesDlg::_addAttribute)

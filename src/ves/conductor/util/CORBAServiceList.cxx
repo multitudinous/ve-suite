@@ -47,8 +47,8 @@
 #include <wx/app.h>
 #include <wx/utils.h>
 
-using namespace VE_XML;
-using namespace VE_Conductor;
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
 
 vprSingletonImp( CORBAServiceList );
 

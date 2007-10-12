@@ -48,8 +48,8 @@
 
 #include <vector>
 
-using namespace VE_Conductor::GUI_Utilities;
-using namespace VE_XML;
+using namespace ves::conductor::util;
+using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE( TransformUI,wxPanel)
    EVT_SPINCTRL( TRANSFORM_PANEL_ID, TransformUI::UpdateTransform )

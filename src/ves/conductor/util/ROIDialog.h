@@ -68,13 +68,13 @@ public:
 
    ///Add an instruction to send. This is for access in the callbacks.
    ///\param newInstruct The instruction to add to the Command.
-   void AddInstruction(VE_XML::DataValuePair* newInstruct);
+   void AddInstruction(ves::open::xml::DataValuePair* newInstruct);
 protected:
    /*!\class ROIMinSliderCallback
     *Class that allows the user to do operations based on the min slider events
     */
    class ROIMinSliderCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+	   public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -98,7 +98,7 @@ protected:
     *This is caused by the slider buffer being reached.
     */
    class ROIBothMoveCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+          public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -120,7 +120,7 @@ protected:
     *Class that allows the user to do operations based on the max slider events
     */
    class ROIMaxSliderCallback:
-          public VE_Conductor::GUI_Utilities::DualSlider::SliderCallback
+          public ves::conductor::util::DualSlider::SliderCallback
    {
       public:
         ///Constructors
@@ -144,9 +144,9 @@ protected:
    virtual void _buildGUI();
    virtual wxSizer* _buildSpecificWidgets();
 
-   VE_Conductor::GUI_Utilities::DualSlider* _xBounds;///<DualSlider for x bounds
-   VE_Conductor::GUI_Utilities::DualSlider* _yBounds;///<DualSlider for y bounds
-   VE_Conductor::GUI_Utilities::DualSlider* _zBounds;///<DualSlider for z bounds
+   ves::conductor::util::DualSlider* _xBounds;///<DualSlider for x bounds
+   ves::conductor::util::DualSlider* _yBounds;///<DualSlider for y bounds
+   ves::conductor::util::DualSlider* _zBounds;///<DualSlider for z bounds
 };
 }
 }

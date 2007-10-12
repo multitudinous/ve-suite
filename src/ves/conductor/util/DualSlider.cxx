@@ -36,7 +36,7 @@
 #include <cmath>
 #include <wx/sizer.h>
 #include <wx/statbox.h>
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE(DualSlider,wxPanel)
    EVT_COMMAND_SCROLL_THUMBTRACK(MIN_SLIDER,DualSlider::_onSlider)
    EVT_COMMAND_SCROLL_THUMBTRACK(MAX_SLIDER,DualSlider::_onSlider)

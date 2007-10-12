@@ -36,7 +36,7 @@
 /*!\file CADOpacitySliderDlg.h
 CADOpacitySliderDlg API
 */
-/*!\class VE_Conductor::GUI_Utilities::CADOpacitySliderDlg
+/*!\class ves::conductor::util::CADOpacitySliderDlg
 *
 */
 #include <ves/open/VjObsC.h>
@@ -87,7 +87,7 @@ public:
    ///Constructor
    ///\param parent The parent wxWindow.
    ///\param id The unique id for this window.
-   CADOpacitySliderDlg(wxWindow* parent, int id,std::string cadID,VE_XML::VE_CAD::CADMaterial* material);
+   CADOpacitySliderDlg(wxWindow* parent, int id,std::string cadID,ves::open::xml::cad::CADMaterial* material);
 
    ///Destructor 
    virtual ~CADOpacitySliderDlg();
@@ -109,9 +109,9 @@ protected:
    ///Build the dialog internally.
    void _buildDialog();
    std::string _cadID;///<The id of the CADNode the material belongs to.
-   std::vector<VE_XML::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+   std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
    std::string _commandName;///<The command name.
-   VE_XML::VE_CAD::CADMaterial* _material;///<The CADMaterial we are updating.
+   ves::open::xml::cad::CADMaterial* _material;///<The CADMaterial we are updating.
 
    ///Send CAD commands back to VE-Xplorer
    void _sendCommandsToXplorer();

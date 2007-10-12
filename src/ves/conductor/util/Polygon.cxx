@@ -35,7 +35,7 @@
 #include <cmath>
 #include <iostream>
 
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 
 ////////////////////////////////////////////////
 Polygon::Polygon( void )

@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/conductor/util/CADMaterialEditMenu.h>
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 /////////////////////////////////////////
 ///Constructor                         //
 /////////////////////////////////////////

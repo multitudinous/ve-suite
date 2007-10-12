@@ -65,7 +65,7 @@ BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
    EVT_BUTTON(TRANSIENT_BUTTON,TextureBasedToolBar::_onTransient)
 END_EVENT_TABLE()
 
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 //////////////////////////////////////////////////////////////////
 TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
 :VE_Conductor::GUI_Utilities::BaseDialog(parent,id,"Texture-Based Tools")

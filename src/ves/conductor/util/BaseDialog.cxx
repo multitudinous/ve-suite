@@ -45,7 +45,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 //#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////

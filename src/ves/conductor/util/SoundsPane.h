@@ -71,7 +71,7 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
-    SoundsPane( VE_XML::VE_Model::ModelWeakPtr model );
+	SoundsPane( ves::open::xml::model::ModelWeakPtr model );
     virtual ~SoundsPane(){;}
 
     enum SOUNDS_TAB_IDS
@@ -82,9 +82,9 @@ public:
 
     void SendCommandsToXplorer();
 
-    ///Set the active VE_XML::VE_Model::Model
+    ///Set the active ves::open::xml::model::Model
     ///\param model The active model;
-    void SetActiveModel(VE_XML::VE_Model::ModelWeakPtr model);
+    void SetActiveModel(ves::open::xml::model::ModelWeakPtr model);
 
 protected:
     void _buildPage();
@@ -94,10 +94,10 @@ protected:
     wxButton* _loadButton;
 
     unsigned int _numSounds;///<The number of sounds
-    VE_XML::VE_Model::ModelStrongPtr m_activeModel;///<The current model;
+    ves::open::xml::model::ModelStrongPtr m_activeModel;///<The current model;
     wxArrayString _loadedSounds;///<The sounds loaded already;
 
-    ///Update the current sound information from a given VE_Model
+    ///Update the current sound information from a given model
     void _updateSoundsInformationFromModel();
 
     ///Check if we've already loaded this sound file

@@ -62,7 +62,7 @@ BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_SPINCTRL(DURATION_CNTL_BOX, UI_TransientDialog::_onSetDuration)
 END_EVENT_TABLE()
 
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor::util;
 ///////////////////////////////////////////////////////
 //Constructor                                        //
 ///////////////////////////////////////////////////////

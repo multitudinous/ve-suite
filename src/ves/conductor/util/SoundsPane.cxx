@@ -60,7 +60,7 @@ END_EVENT_TABLE()
 ///////////////
 //Constructor//
 ///////////////
-SoundsPane::SoundsPane( VE_XML::VE_Model::ModelWeakPtr activeModel )
+SoundsPane::SoundsPane( ves::open::xml::model::ModelWeakPtr activeModel )
 :
 wxDialog(NULL,-1, _("Sounds Pane"), 
 		  wxDefaultPosition, wxDefaultSize, 

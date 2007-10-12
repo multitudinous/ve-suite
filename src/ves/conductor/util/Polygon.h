@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
-#define _VE_CONDUCTOR_GUI_UTILITIES_POLYGON_
+#ifndef CONDUCTOR_GUI_UTILITIES_POLYGON_
+#define CONDUCTOR_GUI_UTILITIES_POLYGON_
 /*!\file Polygon.h
 Polygon API
 */

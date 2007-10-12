@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _VE_CONDUCTOR_GUI_UTILITIES_LINK_
-#define _VE_CONDUCTOR_GUI_UTILITIES_LINK_
+#ifndef CONDUCTOR_GUI_UTILITIES_LINK_
+#define CONDUCTOR_GUI_UTILITIES_LINK_
 /*!\file Link.h
 Link API
 */
-/*!\class VE_Conductor::GUI_Utilities::Link
+/*!\class ves::conductor::util::Link
 *
 */
 #include <vector>
@@ -131,10 +131,10 @@ public:
    void SetHighlightFlag( bool flag );
    ///Draw link
    void DrawLink( wxDC* dc );
-   ///Set VE_XML::VE_Model::Link
-   void SetLink( VE_XML::VE_Model::LinkWeakPtr inputLink );
-   ///Get VE_XML::VE_Model::Link
-   VE_XML::VE_Model::LinkWeakPtr GetLink();
+   ///Set ves::open::xml::model::Link
+   void SetLink( ves::open::xml::model::LinkWeakPtr inputLink );
+   ///Get ves::open::xml::model::Link
+   ves::open::xml::model::LinkWeakPtr GetLink();
    
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
@@ -191,7 +191,7 @@ private:
     /// second = y scale
     std::pair< double, double >* userScale;
     ///The XML Link rep
-    VE_XML::VE_Model::LinkSharedPtr m_veLink;
+    ves::open::xml::model::LinkSharedPtr m_veLink;
     
     std::string ConvertUnicode( const wxChar* data )
     {

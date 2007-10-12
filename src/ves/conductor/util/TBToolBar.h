@@ -39,9 +39,15 @@ TextureBasedToolBar API
 /*!\class TextureBasedToolBar
 * 
 */
-namespace VE_XML 
+namespace ves
 {
-   class DataValuePair;
+namespace open
+{
+namespace xml
+{
+	class DataValuePair;
+}
+}
 }
 
 #include <wx/dialog.h>
@@ -68,7 +74,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public VE_Conductor::GUI_Utilities::BaseDialog
+	class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public ves::conductor::util::BaseDialog
 {
 public:
    ///Constructor
@@ -110,7 +116,7 @@ protected:
    wxComboBox* _solutionSelection;///<The list of active solutions.
    //wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
    UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
-   VE_Conductor::GUI_Utilities::ROIDialog* _roiDlg;///<The ROI dialog;
+   ves::conductor::util::ROIDialog* _roiDlg;///<The ROI dialog;
    ScalarToolsDialog* _scalarToolsDlg;///<The scalar tools dialog;
    TransferFunctionDialog* _transferFunctionDlg;///<The scalar tools dialog;
   

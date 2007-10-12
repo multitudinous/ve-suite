@@ -76,7 +76,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public VE_Conductor::GUI_Utilities::BaseDialog
+	class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public ves::conductor::util::BaseDialog
 {    
 public:
     /// Constructors

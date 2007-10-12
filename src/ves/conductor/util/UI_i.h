@@ -93,7 +93,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
      void SetLogWindow( PEThread* logWindow );
 
 	 ///Returns vector containing XMLObjects
-	 VE_XML::Command GetXplorerData( std::string commandName );
+	 ves::open::xml::Command GetXplorerData( std::string commandName );
      
 virtual void UpdateNetwork (
     const char * network
@@ -148,8 +148,8 @@ virtual void Raise (
     ));
 
   std::map<int,std::string> m_idToModelName;
-  std::map<std::string, VE_XML::XMLObject*> m_objectToModel;
-  std::map< std::string, VE_XML::Command > m_commandNameMap;
+  std::map<std::string, ves::open::xml::XMLObject*> m_objectToModel;
+  std::map< std::string, ves::open::xml::Command > m_commandNameMap;
 };
 }
 }
