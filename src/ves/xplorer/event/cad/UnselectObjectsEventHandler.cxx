@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/UnselectObjectsEventHandler.h>
+#include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>

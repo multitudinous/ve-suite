@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
-#include <ves/xplorer/event/NavigationDataEventHandler.h>
+#include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>

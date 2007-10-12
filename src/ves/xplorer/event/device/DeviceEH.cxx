@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <string>
 
-#include <ves/xplorer/event/DeviceEH.h>
+#include <ves/xplorer/event/device/DeviceEH.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>

@@ -40,12 +40,12 @@
 #include <ves/xplorer/device/Tablet.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/DeviceEH.h>
-#include <ves/xplorer/event/DeviceModeEH.h>
-#include <ves/xplorer/event/UnselectObjectsEventHandler.h>
-#include <ves/xplorer/event/CenterPointJumpEventHandler.h>
-#include <ves/xplorer/event/KeyboardMouseEH.h>
-#include <ves/xplorer/event/NavigationDataEventHandler.h>
+#include <ves/xplorer/event/device/DeviceEH.h>
+#include <ves/xplorer/event/device/DeviceModeEH.h>
+#include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
+#include <ves/xplorer/event/device/CenterPointJumpEventHandler.h>
+#include <ves/xplorer/event/device/KeyboardMouseEH.h>
+#include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
