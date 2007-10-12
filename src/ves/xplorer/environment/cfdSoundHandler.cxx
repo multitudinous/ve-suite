@@ -33,7 +33,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/viz/cfdSoundHandler.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/xplorer/util/fileIO.h>

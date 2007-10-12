@@ -37,7 +37,7 @@
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/viz/cfdSoundHandler.h>
 #include <ves/xplorer/event/viz/cfdCursor.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/xplorer/event/viz/cfdTeacher.h>
@@ -56,8 +56,8 @@
 #include <ves/xplorer/event/DisplayEventHandler.h>
 #include <ves/xplorer/event/ViewEventHandler.h>
 #include <ves/xplorer/event/PhysicsSimulationEventHandler.h>
-#include <ves/xplorer/event/DeviceHandler.h>
-#include <ves/xplorer/event/KeyboardMouse.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/event/SeedPointActivateEH.h>
 #include <ves/xplorer/event/SPBoundEH.h>
 #include <ves/xplorer/event/SPDimensionsEH.h>

@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/viz/cfdPolyData.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>

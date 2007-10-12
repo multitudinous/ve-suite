@@ -54,7 +54,7 @@
 #include <ves/xplorer/event/viz/cfdAnimatedStreamlineCone.h>
 #include <ves/xplorer/event/viz/cfdContour.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/event/viz/cfdCursor.h>

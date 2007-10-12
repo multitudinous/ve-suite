@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 
 #include <vtkLookupTable.h>

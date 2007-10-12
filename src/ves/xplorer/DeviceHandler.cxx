@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/DeviceHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/ModelHandler.h>
 
-#include <ves/xplorer/event/KeyboardMouse.h>
-#include <ves/xplorer/event/Wand.h>
-#include <ves/xplorer/event/Tablet.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
+#include <ves/xplorer/device/Wand.h>
+#include <ves/xplorer/device/Tablet.h>
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/DeviceEH.h>

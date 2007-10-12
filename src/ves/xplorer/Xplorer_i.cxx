@@ -40,7 +40,7 @@
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/viz/cfdDisplaySettings.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

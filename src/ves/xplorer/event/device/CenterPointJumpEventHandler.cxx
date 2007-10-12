@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/CenterPointJumpEventHandler.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
-#include <ves/xplorer/event/DeviceHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 
 
 #include <ves/open/xml/XMLObject.h>

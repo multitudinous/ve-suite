@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/NavigationDataEventHandler.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
-#include <ves/xplorer/event/DeviceHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/event/Device.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

@@ -36,7 +36,7 @@
 #include <omp.h>
 #endif
 
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdDataSet.h>
 
 #include <vtkLookupTable.h>

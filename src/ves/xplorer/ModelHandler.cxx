@@ -50,7 +50,7 @@
 #include <ves/xplorer/event/viz/cfdModel.h>
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 

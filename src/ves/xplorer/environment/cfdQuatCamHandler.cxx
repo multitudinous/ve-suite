@@ -40,7 +40,7 @@
 #include <ves/xplorer/event/QCLoadFileEH.h>
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/event/viz/cfdQuatCam.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/open/xml/Command.h>

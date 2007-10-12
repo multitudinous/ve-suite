@@ -35,8 +35,8 @@
 #include <ves/xplorer/event/KeyboardMouseEH.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
-#include <ves/xplorer/event/DeviceHandler.h>
-#include <ves/xplorer/event/KeyboardMouse.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
