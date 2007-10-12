@@ -31,10 +31,10 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/Wand.h>
+#include <ves/xplorer/device/Wand.h>
 
 #include <ves/xplorer/cfdDebug.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>

@@ -31,13 +31,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Stuff --- //
-#include <ves/xplorer/event/KeyboardMouse.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
 
 #include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
-#include <ves/xplorer/event/viz/cfdModel.h>
-#include <ves/xplorer/event/LocalToWorldTransform.h>
+#include <ves/xplorer/ModelCADHandler.h>
+#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>

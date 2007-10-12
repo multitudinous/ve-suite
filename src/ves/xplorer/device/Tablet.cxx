@@ -31,12 +31,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/Tablet.h>
-#include <ves/xplorer/event/viz/cfdEnum.h>
+#include <ves/xplorer/device/Tablet.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdDebug.h>
-#include <ves/xplorer/event/DeviceHandler.h>
-#include <ves/xplorer/event/KeyboardMouse.h>
-#include <ves/xplorer/event/LocalToWorldTransform.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
+#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

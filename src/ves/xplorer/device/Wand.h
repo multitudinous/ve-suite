@@ -44,7 +44,7 @@ Wand API
 // --- VE-Suite Includes
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/event/Device.h>
+#include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 

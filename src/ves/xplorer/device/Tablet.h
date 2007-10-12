@@ -47,7 +47,7 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <ves/xplorer/event/Device.h>
+#include <ves/xplorer/device/Device.h>
 
 // --- VRJuggler Includes --- //
 #include <gmtl/Vec.h>
