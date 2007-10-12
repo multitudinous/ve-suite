@@ -40,7 +40,7 @@
 #include <ves/xplorer/network/cfdExecutive.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 
-#include <ves/xplorer/plugincfdVEBaseClass.h>
+#include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 

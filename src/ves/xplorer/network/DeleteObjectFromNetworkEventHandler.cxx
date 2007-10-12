@@ -34,7 +34,7 @@
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/network/cfdExecutive.h>
-#include <ves/xplorer/plugincfdVEBaseClass.h>
+#include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
 
 #include <ves/open/xml/XMLObject.h>
