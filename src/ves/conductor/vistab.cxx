@@ -102,7 +102,8 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_CHECKBOX( ID_DATA_AXES_CB,       Vistab::UpdateAxes)
    EVT_CHECKBOX( ID_DATA_SCALAR_BAR,    Vistab::UpdateScalarBar)
 END_EVENT_TABLE()
-using namespace VE_Conductor::GUI_Utilities;
+
+using namespace ves::conductor;
 
 //////////////////////////////////////////
 //Constructor                           //
@@ -524,17 +525,17 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
    
    if ( streamline->ShowModal() == wxID_OK )
    {
-      VE_XML::Command* veCommand = new VE_XML::Command();
+      ves::open::xml::Command* veCommand = new ves::open::xml::Command();
       veCommand->SetCommandName( std::string("Display Seed Points") );
-      VE_XML::DataValuePair* seedPointDVP = new VE_XML::DataValuePair();
+	  ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
       seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
       veCommand->AddDataValuePair(seedPointDVP);
 
-      VE_XML::DataValuePair* activeDataset = new VE_XML::DataValuePair;
+      ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
       activeDataset->SetData("Active Dataset",GetActiveDatasetName());
       veCommand->AddDataValuePair(activeDataset);
 
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+	  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
       delete veCommand;   
    }
 }
@@ -972,28 +973,28 @@ void Vistab::_updateBaseInformation()
    ///This is the default. Other dialogs actions will set the command name to the specific value if they are launched
    _commandName = "VISUALIZATION_SETTINGS";
 
-   VE_XML::DataValuePair* activeScalar = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* activeScalar = new ves::open::xml::DataValuePair();
    activeScalar->SetDataType("STRING");
    activeScalar->SetDataName(std::string("Active Scalar"));
    activeScalar->SetDataString(_activeScalarName);
 
    _vistabBaseInformation.push_back(activeScalar);
    
-   VE_XML::DataValuePair* activeVector = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* activeVector = new ves::open::xml::DataValuePair();
    activeVector->SetDataType("STRING");
    activeVector->SetDataName(std::string("Active Vector"));
    activeVector->SetDataString(_activeVectorName);
 
    _vistabBaseInformation.push_back(activeVector);
 
-   VE_XML::DataValuePair* activeDataset= new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* activeDataset= new ves::open::xml::DataValuePair();
    activeDataset->SetDataType("STRING");
    activeDataset->SetDataName(std::string("Active Dataset"));
    activeDataset->SetDataString(_activeDataSetName);
 
    _vistabBaseInformation.push_back(activeDataset);
 
-   VE_XML::DataValuePair* scalarMin = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* scalarMin = new ves::open::xml::DataValuePair();
 //   minimumValue = _activeScalarRange.at(0) 
 //                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    minimumValue = _activeScalarRange.at(0) 
@@ -1003,7 +1004,7 @@ void Vistab::_updateBaseInformation()
 
    _vistabBaseInformation.push_back(scalarMin);
 
-   VE_XML::DataValuePair* scalarMax = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* scalarMax = new ves::open::xml::DataValuePair();
 //   maximumValue = _activeScalarRange.at(0) 
 //                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
    maximumValue = _activeScalarRange.at(1) - ( (_activeScalarRange.at(1) - _activeScalarRange.at(0)) 
@@ -1018,38 +1019,38 @@ void Vistab::_updateBaseInformation()
    _vistabBaseInformation.push_back( axes );*/
 
    //Store the axes display value
-   VE_XML::DataValuePair* bbox = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* bbox = new ves::open::xml::DataValuePair();
    bbox->SetData( std::string("Show Bounding Box"), static_cast< unsigned int >( bboxCB->GetValue() ) );
    _vistabBaseInformation.push_back( bbox );
 
    //Store the axes display value
-   VE_XML::DataValuePair* wireMesh= new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* wireMesh= new ves::open::xml::DataValuePair();
    wireMesh->SetData( std::string("Show Wire Mesh"), static_cast< unsigned int >( wireFrameCB->GetValue() ) );
    _vistabBaseInformation.push_back( wireMesh );
 
    //set scalar bar state
-   VE_XML::DataValuePair* scalarBarDVP = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* scalarBarDVP = new ves::open::xml::DataValuePair();
    scalarBarDVP->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
    _vistabBaseInformation.push_back( scalarBarDVP );
 }
 ////////////////////////////////////////////////////////////////////////////
 void Vistab::OnClearAll( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair(  std::string("UNSIGNED INT") );
    dataValuePair->SetDataName( "CLEAR_ALL" );
    dataValuePair->SetDataValue( static_cast< unsigned int >( 1 ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("CLEAR_VIS_OBJECTS") );
    veCommand->AddDataValuePair( dataValuePair );
 
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////
-void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
+void Vistab::SendUpdatedSettingsToXplorer(ves::open::xml::Command* subDialogCommand)
 {
    _updateBaseInformation();
-   VE_XML::Command* newCommand = new VE_XML::Command();
+   ves::open::xml::Command* newCommand = new ves::open::xml::Command();
 
    for(size_t i =0; i < _vistabBaseInformation.size(); i++)
    {
@@ -1057,14 +1058,14 @@ void Vistab::SendUpdatedSettingsToXplorer(VE_XML::Command* subDialogCommand)
    }
    if(subDialogCommand)
    {
-      VE_XML::DataValuePair* subDialogSettings = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* subDialogSettings = new ves::open::xml::DataValuePair();
       subDialogSettings->SetData("Sub-Dialog Settings",subDialogCommand);
       newCommand->AddDataValuePair(subDialogSettings);
    }
 
    newCommand->SetCommandName(_commandName);
 
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
+   bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 
    delete newCommand;
    newCommand = 0;
@@ -1232,37 +1233,37 @@ void Vistab::_onClose( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateBoundingBox( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
    dataValuePair->SetData( "Bounding Box State", static_cast< unsigned int >( bboxCB->GetValue() ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("Change Bounding Box State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
    dataValuePair->SetData( "Wire Frame State", static_cast< unsigned int >( wireFrameCB->GetValue() ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("Change Wire Frame State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
    dataValuePair->SetData( "Axes State", static_cast< unsigned int >( axesCB->GetValue() ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("Change Axes State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
    
    if ( axesCB->IsChecked() )
@@ -1287,25 +1288,25 @@ void Vistab::UpdateAxesLabels( wxCommandEvent& event )
    labels.push_back( ConvertUnicode( yAxisEntry->GetValue().c_str() ) );
    labels.push_back( ConvertUnicode( zAxisEntry->GetValue().c_str() ) );
    
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
    dataValuePair->SetData( activeAxesLAbel, labels );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("Change Axes Labels") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateScalarBar( wxCommandEvent& event )
 {
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
    dataValuePair->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("Change Scalar Bar State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = ves:conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////

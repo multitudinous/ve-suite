@@ -36,7 +36,7 @@
 
 #include <wx/window.h>
 
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor;
 
 ////////////////////////////////////////////////
 Module::Module( void ):
@@ -118,7 +118,7 @@ void Module::RemoveLink( size_t i )
    return cls_name;
 }*/
 ////////////////////////////////////////////////
-VE_Conductor::GUI_Utilities::Polygon* Module::GetPolygon( void )
+ves::conductor::util::Polygon* Module::GetPolygon( void )
 {
    return &(poly);
 }

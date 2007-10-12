@@ -51,20 +51,20 @@
 #include <sstream>
 #include <algorithm>
 
-using namespace VE_XML;
-using namespace VE_Conductor;
+using namespace ves::open::xml;
+using namespace ves::conductor;
 
 vprSingletonImp( XMLDataBufferEngine );
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 { 
-   VE_XML::CommandWeakPtr nullCommand = new VE_XML::Command();
+   ves::open::xml::CommandWeakPtr nullCommand = new ves::open::xml::Command();
    nullCommand->SetCommandName( "NULL" );
    m_commandMap[ "NULL" ] = nullCommand;
 
     //Setup default system
-    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
-       new VE_XML::VE_Model::System();
+    ves::open::xml::model::SystemStrongPtr tempSystem = 
+       new ves::open::xml::model::System();
     m_systemMap[tempSystem->GetID()] = tempSystem;
     //get the main systems id
     topId = tempSystem->GetID();
@@ -81,10 +81,10 @@ void XMLDataBufferEngine::CleanUp( void )
     m_systemMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
+ves::open::xml::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    std::map< std::string, VE_XML::CommandPtr >::iterator iter;
+    std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
     iter = m_commandMap.find( commandKey );
     if ( iter == m_commandMap.end() )
     {
@@ -94,27 +94,27 @@ VE_XML::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::SetCommand( std::string commandKey, 
-                                      VE_XML::CommandWeakPtr command )
+                                      ves::open::xml::CommandWeakPtr command )
 {
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     m_commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::CommandWeakPtr > 
+std::map< std::string, ves::open::xml::CommandWeakPtr > 
     XMLDataBufferEngine::GetCommandMap( void )
 {
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    std::map< std::string, VE_XML::CommandWeakPtr > 
+    std::map< std::string, ves::open::xml::CommandWeakPtr > 
         tempMap( m_commandMap.begin(), m_commandMap.end() );
     return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::SetCommandMap( std::map< std::string, 
-                                         VE_XML::CommandWeakPtr > tempMap )
+                                         ves::open::xml::CommandWeakPtr > tempMap )
 {
     m_commandMap.clear();
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
-    m_commandMap = std::map< std::string, VE_XML::CommandPtr >( 
+    m_commandMap = std::map< std::string, ves::open::xml::CommandPtr >( 
         tempMap.begin(), tempMap.end() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     // Load from the nt file loaded through wx
     // Get a list of all the command elements   
     //_fileProgress->Update( 10, _("start loading") );
-    VE_XML::XMLReaderWriter networkWriter;
+    ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
 
     if ( xmlNetwork.size() < 512 )
@@ -151,16 +151,16 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     dataToObtain.push_back( std::make_pair( "XML", "User" ) );
     dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
-    std::vector< VE_XML::XMLObject* >::iterator objectIter;
-    std::vector< VE_XML::XMLObject* > objectVector = 
+	std::vector< ves::open::xml::XMLObject* >::iterator objectIter;
+    std::vector< ves::open::xml::XMLObject* > objectVector = 
         networkWriter.GetLoadedXMLObjects();
-    VE_XML::VE_Model::SystemStrongPtr tempSystem = 0;
+    ves::open::xml::model::SystemStrongPtr tempSystem = 0;
     
     // we are expecting that a network will be found
     if ( !objectVector.empty() )
     {
         tempSystem = 
-            dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
+			dynamic_cast< ves::open::xml::model::System* >( objectVector.at( 0 ) );
         if( tempSystem )
         {
          m_systemMap[tempSystem->GetID()] = tempSystem;
@@ -170,12 +170,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         }
         else
         {
-            tempSystem = new VE_XML::VE_Model::System();
+			tempSystem = new ves::open::xml::model::System();
          m_systemMap[tempSystem->GetID()] = tempSystem;
          topId = tempSystem->GetID();
             
             m_networkMap[ "Network" ] = 
-                dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+				dynamic_cast< ves::open::xml::model::Network* >( objectVector.at( 0 ) );
             tempSystem->AddNetwork( m_networkMap[ "Network" ] );
             objectIter = objectVector.erase( objectVector.begin() );
             tempSystem = 0;
@@ -193,7 +193,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     long moduleID = 0;
     std::ostringstream fromID;
     std::ostringstream toID;
-    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = m_networkMap[ "Network" ];
+	ves::open::xml::model::NetworkWeakPtr tempNetwork = m_networkMap[ "Network" ];
     for( size_t i = 0; i < tempNetwork->GetNumberOfLinks(); ++i )
     {
         tempNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
@@ -222,8 +222,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::ostringstream modelID;
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            VE_XML::VE_Model::ModelWeakPtr model = 
-            dynamic_cast< VE_XML::VE_Model::Model* >( *objectIter );
+			ves::open::xml::model::ModelWeakPtr model = 
+				dynamic_cast< ves::open::xml:model::Model* >( *objectIter );
             if( !model )
             {
                 //if this object is not a model continue
@@ -241,13 +241,13 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     {
         // now lets create a list of them
         std::ostringstream modelID;
-        std::vector< VE_XML::VE_Model::ModelWeakPtr >::iterator modelIter;
-        std::vector< VE_XML::VE_Model::ModelWeakPtr > modelVector;
+        std::vector< ves::open::xml::model::ModelWeakPtr >::iterator modelIter;
+        std::vector< ves::open::xml::model::ModelWeakPtr > modelVector;
         modelVector = tempSystem->GetModels();
         
         for( modelIter = modelVector.begin(); modelIter != modelVector.end(); )
         {
-            VE_XML::VE_Model::ModelWeakPtr model = *modelIter;
+			ves::open::xml::model::ModelWeakPtr model = *modelIter;
 
             modelIter = modelVector.erase( modelIter );
             modelID << model->GetModelID();
@@ -268,7 +268,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     if( tempNetwork->GetNumberOfLinks() == 0 )
     {
         std::ostringstream modelID;
-        for( std::map< std::string, VE_XML::VE_Model::ModelStrongPtr >::iterator 
+        for( std::map< std::string, ves::open::xml::model::ModelStrongPtr >::iterator 
             modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
              ++modelIter )
         {
@@ -281,13 +281,13 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     
     if( !objectVector.empty() )
     {
-        VE_XML::UserWeakPtr userColor = 
-            dynamic_cast< VE_XML::User* >( objectVector.at( 0 ) );
+        ves::open::xml::UserWeakPtr userColor = 
+            dynamic_cast< ves::open::xml::User* >( objectVector.at( 0 ) );
         m_userMap[ "Network" ] = userColor;
         //Set user preferences
-        std::vector< VE_XML::CommandWeakPtr > tempStates = 
+        std::vector< ves::open::xml::CommandWeakPtr > tempStates = 
             userColor->GetUserStateInfo()->GetStateVector();
-        std::map< std::string, VE_XML::CommandWeakPtr > tempMap;
+        std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap;
         for ( size_t i = 0; i < tempStates.size(); ++i )
         {
             //VE_XML::CommandWeakPtr tempCommand = tempStates.at( i );
@@ -298,12 +298,12 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     }
     else
     {
-        m_userMap[ "Network" ] = new VE_XML::User();
+        m_userMap[ "Network" ] = new ves::open::xml::User();
     }
     
     m_userMap[ "Network" ]->SetUserId( "User" );
     m_userMap[ "Network" ]->SetControlStatus( 
-        VE_XML::User::VEControlStatus( "MASTER" ) );
+		ves::open::xml::User::VEControlStatus( "MASTER" ) );
 
    if(tempSystem)
    {
@@ -322,18 +322,18 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 {
     // Here we wshould loop over all of the following
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
     //Write out the veUser info for the local user
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( 
             &(*m_systemMap[ topId]), "veSystem" ) );
     
     //Write out the veUser info for the local user
-    VE_XML::StateInfoWeakPtr colorState = new VE_XML::StateInfo();
+    ves::open::xml::StateInfoWeakPtr colorState = new ves::open::xml::StateInfo();
     ///Load the current preferences from the data buffer
-    std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
+    std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap = 
         UserPreferencesDataBuffer::instance()->GetCommandMap();
     std::cout << tempMap.size() << std::endl;
-    for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator prefIter = 
+    for( std::map< std::string, ves::open::xml::CommandWeakPtr >::iterator prefIter = 
          tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
     {
         colorState->AddState( prefIter->second );
@@ -341,19 +341,19 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 
     if( m_userMap.empty() )
     {
-        m_userMap[ "Network" ] = new VE_XML::User();
+        m_userMap[ "Network" ] = new ves::open::xml::User();
         m_userMap[ "Network" ]->SetUserId( "User" );
         m_userMap[ "Network" ]->SetControlStatus( 
-            VE_XML::User::VEControlStatus( "MASTER" ) );
+            ves::open::xml::User::VEControlStatus( "MASTER" ) );
     }
     m_userMap[ "Network" ]->SetStateInfo( colorState );
 
     
     //Write out the veUser info for the local user
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( 
         &(*m_userMap[ "Network" ]), "User" ) );
     
-    VE_XML::XMLReaderWriter netowrkWriter;
+    ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
     
@@ -365,38 +365,38 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     //Erase all the maps
     CleanUp();
     
-    VE_XML::CommandWeakPtr nullCommand = new VE_XML::Command();
+    ves::open::xml::CommandWeakPtr nullCommand = new ves::open::xml::Command();
     nullCommand->SetCommandName( "NULL" );
     m_commandMap[ "NULL" ] = nullCommand;
     
     //Setup default system
-    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
-        new VE_XML::VE_Model::System();
+    ves::open::xml::model::SystemStrongPtr tempSystem = 
+        new ves::open::xml::model::System();
     m_systemMap[ tempSystem->GetID() ] = tempSystem;
     //get the main systems id
     topId = tempSystem->GetID();    
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::NetworkWeakPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
+ves::open::xml::model::NetworkWeakPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
     std::string dataNumber )
 {
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > XMLDataBufferEngine::GetXMLModels()
+std::map< std::string, ves::open::xml::model::ModelWeakPtr > XMLDataBufferEngine::GetXMLModels()
 {
-    std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > 
+    std::map< std::string, ves::open::xml::model::ModelWeakPtr > 
         tempMap( m_modelMap.begin(), m_modelMap.end() );
    return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::ModelWeakPtr XMLDataBufferEngine::GetXMLModelDataObject( 
+ves::open::xml::model::ModelWeakPtr XMLDataBufferEngine::GetXMLModelDataObject( 
     std::string dataNumber )
 {
     return m_modelMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::UserWeakPtr XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
+ves::open::xml::UserWeakPtr XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
 {
     return m_userMap[ dataNumber ];
 }
@@ -414,19 +414,19 @@ std::string XMLDataBufferEngine::GetTopSystemId( )
    return topId;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(
+ves::open::xml::model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(
    std::string id )
 {
    return m_systemMap[id];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >XMLDataBufferEngine::
+std::map< std::string, ves::open::xml::model::SystemStrongPtr >XMLDataBufferEngine::
     GetXMLSystemDataMap( )
 {
    return m_systemMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLDataBufferEngine::ParseSystem( VE_XML::VE_Model::SystemWeakPtr system )
+void XMLDataBufferEngine::ParseSystem( ves::open::xml::model::SystemWeakPtr system )
 {
    //add the system to the map
    m_systemMap[system->GetID()] = system;

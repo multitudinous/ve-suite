@@ -358,25 +358,25 @@ void Contours::_updateAdvancedSettings()
 
    if(_dataType == "SCALAR")
    {
-      VE_XML::DataValuePair* contourOpacity = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* contourOpacity = new ves::open::xml::DataValuePair();
       contourOpacity->SetData("Contour Opacity",_lastOpacity);
       _advancedSettings.push_back(contourOpacity);
 
-      VE_XML::DataValuePair* warpedScale = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* warpedScale = new ves::open::xml::DataValuePair();
       warpedScale->SetData("Warped Contour Scale",_lastWarpedScale);
       _advancedSettings.push_back(warpedScale);
 
-      VE_XML::DataValuePair* LODSetting = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* LODSetting = new ves::open::xml::DataValuePair();
       LODSetting->SetData("Contour LOD",_lastLOD);
       _advancedSettings.push_back(LODSetting);
 
-      VE_XML::DataValuePair* contourType = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* contourType = new ves::open::xml::DataValuePair();
       contourType->SetDataType("STRING");
       contourType->SetDataName(std::string("Type"));
       contourType->SetDataString(_planeType);
       _advancedSettings.push_back(contourType);
       
-      VE_XML::DataValuePair* warpOptionFlag = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* warpOptionFlag = new ves::open::xml::DataValuePair();
       warpOptionFlag->SetDataName("Warp Option");
       warpOptionFlag->SetDataType("UNSIGNED INT");
       if(_warpOption)
@@ -391,19 +391,19 @@ void Contours::_updateAdvancedSettings()
    }
    else if(_dataType == "VECTOR")
    {
-      VE_XML::DataValuePair* vectorThreshold = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* vectorThreshold = new ves::open::xml::DataValuePair();
       vectorThreshold->SetData("Vector Threshold",_lastVectorThreshold);
       _advancedSettings.push_back(vectorThreshold);
    
-      VE_XML::DataValuePair* vectorScale = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* vectorScale = new ves::open::xml::DataValuePair();
       vectorScale->SetData("Vector Scale",_lastVectorScale);
       _advancedSettings.push_back(vectorScale);
 
-      VE_XML::DataValuePair* vectorRatio = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* vectorRatio = new ves::open::xml::DataValuePair();
       vectorRatio->SetData("Vector Ratio",_lastVectorRatio);
       _advancedSettings.push_back(vectorRatio);
 
-      VE_XML::DataValuePair* scaleByMagFlag = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* scaleByMagFlag = new ves::open::xml::DataValuePair();
       scaleByMagFlag->SetDataName("Scale By Magnitude");
       scaleByMagFlag->SetDataType("UNSIGNED INT");
       if(_lastScaleByMagnitude)
@@ -427,7 +427,7 @@ void Contours::_updateAdvancedSettings()
 void Contours::_updateContourInformation()
 {
    _contourInformation.clear();
-   VE_XML::DataValuePair* contourDirection = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* contourDirection = new ves::open::xml::DataValuePair();
    contourDirection->SetDataType("STRING");
    contourDirection->SetDataName(std::string("Direction"));
    contourDirection->SetDataString(_planeDirection);
@@ -441,21 +441,21 @@ void Contours::_updateContourInformation()
 
    _contourInformation.push_back(contourType);*/
 
-   VE_XML::DataValuePair* numberOfPlanes = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* numberOfPlanes = new ves::open::xml::DataValuePair();
    numberOfPlanes->SetDataType("STRING");
    numberOfPlanes->SetDataName(std::string("Number of Planes"));
    numberOfPlanes->SetDataString(_numberOfPlanesOption);
 
    _contourInformation.push_back(numberOfPlanes);
 
-   VE_XML::DataValuePair* planePosition = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* planePosition = new ves::open::xml::DataValuePair();
    planePosition->SetData("Position",_planePosition);
 
    _contourInformation.push_back(planePosition);
 
    if( !_planeOption.empty() )
    {
-      VE_XML::DataValuePair* planeOption = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* planeOption = new ves::open::xml::DataValuePair();
       planeOption->SetDataType("STRING");
       planeOption->SetDataName(std::string("Plane Option"));
       planeOption->SetDataString(_planeOption);
@@ -470,7 +470,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
    _updateContourInformation();
    _updateAdvancedSettings();
 
-   VE_XML::Command* newCommand = new VE_XML::Command();
+   ves::open::xml::Command* newCommand = new ves::open::xml::Command();
    if(_dataType == "SCALAR")
    {
       newCommand->SetCommandName("UPDATE_SCALAR_SETTINGS");
@@ -485,7 +485,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
    }
 
    //The advanced settings command
-   VE_XML::Command* advancedSettings = new VE_XML::Command();
+   ves::open::xml::Command* advancedSettings = new ves::open::xml::Command();
    advancedSettings->SetCommandName("ADVANCED_CONTOUR_SETTINGS");
    for(size_t i =0; i < _advancedSettings.size(); i++)
    {
@@ -494,7 +494,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
    std::string typeName = (_dataType == "SCALAR")?"Advanced Scalar Settings":"Advanced Vector Settings";
 
    //dvp representing the advanced settings within the contours information
-   VE_XML::DataValuePair* advancedContourSettings = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* advancedContourSettings = new ves::open::xml::DataValuePair();
    advancedContourSettings->SetData(typeName,advancedSettings);
    newCommand->AddDataValuePair(advancedContourSettings);
    

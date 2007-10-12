@@ -183,18 +183,18 @@ void Polydata::_onPolydataPlane( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////
 void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::Command* newCommand = new VE_XML::Command();
+   ves::open::xml::Command* newCommand = new ves::open::xml::Command();
    newCommand->SetCommandName("UPDATE_POLYDATA_SETTINGS");
    
-   VE_XML::DataValuePair* polydataValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* polydataValue = new ves::open::xml::DataValuePair();
    polydataValue->SetData("Polydata Value",static_cast<double>((_polydataSlider->GetValue())));
    newCommand->AddDataValuePair(polydataValue);
 
-   VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* colorByScalar = new ves::open::xml::DataValuePair();
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
 
-   VE_XML::DataValuePair* warpSurface = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* warpSurface = new ves::open::xmlDataValuePair();
    warpSurface->SetDataName("Warped Surface");
    warpSurface->SetDataType("UNSIGNED INT");
    if(_useWarpedSurfaceCheckBox->GetValue())

@@ -38,14 +38,14 @@
 #include <sstream>
 #include <algorithm>
 
-using namespace VE_XML;
-using namespace VE_Conductor;
+using namespace ves::open::xml;
+using namespace ves::conductor;
 
 vprSingletonImp( UserPreferencesDataBuffer );
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferencesDataBuffer::UserPreferencesDataBuffer( void )
 { 
-   VE_XML::CommandPtr nullCommand = new Command();
+   ves::open::xml::CommandPtr nullCommand = new Command();
    nullCommand->SetCommandName( "NULL" );
    commandMap[ "NULL" ] = nullCommand;
 }
@@ -56,11 +56,11 @@ void UserPreferencesDataBuffer::CleanUp( void )
     commandMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::CommandWeakPtr UserPreferencesDataBuffer::GetCommand( 
+ves::open::xml::CommandWeakPtr UserPreferencesDataBuffer::GetCommand( 
     std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
-    std::map< std::string, VE_XML::CommandPtr >::iterator iter;
+    std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
     iter = commandMap.find( commandKey );
     if( iter == commandMap.end() )
     {
@@ -78,17 +78,17 @@ VE_XML::CommandWeakPtr UserPreferencesDataBuffer::GetCommand(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::SetCommand( std::string commandKey, 
-    VE_XML::CommandWeakPtr command )
+    ves::open::xml::CommandWeakPtr command )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, VE_XML::CommandWeakPtr > UserPreferencesDataBuffer::GetCommandMap( void )
+std::map< std::string, ves::open::xml::CommandWeakPtr > UserPreferencesDataBuffer::GetCommandMap( void )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
-    std::map< std::string, VE_XML::CommandWeakPtr > tempMap;
-    for( std::map< std::string, VE_XML::CommandPtr >::iterator 
+    std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap;
+    for( std::map< std::string, ves::open::xml::CommandPtr >::iterator 
         iter = commandMap.begin(); iter != commandMap.end(); )
     {        
         if( iter->first == "NULL" )
@@ -112,21 +112,21 @@ std::map< std::string, VE_XML::CommandWeakPtr > UserPreferencesDataBuffer::GetCo
     return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, VE_XML::CommandWeakPtr > tempMap )
+void UserPreferencesDataBuffer::SetCommandMap( std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap )
 {
     vpr::Guard<vpr::Mutex> val_guard(m_valueLock);
     commandMap.clear();
-    for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator 
+    for( std::map< std::string, ves::open::xml::CommandWeakPtr >::iterator 
         iter = tempMap.begin(); iter != tempMap.end(); ++iter )
     {
         commandMap[ iter->first ] = iter->second;
     }
     //std::copy( tempMap.begin(), tempMap.end(), commandMap.begin() );
-    std::map< std::string, VE_XML::CommandPtr >::iterator iter;
+    std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
     iter = commandMap.find( "NULL" );
     if( iter == commandMap.end() )
     {
-        VE_XML::CommandPtr nullCommand = new Command();
+        ves::open::xml::CommandPtr nullCommand = new Command();
         nullCommand->SetCommandName( "NULL" );
         commandMap[ "NULL" ] = nullCommand;
     }

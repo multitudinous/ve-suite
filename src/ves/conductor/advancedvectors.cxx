@@ -42,9 +42,7 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 
-
-
-using namespace VE_Conductor::GUI_Utilities;
+using namespace ves::conductor;
 //////////////////////////////////////////////////////////////////
 AdvancedVectors::AdvancedVectors(wxWindow* parent, wxWindowID id, 
                              const wxString& caption, 

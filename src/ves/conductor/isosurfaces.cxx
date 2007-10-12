@@ -238,26 +238,26 @@ void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& WXUNUSED(event) )
 ///////////////////////////////////////////////////////////
 void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
 {
-   VE_XML::Command* newCommand = new VE_XML::Command();
+   ves::open::xml::Command* newCommand = new ves::open::xml::Command();
    newCommand->SetCommandName("UPDATE_ISOSURFACE_SETTINGS");
    
-   VE_XML::DataValuePair* isosurfaceValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* isosurfaceValue = new ves::open::xml::DataValuePair();
    isosurfaceValue->SetData("Iso-Surface Value",static_cast<double>((_isoSurfaceSlider->GetValue())));
    newCommand->AddDataValuePair(isosurfaceValue);
 
-   VE_XML::DataValuePair* colorByScalar = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* colorByScalar = new ves::open::xml::DataValuePair();
    colorByScalar->SetData("Color By Scalar",_activeScalar);
    newCommand->AddDataValuePair(colorByScalar);
 
-   VE_XML::DataValuePair* minValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* minValue = new ves::open::xml::DataValuePair();
    minValue->SetData("Minimum Scalar Value", _minValue );
    newCommand->AddDataValuePair(minValue);
 
-   VE_XML::DataValuePair* maxValue = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* maxValue = new ves::open::xml::DataValuePair();
    maxValue->SetData("Maximum Scalar Value", _maxValue );
    newCommand->AddDataValuePair(maxValue);
 
-   VE_XML::DataValuePair* nearestPrecomputed = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePair* nearestPrecomputed = new ves::open::xmlataValuePair();
    nearestPrecomputed->SetDataName("Use Nearest Precomputed");
    nearestPrecomputed->SetDataType("UNSIGNED INT");
    if(_useNearestPreComputedCheckBox->GetValue())

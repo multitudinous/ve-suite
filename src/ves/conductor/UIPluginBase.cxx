@@ -72,9 +72,9 @@
 
 #include <fstream>
 
-using namespace VE_XML::VE_Model;
-using namespace VE_XML;
-using namespace VE_Conductor;
+using namespace ves::open::xml::model;
+using namespace ves::open::xml;
+using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
     EVT_LEFT_DCLICK( UIPluginBase::OnDClick )
@@ -497,7 +497,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
          {
             tempCommand = m_veModel->GetInput( -1 );
             tempCommand->SetCommandName( iteri->first );
-            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
             dataDVP->SetData( iteri->first, *(iteri->second) );
             tempCommand->AddDataValuePair( dataDVP );
          }
@@ -518,7 +518,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
          {
             tempCommand = m_veModel->GetInput( -1 );
             tempCommand->SetCommandName( iterd->first );
-            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
             dataDVP->SetData( iterd->first, *(iterd->second) );
             tempCommand->AddDataValuePair( dataDVP );
          }
@@ -539,7 +539,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
          {
             tempCommand = m_veModel->GetInput( -1 );
             tempCommand->SetCommandName( iters->first );
-            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
             dataDVP->SetData( iters->first, *(iters->second) );
             tempCommand->AddDataValuePair( dataDVP );
          }
@@ -560,7 +560,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
          {
             tempCommand = m_veModel->GetInput( -1 );
             tempCommand->SetCommandName( itervi->first );
-            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
             dataDVP->SetData( itervi->first, *(itervi->second) );
             tempCommand->AddDataValuePair( dataDVP );
          }
@@ -581,7 +581,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
          {
             tempCommand = m_veModel->GetInput( -1 );
             tempCommand->SetCommandName( itervd->first );
-            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
             dataDVP->SetData( itervd->first, *(itervd->second) );
             tempCommand->AddDataValuePair( dataDVP );
          }
@@ -602,7 +602,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
          {
             tempCommand = m_veModel->GetInput( -1 );
             tempCommand->SetCommandName( itervs->first );
-            VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+            ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
             dataDVP->SetData( itervs->first, *(itervs->second) );
             tempCommand->AddDataValuePair( dataDVP );
          }
@@ -619,59 +619,59 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
       Command* tempCommand = m_veModel->GetInput( -1 );
       tempCommand->SetCommandName( "EPRI TAG" );
       
-      VE_XML::DataValuePairWeakPtr dataDVP = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "USE_FINANCIAL", static_cast< long >( financial_dlg->_use_data ) );
       tempCommand->AddDataValuePair( dataDVP );
 
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC00", financial_dlg->_cc00_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC01", financial_dlg->_cc01_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC02", financial_dlg->_cc02_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC03", financial_dlg->_cc03_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC04", financial_dlg->_cc04_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC05", financial_dlg->_cc05_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC06", financial_dlg->_cc06_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC07", financial_dlg->_cc07_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "CC08", financial_dlg->_cc08_d );
       tempCommand->AddDataValuePair( dataDVP );
 
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "OM00", financial_dlg->_om00_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "OM01", financial_dlg->_om01_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "OM02", financial_dlg->_om02_d );
       tempCommand->AddDataValuePair( dataDVP );
       
-      dataDVP = new VE_XML::DataValuePair();
+      dataDVP = new ves::open::xml::DataValuePair();
       dataDVP->SetData( "OM03", financial_dlg->_om03_d );
       tempCommand->AddDataValuePair( dataDVP );
    }
@@ -679,7 +679,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
    return m_veModel;
 }
 /////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SetVEModel( VE_XML::VE_Model::ModelWeakPtr tempModel )
+void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
 {
    m_veModel = tempModel;
 
@@ -791,7 +791,7 @@ void UIPluginBase::SetVEModel( VE_XML::VE_Model::ModelWeakPtr tempModel )
     //Setup the ports so that the plugin can access them.
     for( size_t i = 0; i < m_veModel->GetNumberOfPorts(); ++i )
     {
-        VE_XML::VE_Model::Port* tempPort = m_veModel->GetPort( i );
+		ves::open::xml::model::Port* tempPort = m_veModel->GetPort( i );
         if( tempPort->GetDataFlowDirection() == std::string( "input" ) )
         {
             inputPort.push_back( tempPort );
@@ -863,16 +863,16 @@ void UIPluginBase::ViewInputVariables( void )
         ///Query for the inputs
         std::string compName = GetVEModel()->GetModelName();
         
-        VE_XML::Command returnState;
+        ves::open::xml::Command returnState;
         returnState.SetCommandName("getInputModuleParamList");
-        VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+        ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
         data->SetData(std::string("ModuleName"), compName);
         returnState.AddDataValuePair( data );
         
-        std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-        nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+        std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+        nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
         
-        VE_XML::XMLReaderWriter commandWriter;
+        ves::open::xml::XMLReaderWriter commandWriter;
         std::string status="returnString";
         commandWriter.UseStandaloneDOMDocumentManager();
         commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -888,17 +888,17 @@ void UIPluginBase::ViewInputVariables( void )
         //QueryInputsDlg * results = new QueryInputsDlg(this);
         //ParamsDlg* params = new ParamsDlg(networkFrame);
         //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
-        VE_XML::XMLReaderWriter networkReader;
+        ves::open::xml::XMLReaderWriter networkReader;
         networkReader.UseStandaloneDOMDocumentManager();
         networkReader.ReadFromString();
         //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
         networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-        std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+        std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
         //std::ostringstream output;
         //output << objectVector.size()<<std::endl;
         //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-        VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-        VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+        ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+        ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
         /*std::vector< std::string > temp_vector;
         pair->GetData(temp_vector);
         
@@ -917,7 +917,7 @@ void UIPluginBase::ViewInputVariables( void )
     {
         std::vector< wxString > tagNames;
         std::vector< wxString > values;
-        VE_XML::Command* inputCommand = m_veModel->GetInput( i );
+        ves::open::xml::Command* inputCommand = m_veModel->GetInput( i );
         GetDataTables( inputCommand, tagNames, values );
         std::string inputParamter = inputCommand->GetCommandName();
         inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
@@ -948,7 +948,7 @@ void UIPluginBase::ViewResultsVariables( void )
    {
       std::vector< wxString > tagNames;
       std::vector< wxString > values;
-      VE_XML::Command* inputCommand = m_veModel->GetResult( i );
+      ves::open::xml::Command* inputCommand = m_veModel->GetResult( i );
       GetDataTables( inputCommand, tagNames, values );
       std::string inputParamter = inputCommand->GetCommandName();
       resultsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
@@ -957,11 +957,11 @@ void UIPluginBase::ViewResultsVariables( void )
    resultsDialog->Show();
 }
 ///////////////////////////////////////////////
-void UIPluginBase::GetDataTables( VE_XML::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
+void UIPluginBase::GetDataTables( ves::open::xml::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
 {
    for ( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
    {
-      VE_XML::DataValuePairWeakPtr tempDVP = inputCommand->GetDataValuePair( j );
+      ves::open::xml::DataValuePairWeakPtr tempDVP = inputCommand->GetDataValuePair( j );
       std::string dataType = tempDVP->GetDataType();
       std::string dataName = tempDVP->GetDataName();
       std::string stringData = "empty";
@@ -1007,7 +1007,7 @@ void UIPluginBase::SetPluginNameDialog( void )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::SetCORBAService( VE_Conductor::CORBAServiceList* serviceList )
+void UIPluginBase::SetCORBAService( ves::conductor::util::CORBAServiceList* serviceList )
 {
    this->serviceList = serviceList;
 }
@@ -1111,10 +1111,10 @@ void UIPluginBase::OnDClick( wxMouseEvent &event)
       return;
    }
    
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+   ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair(  std::string("UNSIGNED INT") );
    dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
    dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   ves::open::xml::Command* veCommand = new ves::open::xml::Command();
    veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
    veCommand->AddDataValuePair( dataValuePair );
    
@@ -1185,8 +1185,8 @@ void  UIPluginBase::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowAspenName(wxCommandEvent& event )
 {  
-    UIPLUGIN_CHECKID( event )
-   VE_XML::VE_Model::ModelWeakPtr veModel = GetVEModel();
+   UIPLUGIN_CHECKID( event )
+   ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
    wxString title;
    title << wxT("Aspen Name");
    wxString desc( veModel->GetModelName().c_str(), wxConvUTF8);
@@ -1213,16 +1213,16 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
    std::string compName = GetVEModel()->GetModelName();
 
-   VE_XML::Command returnState;
+   ves::open::xml::Command returnState;
    returnState.SetCommandName("getInputModuleParamList");
-   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
    data->SetData(std::string("ModuleName"), compName);
     returnState.AddDataValuePair( data );
    
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
    
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1234,17 +1234,17 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
    //QueryInputsDlg * results = new QueryInputsDlg(this);
    ParamsDlg* params = new ParamsDlg(m_canvas);
    //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
-   VE_XML::XMLReaderWriter networkReader;
+   ves::open::xml::XMLReaderWriter networkReader;
    networkReader.UseStandaloneDOMDocumentManager();
    networkReader.ReadFromString();
    //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
    //std::ostringstream output;
    //output << objectVector.size()<<std::endl;
    //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-   VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-   VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+   ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+   ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
    std::vector< std::string > temp_vector;
    pair->GetData(temp_vector);
 
@@ -1272,16 +1272,16 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
    std::string compName = GetVEModel()->GetModelName();
 
-   VE_XML::Command returnState;
+   ves::open::xml::Command returnState;
    returnState.SetCommandName("getOutputModuleParamList");
-   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
    data->SetData(std::string("ModuleName"), compName);
     returnState.AddDataValuePair( data );
    
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
    
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1292,13 +1292,13 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
    //QueryInputsDlg * results = new QueryInputsDlg(this);
    ParamsDlg * params = new ParamsDlg(m_canvas);
    //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
-   VE_XML::XMLReaderWriter networkReader;
+   ves::open::xml::XMLReaderWriter networkReader;
    networkReader.UseStandaloneDOMDocumentManager();
    networkReader.ReadFromString();
    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-   VE_XML::Command* cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-   VE_XML::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+   ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+   ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
    std::vector< std::string > temp_vector;
    pair->GetData(temp_vector);
 
@@ -1369,11 +1369,11 @@ void UIPluginBase::OnGeometry(wxCommandEvent& event )
     }
     
     // Here we launch a dialog for a specific plugins input values
-   VE_XML::VE_Model::ModelWeakPtr veModel = GetVEModel();
+	ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
 
    if( !cadDialog )
    {
-      cadDialog = new VE_Conductor::GUI_Utilities::CADNodeManagerDlg( veModel->AddGeometry(),
+	   cadDialog = new ves::conductor::util::CADNodeManagerDlg( veModel->AddGeometry(),
                                                                m_canvas, ::wxNewId() );
 
       cadDialog->SetSize( dialogSize );
@@ -1387,8 +1387,8 @@ void UIPluginBase::OnGeometry(wxCommandEvent& event )
       {
          veModel->AddGeometry();
       }
-      *( dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( veModel->GetGeometry() ) ) = 
-      *( dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( cadDialog->GetRootCADNode() ) );
+	  *( dynamic_cast< ves::open::xml::cad::CADAssembly* >( veModel->GetGeometry() ) ) = 
+		  *( dynamic_cast< ves::open::xml::cad::CADAssembly* >( cadDialog->GetRootCADNode() ) );
    }
 }
 ///////////////////////////////////////////
@@ -1402,7 +1402,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
     }
     
     // Here we launch a dialog for a specific plugins input values
-   VE_XML::VE_Model::ModelWeakPtr veModel = GetVEModel();
+	ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
    DataSetLoaderUI dataSetLoaderDlg( m_canvas, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
@@ -1411,14 +1411,14 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
    if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
    {
       //Now send the data to xplorer
-      VE_XML::XMLReaderWriter netowrkWriter;
+      ves::open::xml::XMLReaderWriter netowrkWriter;
       netowrkWriter.UseStandaloneDOMDocumentManager();
 
       // Create the command and data value pairs
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
       dataValuePair->SetData( "CREATE_NEW_DATASETS", 
-            new VE_XML::VE_Model::Model( *m_veModel ) );
-      VE_XML::Command* veCommand = new VE_XML::Command();
+            new ves::open::xml::model::Model( *m_veModel ) );
+      ves::open::xml::Command* veCommand = new ves::open::xml::Command();
       veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
       veCommand->AddDataValuePair( dataValuePair );
 
@@ -1440,7 +1440,7 @@ void UIPluginBase::OnVisualization(wxCommandEvent& event )
     }
     
     //Get the active model ID from the xml data
-   VE_XML::VE_Model::ModelWeakPtr activeXMLModel = GetVEModel();
+	ves::open::xml::model::ModelWeakPtr activeXMLModel = GetVEModel();
    unsigned int modelID = activeXMLModel->GetModelID();
 
    //Get the active model from the CORBA side
@@ -1496,12 +1496,12 @@ void UIPluginBase::OnVisualization(wxCommandEvent& event )
    
    for(size_t i = 0; i < nInformationPackets; i++)
    {
-      VE_XML::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
+      ves::open::xml::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket(i);
       size_t numProperties = paramBlock->GetNumberOfProperties();
                            
       for ( size_t i = 0; i < numProperties; ++i )
       {
-         VE_XML::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
+         ves::open::xml::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
          if ( dataValuePair->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
          {
             
@@ -1712,10 +1712,10 @@ bool UIPluginBase::CheckID()
 bool UIPluginBase::SetActiveModel()
 {
     // Create the command and data value pairs
-    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair(  std::string("UNSIGNED INT") );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-    VE_XML::Command* veCommand = new VE_XML::Command();
+    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string("CHANGE_ACTIVE_MODEL") );
     veCommand->AddDataValuePair( dataValuePair );
     
@@ -1745,13 +1745,13 @@ void UIPluginBase::OnDelMod(wxCommandEvent& event )
 //    networkFrame->RemoveEventHandler( this );
     
     ///Now send the erased module to xplorer to delete it as well
-    VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair(  std::string("UNSIGNED INT") );
     dataValuePair->SetDataName( "Object ID" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-    VE_XML::Command* veCommand = new VE_XML::Command();
+    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
     veCommand->AddDataValuePair( dataValuePair );
-    bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+	bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
     //Clean up memory
     delete veCommand;
@@ -1882,7 +1882,7 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
 { 
     UIPLUGIN_CHECKID( event )
     //get location
-    VE_XML::VE_Model::Point* tempLoc = new VE_XML::VE_Model::Point();
+    ves::open::xml::model::Point* tempLoc = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > newPoint;
     newPoint.first = 
         static_cast< unsigned int >( actionPoint.x / userScale->first - pos.x );
@@ -1890,7 +1890,7 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
         static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
     tempLoc->SetPoint( newPoint );
     //Ask what type of port
-    VE_XML::VE_Model::Port* port = m_veModel->GetPort( -1 );
+	ves::open::xml::model::Port* port = m_veModel->GetPort( -1 );
     port->SetPortLocation( tempLoc );
     //either input or output
     port->SetModelName( ConvertUnicode( name.c_str() ) );
@@ -1921,10 +1921,10 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
         static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
     //find port in model
     int acutallDestPortNumber = -1;
-    VE_XML::VE_Model::Port* tempPort = 0;
+    ves::open::xml::model::Port* tempPort = 0;
     for( size_t i = 0; i < m_veModel->GetNumberOfPorts(); ++i )
     {
-        VE_XML::VE_Model::Point* tempLoc = 
+        ves::open::xml::model::Point* tempLoc = 
             m_veModel->GetPort( i )->GetPortLocation();
         wxPoint tempPoint( tempLoc->GetPoint().first, 
             tempLoc->GetPoint().second );
