@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 
-#include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
-#include <ves/xplorer/util/readWriteVtkThings.h>
+#include "VE_Xplorer/SceneGraph/vtkActorToStreamLine.h"
+#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
@@ -137,63 +137,86 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     osg::ref_ptr< osg::Vec3Array > texcoord0 = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > texcoord1 = new osg::Vec3Array();
 
-    //Get number of indices in the vtk prim array.
-    //Each vtkCell has the length (not counted), followed by the indices.
-    int primArraySize = primArray->GetNumberOfConnectivityEntries();
-    int numIndices = primArraySize - numPrimitives;
-
     vtkReal opacity = actor->GetProperty()->GetOpacity();
     vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars( opacity );
 
     //Copy data from vtk prim array to osg Geometry
-    int prim = 0, totpts = 0, transparentFlag = 0;
-    int i, npts, *pts;
+    int prim = 0, totpts = 0;
+    int npts, *pts;
 
     //Go through cells (primitives)
     for( primArray->InitTraversal(); primArray->GetNextCell( npts, pts ); ++prim )
     {
-        //Go through points in cell (verts)
-        for( i = 0; i < npts; ++i )
+        int count = 0;
+        double leftOver = 0;
+        double delta = 0.1;
+
+        for( int i = 0; i < npts - 1; ++i )
         {
-            vtkReal* aVertex = polyData->GetPoint( pts[i] );
-            vtkReal* bVertex = polyData->GetPoint( pts[i] );
+            double aVertex[ 3 ], bVertex[ 3 ];
+            polyData->GetPoint( pts[ i ], aVertex );
+            polyData->GetPoint( pts[ i + 1 ], bVertex );
 
-            osg::Vec3 pointA( aVertex[0], aVertex[1], aVertex[2] );
-            osg::Vec3 pointB( bVertex[0], bVertex[1], bVertex[2] );
+            osg::Vec3d pointA( aVertex[ 0 ], aVertex[ 1 ], aVertex[ 2 ] );
+            osg::Vec3d pointB( bVertex[ 0 ], bVertex[ 1 ], bVertex[ 2 ] );
 
-            osg::Vec3 BminusA( pointB.x() - pointA.x(), 
-                               pointB.y() - pointA.y(),
-                               pointB.z() - pointA.z() );
+            osg::Vec3d BminusA( pointB.x() - pointA.x(),
+                                pointB.y() - pointA.y(),
+                                pointB.z() - pointA.z() );
 
-            //for( float t = 0; t < 1.0; )
-            //{                           
-                vertices->push_back( osg::Vec3( -1.0,  1.0, 0 ) );
-                vertices->push_back( osg::Vec3( -1.0, -1.0, 0 ) );
-                vertices->push_back( osg::Vec3(  1.0, -1.0, 0 ) );
-                vertices->push_back( osg::Vec3(  1.0,  1.0, 0 ) );
+            double length = BminusA.length() + leftOver;
+            int numSteps = static_cast< int >( length / delta );
+            double ds = static_cast< double >( 1 ) / static_cast< double >( numSteps );
 
-                for( int b = 0; b < 4; ++b )
+            if( length >= delta )
+            {
+                double j = 0;
+                if( i != 0 )
                 {
-                    texcoord0->push_back( pointA );
-                    texcoord1->push_back( BminusA );
+                    j = ds;
                 }
 
-                unsigned char *aColor = colorArray->GetPointer( 4 * pts[i] );
+                while( j <= 1 )
+                {   
+                    vertices->push_back( osg::Vec3( -1.0,  1.0, j ) );
+                    vertices->push_back( osg::Vec3( -1.0, -1.0, j ) );
+                    vertices->push_back( osg::Vec3(  1.0, -1.0, j ) );
+                    vertices->push_back( osg::Vec3(  1.0,  1.0, j ) );
 
-                colors->push_back( osg::Vec4( aColor[0] / 255.0f,
-                                              aColor[1] / 255.0f,
-	                                          aColor[2] / 255.0f,
-                                              aColor[3] / 255.0f ) );
-                if( aColor[3] / 255.0f < 1 )
-                {
-                    transparentFlag = 1;
+                    unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
+                    colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
+                                                  aColor[ 1 ] / 255.0f,
+                                                  aColor[ 2 ] / 255.0f,
+                                                  aColor[ 3 ] / 255.0f ) );
+
+                    for( int k = 0; k < 4; ++k )
+                    {
+                        texcoord0->push_back( pointA );
+                        texcoord1->push_back( BminusA );
+                    }
+
+                    count += 4;
+                    j += ds;
+
+                    if( j > 1 )
+                    {
+                        leftOver += length - ( numSteps * delta );
+                    }
                 }
-
-                //t += 0.5;
+            }
+            else
+            {
+                leftOver += length;
+            }
         }
 
-        geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, totpts, npts * 4 ) );
-        totpts += npts * 4;
+        geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, totpts, count ) );
+        totpts += npts;
+
+        if( prim == 0 )
+        {
+        break;
+        }
     }
 
     geometry->setVertexArray( vertices.get() );
@@ -214,24 +237,22 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-    bf->setSourceRGB( GL_ONE );
-    bf->setSourceAlpha( GL_ONE );
-    bf->setDestinationRGB( GL_ONE );
-    bf->setDestinationAlpha( GL_ONE );
+    bf->setFunction( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
     stateset->setAttribute( bf.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
     depth->setWriteMask( false );
     stateset->setAttribute( depth.get(), osg::StateAttribute::ON );
 
+    stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     stateset->setAttribute( GetShader().get(), osg::StateAttribute::ON );
 
-    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.2 ) );
+    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.4 ) );
     stateset->addUniform( parSize.get() );
 
-    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.1 ) );
+    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.05 ) );
     stateset->addUniform( parExp.get() );
 
     geometry->setStateSet( stateset.get() );
@@ -253,12 +274,12 @@ osg::ref_ptr< osg::Program > VE_SceneGraph::GetShader()
         "{ \n"
             //Billboard the quads
             "vec3 pos = particleSize * \n"
-                      "( gl_Vertex.x * vec3( gl_ModelViewMatrix[0][0], \n"
-                                            "gl_ModelViewMatrix[1][0], \n"
-                                            "gl_ModelViewMatrix[2][0] ) +  \n"
-                        "gl_Vertex.y * vec3( gl_ModelViewMatrix[0][1],  \n"
-                                            "gl_ModelViewMatrix[1][1],  \n"
-                                            "gl_ModelViewMatrix[2][1] ) ); \n"
+                      "( gl_Vertex.x * vec3( gl_ModelViewMatrix[ 0 ][ 0 ], \n"
+                                            "gl_ModelViewMatrix[ 1 ][ 0 ], \n"
+                                            "gl_ModelViewMatrix[ 2 ][ 0 ] ) +  \n"
+                        "gl_Vertex.y * vec3( gl_ModelViewMatrix[ 0 ][ 1 ],  \n"
+                                            "gl_ModelViewMatrix[ 1 ][ 1 ],  \n"
+                                            "gl_ModelViewMatrix[ 2 ][ 1 ] ) ); \n"
 
             //Move the quads along the line segment
             "float t = gl_Vertex.z; \n"
