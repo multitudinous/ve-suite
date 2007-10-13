@@ -109,12 +109,9 @@ private:
     std::vector< ModelStrongPtr > m_models;
 };
 }
-}
-}
-}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-	const std::string subElementTagName, ves::open::xml::model::System* val)
+                                                                           const std::string subElementTagName, ves::open::xml::model::System* val)
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = 
@@ -123,5 +120,6 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
     return childElement;
 }
 }
-
+}
+}
 #endif// SYSTEM_H

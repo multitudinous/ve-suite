@@ -54,10 +54,10 @@ namespace model
 {
     class Link;
     /// Typedef for a SmartPtr type for the Link.
-    typedef ClassPtrDef<Link>::type  LinkPtr;
-    typedef SharedPtrDef<Link>::type LinkSharedPtr;
-    typedef WeakPtrDef<Link>::type   LinkWeakPtr;
-    typedef ScopedPtrDef<Link>::type LinkScopedPtr;
+    typedef ves::util::ClassPtrDef<Link>::type  LinkPtr;
+    typedef ves::util::SharedPtrDef<Link>::type LinkSharedPtr;
+    typedef ves::util::WeakPtrDef<Link>::type   LinkWeakPtr;
+    typedef ves::util::ScopedPtrDef<Link>::type LinkScopedPtr;
 }
 }
 }

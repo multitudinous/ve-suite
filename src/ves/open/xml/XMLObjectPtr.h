@@ -33,7 +33,7 @@
 #ifndef VE_XML_OBJECT_PTR_H
 #define VE_XML_OBJECT_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
