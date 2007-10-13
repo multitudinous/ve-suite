@@ -18,6 +18,8 @@ lib_env = ves_pkg.getEnv().Copy()
 
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 
+lib_env[ 'LIBS' ] = ['']
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('loki.0.1.6',
                                                         lib_env,
