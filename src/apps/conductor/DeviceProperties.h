@@ -46,14 +46,26 @@ DeviceProperties API
 class wxSplitterWindow;
 class wxCheckBox;
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class DataValuePair;
 }
+}
+}
 
-namespace VE_Conductor
+namespace ves
 {
-   class CORBAServiceList;
+namespace conductor
+{
+namespace util
+{
+    class CORBAServiceList;
+}
+}
 }
 
 class DeviceProperties:public wxDialog 
@@ -83,12 +95,12 @@ class DeviceProperties:public wxDialog
 
       bool animate;
 
-      std::vector<VE_XML::DataValuePair*> instructions;        //The DataValuePairs for the current command
+      std::vector<ves::open::xml::DataValuePair*> instructions;        //The DataValuePairs for the current command
 
       void SendCommandsToXplorer();
       void ClearInstructions();
 
-      VE_Conductor::CORBAServiceList* serviceList;
+      ves::conductor::util::CORBAServiceList* serviceList;
 
       DECLARE_EVENT_TABLE()
 };

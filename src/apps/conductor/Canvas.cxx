@@ -52,7 +52,9 @@
 
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
-
+using namespace ves::open::xml;
+using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 #ifdef WIN32
 #include <cmath>
@@ -85,7 +87,7 @@ lrintf( float flt )
     return intgr ;
 }
 #endif
-using namespace VE_Conductor;
+//using namespace VE_Conductor;
 
 BEGIN_EVENT_TABLE(Canvas, wxScrolledWindow)
     EVT_PAINT( Canvas::OnPaint )
@@ -136,21 +138,21 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     New( true );
 
 	//load
-	VE_Conductor::XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
+	XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 	
 	//get the map count
-	std::map< std::string, VE_XML::VE_Model::SystemStrongPtr> systems =
-		VE_Conductor::XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+	std::map< std::string, model::SystemStrongPtr> systems =
+		XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
 
 	// iterate through the systems
-	for( std::map< std::string, VE_XML::VE_Model::SystemStrongPtr>::iterator 
+	for( std::map< std::string, model::SystemStrongPtr>::iterator 
         iter = systems.begin(); iter != systems.end(); iter++ )
 	{
 		Network* tempNetwork = new Network( this );
 		tempNetwork->LoadSystem(iter->second, this);
 		networks[iter->first] = tempNetwork;
 	}
-	this->SetActiveNetwork( VE_Conductor::XMLDataBufferEngine::instance()->
+	this->SetActiveNetwork( XMLDataBufferEngine::instance()->
 		GetTopSystemId() );
     Refresh(true);
 }
@@ -292,8 +294,8 @@ void Canvas::CreateDefaultNetwork()
 {
     XMLDataBufferEngine::instance()->NewVESData( true );
     ///Initialize tope level network
-    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = 
-        new VE_XML::VE_Model::Network();
+    model::NetworkWeakPtr tempNetwork = 
+        new model::Network();
     XMLDataBufferEngine::instance()->GetXMLSystemDataObject( 
         XMLDataBufferEngine::instance()->GetTopSystemId() )->
         AddNetwork( tempNetwork );

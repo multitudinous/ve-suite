@@ -45,8 +45,15 @@ Avail_Modules API
 
 class AppFrame;
 class Canvas;
-class UIPluginBase;
 class PluginLoader;
+
+namespace ves
+{
+namespace conductor
+{
+    class UIPluginBase;
+}
+}
 
 class Avail_Modules : public wxTreeCtrl
 {
@@ -76,7 +83,7 @@ public:
   void OnSelChanged(wxTreeEvent& event);
   void ShowMenu(wxTreeItemId id, const wxPoint &pt);
   void CreateImageList(int size=16);
-  void AddModule(UIPluginBase* plugin,wxClassInfo* clsi );
+  void AddModule( ves::conductor::UIPluginBase* plugin,wxClassInfo* clsi );
   void ShowDesc(wxCommandEvent& event);
   void ShowHelp(wxCommandEvent& event);
   void Instantiate(wxTreeEvent& event);
@@ -106,10 +113,10 @@ public:
 class ReiTreeItemData : public wxTreeItemData
 {
  public:
-  UIPluginBase* plugin;
+  ves::conductor::UIPluginBase* plugin;
   wxClassInfo* pl_clsi;
 
-  ReiTreeItemData(UIPluginBase* pl,  wxClassInfo* clsi  ) { plugin = pl; pl_clsi = clsi; };
+  ReiTreeItemData( ves::conductor::UIPluginBase* pl,  wxClassInfo* clsi  ) { plugin = pl; pl_clsi = clsi; };
 
 };
 

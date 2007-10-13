@@ -70,13 +70,28 @@
 
 #include <vector>
 
-namespace VE_XML
+namespace ves
 {
-   class Command;
-   class DataValuePair;
+namespace open
+{
+namespace xml
+{
+    class Command;
+    class DataValuePair;
+}
+}
 }
 
-class wxSpinCtrlDbl;
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
+    class wxSpinCtrlDbl;
+}
+}
+}
 
 class ViewLocPane : public wxDialog
 {
@@ -134,9 +149,9 @@ protected:
    void _resetSelections( void );
 
    std::string _commandName;///<The name of the command.
-   std::vector<VE_XML::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
+   std::vector<ves::open::xml::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
    int _numView_LocsGlobal;
-   std::vector< VE_XML::Command* > commands;
+   std::vector< ves::open::xml::Command* > commands;
    int cId, cIso_value, cSc, cMin;
    std::string dataValueName;
 
@@ -152,7 +167,7 @@ protected:
    wxComboBox* _removevpfromflySel;
    wxComboBox* _deleteflySel;
    wxSlider* _speedCtrlSlider;
-   wxSpinCtrlDbl* _spinSpeedControls;
+   ves::conductor::util::wxSpinCtrlDbl* _spinSpeedControls;
    
    //the controls
    void _onLoad(wxCommandEvent& event);

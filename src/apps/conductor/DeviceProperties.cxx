@@ -47,6 +47,10 @@
 #include <wx/button.h>
 #include <wx/filename.h>
 
+using namespace ves::open::xml;
+using namespace ves::conductor;
+using namespace ves::conductor::util;
+
 BEGIN_EVENT_TABLE(DeviceProperties,wxDialog)
    EVT_CHECKBOX(ANIMATE_CHECKBOX,DeviceProperties::OnAnimate)
 END_EVENT_TABLE()
@@ -121,7 +125,7 @@ void DeviceProperties::OnAnimate(wxCommandEvent &event)
 {
    animate=animate_check_box->GetValue();
 
-   VE_XML::DataValuePair* animateDVP=new VE_XML::DataValuePair();
+   DataValuePair* animateDVP=new DataValuePair();
    animateDVP->SetData(std::string("AnimateID"),(unsigned int)(animate));
    instructions.push_back(animateDVP);
 
@@ -131,14 +135,14 @@ void DeviceProperties::OnAnimate(wxCommandEvent &event)
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceProperties::SendCommandsToXplorer(){
    //Build the command
-   VE_XML::Command* command=new VE_XML::Command();
+   Command* command=new Command();
    command->SetCommandName("TRACKBALL_PROPERTIES");
 
    for(size_t i=0;i<instructions.size();i++){
       command->AddDataValuePair(instructions.at(i));
    }
 
-   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer(command);
+   CORBAServiceList::instance()->SendCommandStringToXplorer(command);
 
    //Clean up memory
    delete command;

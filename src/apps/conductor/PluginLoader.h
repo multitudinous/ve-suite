@@ -46,7 +46,13 @@ PluginLoader API
 
 class wxClassInfo;
 
-class UIPluginBase;
+namespace ves
+{
+namespace conductor
+{
+    class UIPluginBase;
+}
+}
 
 class PluginLoader 
 {
@@ -61,7 +67,7 @@ public:
     size_t GetNumberOfPlugins( void );
     ///Get classinfo and plugin pointer for a specific plugin
     ///\param i Plugin pair to retrieve 
-    std::pair< UIPluginBase*, wxClassInfo* > GetPluginDataPair( size_t i );
+    std::pair< ves::conductor::UIPluginBase*, wxClassInfo* > GetPluginDataPair( size_t i );
 
 private:
     ///Called by LoadPlugins to register the plugins with the application
@@ -70,7 +76,7 @@ private:
     ///This instance is not used for any network composition but for information
     void RegisterPlugin(wxClassInfo* info);
 
-    std::vector<UIPluginBase*> plugins;
+    std::vector< ves::conductor::UIPluginBase*> plugins;
     //Keep the list of the first intance of each plugin
     std::vector<wxClassInfo*> plugin_cls; 
     //The classinfo obj of the each plugin, will be use to generate more instances

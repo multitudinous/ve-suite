@@ -56,11 +56,17 @@ Network API
 #include <wx/dcclient.h>
 
 class wxProgressDialog;
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+namespace model
 {
   class User;
+}
+}
 }
 }
 
@@ -103,7 +109,7 @@ public:
     void OnDelLink(wxCommandEvent& event );
 
     //Add to network fuctions
-    void AddtoNetwork(UIPluginBase *new_mod, std::string cls_name);
+    void AddtoNetwork(ves::conductor::UIPluginBase *new_mod, std::string cls_name);
     void AddTag(int x, int y, wxString text);
        
    //Save and Load the network
@@ -113,7 +119,7 @@ public:
    ///always want this action
    void Load( std::string xmlNetwork, bool promptClearXplorer );
    void CreateNetwork( std::string xmlNetwork );
-   void LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * parent );
+   void LoadSystem( ves::open::xml::model::SystemStrongPtr system, Canvas * parent );
    ///Clear the deisgn canvas and xplorer objects if desired
    void New( bool clearXplorer = false );
    ///Acessors
@@ -126,7 +132,7 @@ public:
    bool IsDragging();
    void SetSelectedModule( int mod );
    void HighlightCenter( int modId );
-   std::map< int, VE_Conductor::GUI_Utilities::Module > modules; //The list of modules;
+   std::map< int, ves::conductor::Module > modules; //The list of modules;
    //void ReDraw(wxDC &dc);
    void DrawNetwork(wxDC &dc);
    ///Push all the event handlers from the tags, plugins, and links onto canvas
@@ -198,8 +204,8 @@ protected:
    int m_selTag; //selected Tag
    int m_selTagCon; //selected Tag Connector
     //Three main list of network objs
-   std::vector< VE_Conductor::GUI_Utilities::Link > links; //The list of links between the nodes of moduls.
-   std::vector< VE_Conductor::GUI_Utilities::Tag > tags; //The list of text tags  
+   std::vector< ves::conductor::util::Link > links; //The list of links between the nodes of moduls.
+   std::vector< ves::conductor::util::Tag > tags; //The list of text tags  
    
    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
 
@@ -219,7 +225,7 @@ private:
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
    ///System for this network
-   VE_XML::VE_Model::SystemStrongPtr systemPtr;
+   ves::open::xml::model::SystemStrongPtr systemPtr;
    ///Parent window pointer to the splitter in AppFrame
    Canvas* parent;
    ///wxframe pointer for frame.cxx

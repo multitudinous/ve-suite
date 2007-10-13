@@ -110,11 +110,11 @@
 #include <sstream>
 #include <iomanip>
 
-using namespace VE_Conductor::GUI_Utilities;
-using namespace VE_Conductor;
-using namespace VE_XML;
-using namespace VE_XML::VE_CAD;
-using namespace VE_Shader;
+using namespace ves::conductor::util;
+using namespace ves::conductor;
+using namespace ves::open::xml;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml::shader;
 
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
@@ -212,7 +212,7 @@ viewlocPane( 0 )
         tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
-    serviceList = VE_Conductor::CORBAServiceList::instance();
+    serviceList = CORBAServiceList::instance();
     serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
 
     this->SetIcon( ve_icon32x32_xpm );
@@ -243,10 +243,10 @@ viewlocPane( 0 )
     m_recentVESFiles->AddFilesToMenu(file_menu);
     
     ///Initialize VE-Open
-    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new VE_XML::XMLCreator() );
-    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new VE_Shader::ShaderCreator() );
-    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model", new VE_XML::VE_Model::ModelCreator() );
-    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD", new VE_XML::VE_CAD::CADCreator() );
+    XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new XMLCreator() );
+    XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new shader::ShaderCreator() );
+    XMLObjectFactory::Instance()->RegisterObjectCreator( "Model", new model::ModelCreator() );
+    XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD", new cad::CADCreator() );
 
     //Try and load network from server if one is already present
     std::string nw_str = serviceList->GetNetwork();
@@ -256,8 +256,8 @@ viewlocPane( 0 )
 		canvas->PopulateNetworks( nw_str );
 	}
     //create hierarchy page
-	hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-		GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+	hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+		GetXMLModels(), XMLDataBufferEngine::instance()->
 		GetTopSystemId());
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
@@ -280,9 +280,9 @@ viewlocPane( 0 )
         xplorerColor = preferences->GetBackgroundColor();
     }
 
-    VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr dataValuePair = new DataValuePair();
     dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-    VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+    CommandWeakPtr veCommand = new Command();
     veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
     veCommand->AddDataValuePair(dataValuePair);
     ///Set the command on the buffer first so that a strong ptr is 
@@ -962,10 +962,10 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    VE_XML::DataValuePairWeakPtr dataValuePair = 
-    new VE_XML::DataValuePair(  std::string("STRING") );
+    DataValuePairWeakPtr dataValuePair = 
+    new DataValuePair(  std::string("STRING") );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-    VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+    CommandWeakPtr veCommand = new Command();
     veCommand->SetCommandName( std::string("Change Working Directory") );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
@@ -977,10 +977,10 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
     //Dummy data that isn't used but I don't know if a command will work
     //w/o a DVP 
-    VE_XML::DataValuePairWeakPtr dvp = 
-        new VE_XML::DataValuePair(  std::string("STRING") );
+    DataValuePairWeakPtr dvp = 
+        new DataValuePair(  std::string("STRING") );
     dvp->SetData( "Clear Quat Data", tempDir );
-    VE_XML::CommandWeakPtr vec = new VE_XML::Command();
+    CommandWeakPtr vec = new Command();
     vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
@@ -994,8 +994,8 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 	canvas->PopulateNetworks(ConvertUnicode( fname.c_str() ));
 
     //create hierarchy page
-    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-		GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+    hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+		GetXMLModels(), XMLDataBufferEngine::instance()->
 		GetTopSystemId());
     wxCommandEvent event;
     SubmitToServer( event );
@@ -1005,12 +1005,12 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
-    VE_XML::CommandWeakPtr aspenBKPFile = 
+    CommandWeakPtr aspenBKPFile = 
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-		VE_XML::DataValuePairPtr bkpPtr = 
+		DataValuePairPtr bkpPtr = 
             aspenBKPFile->GetDataValuePair( "BKPFileName" );
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
@@ -1073,20 +1073,20 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    VE_XML::DataValuePairWeakPtr dataValuePair = 
-                  new VE_XML::DataValuePair(  std::string("STRING") );
+    DataValuePairWeakPtr dataValuePair = 
+                  new DataValuePair(  std::string("STRING") );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-    VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+    CommandWeakPtr veCommand = new Command();
     veCommand->SetCommandName( std::string("Change Working Directory") );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
 
     //Dummy data that isn't used but I don't know if a command will work
     //w/o a DVP 
-    VE_XML::DataValuePairWeakPtr dvp = 
-                  new VE_XML::DataValuePair(  std::string("STRING") );
+    DataValuePairWeakPtr dvp = 
+                  new DataValuePair(  std::string("STRING") );
     dvp->SetData( "Clear Quat Data", tempDir );
-    VE_XML::CommandWeakPtr vec = new VE_XML::Command();
+    CommandWeakPtr vec = new Command();
     vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
@@ -1096,13 +1096,13 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Now laod the xml data now that we are in the correct directory
     //network->Load( ConvertUnicode( fname.c_str() ), true );
-//CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+//CORBAServiceList* serviceList = CORBAServiceList::instance();
 //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( fname.c_str() ).c_str() );
 	canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     
 	//create hierarchy page
-    hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-		GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+    hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+		GetXMLModels(), XMLDataBufferEngine::instance()->
 		GetTopSystemId());
     SubmitToServer( event );
     //Rebuild the teacher tab so that the new stored files are loaded
@@ -1112,12 +1112,12 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     }
 	
 	///This code will be moved in the future. It is Aspen specific code.
-    VE_XML::CommandWeakPtr aspenBKPFile = 
+    CommandWeakPtr aspenBKPFile = 
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-		VE_XML::DataValuePairPtr bkpPtr = 
+		DataValuePairPtr bkpPtr = 
             aspenBKPFile->GetDataValuePair( "BKPFileName" );
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
@@ -1148,8 +1148,8 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
    canvas->PopulateNetworks( nw_str, false );
 
    //create hierarchy page
-   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-	   GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+   hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+	   GetXMLModels(), XMLDataBufferEngine::instance()->
 	   GetTopSystemId());
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1175,8 +1175,8 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
 	   canvas->PopulateNetworks( nw_str );
        
        //create hierarchy page
-	   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-		   GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+	   hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+		   GetXMLModels(), XMLDataBufferEngine::instance()->
 		   GetTopSystemId());
        ///Submit job to xplorer
 	   wxCommandEvent event;
@@ -1206,19 +1206,19 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     bkpFileName.SetName( newDataSetName.GetValue() ); 
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("getNetwork");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "getNetwork" );
     returnState.AddDataValuePair( data );
     
-    data = new VE_XML::DataValuePair();
+    data = new DataValuePair();
     data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-    VE_XML::XMLReaderWriter commandWriter;
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1240,15 +1240,15 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
 		canvas->PopulateNetworks( nw_str );
 
 		//create hierarchy page
-		hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-			GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+		hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+			GetXMLModels(), XMLDataBufferEngine::instance()->
 			GetTopSystemId());
 
         Log("Simulation Opened.\n");
         ///
-        VE_XML::CommandWeakPtr aspenBKPFile = new VE_XML::Command();
+        CommandWeakPtr aspenBKPFile = new Command();
         aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
-        data = new VE_XML::DataValuePair();
+        data = new DataValuePair();
         data->SetData( "BKPFileName",  
             ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
         aspenBKPFile->AddDataValuePair( data );
@@ -1269,19 +1269,19 @@ void AppFrame::OpenSimulation( wxString simName )
     wxFileName bkpFileName;
     bkpFileName.SetName( simName); 
 
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("openSimulation");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("AspenPlus", "openSimulation" );
     returnState.AddDataValuePair( data );
     
-    data = new VE_XML::DataValuePair();
+    data = new DataValuePair();
     data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
-    VE_XML::XMLReaderWriter commandWriter;
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1293,16 +1293,16 @@ void AppFrame::OpenSimulation( wxString simName )
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {
     Log("Show Simulation.\n");
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("showSimulation");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "showSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
 
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1314,16 +1314,16 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {
     Log("Hide Simulation.\n");
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("hideSimulation");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "hideSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
 
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1335,16 +1335,16 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 {
     Log("Close Simulation.\n");
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("closeSimulation");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "closeSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
 
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1356,16 +1356,16 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
 {
     Log("Run Simulation.\n");
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("runNetwork");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "runNetwork" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
 
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1376,16 +1376,16 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED(event) )
 {
     Log("Run Simulation.\n");
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("stepNetwork");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "runNetwork" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
 
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1423,16 +1423,16 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::SaveSimulation(wxCommandEvent& WXUNUSED(event))
 {
     Log("Saving Simulation...\n");
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("saveSimulation");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "saveSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ));
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
 
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1461,21 +1461,21 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
     saveFileName.SetName( newDataSetName.GetValue() ); 
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-    VE_XML::Command returnState;
+    Command returnState;
     returnState.SetCommandName("saveAsSimulation");
-    VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+    DataValuePairWeakPtr data = new DataValuePair();
     data->SetData("NetworkQuery", "saveAsSimulation" );
     returnState.AddDataValuePair( data );
     
-    data = new VE_XML::DataValuePair();
+    data = new DataValuePair();
     data->SetData("SaveFileName",  
         ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< VE_XML::XMLObject*, 
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    nodes.push_back(std::pair< XMLObject*, 
         std::string >( &returnState, "vecommand" ));
-    VE_XML::XMLReaderWriter commandWriter;
+    XMLReaderWriter commandWriter;
     std::string status="returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -1483,9 +1483,9 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
     std::string nw_str = serviceList->Query( status );
     Log("Simulation Saved.\n");
 
-    VE_XML::CommandWeakPtr aspenAPWFile = new VE_XML::Command();
+    CommandWeakPtr aspenAPWFile = new Command();
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
-    data = new VE_XML::DataValuePair();
+    data = new DataValuePair();
     data->SetData( "BKPFileName",  
         ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     aspenAPWFile->AddDataValuePair( data );
@@ -1522,10 +1522,10 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
         // set the network
         serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
         // Tell xplorer to ask ce for the new data
-        VE_XML::DataValuePairWeakPtr dataValuePair = 
-            new VE_XML::DataValuePair();
+        DataValuePairWeakPtr dataValuePair = 
+            new DataValuePair();
         dataValuePair->SetData(std::string("Load Data"),xplorerColor);
-        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+        CommandWeakPtr veCommand = new Command();
         veCommand->SetCommandName(std::string("veNetwork Update"));
         veCommand->AddDataValuePair(dataValuePair);
         serviceList->SendCommandStringToXplorer( veCommand );
@@ -1888,7 +1888,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
     //this is kinda confusing...thanks wx!!!
     //wxColourData data;
     //data.SetChooseFull(true);
-    VE_XML::CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->
+    CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
     
     if( bkColor->GetCommandName() != "NULL" )
@@ -1918,9 +1918,9 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
       xplorerColor.push_back(1.0);
 
       // Create the command and data value pairs
-      VE_XML::DataValuePairWeakPtr dataValuePair = new VE_XML::DataValuePair();
+      DataValuePairWeakPtr dataValuePair = new DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::CommandPtr veCommand = new VE_XML::Command();
+      CommandPtr veCommand = new Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 
@@ -1933,8 +1933,8 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-   VE_XML::CommandWeakPtr command = new VE_XML::Command();
+   DataValuePairWeakPtr dvp = new DataValuePair();
+   CommandWeakPtr command = new Command();
    
    std::string device;
 
@@ -1959,8 +1959,8 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
 void AppFrame::DisplaySelection( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePairWeakPtr DVP = new VE_XML::DataValuePair();
-   VE_XML::CommandWeakPtr command = new VE_XML::Command();
+   DataValuePairWeakPtr DVP = new DataValuePair();
+   CommandWeakPtr command = new Command();
 
    unsigned int value;
 
@@ -1985,8 +1985,8 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
 void AppFrame::ViewSelection( wxCommandEvent& event )
 {
    //Create the command and data value pairs
-   VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-   VE_XML::CommandWeakPtr command = new VE_XML::Command();
+   DataValuePairWeakPtr dvp = new DataValuePair();
+   CommandWeakPtr command = new Command();
    
    std::string view;
 
@@ -2037,8 +2037,8 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
 void AppFrame::JugglerSettings( wxCommandEvent& event )
 {
    // Create the command and data value pairs
-   VE_XML::DataValuePairWeakPtr dataValuePair = 
-                           new VE_XML::DataValuePair(  std::string("FLOAT") );
+   DataValuePairWeakPtr dataValuePair = 
+                           new DataValuePair(  std::string("FLOAT") );
    dataValuePair->SetDataName( "Stereo" );
    if ( event.GetId() == JUGGLER_STEREO )
    {
@@ -2048,7 +2048,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
    {
       dataValuePair->SetDataValue( 0.0 );
    }
-   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+   CommandWeakPtr veCommand = new Command();
    veCommand->SetCommandName( std::string("Juggler_Display_Data") );
    veCommand->AddDataValuePair( dataValuePair );
 
@@ -2057,10 +2057,10 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
-   VE_XML::DataValuePairWeakPtr dataValuePair = 
-                           new VE_XML::DataValuePair( std::string("STRING") );
+   DataValuePairWeakPtr dataValuePair = 
+                           new DataValuePair( std::string("STRING") );
    dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
-   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+   CommandWeakPtr veCommand = new Command();
    veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
    veCommand->AddDataValuePair( dataValuePair );
    
@@ -2110,10 +2110,10 @@ void AppFrame::ProcessCommandLineArgs( void )
    
    //Send Command to change xplorer working dir
    // Create the command and data value pairs
-   VE_XML::DataValuePairWeakPtr dataValuePair = 
-      new VE_XML::DataValuePair(  std::string("STRING") );
+   DataValuePairWeakPtr dataValuePair = 
+      new DataValuePair(  std::string("STRING") );
    dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
-   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+   CommandWeakPtr veCommand = new Command();
    veCommand->SetCommandName( std::string("Change Working Directory") );
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );
@@ -2125,8 +2125,8 @@ void AppFrame::ProcessCommandLineArgs( void )
    //network->Load( ConvertUnicode( fname.c_str() ), true );
    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
    //create hierarchy page
-   hierarchyTree->PopulateTree(VE_Conductor::XMLDataBufferEngine::instance()->
-	   GetXMLModels(), VE_Conductor::XMLDataBufferEngine::instance()->
+   hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+	   GetXMLModels(), XMLDataBufferEngine::instance()->
 	   GetTopSystemId());
    // we submit after load to give ce and ge the new network
    SubmitToServer( event );
@@ -2187,21 +2187,21 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
     ::wxSetWorkingDirectory( directory );
     directory.Replace( _("\\"), _("/"), true );
     
-    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::CommandPtr command = new VE_XML::Command();
+    DataValuePairWeakPtr dvp = new DataValuePair();
+    CommandPtr command = new Command();
     std::string mode = ConvertUnicode( directory.c_str() );
     dvp->SetData( std::string( "Change Working Directory" ), mode );
     command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
     command->AddDataValuePair( dvp );
     
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 {
-   VE_XML::DataValuePairWeakPtr dataValuePair = 
-      new VE_XML::DataValuePair(  std::string("STRING") );
+   DataValuePairWeakPtr dataValuePair = 
+      new DataValuePair(  std::string("STRING") );
    if ( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
    {
       dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
@@ -2219,7 +2219,7 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
       dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
    }
    
-   VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+   CommandWeakPtr veCommand = new Command();
    veCommand->SetCommandName( std::string("CHANGE_XPLORER_VIEW") );
    veCommand->AddDataValuePair( dataValuePair );
    serviceList->SendCommandStringToXplorer( veCommand );

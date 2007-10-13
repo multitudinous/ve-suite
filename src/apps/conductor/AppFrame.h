@@ -42,17 +42,16 @@
 
 // --- VE-Suite Includes --- //
 
-namespace VE_Conductor
+namespace ves
 {
-namespace GUI_Utilities
+namespace conductor
+{
+namespace util
 {
     class CADNodeManagerDlg;
-}
-}
-
-namespace VE_Conductor
-{
     class CORBAServiceList;
+}
+}
 }
 
 class UI_Frame;
@@ -401,7 +400,7 @@ private:
     std::string _displayMode;
 
     StreamlinePane* streamlinePane;
-    VE_Conductor::CORBAServiceList* serviceList;
+    ves::conductor::util::CORBAServiceList* serviceList;
     UserPreferences* preferences;
     std::vector< double > xplorerColor;
     wxColourData* xplorerWxColor;

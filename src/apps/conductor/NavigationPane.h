@@ -59,9 +59,15 @@ class wxWindow;
 class wxSizer;
 class wxScrolledWindow;
 
-namespace VE_XML
+namespace ves
 {
-   class Command;
+namespace open
+{
+namespace xml
+{
+    class Command;
+}
+}
 }
 
 //override the buttons
@@ -145,11 +151,11 @@ protected:
    int _activeButton;
    wxScrolledWindow* scrollWindow;
 
-   std::vector< VE_XML::Command* > commands;
+   std::vector< ves::open::xml::Command* > commands;
    
-   VE_XML::CommandPtr startPoint;
-   VE_XML::DataValuePairPtr quatStartPoint;
-   VE_XML::DataValuePairPtr positionStartPoint;
+   ves::open::xml::CommandPtr startPoint;
+   ves::open::xml::DataValuePairPtr quatStartPoint;
+   ves::open::xml::DataValuePairPtr positionStartPoint;
    
    int cId, cIso_value;
    std::string dataValueName;

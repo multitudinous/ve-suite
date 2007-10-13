@@ -40,6 +40,9 @@
 #include <string>
 #include <sstream>
 
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
+
 BEGIN_EVENT_TABLE(ViewLocPane, wxDialog)
    EVT_BUTTON(VIEWLOC_LOAD_BUTTON,ViewLocPane::_onLoad)
    EVT_BUTTON(REMOVE_VIEW_PT_BUTTON,ViewLocPane::_onRemoveVP)
@@ -123,7 +126,7 @@ void ViewLocPane::_onLoadStoredPointsFile(wxCommandEvent& event)
       viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
       wxString relativeViewLocationsPath( wxString("./",wxConvUTF8) + viewPtsFilename.GetFullPath() );
 
-      VE_XML::DataValuePair* velFileName = new VE_XML::DataValuePair();
+      DataValuePair* velFileName = new DataValuePair();
       velFileName->SetData("View Locations file", ConvertUnicode( relativeViewLocationsPath.c_str() ));
       _dataValuePairList.push_back(velFileName);
 
@@ -158,7 +161,7 @@ void ViewLocPane::_onSaveStoredPointsFile(wxCommandEvent& event)
    if ( velFileName.HasName() ) 
    {
       _dataValuePairList.clear();
-      VE_XML::DataValuePair* velFile = new VE_XML::DataValuePair();
+      DataValuePair* velFile = new DataValuePair();
       velFile->SetData("View Points file", ConvertUnicode( velFileName.GetFullPath( wxPATH_NATIVE ).c_str() ) );
       _dataValuePairList.push_back(velFile);
 
@@ -372,7 +375,7 @@ void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED(event) )
         return;
     }
 
-    VE_XML::Command viewPointData = VE_Conductor::CORBAServiceList::instance()->
+    Command viewPointData = VE_Conductor::CORBAServiceList::instance()->
         GetGUIUpdateCommands( "VIEWPOINT_GUI_DATA" );
     //Hasn't updated yet
     if( viewPointData.GetCommandName() == "NULL" )
@@ -592,7 +595,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
    //This assumes that the command name was set by the callback
    //as well as the DataValuePairs
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   Command* veCommand = new Command();
 
    ///This is a hack to get around sending of only 1 command name and not using event handlers in the original
    ///code.
@@ -603,7 +606,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
       _commandName = "ViewLoc_Data";
       // Create the command and data value pairs
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("LONG") );
+      DataValuePair* dataValuePair = new DataValuePair( std::string("LONG") );
       dataValuePair->SetData( dataValueName, commandInputs );
       _dataValuePairList.push_back( dataValuePair );
    }

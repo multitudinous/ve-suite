@@ -50,6 +50,17 @@ class wxButton;
 class wxCheckBox;
 class wxColourData;
 
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
+    class CORBAServiceList;
+}
+}
+}
+
 #include <map>
 #include <string>
 
@@ -140,7 +151,7 @@ private:
    std::vector<double> xplorerColor;
    //wxColour* colour;
 
-   VE_Conductor::CORBAServiceList* serviceList;
+   ves::conductor::util::CORBAServiceList* serviceList;
 
    std::map< std::string, double > backgroundColor; ///Map the colors to their values
 

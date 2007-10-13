@@ -55,6 +55,9 @@
 #ifdef WIN32
 #include <shellapi.h>
 #endif
+using namespace ves::conductor;
+using namespace ves::conductor::util;
+using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
   EVT_TREE_ITEM_RIGHT_CLICK(TREE_CTRL, Avail_Modules::OnItemRightClick)
@@ -357,12 +360,11 @@ void Avail_Modules::ResetPluginTree()
     LoadModules();
     
     //Now tell Xplorer to reload plugins
-    VE_XML::DataValuePair* dvp = 
-        new VE_XML::DataValuePair(  std::string("STRING") );
+    DataValuePair* dvp = 
+        new DataValuePair(  std::string("STRING") );
     dvp->SetData( "Reload_Plugin_Objects", "Reload" );
-    VE_XML::Command vec;
+    ves::open::xml::Command vec;
     vec.SetCommandName( std::string("Plugin_Control") );
     vec.AddDataValuePair( dvp );
-    VE_Conductor::CORBAServiceList::instance()->
-        SendCommandStringToXplorer( &vec );
+    CORBAServiceList::instance()->SendCommandStringToXplorer( &vec );
 }

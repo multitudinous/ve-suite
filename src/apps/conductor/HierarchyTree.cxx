@@ -85,7 +85,7 @@ void HierarchyTree::AddtoImageList(wxBitmap icon)
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateTree(std::map< std::string, 
-								 VE_XML::VE_Model::ModelWeakPtr > tree, std::string id)
+								 ves::open::xml::model::ModelWeakPtr > tree, std::string id)
 {
     ///Reset Tree
     Clear();
@@ -94,7 +94,7 @@ void HierarchyTree::PopulateTree(std::map< std::string,
     std::map< std::string, char** >::iterator aspenIconIter;
     std::string fullPath;
 
-	for( std::map< std::string, VE_XML::VE_Model::ModelWeakPtr >::iterator 
+	for( std::map< std::string, ves::open::xml::model::ModelWeakPtr >::iterator 
         iter = tree.begin(); iter != tree.end(); ++iter )
 	{
 		ModuleData* modData = new ModuleData();
@@ -138,7 +138,7 @@ void HierarchyTree::PopulateTree(std::map< std::string,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateLevel(wxTreeItemId parentLeaf, 
-   std::vector< VE_XML::VE_Model::ModelWeakPtr > models, std::string id)
+   std::vector< ves::open::xml::model::ModelWeakPtr > models, std::string id)
 {
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
