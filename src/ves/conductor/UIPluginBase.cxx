@@ -40,14 +40,16 @@
 #include <ves/conductor/UIDialog.h>
 #include <ves/conductor/TextResultDialog.h>
 #include <ves/conductor/TexTable.h>
-#include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/IconChooser.h>
-#include <ves/conductor/util/ParamsDlg.h>
 #include <ves/conductor/paraThread.h>
-#include <ves/conductor/util/DataSetLoaderUI.h>
 #include <ves/conductor/vistab.h>
-#include <ves/conductor/util/SoundsPane.h>
 #include <ves/conductor/AspenPlus2DIcons.h>
+
+#include <ves/conductor/util/OrbThread.h>
+#include <ves/conductor/util/ParamsDlg.h>
+#include <ves/conductor/util/DataSetLoaderUI.h>
+#include <ves/conductor/util/SoundsPane.h>
+
 // EPRI TAG
 #include <ves/conductor/FinancialDialog.h>
 #include <ves/open/xml/model/Model.h>

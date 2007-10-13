@@ -132,6 +132,8 @@ int VectorsApp::OnExit()
  * Vectors event table definition
  */
 
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE( Vectors, wxDialog )
 ////@begin Vectors event table entrieS
    EVT_RADIOBOX      (VECTOR_DIR_RBOX,            Vectors::_onDirection)

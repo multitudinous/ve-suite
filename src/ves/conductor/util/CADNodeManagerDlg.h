@@ -51,11 +51,11 @@
 
 class wxFileName;
 
-namspace ves
+namespace ves
 {
-namspace open
+namespace open
 {
-namspace xml
+namespace xml
 {
    class DataValuePair;
 namespace cad

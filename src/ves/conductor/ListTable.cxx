@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // ListTable.cpp: implementation of the ListTable class.
 //
@@ -39,6 +37,8 @@
 #include <ves/conductor/ListTable.h>
 
 #include <wx/window.h>
+using namespace ves::conductor;
+
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

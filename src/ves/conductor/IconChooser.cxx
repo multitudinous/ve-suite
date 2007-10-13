@@ -40,6 +40,8 @@
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/AspenPlus2DIcons.h>
 
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE(IconChooser,wxFrame)	
 	EVT_CLOSE(IconChooser::OnClose)
 	EVT_BUTTON(1003,IconChooser::okButtonClick)

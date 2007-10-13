@@ -52,6 +52,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE( Contours, wxDialog )
 ////@begin Contours event table entries
    EVT_RADIOBOX      (CONTOUR_DIR_RBOX,            Contours::_onDirection)

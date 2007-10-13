@@ -118,7 +118,7 @@ void Module::RemoveLink( size_t i )
    return cls_name;
 }*/
 ////////////////////////////////////////////////
-ves::conductor::util::Polygon* Module::GetPolygon( void )
+util::Polygon* Module::GetPolygon( void )
 {
    return &(poly);
 }

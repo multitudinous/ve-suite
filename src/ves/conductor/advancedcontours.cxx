@@ -51,6 +51,8 @@
    EVT_SLIDER        ( LOD_SLIDER,              AdvancedContours::_onContourLOD )
 ////@end AdvancedContours event table entries
 END_EVENT_TABLE()*/
+using namespace ves::conductor;
+
 
 
 AdvancedContours::AdvancedContours( wxWindow* parent, wxWindowID id, 

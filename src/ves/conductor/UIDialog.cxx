@@ -29,10 +29,9 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/UIDialog.h>
+using namespace ves::conductor;
 
 UIDialog::UIDialog(wxWindow* parent, int id, wxString title)
   :wxDialog( 

@@ -44,7 +44,7 @@ class wxSlider;
 class wxTextCtrl;
 class wxButton;
 
-class DefaultPlugin_UI_Dialog : public UIDialog
+class DefaultPlugin_UI_Dialog : public ves::conductor::UIDialog
 {
 public:
   DefaultPlugin_UI_Dialog(wxWindow* parent, int id, long int* height );

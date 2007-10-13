@@ -72,16 +72,6 @@ class wxScrolledWindow;
 
 #include <wx/event.h>
 #define edge_size 10
-class UIDialog;
-class TextResultDialog;
-class TextResultDialog;
-class GeometryDialog;
-class FinancialDialog;
-class GeometryDataBuffer;
-class SummaryResultDialog;
-class SoundsPane;
-class Vistab;
-class IconChooser;
 
 namespace ves
 {
@@ -89,8 +79,9 @@ namespace conductor
 {
 namespace util
 {
-   class CORBAServiceList;
+    class CORBAServiceList;
     class CADNodeManagerDlg;
+    class SoundsPane;
 }
 }
 }
@@ -113,6 +104,15 @@ namespace ves
 {
 namespace conductor
 {
+class UIDialog;
+class TextResultDialog;
+class GeometryDialog;
+class FinancialDialog;
+class GeometryDataBuffer;
+class SummaryResultDialog;
+class Vistab;
+class IconChooser;
+    
 class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler//, public wxObject
 {
 public:
@@ -166,7 +166,7 @@ public:
    ///Return the outline polygon
    void GetPoly(POLY &polygon); 
    ///This returns the UI dialog of the module
-   virtual UIDialog* UI(wxWindow* parent);
+   virtual ves::conductor::UIDialog* UI(wxWindow* parent);
    ///This returns the Result dialog of the module
    virtual UIDialog* Result(wxWindow* parent);
    ///This returns the PortData dialog of the module
@@ -358,7 +358,7 @@ protected:
    ///The network event handler
    wxEvtHandler* m_network;
    ///The sound pane
-   SoundsPane* _soundsDlg;
+   util::SoundsPane* _soundsDlg;
    ///The icon chooser dialog
    IconChooser* m_iconChooser;
    ///The visualization tab

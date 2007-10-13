@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/conductor/QueryInputsDlg.h>
+using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE(QueryInputsDlg,wxDialog)
 	EVT_CLOSE(QueryInputsDlg::OnClose)

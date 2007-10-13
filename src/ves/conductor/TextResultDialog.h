@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTRESULTDIALOG_H
 #define TEXTRESULTDIALOG_H
@@ -47,13 +45,13 @@ TextResultDialog API
 #include <vector>
 
 class wxButton;
-class TexTable;
 //class wxString;
 
 namespace ves
 {
 namespace conductor
 {
+class TexTable;
 class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
 {
  public:

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/TextResultDialog.h>
 #include <ves/conductor/TexTable.h>
@@ -41,6 +39,8 @@
 #include <wx/statbox.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
+using namespace ves::conductor;
+
 
 //BEGIN_EVENT_TABLE(TextResultDialog, wxDialog)
    //EVT_BUTTON(wxID_OK, TextResultDialog::SetAffirmativeId(wxID_OK))

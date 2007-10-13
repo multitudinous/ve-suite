@@ -38,6 +38,8 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/notebook.h>
+using namespace ves::conductor;
+
 
 
 //BEGIN_EVENT_TABLE(SummaryResultDialog, wxDialog)

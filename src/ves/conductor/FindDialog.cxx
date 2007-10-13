@@ -36,6 +36,8 @@
 #include <wx/choice.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE(FindDialog,wxDialog)
    EVT_CLOSE(FindDialog::OnClose)
    EVT_BUTTON(ID_CANCELBUTTON,FindDialog::CancelButtonClick)

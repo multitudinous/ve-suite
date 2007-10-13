@@ -40,6 +40,7 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <wx/sizer.h>
+using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE(GlobalParamDialog, wxDialog)
   EVT_RADIOBUTTON(RADIO_A, GlobalParamDialog::OnChange)

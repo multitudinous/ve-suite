@@ -32,9 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin_UI_Dialog.h>
+
+#include <ves/conductor/UIDialog.h>
+
 #include <ves/open/xml/model/Point.h>
 #include <iostream>
 
+using namespace ves::conductor;
 #include <wx/dc.h>
 IMPLEMENT_DYNAMIC_CLASS(DefaultPlugin, UIPluginBase)
 
@@ -125,7 +129,7 @@ double DefaultPlugin::GetVersion()
 //	dc->DrawBitmap(*my_icon,pos.x, pos.y);
 //}
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* DefaultPlugin::UI(wxWindow* parent)
+ves::conductor::UIDialog* DefaultPlugin::UI(wxWindow* parent)
 {
   if (dlg!=NULL)
     return dlg;

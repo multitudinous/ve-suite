@@ -37,7 +37,15 @@
 #include <ves/VEConfig.h>
 #include <wx/image.h>
 
-class DefaultPlugin : public UIPluginBase
+namespace ves
+{
+namespace conductor
+{
+    class UIDialog;
+}
+}
+
+class DefaultPlugin : public ves::conductor::UIPluginBase
 {
    DECLARE_DYNAMIC_CLASS( DefaultPlugin )
 
@@ -49,7 +57,7 @@ public:
    //Return the version number of the module
    //virtual void DrawIcon(wxDC* dc);
    //This call return a window to be displayed on the framework
-   virtual UIDialog* UI(wxWindow* parent);
+   virtual ves::conductor::UIDialog* UI(wxWindow* parent);
    //This returns the UI dialog of the module
    virtual wxString GetConductorName();
    ///This returns the name of the module

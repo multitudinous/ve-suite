@@ -43,7 +43,8 @@
 
 #include <ves/conductor/advancedisosurface.h>
 
-IMPLEMENT_DYNAMIC_CLASS( AdvancedIsosurface, wxDialog )
+using namespace ves::conductor;
+
 
 BEGIN_EVENT_TABLE( AdvancedIsosurface, wxDialog )
    EVT_LISTBOX( SELECT_SCALAR,			AdvancedIsosurface::OnScalarSelection )

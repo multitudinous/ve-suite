@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/ResultPanel.h>
 #include <wx/combobox.h>
@@ -39,6 +37,8 @@
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/intl.h>
+using namespace ves::conductor;
+
 
 ResultPanel_Dialog::ResultPanel_Dialog(wxWindow* parent, int id)
   : wxDialog((wxWindow *) parent, id, _("Result Panel"), 

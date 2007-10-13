@@ -35,6 +35,8 @@
 #include <wx/arrstr.h>
 #include <wx/utils.h>
 #include <wx/intl.h>
+using namespace ves::conductor;
+
 
 paraThread::paraThread(Network* network) : wxThread(wxTHREAD_JOINABLE)
 {

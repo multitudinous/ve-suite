@@ -54,6 +54,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
+using namespace ves::conductor;
+
 ///////////////////////////
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
 ////@begin Isosurfaces event table entries

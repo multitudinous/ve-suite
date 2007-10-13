@@ -48,6 +48,8 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 #include <iostream>
+using namespace ves::conductor;
+
 ///////////////////////////
 BEGIN_EVENT_TABLE( Polydata, wxDialog )
 ////@begin polydata event table entries

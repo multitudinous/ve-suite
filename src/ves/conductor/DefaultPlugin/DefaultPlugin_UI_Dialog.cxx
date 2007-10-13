@@ -40,6 +40,7 @@
 #include <wx/textctrl.h>
 
 #include <iostream>
+using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE(DefaultPlugin_UI_Dialog, UIDialog)
 //apparently no event for the sliders

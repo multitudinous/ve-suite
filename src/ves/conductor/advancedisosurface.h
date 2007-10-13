@@ -66,7 +66,6 @@ namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS AdvancedIsosurface: public wxDialog
 {    
-    DECLARE_DYNAMIC_CLASS( AdvancedIsosurface )
     DECLARE_EVENT_TABLE()
 
 public:

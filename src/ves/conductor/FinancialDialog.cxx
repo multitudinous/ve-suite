@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/FinancialDialog.h>
 
@@ -42,6 +40,7 @@
 #include <wx/statbox.h>
 #include <wx/stattext.h>
 
+using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE(FinancialDialog, wxDialog)
   EVT_RADIOBUTTON(RADIO_FDA, FinancialDialog::OnChange)

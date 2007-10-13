@@ -77,6 +77,8 @@
 #include <ves/conductor/xpm/scalartb.xpm>
 ////@end XPM images
 
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_TOOL     ( CONTOUR_BUTTON,       Vistab::_onContour )
    EVT_TOOL     ( VECTOR_BUTTON,        Vistab::_onVector )
@@ -102,8 +104,6 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_CHECKBOX( ID_DATA_AXES_CB,       Vistab::UpdateAxes)
    EVT_CHECKBOX( ID_DATA_SCALAR_BAR,    Vistab::UpdateScalarBar)
 END_EVENT_TABLE()
-
-using namespace ves::conductor;
 
 //////////////////////////////////////////
 //Constructor                           //

@@ -37,6 +37,7 @@
 #include <wx/textctrl.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+using namespace ves::conductor;
 
 //BEGIN_EVENT_TABLE(PortDialog, wxDialog)
   //EVT_BUTTON(wxID_OK, PortDialog::OnOK)

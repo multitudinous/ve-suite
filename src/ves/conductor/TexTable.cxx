@@ -29,13 +29,13 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/TexTable.h>
 #include <iostream>
 
 #include <wx/window.h>
+using namespace ves::conductor;
+
 
 TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxSize& size)
   : wxGrid(parent, id, pos, size)

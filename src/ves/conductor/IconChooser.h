@@ -51,12 +51,13 @@
 #undef IconChooser_STYLE
 #define IconChooser_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 
-class UIPluginBase;
 
 namespace ves
 {
 namespace conductor
 {
+class UIPluginBase;
+
 class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 {
 private:
