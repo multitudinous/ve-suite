@@ -57,13 +57,13 @@ GetInputsEventHandler::~GetInputsEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GetInputsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
+void GetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model)
 {
    try
    {
       if ( model )
       {
-         baseModel = dynamic_cast< VE_XML::VE_Model::Model* >( model );
+         baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
       }
    }
    catch(...)
@@ -73,7 +73,7 @@ void GetInputsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string GetInputsEventHandler::Execute( std::vector< VE_XML::XMLObject* > objectToProcess )
+std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess )
 {
     if( !baseModel )
     {
@@ -87,16 +87,16 @@ std::string GetInputsEventHandler::Execute( std::vector< VE_XML::XMLObject* > ob
         size_t numInputs = objectToProcess.size();
         for ( size_t i = 0; i < numInputs; ++i )
         {
-            VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( objectToProcess.at( i ) );
+            ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( objectToProcess.at( i ) );
             std::string dataName = command->GetCommandName();
-            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+            std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
             for( size_t j = 0; j < baseModel->GetNumberOfInputs(); ++j )
             {
-                VE_XML::Command* tempInput = baseModel->GetInput( j );
-                nodes.push_back(std::pair< VE_XML::XMLObject*, std::string >( tempInput, "vecommand" ));
+                ves::open::xml::Command* tempInput = baseModel->GetInput( j );
+                nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( tempInput, "vecommand" ));
             }
 
-            VE_XML::XMLReaderWriter commandWriter;
+            ves::open::xml::XMLReaderWriter commandWriter;
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
         }

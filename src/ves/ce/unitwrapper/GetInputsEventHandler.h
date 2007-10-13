@@ -39,14 +39,21 @@
  */
 #include <ves/ce/unitwrapper/EventHandler.h>
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-   namespace VE_Model
+namespace open
+{
+namespace xml
+{   
+    class XMLObject;
+   namespace model
    {
       class Model;
    }
 }
+}
+}
+
 #include <ves/VEConfig.h>
 
 namespace VE_CE
@@ -62,13 +69,13 @@ public:
 
    ///The call to handle the event
    ///\param objectToProcess The xml Object to process
-   virtual std::string Execute( std::vector< VE_XML::XMLObject* > objectToProcess );
+   virtual std::string Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess );
 
    ///Function to set the xml object to work on
    ///\param baseObject The base object to apply the command to.
-   virtual void SetBaseObject(VE_XML::XMLObject* baseObject );
+   virtual void SetBaseObject(ves::open::xml::XMLObject* baseObject );
 private:
-   VE_XML::VE_Model::Model* baseModel;
+   ves::open::xml::model::Model* baseModel;
 };
 }
 #endif// GET_INPUTS_EVENT_HANDLER_H

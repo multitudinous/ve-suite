@@ -54,13 +54,13 @@ GetResultsEventHandler::~GetResultsEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GetResultsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
+void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model)
 {
    try
    {
       if ( model )
       {
-         baseModel = dynamic_cast< VE_XML::VE_Model::Model* >( model );
+         baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
       }
    }
    catch(...)
@@ -70,7 +70,7 @@ void GetResultsEventHandler::SetBaseObject( VE_XML::XMLObject* model)
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > objectToProcess )
+std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess )
 {
    if ( !baseModel )
    {
@@ -78,7 +78,7 @@ std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > o
       return std::string("NULL");
    }
    
-   VE_XML::Command resultsCommand;
+   ves::open::xml::Command resultsCommand;
    resultsCommand.SetCommandName("Model Results");
    
    size_t numInputs = baseModel->GetNumberOfResults();
@@ -89,17 +89,17 @@ std::string GetResultsEventHandler::Execute( std::vector< VE_XML::XMLObject* > o
    
     for( size_t i = 0; i < numInputs; ++i )
     {
-        VE_XML::Command* tempResult = baseModel->GetResult( i );
-        VE_XML::DataValuePairWeakPtr tempPair = new VE_XML::DataValuePair();
+        ves::open::xml::Command* tempResult = baseModel->GetResult( i );
+        ves::open::xml::DataValuePairWeakPtr tempPair = new ves::open::xml::DataValuePair();
         tempPair->SetData( tempResult->GetCommandName(), tempResult );
         tempResult->AddDataValuePair( tempPair );
     }
    
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back( std::pair< VE_XML::XMLObject*, 
+   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< ves::open::xml::XMLObject*, 
         std::string >( &resultsCommand, "vecommand" ) );
 
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );

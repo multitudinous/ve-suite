@@ -43,9 +43,15 @@
 #include <map>
 
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
+}
+}
 }
 
 namespace VE_CE
@@ -107,7 +113,7 @@ protected:
    /// easy access to modules from conductor ids.
    std::map< int, Module* > moduleIDMap;
    /// Holder of the network
-   VE_XML::VE_Model::NetworkStrongPtr veNetwork;
+   ves::open::xml::model::NetworkStrongPtr veNetwork;
 };
 }
 }

@@ -46,7 +46,7 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 
 using namespace VE_CE::Utilities;
-using namespace VE_XML;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module()
@@ -54,12 +54,12 @@ Module::Module()
     _return_state( 0 ),
     _is_feedback( 0 )
 {
-   veModel = new VE_XML::VE_Model::Model();
+   veModel = new model::Model();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module( const Module &m )
 {
-   veModel = new VE_XML::VE_Model::Model();
+   veModel = new model::Model();
    copy(m);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ void Module::copy( const Module &m )
    ports.clear();
    for ( size_t i = 0; i < m.ports.size(); ++i )
    {
-      ports.push_back( new VE_XML::VE_Model::Port( *(m.ports.at( i )) ) );
+      ports.push_back( new model::Port( *(m.ports.at( i )) ) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ void Module::addOPort( int p, Connection* c )
    c->connect_oport(_oports[fi]);
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::getPortData( int p, VE_XML::Command& intf )
+int Module::getPortData( int p, Command& intf )
 {
    try
    {
@@ -226,7 +226,7 @@ int Module::getPortData( int p, VE_XML::Command& intf )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::setPortData( int p, VE_XML::Command* intf )
+int Module::setPortData( int p, Command* intf )
 {   
    try
    {
@@ -269,13 +269,13 @@ std::string Module::GetModuleName( void )
    return _name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::VE_Model::ModelWeakPtr Module::GetVEModel( void )
+model::ModelWeakPtr Module::GetVEModel( void )
 {
    //Set the input, results, port data data structures
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetVEModel( VE_XML::VE_Model::ModelWeakPtr mod )
+void Module::SetVEModel( model::ModelWeakPtr mod )
 {
    veModel = mod;
    //Set the name of this module
@@ -288,7 +288,7 @@ void Module::SetVEModel( VE_XML::VE_Model::ModelWeakPtr mod )
    ///Get feedback info
    for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
    {
-      VE_XML::DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
+      DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
       if( dvp )
       {
          unsigned int feedback;
@@ -308,7 +308,7 @@ void Module::SetVEModel( VE_XML::VE_Model::ModelWeakPtr mod )
    //Probably now need to set port data pointers on the port vectors
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::Command* > Module::GetInputData( void )
+std::vector< Command* > Module::GetInputData( void )
 {
    inputs.clear();
    for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
@@ -318,15 +318,15 @@ std::vector< VE_XML::Command* > Module::GetInputData( void )
    return inputs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetInputData( std::vector< VE_XML::XMLObject* > inputData )
+void Module::SetInputData( std::vector< XMLObject* > inputData )
 {
    for ( size_t i = 0; i < inputData.size(); ++i )
    {
-      *(veModel->GetInput( i )) = *(dynamic_cast< VE_XML::Command* >( inputData.at( i ) ) );
+      *(veModel->GetInput( i )) = *(dynamic_cast< Command* >( inputData.at( i ) ) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::Command* > Module::GetResultsData( void )
+std::vector< Command* > Module::GetResultsData( void )
 {
    results.clear();
    for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
@@ -336,10 +336,10 @@ std::vector< VE_XML::Command* > Module::GetResultsData( void )
    return results;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetResultsData( std::vector< VE_XML::XMLObject* > resultsData )
+void Module::SetResultsData( std::vector< XMLObject* > resultsData )
 {
    for ( size_t i = 0; i < resultsData.size(); ++i )
    {
-      *(veModel->GetResult( i )) = *(dynamic_cast< VE_XML::Command* >( resultsData.at( i ) ) );
+      *(veModel->GetResult( i )) = *(dynamic_cast< Command* >( resultsData.at( i ) ) );
    }
 }

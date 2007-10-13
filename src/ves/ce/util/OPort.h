@@ -36,10 +36,17 @@
 #include <ves/ce/util/Port.h>
 #include <ves/open/moduleS.h>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
 }
+}
+}
+
 namespace VE_CE
 {
 namespace Utilities
@@ -58,14 +65,14 @@ public:
    int have_profile();
 
    ///Get ouput port data
-   VE_XML::Command* GetPortData( void );
+   ves::open::xml::Command* GetPortData( void );
    ///Set port data for respective port
-   void SetPortData( VE_XML::Command* inputData );
+   void SetPortData( ves::open::xml::Command* inputData );
 
    //Interface      _data;
    Types::Profile *_profile;
 protected:
-   VE_XML::Command* data;
+   ves::open::xml::Command* data;
 };
 }
 }

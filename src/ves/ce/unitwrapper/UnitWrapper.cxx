@@ -61,10 +61,10 @@ UnitWrapper::UnitWrapper (Body::Executive_ptr exec, std::string name)
    return_state = 0;
    
    ///Initialize VE-Open
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_XML::VE_Shader::ShaderCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
 
    eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
    eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::GetInputsEventHandler();
@@ -141,20 +141,20 @@ char * UnitWrapper::GetStatusMessage (
   ))
 {
    // Add your implementation here
-   VE_XML::Command returnState;
+   ves::open::xml::Command returnState;
 
    returnState.SetCommandName("statusmessage");
-   VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+   ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
    data->SetDataName("RETURN_STATE");
    data->SetDataType("UNSIGNED INT");
    data->SetDataValue(return_state);
    returnState.AddDataValuePair( data );
 
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back( std::pair< VE_XML::XMLObject*, 
+   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< ves::open::xml::XMLObject*, 
         std::string >( &returnState, "vecommand" ) );
 
-   VE_XML::XMLReaderWriter commandWriter;
+   ves::open::xml::XMLReaderWriter commandWriter;
    std::string status = "returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -182,11 +182,11 @@ void UnitWrapper::SetParams ( ::CORBA::Long id, const char * param )
 {
    //just send a list command to SetParams
    // the eventhandler will handle the rest
-   VE_XML::XMLReaderWriter networkWriter;
+   ves::open::xml::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( param, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    std::ostringstream idString;
    idString << id;
    eventHandlerMap[ "Set XML Model Inputs" ]->SetBaseObject( xmlModelMap[ idString.str() ] );
@@ -207,11 +207,11 @@ void UnitWrapper::SetID (
    std::ostringstream strm;
    strm << id;
    
-   std::map< std::string, VE_XML::VE_Model::Model* >::iterator iter;
+   std::map< std::string, ves::open::xml::model::Model* >::iterator iter;
    iter = xmlModelMap.find( strm.str() );
    if ( iter == xmlModelMap.end() )
    {
-      xmlModelMap[ strm.str() ] = new VE_XML::VE_Model::Model();
+      xmlModelMap[ strm.str() ] = new ves::open::xml::model::Model();
    }
 
    std::cout<<UnitName_<<" :SetID called"<<std::endl;
@@ -272,11 +272,11 @@ char * UnitWrapper::Query ( const char* command
   ))
 {
    //std::cout << "UnitWrapper::Query called = " << command << std::endl;
-   VE_XML::XMLReaderWriter networkWriter;
+   ves::open::xml::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( command, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
    std::string network;
    //The query function assumes 1 command to be processed at a time
@@ -289,7 +289,7 @@ char * UnitWrapper::Query ( const char* command
    std::ostringstream strm;
    strm << activeId;
 
-   VE_XML::Command* params = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   ves::open::xml::Command* params = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
    std::string commandName = params->GetCommandName();
    std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
    currentEventHandler = eventHandlerMap.find( commandName );
@@ -313,7 +313,7 @@ void UnitWrapper::DeleteModuleInstance( ::CORBA::Long module_id )
    std::ostringstream strm;
    strm << module_id;
    
-   std::map< std::string, VE_XML::VE_Model::Model* >::iterator iter;
+   std::map< std::string, ves::open::xml::model::Model* >::iterator iter;
    iter = xmlModelMap.find( strm.str() );
    if ( iter != xmlModelMap.end() )
    {

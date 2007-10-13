@@ -41,19 +41,21 @@
 
 #include <vector>
 #include <string>
-namespace VE_XML
+namespace ves
 {
-namespace VE_Model
+namespace open
+{
+namespace xml
+{
+    class Command;
+    class XMLObject;
+namespace model
 {
    class Model;
    class Port;
 }
 }
-
-namespace VE_XML
-{
-   class Command;
-   class XMLObject;
+}
 }
 
 namespace VE_CE
@@ -99,20 +101,20 @@ public:
    IPort* getFBPort ();
 
    ///Get output port data for the specific port
-   int getPortData( int, VE_XML::Command& );
+   int getPortData( int, ves::open::xml::Command& );
    ///Set output port data for the specific port
-   int setPortData( int, VE_XML::Command* );
+   int setPortData( int, ves::open::xml::Command* );
 
    int getPortProfile( int, Types::Profile_out& );
    int setPortProfile( int, const Types::Profile* );
 
    ///Accessors for input data
-   std::vector< VE_XML::Command* > GetInputData( void );
-   void SetInputData( std::vector< VE_XML::XMLObject* > inputData );
+   std::vector< ves::open::xml::Command* > GetInputData( void );
+   void SetInputData( std::vector< ves::open::xml::XMLObject* > inputData );
 
    ///Accessors for input data
-   std::vector< VE_XML::Command* > GetResultsData( void );
-   void SetResultsData( std::vector< VE_XML::XMLObject* > resultsData );
+   std::vector< ves::open::xml::Command* > GetResultsData( void );
+   void SetResultsData( std::vector< ves::open::xml::XMLObject* > resultsData );
 
    ///Get the ID for the module
    ///\return The module id
@@ -122,10 +124,10 @@ public:
    std::string GetModuleName( void );
    ///Get the VE_Model for this module
    ///\return The model for this module
-   VE_XML::VE_Model::ModelWeakPtr GetVEModel( void );
+   ves::open::xml::model::ModelWeakPtr GetVEModel( void );
    ///Set the VE_Model for this module
    ///\param mod The model to add
-   void SetVEModel( VE_XML::VE_Model::ModelWeakPtr mod );
+   void SetVEModel( ves::open::xml::model::ModelWeakPtr mod );
 
    int _need_execute;
    int _return_state;
@@ -147,13 +149,13 @@ private:
    
    // The holder of the raw data for this class
    // This class is responsible for the memory management here
-   VE_XML::VE_Model::ModelStrongPtr veModel;
+   ves::open::xml::model::ModelStrongPtr veModel;
    //Container for input data
-   std::vector< VE_XML::Command* > inputs;
+   std::vector< ves::open::xml::Command* > inputs;
    //Container for results data
-   std::vector< VE_XML::Command* > results;
+   std::vector< ves::open::xml::Command* > results;
    //Container for port data
-   std::vector< VE_XML::VE_Model::Port* > ports;
+   std::vector< ves::open::xml::model::Port* > ports;
    ///Do we need to keep track of messages?
 };
 }

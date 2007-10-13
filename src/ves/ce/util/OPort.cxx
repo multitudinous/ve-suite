@@ -84,12 +84,12 @@ int OPort::have_profile( void )
   return ( _profile != NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* OPort::GetPortData( void )
+ves::open::xml::Command* OPort::GetPortData( void )
 {
    return data;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OPort::SetPortData( VE_XML::Command* inputData )
+void OPort::SetPortData( ves::open::xml::Command* inputData )
 {
    data = inputData;
 }

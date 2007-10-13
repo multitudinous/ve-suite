@@ -49,6 +49,7 @@
 
 using namespace VE_CE::Utilities;
 //using namespace VE_XML::VE_Model;
+using namespace ves::open::xml;
 
 Network::Network ()
 {
@@ -80,16 +81,16 @@ int Network::parse( std::string xmlNetwork )
    // NOTE:This function assumes that the network as been cleared first
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
 
    // do this for models
    networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
-   std::vector< VE_XML::XMLObject* > objectVector = 
+   std::vector< XMLObject* > objectVector = 
        networkWriter.GetLoadedXMLObjects();
-   VE_XML::VE_Model::SystemStrongPtr tempSystem = 
-       dynamic_cast< VE_XML::VE_Model::System* >( objectVector.at( 0 ) );
+   model::SystemStrongPtr tempSystem = 
+       dynamic_cast< model::System* >( objectVector.at( 0 ) );
    if( !tempSystem )
    {
        std::cerr << "Improperly formated ves file." 
@@ -97,7 +98,7 @@ int Network::parse( std::string xmlNetwork )
        return 0;
    }
    
-   std::vector< VE_XML::VE_Model::ModelWeakPtr > models = 
+   std::vector< model::ModelWeakPtr > models = 
        tempSystem->GetModels();
    // now lets create a list of them
    for ( size_t i = 0; i < models.size(); ++i )
@@ -191,8 +192,8 @@ std::string Network::GetNetworkString( void )
         return std::string( "" );
     }
     
-    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
-        new VE_XML::VE_Model::System();
+    model::SystemStrongPtr tempSystem = 
+        new model::System();
     //  Models
     for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {
@@ -203,14 +204,14 @@ std::string Network::GetNetworkString( void )
     tempSystem->AddNetwork( veNetwork );
     
     // Here we wshould loop over all of the following
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
     // Just push on the old network as ce can't modify the network
     // it only uses the network. conductor modifies the network
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    nodes.push_back( std::pair< XMLObject*, std::string >( 
         &(*tempSystem), "veSystem" ) );
         
     std::string fileName( "returnString" );
-    VE_XML::XMLReaderWriter netowrkWriter;
+    XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
     return fileName;
