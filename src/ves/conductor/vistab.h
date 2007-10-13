@@ -65,15 +65,8 @@ namespace model
 }
 }
 
-class Contours;
-class Streamlines;
-class Isosurfaces;
-class TextureBasedToolBar;
-class Polydata;
-
 class wxComboBox;
 class wxListBox;
-class wxSpinCtrlDbl;
 class wxCheckBox;
 class wxTextCtrl;
 class wxButton;
@@ -107,10 +100,20 @@ class wxButton;
 
 #include <ves/VEConfig.h>
 
+
 namespace ves
 {
 namespace conductor
 {
+namespace util
+{
+    class wxSpinCtrlDbl;
+}
+class Contours;
+class Streamlines;
+class Isosurfaces;
+class TextureBasedToolBar;
+class Polydata;
 class VE_GUIPLUGINS_EXPORTS Vistab: public wxDialog
 {    
 public:
@@ -233,8 +236,8 @@ public:
    wxComboBox* itemComboBox12; 
    wxListBox*  itemListBox13; 
    wxListBox*  itemListBox15;
-   wxSpinCtrlDbl* _minSpinner;
-   wxSpinCtrlDbl* _maxSpinner;
+   util::wxSpinCtrlDbl* _minSpinner;
+   util::wxSpinCtrlDbl* _maxSpinner;
    wxSlider* _minSlider;
    wxSlider* _maxSlider;
    wxString* _none;

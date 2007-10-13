@@ -46,7 +46,16 @@
 #include <ves/VEConfig.h>
 
 class wxListBox;
-class wxSpinCtrlDbl;
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
+    class wxSpinCtrlDbl;
+}
+}
+}
 
 #define ID_ADVANCEDISOSURFACES 10000
 //#define ID_LISTBOX1 10001

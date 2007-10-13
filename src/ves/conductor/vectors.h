@@ -60,8 +60,6 @@ namespace xml
 }
 }
 
-class AdvancedVectors;
-
 class wxRadioBox;
 class wxRadioButton;
 class wxCheckBox;
@@ -90,6 +88,7 @@ namespace ves
 {
 namespace conductor
 {
+    class AdvancedVectors;
 class VE_GUIPLUGINS_EXPORTS Vectors: public wxDialog
 {    
 public:

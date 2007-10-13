@@ -51,6 +51,7 @@
 // -- C/C++ Libraries --- //
 #include <iostream>
 #include <cmath>
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( SoundsPane, wxDialog )
     EVT_CHECKLISTBOX( SOUND_CBOX, SoundsPane::_onSounds )

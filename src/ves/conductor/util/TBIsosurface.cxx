@@ -47,11 +47,13 @@
 #include <wx/button.h>
 
 #include <iostream>
+using namespace ves::conductor::util;
+
 BEGIN_EVENT_TABLE( TextureBasedIsosurfaceDlg, wxDialog )
    EVT_SLIDER(TBISOSURFACE_PLANE_SLIDER, TextureBasedIsosurfaceDlg::_onUpdateIsoSurface)
    EVT_BUTTON(TBADVANCED_ISOSURFACE_BUTTON, TextureBasedIsosurfaceDlg::_onAdvanced)
 END_EVENT_TABLE()
-using namespace ves::conductor::util;
+
 //////////////////////////////////////////////////////////
 TextureBasedIsosurfaceDlg::TextureBasedIsosurfaceDlg( wxWindow* parent, int id,std::string title )
 :BaseDialog(parent,id,title)

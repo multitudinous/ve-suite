@@ -72,6 +72,7 @@
 /*!
  * DataSetLoaderUI event table definition
  */
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
 
@@ -523,7 +524,7 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED(event) )
    }
    else
    {
-	   mainSizer->Add( new ves::conductorL::util::TransformUI( &transformDialog, _("Transform Input"), 0 ), 
+	   mainSizer->Add( new TransformUI( &transformDialog, _("Transform Input"), 0 ), 
                   -1, wxEXPAND|wxALIGN_CENTER_HORIZONTAL );
    }
 

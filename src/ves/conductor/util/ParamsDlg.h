@@ -51,12 +51,11 @@
 #undef ParamsDlg_STYLE
 #define ParamsDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 
-class AppFrame;
-
 namespace ves
 {
 namespace conductor
 {
+class AppFrame;
 namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS ParamsDlg : public wxDialog

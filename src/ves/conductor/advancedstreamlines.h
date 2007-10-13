@@ -62,10 +62,16 @@ namespace xml
 }
 }
 
-//namespace VE_UI
-//{
-   class UI_TransientDialog;
-//}
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
+    class UI_TransientDialog;
+}
+}
+}
 class wxSlider;
 class wxCheckBox;
 class wxButton;
@@ -188,7 +194,7 @@ protected:
    wxCheckBox* _lastSeedPtCheck;
    wxCheckBox* _streamArrowCheck;
 
-   UI_TransientDialog* particleControls;
+   ves::conductor::util::UI_TransientDialog* particleControls;
    AdvancedStreamlines* _particleParent;
 };
 }

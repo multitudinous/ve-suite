@@ -56,15 +56,11 @@ namespace xml
 }
 }
 
-class AdvancedIsosurface;
-
 class wxRadioButton;
 class wxCheckBox;
 class wxSlider;
 class wxButton;
 class wxStaticBox;
-class Vistab;
-class Network;
 
 #define ID_DIALOG 10000
 #define SYMBOL_ISOSURFACES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -77,6 +73,9 @@ namespace ves
 {
 namespace conductor
 {
+    class Vistab;
+    class Network;
+    class AdvancedIsosurface;
 class VE_GUIPLUGINS_EXPORTS Isosurfaces: public wxDialog
 {    
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )

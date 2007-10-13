@@ -47,8 +47,6 @@ TransformUI API
 
 #include <string>
 #include <ves/VEConfig.h>
-class DataSetLoaderUI;
-class wxSpinCtrlDbl;
 class wxCheckBox;
 
 namespace ves
@@ -74,72 +72,74 @@ namespace conductor
 {
 namespace util
 {
-      class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
-      {
-      public:
-         ///Constructor
-		  TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::Transform* transform );
-         ///Destructor
-         virtual ~TransformUI();
+class DataSetLoaderUI;
+    class wxSpinCtrlDbl;
+class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
+{
+public:
+    ///Constructor
+    TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::Transform* transform );
+    ///Destructor
+    virtual ~TransformUI();
 
-         ///Enums used by wxwidgets
-         enum TRANSFORM_UI
-         {
-            TRANSFORM_PANEL_ID,///<The transform panel ID.
-            UNIFORM_SCALE///<The scale uniformly ID
-         };
+    ///Enums used by wxwidgets
+    enum TRANSFORM_UI
+    {
+    TRANSFORM_PANEL_ID,///<The transform panel ID.
+    UNIFORM_SCALE///<The scale uniformly ID
+    };
 
-         ///Callback for the transform ui
-         void UpdateTransform( wxSpinEvent& event );
+    ///Callback for the transform ui
+    void UpdateTransform( wxSpinEvent& event );
 
-         ///Update whether uniform scaling is used
-         ///\param event The wxCommand event
-         void UpdateUniformScale( wxCommandEvent& event );
+    ///Update whether uniform scaling is used
+    ///\param event The wxCommand event
+    void UpdateUniformScale( wxCommandEvent& event );
 
-         ///Get the current transform
-         //ves::open::xml::Transform* GetTransform( void );
+    ///Get the current transform
+    //ves::open::xml::Transform* GetTransform( void );
 
-         ///Get the current parameter block id
-         void SetParamBlockID( std::string id );
-         ///Get the current parameter block transform
-         void SetParamBlockTransform( ves::open::xml::Transform* transform );
+    ///Get the current parameter block id
+    void SetParamBlockID( std::string id );
+    ///Get the current parameter block transform
+    void SetParamBlockTransform( ves::open::xml::Transform* transform );
 
-      private:
-         ves::open::xml::Transform* transform;///<The Trasnform for the ui.
+private:
+    ves::open::xml::Transform* transform;///<The Trasnform for the ui.
 
-         ///Transform panel controls
-         wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
-         wxSpinCtrlDbl* _yTransformCtrl;///<Y translation control
-         wxSpinCtrlDbl* _zTransformCtrl;///<Z translation control
+    ///Transform panel controls
+    wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
+    wxSpinCtrlDbl* _yTransformCtrl;///<Y translation control
+    wxSpinCtrlDbl* _zTransformCtrl;///<Z translation control
 
-         wxSpinCtrlDbl* _xRotationCtrl;///<X rotation control
-         wxSpinCtrlDbl* _yRotationCtrl;///<Y rotation control
-         wxSpinCtrlDbl* _zRotationCtrl;///<Z rotation control
+    wxSpinCtrlDbl* _xRotationCtrl;///<X rotation control
+    wxSpinCtrlDbl* _yRotationCtrl;///<Y rotation control
+    wxSpinCtrlDbl* _zRotationCtrl;///<Z rotation control
 
-         wxSpinCtrlDbl* _xScaleCtrl;///<X scale control
-         wxSpinCtrlDbl* _yScaleCtrl;///<Y scale control
-         wxSpinCtrlDbl* _zScaleCtrl;///<Z scale control
+    wxSpinCtrlDbl* _xScaleCtrl;///<X scale control
+    wxSpinCtrlDbl* _yScaleCtrl;///<Y scale control
+    wxSpinCtrlDbl* _zScaleCtrl;///<Z scale control
 
-         wxCheckBox* m_uniformScale;///<Uniform scaling checkbox
+    wxCheckBox* m_uniformScale;///<Uniform scaling checkbox
 
-         std::string _commandName;///<The command name.
-         std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+    std::string _commandName;///<The command name.
+    std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
 
-         std::string _id;///<parameter block id
-         ves::open::xml::Transform* _transform;///<parameter block transform
+    std::string _id;///<parameter block id
+    ves::open::xml::Transform* _transform;///<parameter block transform
 
-         ///Send the Command back to VE-Xplorer.
-         void _sendCommandsToXplorer();
+    ///Send the Command back to VE-Xplorer.
+    void _sendCommandsToXplorer();
 
-         double tempX;///<The x scale value.
-         double tempY;///<The y scale value.
-         double tempZ;///<The z scale value.
+    double tempX;///<The x scale value.
+    double tempY;///<The y scale value.
+    double tempZ;///<The z scale value.
 
-         DataSetLoaderUI* dataset;
-         ves::open::xml::ParameterBlock* paramBlock;
+    DataSetLoaderUI* dataset;
+    ves::open::xml::ParameterBlock* paramBlock;
 
-         DECLARE_EVENT_TABLE()
-      };
+    DECLARE_EVENT_TABLE()
+};
 }
 }
 }

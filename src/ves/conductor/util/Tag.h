@@ -83,7 +83,7 @@ public:
     wxRect* GetBoundingBox( void );
     ///Set the raw xml data to configure the tag
     ///\param inputTag The pointer to the class holding the tag data
-    void SetVETagPtr( ves::open::xml::model::::TagPtr inputTag );
+    void SetVETagPtr( ves::open::xml::model::TagPtr inputTag );
     ///Get the raw xml data to be written back out
     ves::open::xml::model::TagPtr GetVETagPtr();
     ///Calculate tag polygon to be drawn

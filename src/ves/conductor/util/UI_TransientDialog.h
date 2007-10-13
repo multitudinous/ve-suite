@@ -44,9 +44,7 @@ class wxSizer;
 class wxWindow;
 class wxImage;
 class wxBitmapButton;
-class wxSpinCtrlDbl;
 #include <wx/spinctrl.h>
-//Transient control ids
 
 namespace ves
 {
@@ -54,14 +52,15 @@ namespace conductor
 {
 namespace util
 {
-	class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public ves::conductor::util:BaseDialog 
+class wxSpinCtrlDbl;
+class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public BaseDialog 
 {
 public:
    UI_TransientDialog(int numTimeSteps,
                     wxWindow* parent, 
 		               wxWindowID id = -1, 
                      std::string title = "Transient Controls");
-   ~UI_TransientDialog(){};
+   virtual ~UI_TransientDialog(){}
 
    enum TRANS_DIALOG_IDS
    {

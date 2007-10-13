@@ -53,8 +53,6 @@ CORBAServiceList API
 #include <vector>
 #include <string>
 
-class PEThread;
-class Body_UI_i;
 class wxTextCtrl;
 class wxUpdateUIEvent;
 
@@ -66,6 +64,8 @@ namespace conductor
 {
 namespace util
 {
+class Body_UI_i;
+class PEThread;
 class VE_CONDUCTOR_UTILS_EXPORTS CORBAServiceList //: public wxObject
 {
 private:

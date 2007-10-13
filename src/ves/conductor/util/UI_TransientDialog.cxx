@@ -53,6 +53,7 @@
 #include <iostream>
 #include <string>
 
+using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_BUTTON(PLAY_BUTTON, UI_TransientDialog::_onPlay)
    EVT_BUTTON(STOP_BUTTON, UI_TransientDialog::_onStop)
@@ -62,7 +63,6 @@ BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_SPINCTRL(DURATION_CNTL_BOX, UI_TransientDialog::_onSetDuration)
 END_EVENT_TABLE()
 
-using namespace ves::conductor::util;
 ///////////////////////////////////////////////////////
 //Constructor                                        //
 ///////////////////////////////////////////////////////

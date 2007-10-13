@@ -57,16 +57,10 @@ namespace xml
 #include <ves/conductor/util/BaseDialog.h>
 #include <ves/VEConfig.h>
 
-class UI_TransientDialog;
 class wxArrayString;
 class wxToolBar;
 class wxComboBox;
 class wxCheckBox;
-
-class ScalarToolsDialog;
-class TransferFunctionDialog;
-
-class ROIDialog;
 
 namespace ves
 {
@@ -74,7 +68,13 @@ namespace conductor
 {
 namespace util
 {
-	class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public ves::conductor::util::BaseDialog
+class UI_TransientDialog;
+class ScalarToolsDialog;
+class TransferFunctionDialog;
+
+class ROIDialog;
+
+class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public BaseDialog
 {
 public:
    ///Constructor

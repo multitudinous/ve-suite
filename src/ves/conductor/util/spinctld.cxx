@@ -36,6 +36,7 @@
 #endif // WX_PRECOMP
 
 #include <ves/conductor/util/spinctld.h>
+using namespace ves::conductor::util;
 #include <math.h>
 
 #if wxMINOR_VERSION > 4
@@ -62,6 +63,12 @@
 //----------------------------------------------------------------------------
 
 // the textctrl used for the wxSpinCtrlDbl, needed for keypresses
+namespace ves
+{
+namespace conductor
+{
+namespace util
+{
 class wxSpinCtrlDblTextCtrl : public wxTextCtrl
 {
 public:
@@ -86,6 +93,9 @@ public:
 private:
     DECLARE_EVENT_TABLE()
 };
+}
+}
+}
 
 BEGIN_EVENT_TABLE(wxSpinCtrlDblTextCtrl,wxTextCtrl)
 //  EVT_TEXT_ENTER( wxID_ANY, wxSpinCtrlDblTextCtrl::OnTextEnter ) // get them from spinctrldbl

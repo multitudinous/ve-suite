@@ -38,6 +38,7 @@
 #include <ace/OS.h>
 #include <iostream>
 #include <sstream>
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( PEThread, wxTextCtrl )
    //EVT_UPDATE_UI(7777, PEThread::OnUpdateUIPop)

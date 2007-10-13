@@ -51,7 +51,6 @@ CADNodePropsDlg API
 class wxBoxSizer;
 class wxNotebook;
 class wxButton;
-class wxSpinCtrlDbl;
 class wxPanel;
 class wxTextCtrl;
 class wxComboBox;
@@ -83,6 +82,8 @@ namespace conductor
 {
 namespace util
 {
+class wxSpinCtrlDbl;
+
 class VE_CONDUCTOR_UTILS_EXPORTS CADNodePropertiesDlg : public wxDialog
 {
 public:

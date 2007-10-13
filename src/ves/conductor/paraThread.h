@@ -40,15 +40,13 @@
 */
 #include <wx/thread.h>
 
-
 #include <ves/VEConfig.h>
-
-class Network;
 
 namespace ves
 {
 namespace conductor
 {
+    class Network;
 class VE_GUIPLUGINS_EXPORTS paraThread : public wxThread  
 {
 public:

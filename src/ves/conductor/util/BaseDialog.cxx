@@ -121,7 +121,7 @@ void BaseDialog::_sendCommandsToXplorer()
          //std::cout<<tempDoc<<std::endl;
          // CORBA releases the allocated memory so we do not have to
          //_vjObsPtr->SetCommandString( tempDoc );
-         lConductor::CORBAServiceList::instance()->SendCommandStringToXplorer(newCommand);
+         CORBAServiceList::instance()->SendCommandStringToXplorer(newCommand);
          delete newCommand;
       }
       catch ( ... )

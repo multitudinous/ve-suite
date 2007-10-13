@@ -46,7 +46,6 @@ Body_UI_i API
 
 #include <ves/open/xml/Command.h>
 
-class PEThread;
 //class Network;
 
 namespace ves
@@ -74,6 +73,7 @@ namespace conductor
 {
 namespace util
 {
+class PEThread;
 class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
  public:

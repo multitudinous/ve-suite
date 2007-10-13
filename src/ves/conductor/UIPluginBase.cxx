@@ -47,8 +47,8 @@
 
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/util/ParamsDlg.h>
-#include <ves/conductor/util/DataSetLoaderUI.h>
 #include <ves/conductor/util/SoundsPane.h>
+#include <ves/conductor/util/DataSetLoaderUI.h>
 
 // EPRI TAG
 #include <ves/conductor/FinancialDialog.h>
@@ -77,6 +77,7 @@
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE(UIPluginBase, wxEvtHandler )
     EVT_LEFT_DCLICK( UIPluginBase::OnDClick )

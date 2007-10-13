@@ -78,7 +78,6 @@ Differences to wxSpinCtrl:
 #include <wx/spinctrl.h> // for EVT_SPINCTRL
 
 class wxTextCtrl;
-class wxSpinCtrlDblTextCtrl;
 #include <ves/VEConfig.h>
 enum
 {
@@ -91,6 +90,7 @@ namespace conductor
 {
 namespace util
 {
+    class wxSpinCtrlDblTextCtrl;
 class VE_CONDUCTOR_UTILS_EXPORTS wxSpinCtrlDbl: public wxControl
 {
 public:

@@ -42,6 +42,7 @@
 #include <wx/bmpbuttn.h>
 
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
       EVT_BUTTON   ( PARTICLE_TRACKING,  AdvancedStreamlines::_OnParticleTracking )

@@ -108,7 +108,6 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS DataSetLoaderUI: public wxDialog
 {    
     //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
-    DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
@@ -119,11 +118,11 @@ public:
                      const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
                      const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
                      long style = SYMBOL_DATASETLOADERUI_STYLE, 
-                     ves::open::xml::model::ModelWeakPtr veModel = 0);
+                     ves::open::xml::model::ModelWeakPtr veModel = 0 );
 
    enum
    {
-      ID_SCROLLEDWINDOW=10001,
+      ID_SCROLLEDWINDOW = 10001,
       ID_COMBOBOX,
       ID_TEXTCTRL,
       ID_BUTTON,
@@ -242,6 +241,7 @@ private:
    ves::open::xml::ParameterBlock* paramBlock;
 
    int lastAddition;
+   DECLARE_EVENT_TABLE()
 };
 }
 }

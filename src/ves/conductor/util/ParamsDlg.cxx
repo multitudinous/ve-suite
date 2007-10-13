@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/conductor/util/ParamsDlg.h>
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE(ParamsDlg,wxDialog)
    EVT_CLOSE(ParamsDlg::OnClose)

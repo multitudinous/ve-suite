@@ -59,13 +59,13 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <iostream>
+using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
    EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
    //EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
    EVT_BUTTON(TRANSIENT_BUTTON,TextureBasedToolBar::_onTransient)
 END_EVENT_TABLE()
 
-using namespace ves::conductor::util;
 //////////////////////////////////////////////////////////////////
 TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
 :ves::conductor::util::BaseDialog(parent,id,"Texture-Based Tools")
