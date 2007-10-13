@@ -74,6 +74,9 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
+
 BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_NEW, MainToolBar::OnNew )
     EVT_MENU( TOOLBAR_OPEN, MainToolBar::OnOpen )
@@ -257,8 +260,8 @@ void MainToolBar::OnSave( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 {
-    VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
+    DataValuePair* dvp = new DataValuePair();
+    CommandSharedPtr command = new ves::open::xml::Command();
 
     std::string mode;
 
@@ -294,15 +297,13 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     command->SetCommandName( std::string( "CHANGE_DEVICE_MODE" ) );
     command->AddDataValuePair( dvp );
 
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
 {
-    VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
+    DataValuePair* dvp = new DataValuePair();
+    CommandSharedPtr command = new ves::open::xml::Command();
 
     std::string mode;
 
@@ -351,15 +352,13 @@ void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
     command->SetCommandName( std::string( "CHANGE_CENTERPOINT_MODE" ) );
     command->AddDataValuePair( dvp );
 
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
 {
-    VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
+    DataValuePair* dvp = new DataValuePair();
+    ves::open::xml::Command* command = new ves::open::xml::Command();
 
     SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
     SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
@@ -370,7 +369,7 @@ void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
     command->SetCommandName( std::string( "UNSELECT_OBJECTS" ) );
     command->AddDataValuePair( dvp );
 
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
     delete command;
 }
@@ -410,8 +409,8 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         EnableTool( TOOLBAR_PLAY, false );
         EnableTool( TOOLBAR_STEP, false );
 
-        VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
-        VE_XML::Command* command = new VE_XML::Command();
+        DataValuePair* dvp = new DataValuePair();
+        ves::open::xml::Command* command = new ves::open::xml::Command();
 
         std::string value;
 
@@ -420,7 +419,7 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         command->SetCommandName( std::string( "PHYSICS_SIMULATION" ) );
         command->AddDataValuePair( dvp );
 
-        VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+        CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
         delete command;
     }
@@ -428,8 +427,8 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 {
-    VE_XML::DataValuePair* dvp = new VE_XML::DataValuePair();
-    VE_XML::Command* command = new VE_XML::Command();
+    DataValuePair* dvp = new DataValuePair();
+    ves::open::xml::Command* command = new ves::open::xml::Command();
 
     std::string value;
 
@@ -473,7 +472,7 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     command->SetCommandName( std::string( "PHYSICS_SIMULATION" ) );
     command->AddDataValuePair( dvp );
 
-    VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+    CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 
     delete command;
 }

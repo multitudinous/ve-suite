@@ -44,6 +44,9 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
+
 /*BEGIN_EVENT_TABLE( ExportMenu, wxMenu )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
@@ -91,14 +94,14 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
         return;
     }
     
-    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::CommandPtr command = new VE_XML::Command();
+    DataValuePairWeakPtr dvp = new DataValuePair();
+    CommandPtr command = new Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "SCREEN_SHOT" ) );
     command->AddDataValuePair( dvp );
 
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,13 +130,13 @@ void ExportMenu::OnDOTFile( wxCommandEvent& event )
         return;
     }
     
-    VE_XML::DataValuePairWeakPtr dvp = new VE_XML::DataValuePair();
-    VE_XML::CommandPtr command = new VE_XML::Command();
+    DataValuePairWeakPtr dvp = new DataValuePair();
+    CommandPtr command = new Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "DOT_FILE" ) );
     command->AddDataValuePair( dvp );
     
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( command );
 }

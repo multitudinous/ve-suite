@@ -55,6 +55,7 @@
 
 using namespace CosNaming;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 cfdVjObsWrapper::cfdVjObsWrapper( void )
 {
@@ -226,7 +227,7 @@ cfdCommandArray* cfdVjObsWrapper::GetCommandArray( void )
    return _vjObs->_cfdArray;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* cfdVjObsWrapper::GetXMLCommand( void )
+Command* cfdVjObsWrapper::GetXMLCommand( void )
 {
    return _vjObs->bufferCommand;
 }

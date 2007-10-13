@@ -62,14 +62,20 @@ VjObs_i API
 
 namespace VE_Xplorer
 {
-   class cfdModelHandler;
-   class cfdCommandArray;
+    class cfdModelHandler;
+    class cfdCommandArray;
 }
 
-namespace VE_XML
+namespace ves
 {
-   class DOMDocumentManager;
-   class Command;
+namespace open
+{
+namespace xml
+{        
+    class DOMDocumentManager;
+    class Command;
+}
+}
 }
 
 #include <vector>
@@ -77,7 +83,7 @@ namespace VE_XML
 namespace VE_Xplorer
 {
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
-                public PortableServer::RefCountServantBase
+    public PortableServer::RefCountServantBase
 {
 public:
     ///Constructor
@@ -129,7 +135,7 @@ public:
     ///Create the vector with XML Commands to be used by Xplorer
     void CreatCommandVector( std::string commandString );
     cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
-    VE_XML::Command* bufferCommand;///< Data to hold command data
+    ves::open::xml::Command* bufferCommand;///< Data to hold command data
     double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
    
     std::vector< cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
@@ -178,8 +184,8 @@ protected:
    short mGetClientInfo;///< client info number
    double mShort_data_array[ 9 ];///< buffer data
 
-   VE_XML::DOMDocumentManager* domManager; ///< dom manger should be removed
-   std::vector< VE_XML::Command* > commandVectorQueue;///< command vector may be a duplicate
+   ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
+   std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
    std::vector< std::string > commandStringQueue;///< command queue with raw string data
    cfdCommandArray* _bufferArray;///< command data
    // Cluster Stuff for the above state variables

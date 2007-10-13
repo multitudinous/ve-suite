@@ -72,8 +72,9 @@ using namespace VE_TextureBased;
 //vprSingletonImp( VE_Xplorer::VjObs_i );
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
-using namespace VE_XML;
+//using namespace VE_SceneGraph;
+//using namespace ves::xplorer::scenegraph;
+using namespace ves::open::xml;
 
 VjObs_i::VjObs_i()
 {
@@ -956,15 +957,15 @@ void VjObs_i::CreatCommandVector( std::string commandString )
     //This function is called from juggler threads
     vprDEBUG(vesDBG,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
     vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-    VE_XML::XMLReaderWriter networkWriter;
+    XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-    std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
     for ( size_t i = 0; i < objectVector.size(); ++i )
     {
-        commandVectorQueue.push_back( static_cast< VE_XML::Command* >( objectVector.at( i ) ) );
+        commandVectorQueue.push_back( static_cast< Command* >( objectVector.at( i ) ) );
     }
 }
 // Frame sync variables used by osg only at this point

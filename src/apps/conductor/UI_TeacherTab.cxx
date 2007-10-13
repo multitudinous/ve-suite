@@ -50,6 +50,9 @@ BEGIN_EVENT_TABLE(UI_TeacherTab, wxDialog )
    EVT_BUTTON( RECORD_SCENE,UI_TeacherTab::_onClear)
 END_EVENT_TABLE()
 
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
+
 ///////////////
 //Constructor//
 ///////////////
@@ -98,9 +101,9 @@ void UI_TeacherTab::_buildPage()
    int numStoredScenes = 1;
    VjObs::scalar_p_var fileNames;
 
-   if ( VE_Conductor::CORBAServiceList::instance()->IsConnectedToXplorer() )
+   if ( CORBAServiceList::instance()->IsConnectedToXplorer() )
    {
-      fileNames = VE_Conductor::CORBAServiceList::instance()->GetXplorerPointer()->get_teacher_name();
+      fileNames = CORBAServiceList::instance()->GetXplorerPointer()->get_teacher_name();
       numStoredScenes = fileNames->length() + 1;
    }   
    
@@ -150,11 +153,11 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& WXUNUSED(event))
    }
    //This assumes that the command name was set by the callback
    //as well as the DataValuePairs
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   Command* veCommand = new Command();
 
    std::string _commandName = "Stored Scenes";
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("UNSIGNED INT") );
+   DataValuePair* dataValuePair = new DataValuePair( std::string("UNSIGNED INT") );
    unsigned int sceneId = _teacherRBox->GetSelection() - 1;
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( sceneId );
@@ -165,7 +168,7 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& WXUNUSED(event))
    try
    {
       // CORBA releases the allocated memory so we do not have to
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+      CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    }
    catch ( ... )
    {
@@ -179,11 +182,11 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& WXUNUSED(event))
 
 void UI_TeacherTab::_onClear(wxCommandEvent& event)
 {
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   Command* veCommand = new Command();
 
    std::string _commandName = "Stored Scenes";
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("UNSIGNED INT") );
+   DataValuePair* dataValuePair = new DataValuePair( std::string("UNSIGNED INT") );
    unsigned int sceneId = _teacherRBox->GetSelection() - 1;
    dataValuePair->SetDataName( "RECORD_SCENE" );
    dataValuePair->SetDataValue( sceneId );
@@ -194,7 +197,7 @@ void UI_TeacherTab::_onClear(wxCommandEvent& event)
    try
    {
       // CORBA releases the allocated memory so we do not have to
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+      CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
       _buildPage();
    }
    catch ( ... )

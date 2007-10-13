@@ -78,8 +78,9 @@
 #include <iostream>
 #include <cmath>
 
-using namespace VE_Conductor::GUI_Utilities;
-using namespace VE_Conductor;
+using namespace ves::open::xml;
+using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE(Network, wxEvtHandler)
     // see the docs on wxScrolledWindow for more info on this
@@ -599,7 +600,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
 
     //Pop the tag event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+    //for( std::vector< GUI_Utilities::Tag >::iterator 
     //     iter=tags.begin(); iter!=tags.end(); iter++ )
     //{
     //    RemoveEventHandler( &(*iter) );
@@ -624,7 +625,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
     }
     
     //Pop the tag event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+    //for( std::vector< GUI_Utilities::Tag >::iterator 
     //   iter=tags.begin(); iter!=tags.end(); iter++ )
     //{
     //    PushEventHandler( &(*iter) );
@@ -640,7 +641,7 @@ void Network::OnDelLink(wxCommandEvent& event )
 {
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
     //Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    //for( std::vector< GUI_Utilities::Link >::iterator 
     //     iter=links.begin(); iter!=links.end(); iter++ )
     //{
     //    RemoveEventHandler( &(*iter) );
@@ -664,7 +665,7 @@ void Network::OnDelLink(wxCommandEvent& event )
     }
 
     //Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    //for( std::vector< GUI_Utilities::Link >::iterator 
     //     iter=links.begin(); iter!=links.end(); iter++ )
     //{
     //    PushEventHandler( &(*iter) );
@@ -682,7 +683,7 @@ void Network::OnDelMod(wxCommandEvent& event )
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
 
     //Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    //for( std::vector< GUI_Utilities::Link >::iterator 
     //     iter=links.begin(); iter!=links.end(); iter++ )
     //{
     //    RemoveEventHandler( &(*iter) );
@@ -719,7 +720,7 @@ void Network::OnDelMod(wxCommandEvent& event )
     }
 
 	//Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    //for( std::vector< GUI_Utilities::Link >::iterator 
     //iter=links.begin(); iter!=links.end(); iter++ )
     //{
     //    PushEventHandler( &(*iter) );
@@ -740,7 +741,7 @@ void Network::OnDelPort(wxCommandEvent& event )
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
     
     //Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    //for( std::vector< GUI_Utilities::Link >::iterator 
     //    iter=links.begin(); iter!=links.end(); iter++ )
     //{
     //    RemoveEventHandler( &(*iter) );
@@ -749,8 +750,8 @@ void Network::OnDelPort(wxCommandEvent& event )
     
     // Need to delete all links associated with this particular module
     // first, delete all the links connects to it
-    VE_XML::VE_Model::Port* selPort = 
-        static_cast< VE_XML::VE_Model::Port* >( event.GetClientData() );
+    model::Port* selPort = 
+        static_cast< model::Port* >( event.GetClientData() );
     for( std::vector< Link >::iterator iter3=links.begin(); 
         iter3!=links.end(); )
     {
@@ -771,7 +772,7 @@ void Network::OnDelPort(wxCommandEvent& event )
     }
     
     //Pop the link event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    //for( std::vector< GUI_Utilities::Link >::iterator 
     //    iter=links.begin(); iter!=links.end(); iter++ )
     //{
     //    PushEventHandler( &(*iter) );
@@ -1081,7 +1082,7 @@ void Network::DropModule(int ix, int iy, int mod )
 
    //num = cur_module->GetNumPoly();
    //tmppoly.resize(num);
-   VE_Conductor::GUI_Utilities::Polygon tmppoly;
+   Polygon tmppoly;
    POLY oldPoly;
    oldPoly.resize( cur_module->GetNumPoly() );
    cur_module->GetPoly( oldPoly );
@@ -1667,7 +1668,7 @@ void Network::AddTag(int x, int y, wxString text)
 {
     while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
     //Pop the tag event handlers to clear these event handlers
-    //for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+    //for( std::vector< GUI_Utilities::Tag >::iterator 
     //     iter=tags.begin(); iter!=tags.end(); iter++ )
     //{
     //    RemoveEventHandler( &(*iter) );
@@ -1702,7 +1703,7 @@ void Network::AddTag(int x, int y, wxString text)
    systemPtr->GetNetwork()->AddTag( t.GetVETagPtr() );
 
    //Pop the tag event handlers to clear these event handlers
-   //for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+   //for( std::vector< GUI_Utilities::Tag >::iterator 
    //     iter=tags.begin(); iter!=tags.end(); iter++ )
    //{
    //    PushEventHandler( &(*iter) );
@@ -1748,14 +1749,14 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     num = cur_module->GetNumPoly();
     tmpPoly.resize(num);
     cur_module->GetPoly(tmpPoly); 
-    VE_Conductor::GUI_Utilities::Polygon newPolygon;
+    Polygon newPolygon;
     *(newPolygon.GetPolygon()) = tmpPoly;
 
     newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
 
     modules[id].GetPlugin()->SetName( wxString( cls_name.c_str(), wxConvUTF8 ) );
     modules[id].GetPlugin()->SetID(id);
-    modules[id].GetPlugin()->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+    modules[id].GetPlugin()->SetCORBAService( CORBAServiceList::instance() );
     modules[id].GetPlugin()->SetDialogSize( parent->GetAppropriateSubDialogSize() );
 
     ///Add the plugin model pointer to the respective system
@@ -1835,13 +1836,13 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
  /*std::string Network::Save( std::string fileName )
 {
    // Here we wshould loop over all of the following
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+    std::vector< std::pair< XMLObject*, std::string > > nodes;
     ///Create the system
-    VE_XML::VE_Model::SystemStrongPtr tempSystem = 
-        new VE_XML::VE_Model::System();
+    SystemStrongPtr tempSystem = 
+        new System();
     //Setup the network to populate
-    VE_XML::VE_Model::NetworkWeakPtr tempNetwork = 
-        new VE_XML::VE_Model::Network();
+    NetworkWeakPtr tempNetwork = 
+        new Network();
     tempSystem->AddNetwork( tempNetwork );
 
     tempNetwork->GetDataValuePair( -1 )->
@@ -1860,7 +1861,7 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
     //Update the links
     for( size_t i = 0; i < links.size(); ++i )
     {
-        VE_XML::VE_Model::Link* xmlLink = tempNetwork->GetLink( -1 );
+        Link* xmlLink = tempNetwork->GetLink( -1 );
         xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].
             GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
         xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].
@@ -1892,32 +1893,32 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
          iter!=modules.end(); ++iter )
     {
         iter->second.GetPlugin()->SetID( iter->first );
-        //nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+        //nodes.push_back( std::pair< XMLObject*, std::string >( 
         //    iter->second.GetPlugin()->GetVEModel(), "veModel" ) );
-        tempSystem->AddModel( new VE_XML::VE_Model::Model( 
+        tempSystem->AddModel( new Model( 
             *(iter->second.GetPlugin()->GetVEModel()) ) );
     }
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    nodes.push_back( std::pair< XMLObject*, std::string >( 
         &(*tempSystem), "veSystem" ) );
     
     //Write out the veUser info for the local user
-    VE_XML::UserPtr userInfo = new VE_XML::User();
+    UserPtr userInfo = new User();
     userInfo->SetUserId( "User" );
-    userInfo->SetControlStatus( VE_XML::User::VEControlStatus( "MASTER" ) );
-    VE_XML::StateInfoWeakPtr colorState = new VE_XML::StateInfo();
+    userInfo->SetControlStatus( User::VEControlStatus( "MASTER" ) );
+    StateInfoWeakPtr colorState = new StateInfo();
     ///Load the current preferences from the data buffer
-    std::map< std::string, VE_XML::CommandWeakPtr > tempMap = 
+    std::map< std::string, CommandWeakPtr > tempMap = 
     UserPreferencesDataBuffer::instance()->GetCommandMap();
-    for( std::map< std::string, VE_XML::CommandWeakPtr >::iterator prefIter = 
+    for( std::map< std::string, CommandWeakPtr >::iterator prefIter = 
         tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
     {
         colorState->AddState( prefIter->second );
     }
     userInfo->SetStateInfo( colorState );
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    nodes.push_back( std::pair< XMLObject*, std::string >( 
         &(*userInfo), "User" ) );
         
-    VE_XML::XMLReaderWriter netowrkWriter;
+    XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
 
@@ -1947,20 +1948,20 @@ void Network::New( bool promptClearXplorer )
       std::map<int, Module>::iterator iter;
       for ( iter=modules.begin(); iter!=modules.end(); ++iter )
       {
-         VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+         DataValuePair* dataValuePair = new DataValuePair(  std::string("UNSIGNED INT") );
          dataValuePair->SetDataName( "Object ID" );
          dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-         VE_XML::Command* veCommand = new VE_XML::Command();
+         Command* veCommand = new Command();
          veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
          veCommand->AddDataValuePair( dataValuePair );
-         bool connected = VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+         bool connected = CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
          //Clean up memory
          delete veCommand;
       }
    }
    
     //Pop the link event handlers to clear these event handlers
-    for( std::vector< VE_Conductor::GUI_Utilities::Link >::iterator 
+    for( std::vector< GUI_Utilities::Link >::iterator 
         iter=links.begin(); iter!=links.end(); iter++ )
     {
         RemoveEventHandler( &(*iter) );
@@ -1976,7 +1977,7 @@ void Network::New( bool promptClearXplorer )
     modules.clear();
 
     //Pop the tag event handlers to clear these event handlers
-    for( std::vector< VE_Conductor::GUI_Utilities::Tag >::iterator 
+    for( std::vector< GUI_Utilities::Tag >::iterator 
          iter =  tags.begin(); iter != tags.end(); iter++ )
     {
         RemoveEventHandler( &(*iter) );
@@ -2027,19 +2028,19 @@ void Network::CreateNetwork( std::string xmlNetwork )
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
    _fileProgress->Update( 10, _("start loading") );
-    VE_Conductor::XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
+    XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
    _fileProgress->Update( 15, _("start loading") );
    _fileProgress->Update( 25, _("start loading") );
 
    // do this for network
-   VE_XML::VE_Model::NetworkWeakPtr veNetwork = 
-       VE_Conductor::XMLDataBufferEngine::instance()->
+   NetworkWeakPtr veNetwork = 
+       XMLDataBufferEngine::instance()->
        GetXMLNetworkDataObject( "Network" );
    
     // we are expecting that a network will be found
     //if( !objectVector.empty() )
     //{
-    //    veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
+    //    veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
     //    objectVector.erase( objectVector.begin() );
     //}
     //else
@@ -2071,7 +2072,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
     //Setup the links
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
-        links.push_back( VE_Conductor::GUI_Utilities::Link( this ) );
+        links.push_back( GUI_Utilities::Link( this ) );
         links.at( i ).SetDCScale( &userScale );
         
         links.at( i ).SetFromPort( *(veNetwork->GetLink( i )->GetFromPort()) );
@@ -2109,7 +2110,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
             veNetwork->GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
         links.at(i).SetUUID( veNetwork->GetLink( i )->GetID() );
 
-        //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+        //CORBAServiceList* serviceList = CORBAServiceList::instance();
         //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
         //serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
         //serviceList->GetMessageLog()->SetMessage( "_\n" );
@@ -2126,7 +2127,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
     //Setup the tags
     for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
     {
-        tags.push_back( VE_Conductor::GUI_Utilities::Tag( this ) );
+        tags.push_back( GUI_Utilities::Tag( this ) );
         tags.at( i ).SetVETagPtr( veNetwork->GetTag( i ) );
         // Create the polygon for tags
         tags.at( i ).CalcTagPoly();
@@ -2143,7 +2144,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
     // now lets create a list of them
     std::vector< std::string > networkModelVector;
     std::vector< std::string >::iterator stringIter;
-    networkModelVector = VE_Conductor::XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
+    networkModelVector = XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
     int timeCalc = 0;
     if(networkModelVector.size())
     {
@@ -2155,8 +2156,8 @@ void Network::CreateNetwork( std::string xmlNetwork )
     {
         _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
         ++i;
-        VE_XML::VE_Model::ModelWeakPtr model =
-            VE_Conductor::XMLDataBufferEngine::instance()->
+        ModelWeakPtr model =
+            XMLDataBufferEngine::instance()->
             GetXMLModelDataObject( *stringIter );
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
@@ -2175,7 +2176,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
         ///Add event handler for the plugins
         PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
-        tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+        tempPlugin->SetCORBAService( CORBAServiceList::instance() );
         tempPlugin->SetDialogSize( frame->GetAppropriateSubDialogSize() );
         if ( model->GetIconFilename() != "DefaultPlugin" )
         {   
@@ -2191,19 +2192,19 @@ void Network::CreateNetwork( std::string xmlNetwork )
         modules[ num ].SetPlugin( tempPlugin );
         modules[ num ].GetPlugin()->SetID( num );
         modules[ num ].SetClassName( model->GetModelName() );
-        modules[ num ].GetPlugin()->SetVEModel( new VE_XML::VE_Model::Model( *model ) );
+        modules[ num ].GetPlugin()->SetVEModel( new Model( *model ) );
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
         int polynum = modules[ num ].GetPlugin()->GetNumPoly();
         POLY tmpPoly;
         tmpPoly.resize( polynum );
         modules[ num ].GetPlugin()->GetPoly(tmpPoly);
-        VE_Conductor::GUI_Utilities::Polygon tempPoly;
+        GUI_Utilities::Polygon tempPoly;
         *(tempPoly.GetPolygon()) = tmpPoly;
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
 
-    VE_XML::UserWeakPtr userInfo = VE_Conductor::XMLDataBufferEngine::instance()->
+    UserWeakPtr userInfo = XMLDataBufferEngine::instance()->
         GetXMLUserDataObject( "Network" );
     
     if( !userInfo->GetUserStateInfo() )
@@ -2216,26 +2217,26 @@ void Network::CreateNetwork( std::string xmlNetwork )
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 1.0f );
 
-        VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+        DataValuePair* dataValuePair = new DataValuePair( );
         dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+        CommandWeakPtr veCommand = new Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
         UserPreferencesDataBuffer::instance()->
             SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), veCommand );
     }
     // Create the command and data value pairs
-    VE_XML::CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
+    CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( colorCommand );
 
     // Create the command and data value pairs
-    VE_XML::CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
+    CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
         GetCommand( "Navigation_Data" );
     //startCommand->SetCommandName( "MOVE_TO_START_POSITION" );
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( startCommand );
 
     //Reset values
@@ -2253,7 +2254,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 	*/
 }
 ////////////////////////////////////////////////////////
-void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * parent )
+void Network::LoadSystem( model::SystemStrongPtr system, Canvas * parent )
 {	
    this->parent = parent;
    modules.clear();
@@ -2269,7 +2270,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
    systemPtr = system;
    
    // do this for network
-   VE_XML::VE_Model::NetworkStrongPtr veNetwork = system->GetNetwork();
+   model::NetworkStrongPtr veNetwork = system->GetNetwork();
    
 //This is needed because on windows the scale must be 1 for the
 //wxAutoBufferedPaintDC to work properly
@@ -2291,7 +2292,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
     //Setup the links
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
-        links.push_back( VE_Conductor::GUI_Utilities::Link( parent ) );
+        links.push_back( Link( parent ) );
         links.back().SetDCScale( &userScale );
         links.back().SetLink( veNetwork->GetLink( i ) );
         ///Need to somehow get max and maxy from links here
@@ -2305,7 +2306,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
     //Setup the tags
     for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
     {
-        tags.push_back( VE_Conductor::GUI_Utilities::Tag( parent ) );
+        tags.push_back( Tag( parent ) );
         tags.at( i ).SetVETagPtr( veNetwork->GetTag( i ) );
         // Create the polygon for tags
         tags.at( i ).CalcTagPoly();
@@ -2319,7 +2320,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
 	size_t modelCount = system->GetModels().size();
     for( size_t j = 0; j < modelCount; j++ )
     {
-		VE_XML::VE_Model::Model* model = new VE_XML::VE_Model::Model( 
+		model::Model* model = new model::Model( 
 			*(system->GetModel(j)) );
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
@@ -2339,7 +2340,7 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
         ///Add event handler for the plugins
 //        PushEventHandler( tempPlugin );
         tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
-        tempPlugin->SetCORBAService( VE_Conductor::CORBAServiceList::instance() );
+        tempPlugin->SetCORBAService( CORBAServiceList::instance() );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
         if ( model->GetIconFilename() != "DefaultPlugin" )
         {   
@@ -2362,12 +2363,12 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
         POLY tmpPoly;
         tmpPoly.resize( polynum );
         modules[ num ].GetPlugin()->GetPoly(tmpPoly);
-        VE_Conductor::GUI_Utilities::Polygon tempPoly;
+        Polygon tempPoly;
         *(tempPoly.GetPolygon()) = tmpPoly;
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
 
-    VE_XML::UserWeakPtr userInfo = VE_Conductor::XMLDataBufferEngine::instance()->
+    UserWeakPtr userInfo = XMLDataBufferEngine::instance()->
         GetXMLUserDataObject( "Network" );
     
     if( !userInfo->GetUserStateInfo() )
@@ -2380,26 +2381,26 @@ void Network::LoadSystem( VE_XML::VE_Model::SystemStrongPtr system, Canvas * par
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 1.0f );
 
-        VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( );
+        DataValuePair* dataValuePair = new DataValuePair( );
         dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-        VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+        CommandWeakPtr veCommand = new Command();
         veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
         veCommand->AddDataValuePair(dataValuePair);
         UserPreferencesDataBuffer::instance()->
             SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), veCommand );
     }
     // Create the command and data value pairs
-    VE_XML::CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
+    CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
         GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( colorCommand );
 
     // Create the command and data value pairs
-    VE_XML::CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
+    CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
         GetCommand( "Navigation_Data" );
     //startCommand->SetCommandName( "MOVE_TO_START_POSITION" );
-    VE_Conductor::CORBAServiceList::instance()->
+    CORBAServiceList::instance()->
         SendCommandStringToXplorer( startCommand );
 
     //Reset values
@@ -2477,7 +2478,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
       {
          std::ostringstream msg;
          msg << "Could not find port " << portNumber << " in module " << moduleID << std::endl;
-         CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+         CORBAServiceList* serviceList = CORBAServiceList::instance();
          serviceList->GetMessageLog()->SetMessage( msg.str().c_str() );
          index = 0;
       }
@@ -2495,7 +2496,7 @@ wxPoint Network::GetPointForSelectedPlugin( unsigned long moduleID, unsigned int
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetIDOnAllActiveModules( void )
 {
-   CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
+   CORBAServiceList* serviceList = CORBAServiceList::instance();
 
    std::map< int, Module >::iterator iter;
    for ( iter=modules.begin(); iter!=modules.end(); ++iter )
@@ -2550,7 +2551,7 @@ void Network::PushAllEvents( )
         parent->PushEventHandler( &tags.at( i ) );
     }
 
-	for( std::map< int, VE_Conductor::GUI_Utilities::Module >::iterator iter
+	for( std::map< int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); iter++ )
     {
 		parent->PushEventHandler( iter->second.GetPlugin() );
@@ -2569,7 +2570,7 @@ void Network::RemoveAllEvents( )
         parent->RemoveEventHandler( &tags.at( i ) );
     }
 
-	for( std::map< int, VE_Conductor::GUI_Utilities::Module >::iterator iter
+	for( std::map< int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); iter++ )
     {
 		parent->RemoveEventHandler( iter->second.GetPlugin() );
@@ -2581,14 +2582,14 @@ void Network::ClearXplorer()
     for( std::map<int, Module>::iterator iter = 
         modules.begin(); iter!=modules.end(); ++iter )
     {
-        VE_XML::DataValuePair* dataValuePair = 
-        new VE_XML::DataValuePair(  std::string("UNSIGNED INT") );
+        DataValuePair* dataValuePair = 
+        new DataValuePair(  std::string("UNSIGNED INT") );
         dataValuePair->SetDataName( "Object ID" );
         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-        VE_XML::Command* veCommand = new VE_XML::Command();
+        Command* veCommand = new Command();
         veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
         veCommand->AddDataValuePair( dataValuePair );
-        bool connected = VE_Conductor::CORBAServiceList::instance()->
+        bool connected = CORBAServiceList::instance()->
             SendCommandStringToXplorer( veCommand );
         //Clean up memory
         delete veCommand;

@@ -57,7 +57,9 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-using namespace VE_Conductor;
+using namespace ves::conductor::util;
+using namespace ves::conductor;
+using namespace ves::open::xml;
 
 BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
     EVT_CHECKLISTBOX( ID_CONDUCTOR_CHKBX,           UserPreferences::OnConductorCheck )
@@ -208,7 +210,7 @@ void UserPreferences::OnConductorCheck( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
 {
-   VE_XML::CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
+   CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
    if ( bkColor->GetCommandName() != "NULL" )
    {
       bkColor->GetDataValuePair( "Background Color" )->GetData( xplorerColor );
@@ -235,13 +237,13 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
       backgroundColor[ "Alpha" ] = xplorerColor.at(3);
 
       // Create the command and data value pairs
-      VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair();
+      DataValuePair* dataValuePair = new DataValuePair();
       dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      VE_XML::CommandWeakPtr veCommand = new VE_XML::Command();
+      CommandWeakPtr veCommand = new Command();
       veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
       veCommand->AddDataValuePair(dataValuePair);
 
-      serviceList = VE_Conductor::CORBAServiceList::instance();
+      serviceList = CORBAServiceList::instance();
       serviceList->SendCommandStringToXplorer( veCommand );
          
       UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );

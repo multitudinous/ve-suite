@@ -375,7 +375,7 @@ void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED(event) )
         return;
     }
 
-    Command viewPointData = VE_Conductor::CORBAServiceList::instance()->
+    Command viewPointData = CORBAServiceList::instance()->
         GetGUIUpdateCommands( "VIEWPOINT_GUI_DATA" );
     //Hasn't updated yet
     if( viewPointData.GetCommandName() == "NULL" )
@@ -621,7 +621,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
    try
    {
       // CORBA releases the allocated memory so we do not have to
-      VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+      CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    }
    catch ( ... )
    {

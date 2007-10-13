@@ -44,6 +44,9 @@
 #include <wx/utils.h>
 #include <wx/filefn.h>
 
+using namespace ves::conductor;
+using namespace ves::conductor::util;
+
 #include <iostream>
 ////////////////////////////////////////////////////////////////////////////////
 PluginLoader::PluginLoader()

@@ -55,9 +55,15 @@ namespace PortableServer{ class POA; }
 #include <vector>
 #include <string>
 
-namespace VE_XML
+namespace ves
 {
-   class Command;
+namespace open
+{
+namespace xml
+{        
+    class Command;
+}
+}
 }
 namespace VE_Xplorer
 {
@@ -74,7 +80,7 @@ public:
    ///shoudl be removed
    cfdCommandArray* GetCommandArray( void );
    ///get xml command data
-   VE_XML::Command* GetXMLCommand( void );
+   ves::open::xml::Command* GetXMLCommand( void );
    ///Get short array
    ///shoudl be removed
    double GetShortArray( int );

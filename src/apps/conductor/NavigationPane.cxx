@@ -73,6 +73,10 @@
 
 #include <iostream>
 
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
     EVT_MOUSE_EVENTS( NavigationPane::onMouse )
     EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, NavigationPane::OnTransStepSlider)
@@ -90,8 +94,6 @@ BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
    EVT_LEFT_DOWN(UI_NavButton::onMouse)
    EVT_LEFT_UP(UI_NavButton::onMouseUp)
 END_EVENT_TABLE()
-
-using namespace VE_Conductor;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////  
 NavigationPane::NavigationPane( wxWindow* parent )
@@ -571,14 +573,14 @@ void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED(event) )
 void NavigationPane::SendCommandsToXplorer( void )
 {
    // Create the command and data value pairs
-   VE_XML::DataValuePair* dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   DataValuePair* dataValuePair = new DataValuePair( std::string("FLOAT") );
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
-   VE_XML::Command* veCommand = new VE_XML::Command();
+   Command* veCommand = new Command();
    veCommand->SetCommandName( std::string("Navigation_Data") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   VE_Conductor::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    
    //Clean up memory
    delete veCommand;
@@ -603,7 +605,7 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-    VE_XML::CommandWeakPtr navPreferenceData = 
+    CommandWeakPtr navPreferenceData = 
         UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
     if ( navPreferenceData->GetCommandName() == "NULL" )
     {
@@ -623,7 +625,7 @@ void NavigationPane::UpdateNavigationData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateXplorerData( void )
 {
-    VE_XML::Command viewPointData = VE_Conductor::CORBAServiceList::instance()->
+    Command viewPointData = CORBAServiceList::instance()->
         GetGUIUpdateCommands( "START_POSITION" );
     //Hasn't updated yet
     if( viewPointData.GetCommandName() == "NULL" )
@@ -639,33 +641,33 @@ void NavigationPane::UpdateXplorerData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
 {
-   VE_XML::CommandWeakPtr navPreferenceData = new VE_XML::Command();
+   CommandWeakPtr navPreferenceData = new Command();
    navPreferenceData->SetCommandName( std::string("Navigation_Data") );
    
    //////////////////////////////////////////////////////////////////
-   VE_XML::DataValuePair* dataValuePair;
-   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   DataValuePair* dataValuePair;
+   dataValuePair = new DataValuePair( std::string("FLOAT") );
    dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
    dataValuePair->SetDataName( dataValueName );
    cIso_value = translationStepSize->GetValue();
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
-   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   dataValuePair = new DataValuePair( std::string("FLOAT") );
    dataValueName = "CHANGE_ROTATION_STEP_SIZE";
    cIso_value = rotationStepSize->GetValue();
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
-   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   dataValuePair = new DataValuePair( std::string("FLOAT") );
    dataValueName = "ROTATE_ABOUT_HEAD";
    cIso_value = headRotationChk->GetValue();
    dataValuePair->SetDataName( dataValueName );
    dataValuePair->SetDataValue( static_cast<double>(cIso_value) );
    navPreferenceData->AddDataValuePair( dataValuePair );
    //////////////////////////////////////////////////////////////////
-   dataValuePair = new VE_XML::DataValuePair( std::string("FLOAT") );
+   dataValuePair = new DataValuePair( std::string("FLOAT") );
    dataValueName = "Z_ZERO_PLANE";
    cIso_value = subZeroChk->GetValue();
    dataValuePair->SetDataName( dataValueName );

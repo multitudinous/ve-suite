@@ -53,6 +53,10 @@
 #include <shellapi.h>
 #endif
 
+using namespace ves::open::xml;
+using namespace ves::conductor::util;
+using namespace ves::conductor;
+
 BEGIN_EVENT_TABLE(HierarchyTree, wxTreeCtrl)
   EVT_TREE_SEL_CHANGED( TREE_CTRL, HierarchyTree::OnSelChanged )
   EVT_TREE_ITEM_EXPANDING( TREE_CTRL, HierarchyTree::OnExpanded )

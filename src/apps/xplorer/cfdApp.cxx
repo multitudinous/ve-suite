@@ -100,6 +100,7 @@ using namespace VE_TextureBased;
 
 using namespace VE_Xplorer;
 using namespace VE_Util;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdApp::cfdApp( int argc, char* argv[] ) 
@@ -321,10 +322,10 @@ void cfdApp::initScene( void )
 {
     vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;   
    //Initialize all the XML objects
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_XML::VE_Shader::ShaderCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_XML::VE_Model::ModelCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_XML::VE_CAD::CADCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new shader::ShaderCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new model::ModelCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new cad::CADCreator());
 
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
