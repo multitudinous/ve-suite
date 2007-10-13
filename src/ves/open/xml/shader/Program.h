@@ -55,7 +55,8 @@ namespace xml
 {
 namespace shader
 {
-	class VE_SHADER_EXPORTS Program:public ves::open::xml::XMLObject{
+class VE_SHADER_EXPORTS Program:public ves::open::xml::XMLObject
+{
 public:
    ///Constructor
    Program();
@@ -105,19 +106,18 @@ protected:
 
    std::string _name;///< The program name.
    ves::open::xml::shader::ShaderPtr _vertexShader;///< The vertex shader.
-   ves::open::xml:shader::ShaderPtr _fragmentShader;///< The fragment shader.
+   ves::open::xml::shader::ShaderPtr _fragmentShader;///< The fragment shader.
 };
-}
-}
-}
 }
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Program* val)
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
+}
+}
 }
 }
 #endif //PROGRAM_H

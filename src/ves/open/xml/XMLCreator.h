@@ -43,8 +43,14 @@
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/CreationEventHandler.h>
-namespace VE_XML{
-class VE_XML_EXPORTS XMLCreator: public CreationEventHandler{
+namespace ves
+{
+namespace open
+{
+namespace xml
+{
+class VE_XML_EXPORTS XMLCreator: public CreationEventHandler
+{
 public:
    ///Constructor
    XMLCreator(){}
@@ -54,15 +60,17 @@ public:
 
    ///Create a new XMLObject.
    ///\param objectType The type of object to create.
-   virtual VE_XML::XMLObject* CreateNewXMLObject(std::string objectType);
+   virtual XMLObject* CreateNewXMLObject(std::string objectType);
 
    ///Create a copy of a XMLObject
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy
-   virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,
-                                                  VE_XML::XMLObject* objectToCopy);
+   virtual XMLObject* CreateNewXMLObjectCopy(std::string objectType,
+        XMLObject* objectToCopy);
 protected:
 };
+}
+}
 }
 #endif// VE_CREATION_EVENT_HANDLER_H
 

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #ifndef DOMDOCUMENT_MANAGER
@@ -51,7 +49,11 @@
 #include <utility>
 
 XERCES_CPP_NAMESPACE_USE
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 // This class should be made into a singleton
 class VE_XML_EXPORTS DOMDocumentManager
@@ -133,5 +135,7 @@ private:
 
    std::map< std::string, std::pair< std::string, std::string > > documentType;
 };
+}
+}
 }
 #endif

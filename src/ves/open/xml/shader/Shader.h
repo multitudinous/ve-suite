@@ -156,16 +156,15 @@ protected:
 
 };
 }
-}
-}
-}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Shader* val)
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
+}
+}
 }
 }
 #endif//SHADER_H

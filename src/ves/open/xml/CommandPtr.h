@@ -44,14 +44,19 @@
  * VE_Open/XML/Command.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Command;
    /// Typedef for a SmartPtr type for the Command.
-   typedef ClassPtrDef<Command>::type  CommandPtr;
-   typedef SharedPtrDef<Command>::type CommandSharedPtr;
-   typedef WeakPtrDef<Command>::type   CommandWeakPtr;
-   typedef ScopedPtrDef<Command>::type CommandScopedPtr;
+   typedef ves::util::ClassPtrDef<Command>::type  CommandPtr;
+   typedef ves::util::SharedPtrDef<Command>::type CommandSharedPtr;
+   typedef ves::util::WeakPtrDef<Command>::type   CommandWeakPtr;
+   typedef ves::util::ScopedPtrDef<Command>::type CommandScopedPtr;
 }
-
+}
+}
 #endif

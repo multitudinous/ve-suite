@@ -44,10 +44,16 @@
  * the hierarchy of a CAD structure.
  */
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-   class DOMDocumentManager;
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
+    class DOMDocumentManager;
+}
+}
 }
 
 #include <ves/VEConfig.h>
@@ -59,7 +65,11 @@ namespace VE_XML
 
 XERCES_CPP_NAMESPACE_USE
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS XMLReaderWriter
 {
@@ -90,7 +100,7 @@ public:
    ///\param nodes The XML node to write. If writing to string set this to "returnString" and it
    ///will be populated w/ the return string.
    ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
-   virtual void WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+   virtual void WriteXMLDocument( std::vector< std::pair< XMLObject*, std::string > > nodes,
                                   std::string& xmlFile,
                                   std::string documentType );
 
@@ -100,10 +110,10 @@ public:
    ///Note that this method only works for writing to disk no to memory
    ///\param xmlFile The base XML document to write to.
    ///\param nodes The XML node to write. 
-   void WriteMultipleXMLDocuments( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+   void WriteMultipleXMLDocuments( std::vector< std::pair< XMLObject*, std::string > > nodes,
                                                     std::string& xmlData );
    ///Set the Active DOMDocumentManager
-   void SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager);
+   void SetDOMDocumentManager( DOMDocumentManager* ddManager);
 
    ///Turn on a stand alone DOMDocumentManager.
    void UseStandaloneDOMDocumentManager();
@@ -121,10 +131,10 @@ public:
    //void WriteToString();
    
    ///Get the active DOMDocumentManager.  
-   VE_XML::DOMDocumentManager* GetDOMDocumentManager();
+   DOMDocumentManager* GetDOMDocumentManager();
 
    ///Return the loaded XMLObject s.
-   std::vector<VE_XML::XMLObject*> GetLoadedXMLObjects();
+   std::vector<XMLObject*> GetLoadedXMLObjects();
 
 protected:
 
@@ -140,11 +150,13 @@ protected:
                                                 std::string tagName );
 
     ///The XMLObjects read in from a document file.
-    std::vector<VE_XML::XMLObject*> m_internalXmlObjects;
+    std::vector<XMLObject*> m_internalXmlObjects;
     ///The XMLObjects read in from a document file.
-    std::vector<VE_XML::XMLObject*> m_xmlObjects;
+    std::vector<XMLObject*> m_xmlObjects;
 
-   VE_XML::DOMDocumentManager* _domDocumentManager;///<The XML document manager.
+    DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };
+}
+}
 }
 #endif// XML_READER_WRITER_H

@@ -55,17 +55,26 @@
  * Contains nodes for creating/managing a XML Objects.
  */
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-   class VEStr;
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
+    class VEStr;
+}
+}
 }
 
-namespace VE_XML
+namespace ves
 {
-
+namespace open
+{
+namespace xml
+{        
 ///Utility function to convert strings to Xerces compatible strings
-#define xercesString(str) VE_XML::XMLObject::VEStr(str).unicodeForm()
+#define xercesString(str) ves::open::xml::XMLObject::VEStr(str).unicodeForm()
 
 class VE_XML_EXPORTS XMLObject
 {
@@ -381,7 +390,7 @@ private:
 };
 ///This is the special case for any xmlobject
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, VE_XML::XMLObject* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, XMLObject* val)
 {
    val->SetOwnerDocument( _rootDocument );
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
@@ -518,6 +527,7 @@ inline std::string XMLObject::ExtractFromSimpleElement< std::string >(const XERC
    }
    return ret_val;
 }
-
+}
+}
 }
 #endif// _VE_XML_OBJECT_H_

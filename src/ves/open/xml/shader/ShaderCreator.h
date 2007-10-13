@@ -61,7 +61,8 @@ namespace xml
 {
 namespace shader
 {
-class VE_SHADER_EXPORTS ShaderCreator : public ves::open::xml::CreationEventHandler{
+class VE_SHADER_EXPORTS ShaderCreator : public ves::open::xml::CreationEventHandler
+{
 public:
    ///Constructor
    ShaderCreator(){}
@@ -76,9 +77,9 @@ public:
    ///Create a copy of a new CAD object
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy.
-   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
-   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
-   virtual ::XMLObject* CreateNewXMLObjectCopy(std::string objectType,::XMLObject* objectToCopy);
+   //virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
+   //virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
+   virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy(std::string objectType, ves::open::xml::XMLObject* objectToCopy);
 protected:
 };
 }

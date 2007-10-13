@@ -44,13 +44,19 @@
  * VE_Open/XML/StateInfo.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class StateInfo;
    //Typedefs for various StateInfo SmartPtrs
-   typedef ClassPtrDef<StateInfo>::type  StateInfoPtr;
-   typedef SharedPtrDef<StateInfo>::type StateInfoSharedPtr;
-   typedef WeakPtrDef<StateInfo>::type   StateInfoWeakPtr;
-   typedef ScopedPtrDef<StateInfo>::type StateInfoScopedPtr;
+   typedef ves::util::ClassPtrDef<StateInfo>::type  StateInfoPtr;
+   typedef ves::util::SharedPtrDef<StateInfo>::type StateInfoSharedPtr;
+   typedef ves::util::WeakPtrDef<StateInfo>::type   StateInfoWeakPtr;
+   typedef ves::util::ScopedPtrDef<StateInfo>::type StateInfoScopedPtr;
+}
+}
 }
 #endif

@@ -46,9 +46,10 @@
 #include <loki/StrongPtr.h>
 #include <loki/SmartPtr.h>
 
-namespace VE_XML
+namespace ves
 {
-
+namespace util
+{
    // ClassPtrDef is the regular ptr class to use.
    template
    <
@@ -151,6 +152,7 @@ namespace VE_XML
         type;
     };
 
+}
 }
 #endif
 

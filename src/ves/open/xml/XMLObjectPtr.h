@@ -44,10 +44,19 @@
  * VE_Open/XML/XMLObject.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class XMLObject;
    /// Typedef for a SmartPtr type for the Uniform.
-   typedef Loki::SmartPtrDef<XMLObject>::type XMLObjectPtr;
+   typedef ves::util::ClassPtrDef<XMLObject>::type  XMLObjectPtr;
+   typedef ves::util::SharedPtrDef<XMLObject>::type XMLObjectSharedPtr;
+   typedef ves::util::WeakPtrDef<XMLObject>::type   XMLObjectWeakPtr;
+   typedef ves::util::ScopedPtrDef<XMLObject>::type XMLObjectScopedPtr;
+}
+}
 }
 #endif

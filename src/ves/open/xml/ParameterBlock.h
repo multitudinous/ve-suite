@@ -44,17 +44,27 @@
 #include <vector>
 
 #include <ves/open/xml/XMLObject.h>
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Transform;
    class DataValuePair;
+}
+}
 }
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
-namespace VE_XML
+namespace ves
 {
+namespace open
+{
+namespace xml
+{        
 class VE_XML_EXPORTS ParameterBlock : public XMLObject
 {
 public:
@@ -77,11 +87,11 @@ public:
 
    ///Optional. Set the Transform.
    ///\param transform The Transform information. Commonly used with CFD datasets and CAD information.
-   void SetTransform(VE_XML::Transform* transform);
+   void SetTransform(Transform* transform);
 
    ///Add a property, which is held in a DataValuePair.
    ///\param prop The DataValuePair holding the information such as a CFD filename.
-   void AddProperty(VE_XML::DataValuePair* prop);
+   void AddProperty(DataValuePair* prop);
    
    ///set the data from an string representing the xml
    ///\param xmlInput The input XML data.
@@ -93,13 +103,13 @@ public:
    ///Return the paramter block.
    std::string GetName( void );
    ///Return the Transform.
-   VE_XML::Transform* GetTransform();
+   Transform* GetTransform();
    ///Return a DataValuePair based on a name.
    ///\param name The name of the DataValuePair to search for.
-   VE_XML::DataValuePair* GetProperty(std::string name);
+   DataValuePair* GetProperty(std::string name);
    ///Return the DataValuePair at the index.
    ///\param index The index of the DataValuePair.
-   VE_XML::DataValuePair* GetProperty( int index );
+   DataValuePair* GetProperty( int index );
    ///Return the number DataValuePair's.
    size_t GetNumberOfProperties( void );
    ///Remove the DataValuePair at the index.
@@ -108,13 +118,13 @@ public:
 
 
 protected:
-   ///Internally update the XML data.
-   ///\param tagName The tag name for this element
-	virtual void _updateVEElement( std::string tagName);
-   unsigned int _id;///<The block ID.
-   VE_XML::Transform* _dcs;///<The optional Transform.
-   std::vector<VE_XML::DataValuePair*> _properties;///<The DataValuePair list containing the block properties.
-   std::string paramName;
+    ///Internally update the XML data.
+    ///\param tagName The tag name for this element
+    virtual void _updateVEElement( std::string tagName);
+    unsigned int _id;///<The block ID.
+    Transform* _dcs;///<The optional Transform.
+    std::vector<DataValuePair*> _properties;///<The DataValuePair list containing the block properties.
+    std::string paramName;
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ParameterBlock* val)
@@ -123,6 +133,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _XML_VE_PARAMETER_BLOCK_H_

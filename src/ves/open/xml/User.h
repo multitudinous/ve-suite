@@ -44,7 +44,11 @@
 #include <iostream>
 
 #include <ves/open/xml/XMLObject.h>
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS User : public XMLObject
 {
@@ -74,14 +78,14 @@ public:
    void SetControlStatus( VEControlStatus cs );
    ///Set the state information for this user
    ///\param userState The StateInfo for this user.
-   void SetStateInfo( VE_XML::StateInfoWeakPtr userState );
+   void SetStateInfo( StateInfoWeakPtr userState );
 
    ///Return the user id
    std::string GetUserId();
    ///Return the VEControlStatus of this user
    VEControlStatus GetControlStatus();
    ///Return the StateInfo for this user.
-   VE_XML::StateInfoWeakPtr GetUserStateInfo();
+   StateInfoWeakPtr GetUserStateInfo();
 
    ///Set the data for this object from an XML element
    ///\param xmlInput The input XML element
@@ -92,7 +96,7 @@ protected:
    ///\param tagName The tagName for this element.
    virtual void _updateVEElement( std::string tagName );
    std::string _userId;///<The users unique identification
-   VE_XML::StateInfoPtr m_stateInfo;///<The StateInfo for this user.
+   StateInfoPtr m_stateInfo;///<The StateInfo for this user.
    VEControlStatus _controlStatus;///<The VEControlStatus of this user.
 };
 template<>
@@ -102,6 +106,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _XML_VE_USER_H_

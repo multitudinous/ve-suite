@@ -33,7 +33,8 @@
 #ifndef SHADER_PTR_H_
 #define SHADER_PTR_H_
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
+
 
 /**
  * \file
@@ -54,7 +55,10 @@ namespace shader
 {
    class Shader;
    /// Typedef for a SmartPtr type for the Shader.
-   typedef Loki::SmartPtrDef<Shader>::type ShaderPtr;
+   typedef ves::util::ClassPtrDef<Shader>::type  ShaderPtr;
+   typedef ves::util::SharedPtrDef<Shader>::type ShaderSharedPtr;
+   typedef ves::util::WeakPtrDef<Shader>::type   ShaderWeakPtr;
+   typedef ves::util::ScopedPtrDef<Shader>::type ShaderScopedPtr;
 }
 }
 }

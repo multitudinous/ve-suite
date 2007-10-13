@@ -49,7 +49,11 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class Transform;
    class FloatArray;
@@ -63,9 +67,15 @@ namespace VE_XML
    //class TwoDStringArray;
    //class ThreeDStringArray;
 }
+}
+}
 
-namespace VE_XML
+namespace ves
 {
+namespace open
+{
+namespace xml
+{        
 class VE_XML_EXPORTS DataValuePair : public XMLObject
 {
 public:
@@ -133,12 +143,12 @@ public:
    double GetDataValue();
 
    ///Get the xmlObject from the DataValuePair  
-   VE_XML::XMLObject* GetDataXMLObject();
+   XMLObject* GetDataXMLObject();
 
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
    ///\param data XMLObject being passed in. Can be a broad range of data types
-   void SetData(std::string dataName, VE_XML::XMLObject* data);
+   void SetData(std::string dataName, XMLObject* data);
 
    ///Helper functions to set data easily
    ///\param dataName Name of the data being passed in
@@ -254,7 +264,7 @@ protected:
    unsigned int _dataUInt;///<Raw unsigned int value
    std::string _dataString;///<Raw string value.
   
-   VE_XML::XMLObject* _veXMLObject;///<Raw XMLObject.
+   XMLObject* _veXMLObject;///<Raw XMLObject.
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, DataValuePair* val)
@@ -263,6 +273,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _VE_DATA_VALUE_PAIR_H_

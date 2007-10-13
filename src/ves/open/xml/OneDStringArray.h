@@ -45,7 +45,11 @@
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS OneDStringArray : public XMLObject
 {
@@ -96,6 +100,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _XML_VE_1DSTRING_ARRAY_H_

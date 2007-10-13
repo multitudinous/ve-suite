@@ -44,14 +44,19 @@
  * VE_Open/XML/User.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class User;
    /// Typedef for a SmartPtr type for the User.
-   typedef ClassPtrDef<User>::type  UserPtr;
-   typedef SharedPtrDef<User>::type UserSharedPtr;
-   typedef WeakPtrDef<User>::type   UserWeakPtr;
-   typedef ScopedPtrDef<User>::type UserScopedPtr;
+   typedef ves::util::ClassPtrDef<User>::type  UserPtr;
+   typedef ves::util::SharedPtrDef<User>::type UserSharedPtr;
+   typedef ves::util::WeakPtrDef<User>::type   UserWeakPtr;
+   typedef ves::util::ScopedPtrDef<User>::type UserScopedPtr;
 }
-
+}
+}
 #endif

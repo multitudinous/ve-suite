@@ -49,7 +49,11 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS StateInfo : public XMLObject
 {
@@ -65,10 +69,10 @@ public:
    
    ///Add new state information.
    ///\param state The new state to add which is held in a Command object.
-   //void AddState(VE_XML::CommandPtr state);
+   //void AddState(CommandPtr state);
    ///Add new state information.
    ///\param state The new state to add which is held in a Command object.
-   void AddState( VE_XML::CommandWeakPtr state );
+   void AddState( CommandWeakPtr state );
    
    ///Clear all current state information.
    void ClearState();
@@ -79,12 +83,12 @@ public:
 
    ///Get a state based on the name.
    ///\param name The name of the state to search for
-   VE_XML::CommandWeakPtr GetState(std::string name);
+   CommandWeakPtr GetState(std::string name);
    ///Get the state based on an index
    ///\param index The index to search for.
-   VE_XML::CommandWeakPtr GetState( size_t index);
+   CommandWeakPtr GetState( size_t index);
    ///Get the vector of states for this user
-   std::vector< VE_XML::CommandWeakPtr > GetStateVector( void );
+   std::vector< CommandWeakPtr > GetStateVector( void );
 
 protected:
    ///Internally update the XML data.
@@ -102,6 +106,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _XML_VE_STATE_INFO_H_

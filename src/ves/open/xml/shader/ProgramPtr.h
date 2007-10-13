@@ -33,7 +33,7 @@
 #ifndef PROGRAM_PTR_H_
 #define PROGRAM_PTR_H_
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
@@ -54,7 +54,10 @@ namespace shader
 {
    class Program;
    /// Typedef for a SmartPtr type for the Program.
-   typedef Loki::SmartPtrDef<Program>::type ProgramPtr;
+   typedef ves::util::ClassPtrDef<Program>::type  ProgramPtr;
+   typedef ves::util::SharedPtrDef<Program>::type ProgramSharedPtr;
+   typedef ves::util::WeakPtrDef<Program>::type   ProgramWeakPtr;
+   typedef ves::util::ScopedPtrDef<Program>::type ProgramScopedPtr;
 }
 }
 }

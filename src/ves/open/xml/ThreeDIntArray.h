@@ -45,12 +45,22 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class TwoDIntArray;
 }
+}
+}
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS ThreeDIntArray : public XMLObject
 {
@@ -107,6 +117,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _XML_VE_3DINT_ARRAY_H_

@@ -44,13 +44,19 @@
  * VE_Open/XML/DataValuePair.h must be included, too.
  */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
    class DataValuePair;
    /// Typedef for a SmartPtr type for the DataValuePair.
-   typedef ClassPtrDef<DataValuePair>::type  DataValuePairPtr;
-   typedef SharedPtrDef<DataValuePair>::type DataValuePairSharedPtr;
-   typedef WeakPtrDef<DataValuePair>::type   DataValuePairWeakPtr;
-   typedef ScopedPtrDef<DataValuePair>::type DataValuePairScopedPtr;
+   typedef ves::util::ClassPtrDef<DataValuePair>::type  DataValuePairPtr;
+   typedef ves::util::SharedPtrDef<DataValuePair>::type DataValuePairSharedPtr;
+   typedef ves::util::WeakPtrDef<DataValuePair>::type   DataValuePairWeakPtr;
+   typedef ves::util::ScopedPtrDef<DataValuePair>::type DataValuePairScopedPtr;
+}
+}
 }
 #endif

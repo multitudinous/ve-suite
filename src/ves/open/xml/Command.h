@@ -51,7 +51,11 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS Command : public XMLObject
 {
@@ -71,10 +75,10 @@ public:
 
    ///Add a data value pair for the command.
    ///\param commandValuePair The data value pair representing command information.
-   //void AddDataValuePair( VE_XML::DataValuePair* commandValuePair );
+   //void AddDataValuePair( DataValuePair* commandValuePair );
    ///Add a data value pair for the command.
    ///\param commandValuePair The data value pair representing command information.
-   void AddDataValuePair( VE_XML::DataValuePairWeakPtr commandValuePair );
+   void AddDataValuePair( DataValuePairWeakPtr commandValuePair );
    
    ///Utility function to extract a command name from an element.
    ///\param commandElement The command element.
@@ -91,12 +95,12 @@ public:
    ///Get a specific DataValuePair by name.
    ///\param dataValueName The name of the DataValuePair to search for.
    ///\return The dvp with the requested name
-   VE_XML::DataValuePairWeakPtr GetDataValuePair(std::string dataValueName);
+   DataValuePairWeakPtr GetDataValuePair(std::string dataValueName);
    
    ///Get a DataValuePair at the index.
    ///\param index The index of the DataValuePair to return.
    ///\return The dvp at the requested index
-   VE_XML::DataValuePairWeakPtr GetDataValuePair( size_t index );
+   DataValuePairWeakPtr GetDataValuePair( size_t index );
 
    ///Return the number of DataValuePair s in this command.
    ///\return The number of dvps stored in this command
@@ -112,8 +116,8 @@ protected:
    void _updateDataValuePairs( void );
 
    std::string _cmdName;///<The name of this command.
-   std::vector< VE_XML::DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.  
-   std::map< std::string, VE_XML::DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
+   std::vector< DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.  
+   std::map< std::string, DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Command* val)
@@ -122,6 +126,8 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const
    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
    _veElement->appendChild( childElement );
    return childElement;
+}
+}
 }
 }
 #endif// _XML_VE_COMMAND_H_

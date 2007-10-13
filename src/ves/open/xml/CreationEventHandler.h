@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CREATION_EVENT_HANDLER_H
 #define CREATION_EVENT_HANDLER_H
@@ -42,7 +40,11 @@
  */
 
 #include <ves/open/xml/XMLObject.h>
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
 class VE_XML_EXPORTS CreationEventHandler
 {
@@ -55,15 +57,17 @@ public:
 
    ///Create a new XMLObject.
    ///\param objectType The type of object to create.
-   virtual VE_XML::XMLObject* CreateNewXMLObject(std::string objectType)=0;
+   virtual XMLObject* CreateNewXMLObject(std::string objectType)=0;
 
    ///Create a copy of a XMLObject
    ///\param objectType The type of object to create.
    ///\param objectToCopy The object to copy
-   virtual VE_XML::XMLObject* CreateNewXMLObjectCopy(std::string objectType,
-                                                  VE_XML::XMLObject* objectToCopy)=0;
+   virtual XMLObject* CreateNewXMLObjectCopy(std::string objectType,
+                                                  XMLObject* objectToCopy)=0;
 protected:
 };
+}
+}
 }
 #endif// VE_CREATION_EVENT_HANDLER_H
 
