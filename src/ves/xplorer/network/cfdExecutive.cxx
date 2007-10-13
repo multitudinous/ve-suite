@@ -75,6 +75,8 @@ XERCES_CPP_NAMESPACE_USE
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 
 vprSingletonImpLifetime( VE_Xplorer::cfdExecutive, 15 );
 
@@ -248,7 +250,7 @@ void cfdExecutive::GetNetwork( void )
 
    // Load from the nt file loaded through wx
    // Get a list of all the command elements   
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
 
@@ -258,24 +260,24 @@ void cfdExecutive::GetNetwork( void )
    // This logic also works for the case where a custom plugin doesn't exist because
    // there will be a default plugin that will be created just like there
    // is currently for conductor
-   std::vector< VE_XML::XMLObject* > currentModels;
+   std::vector< XMLObject* > currentModels;
    currentModels.clear();
    // do this for models
    networkWriter.ReadXMLData( network, "System", "veSystem" );
    currentModels = networkWriter.GetLoadedXMLObjects();
-   VE_XML::VE_Model::SystemWeakPtr tempSystem = 
-       dynamic_cast< VE_XML::VE_Model::System* >( currentModels.at( 0 ) );
+   SystemWeakPtr tempSystem = 
+       dynamic_cast< System* >( currentModels.at( 0 ) );
 
 	veNetwork = network;
 
    // now lets create a list of them
    _id_map.clear();
    idToModel.clear();
-   std::vector< VE_XML::VE_Model::ModelWeakPtr > tempModels;
+   std::vector< ModelWeakPtr > tempModels;
    tempModels = tempSystem->GetModels();
    for ( size_t i = 0; i < tempModels.size(); ++i )
    {
-      VE_XML::VE_Model::ModelWeakPtr model = tempModels.at( i );
+      ModelWeakPtr model = tempModels.at( i );
       _id_map[  model->GetModelID() ] = model->GetModelName();
       idToModel[ model->GetModelID() ] = model;
    }
@@ -327,31 +329,31 @@ void cfdExecutive::GetEverything( void )
          //_plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
          pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }
-      std::map< int, VE_XML::VE_Model::ModelStrongPtr >::iterator modelIter;
+      std::map< int, ModelStrongPtr >::iterator modelIter;
       // this call always returns something because it is up to date with the id map
       modelIter = idToModel.find( iter->first );
       _plugins[ iter->first ]->SetXMLModel( modelIter->second );
       //send command to get results
-      VE_XML::Command returnState;
+      Command returnState;
       returnState.SetCommandName("Get XML Model Results");
       
-      VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();
+      DataValuePairWeakPtr data = new DataValuePair();
       data->SetData("vendorUnit", modelIter->second->GetVendorName() );
       returnState.AddDataValuePair( data );      
       
-      data= new VE_XML::DataValuePair();
+      data= new DataValuePair();
       data->SetData("moduleName", iter->second );
       returnState.AddDataValuePair( data );   
         
-      data= new VE_XML::DataValuePair();
+      data= new DataValuePair();
       data->SetData("moduleId", static_cast< unsigned int >( iter->first ) );
       returnState.AddDataValuePair( data );      
       
-      std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+      std::vector< std::pair< XMLObject*, std::string > > nodes;
       nodes.push_back( 
-                       std::pair< VE_XML::XMLObject*, std::string >( &returnState, "vecommand" ) 
+                       std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) 
                        );
-      VE_XML::XMLReaderWriter commandWriter;
+      XMLReaderWriter commandWriter;
       std::string status="returnString";
       commandWriter.UseStandaloneDOMDocumentManager();
       commandWriter.WriteXMLDocument( nodes, status, "Command" );
@@ -422,7 +424,7 @@ void cfdExecutive::PreFrameUpdate( void )
       if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
       {
          std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-         VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
+         Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {
@@ -446,7 +448,7 @@ void cfdExecutive::PreFrameUpdate( void )
       //1. Set the current command on all plugins
       /*if ( cfdModelHandler::instance()->GetActiveModel() )
       {
-         VE_XML::Command* tempCommand = 
+         Command* tempCommand = 
                   cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
          foundPlugin->second->SetCurrentCommand( tempCommand );
       }*/
@@ -457,7 +459,7 @@ void cfdExecutive::PreFrameUpdate( void )
          )
       {  
          //Process a special plugin command
-         VE_XML::Command* tempCommand = 
+         Command* tempCommand = 
          cfdModelHandler::instance()->GetXMLCommand();
          //if( tempCommand )
          {
@@ -532,27 +534,27 @@ void cfdExecutive::LoadDataFromCE( void )
           //is called in the get network call
           /*if( pos3 != std::string::npos )
           {
-              VE_XML::Command returnState;
+              Command returnState;
               returnState.SetCommandName("Get XML Model Results");
               
-              VE_XML::DataValuePairWeakPtr data = new VE_XML::DataValuePair();      
+              DataValuePairWeakPtr data = new DataValuePair();      
               data->SetData("moduleName", idMap->second );
               returnState.AddDataValuePair( data );
               
-              data = new VE_XML::DataValuePair();
+              data = new DataValuePair();
               data->SetData("vendorUnit", 
                     idToModel[ foundPlugin->first ]->GetVendorName() );
               returnState.AddDataValuePair( data );
               
-              data = new VE_XML::DataValuePair();
+              data = new DataValuePair();
               data->SetData("moduleId", 
                     static_cast< unsigned int >( idMap->first ) );
               returnState.AddDataValuePair( data );
               
-              std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-              nodes.push_back( std::pair< VE_XML::XMLObject*, 
+              std::vector< std::pair< XMLObject*, std::string > > nodes;
+              nodes.push_back( std::pair< XMLObject*, 
                     std::string >( &returnState, "vecommand" ) );
-              VE_XML::XMLReaderWriter commandWriter;
+              XMLReaderWriter commandWriter;
               std::string status="returnString";
               commandWriter.UseStandaloneDOMDocumentManager();
               commandWriter.WriteXMLDocument( nodes, status, "Command" );

@@ -63,6 +63,8 @@
 #include <fstream>
 
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView()
@@ -97,9 +99,9 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 ////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 {
-	VE_XML::XMLReaderWriter networkWriter;
+	XMLReaderWriter networkWriter;
 	networkWriter.UseStandaloneDOMDocumentManager();
-	std::vector< VE_XML::XMLObject* > objectVector;
+	std::vector< XMLObject* > objectVector;
 	// do this for models
 	//networkWriter.ReadXMLData( network, "Model", "veModel" );
 	networkWriter.ReadXMLData( network, "System", "veSystem" );
@@ -115,14 +117,14 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
 	shared_normals->push_back(osg::Vec3(0.0f,-1.0f,0.0f));
 	std::ofstream output ("scale.txt");
-	VE_XML::VE_Model::System * mainSystem = dynamic_cast < VE_XML::VE_Model::System * > ( objectVector.at( 0 ) );
+	System * mainSystem = dynamic_cast < System * > ( objectVector.at( 0 ) );
 	// now lets create a list of them
 	//for ( size_t i = 0; i < objectVector.size(); ++i )
 	for ( size_t i = 0; i < mainSystem->GetModels().size(); ++i )
 	{
 		//_fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
-		//VE_XML::VE_Model::Model* model = dynamic_cast< VE_XML::VE_Model::Model* >( objectVector.at( i ) );
-		VE_XML::VE_Model::ModelWeakPtr model = mainSystem->GetModel(i);
+		//Model* model = dynamic_cast< Model* >( objectVector.at( i ) );
+		ModelWeakPtr model = mainSystem->GetModel(i);
 
         //add 3d blocks
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
@@ -290,7 +292,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		//scale->setScale(100);
 
 		//translate to comp with name to correct location
-		VE_XML::VE_Model::Point * iconLocation = model->GetIconLocation();
+		Point * iconLocation = model->GetIconLocation();
 		std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
 		//std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
 		osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
@@ -313,8 +315,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 	//Streams	
 	//networkWriter.ReadXMLData( network, "Model", "veNetwork" );
 	//objectVector = networkWriter.GetLoadedXMLObjects();
-	//VE_XML::VE_Model::Network* veNetwork = dynamic_cast< VE_XML::VE_Model::Network* >( objectVector.at( 0 ) );
-	VE_XML::VE_Model::NetworkWeakPtr veNetwork = mainSystem->GetNetwork();
+	//Network* veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
+	NetworkWeakPtr veNetwork = mainSystem->GetNetwork();
 	//std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
 	osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     geode->setName( "Network Lines" );

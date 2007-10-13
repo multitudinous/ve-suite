@@ -43,6 +43,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -82,9 +83,9 @@ void UpdateNetworkEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* m
    ;
 }
 //////////////////////////////////////////////////////////////////////////
-void UpdateNetworkEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void UpdateNetworkEventHandler::Execute( XMLObject* xmlObject )
 {
-    VE_XML::Command* cmd = static_cast< VE_XML::Command* >( xmlObject );
+    Command* cmd = static_cast< Command* >( xmlObject );
     if( cmd->GetDataValuePair( "Load Data" ) )
     {
         cfdExecutive::instance()->LoadDataFromCE();

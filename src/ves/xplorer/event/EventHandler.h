@@ -41,11 +41,15 @@
 /*!\namespace VE_EVENTS
  * Namespace for ve-event handlers.
  */
-#include <boost/shared_ptr.hpp>
-
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
+}
+}
 }
 namespace VE_Xplorer
 {
@@ -66,7 +70,7 @@ public:
 
    ///The call to handle the event
    ///\param objectToProcess The xml Object to process
-   virtual void Execute(VE_XML::XMLObject* objectToProcess=0) = 0;
+   virtual void Execute(ves::open::xml::XMLObject* objectToProcess=0) = 0;
 
    ///\param baseObject The cfdGlobalBase object to apply the command to.
    virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject=0) = 0;
@@ -74,6 +78,5 @@ protected:
    ///<the variable of the global base object to operate on
    VE_Xplorer::cfdGlobalBase* _baseObject;
 };
-typedef boost::shared_ptr< EventHandler > EventHandlerPtr;
 }
 #endif// VE_EVENT_HANDLER_H

@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/plugincfdVEBaseClass.h>
+#include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
@@ -64,6 +64,10 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
+using namespace ves::open::xml::cad;
+
 //////////////////////////////////////////////////////////////////      
 // Constructor
 cfdVEBaseClass::cfdVEBaseClass( void ):
@@ -246,11 +250,11 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
    }
    //add inputs to xml model
    //
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( network, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    
    if ( objectVector.empty() )
    {
@@ -258,13 +262,13 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
       return;
    }
 
-   VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+   Command* tempCommand = dynamic_cast< Command* >( objectVector.at( 0 ) );
    size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
    for ( size_t i = 0; i < numDVP; ++i )
    {
-      VE_XML::Command* command = xmlModel->GetResult( i );
-      VE_XML::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
-      VE_XML::Command* copyCommand = dynamic_cast< VE_XML::Command* >( tempPair->GetDataXMLObject() );
+      Command* command = xmlModel->GetResult( i );
+      DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
+      Command* copyCommand = dynamic_cast< Command* >( tempPair->GetDataXMLObject() );
       *command = *copyCommand;
    }
 }
@@ -295,19 +299,19 @@ cfdModel* cfdVEBaseClass::GetCFDModel( void )
    return this->worldDCS.get();
 }*/
 //////////////////////////////////////////////////////////////////   
-void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::ModelWeakPtr tempModel )
+void cfdVEBaseClass::SetXMLModel( ModelWeakPtr tempModel )
 {
    xmlModel = tempModel;
 
    //Decompose model to be utilized by the event handlers
-   VE_XML::VE_CAD::CADAssembly* cadNodeData = dynamic_cast< VE_XML::VE_CAD::CADAssembly* >( xmlModel->GetGeometry() );
+   CADAssembly* cadNodeData = dynamic_cast< CADAssembly* >( xmlModel->GetGeometry() );
    if ( cadNodeData )
    {
-      VE_XML::DataValuePair* cadNode = new VE_XML::DataValuePair();
+      DataValuePair* cadNode = new DataValuePair();
       cadNode->SetDataType( std::string("XMLOBJECT") );
       cadNode->SetData("New Node", cadNodeData );
 
-      VE_XML::Command* cadCommand = new VE_XML::Command();
+      Command* cadCommand = new Command();
       cadCommand->AddDataValuePair( cadNode );
       std::string _commandName = "CAD_ADD_NODE";
       cadCommand->SetCommandName( _commandName );
@@ -322,11 +326,11 @@ void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::ModelWeakPtr tempModel )
    //process the information blocks
    if( xmlModel->GetNumberOfInformationPackets() > 0 )
    {
-      VE_XML::DataValuePair* modelNode = new VE_XML::DataValuePair();
+      DataValuePair* modelNode = new DataValuePair();
       modelNode->SetDataType( std::string("XMLOBJECT") );
-      modelNode->SetData( "CREATE_NEW_DATASETS", new VE_XML::VE_Model::Model( *xmlModel ) );
+      modelNode->SetData( "CREATE_NEW_DATASETS", new Model( *xmlModel ) );
       
-      VE_XML::Command* dataCommand = new VE_XML::Command();
+      Command* dataCommand = new Command();
       dataCommand->AddDataValuePair( modelNode );
       dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
       
@@ -350,7 +354,7 @@ void cfdVEBaseClass::SetXMLModel( VE_XML::VE_Model::ModelWeakPtr tempModel )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetCurrentCommand( VE_XML::Command* command )
+void cfdVEBaseClass::SetCurrentCommand( Command* command )
 {
    if(command)
    {

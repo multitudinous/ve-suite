@@ -39,10 +39,17 @@
  * Activate the texture based visualization.
  */
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
 }
+}
+}
+
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
@@ -53,8 +60,11 @@ namespace VE_Xplorer
 
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-   class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler : public VE_EVENTS::EventHandler{
+namespace VE_EVENTS
+{
+class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler : 
+    public VE_EVENTS::EventHandler
+{
 public:
    ///Constructor
    QuatCamClearDataEventHandler();
@@ -71,7 +81,7 @@ public:
    
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void Execute(VE_XML::XMLObject* veXMLObject);
+   virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
 protected:
 
 };

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef MATERIAL_HELPER_H
 #define MATERIAL_HELPER_H
@@ -53,11 +51,17 @@ namespace osg
 }
 #elif _PERFORMER
 #endif
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
 {
-   class CADMaterial;
+namespace xml
+{
+namespace cad
+{
+    class CADMaterial;
+}
+}
 }
 }
 #include <string>
@@ -76,7 +80,7 @@ public:
    virtual ~MaterialHelper();
 
    ///Load and create the stateset from the input XML data
-   void LoadMaterial(VE_XML::VE_CAD::CADMaterial* material);
+   void LoadMaterial(ves::open::xml::cad::CADMaterial* material);
 #ifdef _OSG
    ///The state set that we want to load the material into
    ///\param materialThe state set representing the material.

@@ -65,9 +65,15 @@ namespace VE_Xplorer
    class cfdReadParam;
 }
 
-namespace VE_XML
+namespace ves
 {
-   class Command;
+namespace open
+{
+namespace xml
+{
+    class Command;
+}
+}
 }
 
 #include <vector>
@@ -138,7 +144,7 @@ public:
    bool IsActive( void );
 
    // New function for testing the new VECommand structure
-   void SetVECommand( VE_XML::Command* veCommand );
+   void SetVECommand( ves::open::xml::Command* veCommand );
 
    unsigned int numQuatCams;
    unsigned int numFlyThroughs;
@@ -185,7 +191,7 @@ private:
    std::vector < int > completionTest;
 
    // class used to store xml command
-   VE_XML::Command* command;
+   ves::open::xml::Command* command;
 
     // Required so that vpr::Singleton can instantiate this class.
    //friend class vpr::Singleton< cfdTextureBasedVizHandler >;

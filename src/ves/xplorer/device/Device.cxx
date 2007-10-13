@@ -53,6 +53,7 @@
 #include <osgUtil/IntersectVisitor>
 
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
@@ -76,17 +77,17 @@ void Device::UpdateSelection()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetVECommand( VE_XML::Command* command )
+void Device::SetVECommand( Command* command )
 {
     if( !command->GetDataValuePair( "SET_START_POSITION" ) )
     {
         return;
     }
-    VE_XML::Command* viewPointGUIData = new VE_XML::Command();
+    Command* viewPointGUIData = new Command();
     viewPointGUIData->SetCommandName( "START_POSITION" );
 
-    VE_XML::DataValuePairWeakPtr quatStartPosition = new VE_XML::DataValuePair();
-    VE_XML::OneDDoubleArray* quatData = new VE_XML::OneDDoubleArray( 0 );
+    DataValuePairWeakPtr quatStartPosition = new DataValuePair();
+    OneDDoubleArray* quatData = new OneDDoubleArray( 0 );
     osg::Quat quat = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
     quatData->AddElementToArray( quat[ 0 ] );
     quatData->AddElementToArray( quat[ 1 ] );
@@ -95,8 +96,8 @@ void Device::SetVECommand( VE_XML::Command* command )
     quatStartPosition->SetData( "QUAT_START_POSITION", quatData );
     viewPointGUIData->AddDataValuePair( quatStartPosition );
 
-    VE_XML::DataValuePairWeakPtr positionStartPosition = new VE_XML::DataValuePair();
-    VE_XML::OneDDoubleArray* positionsData = new VE_XML::OneDDoubleArray( 0 );
+    DataValuePairWeakPtr positionStartPosition = new DataValuePair();
+    OneDDoubleArray* positionsData = new OneDDoubleArray( 0 );
     osg::Vec3d trans = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition();
     positionsData->AddElementToArray( trans[ 0 ] );
     positionsData->AddElementToArray( trans[ 1 ] );

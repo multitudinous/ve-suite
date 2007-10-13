@@ -72,11 +72,6 @@ namespace VE_Xplorer
    class cfdThread;
 }
 
-namespace VE_XML
-{
-   class XMLObject;
-}
-
 namespace VE_EVENTS
 {
    class EventHandler;
@@ -161,7 +156,7 @@ private:
 
    // _name_map : maps a module id to it's module name.
    std::map< int, std::string> _id_map;
-   std::map< int, VE_XML::VE_Model::ModelStrongPtr > idToModel;
+   std::map< int, ves::open::xml::model::ModelStrongPtr > idToModel;
 
    // _name_map : maps a module name to it's module id.
    std::map<int, cfdVEBaseClass* > _plugins;

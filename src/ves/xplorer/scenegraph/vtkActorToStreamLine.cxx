@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 
-#include "VE_Xplorer/SceneGraph/vtkActorToStreamLine.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>

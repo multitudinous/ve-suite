@@ -41,13 +41,19 @@
 
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-   namespace VE_CAD
-   {
-      class CADNode;
-   }
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
+    namespace cad
+    {
+        class CADNode;
+    }
+}
+}
 }
 
 namespace VE_Xplorer
@@ -89,7 +95,7 @@ public:
                            std::string descriptorValue);
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* command); 
+   void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    CADEventHandler& operator=(const CADEventHandler& rhs);
@@ -97,24 +103,24 @@ public:
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
+   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
 
    ///Internal method to add nodes.
    ///\param parentID The ID of the node to add the new node to.
    ///\param node The new CADNode to add to the model
-   void _addNodeToNode(std::string parentID, VE_XML::VE_CAD::CADNode* node);
+   void _addNodeToNode(std::string parentID, ves::open::xml::cad::CADNode* node);
    
    ///Internal method to extract attribtutes from CADNodes.
    ///\param node CADNode to extra attributes from.
-   void _setAttributesOnNode(VE_XML::VE_CAD::CADNode* node);
+   void _setAttributesOnNode(ves::open::xml::cad::CADNode* node);
  
    ///Internal method to extract transform from CADNodes.
    ///\param node CADNode to extract transform from.
-   void _setTransformOnNode(VE_XML::VE_CAD::CADNode* node);
+   void _setTransformOnNode(ves::open::xml::cad::CADNode* node);
    
    VE_Xplorer::cfdModel* m_activeModel;///<The active cfdModel;
    VE_Xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
-   VE_XML::VE_CAD::CADNode* m_cadNode;///<The CADNode.
+   ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
 };
 }
 #endif// VE_EVENT_HANDLER_H

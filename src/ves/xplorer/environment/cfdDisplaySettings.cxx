@@ -39,6 +39,8 @@
 #include <string>
 
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 //////////////////////////////////////////////////////////////////////////
 cfdDisplaySettings::cfdDisplaySettings( void ) 
 { 
@@ -69,7 +71,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
    if( commandType.compare( "Juggler_Display_Data" ) == 0 )
    {
       // Get datavalue pair from current command
-      VE_XML::DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
+      DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
       double stereoToggle = commandData->GetDataValue();
       std::string newCommand = commandData->GetDataName();
 
@@ -116,7 +118,7 @@ bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdComma
       std::vector< jccl::ConfigElementPtr > elements;
       oldCfg->getByType( "display_window", elements );
 
-      VE_XML::DataValuePairWeakPtr desktopData = 
+      DataValuePairWeakPtr desktopData = 
                      veCommand->GetDataValuePair( "desktop_width" );
       double configXValue = desktopData->GetDataValue();
       desktopData = veCommand->GetDataValuePair( "desktop_height" );

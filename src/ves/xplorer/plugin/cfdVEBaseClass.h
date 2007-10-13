@@ -53,7 +53,7 @@ cfdVEBaseClass API
 //class cfdModuleGeometry;
 namespace VE_SceneGraph
 {
-   class DCS;
+    class DCS;
 	class Group;
 }
 
@@ -66,9 +66,15 @@ namespace VE_Xplorer
    class cfdSoundHandler;
 }
 
-namespace VE_XML
+namespace ves
 {
-   class Command;
+namespace open
+{
+namespace xml
+{
+    class Command;
+}
+}
 }
 
 #include <ves/VEConfig.h>
@@ -142,10 +148,10 @@ public:
 
    ///Set the VE_Model to be used by this plugin
    ///\param tempModel Pointer to VE_Model
-   void SetXMLModel( VE_XML::VE_Model::ModelWeakPtr tempModel );
+   void SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel );
    ///Set current command whatever it is
    ///\param command Current command from conductor
-   virtual void SetCurrentCommand( VE_XML::Command* command );
+   virtual void SetCurrentCommand( ves::open::xml::Command* command );
    ///Allow the users to process new inputs after a job has 
    ///been submitted for all plugins
    virtual void ProcessOnSubmitJob( void ){ ; }
@@ -191,7 +197,7 @@ protected:
    VE_Xplorer::Device* m_device;
    cfdSoundHandler* soundHandler;
    
-   VE_XML::VE_Model::ModelStrongPtr xmlModel;
+   ves::open::xml::model::ModelStrongPtr xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
    std::map< std::string, cfdVEBaseClass* > ehMap;

@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 using namespace VE_SceneGraph::Utilities;
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML::VE_Shader;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml::shader;
 
 #ifdef _PERFORMER
 #include <Performer/pf.h>
@@ -146,7 +146,7 @@ void Attribute::UpdateMaterialMode(std::string type, std::string mode)
 #endif
 }
 ////////////////////////////////////////////////////////////////////////
-void Attribute::UpdateShaderUniform(VE_XML::VE_Shader::Uniform* uniformToUpdate)
+void Attribute::UpdateShaderUniform(Uniform* uniformToUpdate)
 {
 #ifdef _OSG
    ShaderHelper shaderHelper;
@@ -223,7 +223,7 @@ void Attribute::CreateTransparencyStateSet()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////
-void Attribute::CreateStateSetFromAttribute(VE_XML::VE_CAD::CADAttribute* attribute)
+void Attribute::CreateStateSetFromAttribute( CADAttribute* attribute)
 {
    std::string attributeType = attribute->GetAttributeType();
    bool blending = attribute->NeedsBlending();

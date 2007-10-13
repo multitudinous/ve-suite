@@ -65,6 +65,8 @@ using namespace VE_Xplorer;
 using namespace VE_Util;
 using namespace VE_SceneGraph;
 
+using namespace ves::open::xml;
+
 vprSingletonImp( VE_Xplorer::cfdQuatCamHandler );
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
@@ -430,7 +432,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 
    if ( !commandType.compare( "ViewLoc_Data" ) )
    {
-      VE_XML::DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
+      DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
       
       ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
       std::vector< long > commandIds;
@@ -548,7 +550,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 /////////////////////////////////////////////////////
 void cfdQuatCamHandler::_updateViewGUIPointData()
 {
-    VE_XML::Command* viewPointGUIData = new VE_XML::Command();
+    Command* viewPointGUIData = new Command();
     viewPointGUIData->SetCommandName( "VIEWPOINT_GUI_DATA" );
     size_t nViewPoints = this->QuatCams.size( );
 
@@ -557,7 +559,7 @@ void cfdQuatCamHandler::_updateViewGUIPointData()
     for(size_t i = 0; i < nViewPoints; ++i)
     {
         name<<"View Location_"<<i;
-        VE_XML::DataValuePair* viewPointNames = new VE_XML::DataValuePair( );
+        DataValuePair* viewPointNames = new DataValuePair( );
         viewPointNames->SetData( "View Location", name.str() );
         viewPointGUIData->AddDataValuePair( viewPointNames );
         name.clear( );
@@ -699,7 +701,7 @@ bool cfdQuatCamHandler::IsActive( void )
    return activecam;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::SetVECommand( VE_XML::Command* veCommand )
+void cfdQuatCamHandler::SetVECommand( Command* veCommand )
 {
    command = veCommand;
 }

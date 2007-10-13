@@ -52,14 +52,21 @@
 #endif
 #include <ves/VEConfig.h>
 
-namespace VE_XML{
-namespace VE_Shader
+namespace ves
 {
-   class Uniform;
+namespace open
+{
+namespace xml
+{
+namespace shader
+{
+    class Uniform;
 }
-namespace VE_CAD
+namespace cad
 {
-   class CADAttribute;
+    class CADAttribute;
+}
+}
 }
 }
 
@@ -99,14 +106,14 @@ public:
 
    ///Create a StateSet from a CADAttribute.
    ///\param attribute The CADAttribute.
-   void CreateStateSetFromAttribute(VE_XML::VE_CAD::CADAttribute* attribute);
+   void CreateStateSetFromAttribute(ves::open::xml::cad::CADAttribute* attribute);
 
    ///Sets this stateset to be the transparency shader.
    void CreateTransparencyStateSet();
 
    ///Update a Uniform value.
    ///\param uniformToUpdate The new uniform information.
-   void UpdateShaderUniform(VE_XML::VE_Shader::Uniform* uniformToUpdate);
+   void UpdateShaderUniform(ves::open::xml::shader::Uniform* uniformToUpdate);
 
    ///Update a the components of a CADMaterial
    ///\param componentName The name of the component to update

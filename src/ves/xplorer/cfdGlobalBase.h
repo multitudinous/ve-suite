@@ -44,9 +44,15 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
-namespace VE_XML
+namespace ves
 {
-   class Command;
+namespace open
+{
+namespace xml
+{    
+    class Command;
+}
+}
 }
 
 #include <ves/VEConfig.h>
@@ -72,16 +78,16 @@ public:
 
    ///Accessor to set the VECommand to be used in any class within Xplorer
    ///\param command holds the current command to be executed
-   void SetVECommand( VE_XML::Command* command );
+   void SetVECommand( ves::open::xml::Command* command );
 
    ///Get the current command
-   VE_XML::Command* GetVECommand();
+   ves::open::xml::Command* GetVECommand();
 protected:
 
 
    VE_Xplorer::cfdCommandArray* _cfdCommandArray;///<cfdApp side variables declared in VjObs_i.h
 
-   VE_XML::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
+   ves::open::xml::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
 
 private:
 };

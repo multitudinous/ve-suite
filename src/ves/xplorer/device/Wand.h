@@ -64,9 +64,15 @@ namespace VE_SceneGraph
     class DCS;
 }
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
     class Command;
+}
+}
 }
 
 namespace osg 
@@ -104,7 +110,7 @@ public:
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
-    void SetVECommand( VE_XML::Command* veCommand );
+    void SetVECommand( ves::open::xml::Command* veCommand );
 
     ///Does not let the user go below the ground plane at 0,0,0 
     ///\param input Flag to insure translation does not go below zero plane
@@ -185,7 +191,7 @@ private:
     int rotationFlag; ///<Rotation flag
     int subzeroFlag; ///<Zero plane flag
 
-    VE_XML::Command* command; ///<Stores xml command
+    ves::open::xml::Command* command; ///<Stores xml command
 
     double deltaTrans[ 3 ]; ///<Stores difference in translation from last position to to current
 

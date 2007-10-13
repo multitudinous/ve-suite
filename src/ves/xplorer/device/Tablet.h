@@ -65,9 +65,15 @@ namespace VE_SceneGraph
     class DCS;
 }
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
     class Command;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -96,7 +102,7 @@ public:
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
-    void SetVECommand( VE_XML::Command* veCommand );
+    void SetVECommand( ves::open::xml::Command* veCommand );
 
 private:
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
@@ -121,7 +127,7 @@ private:
     int rotationFlag; ///<Rotation flag
     int subzeroFlag; ///<Zero plane flag
 
-    VE_XML::Command* command; ///<Stores xml command
+    ves::open::xml::Command* command; ///<Stores xml command
 
 };
 }

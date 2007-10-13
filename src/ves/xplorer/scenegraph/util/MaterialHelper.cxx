@@ -43,7 +43,7 @@
 #include <ves/open/xml/cad/CADMaterial.h>
 #include <ves/open/xml/FloatArray.h>
 #include <string>
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
 using namespace VE_SceneGraph::Utilities;
 ////////////////////////////////
 //Construtor                  //
@@ -58,7 +58,7 @@ MaterialHelper::~MaterialHelper()
 {
 }
 ////////////////////////////////////////////////////////////////
-void MaterialHelper::LoadMaterial(VE_XML::VE_CAD::CADMaterial* material)
+void MaterialHelper::LoadMaterial(CADMaterial* material)
 {
 #ifdef _OSG
    if(!_material.valid())

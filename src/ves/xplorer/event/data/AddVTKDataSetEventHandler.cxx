@@ -55,6 +55,9 @@
 #include <sstream>
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
+using namespace ves::open::xml::model;
+
 /////////////////////////////////////////////////////
 //Constructor                                      //
 /////////////////////////////////////////////////////
@@ -107,17 +110,17 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* m
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AddVTKDataSetEventHandler::Execute(VE_XML::XMLObject* xmlObject)
+void AddVTKDataSetEventHandler::Execute(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
-      VE_XML::VE_Model::Model* veModel = dynamic_cast< VE_XML::VE_Model::Model* >( veModelDVP->GetDataXMLObject() );
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
+      Model* veModel = dynamic_cast< Model* >( veModelDVP->GetDataXMLObject() );
       size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
       for ( size_t i = (numInfoPackets-1); i < numInfoPackets; ++i )
       {
-         VE_XML::ParameterBlock* tempInfoPacket = veModel->GetInformationPacket( i );
+         ParameterBlock* tempInfoPacket = veModel->GetInformationPacket( i );
 
          if ( tempInfoPacket->GetProperty( "VTK_DATA_FILE" ) )
          {

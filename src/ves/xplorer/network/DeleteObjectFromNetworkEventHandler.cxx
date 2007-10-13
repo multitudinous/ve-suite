@@ -51,6 +51,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -90,11 +91,11 @@ void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlo
    ;
 }
 //////////////////////////////////////////////////////////////////////////
-void DeleteObjectFromNetworkEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void DeleteObjectFromNetworkEventHandler::Execute( XMLObject* xmlObject )
 {
    // Get the active object
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Object ID" );   
+   Command* command = dynamic_cast< Command* >( xmlObject );
+   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Object ID" );   
    unsigned int id = 0;
    activeModelDVP->GetData( id );
 

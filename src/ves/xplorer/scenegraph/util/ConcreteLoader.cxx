@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <ves/xplorer/scenegraph/util/ConcreteLoader.h>
 #include <ves/xplorer/scenegraph/util/PerlinNoiseTexture.h>
 #include <iostream>
@@ -38,7 +37,8 @@
 #include <ves/open/xml/shader/Shader.h>
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/shader/Uniform.h>
-using namespace VE_XML::VE_Shader;
+using namespace ves::open::xml::shader;
+
 using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////
 //Constructors                      //
@@ -81,15 +81,15 @@ void ConcreteLoader::_loadShader(std::string vertexSource,std::string fragmentSo
    //std::cout<<"Loading shader!!"<<std::endl;
    //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
    //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
-   VE_XML::VE_Shader::ShaderPtr vertShader = new VE_XML::VE_Shader::Shader();
+   ShaderPtr vertShader = new Shader();
    vertShader->SetShaderType("Vertex");
    vertShader->SetShaderSource(vertexSource);
    
-   VE_XML::VE_Shader::ShaderPtr fragShader = new VE_XML::VE_Shader::Shader();
+   ShaderPtr fragShader = new Shader();
    fragShader->SetShaderType("Fragment");
    fragShader->SetShaderSource(fragmentSource);
 
-   VE_XML::VE_Shader::Uniform lightPosition;
+   Uniform lightPosition;
    lightPosition.SetType("Float");
    lightPosition.SetName("LightPos");
    lightPosition.SetSize(3);
@@ -99,7 +99,7 @@ void ConcreteLoader::_loadShader(std::string vertexSource,std::string fragmentSo
    lightPos.push_back(10.0);
    lightPosition.SetValues(lightPos);
 
-   VE_XML::VE_Shader::Uniform scale;
+   Uniform scale;
    scale.SetType("Float");
    scale.SetName("Scale");
    scale.SetSize(1);
@@ -107,7 +107,7 @@ void ConcreteLoader::_loadShader(std::string vertexSource,std::string fragmentSo
    value.push_back(1.0);
    scale.SetValues(value);
 
-   VE_XML::VE_Shader::Uniform noiseScale;
+   Uniform noiseScale;
    noiseScale.SetType("Float");
    noiseScale.SetName("NoiseScale");
    noiseScale.SetSize(1);
@@ -115,7 +115,7 @@ void ConcreteLoader::_loadShader(std::string vertexSource,std::string fragmentSo
    ns.push_back(1.0);
    noiseScale.SetValues(ns);
 
-   VE_XML::VE_Shader::Uniform specularValues;
+   Uniform specularValues;
    specularValues.SetType("Float");
    specularValues.SetName("specularPower");
    specularValues.SetSize(1);
@@ -127,7 +127,7 @@ void ConcreteLoader::_loadShader(std::string vertexSource,std::string fragmentSo
    //fragShader->AddUniform(dmaterial); 
    vertShader->AddUniform(scale); 
    vertShader->AddUniform(lightPosition); 
-   VE_XML::VE_Shader::Program glslProgram;// = new VE_XML::VE_Shader::Program();
+   Program glslProgram;// = new Program();
    glslProgram.SetProgramName("Phong Shader");
    glslProgram.SetVertexShader(vertShader);
    glslProgram.SetFragmentShader(fragShader);

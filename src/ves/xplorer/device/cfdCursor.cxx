@@ -83,6 +83,7 @@
 using namespace gmtl; //added by Gengxun
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace ves::open::xml;
 
 cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_SceneGraph::Group* rootNode )
 {
@@ -845,7 +846,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
    if ( !commandType.compare( "Streamline_Data" ) )   
    {
-      VE_XML::DataValuePairWeakPtr commandData = 
+      DataValuePairWeakPtr commandData = 
        veCommand->GetDataValuePair( 0 );
       std::vector< long > commandIds;
       commandData->GetData( commandIds );

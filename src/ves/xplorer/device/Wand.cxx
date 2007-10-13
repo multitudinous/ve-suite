@@ -61,6 +61,7 @@ using namespace gmtl;
 using namespace gadget;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
@@ -160,7 +161,7 @@ void Wand::UpdateNavigation()
 
     if( !commandType.compare( "Navigation_Data" ) )
     {
-        VE_XML::DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
+        DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
         cfdIso_value = commandData->GetDataValue();
         newCommand = commandData->GetDataName();
     }
@@ -280,7 +281,7 @@ void Wand::SetHeadRotationFlag( int input )
     rotationFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SetVECommand( VE_XML::Command* veCommand )
+void Wand::SetVECommand( Command* veCommand )
 {
     Device::SetVECommand( veCommand );
     command = veCommand;

@@ -38,7 +38,7 @@
 #include <ves/open/xml/shader/Shader.h>
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/shader/Uniform.h>
-using namespace VE_XML::VE_Shader;
+using namespace ves::open::xml::shader;
 using namespace VE_SceneGraph::Utilities;
 //////////////////////////////////////
 //Constructors                      //
@@ -74,15 +74,15 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    //std::cout<<"Loading shader!!"<<std::endl;
    //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
    //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
-   VE_XML::VE_Shader::ShaderPtr vertShader = new VE_XML::VE_Shader::Shader();
+   ShaderPtr vertShader = new Shader();
    vertShader->SetShaderType("Vertex");
    vertShader->SetShaderSource(vertexSource);
    
-   VE_XML::VE_Shader::ShaderPtr fragShader = new VE_XML::VE_Shader::Shader();
+   ShaderPtr fragShader = new Shader();
    fragShader->SetShaderType("Fragment");
    fragShader->SetShaderSource(fragmentSource);
 
-   VE_XML::VE_Shader::Uniform amaterial;
+   Uniform amaterial;
    amaterial.SetType("Float");
    amaterial.SetName("ambientMaterial");
    amaterial.SetSize(3);
@@ -92,7 +92,7 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    ambient.push_back(0.368421);
    amaterial.SetValues(ambient);
 
-   VE_XML::VE_Shader::Uniform dmaterial;
+   Uniform dmaterial;
    dmaterial.SetType("Float");
    dmaterial.SetName("diffuseMaterial");
    dmaterial.SetSize(3);
@@ -102,7 +102,7 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    diffuse.push_back(0.885003);
    dmaterial.SetValues(diffuse);
 
-   VE_XML::VE_Shader::Uniform smaterial;
+   Uniform smaterial;
    smaterial.SetType("Float");
    smaterial.SetName("specularMaterial");
    smaterial.SetSize(3);
@@ -112,7 +112,7 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    specular.push_back(0.488722);
    smaterial.SetValues(specular);
 
-   VE_XML::VE_Shader::Uniform specularValues;
+   Uniform specularValues;
    specularValues.SetType("Float");
    specularValues.SetName("specularPower");
    specularValues.SetSize(1);
@@ -124,7 +124,7 @@ void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSourc
    fragShader->AddUniform(dmaterial); 
    fragShader->AddUniform(smaterial); 
    fragShader->AddUniform(specularValues); 
-   VE_XML::VE_Shader::Program glslProgram;// = new VE_XML::VE_Shader::Program();
+   Program glslProgram;// = new Program();
    glslProgram.SetProgramName("Phong Shader");
    glslProgram.SetVertexShader(vertShader);
    glslProgram.SetFragmentShader(fragShader);

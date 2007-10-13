@@ -55,8 +55,8 @@ using namespace osgDB;
 using namespace std;
 
 using namespace VE_SceneGraph::Utilities;
-using namespace VE_XML::VE_CAD;
-using namespace VE_XML::VE_Shader;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml::shader;
 
 bool VEAttribute_readLocalData(Object& obj, Input& fr);
 bool VEAttribute_writeLocalData(const Object& obj, Output& fw);

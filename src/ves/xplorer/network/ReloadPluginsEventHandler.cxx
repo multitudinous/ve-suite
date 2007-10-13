@@ -42,6 +42,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -81,7 +82,7 @@ void ReloadPluginsEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* m
    ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ReloadPluginsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void ReloadPluginsEventHandler::Execute( XMLObject* xmlObject )
 {
    cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
    modules->ResetPluginLoader();

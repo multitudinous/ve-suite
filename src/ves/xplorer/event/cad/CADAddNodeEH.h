@@ -38,13 +38,28 @@
 /*!\class CADAddNodeEventHandler
  * Class for handling CADNode transforms.
  */
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
 }
-namespace VE_CAD
+}
+}
+namespace ves
 {
-   class CADNode;
+namespace open
+{
+namespace xml
+{
+namespace cad
+{
+    class CADNode;
+}
+}
+}
 }
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
@@ -66,7 +81,7 @@ public:
 protected:
    ///Update a transform on the CADNode.
    ///\param command The Command containing the udpated transform.
-   void _operateOnNode(VE_XML::XMLObject* command);
+   void _operateOnNode(ves::open::xml::XMLObject* command);
 };
 }
 #endif// VE_EVENT_HANDLER_H

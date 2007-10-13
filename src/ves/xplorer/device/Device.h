@@ -56,9 +56,15 @@ namespace osg
     class Vec3d;
 }
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
     class Command;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -80,7 +86,7 @@ public:
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
-    virtual void SetVECommand( VE_XML::Command* command = 0 );
+    virtual void SetVECommand( ves::open::xml::Command* command = 0 );
 
     ///Do not know what this is
     virtual void UpdateCommand();

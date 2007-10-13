@@ -64,7 +64,7 @@
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
 :
@@ -101,10 +101,10 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBa
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
 {
-    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-    VE_XML::DataValuePairWeakPtr activeModelDVP = 
+    Command* command = dynamic_cast< Command* >( xmlObject );
+    DataValuePairWeakPtr activeModelDVP = 
         command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
 
     std::string viewData;

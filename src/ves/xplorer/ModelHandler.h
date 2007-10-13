@@ -43,9 +43,15 @@ cfdModelHandler API
 #include <map>
 #include <utility>
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
     class Command;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -99,9 +105,9 @@ public:
    void SetCommandArray( cfdCommandArray* );
    ///Set the active xml command
    ///\param inputCommand input xml command
-   void SetXMLCommand( VE_XML::Command* inputCommand );
+   void SetXMLCommand( ves::open::xml::Command* inputCommand );
    ///Returns the current xml command
-   VE_XML::Command* GetXMLCommand( void );
+   ves::open::xml::Command* GetXMLCommand( void );
    //void CreateObjects( void );      
    void LoadSurfaceFiles( std::string );
    vtkPolyData* GetArrow( void );
@@ -138,8 +144,8 @@ private:
    std::string _param;
    cfdDataSet* activeDataset;
    cfdCommandArray* commandArray;
-   VE_XML::Command* activeCommand;
-   VE_XML::Command* nullCommand;
+   ves::open::xml::Command* activeCommand;
+   ves::open::xml::Command* nullCommand;
    cfdReadParam* _readParam;
    cfdScalarBarActor* _scalarBar;
    cfdModel* _activeModel;

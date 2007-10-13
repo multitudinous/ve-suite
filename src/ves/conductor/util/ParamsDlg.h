@@ -55,7 +55,6 @@ namespace ves
 {
 namespace conductor
 {
-class AppFrame;
 namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS ParamsDlg : public wxDialog

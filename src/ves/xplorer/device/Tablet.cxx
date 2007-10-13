@@ -51,6 +51,7 @@ using namespace gmtl;
 using namespace gadget;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Tablet::Tablet( )
@@ -95,7 +96,7 @@ void Tablet::UpdateNavigation()
 
     if( !commandType.compare( "Navigation_Data" ) )
     {
-        VE_XML::DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
+        DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
         cfdIso_value = commandData->GetDataValue();
         newCommand = commandData->GetDataName();
     }
@@ -527,7 +528,7 @@ void Tablet::SetSubZeroFlag( int input )
     subzeroFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tablet::SetVECommand( VE_XML::Command* veCommand )
+void Tablet::SetVECommand( Command* veCommand )
 {
     Device::SetVECommand( veCommand );
     command = veCommand;
