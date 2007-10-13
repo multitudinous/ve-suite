@@ -52,6 +52,9 @@
 #include <fstream>
 #include <sstream>
 
+using namespace ves::open::xml;
+//using namespace ves::ce::util;
+using namespace VE_CE::Utilities;
 // Implementation skeleton constructor
 Body_Executive_i::Body_Executive_i (CosNaming::NamingContext_ptr nc)
   : naming_context_(CosNaming::NamingContext::_duplicate(nc))
@@ -60,10 +63,10 @@ Body_Executive_i::Body_Executive_i (CosNaming::NamingContext_ptr nc)
    _scheduler = new Scheduler( _network );
 
    //Initialize all the XML objects
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new VE_XML::XMLCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new VE_XML::VE_Shader::ShaderCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new VE_XML::VE_Model::ModelCreator());
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new VE_XML::VE_CAD::CADCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new shader::ShaderCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("Model",new model::ModelCreator());
+   XMLObjectFactory::Instance()->RegisterObjectCreator("CAD",new cad::CADCreator());
 }
 
 // Implementation skeleton destructor
@@ -111,10 +114,10 @@ char * Body_Executive_i::GetImportData (
          p.intfs.push_back(oport->_data);
       
          str = p.Save(rv);*/
-         std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-         nodes.push_back( std::pair< VE_XML::Command*, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
+         std::vector< std::pair< XMLObject*, std::string > > nodes;
+         nodes.push_back( std::pair< Command*, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
          std::string fileName( "returnString" );
-         VE_XML::XMLReaderWriter netowrkWriter;
+         XMLReaderWriter netowrkWriter;
          netowrkWriter.UseStandaloneDOMDocumentManager();
          netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
          str = fileName;
@@ -172,16 +175,16 @@ void Body_Executive_i::SetExportData (
 {
   _mutex.acquire();
   
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( std::string( data ), "Command", "vecommand" );
    //delete data;
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
   
    // Should only be one item. But, maybe later...
    if ( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData( 
-         port_id, dynamic_cast< VE_XML::Command* >( objectVector.at(0) ) ) 
+         port_id, dynamic_cast< Command* >( objectVector.at(0) ) ) 
       )
    {
       std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
@@ -203,7 +206,7 @@ char * Body_Executive_i::GetExportData (
    //std::cout << "GetExportData "<< module_id << " " << port_id << std::endl;
   
    //Interface intf;
-   VE_XML::Command portData;
+   Command portData;
    if ( !_network->GetModule( _network->moduleIdx( module_id ) )->getPortData( port_id, portData ) ) 
    {
       std::string msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
@@ -212,10 +215,10 @@ char * Body_Executive_i::GetExportData (
       return CORBA::string_dup("");
    }
 
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-   nodes.push_back( std::pair< VE_XML::Command*, std::string  >( &portData, std::string( "vecommand" ) ) );
+   std::vector< std::pair< XMLObject*, std::string > > nodes;
+   nodes.push_back( std::pair< Command*, std::string  >( &portData, std::string( "vecommand" ) ) );
    std::string fileName( "returnString" );
-   VE_XML::XMLReaderWriter netowrkWriter;
+   XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
    netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
 
@@ -331,15 +334,15 @@ void Body_Executive_i::execute_next_mod( long module_id )
 
 	if (msg!="")
 	{
-		VE_XML::XMLReaderWriter networkWriter;
+		XMLReaderWriter networkWriter;
 		networkWriter.UseStandaloneDOMDocumentManager();
 		networkWriter.ReadFromString();
 		networkWriter.ReadXMLData( msg, "Command", "vecommand" );
-		std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+		std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
 		if ( !objectVector.empty() ) 
 		{
-			VE_XML::Command* returnState = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+			Command* returnState = dynamic_cast< Command* >( objectVector.at( 0 ) );
   
 			long rs;
 			// 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
@@ -371,11 +374,11 @@ void Body_Executive_i::execute_next_mod( long module_id )
             }
             else 
             {
-               std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-               std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
+               std::vector< std::pair< XMLObject*, std::string > > nodes;
+               std::vector< Command* > inputList = _network->GetModule( rt )->GetInputData();
                for ( size_t k = 0; k < inputList.size(); ++k )
                {
-                  nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+                  nodes.push_back( std::pair< Command*, std::string  >( 
                                     inputList.at( k ), std::string( "vecommand" ) ) 
                                  );
                }
@@ -429,12 +432,12 @@ void Body_Executive_i::SetModuleResult (
 {
    _mutex.acquire();
 
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
    //delete result;
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
    _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
 
@@ -532,11 +535,11 @@ void Body_Executive_i::SetModuleUI (
    _mutex.acquire();
   
    ///I don't think this function is used. We may be able to remove it.
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( std::string( ui ), "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
    _network->GetModule( _network->moduleIdx( module_id ) )->SetInputData( objectVector );
    _network->GetModule( _network->moduleIdx( module_id ) )->_need_execute = 1;
@@ -639,17 +642,17 @@ void Body_Executive_i::StartCalc (
    }
    else 
    {
-      std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-      std::vector< VE_XML::Command* > inputList = _network->GetModule( rt )->GetInputData();
+      std::vector< std::pair< XMLObject*, std::string > > nodes;
+      std::vector< Command* > inputList = _network->GetModule( rt )->GetInputData();
       for ( size_t k = 0; k < inputList.size(); ++k )
       {
-         nodes.push_back( std::pair< VE_XML::Command*, std::string  >( 
+         nodes.push_back( std::pair< Command*, std::string  >( 
                            inputList.at( k ), std::string( "vecommand" ) ) 
                         );
       }
 
       std::string fileName( "returnString" );
-      VE_XML::XMLReaderWriter netowrkWriter;
+      XMLReaderWriter netowrkWriter;
       netowrkWriter.UseStandaloneDOMDocumentManager();
       netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
 
@@ -794,25 +797,25 @@ char *  Body_Executive_i::Query (  const char * command
 //std::cout << command << std::endl;
    _mutex.acquire();
    // read the command to get the module name and module id
-   VE_XML::XMLReaderWriter networkWriter;
+   XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( command, "Command", "vecommand" );
    //delete command;
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
    //I think the above is a memory leak
    // we need to cleanup the vector of objects
    
    std::string moduleName;
    std::string vendorUnit;
    unsigned int moduleId = 0;
-   VE_XML::Command* tempCommand = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
-   VE_XML::Command passCommand;
+   Command* tempCommand = dynamic_cast< Command* >( objectVector.at( 0 ) );
+   Command passCommand;
    passCommand.SetCommandName( tempCommand->GetCommandName() );
    size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
    for ( size_t i = 0; i < numDVP; ++i )
    {
-      VE_XML::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
+      DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
       /*if ( tempPair->GetDataName() == "moduleName" )
       {
          tempPair->GetData( moduleName );
@@ -842,12 +845,12 @@ char *  Body_Executive_i::Query (  const char * command
    objectVector.clear();
    
    ///string used to hold query data
-   std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+   std::vector< std::pair< XMLObject*, std::string > > nodes;
    nodes.push_back( 
-                    std::pair< VE_XML::XMLObject*, std::string >( &passCommand, "vecommand" ) 
+                    std::pair< XMLObject*, std::string >( &passCommand, "vecommand" ) 
                     );
    
-   VE_XML::XMLReaderWriter commandWriter;
+   XMLReaderWriter commandWriter;
    std::string status="returnString";
    commandWriter.UseStandaloneDOMDocumentManager();
    commandWriter.WriteXMLDocument( nodes, status, "Command" );

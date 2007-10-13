@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef EXECUTIVE_I_H_
 #define EXECUTIVE_I_H_
@@ -41,10 +39,9 @@
 #include <ves/ce/util/Connection.h>
 #include <ves/ce/util/IPort.h>
 #include <ves/ce/util/OPort.h>
-using namespace VE_CE::Utilities;
 
 #include <ves/open/moduleS.h>
-//#include "VE_Conductor/Framework/package.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -80,9 +77,9 @@ protected:
 
   void execute( std::string );
 
-  std::map<std::string, Body::Unit_var> _mod_units;
-  std::map<std::string, Execute_Thread*> _exec_thread;
-  std::map<std::string, QueryThread*> queryThreads;
+  std::map< std::string, Body::Unit_var > _mod_units;
+  std::map< std::string, Execute_Thread* > _exec_thread;
+  std::map< std::string, QueryThread* > queryThreads;
 
   CosNaming::NamingContext_var naming_context_;
   std::map<std::string, Body::UI_var> uis_;
@@ -90,8 +87,8 @@ protected:
   //Interface _network_intf;
   //Interface _global_intf;
 
-  Network*   _network;
-  Scheduler* _scheduler;
+  VE_CE::Utilities::Network*   _network;
+  VE_CE::Utilities::Scheduler* _scheduler;
 
   // For tracking power requirements/generated and plant efficiencies
   std::map<long, double> _module_powers;
