@@ -37,7 +37,7 @@
 #include <ves/open/xml/cad/CADPart.h>
 #include <iostream>
 
-using namespace ves::open::cad;
+using namespace ves::open::xml::cad;
 
 ////////////////////////////////////
 //Constructors                    //

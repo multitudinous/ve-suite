@@ -50,7 +50,7 @@ namespace open
 {
 namespace xml
 {
-namespace shade
+namespace shader
 {
    class Program;
 }
@@ -133,16 +133,15 @@ protected:
    ves::open::xml::shader::Program* _glslProgram;///<The glsl program.
 };
 }
-}
-}
-}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADAttribute* val)
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
+}
+}
 }
 }
 #endif// _CAD_ATTRIBUTE_H_

@@ -37,7 +37,7 @@
 XERCES_CPP_NAMESPACE_USE
 #include <iostream>
 
-using namespace VE_XML;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////
 ParameterBlock::ParameterBlock(unsigned int id)
@@ -107,12 +107,12 @@ void ParameterBlock::SetBlockId(unsigned int id)
    _id = id;
 }
 ///////////////////////////////////////////////////////////////////
-void ParameterBlock::SetTransform(VE_XML::Transform* transform)
+void ParameterBlock::SetTransform(Transform* transform)
 {
    *_dcs = *transform;
 }
 /////////////////////////////////////////////////////////////////
-void ParameterBlock::AddProperty(VE_XML::DataValuePair* prop)
+void ParameterBlock::AddProperty(DataValuePair* prop)
 {
    _properties.push_back(prop);
 }
@@ -133,7 +133,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
       if(currentElement->hasAttribute(xercesString("id")))
       {
          std::string emptyCheck;
-         VE_XML::XMLObject::GetAttribute(currentElement,"id",emptyCheck);
+         XMLObject::GetAttribute(currentElement,"id",emptyCheck);
          if(!emptyCheck.empty())
          {
             uuid = emptyCheck;
@@ -195,12 +195,12 @@ unsigned int ParameterBlock::GetBlockId()
    return _id;
 }
 /////////////////////////////////////////////////////
-VE_XML::Transform* ParameterBlock::GetTransform()
+Transform* ParameterBlock::GetTransform()
 {
    return _dcs;
 }
 ///////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* ParameterBlock::GetProperty( std::string name )
+DataValuePair* ParameterBlock::GetProperty( std::string name )
 {
    size_t nProps = _properties.size();
    for ( size_t i = 0; i < nProps; i++)
@@ -217,7 +217,7 @@ VE_XML::DataValuePair* ParameterBlock::GetProperty( std::string name )
    return 0;
 }
 /////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePair* ParameterBlock::GetProperty( int index )
+DataValuePair* ParameterBlock::GetProperty( int index )
 {
    try
    {
@@ -251,7 +251,7 @@ void ParameterBlock::RemoveProperty( unsigned int index )
       return;
    }
 
-   std::vector< VE_XML::DataValuePair* >::iterator iter;
+   std::vector< DataValuePair* >::iterator iter;
    for ( iter = _properties.begin(); iter != _properties.end(); ++iter )
    {
       if ( _properties.at( index ) == (*iter) )

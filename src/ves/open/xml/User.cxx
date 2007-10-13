@@ -33,7 +33,7 @@
 #include <ves/open/xml/User.h>
 #include <ves/open/xml/StateInfo.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 //Constructors//
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ void User::SetControlStatus(VEControlStatus cs)
    _controlStatus = cs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void User::SetStateInfo( VE_XML::StateInfoWeakPtr userState )
+void User::SetStateInfo( StateInfoWeakPtr userState )
 {
    m_stateInfo = userState;
 }
@@ -102,7 +102,7 @@ User::VEControlStatus User::GetControlStatus()
    return _controlStatus;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::StateInfoWeakPtr User::GetUserStateInfo()
+StateInfoWeakPtr User::GetUserStateInfo()
 {
    return m_stateInfo;
 }

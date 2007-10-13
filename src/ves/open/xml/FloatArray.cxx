@@ -36,7 +36,7 @@
 
 #include <ves/open/xml/FloatArray.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////

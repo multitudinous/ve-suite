@@ -37,7 +37,7 @@
 #include <ves/open/xml/ThreeDDoubleArray.h>
 #include <ves/open/xml/TwoDDoubleArray.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////

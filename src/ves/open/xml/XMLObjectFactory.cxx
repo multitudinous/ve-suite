@@ -37,18 +37,21 @@
 #include <utility>
 #include <string>
 
-using namespace VE_XML;
+using namespace ves::open::xml;
 
 //utility to properly initialize and delete the Singleton XMLObjectFactory
-namespace VE_XML
+namespace ves
 {
-
+namespace open
+{
+namespace xml
+{
 class ObjectFactoryMaker
 {
 public:
   ObjectFactoryMaker()
   {
-     VE_XML::XMLObjectFactory::Instance(); 
+     XMLObjectFactory::Instance(); 
   };
   ~ObjectFactoryMaker()
   { 
@@ -56,12 +59,13 @@ public:
   };
 };
 }
+}
+}
 
+static ObjectFactoryMaker ObjectFactoryManager;
 
-static VE_XML::ObjectFactoryMaker ObjectFactoryManager;
-
-VE_XML::XMLObjectFactory* VE_XML::XMLObjectFactory::_instanceOfFactory = 0;
-//std::map<std::string,CreationEventHandler*> VE_XML::XMLObjectFactory::_objectCreators;
+XMLObjectFactory* XMLObjectFactory::_instanceOfFactory = 0;
+//std::map<std::string,CreationEventHandler*> XMLObjectFactory::_objectCreators;
 /////////////////////////////////////
 XMLObjectFactory::XMLObjectFactory( )
 {
@@ -98,14 +102,14 @@ XMLObjectFactory* XMLObjectFactory::Instance()
    return _instanceOfFactory;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
+XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
                                                std::string objectNameSpace)
 {
    std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
    //xmlCreator = _objectCreators.find(objectNameSpace);
    for ( xmlCreator = _objectCreators.begin(); xmlCreator != _objectCreators.end(); ++xmlCreator )
    {
-      VE_XML::XMLObject* temp = xmlCreator->second->CreateNewXMLObject(objectType);
+      XMLObject* temp = xmlCreator->second->CreateNewXMLObject(objectType);
       if ( temp )
       {
          return temp;       
@@ -115,7 +119,7 @@ VE_XML::XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLObjectFactory::CreateXMLObjectCopy( VE_XML::XMLObject* objectToCopy )
+XMLObject* XMLObjectFactory::CreateXMLObjectCopy( XMLObject* objectToCopy )
 {
    std::string objectType = objectToCopy->GetObjectType();
    std::string objectNamespace = objectToCopy->GetObjectNamespace();

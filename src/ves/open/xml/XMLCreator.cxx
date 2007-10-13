@@ -49,9 +49,9 @@
 #include <ves/open/xml/TwoDIntArray.h> 
 #include <ves/open/xml/User.h> 
 
-using namespace VE_XML;
+using namespace ves::open::xml;
 /////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
+XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
 {
    if(objectType == "FloatArray")
    {
@@ -120,8 +120,8 @@ VE_XML::XMLObject* XMLCreator::CreateNewXMLObject(std::string objectType)
    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////
-VE_XML::XMLObject* XMLCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                      VE_XML::XMLObject* objectToCopy)
+XMLObject* XMLCreator::CreateNewXMLObjectCopy(std::string objectType,
+                                                      XMLObject* objectToCopy)
 {
    if(objectType == "FloatArray")
    {

@@ -37,7 +37,7 @@
 #include <ves/open/xml/XMLObjectFactory.h>
 
 #include <iostream>
-using namespace VE_XML;
+using namespace ves::open::xml;
 //////////////////////////////
 //Constructor               //
 //////////////////////////////
@@ -65,7 +65,7 @@ void XMLReaderWriter::UseStandaloneDOMDocumentManager()
 {
    if(!_domDocumentManager)
    {
-      _domDocumentManager = new VE_XML::DOMDocumentManager();
+      _domDocumentManager = new DOMDocumentManager();
       _standAloneDDM = true;
    }
 }
@@ -102,13 +102,13 @@ void XMLReaderWriter::ReadFromString()
    }
 }
 //////////////////////////////////////////////////////////////////////////////////
-void XMLReaderWriter::SetDOMDocumentManager(VE_XML::DOMDocumentManager* ddManager)
+void XMLReaderWriter::SetDOMDocumentManager(DOMDocumentManager* ddManager)
 {
    _domDocumentManager = ddManager;
    _standAloneDDM = false;
 }
 ////////////////////////////////////////////////////////////////////   
-VE_XML::DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
+DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
 {
    return _domDocumentManager;
 }
@@ -146,7 +146,7 @@ void XMLReaderWriter::ReadXMLData( std::string xmlData,
     _domDocumentManager->UnLoadParser();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< VE_XML::XMLObject* > XMLReaderWriter::GetLoadedXMLObjects()
+std::vector< XMLObject* > XMLReaderWriter::GetLoadedXMLObjects()
 {
    return m_xmlObjects;
 }
@@ -179,7 +179,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 
    for ( unsigned int i = 0; i < nXMLObjects; ++i )
    {
-      VE_XML::XMLObject* newXMLobj = XMLObjectFactory::Instance()->
+      XMLObject* newXMLobj = XMLObjectFactory::Instance()->
                                         CreateXMLObject(tagName,objectNamespace);
       if ( newXMLobj != NULL )
       {
@@ -202,7 +202,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteMultipleXMLDocuments( 
-            std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+            std::vector< std::pair< XMLObject*, std::string > > nodes,
                                                         std::string& xmlData )
 {
    /*
@@ -236,7 +236,7 @@ void XMLReaderWriter::WriteMultipleXMLDocuments(
    */
 }
 ///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes,
+void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObject*, std::string > > nodes,
                                     std::string& xmlData,
                                     std::string documentType )
 {

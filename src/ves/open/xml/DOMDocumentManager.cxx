@@ -48,7 +48,7 @@
 #include <fstream>
 
 //using namespace VE_Conductor;
-using namespace VE_XML;
+using namespace ves::open::xml;
 
 //////////////////////////////////////////////////////
 DOMDocumentManager::DOMDocumentManager( void )

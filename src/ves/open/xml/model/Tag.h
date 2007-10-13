@@ -96,18 +96,17 @@ private:
    std::string tagText;///<string that contains text for the tag
 };
 }
-}
-}
-}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-	const std::string subElementTagName, ves::open::xml::model::Tag* val)
+                                                                           const std::string subElementTagName, ves::open::xml::model::Tag* val)
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( 
-        subElementTagName );
+                                                                               subElementTagName );
     _veElement->appendChild( childElement );
     return childElement;
+}
+}
 }
 }
 #endif// Tag_H_

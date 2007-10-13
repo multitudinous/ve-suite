@@ -34,7 +34,7 @@
 #include <ves/open/xml/DataValuePair.h>
 XERCES_CPP_NAMESPACE_USE
 #include <iostream>
-using namespace VE_XML;
+using namespace ves::open::xml;
 //////////////////////
 //Constructor       //
 //////////////////////
@@ -83,13 +83,13 @@ Command& Command::operator=( const Command& input)
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void Command::AddDataValuePair(VE_XML::DataValuePair* commandValuePair)
+/*void Command::AddDataValuePair(DataValuePair* commandValuePair)
 {
    _dataValuePairs.push_back(commandValuePair);
    nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void Command::AddDataValuePair( VE_XML::DataValuePairWeakPtr commandValuePair )
+void Command::AddDataValuePair( DataValuePairWeakPtr commandValuePair )
 {
     _dataValuePairs.push_back(commandValuePair);
     nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
@@ -167,7 +167,7 @@ void Command::SetObjectFromXMLData(DOMNode* xmlInput)
         for( unsigned int i = 0; i < nDVPairsIn; ++i )
         {
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>(subElements->item(i));
-            VE_XML::DataValuePairPtr veDvp = new VE_XML::DataValuePair();
+            DataValuePairPtr veDvp = new DataValuePair();
             veDvp->SetObjectFromXMLData(dvPairIn);
             _dataValuePairs.push_back(veDvp);
             nameToDataValuePairMap[ veDvp->GetDataName() ] = veDvp;
@@ -190,9 +190,9 @@ void Command::SetCommandName( std::string name )
     _cmdName = name;
 }
 //////////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePairWeakPtr Command::GetDataValuePair(std::string dataValueName)
+DataValuePairWeakPtr Command::GetDataValuePair(std::string dataValueName)
 {
-    std::map< std::string, VE_XML::DataValuePairPtr >::iterator iter;
+    std::map< std::string, DataValuePairPtr >::iterator iter;
     iter = nameToDataValuePairMap.find( dataValueName );
     if( iter != nameToDataValuePairMap.end() )
     {
@@ -201,7 +201,7 @@ VE_XML::DataValuePairWeakPtr Command::GetDataValuePair(std::string dataValueName
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////
-VE_XML::DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
+DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
 {
     try
     {

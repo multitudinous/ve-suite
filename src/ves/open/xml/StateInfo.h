@@ -36,7 +36,7 @@
 /*!\file StateInfo.h
   State Information API
   */
-/*!\class VE_XML::StateInfo
+/*!\class StateInfo
  * This class is used to hold state information which is essentially a list
  * of Command s.
  */
@@ -97,7 +97,7 @@ protected:
    ///Internally update the Command list.
    void _updateCommands();
 
-   std::vector<VE_XML::CommandPtr> _stateInfo;///<The Command list holding state information.
+   std::vector<CommandPtr> _stateInfo;///<The Command list holding state information.
 };
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, StateInfo* val)

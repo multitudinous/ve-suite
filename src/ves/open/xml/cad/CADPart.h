@@ -94,16 +94,15 @@ protected:
    std::string m_cadFileName; ///<The name of the CAD file on disk
 };
 }
-}
-}
-}
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADPart* val)
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
+}
+}
 }
 }
 #endif// _CAD_PART_H_

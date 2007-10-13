@@ -47,7 +47,7 @@
 #include <sstream>
 XERCES_CPP_NAMESPACE_USE
 
-using namespace VE_XML;
+using namespace ves::open::xml;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
@@ -91,7 +91,7 @@ DataValuePair::DataValuePair( const DataValuePair& input )
 
    if(input._veXMLObject)
    {
-      _veXMLObject = VE_XML::XMLObjectFactory::Instance()->CreateXMLObjectCopy( input._veXMLObject );
+      _veXMLObject = XMLObjectFactory::Instance()->CreateXMLObjectCopy( input._veXMLObject );
    }
 }
 /////////////////////////////////////////////////////
@@ -190,7 +190,7 @@ void DataValuePair::SetDataValue( double data )
    _dataValue = data;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)
+void DataValuePair::SetData(std::string dataName,XMLObject* vexmlObject)
 {
    if ( vexmlObject )
    {
@@ -207,7 +207,7 @@ void DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)
    }
    else
    {
-      std::cout<<"Invalid type passed into DataValuePair::SetData(std::string dataName,VE_XML::XMLObject* vexmlObject)"<<std::endl;
+      std::cout<<"Invalid type passed into DataValuePair::SetData(std::string dataName,XMLObject* vexmlObject)"<<std::endl;
    }
 }
 ///////////////////////////////////////
@@ -278,7 +278,7 @@ double DataValuePair::GetDataValue()
    return 0;
 }
 ////////////////////////////////////////////////////
-VE_XML::XMLObject* DataValuePair::GetDataXMLObject()
+XMLObject* DataValuePair::GetDataXMLObject()
 {
    if(_dataType == std::string("XMLOBJECT"))
    {
@@ -436,7 +436,7 @@ void DataValuePair::SetObjectFromXMLData(DOMNode* element)
    
 }
 ////////////////////////////////////////////////////////////
-/*void GetData( VE_XML::XMLObject& data )
+/*void GetData( XMLObject& data )
 {
    data = *(XMLObjectFactory::Instance()->CreateXMLObjectCopy( _veXMLObject) );
 }*/

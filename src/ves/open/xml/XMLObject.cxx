@@ -41,7 +41,7 @@
 
 XERCES_CPP_NAMESPACE_USE
 
-using namespace VE_XML;
+using namespace ves::open::xml;
 //////////////////////
 XMLObject::XMLObject()
 {

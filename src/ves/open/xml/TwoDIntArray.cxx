@@ -37,7 +37,7 @@
 #include <ves/open/xml/TwoDIntArray.h>
 #include <ves/open/xml/OneDIntArray.h>
 XERCES_CPP_NAMESPACE_USE
-using namespace VE_XML;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
