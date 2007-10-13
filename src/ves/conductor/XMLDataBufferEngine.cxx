@@ -52,6 +52,7 @@
 #include <algorithm>
 
 using namespace ves::open::xml;
+using namespace ves::open::xml::model;
 using namespace ves::conductor;
 
 vprSingletonImp( XMLDataBufferEngine );
@@ -223,7 +224,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
 			ves::open::xml::model::ModelWeakPtr model = 
-				dynamic_cast< ves::open::xml:model::Model* >( *objectIter );
+				dynamic_cast< Model* >( *objectIter );
             if( !model )
             {
                 //if this object is not a model continue
@@ -290,7 +291,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap;
         for ( size_t i = 0; i < tempStates.size(); ++i )
         {
-            //VE_XML::CommandWeakPtr tempCommand = tempStates.at( i );
+            //CommandWeakPtr tempCommand = tempStates.at( i );
             tempMap[ tempStates.at( i )->GetCommandName() ] = tempStates.at( i ); 
             //std::cout << " here " << tempCommand->GetCommandName() << std::endl;
         }

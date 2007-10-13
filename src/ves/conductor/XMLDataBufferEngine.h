@@ -55,7 +55,9 @@ XMLDataBufferEngine API
 #include <ves/open/xml/UserPtr.h>
 
 #include <ves/VEConfig.h>
-namespace VE_Conductor
+namespace ves
+{
+namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS XMLDataBufferEngine
 {
@@ -71,16 +73,16 @@ public:
     ///Get Command with key
     ///The key MUST be the command name
     ///\param commandKey command desired by the user
-    VE_XML::CommandWeakPtr GetCommand( std::string commandKey );
+    ves::open::xml::CommandWeakPtr GetCommand( std::string commandKey );
     ///set Command with key
     ///\param commandKey key of the command desired
     ///\param command command to be stored
-    void SetCommand( std::string commandKey, VE_XML::CommandWeakPtr command );
+    void SetCommand( std::string commandKey, ves::open::xml::CommandWeakPtr command );
     ///Get all the commands
-    std::map< std::string, VE_XML::CommandWeakPtr > GetCommandMap( void );
+    std::map< std::string, ves::open::xml::CommandWeakPtr > GetCommandMap( void );
     ///Set all the commands
     ///\param tempMap the the map of commands when initialized by the user
-    void SetCommandMap( std::map< std::string, VE_XML::CommandWeakPtr > tempMap );
+    void SetCommandMap( std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap );
     ///Set data from CORBA receiver thread
     void SetXplorerData(){ ; }
     ///Load data 
@@ -90,45 +92,46 @@ public:
     ///New 
     void NewVESData( bool promptClearXplorer );
     ///Get data
-    VE_XML::VE_Model::NetworkWeakPtr
+    ves::open::xml::model::NetworkWeakPtr
       GetXMLNetworkDataObject( std::string dataNumber );
    ///Get the network
-   std::map< std::string, VE_XML::VE_Model::ModelWeakPtr > GetXMLModels();
+   std::map< std::string, ves::open::xml::model::ModelWeakPtr > GetXMLModels();
     ///Get data
-    VE_XML::VE_Model::ModelWeakPtr GetXMLModelDataObject( std::string dataNumber );
+    ves::open::xml::model::ModelWeakPtr GetXMLModelDataObject( std::string dataNumber );
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
    ///Get the map of all systems
-   std::map< std::string, VE_XML::VE_Model::SystemStrongPtr >
+   std::map< std::string, ves::open::xml::model::SystemStrongPtr >
       GetXMLSystemDataMap();
    ///Get a system
    std::string GetTopSystemId( );
    ///Get a system
-   VE_XML::VE_Model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
+   ves::open::xml::model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
     ///Get data
-    VE_XML::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
+    ves::open::xml::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
    ///Parse system for subsystems
-   void ParseSystem( VE_XML::VE_Model::SystemWeakPtr system );
+   void ParseSystem( ves::open::xml::model::SystemWeakPtr system );
         
 private:
     ///Map to store the command name and command for easy lookup by the user
-    std::map< std::string, VE_XML::CommandPtr > m_commandMap;
+    std::map< std::string, ves::open::xml::CommandPtr > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
     ///Map of systems
-    std::map< std::string, VE_XML::VE_Model::SystemStrongPtr > m_systemMap;
+    std::map< std::string, ves::open::xml::model::SystemStrongPtr > m_systemMap;
     ///Map of networks - backwards compatibility
-    std::map< std::string, VE_XML::VE_Model::NetworkStrongPtr > m_networkMap;
+    std::map< std::string, ves::open::xml::model::NetworkStrongPtr > m_networkMap;
     //Map of model ids for the given network
     std::map< std::string, std::vector< std::string > > m_networkModelMap;
     ///Map
-    std::map< std::string, VE_XML::VE_Model::ModelStrongPtr > m_modelMap;
+    std::map< std::string, ves::open::xml::model::ModelStrongPtr > m_modelMap;
     ///Map
-    std::map< std::string, VE_XML::VE_Model::TagStrongPtr > m_tagMap;
+    std::map< std::string, ves::open::xml::model::TagStrongPtr > m_tagMap;
     ///Map
-    std::map< std::string, VE_XML::UserPtr > m_userMap;
+    std::map< std::string, ves::open::xml::UserPtr > m_userMap;
    //Top most id
    std::string topId;
 };
+}
 }
 #endif //XML_DATA_BUFFER_ENGINE_H

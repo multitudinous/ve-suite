@@ -33,6 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/conductor/UIPluginBase.h>
+#include <ves/conductor/util/DataSetLoaderUI.h>
 
 #include <iostream>
 #include <ves/util/string_ops.h>
@@ -48,7 +49,6 @@
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/util/ParamsDlg.h>
 #include <ves/conductor/util/SoundsPane.h>
-#include <ves/conductor/util/DataSetLoaderUI.h>
 
 // EPRI TAG
 #include <ves/conductor/FinancialDialog.h>
@@ -1406,7 +1406,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
     
     // Here we launch a dialog for a specific plugins input values
 	ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
-   DataSetLoaderUI dataSetLoaderDlg( m_canvas, ::wxNewId(), 
+   ves::conductor::util::DataSetLoaderUI dataSetLoaderDlg( m_canvas, ::wxNewId(), 
                SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
                SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
    dataSetLoaderDlg.SetSize( dialogSize );

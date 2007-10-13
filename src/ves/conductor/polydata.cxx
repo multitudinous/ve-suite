@@ -196,7 +196,7 @@ void Polydata::_onAddPolydata( wxCommandEvent& WXUNUSED(event) )
    colorByScalar->SetData("Color By Scalar",_colorByScalarName);
    newCommand->AddDataValuePair(colorByScalar);
 
-   ves::open::xml::DataValuePair* warpSurface = new ves::open::xmlDataValuePair();
+   ves::open::xml::DataValuePair* warpSurface = new ves::open::xml::DataValuePair();
    warpSurface->SetDataName("Warped Surface");
    warpSurface->SetDataType("UNSIGNED INT");
    if(_useWarpedSurfaceCheckBox->GetValue())

@@ -136,8 +136,8 @@ public:
 protected:
 
 	wxListBox* scalarSelection;
-	wxSpinCtrlDbl* _minSpinner;
-    wxSpinCtrlDbl* _maxSpinner;
+	util::wxSpinCtrlDbl* _minSpinner;
+    util::wxSpinCtrlDbl* _maxSpinner;
     wxSlider* _minSlider;
     wxSlider* _maxSlider;
 

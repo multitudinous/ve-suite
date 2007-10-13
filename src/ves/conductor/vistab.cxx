@@ -78,6 +78,7 @@
 ////@end XPM images
 
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( Vistab, wxDialog )
    EVT_TOOL     ( CONTOUR_BUTTON,       Vistab::_onContour )
@@ -1306,7 +1307,7 @@ void Vistab::UpdateScalarBar( wxCommandEvent& event )
    veCommand->SetCommandName( std::string("Change Scalar Bar State") );
    veCommand->AddDataValuePair( dataValuePair );
    
-   bool connected = ves:conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   bool connected = CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////

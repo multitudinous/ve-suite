@@ -54,6 +54,7 @@
 #include <iostream>
 
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( Streamlines, wxDialog )
 ////@begin Streamlines event table entries 
@@ -288,7 +289,7 @@ void Streamlines::_updateStreamlineInformation()
 
    _streamlineInformation.push_back(streamSize);
 
-   ves::open::xml3::DataValuePair* nPointsPerPlane = new ves::open::xml::DataValuePair();
+   ves::open::xml::DataValuePair* nPointsPerPlane = new ves::open::xml::DataValuePair();
    nPointsPerPlane->SetDataName("Number Of Points Per Plane");
    nPointsPerPlane->SetDataType("UNSIGNED INT");
    nPointsPerPlane->SetDataValue(_nPointsPerPlane);

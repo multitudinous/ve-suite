@@ -108,11 +108,11 @@ namespace conductor
 namespace util
 {
     class wxSpinCtrlDbl;
+    class TextureBasedToolBar;
 }
 class Contours;
 class Streamlines;
 class Isosurfaces;
-class TextureBasedToolBar;
 class Polydata;
 class VE_GUIPLUGINS_EXPORTS Vistab: public wxDialog
 {    
@@ -224,7 +224,6 @@ public:
    //Contours* contour;
    //Streamlines* streamline;
    //Isosurfaces* isosurface;
-   //TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
    ves::conductor::util::DualSlider* scalarRange;
 
    ///Make sure all the dataset check boxes are unchecked.\n
@@ -379,7 +378,7 @@ protected:
    Contours* vectorContour;///<Vector dialog
    Streamlines* streamline;///<Streamline dialog
    Isosurfaces* isosurface;///<Iso-Surface dialog
-   TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
+   util::TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
    Polydata* polydata;///<Polydata dialog
    Vistab* vistab;
 

@@ -55,6 +55,7 @@
 #include <vector>
 #include <map>
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 
 ///////////////////////////
 BEGIN_EVENT_TABLE( Isosurfaces, wxDialog )
@@ -259,7 +260,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED(event) )
    maxValue->SetData("Maximum Scalar Value", _maxValue );
    newCommand->AddDataValuePair(maxValue);
 
-   ves::open::xml::DataValuePair* nearestPrecomputed = new ves::open::xmlataValuePair();
+   ves::open::xml::DataValuePair* nearestPrecomputed = new ves::open::xml::DataValuePair();
    nearestPrecomputed->SetDataName("Use Nearest Precomputed");
    nearestPrecomputed->SetDataType("UNSIGNED INT");
    if(_useNearestPreComputedCheckBox->GetValue())

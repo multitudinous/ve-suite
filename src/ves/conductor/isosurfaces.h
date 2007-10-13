@@ -73,6 +73,10 @@ namespace ves
 {
 namespace conductor
 {
+namespace util
+{
+    class wxSpinCtrlDbl;
+}
     class Vistab;
     class Network;
     class AdvancedIsosurface;
@@ -151,7 +155,7 @@ protected:
    wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
    wxButton* _advancedButton;///<Display the color by scalar dialog
    wxButton* _computeButton;///<Compute the iso-surface
-   wxSpinCtrlDbl* _isoSpinner;///<Display real scalar value
+   util::wxSpinCtrlDbl* _isoSpinner;///<Display real scalar value
    
    void _onIsosurface( wxCommandEvent& event );
 

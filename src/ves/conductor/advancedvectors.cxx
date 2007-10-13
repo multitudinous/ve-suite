@@ -43,6 +43,7 @@
 #include <wx/statbox.h>
 
 using namespace ves::conductor;
+using namespace ves::conductor::util;
 //////////////////////////////////////////////////////////////////
 AdvancedVectors::AdvancedVectors(wxWindow* parent, wxWindowID id, 
                              const wxString& caption, 

@@ -59,6 +59,7 @@ class wxComboBox;
 class wxTextCtrl;
 class wxButton;
 class wxListBox;
+class wxStaticBox;
 
 namespace ves
 {

@@ -44,7 +44,7 @@
 #include <ves/conductor/advancedisosurface.h>
 
 using namespace ves::conductor;
-
+using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( AdvancedIsosurface, wxDialog )
    EVT_LISTBOX( SELECT_SCALAR,			AdvancedIsosurface::OnScalarSelection )
