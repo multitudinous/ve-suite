@@ -11,8 +11,8 @@ srcs = sca_util.getSourcesRecursive( srcDir )
 env = ves_pkg.getEnv().Copy()
 env.Append(
             LIBS = ['ves_open_xml',
-                   'DataLoaderLib',
-                   'TranslatorToVTKLib',
+                   'ves_builder_dataloader',
+                   'ves_builder_translator_base',
                    'ves_xplorer_scenegraph%s' %(execOsgPatTag),
                    'ves_xplorer_util',
                    'ves_xplorer_volume%s' %(execOsgPatTag),
