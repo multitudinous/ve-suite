@@ -34,12 +34,14 @@
 #include <ves/xplorer/event/volume/TBActivateEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/cfdDebug.h>
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler::TextureBasedActivateEventHandler()
 {
@@ -64,7 +66,7 @@ TextureBasedActivateEventHandler::operator=(const TextureBasedActivateEventHandl
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedActivateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedActivateEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
     try
     {

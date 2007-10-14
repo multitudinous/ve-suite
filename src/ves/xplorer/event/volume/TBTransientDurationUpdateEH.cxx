@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedTransientDurationUpdateEventHandler::TextureBasedTransientDurationUpdateEventHandler()
 {
@@ -67,12 +69,12 @@ TextureBasedTransientDurationUpdateEventHandler::operator=(const TextureBasedTra
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr playDuration = command->GetDataValuePair("Duration");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr playDuration = command->GetDataValuePair("Duration");      
       double value;
       playDuration->GetData(value);
 

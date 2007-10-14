@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler::TextureBasedBoundingBoxEventHandler()
 {
@@ -67,12 +69,12 @@ TextureBasedBoundingBoxEventHandler::operator=(const TextureBasedBoundingBoxEven
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedBoundingBoxEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedBoundingBoxEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateBoundingBox((bboxFlag->GetUIntData()==1)?true:false);
       
    }

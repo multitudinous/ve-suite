@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedPhongShadingEnableEventHandler::TextureBasedPhongShadingEnableEventHandler()
 {
@@ -67,12 +69,12 @@ TextureBasedPhongShadingEnableEventHandler::operator=(const TextureBasedPhongSha
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedPhongShadingEnableEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedPhongShadingEnableEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr enable = command->GetDataValuePair("Phong Shading State");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr enable = command->GetDataValuePair("Phong Shading State");      
       std::string onOff;
       enable->GetData(onOff);
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->EnsurePhongShading((onOff=="On")?true:false);

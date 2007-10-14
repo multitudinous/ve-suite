@@ -40,6 +40,8 @@
 #include <ves/open/xml/DataValuePair.h>
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler::TextureBasedSetActiveShaderManagerEventHandler()
 {
@@ -64,12 +66,12 @@ TextureBasedSetActiveShaderManagerEventHandler::operator=(const TextureBasedSetA
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-	  VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr activeSM = command->GetDataValuePair("Active Shader Manager");      
+	  Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr activeSM = command->GetDataValuePair("Active Shader Manager");      
 	  std::string value;
       activeSM->GetData(value);
 	  VE_TextureBased::cfdTextureBasedVizHandler::instance()->SetActiveShaderManager( value );

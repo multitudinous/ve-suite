@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedUpdateScalarRangeEventHandler::TextureBasedUpdateScalarRangeEventHandler()
 {
@@ -67,19 +69,19 @@ TextureBasedUpdateScalarRangeEventHandler::operator=(const TextureBasedUpdateSca
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+      Command* command = dynamic_cast< Command* >( veXMLObject );
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateActiveTextureManager();
       
       double scalarRange[2] = {0.f,100.f};
 
-      VE_XML::DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
+      DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
       minScalarRange->GetData( scalarRange[0] );
             
-      VE_XML::DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
+      DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
       maxScalarRange->GetData( scalarRange[1] );
       
       //this is overkill

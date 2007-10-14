@@ -40,9 +40,15 @@
  */
 
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+    namespace open
+{
+    namespace xml
+{
+    class XMLObject;
+}
+}
 }
 namespace VE_TextureBased
 {
@@ -75,7 +81,7 @@ public:
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* command); 
+   void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    TextureBasedEventHandler& operator=(const TextureBasedEventHandler& rhs);
@@ -83,7 +89,7 @@ public:
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
+   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
 
    ///Set the active cfdTextureDataset
    void _setActiveTextureDataset(/*std::string tdsName*/);

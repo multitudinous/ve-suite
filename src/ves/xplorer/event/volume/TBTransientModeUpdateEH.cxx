@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler::TextureBasedTransientModeUpdateEventHandler()
 {
@@ -67,18 +69,18 @@ TextureBasedTransientModeUpdateEventHandler::operator=(const TextureBasedTransie
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr playMode = command->GetDataValuePair("Mode");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr playMode = command->GetDataValuePair("Mode");      
       std::string mode;
       playMode->GetData(mode);
 
       if(mode == "Step")
       {
-         VE_XML::DataValuePairWeakPtr playDirection = command->GetDataValuePair("Direction");      
+         DataValuePairWeakPtr playDirection = command->GetDataValuePair("Direction");      
          std::string direction;
          playDirection->GetData(direction);
          VE_TextureBased::cfdTextureBasedVizHandler::instance()->StepTransientVisualization(direction);

@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedClipPlaneEventHandler::TextureBasedClipPlaneEventHandler()
 {
@@ -67,22 +69,22 @@ TextureBasedClipPlaneEventHandler::operator=(const TextureBasedClipPlaneEventHan
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedClipPlaneEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedClipPlaneEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr direction = command->GetDataValuePair("Direction");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr direction = command->GetDataValuePair("Direction");      
       std::string planeDirection;
       direction->GetData(planeDirection);
 
-      VE_XML::DataValuePairWeakPtr coordinate = command->GetDataValuePair("Coordinate");      
+      DataValuePairWeakPtr coordinate = command->GetDataValuePair("Coordinate");      
       std::string planeCoordinate;
       coordinate->GetData( planeCoordinate );
             
       if(planeDirection != "Both")
       {
-         VE_XML::DataValuePairWeakPtr value = command->GetDataValuePair("ROI Value");      
+         DataValuePairWeakPtr value = command->GetDataValuePair("ROI Value");      
          double alpha;
          value->GetData( alpha );
          VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
@@ -91,14 +93,14 @@ void TextureBasedClipPlaneEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLO
       }
       else if(planeDirection == "Both")
       {
-         VE_XML::DataValuePairWeakPtr minValue = command->GetDataValuePair("ROI Min Value");      
+         DataValuePairWeakPtr minValue = command->GetDataValuePair("ROI Min Value");      
          double minAlpha;
          minValue->GetData( minAlpha );
          VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
                                                                          "Positive",
 		                                                                    minAlpha);
       
-         VE_XML::DataValuePairWeakPtr maxValue = command->GetDataValuePair("ROI Max Value");      
+         DataValuePairWeakPtr maxValue = command->GetDataValuePair("ROI Max Value");      
          double maxAlpha;
          maxValue->GetData( maxAlpha );
          VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,

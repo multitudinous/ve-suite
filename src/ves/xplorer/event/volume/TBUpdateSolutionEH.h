@@ -42,9 +42,15 @@
  */
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+    namespace open
+{
+    namespace xml
+{
+    class XMLObject;
+}
+}
 }
 #include <ves/VEConfig.h>
 
@@ -65,7 +71,7 @@ public:
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject);
+   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
 };
 }
 #endif// TEXTURE_BASED_ACTIVATE_EVENT_HANDLER_H

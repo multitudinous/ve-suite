@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler::TextureBasedPreIntegrateEnableEventHandler()
 {
@@ -67,12 +69,12 @@ TextureBasedPreIntegrateEnableEventHandler::operator=(const TextureBasedPreInteg
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr enable = command->GetDataValuePair("Recalculate Pre-Integration");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr enable = command->GetDataValuePair("Recalculate Pre-Integration");      
       unsigned int onOff;
       enable->GetData(onOff);
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);

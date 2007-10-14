@@ -42,6 +42,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_TextureBased;
+using namespace ves::open::xml;
+
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
@@ -88,10 +90,10 @@ void TextureBasedEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* mo
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 //////////////////////////////////////////////////////////////////////
-void TextureBasedEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void TextureBasedEventHandler::Execute(XMLObject* veXMLObject)
 {
    //this is ridiculously simple now...Just testing to see how things will work.
-   //VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
+   //Command* command = dynamic_cast< Command* >( xmlObject );
    if(_activeModel)
    {
       try
@@ -114,7 +116,7 @@ void TextureBasedEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
       }
       try
       {
-         VE_XML::DataValuePair* bboxState = command->GetDataValuePair( "Bounding Box" );
+         DataValuePair* bboxState = command->GetDataValuePair( "Bounding Box" );
 	      if(bboxState)
          {
             bool showBBox = false;

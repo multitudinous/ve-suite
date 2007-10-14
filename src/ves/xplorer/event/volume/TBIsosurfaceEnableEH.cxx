@@ -43,6 +43,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceEnableEventHandler::TextureBasedIsosurfaceEnableEventHandler()
 {
@@ -67,12 +69,12 @@ TextureBasedIsosurfaceEnableEventHandler::operator=(const TextureBasedIsosurface
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject)
+void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr enable = command->GetDataValuePair("Iso-Surface State");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr enable = command->GetDataValuePair("Iso-Surface State");      
       std::string onOff;
       enable->GetData(onOff);
       VE_TextureBased::cfdTextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
