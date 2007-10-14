@@ -66,10 +66,10 @@ int main( int argc, char* argv[] )
         return false;
     }
 
-    VE_XML::VE_Shader::Program program;
+    ves::open::xml::shader::Program program;
     program.SetProgramName( "testVEAFile" );
     
-    VE_XML::VE_Shader::ShaderPtr vertexShader = new VE_XML::VE_Shader::Shader();
+    ves::open::xml::shader::ShaderPtr vertexShader = new ves::open::xml::shader::Shader();
     vertexShader->SetShaderType( "Vertex" );
 
     std::ostringstream vertexSource;
@@ -94,7 +94,7 @@ int main( int argc, char* argv[] )
     
     program.SetVertexShader( vertexShader );
     
-    VE_XML::VE_Shader::ShaderPtr fragmentShader  = new VE_XML::VE_Shader::Shader();
+    ves::open::xml::shader::ShaderPtr fragmentShader  = new ves::open::xml::shader::Shader();
     fragmentShader->SetShaderType( "Fragment" );
     std::ostringstream fragmentSource;
     fragmentSource << std::endl << "\t\tuniform vec3 ambientMaterial;" << std::endl
@@ -132,7 +132,7 @@ int main( int argc, char* argv[] )
     fragmentShader->SetShaderSource( fragmentSource.str() );
 
     {
-        VE_XML::VE_Shader::Uniform uniformFloat;
+        ves::open::xml::shader::Uniform uniformFloat;
         uniformFloat.SetType( "Float" );
         uniformFloat.SetSize( 1 );
         uniformFloat.SetName( "specularPower" );
@@ -143,7 +143,7 @@ int main( int argc, char* argv[] )
     }
     
     {
-        VE_XML::VE_Shader::Uniform uniformSampler;
+        ves::open::xml::shader::Uniform uniformSampler;
         uniformSampler.SetType( "Sampler" );
         uniformSampler.SetSize( 1 );
         uniformSampler.SetName( "baseMap" );
@@ -152,7 +152,7 @@ int main( int argc, char* argv[] )
     }
     
     {
-        VE_XML::VE_Shader::TextureImage textureImage;
+        ves::open::xml::shader::TextureImage textureImage;
         textureImage.SetTextureImageType( "2D" );
         textureImage.SetDimension( 1 );
         textureImage.SetImageFile( "temp.jpg", "FRONT" );
@@ -167,15 +167,15 @@ int main( int argc, char* argv[] )
 
     program.SetFragmentShader( fragmentShader );
 
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( 
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( 
         &program, "Program" ) );
     
     ///Initialize VE-Open
-    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new VE_XML::XMLCreator() );
-    VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new VE_XML::VE_Shader::ShaderCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new ves::open::xml::XMLCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new ves::open::xml::shader::ShaderCreator() );
 
-    VE_XML::XMLReaderWriter netowrkWriter;
+    ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
     std::string filename( "test.vea" );
     netowrkWriter.WriteXMLDocument( nodes, filename, "Command" );
