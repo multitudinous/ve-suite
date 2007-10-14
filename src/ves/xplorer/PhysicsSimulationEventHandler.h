@@ -47,10 +47,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves::open::xml
-{
-    class XMLObject;
-}
+#include <ves/open/xml/XMLObjectPtr.h>
 
 namespace VE_Xplorer
 {

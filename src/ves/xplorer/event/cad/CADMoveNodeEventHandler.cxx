@@ -41,9 +41,9 @@
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/CAD/CADNode.h>
-#include <ves/open/xml/CAD/CADPart.h>
-#include <ves/open/xml/CAD/CADAssembly.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADPart.h>
+#include <ves/open/xml/cad/CADAssembly.h>
 
 #include <iostream>
 using namespace VE_EVENTS;

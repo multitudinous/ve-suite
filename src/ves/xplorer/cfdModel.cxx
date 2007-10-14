@@ -47,9 +47,9 @@
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
 
-#include <ves/open/xml/CAD/CADNode.h>
-#include <ves/open/xml/CAD/CADAttribute.h>
-#include <ves/open/xml/CAD/CADCreator.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/cad/CADCreator.h>
 
 #include <ves/open/xml/Shader/ShaderCreator.h>
 

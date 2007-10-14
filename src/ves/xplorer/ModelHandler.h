@@ -43,24 +43,13 @@ cfdModelHandler API
 #include <map>
 #include <utility>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class Command;
-}
-}
-}
+#include <ves/open/xml/CommandPtr.h>
 
 namespace VE_Xplorer
 {
     class cfdDataSet;
     class cfdModel;
     class cfdCommandArray;
-    class cfdReadParam;
-    class cfdScalarBarActor;
 }
 
 namespace VE_SceneGraph
@@ -121,7 +110,7 @@ public:
    void ReadNNumberOfDataSets(  std::string, std::string );
 
    ///Get the scalar bar - may not be needed anymore
-   cfdScalarBarActor* GetScalarBar(void);
+   //cfdScalarBarActor* GetScalarBar(void);
    ///Register CAD file with so that other models can copy files if needed
    ///\param tempEntity File to be registered
    void RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity );
@@ -146,8 +135,8 @@ private:
    cfdCommandArray* commandArray;
    ves::open::xml::Command* activeCommand;
    ves::open::xml::Command* nullCommand;
-   cfdReadParam* _readParam;
-   cfdScalarBarActor* _scalarBar;
+   //cfdReadParam* _readParam;
+   //cfdScalarBarActor* _scalarBar;
    cfdModel* _activeModel;
 
 #ifdef _OSG

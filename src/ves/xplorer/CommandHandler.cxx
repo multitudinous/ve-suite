@@ -33,7 +33,7 @@
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
 #endif
-#include <ves/xplorer/event/CommandHandler.h>
+#include <ves/xplorer/CommandHandler.h>
 
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/DataValuePair.h>

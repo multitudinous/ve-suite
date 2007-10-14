@@ -38,8 +38,8 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/CAD/CADNode.h>
-#include <ves/open/xml/CAD/CADAttribute.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAttribute.h>
 #include <iostream>
 
 using namespace VE_EVENTS;

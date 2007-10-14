@@ -38,10 +38,8 @@
 /*!\class ClearVisObjectsEventHandler
  * Class for clearing vis options.
  */
-namespace ves::open::xml
-{
-   class XMLObject;
-}
+
+#include <ves/open/xml/XMLObjectPtr.h>
 namespace VE_Xplorer
 {
    class cfdGlobalBase;

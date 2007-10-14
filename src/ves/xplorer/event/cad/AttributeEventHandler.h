@@ -40,14 +40,9 @@
  */
 
 #include <ves/xplorer/event/EventHandler.h>
-namespace ves::open::xml
-{
-   class XMLObject;
-   namespace cad
-   {
-      class CADAttribute;
-   }
-}
+
+#include <ves/open/xml/XMLObjectPtr.h>
+#include <ves/open/xml/cad/CADAttributePtr.h>
 
 namespace VE_Xplorer
 {

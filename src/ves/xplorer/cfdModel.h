@@ -72,11 +72,11 @@ it is better to treat these two dataset as two different models.
 namespace VE_SceneGraph
 {
    class DCS;
-	class Group;
-	class Switch;
-	class CADEntity;
-	class CADEntityHelper;
-	class Clone;
+   class Group;
+   class Switch;
+   class CADEntity;
+   class CADEntityHelper;
+   class Clone;
    class fileInfo;
 }
 namespace VE_EVENTS

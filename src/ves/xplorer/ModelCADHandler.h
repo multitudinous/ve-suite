@@ -53,20 +53,9 @@ namespace VE_SceneGraph
     class CADEntityHelper;
     class Clone;
 }
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace cad
-{
-    class CADNode;
-    class CADAttribute;
-}
-}
-}
-}
+#include <ves/open/xml/cad/CADNodePtr.h>
+#include <ves/open/xml/cad/CADAttributePtr.h>
+
 #include <osg/StateSet>
 namespace osg
 {

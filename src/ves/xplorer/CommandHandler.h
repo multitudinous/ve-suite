@@ -50,9 +50,9 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS CommandHandler 
 {
 private:
-	CommandHandler( void );
-	~CommandHandler( void ){ ; }
-	vprSingletonHeader( CommandHandler );
+   CommandHandler( void );
+   ~CommandHandler( void ){ ; }
+   vprSingletonHeader( CommandHandler );
 
 public:
    ///Initialize environment.
@@ -80,9 +80,9 @@ public:
    void SendConductorMessage( std::string message );
 
 private:
-	ves::open::xml::Command* m_input;///<XML command
+   ves::open::xml::Command* m_input;///<XML command
 
-	Body_VEXplorer_i* m_xplorer;
+   Body_VEXplorer_i* m_xplorer;
 };
 }
 #endif //COMMAND_HANDLER_H

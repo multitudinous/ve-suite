@@ -48,9 +48,9 @@ namespace VE_Xplorer
    class VE_XPLORER_EXPORTS cfdThread
    {
       public:
-		  ///Constructor
+        ///Constructor
          cfdThread( void );
-		 ///Destructor
+       ///Destructor
          ~cfdThread( void );
 
       //   private:

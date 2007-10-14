@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -41,8 +41,8 @@
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
-#include <ves/open/xml/CAD/CADNode.h>
-#include <ves/open/xml/CAD/CADAttribute.h>
+#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADAttribute.h>
 
 #include <ves/xplorer/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>

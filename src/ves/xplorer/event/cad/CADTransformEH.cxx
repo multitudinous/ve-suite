@@ -43,7 +43,7 @@
 
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
-#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
 using namespace ves::open::xml::cad;

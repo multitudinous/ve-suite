@@ -71,10 +71,7 @@ namespace VE_Xplorer
    class cfdObjects;
    class cfdGlobalBase;
 }
-namespace ves::open::xml
-{
-   class XMLObject;
-}
+
 namespace VE_Xplorer
 {
    class cfdModel;

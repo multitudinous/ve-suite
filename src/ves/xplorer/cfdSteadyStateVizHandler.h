@@ -55,6 +55,8 @@ cfdSteadyStateVizHandler API
 #elif _PERFORMER
 #endif
 
+#include <ves/open/xml/CommandPtr.h>
+
 class vtkPolyData;
 
 namespace VE_Xplorer
@@ -87,11 +89,6 @@ namespace VE_Xplorer
 namespace VE_SceneGraph
 {
    class DCS;
-}
-
-namespace ves::open::xml
-{
-   class Command;
 }
 
 namespace VE_EVENTS

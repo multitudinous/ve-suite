@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/PhysicsSimulationEventHandler.h>
 #include <ves/xplorer/cfdGlobalBase.h>
 
 #include <ves/xplorer/scenegraph/PhysicsSimulator.h>

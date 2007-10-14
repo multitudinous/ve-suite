@@ -54,11 +54,7 @@ namespace VE_Xplorer
 {
    class cfdCommandArray;
 }
-
-namespace ves::open::xml
-{
-   class Command;
-}
+#include <ves/open/xml/CommandPtr.h>
 
 namespace VE_Xplorer
 {

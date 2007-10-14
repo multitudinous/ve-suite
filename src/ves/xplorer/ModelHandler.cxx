@@ -64,23 +64,25 @@
 #include <ves/xplorer/event/cad/CADSetRootNodeEH.h>
 #include <ves/xplorer/event/cad/CADToggleEH.h>
 #include <ves/xplorer/event/cad/CADRemoveAttributeEH.h>
-#include <ves/xplorer/event/CADMoveNodeEventHandler.h>
-
-#include <ves/xplorer/event/ActiveModelEventHandler.h>
+#include <ves/xplorer/event/cad/CADMoveNodeEventHandler.h>
 #include <ves/xplorer/event/cad/MaterialUpdateEH.h>
 #include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
-#include <ves/xplorer/event/AddVTKDataSetEventHandler.h>
-#include <ves/xplorer/event/BBoxEventHandler.h>
-#include <ves/xplorer/event/WireframeEventHandler.h>
-#include <ves/xplorer/event/AxesEventHandler.h>
-#include <ves/xplorer/event/AxesLabelsEventHandler.h>
-#include <ves/xplorer/event/ScalarBarEventHandler.h>
-#include <ves/xplorer/event/DataTransformEH.h>
-#include <ves/xplorer/event/SoundActivateEH.h>
-#include <ves/xplorer/event/SoundAddNewEH.h>
-#include <ves/xplorer/event/CADInitializePhysicsEventHandler.h>
-#include <ves/xplorer/event/CADPhysicsMeshEventHandler.h>
-#include <ves/xplorer/event/CADPhysicsPropertiesEventHandler.h>
+#include <ves/xplorer/event/cad/CADInitializePhysicsEventHandler.h>
+#include <ves/xplorer/event/cad/CADPhysicsMeshEventHandler.h>
+#include <ves/xplorer/event/cad/CADPhysicsPropertiesEventHandler.h>
+
+#include <ves/xplorer/event/ActiveModelEventHandler.h>
+
+#include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
+#include <ves/xplorer/event/data/BBoxEventHandler.h>
+#include <ves/xplorer/event/data/WireframeEventHandler.h>
+#include <ves/xplorer/event/data/AxesEventHandler.h>
+#include <ves/xplorer/event/data/AxesLabelsEventHandler.h>
+#include <ves/xplorer/event/data/ScalarBarEventHandler.h>
+#include <ves/xplorer/event/data/DataTransformEH.h>
+
+#include <ves/xplorer/event/environment/SoundActivateEH.h>
+#include <ves/xplorer/event/environment/SoundAddNewEH.h>
 
 #include <ves/open/xml/Command.h>
 
@@ -120,9 +122,9 @@ cfdModelHandler::cfdModelHandler( void )
    _param.erase();//_param = 0;
    
    activeDataset  = 0;
-   _scalarBar     = 0;
+   //_scalarBar     = 0;
    arrow          = 0;
-   _readParam     = 0;
+   //_readParam     = 0;
    commandArray   = 0;
    _activeModel   = 0;
    activeCommand  = 0;
@@ -165,7 +167,7 @@ cfdModelHandler::cfdModelHandler( void )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdModelHandler::Initialize( std::string param )
 {
-	;
+   ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdModelHandler::~cfdModelHandler( void )
@@ -183,12 +185,12 @@ cfdModelHandler::~cfdModelHandler( void )
    }
    _modelList.clear();
 
-   if ( _scalarBar )
-   {
-      delete _scalarBar;
+   //if ( _scalarBar )
+   //{
+   //   delete _scalarBar;
       //vprDEBUG(vesDBG,2) << "delete _scalarBar"
       //   << std::endl << vprDEBUG_FLUSH;
-   }
+   //}
 
    if ( this->arrow ) 
    {
@@ -244,10 +246,10 @@ cfdTextureDataSet* cfdModelHandler::GetActiveTextureDataSet()
 }
 #endif
 /////////////////////////////////////////////////////
-cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
-{
-   return _scalarBar;
-}
+//cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
+//{
+//   return _scalarBar;
+//}
 /////////////////////////////////////////////////////
 void cfdModelHandler::SetActiveModel( int modelNumber )
 {
@@ -262,8 +264,8 @@ void cfdModelHandler::SetActiveModel( int modelNumber )
             break;
          }
       }
-	 
-	 if ( _modelList.size() == 0 )
+    
+    if ( _modelList.size() == 0 )
          _activeModel = 0;
 }
 /////////////////////////////////////////////
@@ -513,11 +515,11 @@ void cfdModelHandler::InitScene( void )
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-	//This code is broken due to the get parent call
-	_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< VE_SceneGraph::Group* >
-												 VE_SceneGraph::SceneManager::instance()->GetRootNode() );
+   //This code is broken due to the get parent call
+   //_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< VE_SceneGraph::Group* >
+   // VE_SceneGraph::SceneManager::instance()->GetRootNode() );
    // Assumes active dataset isn't null
-   _scalarBar->RefreshScalarBar();
+   //_scalarBar->RefreshScalarBar();
 }
 
 /////////////////////////////////
@@ -543,7 +545,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
    
    // Check and see if we need to refresh the scalar bar
-   _scalarBar->CheckCommandId( commandArray );
+   //_scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();
 }

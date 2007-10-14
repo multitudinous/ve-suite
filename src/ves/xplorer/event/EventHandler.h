@@ -41,16 +41,7 @@
 /*!\namespace VE_EVENTS
  * Namespace for ve-event handlers.
  */
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
+#include <ves/open/xml/XMLObjectPtr.h>
 namespace VE_Xplorer
 {
    class cfdGlobalBase;

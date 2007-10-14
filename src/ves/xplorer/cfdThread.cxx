@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/viz/cfdThread.h>
+#include <ves/xplorer/cfdThread.h>
 
 using namespace VE_Xplorer;
 
