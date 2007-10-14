@@ -43,6 +43,8 @@ cfdCursor API
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 namespace VE_SceneGraph
 {
    class DCS;
@@ -76,11 +78,6 @@ namespace VE_Xplorer
 {
    class cfdCommandArray;
    class cfdDataSet;
-}
-
-namespace VE_XML
-{
-   class Command;
 }
 
 #include <ves/xplorer/cfdGlobalBase.h>

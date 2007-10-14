@@ -47,7 +47,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace VE_XML
+namespace ves::open::xml
 {
     class XMLObject;
 }
@@ -80,7 +80,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( VE_XML::XMLObject* command ); 
+    void Execute( ves::open::xml::XMLObject* command ); 
    
 protected:
 

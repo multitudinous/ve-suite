@@ -55,7 +55,7 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
-namespace VE_XML
+namespace ves::open::xml
 {
    class Command;
 }

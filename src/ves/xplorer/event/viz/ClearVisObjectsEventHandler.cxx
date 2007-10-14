@@ -93,7 +93,7 @@ void ClearVisObjectsEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase*
    ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ClearVisObjectsEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
 {
    //call back over to ssvishandler to clear the vis objects
    cfdSteadyStateVizHandler::instance()->ClearVisObjects();

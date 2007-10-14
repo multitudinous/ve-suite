@@ -39,7 +39,7 @@
 #include <iostream>
 
 using namespace VE_EVENTS;
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
 using namespace VE_SceneGraph;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
@@ -84,7 +84,7 @@ void AttributeEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void AttributeEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void AttributeEventHandler::Execute(ves::open::xml::XMLObject* veXMLObject)
 {
    if(_activeModel)
    {

@@ -42,10 +42,9 @@
  */
 
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_XML
-{
-   class XMLObject;
-}
+
+#include <ves/open/xml/XMLObjectPtr.h>
+
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
@@ -70,7 +69,7 @@ public:
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* command); 
+   void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    ActiveModelEventHandler& operator=(const ActiveModelEventHandler& rhs);

@@ -37,7 +37,7 @@
 #include <iostream>
 
 using namespace VE_Xplorer;
-using namespace VE_XML;
+using namespace ves::open::xml;
 
 cfdGlobalBase::cfdGlobalBase()
 { 
@@ -48,12 +48,12 @@ cfdGlobalBase::cfdGlobalBase()
 cfdGlobalBase::~cfdGlobalBase()
 {
 }
-void cfdGlobalBase::SetVECommand( VE_XML::Command* command )
+void cfdGlobalBase::SetVECommand( ves::open::xml::Command* command )
 {
    veCommand = command;
 }
 //////////////////////////////////////////////
-VE_XML::Command* cfdGlobalBase::GetVECommand()
+ves::open::xml::Command* cfdGlobalBase::GetVECommand()
 {
    return veCommand;
 }

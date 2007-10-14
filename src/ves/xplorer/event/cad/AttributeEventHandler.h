@@ -40,10 +40,10 @@
  */
 
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_XML
+namespace ves::open::xml
 {
    class XMLObject;
-   namespace VE_CAD
+   namespace cad
    {
       class CADAttribute;
    }
@@ -76,7 +76,7 @@ public:
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* command); 
+   void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    AttributeEventHandler& operator=(const AttributeEventHandler& rhs);
@@ -84,10 +84,10 @@ public:
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(VE_XML::XMLObject* veXMLObject) = 0;
+   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
 
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
-   VE_XML::VE_CAD::CADAttribute* _activeAttribute;///<The CADNode.
+   ves::open::xml::cad::CADAttribute* _activeAttribute;///<The CADNode.
 };
 }
 #endif// VE_EVENT_HANDLER_H

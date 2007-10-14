@@ -576,7 +576,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
       {
          std::map<std::string,VE_EVENTS::TextureBasedEventHandler*>::iterator currentEventHandler;
-         VE_XML::Command* tbvizCommand = cfdModelHandler::instance()->GetXMLCommand();
+         ves::open::xml::Command* tbvizCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {

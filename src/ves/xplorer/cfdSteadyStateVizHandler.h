@@ -89,7 +89,7 @@ namespace VE_SceneGraph
    class DCS;
 }
 
-namespace VE_XML
+namespace ves::open::xml
 {
    class Command;
 }

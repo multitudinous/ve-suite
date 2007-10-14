@@ -65,10 +65,10 @@ void ActiveModelEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* mo
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void ActiveModelEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void ActiveModelEventHandler::Execute(ves::open::xml::XMLObject* veXMLObject)
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
+   ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( veXMLObject );
+   ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
    unsigned int newModel;
    activeModelDVP->GetData( newModel );
    VE_Xplorer::cfdModelHandler::instance()->SetActiveModel( newModel );

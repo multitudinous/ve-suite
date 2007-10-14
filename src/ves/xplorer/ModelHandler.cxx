@@ -128,7 +128,7 @@ cfdModelHandler::cfdModelHandler( void )
    activeCommand  = 0;
 
    //create null command to be returned when a command is not active
-   nullCommand = new VE_XML::Command();
+   nullCommand = new ves::open::xml::Command();
    nullCommand->SetCommandName( "NULL" );
    
    tbased = false;
@@ -219,7 +219,7 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
    commandArray = input;
 }
 /////////////////////////////////////////////////////////////
-void cfdModelHandler::SetXMLCommand( VE_XML::Command* inputCommand )
+void cfdModelHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
 {
    //if ( inputCommand )
    {
@@ -231,7 +231,7 @@ void cfdModelHandler::SetXMLCommand( VE_XML::Command* inputCommand )
    }*/
 }
 /////////////////////////////////////////////////////////////
-VE_XML::Command* cfdModelHandler::GetXMLCommand( void )
+ves::open::xml::Command* cfdModelHandler::GetXMLCommand( void )
 {
    return activeCommand;
 }

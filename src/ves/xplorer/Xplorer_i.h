@@ -57,13 +57,12 @@
 
 namespace VE_Xplorer
 {
-	class cfdModelHandler;
-	class cfdCommandArray;
+   class cfdModelHandler;
+   class cfdCommandArray;
 }
-namespace VE_XML
-{
-	class Command;
-}
+
+#include <ves/open/xml/CommandPtr.h>
+
 #include <vector>
 #include <map>
 #include <iostream>
@@ -123,10 +122,10 @@ public:
    bool GetClusterMode( void );
 
    ///Get the command queue
-   std::vector <VE_XML::Command*> GetCommandQueue();
+   std::vector <ves::open::xml::Command*> GetCommandQueue();
 
    VE_Xplorer::cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
-   VE_XML::Command* bufferCommand;///< Data to hold command data
+   ves::open::xml::Command* bufferCommand;///< Data to hold command data
    std::vector< VE_Xplorer::cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
 
    ///Set xplorer data
@@ -139,7 +138,7 @@ protected:
    void CreateCommandQueue( void );
 
    VE_Xplorer::cfdCommandArray* _bufferArray;///< command data
-   std::vector< VE_XML::Command* > commandVectorQueue;///< command vector may be a duplicate
+   std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
    std::vector< std::string > commandStringQueue;///< command queue with raw string data
 
    vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses

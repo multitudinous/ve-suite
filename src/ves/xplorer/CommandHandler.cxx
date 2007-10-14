@@ -71,7 +71,7 @@ void CommandHandler::PreFrameUpdate()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
+bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
 {
     //The calling function is reponsible for deleting the incoming command
     //If in cluster mode
@@ -81,12 +81,12 @@ bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
     }
     
     //Now send the data to xplorer
-    VE_XML::XMLReaderWriter netowrkWriter;
+    ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // New need to destroy document and send it
-    std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< VE_XML::XMLObject*, std::string >( inputCommand, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( inputCommand, "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
@@ -106,7 +106,7 @@ bool CommandHandler::SetXMLCommand( VE_XML::Command* inputCommand )
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_XML::Command* CommandHandler::GetXMLCommand()
+ves::open::xml::Command* CommandHandler::GetXMLCommand()
 {
 	return m_input;
 }
@@ -119,10 +119,10 @@ void CommandHandler::SetXplorer( Body_VEXplorer_i* xplorer )
 void CommandHandler::SendConductorMessage( std::string message )
 {
     //Now tell conductor to display text
-    VE_XML::DataValuePair* dvp = 
-        new VE_XML::DataValuePair(  std::string("STRING") );
+    ves::open::xml::DataValuePair* dvp = 
+        new ves::open::xml::DataValuePair(  std::string("STRING") );
     dvp->SetData( "TEXT_OUTPUT", message );
-    VE_XML::Command vec;
+    ves::open::xml::Command vec;
     vec.SetCommandName( std::string("TEXT_FEEDBACK") );
     vec.AddDataValuePair( dvp );
     SetXMLCommand( &vec );

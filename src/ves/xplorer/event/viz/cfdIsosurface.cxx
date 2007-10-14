@@ -233,8 +233,8 @@ void cfdIsosurface::UpdateCommand()
    cfdObjects::UpdateCommand();
 
    //Extract the specific commands from the overall command
-   VE_XML::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
 
    //Extract the isosurface value
    activeModelDVP = objectCommand->GetDataValuePair( "Iso-Surface Value" );

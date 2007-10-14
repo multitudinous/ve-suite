@@ -290,8 +290,8 @@ void cfdStreamers::UpdateCommand()
    cfdObjects::UpdateCommand();
    
    //Extract the specific commands from the overall command
-   VE_XML::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-   VE_XML::Command* objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+   ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
    
    //Extract the integration direction
    activeModelDVP = objectCommand->GetDataValuePair( "Integration Direction" );
@@ -322,7 +322,7 @@ void cfdStreamers::UpdateCommand()
    
    //Extract the advanced settings from the commands
    activeModelDVP = objectCommand->GetDataValuePair( "Advanced Streamline Settings" );
-   objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
    
    /////////////////////
    activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Arrows" );
@@ -388,7 +388,7 @@ void cfdStreamers::UpdateCommand()
    //Set the number of seed points in each direction and get the %BB info
    //Extract the advanced settings from the commands
    //activeModelDVP = objectCommand->GetDataValuePair( "Seed_Point_Settings" );
-   //objectCommand = dynamic_cast< VE_XML::Command* >( activeModelDVP->GetDataXMLObject() );
+   //objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
    activeModelDVP = objectCommand->GetDataValuePair( "Max_X_BB" );
    //if 1 is there then they all are there
    if ( activeModelDVP )

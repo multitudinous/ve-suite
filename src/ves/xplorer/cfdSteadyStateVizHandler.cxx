@@ -206,7 +206,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
       {
          std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-         VE_XML::Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
+         ves::open::xml::Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {

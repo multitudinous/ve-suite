@@ -60,7 +60,7 @@ using namespace VE_TextureBased;
 #include <jccl/RTRC/ConfigManager.h>
 
 using namespace VE_Xplorer;
-using namespace VE_XML;
+using namespace ves::open::xml;
 using namespace VE_SceneGraph;
 using namespace VE_TextureBased;
 
@@ -155,15 +155,15 @@ void Body_VEXplorer_i::SetCommand( const char* command )
    }
 
    vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
-   VE_XML::XMLReaderWriter networkWriter;
+   ves::open::xml::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
    for ( size_t i = 0; i < objectVector.size(); ++i )
    {
-      commandVectorQueue.push_back( static_cast< VE_XML::Command* >( objectVector.at( i ) ) );
+      commandVectorQueue.push_back( static_cast< ves::open::xml::Command* >( objectVector.at( i ) ) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

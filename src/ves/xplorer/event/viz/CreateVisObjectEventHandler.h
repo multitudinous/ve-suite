@@ -71,7 +71,7 @@ namespace VE_Xplorer
    class cfdObjects;
    class cfdGlobalBase;
 }
-namespace VE_XML
+namespace ves::open::xml
 {
    class XMLObject;
 }
@@ -106,17 +106,17 @@ public:
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute( VE_XML::XMLObject* command); 
+   void Execute( ves::open::xml::XMLObject* command); 
 
 private:
    ///Set the active dataset for the cfdobject to work on
-   void SetActiveDataSet( VE_XML::XMLObject* xmlObject );
+   void SetActiveDataSet( ves::open::xml::XMLObject* xmlObject );
    ///Set the active scalar and appropriate range
-   void SetActiveScalarAndRange( VE_XML::XMLObject* xmlObject );
+   void SetActiveScalarAndRange( ves::open::xml::XMLObject* xmlObject );
    ///Set access to the active sclalt range
-   void SetActiveVector( VE_XML::XMLObject* xmlObject );
+   void SetActiveVector( ves::open::xml::XMLObject* xmlObject );
    ///Set the active cfd object based on the command
-   void SetActiveCfdObject( VE_XML::XMLObject* xmlObject );
+   void SetActiveCfdObject( ves::open::xml::XMLObject* xmlObject );
 
    //VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
    VE_Xplorer::cfdObjects* activeObject;   ///<The active cfdObject
