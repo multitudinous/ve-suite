@@ -40,17 +40,18 @@
 *Class to handle physics mesh types for CADEntities
 */
 
-namespace VE_XML
+namespace ves
+{
+namespace open
+{
+namespace xml
 {
     class XMLObject;
 }
-
-namespace VE_CAD
-{
-    class CADNode;
+}
 }
 
-#include <ves/xplorer/event/CADEventHandler.h>
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 
 #include <ves/VEConfig.h>
 
@@ -74,7 +75,7 @@ public:
 protected:
     ///Toggle a CADNode on/off.
     ///\param command The Command containing the CADNode to toggle.
-    void _operateOnNode( VE_XML::XMLObject* command );
+    void _operateOnNode( ves::open::xml::XMLObject* command );
 
 };
 }

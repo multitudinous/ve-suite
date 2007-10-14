@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/CADPhysicsPropertiesEventHandler.h>
+#include <ves/xplorer/event/cad/CADPhysicsPropertiesEventHandler.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
@@ -44,6 +44,8 @@
 #include <iostream>
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
+using namespace ves::open::xml::cad;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler::CADPhysicsPropertiesEventHandler()
@@ -75,13 +77,13 @@ CADPhysicsPropertiesEventHandler& CADPhysicsPropertiesEventHandler::operator=( c
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPhysicsPropertiesEventHandler::_operateOnNode( VE_XML::XMLObject* xmlObject )
+void CADPhysicsPropertiesEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
     try
     {
-        VE_XML::Command* command = dynamic_cast< VE_XML::Command* >(xmlObject);
-        VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
+        Command* command = dynamic_cast< Command* >(xmlObject);
+        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {

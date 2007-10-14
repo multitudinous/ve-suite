@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADToggleEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -40,12 +40,13 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/cad/CADNode.h>
 
 #include <iostream>
 
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -76,14 +77,14 @@ CADToggleEventHandler& CADToggleEventHandler::operator=(const CADToggleEventHand
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADToggleEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADToggleEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr toggleValue = command->GetDataValuePair("Toggle Value");
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr toggleValue = command->GetDataValuePair("Toggle Value");
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
 
       //This assumes the part/assembly is there already
       if(nodeType->GetDataString() == std::string("Assembly"))

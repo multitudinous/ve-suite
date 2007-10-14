@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/CADMoveNodeEventHandler.h>
+#include <ves/xplorer/event/cad/CADMoveNodeEventHandler.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
@@ -47,7 +47,8 @@
 
 #include <iostream>
 using namespace VE_EVENTS;
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -78,28 +79,28 @@ CADMoveNodeEventHandler& CADMoveNodeEventHandler::operator=(const CADMoveNodeEve
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADMoveNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADMoveNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr movingNodeType = 
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr movingNodeType = 
           command->GetDataValuePair("Move Node Type");
    
       std::string nodeType;
       movingNodeType->GetData( nodeType );
 
-      VE_XML::DataValuePairWeakPtr movingNode = 
+      DataValuePairWeakPtr movingNode = 
           command->GetDataValuePair("Move Node ID");
       std::string movingNodeID;
       movingNode->GetData( movingNodeID );
 
-      VE_XML::DataValuePairWeakPtr oldParent = 
+      DataValuePairWeakPtr oldParent = 
           command->GetDataValuePair("Old Parent ID");
       std::string oldParentID;
       oldParent->GetData( oldParentID );
 
-      VE_XML::DataValuePairWeakPtr newParent = 
+      DataValuePairWeakPtr newParent = 
           command->GetDataValuePair("New Parent ID");
       std::string newParentID;
       newParent->GetData( newParentID );

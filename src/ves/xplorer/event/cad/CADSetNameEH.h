@@ -38,22 +38,24 @@
 /*!\class CADSetNameEventHandler
  * Class for setting name on CADNode.
  */
-#include <ves/xplorer/event/CADEventHandler.h>
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+namespace open
+{
+namespace xml
+{
+    class XMLObject;
 }
-
-namespace VE_CAD
-{
-   class CADNode;
+}
 }
 
 namespace VE_EVENTS
 {
-class VE_XPLORER_EXPORTS CADSetNameEventHandler: public CADEventHandler{
+class VE_XPLORER_EXPORTS CADSetNameEventHandler: public CADEventHandler
+{
 public:
    ///Constructor
    CADSetNameEventHandler();
@@ -69,7 +71,7 @@ public:
 protected:
    ///Remove a CADNode.
    ///\param command The Command containing the CADNode to remove.
-   void _operateOnNode(VE_XML::XMLObject* command);
+   void _operateOnNode(ves::open::xml::XMLObject* command);
 };
 }
 #endif// VE_EVENT_HANDLER_H

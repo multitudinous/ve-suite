@@ -32,13 +32,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADSetRootNodeEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <iostream>
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -69,12 +71,12 @@ CADSetRootNodeEventHandler& CADSetRootNodeEventHandler::operator=(const CADSetRo
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetRootNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADSetRootNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr newRootNode = command->GetDataValuePair("Root Node ID");
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr newRootNode = command->GetDataValuePair("Root Node ID");
 
       std::string rootNodeID;
       newRootNode->GetData(rootNodeID);       

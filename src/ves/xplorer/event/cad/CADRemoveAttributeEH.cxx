@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADRemoveAttributeEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -43,7 +43,9 @@
 #include <iostream>
 
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -74,16 +76,16 @@ CADRemoveAttributeEventHandler& CADRemoveAttributeEventHandler::operator=(const 
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADRemoveAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADRemoveAttributeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
       std::cout<<"---Adding attribute to node---"<<std::endl;
       std::cout<<"CADRemoveAttributeEventHandler."<<std::endl;
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
-      VE_XML::DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Attribute Name");
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Attribute Name");
 
       m_cadHandler->RemoveAttributeFromNode(nodeID->GetDataString(),
                                             nodeType->GetDataString(),

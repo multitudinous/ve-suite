@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADSetActiveAttributeEH.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 
@@ -44,7 +44,8 @@
 
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -75,14 +76,14 @@ CADSetActiveAttributeEventHandler& CADSetActiveAttributeEventHandler::operator=(
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetActiveAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADSetActiveAttributeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
-      VE_XML::DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Active Attribute");
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Active Attribute");
 
       std::cout<<"--Setting active attribute--"<<std::endl;
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);

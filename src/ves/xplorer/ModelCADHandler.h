@@ -53,12 +53,18 @@ namespace VE_SceneGraph
     class CADEntityHelper;
     class Clone;
 }
-namespace VE_XML
+namespace ves
 {
-namespace VE_CAD
+namespace open
+{
+namespace xml
+{
+namespace cad
 {
     class CADNode;
     class CADAttribute;
+}
+}
 }
 }
 #include <osg/StateSet>
@@ -97,7 +103,7 @@ public:
     ///\param nodeType The node type.
     ///\param The CADAttribute to add to the node.
     void AddAttributeToNode(std::string nodeID,
-                                      VE_XML::VE_CAD::CADAttribute* newAttribute);
+                                      ves::open::xml::cad::CADAttribute* newAttribute);
     ///Add a new attribute to a node
     ///\param nodeID The ID of the node to add Attribute to.
     ///\param nodeType The node type.

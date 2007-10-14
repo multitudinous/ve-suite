@@ -32,14 +32,17 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/FloatArray.h>
 
-#include <ves/open/xml/CAD/CADMaterial.h>
+#include <ves/open/xml/cad/CADMaterial.h>
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
+using namespace ves::open::xml::cad;
+
 ////////////////////////////////////////////////////////
 //Constructor                                         //
 ////////////////////////////////////////////////////////
@@ -68,16 +71,16 @@ MaterialModeUpdateEventHandler& MaterialModeUpdateEventHandler::operator=(const 
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////////   
-void MaterialModeUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject) 
+void MaterialModeUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject) 
 {
    try
    {
-      VE_XML::Command* componentUpdate = dynamic_cast<VE_XML::Command*>(veXMLObject);
-      VE_XML::DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr material = componentUpdate->GetDataValuePair("Material");
-      VE_XML::DataValuePairWeakPtr updateMode = componentUpdate->GetDataValuePair("Mode");
+      Command* componentUpdate = dynamic_cast<Command*>(veXMLObject);
+      DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr material = componentUpdate->GetDataValuePair("Material");
+      DataValuePairWeakPtr updateMode = componentUpdate->GetDataValuePair("Mode");
       
-      VE_XML::VE_CAD::CADMaterial* rawMaterial = dynamic_cast<VE_XML::VE_CAD::CADMaterial*>(material->GetDataXMLObject());
+      CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>(material->GetDataXMLObject());
       std::string newMode = updateMode->GetDataString();
       std::string value = "";
     

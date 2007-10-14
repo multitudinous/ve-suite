@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADTransformEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -46,7 +46,9 @@
 #include <ves/open/xml/CAD/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -77,15 +79,15 @@ CADTransformEventHandler& CADTransformEventHandler::operator=(const CADTransform
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADTransformEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try{
 
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
+      Command* command = dynamic_cast<Command*>(xmlObject);
 
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
-      VE_XML::DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");
       
 		VE_SceneGraph::DCS* transform = 0;
         
@@ -112,7 +114,7 @@ void CADTransformEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       if( transform )
       {
-         VE_XML::Transform* rawTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
+         Transform* rawTransform = dynamic_cast<Transform*>(newTransform->GetDataXMLObject());
          transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
          transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
          transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );

@@ -38,15 +38,18 @@
 /*!\class CADMoveNodeEventHandler
  * Class that handles moving a CADNode to a different CADAssembly.
  */
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-}
-namespace VE_CAD
+namespace open
 {
-   class CADNode;
+namespace xml
+{
+    class XMLObject;
 }
-#include <ves/xplorer/event/CADEventHandler.h>
+}
+}
+
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
 namespace VE_EVENTS
 {
@@ -66,7 +69,7 @@ public:
 protected:
    ///Update a transform on the CADNode.
    ///\param command The Command containing the udpated transform.
-   void _operateOnNode(VE_XML::XMLObject* command);
+   void _operateOnNode(ves::open::xml::XMLObject* command);
 };
 }
 #endif// VE_CAD_MOVE_NODE_EVENT_HANDLER_H

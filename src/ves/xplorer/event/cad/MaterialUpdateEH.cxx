@@ -32,15 +32,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/MaterialUpdateEH.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/FloatArray.h>
 
-#include <ves/open/xml/CAD/CADMaterial.h>
+#include <ves/open/xml/cad/CADMaterial.h>
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
+using namespace ves::open::xml::cad;
+
 ////////////////////////////////////////////////////////
 //Constructor                                         //
 ////////////////////////////////////////////////////////
@@ -69,17 +72,17 @@ MaterialUpdateEventHandler& MaterialUpdateEventHandler::operator=(const Material
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////////   
-void MaterialUpdateEventHandler::_operateOnNode(VE_XML::XMLObject* veXMLObject) 
+void MaterialUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject) 
 {
    std::cout<<"Material update event handler"<<std::endl;
    try
    {
-      VE_XML::Command* componentUpdate = dynamic_cast<VE_XML::Command*>(veXMLObject);
-      VE_XML::DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr material = componentUpdate->GetDataValuePair("Material");
-      VE_XML::DataValuePairWeakPtr component = componentUpdate->GetDataValuePair("Material Component");
+      Command* componentUpdate = dynamic_cast<Command*>(veXMLObject);
+      DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr material = componentUpdate->GetDataValuePair("Material");
+      DataValuePairWeakPtr component = componentUpdate->GetDataValuePair("Material Component");
       
-      VE_XML::VE_CAD::CADMaterial* rawMaterial = dynamic_cast<VE_XML::VE_CAD::CADMaterial*>(material->GetDataXMLObject());
+      CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>(material->GetDataXMLObject());
       std::string rawComponent = component->GetDataString();
       std::vector<double> values;
       if(rawComponent == "Diffuse")

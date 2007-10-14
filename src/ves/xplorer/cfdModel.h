@@ -83,14 +83,7 @@ namespace VE_EVENTS
 {
    class EventHandler;
 }
-namespace VE_XML
-{
-namespace VE_CAD
-{
-   class CADNode;
-   class CADAttribute;
-}
-}
+
 namespace VE_Xplorer
 {
    class cfdDataSet;

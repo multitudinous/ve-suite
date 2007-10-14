@@ -45,7 +45,8 @@
 #include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -76,14 +77,14 @@ CADDeleteNodeEventHandler& CADDeleteNodeEventHandler::operator=(const CADDeleteN
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADDeleteNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADDeleteNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr parentID = command->GetDataValuePair("Parent ID");
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr parentID = command->GetDataValuePair("Parent ID");
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
 
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Deleting node---"<<std::endl;

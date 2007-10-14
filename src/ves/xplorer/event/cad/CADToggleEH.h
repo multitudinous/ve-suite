@@ -38,15 +38,18 @@
 /*!\class CADToggleEventHandler
  * Class to toggle CADNode on/off.
  */
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-}
-namespace VE_CAD
+namespace open
 {
-   class CADNode;
+namespace xml
+{
+    class XMLObject;
 }
-#include <ves/xplorer/event/CADEventHandler.h>
+}
+}
+
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
 namespace VE_EVENTS
 {
@@ -67,7 +70,7 @@ public:
 protected:
    ///Toggle a CADNode on/off.
    ///\param command The Command containing the CADNode to toggle.
-   void _operateOnNode(VE_XML::XMLObject* command);
+   void _operateOnNode(ves::open::xml::XMLObject* command);
 };
 }
 #endif// VE_EVENT_HANDLER_H

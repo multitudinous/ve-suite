@@ -44,6 +44,7 @@
 #include <boost/filesystem/path.hpp>
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 UnselectObjectsEventHandler::UnselectObjectsEventHandler()
@@ -70,9 +71,9 @@ void UnselectObjectsEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
+void UnselectObjectsEventHandler::Execute( XMLObject* veXMLObject )
 {
-    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+    Command* command = dynamic_cast< Command* >( veXMLObject );
 
     if( command->GetCommandName() == "UNSELECT_OBJECTS" )
     {

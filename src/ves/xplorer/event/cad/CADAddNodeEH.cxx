@@ -45,7 +45,8 @@
 
 #include <iostream>
 using namespace VE_EVENTS;
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -76,23 +77,23 @@ CADAddNodeEventHandler& CADAddNodeEventHandler::operator=(const CADAddNodeEventH
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADAddNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr cadNode = command->GetDataValuePair("New Node");
-      std::string nodeType = dynamic_cast<VE_XML::VE_CAD::CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr cadNode = command->GetDataValuePair("New Node");
+      std::string nodeType = dynamic_cast<CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
 
-      VE_XML::VE_CAD::CADNode* node = 0;
-      VE_XML::VE_CAD::CADAssembly* assembly = 0; 
-      VE_XML::VE_CAD::CADPart* part = 0;
+      CADNode* node = 0;
+      CADAssembly* assembly = 0; 
+      CADPart* part = 0;
        VE_SceneGraph::DCS* parentAssembly = 0;
 
       if(nodeType == "Assembly")
       {
          
-         assembly = dynamic_cast<VE_XML::VE_CAD::CADAssembly*>(cadNode->GetDataXMLObject());
+         assembly = dynamic_cast<CADAssembly*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(assembly);
          if(m_cadHandler->AssemblyExists(node->GetID()))
          {
@@ -101,7 +102,7 @@ void CADAddNodeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
       }
       else if(nodeType == "Part")
       {
-         part = dynamic_cast<VE_XML::VE_CAD::CADPart*>(cadNode->GetDataXMLObject());
+         part = dynamic_cast<CADPart*>(cadNode->GetDataXMLObject());
          node = dynamic_cast<CADNode*>(part);
          if(m_cadHandler->PartExists(node->GetID()))
          {

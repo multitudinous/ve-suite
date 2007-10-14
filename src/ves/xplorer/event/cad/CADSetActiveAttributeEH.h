@@ -38,18 +38,23 @@
 /*!\class CADSetActiveAttributeEventHandler
  * Class for handling CADNode attributes.
  */
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
-}
-namespace VE_CAD
+namespace open
 {
-   class CADNode;
+namespace xml
+{
+    class XMLObject;
 }
-#include <ves/xplorer/event/CADEventHandler.h>
+}
+}
+
+#include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS CADSetActiveAttributeEventHandler: public CADEventHandler{
+namespace VE_EVENTS
+{
+class VE_XPLORER_EXPORTS CADSetActiveAttributeEventHandler: public CADEventHandler
+{
 public:
    ///Constructor
    CADSetActiveAttributeEventHandler();
@@ -65,7 +70,7 @@ public:
 protected:
    ///Set the active CADAttribute on the CADNode.
    ///\param command The Command containing the active CADAttribute.
-   void _operateOnNode(VE_XML::XMLObject* command);
+   void _operateOnNode(ves::open::xml::XMLObject* command);
 };
 }
 #endif// VE_ATTRIBUTE_HANDLER_H

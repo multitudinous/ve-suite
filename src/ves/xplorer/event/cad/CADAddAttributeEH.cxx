@@ -44,7 +44,8 @@
 
 using namespace VE_SceneGraph::Utilities;
 using namespace VE_EVENTS;
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -75,16 +76,16 @@ CADAddAttributeEventHandler& CADAddAttributeEventHandler::operator=(const CADAdd
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddAttributeEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADAddAttributeEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
       std::cout<<"---Adding attribute to node---"<<std::endl;
       std::cout<<"CADAddAttributeEventHandler."<<std::endl;
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr newAttribute = command->GetDataValuePair("Attribute");
-      VE_XML::VE_CAD::CADAttribute* rawAttribute = dynamic_cast<VE_XML::VE_CAD::CADAttribute*>(newAttribute->GetDataXMLObject());
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr newAttribute = command->GetDataValuePair("Attribute");
+      CADAttribute* rawAttribute = dynamic_cast<CADAttribute*>(newAttribute->GetDataXMLObject());
 
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"Node:"<<nodeID->GetDataString()<<std::endl;

@@ -61,7 +61,8 @@
 #include <osg/Node>
 #endif
 using namespace VE_EVENTS;
-using namespace VE_XML::VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 using namespace VE_SceneGraph;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
@@ -115,7 +116,7 @@ void CADEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* model)
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void CADEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void CADEventHandler::Execute(XMLObject* veXMLObject)
 {
     if(m_cadHandler)
     {

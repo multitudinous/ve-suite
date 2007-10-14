@@ -36,7 +36,7 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Clone.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -44,7 +44,8 @@
 #include <ves/open/xml/CAD/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
-using namespace VE_CAD;
+using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
@@ -75,14 +76,14 @@ CADSetNameEventHandler& CADSetNameEventHandler::operator=(const CADSetNameEventH
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetNameEventHandler::_operateOnNode(VE_XML::XMLObject* xmlObject)
+void CADSetNameEventHandler::_operateOnNode(XMLObject* xmlObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-      VE_XML::DataValuePairWeakPtr newName = command->GetDataValuePair("Node Name");
-      VE_XML::DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      VE_XML::DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+      Command* command = dynamic_cast<Command*>(xmlObject);
+      DataValuePairWeakPtr newName = command->GetDataValuePair("Node Name");
+      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
+      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
 
       std::string errorString;
           
