@@ -44,10 +44,17 @@
 #include <ves/VEConfig.h>
 //#include <utility>
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+    namespace open
+{
+    namespace xml
+{
+    class XMLObject;
 }
+}
+}
+
 namespace VE_Xplorer
 {
    class cfdModel;
@@ -80,7 +87,7 @@ public:
    
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute( VE_XML::XMLObject* command); 
+   void Execute( ves::open::xml::XMLObject* command); 
 
 private:
    VE_Xplorer::cfdModel* _activeModel; ///<The active model

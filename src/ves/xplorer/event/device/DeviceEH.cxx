@@ -46,6 +46,7 @@
 #include <boost/filesystem/path.hpp>
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler()
@@ -72,9 +73,9 @@ void DeviceEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHa
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
+void DeviceEventHandler::Execute( XMLObject* veXMLObject )
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+   Command* command = dynamic_cast< Command* >( veXMLObject );
    
    std::string device;
    command->GetDataValuePair( "Device" )->GetData( device );

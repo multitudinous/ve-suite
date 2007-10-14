@@ -52,6 +52,7 @@
 #endif
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::DeviceModeEventHandler()
@@ -78,9 +79,9 @@ void DeviceModeEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* mod
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceModeEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
+void DeviceModeEventHandler::Execute( XMLObject* veXMLObject )
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+   Command* command = dynamic_cast< Command* >( veXMLObject );
    
    std::string mode;
    command->GetDataValuePair( "Mode" )->GetData( mode );

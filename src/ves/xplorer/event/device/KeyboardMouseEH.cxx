@@ -52,6 +52,7 @@
 #endif
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouseEventHandler::KeyboardMouseEventHandler()
@@ -77,10 +78,10 @@ void KeyboardMouseEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* m
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouseEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void KeyboardMouseEventHandler::Execute(XMLObject* veXMLObject)
 {
-   VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-   VE_XML::DataValuePairWeakPtr animateDVP=command->GetDataValuePair("AnimateID");
+   Command* command=dynamic_cast<Command*>(veXMLObject);
+   DataValuePairWeakPtr animateDVP=command->GetDataValuePair("AnimateID");
 
    unsigned int animate;
    animateDVP->GetData(animate);
