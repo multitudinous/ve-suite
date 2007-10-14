@@ -49,11 +49,6 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
-/*namespace VE_SceneGraph
-{
-	class Geode;
-}*/
-
 // VTK Classes
 class vtkPolyData;
 class vtkActor;
@@ -63,7 +58,6 @@ class vtkMultiGroupDataGeometryFilter;
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
 #include <vector>
-#include <vpr/Sync/Mutex.h>
 
 namespace VE_Xplorer
 {

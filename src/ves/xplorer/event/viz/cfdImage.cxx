@@ -35,7 +35,6 @@
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/util/fileIO.h>
-#include <ves/xplorer/event/viz/cfdReadParam.h>
 
 #include <vtkPlaneSource.h>
 #include <vtkBMPReader.h>
@@ -67,7 +66,6 @@ cfdImage::cfdImage( std::string param )
    if ( param.empty() )
       return;
    _param = param;
-   _readParam = new cfdReadParam();
    // Fix this if createobjects is true then continue else return
    CreateObjects();
 
@@ -307,7 +305,6 @@ void cfdImage::CreateObjects( void )
       else
       {
          // Skip past block
-         //_readParam->ContinueRead( input, id );
       }
    }
 }

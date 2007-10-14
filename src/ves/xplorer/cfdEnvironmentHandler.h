@@ -52,10 +52,7 @@ namespace VE_Xplorer
 {
     class cfdCursor;
     class cfdCommandArray;
-    class cfdReadParam;
-    //class cfdSoundHandler;
     class cfdTeacher;
-    //class cfdSoundHandler;
     class cfdQuatCamHandler;
     class cfdDisplaySettings;
 
@@ -187,7 +184,6 @@ private:
    cfdCursor* cursor;///<The cursor.
    std::string _param;///<Store parameters.
    cfdCommandArray* _commandArray;///<Command array.
-   cfdReadParam* _readParam;///<Read parameters.
 
    // cur_box will eventually be used to define bounding box
    // for data interagation

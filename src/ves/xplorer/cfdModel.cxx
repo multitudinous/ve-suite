@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/event/viz/cfdSound.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/environment/cfdSound.h>
+#include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>

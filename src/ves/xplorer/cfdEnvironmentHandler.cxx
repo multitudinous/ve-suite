@@ -35,33 +35,31 @@
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/viz/cfdSoundHandler.h>
-#include <ves/xplorer/event/viz/cfdCursor.h>
+#include <ves/xplorer/environment/cfdSoundHandler.h>
+#include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/event/viz/cfdReadParam.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
-#include <ves/xplorer/event/viz/cfdSoundHandler.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
-#include <ves/xplorer/event/ChangeCursorEventHandler.h>
-#include <ves/xplorer/event/StoredSceneEH.h>
-#include <ves/xplorer/event/ChangeWorkingDirectoryEventHandler.h>
-#include <ves/xplorer/event/ChangeBackgroundColorEventHandler.h>
-#include <ves/xplorer/event/DisplayInformation.h>
-#include <ves/xplorer/event/DisplayEventHandler.h>
-#include <ves/xplorer/event/ViewEventHandler.h>
-#include <ves/xplorer/event/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/event/device/ChangeCursorEventHandler.h>
+#include <ves/xplorer/event/environment/StoredSceneEH.h>
+#include <ves/xplorer/event/environment/ChangeWorkingDirectoryEventHandler.h>
+#include <ves/xplorer/event/environment/ChangeBackgroundColorEventHandler.h>
+#include <ves/xplorer/environment/DisplayInformation.h>
+#include <ves/xplorer/event/environment/DisplayEventHandler.h>
+#include <ves/xplorer/event/environment/ViewEventHandler.h>
+#include <ves/xplorer/PhysicsSimulationEventHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
-#include <ves/xplorer/event/SeedPointActivateEH.h>
-#include <ves/xplorer/event/SPBoundEH.h>
-#include <ves/xplorer/event/SPDimensionsEH.h>
-#include <ves/xplorer/event/ExportDOTFileEventHandler.h>
+#include <ves/xplorer/event/data/SeedPointActivateEH.h>
+#include <ves/xplorer/event/data/SPBoundEH.h>
+#include <ves/xplorer/event/data/SPDimensionsEH.h>
+#include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -87,7 +85,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    cursor = 0;
    _param.erase();// = 0;
    _commandArray = 0;
-   _readParam = 0;
+   //_readParam = 0;
    arrow = 0;
    displaySettings = 0;
 
@@ -109,7 +107,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
     display_information = 0;
     _activeGeomPicking = false;
 
-   _readParam = 0;
+   //_readParam = 0;
    _param.erase();// = 0;
    desktopWidth = 0;
    desktopHeight = 0;
@@ -157,13 +155,6 @@ void cfdEnvironmentHandler::Initialize( void )
 ////////////////////////////////////////////////////////////////////////////////
 cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 {
-   if ( this->_readParam )
-   {  
-      //vprDEBUG(vesDBG,2)  
-      //  << "|       deleting this->_readParam" << std::endl << vprDEBUG_FLUSH;
-      delete this->_readParam;
-   }
-
    if ( this->cursor )
    {  
       //vprDEBUG(vesDBG,2)  
