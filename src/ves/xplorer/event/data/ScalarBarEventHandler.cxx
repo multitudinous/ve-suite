@@ -36,7 +36,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/event/device/cfdCursor.h>
+#include <ves/xplorer/device/cfdCursor.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

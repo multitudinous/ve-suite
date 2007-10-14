@@ -36,7 +36,7 @@
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/event/SeedPoints.h>
+#include <ves/xplorer/event/data/SeedPoints.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/Clone.h>

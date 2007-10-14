@@ -36,7 +36,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/event/device/cfdCursor.h>
+#include <ves/xplorer/device/cfdCursor.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -52,6 +52,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -106,10 +107,10 @@ void WireframeEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model
    }
 }
 //////////////////////////////////////////////////////////////////////////
-void WireframeEventHandler::Execute( VE_XML::XMLObject* xmlObject )
+void WireframeEventHandler::Execute( XMLObject* xmlObject )
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( xmlObject );
-   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
+   Command* command = dynamic_cast< Command* >( xmlObject );
+   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
    
    unsigned int state = 0;
    activeModelDVP->GetData( state );

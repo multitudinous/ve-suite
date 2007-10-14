@@ -44,6 +44,8 @@
 #include <vtkDataSet.h>
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
 {
@@ -90,16 +92,16 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalB
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void SeedPointDimensionsEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void SeedPointDimensionsEventHandler::Execute(XMLObject* veXMLObject)
 {
    if(!_activeModel)
       throw;
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+      Command* command = dynamic_cast< Command* >( veXMLObject );
      
      std::vector<long> allDimensions;
-     VE_XML::DataValuePairWeakPtr dimensions = command->GetDataValuePair("Dimensions");
+     DataValuePairWeakPtr dimensions = command->GetDataValuePair("Dimensions");
      dimensions->GetData(allDimensions);
      VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->SetDimensions(allDimensions[0],
                                                                                    allDimensions[1],
