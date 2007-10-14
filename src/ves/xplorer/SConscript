@@ -66,11 +66,13 @@ lib_env.Append(LIBS = ['ves_open_xml',
                    'ves_xplorer_scenegraph%s' %(execOsgPatTag),
                    'ves_xplorer_util',
                    'ves_xplorer_volume%s' %(execOsgPatTag),
-                   'ves_open_module'])
+                   'ves_open_module','ves_builder_dataloader','ves_builder_translator_base'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                         pj('#', buildDir, 'src', 'ves', 'xplorer', 'volume'),
+                        pj('#', buildDir, 'src', 'ves', 'builder','DataLoader'),
+                        pj('#', buildDir, 'src', 'ves', 'builder','cfdTranslatorToVTK'),
                         pj('#', buildDir, 'src', 'ves', 'open'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
@@ -80,6 +82,7 @@ lib_env.ParseConfig('flagpoll TAO \
                           TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
                           --libs --cflags')
 lib_env.ParseConfig('flagpoll bullet vrjuggler --atleast-version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
+lib_env.Append(LIBS = ['GLU','GL'])
 lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
 
 vtk_options.apply( lib_env )
