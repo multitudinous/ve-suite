@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/SoundAddNewEH.h>
+#include <ves/xplorer/event/environment/SoundAddNewEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/ModelHandler.h>
 
@@ -40,6 +40,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 SoundAddNewEventHandler::SoundAddNewEventHandler()
 {
@@ -87,19 +89,19 @@ void SoundAddNewEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* bas
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void SoundAddNewEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void SoundAddNewEventHandler::Execute(XMLObject* veXMLObject)
 {
    try
    {
       if(_activeModel)
       { 
-         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-         VE_XML::DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
+         Command* command = dynamic_cast< Command* >( veXMLObject );
+         DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
          std::string guiName;
          soundName->GetData(guiName);
 
          std::string fileName;
-         VE_XML::DataValuePairWeakPtr soundFile = command->GetDataValuePair( "Sound Filename" );
+         DataValuePairWeakPtr soundFile = command->GetDataValuePair( "Sound Filename" );
          soundFile->GetData(fileName);
          _activeModel->AddNewSound(guiName,fileName);
       } 

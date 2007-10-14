@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/QCLoadFileEH.h>
+#include <ves/xplorer/event/environment/QCLoadFileEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 
@@ -40,6 +40,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler::QuatCamLoadFileEventHandler()
@@ -69,13 +70,13 @@ void QuatCamLoadFileEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase*
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void QuatCamLoadFileEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void QuatCamLoadFileEventHandler::Execute(XMLObject* veXMLObject)
 {
    std::string fileName;
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-      VE_XML::DataValuePairWeakPtr velFile = command->GetDataValuePair("View Locations file");      
+      Command* command = dynamic_cast< Command* >( veXMLObject );
+      DataValuePairWeakPtr velFile = command->GetDataValuePair("View Locations file");      
       velFile->GetData(fileName);
       VE_Xplorer::cfdQuatCamHandler::instance()->LoadFromFile(fileName);
    }

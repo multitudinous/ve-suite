@@ -41,9 +41,9 @@
 
 namespace ves
 {
-    namespace open
+namespace open
 {
-    namespace xml
+namespace xml
 {
     class XMLObject;
 }

@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/ChangeBackgroundColorEventHandler.h>
+#include <ves/xplorer/event/environment/ChangeBackgroundColorEventHandler.h>
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/DisplayInformation.h>
+#include <ves/xplorer/environment/DisplayInformation.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -51,6 +51,8 @@
 #endif
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
+
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
@@ -76,10 +78,10 @@ void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlob
 ///////////////////////////////////////////////////////////////////////////////
 ///Exectute the event                                                        //
 ///////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void ChangeBackgroundColorEventHandler::Execute(XMLObject* veXMLObject)
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
+   Command* command = dynamic_cast< Command* >( veXMLObject );
+   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
    std::vector<double> color;
    activeModelDVP->GetData( color );
    if(!color.empty())

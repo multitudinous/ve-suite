@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/SoundActivateEH.h>
+#include <ves/xplorer/event/environment/SoundActivateEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/ModelHandler.h>
 
@@ -40,6 +40,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 SoundActivateEventHandler::SoundActivateEventHandler()
 {
@@ -87,19 +89,19 @@ void SoundActivateEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* b
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void SoundActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void SoundActivateEventHandler::Execute(XMLObject* veXMLObject)
 {
    try
    {
       if(_activeModel)
       { 
-         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-         VE_XML::DataValuePairWeakPtr soundStatus = command->GetDataValuePair( "Status" );
+         Command* command = dynamic_cast< Command* >( veXMLObject );
+         DataValuePairWeakPtr soundStatus = command->GetDataValuePair( "Status" );
          unsigned int onOff = 0;
          soundStatus->GetData(onOff);
 
          std::string name;
-         VE_XML::DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
+         DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
          soundName->GetData(name);
          (onOff==1)?_activeModel->ActivateSound(name):_activeModel->DeactivateSound(name);
       } 

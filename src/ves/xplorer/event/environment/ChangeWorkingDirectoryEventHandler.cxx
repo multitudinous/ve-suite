@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/ChangeWorkingDirectoryEventHandler.h>
+#include <ves/xplorer/event/environment/ChangeWorkingDirectoryEventHandler.h>
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
@@ -52,6 +52,7 @@
 #endif
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
@@ -77,10 +78,10 @@ void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlo
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void ChangeWorkingDirectoryEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void ChangeWorkingDirectoryEventHandler::Execute(XMLObject* veXMLObject)
 {
-   VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-   VE_XML::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
+   Command* command = dynamic_cast< Command* >( veXMLObject );
+   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
    std::string newWorkingDir;
    activeModelDVP->GetData( newWorkingDir );
    std::cout << newWorkingDir << std::endl;

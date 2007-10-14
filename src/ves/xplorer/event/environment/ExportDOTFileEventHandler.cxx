@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/ExportDOTFileEventHandler.h>
+#include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CreateGraphDOTVisitor.h>
 
@@ -40,6 +40,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::ExportDOTFileEventHandler()
@@ -71,12 +72,12 @@ void ExportDOTFileEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* b
     ;
 }
 //////////////////////////////////////////////////////////////////////////   
-void ExportDOTFileEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void ExportDOTFileEventHandler::Execute(XMLObject* veXMLObject)
 {
     try
     {
-        VE_XML::Command* command = 
-            dynamic_cast< VE_XML::Command* >( veXMLObject );
+        Command* command = 
+            dynamic_cast< Command* >( veXMLObject );
         std::string filename;
         command->GetDataValuePair("Filename")->GetData( filename );
         // store the active geometry and viz objects as a pfb

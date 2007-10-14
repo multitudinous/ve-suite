@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
-#include <ves/xplorer/event/Device.h>
+#include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -58,6 +58,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler::NavigationDataEventHandler()
@@ -82,21 +83,21 @@ void NavigationDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* 
    _baseObject = modelHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationDataEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void NavigationDataEventHandler::Execute(XMLObject* veXMLObject)
 {
-   VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
+   Command* command=dynamic_cast<Command*>(veXMLObject);
    dynamic_cast< Device* >( _baseObject )->SetVECommand( command );
 
-   VE_XML::DataValuePairWeakPtr quatPosition = command->GetDataValuePair( "QUAT_START_POSITION" );
+   DataValuePairWeakPtr quatPosition = command->GetDataValuePair( "QUAT_START_POSITION" );
    if( quatPosition )
    {
-       VE_XML::OneDDoubleArray* data = dynamic_cast< VE_XML::OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
+       OneDDoubleArray* data = dynamic_cast< OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
        std::vector< double > tempQuat = data->GetArray();
        osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
        VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetQuat( quat );
 
        quatPosition = command->GetDataValuePair( "POSITION_START_POSITION" );
-       data = dynamic_cast< VE_XML::OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
+       data = dynamic_cast< OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
        VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetTranslationArray( data->GetArray() );
    }
 }

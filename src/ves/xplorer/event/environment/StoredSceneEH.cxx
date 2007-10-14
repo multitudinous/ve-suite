@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/StoredSceneEH.h>
+#include <ves/xplorer/event/environment/StoredSceneEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
@@ -41,6 +41,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 StoredSceneEventHandler::StoredSceneEventHandler()
@@ -70,11 +71,11 @@ void StoredSceneEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* bas
 {
 }
 //////////////////////////////////////////////////////////////////////////   
-void StoredSceneEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void StoredSceneEventHandler::Execute(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+      Command* command = dynamic_cast< Command* >( veXMLObject );
       unsigned int whichChild =0;
 
       if(command->GetDataValuePair("LOAD_PFB_FILE"))

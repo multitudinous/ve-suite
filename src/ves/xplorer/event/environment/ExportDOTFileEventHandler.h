@@ -39,9 +39,15 @@
  * load a stored scene.
  */
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+    namespace open
+{
+    namespace xml
+{
+    class XMLObject;
+}
+}
 }
 namespace VE_Xplorer
 {
@@ -72,7 +78,7 @@ public:
    
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void Execute(VE_XML::XMLObject* veXMLObject);
+   virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
 protected:
 
 };

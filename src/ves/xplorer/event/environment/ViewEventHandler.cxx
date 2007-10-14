@@ -38,7 +38,7 @@
 #endif
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/event/ViewEventHandler.h>
+#include <ves/xplorer/event/environment/ViewEventHandler.h>
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
@@ -55,6 +55,7 @@
 #include <string>
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler()
@@ -81,9 +82,9 @@ void ViewEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHand
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::Execute( VE_XML::XMLObject* veXMLObject )
+void ViewEventHandler::Execute( XMLObject* veXMLObject )
 {
-    VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+    Command* command = dynamic_cast< Command* >( veXMLObject );
 
     std::string view;
     command->GetDataValuePair( "View" )->GetData( view );

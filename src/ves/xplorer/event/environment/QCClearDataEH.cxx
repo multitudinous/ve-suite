@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/QCClearDataEH.h>
+#include <ves/xplorer/event/environment/QCClearDataEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 
@@ -40,6 +40,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler::QuatCamClearDataEventHandler()
@@ -69,13 +70,13 @@ void QuatCamClearDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void QuatCamClearDataEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void QuatCamClearDataEventHandler::Execute(XMLObject* veXMLObject)
 {
    try
    {
-      VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
+      Command* command = dynamic_cast< Command* >( veXMLObject );
       //This isn't used but I think we need to pass in something to the command
-      VE_XML::DataValuePairWeakPtr velFile = command->GetDataValuePair("Clear Quat Data");      
+      DataValuePairWeakPtr velFile = command->GetDataValuePair("Clear Quat Data");      
       std::string clearCmdDummy;
       velFile->GetData(clearCmdDummy);
       VE_Xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();

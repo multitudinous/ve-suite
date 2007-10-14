@@ -32,11 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <string>
 
-#include <ves/xplorer/event/DisplayEventHandler.h>
+#include <ves/xplorer/event/environment/DisplayEventHandler.h>
 
 #include <ves/xplorer/cfdGlobalBase.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/DisplayInformation.h>
+#include <ves/xplorer/environment/DisplayInformation.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -52,6 +52,7 @@
 #endif
 
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler::DisplayEventHandler()
@@ -76,10 +77,10 @@ void DisplayEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHa
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void DisplayEventHandler::Execute(XMLObject* veXMLObject)
 {
-   VE_XML::Command* command=dynamic_cast<VE_XML::Command*>(veXMLObject);
-   VE_XML::DataValuePairWeakPtr DVP;
+   Command* command=dynamic_cast<Command*>(veXMLObject);
+   DataValuePairWeakPtr DVP;
    unsigned int value;
 
    if(command->GetDataValuePair("FrameRateID"))
