@@ -1,0 +1,12 @@
+##Build VE-Suite
+openSubdirs = Split("""
+    ce
+    conductor
+    launcher
+    xplorer
+""")
+
+##Run SConscript files in all of those folders.
+for d in openSubdirs:
+   #print " dir ", d
+   SConscript( dirs = d )
