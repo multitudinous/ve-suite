@@ -36,11 +36,16 @@
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/VEConfig.h>
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+    namespace open
+{
+    namespace xml
+{
+    class XMLObject;
 }
-
+}
+}
 namespace VE_Xplorer
 {
    class cfdModel;
@@ -66,7 +71,7 @@ public:
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
-   void Execute(VE_XML::XMLObject* veXMLObject);
+   void Execute(ves::open::xml::XMLObject* veXMLObject);
 
    ///Set the cfdModel.
    ///\param model The cfdModel to execute the Command on\n.

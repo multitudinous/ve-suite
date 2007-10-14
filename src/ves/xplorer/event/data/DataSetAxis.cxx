@@ -50,6 +50,7 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+
 ////////////////////////////////////////////////////////////////////////////////
 DataSetAxis::DataSetAxis( void )
 {

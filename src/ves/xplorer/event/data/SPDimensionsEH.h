@@ -39,9 +39,15 @@
  * Update the SeedPoints Bounding box.
  */
 
-namespace VE_XML
+namespace ves
 {
-   class XMLObject;
+    namespace open
+{
+    namespace xml
+{
+    class XMLObject;
+}
+}
 }
 namespace VE_Xplorer
 {
@@ -67,7 +73,7 @@ public:
    
    ///Update the bounds.
    ///\param veXMLObject The veXMLObject to execute.
-   virtual void Execute(VE_XML::XMLObject* veXMLObject);
+   virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
 
    ///Set the active cfdModel
    ///\param model The active cfdModel

@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/AddVTKDataSetEventHandler.h>
+#include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdDataSet.h>

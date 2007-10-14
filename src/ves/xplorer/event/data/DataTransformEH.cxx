@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/event/DataTransformEH.h>
+#include <ves/xplorer/event/data/DataTransformEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
@@ -47,9 +47,10 @@
 
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
-#include <ves/open/xml/CAD/CADNode.h>
+#include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
 using namespace VE_EVENTS;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -82,21 +83,21 @@ DataTransformEventHandler& DataTransformEventHandler::operator=(const DataTransf
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::Execute(VE_XML::XMLObject* xmlObject)
+void DataTransformEventHandler::Execute(XMLObject* xmlObject)
 {
     try
     {
         if( _activeModel )
         {
-            VE_XML::Command* command = dynamic_cast<VE_XML::Command*>(xmlObject);
-            VE_XML::DataValuePairWeakPtr datasetName = command->GetDataValuePair("Parameter Block ID");     
-            VE_XML::DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");     
+            Command* command = dynamic_cast<Command*>(xmlObject);
+            DataValuePairWeakPtr datasetName = command->GetDataValuePair("Parameter Block ID");     
+            DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");     
 		    VE_SceneGraph::DCS* transform = 0;
             transform = _activeModel->GetActiveDataSet()->GetDCS();
       
             if( transform )
             {
-                VE_XML::Transform* dataTransform = dynamic_cast<VE_XML::Transform*>(newTransform->GetDataXMLObject());
+                Transform* dataTransform = dynamic_cast<Transform*>(newTransform->GetDataXMLObject());
                 transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
                 transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
                 transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );

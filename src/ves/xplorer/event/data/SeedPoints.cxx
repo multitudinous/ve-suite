@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef _OSG
-#include <ves/xplorer/event/SeedPoints.h>
+#include <ves/xplorer/event/data/SeedPoints.h>
 #include <osg/StateSet>
 #include <osg/Shader>
 #include <osg/Program>

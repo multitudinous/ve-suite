@@ -31,11 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/SeedPointActivateEH.h>
+#include <ves/xplorer/event/data/SeedPointActivateEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/cfdDataSet.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/event/ModelCADHandler.h>
+#include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/event/SeedPoints.h>
 
@@ -45,6 +45,8 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
+using namespace ves::open::xml;
+
 ////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler::SeedPointActivateEventHandler()
 {
@@ -92,7 +94,7 @@ void SeedPointActivateEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBas
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////   
-void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
+void SeedPointActivateEventHandler::Execute(XMLObject* veXMLObject)
 {
    try
    {
@@ -101,9 +103,9 @@ void SeedPointActivateEventHandler::Execute(VE_XML::XMLObject* veXMLObject)
          //make the CAD transparent
          _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
          ///what happens if texture is somehow added first? Is that possible?
-         VE_XML::Command* command = dynamic_cast< VE_XML::Command* >( veXMLObject );
-         VE_XML::DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
-		   VE_XML::DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
+         Command* command = dynamic_cast< Command* >( veXMLObject );
+         DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
+		   DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
 		   std::string datasetname;
 		   activeDataset->GetData(datasetname);
 		   //check to see if the seed points exist

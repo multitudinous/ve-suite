@@ -31,11 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/event/SPBoundEH.h>
+#include <ves/xplorer/event/data/SPBoundEH.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/event/SeedPoints.h>
+#include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/cfdDataSet.h>
 
 #include <ves/open/xml/Command.h>
