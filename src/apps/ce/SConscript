@@ -19,7 +19,7 @@ env.Append(LIBPATH = [
                         pj('#', buildDir, 'src','ves','open','xml')
                      ])
 
-env.ParseConfig('flagpoll TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
+env.ParseConfig('flagpoll Boost.Filesystem TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
                               TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 

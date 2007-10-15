@@ -7,10 +7,10 @@ Import('ves_pkg', 'RootDir')
 env = ves_pkg.getEnv().Copy()
 
 launcherBundle = ves_pkg.createFileBundle( 'bin' )
-pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )
-pyFile += sca_util.getFilesRecursiveByExt( '.', ['.xpm'] )
+pyFile = sca_util.getFilesRecursiveByExt( '.', ['.xpm'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.bmp'] )
 pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
+pyFile += sca_util.getFilesRecursiveByExt( '.', ['.ico'] )
 runScripts = ['vesuiteReboot.sh',
               'vesuiteWake.sh',
               'vesuiteShutdown.sh',
@@ -19,9 +19,6 @@ runScripts = ['vesuiteReboot.sh',
 iconScripts = ['vesuiteConfig.sh',
                'vesuiteGnomeConfig.sh',
                'vesuiteKdeConfig.sh' ]
-
-launcherBundle.addFiles( runScripts )
-launcherBundle.addFiles( pyFile )
 
 linuxDClick = ves_pkg.createFileBundle( pj('share','vesuite','misc' ) )
 dclickFiles = sca_util.getFilesRecursiveByExt( pj(RootDir,'VE_Installer','installer','LinuxConfig'), ['.xml'] )
@@ -33,3 +30,5 @@ dclickFiles = map(lambda s: pj('LinuxConfig', s), dclickFiles)
 
 linuxDClick.addFiles( dclickFiles )
 linuxDClick.addFiles( iconScripts )
+launcherBundle.addFiles( runScripts )
+launcherBundle.addFiles( pyFile )
