@@ -51,7 +51,7 @@
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <ves/open/xml/cad/CADCreator.h>
 
-#include <ves/open/xml/Shader/ShaderCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
 
 #ifdef _OSG
 #include <osg/StateSet>
