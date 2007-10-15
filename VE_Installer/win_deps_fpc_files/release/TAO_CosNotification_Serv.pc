@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosNotification_Serv
+Description: TAO CosNotification Service Library
+Requires: TAO_CosNotification_Skel, TAO_Svc_Utils, TAO_DynamicAny, TAO_ETCL
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosNotification_Serv.lib
+Cflags: /I"${includedir}"

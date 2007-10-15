@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_RTEventLogAdmin_Skel
+Description: TAO RTEvent Logging Service Skeleton Library
+Requires: TAO_RTEventLogAdmin, TAO_DsLogAdmin_Skel, TAO_RTEvent_Skel, TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_RTEventLogAdmin_Skel.lib
+Cflags: /I"${includedir}"

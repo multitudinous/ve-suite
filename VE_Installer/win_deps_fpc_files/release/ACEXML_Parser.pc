@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: ACEXML_Parser
+Description: ACE XML Parser Library
+Requires: ACEXML
+Version: 5.5
+Libs: /libpath:"${libdir}" ACEXML_Parser.lib
+Cflags: /I"${includedir}"
