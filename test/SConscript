@@ -54,4 +54,4 @@ loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s),
 srcs.extend(loki_srcs)
 
 
-env.Program('TestRunner', srcs)
+env.Program('TestRunner.exe', srcs)

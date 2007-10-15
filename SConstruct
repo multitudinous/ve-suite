@@ -95,7 +95,7 @@ buildUUID = buildUUID.replace('/', '-')
 if ARGUMENTS.has_key("build_dir"):
    buildDir = ARGUMENTS["build_dir"]
 else:
-   buildDir = 'build.'+buildUUID
+   buildDir = 'buildwin'
 
 ########### Some utility functions
 def GetTag(execTag = False, osgTag = False,
@@ -113,6 +113,13 @@ def GetTag(execTag = False, osgTag = False,
         patented_tag = "_vep"
         finalTag += patented_tag
     return finalTag
+
+class WxWidgetsOption(fp_opt.FlagPollBasedOption):
+   def __init__(self, name='wxWidgets', requiredVersion="2.8", required=True, useCppPath=True):
+      help_text = """Base dir for wxWidgets"""
+      self.baseDirKey = ""
+      self.filesToCheckRelBase = []
+      fp_opt.FlagPollBasedOption.__init__(self, 'wxWidgetsOption', name, requiredVersion, required, useCppPath, help_text)
 
 execOsgPatTag = GetTag(True, True, True)
 execOsgPatClusterTag = GetTag(True, True, True, True)
@@ -203,13 +210,13 @@ osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True,
 opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
+wxwidgets_options = WxWidgetsOption()
+#wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
 opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.31')
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
-wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
-opts.AddOption( wxwidgets_options )
 opts.Add('prefix', 'Installation prefix', '/usr/local')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
@@ -311,6 +318,7 @@ if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
    opts.Process(baseEnv, None, True)                   # Update the options
    
+   wxwidgets_options.validate(baseEnv,)
    if baseEnv[ 'validate' ] == 'yes':
        # check the apr and apu utilities
        # there is probably an easier way to do this so feel free to simplify

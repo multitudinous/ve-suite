@@ -18,7 +18,7 @@ hdf4_options.apply( env )
 hdf5_options.apply( env )
 
 vtk_options.apply( env )
-prog = ves_pkg.createProgram('HDFToVTKTranslator', env, 'bin')
+prog = ves_pkg.createProgram('HDFToVTKTranslator.exe', env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
