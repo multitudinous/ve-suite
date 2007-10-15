@@ -18,8 +18,12 @@ for d in xplorerSubdirs:
    #print " dir ", d
    SConscript( dirs = d )
 
-sources = glob.glob(pj(RootDir, 'src','ves','xplorer','*.cxx'))
-headers = glob.glob(pj(RootDir, 'src','ves','xplorer','*.h'))
+sources = []
+headers = []
+sources_list = glob.glob(pj(RootDir, 'src','ves','xplorer','*.cxx'))
+headers_list = glob.glob(pj(RootDir, 'src','ves','xplorer','*.h'))
+sources += map(lambda s: os.path.basename(s), sources_list)
+headers += map(lambda s: os.path.basename(s), headers_list)
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','event') )
 event_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
