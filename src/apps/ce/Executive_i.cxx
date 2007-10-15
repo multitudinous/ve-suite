@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/util/string_ops.h>
 #include <apps/ce/Executive_i.h>
 
 #include <ves/open/xml/model/ModelCreator.h>
@@ -47,6 +46,8 @@
 #include <apps/ce/QueryThread.h>
 
 #include <ace/OS.h>
+
+#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -124,13 +125,21 @@ char * Body_Executive_i::GetImportData (
       } 
       else 
       {
-         std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
+         std::string msg = "Mod #" 
+                         + boost::lexical_cast<std::string>( module_id )
+                         + " IPort, id #"
+                         + boost::lexical_cast<std::string>( port_id )
+                         + " has no data\n" ;
          ClientMessage(msg.c_str());
       }
    } 
    else 
    {
-      std::string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+      std::string msg = "Unable to get mod #"
+                      + boost::lexical_cast<std::string>( module_id )
+                      + " IPort, id #"
+                      + boost::lexical_cast<std::string>( port_id )
+                      + "\n" ;
       ClientMessage(msg.c_str());
    }
   
@@ -187,7 +196,11 @@ void Body_Executive_i::SetExportData (
          port_id, dynamic_cast< Command* >( objectVector.at(0) ) ) 
       )
    {
-      std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+      std::string msg = "Unable to set mod id# "
+                      + boost::lexical_cast<std::string>( module_id )
+                      + ", port id# "
+                      + boost::lexical_cast<std::string>( port_id )
+                      + "'s port data\n";
       ClientMessage(msg.c_str());
    }
 }
@@ -209,7 +222,11 @@ char * Body_Executive_i::GetExportData (
    Command portData;
    if ( !_network->GetModule( _network->moduleIdx( module_id ) )->getPortData( port_id, portData ) ) 
    {
-      std::string msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+      std::string msg = "Mod #" 
+                      + boost::lexical_cast<std::string>( module_id )
+                      + " IPort, id #"
+                      + boost::lexical_cast<std::string>( port_id )
+                      + " has no data\n" ;
       ClientMessage(msg.c_str());
       _mutex.release();
       return CORBA::string_dup("");
@@ -254,7 +271,11 @@ void Body_Executive_i::SetProfileData (
   
    if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortProfile( port_id, &data) ) 
    {
-      std::string msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
+      std::string msg = "Unable to set mod id# "
+                      + boost::lexical_cast<std::string>( module_id )
+                      + ", port id# "
+                      + boost::lexical_cast<std::string>( port_id )
+                      + "'s port profile\n";
       ClientMessage(msg.c_str());
    } 
    else 
@@ -293,12 +314,20 @@ void Body_Executive_i::GetProfileData (
     if(oport->have_profile()) {
       data = new Types::Profile(*(oport->_profile));
     } else {
-      std::string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no Profile\n" ;
+      std::string msg = "Mod #"
+                      + boost::lexical_cast<std::string>( module_id )
+                      + " IPort, id #"
+                      + boost::lexical_cast<std::string>( port_id )
+                      + " has no Profile\n" ;
       std::cerr << msg;
       ClientMessage(msg.c_str());
     }
   } else {
-    std::string msg = "Unable to get Profile from mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+    std::string msg = "Unable to get Profile from mod #"
+                    + boost::lexical_cast<std::string>( module_id )
+                    + " IPort, id #"
+                    + boost::lexical_cast<std::string>( port_id )
+                    + "\n" ;
     std::cerr << msg;
     ClientMessage(msg.c_str());	
   }
@@ -441,7 +470,9 @@ void Body_Executive_i::SetModuleResult (
 
    _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
 
-   std::string msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
+   std::string msg = "Mod id# "
+                     + boost::lexical_cast<std::string>( module_id )
+                     + "'s Execution is done\n";
    ClientMessage(msg.c_str());
   
   _mutex.release();

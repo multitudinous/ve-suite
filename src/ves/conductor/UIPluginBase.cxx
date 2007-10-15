@@ -36,7 +36,7 @@
 #include <ves/conductor/util/DataSetLoaderUI.h>
 
 #include <iostream>
-#include <ves/util/string_ops.h>
+#include <boost/lexical_cast.hpp>
 #include <ves/conductor/SummaryResultDialog.h>
 #include <ves/conductor/UIDialog.h>
 #include <ves/conductor/TextResultDialog.h>
@@ -973,19 +973,19 @@ void UIPluginBase::GetDataTables( ves::open::xml::Command* inputCommand, std::ve
       {
          double doubleData;
          tempDVP->GetData( doubleData );
-         stringData = ::to_string( doubleData );
+         stringData =  boost::lexical_cast<std::string>( doubleData );
       }
       else if ( dataType == std::string("UNSIGNED INT") )
       {
          unsigned int intData;
          tempDVP->GetData( intData );
-         stringData = ::to_string( intData );
+         stringData = boost::lexical_cast<std::string>( intData );
       }
       else if ( dataType == std::string("LONG") )
       {
          long longData;
          tempDVP->GetData( longData );
-         stringData = ::to_string( static_cast< int >( longData ) );
+         stringData = boost::lexical_cast<std::string>( longData ) ;
       }
       else if ( dataType == std::string("STRING") )
       {
