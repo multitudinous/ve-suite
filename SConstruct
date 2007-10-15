@@ -307,10 +307,34 @@ This file will be loaded each time.  Note: Options are cached in the file
 base_bldr = EnvironmentBuilder()
 ## Add debug options in for vesuite from SConsAddons 
 base_bldr.addOptions( opts )
+baseEnv = None
 ## Now get the evironment
-baseEnv = base_bldr.buildEnvironment()
+if GetPlatform() == 'win32':
+   # XXX: Temp hack to get msvs version setting
+   if ARGUMENTS.has_key('MSVS_VERSION'):
+      baseEnv = base_bldr.buildEnvironment(MSVS_VERSION=ARGUMENTS['MSVS_VERSION'])
+      ##opt_env = Environment(MSVS_VERSION=ARGUMENTS['MSVS_VERSION'])
+   else:
+      baseEnv = base_bldr.buildEnvironment()
+     ## opt_env = Environment()
 
-baseEnv[ 'ENV' ] = os.environ
+   # When using Visual C++ 8.0 or newer, embed the manifest in all DLLs and
+   # EXEs.
+   # NOTE: The [:3] bit used before passing the MSVS_VERSION value to float()
+   # is to handle the case of Visual C++ Express Edition which appends "Exp"
+   # to the version number.
+   if baseEnv.has_key('MSVS_VERSION') and float(baseEnv['MSVS_VERSION'][:3]) >= 8.0:
+      baseEnv['SHLINKCOM'] = \
+         [baseEnv['SHLINKCOM'],
+          'mt.exe -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
+      baseEnv['LINKCOM'] = \
+         [baseEnv['LINKCOM'],
+          'mt.exe -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
+else:
+    baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
+##   opt_env = Environment(ENV = os.environ)
+##baseEnv = base_bldr.buildEnvironment()
+
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
 
