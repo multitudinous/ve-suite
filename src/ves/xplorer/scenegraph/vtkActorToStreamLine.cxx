@@ -164,20 +164,20 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
                                 pointB.y() - pointA.y(),
                                 pointB.z() - pointA.z() );
 
-            double length = BminusA.length() + leftOver;
-            int numSteps = static_cast< int >( length / delta );
-            double ds = static_cast< double >( 1 ) / static_cast< double >( numSteps );
+            
+            double lineSegmentLength = BminusA.length();
+            double totalDistance = lineSegmentLength + leftOver;
+            int numSteps = static_cast< int >( totalDistance / delta );
+            double ds = delta / lineSegmentLength;
+            double firstPos = ds * ( ( delta - leftOver ) / delta );
 
-            if( length >= delta )
+            if( totalDistance >= delta )
             {
-                double j = 0;
-                if( i != 0 )
-                {
-                    j = ds;
-                }
+                leftOver = totalDistance - ( numSteps * delta );
 
+                double j = firstPos;
                 while( j <= 1 )
-                {   
+                {
                     vertices->push_back( osg::Vec3( -1.0,  1.0, j ) );
                     vertices->push_back( osg::Vec3( -1.0, -1.0, j ) );
                     vertices->push_back( osg::Vec3(  1.0, -1.0, j ) );
@@ -197,26 +197,16 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
 
                     count += 4;
                     j += ds;
-
-                    if( j > 1 )
-                    {
-                        leftOver += length - ( numSteps * delta );
-                    }
                 }
             }
             else
             {
-                leftOver += length;
+                leftOver += totalDistance;
             }
         }
 
         geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, totpts, count ) );
-        totpts += npts;
-
-        if( prim == 0 )
-        {
-        break;
-        }
+        totpts += count;
     }
 
     geometry->setVertexArray( vertices.get() );
