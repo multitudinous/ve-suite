@@ -1,0 +1,12 @@
+##Builds VE_Conductor_UtilitiesLib
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir')
+
+srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'util','icons') )
+pyFile = sca_util.getFilesRecursiveByExt( srcDir, ['.xpm'] )
+#pyFile = map(lambda s: pj('icons', s), pyFile)
+launcherBundle = ves_pkg.createFileBundle( pj('bin','installerImages' ) )
+launcherBundle.addFiles( pyFile )
