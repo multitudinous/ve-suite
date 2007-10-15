@@ -3,7 +3,7 @@ import os, sys, string
 import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options vesSVNRevision RootDir')
+Import('baseEnv ves_pkg LIBDIR GetPlatform execOsgPatTag buildDir osg_options vtk_options xerces_options GetSVNVersion RootDir')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
 srcs = sca_util.getSourcesRecursive( srcDir )
@@ -32,7 +32,7 @@ env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
 #disable profiling by default
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
-env.Append( CPPDEFINES = [vesSVNRevision] )
+env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
 env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
 env.Append(LIBS = ['osgOQ'])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])

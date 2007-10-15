@@ -211,7 +211,7 @@ class Launch:
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
-            exe = "project_tao_osg_vep" + self.windowsSuffix
+            exe = "ves_xplorer_tao_osg_vep" + self.windowsSuffix
             try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdin = self.inputSource, 
@@ -223,7 +223,7 @@ class Launch:
         ##Conductor section
         if self.settings["Conductor"]:
             print "Starting Conductor."
-            exe = "WinClient" + self.windowsSuffix
+            exe = "ves_conductor" + self.windowsSuffix
             conduct_Pid = []
             ##Append argument if desktop mode selected
             if self.settings["VESFile"]:
@@ -278,13 +278,13 @@ class Launch:
                 sys.exit(2)
                 
             #Checking existence of executable file first before calling it
-            exe = "Exe_server" + self.debugSuffix
+            exe = "ves_ce" + self.debugSuffix
             sleep(3)
             try:
                 pids.append(subprocess.Popen(self.ServerCall(), 
                                              stdout = self.outputDestination, stderr = subprocess.STDOUT).pid)
             except OSError:
-                print "Exe_server call error, \"%s\" not found on your environment." % exe
+                print "ves_ce call error, \"%s\" not found on your environment." % exe
                 sys.exit(2)
                 
             self.nameserverPids = pids
@@ -324,7 +324,7 @@ class Launch:
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             #Checking existence of project_tao_osg_vep file first before calling it
-            exe = "project_tao_osg_vep" + self.debugSuffix
+            exe = "ves_xplorer_tao_osg_vep" + self.debugSuffix
             try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdout = self.outputDestination, stderr = subprocess.STDOUT)
@@ -336,7 +336,7 @@ class Launch:
         if self.settings["Conductor"]:
             print "Starting Conductor."
             #Checking existence of WinClient file first before calling it
-            exe = "WinClient" + self.debugSuffix
+            exe = "ves_conductor" + self.debugSuffix
             conduct_Pid = []
             try:
                 conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
@@ -376,9 +376,9 @@ class Launch:
     def ServerCall(self):
         """Returns a generic Server call."""
         if unix:
-            exe = "Exe_server" + self.debugSuffix
+            exe = "ves_ce" + self.debugSuffix
         elif windows:
-            exe = "Winserver" + self.windowsSuffix
+            exe = "ves_ce" + self.windowsSuffix
         else:
             exe = "Error"
         c = [exe, "-ORBInitRef", self.ServiceArg()]
@@ -389,7 +389,7 @@ class Launch:
 
     def ConductorCall(self):
         """Returns a generic Conductor call."""
-        exe = "WinClient"
+        exe = "ves_conductor"
         if unix:
             exe += self.debugSuffix
         elif windows:
@@ -422,7 +422,7 @@ class Launch:
         else:
             desktop = []
         ##Set Xplorer's type
-        exe = "project_tao_osg_vep"
+        exe = "ves_xplorer_tao_osg_vep"
         ##Tack on the Windows suffix.
         if unix:
             exe += self.debugSuffix
@@ -552,7 +552,7 @@ class Launch:
                 try:
                     subprocess.Popen(self.XplorerCall())
                 except OSError:
-                    exe = "project_tao_osg_vep"
+                    exe = "ves_xplorer_tao_osg_vep"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
                     sys.exit(2)
                 return
@@ -572,7 +572,7 @@ class Launch:
                 try:
                     subprocess.Popen(self.XplorerCall())
                 except OSError:
-                    exe = "project_tao_osg_vep"
+                    exe = "ves_xplorer_tao_osg_vep"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
                     sys.exit(2)
                 return

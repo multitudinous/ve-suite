@@ -42,14 +42,22 @@ else:
 #if not os.environ.has_key('FLAGPOLL_PATH'):
 #   os.environ['FLAGPOLL_PATH'] = pj(os.getcwd(), 'Tools', 'flagpoll')
 # determine the svn version of the local vesuite build
-cmd_call = os.popen('svnversion')
-svn_str = cmd_call.read().strip()
-if None != cmd_call.close():
-    svn_str = 999999
-    print "Unable to determine local subversion revision number %s"%svn_str
-else:
-    print "Subversion revision number %s"%svn_str
-vesSVNRevision = 'SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str
+# pass in the real src directory not the scons build dir
+def GetSVNVersion( dir = ''):
+    cwd = os.getcwd()
+    os.chdir( dir )
+    cmd_call = os.popen('svnversion')
+    svn_str = cmd_call.read().strip()
+    if None != cmd_call.close():
+        svn_str = 999999
+        print "Unable to determine local subversion revision number %s"%svn_str
+    else:
+        print "Subversion revision number %s"%svn_str
+    vesSVNRevision = 'SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str
+    os.chdir( cwd )
+    return vesSVNRevision
+
+Export('GetSVNVersion')
 
 import SConsAddons.Util as sca_util
 import SConsAddons.Options as asc_opt
@@ -226,7 +234,7 @@ Export('opts', 'vtk_options', 'osg_options',
          'xerces_options','wxwidgets_options',
          'hdf5_options',
          'hdf4_options',
-         'VE_SUITE_VERSION', 'vesSVNRevision')
+         'VE_SUITE_VERSION')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
