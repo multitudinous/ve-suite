@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../../VTK_Pre-Compile_5.1/
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: VTK
+Description: Visualization ToolKit from Kitware release pre-compiled for VES
+Provides: VTK
+Requires:
+Version: 5.1 
+Libs: /libpath:"${libdir}" vtkCommon.lib vtkDICOMParser.lib vtkexoIIc.lib vtkexpat.lib vtkFiltering.lib vtkfreetype.lib vtkftgl.lib vtkGenericFiltering.lib vtkGraphics.lib vtkHybrid.lib vtkImaging.lib vktInfovis.lib vktIO.lib vtkjpeg.lib vtkMPEG2Encode.lib vtkNetCDF.lib vtkParallel.lib vtkpng.lib vktRendering.lib vtksys.lib vtktiff.lib vtkVolumeRendering.lib vtkWidgets.lib vtkzlib.lib
+Cflags: -I${includedir}
+Arch: noarch
+

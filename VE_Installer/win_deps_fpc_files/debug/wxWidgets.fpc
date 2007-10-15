@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../../WxWidgets_2.8.4_Pre-Compile_8.0_SP1/
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib/vc_dll
+includedir=${prefix}/include ${prefix}/lib/vc_dll/mswd
+
+Name: wxWidgets
+Description: wxWidgets pre-compiled for VES
+Provides: wxWidgets
+Requires:
+Version: 2.8.4 
+Libs: /libpath:"${libdir}" wxbase28d.lib wxbase28d_net.lib wxbase28d_xml.lib wxexpatd.lib wxjpegd.lib wxmsw28d_adv.lib wxmsw28d_aui.lib wxmsw28d_core.lib wxmsw28d_gl.lib wxmsw28d_html.lib wxmsw28d_media.lib wxmsw28d_qa.lib wxmsw28d_richtext.lib wxmsw28d_xrc.lib wxpngd.lib wxregexd.lib wxtiffd.lib wxzlibd.lib
+Cflags: /I"${includedir}"
+Arch: noarch
+

@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../../Coin-2.4.6-msvc8/
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include 
+
+Name: Coin3D
+Description: Coin3D release pre-compiled for VES
+Provides: Coin3D
+Requires:
+Version: 2.4.6
+Libs: /libpath:"${libdir}" coin2.lib coin2s.lib
+Cflags: /I"${includedir}"
+Arch: noarch
+
