@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosEvent_Serv
+Description: TAO CosEvent Service Library
+Requires: TAO_CosEvent_Skel, TAO_DynamicInterface, TAO_IFR_Client, TAO_Messaging, TAO_CosNaming, TAO_Svc_Utils
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosEvent_Servd.lib
+Cflags: /I"${includedir}"

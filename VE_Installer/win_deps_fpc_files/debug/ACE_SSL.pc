@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: ACE_SSL
+Description: ACE SSL Library
+Requires: ACE
+Version: 5.5
+Libs: /libpath:"${libdir}"  ACE_SSLd.lib ssld.lib cryptod.lib
+Cflags: /I"${includedir}" 

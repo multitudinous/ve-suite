@@ -1,0 +1,11 @@
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+exec_prefix=${prefix}
+libdir=${exec_prefix}\lib
+includedir=${prefix}
+
+Name: TAO_CosEvent_Skel
+Description: TAO CosEvent Skeleton Library
+Requires: TAO_CosEvent, TAO_PortableServer
+Version: 1.5
+Libs: /libpath:"${libdir}" TAO_CosEvent_Skeld.lib
+Cflags: /I"${includedir}"
