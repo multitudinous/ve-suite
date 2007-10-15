@@ -52,7 +52,7 @@ def GetSVNVersion( dir = ''):
         svn_str = 999999
         print "Unable to determine local subversion revision number %s"%svn_str
     else:
-        print "Subversion revision number %s"%svn_str
+        print "%s is at subversion revision number %s"%(dir,svn_str)
     vesSVNRevision = 'SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str
     os.chdir( cwd )
     return vesSVNRevision
