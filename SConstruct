@@ -380,9 +380,9 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if GetPlatform() == 'win32':
       baseEnv["WINDOWS_INSERT_MANIFEST"] = True
-      baseEnv["PROGSUFFIX"] = '.exe'
-      baseEnv["LIBSUFFIX"] = '.lib'
-      baseEnv["SHLIBSUFFIX"] = '.dll'
+      baseEnv["PROGSUFFIX"] = 'exe'
+      baseEnv["LIBSUFFIX"] = 'lib'
+      baseEnv["SHLIBSUFFIX"] = 'dll'
 
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
