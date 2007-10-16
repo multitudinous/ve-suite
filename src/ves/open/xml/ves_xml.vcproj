@@ -185,7 +185,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="CAD"
+			Name="cad"
 			>
 			<Filter
 				Name="Header Files"
@@ -285,7 +285,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Model"
+			Name="model"
 			>
 			<Filter
 				Name="Header Files"
@@ -361,7 +361,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="XML"
+			Name="xml"
 			>
 			<Filter
 				Name="Header Files"
@@ -567,7 +567,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Shader"
+			Name="shader"
 			>
 			<Filter
 				Name="Header Files"
