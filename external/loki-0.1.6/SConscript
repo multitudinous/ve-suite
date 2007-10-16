@@ -2,6 +2,7 @@
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
+GetPlatform = sca_util.GetPlatform
 
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir')
 openDir = os.path.abspath( pj(RootDir, 'external', 'loki-0.1.6') )
@@ -15,12 +16,12 @@ sources = map(lambda s: pj('src', s),
 lib_env = ves_pkg.getEnv().Copy()
 
 lib_env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'] )
-lib_env.Append( CPPDEFINES = ['LOKI_MAKE_DLL'] )
-lib_env.Append( CPPDEFINES = ['_WINDLL'] )
-lib_env.Append( CPPDEFINES = ['_DEBUG'] )
-lib_env.Append( CPPDEFINES = ['UNICODE'] )
-lib_env.Append( CPPDEFINES = ['LOKI_MAKE_DLL'] )
-lib_env.Append( CPPDEFINES = ['LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'] )
+if GetPlatform() == "win32":
+   lib_env.Append( CPPDEFINES = ['LOKI_MAKE_DLL'] )
+   lib_env.Append( CPPDEFINES = ['_WINDLL'] )
+   lib_env.Append( CPPDEFINES = ['_DEBUG'] )
+   lib_env.Append( CPPDEFINES = ['UNICODE'] )
+   lib_env.Append( CPPDEFINES = ['LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'] )
 
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 
