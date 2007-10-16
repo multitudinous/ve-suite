@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="VE_XML"
-	ProjectGUID="{E8FE9A1C-3985-407A-9648-FF2C2D025EA1}"
-	RootNamespace="VE_XML"
+	Name="xml"
+	ProjectGUID="{4435AF07-AB56-40D3-B2A8-9700253E91BC}"
+	RootNamespace="xml"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(APR_UTIL_HOME)\include&quot;;&quot;$(APR_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(APR_UTIL_HOME)\include&quot;;&quot;$(APR_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_XML_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,13 +65,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2d.lib libapr-1_d.lib libaprutil-1_d.lib"
-				OutputFile="$(OutDir)/VE_XML_d.dll"
+				OutputFile="$(OutDir)/ves_xml_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(APR_HOME)\Debug&quot;;&quot;$(APR_UTIL_HOME)\Debug&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)/VE_XML.pdb"
+				ProgramDatabaseFile="$(OutDir)/ves_xml.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_XML_d.lib"
+				ImportLibrary="$(OutDir)/ves_xml_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(APR_UTIL_HOME)\include&quot;;&quot;$(APR_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(APR_UTIL_HOME)\include&quot;;&quot;$(APR_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_XML_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -145,14 +145,14 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2.lib libapr-1.lib libaprutil-1.lib "
-				OutputFile="$(OutDir)/VE_XML.dll"
+				OutputFile="$(OutDir)/ves_xml.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;;&quot;$(APR_HOME)\Release&quot;;&quot;$(APR_UTIL_HOME)\Release&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/VE_XML.lib"
+				ImportLibrary="$(OutDir)/ves_xml.lib"
 				TargetMachine="1"
 			/>
 			<Tool

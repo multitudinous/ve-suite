@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="UnitWrapper"
-	ProjectGUID="{26D74E56-5E2A-4664-9675-AB4A4C788982}"
+	ProjectGUID="{DFAB3564-91AE-4584-A411-239EF0C1E813}"
 	RootNamespace="UnitWrapper"
 	Keyword="Win32Proj"
 	>
