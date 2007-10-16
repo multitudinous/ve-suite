@@ -27,7 +27,7 @@ else:
    include_dirs = fp_osg.findIncludes()
    print fp_osg.findLibs()
    print fp_osg.findLibPaths()
-   lib_env.AppendUnique( CXXPATH = " /I" + include_dirs[0] + " " )
+   lib_env.AppendUnique( CPPPATH = include_dirs[0] )
    lib_env.Append( LIBS = fp_osg.findLibs() )
    lib_env.Append( LIBPATH = fp_osg.findLibPaths() )
 
