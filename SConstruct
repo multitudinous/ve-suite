@@ -394,9 +394,6 @@ if not SConsAddons.Util.hasHelpFlag():
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
    if GetPlatform() == 'win32':
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
-      baseEnv.Append( PROGSUFFIX = 'exe' )
-      baseEnv.Append( LIBSUFFIX = 'lib' )
-      baseEnv.Append( SHLIBSUFFIX = 'dll' )
 
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir

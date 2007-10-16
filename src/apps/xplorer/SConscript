@@ -48,7 +48,7 @@ env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-vrj-ogl-libs --li
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 env.ParseConfig('flagpoll bullet --libs --cflags')
 
-prog = ves_pkg.createProgram('ves_xplorer%s' %(execOsgPatTag), env, 'bin')
+prog = ves_pkg.createProgram('ves_xplorer%s.exe' %(execOsgPatTag), env, 'bin')
 prog.addSources( srcs )
 prog.build()
 

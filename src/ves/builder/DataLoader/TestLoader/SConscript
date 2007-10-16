@@ -17,7 +17,7 @@ env.Append(LIBPATH = [pj('#', buildDir, 'src','builder','util'),
 
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --cflags --libs'%env['BoostVersion'])
 vtk_options.apply( env )
-prog = ves_pkg.createProgram('loaderToVtk', env, 'bin')
+prog = ves_pkg.createProgram('loaderToVtk.exe', env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
