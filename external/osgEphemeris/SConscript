@@ -23,7 +23,10 @@ if GetPlatform() != 'win32':
    osg_options.apply( lib_env )
 else:
    print "Running: flagpoll OpenSceneGraph --libs --cflags"
-   lib_env.ParseConfig('flagpoll OpenSceneGraph --libs --cflags')
+   fp_osg = sca_util.FlagPollParser('OpenSceneGraph')
+   lib_env.Append( CPPPATH = fp_osg.findIncludes() )
+   lib_env.Append( LIBS = fp_osg.findLibs() )
+   lib_env.Append( LIBPATH = fp_osg.findLibPaths() )
 
 if baseEnv['StaticLibs'] == "yes":
     lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
