@@ -1,7 +1,7 @@
-prefix=${fp_file_cwd}/../../OSG_1.2_Pre-Compile_vc8.0/
+prefix=${fp_file_cwd}\..\..\OSG_1.2_Pre-Compile_vc8.0
 exec_prefix=${prefix}
-libdir=${exec_prefix}/lib/win32
-includedir=${prefix}/include 
+libdir=${exec_prefix}\lib\win32
+includedir=${prefix}\include 
 
 Name: OpenSceneGraph
 Description: OpenSceneGraph release pre-compiled for VES
