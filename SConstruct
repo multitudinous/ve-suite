@@ -203,11 +203,13 @@ hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_h
 opts.AddOption(hdf5_options)
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
 opts.AddOption(hdf4_options)
-osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
-                        ['osgText', 'osgText',
-                         'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
-                         'osgSim', 'osgFX'])
-opts.AddOption( osg_options )
+osg_options = None
+if GetPlatform() != "win32":
+   osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
+                           ['osgText', 'osgText',
+                            'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
+                            'osgSim', 'osgFX'])
+   opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
 wxwidgets_options = None
