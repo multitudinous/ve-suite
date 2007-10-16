@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options')
+Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform')
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgOQ') )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgOQ' ) )
 headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgOQ')  )
@@ -18,6 +18,8 @@ lib_env.Append( CPPDEFINES  = ['OSGOQ_EXPORTS'] )
 
 if GetPlatform() != 'win32':
    osg_options.apply( lib_env )
+   lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-extra_libs'%lib_env['VRJugglerVersion'])
+   lib_env.Append(LIBS = ['GLU','GL'])
 else:
    print "Running: flagpoll for OpenSceneGraph"
    fp_osg = sca_util.FlagPollParser('OpenSceneGraph')

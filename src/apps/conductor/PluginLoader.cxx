@@ -150,7 +150,7 @@ void PluginLoader::RegisterPlugins()
           wxString( "UIPluginBase", wxConvUTF8 ) )
       {   
          RegisterPlugin(classInfo);
-         wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
+         wxLogDebug (_("|\tRegister plugins : %s"),classInfo->GetClassName());
       }
       node = (wxNode*)wxClassInfo::sm_classTable->Next();
    }
