@@ -378,10 +378,17 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
       buildDir += '.patented'
 
+   if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
+      base_bldr.enableDebug()
+      base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DBG_DLL_RT)
+   else:
+      base_bldr.enableOpt()
+      base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
    ##base_bldr = base_bldr.clone()
+
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
