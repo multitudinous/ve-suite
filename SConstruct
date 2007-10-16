@@ -210,8 +210,12 @@ osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True,
 opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
-wxwidgets_options = WxWidgetsOption()
-#wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
+wxwidgets_options = None
+if GetPlatform() == 'win32':
+   wxwidgets_options = WxWidgetsOption()
+else:
+   wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
+   opts.AddOption( wxwidgets_options )
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
 opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.31')
@@ -307,33 +311,9 @@ This file will be loaded each time.  Note: Options are cached in the file
 base_bldr = EnvironmentBuilder()
 ## Add debug options in for vesuite from SConsAddons 
 base_bldr.addOptions( opts )
-baseEnv = None
-## Now get the evironment
-if GetPlatform() == 'win32':
-   # XXX: Temp hack to get msvs version setting
-   if ARGUMENTS.has_key('MSVS_VERSION'):
-      baseEnv = base_bldr.buildEnvironment(MSVS_VERSION=ARGUMENTS['MSVS_VERSION'])
-      ##opt_env = Environment(MSVS_VERSION=ARGUMENTS['MSVS_VERSION'])
-   else:
-      baseEnv = base_bldr.buildEnvironment()
-     ## opt_env = Environment()
 
-   # When using Visual C++ 8.0 or newer, embed the manifest in all DLLs and
-   # EXEs.
-   # NOTE: The [:3] bit used before passing the MSVS_VERSION value to float()
-   # is to handle the case of Visual C++ Express Edition which appends "Exp"
-   # to the version number.
-   if baseEnv.has_key('MSVS_VERSION') and float(baseEnv['MSVS_VERSION'][:3]) >= 8.0:
-      baseEnv['SHLINKCOM'] = \
-         [baseEnv['SHLINKCOM'],
-          'mt.exe -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
-      baseEnv['LINKCOM'] = \
-         [baseEnv['LINKCOM'],
-          'mt.exe -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
-else:
-    baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
-##   opt_env = Environment(ENV = os.environ)
-##baseEnv = base_bldr.buildEnvironment()
+baseEnv = base_bldr.buildEnvironment()
+baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
 
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
@@ -341,8 +321,9 @@ baseEnv.Help(help_text)
 if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
    opts.Process(baseEnv, None, True)                   # Update the options
-   
-   wxwidgets_options.validate(baseEnv,)
+   if GetPlatform() == "win32":
+      wxwidgets_options.validate(baseEnv,)
+
    if baseEnv[ 'validate' ] == 'yes':
        # check the apr and apu utilities
        # there is probably an easier way to do this so feel free to simplify
@@ -396,6 +377,12 @@ if not SConsAddons.Util.hasHelpFlag():
    if baseEnv['Patented'] == 'yes':
       baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
       buildDir += '.patented'
+
+   if GetPlatform() == 'win32':
+      baseEnv["WINDOWS_INSERT_MANIFEST"] = True
+      baseEnv["PROGSUFFIX"] = '.exe'
+      baseEnv["LIBSUFFIX"] = '.lib'
+      baseEnv["SHLIBSUFFIX"] = '.dll'
 
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
