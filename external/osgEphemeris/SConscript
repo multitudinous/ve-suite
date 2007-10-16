@@ -15,9 +15,15 @@ sources = map(lambda s: pj('src', 'osgEphemerisLib', s),
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'include' )] )
 lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_EXPORTS'] )
+
 if GetPlatform() == 'darwin':
     lib_env.Append( CPPDEFINES  = ['_DARWIN'] )
-osg_options. apply( lib_env )
+
+if GetPlatform() != 'win32':
+   osg_options.apply( lib_env )
+else:
+   lib_env.ParseConfig('flagpoll OpenSceneGraph --libs --cflags' )
+
 if baseEnv['StaticLibs'] == "yes":
     lib = ves_pkg.createStaticAndSharedLibrary('osgEphemeris', lib_env,
                                                installPrefix = LIBDIR)
