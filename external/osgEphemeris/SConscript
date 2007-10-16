@@ -24,10 +24,11 @@ if GetPlatform() != 'win32':
 else:
    print "Running: flagpoll OpenSceneGraph --libs --cflags"
    fp_osg = sca_util.FlagPollParser('OpenSceneGraph')
-   print fp_osg.findIncludes()
+   include_dirs = fp_osg.findIncludes()
+   incs_as_flags = [" /I" + p for p in self.found_incs]
    print fp_osg.findLibs()
    print fp_osg.findLibPaths()
-   lib_env.Append( CPPPATH = fp_osg.findIncludes() )
+   lib_env.Append( CPPPATH = incs_as_flags )
    lib_env.Append( LIBS = fp_osg.findLibs() )
    lib_env.Append( LIBPATH = fp_osg.findLibPaths() )
 
