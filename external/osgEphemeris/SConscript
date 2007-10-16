@@ -25,7 +25,7 @@ else:
    print "Running: flagpoll OpenSceneGraph --libs --cflags"
    fp_osg = sca_util.FlagPollParser('OpenSceneGraph')
    include_dirs = fp_osg.findIncludes()
-   incs_as_flags = [" /I" + p for p in self.found_incs]
+   incs_as_flags = [" /I" + p for p in include_dirs]
    print fp_osg.findLibs()
    print fp_osg.findLibPaths()
    lib_env.Append( CPPPATH = incs_as_flags )
