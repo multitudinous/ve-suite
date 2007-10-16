@@ -25,7 +25,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;echo module.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open/skel -GI $(VE_SUITE_HOME)/src/ves/open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=src/ves/VEConfig.h&#x0D;&#x0A;echo VjObs.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open/skel -GI $(VE_SUITE_HOME)/src/ves/open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=src/ves/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;&#x0D;&#x0A;"
+				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;echo module.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open -GI $(VE_SUITE_HOME)/src/ves/open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h&#x0D;&#x0A;echo VjObs.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open -GI $(VE_SUITE_HOME)/src/ves/open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -41,7 +41,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsrvcs&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsrvcs&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;VE_OPEN_MODULE_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -62,7 +62,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib"
 				OutputFile="$(OutDir)/ves_open_idl.dll"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -106,7 +106,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;echo module.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open/skel -GI $(VE_SUITE_HOME)/src/ves/open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=src/ves/VEConfig.h&#x0D;&#x0A;echo VjObs.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open/skel -GI $(VE_SUITE_HOME)/src/ves/open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=src/ves/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
+				CommandLine="echo C++ stubs. . .&#x0D;&#x0A;call $(VE_SUITE_HOME)/VE_Installer/setup.bat&#x0D;&#x0A;echo module.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open -GI $(VE_SUITE_HOME)/src/ves/open/idl/module.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h&#x0D;&#x0A;echo VjObs.idl...&#x0D;&#x0A;$(ACE_ROOT)/bin/tao_idl.exe -GC -in -o $(VE_SUITE_HOME)/src/ves/open -GI $(VE_SUITE_HOME)/src/ves/open/idl/VjObs.idl -t $(VE_SUITE_HOME)/VE_Installer -H dynamic_hash -Wb,export_macro=VE_OPEN_MODULE_EXPORTS -Wb,export_include=ves/VEConfig.h&#x0D;&#x0A;echo Done.&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -123,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsrvcs&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsrvcs&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VE_OPEN_MODULE_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -189,19 +189,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\skel\moduleC.cpp"
+				RelativePath=".\moduleC.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\skel\moduleS.cpp"
+				RelativePath=".\moduleS.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\skel\VjObsC.cpp"
+				RelativePath=".\VjObsC.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\skel\VjObsS.cpp"
+				RelativePath=".\VjObsS.cpp"
 				>
 			</File>
 		</Filter>
@@ -211,19 +211,19 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\skel\moduleC.h"
+				RelativePath=".\moduleC.h"
 				>
 			</File>
 			<File
-				RelativePath=".\skel\moduleS.h"
+				RelativePath=".\moduleS.h"
 				>
 			</File>
 			<File
-				RelativePath=".\skel\VjObsC.h"
+				RelativePath=".\VjObsC.h"
 				>
 			</File>
 			<File
-				RelativePath=".\skel\VjObsS.h"
+				RelativePath=".\VjObsS.h"
 				>
 			</File>
 		</Filter>
