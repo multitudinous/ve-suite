@@ -26,7 +26,7 @@ env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valu
                               TAO_Messaging TAO_Valuetype vpr --cflags --libs')
 xerces_options.apply( env )
 wxwidgets_options.apply( env )
-prog = ves_pkg.createProgram('ves_conductor.exe', env, 'bin')
+prog = ves_pkg.createProgram('ves_conductor', env, 'bin')
 prog.addSources( srcs )
 prog.build()
 

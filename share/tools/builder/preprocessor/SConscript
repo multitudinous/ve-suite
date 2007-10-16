@@ -15,6 +15,6 @@ env.Append( LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 vtk_options.apply( env )
 
-prog = ves_pkg.createProgram('preprocessor.exe', env, 'bin')
+prog = ves_pkg.createProgram('preprocessor', env, 'bin')
 prog.addSources( srcs )
 prog.build()
