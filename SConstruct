@@ -378,11 +378,6 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Append( CPPDEFINES = ['VE_PATENTED'] )
       buildDir += '.patented'
 
-   if GetPlatform() == 'win32':
-      baseEnv["WINDOWS_INSERT_MANIFEST"] = True
-      baseEnv["PROGSUFFIX"] = 'exe'
-      baseEnv["LIBSUFFIX"] = 'lib'
-      baseEnv["SHLIBSUFFIX"] = 'dll'
 
    ## read the builder options after they have been added to the env
    ##base_bldr.readOptions( baseEnv )
@@ -397,6 +392,11 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
+   if GetPlatform() == 'win32':
+      baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
+      baseEnv.Append( PROGSUFFIX = 'exe' )
+      baseEnv.Append( LIBSUFFIX = 'lib' )
+      baseEnv.Append( SHLIBSUFFIX = 'dll' )
 
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
