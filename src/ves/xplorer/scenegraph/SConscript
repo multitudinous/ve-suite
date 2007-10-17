@@ -32,7 +32,7 @@ xerces_options.apply( lib_env )
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
    
-lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY'])
+lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY','VE_NURBS_UTILS_LIBRARY'])
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_scenegraph',
