@@ -15,6 +15,8 @@ xerces_options.apply( lib_env )
 apr_options.apply( lib_env )
 apu_options.apply( lib_env )
 
+lib_env.Append( CPPDEFINES = ['VE_XML_LIBRARY'])
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_open_xml',
                                                         lib_env,

@@ -191,7 +191,12 @@ else:
                          'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
                          'osgSim', 'osgFX'])
 opts.AddOption( osg_options )
-xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
+if GetPlatform() == 'win32':
+   xerces_options = fp_option.FlagPollBasedOption("xerces",
+         "xerces-c", "2.7", True, True)
+else:
+   xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
+   
 opts.AddOption( xerces_options )
 wxwidgets_options = None
 
