@@ -249,8 +249,8 @@ Export('opts', 'vtk_options', 'osg_options',
          'VE_SUITE_VERSION',
          'apr_options', 'apu_options',
          'bullet_options', 'tao_options',
-         'vrjuggler_options', 'boost_options'
-         'gmtl_options', 'vpr_options,
+         'vrjuggler_options', 'boost_options',
+         'gmtl_options', 'vpr_options',
          'gadgeteer_options')
 
 ##Display some help
