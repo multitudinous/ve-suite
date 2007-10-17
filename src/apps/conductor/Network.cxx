@@ -1082,7 +1082,7 @@ void Network::DropModule(int ix, int iy, int mod )
 
    //num = cur_module->GetNumPoly();
    //tmppoly.resize(num);
-   Polygon tmppoly;
+   ves::conductor::util::Polygon tmppoly;
    POLY oldPoly;
    oldPoly.resize( cur_module->GetNumPoly() );
    cur_module->GetPoly( oldPoly );
@@ -1749,7 +1749,7 @@ void Network::AddtoNetwork(UIPluginBase *cur_module, std::string cls_name)
     num = cur_module->GetNumPoly();
     tmpPoly.resize(num);
     cur_module->GetPoly(tmpPoly); 
-    Polygon newPolygon;
+    ves::conductor::util::Polygon newPolygon;
     *(newPolygon.GetPolygon()) = tmpPoly;
 
     newPolygon.TransPoly( bbox.x, bbox.y, *(modules[id].GetPolygon()) ); //Make the network recognize its polygon 
@@ -2363,7 +2363,7 @@ void Network::LoadSystem( model::SystemStrongPtr system, Canvas * parent )
         POLY tmpPoly;
         tmpPoly.resize( polynum );
         modules[ num ].GetPlugin()->GetPoly(tmpPoly);
-        Polygon tempPoly;
+        ves::conductor::util::Polygon tempPoly;
         *(tempPoly.GetPolygon()) = tmpPoly;
         tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon 
     }
