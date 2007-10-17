@@ -2,7 +2,7 @@
 import os, sys, string, glob
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir')
+Import('baseEnv ves_pkg LIBDIR buildDir RootDir')
 
 openSubdirs = Split("""
     idl
@@ -21,9 +21,9 @@ sources = Split("""
    VjObsS.cpp
 """)
 ##srcs = map(lambda s: pj('#', 'VE_Open', 'skel', s), srcs)
-headers  = glob.glob(pj('#', buildDir, 'src','ves','open','*.cpp'))
-headers += glob.glob(pj('#', buildDir, 'src','ves','open','*.h'))
-headers += glob.glob(pj('#', buildDir, 'src','ves','open','*.inl'))
+headers  = glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.cpp'))
+headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.h'))
+headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.inl'))
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.ParseConfig('flagpoll TAO ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \

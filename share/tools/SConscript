@@ -1,0 +1,13 @@
+##Builds VE-Suite Libraries
+#import os
+#pj = os.path.join
+
+toolsSubdirs = Split("""
+    builder
+    vea
+""")
+
+##Run SConscript files in all of those folders.
+for d in toolsSubdirs:
+   #print " dir ", d
+   SConscript( dirs = d )

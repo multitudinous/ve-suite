@@ -30,5 +30,5 @@ else:
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Conductor', 'GUIPlugin'))
+lib.addHeaders(headers,  pj( 'ves', 'conductor'))
 lib.build()
