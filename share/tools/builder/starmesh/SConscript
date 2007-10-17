@@ -9,4 +9,4 @@ sources = Split("""
 """)
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
-env.Program('vexplorer.exe', source = sources)
+env.Program('vexplorer' + env["PROGSUFFIX"], source = sources)

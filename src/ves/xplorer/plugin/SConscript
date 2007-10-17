@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options xerces_options')
+Import('baseEnv ves_pkg LIBDIR buildDir vtk_options osg_options xerces_options')
 
 sources = Split("""
     cfdVEBaseClass.cxx
@@ -32,11 +32,11 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
 if baseEnv['StaticLibs'] == "yes":
-   lib = ves_pkg.createStaticAndSharedLibrary('GraphicalPlugin%s' %(execOsgPatTag),
+   lib = ves_pkg.createStaticAndSharedLibrary('GraphicalPlugin',
                                                         lib_env,
                                                         installPrefix = LIBDIR)
 else:
-   lib = ves_pkg.createSharedLibrary('GraphicalPlugin%s' %(execOsgPatTag), lib_env,
+   lib = ves_pkg.createSharedLibrary('GraphicalPlugin', lib_env,
                                                installPrefix = LIBDIR)
    
 lib.addSources(sources)

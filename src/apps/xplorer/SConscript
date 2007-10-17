@@ -13,13 +13,11 @@ env.Append(
             LIBS = ['ves_open_xml',
                    'ves_builder_dataloader',
                    'ves_builder_translator_base',
-                   'ves_xplorer_scenegraph%s' %(execOsgPatTag),
+                   'ves_xplorer_scenegraph',
                    'ves_xplorer_util',
-                   'ves_xplorer_volume%s' %(execOsgPatTag),
+                   'ves_xplorer_volume',
                    'ves_open_module',
-                   'ves_xplorer%s' %(execOsgPatTag)])#,
-                   #'VE_XplorerNetworkLib%s' %(execOsgPatTag),
-                   #'GraphicalPlugin%s' %(execOsgPatTag)])
+                   'ves_xplorer'])
 
 env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
                         pj('#', buildDir, 'src','ves','xplorer','util'),

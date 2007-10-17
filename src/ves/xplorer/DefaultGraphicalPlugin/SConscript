@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options xerces_options GetPlatform')
+Import('baseEnv ves_pkg LIBDIR buildDir vtk_options osg_options xerces_options GetPlatform')
 
 sources = Split("""
     DefaultGraphicalPlugin.cxx
@@ -13,10 +13,10 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_SceneGraph%s' %(execOsgPatTag),
-                   'VE_XplorerLib%s' %(execOsgPatTag),
-                   'GraphicalPlugin%s' %(execOsgPatTag),
-                   'VE_TextureBasedLib%s' %(execOsgPatTag),
+lib_env.Append(LIBS = ['VE_SceneGraph',
+                   'VE_XplorerLib',
+                   'GraphicalPlugin',
+                   'VE_TextureBasedLib',
                    'VE_UtilLib', 'VE_XML'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
                         pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
@@ -37,7 +37,7 @@ if GetPlatform() == 'darwin':
    lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
    lib_env['SHLIBSUFFIX'] = '.dylib'
 
-lib = ves_pkg.createSharedLibrary('DefaultGraphicalPlugin%s' %(execOsgPatTag),
+lib = ves_pkg.createSharedLibrary('DefaultGraphicalPlugin',
                                                         lib_env,
                                                         installPrefix = pj('share','vesuite','examples','simple','Plugins','GE','RHEL_4_i686'))
 ##  RHEL_4_i686 

@@ -25,7 +25,7 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 wxwidgets_options.apply( env )
 vtk_options.apply( env )
-prog = ves_pkg.createProgram( programName + '.exe', env, 'bin')
+prog = ves_pkg.createProgram( programName + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
 prog.build()
 
@@ -34,11 +34,11 @@ if GetPlatform() == "darwin":
    bld = Builder(action = idlCmd )
    env.Append(BUILDERS = {'apple_rez': bld})
    if 'install' in COMMAND_LINE_TARGETS:
-      conductorTarget = pj(PREFIX,'bin','Texture')
-      winTarget = pj(PREFIX,'bin','vtkTo3DTexture')
+      conductorTarget = pj(PREFIX,'bin','Texture' + env["PROGSUFFIX"])
+      winTarget = pj(PREFIX,'bin','vtkTo3DTexture' + env["PROGSUFFIX"])
    else:
-      conductorTarget = pj( '#', buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','Texture')
-      winTarget = pj( '#',buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','vtkTo3DTexture')
+      conductorTarget = pj( '#', buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','Texture' + env["PROGSUFFIX"])
+      winTarget = pj( '#',buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','vtkTo3DTexture' + env["PROGSUFFIX"])
 
    env.apple_rez( conductorTarget, winTarget)
    env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))

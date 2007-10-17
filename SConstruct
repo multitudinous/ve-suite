@@ -98,33 +98,12 @@ else:
    buildDir = 'buildwin'
 
 ########### Some utility functions
-def GetTag(execTag = False, osgTag = False,
-           patentedTag = False, clusterTag = False):
-    """Creates a combined tag for libraries and programs."""
-    ##Combine the tags.
-    finalTag = ''
-    if execTag:
-        exec_tag = '_tao'
-        finalTag += exec_tag
-    if osgTag:
-        osg_tag = "_osg"
-        finalTag += osg_tag
-    if patentedTag:
-        patented_tag = "_vep"
-        finalTag += patented_tag
-    return finalTag
-
 class WxWidgetsOption(fp_opt.FlagPollBasedOption):
    def __init__(self, name='wxWidgets', requiredVersion="2.8", required=True, useCppPath=True):
       help_text = """Base dir for wxWidgets"""
       self.baseDirKey = ""
       self.filesToCheckRelBase = []
       fp_opt.FlagPollBasedOption.__init__(self, 'wxWidgetsOption', name, requiredVersion, required, useCppPath, help_text)
-
-execOsgPatTag = GetTag(True, True, True)
-execOsgPatClusterTag = GetTag(True, True, True, True)
-Export('execOsgPatTag')
-Export('execOsgPatClusterTag')
 
 def CreateConfig(target, source, env):
    "Creates the xxx-config file users use to compile against this library"

@@ -211,7 +211,7 @@ class Launch:
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             ##Append argument if desktop mode selected
-            exe = "ves_xplorer_tao_osg_vep" + self.windowsSuffix
+            exe = "ves_xplorer" + self.windowsSuffix
             try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdin = self.inputSource, 
@@ -324,7 +324,7 @@ class Launch:
         elif self.settings["Xplorer"]:
             print "Starting Xplorer."
             #Checking existence of project_tao_osg_vep file first before calling it
-            exe = "ves_xplorer_tao_osg_vep" + self.debugSuffix
+            exe = "ves_xplorer" + self.debugSuffix
             try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdout = self.outputDestination, stderr = subprocess.STDOUT)
@@ -422,7 +422,7 @@ class Launch:
         else:
             desktop = []
         ##Set Xplorer's type
-        exe = "ves_xplorer_tao_osg_vep"
+        exe = "ves_xplorer"
         ##Tack on the Windows suffix.
         if unix:
             exe += self.debugSuffix
@@ -552,7 +552,7 @@ class Launch:
                 try:
                     subprocess.Popen(self.XplorerCall())
                 except OSError:
-                    exe = "ves_xplorer_tao_osg_vep"
+                    exe = "ves_xplorer"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
                     sys.exit(2)
                 return

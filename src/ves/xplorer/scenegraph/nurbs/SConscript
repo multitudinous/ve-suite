@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag osg_options')
+Import('baseEnv ves_pkg LIBDIR osg_options')
 
 sources = Split("""
    ControlPoint.cxx

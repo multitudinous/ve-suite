@@ -82,74 +82,74 @@ env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
 vtk_options.apply( env )
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 
-norm2poly = ves_pkg.createProgram('addNormals2Poly.exe', env, 'bin')
+norm2poly = ves_pkg.createProgram('addNormals2Poly' + env["PROGSUFFIX"], env, 'bin')
 norm2poly.addSources( addNormals2Poly )
 norm2poly.build()
 
-append = ves_pkg.createProgram('appendVTK', env, 'bin')
+append = ves_pkg.createProgram('appendVTK' + env["PROGSUFFIX"], env, 'bin')
 append.addSources( appendVTK )
 append.build()
 
-fluentPart = ves_pkg.createProgram('combineFluentParticleFile.exe', env, 'bin')
+fluentPart = ves_pkg.createProgram('combineFluentParticleFile' + env["PROGSUFFIX"], env, 'bin')
 fluentPart.addSources( combineFluentParticleFile )
 fluentPart.build()
 
-comparScal = ves_pkg.createProgram('compareScalars.exe', env, 'bin')
+comparScal = ves_pkg.createProgram('compareScalars' + env["PROGSUFFIX"], env, 'bin')
 comparScal.addSources( compareScalars )
 comparScal.build()
 
-cel2point = ves_pkg.createProgram('convertCellDataToPointData.exe', env, 'bin')
+cel2point = ves_pkg.createProgram('convertCellDataToPointData' + env["PROGSUFFIX"], env, 'bin')
 cel2point.addSources( convertCellDataToPointData )
 cel2point.build()
 
-surf2stl = ves_pkg.createProgram('convertSurfaceFileToStl.exe', env, 'bin')
+surf2stl = ves_pkg.createProgram('convertSurfaceFileToStl' + env["PROGSUFFIX"], env, 'bin')
 surf2stl.addSources( convertSurfaceFileToStl )
 surf2stl.build()
 
-vtk2ascii = ves_pkg.createProgram('convertVTK2Ascii.exe', env, 'bin')
+vtk2ascii = ves_pkg.createProgram('convertVTK2Ascii' + env["PROGSUFFIX"], env, 'bin')
 vtk2ascii.addSources( convertVTK2Ascii )
 vtk2ascii.build()
 
-vtk2bin = ves_pkg.createProgram('convertVTK2Binary.exe', env, 'bin')
+vtk2bin = ves_pkg.createProgram('convertVTK2Binary' + env["PROGSUFFIX"], env, 'bin')
 vtk2bin.addSources( convertVTK2Binary )
 vtk2bin.build()
 
-mini = ves_pkg.createProgram('createMiniFlowdata.exe', env, 'bin')
+mini = ves_pkg.createProgram('createMiniFlowdata' + env["PROGSUFFIX"], env, 'bin')
 mini.addSources( createMiniFlowdata )
 mini.build()
 
-vtkSurf = ves_pkg.createProgram('makeVtkSurface.exe', env, 'bin')
+vtkSurf = ves_pkg.createProgram('makeVtkSurface' + env["PROGSUFFIX"], env, 'bin')
 vtkSurf.addSources( makeVtkSurface )
 vtkSurf.build()
 
-merge = ves_pkg.createProgram('mergeVertices.exe', env, 'bin')
+merge = ves_pkg.createProgram('mergeVertices' + env["PROGSUFFIX"], env, 'bin')
 merge.addSources( mergeVertices )
 merge.build()
 
-mesh = ves_pkg.createProgram('meshViewer.exe', env, 'bin')
+mesh = ves_pkg.createProgram('meshViewer' + env["PROGSUFFIX"], env, 'bin')
 mesh.addSources( meshViewer )
 mesh.build()
 
-fieldData = ves_pkg.createProgram('moveFieldToPointData.exe', env, 'bin')
+fieldData = ves_pkg.createProgram('moveFieldToPointData' + env["PROGSUFFIX"], env, 'bin')
 fieldData.addSources( moveFieldToPointData )
 fieldData.build()
 
-removeCells = ves_pkg.createProgram('removeVtkCellsOutsideBox.exe', env, 'bin')
+removeCells = ves_pkg.createProgram('removeVtkCellsOutsideBox' + env["PROGSUFFIX"], env, 'bin')
 removeCells.addSources( removeVtkCellsOutsideBox )
 removeCells.build()
 
-removePoint = ves_pkg.createProgram('removeVtkPointData.exe', env, 'bin')
+removePoint = ves_pkg.createProgram('removeVtkPointData' + env["PROGSUFFIX"], env, 'bin')
 removePoint.addSources( removeVtkPointData )
 removePoint.build()
 
-scale = ves_pkg.createProgram('scaleVTK.exe', env, 'bin')
+scale = ves_pkg.createProgram('scaleVTK' + env["PROGSUFFIX"], env, 'bin')
 scale.addSources( scaleVTK )
 scale.build()
 
-trans = ves_pkg.createProgram('transformVTK.exe', env, 'bin')
+trans = ves_pkg.createProgram('transformVTK' + env["PROGSUFFIX"], env, 'bin')
 trans.addSources( transformVTK )
 trans.build()
 
-scaleRange = ves_pkg.createProgram('whatIsScalarRange.exe', env, 'bin')
+scaleRange = ves_pkg.createProgram('whatIsScalarRange' + env["PROGSUFFIX"], env, 'bin')
 scaleRange.addSources( whatIsScalarRange )
 scaleRange.build()

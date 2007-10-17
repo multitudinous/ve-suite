@@ -459,7 +459,7 @@ class LauncherWindow(wx.Frame):
 
     def ResetVESuite(self, event = None):
         ##Killall process in master cluster
-        os.system("killall ves_xplorer_tao_osg_vep")
+        os.system("killall ves_xplorer")
         os.system("killall ves_ce")
         os.system("killall ves_conductor")
         os.system("killall Naming_Service")
@@ -468,7 +468,7 @@ class LauncherWindow(wx.Frame):
         if (not self.state.GetSurface("DesktopMode")):
             newSlaveList = self.state.GetSurface("ClusterDict").GetNames()
             for cluster in newSlaveList:
-                os.system(("ssh %s killall ves_xplorer_tao_osg_vep") % cluster)
+                os.system(("ssh %s killall ves_xplorer") % cluster)
                 os.system(("ssh %s killall ves_ce") % cluster)
                 os.system(("ssh %s killall ves_conductor") % cluster)
                 os.system(("ssh %s killall Naming_Service") % cluster)
