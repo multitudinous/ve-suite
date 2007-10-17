@@ -6,5 +6,5 @@ includedir=${prefix}
 Name: ACE
 Description: ADAPTIVE Communication Environment 
 Version: 5.5
-Libs: /libpath:"${libdir}" ACEd.lib rtd.lib dld.lib 
+Libs: /libpath:"${libdir}" ACEd.lib
 Cflags: /I"${includedir}"
