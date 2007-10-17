@@ -69,7 +69,7 @@ namespace conductor
 {
 namespace util
 {
-   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public ves::open::xml::cad::CADNodeTraverser
+   class VE_GUIPLUGINS_EXPORTS CADTreeBuilder: public ves::open::xml::cad::CADNodeTraverser
    {
       public:
         
@@ -84,7 +84,7 @@ namespace util
          ///Destructor
          virtual ~CADTreeBuilder();
 
-         class VE_CONDUCTOR_UTILS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback{
+         class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback{
          public:
             ///Constructor
             TreeGraphPreCallback(){;}
@@ -101,7 +101,7 @@ namespace util
          protected:
       };
 
-      class VE_CONDUCTOR_UTILS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback{
+      class VE_GUIPLUGINS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADNodeTraverseCallback{
          public:
             ///Constructor
             TreeGraphPostCallback(){;}
@@ -121,7 +121,7 @@ namespace util
       /*!\class ves::open::xml::cad::CADTreeBuilder::TreeNodeData
        * Class to pair the CADNode with and item in the tree.
        */
-      class VE_CONDUCTOR_UTILS_EXPORTS TreeNodeData : public wxTreeItemData
+      class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
       {
       public:
          ///Constructor

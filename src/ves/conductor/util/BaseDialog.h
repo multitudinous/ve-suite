@@ -66,7 +66,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS BaseDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS BaseDialog : public wxDialog
 {
 public:
    ///Constructor

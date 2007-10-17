@@ -77,7 +77,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS CADOpacitySliderDlg:public wxDialog
+class VE_GUIPLUGINS_EXPORTS CADOpacitySliderDlg:public wxDialog
 {
 public:
    enum OPACITY_DLG_IDS

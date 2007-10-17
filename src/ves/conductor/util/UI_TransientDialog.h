@@ -53,7 +53,7 @@ namespace conductor
 namespace util
 {
 class wxSpinCtrlDbl;
-class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public BaseDialog 
+class VE_GUIPLUGINS_EXPORTS UI_TransientDialog : public BaseDialog 
 {
 public:
    UI_TransientDialog(int numTimeSteps,

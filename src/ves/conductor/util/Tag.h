@@ -60,7 +60,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS Tag : public wxEvtHandler
+class VE_GUIPLUGINS_EXPORTS Tag : public wxEvtHandler
 {
 public:
     ///Constructor

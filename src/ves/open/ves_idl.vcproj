@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="ves_idl"
+	Name="idl"
 	ProjectGUID="{92349120-95F6-4313-BC18-26DBA7B9FE5B}"
+	RootNamespace="idl"
 	Keyword="Win32Proj"
 	>
 	<Platforms>

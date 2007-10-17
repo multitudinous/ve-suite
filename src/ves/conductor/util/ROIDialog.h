@@ -51,7 +51,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS ROIDialog : public BaseDialog 
+class VE_GUIPLUGINS_EXPORTS ROIDialog : public BaseDialog 
 {
 public:
    ///Constructor

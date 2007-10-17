@@ -50,7 +50,7 @@ namespace conductor
 namespace util
 {
 
-class VE_CONDUCTOR_UTILS_EXPORTS CADMaterialEditMenu : public wxMenu{
+class VE_GUIPLUGINS_EXPORTS CADMaterialEditMenu : public wxMenu{
 public:
    enum MATERIAL_EDIT_MENU_IDS
    {

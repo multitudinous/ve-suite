@@ -52,7 +52,7 @@ namespace conductor
 {
 namespace util
 {
-	class VE_CONDUCTOR_UTILS_EXPORTS TransferFunctionDialog : public ves::conductor::util::BaseDialog 
+	class VE_GUIPLUGINS_EXPORTS TransferFunctionDialog : public ves::conductor::util::BaseDialog 
 {
 public:
    ///Constructor

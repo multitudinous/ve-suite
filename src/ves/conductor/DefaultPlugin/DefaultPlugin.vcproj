@@ -212,27 +212,11 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 			>
-			<File
-				RelativePath=".\DefaultPlugin.cxx"
-				>
-			</File>
-			<File
-				RelativePath=".\DefaultPlugin_UI_Dialog.cxx"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd"
 			>
-			<File
-				RelativePath=".\DefaultPlugin.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DefaultPlugin_UI_Dialog.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

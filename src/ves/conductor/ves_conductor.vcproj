@@ -235,7 +235,55 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\BaseDialog.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADMaterialEditMenu.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADNodeManagerDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADNodeMenu.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADNodePropsDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADOpacitySliderDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADTreeBuilder.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\contours.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CORBAServiceList.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\DataSetLoaderUI.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\DefaultPlugin\DefaultPlugin.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\DefaultPlugin\DefaultPlugin_UI_Dialog.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\DualSlider.cxx"
 				>
 			</File>
 			<File
@@ -259,6 +307,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\Link.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ListTable.cxx"
 				>
 			</File>
@@ -267,11 +319,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\OrbThread.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\ParamsDlg.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\paraThread.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\polydata.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Polygon.cxx"
 				>
 			</File>
 			<File
@@ -287,6 +351,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\ROIDialog.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\ScalarToolsDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\SoundsPane.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\spinctld.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\streamlines.cxx"
 				>
 			</File>
@@ -299,11 +379,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\Tag.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TBIsosurface.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TBToolBar.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\TexTable.cxx"
 				>
 			</File>
 			<File
 				RelativePath=".\TextResultDialog.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TransferFunctionDlg.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TransformUI.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\UI_i.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\UI_TransientDialog.cxx"
 				>
 			</File>
 			<File
@@ -324,6 +432,10 @@
 			</File>
 			<File
 				RelativePath=".\vistab.cxx"
+				>
+			</File>
+			<File
+				RelativePath=".\util\WPDialog.cxx"
 				>
 			</File>
 			<File
@@ -356,7 +468,55 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\BaseDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADMaterialEditMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADNodeManagerDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADNodeMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADNodePropsDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADOpacitySliderDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CADTreeBuilder.h"
+				>
+			</File>
+			<File
 				RelativePath=".\contours.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\CORBAServiceList.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\DataSetLoaderUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DefaultPlugin\DefaultPlugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DefaultPlugin\DefaultPlugin_UI_Dialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\DualSlider.h"
 				>
 			</File>
 			<File
@@ -380,6 +540,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\Link.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ListTable.h"
 				>
 			</File>
@@ -388,11 +552,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\OrbThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\ParamsDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\paraThread.h"
 				>
 			</File>
 			<File
 				RelativePath=".\polydata.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\Polygon.h"
 				>
 			</File>
 			<File
@@ -408,6 +584,22 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\ROIDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\ScalarToolsDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\SoundsPane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\spinctld.h"
+				>
+			</File>
+			<File
 				RelativePath=".\streamlines.h"
 				>
 			</File>
@@ -420,11 +612,39 @@
 				>
 			</File>
 			<File
+				RelativePath=".\util\Tag.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TBIsosurface.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TBToolBar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\TexTable.h"
 				>
 			</File>
 			<File
 				RelativePath=".\TextResultDialog.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TransferFunctionDlg.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\TransformUI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\UI_i.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\UI_TransientDialog.h"
 				>
 			</File>
 			<File
@@ -445,6 +665,10 @@
 			</File>
 			<File
 				RelativePath=".\vistab.h"
+				>
+			</File>
+			<File
+				RelativePath=".\util\WPDialog.h"
 				>
 			</File>
 		</Filter>

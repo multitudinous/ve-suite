@@ -74,7 +74,7 @@ class TransferFunctionDialog;
 
 class ROIDialog;
 
-class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public BaseDialog
+class VE_GUIPLUGINS_EXPORTS TextureBasedToolBar : public BaseDialog
 {
 public:
    ///Constructor

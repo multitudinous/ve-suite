@@ -91,7 +91,7 @@ namespace conductor
 namespace util
 {
     class wxSpinCtrlDblTextCtrl;
-class VE_CONDUCTOR_UTILS_EXPORTS wxSpinCtrlDbl: public wxControl
+class VE_GUIPLUGINS_EXPORTS wxSpinCtrlDbl: public wxControl
 {
 public:
     wxSpinCtrlDbl();

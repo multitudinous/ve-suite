@@ -78,7 +78,7 @@ namespace util
 {
 class CADTreeBuilder;
 
-class VE_CONDUCTOR_UTILS_EXPORTS CADNodeManagerDlg: public wxDialog{
+class VE_GUIPLUGINS_EXPORTS CADNodeManagerDlg: public wxDialog{
 public:
    ///Constructor
    ///\param node The CADNode to manage with this dialog.
