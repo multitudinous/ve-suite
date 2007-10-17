@@ -74,7 +74,7 @@ namespace conductor
 namespace util
 {
 class PEThread;
-class VE_GUIPLUGINS_EXPORTS Body_UI_i : public virtual POA_Body::UI
+class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
  public:
   //Constructor 

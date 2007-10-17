@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CADMATERIAL_EDIT_MENU_H
 #define CADMATERIAL_EDIT_MENU_H
@@ -50,7 +48,7 @@ namespace conductor
 namespace util
 {
 
-class VE_GUIPLUGINS_EXPORTS CADMaterialEditMenu : public wxMenu{
+class VE_CONDUCTOR_UTILS_EXPORTS CADMaterialEditMenu : public wxMenu{
 public:
    enum MATERIAL_EDIT_MENU_IDS
    {

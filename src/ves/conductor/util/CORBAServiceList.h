@@ -66,7 +66,7 @@ namespace util
 {
 class Body_UI_i;
 class PEThread;
-class VE_GUIPLUGINS_EXPORTS CORBAServiceList //: public wxObject
+class VE_CONDUCTOR_UTILS_EXPORTS CORBAServiceList //: public wxObject
 {
 private:
     // Required so that vpr::Singleton can instantiate this class.

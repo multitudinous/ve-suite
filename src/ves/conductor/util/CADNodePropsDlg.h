@@ -84,7 +84,7 @@ namespace util
 {
 class wxSpinCtrlDbl;
 
-class VE_GUIPLUGINS_EXPORTS CADNodePropertiesDlg : public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS CADNodePropertiesDlg : public wxDialog
 {
 public:
    enum CAD_PROPERTY_IDS

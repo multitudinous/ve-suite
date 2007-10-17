@@ -56,7 +56,7 @@ namespace conductor
 {
 namespace util
 {
-	class VE_GUIPLUGINS_EXPORTS ScalarToolsDialog : public ves::conductor::util::BaseDialog 
+	class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public ves::conductor::util::BaseDialog 
 {
 public:
    ///Constructor

@@ -68,7 +68,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS SoundsPane : public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
 	SoundsPane( ves::open::xml::model::ModelWeakPtr model );

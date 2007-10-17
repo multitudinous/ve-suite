@@ -49,7 +49,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS WPDialog : public BaseDialog
+class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
 
 {
 public:

@@ -52,7 +52,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS DualSlider: public wxPanel
+class VE_CONDUCTOR_UTILS_EXPORTS DualSlider: public wxPanel
 {
 public:
    enum DUAL_SLIDER_IDS

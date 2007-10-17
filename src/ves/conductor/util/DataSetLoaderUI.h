@@ -106,7 +106,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS DataSetLoaderUI: public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS DataSetLoaderUI: public wxDialog
 {    
     //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
 

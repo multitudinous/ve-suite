@@ -69,7 +69,7 @@ namespace conductor
 {
 namespace util
 {
-   class VE_GUIPLUGINS_EXPORTS CADTreeBuilder: public ves::open::xml::cad::CADNodeTraverser
+   class VE_CONDUCTOR_UTILS_EXPORTS CADTreeBuilder: public ves::open::xml::cad::CADNodeTraverser
    {
       public:
         

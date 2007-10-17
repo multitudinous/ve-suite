@@ -47,7 +47,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS CADNodeMenu : public wxMenu{
+class VE_CONDUCTOR_UTILS_EXPORTS CADNodeMenu : public wxMenu{
 public:
    enum GEOMETRY_MENU_IDS
    {

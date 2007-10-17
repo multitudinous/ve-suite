@@ -55,7 +55,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
+class VE_CONDUCTOR_UTILS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
 {
 public:
 	PEThread( void );

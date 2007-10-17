@@ -74,7 +74,7 @@ namespace util
 {
 class DataSetLoaderUI;
     class wxSpinCtrlDbl;
-class VE_GUIPLUGINS_EXPORTS TransformUI : public wxPanel
+class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
 {
 public:
     ///Constructor

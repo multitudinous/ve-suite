@@ -48,7 +48,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_GUIPLUGINS_EXPORTS Polygon
+class VE_CONDUCTOR_UTILS_EXPORTS Polygon
 {
 public:
    ///Constructor
