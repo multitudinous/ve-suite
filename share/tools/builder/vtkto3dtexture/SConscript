@@ -37,8 +37,8 @@ if GetPlatform() == "darwin":
       conductorTarget = pj(PREFIX,'bin','Texture' + env["PROGSUFFIX"])
       winTarget = pj(PREFIX,'bin','vtkTo3DTexture' + env["PROGSUFFIX"])
    else:
-      conductorTarget = pj( '#', buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','Texture' + env["PROGSUFFIX"])
-      winTarget = pj( '#',buildDir,'VE_Builder','vtkTo3DTexture','tcGUI','vtkTo3DTexture' + env["PROGSUFFIX"])
+      conductorTarget = pj( '#', buildDir,'share','tools','builder','vtkto3dtexture','Texture' + env["PROGSUFFIX"])
+      winTarget = pj( '#', buildDir,'share','tools','builder','vtkto3dtexture','vtkTo3DTexture' + env["PROGSUFFIX"])
 
    env.apple_rez( conductorTarget, winTarget)
    env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
