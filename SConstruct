@@ -64,12 +64,14 @@ import SConsAddons.Options as asc_opt
 import SConsAddons.Options.Options 
 import SConsAddons.Options.VTK
 import SConsAddons.Options.OSG
+import SConsAddons.Options.VRJuggler.VRJ
+import SConsAddons.Options.Boost
 #import SConsAddons.Options.OPAL
 #import SConsAddons.Options.ODE
 import SConsAddons.Options.Xerces
 import SConsAddons.Options.WxWidgets
 import SConsAddons.AutoDist as sca_auto_dist
-import SConsAddons.Options.FlagPollBasedOption as fp_opt
+import SConsAddons.Options.FlagPollBasedOption as fp_option
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
 ########### Setup build dir and name
@@ -100,7 +102,7 @@ else:
    buildDir = 'build.'+buildUUID
 
 ########### Some utility functions
-class WxWidgetsOption(fp_opt.FlagPollBasedOption):
+class WxWidgetsOption(fp_option.FlagPollBasedOption):
    def __init__(self, name='wxWidgets', requiredVersion="2.8", required=True, useCppPath=True):
       help_text = """Base dir for wxWidgets"""
       self.baseDirKey = ""
@@ -222,15 +224,54 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 
-apr_options = sca_util.FlagPollParser( aprCommand )
-apu_options = sca_util.FlagPollParser( apuCommand )
-bullet_options = sca_util.FlagPollParser('bullet')
-tao_options = sca_util.FlagPollParser('TAO')
-vrjuggler_options = sca_util.FlagPollParser('vrjuggler')
-boost_options = sca_util.FlagPollParser('Boost.Filesystem')
-gmtl_options = sca_util.FlagPollParser('gmtl')
-vpr_options = sca_util.FlagPollParser('vpr')
-gadgeteer_options = sca_util.FlagPollParser('gadgeteer')
+
+   #    aprVersion = '0.9'
+   #    aprCommand = 'apr'
+   #    apuCommand = 'apr-util'
+       #apuLib = 'aprutil'
+   #    if baseEnv.has_key('AprVersion'):
+   #       aprVersion = baseEnv[ 'AprVersion' ]
+   #       if baseEnv[ 'AprVersion' ] >= "1.0":
+   #          aprCommand = 'apr-1'
+   #          apuCommand = 'apr-util-1'
+             #apuLib = 'aprutil-1'
+   #    fgpApr = sca_util.FlagPollParser( aprCommand )
+   #    if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
+   #    if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
+   #    if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
+   #    if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
+   #    if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
+   #    if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
+apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
+                                            "apr-1", "1.0", True, True, compileTest=True, headerToCheck="apr.h")
+
+apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
+                                             "apr-util-1", "1.0", True, True, compileTest=True, headerToCheck="apu.h")
+
+bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
+                                               "bullet", "0.1", True, True, compileTest=True,
+                                               headerToCheck="btBulletCollisionCommon.h")
+
+tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
+                                               "TAO", "1.5", True, True, compileTest=True,
+                                               headerToCheck="ace/ACE.h")
+
+boost_options = SConsAddons.Options.Boost.Boost("boost", "1.33.0",
+                                                libs = ['filesystem'],
+                                                required = True,
+                                                useVersion = True,
+                                                autoLink = True)
+
+vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
+
+gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
+                                               "gmtl", "0.5", True, True)
+
+vpr_options = fp_option.FlagPollBasedOption("Vapor",
+                                               "vpr", "2.0", True, True)
+
+gadgeteer_options = fp_option.FlagPollBasedOption("Gadgeteer",
+                                               "gadgeteer", "1.0", True, True)
 
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
@@ -456,7 +497,7 @@ if not SConsAddons.Util.hasHelpFlag():
    doxySubdirs = pj('#', 'share' , 'docs', 'doxygen')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
-   osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
+   #osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    vesUtilSubdirs = pj( buildDir, 'share', 'tools' )
    ##Set the Sconscript files to build.
    if 'docs' in COMMAND_LINE_TARGETS:
@@ -474,7 +515,8 @@ if not SConsAddons.Util.hasHelpFlag():
    else:
       ves_dirs = [vesSubdirs, veiDistSubdirs, docsSubdirs, veiSubdirs, 
                   shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs, 
-                  osgEphemerisSubdirs, installerSubdirs, vesUtilSubdirs ]
+                  installerSubdirs, vesUtilSubdirs ]
+                  #osgEphemerisSubdirs, installerSubdirs, vesUtilSubdirs ]
 
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:
