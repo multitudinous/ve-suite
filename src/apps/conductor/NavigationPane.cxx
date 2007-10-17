@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "NavigationPane.h"
-
 #include <ves/conductor/util/CORBAServiceList.h>
+
+#include "NavigationPane.h"
 
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 
