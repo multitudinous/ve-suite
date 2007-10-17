@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform vtk_options buildDir wxwidgets_options PREFIX')
+Import('baseEnv ves_pkg LIBDIR GetPlatform vtk_options buildDir wxwidgets_options boost_options PREFIX')
 
 srcs = Split("""
    flowTexture.cxx 
@@ -22,7 +22,7 @@ if env[ 'UseMPI' ] == 'yes':
 
 env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
             LIBS = ['ves_xplorer_util'])
-env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
+boost_options.apply( env )
 wxwidgets_options.apply( env )
 vtk_options.apply( env )
 prog = ves_pkg.createProgram( programName + env["PROGSUFFIX"], env, 'bin')

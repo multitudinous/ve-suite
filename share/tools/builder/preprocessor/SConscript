@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX buildDir vtk_options')
+Import('ves_pkg LIBDIR PREFIX buildDir vtk_options boost_options')
 
 srcs = Split("""
    multiPlaneVtkOutput.cxx
@@ -12,7 +12,8 @@ srcs = Split("""
 env = ves_pkg.getEnv().Copy()
 env.Append( LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
             LIBS = ['ves_xplorer_util'])
-env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
+
+boost_options.apply( env )
 vtk_options.apply( env )
 
 prog = ves_pkg.createProgram('preprocessor' + env["PROGSUFFIX"], env, 'bin')

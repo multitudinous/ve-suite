@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir vtk_options')
+Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir vtk_options boost_options')
 
 addNormals2Poly = Split("""
    addNormals2Poly.cxx
@@ -80,7 +80,7 @@ env = ves_pkg.getEnv().Copy()
 env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
             LIBS = ['ves_xplorer_util'])
 vtk_options.apply( env )
-env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
+boost_options.apply( env )
 
 norm2poly = ves_pkg.createProgram('addNormals2Poly' + env["PROGSUFFIX"], env, 'bin')
 norm2poly.addSources( addNormals2Poly )
