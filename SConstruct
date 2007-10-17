@@ -222,11 +222,28 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 
+apr_options = sca_util.FlagPollParser( aprCommand )
+apu_options = sca_util.FlagPollParser( apuCommand )
+bullet_options = sca_util.FlagPollParser('bullet')
+tao_options = sca_util.FlagPollParser('TAO')
+vrjuggler_options = sca_util.FlagPollParser('vrjuggler')
+boost_options = sca_util.FlagPollParser('Boost.Filesystem')
+
+opts.AddOption( apr_options )
+opts.AddOption( apu_options )
+opts.AddOption( bullet_options )
+opts.AddOption( tao_options )
+opts.AddOption( vrjuggler_options )
+opts.AddOption( boost_options )
+
 Export('opts', 'vtk_options', 'osg_options', 
          'xerces_options','wxwidgets_options',
          'hdf5_options',
          'hdf4_options',
-         'VE_SUITE_VERSION')
+         'VE_SUITE_VERSION',
+         'apr_options', 'apu_options',
+         'bullet_options', 'tao_options',
+         'vrjuggler_options', 'boost_options')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
@@ -305,43 +322,43 @@ if not SConsAddons.Util.hasHelpFlag():
    if GetPlatform() == "win32":
       wxwidgets_options.validate(baseEnv,)
 
-   if baseEnv[ 'validate' ] == 'yes':
+   #if baseEnv[ 'validate' ] == 'yes':
        # check the apr and apu utilities
        # there is probably an easier way to do this so feel free to simplify
-       aprVersion = '0.9'
-       aprCommand = 'apr'
-       apuCommand = 'apr-util'
+   #    aprVersion = '0.9'
+   #    aprCommand = 'apr'
+   #    apuCommand = 'apr-util'
        #apuLib = 'aprutil'
-       if baseEnv.has_key('AprVersion'):
-          aprVersion = baseEnv[ 'AprVersion' ]
-          if baseEnv[ 'AprVersion' ] >= "1.0":
-             aprCommand = 'apr-1'
-             apuCommand = 'apr-util-1'
+   #    if baseEnv.has_key('AprVersion'):
+   #       aprVersion = baseEnv[ 'AprVersion' ]
+   #       if baseEnv[ 'AprVersion' ] >= "1.0":
+   #          aprCommand = 'apr-1'
+   #          apuCommand = 'apr-util-1'
              #apuLib = 'aprutil-1'
 
-       fgpApr = sca_util.FlagPollParser( aprCommand )
-       if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
-          Exit(1)
+   #    fgpApr = sca_util.FlagPollParser( aprCommand )
+   #    if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
+   #       Exit(1)
 
-       fgpApu = sca_util.FlagPollParser( apuCommand )
-       if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
-          Exit(1)
+   #    fgpApu = sca_util.FlagPollParser( apuCommand )
+   #    if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
+   #       Exit(1)
 
-       fgpBullet = sca_util.FlagPollParser('bullet')
-       if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
-          Exit(1)
+   #    fgpBullet = sca_util.FlagPollParser('bullet')
+   #    if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
+   #       Exit(1)
 
-       fgpTAO = sca_util.FlagPollParser('TAO')
-       if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
-          Exit(1)
+   #    fgpTAO = sca_util.FlagPollParser('TAO')
+   #    if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
+   #       Exit(1)
 
-       fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
-       if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
-          Exit(1)
+   #    fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
+   #    if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
+   #       Exit(1)
 
-       fgpBoost = sca_util.FlagPollParser('Boost.Filesystem')
-       if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
-          Exit(1)
+   #    fgpBoost = sca_util.FlagPollParser('Boost.Filesystem')
+   #    if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
+   #       Exit(1)
 
    ## Try to save the options if possible and if the user did
    ## not specify an options file
