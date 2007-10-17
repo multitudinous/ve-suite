@@ -1,4 +1,4 @@
-##Builds VE_Conductor_UtilitiesLib
+##Builds VE_Utils
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util

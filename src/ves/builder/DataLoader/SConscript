@@ -75,7 +75,7 @@ env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util'),
                       pj('#', buildDir, 'src','ves','builder','DataLoader') ],
            LIBS = ['ves_xplorer_util', 'ves_builder_dataloader', 'ves_builder_translator_base'])
 
-env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --cflags --libs'%env['BoostVersion'])
+boost_options.apply( env )
 vtk_options.apply( env )
 prog = ves_pkg.createProgram('loaderToVtk' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
