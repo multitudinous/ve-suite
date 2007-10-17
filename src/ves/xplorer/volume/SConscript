@@ -24,6 +24,9 @@ gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 vtk_options.apply( lib_env )
+   
+lib_env.Append( CPPDEFINES = ['VE_TEXTURE_BASED_LIBRARY'])
+
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_volume',
