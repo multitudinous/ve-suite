@@ -351,7 +351,7 @@ void Streamlines::_onCompute(wxCommandEvent& WXUNUSED(event))
    activeDataset->SetData("Active Dataset",dynamic_cast<Vistab*>(GetParent())->GetActiveDatasetName());
    veCommand->AddDataValuePair(activeDataset);
 
-   ves:conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+   ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
    delete veCommand;   
    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
    newCommand->SetCommandName("UPDATE_STREAMLINE_SETTINGS");
@@ -496,7 +496,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
      dimensions->SetData("Dimensions",seedPointDims);
      dimensionsCommand->AddDataValuePair(dimensions);
 
-     ves:conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( dimensionsCommand );
+	 ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( dimensionsCommand );
 	 delete dimensionsCommand;
    }
    catch(...)
