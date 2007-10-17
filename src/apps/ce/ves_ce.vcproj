@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="VE_CE"
+	Name="ce"
 	ProjectGUID="{E96F21F0-C5EF-43F0-9643-154D3BB96118}"
+	RootNamespace="ce"
 	>
 	<Platforms>
 		<Platform
@@ -44,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -71,7 +72,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_BiDirGIOP.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_ValueType.lib TAO_Messaging.lib TAO_CodecFactory.lib xerces-c_2.lib odbc32.lib odbccp32.lib"
-				OutputFile="$(OutDir)/WinServer.exe"
+				OutputFile="$(OutDir)/ves_ce.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;"
@@ -134,7 +135,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -164,7 +165,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_Valuetyped.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_CodecFactoryd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib"
-				OutputFile="$(OutDir)/WinServer_d.exe"
+				OutputFile="$(OutDir)/ves_ce_d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"

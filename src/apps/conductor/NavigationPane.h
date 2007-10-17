@@ -38,6 +38,9 @@ NavigationPane API
 /*!\class NavigationPane
 * 
 */
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
 #include <wx/image.h>
 #include <wx/dialog.h>
 #include <wx/bmpbuttn.h>

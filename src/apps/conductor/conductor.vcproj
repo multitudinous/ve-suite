@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="VE_Conductor"
-	ProjectGUID="{E18B55CA-745E-4EBC-9056-85CA897EE690}"
+	Name="conductor"
+	ProjectGUID="{B3C037F6-CB88-4A0F-BA91-25AF2D8DA88B}"
 	RootNamespace="WinClient"
 	>
 	<Platforms>
@@ -50,7 +50,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION=$(SVN_VES_REVISION)"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -77,7 +77,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ace.lib TAO.lib TAO_CosNaming.lib TAO_PortableServer.lib TAO_AnyTypeCode.lib TAO_BiDirGIOP.lib TAO_Messaging.lib TAO_Valuetype.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib wxmsw28_adv.lib xerces-c_2.lib"
-				OutputFile="$(OutDir)/WinClient.exe"
+				OutputFile="$(OutDir)/ves_conductor.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
@@ -144,8 +144,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;NOPCH;_TAO;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION=$(SVN_VES_REVISION)"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\msw&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL=1;wxUSE_GUI=1;_MT;WINVER=0x400;NOPCH;_TAO;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING;SVN_VES_REVISION=$(SVN_VES_REVISION)"
 				IgnoreStandardIncludePath="false"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -177,7 +177,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_Valuetyped.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib wxmsw28d_adv.lib xerces-c_2D.lib"
-				OutputFile="$(OutDir)/WinClient_d.exe"
+				OutputFile="$(OutDir)/ves_conductor_d.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
@@ -233,14 +233,6 @@
 			</File>
 			<File
 				RelativePath=".\ConductorApp.cxx"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin.cxx"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.cxx"
 				>
 			</File>
 			<File
@@ -310,14 +302,6 @@
 			</File>
 			<File
 				RelativePath=".\ConductorApp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin.h"
-				>
-			</File>
-			<File
-				RelativePath="..\DefaultPlugin\DefaultPlugin_UI_Dialog.h"
 				>
 			</File>
 			<File
