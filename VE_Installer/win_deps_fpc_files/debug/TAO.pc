@@ -1,4 +1,4 @@
-prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+prefix=${fp_file_cwd}\..\..\ACETAO_5.5.10_Pre-Compile_vc8.0_SP1
 exec_prefix=${prefix}
 libdir=${exec_prefix}\lib
 includedir=${prefix}
@@ -7,5 +7,6 @@ Name: TAO
 Description: The ACE ORB
 Requires: ACE
 Version: 1.5
-Libs: /libpath:"${libdir}" TAOd.lib
-Cflags: /I"${includedir}"
+Libs: /libpath:"${libdir}" TAOd.lib aced.lib TAO_CosNamingd.lib TAO_PortableServerd.lib \
+TAO_AnyTypeCoded.lib TAO_Valuetyped.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_CodecFactoryd.lib
+Cflags: /I"${includedir}" /I"${includedir}/TAO" /I"${includedir}/TAO/orbsvcs"
