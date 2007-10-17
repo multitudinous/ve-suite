@@ -184,7 +184,7 @@ opts.AddOption(hdf4_options)
 osg_options = None
 if GetPlatform() == 'win32':
    osg_options = fp_option.FlagPollBasedOption("OSG",
-                                               "osg", "1.2", True, True)
+                                               "OpenSceneGraph", "1.2", True, True)
 else:
    osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',
