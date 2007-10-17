@@ -102,12 +102,6 @@ else:
    buildDir = 'build.'+buildUUID
 
 ########### Some utility functions
-class WxWidgetsOption(fp_option.FlagPollBasedOption):
-   def __init__(self, name='wxWidgets', requiredVersion="2.8", required=True, useCppPath=True):
-      help_text = """Base dir for wxWidgets"""
-      self.baseDirKey = ""
-      self.filesToCheckRelBase = []
-      fp_opt.FlagPollBasedOption.__init__(self, 'wxWidgetsOption', name, requiredVersion, required, useCppPath, help_text)
 
 def CreateConfig(target, source, env):
    "Creates the xxx-config file users use to compile against this library"
@@ -195,10 +189,11 @@ xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
 wxwidgets_options = None
 if GetPlatform() == 'win32':
-   wxwidgets_options = WxWidgetsOption()
+   wxwidgets_options = fp_option.FlagPollBasedOption(name='wxWidgets', requiredVersion="2.8", required=True, useCppPath=True)
 else:
    wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
-   opts.AddOption( wxwidgets_options )
+opts.AddOption( wxwidgets_options )
+
 opts.Add('AprVersion', 'Set the APR version so that the proper apr pkg-config files can be found', '1.0')
 opts.Add('VRJugglerVersion', 'Set the VRJuggler version so that the proper flagpoll files can be found', '2.0.2')
 opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpoll files can be found', '1.31')
@@ -368,8 +363,6 @@ baseEnv.Help(help_text)
 if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
    opts.Process(baseEnv, None, True)                   # Update the options
-   if GetPlatform() == "win32":
-      wxwidgets_options.validate(baseEnv,)
 
    #if baseEnv[ 'validate' ] == 'yes':
        # check the apr and apu utilities
