@@ -5,7 +5,7 @@ import SConsAddons.Util as sca_util
 
 Import('baseEnv ves_pkg LIBDIR RootDir buildDir osg_options GetPlatform')
 openDir = os.path.abspath( pj(RootDir, 'external', 'osgEphemeris') )
-headers = sca_util.getHeadersRecursive( pj( openDir, 'include','osgEphemeris')  )
+headers = sca_util. getFilesRecursiveByExt( pj( openDir, 'include','osgEphemeris'),['*']  )
 sources = sca_util.getSourcesRecursive( pj( openDir, 'src', 'osgEphemerisLib' ) )
 headers = map(lambda s: pj('include','osgEphemeris', s), 
                 headers)
@@ -39,7 +39,7 @@ else:
                                       installPrefix = LIBDIR)
    
 lib.addSources(sources)
-lib.addHeaders(headers, '..')
+lib.addHeaders(headers, '..' )
 lib.build()
 
 ### Build the osgdb plugin
