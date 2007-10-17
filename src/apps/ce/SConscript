@@ -24,7 +24,7 @@ env.ParseConfig('flagpoll Boost.Filesystem TAO TAO_IORInterceptor TAO_ObjRefTemp
                               TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
 
 xerces_options.apply( env )
-ce_prog = ves_pkg.createProgram('ves_ce.exe', env, 'bin')
+ce_prog = ves_pkg.createProgram('ves_ce' + env["PROGSUFFIX"], env, 'bin')
 ce_prog.addSources( srcs )
 ce_prog.build()
 
