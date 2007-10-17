@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX buildDir xerces_options')
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options GetPlatform')
 
 srcs = Split("""
    veaMaker.cxx 
@@ -13,6 +13,10 @@ env.Append(LIBS = ['ves_open_xml'])
 env.Append(LIBPATH = [ pj('#', buildDir,'src','ves', 'open', 'xml')])
 
 xerces_options.apply( env )
+
+if GetPlatform() == 'win32':
+   env.Append( CPPDEFINES = ['LOKI_DLL'])
+   
 ce_prog = ves_pkg.createProgram('veaMaker' + env["PROGSUFFIX"], env, 'bin')
 ce_prog.addSources( srcs )
 ce_prog.build()
