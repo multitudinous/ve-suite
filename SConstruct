@@ -258,13 +258,16 @@ bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                                                "TAO", "1.5", True, True, compileTest=True,
                                                headerToCheck="ace/ACE.h")
-
-boost_options = SConsAddons.Options.Boost.Boost("boost", "1.33.0",
+if GetPlatform() != 'win32':
+    boost_options = SConsAddons.Options.Boost.Boost("boost", "1.33.0",
                                                 libs = ['filesystem'],
                                                 required = True,
                                                 useVersion = True,
                                                 autoLink = True)
-
+else:
+    boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
+        "Boost.Filesystem", "1.33.1", True, True)
+                                              
 vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
@@ -442,6 +445,9 @@ if not SConsAddons.Util.hasHelpFlag():
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj('#',buildDir,'src')] )
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
+   if GetPlatform() == 'win32':
+        baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
+   
    #baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )

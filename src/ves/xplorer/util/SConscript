@@ -23,6 +23,8 @@ lib_env = ves_pkg.getEnv().Copy()
 vtk_options.apply( lib_env )
 boost_options.apply( lib_env )
 
+lib_env.Append( CPPDEFINES = ['VE_UTIL_LIBRARY'] )
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_util',
                                                         lib_env,

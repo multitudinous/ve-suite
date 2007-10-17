@@ -62,4 +62,4 @@ else:
    
 libDB.addSources(sourcesDB)
 #libDB.addHeaders(headers, '..')
-libDB.build()
+#libDB.build()
