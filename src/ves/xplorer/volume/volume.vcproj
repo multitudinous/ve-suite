@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="VE_TextureBased"
-	ProjectGUID="{398FF31C-58CE-4A0A-A288-BC3917FC9200}"
-	RootNamespace="VE_TextureBased"
+	Name="volume"
+	ProjectGUID="{5D9B9762-0C0C-4C75-B8E6-54D3FA895BAE}"
+	RootNamespace="volume"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory="./VE_TextureBasedLib/$(ConfigurationName)"
+			IntermediateDirectory="./volumeLib/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;BOOST_ALL_DYN_LINK;JUGGLER_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -64,14 +64,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib opengl32.lib VE_UtilLib_d.lib"
-				OutputFile="$(OutDir)/VE_TextureBased_osg_vep_d.dll"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib vtkCommon_d.lib vtkFiltering_d.lib vtkHybrid_d.lib vtkImaging_d.lib vtkIO_d.lib vtkParallel_d.lib vtkRendering_d.lib opengl32.lib"
+				OutputFile="$(OutDir)/ves_volume_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(IntDir)/VE_TextureBased.pdb"
+				ProgramDatabaseFile="$(IntDir)/volume.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_TextureBased_osg_vep_d.lib"
+				ImportLibrary="$(OutDir)/ves_volume_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -102,7 +102,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
-			IntermediateDirectory="./VE_TextureBasedLib/$(ConfigurationName)"
+			IntermediateDirectory="./volume/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
 			CharacterSet="2"
@@ -124,7 +124,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VTK44;VE_TEXTURE_BASED_LIBRARY;_OSG;VE_PATENTED;BOOST_ALL_DYN_LINK;JUGGLER_OPT;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				OpenMP="false"
@@ -144,15 +144,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osg.lib osgDB.lib osgUtil.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib VE_UtilLib.lib"
-				OutputFile="$(OutDir)/VE_TextureBased_osg_vep.dll"
+				AdditionalDependencies="osg.lib osgDB.lib osgUtil.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib"
+				OutputFile="$(OutDir)/ves_volume.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/VE_TextureBased_osg_vep.lib"
+				ImportLibrary="$(OutDir)/ves_volume.lib"
 				TargetMachine="1"
 			/>
 			<Tool

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="VE_NURBS_Utils"
-	ProjectGUID="{73625290-E0C4-4D03-93D2-83C098410C66}"
+	Name="util"
+	ProjectGUID="{700968D6-9D5B-4942-9854-E01C1FDEB98B}"
 	RootNamespace="VE_NURBS_Utils"
 	Keyword="Win32Proj"
 	>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_NURBS_UTILS_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,13 +61,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/VE_NURBS_Utils_d.dll"
+				OutputFile="$(OutDir)/ves_scenegraph_nurbs_util_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/VE_NURBS_Utils.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_NURBS_Utils_d.lib"
+				ImportLibrary="$(OutDir)/ves_scenegraph_nurbs_util_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -120,7 +120,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_NURBS_UTILS_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -139,14 +139,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/VE_NURBS_Utils.dll"
+				OutputFile="$(OutDir)/ves_scenegraph_nurbs_util.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/VE_NURBS_Utils.lib"
+				ImportLibrary="$(OutDir)/ves_scenegraph_nurbs_util.lib"
 				TargetMachine="1"
 			/>
 			<Tool

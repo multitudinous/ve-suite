@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="VE_UtilLib"
-	ProjectGUID="{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}"
+	Name="util"
+	ProjectGUID="{B55B9938-B680-4F52-A9A0-C1C8E0928CAC}"
 	RootNamespace="VE_Xplorer"
 	>
 	<Platforms>
@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;"
 				PreprocessorDefinitions="NDEBUG;WIN32;_CONSOLE;VE_UTIL_LIBRARY;VTK44;TABLET;_WIN32;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				StringPooling="true"
 				RuntimeLibrary="2"
@@ -74,13 +74,13 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib comctl32.lib ws2_32.lib"
 				ShowProgress="0"
-				OutputFile="$(OutDir)\VE_UtilLib.dll"
+				OutputFile="$(OutDir)\ves_util.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				ProgramDatabaseFile=".\Release/VE_Xplorer.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)\VE_UtilLib.lib"
+				ImportLibrary="$(OutDir)\ves_util.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -139,7 +139,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk-5.1&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\src&quot;"
 				PreprocessorDefinitions="_DEBUG;VE_UTIL_LIBRARY;VTK44;WIN32;_WIN32;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;BOOST_ALL_DYN_LINK;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -166,7 +166,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vtkHybrid_d.lib vtkCommon_d.lib vtkFiltering_d.lib vtkGraphics_d.lib vtkImaging_d.lib vtkIO_d.lib vtkRendering_d.lib comctl32.lib ws2_32.lib"
 				ShowProgress="0"
-				OutputFile="$(OutDir)\VE_UtilLib_d.dll"
+				OutputFile="$(OutDir)\ves_util_d.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
@@ -175,7 +175,7 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)/VE_UtilLib_d.pdb"
 				SubSystem="1"
-				ImportLibrary="$(OutDir)\VE_UtilLib_d.lib"
+				ImportLibrary="$(OutDir)\ves_util_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool

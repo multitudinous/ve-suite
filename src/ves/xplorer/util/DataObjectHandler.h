@@ -59,7 +59,7 @@ public:
     /*!\class VE_Util::DataObjectHandler::DatasetOperatorCallback
     *
     */
-    class DatasetOperatorCallback
+    class VE_UTIL_EXPORTS DatasetOperatorCallback
     {
     public:    
         ///Constructor
