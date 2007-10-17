@@ -3,7 +3,7 @@ import os, sys, string
 import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir tao_options')
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options wxwidgets_options RootDir tao_options vpr_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'conductor') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -19,7 +19,8 @@ lib_env.Append(LIBPATH = [
 tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
-lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY'])
+vpr_options.apply( lib_env )
+lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY','VE_CONDUCTOR_UTILS_LIBRARY'])
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_plugin',
                                                         lib_env,
