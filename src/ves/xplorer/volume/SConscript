@@ -4,6 +4,7 @@ import SConsAddons.Util as sca_util
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR buildDir osg_options vtk_options GetPlatform RootDir')
+Import('boost_options gmtl_options vrjuggler_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','volume') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -17,15 +18,12 @@ headers.pop(index)
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = 'ves_xplorer_util')
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'util')])
-lib_env.ParseConfig('flagpoll gmtl --libs --cflags Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
+
+boost_options.apply( lib_env )
+gmtl_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 vtk_options.apply( lib_env )
-
-if GetPlatform() != 'darwin':
-    lib_env.ParseConfig('flagpoll vrjuggler --cflags --libs --atleast-version=%s --get-extra_libs'%lib_env['VRJugglerVersion'])
-    lib_env.Append(LIBS = ['GLU','GL'])
-else:
-    lib_env.ParseConfig('flagpoll vrjuggler-opengl vrjuggler --cflags --libs --atleast-version=%s --get-vrj_ogl_libs'%lib_env['VRJugglerVersion'])     
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_volume',

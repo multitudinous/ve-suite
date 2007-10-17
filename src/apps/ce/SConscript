@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX buildDir xerces_options')
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options boost_options tao_options')
 
 srcs = Split("""
    Exe_server.cxx 
@@ -18,12 +18,10 @@ env.Append(LIBPATH = [
                         pj('#', buildDir, 'src','ves','open'),
                         pj('#', buildDir, 'src','ves','open','xml')
                      ])
-
-env.ParseConfig('flagpoll Boost.Filesystem TAO TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
-                              TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
-                              TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode --libs --cflags')
-
+                     
 xerces_options.apply( env )
+boost_options.apply( env )
+tao_options.apply( env )
 ce_prog = ves_pkg.createProgram('ves_ce' + env["PROGSUFFIX"], env, 'bin')
 ce_prog.addSources( srcs )
 ce_prog.build()

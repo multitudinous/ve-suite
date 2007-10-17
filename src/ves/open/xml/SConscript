@@ -4,22 +4,17 @@ import SConsAddons.Util as sca_util
 ##import practice
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options RootDir')
+Import('baseEnv ves_pkg LIBDIR xerces_options apr_options apu_options RootDir')
 openDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'open', 'xml') )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-##Get apr config.
-if baseEnv.has_key('AprVersion'):
-   if baseEnv[ 'AprVersion' ] >= "1.0":
-      lib_env.ParseConfig('flagpoll apr-1 apr-util-1 --libs --cflags' )
-   else:
-      lib_env.ParseConfig('flagpoll apr apr-util --libs --cflags' )
-else:
-   lib_env.ParseConfig('flagpoll apr apr-util --libs --cflags' )
 
 xerces_options.apply( lib_env )
+apr_options.apply( lib_env )
+apu_options.apply( lib_env )
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_open_xml',
                                                         lib_env,

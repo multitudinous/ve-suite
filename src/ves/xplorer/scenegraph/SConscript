@@ -4,6 +4,8 @@ import SConsAddons.Util as sca_util
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR osg_options vtk_options RootDir buildDir xerces_options GetPlatform')
+Import('gmtl_options bullet_options vpr_options gadgeteer_options vrjuggler_options')
+
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','scenegraph') )
 sources = sca_util.getSourcesRecursive( srcDir )
 headers = sca_util.getHeadersRecursive( srcDir )
@@ -11,20 +13,17 @@ headers = sca_util.getHeadersRecursive( srcDir )
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'SceneGraph', s), srcs)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.ParseConfig('flagpoll bullet gmtl --libs --cflags Boost --cflags')
-lib_env.ParseConfig('flagpoll vpr --atleast-version=%s gadgeteer --libs --cflags'%lib_env['VPRVersion'])
-
-if GetPlatform() != 'darwin':
-    lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --get-extra_libs'%lib_env['VRJugglerVersion'])
-    lib_env.Append(LIBS = ['GLU','GL'])
-else:
-    lib_env.ParseConfig('flagpoll vrjuggler-opengl --atleast-version=%s --get-vrj_ogl_libs'%lib_env['VRJugglerVersion'])     
 
 lib_env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
 lib_env.Append(LIBS = ['ves_open_xml','osgOQ','ves_xplorer_util'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                           pj('#',buildDir,'external','osgOQ')])
+gmtl_options.apply( lib_env )
+bullet_options.apply( lib_env )
+vpr_options.apply( lib_env )
+gadgeteer_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )

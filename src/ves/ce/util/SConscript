@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR buildDir xerces_options RootDir')
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options tao_options RootDir')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'ce', 'util') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -14,8 +14,9 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['ves_open_xml', 'ves_open_module'])
 lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'open'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml') ] )
-lib_env.ParseConfig('flagpoll TAO TAO_PortableServer TAO_Messaging TAO_Valuetype --libs --cflags')
+
 xerces_options.apply( lib_env )
+tao_options.apply( lib_env )
 
 if baseEnv['StaticLibs'] == "yes":
    vece_util_lib = ves_pkg.createStaticAndSharedLibrary('ves_ce_util',

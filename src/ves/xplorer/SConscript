@@ -5,6 +5,7 @@ import glob
 import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR')
+Import('tao_options boost_options vrjuggler_options bullet_options')
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -80,14 +81,10 @@ lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph
                         pj('#', buildDir, 'src', 'ves', 'open'),
                         pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
-lib_env.ParseConfig('flagpoll TAO \
-                          ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype \
-                          TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging \
-                          TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode \
-                          --libs --cflags')
-lib_env.ParseConfig('flagpoll bullet vrjuggler --atleast-version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
-lib_env.Append(LIBS = ['GLU','GL'])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
+tao_options.apply( lib_env )
+boost_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
+bullet_options.apply( lib_env )
 
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
