@@ -86,7 +86,7 @@ namespace xml
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_EXPORTS cfdVEBaseClass
+class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
 {
 public:
    cfdVEBaseClass( void );

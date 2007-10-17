@@ -45,7 +45,7 @@ namespace osg
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_EXPORTS NetworkSystemView : public cfdGlobalBase
+class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public cfdGlobalBase
 {
 public:
    NetworkSystemView();

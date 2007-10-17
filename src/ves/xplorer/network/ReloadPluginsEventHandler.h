@@ -59,7 +59,7 @@ namespace VE_Xplorer
 #include <ves/xplorer/event/EventHandler.h>
 namespace VE_EVENTS
 {
-class VE_XPLORER_EXPORTS ReloadPluginsEventHandler: public EventHandler
+class VE_XPLORER_NETWORK_EXPORTS ReloadPluginsEventHandler: public EventHandler
 {
 public:
    ///Constructor
