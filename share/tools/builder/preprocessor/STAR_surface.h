@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef STAR_SURFACE_H
 #define STAR_SURFACE_H
@@ -46,7 +44,7 @@
 //#include <vtkUnstructuredGridWriter.h>
 //#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 using namespace VE_Util;
 

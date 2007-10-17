@@ -31,14 +31,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "tcFrame.h"
-#include "wx/string.h"
+#include <wx/string.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 #include <cmath>
-#include "VE_Xplorer/Utilities/fileIO.h"
+#include <ves/xplorer/util/fileIO.h>
+
 
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)

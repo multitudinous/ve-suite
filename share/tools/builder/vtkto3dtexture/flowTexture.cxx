@@ -29,12 +29,10 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "flowTexture.h"
 
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <iostream>
 #include <fstream>

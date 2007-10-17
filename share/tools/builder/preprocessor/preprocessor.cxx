@@ -38,12 +38,12 @@
 #include <iostream>
 #include <cassert>
 
-#include "VE_Builder/Preprocessor/STAR_octree.h"
-#include "VE_Builder/Preprocessor/STAR_isosurface.h"
-#include "VE_Builder/Preprocessor/STAR_surface.h"
-#include "VE_Builder/Preprocessor/multiPlaneVtkOutput.h"
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include "STAR_octree.h"
+#include "STAR_isosurface.h"
+#include "STAR_surface.h"
+#include "multiPlaneVtkOutput.h"
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #ifdef _MPI
 #include "mpi.h"

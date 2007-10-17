@@ -34,8 +34,9 @@
 #include <fstream>
 #include <vector>
 
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>

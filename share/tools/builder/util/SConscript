@@ -77,8 +77,8 @@ whatIsScalarRange = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
-env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','Utilities')],
-            LIBS = ['VE_UtilLib'])
+env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
+            LIBS = ['ves_xplorer_util'])
 vtk_options.apply( env )
 env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%env['BoostVersion'])
 

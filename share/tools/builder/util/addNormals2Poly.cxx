@@ -29,16 +29,16 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <vtkDataObject.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkGeometryFilter.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
+
 using namespace VE_Util;
 
 int main( int argc, char *argv[] )

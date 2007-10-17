@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef STAR_ISOSURFACE_H
 #define STAR_ISOSURFACE_H
@@ -45,7 +43,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include "VE_Xplorer/Utilities/setScalarAndVector.h"
+#include <ves/xplorer/util/setScalarAndVector.h>
 
 class isosurfaceVtkOutput
 {

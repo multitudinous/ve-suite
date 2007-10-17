@@ -29,13 +29,11 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <vtkAppendFilter.h>
 #include <vtkTransformFilter.h>

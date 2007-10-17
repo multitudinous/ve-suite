@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
@@ -55,16 +53,13 @@
 #include <vtkScalarsToColors.h>
 #include <vtkLookupTable.h>
 
-//#include "VE_Xplorer/XplorerHandlers/cfdImage.h"  //BMP support
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/viewCells.h"
-#include "VE_Xplorer/Utilities/setScalarAndVector.h"
-#include "VE_Xplorer/Utilities/cfdGrid2Surface.h"
-
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"  //debugging
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <ves/xplorer/util/setScalarAndVector.h>
+#include <ves/xplorer/util/viewCells.h>
+#include <ves/xplorer/util/cfdGrid2Surface.h>
 
 using namespace VE_Util;
-//using namespace VE_Xplorer;
 
 void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor );
 vtkActor * getActorFromDataSet( vtkDataSet * dataset );

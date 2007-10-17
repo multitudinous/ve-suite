@@ -29,14 +29,12 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
-#include "VE_Xplorer/Utilities/fileIO.h"
-#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include "VE_Xplorer/Utilities/cfdAccessoryFunctions.h"
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/util/readWriteVtkThings.h>
+#include <ves/xplorer/util/cfdAccessoryFunctions.h>
 
 #include <vtkDataSet.h>
 #include <vtkDataArray.h>
