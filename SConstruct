@@ -261,7 +261,8 @@ bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
                                                headerToCheck="btBulletCollisionCommon.h")
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
-                                               "TAO", "1.5", True, True, compileTest=True,
+                     "ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
+                                               "1.5", True, True, compileTest=True,
                                                headerToCheck="ace/ACE.h")
 if GetPlatform() != 'win32':
     boost_options = SConsAddons.Options.Boost.Boost("boost", "1.33.0",
@@ -272,7 +273,7 @@ if GetPlatform() != 'win32':
 else:
     boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.33.1", True, True)
-                                              
+
 vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
