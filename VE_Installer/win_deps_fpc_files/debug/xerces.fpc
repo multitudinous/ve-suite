@@ -8,7 +8,7 @@ Description: xerces-c pre-compiled for VES
 Provides: xerces-c
 Requires:
 Version: 2.7
-Libs: /libpath:"${libdir}" xerces-c_2D.lib xerces-depdom_2_7D.lib
+Libs: /libpath:"${libdir}" xerces-c_2D.lib xerces-depdom_2D.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 
