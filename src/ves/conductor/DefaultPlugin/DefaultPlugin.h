@@ -45,7 +45,7 @@ namespace conductor
 }
 }
 
-class DefaultPlugin : public ves::conductor::UIPluginBase
+class VE_GUIPLUGINS_LIBRARY DefaultPlugin : public ves::conductor::UIPluginBase
 {
    DECLARE_DYNAMIC_CLASS( DefaultPlugin )
 
