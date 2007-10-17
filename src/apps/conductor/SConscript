@@ -25,6 +25,10 @@ xerces_options.apply( env )
 wxwidgets_options.apply( env )
 tao_options.apply( env )
 vrjuggler_options.apply( env )
+
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
+   
 prog = ves_pkg.createProgram('ves_conductor' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
 prog.build()
