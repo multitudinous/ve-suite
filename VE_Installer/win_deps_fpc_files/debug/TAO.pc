@@ -7,6 +7,6 @@ Name: TAO
 Description: The ACE ORB
 Requires: ACE
 Version: 1.5
-Libs: /libpath:"${libdir}" TAOd.lib aced.lib TAO_CosNamingd.lib TAO_PortableServerd.lib \
+Libs: /libpath:"${libdir}" TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib \
 TAO_AnyTypeCoded.lib TAO_Valuetyped.lib TAO_BiDirGIOPd.lib TAO_Messagingd.lib TAO_CodecFactoryd.lib
 Cflags: /I"${includedir}" /I"${includedir}/TAO" /I"${includedir}/TAO/orbsvcs"
