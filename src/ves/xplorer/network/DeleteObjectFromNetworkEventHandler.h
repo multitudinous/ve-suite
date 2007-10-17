@@ -63,7 +63,7 @@ namespace VE_Xplorer
 #include <ves/xplorer/event/EventHandler.h>
 namespace VE_EVENTS
 {
-class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public EventHandler
+class VE_XPLORER_EXPORTS DeleteObjectFromNetworkEventHandler: public EventHandler
 {
 public:
    ///Constructor

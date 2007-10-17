@@ -83,7 +83,7 @@ namespace PortableServer { class POA; }
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
+class VE_XPLORER_EXPORTS cfdExecutive : public cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.

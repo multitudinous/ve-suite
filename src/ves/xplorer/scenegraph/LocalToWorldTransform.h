@@ -53,7 +53,7 @@
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
+class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
     LocalToWorldTransform( VE_SceneGraph::DCS* worldNode, VE_SceneGraph::DCS* localNode );

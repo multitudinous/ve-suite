@@ -71,7 +71,7 @@ namespace VE_Xplorer
 
 namespace VE_EVENTS
 {
-class VE_XPLORER_NETWORK_EXPORTS SwitchXplorerViewEventHandler: public EventHandler
+class VE_XPLORER_EXPORTS SwitchXplorerViewEventHandler: public EventHandler
 {
 public:
     ///Constructor

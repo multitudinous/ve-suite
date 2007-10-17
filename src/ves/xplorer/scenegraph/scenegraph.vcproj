@@ -239,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LocalToWorldTransform.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\PhysicsConstraint.cxx"
 				>
 			</File>
@@ -368,6 +372,10 @@
 			</File>
 			<File
 				RelativePath=".\Group.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LocalToWorldTransform.h"
 				>
 			</File>
 			<File

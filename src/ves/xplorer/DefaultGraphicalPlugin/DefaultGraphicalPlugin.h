@@ -53,7 +53,7 @@ namespace VE_SceneGraph
 	class DCS;
 }
 
-class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public VE_Xplorer::cfdVEBaseClass 
+class VE_XPLORER_EXPORTS DefaultGraphicalPlugin : public VE_Xplorer::cfdVEBaseClass 
 {
 public:
    DefaultGraphicalPlugin( void );

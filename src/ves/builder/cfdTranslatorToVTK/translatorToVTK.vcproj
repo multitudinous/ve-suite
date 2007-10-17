@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="cfdTranslatorToVTK"
+	Name="translatorToVTK"
 	ProjectGUID="{C3E4EC67-9496-4391-A1B2-8179B3954E9D}"
+	RootNamespace="translatorToVTK"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -40,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;VE_BUILDER_LIBRARY;WINVER=0x400;VTK44"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,14 +63,14 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_UtilLib_d.lib vtkCommon_d.lib vtkRendering_d.lib vtkGraphics_d.lib vtkIO_d.lib vtkFiltering_d.lib"
-				OutputFile="$(OutDir)/cfdTranslatorToVTK_d.dll"
+				AdditionalDependencies="vtkCommon_d.lib vtkRendering_d.lib vtkGraphics_d.lib vtkIO_d.lib vtkFiltering_d.lib"
+				OutputFile="$(OutDir)/ves_builder_translatorToVTK_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/cfdTranslatorToVTK.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/cfdTranslatorToVTK_d.lib"
+				ImportLibrary="$(OutDir)/ves_builder_translatorToVTK_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -122,7 +123,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(VTK_HOME)\include\vtk-5.1&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;VE_BUILDER_LIBRARY;WINVER=0x400;VTK44"
 				RuntimeLibrary="2"
 				RuntimeTypeInfo="true"
@@ -142,15 +143,15 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_UtilLib.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib"
-				OutputFile="$(OutDir)/cfdTranslatorToVTK.dll"
+				AdditionalDependencies="vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib"
+				OutputFile="$(OutDir)/ves_builder_translatorToVTK.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(OutDir)/cfdTranslatorToVTK.lib"
+				ImportLibrary="$(OutDir)/ves_builder_translatorToVTK.lib"
 				TargetMachine="1"
 			/>
 			<Tool

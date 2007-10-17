@@ -50,7 +50,7 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_NETWORK_EXPORTS cfdVEPluginLoader
+class VE_XPLORER_EXPORTS cfdVEPluginLoader
 {
 public:
 

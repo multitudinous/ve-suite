@@ -44,7 +44,7 @@ cfdVEAvailModules API
 
 namespace VE_Xplorer
 {
-class VE_XPLORER_NETWORK_EXPORTS cfdVEAvailModules
+class VE_XPLORER_EXPORTS cfdVEAvailModules
 {
 public:
     ///Constructor

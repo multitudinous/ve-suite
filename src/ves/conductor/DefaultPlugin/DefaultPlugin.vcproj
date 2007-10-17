@@ -75,12 +75,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2.lib wxbase28.lib wxmsw28_core.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib"
-				OutputFile="$(OutDir)/DefaultPlugin.dll"
+				OutputFile="$(OutDir)/ves_conductor_DefaultPlugin.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Release&quot;"
 				ProgramDatabaseFile=".\Release/Compressor.pdb"
-				ImportLibrary="$(OutDir)\DefaultPlugin.lib"
+				ImportLibrary="$(OutDir)\ves_conductor_DefaultPlugin.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -170,13 +170,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28d.lib wxmsw28d_core.lib"
-				OutputFile="$(OutDir)\DefaultPlugin_d.dll"
+				OutputFile="$(OutDir)\ves_conductor_DefaultPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)\GUIPlugin_d.pdb"
-				ImportLibrary="$(OutDir)\DefaultPlugin_d.lib"
+				ImportLibrary="$(OutDir)\ves_conductor_DefaultPlugin_d.lib"
 				TargetMachine="1"
 			/>
 			<Tool
