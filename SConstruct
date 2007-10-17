@@ -228,6 +228,9 @@ bullet_options = sca_util.FlagPollParser('bullet')
 tao_options = sca_util.FlagPollParser('TAO')
 vrjuggler_options = sca_util.FlagPollParser('vrjuggler')
 boost_options = sca_util.FlagPollParser('Boost.Filesystem')
+gmtl_options = sca_util.FlagPollParser('gmtl')
+vpr_options = sca_util.FlagPollParser('vpr')
+gadgeteer_options = sca_util.FlagPollParser('gadgeteer')
 
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
@@ -235,6 +238,9 @@ opts.AddOption( bullet_options )
 opts.AddOption( tao_options )
 opts.AddOption( vrjuggler_options )
 opts.AddOption( boost_options )
+opts.AddOption( gmtl_options )
+opts.AddOption( vpr_options )
+opts.AddOption( gadgeteer_options )
 
 Export('opts', 'vtk_options', 'osg_options', 
          'xerces_options','wxwidgets_options',
@@ -243,7 +249,9 @@ Export('opts', 'vtk_options', 'osg_options',
          'VE_SUITE_VERSION',
          'apr_options', 'apu_options',
          'bullet_options', 'tao_options',
-         'vrjuggler_options', 'boost_options')
+         'vrjuggler_options', 'boost_options'
+         'gmtl_options', 'vpr_options,
+         'gadgeteer_options')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
