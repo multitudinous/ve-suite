@@ -19,7 +19,7 @@ lib_env.Append(LIBPATH = [
 tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
-lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_EXPORTS'])
+lib_env.Append( CPPDEFINES = ['VE_GUIPLUGINS_LIBRARY'])
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_conductor_plugin',
                                                         lib_env,
