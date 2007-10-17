@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR vtk_options buildDir')
+Import('baseEnv ves_pkg LIBDIR vtk_options buildDir boost_options')
 
 sources = Split("""
    cfdTranslatorToVTK.cxx 
@@ -16,8 +16,9 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves','xplorer','util')],
                LIBS = ['ves_xplorer_util'])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
+boost_options.apply( lib_env )
 vtk_options.apply( lib_env )
+lib_env.Append( CPPDEFINES = ['VE_BUILDER_LIBRARY'])
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_builder_translator_base',

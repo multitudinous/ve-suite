@@ -96,6 +96,8 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
    
+lib_env.Append( CPPDEFINES = ['VE_XPLORER_LIBRARY'])
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer',
                                                         lib_env,

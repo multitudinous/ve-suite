@@ -29,6 +29,11 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 #lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
+   
+lib_env.Append( CPPDEFINES = ['VE_SCENEGRAPH_LIBRARY','VE_SCENEGRAPH_UTILS_LIBRARY','VE_NURBS_LIBRARY'])
+
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('ves_xplorer_scenegraph',
                                                         lib_env,
