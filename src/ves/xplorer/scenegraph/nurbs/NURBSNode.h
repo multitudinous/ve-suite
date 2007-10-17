@@ -59,10 +59,10 @@ class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
     ///Constructor
-    NURBSNode(NURBS::NURBSObject* object);
+    NURBSNode(NURBS::NURBSObject* object = 0);
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     NURBSNode( const NURBSNode&, 
-        const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY ){;}
+        const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
 
     META_Node( NURBS, NURBSNode );
 

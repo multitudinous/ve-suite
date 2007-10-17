@@ -92,7 +92,7 @@ public:
 	  m_hasSelectedControlPoint = controlMesh.m_hasSelectedControlPoint;
    }
 
-   META_Object(VE_NURBS,NURBS::NURBSControlMesh)
+   META_Object(NURBS,NURBS::NURBSControlMesh)
 
    ///Set the control points
    void SetControlPoints(std::vector<NURBS::ControlPoint> controlPoints,
@@ -756,6 +756,12 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
 ///////////////////////////////
 NURBSNode::~NURBSNode()
 {
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+NURBSNode::NURBSNode( const NURBSNode& input, const osg::CopyOp& copyop )
+{
+    ;
 }
 /////////////////////////////////////////////
 ///Show the triangulated wireframe surface //
