@@ -94,8 +94,10 @@ buildUUID = buildUUID.replace('/', '-')
 
 if ARGUMENTS.has_key("build_dir"):
    buildDir = ARGUMENTS["build_dir"]
-else:
+elif GetPlatform() == 'win32':
    buildDir = 'buildwin'
+else:
+   buildDir = 'build.'+buildUUID
 
 ########### Some utility functions
 class WxWidgetsOption(fp_opt.FlagPollBasedOption):
