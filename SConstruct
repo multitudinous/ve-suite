@@ -188,8 +188,10 @@ opts.AddOption( osg_options )
 xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
 opts.AddOption( xerces_options )
 wxwidgets_options = None
+
 if GetPlatform() == 'win32':
-   wxwidgets_options = fp_option.FlagPollBasedOption(name='wxWidgets', requiredVersion="2.8", required=True, useCppPath=True)
+   wxwidgets_options = fp_option.FlagPollBasedOption("wxWidgets",
+         "wxWidgets", "2.8", True, True)
 else:
    wxwidgets_options = SConsAddons.Options.WxWidgets.WxWidgets("wxwidgets","2.8", True, True)
 opts.AddOption( wxwidgets_options )
