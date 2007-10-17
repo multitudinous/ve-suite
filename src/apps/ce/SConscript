@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('ves_pkg LIBDIR PREFIX buildDir xerces_options boost_options tao_options')
+Import('ves_pkg LIBDIR PREFIX buildDir xerces_options boost_options tao_options GetPlatform')
 
 srcs = Split("""
    Exe_server.cxx 
@@ -22,6 +22,10 @@ env.Append(LIBPATH = [
 xerces_options.apply( env )
 boost_options.apply( env )
 tao_options.apply( env )
+
+if GetPlatform() == 'win32':
+   env.Append( CPPDEFINES = ['LOKI_DLL'])
+   
 ce_prog = ves_pkg.createProgram('ves_ce' + env["PROGSUFFIX"], env, 'bin')
 ce_prog.addSources( srcs )
 ce_prog.build()

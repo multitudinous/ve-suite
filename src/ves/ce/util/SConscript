@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('baseEnv ves_pkg LIBDIR buildDir xerces_options tao_options RootDir')
+Import('baseEnv ves_pkg LIBDIR buildDir xerces_options tao_options RootDir GetPlatform')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'ce', 'util') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -17,6 +17,12 @@ lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'open'),
 
 xerces_options.apply( lib_env )
 tao_options.apply( lib_env )
+
+
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
+ 
+lib_env.Append( CPPDEFINES = ['VE_CE_UTILS_LIBRARY'])
 
 if baseEnv['StaticLibs'] == "yes":
    vece_util_lib = ves_pkg.createStaticAndSharedLibrary('ves_ce_util',

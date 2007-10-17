@@ -4,16 +4,6 @@ pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR buildDir RootDir tao_options')
 
-openSubdirs = Split("""
-    idl
-    xml
-""")
-
-##Run SConscript files in all of those folders.
-for d in openSubdirs:
-   #print " dir ", d
-   SConscript( dirs = d )
-
 sources = Split("""
    moduleS.cpp
    moduleC.cpp
@@ -27,6 +17,7 @@ headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.inl'))
 
 lib_env = ves_pkg.getEnv().Copy()
 
+print lib_env
 tao_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_OPEN_MODULE_LIBRARY'])
@@ -42,3 +33,13 @@ else:
 lib.addSources(sources)
 lib.addHeaders(headers,  pj( 'ves','open') )
 lib.build()
+
+openSubdirs = Split("""
+    idl
+    xml
+""")
+
+##Run SConscript files in all of those folders.
+for d in openSubdirs:
+   #print " dir ", d
+   SConscript( dirs = d )
