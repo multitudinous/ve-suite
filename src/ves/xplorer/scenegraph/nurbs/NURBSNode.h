@@ -58,12 +58,18 @@ namespace NURBS
 class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
-   ///Constructor
-   NURBSNode(NURBS::NURBSObject* object);
+    ///Constructor
+    NURBSNode(NURBS::NURBSObject* object);
+    ///Copy constructor using CopyOp to manage deep vs shallow copy
+    NURBSNode( const NURBSNode&, 
+        const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY ){;}
 
+    META_Node( NURBS, NURBSNode );
+
+protected:
    ///Destructor
    virtual ~NURBSNode();
-
+public:
    ///Set the NURBS::NURBSObject
    ///\param object The NURBS::NURBSObject
    void SetNURBSObject(NURBS::NURBSObject* object);
