@@ -48,10 +48,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;VE_DEFAULT_PLUGIN_LIBRARY"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;WXUSINGDLL;_USRDLL;_REENTRANT;_STLP_USE_OWN_NAMESPACE;VE_DEFAULT_PLUGIN_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				StringPooling="true"
-				RuntimeLibrary="0"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/Compressor.pch"
@@ -74,7 +74,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase28.lib wxmsw28_core.lib"
+				AdditionalDependencies="xerces-c_2.lib wxbase28.lib wxmsw28_core.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib"
 				OutputFile="$(OutDir)/DefaultPlugin.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -141,8 +141,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;VE_DEFAULT_PLUGIN_LIBRARY"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\src&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;VE_DEFAULT_PLUGIN_LIBRARY;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="true"

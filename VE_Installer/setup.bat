@@ -1,37 +1,37 @@
 REM Edit this file to reflect your local environment for VE_Suite
 
-set VE_SUITE_HOME=C:\devEnv\VE_Suite_1.0
-set VE_INSTALL_DIR=C:\devEnv\VE_Suite_1.0
+set VE_SUITE_HOME=D:\devEnv\VES
+set VE_INSTALL_DIR=D:\devEnv\VES
 
-REM set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0-svn\vrjuggler-2.0.3-win32-vc80
-set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
-set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
-REM set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80
-REM set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80-deps
-REM set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8
-set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk_cvs\vtk_vc80_install
-REM set WX_HOME=C:\WxWidgets_2.8.0_Pre-Compile_vc8.0
-REM set WX_HOME=C:\WxWidgets_2.8.0_Pre-Compile_vc8.0
-set WX_HOME=C:\devEnv\VES.1.0-deps\wxWidgets-2.8.3
-set WX_ROOT=C:\devEnv\VES.1.0-Deps\wxWidgets-2.8.3
-set JAVA_HOME=C:\j2sdk1.4.2_06
-set ACE_ROOT=C:\devEnv\VES.1.0-Deps\ACE_wrappers
-REM set ACE_ROOT=C:\ACETAO_5.5.1_Pre-Compile_vc8.0
+REM set VJ_BASE_DIR=D:\devEnv\VES.1.0-Deps\vrjuggler-2.0-svn\vrjuggler-2.0.3-win32-vc80
+set VJ_DEPS_DIR=D:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
+set VJ_BASE_DIR=D:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
+REM set VJ_BASE_DIR=D:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80
+REM set VJ_DEPS_DIR=D:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80-deps
+REM set VTK_HOME=D:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8
+set VTK_HOME=D:\devEnv\VES.1.0-Deps\vtk_cvs\vtk_vc80_install
+REM set WX_HOME=D:\WxWidgets_2.8.0_Pre-Compile_vc8.0
+REM set WX_HOME=D:\WxWidgets_2.8.0_Pre-Compile_vc8.0
+set WX_HOME=D:\devEnv\VES.1.0-deps\wxWidgets-2.8.3
+set WX_ROOT=D:\devEnv\VES.1.0-Deps\wxWidgets-2.8.3
+set JAVA_HOME=D:\j2sdk1.4.2_06
+set ACE_ROOT=D:\devEnv\VES.1.0-Deps\ACE_wrappers
+REM set ACE_ROOT=D:\ACETAO_5.5.1_Pre-Compile_vc8.0
 set TAO_ROOT=%ACE_ROOT%\TAO
-set XERCESCROOT=C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
-set BULLET_HOME=C:\devEnv\VES.1.0-Deps\bullet_svn
-REM set BULLET_HOME=C:\Bullet_Pre-Compile_2.42
-REM set OSGHOME=C:\OSG_1.2_Pre-Compile_vc8.0
+set XERCESCROOT=D:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
+set BULLET_HOME=D:\devEnv\VES.1.0-Deps\bullet_svn
+REM set BULLET_HOME=D:\Bullet_Pre-Compile_2.42
+REM set OSGHOME=D:\OSG_1.2_Pre-Compile_vc8.0
 REM PRODUCER_HOME=%OSGHOME%
 REM OPENTHREADS_HOME=%OSGHOME%
-set OSGHOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenSceneGraph
-set PRODUCER_HOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\Producer
-set OPENTHREADS_HOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenThreads
-set DEMETER_HOME=C:\devEnv\demeter-3.21
-set APR_HOME=C:\devEnv\VES.1.0-Deps\apr
-set APR_UTIL_HOME=C:\devEnv\VES.1.0-Deps\apr-util
-set APR_ICONV_HOME=C:\devEnv\VES.1.0-Deps\apr-iconv
-set COIN_HOME=C:\devEnv\VES.1.0-Deps\Coin-2.4.5
+set OSGHOME=D:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenSceneGraph
+set PRODUCER_HOME=D:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\Producer
+set OPENTHREADS_HOME=D:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenThreads
+set DEMETER_HOME=D:\devEnv\demeter-3.21
+set APR_HOME=D:\devEnv\VES.1.0-Deps\apr
+set APR_UTIL_HOME=D:\devEnv\VES.1.0-Deps\apr-util
+set APR_ICONV_HOME=D:\devEnv\VES.1.0-Deps\apr-iconv
+set COIN_HOME=D:\devEnv\VES.1.0-Deps\Coin-2.4.5
 set TAO_MACHINE=localhost
 REM set TAO_MACHINE=costello.vrac.iastate.edu
 REM set TAO_MACHINE=keymaker.vrac.iastate.edu
@@ -39,7 +39,7 @@ set VEXMASTER=costello
 set TAO_PORT=1239
 set SNX_BASE_DIR=%VJ_BASE_DIR%
 
-set OPENAL_LIB_DIR=C:\devEnv\VES.1.0-Deps\openal\OpenAL-Windows\OpenAL32\Debug
+set OPENAL_LIB_DIR=D:\devEnv\VES.1.0-Deps\openal\OpenAL-Windows\OpenAL32\Debug
 REM NOTE: On Windows the juggler location must point to a Windows
 REM (local or on network) machine, otherwise user may run into runtime
 REM problems when loading config files across the network
