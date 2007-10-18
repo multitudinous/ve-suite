@@ -240,6 +240,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EphemerisDialog.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\ExportMenu.cxx"
 				>
 			</File>
@@ -306,6 +310,10 @@
 			</File>
 			<File
 				RelativePath=".\DeviceProperties.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EphemerisDialog.h"
 				>
 			</File>
 			<File

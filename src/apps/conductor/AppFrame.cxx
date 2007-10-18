@@ -58,19 +58,20 @@
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 
-#include "ConductorApp.h"
-#include "UserPreferences.h"
-#include "Avail_Modules.h"
-#include "HierarchyTree.h"
-#include "UI_TeacherTab.h"
-#include "DeviceProperties.h"
-#include "NavigationPane.h"
-#include "Splitter.h"
-#include "ViewLocPane.h"
-#include "Network.h"
-#include "Canvas.h"
-#include "MainToolBar.h"
-#include "ExportMenu.h"
+#include <apps/conductor/ConductorApp.h>
+#include <apps/conductor/UserPreferences.h>
+#include <apps/conductor/Avail_Modules.h>
+#include <apps/conductor/HierarchyTree.h>
+#include <apps/conductor/UI_TeacherTab.h>
+#include <apps/conductor/DeviceProperties.h>
+#include <apps/conductor/NavigationPane.h>
+#include <apps/conductor/Splitter.h>
+#include <apps/conductor/ViewLocPane.h>
+#include <apps/conductor/Network.h>
+#include <apps/conductor/Canvas.h>
+#include <apps/conductor/MainToolBar.h>
+#include <apps/conductor/ExportMenu.h>
+#include <apps/conductor/EphemerisDialog.h>
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/Module.h>
@@ -168,6 +169,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
     EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
     EVT_MENU( XPLORER_COLOR, AppFrame::SetBackgroundColor )
+	EVT_MENU( XPLORER_EPHEMERIS, AppFrame::SetEphemerisData)
     EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
@@ -204,7 +206,8 @@ m_frame( 0 ),
 _treeView( 0 ),
 deviceProperties( 0 ),
 navPane( 0 ),
-viewlocPane( 0 )
+viewlocPane( 0 ),
+m_ephemeris( 0 )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -744,6 +747,7 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
     xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
     xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
+	xplorerMenu->Append( XPLORER_EPHEMERIS, _("Ephemeris Data") );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
     xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            
@@ -1881,6 +1885,17 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
    }
    // now show it
    navPane->Show();
+}
+//////////////////////////////////////////////////////////////////
+void AppFrame::SetEphemerisData( wxCommandEvent& WXUNUSED(event) )
+{
+	if(!m_ephemeris)
+	{
+		m_ephemeris = new EphemerisDialog(this,wxID_ANY);
+	}
+	if(m_ephemeris->ShowModal() == wxID_OK)
+	{
+	}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )

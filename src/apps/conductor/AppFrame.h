@@ -67,6 +67,7 @@ class NavigationPane;
 class StreamlinePane;
 class UserPreferences;
 class DeviceProperties;
+class EphemerisDialog;
 
 
 // --- wxWidgets Includes --- //
@@ -177,6 +178,7 @@ public:
         XPLORER_SCENES,
         XPLORER_EXIT,
         XPLORER_COLOR,
+		XPLORER_EPHEMERIS,
         ID_PREFERENCES,
         CHANGE_XPLORER_VIEW,
         CHANGE_XPLORER_VIEW_NETWORK,
@@ -351,6 +353,10 @@ protected:
     ///\param The command event
     void SetBackgroundColor( wxCommandEvent& event ); 
 
+	///Set the ephemeris data
+	///\param event The command event
+	void SetEphemerisData(wxCommandEvent& event);
+
     void OnExitXplorer( wxCommandEvent& event );
 
     ///Process Juggler settings
@@ -399,6 +405,7 @@ private:
     ///<Desktop or Tablet
     std::string _displayMode;
 
+	EphemerisDialog* m_ephemeris;///<Ephemeris data dialog
     StreamlinePane* streamlinePane;
     ves::conductor::util::CORBAServiceList* serviceList;
     UserPreferences* preferences;
