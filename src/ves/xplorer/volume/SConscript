@@ -20,6 +20,7 @@ index = sources.index(pj('TextureDataManager.cxx') )
 sources.pop(index)
 index = sources.index(pj('VectorData.cxx') )
 sources.pop(index)
+
 index = headers.index(pj('Database.h') )
 headers.pop(index)
 index = headers.index(pj('DatabaseDriver.h') )
