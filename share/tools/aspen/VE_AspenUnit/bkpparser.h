@@ -12,13 +12,22 @@
 #include <map>
 #include <utility>
 #include <sstream>
-#include "share/tools/aspen/CASIlib/CASI.h"
-#include "VE_Open/XML/Model/Network.h"
-#include "VE_Open/XML/Model/System.h"
+#include <CASI.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 
-namespace VE_Model
+namespace ves
+{
+namespace open
+{
+namespace xml
+{
+namespace model
 {
    class Network;
+}
+}
+}
 }
 
 class BKPParser
@@ -101,9 +110,9 @@ public:
 	int getStreamSize(int index);                           //returns the total number of points for a stream
 	bool isOpen();
 
-   void CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork, std::string hierName );
+	void CreateNetworkLinks( ves::open::xml::model::NetworkWeakPtr subNetwork, std::string hierName );
    void CreateNetworkInformation( std::string networkData );
-   void ParseSubSystem(VE_XML::VE_Model::ModelStrongPtr model, std::string networkName);
+   void ParseSubSystem(ves::open::xml::model::ModelStrongPtr model, std::string networkName);
    std::string CreateNetwork( void );
    std::string GetInputModuleParamProperties(std::string modname, std::string paramName);
    std::string GetInputModuleParams(std::string modname);

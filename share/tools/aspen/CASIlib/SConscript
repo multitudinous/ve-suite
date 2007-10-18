@@ -1,0 +1,26 @@
+## Build CASIlib
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR RootDir')
+
+sources = Split("""
+   CASI.cxx
+   CASI_CASIObj.cxx
+   CASI_Document.cxx
+   CASI_VAriable.cxx
+   happ.cxx
+""")
+
+headers = Split("""
+   CASI.h
+   happ.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append( CPPDEFINES = ['_AFXDLL'])
+lib = ves_pkg.createSharedLibrary('CASIlib', lib_env,
+                                               installPrefix = LIBDIR)
+lib.addSources(sources)
+lib.addHeaders(headers, "..")
+lib.build()

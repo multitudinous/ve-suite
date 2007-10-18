@@ -1,6 +1,6 @@
 #ifndef CORBA_UNIT_MANAGER
 #define CORBA_UNIT_MANAGER
-#include "VE_Open/skel/moduleS.h"
+#include <moduleS.h>
 #include <string>
 #include "AspenUnit_i.h"
 #include "VE_AspenUnit.h"

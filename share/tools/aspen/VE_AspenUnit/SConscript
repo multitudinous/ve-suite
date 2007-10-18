@@ -1,0 +1,37 @@
+##Builds AspenUnit
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR xerces_options RootDir buildDir')
+
+srcs = Split("""
+   AspenUnit_i.cxx
+   bkpparser.cxx
+   CorbaUnitManager.cxx
+   VE_AspenUnit.cxx
+   VE_AspenUnitDlg.cxx
+""")
+
+headers = Split("""
+   AspenUnit_i.h
+   bkpparser.h
+   CorbaUnitManager.h
+   VE_AspenUnit.h
+   VE_AspenUnitDlg.h
+""")
+
+env = ves_pkg.getEnv().Copy()
+env.Append( CPPDEFINES = ['_AFXDLL'])
+env.Append( CPPDEFINES = ['LOKI_DLL'])
+env.Append( CPPDEFINES = ['LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
+env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'])
+
+env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib')] )
+env.Append( CPPPATH = [pj('#', 'src', 'ves', 'open')] )
+
+xerces_options.apply( env )
+
+prog = ves_pkg.createProgram('AspenUnit' + env["PROGSUFFIX"], env, 'bin')
+prog.addSources( srcs )
+prog.addHeaders(headers, "..")
+prog.build()
