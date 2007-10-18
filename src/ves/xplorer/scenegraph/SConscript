@@ -19,6 +19,7 @@ lib_env.Append(LIBS = ['ves_open_xml','osgOQ','ves_xplorer_util'])
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
                           pj('#',buildDir,'external','osgOQ')])
+
 gmtl_options.apply( lib_env )
 bullet_options.apply( lib_env )
 vpr_options.apply( lib_env )

@@ -379,7 +379,7 @@ baseEnv.Help(help_text)
 
 if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
-   opts.Process(baseEnv, None, True)                   # Update the options
+   opts.Process(baseEnv)                   # Update the options
 
    #if baseEnv[ 'validate' ] == 'yes':
        # check the apr and apu utilities
@@ -554,6 +554,10 @@ if not SConsAddons.Util.hasHelpFlag():
          pass
       else:
          ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
+
+   # Need test patch for scons-addons to enable!
+   #if GetPlatform() == 'win32':
+   #   ves_pkg.generateVisualStudioSolution()
 
    ##Setup the install flag to install VE-Suite
    if 'install' in COMMAND_LINE_TARGETS:
