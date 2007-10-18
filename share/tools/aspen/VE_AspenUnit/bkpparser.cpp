@@ -989,7 +989,8 @@ void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork,
 		 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
          
 		 //Now we create a link
-		 VE_XML::VE_Model::LinkWeakPtr xmlLink = subNetwork->GetLink( -1 );
+		 //VE_XML::VE_Model::LinkWeakPtr xmlLink = subNetwork->GetLink( -1 );
+		 VE_XML::VE_Model::LinkWeakPtr xmlLink = new VE_XML::VE_Model::Link();
 		 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
 		 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
 		 
@@ -1006,6 +1007,7 @@ void BKPParser::CreateNetworkLinks( VE_XML::VE_Model::NetworkWeakPtr subNetwork,
 			// I am not sure why we need to reverse the points but we do
 			xmlLink->GetLinkPoint( linkPoints[hierName][ fromPortName ].size() - j )->SetPoint( linkPoints[hierName][ fromPortName ].at( j - 1 ) );
 		 }
+		 subNetwork->AddLink( xmlLink );
 	  }
    }
 }
