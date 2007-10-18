@@ -261,7 +261,7 @@ bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
                                                headerToCheck="btBulletCollisionCommon.h")
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
-                     "ACE TAO_IORInterceptor TAO_ObjRefTemplate TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
+                     "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
                                                "1.5", True, True, compileTest=True,
                                                headerToCheck="ace/ACE.h")
 if GetPlatform() != 'win32':
