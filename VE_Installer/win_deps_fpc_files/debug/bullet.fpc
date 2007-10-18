@@ -9,6 +9,6 @@ Provides: bullet
 Requires:
 Version: 2.60 
 Cflags: /I"${includedir}"
-Libs: /libpath:"${libdir} libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib libbulletmultithreaded_d.lib"
+Libs: /libpath:"${libdir}" libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib libbulletmultithreaded_d.lib
 Arch: noarch
 
