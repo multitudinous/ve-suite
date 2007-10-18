@@ -37,6 +37,10 @@
 
 #include <string>
 
+#ifndef WIN32
+typedef __int64 int64_t;
+#endif
+
 namespace VE_TextureBased
 {
    /**
