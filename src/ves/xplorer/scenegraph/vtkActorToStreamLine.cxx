@@ -56,10 +56,10 @@ typedef double vtkReal;
 ////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToStreamLine( vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose )
 {
-    // make actor current
+    //Make actor current
     actor->GetMapper()->Update();
 
-    // this could possibly be any type of DataSet, vtkActorToOSG assumes polyData
+    //This could possibly be any type of DataSet, vtkActorToOSG assumes polyData
     if( strcmp( actor->GetMapper()->GetInput()->GetClassName(), "vtkPolyData" ) )
     {
         std::cerr << "ERROR! Actor must use a vtkPolyDataMapper." << std::endl;
@@ -74,7 +74,7 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToStreamLine( vtkActor *actor,
         //std::cout << " creating a new geode in vtkactortoosg" << std::endl;
     }
 
-    // get poly data
+    //Get poly data
     vtkPolyData* polyData = dynamic_cast< vtkPolyData* >( actor->GetMapper()->GetInput() );
 
     if( verbose )
@@ -147,6 +147,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     //Go through cells (primitives)
     for( primArray->InitTraversal(); primArray->GetNextCell( npts, pts ); ++prim )
     {
+        bool isFirstPoint = true;
         int count = 0;
         double leftOver = 0;
         double delta = 0.1;
@@ -167,12 +168,36 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
             
             double lineSegmentLength = BminusA.length();
             double totalDistance = lineSegmentLength + leftOver;
-            int numSteps = static_cast< int >( totalDistance / delta );
-            double ds = delta / lineSegmentLength;
-            double firstPos = ds * ( ( delta - leftOver ) / delta );
 
+            if( isFirstPoint )
+            {
+                vertices->push_back( osg::Vec3( -1.0,  1.0, 0 ) );
+                vertices->push_back( osg::Vec3( -1.0, -1.0, 0 ) );
+                vertices->push_back( osg::Vec3(  1.0, -1.0, 0 ) );
+                vertices->push_back( osg::Vec3(  1.0,  1.0, 0 ) );
+
+                unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
+                colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
+                                              aColor[ 1 ] / 255.0f,
+                                              aColor[ 2 ] / 255.0f,
+                                              aColor[ 3 ] / 255.0f ) );
+
+                for( int k = 0; k < 4; ++k )
+                {
+                    texcoord0->push_back( pointA );
+                    texcoord1->push_back( BminusA );
+                }
+
+                count += 4;
+                isFirstPoint = false;
+            }
+            
             if( totalDistance >= delta )
             {
+                int numSteps = static_cast< int >( totalDistance / delta );
+                double ds = delta / lineSegmentLength;
+                double firstPos = ds * ( ( delta - leftOver ) / delta );
+
                 leftOver = totalDistance - ( numSteps * delta );
 
                 double j = firstPos;
@@ -242,7 +267,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.4 ) );
     stateset->addUniform( parSize.get() );
 
-    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.05 ) );
+    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.04 ) );
     stateset->addUniform( parExp.get() );
 
     geometry->setStateSet( stateset.get() );

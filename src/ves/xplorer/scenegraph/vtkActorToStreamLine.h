@@ -34,13 +34,14 @@
 #ifndef VTK_ACTOR_TO_STREAMLINE_H
 #define VTK_ACTOR_TO_STREAMLINE_H
 
+#include <ves/VEConfig.h>
+
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/ref_ptr>
 
 #include <vtkActor.h>
 #include <vtkCellArray.h>
-#include <ves/VEConfig.h>
 
 namespace VE_SceneGraph
 {
