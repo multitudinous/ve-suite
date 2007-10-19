@@ -40,6 +40,7 @@
 #include <ves/xplorer/scenegraph/vtkActorToPF.h>
 #elif _OSG
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
+#include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
 
 #include <osg/Geode>
 #include <osg/Node>
@@ -90,7 +91,16 @@ void Geode::TranslateToGeode( vtkActor* actor )
 #elif _OPENSG
 #endif
 }
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
+void Geode::StreamLineToGeode( vtkActor* actor )
+{
+#ifdef _PERFORMER
+#elif _OSG
+    VE_SceneGraph::vtkActorToStreamLine( actor, this, _vtkDebugLevel );
+#elif _OPENSG
+#endif
+}
+//////////////////////////////////////////////////////////////////////////////////
 osg::Group* Geode::GetParent( unsigned int position )
 {
 #ifdef _OPENSG

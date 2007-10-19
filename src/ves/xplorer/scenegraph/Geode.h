@@ -87,6 +87,8 @@ public:
     ///\param actor The VTK actor to be translated to a geode
     void TranslateToGeode( vtkActor* actor );
 
+    void StreamLineToGeode( vtkActor* actor );
+
     ///Generic get parent function
     ///\param position The position of the parent to be returned
     osg::Group* GetParent( unsigned int position );
