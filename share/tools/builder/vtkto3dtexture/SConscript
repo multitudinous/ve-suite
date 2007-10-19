@@ -10,6 +10,12 @@ srcs = Split("""
    tcFrame.cxx 
    textureCreator.cxx
 """)
+headers = Split("""
+   flowTexture.h 
+   tcApp.h
+   tcFrame.h 
+   textureCreator.h
+""")
 ##srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
 
 programName = 'vtkTo3DTexture'
@@ -27,6 +33,7 @@ wxwidgets_options.apply( env )
 vtk_options.apply( env )
 prog = ves_pkg.createProgram( programName + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
+prog.addHeaders( headers )
 prog.build()
 
 if GetPlatform() == "darwin":

@@ -58,5 +58,5 @@ tao_options.apply( env )
 
 prog = ves_pkg.createProgram('AspenUnit' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
-prog.addHeaders(headers, "..")
+prog.addHeaders( headers )
 prog.build()

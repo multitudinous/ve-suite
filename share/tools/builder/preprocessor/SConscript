@@ -1,13 +1,13 @@
 ##Builds preprocessor program
 import os, sys, string
 pj = os.path.join
+import SConsAddons.Util as sca_util
 
-Import('ves_pkg LIBDIR PREFIX buildDir vtk_options boost_options')
+Import('ves_pkg LIBDIR PREFIX buildDir vtk_options boost_options RootDir')
 
-srcs = Split("""
-   multiPlaneVtkOutput.cxx
-   preprocessor.cxx
-""")
+srcDir = os.path.abspath( pj(RootDir, 'share', 'tools', 'builder','preprocessor') )
+srcs = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Copy()
 env.Append( LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
@@ -18,4 +18,5 @@ vtk_options.apply( env )
 
 prog = ves_pkg.createProgram('preprocessor' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
+prog.addHeaders( headers )
 prog.build()

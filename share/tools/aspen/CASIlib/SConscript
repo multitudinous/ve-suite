@@ -23,5 +23,5 @@ lib_env.Append( CPPDEFINES = ['CASI_LIBRARY'])
 lib = ves_pkg.createSharedLibrary('CASIlib', lib_env,
                                                installPrefix = LIBDIR)
 lib.addSources(sources)
-lib.addHeaders(headers, "..")
+lib.addHeaders(headers)
 lib.build()
