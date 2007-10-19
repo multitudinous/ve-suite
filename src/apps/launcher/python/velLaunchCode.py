@@ -98,7 +98,9 @@ class Launch:
         else:
             self.debugSuffix = ""
         ##Set Windows suffix.
-        self.windowsSuffix = self.debugSuffix + ".exe"
+        ##our installs do not support debug and release so there is not need for this
+	#self.windowsSuffix = self.debugSuffix + ".exe"
+        self.windowsSuffix = ".exe"
         ##Set self.cluster to True if there's cluster functionality.
         ##If so, begin building self.clusterScript
         ##Used in EnvSetup and Windows/Unix.
