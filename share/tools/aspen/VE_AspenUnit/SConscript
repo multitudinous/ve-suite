@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options RootDir buildDir')
+Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir buildDir')
 
 srcs = Split("""
    AspenUnit_i.cxx
@@ -27,9 +27,21 @@ env.Append( CPPDEFINES = ['LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'])
 
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib')] )
-env.Append( CPPPATH = [pj('#', 'src', 'ves', 'open')] )
+env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib','aspenplus_2004')] )
+env.Append( CPPPATH = [pj('#', buildDir, 'src', 'ves', 'open')] )
+
+env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','CASIlib')])
+env.Append(LIBPATH = [pj('#', buildDir, 'external','loki-0.1.6')])
+env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open')])
+env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml')])
+
+env.Append(LIBS = ['CASIlib'])
+env.Append(LIBS = ['loki.0.1.6'])
+env.Append(LIBS = ['ves_open_module'])
+env.Append(LIBS = ['ves_open_xml'])
 
 xerces_options.apply( env )
+tao_options.apply( env )
 
 prog = ves_pkg.createProgram('AspenUnit' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )

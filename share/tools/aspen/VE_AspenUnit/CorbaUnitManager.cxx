@@ -2,14 +2,14 @@
 #include <xercesc/dom/DOM.hpp>
 #include "CorbaUnitManager.h"
 #include "orbsvcs/CosNamingC.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/XMLCreator.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/Model/ModelCreator.h"
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/cad/CADCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/model/ModelCreator.h>
 #include "VE_AspenUnit.h"
 
-#include "tao/BiDir_GIOP/BiDirGIOP.h"
+#include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <fstream>
 #include <iostream>
 
@@ -50,10 +50,10 @@ void CorbaUnitManager::RunORB()
    }
 
       ///Initialize VE-Open
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_XML::VE_Shader::ShaderCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
-   VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
+   ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
 
 	//initialize OLE
 	CoInitialize(NULL);

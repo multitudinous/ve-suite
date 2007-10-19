@@ -1,11 +1,18 @@
-#include "happ.h"
+#ifndef CASI_H
+#define CASI_H
+
+#include <happ.h>
 
 #include <set>
 #include <vector>
 #include <map>
 
-#ifndef CASI_H
-#define CASI_H
+#  ifdef CASI_LIBRARY
+#    define CASI_EXPORTS   __declspec(dllexport)
+#  else
+#    define CASI_EXPORTS   __declspec(dllimport)
+#  endif // CASI_EXPORTS
+
 namespace CASI
 {
 
@@ -13,7 +20,7 @@ namespace CASI
 
 	typedef enum { STREAM, BLOCK, VARIABLE } VARTYPE;
 	
-	class CASIBroker
+	class CASI_EXPORTS CASIBroker
 	{
 		public:
 
@@ -25,7 +32,7 @@ namespace CASI
 	};
 
 
-	class Variable
+	class CASI_EXPORTS Variable
 	{
 		//This class mimic the right panel of the Variable Exploer
 		public:
@@ -79,7 +86,7 @@ namespace CASI
 	};
 
 
-	class CASIObj : public Variable
+	class CASI_EXPORTS CASIObj : public Variable
 	{
 	public:
 		CASIObj():Variable() {};
@@ -115,7 +122,7 @@ namespace CASI
 		std::vector<CString> blockOutputs;
 	};
 		
-	class CASIDocument
+	class CASI_EXPORTS CASIDocument
 	{
 	
 		public:

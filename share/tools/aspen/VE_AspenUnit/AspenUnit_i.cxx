@@ -31,19 +31,19 @@
 #include "stdafx.h"
 #include "AspenUnit_i.h"
 #include "VE_AspenUnit.h"
-#include "VE_Open/XML/Model/Network.h"
-#include "VE_Open/XML/Model/Link.h"
-#include "VE_Open/XML/Model/Model.h"
-#include "VE_Open/XML/DataValuePair.h"
-#include "VE_Open/XML/XMLReaderWriter.h"
-#include "VE_Open/XML/Model/Point.h"
-#include "VE_Open/XML/Model/Port.h"
-#include "VE_Open/XML/Command.h"
-#include "VE_Open/XML/XMLObjectFactory.h"
-#include "VE_Open/XML/XMLCreator.h"
-#include "VE_Open/XML/Shader/ShaderCreator.h"
-#include "VE_Open/XML/Model/ModelCreator.h"
-#include "VE_Open/XML/CAD/CADCreator.h"
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/XMLObjectFactory.h>
+#include <ves/open/xml/XMLCreator.h>
+#include <ves/open/xml/shader/ShaderCreator.h>
+#include <ves/open/xml/model/ModelCreator.h>
+#include <ves/open/xml/cad/CADCreator.h>
 #include <fstream>
 #include <iostream>
 
@@ -51,10 +51,10 @@
 Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent)
   : executive_(Body::Executive::_duplicate(exec))
 {
-  VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new VE_XML::XMLCreator() );
-  VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new VE_XML::VE_Shader::ShaderCreator() );
-  VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new VE_XML::VE_Model::ModelCreator() );
-  VE_XML::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new VE_XML::VE_CAD::CADCreator() );
+  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
+  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
+  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
+  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
   UnitName_=name;
   return_state = 0;
   //bkp = parser;
@@ -163,20 +163,20 @@ char * Body_Unit_i::GetStatusMessage (
   ))
 {
   // Add your implementation here
-	VE_XML::Command returnState;
+	ves::open::xml::Command returnState;
 
 	returnState.SetCommandName("statusmessage");
-	VE_XML::DataValuePairWeakPtr data=returnState.GetDataValuePair(-1);
+	ves::open::xml::DataValuePairWeakPtr data=returnState.GetDataValuePair(-1);
 	data->SetDataName("RETURN_STATE");
 	data->SetDataType("UNSIGNED INT");
 	data->SetDataValue(return_state);
 	
-	std::vector< std::pair< VE_XML::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
 
 	nodes.push_back( 
-                  std::pair< VE_XML::XMLObject*, std::string >( &returnState, "Command" ) 
+                  std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "Command" ) 
                      );
-	VE_XML::XMLReaderWriter commandWriter;
+	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
 	commandWriter.WriteXMLDocument( nodes, status, "vecommand" );
@@ -283,16 +283,16 @@ char * Body_Unit_i::Query ( const char * query_str
     ::Error::EUnknown
   ))
 {
-	VE_XML::XMLReaderWriter networkWriter;
+	ves::open::xml::XMLReaderWriter networkWriter;
 	networkWriter.UseStandaloneDOMDocumentManager();
 	networkWriter.ReadFromString();
 	networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
-	std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+	std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
 
-	VE_XML::Command* cmd;	
+	ves::open::xml::Command* cmd;	
 	std::string cmdname;
 	
-	cmd = dynamic_cast< VE_XML::Command* >( objectVector.at( 0 ) );
+	cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
 	cmdname = cmd->GetCommandName();
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel(("Command: "+cmdname+"\r\n").c_str());
@@ -425,7 +425,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		return CORBA::string_dup("NULL");
 }
 
-char* Body_Unit_i::handleGetNetwork(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetNetwork(ves::open::xml::Command* cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -457,7 +457,7 @@ char* Body_Unit_i::handleGetNetwork(VE_XML::Command* cmd)
 	return CORBA::string_dup(network.c_str());
 }
 
-char* Body_Unit_i::handleOpenSimulation(VE_XML::Command* cmd)
+char* Body_Unit_i::handleOpenSimulation(ves::open::xml::Command* cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -469,7 +469,7 @@ char* Body_Unit_i::handleOpenSimulation(VE_XML::Command* cmd)
 	return CORBA::string_dup("Simulation Opened.");
 }
 
-char* Body_Unit_i::handleSaveAs(VE_XML::Command* cmd)
+char* Body_Unit_i::handleSaveAs(ves::open::xml::Command* cmd)
 {
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel("saving...\r\n");
@@ -481,7 +481,7 @@ char* Body_Unit_i::handleSaveAs(VE_XML::Command* cmd)
 }
 
 //BLOCKS
-char* Body_Unit_i::handleGetInputModuleParamList(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -489,7 +489,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(VE_XML::Command* cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -503,7 +503,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(VE_XML::Command* cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetInputModuleProperties(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -511,7 +511,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(VE_XML::Command* cmd)
 
 	for ( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -524,7 +524,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(VE_XML::Command* cmd)
 
 }
 
-char* Body_Unit_i::handleGetOutputModuleParamList(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -532,7 +532,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(VE_XML::Command* cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -546,7 +546,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(VE_XML::Command* cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetOutputModuleProperties(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -554,7 +554,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(VE_XML::Command* cmd)
 
 	for ( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -568,7 +568,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(VE_XML::Command* cmd)
 }
 
 //Streams
-char* Body_Unit_i::handleGetStreamInputModuleParamList(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -576,7 +576,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(VE_XML::Command* cmd)
 
 	for ( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -590,7 +590,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(VE_XML::Command* cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetStreamInputModuleProperties(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -598,7 +598,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(VE_XML::Command* cmd)
 
 	for ( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -611,7 +611,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(VE_XML::Command* cmd)
 
 }
 
-char* Body_Unit_i::handleGetStreamOutputModuleParamList(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -619,7 +619,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(VE_XML::Command* cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -633,7 +633,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(VE_XML::Command* cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetStreamOutputModuleProperties(VE_XML::Command* cmd)
+char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -641,7 +641,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleProperties(VE_XML::Command* cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -663,22 +663,22 @@ void Body_Unit_i::SetParams (CORBA::Long id,
   ))
 {
    //discard the id, it is not used;
-   VE_XML::XMLReaderWriter networkWriter;
+   ves::open::xml::XMLReaderWriter networkWriter;
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( param, "Command", "vecommand" );
-   std::vector< VE_XML::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
   
    //this part would need rewrite later
    for( size_t i=0; i<objectVector.size(); i++)
    {
-		VE_XML::Command* param = dynamic_cast< VE_XML::Command* >( objectVector.at( i ) );
+		ves::open::xml::Command* param = dynamic_cast< ves::open::xml::Command* >( objectVector.at( i ) );
 		std::string paramName = param->GetCommandName();
 		
 		size_t num = param->GetNumberOfDataValuePairs();
 		for (size_t j=0; j<num; j++)
 		{
-			VE_XML::DataValuePairWeakPtr curPair= param->GetDataValuePair("NodePath");
+			ves::open::xml::DataValuePairWeakPtr curPair= param->GetDataValuePair("NodePath");
 			CString nodepath = curPair->GetDataString().c_str();
 			curPair = param->GetDataValuePair("Value");
 			CString nodevalue = curPair->GetDataString().c_str();
@@ -689,14 +689,14 @@ void Body_Unit_i::SetParams (CORBA::Long id,
 		}
    }
 }
-void Body_Unit_i::SetParam (VE_XML::Command* cmd)
+void Body_Unit_i::SetParam (ves::open::xml::Command* cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;
 
 	for( size_t i=0; i < num; i++)
 	{
-		VE_XML::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="ParamName")
