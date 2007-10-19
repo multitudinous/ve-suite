@@ -771,8 +771,7 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
    do
    {
 	   //grab the first of all 3 types of indicators
-	   size_t semi = 0;
-//	   size_t semi = network.find("\;", tagEnd);
+	   size_t semi = network.find("\;", tagEnd);
 	   size_t slash = network.find("\\", tagEnd);
 	   size_t question = network.find("\?", tagEnd);
 
@@ -780,7 +779,7 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
 	   if (semi < slash && semi < question)
 	   {
 		   tagBegin = semi;
-//		   tagEnd = network.find("\;", tagBegin + 1) + 1;
+		   tagEnd = network.find("\;", tagBegin + 1) + 1;
 	   }
 	   else if (slash < semi && slash < question)
 	   {

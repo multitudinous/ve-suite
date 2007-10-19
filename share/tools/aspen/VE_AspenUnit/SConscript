@@ -21,11 +21,17 @@ headers = Split("""
 """)
 
 env = ves_pkg.getEnv().Copy()
+env['MSVS_USE_MFC_DIRS'] = 1
+
+ves_res=env.RES('VE_AspenUnit.rc')
+env.Clone(WINDOWS_INSERT_DEF = 1)
 env.Append( CPPDEFINES = ['_AFXDLL'])
 env.Append( CPPDEFINES = ['LOKI_DLL'])
 env.Append( CPPDEFINES = ['LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'])
 
+env.Append( CPPPATH = [pj('#', 'src')] )
+env.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib','aspenplus_2004')] )
 env.Append( CPPPATH = [pj('#', buildDir, 'src', 'ves', 'open')] )
@@ -39,6 +45,13 @@ env.Append(LIBS = ['CASIlib'])
 env.Append(LIBS = ['loki.0.1.6'])
 env.Append(LIBS = ['ves_open_module'])
 env.Append(LIBS = ['ves_open_xml'])
+env.Append(LIBS = ['ves_open_xml'])
+env.Append(LIBS = ['gdiplus'])
+env.Append(LIBS = ['odbc32.lib'])
+env.Append(LIBS = ['odbccp32.lib'])
+
+for res in ves_res:
+  srcs.append(res)
 
 xerces_options.apply( env )
 tao_options.apply( env )
