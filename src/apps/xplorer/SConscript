@@ -8,6 +8,7 @@ Import('tao_options boost_options vrjuggler_options bullet_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
 srcs = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
 
 env = ves_pkg.getEnv().Copy()
 env.Append(
@@ -49,5 +50,6 @@ if GetPlatform() == 'win32':
    
 prog = ves_pkg.createProgram('ves_xplorer' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
+prog.addHeaders( headers )
 prog.build()
 

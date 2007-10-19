@@ -8,6 +8,7 @@ Import('tao_options vrjuggler_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'conductor') )
 srcs = sca_util.getSourcesRecursive( srcDir )
+headers = sca_util.getHeadersRecursive( srcDir )
 #srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin.cxx' )]
 #srcs += [pj( '..', '..', 'ves','conductor', 'DefaultPlugin', 'DefaultPlugin_UI_Dialog.cxx' )]
 
@@ -31,6 +32,7 @@ if GetPlatform() == 'win32':
    
 prog = ves_pkg.createProgram('ves_conductor' + env["PROGSUFFIX"], env, 'bin')
 prog.addSources( srcs )
+prog.addHeaders( headers )
 prog.build()
 
 if GetPlatform() == "darwin":

@@ -11,6 +11,13 @@ srcs = Split("""
    QueryThread.cxx
 """)
 
+headers = Split("""
+   Exe_server.h
+   Executive_i.h
+   Execute_Thread.h
+   QueryThread.h
+""")
+
 env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['ves_open_xml', 'ves_ce_util', 'ves_open_module'])
 env.Append(LIBPATH = [
@@ -28,5 +35,6 @@ if GetPlatform() == 'win32':
    
 ce_prog = ves_pkg.createProgram('ves_ce' + env["PROGSUFFIX"], env, 'bin')
 ce_prog.addSources( srcs )
+ce_prog.addHeaders( headers )
 ce_prog.build()
 
