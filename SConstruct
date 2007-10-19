@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!python
 EnsureSConsVersion(0,96)
 SConsignFile()
 
