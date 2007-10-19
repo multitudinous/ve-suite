@@ -556,8 +556,8 @@ if not SConsAddons.Util.hasHelpFlag():
          ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
 
    # Need test patch for scons-addons to enable!
-   #if GetPlatform() == 'win32':
-   #   ves_pkg.generateVisualStudioSolution()
+   if GetPlatform() == 'win32':
+      ves_pkg.generateVisualStudioSolution()
 
    ##Setup the install flag to install VE-Suite
    if 'install' in COMMAND_LINE_TARGETS:
