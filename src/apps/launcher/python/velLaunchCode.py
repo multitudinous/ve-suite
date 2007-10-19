@@ -171,7 +171,7 @@ class Launch:
                 sys.exit(2)
                 
             #Checking existence of executable file first before calling it
-            exe = "Winserver" + self.windowsSuffix
+            exe = "ves_ce" + self.windowsSuffix
             sleep(2)
             try:
                 pids.append(subprocess.Popen(self.ServerCall(),
