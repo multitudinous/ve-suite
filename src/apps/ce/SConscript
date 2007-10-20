@@ -12,7 +12,6 @@ srcs = Split("""
 """)
 
 headers = Split("""
-   Exe_server.h
    Executive_i.h
    Execute_Thread.h
    QueryThread.h
