@@ -74,6 +74,7 @@ import SConsAddons.AutoDist as sca_auto_dist
 import SConsAddons.Options.FlagPollBasedOption as fp_option
 from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
+################################################################################
 ########### Setup build dir and name
 RootDir = os.getcwd()
 Export('RootDir')
@@ -85,6 +86,9 @@ buildPlatform = distutils.util.get_platform()
 ##setup platform specific information
 pt = platform
 machineType = pt.machine()
+if machineType == None:
+     machineType = 'none'
+
 if GetPlatform() == 'linux':
    kernelVersion = pt.libc_ver()[1]+'-'+pt.dist()[0]+'-'+pt.dist()[1]
 else:
@@ -101,6 +105,7 @@ elif GetPlatform() == 'win32':
 else:
    buildDir = 'build.'+buildUUID
 
+################################################################################
 ########### Some utility functions
 
 def CreateConfig(target, source, env):
@@ -219,7 +224,6 @@ opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the bu
 opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
 opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
 opts.Add('validate', 'If "no", do not validate flagpoll packages. Should help speed up the build', 'yes')
-#opts.Add('tao', 'If true, use TAO in the build', 'no')
 ##Added options for velauncher build.
 ##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
 ##opts.Add('CxPath', "Set CXPATH to find 
@@ -232,24 +236,6 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 ##opts.Add('arch', 'CPU architecture (ia32, x86_64, or ppc)',
 ##         cpu_arch_default)
 
-
-   #    aprVersion = '0.9'
-   #    aprCommand = 'apr'
-   #    apuCommand = 'apr-util'
-       #apuLib = 'aprutil'
-   #    if baseEnv.has_key('AprVersion'):
-   #       aprVersion = baseEnv[ 'AprVersion' ]
-   #       if baseEnv[ 'AprVersion' ] >= "1.0":
-   #          aprCommand = 'apr-1'
-   #          apuCommand = 'apr-util-1'
-             #apuLib = 'aprutil-1'
-   #    fgpApr = sca_util.FlagPollParser( aprCommand )
-   #    if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
-   #    if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
-   #    if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
-   #    if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
-   #    if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
-   #    if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
 apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
                                             "apr-1", "1.0", True, True, compileTest=True, headerToCheck="apr.h")
 
@@ -381,44 +367,6 @@ if not SConsAddons.Util.hasHelpFlag():
    # now lets process everything
    opts.Process(baseEnv)                   # Update the options
 
-   #if baseEnv[ 'validate' ] == 'yes':
-       # check the apr and apu utilities
-       # there is probably an easier way to do this so feel free to simplify
-   #    aprVersion = '0.9'
-   #    aprCommand = 'apr'
-   #    apuCommand = 'apr-util'
-       #apuLib = 'aprutil'
-   #    if baseEnv.has_key('AprVersion'):
-   #       aprVersion = baseEnv[ 'AprVersion' ]
-   #       if baseEnv[ 'AprVersion' ] >= "1.0":
-   #          aprCommand = 'apr-1'
-   #          apuCommand = 'apr-util-1'
-             #apuLib = 'aprutil-1'
-
-   #    fgpApr = sca_util.FlagPollParser( aprCommand )
-   #    if not fgpApr.validate( baseEnv, "apr.h", aprVersion ):
-   #       Exit(1)
-
-   #    fgpApu = sca_util.FlagPollParser( apuCommand )
-   #    if not fgpApu.validate( baseEnv, "apu.h", aprVersion ):
-   #       Exit(1)
-
-   #    fgpBullet = sca_util.FlagPollParser('bullet')
-   #    if not fgpBullet.validate( baseEnv, "btBulletCollisionCommon.h", '0.1' ):
-   #       Exit(1)
-
-   #    fgpTAO = sca_util.FlagPollParser('TAO')
-   #    if not fgpTAO.validate( baseEnv, "ace/ACE.h", '1.5' ):
-   #       Exit(1)
-
-   #    fgpVrjuggler = sca_util.FlagPollParser('vrjuggler')
-   #    if not fgpVrjuggler.validate( baseEnv, "vrj/vrjConfig.h", baseEnv['VRJugglerVersion']):
-   #       Exit(1)
-
-   #    fgpBoost = sca_util.FlagPollParser('Boost.Filesystem')
-   #    if not fgpBoost.validate( baseEnv, "boost/filesystem/operations.hpp", baseEnv['BoostVersion']):
-   #       Exit(1)
-
    ## Try to save the options if possible and if the user did
    ## not specify an options file
    try:                                   
@@ -442,10 +390,6 @@ if not SConsAddons.Util.hasHelpFlag():
       base_bldr.enableOpt()
       base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
-   ## read the builder options after they have been added to the env
-   ##base_bldr.readOptions( baseEnv )
-   ##base_bldr = base_bldr.clone()
-
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
@@ -454,7 +398,7 @@ if not SConsAddons.Util.hasHelpFlag():
    if GetPlatform() == 'win32':
         baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
    
-   #baseEnv.Append( CPPDEFINES = ['SVN_VES_REVISION=\"\\\"%s\\\"\"'%svn_str] )
+   #setup default libraries and defines
    baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
@@ -500,46 +444,27 @@ if not SConsAddons.Util.hasHelpFlag():
    vesSubdirs=pj(buildDir, 'src' )
    veiSubdirs = pj(buildDir,'VE_Installer','installer')
    veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
-   veiFreezeSubdirs = pj(buildDir,'VE_Installer','installer', 'freezeCode')	
    fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
-   docsSubdirs = pj('#', 'share', 'docs')
-   docbookSubdirs = pj('#', 'share', 'docs', 'docbook')
-   chlogSubdirs = pj('#', 'share', 'docs', 'changelog')
-   doxySubdirs = pj('#', 'share' , 'docs', 'doxygen')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    #osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-   vesUtilSubdirs = pj( buildDir, 'share', 'tools' )
-   ##Set the Sconscript files to build.
-   if 'docs' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ docbookSubdirs ]
-      baseEnv.Alias('docs', docbookSubdirs)
-   elif 'changelog' in COMMAND_LINE_TARGETS:
-      ves_dirs = [ chlogSubdirs ]
-      baseEnv.Alias('changelog', chlogSubdirs)
-   elif 'doxygen' in  COMMAND_LINE_TARGETS:
-      ves_dirs = [ doxySubdirs ]
-      baseEnv.Alias('doxygen', doxySubdirs)
-   elif 'freeze' in  COMMAND_LINE_TARGETS:
-      ves_dirs = [ veiFreezeSubdirs ]
-      baseEnv.Alias('freeze', veiFreezeSubdirs)      
-   else:
-      ves_dirs = [vesSubdirs, veiDistSubdirs, docsSubdirs, veiSubdirs, 
-                  shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs, 
-                  installerSubdirs, vesUtilSubdirs ]
-                  #osgEphemerisSubdirs, installerSubdirs, vesUtilSubdirs ]
+   
+   ves_dirs = [vesSubdirs, veiDistSubdirs, veiSubdirs, 
+               shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs, 
+               installerSubdirs ]
 
+   # freeze the python code
+   if 'freeze' in  COMMAND_LINE_TARGETS:
+      veiFreezeSubdirs = pj(buildDir,'VE_Installer','installer', 'freezeCode')	
+      ves_dirs.append( veiFreezeSubdirs )
+      baseEnv.Alias('freeze', veiFreezeSubdirs) 
+     
    # Build the test suite if asked.
    if 'testsuite' in COMMAND_LINE_TARGETS:
       ves_dirs.append(pj('#', 'test'))
       baseEnv.Alias('testsuite', pj('#', 'test'))
-
-   ## directory for examples
-   ves_dirs += [pj( buildDir,'share','examples','simple')]
-   ves_dirs += [pj( buildDir,'share','vrj_configs')]
-   ves_dirs += [pj( buildDir,'share','shaders')]
 
    ##Run SConscript files in all of those folders.
    for d in ves_dirs:

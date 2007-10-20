@@ -22,3 +22,14 @@ if os.path.exists(docbookDirectory):
 else:
     print "Checking for Docbook files... [NO]"
     print "*** If you want to generate the docbook files, please run \"scons docs\" option first. ***"
+
+docSubdirs = Split("""
+    docbook
+    changelog
+    doxygen
+""")
+
+##Run SConscript files in all of those folders.
+for d in docSubdirs:
+   SConscript( dirs = d )
+

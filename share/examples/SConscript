@@ -1,0 +1,12 @@
+##sets up jconf files for stereo_desktop
+#import os, sys, string
+#pj = os.path.join
+#import SConsAddons.Util as sca_util
+
+exampleSubdirs = Split("""
+    simple
+""")
+
+##Run SConscript files in all of those folders.
+for d in exampleSubdirs:
+   SConscript( dirs = d )

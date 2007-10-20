@@ -12,3 +12,25 @@ fontBundle.addFiles( fontFile )
 ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite') )
 ##fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
 ptConfigFile.addFiles( ['ptconfigfile.txt'] )
+
+shareSubdirs = Split("""
+    shaders
+    vrj_configs
+    examples
+    tools
+""")
+
+##Set the Sconscript files to build.
+if 'docs' in COMMAND_LINE_TARGETS:
+  shareSubdirs.append(pj('docs'))
+  ves_pkg.getEnv().Alias('docs', pj('docs'))
+#elif 'changelog' in COMMAND_LINE_TARGETS:
+#  ves_dirs = [ chlogSubdirs ]
+#  baseEnv.Alias('changelog', chlogSubdirs)
+#elif 'doxygen' in  COMMAND_LINE_TARGETS:
+#  ves_dirs = [ doxySubdirs ]
+#  baseEnv.Alias('doxygen', doxySubdirs)
+
+##Run SConscript files in all of those folders.
+for d in shareSubdirs:
+   SConscript( dirs = d )
