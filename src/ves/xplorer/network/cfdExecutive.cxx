@@ -364,6 +364,8 @@ void cfdExecutive::GetEverything( void )
       delete tempResult;
       _plugins[ iter->first ]->ProcessOnSubmitJob();
       _plugins[ iter->first ]->PreFrameUpdate();
+      int dummyVar = 0;
+      _plugins[ iter->first ]->CreateCustomVizFeature( dummyVar );
       vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                            << " ]-> " << iter->second 
                            << " is updated."
@@ -419,25 +421,30 @@ void cfdExecutive::PreFrameUpdate( void )
                           << std::endl << vprDEBUG_FLUSH;
 
    //process the current command form the gui
-   //if ( cfdModelHandler::instance()->GetActiveModel() )
-   {
-      if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
-      {
-         std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
-         Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
-         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
-         if ( currentEventHandler != _eventHandlers.end() )
-         {
+    if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
+    {
+        std::map< std::string, VE_EVENTS::EventHandler* >::iterator 
+            currentEventHandler;
+        Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
+        currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
+        if( currentEventHandler != _eventHandlers.end() )
+        {
             vprDEBUG(vesDBG,0) << "|\t\tExecuting: "<< tempCommand->GetCommandName() 
-                                 << std::endl << vprDEBUG_FLUSH;
+                << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
-         }
-      }
-   }
+        }
+    }
 
    ///Load the data from ce
-   //LoadDataFromCE();
+   std::string tempNetworkCommand = ui_i->GetStatusString();
+   bool updatePluginResults = false;
+   if( tempNetworkCommand  == "VES Network Execution Complete" )
+   {
+       std::cout << "|\tLoading data into plugins" << std::endl;
+       //LoadDataFromCE();
+       updatePluginResults = true;
+   }
 
    ///process the standard plugin stuff
    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
@@ -460,7 +467,7 @@ void cfdExecutive::PreFrameUpdate( void )
       {  
          //Process a special plugin command
          Command* tempCommand = 
-         cfdModelHandler::instance()->GetXMLCommand();
+          cfdModelHandler::instance()->GetXMLCommand();
          //if( tempCommand )
          {
             std::string cmdName = tempCommand->GetCommandName();
@@ -476,6 +483,12 @@ void cfdExecutive::PreFrameUpdate( void )
       }
       //3. Call this for all plugins every frame
       foundPlugin->second->PreFrameUpdate();
+      //4. Run results function for all plugins
+      if( updatePluginResults )
+      {
+          int dummyVar = 0;
+          foundPlugin->second->CreateCustomVizFeature( dummyVar );
+      }
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -498,14 +511,14 @@ void cfdExecutive::LoadDataFromCE( void )
       GetEverything();
       VE_SceneGraph::SceneManager::instance()->ViewLogo(false);
    }
-   
+   return;
    // store the statusString in order to perform multiple operations on it...
-   std::string statusString = ui_i->GetStatusString();
-   vprDEBUG(vesDBG,3) << "|\tcfdExecutive::PreFrameUpdate statusString = " << statusString 
-      << std::endl << vprDEBUG_FLUSH;
+   //std::string statusString = ui_i->GetStatusString();
+   //vprDEBUG(vesDBG,3) << "|\tcfdExecutive::PreFrameUpdate statusString = " << statusString 
+   //   << std::endl << vprDEBUG_FLUSH;
    
    // record position of some key phrases...
-   size_t pos1 = statusString.find( "VES Network Execution Complete" );
+   //size_t pos1 = statusString.find( "VES Network Execution Complete" );
    
    //*******************************************************************//
    //For multiple model apps this implementation has to be changed      //
@@ -516,12 +529,12 @@ void cfdExecutive::LoadDataFromCE( void )
    //*******************************************************************//
    //unsigned int pos2 = statusString.find("Execution is done");
    
-   size_t pos3 = statusString.find("Time Step Complete");
+   //size_t pos3 = statusString.find("Time Step Complete");
    
    // If either of the positions are valid positions, 
    // then make results available to the graphical plugins...
-   if ( pos1 != std::string::npos || 
-        pos3 != std::string::npos )
+   //if ( pos1 != std::string::npos || 
+   //     pos3 != std::string::npos )
    {
       std::map< int, std::string >::iterator idMap;
       for( std::map< int, cfdVEBaseClass* >::iterator foundPlugin = 
