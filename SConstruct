@@ -480,6 +480,7 @@ if not SConsAddons.Util.hasHelpFlag():
       else:
          ves_pkg.addPackager( SConsAddons.AutoDist.TarGzPackager() )
 
+   # Requires one build on command line to verify options are correct.
    if GetPlatform() == 'win32':
       SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg)
 
