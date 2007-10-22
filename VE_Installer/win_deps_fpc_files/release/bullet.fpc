@@ -1,11 +1,11 @@
-prefix=${fp_file_cwd}/../../Bullet_Pre-Compile_2.60/
+prefix=${fp_file_cwd}/..\..\Bullet_Pre-Compile_2.60
 exec_prefix=${prefix}
-libdir=${exec_prefix}/out/release8/libs
-includedir=${prefix}/src
+libdir=${exec_prefix}\out\release8\libs
+includedir=${prefix}\src
 
 Name: Bullet-2.60_MSVC_8_SP1
 Description: Bullet Physics release Pre-Compiled for VES
-Provides: Bullet Physics libraries
+Provides: bullet 
 Requires:
 Version: 2.60 
 Cflags: /I"${includedir}"
