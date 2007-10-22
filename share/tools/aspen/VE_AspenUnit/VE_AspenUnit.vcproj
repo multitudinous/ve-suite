@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\tao\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\share\tools\aspen\CASIlib\aspenplus_2004&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\share\tools\aspen\CASIlib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\tao\orbsvcs&quot;;&quot;$(VE_SUITE_INCLUDES)\ves\open&quot;;&quot;$(VE_SUITE_INCLUDES)&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\share\tools\aspen\CASIlib\aspenplus_2004&quot;;&quot;$(VE_SUITE_HOME)\external\loki-0.1.6\include&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="0"
@@ -70,10 +70,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_CodecFactoryd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib TAO_Valuetyped.lib TAO_Messagingd.lib gdiplus.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_AnyTypeCoded.lib TAO_CodecFactoryd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib TAO_Valuetyped.lib TAO_Messagingd.lib gdiplus.lib CASIlib.lib loki.0.1.6.lib osgdb_osgOQ.lib osgOQ.lib ves_builder_dataloader.lib ves_builder_translator_base.lib ves_ce_unitwrapper.lib ves_ce_util.lib ves_conductor_plugin.lib ves_open_module.lib ves_open_xml.lib ves_xplorer.lib ves_xplorer_scenegraph.lib ves_xplorer_util.lib ves_xplorer_volume.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(ACE_ROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(XERCESCROOT)\Build\Win32\VC7.1\Debug&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(VE_SUITE_HOME)\buildwin\share\tools\aspen\CASIlib&quot;;&quot;$(VE_SUITE_LIBS)&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -199,24 +199,96 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\AspenUnit_i.cpp"
+				RelativePath=".\AspenUnit_i.cxx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\bkpparser.cpp"
+				RelativePath=".\bkpparser.cxx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\CorbaUnitManager.cxx"
 				>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnit.cpp"
+				RelativePath=".\VE_AspenUnit.cxx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\VE_AspenUnitDlg.cpp"
+				RelativePath=".\VE_AspenUnitDlg.cxx"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)\$(InputName)1.obj"
+						XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
