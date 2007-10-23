@@ -393,15 +393,15 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
-   baseEnv.Append( CPPPATH = [pj('#',buildDir,'src')] )
+   baseEnv.Append( CPPPATH = [pj(RootDir,buildDir,'src')] )
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    if GetPlatform() == 'win32':
         baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
    
    #setup default libraries and defines
-   baseEnv.Append( CPPPATH = [pj('#', 'external', 'loki-0.1.6', 'include')] )
+   baseEnv.Append( CPPPATH = [pj(RootDir,  buildDir,'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
-   baseEnv.Append( LIBPATH = [pj('#', buildDir,'external', 'loki-0.1.6')] )
+   baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
    if GetPlatform() == 'win32':
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
