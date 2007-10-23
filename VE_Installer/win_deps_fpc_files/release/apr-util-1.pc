@@ -6,5 +6,5 @@ includedir=${prefix}\include
 Name: APR Utils
 Description: Companion library for APR
 Version: 1.2.8
-Libs: /libpath:"${libdir}" libapr-util-1.lib
+Libs: /libpath:"${libdir}" libaprutil-1.lib
 Cflags: /I"${includedir}"
