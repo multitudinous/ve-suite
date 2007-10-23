@@ -393,7 +393,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
-   baseEnv.Append( CPPPATH = [pj(RootDir,'src')] )
+   baseEnv.Append( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    if GetPlatform() == 'win32':
         baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
