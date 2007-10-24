@@ -150,7 +150,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
         bool isFirstPoint = true;
         int count = 0;
         double leftOver = 0;
-        double delta = 0.1;
+        double delta = 0.5;
 
         for( int i = 0; i < npts - 1; ++i )
         {
@@ -164,10 +164,6 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
             osg::Vec3d BminusA( pointB.x() - pointA.x(),
                                 pointB.y() - pointA.y(),
                                 pointB.z() - pointA.z() );
-
-            
-            double lineSegmentLength = BminusA.length();
-            double totalDistance = lineSegmentLength + leftOver;
 
             if( isFirstPoint )
             {
@@ -191,6 +187,9 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
                 count += 4;
                 isFirstPoint = false;
             }
+
+            double lineSegmentLength = BminusA.length();
+            double totalDistance = lineSegmentLength + leftOver;
             
             if( totalDistance >= delta )
             {
@@ -226,7 +225,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
             }
             else
             {
-                leftOver += totalDistance;
+                leftOver = totalDistance;
             }
         }
 
