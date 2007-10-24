@@ -767,7 +767,9 @@ class Launch:
             ##Append OSG_FILE_PATH
             self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ';')
             pathList = [os.path.join(os.path.join(VELAUNCHER_DIR,"bin")),
+                        os.path.join(VELAUNCHER_DIR),
                         os.path.join(os.path.join(VELAUNCHER_DIR,"lib")),
+                        os.path.join(VELAUNCHER_DIR, '..', "lib"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "share"),
                         os.path.join(str(os.getenv("VE_DEPS_DIR")), "bin"),
                         os.path.join(str(os.getenv("VJ_BASE_DIR")), "lib")]
@@ -861,16 +863,16 @@ class Launch:
     def EnvAppend(self, var, appendages, sep):
         """Appends appendages (list) to var, using sep to separate them."""
         originalVar = os.getenv(var, "None")
-        if not self.settings["DevMode"]:
-            modifiedVar = os.getenv(var, None)
-            empty = (modifiedVar == None)
-            for app in appendages:
-                if empty:
-                    modifiedVar = app
-                    empty = False
-                else:
-                    modifiedVar = app + sep + modifiedVar 
-            os.environ[var] = modifiedVar
+        ##if not self.settings["DevMode"]:
+        modifiedVar = os.getenv(var, None)
+        empty = (modifiedVar == None)
+        for app in appendages:
+            if empty:
+                modifiedVar = app
+                empty = False
+            else:
+                modifiedVar = app + sep + modifiedVar 
+        os.environ[var] = modifiedVar
         ##Put var in clusterScript
         self.WriteToClusterScript(var)
         ##Debug printout.
