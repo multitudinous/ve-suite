@@ -58,20 +58,20 @@
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 
-#include <apps/conductor/ConductorApp.h>
-#include <apps/conductor/UserPreferences.h>
-#include <apps/conductor/Avail_Modules.h>
-#include <apps/conductor/HierarchyTree.h>
-#include <apps/conductor/UI_TeacherTab.h>
-#include <apps/conductor/DeviceProperties.h>
-#include <apps/conductor/NavigationPane.h>
-#include <apps/conductor/Splitter.h>
-#include <apps/conductor/ViewLocPane.h>
-#include <apps/conductor/Network.h>
-#include <apps/conductor/Canvas.h>
-#include <apps/conductor/MainToolBar.h>
-#include <apps/conductor/ExportMenu.h>
-#include <apps/conductor/EphemerisDialog.h>
+#include "ConductorApp.h"
+#include "UserPreferences.h"
+#include "Avail_Modules.h"
+#include "HierarchyTree.h"
+#include "UI_TeacherTab.h"
+#include "DeviceProperties.h"
+#include "NavigationPane.h"
+#include "Splitter.h"
+#include "ViewLocPane.h"
+#include "Network.h"
+#include "Canvas.h"
+#include "MainToolBar.h"
+#include "ExportMenu.h"
+#include "EphemerisDialog.h"
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/Module.h>
