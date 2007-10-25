@@ -38,6 +38,7 @@ REM set TAO_MACHINE=keymaker.vrac.iastate.edu
 set VEXMASTER=costello
 set TAO_PORT=1239
 set SNX_BASE_DIR=%VJ_BASE_DIR%
+set UPX_PATH=%VE_SUITE_HOME%\external\FreezePython\upx301w
 
 set OPENAL_LIB_DIR=C:\devEnv\VES.1.0-Deps\openal\OpenAL-Windows\OpenAL32\Debug
 REM NOTE: On Windows the juggler location must point to a Windows
@@ -78,7 +79,7 @@ set Path=%VE_SUITE_HOME%\bin;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll;%Path%
 set Path=%ACE_ROOT%\bin;%ACE_ROOT%\lib;%XERCESCROOT%\Build\Win32\VC7.1\Debug;%Path%
 set Path=%XERCESCROOT%\Build\Win32\VC7.1\Release;%Path%
 set Path=%TAO_ROOT%\orbsvcs\Naming_Service;%Path%
-set Path=%VE_SUITE_HOME%\bin\win32;%Path%
+set Path=%VE_SUITE_HOME%\bin\win32;%UPX_PATH%;%Path%
 set Path=%OSGHOME%\bin\win32;%PRODUCER_HOME%\bin\win32;%OPENTHREADS_HOME%\bin\win32;%VE_SUITE_HOME%\lib\win32;%Path%
 set Path=%DEMETER_HOME%\bin;%Path%
 set Path=%COIN_HOME%\bin;%Path%
