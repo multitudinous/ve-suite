@@ -131,26 +131,27 @@ void DataObjectHandler::_convertCellDataToPointData(vtkDataSet* dataSet)
                   << "will try to convert cell data to point data" << std::endl;
 
         vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
-        converter->SetInput( dataSet );
+        converter->SetInput( 0, dataSet );
         converter->PassCellDataOff();
         converter->Update();
 
-	///Why do we need to do this only for unstructured grids?
+	    ///Why do we need to do this only for unstructured grids?
         if ( dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
         {
-            vtkDataSet * newdataset = vtkUnstructuredGrid::New();
-            newdataset->DeepCopy( converter->GetOutput() );
-            converter->Delete();
-
-            dataSet->Delete();
-            dataSet = newdataset;
-        }
+            dataSet->DeepCopy( converter->GetUnstructuredGridOutput() );
+            converter->Delete()
+		}
         else
         {
             converter->Delete();
             std::cout <<"\nAttempt failed: can not currently handle "
                       << "this type of data\n" << std::endl;
             exit(1);
+        }
+		if(dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays)
+        {
+           m_numberOfPointDataArrays = dataSet->GetPointData()
+                                        ->GetNumberOfArrays();
         }
     }
     return;
