@@ -1,4 +1,4 @@
-##sets up jconf files for stereo_desktop
+#!python
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
@@ -6,14 +6,16 @@ import SConsAddons.Util as sca_util
 Import('ves_pkg', 'RootDir')
 env = ves_pkg.getEnv().Copy()
 
+
 ##Freezing Launcher Code
 ##Set UPX path in ENV
 if sca_util.GetPlatform() == "win32":
     UPX_PATH = pj(RootDir,'external','FreezePython','upx301w')
 else:
     UPX_PATH = pj(RootDir,'external','FreezePython','upx-3.00-i386_linux')
-	
-os.putenv('PATH', UPX_PATH)
+
+os.environ['PATH'] = os.environ['PATH'] + os.pathsep + UPX_PATH
+os.putenv('PATH', os.environ['PATH'])
 
 srcs = Split("""
     velauncher
@@ -51,15 +53,18 @@ print "# Please wait... it takes a minute #"
 print "####################################\n"
 
 make_cmd = "python " + makespec_py
-build_cmd = "python"
+
+build_cmd = "python "
+
+config_cmd = pj(basePyinstallerDir,'Configure.py')
+os.popen("python " + config_cmd)
 
 if sca_util.GetPlatform() == "win32":
-    config_cmd = pj(basePyinstallerDir,'Configure.py')
-    os.popen("python " + config_cmd)
     makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\Ve_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
     makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = installerDistDir)
+    
     freezeAction = '%s ${SOURCE.abspath} %s\\velauncher.spec' % (build_cmd, velauncherDistDir)
-	freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
+    freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
 
     env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
     env.makespec(target = makespecTarget ,source = makespecSrc)
@@ -68,7 +73,6 @@ if sca_util.GetPlatform() == "win32":
     Depends('velauncher.exe', 'velauncher.spec')
 
 else:
-    os.popen("python " + basePyinstallerDir + "/Configure.py")
     makespecAction = '%s --onefile --out=%s --path=%s ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir)
     makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = installerDistDir)
 
@@ -78,6 +82,5 @@ else:
     env.Append(BUILDERS = {'makespec': makespecBuilder, 'freeze' : freezeBuilder})
     env.makespec(target = makespecTarget ,source = makespecSrc)
     env.freeze(target = freezeTarget, source = build_py)
-
-    Depends('velauncher', 'velauncher.spec')
     
+    Depends('velauncher', 'velauncher.spec')
