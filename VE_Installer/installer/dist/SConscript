@@ -8,7 +8,7 @@ env = ves_pkg.getEnv().Copy()
 
 launcherBundle = ves_pkg.createFileBundle( 'bin' )
 ##Move frozen code to PREFIX if it exists.
-if platform == "win32":
+if sca_util.GetPlatform() == "win32":
     frozenFile = ['velauncher.exe']
 else:
     frozenFile = ['velauncher']
