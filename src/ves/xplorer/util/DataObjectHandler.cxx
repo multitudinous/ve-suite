@@ -139,7 +139,7 @@ void DataObjectHandler::_convertCellDataToPointData(vtkDataSet* dataSet)
         if ( dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
         {
             dataSet->DeepCopy( converter->GetUnstructuredGridOutput() );
-            converter->Delete()
+            converter->Delete();
 		}
         else
         {
