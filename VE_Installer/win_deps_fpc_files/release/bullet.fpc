@@ -1,4 +1,4 @@
-prefix=${fp_file_cwd}/..\..\Bullet_Pre-Compile_2.60
+prefix=${fp_file_cwd}\..\..\Bullet_Pre-Compile_2.60
 exec_prefix=${prefix}
 libdir=${exec_prefix}\out\release8\libs
 includedir=${prefix}\src
@@ -9,6 +9,6 @@ Provides: bullet
 Requires:
 Version: 2.60 
 Cflags: /I"${includedir}"
-Libs: /libpath:"${libdir} libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib libbulletmultithreaded.lib"
+Libs: /libpath:"${libdir}" libbulletcollision.lib libbulletdynamics.lib libbulletmath.lib libbulletmultithreaded.lib
 Arch: noarch
 
