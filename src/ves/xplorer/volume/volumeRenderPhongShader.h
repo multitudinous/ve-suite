@@ -35,9 +35,10 @@
 //the shader inline source
 static const char* vrPhongVertSource = {
    " \n"
+   "//#version 110\n"
    "//varying vec3  ViewVec;\n"
    "varying vec4 eyePos;\n"
-   "#version 110\n"
+   "//#version 110\n"
    "uniform vec3 stepSize;\n"
    "uniform vec3 datacenter;\n"
    "//varying vec3  lightVec;\n"
@@ -91,10 +92,10 @@ static const char* vrPhongVertSource = {
 };
 
 static const char* vrPhongFragSource = {
+   "//#version 110\n"
    //a volume rendering shader which applies a 2D transfer function
    //and phong shading
    "//Phong shading\n"
-   "#version 110\n"
    "vec3 phongShading(vec3 normalVector, vec3 viewVector, vec3 lightVector,vec3 materialDiffuse)\n"
    "{\n"
    "//material properties\n"
