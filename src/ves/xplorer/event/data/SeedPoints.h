@@ -36,6 +36,11 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <ves/VEConfig.h>
+#include <osg/Version>
+
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
+#include <osg/RenderInfo>
+#endif
 
 namespace osg
 {
@@ -156,12 +161,18 @@ protected:
 	   void SetAlpha(float alpha);
 	  
 	   /// we need to set up the bounding box of the data too, so that the scene graph knows where this
-       /// objects is, for both positioning the camera at start up, and most importantly for culling.
-       virtual osg::BoundingBox computeBound() const;
+           /// objects is, for both positioning the camera at start up, and most importantly for culling.
+           virtual osg::BoundingBox computeBound() const;
 
-	  ///the draw immediate mode method is where the OSG wraps up the drawing of
-      /// of OpenGL primitives.
-      virtual void drawImplementation(osg::State& currentState) const;
+         ///the draw immediate mode method is where the OSG wraps up the drawing of
+        /// of OpenGL primitives.
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
+        virtual void drawImplementation(osg::RenderInfo& currentState) const;
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+        virtual void drawImplementation(osg::State& currentState) const;
+#endif
+
+      
 
       ///Update a specific boundary
       ///\param index The index of the boundary
