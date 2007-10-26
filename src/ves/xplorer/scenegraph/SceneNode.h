@@ -50,16 +50,53 @@
 
 namespace VE_SceneGraph
 {
+    class Technique;
+}
+
+// --- OSG Includes --- //
+#ifdef _OSG
+namespace osg
+{
+    class NodeVisitor;
+}
+#elif _OPENSG
+#endif
+
+// --- C/C++ Libraries --- //
+#include <string>
+#include <map>
+
+namespace VE_SceneGraph
+{
 class VE_SCENEGRAPH_EXPORTS SceneNode
 {
 public:
-   ///Base Constructor
-   SceneNode();
+    ///Base Constructor
+    SceneNode();
 
-   ///Destructor
-   virtual ~SceneNode(){;}
+    ///Destructor
+    virtual ~SceneNode();
+
+// -------------------------------------------------- //
+// --- This stuff is used for multipass rendering --- //
+// -------------------------------------------------- //
+public:
+    virtual void InheritedTraverse( osg::NodeVisitor& nv ) = 0;
+
+    void DirtyTechniques();
+
+    void AddTechnique( std::string name, VE_SceneGraph::Technique* technique );
+
+    void SetTechnique( std::string name );
+
+    VE_SceneGraph::Technique* GetTechnique( std::string name );
+
+    VE_SceneGraph::Technique* GetActiveTechnique();
 
 protected:
+    std::string m_activeTechnique;
+
+    std::map< std::string, VE_SceneGraph::Technique* > m_techniques;
 
 };
 }

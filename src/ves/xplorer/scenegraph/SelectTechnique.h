@@ -43,13 +43,13 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
 public:
-    SelectTechnique( VE_SceneGraph::DCS* dcs );
+    SelectTechnique( osg::StateSet* stateSet );
     ~SelectTechnique();
   
 protected:
     virtual void DefinePasses();
 
-    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;
+    osg::ref_ptr< osg::StateSet > m_stateSet;
 private:
 
 };

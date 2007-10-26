@@ -31,6 +31,7 @@
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/Switch.h>
+#include <ves/xplorer/scenegraph/Technique.h>
 
 //C/C++ Libraries
 #include <iostream>
@@ -177,3 +178,20 @@ osg::Node* Switch::GetChild( unsigned int position )
 	return this->getChild( position );
 #endif
 }
+////////////////////////////////////////////////////////////////////////////////
+void Switch::traverse( osg::NodeVisitor& nv )
+{
+    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+
+    if( technique )
+    {
+        technique->Traverse( nv, this );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Switch::InheritedTraverse( osg::NodeVisitor& nv )
+{
+    typedef osg::Switch inherited;
+    inherited::traverse( nv );
+}
+////////////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Technique.h>
-#include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneNode.h>
 
 // --- OSG Includes --- //
 #include <osgUtil/CullVisitor>
@@ -61,9 +61,9 @@ const osg::StateSet* Technique::GetPassStateSet( int i ) const
     return m_passes[ i ].get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Technique::Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs )
+void Technique::Traverse( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node )
 {
-    TraverseImplementation( nv, dcs );
+    TraverseImplementation( nv, node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Technique::DirtyPasses()
@@ -85,7 +85,7 @@ osg::Node* Technique::GetOverrideChild( int )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Technique::TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs )
+void Technique::TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node )
 {
     //Define passes if necessary
     if( m_passes.empty() )
@@ -114,7 +114,7 @@ void Technique::TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::DCS
         }
         else
         {
-            dcs->InheritedTraverse( nv );
+            node->InheritedTraverse( nv );
         }
 
         //Pop the StateSet if necessary

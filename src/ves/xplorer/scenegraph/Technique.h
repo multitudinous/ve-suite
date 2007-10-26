@@ -37,6 +37,11 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
+namespace VE_SceneGraph
+{
+    class SceneNode;
+}
+
 // --- OSG Includes --- //
 #include <osg/State>
 #include <osg/Group>
@@ -48,8 +53,6 @@
 
 namespace VE_SceneGraph
 {
-    class DCS;
-
 class VE_SCENEGRAPH_EXPORTS Technique
 {
 public:
@@ -64,7 +67,7 @@ public:
 
     void DirtyPasses();
 
-    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
+    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node );
 
 protected:
     virtual void DefinePasses() = 0;
@@ -73,7 +76,7 @@ protected:
 
     virtual osg::Node* GetOverrideChild( int );
 
-    void TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
+    void TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node );
 
     std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
 

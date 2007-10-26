@@ -41,6 +41,7 @@
 #elif _OSG
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
 #include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
+#include <ves/xplorer/scenegraph/Technique.h>
 
 #include <osg/Geode>
 #include <osg/Node>
@@ -55,39 +56,40 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkDataSet.h>
 
-//C/C++ Libraries
+// --- C/C++ Libraries --- //
 #include <iostream>
 
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Geode::Geode( void )
+Geode::Geode()
 {
-   _vtkDebugLevel = 0;
+    _vtkDebugLevel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-Geode::Geode(const Geode& geode,const osg::CopyOp& copyop):
-osg::Geode(geode,copyop)
+Geode::Geode( const Geode& geode, const osg::CopyOp& copyop )
+:
+osg::Geode( geode, copyop )
 {
-   ;
+    ;
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-Geode::~Geode( void )
+Geode::~Geode()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::TranslateToGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
-   VE_SceneGraph::vtkActorToPF( actor, this, _vtkDebugLevel );
+    VE_SceneGraph::vtkActorToPF( actor, this, _vtkDebugLevel );
 #elif _OSG
-   VE_SceneGraph::vtkActorToOSG(actor, this, _vtkDebugLevel);
-   osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
-   lightModel->setTwoSided( true );
-   this->getOrCreateStateSet()->setAttributeAndModes( lightModel.get(), osg::StateAttribute::ON);
+    VE_SceneGraph::vtkActorToOSG( actor, this, _vtkDebugLevel );
+    osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
+    lightModel->setTwoSided( true );
+    getOrCreateStateSet()->setAttributeAndModes( lightModel.get(), osg::StateAttribute::ON );
 #elif _OPENSG
 #endif
 }
@@ -104,9 +106,24 @@ void Geode::StreamLineToGeode( vtkActor* actor )
 osg::Group* Geode::GetParent( unsigned int position )
 {
 #ifdef _OPENSG
-   
 #elif _OSG
-	return this->getParent( position );
+    return this->getParent( position );
 #endif
+}
+////////////////////////////////////////////////////////////////////////////////
+void Geode::traverse( osg::NodeVisitor& nv )
+{
+    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+
+    if( technique )
+    {
+        technique->Traverse( nv, this );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Geode::InheritedTraverse( osg::NodeVisitor& nv )
+{
+    typedef osg::Geode inherited;
+    inherited::traverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////

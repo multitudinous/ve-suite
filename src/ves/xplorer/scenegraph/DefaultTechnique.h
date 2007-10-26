@@ -46,7 +46,7 @@ public:
     DefaultTechnique();
     ~DefaultTechnique();
 
-    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::DCS* dcs );
+    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node );
   
 protected:
     virtual void DefinePasses();

@@ -33,7 +33,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SelectTechnique.h>
-#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/BlendFunc>
@@ -46,9 +45,9 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-SelectTechnique::SelectTechnique( VE_SceneGraph::DCS* dcs )
+SelectTechnique::SelectTechnique( osg::StateSet* stateSet )
 :
-m_dcs( dcs )
+m_stateSet( stateSet )
 {
     DefinePasses();
 }
@@ -62,9 +61,9 @@ void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-        osg::ref_ptr< osg::StateSet > stateset = m_dcs->getOrCreateStateSet();
+        osg::ref_ptr< osg::StateSet > stateSet = m_stateSet.get();
 
-        AddPass( stateset.get() );
+        AddPass( stateSet.get() );
     }
 
     //Implement pass #2
@@ -83,7 +82,7 @@ void SelectTechnique::DefinePasses()
                 "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
             "} \n";
 
-        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+        osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
         osg::ref_ptr< osg::Program > program = new osg::Program;
         osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
         osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
@@ -96,11 +95,11 @@ void SelectTechnique::DefinePasses()
         linewidth->setWidth( 2.0f );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
         
-        stateset->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-        stateset->setAttributeAndModes( polymode.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-        stateset->setAttributeAndModes( program.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
 
-        AddPass( stateset.get() );
+        AddPass( stateSet.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -96,6 +96,13 @@ public:
 protected:
     int _vtkDebugLevel;///<The VTK debug level
 
+// -------------------------------------------------- //
+// --- This stuff is used for multipass rendering --- //
+// -------------------------------------------------- //
+public:
+    virtual void traverse( osg::NodeVisitor& nv );
+    virtual void InheritedTraverse( osg::NodeVisitor& nv );
+
 };
 }
 

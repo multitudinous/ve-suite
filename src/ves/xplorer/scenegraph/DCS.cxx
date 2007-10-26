@@ -34,14 +34,12 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/TransferPhysicsDataCallback.h>
-#include <ves/xplorer/scenegraph/DefaultTechnique.h>
 #include <ves/xplorer/scenegraph/SelectTechnique.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/Vec3d>
 #include <osg/MatrixTransform>
-#include <osg/NodeVisitor>
 #elif _OPENSG
 #endif
 
@@ -66,8 +64,7 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( void )
 :
-m_btBody( 0 ),
-m_activeTechnique( "Default" )
+m_btBody( 0 )
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; i++ )
@@ -98,14 +95,12 @@ m_activeTechnique( "Default" )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( getOrCreateStateSet() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
 :
-m_btBody( 0 ),
-m_activeTechnique( "Default" )
+m_btBody( 0 )
 {
     this->SetTranslationArray( trans );
     this->SetRotationArray( rot );
@@ -115,35 +110,24 @@ m_activeTechnique( "Default" )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( getOrCreateStateSet() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
 :
 osg::PositionAttitudeTransform( dcs, copyop ),
-m_btBody( 0 ),
-m_activeTechnique( "Default" )
+m_btBody( 0 )
 {
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( this ) );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( getOrCreateStateSet() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
 {
-    //Delete techniques in map
-    for( std::map< std::string, VE_SceneGraph::Technique* >::iterator 
-        iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
-    {
-		VE_SceneGraph::Technique* tempTech = iter->second;
-        delete tempTech;
-    }
-
-    m_techniques.clear();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double* DCS::GetVETranslationArray( void )
@@ -548,35 +532,5 @@ void DCS::InheritedTraverse( osg::NodeVisitor& nv )
 {
     typedef osg::PositionAttitudeTransform inherited;
     inherited::traverse( nv );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DCS::DirtyTechniques()
-{
-    //Set properties in Devices
-    std::map< std::string, VE_SceneGraph::Technique* >::const_iterator itr;
-    for( itr = m_techniques.begin(); itr != m_techniques.end(); ++itr )
-    {
-        itr->second->DirtyPasses();
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void DCS::AddTechnique(  std::string name, VE_SceneGraph::Technique* technique  )
-{
-    m_techniques[ std::string( name ) ] = technique;
-}
-////////////////////////////////////////////////////////////////////////////////
-void DCS::SetTechnique( std::string name )
-{
-    m_activeTechnique = name;
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Technique* DCS::GetTechnique( std::string name )
-{
-    return m_techniques[ name ];
-}
-////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Technique* DCS::GetActiveTechnique()
-{
-    return m_techniques[ m_activeTechnique ];
 }
 ////////////////////////////////////////////////////////////////////////////////

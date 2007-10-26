@@ -32,6 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
+#include <ves/xplorer/scenegraph/DefaultTechnique.h>
+
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/NodeVisitor>
+#elif _OPENSG
+#endif
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -39,8 +46,53 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-SceneNode::SceneNode( void )
+SceneNode::SceneNode()
+:
+m_activeTechnique( "Default" )
 {
-   ;
+    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
+}
+////////////////////////////////////////////////////////////////////////////////
+SceneNode::~SceneNode()
+{
+    //Delete techniques in map
+    for( std::map< std::string, VE_SceneGraph::Technique* >::iterator 
+        iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
+    {
+		VE_SceneGraph::Technique* tempTech = iter->second;
+        delete tempTech;
+    }
+
+    m_techniques.clear();
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneNode::DirtyTechniques()
+{
+    //Set properties in Devices
+    std::map< std::string, VE_SceneGraph::Technique* >::const_iterator itr;
+    for( itr = m_techniques.begin(); itr != m_techniques.end(); ++itr )
+    {
+        itr->second->DirtyPasses();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneNode::AddTechnique(  std::string name, VE_SceneGraph::Technique* technique  )
+{
+    m_techniques[ std::string( name ) ] = technique;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneNode::SetTechnique( std::string name )
+{
+    m_activeTechnique = name;
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Technique* SceneNode::GetTechnique( std::string name )
+{
+    return m_techniques[ name ];
+}
+////////////////////////////////////////////////////////////////////////////////
+VE_SceneGraph::Technique* SceneNode::GetActiveTechnique()
+{
+    return m_techniques[ m_activeTechnique ];
 }
 ////////////////////////////////////////////////////////////////////////////////

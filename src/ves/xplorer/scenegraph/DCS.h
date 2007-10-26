@@ -50,17 +50,11 @@
 namespace VE_SceneGraph
 {
     class TransferPhysicsDataCallback;
-    class Technique;
 }
 
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/PositionAttitudeTransform>
-
-namespace osg
-{
-    class NodeVisitor;
-}
 #elif _OPENSG
 #endif
 
@@ -77,7 +71,6 @@ class btRigidBody;
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
-#include <map>
 
 template< typename DATA_TYPE_OUT, typename DATA_TYPE_IN, unsigned ROWS, unsigned COLS >
 gmtl::Matrix< DATA_TYPE_OUT, ROWS, COLS >
@@ -242,23 +235,8 @@ private:
 // -------------------------------------------------- //
 public:
     virtual void traverse( osg::NodeVisitor& nv );
+    virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
-    void InheritedTraverse( osg::NodeVisitor& nv );
-
-    void DirtyTechniques();
-
-    void AddTechnique( std::string name, VE_SceneGraph::Technique* technique );
-
-    void SetTechnique( std::string name );
-
-    VE_SceneGraph::Technique* GetTechnique( std::string name );
-
-    VE_SceneGraph::Technique* GetActiveTechnique();
-
-private:
-    std::string m_activeTechnique;
-
-    std::map< std::string, VE_SceneGraph::Technique* > m_techniques;
 };
 }
 

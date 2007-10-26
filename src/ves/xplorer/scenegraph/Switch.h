@@ -119,6 +119,13 @@ public:
     ///Set the name of the node
     const std::string GetName();
 
+// -------------------------------------------------- //
+// --- This stuff is used for multipass rendering --- //
+// -------------------------------------------------- //
+public:
+    virtual void traverse( osg::NodeVisitor& nv );
+    virtual void InheritedTraverse( osg::NodeVisitor& nv );
+
 };
 }
 

@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/Technique.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -187,5 +188,21 @@ void Group::ToggleDisplay( std::string onOff )
 #elif _OPENSG
 #endif
    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Group::traverse( osg::NodeVisitor& nv )
+{
+    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+
+    if( technique )
+    {
+        technique->Traverse( nv, this );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Group::InheritedTraverse( osg::NodeVisitor& nv )
+{
+    typedef osg::Group inherited;
+    inherited::traverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
