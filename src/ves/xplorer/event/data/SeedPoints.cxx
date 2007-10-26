@@ -311,6 +311,7 @@ osg::BoundingBox SeedPoints::PointsDrawable::computeBound() const
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void SeedPoints::PointsDrawable::drawImplementation(osg::RenderInfo& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+void SeedPoints::PointsDrawable::drawImplementation(osg::State& renderState) const
 #endif
 {
 	unsigned int numSeedPoints = _dimensions[0]*_dimensions[1]*_dimensions[2];
