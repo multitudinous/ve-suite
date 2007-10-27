@@ -149,8 +149,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     std::vector< std::pair< std::string, std::string > >::iterator dataIter;
     dataToObtain.push_back( std::make_pair( "Model", "veNetwork" ) );
     dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
-    dataToObtain.push_back( std::make_pair( "XML", "User" ) );
     dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
+    dataToObtain.push_back( std::make_pair( "XML", "User" ) );
     networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
 	std::vector< ves::open::xml::XMLObject* >::iterator objectIter;
     std::vector< ves::open::xml::XMLObject* > objectVector = 
@@ -161,22 +161,22 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     if ( !objectVector.empty() )
     {
         tempSystem = 
-			dynamic_cast< ves::open::xml::model::System* >( objectVector.at( 0 ) );
+            dynamic_cast< ves::open::xml::model::System* >( objectVector.at( 0 ) );
         if( tempSystem )
         {
-         m_systemMap[tempSystem->GetID()] = tempSystem;
-         //get the main systems id
-         topId = tempSystem->GetID();
+            m_systemMap[tempSystem->GetID()] = tempSystem;
+            //get the main systems id
+            topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
         }
         else
         {
-			tempSystem = new ves::open::xml::model::System();
-         m_systemMap[tempSystem->GetID()] = tempSystem;
-         topId = tempSystem->GetID();
-            
+            tempSystem = new ves::open::xml::model::System();
+            m_systemMap[tempSystem->GetID()] = tempSystem;
+            topId = tempSystem->GetID();
+
             m_networkMap[ "Network" ] = 
-				dynamic_cast< ves::open::xml::model::Network* >( objectVector.at( 0 ) );
+                dynamic_cast< ves::open::xml::model::Network* >( objectVector.at( 0 ) );
             tempSystem->AddNetwork( m_networkMap[ "Network" ] );
             objectIter = objectVector.erase( objectVector.begin() );
             tempSystem = 0;
@@ -184,10 +184,10 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     }
     else
     {
-       std::cerr << "Improperly formated ves file." 
-                    << "VES File Read Error" << std::endl;
+        std::cerr << "Improperly formated ves file." 
+            << "VES File Read Error" << std::endl;
     }
-        
+
 
     std::vector< std::string > networkModelVector;
     std::vector< std::string >::iterator stringIter;
