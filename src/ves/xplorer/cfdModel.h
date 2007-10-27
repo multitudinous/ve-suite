@@ -69,7 +69,11 @@ it is better to treat these two dataset as two different models.
 
 #include <vrj/vrjParam.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class DCS;
    class Group;
@@ -79,6 +83,9 @@ namespace VE_SceneGraph
    class Clone;
    class fileInfo;
 }
+}
+}
+
 namespace VE_EVENTS
 {
    class EventHandler;
@@ -128,7 +135,7 @@ namespace VE_Xplorer
 class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
 {
 public:
-   cfdModel( VE_SceneGraph::DCS* );
+   cfdModel( ves::xplorer::scenegraph::DCS* );
    virtual ~cfdModel();
 
    ///PreFrame callback to update the model based on commands from
@@ -140,11 +147,11 @@ public:
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() {}
 
-   void setModelNode( VE_SceneGraph::CADEntityHelper * );
+   void setModelNode( ves::xplorer::scenegraph::CADEntityHelper * );
    void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
    bool GetMirrorDataFlag( void );
    void SetMirrorDataFlag( bool );
-   void SetMirrorNode( VE_SceneGraph::Group* );
+   void SetMirrorNode( ves::xplorer::scenegraph::Group* );
 
    VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
    unsigned int GetIndexOfDataSet( std::string dataSetName );
@@ -155,7 +162,7 @@ public:
    VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
    void SetActiveDataSet( VE_Xplorer::cfdDataSet* );
 
-   VE_SceneGraph::CADEntity* GetGeomDataSet( int );
+   ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
    unsigned int GetNumberOfGeomDataSets( void );
    std::string GetGeomFileName( int );
    void CreateGeomDataSet( std::string );
@@ -166,10 +173,10 @@ public:
    VE_Xplorer::ModelCADHandler* GetModelCADHandler();
 
    ///Get the node for the cfd data set
-   VE_SceneGraph::CADEntityHelper* GetCfdNode( void );
+   ves::xplorer::scenegraph::CADEntityHelper* GetCfdNode( void );
 
    ///Get the dcs for the cfd data set
-   VE_SceneGraph::DCS* GetDCS( void );
+   ves::xplorer::scenegraph::DCS* GetDCS( void );
 
    ///Set the id for this model
    ///\param id the id of the model to be set
@@ -229,18 +236,18 @@ private:
    bool mirrorDataFlag;
 
 private:
-   //VE_SceneGraph::cfdTempAnimation* animation;
-   osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
-   osg::ref_ptr< VE_SceneGraph::Group > classic;
-   osg::ref_ptr< VE_SceneGraph::Group > textureBased;
-   typedef std::vector< VE_SceneGraph::CADEntity* > GeometoryDataSetList;
+   //ves::xplorer::scenegraph::cfdTempAnimation* animation;
+   osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
+   osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
+   osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
+   typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;
    GeometoryDataSetList mGeomDataSets;
    typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
    VTKDataSetList mVTKDataSets;
 
-   /*std::map< std::string, VE_SceneGraph::CADEntity* > _partList;///<A list of the current parts.
-   std::map< std::string, VE_SceneGraph::DCS* > _assemblyList;///A list of the current assemblies.
-   std::map< std::string, VE_SceneGraph::Clone* > _cloneList;///A list of clones.
+   /*std::map< std::string, ves::xplorer::scenegraph::CADEntity* > _partList;///<A list of the current parts.
+   std::map< std::string, ves::xplorer::scenegraph::DCS* > _assemblyList;///A list of the current assemblies.
+   std::map< std::string, ves::xplorer::scenegraph::Clone* > _cloneList;///A list of clones.
 */
 #ifdef _OSG
    typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;
@@ -248,12 +255,12 @@ private:
    VE_TextureBased::cfdTextureDataSet* _activeTextureDataSet;
 #endif
 
-   osg::ref_ptr< VE_SceneGraph::DCS > mModelDCS;
-   osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-   VE_SceneGraph::CADEntityHelper* mModelNode;
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
+   ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
    cfdDataSet* activeDataSet;
-   VE_SceneGraph::Clone* mirrorNode;
-   osg::ref_ptr< VE_SceneGraph::Group > mirrorGroupNode;
+   ves::xplorer::scenegraph::Clone* mirrorNode;
+   osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
 
    //the information for following three variables should be transfered from cfdApp
    ModelTypeIndex mModelType;

@@ -104,7 +104,7 @@ void ChangeWorkingDirectoryEventHandler::Execute(XMLObject* veXMLObject)
    //the STORED scenes are no longer valid
    VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->Reset();
    //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
-   VE_SceneGraph::SceneManager::instance()->ResetOcclusionQueryContext();
+   ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }
 ///////////////////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler& ChangeWorkingDirectoryEventHandler::operator=(const ChangeWorkingDirectoryEventHandler& rhs)

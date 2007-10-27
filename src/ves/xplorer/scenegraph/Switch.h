@@ -36,11 +36,11 @@
 /*!\file Switch.h
 */
 
-/*!\class VE_SceneGraph::Switch
+/*!\class ves::xplorer::scenegraph::Switch
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -53,7 +53,11 @@
 #elif OPENSG
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS Switch : public osg::Switch, public SceneNode
@@ -66,7 +70,7 @@ public:
     ///Copy constructor using CopyOp to manage deep vs shallow copy.
     Switch( const Switch&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
    
-    META_Node( VE_SceneGraph, Switch );
+    META_Node( ves::xplorer::scenegraph, Switch );
 
 protected:
     virtual ~Switch();
@@ -103,7 +107,7 @@ public:
 
     ///Generic search child function
     ///\param searchChild SceneNode* of child to be found
-    bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+    bool SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild );
 
     ///Generic find parent function
     ///\param position the position of the parent to be returned
@@ -127,6 +131,8 @@ public:
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
+}
+}
 }
 
 #endif //SWITCH_H

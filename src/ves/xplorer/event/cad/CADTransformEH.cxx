@@ -89,7 +89,7 @@ void CADTransformEventHandler::_operateOnNode(XMLObject* xmlObject)
       DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
       DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");
       
-		VE_SceneGraph::DCS* transform = 0;
+		ves::xplorer::scenegraph::DCS* transform = 0;
         
       if(nodeType->GetDataString() == std::string("Part"))
       {

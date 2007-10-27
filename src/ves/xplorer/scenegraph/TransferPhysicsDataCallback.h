@@ -37,11 +37,11 @@
 /*!\file TransferPhysicsDataCallback.h
  */
 
-/*!\class VE_SceneGraph::TransferPhysicsDataCallback
+/*!\class ves::xplorer::scenegraph::TransferPhysicsDataCallback
  * This is the callback class configured to handle transfering physics data back to the respective osg node
  */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
  *
  */
 
@@ -55,7 +55,11 @@
 
 class btRigidBody;
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS TransferPhysicsDataCallback : public osg::NodeCallback
@@ -83,6 +87,8 @@ protected:
 };
 #elif _OPENSG
 #endif
+}
+}
 }
 
 #endif //TRANSFER_PHYSICS_DATA_CALLBACK_H

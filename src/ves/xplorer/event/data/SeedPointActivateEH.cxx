@@ -109,17 +109,17 @@ void SeedPointActivateEventHandler::Execute(XMLObject* veXMLObject)
 		   std::string datasetname;
 		   activeDataset->GetData(datasetname);
 		   //check to see if the seed points exist
-		   if(!VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
+		   if(!ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
 		   {
-            VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
 		   }
 		 
             //this seems to be a bad sequence of calls but we need to set the
             //active dataset otherwise this set of calls goes in every seed pointEH
             //as well as all the commands have to lug this extra info.
             _activeModel->SetActiveDataSet(_activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname)));
-            VE_SceneGraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
-            VE_SceneGraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
+            ves::xplorer::scenegraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
+            ves::xplorer::scenegraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
 
             seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
             seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );

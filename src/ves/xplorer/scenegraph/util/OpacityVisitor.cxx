@@ -44,7 +44,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool state )

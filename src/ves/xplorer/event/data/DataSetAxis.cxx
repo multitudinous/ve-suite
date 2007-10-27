@@ -49,7 +49,7 @@
 #include <string>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 DataSetAxis::DataSetAxis( void )
@@ -62,7 +62,7 @@ DataSetAxis::DataSetAxis( void )
    xAxisLabel = "X Axis";
    yAxisLabel = "Y Axis";
    zAxisLabel = "Z Axis";
-	axisGroup = new VE_SceneGraph::Group();
+	axisGroup = new ves::xplorer::scenegraph::Group();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSetAxis::~DataSetAxis()
@@ -112,7 +112,7 @@ void DataSetAxis::CreateAxis( void )
    tempGroup->addChild( CreateAxisLines().get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Group* DataSetAxis::GetAxis( void )
+ves::xplorer::scenegraph::Group* DataSetAxis::GetAxis( void )
 {
    return axisGroup.get();
 }

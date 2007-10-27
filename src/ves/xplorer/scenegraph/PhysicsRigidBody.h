@@ -36,11 +36,11 @@
 /*!\file PhysicsRigidBody.h
 */
 
-/*!\class VE_SceneGraph::PhysicsRigidBody
+/*!\class ves::xplorer::scenegraph::PhysicsRigidBody
 * 
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -58,7 +58,11 @@
 class btTriangleMesh;
 class btCollisionShape;
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody, public osg::NodeVisitor
 {
@@ -98,6 +102,8 @@ private:
     btTriangleMesh* tri_mesh;///<The triangle mesh for the osg node
 
 };
+}
+}
 }
 
 #endif //PHYSICS_RIGID_BODY_H

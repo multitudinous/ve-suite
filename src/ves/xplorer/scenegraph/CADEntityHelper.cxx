@@ -88,10 +88,11 @@
 
 #include <boost/filesystem/operations.hpp> 
 #include <boost/filesystem/path.hpp>
-using namespace VE_SceneGraph;
+
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-CADEntityHelper::CADEntityHelper( void )
+CADEntityHelper::CADEntityHelper()
 {
     m_twoSidedLighting = false;
 }
@@ -351,13 +352,13 @@ void CADEntityHelper::LoadFile( std::string filename,
     if( !root.valid() && occlude ) //(m_cadNode->getNumParents() > 0) )
     {
         /*osgOQ::OcclusionQueryNonFlatVisitor oqv( 
-                                             VE_SceneGraph::SceneManager::instance()->
+                                             ves::xplorer::scenegraph::SceneManager::instance()->
                                              GetOcclusionQueryContext() );
         m_cadNode->accept( oqv );*/
 
 
         root = new osgOQ::OcclusionQueryRoot( 
-            VE_SceneGraph::SceneManager::instance()->
+            ves::xplorer::scenegraph::SceneManager::instance()->
             GetOcclusionQueryContext() );
         root->addChild( tempCADNode.get() );
         m_cadNode = static_cast< osg::Node* >( root.get() );
@@ -388,13 +389,13 @@ void CADEntityHelper::AddOccluderNodes()
     if( !root.valid() && (m_cadNode->getNumParents() > 0) )
     {
         osgOQ::OcclusionQueryNonFlatVisitor oqv( 
-            VE_SceneGraph::SceneManager::instance()->
+            ves::xplorer::scenegraph::SceneManager::instance()->
             GetOcclusionQueryContext() );
         m_cadNode->accept( oqv );
         
         /*
         root = new osgOQ::OcclusionQueryRoot( 
-            VE_SceneGraph::SceneManager::instance()->
+            ves::xplorer::scenegraph::SceneManager::instance()->
             GetOcclusionQueryContext() );
         root->addChild( tempCADNode.get() );
         m_cadNode = static_cast< osg::Node* >( root.get() );
@@ -449,24 +450,24 @@ std::string CADEntityHelper::
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
 {
-    std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
+    std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >nurbsPatches;
     //std::string nurbsfile(argv[1]);
     std::vector< std::string > patchFiles = 
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory,".txt");
     size_t nPatches = patchFiles.size();
-    NURBS::Utilities::OCCNURBSFileReader patchReader;
+    ves::xplorer::scenegraph::nurbs::util::OCCNURBSFileReader patchReader;
     
     for( size_t i = 0; i < nPatches;i++)
     {
-        NURBS::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
+        ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
         if(surface)
         {
             surface->SetInterpolationGridSize(10,"U");
             surface->SetInterpolationGridSize(20,"V");
             surface->Interpolate();
             
-            osg::ref_ptr<NURBS::NURBSNode> renderablePatch = 
-                new NURBS::NURBSNode(surface);
+            osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch = 
+                new ves::xplorer::scenegraph::nurbs::NURBSNode(surface);
             nurbsPatches.push_back(renderablePatch.get());
         }
         else

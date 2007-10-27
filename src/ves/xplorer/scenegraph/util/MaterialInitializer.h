@@ -43,9 +43,13 @@ MaterialInitializer API
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class VE_SCENEGRAPH_UTILS_EXPORTS MaterialInitializer : public osg::NodeVisitor
 {
@@ -58,6 +62,8 @@ public:
 private:
 
 };
+}
+}
 }
 }
 

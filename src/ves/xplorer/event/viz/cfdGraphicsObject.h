@@ -44,11 +44,17 @@ cfdGraphicsObject API
 #include <ves/xplorer/scenegraph/Geode.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class Group;
     class Geode;
     ///class DCS;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -88,11 +94,11 @@ public:
 
    ///Set parent node to add "graphics node" to
    ///\param input
-   void SetParentNode( VE_SceneGraph::DCS* input );
+   void SetParentNode( ves::xplorer::scenegraph::DCS* input );
 
    ///node the parent node will be added to
    ///\param input
-   void SetWorldNode( VE_SceneGraph::DCS* input );
+   void SetWorldNode( ves::xplorer::scenegraph::DCS* input );
 
    ///set model pointer to be able to grab
    ///transient info and the switch node
@@ -110,23 +116,23 @@ public:
    void SetGeodes( VE_Xplorer::cfdObjects* input );
 
    ///Return parent node for a this object
-   VE_SceneGraph::DCS* GetParentNode( void );
+   ves::xplorer::scenegraph::DCS* GetParentNode( void );
 
    ///Clear geodes vector and geode from memory and the graph
    void RemoveGeodeFromDCS( void );
 
    // Return the animation so that we can change the speed of the animation
-   //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+   //ves::xplorer::scenegraph::cfdTempAnimation* GetAnimation( void );
 
 protected:
-	std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;///<SceneGraph Geode.
-	VE_SceneGraph::DCS* parentNode;///<SceneGraph parent node.
-   VE_SceneGraph::DCS* worldNode;///<SceneGraph world node.
+	std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<SceneGraph Geode.
+	ves::xplorer::scenegraph::DCS* parentNode;///<SceneGraph parent node.
+   ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
    VizType type;///<Type of viz: trans, classic, texture.
 
    // used for animated particles and other ss 
    // animated features
-   //VE_SceneGraph::cfdTempAnimation* animation;
+   //ves::xplorer::scenegraph::cfdTempAnimation* animation;
    VE_Xplorer::cfdModel* model;///<Xplorer cfd model.
 };
 }

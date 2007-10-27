@@ -38,7 +38,11 @@
 
 #include <ves/xplorer/scenegraph/Technique.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
@@ -53,6 +57,8 @@ protected:
 private:
 
 };
+}
+}
 }
 
 #endif //SELECT_TECHNIQUE_H

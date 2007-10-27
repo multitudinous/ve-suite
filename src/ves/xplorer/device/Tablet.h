@@ -60,9 +60,15 @@
 #include <osg/ref_ptr>
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class DCS;
+}
+}
 }
 
 namespace ves

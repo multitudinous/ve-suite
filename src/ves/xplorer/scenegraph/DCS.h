@@ -36,20 +36,26 @@
 /*!\file DCS.h
  */
 
-/*!\class VE_SceneGraph::DCS
+/*!\class ves::xplorer::scenegraph::DCS
  *
  */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
  *
  */
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneNode.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class TransferPhysicsDataCallback;
+}
+}
 }
 
 // --- OSG Includes --- //
@@ -89,7 +95,11 @@ convertTo( const gmtl::Matrix< DATA_TYPE_IN, ROWS, COLS >& in )
     return out;
 }
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS DCS : public osg::PositionAttitudeTransform, public SceneNode
@@ -114,7 +124,7 @@ public:
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     DCS( const DCS&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-    META_Node( VE_SceneGraph, DCS );
+    META_Node( ves::xplorer::scenegraph, DCS );
 
     ///Get translation array pointer
     double* GetVETranslationArray();
@@ -188,7 +198,7 @@ public:
 
     ///Generic search child function
     ///\param searchChild SceneNode* of child to be found
-    bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+    bool SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild );
 
     ///Generic find parent function
     ///\param position The position of the parent to be returned
@@ -238,6 +248,8 @@ public:
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
+}
+}
 }
 
 #endif //DCS_H

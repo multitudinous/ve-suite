@@ -40,7 +40,7 @@
 #elif _OPENSG
 #endif
 using namespace gmtl;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ cfdQuatCam::cfdQuatCam(gmtl::Matrix44d& m, double* worldTrans)
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::DCS* worldDCS)
+void cfdQuatCam::SetCamPos(double* worldTrans, ves::xplorer::scenegraph::DCS* worldDCS)
 {
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
@@ -103,7 +103,7 @@ void cfdQuatCam::TransLerp(double t)
    gmtl::lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCam::UpdateRotation( VE_SceneGraph::DCS* worldDCS)
+void cfdQuatCam::UpdateRotation( ves::xplorer::scenegraph::DCS* worldDCS)
 {
    Matrix44d temp;
    temp = makeRot<gmtl::Matrix44d>( CurPosQuat );

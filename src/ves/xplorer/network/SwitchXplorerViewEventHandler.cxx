@@ -63,7 +63,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
 
@@ -114,7 +114,7 @@ void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
     if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
     {
         SceneManager::instance()->SetActiveSwitchNode( 2 );
-        osg::ref_ptr< VE_SceneGraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
+        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
         NetworkSystemView networkLayout( cfdExecutive::instance()->GetCurrentNetwork() );
         if( tempDCS->GetNumChildren() >= 1 )
         {
@@ -141,6 +141,6 @@ void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
     }
    
     VE_Xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS( 
-        VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode() );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////

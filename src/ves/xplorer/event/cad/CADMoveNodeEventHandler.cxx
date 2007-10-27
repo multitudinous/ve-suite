@@ -105,8 +105,8 @@ void CADMoveNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
       std::string newParentID;
       newParent->GetData( newParentID );
       
-      osg::ref_ptr<VE_SceneGraph::DCS> oldParentCAD; 
-      osg::ref_ptr<VE_SceneGraph::DCS> newParentCAD; 
+      osg::ref_ptr<ves::xplorer::scenegraph::DCS> oldParentCAD; 
+      osg::ref_ptr<ves::xplorer::scenegraph::DCS> newParentCAD; 
       
       if(m_cadHandler->GetAssembly(oldParentID))
       {

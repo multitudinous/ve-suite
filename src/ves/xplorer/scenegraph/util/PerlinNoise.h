@@ -30,9 +30,13 @@
 /*!\file PerlinNoise.h
 Functions for creating Perlin Noise
 */
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
     void SetNoiseFrequency(int frequency);
 
@@ -51,6 +55,8 @@ namespace Utilities
     double PerlinNoise1D(double x,double alpha, double beta, int n);
     double PerlinNoise2D(double x,double y,double alpha, double beta, int n);
     double PerlinNoise3D(double x,double y,double z,double alpha, double beta, int n);
+}
+}
 }
 }
 #endif ///PERLIN_NOISE_FUNCTIONS 

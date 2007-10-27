@@ -96,18 +96,18 @@ public:
     virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray* _cfdCommandArray = 0 );
 
     ///Get the active coordinate system
-    VE_SceneGraph::DCS* GetActiveDCS();
+    ves::xplorer::scenegraph::DCS* GetActiveDCS();
 
     ///Set the active coordinate system
     ///\param dcs The current active coordinate system
-    void SetActiveDCS( VE_SceneGraph::DCS* dcs );
+    void SetActiveDCS( ves::xplorer::scenegraph::DCS* dcs );
 
     ///Get the active coordinate system
-    VE_SceneGraph::DCS* GetSelectedDCS();
+    ves::xplorer::scenegraph::DCS* GetSelectedDCS();
 
     ///Set the active coordinate system
     ///\param dcs The current active coordinate system
-    void SetSelectedDCS( VE_SceneGraph::DCS* dcs );
+    void SetSelectedDCS( ves::xplorer::scenegraph::DCS* dcs );
 
     ///Set the center point
     ///\param cp The center point
@@ -133,8 +133,8 @@ protected:
     ///\param endPoint The end point
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
-    osg::ref_ptr< VE_SceneGraph::DCS > activeDCS;///<The active DCS
-    osg::ref_ptr< VE_SceneGraph::DCS > selectedDCS;///<The DCS which is selected
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDCS;///<The active DCS
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > selectedDCS;///<The DCS which is selected
     gmtl::Point3d* center_point;///<The point about which rotation occurs
     double* m_threshold;///<
     double* m_jump;///<

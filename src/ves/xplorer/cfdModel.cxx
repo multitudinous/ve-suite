@@ -85,11 +85,11 @@ using namespace VE_TextureBased;
 
 #include <ves/xplorer/cfdModel.h>
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
+cfdModel::cfdModel( ves::xplorer::scenegraph::DCS* worldDCS )
 {
    vprDEBUG(vesDBG,1) << "|\tNew cfdModel ! " 
                           << std::endl << vprDEBUG_FLUSH;
@@ -97,7 +97,7 @@ cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )
    //this->actor = NULL;
    //ModelIndex = static_cast<ModelTypeIndex>(value);
    // Will fix this later so that each model has a dcs
-   //mModelDCS = new VE_SceneGraph::DCS();
+   //mModelDCS = new ves::xplorer::scenegraph::DCS();
    _worldDCS = worldDCS;
    m_cadHandler = new VE_Xplorer::ModelCADHandler( _worldDCS.get() );
    //mirrorNode = 0;
@@ -209,11 +209,11 @@ void cfdModel::CreateCfdDataSet( void )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetMirrorNode( VE_SceneGraph::Group* dataNode )
+void cfdModel::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
 {
    if ( !mirrorNode )
    {
-      mirrorNode = new VE_SceneGraph::Clone();
+      mirrorNode = new ves::xplorer::scenegraph::Clone();
 		mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
       double rot[ 3 ];
       rot[ 0 ] = 180.0f;
@@ -226,7 +226,7 @@ void cfdModel::SetMirrorNode( VE_SceneGraph::Group* dataNode )
    {
       this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
       delete mirrorNode;     
-      mirrorNode = new VE_SceneGraph::Clone( GetActiveDataSet()->GetDCS() );
+      mirrorNode = new ves::xplorer::scenegraph::Clone( GetActiveDataSet()->GetDCS() );
       double rot[ 3 ];
       rot[ 0 ] = 180.0f;
       rot[ 1 ] = 0.0f;
@@ -270,12 +270,12 @@ void cfdModel::setModelType( ModelTypeIndex type )
    this->mModelType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntityHelper* cfdModel::GetCfdNode( )
+ves::xplorer::scenegraph::CADEntityHelper* cfdModel::GetCfdNode( )
 {
    return this->mModelNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdModel::GetDCS( )
+ves::xplorer::scenegraph::DCS* cfdModel::GetDCS( )
 {
    return this->_worldDCS.get();
 }

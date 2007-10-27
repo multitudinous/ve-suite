@@ -46,13 +46,20 @@ Mananger for the CAD associated with a cfdModel
 #include <string>
 #include <vector>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class DCS;
     class CADEntity;
     class CADEntityHelper;
     class Clone;
 }
+}
+}
+
 #include <ves/open/xml/cad/CADNodePtr.h>
 #include <ves/open/xml/cad/CADAttributePtr.h>
 
@@ -69,7 +76,7 @@ class VE_XPLORER_EXPORTS ModelCADHandler : public cfdGlobalBase
 public:
     ///Constructor
     ///\param rootCADNode The top-level CAD
-    ModelCADHandler(VE_SceneGraph::DCS* rootCADNode);
+    ModelCADHandler(ves::xplorer::scenegraph::DCS* rootCADNode);
     ///Copy Construtor
     ///\param rhs The ModelCADHandler we are copying.
     ModelCADHandler(const ModelCADHandler& rhs);
@@ -149,15 +156,15 @@ public:
 
     ///Get a specific part. 
     ///\param partID The ID of the part to search form
-    VE_SceneGraph::CADEntity* GetPart(std::string partID);
+    ves::xplorer::scenegraph::CADEntity* GetPart(std::string partID);
 
     ///Get a specific assembly. 
     ///\param assemblyID The ID of the assembly to search form
-    VE_SceneGraph::DCS* GetAssembly(std::string assemblyID);
+    ves::xplorer::scenegraph::DCS* GetAssembly(std::string assemblyID);
 
     ///Get a specific assembly. 
     ///\param assemblyID The ID of the assembly to search form
-    VE_SceneGraph::Clone* GetClone(std::string cloneID);
+    ves::xplorer::scenegraph::Clone* GetClone(std::string cloneID);
 
     ///\param cloneID The part ID to search for.
     bool CloneExists(std::string clone);
@@ -193,11 +200,11 @@ protected:
     ///The clipping plane for geometry
     osg::ref_ptr<osg::ClipPlane> m_clipPlane;
     ///A list of the current parts.
-    std::map< std::string, VE_SceneGraph::CADEntity* > m_partList;
+    std::map< std::string, ves::xplorer::scenegraph::CADEntity* > m_partList;
     ///A list of the current assemblies.
-    std::map< std::string, osg::ref_ptr< VE_SceneGraph::DCS > > m_assemblyList;
+    std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > > m_assemblyList;
     ///A list of clones.
-    std::map< std::string, VE_SceneGraph::Clone* > m_cloneList;
+    std::map< std::string, ves::xplorer::scenegraph::Clone* > m_cloneList;
     ///ID for root CAD node id
     std::string m_rootCADNodeID;
 	///Attribute list mapping for all CAD

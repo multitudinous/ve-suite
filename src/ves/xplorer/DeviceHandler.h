@@ -117,8 +117,8 @@ private:
     std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
 
     VE_Xplorer::Device* active_device; ///<The active device
-    osg::ref_ptr< VE_SceneGraph::DCS > m_activeDCS;///<The active coordinate system
-    osg::ref_ptr< VE_SceneGraph::DCS > selectedDCS;///<The selected coordinate system
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_activeDCS;///<The active coordinate system
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > selectedDCS;///<The selected coordinate system
     std::string device_mode; ///<Tells whether navigation or selection is active
     gmtl::Point3d center_point; ///<Do not know what this is
     double m_threshold;///<

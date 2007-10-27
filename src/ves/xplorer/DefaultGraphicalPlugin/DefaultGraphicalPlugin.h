@@ -48,9 +48,15 @@ DefaultGraphicalPlugin API
 #elif _PERFORMER
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 	class DCS;
+}
+}
 }
 
 namespace ves
@@ -65,7 +71,7 @@ public:
    DefaultGraphicalPlugin( void );
    virtual ~DefaultGraphicalPlugin( void );
 
-	virtual void InitializeNode( VE_SceneGraph::DCS* veworldDCS );
+	virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
 private:
 };
 }

@@ -47,10 +47,17 @@ cfdTextureBasedVizHandler API
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
 
 #include <string>
-namespace VE_SceneGraph
+
+namespace ves
 {
-   class DCS;
-	class Group;
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+    class Group;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -90,8 +97,8 @@ namespace VE_TextureBased
          //void CleanUp( void );
          void SetParameterFile(std::string paramFile);
          void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
-         void SetWorldDCS( VE_SceneGraph::DCS* dcs);
-         void SetParentNode( VE_SceneGraph::Group* parent);
+         void SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs);
+         void SetParentNode( ves::xplorer::scenegraph::Group* parent);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
 
          ///Update the active cfdTextureManager by pinging the cfdTextureDataSet
@@ -191,20 +198,20 @@ namespace VE_TextureBased
          double _animationDelay;
          std::string _paramFile;
          VE_Xplorer::cfdCommandArray* _cmdArray;
-         osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
+         osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
          cfdTextureDataSet* _activeTDSet;
          cfdTextureManager* _activeTM;
 
 			//std::vector<cfdVolumeVisualization*> _volumeVisNodes;
          cfdVolumeVisualization* _activeVolumeVizNode;
-			osg::ref_ptr< VE_SceneGraph::Group > _parent;
+			osg::ref_ptr< ves::xplorer::scenegraph::Group > _parent;
          cfdPBufferManager* _pbm;
          //osgUtil::SceneView* _sceneView;
          cfdVolumeVisNodeHandler* _activeVisNodeHdlr;
          cfdScalarVolumeVisHandler* _svvh;
          cfdVectorVolumeVisHandler* _vvvh;
          bool m_isMaster;///<Flag defining the master node
-      //osg::ref_ptr< VE_SceneGraph::Switch > _visOptionSwitch;
+      //osg::ref_ptr< ves::xplorer::scenegraph::Switch > _visOptionSwitch;
          float* _currentBBox;
          bool _cleared;
          bool _textureBaseSelected;

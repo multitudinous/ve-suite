@@ -39,7 +39,7 @@
 /*!\file NURBSObject.cxx
   NURBS Surface code
   */
-/*!\class NURBS::NURBSObject
+/*!\class ves::xplorer::scenegraph::nurbs::NURBSObject
  * Base class defining a NURBS representation. 
  */
 #include <ves/VEConfig.h>
@@ -48,10 +48,17 @@
 #include <string>
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
 
-namespace NURBS
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 class Point;
 class ControlPoint;
+
 ///???
 class VE_NURBS_EXPORTS NURBSObject
 {
@@ -83,13 +90,13 @@ public:
    ///Set the vKnot vector for this surface.
    ///\param knots The KnotVector for this surface.
    ///\param direction "U" or "V" direction
-   void SetKnotVector(NURBS::KnotVector knots, std::string direction="U");
+   void SetKnotVector(ves::xplorer::scenegraph::nurbs::KnotVector knots, std::string direction="U");
 
    ///Set the ControlPoint s for this NURBSObject.\n
    ///rows and columns are at least 1.
    ///1 <= columns, 1 == rows: NURBSCurve.\n
    ///Otherwise a NURBSSurface is created
-   void SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
+   void SetControlPoints(std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> ctrlPts,
                          unsigned int columns,unsigned int rows=1);
 
    ///Set the size between u/v parameters when calculating the surface.
@@ -98,7 +105,7 @@ public:
    void SetInterpolationGridSize(unsigned int stepSize,std::string direction="U");
 
    ///Update the object as an effect of moving a control point
-   void UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControlPoint);
+   void UpdateMesh(/*std::vector<*/ves::xplorer::scenegraph::nurbs::ControlPoint modifiedControlPoint);
 
    ///Interpolate the NURBS object.
    virtual void Interpolate()=0;
@@ -126,27 +133,27 @@ public:
    unsigned int GetMinimumDegree();
    ///Get a specified control point
    ///\param index The key to search for in the control point list
-   NURBS::ControlPoint* GetControlPoint(size_t index);
+   ves::xplorer::scenegraph::nurbs::ControlPoint* GetControlPoint(size_t index);
 
    ///Get the ControlPoint s for this surface.
    ///\param derivative The kth derivative control point mesh
-   std::vector<NURBS::ControlPoint>& ControlPoints(unsigned int derivative = 0);
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>& ControlPoints(unsigned int derivative = 0);
 
    ///Get the ControlPoint 2d array
    ///\param derivative The kth derivative control point mesh
-   std::vector< std::vector<NURBS::ControlPoint> > GetControlPoints( unsigned int derivative = 0);
+   std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > GetControlPoints( unsigned int derivative = 0);
    
    ///Get a KnotVector for a specified direction
    ///\param  direction The direction for the knot vector
-   NURBS::KnotVector& KnotVector(std::string direction);
+   ves::xplorer::scenegraph::nurbs::KnotVector& KnotVector(std::string direction);
 
    ///Get the tessellated points.
-   std::vector<NURBS::Point>& InterpolatedPoints();
+   std::vector<ves::xplorer::scenegraph::nurbs::Point>& InterpolatedPoints();
 
    ///write out the NURBSObject
-   inline friend std::ostream& operator<<(std::ostream& os,NURBS::NURBSObject& nurbsObject)
+   inline friend std::ostream& operator<<(std::ostream& os,ves::xplorer::scenegraph::nurbs::NURBSObject& nurbsObject)
    {
-      bool isSurface = (nurbsObject.GetType() == NURBS::NURBSObject::Surface)?true:false;
+      bool isSurface = (nurbsObject.GetType() == ves::xplorer::scenegraph::nurbs::NURBSObject::Surface)?true:false;
       os<<"Knots U"<<std::endl;
       os<<nurbsObject.KnotVector("U")<<std::endl;
 
@@ -229,7 +236,7 @@ protected:
 
    std::map<std::string, unsigned int> _currentSpan;///<The current span in the knot vector.
 
-   std::map<std::string, NURBS::KnotVector> _knotVectors;///<The raw u/v knot vectors
+   std::map<std::string, ves::xplorer::scenegraph::nurbs::KnotVector> _knotVectors;///<The raw u/v knot vectors
  
    std::map<std::string, std::map< unsigned int, std::vector<double> > > _knotDifferences;///<Knot differences
    std::map<std::string, std::map< unsigned int, std::vector<double> > > _derivativeBasisFunctions;///<The u/v derivatives of basis functions
@@ -237,8 +244,12 @@ protected:
    std::map<unsigned int, std::vector<double> > _uBasisFunctionsDerivatives;///<The kth derivative u basis functions
    std::map<unsigned int, std::vector<double> > _vBasisFunctionsDerivatives;///<The kth derivative v basis functions
 
-   std::map<unsigned int, std::vector<NURBS::ControlPoint> > _controlPoints;///<The raw ControlPoint data
-   std::map<unsigned int, std::vector<NURBS::Point> > _interpolatedPoints;///<The tesselated points.
+   std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > _controlPoints;///<The raw ControlPoint data
+   std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::Point> > _interpolatedPoints;///<The tesselated points.
 };
 }
+}
+}
+}
+
 #endif //NURBS_OBJECT_H

@@ -33,7 +33,7 @@
 #include <ves/xplorer/scenegraph/util/PerlinNoiseTexture.h>
 #include <ves/xplorer/scenegraph/util/PerlinNoise.h>
 #include <osg/Texture3D>
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 /////////////////////////////////////////////////////////////////////
 PerlinNoiseTexture::PerlinNoiseTexture(unsigned int sdim,
                                                 unsigned int tdim,
@@ -68,7 +68,7 @@ void PerlinNoiseTexture::_initNoiseImage(int s, int t, int r)
 
     for (f = 0, inc = 0; f < numOctaves; ++f, frequency *= 2, ++inc, amp *= 0.5)
     {
-        VE_SceneGraph::Utilities::SetNoiseFrequency(frequency);
+        ves::xplorer::scenegraph::util::SetNoiseFrequency(frequency);
         ptr = m_noiseImage->data();
         ni[0] = ni[1] = ni[2] = 0;
 
@@ -81,7 +81,7 @@ void PerlinNoiseTexture::_initNoiseImage(int s, int t, int r)
                 inck = 1.0 / (s / frequency);
                 for (k = 0; k < s; ++k, ni[2] += inck, ptr += 4)
                 {
-                    *(ptr+inc) = (GLubyte) (((VE_SceneGraph::Utilities::noise3(ni) + 1.0) * amp) * 128.0);
+                    *(ptr+inc) = (GLubyte) (((ves::xplorer::scenegraph::util::noise3(ni) + 1.0) * amp) * 128.0);
                 }
             }
         }

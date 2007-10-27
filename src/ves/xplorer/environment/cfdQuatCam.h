@@ -57,9 +57,15 @@ cfdQuatCam API
 #elif _PERFORMER
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class DCS;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -78,7 +84,7 @@ namespace VE_Xplorer
          ///Set camera position
          ///\param worldTrans
          ///\param worldDCS
-         void SetCamPos( double* worldTrans, VE_SceneGraph::DCS* worldDCS);
+         void SetCamPos( double* worldTrans, ves::xplorer::scenegraph::DCS* worldDCS);
 
          ///Move camera position, both translation and rotation slerp.
          ///\param t 
@@ -94,7 +100,7 @@ namespace VE_Xplorer
 
          ///Update rotation
          ///param worldDCS
-         void UpdateRotation( VE_SceneGraph::DCS* worldDCS);
+         void UpdateRotation( ves::xplorer::scenegraph::DCS* worldDCS);
 
          ///Returns matrix for gmtl.
          gmtl::Matrix44d GetMatrix( void );

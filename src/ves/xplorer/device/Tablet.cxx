@@ -50,7 +50,7 @@
 using namespace gmtl;
 using namespace gadget;
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ void Tablet::UpdateNavigation()
         return;
     }
 
-    osg::ref_ptr< VE_SceneGraph::DCS > world = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > world = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
 
     osg::Quat rot_quat;
     osg::Quat world_quat = world->getAttitude();

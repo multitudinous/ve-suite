@@ -36,20 +36,26 @@
 /*!\file UpdateIDOnChildrenVisitor.h
 */
 
-/*!\class VE_SceneGraph::UpdateIDOnChildrenVisitor
+/*!\class ves::xplorer::scenegraph::UpdateIDOnChildrenVisitor
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-namespace VE_SceneGraph
+namespace ves
 {
-class DCS;
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+}
+}
 }
 
 // --- OSG Includes --- //
@@ -58,7 +64,11 @@ class DCS;
 // --- C/C++ Libraries
 #include <string>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS UpdateIDOnChildrenVisitor : public osg::NodeVisitor
 {
@@ -66,7 +76,7 @@ public:
     ///Constructor
     ///\param node The node to be traversed
     ///\param id The model's GUID
-    UpdateIDOnChildrenVisitor( VE_SceneGraph::DCS* node, std::string id );
+    UpdateIDOnChildrenVisitor( ves::xplorer::scenegraph::DCS* node, std::string id );
 
     ///Destructor
     virtual ~UpdateIDOnChildrenVisitor( void );
@@ -79,6 +89,8 @@ private:
     std::string modelGUID;///<GUID to identify the VE-Open model
 
 };
+}
+}
 }
 
 #endif //UPDATE_ID_ON_CHILDREN_VISITOR_H

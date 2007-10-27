@@ -94,11 +94,11 @@ void NavigationDataEventHandler::Execute(XMLObject* veXMLObject)
        OneDDoubleArray* data = dynamic_cast< OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
        std::vector< double > tempQuat = data->GetArray();
        osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-       VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetQuat( quat );
+       ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetQuat( quat );
 
        quatPosition = command->GetDataValuePair( "POSITION_START_POSITION" );
        data = dynamic_cast< OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
-       VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetTranslationArray( data->GetArray() );
+       ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetTranslationArray( data->GetArray() );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

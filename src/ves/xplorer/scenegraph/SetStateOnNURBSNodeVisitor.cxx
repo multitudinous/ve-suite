@@ -40,7 +40,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node, 
@@ -69,8 +69,8 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         return;
     }
 
-    NURBS::NURBSNode* tempNode = 
-        dynamic_cast< NURBS::NURBSNode* >( tempGroup.get() );
+    ves::xplorer::scenegraph::nurbs::NURBSNode* tempNode = 
+        dynamic_cast< ves::xplorer::scenegraph::nurbs::NURBSNode* >( tempGroup.get() );
     if( tempNode )
     {
         //process patches

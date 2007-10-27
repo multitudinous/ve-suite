@@ -36,20 +36,26 @@
 /*!\file PhysicsSimulator.h
 */
 
-/*!\class VE_SceneGraph::PhysicsSimulator
+/*!\class ves::xplorer::scenegraph::PhysicsSimulator
 * 
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class CADEntity;
+}
+}
 }
 
 // --- VR Juggler Includes --- //
@@ -73,7 +79,11 @@ class btCollisionShape;
 // --- C/C++ Libraries --- //
 #include <vector>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS PhysicsSimulator    //: public vpr::Singleton< PhysicsSimulator >
 {
@@ -140,7 +150,7 @@ private:
 
     gadget::PositionInterface head;///<The head in vr juggler
 
-    std::vector< VE_SceneGraph::CADEntity* > box_vector;///<
+    std::vector< ves::xplorer::scenegraph::CADEntity* > box_vector;///<
 
     btDynamicsWorld* m_dynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
 
@@ -148,6 +158,8 @@ private:
     btBroadphaseInterface* m_broadphase;///<Maintains objects with overlapping AABB
     btSequentialImpulseConstraintSolver* m_solver;///<A physics solver which sequentially applies impulses
 };
+}
+}
 }
 
 #endif //PHYSICS_SIMULATOR_H

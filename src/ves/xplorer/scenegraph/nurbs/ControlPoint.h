@@ -39,19 +39,26 @@
 /*!\file ControlPoint.cxx
   Point and ControlPoint code
   */
-/*!\class NURBS::ControlPoint
+/*!\class ves::xplorer::scenegraph::nurbs::ControlPoint
  * Class defining a Control Point for NURBS object.
  */
-/*!\class NURBS::Point
+/*!\class ves::xplorer::scenegraph::nurbs::Point
  * Class defining a Point for NURBS object.
  */
-/*!\namespace NURBS
+/*!\namespace ves::xplorer::scenegraph::nurbs
  * NURBS API namespace.
  */
 #include <ves/VEConfig.h>
 
 #include <ostream>
-namespace NURBS
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 ///???
 class VE_NURBS_EXPORTS Point
@@ -195,8 +202,9 @@ protected:
    unsigned int _row;///<The row of this control point in the overall mesh
    unsigned int _column;///<The column of this control point in the overall mesh
 };
+
 ///???
-class VE_NURBS_EXPORTS ControlPoint : public NURBS::Point
+class VE_NURBS_EXPORTS ControlPoint : public ves::xplorer::scenegraph::nurbs::Point
 {
 public:
    ///Constructor
@@ -239,7 +247,7 @@ public:
    ///Weighted component Z
    double WeightedZ();
    ///Returns P*weight
-   NURBS::ControlPoint GetWeightedPoint();
+   ves::xplorer::scenegraph::nurbs::ControlPoint GetWeightedPoint();
 
    ///Dot product
    inline double operator*(const ControlPoint& rhs) const
@@ -282,6 +290,11 @@ protected:
    double _zW;///<Weighted z-coord
 
    double _weight;///<The weight for this coordinate.
+
 };
 }
+}
+}
+}
+
 #endif //VE_POINT_H

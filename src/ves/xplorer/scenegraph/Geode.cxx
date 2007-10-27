@@ -59,7 +59,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Geode::Geode()
@@ -84,9 +84,9 @@ Geode::~Geode()
 void Geode::TranslateToGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
-    VE_SceneGraph::vtkActorToPF( actor, this, _vtkDebugLevel );
+    ves::xplorer::scenegraph::vtkActorToPF( actor, this, _vtkDebugLevel );
 #elif _OSG
-    VE_SceneGraph::vtkActorToOSG( actor, this, _vtkDebugLevel );
+    ves::xplorer::scenegraph::vtkActorToOSG( actor, this, _vtkDebugLevel );
     osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
     lightModel->setTwoSided( true );
     getOrCreateStateSet()->setAttributeAndModes( lightModel.get(), osg::StateAttribute::ON );
@@ -98,7 +98,7 @@ void Geode::StreamLineToGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
 #elif _OSG
-    VE_SceneGraph::vtkActorToStreamLine( actor, this, _vtkDebugLevel );
+    ves::xplorer::scenegraph::vtkActorToStreamLine( actor, this, _vtkDebugLevel );
 #elif _OPENSG
 #endif
 }
@@ -113,7 +113,7 @@ osg::Group* Geode::GetParent( unsigned int position )
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::traverse( osg::NodeVisitor& nv )
 {
-    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
 
     if( technique )
     {

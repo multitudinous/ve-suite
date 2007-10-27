@@ -51,14 +51,14 @@
 #include <sstream>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 DisplayInformation::DisplayInformation()
 {
-    display_switch = new VE_SceneGraph::Switch;
+    display_switch = new ves::xplorer::scenegraph::Switch;
     display_switch->SetName( "Display Information Switch Node" );
-    VE_SceneGraph::SceneManager::instance()->GetRootNode()->AddChild( display_switch.get() );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->AddChild( display_switch.get() );
 
     framerate = new osg::CameraNode;
     framerate->setName( "Framerate Node" );
@@ -71,8 +71,8 @@ DisplayInformation::DisplayInformation()
     wcs_z_text = new osgText::Text;
 
     //The physical model for the world coordinate system display
-    osg::ref_ptr< VE_SceneGraph::DCS > dcs = new VE_SceneGraph::DCS();
-    wcs_model = new VE_SceneGraph::CADEntity( GetVESuite_WCS(), dcs.get(), true, false );
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs = new ves::xplorer::scenegraph::DCS();
+    wcs_model = new ves::xplorer::scenegraph::CADEntity( GetVESuite_WCS(), dcs.get(), true, false );
 
     display_switch->addChild( framerate.get() );
     display_switch->addChild( wcs.get() );
@@ -171,8 +171,8 @@ void DisplayInformation::InitCoordSysDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayInformation::LatePreFrame()
 {
-   VE_SceneGraph::DCS* activeNodeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
-   VE_SceneGraph::DCS* worldDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+   ves::xplorer::scenegraph::DCS* activeNodeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+   ves::xplorer::scenegraph::DCS* worldDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
    if( activeNodeDCS != worldDCS )
    {
@@ -195,7 +195,7 @@ void DisplayInformation::LatePreFrame()
 
 	if( display_switch->getChildValue( wcs.get() ) )
 	{
-		osg::Quat temp = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
+		osg::Quat temp = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
 		osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
 
 		wcs_model->GetDCS()->setAttitude( quat );

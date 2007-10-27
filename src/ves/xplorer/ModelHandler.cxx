@@ -112,7 +112,7 @@ using namespace VE_TextureBased;
 
 vprSingletonImpLifetime( VE_Xplorer::cfdModelHandler, 11 );
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
 cfdModelHandler::cfdModelHandler( void )
@@ -478,7 +478,7 @@ void cfdModelHandler::InitScene( void )
          _modelList.at( j )->GetCfdDataSet( i )->LoadData();
          _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
          if ( _modelList.at( j )->GetCfdDataSet( i )->GetParent() == _modelList.at( j )->GetCfdDataSet( i ) )
-            VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
                AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
       }
 
@@ -516,8 +516,8 @@ void cfdModelHandler::InitScene( void )
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
    //This code is broken due to the get parent call
-   //_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< VE_SceneGraph::Group* >
-   // VE_SceneGraph::SceneManager::instance()->GetRootNode() );
+   //_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< ves::xplorer::scenegraph::Group* >
+   // ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
    // Assumes active dataset isn't null
    //_scalarBar->RefreshScalarBar();
 }
@@ -635,16 +635,16 @@ vtkPolyData* cfdModelHandler::GetArrow( void )
    return this->arrow;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModelHandler::RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity )
+void cfdModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
 {
     m_filenameToCADMap.insert( 
-        std::pair< std::string, VE_SceneGraph::CADEntity* >( 
+        std::pair< std::string, ves::xplorer::scenegraph::CADEntity* >( 
         tempEntity->GetFilename(), tempEntity ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename )
+ves::xplorer::scenegraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename )
 {
-    std::multimap< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
     iter = m_filenameToCADMap.find( filename );
     if ( iter != m_filenameToCADMap.end() )
     {
@@ -653,9 +653,9 @@ VE_SceneGraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModelHandler::UnregisterCADFile( VE_SceneGraph::CADEntity* tempEntity )
+void cfdModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
 {
-    std::multimap< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
     for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )
     {
         if( iter->second == tempEntity )

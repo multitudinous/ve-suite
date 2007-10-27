@@ -72,7 +72,7 @@ using namespace VE_TextureBased;
 //vprSingletonImp( VE_Xplorer::VjObs_i );
 
 using namespace VE_Xplorer;
-//using namespace VE_SceneGraph;
+//using namespace ves::xplorer::scenegraph;
 //using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
@@ -645,7 +645,7 @@ void VjObs_i::GetCfdStateVariables( void )
    this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
    this->mStates->clusterTime_since_start = time_since_start;
 
-   gmtl::Matrix44d matrix=VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat();
+   gmtl::Matrix44d matrix=ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat();
 
    //std::cout << "master: " << std::endl << matrix << std::endl;
    for(int i=0;i<16;i++)
@@ -734,7 +734,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          matrix.mData[i]=this->mStates->clusterMatrix[i];
       }
       //std::cout << "slave: " << std::endl << matrix << std::endl;
-      VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
+      ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG

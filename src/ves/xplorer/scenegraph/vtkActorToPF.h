@@ -74,7 +74,12 @@
 #endif
 #include <fcntl.h>
 #include <ves/VEConfig.h>
-namespace VE_SceneGraph
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    // vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one
    //   will be created. Optional verbose parameter prints debugging and
@@ -86,5 +91,8 @@ namespace VE_SceneGraph
    VE_SCENEGRAPH_EXPORTS pfGeoSet *processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
    VE_SCENEGRAPH_EXPORTS void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int v);
 }
+}
+}
+
 #endif //_PERFORMER
 #endif //VTK_ACTOR_TO_PF_H

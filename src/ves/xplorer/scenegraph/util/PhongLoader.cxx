@@ -39,7 +39,7 @@
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/shader/Uniform.h>
 using namespace ves::open::xml::shader;
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 //////////////////////////////////////
 //Constructors                      //
 //////////////////////////////////////

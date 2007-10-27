@@ -47,9 +47,15 @@ DataSetAxis API
 #include <string>
 #include <vector>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class Group;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -79,7 +85,7 @@ public:
    /// Read parameter file
    void CreateAxis( void );
    /// Get the axis that was created
-   VE_SceneGraph::Group* GetAxis( void );
+   ves::xplorer::scenegraph::Group* GetAxis( void );
    ///Create the labels for the axes
    ///\param terxtIn The text for the axis
    ///\param x the x location for the label
@@ -94,7 +100,7 @@ private:
    std::string xAxisLabel; ///<X axis label
    std::string yAxisLabel; ///<Y axis label
    std::string zAxisLabel; ///<Z axis label
-   osg::ref_ptr< VE_SceneGraph::Group > axisGroup; ///<Do not know what this is
+   osg::ref_ptr< ves::xplorer::scenegraph::Group > axisGroup; ///<Do not know what this is
 };
 }
 #endif

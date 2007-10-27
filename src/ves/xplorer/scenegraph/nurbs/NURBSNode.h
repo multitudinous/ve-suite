@@ -47,32 +47,40 @@
 /*!\file NURBSNode.cxx
   NURBS Object OSG Renderer code
   */
-/*!\class NURBS::NURBSNode
+/*!\class ves::xplorer::scenegraph::nurbs::NURBSNode
  * Class defining the interface between NURBS object and osg::Geometry.
  */
-namespace NURBS
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
    class NURBSControlMesh;
    class NURBSTessellatedSurface;
+
 ///???
 class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
     ///Constructor
-    NURBSNode(NURBS::NURBSObject* object = 0);
+    NURBSNode(ves::xplorer::scenegraph::nurbs::NURBSObject* object = 0);
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     NURBSNode( const NURBSNode&, 
         const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
 
-    META_Node( NURBS, NURBSNode );
+    META_Node( ves::xplorer::scenegraph::nurbs, NURBSNode );
 
 protected:
    ///Destructor
    virtual ~NURBSNode();
 public:
-   ///Set the NURBS::NURBSObject
-   ///\param object The NURBS::NURBSObject
-   void SetNURBSObject(NURBS::NURBSObject* object);
+   ///Set the ves::xplorer::scenegraph::nurbs::NURBSObject
+   ///\param object The ves::xplorer::scenegraph::nurbs::NURBSObject
+   void SetNURBSObject(ves::xplorer::scenegraph::nurbs::NURBSObject* object);
 
    ///Show the triangulated wireframe surface
    ///\param trueFalse turn off/on wireframe
@@ -98,7 +106,7 @@ public:
                                  float dy,
                                  float dz);
    ///Get the original surface
-   NURBS::NURBSObject* GetNURBS();
+   ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBS();
 
    ///Get the osg::Geometry for the surface
    osg::Geode* GetTriangulatedSurface();
@@ -126,15 +134,18 @@ protected:
    ///\param index The index of the point to calculate the normal
    osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index);
 
-   NURBS::NURBSObject* _nurbsObject;///<The NURBSurface
+   ves::xplorer::scenegraph::nurbs::NURBSObject* _nurbsObject;///<The NURBSurface
    osg::ref_ptr<osg::Geode> _triangulatedSurfaceGeode;///<The triangulated surface
    osg::ref_ptr<osg::Geode> _controlMeshGeode;///<The control mesh geode
 
-   osg::ref_ptr<NURBS::NURBSControlMesh> _controlMeshDrawable;///<The control mesh drawable
-   osg::ref_ptr<NURBS::NURBSTessellatedSurface> _triangulatedSurfaceDrawable;///<The control mesh drawable
+   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSControlMesh> _controlMeshDrawable;///<The control mesh drawable
+   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSTessellatedSurface> _triangulatedSurfaceDrawable;///<The control mesh drawable
 
+};
 }
-;
 }
+}
+}
+
 #endif //NURBS_SURFACE_RENDER_H
 

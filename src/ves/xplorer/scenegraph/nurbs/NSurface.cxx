@@ -36,7 +36,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace NURBS;
+using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////
 //Constructor         //
 ////////////////////////
@@ -90,7 +90,7 @@ void NURBSSurface::_interpolateWithinRange(double umin,double umax,
    unsigned int vIndexMax = _findNearestParameterIndex("V",vmax);
    
 
-   std::map<unsigned int,std::vector<NURBS::ControlPoint> > surfaceInfo;
+   std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > surfaceInfo;
    
    bool hasUderivative = (_degree["U"] >1)?true:false;
    bool hasVderivative = (_degree["V"] >1)?true:false;
@@ -182,7 +182,7 @@ void NURBSSurface::Interpolate()
    _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]-1);
    _interpolationStepSize["V"] = 1.0/(_meshDimensions["V"]-1);
 
-   std::map<unsigned int,std::vector<NURBS::ControlPoint> > surfaceInfo;
+   std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > surfaceInfo;
    for(unsigned int v = 0;v < _meshDimensions["V"]; v++)
    {
       _parameterValues["V"][vparam] = v;
@@ -226,14 +226,14 @@ void NURBSSurface::Interpolate()
    }
 }
 ////////////////////////////////////////////////////////////////
-std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculatePointOnSurface(double u,
+std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > NURBSSurface::_calculatePointOnSurface(double u,
                                                                         double v,
                                                                         unsigned int uspan,
                                                                         unsigned int vspan)
 {
-   std::map<unsigned int,std::vector<NURBS::ControlPoint> > resutlingWeightedPoint;//(0,0,0);
-   std::map<unsigned int,std::vector<NURBS::ControlPoint> > aDerivatives;
-   std::vector<NURBS::ControlPoint> tempUContribution;
+   std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > resutlingWeightedPoint;//(0,0,0);
+   std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > aDerivatives;
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> tempUContribution;
    unsigned int uindex = 0;
    unsigned int vindex = 0;
    double invWeight = 0.0;///resutlingWeightedPoint.Weight();
@@ -266,7 +266,7 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
                           *_derivativeBasisFunctions["U"][n].at(k);
          }
          //invWeight = 1.0/ucontrib[3];
-         tempUContribution.push_back(NURBS::ControlPoint(ucontrib[0]/*invWeight*/,
+         tempUContribution.push_back(ves::xplorer::scenegraph::nurbs::ControlPoint(ucontrib[0]/*invWeight*/,
                                                          ucontrib[1]/*invWeight*/,
                                                          ucontrib[2]/*invWeight*/,
                                                          ucontrib[3]));
@@ -350,7 +350,7 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
             vContrib[1] -= bcoeff*v2[1];
             vContrib[2] -= bcoeff*v2[2];
          }
-         resutlingWeightedPoint[k].push_back(NURBS::ControlPoint(vContrib[0]/aDerivatives[0][0].Weight(),
+         resutlingWeightedPoint[k].push_back(ves::xplorer::scenegraph::nurbs::ControlPoint(vContrib[0]/aDerivatives[0][0].Weight(),
                                                                  vContrib[1]/aDerivatives[0][0].Weight(),
                                                                  vContrib[2]/aDerivatives[0][0].Weight()));
       }
@@ -359,7 +359,7 @@ std::map<unsigned int,std::vector<NURBS::ControlPoint> > NURBSSurface::_calculat
    return resutlingWeightedPoint;
 }
 //////////////////////////////////////////////////////////////////////////
-std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > 
+std::map<unsigned int, std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::Point> > > 
 NURBSSurface::GetSurfaceDerivatives()
 {
    return _surfDerivatives;
@@ -367,8 +367,8 @@ NURBSSurface::GetSurfaceDerivatives()
 ////////////////////////////////////////////////////////////////////////////////
 void NURBSSurface::Write( std::ostream& stream )
 {
-   NURBS::KnotVector uKnotVector = this->KnotVector( "U" );
-   NURBS::KnotVector vKnotVector = this->KnotVector( "V" );
+   ves::xplorer::scenegraph::nurbs::KnotVector uKnotVector = this->KnotVector( "U" );
+   ves::xplorer::scenegraph::nurbs::KnotVector vKnotVector = this->KnotVector( "V" );
    std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
    std::vector< double > uKnots = uKnotVector.GetDistinctKnotVector();
    std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
@@ -396,7 +396,7 @@ void NURBSSurface::Write( std::ostream& stream )
    stream << std::endl;
 
    //Get poles and weights
-   std::vector< std::vector<NURBS::ControlPoint> > points = this->GetControlPoints();
+   std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > points = this->GetControlPoints();
    double X;
    double Y;
    double Z;

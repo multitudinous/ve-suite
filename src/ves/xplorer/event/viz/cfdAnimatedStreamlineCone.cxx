@@ -47,7 +47,7 @@
 #include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 {
@@ -227,7 +227,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
-      geodes.push_back( new VE_SceneGraph::Geode() );
+      geodes.push_back( new ves::xplorer::scenegraph::Geode() );
       geodes.back()->TranslateToGeode( temp );
       temp->Delete();
      

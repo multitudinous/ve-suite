@@ -52,7 +52,7 @@
 //#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 #include <ves/xplorer/cfdDebug.h>
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 cfdIsosurface::cfdIsosurface( int numsteps )
 {
@@ -166,7 +166,7 @@ void cfdIsosurface::Update()
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new VE_SceneGraph::Geode() );
+   geodes.push_back( new ves::xplorer::scenegraph::Geode() );
    geodes.back()->TranslateToGeode( temp );
    temp->Delete();
    lut->Delete();

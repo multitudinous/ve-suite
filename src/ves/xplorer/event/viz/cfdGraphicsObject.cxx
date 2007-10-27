@@ -44,7 +44,7 @@
 #include <osgDB/WriteFile>
 #endif
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
@@ -80,19 +80,19 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
 }
 
 // Set parent node to add "graphics node" to
-void cfdGraphicsObject::SetParentNode( VE_SceneGraph::DCS* input )
+void cfdGraphicsObject::SetParentNode( ves::xplorer::scenegraph::DCS* input )
 {
    this->parentNode = input;
 }
 
 // node the parent node will be added to
-void cfdGraphicsObject::SetWorldNode( VE_SceneGraph::DCS* input )
+void cfdGraphicsObject::SetWorldNode( ves::xplorer::scenegraph::DCS* input )
 {
    this->worldNode = input;
 }
 
 /*
-VE_SceneGraph::cfdTempAnimation* cfdGraphicsObject::GetAnimation( void )
+ves::xplorer::scenegraph::cfdTempAnimation* cfdGraphicsObject::GetAnimation( void )
 {
    return animation;
 }
@@ -113,7 +113,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
 
       // is it transient, classic, or animated class
       // add animation or dcs
-      VE_SceneGraph::Switch* temp = this->model->GetActiveDataSet()->GetSwitchNode();
+      ves::xplorer::scenegraph::Switch* temp = this->model->GetActiveDataSet()->GetSwitchNode();
       if ( this->geodes.size() == 1 )
       {
          // classic ss
@@ -127,7 +127,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
                              << std::endl << vprDEBUG_FLUSH;
          // we can do this because classic group is always
          // child 0 see line 58 of cfdModel.cxx
-			VE_SceneGraph::Group* test = dynamic_cast< VE_SceneGraph::Group* >(temp->GetChild( 0 ));
+			ves::xplorer::scenegraph::Group* test = dynamic_cast< ves::xplorer::scenegraph::Group* >(temp->GetChild( 0 ));
          test->AddChild( this->geodes.back().get() );
          vprDEBUG(vesDBG,1) << "|\tFinished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
@@ -140,7 +140,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       {
          // classic ss animated images, planes, tracked particles
          // even if model contains transient data
-         this->animation = new VE_SceneGraph::cfdTempAnimation();
+         this->animation = new ves::xplorer::scenegraph::cfdTempAnimation();
          this->animation->AddGeodesToSequence( this->geodes );
          if ( parentNode->SearchChild( temp ) < 0 )
          {
@@ -163,7 +163,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          }
 
          // classic transient data
-         VE_SceneGraph::cfdTempAnimation* transAnimation = this->model->GetAnimation();
+         ves::xplorer::scenegraph::cfdTempAnimation* transAnimation = this->model->GetAnimation();
          // the following functions should be called upon creation in cfdModel
          transAnimation->AddGeodesToSequence( this->geodes );
          if(  temp->GetChild( 0 )->SearchChild( transAnimation->GetSequence() ) < 0 )
@@ -199,12 +199,12 @@ void cfdGraphicsObject::SetGeodes( VE_Xplorer::cfdObjects* input )
     for( unsigned int i = 0; i < input->GetGeodes().size(); ++i )
     {
         //std::cout << "1 " << input.at( i ).get() << std::endl;
-        this->geodes.push_back( new VE_SceneGraph::Geode( *input->GetGeodes().at( i ) ) );
+        this->geodes.push_back( new ves::xplorer::scenegraph::Geode( *input->GetGeodes().at( i ) ) );
         //std::cout << input.at( i ).get() << std::endl;
 
         //Add phong shading to the geodes
         osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
-        VE_SceneGraph::Utilities::PhongLoader phongShader;
+        ves::xplorer::scenegraph::util::PhongLoader phongShader;
 
         if( isStreamLine )
         {
@@ -219,7 +219,7 @@ void cfdGraphicsObject::SetGeodes( VE_Xplorer::cfdObjects* input )
 }
 
 // Return parent node for a this object
-VE_SceneGraph::DCS* cfdGraphicsObject::GetParentNode( void )
+ves::xplorer::scenegraph::DCS* cfdGraphicsObject::GetParentNode( void )
 {
    return this->parentNode;
 }
@@ -253,7 +253,7 @@ void cfdGraphicsObject::AddGeodesToSequence( void )
          for(int k = 0; k < nGeodes; k++)
          {
             std::cout<<"removing geode : "<< k<<std::endl;
-            tempGeode = (VE_SceneGraph::Geode*)tempDCS->GetChild(0);
+            tempGeode = (ves::xplorer::scenegraph::Geode*)tempDCS->GetChild(0);
             tempDCS->RemoveChild(tempGeode);
             geodes.erase(geodes.begin());
             delete tempGeode;
@@ -295,7 +295,7 @@ void cfdGraphicsObject::UpdateGeode( void )
    {
       //check if current data set is transient
       if(this->activeDataSet->IsPartOfTransientSeries()){
-         this->transientGeodes.push_back(new VE_SceneGraph::Geode());
+         this->transientGeodes.push_back(new ves::xplorer::scenegraph::Geode());
    if ( this->usePreCalcData && this->PDactor != NULL )
    {
       vprDEBUG(vesDBG, 2) 
@@ -303,7 +303,7 @@ void cfdGraphicsObject::UpdateGeode( void )
          << std::endl << vprDEBUG_FLUSH;
 
       // Function implements respective vtkActorToGeode function
-      ((VE_SceneGraph::Geode*)this->transientGeodes.back())->TranslateToGeode( this->PDactor );
+      ((ves::xplorer::scenegraph::Geode*)this->transientGeodes.back())->TranslateToGeode( this->PDactor );
    }
    else
    {
@@ -312,7 +312,7 @@ void cfdGraphicsObject::UpdateGeode( void )
          << std::endl << vprDEBUG_FLUSH;
 
       // Function implements respective vtkActorToGeode function
-      ((VE_SceneGraph::Geode*)this->transientGeodes.back())->TranslateToGeode( this->actor );
+      ((ves::xplorer::scenegraph::Geode*)this->transientGeodes.back())->TranslateToGeode( this->actor );
    }
          //check if this is causing problems 
          if ( this->transientGeodes.size()%_sequence->GetNumberOfFrames() == 0 )
@@ -321,7 +321,7 @@ void cfdGraphicsObject::UpdateGeode( void )
          vprDEBUG(vesDBG, 1) << "cfdObjects::Allocate Geode..."
                            << updateFlag<< std::endl << vprDEBUG_FLUSH;
    
-         this->_geode = new VE_SceneGraph::Geode();
+         this->_geode = new ves::xplorer::scenegraph::Geode();
          this->addGeode = true;      
       }
    }
@@ -352,7 +352,7 @@ void cfdGraphicsObject::AddGeodeToDCS( void )
          << std::endl << vprDEBUG_FLUSH;
 
       // Function implements respective vtkActorToGeode function
-      ((VE_SceneGraph::Geode*)this->_geodes.back())->TranslateToGeode( this->PDactor );
+      ((ves::xplorer::scenegraph::Geode*)this->_geodes.back())->TranslateToGeode( this->PDactor );
    }
    else
    {
@@ -361,7 +361,7 @@ void cfdGraphicsObject::AddGeodeToDCS( void )
          << std::endl << vprDEBUG_FLUSH;
 
       // Function implements respective vtkActorToGeode function
-      ((VE_SceneGraph::Geode*)this->_geodes.back())->TranslateToGeode( this->actor );
+      ((ves::xplorer::scenegraph::Geode*)this->_geodes.back())->TranslateToGeode( this->actor );
    }
 
    vprDEBUG(vesDBG, 2) 
@@ -382,12 +382,12 @@ void cfdGraphicsObject::AddGeodeToDCS( void )
       vprDEBUG(vesDBG,1) << "this->geodes[ 0 ] = " << this->_geodes[ 0 ]
          << std::endl << "this->geodes[ num ] = " << this->_geodes[ num ]
          << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( ((VE_SceneGraph::Geode*)this->_geodes[ num ]) );
+      this->_dcs->AddChild( ((ves::xplorer::scenegraph::Geode*)this->_geodes[ num ]) );
 
       if ( this->_geodes.size() > 2 ) // remove oldest
       {
          int num = (this->_geodes.size() - 1) - 2;
-         VE_SceneGraph::Group* parent = (Group*)this->_geodes[ num ]->GetParent(0);
+         ves::xplorer::scenegraph::Group* parent = (Group*)this->_geodes[ num ]->GetParent(0);
          parent->RemoveChild(this->_geodes[ num ] );
          delete this->_geodes[ num ];
          this->_geodes.erase( this->_geodes.end() - 3 );
@@ -400,7 +400,7 @@ void cfdGraphicsObject::AddGeodeToDCS( void )
       int num = (this->_geodes.size() - 1) - 1;
       vprDEBUG(vesDBG,1) << " 1. removing child num = " << num << " : " << this->_geodes[ num ] << " : " << _geodes.size()
                              << std::endl << vprDEBUG_FLUSH;
-      VE_SceneGraph::Group* parent = (Group*)this->_geodes[ num ]->GetParent(0);
+      ves::xplorer::scenegraph::Group* parent = (Group*)this->_geodes[ num ]->GetParent(0);
       vprDEBUG(vesDBG,2) << " 1. removing child parent = " << parent 
                              << std::endl << vprDEBUG_FLUSH;
       parent->RemoveChild( this->_geodes[ num ] );
@@ -413,7 +413,7 @@ void cfdGraphicsObject::AddGeodeToDCS( void )
       this->_geodes.erase( this->_geodes.end() - 2 );
       vprDEBUG(vesDBG,2) << " 1. erase child succesful" 
                              << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( ((VE_SceneGraph::Geode*)this->_geodes[ num ]) );
+      this->_dcs->AddChild( ((ves::xplorer::scenegraph::Geode*)this->_geodes[ num ]) );
       vprDEBUG(vesDBG,1) << " 1. add child succesful " 
                              << std::endl << vprDEBUG_FLUSH;
    }
@@ -421,7 +421,7 @@ void cfdGraphicsObject::AddGeodeToDCS( void )
    { 
       vprDEBUG(vesDBG,1) << " adding child geode = " << this->_geodes.at( 0 )
                              << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( ((VE_SceneGraph::Geode*)this->_geodes.at( 0 )) );     
+      this->_dcs->AddChild( ((ves::xplorer::scenegraph::Geode*)this->_geodes.at( 0 )) );     
    }
 }
 */
@@ -434,7 +434,7 @@ void cfdGraphicsObject::RemoveGeodeFromDCS( void )
       {
          // Need to find tha parent because with multiple models
          // Not all geodes are going to be on the same dcs
-			VE_SceneGraph::Group* parent = dynamic_cast< VE_SceneGraph::Group* >(this->geodes.at( i )->GetParent(0));
+			ves::xplorer::scenegraph::Group* parent = dynamic_cast< ves::xplorer::scenegraph::Group* >(this->geodes.at( i )->GetParent(0));
          parent->RemoveChild( this->geodes.at( i ).get() );
 #ifdef _PERFORMER
          delete this->geodes.at( i );
@@ -444,7 +444,7 @@ void cfdGraphicsObject::RemoveGeodeFromDCS( void )
 
       /*if ( animation )
       {
-         VE_SceneGraph::Group* parent = this->animation->GetSequence()->GetParent(0);
+         ves::xplorer::scenegraph::Group* parent = this->animation->GetSequence()->GetParent(0);
          parent->RemoveChild( this->animation->GetSequence() );
 #ifdef _PERFORMER
          delete animation;

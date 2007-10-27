@@ -51,7 +51,7 @@
 #include <fstream>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
 cfdImage::cfdImage( std::string param )
@@ -123,7 +123,7 @@ cfdImage::cfdImage( std::string param )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->SetTexture( this->texture ); 
-      geodes.push_back( new VE_SceneGraph::Geode() );
+      geodes.push_back( new ves::xplorer::scenegraph::Geode() );
       geodes.back()->TranslateToGeode( temp );
       temp->Delete();
 
@@ -213,7 +213,7 @@ cfdImage::cfdImage ( std::string filename, int resx, int resy, int dim, double *
       temp->GetProperty()->SetDiffuse(1.0);
       temp->GetProperty()->SetSpecular(1.0);
       temp->GetProperty()->SetInterpolationToPhong();
-      geodes.push_back( new VE_SceneGraph::Geode() );
+      geodes.push_back( new ves::xplorer::scenegraph::Geode() );
       geodes.back()->TranslateToGeode( temp );
       temp->Delete();
 

@@ -36,21 +36,27 @@
 /*!\file SceneNode.h
 */
 
-/*!\class VE_SceneGraph::SceneNode
+/*!\class ves::xplorer::scenegraph::SceneNode
 *Base class for all scene graph nodes
 *Do not understand why we need this class
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class Technique;
+}
+}
 }
 
 // --- OSG Includes --- //
@@ -66,7 +72,11 @@ namespace osg
 #include <string>
 #include <map>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS SceneNode
 {
@@ -85,20 +95,22 @@ public:
 
     void DirtyTechniques();
 
-    void AddTechnique( std::string name, VE_SceneGraph::Technique* technique );
+    void AddTechnique( std::string name, ves::xplorer::scenegraph::Technique* technique );
 
     void SetTechnique( std::string name );
 
-    VE_SceneGraph::Technique* GetTechnique( std::string name );
+    ves::xplorer::scenegraph::Technique* GetTechnique( std::string name );
 
-    VE_SceneGraph::Technique* GetActiveTechnique();
+    ves::xplorer::scenegraph::Technique* GetActiveTechnique();
 
 protected:
     std::string m_activeTechnique;
 
-    std::map< std::string, VE_SceneGraph::Technique* > m_techniques;
+    std::map< std::string, ves::xplorer::scenegraph::Technique* > m_techniques;
 
 };
+}
+}
 }
 
 #endif //SCENENODE_H

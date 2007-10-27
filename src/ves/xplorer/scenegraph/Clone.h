@@ -36,30 +36,40 @@
 /*!\file Clone.h
 */
 
-/*!\class VE_SceneGraph::Clone
+/*!\class ves::xplorer::scenegraph::Clone
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
 
-namespace VE_SceneGraph
+namespace ves
 {
-class DCS;
-class SceneNode;
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+    class SceneNode;
+}
+}
 }
 
 // --- OSG Includes --- //
 namespace osg
 {
-class Node;
+    class Node;
 }
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS Clone
 {
@@ -91,12 +101,14 @@ public:
     void SetScaleArray( double* scale );
 
     ///Return the cloned structure including the transform
-    VE_SceneGraph::DCS* GetClonedGraph();
+    ves::xplorer::scenegraph::DCS* GetClonedGraph();
    
 protected:
-    osg::ref_ptr< VE_SceneGraph::DCS > m_cloneTransform;///<The cloned structure including the transform
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_cloneTransform;///<The cloned structure including the transform
 
 };
+}
+}
 }
 
 #endif //CLONE_H

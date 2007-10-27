@@ -36,11 +36,11 @@
 /*!\file FindParentsVisitor.h
 */
 
-/*!\class VE_SceneGraph::FindParentsVisitor
+/*!\class ves::xplorer::scenegraph::FindParentsVisitor
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -50,7 +50,11 @@
 // --- OSG Includes --- //
 #include <osg/NodeVisitor>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS FindParentsVisitor : public osg::NodeVisitor
 {
@@ -76,6 +80,8 @@ private:
     std::string modelGUID;///<GUID to identify the VE-Open model
     osg::ref_ptr< osg::Node > parentNode;///<Pointer to the found parent node
 };
+}
+}
 }
 
 #endif //FIND_PARENTS_VISITOR_H

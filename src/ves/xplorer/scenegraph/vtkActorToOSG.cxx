@@ -63,9 +63,10 @@ typedef float vtkReal;
 #include <osg/Vec3>
 #include <osg/LineWidth>
 #include <iostream>
-using namespace VE_SceneGraph;
 
-osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose) {
+using namespace ves::xplorer::scenegraph;
+
+osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToOSG(vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose) {
 
 	// make actor current
 	actor->GetMapper()->Update();
@@ -98,10 +99,10 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::re
 	osg::ref_ptr< osg::Geometry > points, lines, polys, strips;
 
 	// create new Geometry for the Geode
-   points = VE_SceneGraph::processPrimitive(actor, polyData->GetVerts(), osg::PrimitiveSet::POINTS, verbose);
-	lines = VE_SceneGraph::processPrimitive(actor, polyData->GetLines(), osg::PrimitiveSet::LINE_STRIP, verbose);
-	polys = VE_SceneGraph::processPrimitive(actor, polyData->GetPolys(), osg::PrimitiveSet::POLYGON, verbose);
-	strips = VE_SceneGraph::processPrimitive(actor, polyData->GetStrips(), osg::PrimitiveSet::TRIANGLE_STRIP, verbose);
+   points = ves::xplorer::scenegraph::processPrimitive(actor, polyData->GetVerts(), osg::PrimitiveSet::POINTS, verbose);
+	lines = ves::xplorer::scenegraph::processPrimitive(actor, polyData->GetLines(), osg::PrimitiveSet::LINE_STRIP, verbose);
+	polys = ves::xplorer::scenegraph::processPrimitive(actor, polyData->GetPolys(), osg::PrimitiveSet::POLYGON, verbose);
+	strips = ves::xplorer::scenegraph::processPrimitive(actor, polyData->GetStrips(), osg::PrimitiveSet::TRIANGLE_STRIP, verbose);
 
 	// remove old gsets and delete them
    while( geode->getNumDrawables() ) geode->removeDrawable((unsigned int)0);//removeDrawable(0);
@@ -114,7 +115,7 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::re
 	return geode;
 }
 
-osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
+osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
 
    if (verbose) 
    {

@@ -40,7 +40,7 @@
 
 using namespace VE_EVENTS;
 using namespace ves::open::xml::cad;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////

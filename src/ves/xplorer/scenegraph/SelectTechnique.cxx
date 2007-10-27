@@ -42,7 +42,7 @@
 #include <osg/Material>
 #include <osg/PolygonMode>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
@@ -61,9 +61,7 @@ void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-        osg::ref_ptr< osg::StateSet > stateSet = m_stateSet.get();
-
-        AddPass( stateSet.get() );
+        AddPass( m_stateSet.get() );
     }
 
     //Implement pass #2
@@ -95,9 +93,9 @@ void SelectTechnique::DefinePasses()
         linewidth->setWidth( 2.0f );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
         
-        stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-        stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
-        stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::ON );
 
         AddPass( stateSet.get() );
     }

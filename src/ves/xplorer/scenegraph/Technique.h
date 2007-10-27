@@ -37,9 +37,15 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class SceneNode;
+}
+}
 }
 
 // --- OSG Includes --- //
@@ -51,7 +57,11 @@ namespace VE_SceneGraph
 #include <vector>
 #include <string>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS Technique
 {
@@ -67,7 +77,7 @@ public:
 
     void DirtyPasses();
 
-    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node );
+    virtual void Traverse( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node );
 
 protected:
     virtual void DefinePasses() = 0;
@@ -76,11 +86,13 @@ protected:
 
     virtual osg::Node* GetOverrideChild( int );
 
-    void TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node );
+    void TraverseImplementation( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node );
 
     std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
 
 };
+}
+}
 }
 
 #endif //TECHNIQUE_H

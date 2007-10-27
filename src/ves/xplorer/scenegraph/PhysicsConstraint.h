@@ -36,11 +36,11 @@
 /*!\file PhysicsConstraint.h
 */
 
-/*!\class VE_SceneGraph::PhysicsConstraint
+/*!\class ves::xplorer::scenegraph::PhysicsConstraint
 * 
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -50,9 +50,11 @@
 // --- OSG Stuff --- //
 #include <osg/ref_ptr>
 
-// --- Bullet Stuff --- //
-
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS PhysicsConstraint
 {
@@ -67,6 +69,8 @@ public:
 private:
 
 };
+}
+}
 }
 
 #endif //PHYSICS_CONSTRAINT_H

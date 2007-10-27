@@ -59,9 +59,15 @@ namespace VE_Xplorer
    class cfdCommandArray;
 }
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class DCS;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -102,7 +108,7 @@ namespace VE_Xplorer
          std::vector< cfdImage* > _images;///<The vector of images.
 
       private:
-			osg::ref_ptr< VE_SceneGraph::DCS > _dcs;///<reference pointer to the dcs
+			osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;///<reference pointer to the dcs
          char basename[256];///<Holds basename input.
          int frames;///<Number of frames.
          int ex_x, ex_y;///<ex_x and ex_y.

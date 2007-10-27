@@ -47,7 +47,7 @@
 #include <vtkCompositeDataPipeline.h>
 #include <vtkDemandDrivenPipeline.h>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace VE_Xplorer;
 
 cfdObjects::cfdObjects( void )
@@ -86,7 +86,7 @@ void cfdObjects::SetObjectType( int type )
    this->objectType = type;
 }
 
-std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > cfdObjects::GetGeodes( void )
+std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdObjects::GetGeodes( void )
 {
    return geodes;
 }

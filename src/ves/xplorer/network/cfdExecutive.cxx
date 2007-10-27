@@ -74,7 +74,7 @@ XERCES_CPP_NAMESPACE_USE
 #include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::xplorer::plugin;
@@ -105,9 +105,9 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
-   this->_masterNode = new VE_SceneGraph::Group();
+   this->_masterNode = new ves::xplorer::scenegraph::Group();
    this->_masterNode->SetName( "cfdExecutive_Node" );
-   VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
+   ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
 
    m_avModules = new cfdVEAvailModules();
 
@@ -317,7 +317,7 @@ void cfdExecutive::GetEverything( void )
 
          _plugins[ iter->first ] = temp;
          // When we create the _plugin map here we will do the following
-         _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
+         _plugins[ iter->first ]->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
          _plugins[ iter->first ]->AddSelfToSG();
          cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
          tempCFDModel->SetID( iter->first );
@@ -511,7 +511,7 @@ void cfdExecutive::LoadDataFromCE( void )
    {
       // Get Network and parse it
       GetEverything();
-      VE_SceneGraph::SceneManager::instance()->ViewLogo(false);
+      ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo(false);
    }
    return;
    // store the statusString in order to perform multiple operations on it...

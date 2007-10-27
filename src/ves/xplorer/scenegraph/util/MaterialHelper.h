@@ -35,7 +35,7 @@
 /*!\file MaterialHelper.h
   MaterialHelper API
   */
-/*!\class VE_SceneGraph::Utilities::MaterialHelper
+/*!\class ves::xplorer::scenegraph::util::MaterialHelper
  * Class that creates an OSG StateSet representing
  * a glsl program.
  */
@@ -68,9 +68,13 @@ namespace cad
 ///////////////////////////////////////////////////////////////////////
 //this class is used to create a stateset representing a gl Material //
 ///////////////////////////////////////////////////////////////////////
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class VE_SCENEGRAPH_UTILS_EXPORTS MaterialHelper{
 public:
@@ -97,6 +101,8 @@ protected:
 #elif _PERFORMER
 #endif
 };
+}
+}
 }
 }
 #endif// MATERIAL_HELPER_H

@@ -43,7 +43,7 @@
 #include <iomanip>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 // Fix need to add the new style read param to this class
 // tak code out of cfdReadPAram to this function
@@ -74,7 +74,7 @@ cfdAnimatedImage::cfdAnimatedImage( std::string basename, int frames,
    }
 
    //this->_sequence = new cfdTempAnimation();
-   this->_dcs = new VE_SceneGraph::DCS();
+   this->_dcs = new ves::xplorer::scenegraph::DCS();
 }
 
 cfdAnimatedImage::cfdAnimatedImage( std::string param )
@@ -108,7 +108,7 @@ cfdAnimatedImage::cfdAnimatedImage( std::string param )
       _images.push_back(im);
    }
 
-   this->_dcs = new VE_SceneGraph::DCS();
+   this->_dcs = new ves::xplorer::scenegraph::DCS();
    this->_dcs->SetTranslationArray( imageTrans );
    this->_dcs->SetRotationArray( imageRot );
    this->_dcs->SetScaleArray( imageScale );

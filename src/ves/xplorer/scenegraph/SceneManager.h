@@ -36,11 +36,11 @@
 /*!\file SceneManager.h
 */
 
-/*!\class VE_SceneGraph::SceneManager
+/*!\class ves::xplorer::scenegraph::SceneManager
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -63,15 +63,25 @@
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class DCS;
     class Group;
     class Switch;
     class CADEntity;
 }
+}
+}
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS SceneManager //: public vpr::Singleton< SceneManager >
 {
@@ -87,16 +97,16 @@ public:
     void InitScene();
 
     ///Return the root node of the scenegraph
-    VE_SceneGraph::Group* GetRootNode();
+    ves::xplorer::scenegraph::Group* GetRootNode();
 
     ///Return the world DCS of the scenegraph
-    VE_SceneGraph::DCS* GetWorldDCS();
+    ves::xplorer::scenegraph::DCS* GetWorldDCS();
 
     ///Return the network DCS of the scenegraph
-    VE_SceneGraph::DCS* GetNetworkDCS();
+    ves::xplorer::scenegraph::DCS* GetNetworkDCS();
 
     ///Return the active switch node of the scenegraph
-    VE_SceneGraph::DCS* GetActiveSwitchNode();
+    ves::xplorer::scenegraph::DCS* GetActiveSwitchNode();
 
     ///Return the active switch node of the scenegraph
     osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
@@ -136,18 +146,18 @@ private:
     vprSingletonHeader( SceneManager );
 
     std::string _param;///<
-    osg::ref_ptr< VE_SceneGraph::Group > rootNode;///<The root node of our scenegraph
-    osg::ref_ptr< VE_SceneGraph::DCS > _logoNode;///<The node which contains our logo
-    osg::ref_ptr< VE_SceneGraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
-    osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;///<Node to control navigation
-    osg::ref_ptr< VE_SceneGraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode;///<The root node of our scenegraph
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _logoNode;///<The node which contains our logo
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;///<Node to control navigation
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
 
     //The logo
-    VE_SceneGraph::CADEntity* m_blueArrow;
-    VE_SceneGraph::CADEntity* m_greyArrow;
-    VE_SceneGraph::CADEntity* m_orangeArrow;
-    VE_SceneGraph::CADEntity* m_veText;
-    VE_SceneGraph::CADEntity* m_suiteText;
+    ves::xplorer::scenegraph::CADEntity* m_blueArrow;
+    ves::xplorer::scenegraph::CADEntity* m_greyArrow;
+    ves::xplorer::scenegraph::CADEntity* m_orangeArrow;
+    ves::xplorer::scenegraph::CADEntity* m_veText;
+    ves::xplorer::scenegraph::CADEntity* m_suiteText;
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
@@ -163,6 +173,8 @@ protected:
 #endif
 
 };
+}
+}
 }
 
 #endif //SCENE_MANAGER_H

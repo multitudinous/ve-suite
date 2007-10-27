@@ -49,12 +49,12 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 typedef double vtkReal;
 
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToStreamLine( vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose )
+osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose )
 {
     //Make actor current
     actor->GetMapper()->Update();
@@ -90,7 +90,7 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToStreamLine( vtkActor *actor,
     osg::ref_ptr< osg::Geometry > lines;
 
     //Create new Geometry for the Geode
-    lines = VE_SceneGraph::ProcessPrimitive( actor, polyData->GetLines(), osg::PrimitiveSet::LINE_STRIP, verbose );
+    lines = ves::xplorer::scenegraph::ProcessPrimitive( actor, polyData->GetLines(), osg::PrimitiveSet::LINE_STRIP, verbose );
 
     //Remove old gsets and delete them
     while( geode->getNumDrawables() )
@@ -106,7 +106,7 @@ osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToStreamLine( vtkActor *actor,
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
+osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
 {
     if( verbose ) 
     {
@@ -274,7 +274,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::ProcessPrimitive( vtkActor *actor, 
     return geometry;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Program > VE_SceneGraph::GetShader()
+osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
 {
     char vertexPass[] =
         "uniform float particleSpeed; \n"

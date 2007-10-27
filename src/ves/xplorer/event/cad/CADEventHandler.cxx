@@ -63,7 +63,7 @@
 using namespace VE_EVENTS;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ void CADEventHandler::_setAttributesOnNode(CADNode* activeNode)
     void CADEventHandler::_setTransformOnNode(CADNode* activeNode)
     {
     //set the transform
-    VE_SceneGraph::DCS* transform = 0;
+    ves::xplorer::scenegraph::DCS* transform = 0;
     std::string nodeID = activeNode->GetID();
     if(activeNode->GetNodeType() == "Assembly")
     {
@@ -205,25 +205,25 @@ void CADEventHandler::SetNodeDescriptors(std::string nodeID,
 
     if(nodeType == "Assembly")
     {
-        VE_SceneGraph::DCS* assemblyNode = m_cadHandler->GetAssembly(nodeID);
+        ves::xplorer::scenegraph::DCS* assemblyNode = m_cadHandler->GetAssembly(nodeID);
         assemblyNode->setDescriptions( descriptorsList );
     }
     else if(nodeType == "Part")
     {
-        VE_SceneGraph::CADEntity* partNode = m_cadHandler->GetPart(nodeID);
+        ves::xplorer::scenegraph::CADEntity* partNode = m_cadHandler->GetPart(nodeID);
         partNode->GetDCS()->setDescriptions( descriptorsList );
     }
     else if(nodeType == "Clone")
     {
-        VE_SceneGraph::Clone* cloneNode = m_cadHandler->GetClone(nodeID);
-        VE_SceneGraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
+        ves::xplorer::scenegraph::Clone* cloneNode = m_cadHandler->GetClone(nodeID);
+        ves::xplorer::scenegraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
         cloneNode->GetClonedGraph()->setDescriptions(descriptorsList);
     }
 }
 /////////////////////////////////////////////////////////////////////////
 void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
 {
-    VE_SceneGraph::DCS* parentAssembly = 0;
+    ves::xplorer::scenegraph::DCS* parentAssembly = 0;
     parentAssembly = m_cadHandler->GetAssembly(parentID);
 
     vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent---" << parentID 
@@ -263,7 +263,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
         m_cadHandler->GetAssembly(newAssembly->GetID())->ToggleDisplay(newAssembly->GetVisibility());
         SetNodeDescriptors(newAssembly->GetID(),"Assembly","VE_XML_ID",newAssembly->GetID());
         //Set a default material on nodes that have no initial material
-        VE_SceneGraph::Utilities::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
+        ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
     }
     else if(activeNode->GetNodeType() == "Part")
     {
@@ -282,7 +282,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
                                 parentID
                               );
 
-        VE_SceneGraph::CADEntity* partNode = m_cadHandler->GetPart(newPart->GetID());
+        ves::xplorer::scenegraph::CADEntity* partNode = m_cadHandler->GetPart(newPart->GetID());
         if ( partNode->GetNode()->GetNode() )
         {
             partNode->GetNode()->SetName(newPart->GetNodeName());
@@ -323,7 +323,7 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
             //set the uuid on the osg node so that we can get back to vexml
             SetNodeDescriptors(newPart->GetID(),"Part","VE_XML_ID",newPart->GetID());
             //Set a default material on nodes that have no initial material
-            VE_SceneGraph::Utilities::MaterialInitializer material_initializer( partNode->GetDCS() );
+            ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( partNode->GetDCS() );
         }
         else
         {

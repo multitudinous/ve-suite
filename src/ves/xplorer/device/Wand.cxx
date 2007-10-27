@@ -60,7 +60,7 @@
 using namespace gmtl;
 using namespace gadget;
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ m_buttonPushed( false )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::Initialize()
 {
-    rootNode = VE_SceneGraph::SceneManager::instance()->GetRootNode();
+    rootNode = ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
     for( int i = 0; i < 3; ++i )
     {
@@ -317,7 +317,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG(vesDBG,1) << "|\tWand::ProcessHit No object selected" 
                            << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
         return;
     }
@@ -342,7 +342,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
     //Now find the id for the cad
     selectedGeometry = objectHit._geode;
-    VE_SceneGraph::FindParentsVisitor parentVisitor( selectedGeometry.get() );
+    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( selectedGeometry.get() );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
     {
@@ -353,7 +353,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
             << parentNode->getDescriptions().at( 1 ) 
             << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = dynamic_cast< VE_SceneGraph::DCS* >( parentNode.get() );
+        activeDCS = dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
     }
     else
     {
@@ -363,7 +363,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
           << objectHit._geode->getParents().front()->getName() 
           << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = VE_SceneGraph::SceneManager::instance()->GetWorldDCS();
+        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -678,7 +678,7 @@ double* Wand::GetPlaneEquationConstantsNormalToWand()
     Matrix44d vjMat = convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
     Matrix44d worldWandMat = 
-        VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
     ///Normalize vector
     gmtl::Vec3d vjVec;
     vjVec.set( 0.0f, 0.0f, -1.0f );

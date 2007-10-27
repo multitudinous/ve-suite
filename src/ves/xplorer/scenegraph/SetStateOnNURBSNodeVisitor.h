@@ -36,11 +36,11 @@
 /*!\file SetStateOnNURBSVisitor.h
 */
 
-/*!\class VE_SceneGraph::SetStateOnNURBSVisitor
+/*!\class ves::xplorer::scenegraph::SetStateOnNURBSVisitor
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -54,7 +54,11 @@
 #include <string>
 #include <utility>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS SetStateOnNURBSNodeVisitor : public osg::NodeVisitor
 {
@@ -86,6 +90,8 @@ private:
     ///Delta for the mouse to move
     std::pair< double, double > m_mouseDelta;
 };
+}
+}
 }
 
 #endif //SET_STATE_ON_NURBS_NODE_VISITOR_H

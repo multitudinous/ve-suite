@@ -37,7 +37,7 @@
 /*!\file PhongLoader.h
   PhongLoader API
   */
-/*!\class VE_SceneGraph::Utilities::PhongLoader
+/*!\class ves::xplorer::scenegraph::util::PhongLoader
  * Class that creates an OSG StateSet representing
  * a phong shading glsl program.
  */
@@ -51,11 +51,15 @@
 ///////////////////////////////////////////////////////////////////////
 //this class is used to create a stateset representing a phong shader// 
 ///////////////////////////////////////////////////////////////////////
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
 {
-class VE_SCENEGRAPH_UTILS_EXPORTS PhongLoader : public VE_SceneGraph::Utilities::ShaderHelper
+namespace scenegraph
+{
+namespace util
+{
+class VE_SCENEGRAPH_UTILS_EXPORTS PhongLoader : public ves::xplorer::scenegraph::util::ShaderHelper
 {
 public:
    ///Constructor
@@ -79,6 +83,8 @@ protected:
    ///\param fragSource The fragment shader source code
    virtual void _loadShader(std::string vertexSource, std::string fragSource);
 };
+}
+}
 }
 }
 #endif

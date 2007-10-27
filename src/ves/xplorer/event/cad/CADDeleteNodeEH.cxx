@@ -88,7 +88,7 @@ void CADDeleteNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
 
       //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Deleting node---"<<std::endl;
-      VE_SceneGraph::DCS* parentAssembly = 0;
+      ves::xplorer::scenegraph::DCS* parentAssembly = 0;
       parentAssembly = m_cadHandler->GetAssembly(parentID->GetDataString());
 
       //This assumes the part/assembly isn't there already

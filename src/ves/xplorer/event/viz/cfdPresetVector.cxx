@@ -50,7 +50,7 @@
 #include <vtkProperty.h>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a vector field.
 cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
@@ -156,7 +156,7 @@ void cfdPresetVector::Update( void )
 
    try
    {
-		osg::ref_ptr<VE_SceneGraph::Geode > tempGeode = new VE_SceneGraph::Geode();
+		osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
       tempGeode->TranslateToGeode( temp );
       geodes.push_back( tempGeode ); 
       this->updateFlag = true;

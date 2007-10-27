@@ -81,7 +81,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -765,7 +765,7 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
 
    //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
-	osg::ref_ptr< VE_SceneGraph::DCS > activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
    // add active dataset DCS to scene graph if not already there...
    vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "

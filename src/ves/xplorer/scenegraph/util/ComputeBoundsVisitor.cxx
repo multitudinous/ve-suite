@@ -36,7 +36,7 @@
 #include <osg/Drawable>
 #include <osg/Geode>
 
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 
 ComputeBoundsVisitor::ComputeBoundsVisitor( TraversalMode traversalMode )
 :

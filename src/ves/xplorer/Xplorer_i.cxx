@@ -61,7 +61,7 @@ using namespace VE_TextureBased;
 
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace VE_TextureBased;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +299,7 @@ void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
          matrix.mData[i]=this->mStates->clusterMatrix[i];
       }
       //std::cout << "slave: " << std::endl << matrix << std::endl;
-      VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
+      ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG

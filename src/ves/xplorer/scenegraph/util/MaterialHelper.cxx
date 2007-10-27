@@ -44,7 +44,7 @@
 #include <ves/open/xml/FloatArray.h>
 #include <string>
 using namespace ves::open::xml::cad;
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 ////////////////////////////////
 //Construtor                  //
 ////////////////////////////////

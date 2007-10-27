@@ -88,7 +88,7 @@ void CADAddNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
       CADNode* node = 0;
       CADAssembly* assembly = 0; 
       CADPart* part = 0;
-       VE_SceneGraph::DCS* parentAssembly = 0;
+       ves::xplorer::scenegraph::DCS* parentAssembly = 0;
 
       if(nodeType == "Assembly")
       {

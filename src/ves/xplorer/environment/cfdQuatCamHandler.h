@@ -53,9 +53,15 @@ cfdQuatCamHandler API
 #include <vpr/Util/Timer.h>
 #include <vpr/Util/Singleton.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class DCS;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -98,7 +104,7 @@ public:
    virtual void UpdateCommand();
    ///Set the DCS 
    ///\param newDCS The new DCS
-   void SetDCS( VE_SceneGraph::DCS* newDCS );
+   void SetDCS( ves::xplorer::scenegraph::DCS* newDCS );
    ///This function is for quatecam handler only
    ///This should be removed once the new animation code is in place
    void SetMasterNode( bool masterNode );
@@ -106,13 +112,13 @@ public:
    ///Clear out all the saved quaternions
    void ClearQuaternionData();
 
-   void LoadData( VE_SceneGraph::DCS* );
+   void LoadData( ves::xplorer::scenegraph::DCS* );
 
    void WriteToFile( std::string );
 
    void LoadFromFile( std::string );
 
-   void Relocate( VE_SceneGraph::DCS* worldDCS ); 
+   void Relocate( ves::xplorer::scenegraph::DCS* worldDCS ); 
 
    void RemoveViewPt( void );
 
@@ -162,7 +168,7 @@ protected:
 private:
 
    cfdQuatCam* thisQuatCam;
-   osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
    cfdReadParam* _readParam;
    std::string   _param;
    double t;

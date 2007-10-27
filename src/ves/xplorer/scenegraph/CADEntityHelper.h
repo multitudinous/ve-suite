@@ -36,11 +36,11 @@
 /*!\file CADEntityHelper.h
 */
 
-/*!\class VE_SceneGraph::CADEntityHelper
+/*!\class ves::xplorer::scenegraph::CADEntityHelper
 *Class to assist CADEntity
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -103,13 +103,17 @@ typedef progress_streambuf< char > progbuf;
 
 namespace osg 
 { 
-class Fog; 
-class LightModel;
+    class Fog; 
+    class LightModel;
 }
 #elif _OPENSG
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS CADEntityHelper
 {
@@ -182,6 +186,8 @@ private:
     bool m_twoSidedLighting;
 
 };
+}
+}
 }
 
 #endif //CAD_ENTITY_HELPER_H

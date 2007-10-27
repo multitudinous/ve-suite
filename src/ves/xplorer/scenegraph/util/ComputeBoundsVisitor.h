@@ -40,9 +40,13 @@
 #include <osg/BoundingBox>
 #include <osg/Polytope>
 
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class VE_SCENEGRAPH_UTILS_EXPORTS ComputeBoundsVisitor : public osg::NodeVisitor
 {
@@ -75,6 +79,8 @@ protected:
     MatrixStack _matrixStack;
     osg::BoundingBox _bb;
 };
+}
+}
 }
 }
 

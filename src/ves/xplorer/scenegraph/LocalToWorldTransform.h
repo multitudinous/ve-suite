@@ -51,12 +51,17 @@
 
 #include <gmtl/Matrix.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    LocalToWorldTransform( VE_SceneGraph::DCS* worldNode, VE_SceneGraph::DCS* localNode );
+    LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldNode,
+                           ves::xplorer::scenegraph::DCS* localNode );
     virtual ~LocalToWorldTransform();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
@@ -64,12 +69,14 @@ public:
     gmtl::Matrix44d& GetLocalToWorldTransform();
 
 private:
-    osg::ref_ptr< VE_SceneGraph::DCS > m_worldNode;
-    osg::ref_ptr< VE_SceneGraph::DCS > m_localNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_worldNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_localNode;
 
     gmtl::Matrix44d m_localToWorldTransform;
 
 };
+}
+}
 }
 
 #endif //LOCAL_TO_WORLD_TRANSFORM_H

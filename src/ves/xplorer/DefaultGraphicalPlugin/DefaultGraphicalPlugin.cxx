@@ -36,7 +36,7 @@
 #include <iostream>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::DefaultGraphicalPlugin;
 
@@ -51,7 +51,7 @@ DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
    std::cout << "DefaultGraphicalPlugin is deleted" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DefaultGraphicalPlugin::InitializeNode( VE_SceneGraph::DCS* veworldDCS )
+void DefaultGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
 }

@@ -47,9 +47,9 @@ bool VEDCS_writeLocalData(const Object& obj, Output& fw);
 // register the read and write functions with the osgDB::Registry.
 RegisterDotOsgWrapperProxy ve_DCSProxy
 (
-    new VE_SceneGraph::DCS,
+    new ves::xplorer::scenegraph::DCS,
     "DCS",
-    "Object Node Transform Group VE_SceneGraph::DCS",
+    "Object Node Transform Group ves::xplorer::scenegraph::DCS",
     &VEDCS_readLocalData,
     &VEDCS_writeLocalData
 );
@@ -58,7 +58,7 @@ bool VEDCS_readLocalData(Object& obj, Input& fr)
 {
     bool iteratorAdvanced = false;
 
-    VE_SceneGraph::DCS& transform = static_cast<VE_SceneGraph::DCS&>(obj);
+    ves::xplorer::scenegraph::DCS& transform = static_cast<ves::xplorer::scenegraph::DCS&>(obj);
 
     if (fr.matchSequence("position %f %f %f"))
     {
@@ -119,7 +119,7 @@ bool VEDCS_readLocalData(Object& obj, Input& fr)
 
 bool VEDCS_writeLocalData(const Object& obj, Output& fw)
 {
-    const VE_SceneGraph::DCS& transform = static_cast<const VE_SceneGraph::DCS&>(obj);
+    const ves::xplorer::scenegraph::DCS& transform = static_cast<const ves::xplorer::scenegraph::DCS&>(obj);
     //fw.writeObject( transform );
     fw.indent()<<"position "<<transform.getPosition()<<std::endl;
     fw.indent()<<"attitude "<<transform.getAttitude()<<std::endl;

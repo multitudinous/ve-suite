@@ -39,10 +39,11 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldTransform::LocalToWorldTransform( VE_SceneGraph::DCS* worldNode, VE_SceneGraph::DCS* localNode )
+LocalToWorldTransform::LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldNode,
+                                              ves::xplorer::scenegraph::DCS* localNode )
 :
 NodeVisitor( TRAVERSE_PARENTS )
 {
@@ -65,7 +66,8 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
     {
         for( size_t i = 0; i < _nodePath.size(); ++i )
         {
-            m_localToWorldTransform *= static_cast< VE_SceneGraph::DCS* >( _nodePath.at( i ) )->GetMat();;
+            m_localToWorldTransform *= static_cast< ves::xplorer::scenegraph::DCS* >
+                ( _nodePath.at( i ) )->GetMat();;
         }
         gmtl::Matrix44d tempLocalMat = m_localNode->GetMat();
         m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( tempLocalMat );

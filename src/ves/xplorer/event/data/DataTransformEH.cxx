@@ -92,7 +92,7 @@ void DataTransformEventHandler::Execute(XMLObject* xmlObject)
             Command* command = dynamic_cast<Command*>(xmlObject);
             DataValuePairWeakPtr datasetName = command->GetDataValuePair("Parameter Block ID");     
             DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");     
-		    VE_SceneGraph::DCS* transform = 0;
+		    ves::xplorer::scenegraph::DCS* transform = 0;
             transform = _activeModel->GetActiveDataSet()->GetDCS();
       
             if( transform )

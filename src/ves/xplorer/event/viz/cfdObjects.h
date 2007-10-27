@@ -96,7 +96,7 @@ namespace VE_Xplorer
 		 vtkPolyData* ApplyGeometryFilter(vtkAlgorithmOutput* input);
 
          ///Returnd geodes.
-         std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > GetGeodes( void );
+         std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes( void );
 
          ///Clear the geodes.
          void ClearGeodes( void );
@@ -195,7 +195,7 @@ namespace VE_Xplorer
          // used by vectors and intended for warped contours
          //static float vectorScale;
 
-         std::vector< osg::ref_ptr< VE_SceneGraph::Geode > > geodes;///<geode vector.
+         std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<geode vector.
          vtkPolyData* pointSource;///<point source for vtk polydata.
 
 		 ///vtkMultiGroupGeometryFilter

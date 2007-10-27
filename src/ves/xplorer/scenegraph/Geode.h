@@ -36,11 +36,11 @@
 /*!\file Geode.h
 */
 
-/*!\class VE_SceneGraph::Geode
+/*!\class ves::xplorer::scenegraph::Geode
 *A leaf node on the scene graph
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -57,7 +57,11 @@
 // --- VTK Includes --- //
 class vtkActor;
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS Geode : public osg::Geode, public SceneNode
@@ -77,7 +81,7 @@ public:
     ///\param copyop
     Geode( const Geode& geode, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
    
-    META_Node( VE_SceneGraph, Geode );
+    META_Node( ves::xplorer::scenegraph, Geode );
 
     ///Turn vtkActorToXX on and off
     ///\param onOff The VTK debug level
@@ -104,6 +108,8 @@ public:
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
+}
+}
 }
 
 #endif //GEODE_H

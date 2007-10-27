@@ -39,7 +39,7 @@
 /*!\file NCurve.cxx
   NURBS Curve Code
   */
-/*!\class NURBS::NURBSCurve
+/*!\class ves::xplorer::scenegraph::nurbs::NURBSCurve
  * Class defining a NURBSCurve. 
  */
 #include <ves/VEConfig.h>
@@ -47,7 +47,15 @@
 #include <vector>
 #include <map>
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
-namespace NURBS
+
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 class Point;
 class ControlPoint;
@@ -87,7 +95,11 @@ protected:
    ///Calculate a point and it's derivatives on a curve
    ///\param parameter The interpolating parameter
    ///\param span The knot span to interpolate the parameter on
-   std::vector<NURBS::ControlPoint> _calculatePointOnCurve(double parameter, unsigned int span);
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> _calculatePointOnCurve(double parameter, unsigned int span);
 };
 }
+}
+}
+}
+
 #endif //VE_POINT_H

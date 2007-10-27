@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/util/Attribute.h>
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
 
@@ -43,9 +43,9 @@ using namespace ves::open::xml::shader;
 //Performer static member for performer compliance
 //it allows performer to determine the class type
 
-pfType* VE_SceneGraph::Utilities::Attribute::_classType = NULL;
+pfType* ves::xplorer::scenegraph::util::Attribute::_classType = NULL;
 //initialize our class w/ performer at run time
-void VE_SceneGraph::Utilities::Attribute::init(void)
+void ves::xplorer::scenegraph::util::Attribute::init(void)
 {
    if(_classType == 0)
    {

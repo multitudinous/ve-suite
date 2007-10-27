@@ -35,7 +35,7 @@
 /*!\file ShaderHelper.h
   ShaderHelper API
   */
-/*!\class VE_SceneGraph::Utilities::ShaderHelper
+/*!\class ves::xplorer::scenegraph::util::ShaderHelper
  * Class that creates an OSG StateSet representing
  * a glsl program.
  */
@@ -73,9 +73,13 @@ namespace shader
 ///////////////////////////////////////////////////////////////////////
 //this class is used to create a stateset representing a glsl program//
 ///////////////////////////////////////////////////////////////////////
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class VE_SCENEGRAPH_UTILS_EXPORTS ShaderHelper
 {
@@ -148,6 +152,8 @@ protected:
 #elif _PERFORMER
 #endif
 };
+}
+}
 }
 }
 #endif// SHADER_HELPER_H

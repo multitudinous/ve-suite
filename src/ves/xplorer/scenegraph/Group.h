@@ -36,11 +36,11 @@
 /*!\file Group.h
 */
 
-/*!\class VE_SceneGraph::Group
+/*!\class ves::xplorer::scenegraph::Group
 *General group node which maintains a list of children
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -53,7 +53,11 @@
 #elif _OPENSG
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS Group : public osg::Group, public SceneNode
@@ -66,7 +70,7 @@ public:
     ///Copy constructor using CopyOp to manage deep vs shallow copy
     Group( const Group&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
    
-    META_Node( VE_SceneGraph, Group );
+    META_Node( ves::xplorer::scenegraph, Group );
 
 protected:
     ///Destructor
@@ -79,25 +83,27 @@ public:
 
     ///Generic remove child function
     ///\param child The child that is removed
-    int RemoveChild( SceneNode* child );
+    int RemoveChild( ves::xplorer::scenegraph::SceneNode* child );
 
     ///Generic add child function
     ///\param child The child that is added
-    int AddChild( SceneNode* child );
+    int AddChild( ves::xplorer::scenegraph::SceneNode* child );
 
     ///Generic insert child function
     ///\param position The specific location within the group
     ///\param child The child that is inserted
-    void InsertChild( int position, SceneNode* child );
+    void InsertChild( int position,
+                      ves::xplorer::scenegraph::SceneNode* child );
 
     ///Generic replace child function
     ///\param childToBeReplaced The child to be replaced
     ///\param newChild The new child
-    int ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild );
+    int ReplaceChild( SceneNode* childToBeReplaced,
+                      ves::xplorer::scenegraph::SceneNode* newChild );
 
     ///Generic search child function
     ///\param searchChild SceneNode* of child to be found
-    bool SearchChild( VE_SceneGraph::SceneNode* searchChild );
+    bool SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild );
 
     ///Generic find parent function
     ///\param position The position of the parent to be returned
@@ -129,6 +135,8 @@ public:
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
+}
+}
 }
 
 #endif //GROUP_H

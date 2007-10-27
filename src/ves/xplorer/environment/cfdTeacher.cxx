@@ -56,7 +56,7 @@
 #include <boost/filesystem/path.hpp>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 #ifdef _OSG
     #include <osgDB/WriteFile>
@@ -65,7 +65,7 @@ using namespace VE_SceneGraph;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::DCS* worldDCS )
+cfdTeacher::cfdTeacher( std::string specifiedDir, ves::xplorer::scenegraph::DCS* worldDCS )
 :
 m_currentScene( 0 )
 {
@@ -75,7 +75,7 @@ m_currentScene( 0 )
         << "\"" << std::endl << vprDEBUG_FLUSH;
 
     // initialize in case the directory is not there...
-    this->dcs = new VE_SceneGraph::DCS();
+    this->dcs = new ves::xplorer::scenegraph::DCS();
     this->dcs->SetName( "Teacher Node" );
     _worldDCS = worldDCS;
     _worldDCS->AddChild( this->dcs.get() );
@@ -108,7 +108,7 @@ cfdTeacher::~cfdTeacher( )
     //    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
+ves::xplorer::scenegraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
 {
     //only load the current one so clear out the list
     if( m_currentScene )
@@ -118,12 +118,12 @@ VE_SceneGraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
         m_currentScene = 0;
     }
 
-    m_currentScene = new VE_SceneGraph::CADEntityHelper();
+    m_currentScene = new ves::xplorer::scenegraph::CADEntityHelper();
     m_currentScene->LoadFile( this->pfbFileNames[ i ], false, true );
     return m_currentScene;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdTeacher::GetDCS()
+ves::xplorer::scenegraph::DCS* cfdTeacher::GetDCS()
 {
     return this->dcs.get();
 }
@@ -187,7 +187,7 @@ void cfdTeacher::RecordScene()
       // Make an identity matrix
       gmtl::identity( I );
       this->_worldDCS->SetMat( I );
-		//VE_SceneGraph::Clone* graphToWrite = new VE_SceneGraph::Clone(_worldDCS.get());
+		//ves::xplorer::scenegraph::Clone* graphToWrite = new ves::xplorer::scenegraph::Clone(_worldDCS.get());
 
       writePFBFile( this->_worldDCS.get(), pfb_filename );
 
@@ -197,7 +197,7 @@ void cfdTeacher::RecordScene()
    }
    else
    {
-      writePFBFile(VE_SceneGraph::SceneManager::instance()->GetRootNode(), pfb_filename);
+      writePFBFile(ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), pfb_filename);
    }
    
    vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << pfbFileNames.size()
@@ -239,7 +239,7 @@ void cfdTeacher::UpdateCommand()
     std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdTeacher::writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName)
+void cfdTeacher::writePFBFile( ves::xplorer::scenegraph::SceneNode* graph,std::string fileName)
 {
 #ifdef _OSG
     osgUtil::Optimizer optimizer;

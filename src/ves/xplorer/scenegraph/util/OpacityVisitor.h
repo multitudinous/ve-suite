@@ -43,9 +43,13 @@ OpacityVisitor API
 #include <osg/ref_ptr>
 #include <osg/NodeVisitor>
 
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class VE_SCENEGRAPH_UTILS_EXPORTS OpacityVisitor : public osg::NodeVisitor
 {
@@ -60,6 +64,8 @@ private:
 	bool transparent;
 
 };
+}
+}
 }
 }
 

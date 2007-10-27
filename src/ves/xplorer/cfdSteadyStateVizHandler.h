@@ -86,9 +86,15 @@ namespace VE_Xplorer
    class cfdTextOutput;
 }
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class DCS;
+}
+}
 }
 
 namespace VE_EVENTS
@@ -148,7 +154,7 @@ public:
    
    // Helper functions
    void SetCommandArray( cfdCommandArray* );
-   //VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
+   //ves::xplorer::scenegraph::cfdTempAnimation* GetActiveAnimation( void );
    bool TransientGeodesIsBusy();
 
 private:
@@ -183,9 +189,9 @@ private:
    cfdTextOutput*       textOutput;
    // Common objects for all functions
    cfdCommandArray*  commandArray;
-	osg::ref_ptr< VE_SceneGraph::DCS > _activeDataSetDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
    cfdObjects* _activeObject;
-   //VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
+   //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
 
    // Classes and variables for multithreading.
    vpr::Thread* vjTh[1];

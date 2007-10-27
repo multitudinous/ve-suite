@@ -51,10 +51,16 @@ cfdVEBaseClass API
 #include <map>
 
 //class cfdModuleGeometry;
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class DCS;
 	class Group;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -94,10 +100,10 @@ class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
 {
 public:
    cfdVEBaseClass( void );
-   //cfdVEBaseClass( VE_SceneGraph::DCS* );
+   //cfdVEBaseClass( ves::xplorer::scenegraph::DCS* );
    virtual ~cfdVEBaseClass( void );
 
-   virtual void InitializeNode( VE_SceneGraph::DCS* );
+   virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
    // Methods to do scene graph manipulations
    // New methods may have to be added later
    virtual void AddSelfToSG( void );
@@ -165,9 +171,9 @@ public:
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;
-   osg::ref_ptr< VE_SceneGraph::Group > groupNode;
+   osg::ref_ptr< ves::xplorer::scenegraph::Group > groupNode;
 
-   osg::ref_ptr< VE_SceneGraph::DCS > worldDCS;
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
 
    std::string _objectDescription;
 
@@ -177,7 +183,7 @@ protected:
    long pos_x;
    long pos_y;
 
-   //VE_SceneGraph::DCS* GetWorldDCS();
+   //ves::xplorer::scenegraph::DCS* GetWorldDCS();
 
    std::map<std::string, long *>                      _int;
    std::map<std::string, double *>                    _double;
@@ -196,7 +202,7 @@ protected:
 
    int _modID;
    std::string _objectName;
-   osg::ref_ptr< VE_SceneGraph::DCS > _dcs;
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;
    VE_Xplorer::cfdCursor* _cursor;
    VE_Xplorer::Device* m_device;
    VE_Xplorer::cfdSoundHandler* soundHandler;

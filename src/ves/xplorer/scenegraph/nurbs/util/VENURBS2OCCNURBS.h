@@ -51,9 +51,16 @@
 #include <Geom_BSplineSurface.hxx>
 
 #include <ves/VEConfig.h>
-namespace NURBS
+
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
+{
+namespace util
 {
 ///???
 class VE_NURBS_UTILS_EXPORTS VENURBS2OCCNURBS
@@ -66,10 +73,10 @@ public:
 
    ///Get a VE NURBS patch and return an OCC BSpline Surface
    ///\param veNURBSSurface NURBS surface to be converted
-   Geom_BSplineSurface* GetOCCNURBSSurface( NURBS::NURBSSurface* veNURBSSurface )
+   Geom_BSplineSurface* GetOCCNURBSSurface( ves::xplorer::scenegraph::nurbs::NURBSSurface* veNURBSSurface )
    {
-      NURBS::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
-      NURBS::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
+      ves::xplorer::scenegraph::nurbs::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
+      ves::xplorer::scenegraph::nurbs::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
       std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
       std::vector< double > uKnots = uKnotVector.GetDistinctKnotVector();
       std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
@@ -99,7 +106,7 @@ public:
       }
       
       //Get control points
-      std::vector< std::vector<NURBS::ControlPoint> > points = veNURBSSurface->GetControlPoints();
+      std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > points = veNURBSSurface->GetControlPoints();
       TColgp_Array2OfPnt Poles( 1, points.at( 0 ).size(), 1, points.size() );
       TColStd_Array2OfReal Weights( 1, points.at( 0 ).size(), 1, points.size() );
       double X = 0;
@@ -129,5 +136,9 @@ public:
 };
 }
 }
+}
+}
+}
+
 #endif //VE_NURBS_2_OCC_NURBS_H
 

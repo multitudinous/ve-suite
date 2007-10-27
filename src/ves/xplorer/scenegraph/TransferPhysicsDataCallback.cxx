@@ -38,7 +38,7 @@
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btRigidBody.h>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ void TransferPhysicsDataCallback::SetbtRigidBody( btRigidBody* transform )
 ////////////////////////////////////////////////////////////////////////////////
 void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
-    osg::ref_ptr< VE_SceneGraph::DCS > dcs = static_cast< VE_SceneGraph::DCS* >( node );
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs = static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
     if( dcs.valid() && m_btBody )
     {

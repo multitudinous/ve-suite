@@ -63,7 +63,7 @@
 using namespace gmtl;
 using namespace VE_Xplorer;
 using namespace ves::xplorer::util;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 using namespace ves::open::xml;
 
@@ -110,7 +110,7 @@ cfdQuatCamHandler::cfdQuatCamHandler() :
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::SetDCS(VE_SceneGraph::DCS* worldDCS)
+void cfdQuatCamHandler::SetDCS(ves::xplorer::scenegraph::DCS* worldDCS)
 {
    _worldDCS = worldDCS;
 }
@@ -120,7 +120,7 @@ cfdQuatCamHandler::~cfdQuatCamHandler( void )
    ///empty destrutor?
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::LoadData( VE_SceneGraph::DCS* worldDCS)
+void cfdQuatCamHandler::LoadData( ves::xplorer::scenegraph::DCS* worldDCS)
 {
    Matrix44d vjm = worldDCS->GetMat();
    QuatCams.push_back(new cfdQuatCam(vjm, worldDCS->GetVETranslationArray()));
@@ -331,7 +331,7 @@ void cfdQuatCamHandler::ClearQuaternionData()
    }   
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::Relocate( VE_SceneGraph::DCS* worldDCS )
+void cfdQuatCamHandler::Relocate( ves::xplorer::scenegraph::DCS* worldDCS )
 {
    Matrix44d vjm;
 

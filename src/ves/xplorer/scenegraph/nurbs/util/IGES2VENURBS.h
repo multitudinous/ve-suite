@@ -58,9 +58,16 @@
 #include <vector>
 
 #include <ves/VEConfig.h>
-namespace NURBS
+
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
+{
+namespace util
 {
 ///???
 class VE_NURBS_UTILS_EXPORTS IGES2VENURBS
@@ -73,9 +80,9 @@ public:
 
    ///Get a filename for an IGES file and return a vector of VE NURBS Surfaces
    ///\param igesFileName IGES filename to be converted
-   std::vector< NURBS::NURBSSurface* > GetVectorOfVENURBSSurface( std::string igesFileName )
+   std::vector< ves::xplorer::scenegraph::nurbs::NURBSSurface* > GetVectorOfVENURBSSurface( std::string igesFileName )
    {
-      std::vector< NURBS::NURBSSurface* > surfaceVector;
+      std::vector< ves::xplorer::scenegraph::nurbs::NURBSSurface* > surfaceVector;
       OCCNURBS2VENURBS occConverter;
       IGESToBRep_BasicSurface surfaceConverter;
       // Read the file
@@ -92,7 +99,7 @@ public:
          Handle_Geom_BSplineSurface tempPointer = GeomConvert::SurfaceToBSplineSurface( tempGeomSurface );
          //Handle_Geom_BSplineSurface tempPointer = surfaceConverter.TransferBSplineSurface( Handle(IGESGeom_BSplineSurface) igesData );
          //IGESConvGeom
-         NURBS::NURBSSurface* temp = occConverter.GetVENURBSSurface( tempPointer );
+         ves::xplorer::scenegraph::nurbs::NURBSSurface* temp = occConverter.GetVENURBSSurface( tempPointer );
          surfaceVector.push_back( temp );
       }
       /*bsplineSurface = IGESToBRep_BasicSurface.TransferBSplineSurface();
@@ -103,5 +110,9 @@ public:
 };
 }
 }
+}
+}
+}
+
 #endif //IGES_2_VE_NURBS_H
 

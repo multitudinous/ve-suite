@@ -38,7 +38,7 @@
 #include <algorithm>
 #include <string>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 Switch::Switch()
 {
@@ -152,7 +152,7 @@ int Switch::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Switch::SearchChild( VE_SceneGraph::SceneNode* searchChild )
+bool Switch::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
 #ifdef _OPENSG
 	
@@ -181,7 +181,7 @@ osg::Node* Switch::GetChild( unsigned int position )
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::traverse( osg::NodeVisitor& nv )
 {
-    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
 
     if( technique )
     {

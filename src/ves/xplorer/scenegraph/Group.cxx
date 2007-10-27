@@ -46,7 +46,7 @@
 #include <algorithm>
 #include <string>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Group::Group( const Group& group, const osg::CopyOp& copyop )
@@ -140,7 +140,7 @@ int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Group::SearchChild( VE_SceneGraph::SceneNode* searchChild )
+bool Group::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
 #ifdef _OSG
 	return this->containsNode( dynamic_cast< osg::Node* >(searchChild) );
@@ -192,7 +192,7 @@ void Group::ToggleDisplay( std::string onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void Group::traverse( osg::NodeVisitor& nv )
 {
-    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
 
     if( technique )
     {

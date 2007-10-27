@@ -53,9 +53,15 @@ cfdExecutive API
 #include <string>
 #include <vector>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class Group;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -161,7 +167,7 @@ private:
    //cfdDashboard* _dashBoard;
    //cfdInteractiveGeometry* _geometry;
    Body_UI_i* ui_i;
-   osg::ref_ptr< VE_SceneGraph::Group > _masterNode;
+   osg::ref_ptr< ves::xplorer::scenegraph::Group > _masterNode;
 
    bool _doneWithCalculations;
    bool updateNetworkString;

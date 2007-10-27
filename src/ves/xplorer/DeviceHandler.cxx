@@ -61,7 +61,7 @@ using namespace VE_Xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
-m_activeDCS( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() ),
+m_activeDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
 selectedDCS( 0 ),
 device_mode( "World Navigation" ),
 center_point( 0, 2, 0 ),
@@ -155,7 +155,7 @@ void DeviceHandler::SetDeviceMode( std::string mode )
 
     if( device_mode == "World Navigation" )
     {
-        m_activeDCS = VE_SceneGraph::SceneManager::instance()->
+        m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveSwitchNode();
         active_device->SetActiveDCS( m_activeDCS.get() );
     }
@@ -196,7 +196,7 @@ void DeviceHandler::SetCenterPointJumpMode( std::string mode )
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
 {
-    m_activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
     active_device->SetActiveDCS( m_activeDCS.get() );
 
     selectedDCS = 0;
@@ -224,7 +224,7 @@ void DeviceHandler::ProcessDeviceEvents()
     }
 
     //Get the active dcs from the scenemanager
-    //m_activeDCS = VE_SceneGraph::SceneManager::instance()->GetActiveSwitchNode();
+    //m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
 
     //Get the selected dcs from the active device
     selectedDCS = active_device->GetSelectedDCS();

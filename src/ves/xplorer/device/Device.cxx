@@ -88,7 +88,7 @@ void Device::SetVECommand( Command* command )
 
     DataValuePairWeakPtr quatStartPosition = new DataValuePair();
     OneDDoubleArray* quatData = new OneDDoubleArray( 0 );
-    osg::Quat quat = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
+    osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
     quatData->AddElementToArray( quat[ 0 ] );
     quatData->AddElementToArray( quat[ 1 ] );
     quatData->AddElementToArray( quat[ 2 ] );
@@ -98,7 +98,7 @@ void Device::SetVECommand( Command* command )
 
     DataValuePairWeakPtr positionStartPosition = new DataValuePair();
     OneDDoubleArray* positionsData = new OneDDoubleArray( 0 );
-    osg::Vec3d trans = VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->getPosition();
+    osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getPosition();
     positionsData->AddElementToArray( trans[ 0 ] );
     positionsData->AddElementToArray( trans[ 1 ] );
     positionsData->AddElementToArray( trans[ 2 ] );
@@ -119,22 +119,22 @@ bool Device::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray )
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* Device::GetActiveDCS()
+ves::xplorer::scenegraph::DCS* Device::GetActiveDCS()
 {
     return activeDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetActiveDCS( VE_SceneGraph::DCS* dcs )
+void Device::SetActiveDCS( ves::xplorer::scenegraph::DCS* dcs )
 {
     activeDCS = dcs;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* Device::GetSelectedDCS()
+ves::xplorer::scenegraph::DCS* Device::GetSelectedDCS()
 {
     return selectedDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetSelectedDCS( VE_SceneGraph::DCS* dcs )
+void Device::SetSelectedDCS( ves::xplorer::scenegraph::DCS* dcs )
 {
     selectedDCS = dcs;
 }
@@ -174,7 +174,7 @@ void Device::ProcessSelection()
    intersect_visitor.addLineSegment( line_segment.get() );
 
    //Add IntersectVisitor to RootNode so that all geometry is checked and no transforms are applied to LineSegment
-   VE_SceneGraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
+   ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
 
    osgUtil::IntersectVisitor::HitList hit_list;
    hit_list = intersect_visitor.getHitList( line_segment.get() );

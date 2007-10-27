@@ -44,9 +44,16 @@
 
 #include <iostream>
 
-using namespace NURBS;
-namespace NURBS{
+using namespace ves::xplorer::scenegraph::nurbs;
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
+{
 /////////////////////////////////////////////////////////////
 ///Class for the control mesh drawable                     //
 /////////////////////////////////////////////////////////////
@@ -56,7 +63,7 @@ public:
    ///Constructor
    NURBSControlMesh(){m_hasSelectedControlPoint = false;}
 
-   NURBSControlMesh(std::vector<NURBS::ControlPoint>* controlPoints, 
+   NURBSControlMesh(std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>* controlPoints, 
                     unsigned int numU,
                     unsigned int numV,bool isSurface=false) 
    {
@@ -92,10 +99,10 @@ public:
 	  m_hasSelectedControlPoint = controlMesh.m_hasSelectedControlPoint;
    }
 
-   META_Object(NURBS,NURBS::NURBSControlMesh)
+   META_Object(NURBS,ves::xplorer::scenegraph::nurbs::NURBSControlMesh)
 
    ///Set the control points
-   void SetControlPoints(std::vector<NURBS::ControlPoint> controlPoints,
+   void SetControlPoints(std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
                          unsigned int numU,
                          unsigned int numV,bool isSurface=false)
    {
@@ -144,10 +151,10 @@ public:
    bool IsSelecting();
 
    ///Get the indexed control point
-   NURBS::ControlPoint& GetControlPoint(unsigned int index);
+   ves::xplorer::scenegraph::nurbs::ControlPoint& GetControlPoint(unsigned int index);
 
    ///Get the indexed control point
-   NURBS::ControlPoint& GetSelectedControlPoint();
+   ves::xplorer::scenegraph::nurbs::ControlPoint& GetSelectedControlPoint();
 
    // we need to set up the bounding box of the data too, so that the scene graph knows where this
    // objects is, for both positioning the camera at start up, and most importantly for culling.
@@ -181,21 +188,26 @@ protected:
    GLint _hits;///<Selected primitives	
    unsigned int _numUControlPoints;///<The number of control points in U direction.
    unsigned int _numVControlPoints;///<The number of control points in V direction.
-   std::vector<NURBS::ControlPoint>* _controlPoints;///<The control points
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>* _controlPoints;///<The control points
+
 };
 }
-///////////////////////////////////////////////////
+}
+}
+}
+
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::SetSelection(bool trueFalse)
 {
    _selection = trueFalse;
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool NURBSControlMesh::IsSelecting()
 {
    return _selection;
 }
-////////////////////////////////////////////////////////////////
-NURBS::ControlPoint& NURBSControlMesh::GetSelectedControlPoint()
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::nurbs::ControlPoint& NURBSControlMesh::GetSelectedControlPoint()
 {
    try
    {
@@ -206,12 +218,12 @@ NURBS::ControlPoint& NURBSControlMesh::GetSelectedControlPoint()
       std::cout<<"Invalid control point index."<<std::endl;
    }
 }
-//////////////////////////////////////////////////////////////////////////
-NURBS::ControlPoint& NURBSControlMesh::GetControlPoint(unsigned int index)
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::nurbs::ControlPoint& NURBSControlMesh::GetControlPoint(unsigned int index)
 {
    return _controlPoints->at(index);
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::_drawUCurves()const
 {
    //u iso-curves
@@ -228,7 +240,7 @@ void NURBSControlMesh::_drawUCurves()const
       glEnd();
    }
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::_drawVCurves()const
 {
    
@@ -246,7 +258,7 @@ void NURBSControlMesh::_drawVCurves()const
         
    }
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::_drawUVPoints()const
 {
    //u iso-curves  
@@ -278,14 +290,14 @@ void NURBSControlMesh::_drawUVPoints()const
       glDisable(GL_POINT_SMOOTH);
    }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::SetMousePosition(float xPosition,
                                         float yPosition)
 {
    _mouse[0] = (xPosition+1.0)*.5;
    _mouse[1] = (yPosition+1.0)*.5;
 }
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::Selection()const											
 {
    GLint viewport[4];
@@ -364,17 +376,17 @@ void NURBSControlMesh::Selection()const
    }
    hits = 0;
 }
-///////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::ResetSelection()
 {
    _selectedControlPointIndex = -1;
 }
-////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool NURBSControlMesh::IsControlPointSelected( )
 {
 	return m_hasSelectedControlPoint;
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
                                                      float dy,
                                                      float dz)
@@ -406,7 +418,7 @@ bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
    }
    return false;
 }
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void NURBSControlMesh::drawImplementation(osg::RenderInfo& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
@@ -444,7 +456,7 @@ void NURBSControlMesh::drawImplementation(osg::State& renderState) const
    }
    _drawUVPoints();
 }
-//////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::BoundingBox NURBSControlMesh::computeBound()const
 {
    osg::BoundingBox bbox;
@@ -458,8 +470,15 @@ osg::BoundingBox NURBSControlMesh::computeBound()const
    }
    return bbox;
 }
-/////////////////////////////////////////////////////////////
-namespace NURBS
+////////////////////////////////////////////////////////////////////////////////
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 ///???
 class TestControlPointCallback : public osg::NodeCallback 
@@ -492,7 +511,7 @@ class TestControlPointCallback : public osg::NodeCallback
                _time = referenceTime-_startTime;
                const float TwoPI=2.0f*osg::PI;
                const float phase = -_time/_period;
-               NURBS::ControlPoint* movingPoint =
+               ves::xplorer::scenegraph::nurbs::ControlPoint* movingPoint =
                        nurbsData->GetNURBS()->GetControlPoint(3);
 
                double dz = sinf(TwoPI*phase);
@@ -512,8 +531,18 @@ class TestControlPointCallback : public osg::NodeCallback
         double  _xphase;///<???
         float   _amplitude;///<???
 };
-   }
-namespace NURBS
+}
+}
+}
+}
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 ////////////////////////////////////////////////////////////////////
 ///Class for the tessellated surface mesh drawable                //
@@ -522,7 +551,7 @@ class VE_NURBS_EXPORTS NURBSTessellatedSurface: public osg::Drawable
 {
 public:
    ///Constructor
-   NURBSTessellatedSurface(NURBS::NURBSObject* nurbsObject=0)
+   NURBSTessellatedSurface(ves::xplorer::scenegraph::nurbs::NURBSObject* nurbsObject=0)
    {
       _nurbsObject = nurbsObject;
       setUseDisplayList(false);
@@ -536,10 +565,10 @@ public:
       _nurbsObject = tessSurf._nurbsObject;
    }
 
-   META_Object(VE_NURBS,NURBS::NURBSTessellatedSurface)
+   META_Object(VE_NURBS,ves::xplorer::scenegraph::nurbs::NURBSTessellatedSurface)
 
    ///Get the raw NURBS data
-   NURBS::NURBSObject* GetNURBSData();
+   ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBSData();
 
    // the draw immediate mode method is where the OSG wraps up the drawing of
    // of OpenGL primitives.
@@ -565,20 +594,24 @@ protected:
    void _tessellateCurve() const;
 
    ///Calculate the normal on the surface at point.
-   ///Should this be in the NURBS::NURBSSurface class?
+   ///Should this be in the ves::xplorer::scenegraph::nurbs::NURBSSurface class?
    ///\param index ???
    osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index)const;
 
-   NURBS::NURBSObject* _nurbsObject;///The NURBS representation
+   ves::xplorer::scenegraph::nurbs::NURBSObject* _nurbsObject;///The NURBS representation
 };
 }
-///////////////////////////////////////////////////////////
-NURBS::NURBSObject* NURBSTessellatedSurface::GetNURBSData()
+}
+}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::nurbs::NURBSObject* NURBSTessellatedSurface::GetNURBSData()
 {
    return _nurbsObject;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 void NURBSTessellatedSurface::drawImplementation(osg::RenderInfo& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
@@ -594,13 +627,13 @@ void NURBSTessellatedSurface::drawImplementation(osg::State& renderState) const
       _tessellateCurve();
    }
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::BoundingBox NURBSTessellatedSurface::computeBound()const
 {
    osg::BoundingBox bbox;
    if(_nurbsObject)
    {
-      std::vector<NURBS::ControlPoint> ctPts = _nurbsObject->ControlPoints();
+      std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> ctPts = _nurbsObject->ControlPoints();
       unsigned int nControlPoints = ctPts.size();
       for(unsigned int i = 0; i < nControlPoints; i++)
       {
@@ -609,6 +642,7 @@ osg::BoundingBox NURBSTessellatedSurface::computeBound()const
    }
    return bbox;
 }
+////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////   
 ///Tessellate the surface                       //
 //////////////////////////////////////////////////
@@ -672,6 +706,7 @@ void NURBSTessellatedSurface::_tessellateSurface()const
       glEnd();
    }
 }
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////
 ///Tessellate the curve                       //
 ////////////////////////////////////////////////
@@ -695,28 +730,25 @@ void NURBSTessellatedSurface::_tessellateCurve()const
    }
    glEnd();
 }	
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int index)const 
 {
    osg::Vec3 normal(0,1,0);
    if(_nurbsObject->GetMinimumDegree() > 1)
    //if(_nurbsObject->GetType() == NURBSObject::Surface)
    {
-      NURBS::NURBSSurface* surface = dynamic_cast<NURBS::NURBSSurface*>(_nurbsObject);
+      ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = dynamic_cast<ves::xplorer::scenegraph::nurbs::NURBSSurface*>(_nurbsObject);
       
-      NURBS::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at(index);
-      NURBS::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at(index);
-      NURBS::Point cross = dSdV^dSdU; 
+      ves::xplorer::scenegraph::nurbs::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at(index);
+      ves::xplorer::scenegraph::nurbs::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at(index);
+      ves::xplorer::scenegraph::nurbs::Point cross = dSdV^dSdU; 
       normal.set(cross.X(),cross.Y(),cross.Z());
       normal.normalize();
    }
    return normal;
 }
-
-////////////////////////////////////////////////
-///Constructor                                //
-////////////////////////////////////////////////
-NURBSNode::NURBSNode(NURBS::NURBSObject* object)
+////////////////////////////////////////////////////////////////////////////////
+NURBSNode::NURBSNode(ves::xplorer::scenegraph::nurbs::NURBSObject* object)
 {
    _nurbsObject = object;
    _isSelecting = false;
@@ -725,10 +757,10 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       
       _controlMeshGeode = new osg::Geode();
 
-      _controlMeshDrawable = new NURBS::NURBSControlMesh(&_nurbsObject->ControlPoints(),
+      _controlMeshDrawable = new ves::xplorer::scenegraph::nurbs::NURBSControlMesh(&_nurbsObject->ControlPoints(),
                                                          _nurbsObject->NumControlPoints("U"),
                                                          _nurbsObject->NumControlPoints("V"),
-                                (_nurbsObject->GetType()== NURBS::NURBSObject::Surface)?true:false);
+                                (_nurbsObject->GetType()== ves::xplorer::scenegraph::nurbs::NURBSObject::Surface)?true:false);
 
       _controlMeshGeode->addDrawable(_controlMeshDrawable.get());
       _controlMeshGeode->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
@@ -738,7 +770,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       addChild(_controlMeshGeode.get());
 
       _triangulatedSurfaceGeode = new osg::Geode();
-      _triangulatedSurfaceDrawable = new NURBS::NURBSTessellatedSurface(_nurbsObject);
+      _triangulatedSurfaceDrawable = new ves::xplorer::scenegraph::nurbs::NURBSTessellatedSurface(_nurbsObject);
       _triangulatedSurfaceGeode->addDrawable(_triangulatedSurfaceDrawable.get());
 
       osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
@@ -751,9 +783,7 @@ NURBSNode::NURBSNode(NURBS::NURBSObject* object)
       //setUpdateCallback(new TestControlPointCallback(1.0));
    }
 }
-///////////////////////////////
-///Destructor                //
-///////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 NURBSNode::~NURBSNode()
 {
     ;
@@ -763,6 +793,7 @@ NURBSNode::NURBSNode( const NURBSNode& input, const osg::CopyOp& copyop )
 {
     ;
 }
+////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////
 ///Show the triangulated wireframe surface //
 /////////////////////////////////////////////
@@ -770,7 +801,7 @@ void NURBSNode::ViewWireframe(bool trueFalse)
 {
    _wireframeView = trueFalse;
 }
-///////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSNode::MoveSelectedControlPoint(float dx,
                                          float dy,
                                          float dz)
@@ -785,13 +816,15 @@ void NURBSNode::MoveSelectedControlPoint(float dx,
       }
    }
 }
+////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////
 ///Get the original surface            //
 /////////////////////////////////////////
-NURBS::NURBSObject* NURBSNode::GetNURBS()
+ves::xplorer::scenegraph::nurbs::NURBSObject* NURBSNode::GetNURBS()
 {
    return _nurbsObject;
 }
+////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////
 ///Get the osg::Geometry for the surface     //
 ///////////////////////////////////////////////
@@ -803,6 +836,7 @@ osg::Geode* NURBSNode::GetTriangulatedSurface()
    }
    return 0;
 }
+////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////
 ///Get the control mesh              //
 ///////////////////////////////////////
@@ -814,7 +848,7 @@ osg::Geode* NURBSNode::GetControlMesh()
    }
    return 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////
 ///Draw the control mesh          //   
 ////////////////////////////////////
@@ -825,7 +859,7 @@ void NURBSNode::UpdateControlMesh()
    _controlMeshDrawable->dirtyBound();
    //_controlMeshDrawable->dirtyDisplayList();
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSNode::SetSelectionStatus(bool trueFalse)
 {
    _isSelecting = trueFalse;
@@ -839,7 +873,7 @@ void NURBSNode::SetSelectionStatus(bool trueFalse)
       _controlMeshDrawable->SetSelection(_isSelecting);
    }
 }
-////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void NURBSNode::SetMousePosition(float xPosition,
                                  float yPosition)
 {
@@ -848,16 +882,17 @@ void NURBSNode::SetMousePosition(float xPosition,
       _controlMeshDrawable->SetMousePosition(xPosition,yPosition);
    }
 }
-////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool NURBSNode::IsControlPointSelected()
 {
 	return _controlMeshDrawable->IsControlPointSelected();
 }
-/////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool NURBSNode::IsSelecting()
 {
    return _isSelecting;
 }
+////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////
 ///Calculate the surface normal at a point                           //
 ///////////////////////////////////////////////////////////////////////
@@ -865,7 +900,7 @@ osg::Vec3 NURBSNode::_calculateSurfaceNormalAtPoint(unsigned int index)
 {
    return osg::Vec3(0.,1.,0.);
 }
-///////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::BoundingSphere NURBSNode::computeBound()const
 {
    if(_controlMeshDrawable.valid())
@@ -874,4 +909,4 @@ osg::BoundingSphere NURBSNode::computeBound()const
    }
    return osg::BoundingSphere();
 }
-
+////////////////////////////////////////////////////////////////////////////////

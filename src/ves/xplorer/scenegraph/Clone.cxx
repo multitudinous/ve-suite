@@ -46,78 +46,80 @@
 #include <typeinfo>
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Clone::Clone( void )
+Clone::Clone()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Clone::Clone( osg::Node* original )
 {
-   CloneNode( original );
+    CloneNode( original );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Clone::~Clone( void )
+Clone::~Clone()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::CloneNode( osg::Node* original )
 {
-   if( !m_cloneTransform.valid() )
-   {
-	   m_cloneTransform = new VE_SceneGraph::DCS();
-   }
-   
-   //Deep copy nodes so that picking is accurate and so that physics will work properly in the future
-   if( dynamic_cast< VE_SceneGraph::DCS* >( original ) )
-   {
-      m_cloneTransform = new VE_SceneGraph::DCS( *static_cast< VE_SceneGraph::DCS* >( original ), osg::CopyOp::DEEP_COPY_NODES );
-   }
-   else if( dynamic_cast< osg::Geode* >( original ) )
-   {
-      m_cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), osg::CopyOp::DEEP_COPY_NODES ) );
-   }
-   else
-   {
-      std::cout << "ERROR : Cast not present " << std::endl;
-      std::cout << typeid( *original ).name() << std::endl;
-   }
+    if( !m_cloneTransform.valid() )
+    {
+        m_cloneTransform = new ves::xplorer::scenegraph::DCS();
+    }
+
+    //Deep copy nodes so that picking is accurate and so that physics will work properly in the future
+    if( dynamic_cast< ves::xplorer::scenegraph::DCS* >( original ) )
+    {
+        m_cloneTransform = new ves::xplorer::scenegraph::DCS(
+            *static_cast< ves::xplorer::scenegraph::DCS* >( original ),
+             osg::CopyOp::DEEP_COPY_NODES );
+    }
+    else if( dynamic_cast< osg::Geode* >( original ) )
+    {
+        m_cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), osg::CopyOp::DEEP_COPY_NODES ) );
+    }
+    else
+    {
+        std::cout << "ERROR : Cast not present " << std::endl;
+        std::cout << typeid( *original ).name() << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::SetTranslationArray( double* translation )
 {
-   if( m_cloneTransform.valid() )
-   {
-      m_cloneTransform->SetTranslationArray( translation );
-   }
+    if( m_cloneTransform.valid() )
+    {
+        m_cloneTransform->SetTranslationArray( translation );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::SetRotationArray( double* rotation )
 {
-   if( m_cloneTransform.valid() )
-   {
-      m_cloneTransform->SetRotationArray( rotation );
-   }
+    if( m_cloneTransform.valid() )
+    {
+        m_cloneTransform->SetRotationArray( rotation );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Clone::SetScaleArray( double* scale )
 {
-   if( m_cloneTransform.valid() )
-   {
-      m_cloneTransform->SetScaleArray( scale );
-   }
+    if( m_cloneTransform.valid() )
+    {
+        m_cloneTransform->SetScaleArray( scale );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* Clone::GetClonedGraph( void )
+ves::xplorer::scenegraph::DCS* Clone::GetClonedGraph()
 {
-   if( m_cloneTransform.valid() )
-   {
-      return m_cloneTransform.get();
-   }
+    if( m_cloneTransform.valid() )
+    {
+        return m_cloneTransform.get();
+    }
 
-   return 0;
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

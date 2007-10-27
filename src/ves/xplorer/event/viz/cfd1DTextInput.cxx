@@ -41,12 +41,12 @@
 #include <ves/xplorer/cfdDebug.h>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 cfd1DTextInput::cfd1DTextInput( void ):DCS()
 {
-   this->geode = new VE_SceneGraph::Geode();
-	(( VE_SceneGraph::DCS* )this)->AddChild( this->geode.get() );
+   this->geode = new ves::xplorer::scenegraph::Geode();
+	(( ves::xplorer::scenegraph::DCS* )this)->AddChild( this->geode.get() );
 
    // Do we need to initialize this->text here?
    // If this->text is required, it should probably be a constructor argument
@@ -58,9 +58,9 @@ cfd1DTextInput::~cfd1DTextInput( void )
    //                       << std::endl << vprDEBUG_FLUSH;
 }
 
-VE_SceneGraph::DCS* cfd1DTextInput::getpfDCS( void )
+ves::xplorer::scenegraph::DCS* cfd1DTextInput::getpfDCS( void )
 {
-   return (VE_SceneGraph::DCS*)this;
+   return (ves::xplorer::scenegraph::DCS*)this;
 }
 
 void cfd1DTextInput::SetFilename( std::string text )

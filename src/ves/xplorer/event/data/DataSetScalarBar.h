@@ -55,9 +55,15 @@ using osgSim::ScalarBar;
 #include <osg/ref_ptr>
 #include <osg/Geode>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class DCS;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -85,7 +91,7 @@ public:
    /// cleanup and add the scalar bar to the dcs
    void AddScalarBarToGroup( void );
    /// Get the scalar bar that was created
-	VE_SceneGraph::DCS* GetScalarBar( void );
+	ves::xplorer::scenegraph::DCS* GetScalarBar( void );
    ///Create the osg scalar bar
    osg::ref_ptr< ScalarBar > CreateScalarBar( void );
    // Create a custom scalar printer
@@ -132,7 +138,7 @@ public:
    };
 
 private:
-   osg::ref_ptr< VE_SceneGraph::DCS > scalarBarDCS; ///<Scalar bar coordinate system
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > scalarBarDCS; ///<Scalar bar coordinate system
    double bbox[ 6 ]; ///<Bounding box
 };
 }

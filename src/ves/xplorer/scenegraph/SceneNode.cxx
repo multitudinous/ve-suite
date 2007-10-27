@@ -43,23 +43,23 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::SceneNode()
 :
 m_activeTechnique( "Default" )
 {
-    AddTechnique( "Default", new VE_SceneGraph::DefaultTechnique() );
+    AddTechnique( "Default", new ves::xplorer::scenegraph::DefaultTechnique() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::~SceneNode()
 {
     //Delete techniques in map
-    for( std::map< std::string, VE_SceneGraph::Technique* >::iterator 
+    for( std::map< std::string, ves::xplorer::scenegraph::Technique* >::iterator 
          iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
     {
-        VE_SceneGraph::Technique* tempTech = iter->second;
+        ves::xplorer::scenegraph::Technique* tempTech = iter->second;
         delete tempTech;
     }
 
@@ -68,15 +68,14 @@ SceneNode::~SceneNode()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::DirtyTechniques()
 {
-    //Set properties in Devices
-    std::map< std::string, VE_SceneGraph::Technique* >::const_iterator itr;
+    std::map< std::string, ves::xplorer::scenegraph::Technique* >::const_iterator itr;
     for( itr = m_techniques.begin(); itr != m_techniques.end(); ++itr )
     {
         itr->second->DirtyPasses();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneNode::AddTechnique(  std::string name, VE_SceneGraph::Technique* technique  )
+void SceneNode::AddTechnique(  std::string name, ves::xplorer::scenegraph::Technique* technique  )
 {
     m_techniques[ std::string( name ) ] = technique;
 }
@@ -86,12 +85,12 @@ void SceneNode::SetTechnique( std::string name )
     m_activeTechnique = name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Technique* SceneNode::GetTechnique( std::string name )
+ves::xplorer::scenegraph::Technique* SceneNode::GetTechnique( std::string name )
 {
     return m_techniques[ name ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Technique* SceneNode::GetActiveTechnique()
+ves::xplorer::scenegraph::Technique* SceneNode::GetActiveTechnique()
 {
     return m_techniques[ m_activeTechnique ];
 }

@@ -40,10 +40,10 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-UpdateIDOnChildrenVisitor::UpdateIDOnChildrenVisitor( VE_SceneGraph::DCS* node, std::string id )
+UpdateIDOnChildrenVisitor::UpdateIDOnChildrenVisitor( ves::xplorer::scenegraph::DCS* node, std::string id )
 :
 NodeVisitor( TRAVERSE_ALL_CHILDREN ),
 modelGUID( id )

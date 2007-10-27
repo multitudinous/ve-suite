@@ -130,7 +130,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         //add 3d blocks
 		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("3DIcons/"+model->GetIconFilename()+".obj");
 		
-		//osg::ref_ptr<VE_SceneGraph::TextTexture> text = new VE_SceneGraph::TextTexture();
+		//osg::ref_ptr<ves::xplorer::scenegraph::TextTexture> text = new ves::xplorer::scenegraph::TextTexture();
 		//text->UpdateText(model->GetModelName());
 		
 		//add red block id if block .ive file is not found
@@ -151,7 +151,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 		loadedModel->setName(model->GetModelName());
 
 		//calculate the original size of the icon
-		VE_SceneGraph::Utilities::ComputeBoundsVisitor visitor;
+		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor;
 		loadedModel->accept(visitor);
 		osg::BoundingBox bounds = visitor.getBoundingBox();
 		float dx = bounds.xMax() - bounds.xMin();
@@ -360,7 +360,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
     //Add phong shading to the geodes
     //osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
-    //VE_SceneGraph::Utilities::PhongLoader phongShader;
+    //ves::xplorer::scenegraph::util::PhongLoader phongShader;
     //phongShader.SetStateSet( geodeProperties.get() );
     //phongShader.SyncShaderAndStateSet();
 

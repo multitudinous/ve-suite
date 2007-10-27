@@ -43,7 +43,7 @@
 #include <algorithm>
 #include <string>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 // forward declare functions to use later.
 bool VEGroup_readLocalData(osg::Object& obj, osgDB::Input& fr);
 bool VEGroup_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
@@ -51,9 +51,9 @@ bool VEGroup_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
 // register the read and write functions with the osgDB::Registry.
 osgDB::RegisterDotOsgWrapperProxy ve_GroupProxy
 (
-    new VE_SceneGraph::Group,
+    new ves::xplorer::scenegraph::Group,
     "Group",
-    "Object Node VE_SceneGraph::Group",
+    "Object Node ves::xplorer::scenegraph::Group",
     &VEGroup_readLocalData,
     &VEGroup_writeLocalData
 );
@@ -62,7 +62,7 @@ bool VEGroup_readLocalData(osg::Object& obj, osgDB::Input& fr)
 {
     bool iteratorAdvanced = false;
 
-    VE_SceneGraph::Group& group = static_cast<VE_SceneGraph::Group&>(obj);
+    ves::xplorer::scenegraph::Group& group = static_cast<ves::xplorer::scenegraph::Group&>(obj);
 
     int num_children;
     if (fr[0].matchWord("num_children") &&
@@ -87,7 +87,7 @@ bool VEGroup_readLocalData(osg::Object& obj, osgDB::Input& fr)
 bool VEGroup_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
 {
    ///call the base class writer
-   const VE_SceneGraph::Group& group = static_cast<const VE_SceneGraph::Group&>(obj);
+   const ves::xplorer::scenegraph::Group& group = static_cast<const ves::xplorer::scenegraph::Group&>(obj);
     //fw.writeObject(group);
     fw.indent() << "num_children " << group.getNumChildren() << std::endl;
     for(unsigned int i=0;i<group.getNumChildren();++i)

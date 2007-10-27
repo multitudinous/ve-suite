@@ -82,10 +82,10 @@
 
 using namespace gmtl; //added by Gengxun
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 
-cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_SceneGraph::Group* rootNode )
+cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldDCS, ves::xplorer::scenegraph::Group* rootNode )
 {
    veCommand = 0;
    cursorId = NONE;
@@ -142,8 +142,8 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_Scen
    this->arrowActorS    = vtkActor::New();
    this->arrowGlyphS    = vtkGlyph3D::New();
 
-   this->cursorGeode = new VE_SceneGraph::Geode();
-   this->cursorDCS = new VE_SceneGraph::DCS();
+   this->cursorGeode = new ves::xplorer::scenegraph::Geode();
+   this->cursorDCS = new ves::xplorer::scenegraph::DCS();
    cursorDCS->SetName( "cfdCursor" );
    double tempArray[ 3 ];
    tempArray[ 0 ] = xscale;
@@ -152,7 +152,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::DCS* worldDCS, VE_Scen
 
    this->cursorDCS->SetScaleArray( tempArray );
 
-   cursorScaleDCS = new VE_SceneGraph::DCS();
+   cursorScaleDCS = new ves::xplorer::scenegraph::DCS();
    cursorDCS->AddChild( cursorScaleDCS.get() );
 
    this->pReso = 2;  // Set the number of x-y subdivisions in the plane
@@ -223,7 +223,7 @@ void cfdCursor::Initialize( double x[3], double v[3] )
    this->BuildPlaneSource();
 
    this->cursorGeode->TranslateToGeode( this->sphereActor );
-	(( VE_SceneGraph::DCS* )this->cursorDCS->GetChild( 0 ))->AddChild( this->cursorGeode.get() );
+	(( ves::xplorer::scenegraph::DCS* )this->cursorDCS->GetChild( 0 ))->AddChild( this->cursorGeode.get() );
 }
 
 int cfdCursor::GetCursorID( void )
@@ -535,7 +535,7 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
    this->SetTranslation();
 }
 
-VE_SceneGraph::DCS* cfdCursor::GetDCS()
+ves::xplorer::scenegraph::DCS* cfdCursor::GetDCS()
 {
    return this->cursorDCS.get();
 }
@@ -726,7 +726,7 @@ void cfdCursor::SetTranslation( void )
       combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
 
-		dynamic_cast< VE_SceneGraph::DCS* >(this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
+		dynamic_cast< ves::xplorer::scenegraph::DCS* >(this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
       Matrix44d dataSetMatrix = this->activeDataSetDCS->GetMat();
 
       totalMat = worldMat * dataSetMatrix;
@@ -818,7 +818,7 @@ double* cfdCursor::ReturnLocalLocationVector( void )
    return this->localLocation;
 }
 
-void cfdCursor::SetActiveDataSetDCS( VE_SceneGraph::DCS* myDCS )
+void cfdCursor::SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS )
 {
    this->activeDataSetDCS = myDCS;
 }

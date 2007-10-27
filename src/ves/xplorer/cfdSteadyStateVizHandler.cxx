@@ -86,7 +86,7 @@
 vprSingletonImpLifetime( VE_Xplorer::cfdSteadyStateVizHandler, 10 );
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
@@ -151,7 +151,7 @@ void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*
-VE_SceneGraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
+ves::xplorer::scenegraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
 {
    return this->_activeTempAnimation;
 }
@@ -243,7 +243,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
+            temp->SetWorldNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
             temp->SetGeodes( _activeObject );
             temp->AddGraphicsObjectToSceneGraph();
             
@@ -278,7 +278,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             {
                // we mirror the dataset in two places
                // once here for data viz and once in modelhandler for geom
-               VE_SceneGraph::Group* temp = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
+               ves::xplorer::scenegraph::Group* temp = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
                cfdModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
             }*/
             this->_activeObject = NULL;

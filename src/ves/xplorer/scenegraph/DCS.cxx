@@ -59,29 +59,29 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-DCS::DCS( void )
+DCS::DCS()
 :
 m_btBody( 0 )
 {
     double temp[3];
-    for( unsigned int i = 0; i < 3; i++ )
+    for( unsigned int i = 0; i < 3; ++i )
     {
         temp[i] = 0.0f;
     }
 
     SetTranslationArray( temp );
 
-    for( unsigned int i = 0; i < 3; i++ )
+    for( unsigned int i = 0; i < 3; ++i )
     {
         temp[i] = 0.0f;
     }
 
     SetRotationArray( temp );
 
-    for( unsigned int i = 0; i < 3; i++ )
+    for( unsigned int i = 0; i < 3; ++i )
     {
         temp[i] = 1.0f;
     }
@@ -95,7 +95,7 @@ m_btBody( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique
+    AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
         ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ m_btBody( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique
+    AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
         ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ m_btBody( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique
+    AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
         ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -133,10 +133,10 @@ DCS::~DCS()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double* DCS::GetVETranslationArray( void )
+double* DCS::GetVETranslationArray()
 {
     osg::Vec3d trans = this->getPosition();
-    for( size_t i = 0; i < 3; i++ )
+    for( size_t i = 0; i < 3; ++i )
     {
         m_Translation[i] = trans[i];
     }
@@ -144,7 +144,7 @@ double* DCS::GetVETranslationArray( void )
     return m_Translation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double* DCS::GetRotationArray( void )
+double* DCS::GetRotationArray()
 {
     osg::Quat quat = this->getAttitude();
 
@@ -159,10 +159,10 @@ double* DCS::GetRotationArray( void )
     return m_Rotation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double* DCS::GetScaleArray( void )
+double* DCS::GetScaleArray()
 {
     osg::Vec3d tempScale = this->getScale();
-    for ( size_t i = 0; i < 3; i++ )
+    for ( size_t i = 0; i < 3; ++i )
     {
         m_Scale[i] = tempScale[i];
     }
@@ -265,7 +265,7 @@ void DCS::SetScaleArray( double* scale )
     SetScaleArray( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
-gmtl::Matrix44d DCS::GetMat( void )
+gmtl::Matrix44d DCS::GetMat()
 {
 #ifdef _OSG
     osg::Matrixd scaleMat = osg::Matrixd::scale( this->getScale() );
@@ -397,7 +397,7 @@ void DCS::InsertChild( int position, SceneNode* child )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-int DCS::GetNumChildren( void )
+int DCS::GetNumChildren()
 {
 #ifdef _OSG
     return this->getNumChildren();
@@ -440,7 +440,7 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool DCS::SearchChild( VE_SceneGraph::SceneNode* searchChild )
+bool DCS::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
 #ifdef _OSG
     return this->containsNode( dynamic_cast< osg::Node* >( searchChild ) );
@@ -523,7 +523,7 @@ void DCS::SetbtRigidBody( btRigidBody* rigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    VE_SceneGraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
 
     if( technique )
     {

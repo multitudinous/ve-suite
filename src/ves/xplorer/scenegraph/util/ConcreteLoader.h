@@ -37,7 +37,7 @@
 /*!\file ConcreteLoader.h
   ConcreteLoader API
   */
-/*!\class VE_SceneGraph::Utilities::ConcreteLoader
+/*!\class ves::xplorer::scenegraph::util::ConcreteLoader
  * Class that creates an OSG StateSet representing
  * a procedrual concrete shading glsl program.
  */
@@ -50,13 +50,17 @@
 ///////////////////////////////////////////////////////////////////////
 //this class is used to create a stateset representing a phong shader// 
 ///////////////////////////////////////////////////////////////////////
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class PerlinNoiseTexture;
 class VE_SCENEGRAPH_UTILS_EXPORTS ConcreteLoader : 
-	public VE_SceneGraph::Utilities::ShaderHelper
+	public ves::xplorer::scenegraph::util::ShaderHelper
 {
 public:
    ///Constructor
@@ -84,5 +88,8 @@ protected:
 };
 }
 }
+}
+}
+
 #endif
 #endif// PHONG_LOADER_H

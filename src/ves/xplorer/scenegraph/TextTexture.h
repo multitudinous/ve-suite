@@ -37,11 +37,11 @@
 *Text Texture API that renders text offscreen to a texture
 */
 
-/*!\class VE_SceneGraph::TextTexture
+/*!\class ves::xplorer::scenegraph::TextTexture
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -69,9 +69,13 @@ namespace osgText
    class Text;
 }
 
-namespace VE_SceneGraph
+namespace ves
 {
-class VE_SCENEGRAPH_EXPORTS TextTexture : public VE_SceneGraph::Geode
+namespace xplorer
+{
+namespace scenegraph
+{
+class VE_SCENEGRAPH_EXPORTS TextTexture : public ves::xplorer::scenegraph::Geode
 {
 public:
    ///Constructor
@@ -86,7 +90,7 @@ public:
    TextTexture( const TextTexture& ttexture, 
                 const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
    
-   META_Node( VE_SceneGraph, TextTexture );
+   META_Node( ves::xplorer::scenegraph, TextTexture );
 
    ///Set the color of the text
    ///\param color Text color
@@ -131,6 +135,8 @@ protected:
    //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
 
 };
+}
+}
 }
 
 #endif//_OSG

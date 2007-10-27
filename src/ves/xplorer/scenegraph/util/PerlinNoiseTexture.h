@@ -35,9 +35,14 @@
 
 #include <osg/Texture>
 #include <osg/Image>
-namespace VE_SceneGraph
+
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 class PerlinNoiseTexture
 {
@@ -72,4 +77,7 @@ protected:
 };
 }
 }
+}
+}
+
 #endif //PERLIN_NOISE_TEXTURE_H

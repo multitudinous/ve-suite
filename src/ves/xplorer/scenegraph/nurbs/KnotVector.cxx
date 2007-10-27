@@ -34,7 +34,8 @@
 #include <iostream>
 #include <string>
 #include <cmath>
-using namespace NURBS;
+
+using namespace ves::xplorer::scenegraph::nurbs;
 
 ////////////////////////
 //Constructor         //

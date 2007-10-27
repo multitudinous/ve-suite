@@ -52,9 +52,15 @@ namespace VE_Xplorer
     class cfdCommandArray;
 }
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 	class CADEntity;
+}
+}
 }
 
 namespace VE_EVENTS
@@ -113,14 +119,14 @@ public:
    //cfdScalarBarActor* GetScalarBar(void);
    ///Register CAD file with so that other models can copy files if needed
    ///\param tempEntity File to be registered
-   void RegisterCADFile( VE_SceneGraph::CADEntity* tempEntity );
+   void RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity );
    ///Check and see if this cad file is already loaded
    ///\return The found cad file otherwise null
    ///\param filename The file name to grab
-   VE_SceneGraph::CADEntity* IsCADFileLoaded( std::string filename );
+   ves::xplorer::scenegraph::CADEntity* IsCADFileLoaded( std::string filename );
    ///Reset the map holding cad references
    ///\param tempEntity CAD file to try and remove from the map
-   void UnregisterCADFile( VE_SceneGraph::CADEntity* tempEntity );
+   void UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity );
 #ifdef _OSG
    //texture manager access
    ///Should this call be in the texture manager singleton not modelhandler
@@ -152,7 +158,7 @@ private:
     std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;
     ///This map connects filenames to GUIDs so that we can 
     ///figure out what CAD files should be copied
-    std::multimap< std::string, VE_SceneGraph::CADEntity* > m_filenameToCADMap;
+    std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;
 };
 }
 #endif

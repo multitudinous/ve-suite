@@ -48,16 +48,22 @@ cfd1DTextInput API
 #elif _PERFORMER
 #endif
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    class Geode;
+}
+}
 }
 
 class  vtkActor;
 
 namespace VE_Xplorer
 {
-   class cfd1DTextInput : public VE_SceneGraph::DCS
+   class cfd1DTextInput : public ves::xplorer::scenegraph::DCS
    {
       public:
          ///Constructor
@@ -65,7 +71,7 @@ namespace VE_Xplorer
          ///Destructor
          virtual ~cfd1DTextInput( void );
          ///get the Performer DCS (may need to remove)
-         VE_SceneGraph::DCS* getpfDCS( void );
+         ves::xplorer::scenegraph::DCS* getpfDCS( void );
          ///set transform values.
          ///\param scale The scale value.
          ///\param trans The translation value.
@@ -87,7 +93,7 @@ namespace VE_Xplorer
          std::string text;///<The string to hold the text.
          vtkActor*   actor;///<The VTKactor.
          //DCS*      dcs;
-			osg::ref_ptr< VE_SceneGraph::Geode > geode;///<The geode.  
+			osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.  
    };
 }
 #endif

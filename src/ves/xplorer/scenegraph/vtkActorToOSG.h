@@ -44,7 +44,12 @@
 #include <vtkActor.h>
 #include <vtkCellArray.h>
 #include <ves/VEConfig.h>
-namespace VE_SceneGraph
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
    // vtkActorToOSG - translates vtkActor to osg::Geode. If geode is NULL, new one
    //   will be created. Optional verbose parameter prints debugging and
@@ -53,5 +58,8 @@ namespace VE_SceneGraph
 
    osg::ref_ptr< osg::Geometry > processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
 }
+}
+}
+
 #endif
 #endif

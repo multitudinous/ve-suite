@@ -38,22 +38,40 @@
 /*!\file OCCNURBSFileReader.cxx
  * OCCNURBSFileReader Code
  */
-/*!\namespace NURBS::Utilities
+/*!\namespace ves::xplorer::scenegraph::nurbs::util
  * NURBS Utilities API namespace
  */
-/*!\class NURBS::Utilities::OCCNURBSFileReader
+/*!\class ves::xplorer::scenegraph::nurbs::util::OCCNURBSFileReader
  * Class that reads a NURBS patch file 
  * Created by the Star-2-OCC utility
  */
 #include <ves/VEConfig.h>
-namespace NURBS
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
    class NURBSSurface;
 }
+}
+}
+}
+
 #include <string>
-namespace NURBS
+
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
+{
+namespace util
 {
 ///???
 class VE_NURBS_UTILS_EXPORTS OCCNURBSFileReader
@@ -68,15 +86,19 @@ public:
    ///Read in a NURBS patch created by the NURBSPointCreator utility.
    ///
    ///The user is responsible for cleaning up the memory associated with
-   ///the returned NURBS::NURBSSurface.
+   ///the returned ves::xplorer::scenegraph::nurbs::NURBSSurface.
    ///\param star2occFile ???
-   NURBS::NURBSSurface* ReadPatchFile(std::string star2occFile);
+   ves::xplorer::scenegraph::nurbs::NURBSSurface* ReadPatchFile(std::string star2occFile);
 
 protected:
    std::string _patchFile;///<The original star-to-occ data file.
-   NURBS::NURBSSurface* _surfacePatch;///<The surface patch
+   ves::xplorer::scenegraph::nurbs::NURBSSurface* _surfacePatch;///<The surface patch
 };
 }
 }
+}
+}
+}
+
 #endif //OCC_NURBS_FILE_READER_H
 

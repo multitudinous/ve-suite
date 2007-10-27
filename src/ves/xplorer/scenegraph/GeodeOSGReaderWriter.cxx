@@ -46,9 +46,9 @@ bool VEGeode_writeLocalData(const Object& obj, Output& fw);
 // register the read and write functions with the osgDB::Registry.
 RegisterDotOsgWrapperProxy ve_GeodeProxy
 (
-    new VE_SceneGraph::Geode,
+    new ves::xplorer::scenegraph::Geode,
     "Geode",
-    "Object Node VE_SceneGraph::Geode",
+    "Object Node ves::xplorer::scenegraph::Geode",
     &VEGeode_readLocalData,
     &VEGeode_writeLocalData
 );
@@ -57,7 +57,7 @@ bool VEGeode_readLocalData(Object& obj, Input& fr)
 {
     bool iteratorAdvanced = false;
 
-    VE_SceneGraph::Geode& geode = static_cast< VE_SceneGraph::Geode&>(obj);
+    ves::xplorer::scenegraph::Geode& geode = static_cast< ves::xplorer::scenegraph::Geode&>(obj);
 
     int num_drawables;
     if ((fr[0].matchWord("num_drawables") || fr[0].matchWord("num_geosets")) &&

@@ -52,7 +52,7 @@
 #include <osg/ClipPlane>
 using namespace VE_Xplorer;
 /////////////////////////////////////////////////////////////////////////////////////////////
-ModelCADHandler::ModelCADHandler(VE_SceneGraph::DCS* rootNode)
+ModelCADHandler::ModelCADHandler(ves::xplorer::scenegraph::DCS* rootNode)
 {
     m_assemblyList["rootNode"] = rootNode;
     m_clipPlane = new osg::ClipPlane();
@@ -75,7 +75,7 @@ ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::~ModelCADHandler()
 {
-    std::map<std::string, VE_SceneGraph::CADEntity*>::iterator iter;
+    std::map<std::string, ves::xplorer::scenegraph::CADEntity*>::iterator iter;
     for ( iter = m_partList.begin(); iter != m_partList.end(); iter++ )
     {
         cfdModelHandler::instance()->UnregisterCADFile( iter->second );
@@ -87,7 +87,7 @@ ModelCADHandler::~ModelCADHandler()
     m_assemblyList.clear();
 
     for (std::map< std::string, 
-         VE_SceneGraph::Clone* >::iterator itr = m_cloneList.begin();
+         ves::xplorer::scenegraph::Clone* >::iterator itr = m_cloneList.begin();
          itr != m_cloneList.end(); itr++)
     {
         delete itr->second;
@@ -146,7 +146,7 @@ void ModelCADHandler::CreateClone(std::string cloneID,
         if ( GetAssembly( originalID ) )
         {
             m_cloneList[ cloneID ] = 
-                new VE_SceneGraph::Clone( GetAssembly( originalID ) );
+                new ves::xplorer::scenegraph::Clone( GetAssembly( originalID ) );
         }
     }
     else if( originalType == std::string( "Part" ) )
@@ -154,27 +154,27 @@ void ModelCADHandler::CreateClone(std::string cloneID,
         if ( GetPart( originalID ) )
         {
             m_cloneList[ cloneID ] = 
-                new VE_SceneGraph::Clone( GetPart(originalID )->GetNode()->GetNode() );
+                new ves::xplorer::scenegraph::Clone( GetPart(originalID )->GetNode()->GetNode() );
         }
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::CreateAssembly( std::string assemblyID )
 {
-    m_assemblyList[ assemblyID ] = new VE_SceneGraph::DCS();
+    m_assemblyList[ assemblyID ] = new ves::xplorer::scenegraph::DCS();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::CreatePart( std::string fileName, std::string partID, 
     std::string parentID )
 {
-    VE_SceneGraph::CADEntity* tempCAD = 
+    ves::xplorer::scenegraph::CADEntity* tempCAD = 
         cfdModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
     {
         ///If we have already loaded the parts
-        VE_SceneGraph::CADEntityHelper* tempNode = tempCAD->GetNode();
+        ves::xplorer::scenegraph::CADEntityHelper* tempNode = tempCAD->GetNode();
         m_partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( tempNode, 
+            new ves::xplorer::scenegraph::CADEntity( tempNode, 
                                           m_assemblyList[ parentID ].get() );
         vprDEBUG(vesDBG,1) << "|\t--Cloned new part--"
                             << std::endl << vprDEBUG_FLUSH;
@@ -184,7 +184,7 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
         ///If we have not loaded this part
         ///turn on occlusion culling by default
         m_partList[ partID ] = 
-            new VE_SceneGraph::CADEntity( fileName, m_assemblyList[ parentID ].get(), false, true );
+            new ves::xplorer::scenegraph::CADEntity( fileName, m_assemblyList[ parentID ].get(), false, true );
         vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
                             << std::endl << vprDEBUG_FLUSH;
     }
@@ -305,7 +305,7 @@ void ModelCADHandler::MakeCADRootTransparent()
    try
    {
       m_assemblyList[m_rootCADNodeID]->setStateSet( attribute.get() );
-      VE_SceneGraph::Utilities::OpacityVisitor 
+      ves::xplorer::scenegraph::util::OpacityVisitor 
           opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true );
    }
 
@@ -332,7 +332,7 @@ void ModelCADHandler::MakeCADRootOpaque()
       if( m_assemblyList[m_rootCADNodeID]->getStateSet() )
       {   
          m_assemblyList[ m_rootCADNodeID ]->getStateSet()->clear();
-         VE_SceneGraph::Utilities::OpacityVisitor 
+         ves::xplorer::scenegraph::util::OpacityVisitor 
              opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false );
       }
    }
@@ -405,16 +405,16 @@ void ModelCADHandler::AddAttributeToNode(std::string nodeID,
 {
 #ifdef _OSG
     vprDEBUG(vesDBG,1) <<"|\tModelCADHandler::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
-    osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute;
+    osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute;
 	std::map<std::string, osg::ref_ptr<osg::StateSet> >::iterator 
 		itr = m_globalAttributeList.find( newAttribute->GetAttributeName() ) ;
 	if( itr != m_globalAttributeList.end() )
 	{
-		attribute = dynamic_cast<VE_SceneGraph::Utilities::Attribute*>((*itr).second.get());
+		attribute = dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>((*itr).second.get());
 	}
 	else
 	{
-	   attribute = new VE_SceneGraph::Utilities::Attribute();
+	   attribute = new ves::xplorer::scenegraph::util::Attribute();
        attribute->CreateStateSetFromAttribute(newAttribute);
 	   m_globalAttributeList[newAttribute->GetAttributeName()] = attribute.get();
 	}
@@ -470,8 +470,8 @@ void ModelCADHandler::UpdateMaterialMode(std::string nodeID,
             if(foundAttribute->first == attributeName)
             {
                 ///update the material component
-                osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = 
-                              dynamic_cast<VE_SceneGraph::Utilities::Attribute*>(foundAttribute->second.get());
+                osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute = 
+                              dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>(foundAttribute->second.get());
                 if(attribute.valid())
                 {
                     attribute->UpdateMaterialMode(type,mode);
@@ -513,8 +513,8 @@ void ModelCADHandler::UpdateMaterialComponent(std::string nodeID,
              if(foundAttribute->first == attributeName)
              {
                 ///update the material component
-                osg::ref_ptr<VE_SceneGraph::Utilities::Attribute> attribute = 
-                              dynamic_cast<VE_SceneGraph::Utilities::Attribute*>
+                osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute = 
+                              dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>
                                 ( foundAttribute->second.get() );
                 if( attribute.valid() )
                 {
@@ -534,9 +534,9 @@ void ModelCADHandler::UpdateMaterialComponent(std::string nodeID,
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntity* ModelCADHandler::GetPart(std::string partID)
+ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart(std::string partID)
 {
-    std::map< std::string, VE_SceneGraph::CADEntity* >::iterator iter;
+    std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
     iter = m_partList.find( partID );
 
     if ( iter == m_partList.end() )
@@ -552,14 +552,14 @@ VE_SceneGraph::CADEntity* ModelCADHandler::GetPart(std::string partID)
     return m_partList[ partID ];
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* ModelCADHandler::GetAssembly(std::string assemblyID)
+ves::xplorer::scenegraph::DCS* ModelCADHandler::GetAssembly(std::string assemblyID)
 {
     return m_assemblyList[ assemblyID ].get();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Clone* ModelCADHandler::GetClone(std::string cloneID)
+ves::xplorer::scenegraph::Clone* ModelCADHandler::GetClone(std::string cloneID)
 {
-    std::map< std::string, VE_SceneGraph::Clone* >::iterator iter;
+    std::map< std::string, ves::xplorer::scenegraph::Clone* >::iterator iter;
     iter = m_cloneList.find( cloneID );
 
     if ( iter == m_cloneList.end() )
@@ -572,7 +572,7 @@ VE_SceneGraph::Clone* ModelCADHandler::GetClone(std::string cloneID)
 /////////////////////////////////////////////////////////////////////////////////////////////
 bool ModelCADHandler::PartExists(std::string partID)
 {
-    std::map<std::string,VE_SceneGraph::CADEntity*>::iterator foundPart;
+    std::map<std::string,ves::xplorer::scenegraph::CADEntity*>::iterator foundPart;
     foundPart = m_partList.find( partID );
 
     if( foundPart != m_partList.end() )
@@ -584,7 +584,7 @@ bool ModelCADHandler::PartExists(std::string partID)
 /////////////////////////////////////////////////////////////////////////////////////////////
 bool ModelCADHandler::AssemblyExists(std::string assemblyID)
 {
-    std::map< std::string, osg::ref_ptr< VE_SceneGraph::DCS > >::iterator 
+    std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >::iterator 
         foundAssembly;
     foundAssembly = m_assemblyList.find (assemblyID) ;
 
@@ -597,7 +597,7 @@ bool ModelCADHandler::AssemblyExists(std::string assemblyID)
 /////////////////////////////////////////////////////////////////////////////////////////////
 bool ModelCADHandler::CloneExists(std::string cloneID)
 {
-    std::map< std::string, VE_SceneGraph::Clone* >::iterator foundClone;
+    std::map< std::string, ves::xplorer::scenegraph::Clone* >::iterator foundClone;
     foundClone = m_cloneList.find( cloneID );
 
     if( foundClone != m_cloneList.end() )

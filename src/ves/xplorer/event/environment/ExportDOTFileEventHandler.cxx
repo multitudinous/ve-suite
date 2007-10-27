@@ -82,8 +82,8 @@ void ExportDOTFileEventHandler::Execute(XMLObject* veXMLObject)
         command->GetDataValuePair("Filename")->GetData( filename );
         // store the active geometry and viz objects as a pfb
         // (but not the sun, menu, laser, or text)
-        VE_SceneGraph::CreateGraphDOTVisitor dotCreator( 
-            VE_SceneGraph::SceneManager::instance()->GetRootNode(), filename );
+        ves::xplorer::scenegraph::CreateGraphDOTVisitor dotCreator( 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), filename );
     }
     catch( ... )
     {

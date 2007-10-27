@@ -35,7 +35,9 @@
 #include <osgText/Text>
 #include <osg/CameraNode>
 #include <osg/Texture2D>
-using namespace VE_SceneGraph;
+
+using namespace ves::xplorer::scenegraph;
+
 ///////////////////////////////////////////////////////////////////////
 TextTexture::TextTexture(unsigned int textureResolutionX,
                          unsigned int textureResolutionY,
@@ -76,7 +78,8 @@ TextTexture::TextTexture(unsigned int textureResolutionX,
 /////////////////////////////////////////////////////
 TextTexture::TextTexture(const TextTexture& ttexture, 
                          const osg::CopyOp& copyop)  
-:VE_SceneGraph::Geode(ttexture,copyop)
+:
+ves::xplorer::scenegraph::Geode(ttexture,copyop)
 {
    _font = ttexture._font;
    _textureResolution[0] = ttexture._textureResolution[0];

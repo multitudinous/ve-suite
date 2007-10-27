@@ -36,7 +36,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace NURBS;
+using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////
 //Constructor         //
 ///////////////////////////////////////////////////////
@@ -139,14 +139,14 @@ void NURBSObject::SetDegree(unsigned int degree, std::string direction)
    _needsRetessellation = true;
 }
 ///////////////////////////////////////////////////////
-void NURBSObject::SetKnotVector(NURBS::KnotVector knots,
+void NURBSObject::SetKnotVector(ves::xplorer::scenegraph::nurbs::KnotVector knots,
                                 std::string direction)
 {
    _knotVectors[direction] = knots;
    _needsRetessellation = true;
 }
 ///////////////////////////////////////////////////////////////////////////
-void NURBSObject::SetControlPoints(std::vector<NURBS::ControlPoint> ctrlPts,
+void NURBSObject::SetControlPoints(std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> ctrlPts,
                                     unsigned int columns,
                                     unsigned int rows)
 {
@@ -187,7 +187,7 @@ NURBSObject::Type NURBSObject::GetType()
    return _type;
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void NURBSObject::UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControlPoint)
+void NURBSObject::UpdateMesh(/*std::vector<*/ves::xplorer::scenegraph::nurbs::ControlPoint modifiedControlPoint)
 {
    ///This assumes the control point data has already been updated!!!
    double ubounds[2] = {0.0,1.0};
@@ -205,7 +205,7 @@ void NURBSObject::UpdateMesh(/*std::vector<*/NURBS::ControlPoint modifiedControl
    ubounds[0] = _knotVectors["U"].Knot(uIndex);
    ubounds[1] = _knotVectors["U"].Knot(uIndex + _degree["U"] + 1);
 
-   if(_type == NURBS::NURBSObject::Surface)
+   if(_type == ves::xplorer::scenegraph::nurbs::NURBSObject::Surface)
    {
       vbounds[0] = _knotVectors["V"].Knot(vIndex);
       vbounds[1] = _knotVectors["V"].Knot(vIndex+_degree["V"]+1);
@@ -234,22 +234,22 @@ unsigned int NURBSObject::GetOrder(std::string direction)
    return _order[direction];
 }
 /////////////////////////////////////////////////////////////////
-NURBS::KnotVector& NURBSObject::KnotVector(std::string direction)
+ves::xplorer::scenegraph::nurbs::KnotVector& NURBSObject::KnotVector(std::string direction)
 {
    return _knotVectors[direction];
 }
 /////////////////////////////////////////////////////////////////////////////////////
-std::vector<NURBS::ControlPoint>& NURBSObject::ControlPoints(unsigned int derivative)
+std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>& NURBSObject::ControlPoints(unsigned int derivative)
 {
    return _controlPoints[derivative];
 }
 ////////////////////////////////////////////////////////////
-std::vector<NURBS::Point>& NURBSObject::InterpolatedPoints()
+std::vector<ves::xplorer::scenegraph::nurbs::Point>& NURBSObject::InterpolatedPoints()
 {
    return _interpolatedPoints[0];
 }
 //////////////////////////////////////////////////////////////
-NURBS::ControlPoint* NURBSObject::GetControlPoint(size_t index)
+ves::xplorer::scenegraph::nurbs::ControlPoint* NURBSObject::GetControlPoint(size_t index)
 {
    return &_controlPoints[0][index];
 }
@@ -488,16 +488,16 @@ unsigned int NURBSObject::_findNearestParameterIndex(std::string direction,
    return lowerNearestValue->second;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::vector<NURBS::ControlPoint> > NURBSObject::GetControlPoints( unsigned int derivative )
+std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > NURBSObject::GetControlPoints( unsigned int derivative )
 {
    size_t numUPoints = _nControlPoints["U"];
    size_t numVPoints = _nControlPoints["V"];
-   std::vector< NURBS::ControlPoint > tempPoints = _controlPoints[ derivative ];
-   std::vector< std::vector< NURBS::ControlPoint > > controlPoints;
+   std::vector< ves::xplorer::scenegraph::nurbs::ControlPoint > tempPoints = _controlPoints[ derivative ];
+   std::vector< std::vector< ves::xplorer::scenegraph::nurbs::ControlPoint > > controlPoints;
 
    for ( size_t i =0; i < numVPoints; ++i )
    {
-      std::vector< NURBS::ControlPoint > points;
+      std::vector< ves::xplorer::scenegraph::nurbs::ControlPoint > points;
       for ( size_t j = 0; j < numUPoints; ++j )
       {
          points.push_back( tempPoints.at( (i * numUPoints) + j ) );

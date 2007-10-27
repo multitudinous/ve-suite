@@ -62,7 +62,7 @@
 #include <boost/filesystem/path.hpp>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
@@ -85,10 +85,10 @@ cfdVEBaseClass::~cfdVEBaseClass( void )
     ;
 }
 //////////////////////////////////////////////////////////////////      
-void cfdVEBaseClass::InitializeNode( VE_SceneGraph::DCS* veworldDCS )
+void cfdVEBaseClass::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-   //this->groupNode = new VE_SceneGraph::Group();
-   this->_dcs = new VE_SceneGraph::DCS(); 
+   //this->groupNode = new ves::xplorer::scenegraph::Group();
+   this->_dcs = new ves::xplorer::scenegraph::DCS(); 
    this->_dcs->SetName("cfdVEBaseClass");
    //this->dataRepresentation = new cfdObjects();
    //this->geometryNode = new cfdModuleGeometry( groupNode );
@@ -295,7 +295,7 @@ cfdModel* cfdVEBaseClass::GetCFDModel( void )
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////   
-/*VE_SceneGraph::DCS* cfdVEBaseClass::GetWorldDCS()
+/*ves::xplorer::scenegraph::DCS* cfdVEBaseClass::GetWorldDCS()
 {
    return this->worldDCS.get();
 }*/

@@ -80,7 +80,7 @@ void TextureBasedActivateEventHandler::_operateOnNode(XMLObject* veXMLObject)
                      << std::endl << vprDEBUG_FLUSH;
             _activeModel->GetDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
         }
-        VE_SceneGraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
+        ves::xplorer::scenegraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
         if ( !_activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
         {
             vprDEBUG(vesDBG,2) << "|\t\tadding active dcs node to worldDCS for classic ss "

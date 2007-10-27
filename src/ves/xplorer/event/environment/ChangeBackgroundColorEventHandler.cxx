@@ -86,7 +86,7 @@ void ChangeBackgroundColorEventHandler::Execute(XMLObject* veXMLObject)
    activeModelDVP->GetData( color );
    if(!color.empty())
    {
-      VE_SceneGraph::SceneManager::instance()->SetBackgroundColor(color);
+      ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor(color);
       VE_Xplorer::cfdEnvironmentHandler::instance()->
        GetDisplayInformation()->SetTextColor( color );
    }

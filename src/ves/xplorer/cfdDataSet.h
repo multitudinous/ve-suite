@@ -67,12 +67,18 @@ namespace VE_Xplorer
    //class SeedPoints;
 }
 
-namespace VE_SceneGraph
+namespace ves
 {
-   class DCS;
-	class Group;
-	class Switch;
-   class Geode;
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+    class Group;
+    class Switch;
+    class Geode;
+}
+}
 }
 
 namespace ves
@@ -239,13 +245,13 @@ public:
     double * GetVectorMagRange();
 
     // get/set this dataset's DCS
-    VE_SceneGraph::DCS* GetDCS();
-    void SetDCS( VE_SceneGraph::DCS* );
+    ves::xplorer::scenegraph::DCS* GetDCS();
+    void SetDCS( ves::xplorer::scenegraph::DCS* );
 
-    VE_SceneGraph::Switch* GetSwitchNode( void );
+    ves::xplorer::scenegraph::Switch* GetSwitchNode( void );
 
-    //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
-    //void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
+    //ves::xplorer::scenegraph::cfdTempAnimation* GetAnimation( void );
+    //void SetAnimation( ves::xplorer::scenegraph::cfdTempAnimation* );
 
     int IsPartOfTransientSeries();
     void SetAsPartOfTransientSeries();
@@ -346,15 +352,15 @@ private:
     std::vector< std::string > scalarName;
     std::vector< std::string > vectorName;
 
-    //osg::ref_ptr< VE_SceneGraph::Geode > bboxGeode;
-    osg::ref_ptr< VE_SceneGraph::Geode > wireframeGeode;
-    osg::ref_ptr< VE_SceneGraph::Group > m_visualBBox;
-    //VE_SceneGraph::cfdTempAnimation* animation;
+    //osg::ref_ptr< ves::xplorer::scenegraph::Geode > bboxGeode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Geode > wireframeGeode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > m_visualBBox;
+    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
 
-    osg::ref_ptr< VE_SceneGraph::DCS > dcs;
-    osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
-    osg::ref_ptr< VE_SceneGraph::Group > classic;
-    osg::ref_ptr< VE_SceneGraph::Group > textureBased; 
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased; 
 
     VE_Xplorer::DataSetAxis* dataSetAxes;
     VE_Xplorer::DataSetScalarBar* dataSetScalarBar;

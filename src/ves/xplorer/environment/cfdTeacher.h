@@ -56,10 +56,16 @@ namespace VE_Xplorer
     class cfdCommandArray;
 }
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class DCS;
     class CADEntityHelper;
+}
+}
 }
 
 //A reader that reads performer binary files
@@ -69,7 +75,7 @@ class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
 {
 public:
     ///Constructor
-    cfdTeacher( std::string, VE_SceneGraph::DCS* );
+    cfdTeacher( std::string, ves::xplorer::scenegraph::DCS* );
 
     ///Destructor
     virtual ~cfdTeacher();
@@ -83,13 +89,13 @@ public:
 
     ///Write out a performer bindary file
     ///\param SceneNode* and file name
-    void writePFBFile( VE_SceneGraph::SceneNode* graph,std::string fileName);
+    void writePFBFile( ves::xplorer::scenegraph::SceneNode* graph,std::string fileName);
 
     ///Get DCS 
-    VE_SceneGraph::DCS* GetDCS( );
+    ves::xplorer::scenegraph::DCS* GetDCS( );
     ///Get a performer node output
     ///\param node ID
-    VE_SceneGraph::CADEntityHelper* getpfNode( int );
+    ves::xplorer::scenegraph::CADEntityHelper* getpfNode( int );
     ///Set/Get number of fles
     ///\param i file name ID
     int getNumberOfFiles();
@@ -107,10 +113,10 @@ public:
     void Reset();
     
 private:
-    osg::ref_ptr< VE_SceneGraph::DCS > dcs;
-    osg::ref_ptr< VE_SceneGraph::DCS > _worldDCS;
-    //std::vector< VE_SceneGraph::CADEntityHelper* > node;  // array of nodes
-    VE_SceneGraph::CADEntityHelper* m_currentScene;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
+    //std::vector< ves::xplorer::scenegraph::CADEntityHelper* > node;  // array of nodes
+    ves::xplorer::scenegraph::CADEntityHelper* m_currentScene;
     ///Sorted file filenames for stored scenes
     std::vector<std::string> pfbFileNames;
     std::string directory;

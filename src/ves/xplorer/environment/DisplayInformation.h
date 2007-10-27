@@ -51,10 +51,16 @@ DisplayInformation API
 //C/C++ Libraries
 #include <vector>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 	class Switch;
 	class CADEntity;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -95,7 +101,7 @@ private:
    ///Initialize the world coordinate system display
    void InitCoordSysDisplay();
 
-	osg::ref_ptr< VE_SceneGraph::Switch > display_switch; ///<Allows switching between different display options
+	osg::ref_ptr< ves::xplorer::scenegraph::Switch > display_switch; ///<Allows switching between different display options
 
 	osg::ref_ptr< osg::CameraNode > framerate;
 	osg::ref_ptr< osg::CameraNode > wcs;
@@ -105,7 +111,7 @@ private:
 	osg::ref_ptr< osgText::Text > wcs_y_text; ///<Text for the y world coordinate system
 	osg::ref_ptr< osgText::Text > wcs_z_text; ///<Text for the z world coordinate system
 
-	VE_SceneGraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
+	ves::xplorer::scenegraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
 };
 }
 

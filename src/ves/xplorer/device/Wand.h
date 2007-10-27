@@ -59,9 +59,15 @@ Wand API
 
 #include <osgUtil/IntersectVisitor>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
     class DCS;
+}
+}
 }
 
 namespace ves

@@ -41,7 +41,7 @@
 #include <osgDB/Input>
 #include <osgDB/Output>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 // forward declare functions to use later.
 bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr);
 bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
@@ -49,9 +49,9 @@ bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
 // register the read and write functions with the osgDB::Registry.
 osgDB::RegisterDotOsgWrapperProxy g_SwitchProxy
 (
-    new VE_SceneGraph::Switch,
+    new ves::xplorer::scenegraph::Switch,
     "Switch",
-    "Object Node VE_SceneGraph::Switch Group ",
+    "Object Node ves::xplorer::scenegraph::Switch Group ",
     &VESwitch_readLocalData,
     &VESwitch_writeLocalData
 );
@@ -60,7 +60,7 @@ bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr)
 {
     bool iteratorAdvanced = false;
 
-    VE_SceneGraph::Switch& sw = static_cast<VE_SceneGraph::Switch&>(obj);
+    ves::xplorer::scenegraph::Switch& sw = static_cast<ves::xplorer::scenegraph::Switch&>(obj);
 
     if (fr.matchSequence("value"))
     {
@@ -140,7 +140,7 @@ bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr)
 ///////////////////////////////////////////////////////////
 bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
 {
-   const VE_SceneGraph::Switch& sw = static_cast<const VE_SceneGraph::Switch&>(obj);
+   const ves::xplorer::scenegraph::Switch& sw = static_cast<const ves::xplorer::scenegraph::Switch&>(obj);
    //fw.writeObject(sw);
 
     fw.indent()<<"NewChildDefaultValue "<<sw.getNewChildDefaultValue()<<std::endl;

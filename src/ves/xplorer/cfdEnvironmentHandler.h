@@ -165,11 +165,11 @@ public:
 
    ///Get the seed points drawable
    ///\return Return the DCS for the seed points
-   VE_SceneGraph::DCS* GetSeedPointsDCS();
+   ves::xplorer::scenegraph::DCS* GetSeedPointsDCS();
 
 private:
    osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
-   osg::ref_ptr<VE_SceneGraph::DCS> _seedPointsDCS;///<The DCS for the seed points
+   osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
    cfdTeacher* _teacher;///<Handle teacher functionality.
    //cfdSoundHandler* _soundHandler;///<Handle the sound.
    cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.

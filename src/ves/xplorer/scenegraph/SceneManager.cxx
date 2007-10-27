@@ -68,7 +68,7 @@
 
 #include <ves/xplorer/cfdDebug.h>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 vprSingletonImpLifetime( SceneManager, 100 );
 
@@ -127,14 +127,14 @@ void SceneManager::InitScene()
 {
     std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
 
-    rootNode = new VE_SceneGraph::Group();
+    rootNode = new ves::xplorer::scenegraph::Group();
     rootNode->SetName( "Root Node" );
     rootNode->setThreadSafeRefUnref( true );
 
-    worldDCS = new VE_SceneGraph::DCS();
+    worldDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->SetName( "World DCS" );
 
-    networkDCS  = new VE_SceneGraph::DCS();
+    networkDCS  = new ves::xplorer::scenegraph::DCS();
     networkDCS->SetName( "Network DCS" );
 
     m_clrNode = new osg::ClearNode();
@@ -194,17 +194,17 @@ void SceneManager::InitScene()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::Group* SceneManager::GetRootNode()
+ves::xplorer::scenegraph::Group* SceneManager::GetRootNode()
 {
     return rootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* SceneManager::GetWorldDCS()
+ves::xplorer::scenegraph::DCS* SceneManager::GetWorldDCS()
 {
     return worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* SceneManager::GetNetworkDCS()
+ves::xplorer::scenegraph::DCS* SceneManager::GetNetworkDCS()
 {
     return networkDCS.get();
 }
@@ -226,7 +226,7 @@ void SceneManager::_createLogo()
 #ifdef _OSG
     if( !_logoSwitch )
     {
-        _logoSwitch = new VE_SceneGraph::Switch();   
+        _logoSwitch = new ves::xplorer::scenegraph::Switch();   
     }
 
     if( !_logoNode.valid() )
@@ -235,16 +235,16 @@ void SceneManager::_createLogo()
         osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
         double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
 
-        _logoNode = new VE_SceneGraph::DCS();
+        _logoNode = new ves::xplorer::scenegraph::DCS();
         _logoNode->SetTranslationArray( translation );
         _logoNode->SetQuat( quat );
         _logoNode->SetScaleArray( scale );
 
-        //m_blueArrow = new VE_SceneGraph::CADEntity( BlueArrow(), _logoNode.get(), true, false );
-        //m_greyArrow = new VE_SceneGraph::CADEntity( GreyArrow(), _logoNode.get(), true, false );
-        //m_orangeArrow = new VE_SceneGraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
-        m_veText = new VE_SceneGraph::CADEntity( VE(), _logoNode.get(), true, false );
-        m_suiteText = new VE_SceneGraph::CADEntity( Suite(), _logoNode.get(), true, false );
+        //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( BlueArrow(), _logoNode.get(), true, false );
+        //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( GreyArrow(), _logoNode.get(), true, false );
+        //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
+        m_veText = new ves::xplorer::scenegraph::CADEntity( VE(), _logoNode.get(), true, false );
+        m_suiteText = new ves::xplorer::scenegraph::CADEntity( Suite(), _logoNode.get(), true, false );
 
         char phong_vertex[]=
             "varying vec4 color; \n"
@@ -314,7 +314,7 @@ void SceneManager::PreFrameUpdate()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode()
+ves::xplorer::scenegraph::DCS* SceneManager::GetActiveSwitchNode()
 {
    osg::Switch::ValueList boolList = _logoSwitch->getValueList();
    
@@ -322,7 +322,7 @@ VE_SceneGraph::DCS* SceneManager::GetActiveSwitchNode()
    {
       if( boolList.at( i ) )
       {
-         return dynamic_cast< VE_SceneGraph::DCS* >( _logoSwitch->getChild( i ) );
+         return dynamic_cast< ves::xplorer::scenegraph::DCS* >( _logoSwitch->getChild( i ) );
       }
    }
 }

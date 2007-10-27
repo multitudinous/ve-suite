@@ -53,7 +53,7 @@
 #include <string>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 DataSetScalarBar::DataSetScalarBar( void )
 {
@@ -65,7 +65,7 @@ DataSetScalarBar::DataSetScalarBar( void )
    //xAxisLabel = "X Axis";
    //yAxisLabel = "Y Axis";
    //zAxisLabel = "Z Axis";
-	scalarBarDCS = new VE_SceneGraph::DCS();
+	scalarBarDCS = new ves::xplorer::scenegraph::DCS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSetScalarBar::~DataSetScalarBar()
@@ -89,7 +89,7 @@ void DataSetScalarBar::SetBoundingBox( double* inBBox )
 void DataSetScalarBar::AddScalarBarToGroup( void )
 {
    //Now add the labels
-	osg::ref_ptr< VE_SceneGraph::DCS > tempDCS = scalarBarDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = scalarBarDCS;
    size_t numChildren = tempDCS->getNumChildren();
    for ( size_t i = 0; i < numChildren; ++i )
    {
@@ -110,7 +110,7 @@ void DataSetScalarBar::AddScalarBarToGroup( void )
    scalarBarDCS->SetTranslationArray( trans );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* DataSetScalarBar::GetScalarBar( void )
+ves::xplorer::scenegraph::DCS* DataSetScalarBar::GetScalarBar( void )
 {
    return scalarBarDCS.get();
 }

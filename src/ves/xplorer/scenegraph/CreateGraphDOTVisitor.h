@@ -36,11 +36,11 @@
 /*!\file CreateGraphDOTVisitor.h
 */
 
-/*!\class VE_SceneGraph::CreateGraphDOTVisitor
+/*!\class ves::xplorer::scenegraph::CreateGraphDOTVisitor
 *
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph::
 *
 */
 
@@ -53,7 +53,11 @@
 #include <string>
 #include <fstream>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS CreateGraphDOTVisitor : public osg::NodeVisitor
 {
@@ -75,13 +79,18 @@ private:
     ///\param node Node to look at
     ///\return Node data in a string
     std::string GetMaterialDataString( osg::Node* node );
+
     ///Get the texture string to write out
     ///\param node Node to look at
     ///\return Node data in a string
     std::string GetTextureDataString( osg::Node* node );
+
     ///DOT file stream to be written to
     std::ofstream m_dotFile;
+
 };
+}
+}
 }
 
 #endif //CREATE_GRAPH_DOT_VISITOR_H

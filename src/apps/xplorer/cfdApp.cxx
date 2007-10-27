@@ -160,7 +160,7 @@ void cfdApp::exit()
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
 
-    //VE_SceneGraph::SceneManager::instance()->CleanUp();
+    //ves::xplorer::scenegraph::SceneManager::instance()->CleanUp();
     //cfdModelHandler::instance()->CleanUp();
     //cfdEnvironmentHandler::instance()->CleanUp();
     //cfdSteadyStateVizHandler::instance()->CleanUp();
@@ -212,7 +212,7 @@ osg::Group* cfdApp::getScene()
    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
    //   "C:/test.osg");
 #ifdef _OSG
-   return (osg::Group*)VE_SceneGraph::SceneManager::instance()->GetRootNode();
+   return (osg::Group*)ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 #endif
 }
 
@@ -332,12 +332,12 @@ void cfdApp::initScene( void )
    std::cout << "| ***************************************************************** |" << std::endl;
    _vjobsWrapper->InitCluster();
    // define the rootNode, worldDCS, and lighting
-   VE_SceneGraph::SceneManager::instance()->InitScene();
+   ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
 
    this->getScene()->addChild( light_source_0.get() );
 
 #ifdef _OSG
-   VE_SceneGraph::SceneManager::instance()->ViewLogo(true);
+   ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo(true);
 #endif
 
    // modelHandler stores the arrow and holds all data and geometry
@@ -450,7 +450,7 @@ void cfdApp::latePreFrame( void )
 
 #endif
 
-    VE_SceneGraph::SceneManager::instance()->PreFrameUpdate();
+    ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();
     ///////////////////////
     cfdModelHandler::instance()->PreFrameUpdate();
     ///////////////////////
@@ -464,7 +464,7 @@ void cfdApp::latePreFrame( void )
     {
         if( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
         {
-            _tbvHandler->SetParentNode((VE_SceneGraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+            _tbvHandler->SetParentNode((ves::xplorer::scenegraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
             _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
             _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
             _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
@@ -481,7 +481,7 @@ void cfdApp::latePreFrame( void )
 
 	float dt = current_time - previous_time;
 	//std::cout<<dt<<std::endl;
-	VE_SceneGraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
+	ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
 	previous_time = current_time;
 	//**********************************************************************
 #ifdef _OSG

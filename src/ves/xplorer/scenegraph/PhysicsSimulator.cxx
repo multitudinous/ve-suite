@@ -61,7 +61,7 @@
 #include <ostream>
 #include <string>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 const int maxProxies = 32766;
 
@@ -381,7 +381,10 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
 
         osgDB::Registry::instance()->getReaderWriterForExtension("osg")->writeNode( *geode, box_ss );
 
-        box_vector.push_back( new VE_SceneGraph::CADEntity( "C:/Users/JK/Desktop/Models/box.osg", VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), false, false ) );
+        box_vector.push_back( new ves::xplorer::scenegraph::CADEntity( 
+            "C:/Users/JK/Desktop/Models/box.osg",
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
+            false, false ) );
 
         float mass = 1.0f;
         btTransform transform;

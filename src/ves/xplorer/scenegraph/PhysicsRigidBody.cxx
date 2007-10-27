@@ -69,7 +69,7 @@ public:
     std::vector< unsigned int > triangleIndex;
 };
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, const btTransform& startTransform )
@@ -168,7 +168,7 @@ void PhysicsRigidBody::BoundingBoxShape()
 {
     if( this )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -184,14 +184,14 @@ void PhysicsRigidBody::BoundingBoxShape()
 
     SetMassProps();
 
-    VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
+    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
     if( this )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -205,14 +205,14 @@ void PhysicsRigidBody::StaticConcaveShape()
 
     SetMass( 0 );
 
-    VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
+    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::ConvexShape()
 {
     if( this )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -226,6 +226,6 @@ void PhysicsRigidBody::ConvexShape()
 
     SetMassProps();
 
-    VE_SceneGraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
+    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////

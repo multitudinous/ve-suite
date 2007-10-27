@@ -50,11 +50,12 @@
 // --- C/C++ Libraries --- //
 #include <cassert>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile, 
-    VE_SceneGraph::DCS* parentDCS, bool isStream, bool occlude )
+                      ves::xplorer::scenegraph::DCS* parentDCS,
+                      bool isStream, bool occlude )
 :
 m_physicsRigidBody( 0 ),
 m_physicsFlag( false ),
@@ -62,8 +63,8 @@ m_transparencyFlag( false )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
-    m_dcs = new VE_SceneGraph::DCS();
-    m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper();
+    m_dcs = new ves::xplorer::scenegraph::DCS();
+    m_cadEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
 
     m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream, occlude );
     m_fileName.assign( geomFile );
@@ -76,7 +77,8 @@ m_transparencyFlag( false )
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS )
+CADEntity::CADEntity( osg::Node* node,
+                      ves::xplorer::scenegraph::DCS* parentDCS )
 :
 m_physicsRigidBody( 0 ),
 m_physicsFlag( false ),
@@ -84,8 +86,8 @@ m_transparencyFlag( false )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
-    m_dcs = new VE_SceneGraph::DCS();
-    m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper();
+    m_dcs = new ves::xplorer::scenegraph::DCS();
+    m_cadEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
 
     m_cadEntityHelper->SetNode( node );
     m_fileName.assign( "" );
@@ -94,8 +96,8 @@ m_transparencyFlag( false )
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, 
-    VE_SceneGraph::DCS* parentDCS )
+CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy, 
+                      ves::xplorer::scenegraph::DCS* parentDCS )
 :
 m_physicsRigidBody( 0 ),
 m_physicsFlag( false ),
@@ -103,8 +105,8 @@ m_transparencyFlag( false )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
-    m_dcs = new VE_SceneGraph::DCS();
-    m_cadEntityHelper = new VE_SceneGraph::CADEntityHelper( *nodeToCopy );
+    m_dcs = new ves::xplorer::scenegraph::DCS();
+    m_cadEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper( *nodeToCopy );
 
     m_fileName = m_cadEntityHelper->GetNode()->getName();
     m_dcs->SetName( "CADEntityDCS" );
@@ -121,24 +123,24 @@ void CADEntity::InitPhysics()
 {
     if( !m_physicsRigidBody.valid() )
     {
-        m_physicsRigidBody = new VE_SceneGraph::PhysicsRigidBody( 
+        m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody( 
             m_cadEntityHelper->GetNode() );
 
         m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::CADEntityHelper* CADEntity::GetNode()
+ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode()
 {
     return m_cadEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* CADEntity::GetDCS()
+ves::xplorer::scenegraph::DCS* CADEntity::GetDCS()
 {
     return m_dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
+ves::xplorer::scenegraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
     return m_physicsRigidBody.get();
 }

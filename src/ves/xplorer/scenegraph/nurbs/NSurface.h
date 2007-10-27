@@ -39,7 +39,7 @@
 /*!\file NSurface.cxx
   NURBS Surface code
   */
-/*!\class NURBS::NURBSSurface
+/*!\class ves::xplorer::scenegraph::nurbs::NURBSSurface
  * Class defining a NURBSSurface. 
  */
 #include <ves/VEConfig.h>
@@ -47,7 +47,14 @@
 #include <map>
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSObject.h>
-namespace NURBS
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 class Point;
 class ControlPoint;
@@ -73,7 +80,7 @@ public:
    virtual void Interpolate();
 
    ///???
-   std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > GetSurfaceDerivatives();
+   std::map<unsigned int, std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::Point> > > GetSurfaceDerivatives();
 
    ///Write the surface out in the VE-NURBS format
    ///\param stream ostrem to write to
@@ -99,14 +106,18 @@ protected:
    ///\param vparameter The interpolating v parameter
    ///\param uspan The knot u span to interpolate the parameter on
    ///\param vspan The knot v span to interpolate the parameter on
-   std::map<unsigned int,std::vector<NURBS::ControlPoint> > _calculatePointOnSurface(double uparameter,
+   std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > _calculatePointOnSurface(double uparameter,
                                          double vparameter,
                                          unsigned int uspan,
                                          unsigned int vspan);
 
    
-   std::map<unsigned int, std::map<unsigned int,std::vector<NURBS::Point> > > _surfDerivatives;///<The surfaceDerivatives.
+   std::map<unsigned int, std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::Point> > > _surfDerivatives;///<The surfaceDerivatives.
 
 };
 }
+}
+}
+}
+
 #endif //VE_POINT_H

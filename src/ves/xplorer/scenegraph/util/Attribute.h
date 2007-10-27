@@ -70,9 +70,13 @@ namespace cad
 }
 }
 
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 #ifdef _OSG
 class VE_SCENEGRAPH_UTILS_EXPORTS Attribute : public osg::StateSet{
@@ -88,7 +92,7 @@ public:
              const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
 
    ///OSG defines this macro
-   META_Object(VE_SceneGraph::Utilities,Attribute);
+   META_Object(ves::xplorer::scenegraph::util,Attribute);
    Attribute& operator=(const osg::StateSet& rhs);
 #elif _PERFORMER
     Attribute(const Attribute& cfdSeq);
@@ -130,7 +134,11 @@ protected:
 #ifdef _PERFORMER
    static pfType* _classType;
 #endif
+
 };
 }
 }
+}
+}
+
 #endif //VE_SCENE_GRAPH_ATTRIBUTE_H

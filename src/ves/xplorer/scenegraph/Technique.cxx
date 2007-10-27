@@ -38,7 +38,7 @@
 // --- OSG Includes --- //
 #include <osgUtil/CullVisitor>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Technique::Technique()
@@ -61,7 +61,7 @@ const osg::StateSet* Technique::GetPassStateSet( int i ) const
     return m_passes[ i ].get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Technique::Traverse( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node )
+void Technique::Traverse( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node )
 {
     TraverseImplementation( nv, node );
 }
@@ -85,7 +85,7 @@ osg::Node* Technique::GetOverrideChild( int )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Technique::TraverseImplementation( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node )
+void Technique::TraverseImplementation( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node )
 {
     //Define passes if necessary
     if( m_passes.empty() )

@@ -36,11 +36,11 @@
 /*!\file CADEntity.h
 */
 
-/*!\class VE_SceneGraph::CADEntity
+/*!\class ves::xplorer::scenegraph::CADEntity
 * 
 */
 
-/*!\namespace VE_SceneGraph
+/*!\namespace ves::xplorer::scenegraph
 *
 */
 
@@ -51,11 +51,17 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/PhysicsRigidBody.h>
 
-namespace VE_SceneGraph
+namespace ves
 {
-class DCS;
-class CADEntityHelper;
-class PhysicsRigidBody;
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+    class CADEntityHelper;
+    class PhysicsRigidBody;
+}
+}
 }
 
 // --- OSG Includes --- //
@@ -65,7 +71,7 @@ class PhysicsRigidBody;
 
 namespace osg
 {
-class Fog;
+    class Fog;
 }
 #endif
 
@@ -73,7 +79,11 @@ class Fog;
 #include <vector>
 #include <string>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
@@ -83,20 +93,21 @@ public:
     ///\param parentDCS The parent DCS that CADEntity is added to
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the node with osgOQ
-    CADEntity( std::string geomFile, VE_SceneGraph::DCS* parentDCS, 
-        bool isStream = false, bool occlude = false );
+    CADEntity( std::string geomFile,
+               ves::xplorer::scenegraph::DCS* parentDCS, 
+               bool isStream = false, bool occlude = false );
 
     ///Constructor that takes an osg::Node*
     ///\param node
     ///\param parentDCS
-    CADEntity( osg::Node* node, VE_SceneGraph::DCS* parentDCS );
+    CADEntity( osg::Node* node, ves::xplorer::scenegraph::DCS* parentDCS );
 
     ///Constructor that takes a CADEntityHelper and deep copies 
     ///the osg node contained in the CADEntityHelper
     ///\param nodeToCopy The node to copy
     ///\param parentDCS The parent DCS that CADEntity is added to
-    CADEntity( VE_SceneGraph::CADEntityHelper* nodeToCopy, 
-        VE_SceneGraph::DCS* parentDCS );
+    CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy, 
+               ves::xplorer::scenegraph::DCS* parentDCS );
 
     ///Destructor
     virtual ~CADEntity();
@@ -106,13 +117,13 @@ public:
     void InitPhysics();
 
     ///Returns the DCS of CADEntity
-    VE_SceneGraph::DCS* GetDCS();
+    ves::xplorer::scenegraph::DCS* GetDCS();
 
     ///Returns the node of CADEntity
-    VE_SceneGraph::CADEntityHelper* GetNode();
+    ves::xplorer::scenegraph::CADEntityHelper* GetNode();
 
     ///Returns the physics rigid body of CADEntity
-    VE_SceneGraph::PhysicsRigidBody* GetPhysicsRigidBody();
+    ves::xplorer::scenegraph::PhysicsRigidBody* GetPhysicsRigidBody();
 
     ///Returns the filename of CADEntity
     std::string GetFilename();
@@ -126,17 +137,19 @@ public:
     
 private:
     ///A helper class to give added functionality to CADEntity
-    VE_SceneGraph::CADEntityHelper* m_cadEntityHelper;
+    ves::xplorer::scenegraph::CADEntityHelper* m_cadEntityHelper;
     ///The DCS of CADEntity
-    osg::ref_ptr< VE_SceneGraph::DCS > m_dcs;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
     ///The physics rigid body representation of CADEntity
-    osg::ref_ptr< VE_SceneGraph::PhysicsRigidBody > m_physicsRigidBody;
+    osg::ref_ptr< ves::xplorer::scenegraph::PhysicsRigidBody > m_physicsRigidBody;
 
     bool m_physicsFlag;///<The current state of physics for CADEntity
     bool m_transparencyFlag;///<The current state of transparency
 
     std::string m_fileName;///<The name of the geometry file loaded
 };
+}
+}
 }
 
 #endif //CAD_ENTITY_H

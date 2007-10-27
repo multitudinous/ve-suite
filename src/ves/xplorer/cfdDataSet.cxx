@@ -80,7 +80,7 @@
 #include <sstream>
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::builder::DataLoader;
 
@@ -125,12 +125,12 @@ cfdDataSet::cfdDataSet( ) :
    // By default, the dataset is assumed to have no parent, that is,
    // use its own range to determine color mapping.
    //this->dcs = NULL;
-   this->switchNode = new VE_SceneGraph::Switch();
+   this->switchNode = new ves::xplorer::scenegraph::Switch();
    this->switchNode->SetName( "switch_for_data_viz" );
-   this->classic = new VE_SceneGraph::Group();
+   this->classic = new ves::xplorer::scenegraph::Group();
    this->classic->SetName( "classic" );
    this->switchNode->AddChild( this->classic.get() );
-   this->textureBased = new VE_SceneGraph::Group();
+   this->textureBased = new ves::xplorer::scenegraph::Group();
    this->textureBased->SetName( "textureBased" );
    this->switchNode->AddChild( this->textureBased.get() );
    this->switchNode->SetVal(0);
@@ -1429,28 +1429,28 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double* range )
    //this->definedRange[ 1 ] = range[ 1 ];
 }
 //////////////////////////////////////////////////////////////////
-VE_SceneGraph::Switch* cfdDataSet::GetSwitchNode()
+ves::xplorer::scenegraph::Switch* cfdDataSet::GetSwitchNode()
 {
    if ( !switchNode )
    {
-      switchNode = new VE_SceneGraph::Switch();
+      switchNode = new ves::xplorer::scenegraph::Switch();
    }
 
    return switchNode.get();
 }
 /////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdDataSet::GetDCS()
+ves::xplorer::scenegraph::DCS* cfdDataSet::GetDCS()
 {
    if ( dcs == NULL )
    {
-      dcs = new VE_SceneGraph::DCS();
+      dcs = new ves::xplorer::scenegraph::DCS();
       return this->dcs.get();
    }
    else
       return this->dcs.get();
 }
 /////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetDCS( VE_SceneGraph::DCS* myDCS )
+void cfdDataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
 {
    if ( dcs == NULL )
       this->dcs = myDCS;
@@ -1577,7 +1577,7 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
 {
     if( !m_visualBBox.valid() )
     {
-       m_visualBBox = new VE_SceneGraph::Group();
+       m_visualBBox = new ves::xplorer::scenegraph::Group();
     }
     ves::xplorer::util::CreateDataObjectBBoxActorsCallback* bboxActorsCbk = 
         dynamic_cast<ves::xplorer::util::CreateDataObjectBBoxActorsCallback*>
@@ -1589,7 +1589,7 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
     size_t nBBoxActors = bboxActors.size();
     for(size_t i = 0; i < nBBoxActors; ++i)
     {
-        osg::ref_ptr<VE_SceneGraph::Geode> bboxGeode = new VE_SceneGraph::Geode();
+        osg::ref_ptr<ves::xplorer::scenegraph::Geode> bboxGeode = new ves::xplorer::scenegraph::Geode();
         bboxGeode->TranslateToGeode( bboxActors.at(i) );
         m_visualBBox->AddChild(bboxGeode.get());
 
@@ -1615,7 +1615,7 @@ void cfdDataSet::CreateWireframeGeode( void )
    wireframeActor->GetProperty()->SetOpacity(0.7f);
    wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
-	wireframeGeode = new VE_SceneGraph::Geode();
+	wireframeGeode = new ves::xplorer::scenegraph::Geode();
    wireframeGeode->TranslateToGeode( wireframeActor );
    
    //wireframe->Delete();

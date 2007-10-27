@@ -43,7 +43,7 @@
 #include <iostream>
 #include <sstream>
 
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 CreateGraphDOTVisitor::CreateGraphDOTVisitor( osg::Node* node, 
@@ -176,3 +176,4 @@ std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
     }
     return textureData.str();
 }
+////////////////////////////////////////////////////////////////////////////////

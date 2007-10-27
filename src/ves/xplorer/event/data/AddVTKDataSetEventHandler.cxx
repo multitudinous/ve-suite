@@ -236,7 +236,7 @@ void AddVTKDataSetEventHandler::Execute(XMLObject* xmlObject)
                _activeModel->GetCfdDataSet( i )->SetArrow( VE_Xplorer::cfdModelHandler::instance()->GetArrow() );
                if ( _activeModel->GetCfdDataSet( i )->GetParent() == _activeModel->GetCfdDataSet( i ) )
                {
-                  VE_SceneGraph::SceneManager::instance()->GetWorldDCS()->
+                  ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
                         AddChild( _activeModel->GetCfdDataSet( i )->GetDCS() );
                   _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( i ) );
                }

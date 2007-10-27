@@ -96,21 +96,21 @@ void PhysicsSimulationEventHandler::Execute( ves::open::xml::XMLObject* veXMLObj
   
     if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( true );
-        VE_SceneGraph::PhysicsSimulator::instance()->ResetScene();
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->ResetScene();
     }
     else if( command->GetDataValuePair( "PausePhysicsSimulation" ) )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( true );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );
     }
     else if( command->GetDataValuePair( "StartPhysicsSimulation" ) )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( false );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( false );
     }
     else if( command->GetDataValuePair( "StepPhysicsSimulation" ) )
     {
-        VE_SceneGraph::PhysicsSimulator::instance()->SetIdle( true );
-        VE_SceneGraph::PhysicsSimulator::instance()->StepSimulation();
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->StepSimulation();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

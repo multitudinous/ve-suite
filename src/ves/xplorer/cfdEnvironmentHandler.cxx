@@ -73,7 +73,7 @@
 vprSingletonImpLifetime( VE_Xplorer::cfdEnvironmentHandler, 11 );
 
 using namespace VE_Xplorer;
-using namespace VE_SceneGraph;
+using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    
    ///add a transform for manipulation of the seed points 
    ///to sync with the active dataset
-   _seedPointsDCS = new VE_SceneGraph::DCS();
+   _seedPointsDCS = new ves::xplorer::scenegraph::DCS();
    _seedPointsDCS->SetName("Seed Points DCS");
    _seedPointsDCS->addChild(_seedPoints.get());
 
@@ -256,15 +256,15 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
    this->cursor = new cfdCursor( this->arrow, 
-                             VE_SceneGraph::SceneManager::instance()->GetWorldDCS(), 
-                             VE_SceneGraph::SceneManager::instance()->GetRootNode() );
+                             ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(), 
+                             ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
    //this->cursor->Initialize( NULL, NULL );
 
    //
    // Initiate quatcam
    //
    std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
-   VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(VE_SceneGraph::SceneManager::instance()->GetWorldDCS());
+   VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS());
 
    //
    // Initiate quatcam
@@ -277,7 +277,7 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
-                                 VE_SceneGraph::SceneManager::instance()->GetWorldDCS() );
+                                 ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 
    if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
    {
@@ -409,7 +409,7 @@ VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
 	return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_SceneGraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
+ves::xplorer::scenegraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
 {
 	if(_seedPointsDCS.valid())
 	{

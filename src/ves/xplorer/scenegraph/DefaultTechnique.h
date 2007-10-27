@@ -38,7 +38,11 @@
 
 #include <ves/xplorer/scenegraph/Technique.h>
 
-namespace VE_SceneGraph
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
 {
 class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
 {
@@ -46,7 +50,8 @@ public:
     DefaultTechnique();
     ~DefaultTechnique();
 
-    virtual void Traverse( osg::NodeVisitor& nv, VE_SceneGraph::SceneNode* node );
+    virtual void Traverse( osg::NodeVisitor& nv,
+                           ves::xplorer::scenegraph::SceneNode* node );
   
 protected:
     virtual void DefinePasses();
@@ -54,6 +59,8 @@ protected:
 private:
 
 };
+}
+}
 }
 
 #endif //DEFAULT_TECHNIQUE_H

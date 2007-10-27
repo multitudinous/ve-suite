@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
-using namespace NURBS;
+using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////////
 //Constructor             //
 ////////////////////////////
@@ -183,7 +183,7 @@ bool Point::IsSelected()
 //ControlPoint class      //
 ////////////////////////////
 ControlPoint::ControlPoint()
-:NURBS::Point()
+:ves::xplorer::scenegraph::nurbs::Point()
 {
    _xW = _x;
    _yW = _y;
@@ -195,13 +195,13 @@ ControlPoint::ControlPoint()
 }
 ///////////////////////////////////////////////////////////////
 ControlPoint::ControlPoint(double x, double y, double z, double w)
-:NURBS::Point(x,y,z)
+:ves::xplorer::scenegraph::nurbs::Point(x,y,z)
 {
    SetWeight(w);
 }
 ///////////////////////////////////////////////////
 ControlPoint::ControlPoint(const ControlPoint& rhs)
-:NURBS::Point(rhs)
+:ves::xplorer::scenegraph::nurbs::Point(rhs)
 {
    SetWeight(rhs._weight);
    _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
@@ -240,7 +240,7 @@ double ControlPoint::Weight()
 //////////////////////////////////////////////
 ControlPoint ControlPoint::GetWeightedPoint()
 {
-   return NURBS::ControlPoint(_xW,_yW,_zW,_weight);
+   return ves::xplorer::scenegraph::nurbs::ControlPoint(_xW,_yW,_zW,_weight);
 }
 ////////////////////////////////
 //Weighted component X        //
@@ -292,7 +292,7 @@ ControlPoint& ControlPoint::operator=(const ControlPoint& rhs)
 {
    if(this != &rhs)
    {
-      NURBS::Point::operator=(rhs);
+      ves::xplorer::scenegraph::nurbs::Point::operator=(rhs);
       SetWeight(rhs._weight);
       _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
       _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];

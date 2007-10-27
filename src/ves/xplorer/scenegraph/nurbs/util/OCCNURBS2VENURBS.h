@@ -48,9 +48,16 @@
 #include <TColgp_Array2OfPnt.hxx>
 
 #include <ves/VEConfig.h>
-namespace NURBS
+
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
+{
+namespace util
 {
 ///???
 class VE_NURBS_UTILS_EXPORTS OCCNURBS2VENURBS
@@ -63,9 +70,9 @@ public:
 
    ///Get a OCC NURBS patch and return an VE NURBS Surface
    ///\param occNURBSSurface NURBS surface to be converted
-   NURBS::NURBSSurface* GetVENURBSSurface( Handle_Geom_BSplineSurface occNURBSSurface )
+   ves::xplorer::scenegraph::nurbs::NURBSSurface* GetVENURBSSurface( Handle_Geom_BSplineSurface occNURBSSurface )
    {
-      NURBS::KnotVector uKnots;      
+      ves::xplorer::scenegraph::nurbs::KnotVector uKnots;      
       // get the know uknots
       TColStd_Array1OfReal Ku( 1, occNURBSSurface->NbUKnots() );
       occNURBSSurface->UKnots( Ku );
@@ -80,7 +87,7 @@ public:
          }
       }
       
-      NURBS::KnotVector vKnots;      
+      ves::xplorer::scenegraph::nurbs::KnotVector vKnots;      
       // get the vknots
       TColStd_Array1OfReal Kv( 1, occNURBSSurface->NbVKnots() );
       occNURBSSurface->VKnots( Kv );
@@ -101,7 +108,7 @@ public:
       // get poles/control
       TColgp_Array2OfPnt Poles( 1, occNURBSSurface->NbUPoles(), 1, occNURBSSurface->NbVPoles() );
       occNURBSSurface->Poles( Poles );
-      std::vector<NURBS::ControlPoint> surfaceCtrlPts;
+      std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> surfaceCtrlPts;
       unsigned int nU = occNURBSSurface->NbUPoles();
       unsigned int nV = occNURBSSurface->NbVPoles();
       double x = 0;
@@ -117,12 +124,12 @@ public:
             y = Poles( i, j ).Y(); 
             z = Poles( i, j ).Z();
             w = W( i, j );
-            surfaceCtrlPts.push_back(NURBS::ControlPoint(x,y,z,w));
+            surfaceCtrlPts.push_back(ves::xplorer::scenegraph::nurbs::ControlPoint(x,y,z,w));
          }
       }
       
       ///User responsible for deleting memory!!!
-      NURBS::NURBSSurface* surfacePatch = new NURBS::NURBSSurface();
+      ves::xplorer::scenegraph::nurbs::NURBSSurface* surfacePatch = new ves::xplorer::scenegraph::nurbs::NURBSSurface();
       surfacePatch->SetControlPoints(surfaceCtrlPts,nU,nV);
       surfacePatch->SetKnotVector(uKnots,"U");
       surfacePatch->SetKnotVector(vKnots,"V");
@@ -132,5 +139,9 @@ public:
 };
 }
 }
+}
+}
+}
+
 #endif //OCC_NURBS_2_VE_NURBS_H
 

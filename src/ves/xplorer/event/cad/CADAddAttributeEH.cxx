@@ -42,7 +42,7 @@
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <iostream>
 
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 using namespace VE_EVENTS;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;

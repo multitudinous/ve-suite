@@ -35,12 +35,12 @@
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
 #include <iostream>
 
-using namespace NURBS;
+using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////
 //Constructor         //
 ////////////////////////
 NURBSCurve::NURBSCurve(unsigned int degree)
-:NURBSObject(NURBS::NURBSObject::Curve,degree)
+:NURBSObject(ves::xplorer::scenegraph::nurbs::NURBSObject::Curve,degree)
 {
    _needsRetessellation = true;
 }
@@ -79,7 +79,7 @@ void NURBSCurve::_interpolateWithinRange(double umin,double umax,
 
    //std::cout<<"umin: "<<uIndexMin<<std::endl;
    //std::cout<<"umax: "<<uIndexMax<<std::endl;
-   std::vector<NURBS::ControlPoint> curveInfo;
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
 
    for(unsigned int u = uIndexMin; u <= uIndexMax; u++)
    {
@@ -120,7 +120,7 @@ void NURBSCurve::Interpolate()
    
    _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]-1); 
    double param = 0.0;
-   std::vector<NURBS::ControlPoint> curveInfo;
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
 
    for(unsigned int i = 0; i < _meshDimensions["U"]; i++)
    {
@@ -135,10 +135,10 @@ void NURBSCurve::Interpolate()
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-std::vector<NURBS::ControlPoint> NURBSCurve::_calculatePointOnCurve(double parameter, 
+std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> NURBSCurve::_calculatePointOnCurve(double parameter, 
                                                                     unsigned int span)
 {
-   std::vector<NURBS::ControlPoint> resutlingWeightedPoint;
+   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> resutlingWeightedPoint;
    double invWeight = 1.0f;
    double ctrlPtWeight = 1.0;
    double resultPtWeight = 1.0;

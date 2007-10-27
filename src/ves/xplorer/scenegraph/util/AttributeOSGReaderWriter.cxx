@@ -54,7 +54,7 @@ using namespace osg;
 using namespace osgDB;
 using namespace std;
 
-using namespace VE_SceneGraph::Utilities;
+using namespace ves::xplorer::scenegraph::util;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml::shader;
 
@@ -70,9 +70,9 @@ const char* VEAttribute_getRenderBinModeStr(StateSet::RenderBinMode mode);
 // register the read and write functions with the osgDB::Registry.
 RegisterDotOsgWrapperProxy ve_AttributeFuncProxy
 (
-    new VE_SceneGraph::Utilities::Attribute(),
+    new ves::xplorer::scenegraph::util::Attribute(),
     "Attribute",
-    "Object VE_SceneGraph::Utilities::Attribute",
+    "Object ves::xplorer::scenegraph::util::Attribute",
     &VEAttribute_readLocalData,
     &VEAttribute_writeLocalData,
     DotOsgWrapper::READ_AND_WRITE

@@ -55,9 +55,13 @@ int start;
 int B;
 int BM;
 
-namespace VE_SceneGraph
+namespace ves
 {
-namespace Utilities
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace util
 {
 static void initNoise(void);
 void SetNoiseFrequency(int frequency)
@@ -288,6 +292,8 @@ double PerlinNoise3D(double x,double y,double z,double alpha,double beta,int n)
       p[2] *= beta;
    }
    return(sum);
+}
+}
 }
 }
 }

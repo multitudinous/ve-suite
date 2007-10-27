@@ -39,16 +39,24 @@
 /*!\file KnotVector.cxx
   KnotVector code
   */
-/*!\class NURBS::KnotVector
+/*!\class ves::xplorer::scenegraph::nurbs::KnotVector
  * Class defining a KnotVector for NURBS object.
  */
 
 #include <ves/VEConfig.h>
+
 #include <vector>
 #include <map>
 #include <string>
 #include <iostream>
-namespace NURBS
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+namespace nurbs
 {
 ///???
 class VE_NURBS_EXPORTS KnotVector
@@ -112,7 +120,7 @@ public:
    std::vector< double > GetDistinctKnotVector( void );
 
    ///Write out the knot vector.
-   inline friend std::ostream& operator<<(std::ostream& os,NURBS::KnotVector& knotVector)
+   inline friend std::ostream& operator<<(std::ostream& os,ves::xplorer::scenegraph::nurbs::KnotVector& knotVector)
    {
       unsigned int nKnots = knotVector.NumberOfKnots();
       for(unsigned int i = 0; i < nKnots; i++)
@@ -130,4 +138,8 @@ protected:
    std::map< double, unsigned int >::iterator _currentSpan;///<The current span we are investigating
 };
 }
+}
+}
+}
+
 #endif 
