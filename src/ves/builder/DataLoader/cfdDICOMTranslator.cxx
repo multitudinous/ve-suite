@@ -40,7 +40,8 @@
 
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -57,10 +58,10 @@ cfdDICOMTranslator::~cfdDICOMTranslator()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                           VE_Builder::cfdTranslatorToVTK* toVTK)
+		                                           cfdTranslatorToVTK* toVTK)
 {
-   VE_Builder::cfdDICOMTranslator* dicomToVTK =
-              dynamic_cast<VE_Builder::cfdDICOMTranslator*>(toVTK);
+   cfdDICOMTranslator* dicomToVTK =
+              dynamic_cast<cfdDICOMTranslator*>(toVTK);
    if(dicomToVTK)
    {
       vtkDICOMImageReader* dicomTranslator = vtkDICOMImageReader::New();

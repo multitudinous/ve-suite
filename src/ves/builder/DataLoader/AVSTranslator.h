@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _AVS_TRANSLATOR_H_
 #define _AVS_TRANSLATOR_H_
@@ -38,10 +36,14 @@
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS AVSTranslator: 
-   public VE_Builder::cfdTranslatorToVTK
+   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    AVSTranslator();
@@ -49,7 +51,7 @@ public:
    ///Display help for the AVS translator
    virtual void DisplayHelp( void );
    
-   class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback{
+   class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback{
    public:
       AVSTranslateCbk(){};
       virtual ~AVSTranslateCbk(){};
@@ -61,17 +63,18 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    protected:
    };
-   class VE_USER_BUILDER_EXPORTS AVSPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback{
+   class VE_USER_BUILDER_EXPORTS AVSPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
    public:
       AVSPreTranslateCbk(){};
       virtual ~AVSPreTranslateCbk(){};
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
    protected:
    };
 protected:
    AVSPreTranslateCbk _cmdParser;
    AVSTranslateCbk _AVSToVTK;
 };
-
+}
+}
 }
 #endif//_AVS_TRANSLATOR_H_

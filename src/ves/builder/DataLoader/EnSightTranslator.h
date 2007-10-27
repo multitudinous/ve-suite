@@ -35,10 +35,14 @@
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS EnSightTranslator: 
-   public VE_Builder::cfdTranslatorToVTK
+   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    EnSightTranslator();
@@ -46,7 +50,7 @@ public:
    ///Display help for the EnSight translator
    virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       EnSightTranslateCbk(){;}
@@ -56,24 +60,25 @@ public:
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
       virtual void Translate( vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
+		                     ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
       ///This creates additional scalars from vector components
       ///\param outputDataset Dataset to be used and modified
       void AddScalarsFromVectors( vtkDataObject*& outputDataset );
    };
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS EnSightPreTranslateCbk: 
-      public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
       EnSightPreTranslateCbk(){;}
       virtual ~EnSightPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
    };
 protected:
    EnSightPreTranslateCbk cmdParser;
    EnSightTranslateCbk ensightToVTK;
 };
-
+}
+}
 }
 #endif//_ENSIGHT_TRANSLATOR_H_

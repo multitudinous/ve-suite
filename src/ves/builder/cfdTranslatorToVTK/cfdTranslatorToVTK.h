@@ -39,7 +39,11 @@
 //class vtkDataSet;
 class vtkDataObject;
 #include <ves/VEConfig.h>
-namespace VE_Builder
+namespace ves
+{
+namespace builder
+{
+namespace cfdTranslatorToVTK
 {
 class VE_BUILDER_EXPORTS cfdTranslatorToVTK
 {
@@ -93,7 +97,7 @@ public:
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
       virtual void Translate(vtkDataObject*& outputDataset,
-		             VE_Builder::cfdTranslatorToVTK* toVTK) = 0;
+		             cfdTranslatorToVTK* toVTK) = 0;
    protected:
    };
    ///////////////////////////////////////////////////////////
@@ -103,7 +107,7 @@ public:
    public:
       PostTranslateCallback(){};
       virtual ~PostTranslateCallback(){};
-      virtual void PostProcess(VE_Builder::cfdTranslatorToVTK* toVTK) = 0;
+      virtual void PostProcess(cfdTranslatorToVTK* toVTK) = 0;
    protected:
    };
 
@@ -171,5 +175,7 @@ protected:
 
    bool isTransient;
 };
+}
+}
 }
 #endif //_CFD_TRANSLATOR_TO_VTK_H_

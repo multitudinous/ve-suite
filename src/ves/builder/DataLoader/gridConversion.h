@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef GRID_CONVERSION_H
 #define GRID_CONVERSION_H
@@ -40,10 +38,18 @@ class vtkStructuredGrid;
 class vtkUnstructuredGrid;
 class vtkDataSet;
 
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
+{
 // allow conversion of any kind of vtkDataSet to a vtkUnstructuredGrid
 vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid );
 
 // allow conversion of vtkRectilinearGrids to vtkStructuredGrids
 vtkStructuredGrid * convertToStructuredGrid( vtkRectilinearGrid * rgrid );
-
+}
+}
+}
 #endif //GRID_CONVERSION_H

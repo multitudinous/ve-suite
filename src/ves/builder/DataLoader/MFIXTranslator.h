@@ -29,18 +29,20 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _MFIX_TRANSLATOR_H_
 #define _MFIX_TRANSLATOR_H_
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS MFIXTranslator: 
-   public VE_Builder::cfdTranslatorToVTK
+   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    MFIXTranslator();
@@ -48,7 +50,7 @@ public:
    ///Display help for the MFIX translator
    virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       MFIXTranslateCbk(){;}
@@ -62,17 +64,18 @@ public:
    };
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS MFIXPreTranslateCbk: 
-      public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
       MFIXPreTranslateCbk(){;}
       virtual ~MFIXPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
    };
 protected:
    MFIXPreTranslateCbk cmdParser;
    MFIXTranslateCbk mfixToVTK;
 };
-
+}
+}
 }
 #endif//_MFIX_TRANSLATOR_H_

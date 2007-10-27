@@ -41,11 +41,14 @@
 #include <ves/builder/DataLoader/StarCDTranslator.h>
 #include <ves/builder/DataLoader/AnsysTranslator.h>
 
+#include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
+
 #include <ves/xplorer/util/fileIO.h>
 #include <vtkDataObject.h>
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 //////////////////////
 //Constructor       //
 //////////////////////
@@ -55,23 +58,23 @@ DataLoader::DataLoader()
    activeLoader = 0;
    // load up the translator map
    // AVS
-   translatorMap[ "avs" ] = new VE_Builder::AVSTranslator();
+   translatorMap[ "avs" ] = new AVSTranslator();
    // REI
-   translatorMap[ "BANFDB" ] = new VE_Builder::cfdREITranslator();
+   translatorMap[ "BANFDB" ] = new cfdREITranslator();
    // DICOM
-   translatorMap[ "dcm" ] = new VE_Builder::cfdDICOMTranslator();
+   translatorMap[ "dcm" ] = new cfdDICOMTranslator();
    // Fluent
-   translatorMap[ "cas" ] = new VE_Builder::FluentTranslator();
+   translatorMap[ "cas" ] = new FluentTranslator();
    // MFIX
-   translatorMap[ "mfix" ] = new VE_Builder::MFIXTranslator();
+   translatorMap[ "mfix" ] = new MFIXTranslator();
    // EnSight
-   translatorMap[ "ens" ] = new VE_Builder::EnSightTranslator();
+   translatorMap[ "ens" ] = new EnSightTranslator();
    // Plot3D
-   translatorMap[ "xyz" ] = new VE_Builder::plot3dReader();
+   translatorMap[ "xyz" ] = new plot3dReader();
    // StarCD
-   translatorMap[ "star" ] = new VE_Builder::StarCDTranslator();
+   translatorMap[ "star" ] = new StarCDTranslator();
    // ANSYS
-   translatorMap[ "rst" ] = new VE_Builder::AnsysTranslator();
+   translatorMap[ "rst" ] = new AnsysTranslator();
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::~DataLoader()
@@ -113,7 +116,7 @@ vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
    }
    else
    {
-      std::map< std::string, cfdTranslatorToVTK* >::iterator iter;
+      std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* >::iterator iter;
       for ( iter = translatorMap.begin(); iter != translatorMap.end(); ++iter )
       {
          iter->second->DisplayHelp();
@@ -121,7 +124,7 @@ vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
       return 0;
    }
    //Check and see if we have a loader
-   std::map< std::string, cfdTranslatorToVTK* >::iterator iter;
+   std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* >::iterator iter;
    iter = translatorMap.find( fileExtension );
    if ( iter == translatorMap.end() )
    {

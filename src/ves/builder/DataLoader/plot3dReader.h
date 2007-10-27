@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLOT3DREADER_H
 #define PLOT3DREADER_H
@@ -44,9 +42,13 @@ class vtkAppendFilter;
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
 {
-class  VE_USER_BUILDER_EXPORTS plot3dReader: public VE_Builder::cfdTranslatorToVTK
+namespace builder
+{
+namespace DataLoader
+{
+class  VE_USER_BUILDER_EXPORTS plot3dReader: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    plot3dReader( void );
@@ -55,7 +57,7 @@ public:
    ///Display help for the Plot3D translator
    virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS Plot3DTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS Plot3DTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       Plot3DTranslateCbk(){;}
@@ -65,7 +67,7 @@ public:
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
       virtual void Translate(vtkDataObject*& outputDataset,
-                             cfdTranslatorToVTK* toVTK);
+                             ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
       ///This creates additional scalars from vector components
       ///\param outputDataset Dataset to be used and modified
    private:
@@ -83,12 +85,12 @@ public:
    };
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS Plot3DPreTranslateCbk: 
-      public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
       Plot3DPreTranslateCbk(){;}
       virtual ~Plot3DPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
       std::string GetIBlankFlag( void );
       std::string GetNumberOfDimensions( void );
       std::string GetMultigridFlag( void );
@@ -128,5 +130,7 @@ protected:
    Plot3DPreTranslateCbk cmdParser;
    Plot3DTranslateCbk plot3dToVTK;
 };
+}
+}
 }
 #endif

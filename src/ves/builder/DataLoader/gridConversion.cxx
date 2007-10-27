@@ -40,8 +40,9 @@
 #include <vtkIdList.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
+using namespace ves::builder::DataLoader;
 
-vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
+vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDataSet * rgrid )
 {
    int debug = 0;
 
@@ -110,7 +111,7 @@ vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
    return ugrid;
 }
 
-vtkStructuredGrid * convertToStructuredGrid( vtkRectilinearGrid * rGrid )
+vtkStructuredGrid* ves::builder::DataLoader::convertToStructuredGrid( vtkRectilinearGrid * rGrid )
 {
    int debug = 0;
 

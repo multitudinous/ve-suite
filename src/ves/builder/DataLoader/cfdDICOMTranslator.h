@@ -36,9 +36,14 @@
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder{
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
+{
 class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator: 
-   public VE_Builder::cfdTranslatorToVTK{
+   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK{
 
 public:
    cfdDICOMTranslator();
@@ -46,7 +51,7 @@ public:
    ///Display help for the DICOM translator
    virtual void DisplayHelp( void );
  
-   class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback{
+   class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback{
    public:
       DICOMTranslateCbk(){};
       virtual ~DICOMTranslateCbk(){};
@@ -58,7 +63,7 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    protected:
    };
-   class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback{
+   class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
    public:
       DICOMPreTranslateCbk(){};
       virtual ~DICOMPreTranslateCbk(){};
@@ -68,6 +73,7 @@ protected:
    DICOMPreTranslateCbk _cmdParser;
    DICOMTranslateCbk _dicomToVTK;
 };
-
+}
+}
 }
 #endif//_CFD_DICOM_TRANSLATOR_H_

@@ -39,7 +39,7 @@
 #include <vtkDataObject.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 #include <ves/xplorer/util/fileIO.h>
-using namespace VE_Builder;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructor                         //
 ////////////////////////////////////////

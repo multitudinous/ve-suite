@@ -43,7 +43,8 @@
 
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -60,16 +61,16 @@ FluentTranslator::~FluentTranslator()
 }
 //////////////////////////////////////////////////////////////////////////
 void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               VE_Builder::cfdTranslatorToVTK* toVTK)
+                                               cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputDataset,
-		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
+		                                     cfdTranslatorToVTK* toVTK )
 {
-   VE_Builder::FluentTranslator* FluentToVTK =
-              dynamic_cast< VE_Builder::FluentTranslator* >( toVTK );
+   FluentTranslator* FluentToVTK =
+              dynamic_cast< FluentTranslator* >( toVTK );
    if ( FluentToVTK )
    {
 	   vtkFLUENTReader* reader = vtkFLUENTReader::New();

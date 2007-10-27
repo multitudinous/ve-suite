@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _STARCD_TRANSLATOR_H_
 #define _STARCD_TRANSLATOR_H_
@@ -38,9 +36,13 @@
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
 {
-class VE_USER_BUILDER_EXPORTS StarCDTranslator : public VE_Builder::cfdTranslatorToVTK
+namespace builder
+{
+namespace DataLoader
+{
+class VE_USER_BUILDER_EXPORTS StarCDTranslator : public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    StarCDTranslator();
@@ -48,7 +50,7 @@ public:
    ///Display help for the StarCD translator
    virtual void DisplayHelp( void );
    
-   class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       StarCDTranslateCbk(){};
@@ -61,17 +63,18 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    protected:
    };
-   class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback{
+   class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
    public:
       StarCDPreTranslateCbk(){};
       virtual ~StarCDPreTranslateCbk(){};
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
    protected:
    };
 protected:
    StarCDPreTranslateCbk _cmdParser;
    StarCDTranslateCbk starToVTK;
 };
-
+}
+}
 }
 #endif//_STARCD_TRANSLATOR_H_

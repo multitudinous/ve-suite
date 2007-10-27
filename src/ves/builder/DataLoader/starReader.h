@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef STARREADER_H
 #define STARREADER_H
@@ -38,7 +36,12 @@
 #include <string>
 
 class vtkUnstructuredGrid;
-
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
+{
 class starReader
 {
    public:
@@ -75,4 +78,7 @@ class starReader
       int   scaleIndex;
       float scaleFactor;
 };
+}
+}
+}
 #endif

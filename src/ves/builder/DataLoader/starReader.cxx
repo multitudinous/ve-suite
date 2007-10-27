@@ -49,6 +49,7 @@
 
 using namespace ves::xplorer::util;
 using std::istringstream;
+using namespace ves::builder::DataLoader;
 
 starReader::starReader( std::string paramFile )
 {

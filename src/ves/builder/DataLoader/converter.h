@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CONVERTER_H
 #define CONVERTER_H
@@ -38,6 +36,14 @@
 class vtkFloatArray;
 class vtkPointData;
 
-extern void letUsersAddParamsToField( const int numParams, vtkFloatArray** data, vtkPointData * pointData, int verbose = 1 );
-
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
+{
+    extern void letUsersAddParamsToField( const int numParams, vtkFloatArray** data, vtkPointData * pointData, int verbose = 1 );
+}
+}
+}
 #endif    // CONVERTER_H

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CFD_REI_TRANS_H_
 #define _CFD_REI_TRANS_H_
@@ -39,8 +37,13 @@
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 #include <set>
 
-namespace VE_Builder{
-class VE_USER_BUILDER_EXPORTS cfdREITranslator: public VE_Builder::cfdTranslatorToVTK
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
+{
+class VE_USER_BUILDER_EXPORTS cfdREITranslator: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    cfdREITranslator();
@@ -48,7 +51,7 @@ public:
    ///Display help for the REI translator
    virtual void DisplayHelp( void );
 
-   class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       REITranslatorCbk(){};
@@ -62,7 +65,7 @@ public:
       int debug;
    protected:
    };
-   class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+   class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
       REIPreTranslatorCbk(){};
@@ -74,5 +77,7 @@ protected:
    REIPreTranslatorCbk _cmdParser;
    REITranslatorCbk _reiTranslator;
 };
+}
+}
 }
 #endif//_CFD_REI_TRANS_H_

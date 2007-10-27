@@ -46,12 +46,22 @@
 
 class vtkDataObject;
 
-namespace VE_Builder
+namespace ves
 {
-   class cfdTranslatorToVTK;
+namespace builder
+{
+namespace cfdTranslatorToVTK
+{
+    class cfdTranslatorToVTK;
+}
+}
 }
 
-namespace VE_Builder
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS DataLoader
 {
@@ -67,7 +77,7 @@ private:
    DataLoader& operator= ( const DataLoader& );
 public:   
    ///Get the active translator for the data that is loaded.
-   cfdTranslatorToVTK* GetActiveTranslator( void );
+   ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* GetActiveTranslator( void );
 
    ///Set the data file name to be translated.
    ///\param inputData The file name of the data to be loaded.
@@ -80,8 +90,10 @@ public:
 private:
    std::string inputDataName;///<The name of the data file.
    std::string inputDataDir;///<The name of the input data dir.
-   cfdTranslatorToVTK* activeLoader;///<The pointer to the active loader
-   std::map< std::string, cfdTranslatorToVTK* > translatorMap;///<Map the translators to a filename or extension, must be unique
+   ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* activeLoader;///<The pointer to the active loader
+   std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* > translatorMap;///<Map the translators to a filename or extension, must be unique
 };
+}
+}
 }
 #endif// _DATA_LOADER_H_

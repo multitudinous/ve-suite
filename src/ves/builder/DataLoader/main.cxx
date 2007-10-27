@@ -32,13 +32,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <ves/builder/DataLoader/DataLoader.h>
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ///////////////////////////////////////////////////////////////////
 //Example of how to read dicom files and create vtk files for the//
 //dicom data                                                     //
 ///////////////////////////////////////////////////////////////////
 int main(int argc, char** argv)
 {
-   VE_Builder::DataLoader loader;
+   DataLoader loader;
    loader.SetInputData( "something", "somedir" );
    vtkDataObject* tempData = loader.GetVTKDataSet( argc, argv );
    return 0;

@@ -39,7 +39,8 @@
 
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -56,16 +57,16 @@ AVSTranslator::~AVSTranslator()
 }
 //////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               VE_Builder::cfdTranslatorToVTK* toVTK)
+                                               cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                     VE_Builder::cfdTranslatorToVTK* toVTK)
+		                                     cfdTranslatorToVTK* toVTK)
 {
-   VE_Builder::AVSTranslator* AVSToVTK =
-              dynamic_cast<VE_Builder::AVSTranslator*>(toVTK);
+   AVSTranslator* AVSToVTK =
+              dynamic_cast<AVSTranslator*>(toVTK);
    if(AVSToVTK)
    {
       vtkAVSucdReader* avsReader = vtkAVSucdReader::New();

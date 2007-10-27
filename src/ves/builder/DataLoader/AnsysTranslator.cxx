@@ -37,7 +37,8 @@
 
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -54,16 +55,16 @@ AnsysTranslator::~AnsysTranslator()
 }
 //////////////////////////////////////////////////////////////////////////
 void AnsysTranslator::AnsysPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               VE_Builder::cfdTranslatorToVTK* toVTK)
+                                               cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AnsysTranslator::AnsysTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                     VE_Builder::cfdTranslatorToVTK* toVTK)
+		                                     cfdTranslatorToVTK* toVTK)
 {
-   VE_Builder::AnsysTranslator* ansysTransVTK =
-              dynamic_cast<VE_Builder::AnsysTranslator*>(toVTK);
+   AnsysTranslator* ansysTransVTK =
+              dynamic_cast<AnsysTranslator*>(toVTK);
    if ( ansysTransVTK )
    {
       ansysReader* ansys = new ansysReader( ansysTransVTK->GetFile(0).c_str() );

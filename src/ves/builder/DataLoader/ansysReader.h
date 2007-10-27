@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef ANSYSREADER_H
 #define ANSYSREADER_H
@@ -43,6 +41,12 @@ class vtkUnstructuredGrid;
 class vtkIntArray;
 class vtkDoubleArray;
 
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
+{
 class ansysReader
 {
    public:
@@ -166,4 +170,7 @@ class ansysReader
       vtkIntArray * pointerToMidPlaneNode;
       int32 int32MaximumFileLength;
 };
+}
+}
+}
 #endif

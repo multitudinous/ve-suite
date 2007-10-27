@@ -29,16 +29,17 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include <ves/builder/DataLoader/converter.h>
+
 #include <iostream>
 
 #include <vtkPointData.h>
 #include <vtkFloatArray.h> // this code requires VTK4
 
+using namespace ves::builder::DataLoader;
 
-void letUsersAddParamsToField( const int numParams, vtkFloatArray** data,
+void ves::builder::DataLoader::letUsersAddParamsToField( const int numParams, vtkFloatArray** data,
                                vtkPointData* pointData, int verbose )
 {  
    int debug  = 0;

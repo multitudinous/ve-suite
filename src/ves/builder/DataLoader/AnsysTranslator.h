@@ -36,9 +36,13 @@
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
 {
-class VE_USER_BUILDER_EXPORTS AnsysTranslator : public VE_Builder::cfdTranslatorToVTK
+namespace builder
+{
+namespace DataLoader
+{
+class VE_USER_BUILDER_EXPORTS AnsysTranslator : public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    AnsysTranslator();
@@ -46,7 +50,7 @@ public:
    ///Display help for the StarCD translator
    virtual void DisplayHelp( void );
    
-   class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       AnsysTranslateCbk(){};
@@ -59,17 +63,18 @@ public:
 		                     cfdTranslatorToVTK* toVTK);
    protected:
    };
-   class VE_USER_BUILDER_EXPORTS AnsysPreTranslateCbk: public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback{
+   class VE_USER_BUILDER_EXPORTS AnsysPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
    public:
       AnsysPreTranslateCbk(){};
       virtual ~AnsysPreTranslateCbk(){};
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
    protected:
    };
 protected:
    AnsysPreTranslateCbk _cmdParser;
    AnsysTranslateCbk ansysToVTK;
 };
-
+}
+}
 }
 #endif//ANSYS_TRANSLATOR_H_

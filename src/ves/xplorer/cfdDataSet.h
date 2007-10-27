@@ -86,9 +86,15 @@ namespace util
 }
 }
 
-namespace VE_Builder
+namespace ves
 {
-   class DataLoader;
+namespace builder
+{
+namespace DataLoader
+{
+    class DataLoader;
+}
+}
 }
 #include <ves/VEConfig.h>
 #include <ves/xplorer/util/DataObjectHandler.h>
@@ -99,270 +105,270 @@ namespace VE_Builder
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdDataSet
-   {
-      public:
-         cfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
-  
-         ~cfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
+class VE_XPLORER_EXPORTS cfdDataSet
+{
+public:
+    cfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
 
-         // Initialize the number of data to load and parallel process.
-         // By default, use the octree table.
-         void LoadData( const std::string fileName );
-         void LoadData(vtkUnstructuredGrid*,int);
-         void LoadData();
-  
-         // Set/get the range of velocity based on the data set.
-         void SetRange( double dataRange[2] );
-         void SetRange( double dataMin, double dataMax );
-         void GetRange( double dataRange[2] );
-         void GetRange( double &dataMin, double &dataMax );
-         double * GetRange();
-  
-         // Set/get the min/max velocity, used defined.
-         void SetUserRange( double userRange[2] );
-         void SetUserRange( double userMin, double userMax );
-         void GetUserRange( double userRange[2] );
-         void GetUserRange( double &userMin, double &userMax );
-         double * GetUserRange();
+    ~cfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
 
-         // Set/get the length of the diagonal of the bounding box for data set.
-         void SetLength( float len );
-         //void GetLength( float &len );
-         //float GetLength();
+    // Initialize the number of data to load and parallel process.
+    // By default, use the octree table.
+    void LoadData( const std::string fileName );
+    void LoadData(vtkUnstructuredGrid*,int);
+    void LoadData();
 
-         // Get the length of the diagonal of the bounding box of the average cell
-         //void GetMeanCellLength( float &len );
-         //float GetMeanCellLength();
+    // Set/get the range of velocity based on the data set.
+    void SetRange( double dataRange[2] );
+    void SetRange( double dataMin, double dataMax );
+    void GetRange( double dataRange[2] );
+    void GetRange( double &dataMin, double &dataMax );
+    double * GetRange();
 
-         // Set/get the step length for streamline integration.
-         void SetStepLength( float sLen );
-         void GetStepLength( float &sLen );
-         float GetStepLength();
+    // Set/get the min/max velocity, used defined.
+    void SetUserRange( double userRange[2] );
+    void SetUserRange( double userMin, double userMax );
+    void GetUserRange( double userRange[2] );
+    void GetUserRange( double &userMin, double &userMax );
+    double * GetUserRange();
 
-         // Set/get the maximum streamline integration time.
-         void SetMaxTime( float mT );
-         void GetMaxTime( float &mT );
-         float GetMaxTime();
+    // Set/get the length of the diagonal of the bounding box for data set.
+    void SetLength( float len );
+    //void GetLength( float &len );
+    //float GetLength();
 
-         // Set/get time step for streamline integration
-         void SetTimeStep( float tStep );
-         void GetTimeStep( float &tStep );
-         float GetTimeStep();
+    // Get the length of the diagonal of the bounding box of the average cell
+    //void GetMeanCellLength( float &len );
+    //float GetMeanCellLength();
 
-         // Get the vtk look up table.
-         vtkLookupTable * GetLookupTable();
+    // Set/get the step length for streamline integration.
+    void SetStepLength( float sLen );
+    void GetStepLength( float &sLen );
+    float GetStepLength();
 
-         // Get the single piece original data.
-         vtkUnstructuredGrid * GetUnsData();
-         vtkPolyData * GetPolyData();
-         vtkDataObject * GetDataSet();
+    // Set/get the maximum streamline integration time.
+    void SetMaxTime( float mT );
+    void GetMaxTime( float &mT );
+    float GetMaxTime();
 
-         void SetType();       // compute dataset type by looking at the file
-         void SetType( int );  // manually set the dataset type
-         int GetType();        // get the dataset type
+    // Set/get time step for streamline integration
+    void SetTimeStep( float tStep );
+    void GetTimeStep( float &tStep );
+    float GetTimeStep();
 
-         // SetActiveScalar and compute the actual scalar range and the pretty range for display purposes
-         // 0 <= activeScalar < numScalars
-         void SetActiveScalar( int );
-         void SetActiveScalar( std::string scalarName );
-         int GetActiveScalar();
+    // Get the vtk look up table.
+    vtkLookupTable * GetLookupTable();
 
-         void SetActiveVector( int );
-         void SetActiveVector( std::string vectorName );
-         int GetActiveVector();
+    // Get the single piece original data.
+    vtkUnstructuredGrid * GetUnsData();
+    vtkPolyData * GetPolyData();
+    vtkDataObject * GetDataSet();
 
-         // Update the geometrical properties of the mesh
-         void UpdatePropertiesForNewMesh();
+    void SetType();       // compute dataset type by looking at the file
+    void SetType( int );  // manually set the dataset type
+    int GetType();        // get the dataset type
 
-         static void AutoComputeUserRange( const double rawRange[2],
-                                    double prettyRange[2] );
+    // SetActiveScalar and compute the actual scalar range and the pretty range for display purposes
+    // 0 <= activeScalar < numScalars
+    void SetActiveScalar( int );
+    void SetActiveScalar( std::string scalarName );
+    int GetActiveScalar();
 
-         void ResetScalarBarRange( double min, double max );
+    void SetActiveVector( int );
+    void SetActiveVector( std::string vectorName );
+    int GetActiveVector();
 
-         void SetFileName( const std::string filename );
-         void SetFileName_OnFly(int);
-         std::string GetFileName();
+    // Update the geometrical properties of the mesh
+    void UpdatePropertiesForNewMesh();
 
-         void SetPrecomputedDataSliceDir( const std::string newDir );
-         std::string GetPrecomputedDataSliceDir();
+    static void AutoComputeUserRange( const double rawRange[2],
+                double prettyRange[2] );
 
-         void SetPrecomputedSurfaceDir( const std::string newDir );
-         std::string GetPrecomputedSurfaceDir();
+    void ResetScalarBarRange( double min, double max );
 
-         cfdPlanes * GetPrecomputedXSlices();
-         cfdPlanes * GetPrecomputedYSlices();
-         cfdPlanes * GetPrecomputedZSlices();
-         cfdPlanes * GetPrecomputedSlices( int xyz );
+    void SetFileName( const std::string filename );
+    void SetFileName_OnFly(int);
+    std::string GetFileName();
 
-         void StoreScalarInfo();
+    void SetPrecomputedDataSliceDir( const std::string newDir );
+    std::string GetPrecomputedDataSliceDir();
 
-         #ifdef USE_OMP
-            vtkUnstructuredGrid * GetData(int i);
-            int GetNoOfDataForProcs();       // Set/get number of data for parallel process.
-         #endif
+    void SetPrecomputedSurfaceDir( const std::string newDir );
+    std::string GetPrecomputedSurfaceDir();
 
-         void SetArrow( vtkPolyData * );
-         vtkPolyData * GetArrow();
+    cfdPlanes * GetPrecomputedXSlices();
+    cfdPlanes * GetPrecomputedYSlices();
+    cfdPlanes * GetPrecomputedZSlices();
+    cfdPlanes * GetPrecomputedSlices( int xyz );
 
-         void SetNewlyActivated();
-         void SetNotNewlyActivated();
-         int IsNewlyActivated();
+    void StoreScalarInfo();
 
-         int GetNumberOfScalars();
-         std::string GetScalarName( int );
+#ifdef USE_OMP
+    vtkUnstructuredGrid * GetData(int i);
+    int GetNoOfDataForProcs();       // Set/get number of data for parallel process.
+#endif
 
-         int GetNumberOfVectors();
-         std::string GetVectorName( int );
+    void SetArrow( vtkPolyData * );
+    vtkPolyData * GetArrow();
 
-         cfdDataSet * GetParent();
-         void SetParent( cfdDataSet * );
+    void SetNewlyActivated();
+    void SetNotNewlyActivated();
+    int IsNewlyActivated();
 
-         void SetActualScalarRange( int, double * );
-         void GetActualScalarRange( int, double * );
-         double* GetActualScalarRange( int );
-         double* GetActualScalarRange(std::string name);
+    int GetNumberOfScalars();
+    std::string GetScalarName( int );
 
-         // returns displayed range of active scalar
-         double * GetDisplayedScalarRange();
+    int GetNumberOfVectors();
+    std::string GetVectorName( int );
 
-         // get/set displayed range of any scalar
-         double * GetDisplayedScalarRange( int );
-         void SetDisplayedScalarRange( int , double * );
+    cfdDataSet * GetParent();
+    void SetParent( cfdDataSet * );
 
-         double * GetVectorMagRange();
+    void SetActualScalarRange( int, double * );
+    void GetActualScalarRange( int, double * );
+    double* GetActualScalarRange( int );
+    double* GetActualScalarRange(std::string name);
 
-         // get/set this dataset's DCS
-         VE_SceneGraph::DCS* GetDCS();
-         void SetDCS( VE_SceneGraph::DCS* );
+    // returns displayed range of active scalar
+    double * GetDisplayedScalarRange();
 
-         VE_SceneGraph::Switch* GetSwitchNode( void );
+    // get/set displayed range of any scalar
+    double * GetDisplayedScalarRange( int );
+    void SetDisplayedScalarRange( int , double * );
 
-         //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
-         //void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
+    double * GetVectorMagRange();
 
-         int IsPartOfTransientSeries();
-         void SetAsPartOfTransientSeries();
+    // get/set this dataset's DCS
+    VE_SceneGraph::DCS* GetDCS();
+    void SetDCS( VE_SceneGraph::DCS* );
 
-         void Print();
-         ///Accessor methods to store and query the uuids for specfic
-         ///attributes of a cfdDataSet
-         void SetUUID( std::string attribute, std::string uuid );
-         std::string GetUUID( std::string attribute );
+    VE_SceneGraph::Switch* GetSwitchNode( void );
 
-         ///Create the bbox geode for the dataset
-         void CreateBoundingBoxGeode( void );
-         ///Create the wireframe geode for the dataset
-         void CreateWireframeGeode( void );
-         ///Set the bounding box for this dataset
-         ///\param state The state of the bounding box 0 or 1 
-         void SetBoundingBoxState( unsigned int state );
-         ///Set the wireframe state for this dataset
-         ///\param state The state of the wireframe 0 or 1 
-         void SetWireframeState( unsigned int state );
-         ///Set the axes state for this dataset
-         ///\param state The state of the axes state 0 or 1 
-         void SetAxesState( unsigned int state );
-         ///Set the bounding box for this dataset
-         VE_Xplorer::DataSetAxis* GetDataSetAxes( void );
-         ///Set the scalar for this dataset
-         ///\param state The state of the scalar bar 0 or 1 
-        void SetDataSetScalarState( unsigned int state );
-        ///Get the scalar bar
-        VE_Xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
+    //VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+    //void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
 
-		///Get the bounds of the vtkDataObject contained in the cfdDataSet
-		///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
-		void GetBounds(double bounds[6]);
+    int IsPartOfTransientSeries();
+    void SetAsPartOfTransientSeries();
 
-        ///Get the bounds of the vtkDataObject contained in the cfdDataSet
-		///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
-		double* GetBounds();
+    void Print();
+    ///Accessor methods to store and query the uuids for specfic
+    ///attributes of a cfdDataSet
+    void SetUUID( std::string attribute, std::string uuid );
+    std::string GetUUID( std::string attribute );
 
-        ///Get the scalar range by name
-        ///\param scalarName The name of the scalar to get the range
-        double* GetScalarRange(std::string scalarName);
-		
-        ///Get the number of points
-        unsigned int GetNumberOfPoints();
+    ///Create the bbox geode for the dataset
+    void CreateBoundingBoxGeode( void );
+    ///Create the wireframe geode for the dataset
+    void CreateWireframeGeode( void );
+    ///Set the bounding box for this dataset
+    ///\param state The state of the bounding box 0 or 1 
+    void SetBoundingBoxState( unsigned int state );
+    ///Set the wireframe state for this dataset
+    ///\param state The state of the wireframe 0 or 1 
+    void SetWireframeState( unsigned int state );
+    ///Set the axes state for this dataset
+    ///\param state The state of the axes state 0 or 1 
+    void SetAxesState( unsigned int state );
+    ///Set the bounding box for this dataset
+    VE_Xplorer::DataSetAxis* GetDataSetAxes( void );
+    ///Set the scalar for this dataset
+    ///\param state The state of the scalar bar 0 or 1 
+    void SetDataSetScalarState( unsigned int state );
+    ///Get the scalar bar
+    VE_Xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
+
+    ///Get the bounds of the vtkDataObject contained in the cfdDataSet
+    ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
+    void GetBounds(double bounds[6]);
+
+    ///Get the bounds of the vtkDataObject contained in the cfdDataSet
+    ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
+    double* GetBounds();
+
+    ///Get the scalar range by name
+    ///\param scalarName The name of the scalar to get the range
+    double* GetScalarRange(std::string scalarName);
+
+    ///Get the number of points
+    unsigned int GetNumberOfPoints();
 private:
-	     ///Operator callbacks for DataObjectHandler
-	     std::map<std::string, ves::xplorer::util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
-         std::map< std::string, std::string > dataSetUUIDMap;
-         
-         double** actualScalarRange;
-         double** displayedScalarRange;
+    ///Operator callbacks for DataObjectHandler
+    std::map<std::string, ves::xplorer::util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
+    std::map< std::string, std::string > dataSetUUIDMap;
 
-         cfdDataSet* parent;
-         double m_bounds[6];///The bounding box data;
-         int isNewlyActivated;
+    double** actualScalarRange;
+    double** displayedScalarRange;
 
-         int CountNumberOfParameters( const int numComponents );
-         std::vector<std::string> GetParameterNames( const int numComponents, const int numParameters );
+    cfdDataSet* parent;
+    double m_bounds[6];///The bounding box data;
+    int isNewlyActivated;
 
-         double* range;          // Range of scalar.
-   
-         double* definedRange;   // 'prettied' range of scalar that is automatically computed or user-defined.
+    int CountNumberOfParameters( const int numComponents );
+    std::vector<std::string> GetParameterNames( const int numComponents, const int numParameters );
 
-         double* vectorMagRange; // assumes just one vector
+    double* range;          // Range of scalar.
 
-         float bbDiagonal;        // length of the diagonal of the bounding box.
+    double* definedRange;   // 'prettied' range of scalar that is automatically computed or user-defined.
 
-         double meanCellBBLength; // length of diagonal of average cell bounding box. 
-  
-         float stepLength;        // Step length for streamline integration.
+    double* vectorMagRange; // assumes just one vector
 
-         float maxTime;           // Maximum time of integration for streamline.
+    float bbDiagonal;        // length of the diagonal of the bounding box.
 
-         float timeStep;          // Time step for streamline integration.
+    double meanCellBBLength; // length of diagonal of average cell bounding box. 
 
-         vtkLookupTable* lut;    // Lookup table.
+    float stepLength;        // Step length for streamline integration.
 
-         vtkDataObject* dataSet;    // Original piece of vtk data.
-         int datasetType;         // used by gui to place in appropriate column
+    float maxTime;           // Maximum time of integration for streamline.
 
-         int activeScalar;
-         int activeVector;
+    float timeStep;          // Time step for streamline integration.
 
-         std::string fileName;
-         std::string precomputedDataSliceDir;
-         std::string precomputedSurfaceDir;
+    vtkLookupTable* lut;    // Lookup table.
 
-         cfdPlanes* x_planes;
-         cfdPlanes* y_planes;
-         cfdPlanes* z_planes;
+    vtkDataObject* dataSet;    // Original piece of vtk data.
+    int datasetType;         // used by gui to place in appropriate column
 
-         vtkPolyData* arrow;
+    int activeScalar;
+    int activeVector;
 
-         int numPtDataArrays;
-         int numScalars;
-         int numVectors;
-         std::vector< std::string > scalarName;
-         std::vector< std::string > vectorName;
+    std::string fileName;
+    std::string precomputedDataSliceDir;
+    std::string precomputedSurfaceDir;
 
-         //osg::ref_ptr< VE_SceneGraph::Geode > bboxGeode;
-         osg::ref_ptr< VE_SceneGraph::Geode > wireframeGeode;
-         osg::ref_ptr< VE_SceneGraph::Group > m_visualBBox;
-         //VE_SceneGraph::cfdTempAnimation* animation;
+    cfdPlanes* x_planes;
+    cfdPlanes* y_planes;
+    cfdPlanes* z_planes;
 
-		osg::ref_ptr< VE_SceneGraph::DCS > dcs;
-         osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
-		osg::ref_ptr< VE_SceneGraph::Group > classic;
-         osg::ref_ptr< VE_SceneGraph::Group > textureBased; 
+    vtkPolyData* arrow;
 
-         VE_Xplorer::DataSetAxis* dataSetAxes;
-         VE_Xplorer::DataSetScalarBar* dataSetScalarBar;
-         ves::xplorer::util::cfdVTKFileHandler* _vtkFHndlr;
-		 ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
-		 int partOfTransientSeries;
-         //int intRange[2];
-         VE_Builder::DataLoader* m_externalFileLoader;///<Translator interface
+    int numPtDataArrays;
+    int numScalars;
+    int numVectors;
+    std::vector< std::string > scalarName;
+    std::vector< std::string > vectorName;
 
-      #ifdef USE_OMP 
-         unsigned int noOfData;   // Total no. of octants.
-         vtkUnstructuredGridReader *dataReader[MAX_DATA];
-         vtkUnstructuredGrid *data[MAX_DATA];
-      #endif
-   };
+    //osg::ref_ptr< VE_SceneGraph::Geode > bboxGeode;
+    osg::ref_ptr< VE_SceneGraph::Geode > wireframeGeode;
+    osg::ref_ptr< VE_SceneGraph::Group > m_visualBBox;
+    //VE_SceneGraph::cfdTempAnimation* animation;
+
+    osg::ref_ptr< VE_SceneGraph::DCS > dcs;
+    osg::ref_ptr< VE_SceneGraph::Switch > switchNode;
+    osg::ref_ptr< VE_SceneGraph::Group > classic;
+    osg::ref_ptr< VE_SceneGraph::Group > textureBased; 
+
+    VE_Xplorer::DataSetAxis* dataSetAxes;
+    VE_Xplorer::DataSetScalarBar* dataSetScalarBar;
+    ves::xplorer::util::cfdVTKFileHandler* _vtkFHndlr;
+    ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
+    int partOfTransientSeries;
+    //int intRange[2];
+    ves::builder::DataLoader::DataLoader* m_externalFileLoader;///<Translator interface
+
+#ifdef USE_OMP 
+    unsigned int noOfData;   // Total no. of octants.
+    vtkUnstructuredGridReader *dataReader[MAX_DATA];
+    vtkUnstructuredGrid *data[MAX_DATA];
+#endif
+};
 }
 #endif

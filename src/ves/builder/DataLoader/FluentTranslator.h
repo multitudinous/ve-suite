@@ -29,18 +29,20 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _FLUENT_TRANSLATOR_H_
 #define _FLUENT_TRANSLATOR_H_
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
-namespace VE_Builder
+namespace ves
+{
+namespace builder
+{
+namespace DataLoader
 {
 class VE_USER_BUILDER_EXPORTS FluentTranslator: 
-   public VE_Builder::cfdTranslatorToVTK
+    public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
    FluentTranslator();
@@ -48,7 +50,7 @@ public:
    ///Display help for the Fluent translator
    virtual void DisplayHelp( void );
    //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public VE_Builder::cfdTranslatorToVTK::TranslateCallback
+   class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
    {
    public:
       FluentTranslateCbk(){;}
@@ -62,17 +64,18 @@ public:
    };
    //////////////////////////////////////////////////////
    class VE_USER_BUILDER_EXPORTS FluentPreTranslateCbk: 
-      public VE_Builder::cfdTranslatorToVTK::PreTranslateCallback
+      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
    {
    public:
       FluentPreTranslateCbk(){;}
       virtual ~FluentPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
    };
 protected:
    FluentPreTranslateCbk cmdParser;
    FluentTranslateCbk fluentToVTK;
 };
-
+}
+}
 }
 #endif//_FLUENT_TRANSLATOR_H_

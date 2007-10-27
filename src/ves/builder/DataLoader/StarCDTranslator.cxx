@@ -39,7 +39,8 @@
 
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -56,16 +57,16 @@ StarCDTranslator::~StarCDTranslator()
 }
 //////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::StarCDPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               VE_Builder::cfdTranslatorToVTK* toVTK)
+                                               cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::StarCDTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                     VE_Builder::cfdTranslatorToVTK* toVTK)
+		                                     cfdTranslatorToVTK* toVTK)
 {
-   VE_Builder::StarCDTranslator* starCDToVTK =
-              dynamic_cast<VE_Builder::StarCDTranslator*>(toVTK);
+   StarCDTranslator* starCDToVTK =
+              dynamic_cast<StarCDTranslator*>(toVTK);
    if ( starCDToVTK )
    {
       starReader* star = new starReader( starCDToVTK->GetFile(0).c_str() );

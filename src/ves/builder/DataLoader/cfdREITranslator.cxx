@@ -49,7 +49,8 @@
 #include <iostream>
 
 using namespace ves::xplorer::util;
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -64,10 +65,10 @@ cfdREITranslator::~cfdREITranslator()
 }
 /////////////////////////////////////////
 void cfdREITranslator::REITranslatorCbk::Translate(vtkDataObject*& outputDataset,
-		                                           VE_Builder::cfdTranslatorToVTK* toVTK)
+		                                           cfdTranslatorToVTK* toVTK)
 {
-   VE_Builder::cfdREITranslator* reiTranslator =
-                              dynamic_cast<VE_Builder::cfdREITranslator*>(toVTK);
+   cfdREITranslator* reiTranslator =
+                              dynamic_cast<cfdREITranslator*>(toVTK);
 
 //   reiTranslator->SetNumberOfFoundFiles(1);
    if ( reiTranslator )

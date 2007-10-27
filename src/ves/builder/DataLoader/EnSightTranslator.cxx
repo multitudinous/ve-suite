@@ -52,7 +52,8 @@
 #include <iomanip>
 #include <sstream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -69,16 +70,16 @@ EnSightTranslator::~EnSightTranslator()
 }
 //////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               VE_Builder::cfdTranslatorToVTK* toVTK)
+                                               cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDataset,
-		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
+		                                     cfdTranslatorToVTK* toVTK )
 {
-   VE_Builder::EnSightTranslator* EnSightToVTK =
-              dynamic_cast< VE_Builder::EnSightTranslator* >( toVTK );
+   EnSightTranslator* EnSightToVTK =
+              dynamic_cast< EnSightTranslator* >( toVTK );
    if ( !EnSightToVTK )
    {
       return;

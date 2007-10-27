@@ -61,6 +61,7 @@
    std::cout << std::setw(PRINT_WIDTH-3) << #x << " = " << x << std::endl;
 #endif
 using namespace ves::xplorer::util;
+using namespace ves::builder::DataLoader;
 
 ansysReader::ansysReader( std::string input )
 {

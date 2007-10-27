@@ -82,6 +82,7 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace ves::xplorer::util;
+using namespace ves::builder::DataLoader;
 
 cfdDataSet::cfdDataSet( ) :
     parent( this ),
@@ -567,7 +568,7 @@ void cfdDataSet::LoadData()
    {
       if( !m_externalFileLoader )
       {
-         m_externalFileLoader = new VE_Builder::DataLoader();
+         m_externalFileLoader = new DataLoader();
       }
       m_externalFileLoader->SetInputData( "something", "somedir" );
       unsigned int nParams = 7;

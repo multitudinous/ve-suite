@@ -39,7 +39,8 @@
 
 #include <iostream>
 
-using namespace VE_Builder;
+using namespace ves::builder::DataLoader;
+using namespace ves::builder::cfdTranslatorToVTK;
 ////////////////////////////////////////
 //Constructors                        //
 ////////////////////////////////////////
@@ -56,16 +57,16 @@ MFIXTranslator::~MFIXTranslator()
 }
 //////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               VE_Builder::cfdTranslatorToVTK* toVTK)
+                                               cfdTranslatorToVTK* toVTK)
 {
    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
-		                                     VE_Builder::cfdTranslatorToVTK* toVTK )
+		                                     cfdTranslatorToVTK* toVTK )
 {
-   VE_Builder::MFIXTranslator* MFIXToVTK =
-              dynamic_cast< VE_Builder::MFIXTranslator* >( toVTK );
+   MFIXTranslator* MFIXToVTK =
+              dynamic_cast< MFIXTranslator* >( toVTK );
    if ( MFIXToVTK )
    {
 	   vtkMFIXReader *reader = vtkMFIXReader::New();
