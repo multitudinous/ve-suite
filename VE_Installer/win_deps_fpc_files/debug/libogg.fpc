@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../../libogg-1.1.3
+exec_prefix=${prefix}
+libdir=${exec_prefix}/win32/Dynamic_Debug
+includedir=${prefix}/include
+
+Name: libogg
+Description: libogg debug pre-compiled for VES
+Provides: libogg
+Requires:
+Version: 1.1.3
+Libs: /libpath:"${libdir}" ogg_d.lib
+Cflags: -I"${includedir}"
+Arch: noarch
+

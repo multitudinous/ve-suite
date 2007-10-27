@@ -1,0 +1,14 @@
+prefix=${fp_file_cwd}/../../libvorbis-1.2.0
+exec_prefix=${prefix}
+libdir=${exec_prefix}/win32
+includedir=${prefix}/include
+
+Name: libvorbis
+Description: libvorbis debug pre-compiled for VES
+Provides: libvorbis
+Requires: libogg
+Version: 1.2.0
+Libs: /libpath:"${libdir}/Vorbis_Dynamic_Debug" /libpath:"${libdir}/VorbisEnc_Dynamic_Debug" /libpath:"${libdir}/VorbisFile_Dynamic_Debug" vorbis_d.lib vorbisenc_d.lib vorbisfile_d.lib
+Cflags: -I"${includedir}"
+Arch: noarch
+
