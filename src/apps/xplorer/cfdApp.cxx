@@ -101,6 +101,7 @@ using namespace VE_TextureBased;
 using namespace VE_Xplorer;
 using namespace ves::xplorer::util;
 using namespace ves::open::xml;
+using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdApp::cfdApp( int argc, char* argv[] ) 

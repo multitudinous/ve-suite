@@ -70,9 +70,13 @@ namespace plugin
 }
 }
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public EventHandler
+namespace xplorer
+{
+namespace network
+{
+class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public VE_EVENTS::EventHandler
 {
 public:
    ///Constructor
@@ -100,5 +104,7 @@ public:
 private:
    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* _plugins;
 };
+}
+}
 }
 #endif// DELETE_OBJECT_FROM_NETWORK_EVENT_HANDLER_H

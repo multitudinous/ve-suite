@@ -54,7 +54,11 @@ namespace plugin
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
+{
+namespace network
 {
 class VE_XPLORER_NETWORK_EXPORTS cfdVEPluginLoader
 {
@@ -89,5 +93,7 @@ public:
    //The classinfo obj of the each plugin, will be use to generate more instances
    //std::vector<wxPluginLibrary *> libs;
 };
+}
+}
 }
 #endif

@@ -65,6 +65,8 @@ using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace ves::open::xml;
+using namespace ves::xplorer::network;
+
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
 :
@@ -90,7 +92,7 @@ SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=( const S
 {
     if( this != &rhs )
     {
-        VE_EVENTS::SwitchXplorerViewEventHandler::operator=( rhs );
+        SwitchXplorerViewEventHandler::operator=( rhs );
     }
 
     return *this;

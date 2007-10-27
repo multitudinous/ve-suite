@@ -43,9 +43,13 @@ namespace osg
    class AutoTransform;
 }
 
-namespace VE_Xplorer
+namespace ves
 {
-class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public cfdGlobalBase
+namespace xplorer
+{
+namespace network
+{
+class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public VE_Xplorer::cfdGlobalBase
 {
 public:
    NetworkSystemView();
@@ -63,5 +67,7 @@ private:
     osg::ref_ptr<osg::AutoTransform> worldTranslate;
 
 };
+}
+}
 }
 #endif

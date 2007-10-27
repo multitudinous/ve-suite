@@ -60,13 +60,10 @@ namespace VE_SceneGraph
 
 namespace VE_Xplorer
 {
-   class cfdGauges;
-   class cfdDashboard;
-   class cfdInteractiveGeometry;
-   class Body_UI_i;
+   //class cfdGauges;
+   //class cfdDashboard;
+   //class cfdInteractiveGeometry;
    class cfdCommandArray;
-   class cfdVEAvailModules;
-   class cfdVEAvail_Modules;
    class cfdVjObsWrapper;
    class cfdThread;
 }
@@ -91,9 +88,15 @@ namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
 namespace PortableServer { class POA; }
 
-namespace VE_Xplorer
+namespace ves
 {
-class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
+namespace xplorer
+{
+namespace network
+{
+    class cfdVEAvailModules;
+    class Body_UI_i;
+class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public VE_Xplorer::cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
@@ -132,7 +135,7 @@ public:
    ///to have access to scalar information
    void UnbindORB( void );
    ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* ){ return true; }
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray* ){ return true; }
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
    ///This function returns the map of the current plugins 
@@ -154,9 +157,9 @@ private:
    std::string veNetwork;
 
    std::string _activeScalarName;
-   cfdGauges* _gauges;
-   cfdDashboard* _dashBoard;
-   cfdInteractiveGeometry* _geometry;
+   //cfdGauges* _gauges;
+   //cfdDashboard* _dashBoard;
+   //cfdInteractiveGeometry* _geometry;
    Body_UI_i* ui_i;
    osg::ref_ptr< VE_SceneGraph::Group > _masterNode;
 
@@ -177,5 +180,7 @@ private:
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 
 };
+}
+}
 }
 #endif

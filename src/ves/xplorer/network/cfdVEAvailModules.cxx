@@ -36,7 +36,8 @@
 #include <fstream>
 #include <sstream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer::network;
+
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEAvailModules::cfdVEAvailModules()
 {

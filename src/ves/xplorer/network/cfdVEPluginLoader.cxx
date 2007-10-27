@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 #include <ves/xplorer/cfdDebug.h>
@@ -53,12 +52,13 @@ static const std::string DSO_SUFFIX(".so");
 
 using namespace VE_Xplorer;
 using namespace ves::xplorer::plugin;
-
+using namespace ves::xplorer::network;
+////////////////////////////////////////////////////////////////////////////////
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
    plugins.clear();
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 cfdVEPluginLoader::~cfdVEPluginLoader()
 {
    std::map< int, cfdVEBaseClass* >::iterator iter;
@@ -78,7 +78,7 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
    }
    libs.clear();
 }
-//////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int cfdVEPluginLoader::GetNumberOfPlugins( void )
 {
    return plugins.size();

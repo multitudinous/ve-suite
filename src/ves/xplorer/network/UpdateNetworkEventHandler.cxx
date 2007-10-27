@@ -44,6 +44,7 @@
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
+using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -73,7 +74,7 @@ UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=(const UpdateNetw
 {
    if(this != &rhs)
    {
-      VE_EVENTS::UpdateNetworkEventHandler::operator=(rhs);
+      UpdateNetworkEventHandler::operator=(rhs);
    }
    return *this;
 }

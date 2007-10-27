@@ -48,7 +48,11 @@ Body_UI_i API
 #include <string>
 #include <vector>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
+{
+namespace network
 {
 class  Body_UI_i : public virtual POA_Body::UI
 {
@@ -129,5 +133,7 @@ protected:
       ::Error::EUnknown
     )) { ; } 
 };
+}
+}
 }
 #endif

@@ -43,6 +43,7 @@
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
+using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -72,7 +73,7 @@ ReloadPluginsEventHandler& ReloadPluginsEventHandler::operator=(const ReloadPlug
 {
    if(this != &rhs)
    {
-      VE_EVENTS::ReloadPluginsEventHandler::operator=(rhs);
+      ReloadPluginsEventHandler::operator=(rhs);
    }
    return *this;
 }

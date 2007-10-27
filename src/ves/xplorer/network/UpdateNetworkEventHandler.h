@@ -56,9 +56,13 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_NETWORK_EXPORTS UpdateNetworkEventHandler: public EventHandler
+namespace xplorer
+{
+namespace network
+{
+class VE_XPLORER_NETWORK_EXPORTS UpdateNetworkEventHandler: public VE_EVENTS::EventHandler
 {
 public:
    ///Constructor
@@ -85,5 +89,7 @@ public:
 
 private:
 };
+}
+}
 }
 #endif// RELOAD_PLUGINS_EVENT_HANDLER_H

@@ -78,8 +78,9 @@ using namespace VE_SceneGraph;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::xplorer::plugin;
+using namespace ves::xplorer::network;
 
-vprSingletonImpLifetime( VE_Xplorer::cfdExecutive, 15 );
+vprSingletonImpLifetime( ves::xplorer::network::cfdExecutive, 15 );
 
 void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
@@ -159,10 +160,10 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
                 << std::endl;
    }
 
-   _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::DeleteObjectFromNetworkEventHandler();
-   _eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new VE_EVENTS::SwitchXplorerViewEventHandler();
-   _eventHandlers[std::string("Plugin_Control")] = new VE_EVENTS::ReloadPluginsEventHandler();
-   _eventHandlers[std::string("veNetwork Update")] = new VE_EVENTS::UpdateNetworkEventHandler();
+   _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new DeleteObjectFromNetworkEventHandler();
+   _eventHandlers[std::string("CHANGE_XPLORER_VIEW")] = new SwitchXplorerViewEventHandler();
+   _eventHandlers[std::string("Plugin_Control")] = new ReloadPluginsEventHandler();
+   _eventHandlers[std::string("veNetwork Update")] = new UpdateNetworkEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )

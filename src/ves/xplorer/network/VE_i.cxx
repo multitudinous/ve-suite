@@ -30,12 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <ves/xplorer/network/VE_i.h>
 #include <iostream>
 #include <vpr/Sync/Guard.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer::network;
 
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)

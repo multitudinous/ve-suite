@@ -67,9 +67,13 @@ namespace VE_Xplorer
     class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_NETWORK_EXPORTS SwitchXplorerViewEventHandler: public EventHandler
+namespace xplorer
+{
+namespace network
+{
+class VE_XPLORER_NETWORK_EXPORTS SwitchXplorerViewEventHandler: public VE_EVENTS::EventHandler
 {
 public:
     ///Constructor
@@ -102,5 +106,6 @@ private:
 
 };
 }
-
+}
+}
 #endif// SWITCH_XPLORER_VIEW_EVENT_HANDLER_H

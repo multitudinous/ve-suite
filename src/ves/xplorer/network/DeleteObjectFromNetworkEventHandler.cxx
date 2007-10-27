@@ -53,6 +53,7 @@ using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
+using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
@@ -82,7 +83,7 @@ DeleteObjectFromNetworkEventHandler& DeleteObjectFromNetworkEventHandler::operat
 {
    if(this != &rhs)
    {
-      VE_EVENTS::DeleteObjectFromNetworkEventHandler::operator=(rhs);
+      DeleteObjectFromNetworkEventHandler::operator=(rhs);
    }
    return *this;
 }

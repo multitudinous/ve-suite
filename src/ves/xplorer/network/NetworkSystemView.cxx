@@ -65,6 +65,7 @@
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
+using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView()
