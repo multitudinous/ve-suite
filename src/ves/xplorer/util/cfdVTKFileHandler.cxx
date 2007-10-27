@@ -65,7 +65,7 @@
 #include <vtkXMLMultiGroupDataWriter.h>
 #include <fstream>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 //////////////////////////////////////
 //Constructors                      //

@@ -42,7 +42,7 @@
 #include <vtkTransform.h>
 #include <vtkTransformFilter.h>
 #include <vtkSetGet.h> // defines data object types
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    

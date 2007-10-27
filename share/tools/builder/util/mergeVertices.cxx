@@ -39,7 +39,7 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkSetGet.h> // defines data object types
 #include <vtkExtractUnstructuredGrid.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    

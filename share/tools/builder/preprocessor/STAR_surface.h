@@ -46,7 +46,7 @@
 #include <vtkDataSet.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 class surfaceVtkOutput
 {

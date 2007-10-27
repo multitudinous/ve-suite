@@ -6,5 +6,4 @@ srcSubdirs = Split("""
 
 ##Run SConscript files in all of those folders.
 for d in srcSubdirs:
-   #print " dir ", d
    SConscript( dirs = d )

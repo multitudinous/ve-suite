@@ -43,7 +43,7 @@
 
 #include <ves/xplorer/cfdDebug.h>
 using namespace VE_Xplorer;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 cfdSoundHandler::cfdSoundHandler( std::string param )
 {

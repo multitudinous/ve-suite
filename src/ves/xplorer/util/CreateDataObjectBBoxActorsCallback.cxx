@@ -37,7 +37,9 @@
 #include <vtkOutlineFilter.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
-using namespace VE_Util;
+
+using namespace ves::xplorer::util;
+
 //////////////////////////////////////////////////////////////////////
 CreateDataObjectBBoxActorsCallback::CreateDataObjectBBoxActorsCallback()
 {

@@ -97,7 +97,7 @@ DataLoader& DataLoader::operator=( const DataLoader& input)
 vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
 {
    //Data processing loop
-   std::string fileExtension = VE_Util::fileIO::getExtension( inputDataName );
+   std::string fileExtension = ves::xplorer::util::fileIO::getExtension( inputDataName );
    if ( fileExtension.empty() )
    {
       // an example of this would be rei data

@@ -37,7 +37,9 @@
 #include <vtkPointData.h>
 #include <vtkFloatArray.h>
 
-void activateScalar( vtkDataSet * dataSet )
+using namespace ves::xplorer::util;
+
+void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
 {
    // if there are data arrays, count the number of arrays
    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
@@ -97,7 +99,7 @@ void activateScalar( vtkDataSet * dataSet )
    return;
 }
 
-void activateVector( vtkDataSet * dataSet )
+void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
 {
    // if there are data arrays, count the number of arrays
    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();

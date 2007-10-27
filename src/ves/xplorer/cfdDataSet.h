@@ -75,9 +75,15 @@ namespace VE_SceneGraph
    class Geode;
 }
 
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
    class cfdVTKFileHandler;
+}
+}
 }
 
 namespace VE_Builder
@@ -281,7 +287,7 @@ namespace VE_Xplorer
         unsigned int GetNumberOfPoints();
 private:
 	     ///Operator callbacks for DataObjectHandler
-	     std::map<std::string, VE_Util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
+	     std::map<std::string, ves::xplorer::util::DataObjectHandler::DatasetOperatorCallback* > m_dataObjectOps;
          std::map< std::string, std::string > dataSetUUIDMap;
          
          double** actualScalarRange;
@@ -346,8 +352,8 @@ private:
 
          VE_Xplorer::DataSetAxis* dataSetAxes;
          VE_Xplorer::DataSetScalarBar* dataSetScalarBar;
-         VE_Util::cfdVTKFileHandler* _vtkFHndlr;
-		 VE_Util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
+         ves::xplorer::util::cfdVTKFileHandler* _vtkFHndlr;
+		 ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
 		 int partOfTransientSeries;
          //int intRange[2];
          VE_Builder::DataLoader* m_externalFileLoader;///<Translator interface

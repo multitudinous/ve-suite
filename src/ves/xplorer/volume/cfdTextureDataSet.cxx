@@ -225,7 +225,7 @@ void cfdTextureDataSet::CreateTextureManager(std::string textureDescriptionFile)
    std::cout << "|\tReading texture description file: " 
                << textureDescriptionFile << std::endl;
 
-   std::vector< std::string > files = VE_Util::fileIO::GetFilesInDirectory( textureDescriptionFile,std::string( "vti" ) );
+   std::vector< std::string > files = ves::xplorer::util::fileIO::GetFilesInDirectory( textureDescriptionFile,std::string( "vti" ) );
    for ( size_t i = 0; i < files.size(); ++i )
    {         
       std::cout << "|\tLoading texture time step file: " << i << " " << files.at(i) << std::endl;         

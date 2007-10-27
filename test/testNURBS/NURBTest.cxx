@@ -295,7 +295,7 @@ int parseOCCNURBSFile(int argc, char** argv)
 {
    std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
    //std::string nurbsfile(argv[1]);
-   std::vector< std::string > patchFiles = VE_Util::fileIO::GetFilesInDirectory(argv[1],".txt");
+   std::vector< std::string > patchFiles = ves::xplorer::util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
    NURBS::Utilities::OCCNURBSFileReader patchReader;
 

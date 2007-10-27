@@ -36,7 +36,7 @@
 /*!\file fileIO.h
 fileIO API
 */
-/*!\class VE_Util::fileIO
+/*!\class ves::xplorer::util::fileIO
 *
 */
 #include <iosfwd>
@@ -45,7 +45,11 @@ fileIO API
 #include <ves/VEConfig.h>
 
 
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS fileIO
 { 
@@ -129,5 +133,7 @@ public:
    ///\param fullPath The path the relative path is being extracted from.
    static std::string ExtractRelativeDirectoryFromFullPath(std::string fullPath);
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif

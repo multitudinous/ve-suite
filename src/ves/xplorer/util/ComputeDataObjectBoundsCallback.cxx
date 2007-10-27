@@ -35,7 +35,8 @@
 #include <vtkDataSet.h>
 #include <cmath>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
+
 //////////////////////////////////////////////////////////////////
 ComputeDataObjectBoundsCallback::ComputeDataObjectBoundsCallback()
 {

@@ -16,7 +16,6 @@ xplorerSubdirs = Split("""
 
 ##Run SConscript files in all of those folders.
 for d in xplorerSubdirs:
-   #print " dir ", d
    SConscript( dirs = d )
 
 sources = []
@@ -61,10 +60,6 @@ base_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
 base_header_srcs = sca_util.getHeadersRecursive( srcDir )
 sources += map(lambda s: pj('plugin', s), base_plugin_srcs)
 headers += map(lambda s: pj('plugin', s), base_header_srcs)
-
-#print sources
-#print headers
-
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['ves_open_xml',

@@ -36,7 +36,7 @@
 ComputeMeanCellBBoxLengthCallback API.
 */
 
-/*!\class VE_Util::ComputeMeanCellBBoxLengthCallback
+/*!\class ves::xplorer::util::ComputeMeanCellBBoxLengthCallback
 *
 */
 class vtkDataSet;
@@ -45,10 +45,14 @@ class vtkDataSet;
 #include <ves/xplorer/util/DataObjectHandler.h>
 
 
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS ComputeVectorMagnitudeRangeCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:    
     ///Constructor
@@ -65,6 +69,8 @@ public:
 protected:
     double m_magnitudeRange[2];///<The mean cell bbox length;
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

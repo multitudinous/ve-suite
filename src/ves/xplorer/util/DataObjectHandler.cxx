@@ -42,7 +42,7 @@
 #include <vtkPointData.h>
 #include <iostream>
 #include <vtkCompositeDataPipeline.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 //////////////////////////////////////
 DataObjectHandler::DataObjectHandler()

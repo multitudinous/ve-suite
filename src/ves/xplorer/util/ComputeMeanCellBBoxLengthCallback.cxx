@@ -34,8 +34,8 @@
 #include <ves/xplorer/util/cfdAccessoryFunctions.h>
 #include<vtkDataSet.h>
 
+using namespace ves::xplorer::util;
 
-using namespace VE_Util;
 //////////////////////////////////////////////////////////////////////
 ComputeMeanCellBBoxLengthCallback::ComputeMeanCellBBoxLengthCallback()
 :m_meanCellBBLength(0.0)

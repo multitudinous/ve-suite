@@ -81,7 +81,7 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 cfdDataSet::cfdDataSet( ) :
     parent( this ),
@@ -141,13 +141,13 @@ cfdDataSet::cfdDataSet( ) :
    m_bounds[4] = 100000;
    m_bounds[5] = -100000;
 
-   m_dataObjectOps["Compute Bounds"] = new VE_Util::ComputeDataObjectBoundsCallback();
-   m_dataObjectOps["Compute Vector Magnitude Range"] = new VE_Util::ComputeVectorMagnitudeRangeCallback();
-   m_dataObjectOps["Count Number Of Vectors And Scalars"] = new VE_Util::CountNumberOfParametersCallback();
-   m_dataObjectOps["Number Of Grid Points"] = new VE_Util::GetNumberOfPointsCallback();
-   m_dataObjectOps["Scalar Range Information"] = new VE_Util::ProcessScalarRangeCallback();
-   m_dataObjectOps["Active Data Information"] = new VE_Util::ActiveDataInformationCallback();
-   m_dataObjectOps["Create BBox Actors"] = new VE_Util::CreateDataObjectBBoxActorsCallback();
+   m_dataObjectOps["Compute Bounds"] = new ves::xplorer::util::ComputeDataObjectBoundsCallback();
+   m_dataObjectOps["Compute Vector Magnitude Range"] = new ves::xplorer::util::ComputeVectorMagnitudeRangeCallback();
+   m_dataObjectOps["Count Number Of Vectors And Scalars"] = new ves::xplorer::util::CountNumberOfParametersCallback();
+   m_dataObjectOps["Number Of Grid Points"] = new ves::xplorer::util::GetNumberOfPointsCallback();
+   m_dataObjectOps["Scalar Range Information"] = new ves::xplorer::util::ProcessScalarRangeCallback();
+   m_dataObjectOps["Active Data Information"] = new ves::xplorer::util::ActiveDataInformationCallback();
+   m_dataObjectOps["Create BBox Actors"] = new ves::xplorer::util::CreateDataObjectBBoxActorsCallback();
 }
 
 cfdDataSet::~cfdDataSet()
@@ -538,7 +538,7 @@ void cfdDataSet::LoadData()
                              << std::endl << vprDEBUG_FLUSH;
    }
 
-   std::string extension = VE_Util::fileIO::getExtension( fileName );
+   std::string extension = ves::xplorer::util::fileIO::getExtension( fileName );
    //What should the extension of the star.param file be?
    //The translator expects ".star" but we have things setup to 
    //be ".param". One or the other should be changed for consistency.
@@ -608,7 +608,7 @@ void cfdDataSet::LoadData()
    }
    if(!m_dataObjectHandler)
    {
-	   m_dataObjectHandler = new VE_Util::DataObjectHandler();
+	   m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
    }
    m_dataObjectHandler->OperateOnAllDatasetsInObject(dataSet);
 
@@ -664,11 +664,11 @@ void cfdDataSet::LoadData()
    this->StoreScalarInfo();
    
    // count the number of vectors and store names ...
-   this->numVectors = dynamic_cast<VE_Util::CountNumberOfParametersCallback*>
+   this->numVectors = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
 	   (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetNumberOfParameters(true);
    if ( this->numVectors )
    {
-      this->vectorName = dynamic_cast<VE_Util::CountNumberOfParametersCallback*>
+      this->vectorName = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
 	   (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetParameterNames(true);
    }
 
@@ -686,8 +686,8 @@ void cfdDataSet::LoadData()
          {
              this->vectorMagRange = new double[2];
          }
-          VE_Util::ComputeVectorMagnitudeRangeCallback* vecMagRangeCbk =
-              dynamic_cast<VE_Util::ComputeVectorMagnitudeRangeCallback*>
+          ves::xplorer::util::ComputeVectorMagnitudeRangeCallback* vecMagRangeCbk =
+              dynamic_cast<ves::xplorer::util::ComputeVectorMagnitudeRangeCallback*>
               (m_dataObjectOps["Compute Vector Magnitude Range"]); 
           m_dataObjectHandler->SetDatasetOperatorCallback(vecMagRangeCbk);
           m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
@@ -708,8 +708,8 @@ unsigned int cfdDataSet::GetNumberOfPoints()
 {
     if(m_dataObjectHandler)
     {
-        VE_Util::GetNumberOfPointsCallback* numberOfPointsCallback = 
-        dynamic_cast<VE_Util::GetNumberOfPointsCallback*>
+        ves::xplorer::util::GetNumberOfPointsCallback* numberOfPointsCallback = 
+        dynamic_cast<ves::xplorer::util::GetNumberOfPointsCallback*>
                                (m_dataObjectOps["Number Of Grid Points"]);
         m_dataObjectHandler->SetDatasetOperatorCallback(numberOfPointsCallback );
         m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
@@ -730,8 +730,8 @@ void cfdDataSet::GetBounds(double bounds[6])
     
     if(m_dataObjectHandler)
     {
-        VE_Util::ComputeDataObjectBoundsCallback* boundsCallback = 
-        dynamic_cast<VE_Util::ComputeDataObjectBoundsCallback*>
+        ves::xplorer::util::ComputeDataObjectBoundsCallback* boundsCallback = 
+        dynamic_cast<ves::xplorer::util::ComputeDataObjectBoundsCallback*>
                                (m_dataObjectOps["Compute Bounds"]);
         m_dataObjectHandler->SetDatasetOperatorCallback(boundsCallback);
         m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
@@ -795,8 +795,8 @@ void cfdDataSet::SetActiveScalar( std::string tempActiveScalar )
          << this->scalarName[ this->activeScalar ]
          << std::endl << vprDEBUG_FLUSH;
    }
-   VE_Util::ActiveDataInformationCallback* activeDataInfoCbk = 
-       dynamic_cast<VE_Util::ActiveDataInformationCallback*>
+   ves::xplorer::util::ActiveDataInformationCallback* activeDataInfoCbk = 
+       dynamic_cast<ves::xplorer::util::ActiveDataInformationCallback*>
        (m_dataObjectOps["Active Data Information"]);
    activeDataInfoCbk->SetActiveDataName(  this->scalarName[ this->activeScalar ] );
    m_dataObjectHandler->SetDatasetOperatorCallback(activeDataInfoCbk);
@@ -1086,8 +1086,8 @@ void cfdDataSet::SetActiveVector( std::string tempVectorName )
          << this->vectorName[ this->activeVector ]
          << std::endl << vprDEBUG_FLUSH;
    }
-   VE_Util::ActiveDataInformationCallback* activeDataInfoCbk = 
-       dynamic_cast<VE_Util::ActiveDataInformationCallback*>
+   ves::xplorer::util::ActiveDataInformationCallback* activeDataInfoCbk = 
+       dynamic_cast<ves::xplorer::util::ActiveDataInformationCallback*>
        (m_dataObjectOps["Active Data Information"]);
    activeDataInfoCbk->SetActiveDataName(  this->vectorName[ this->activeVector ],true );
    m_dataObjectHandler->SetDatasetOperatorCallback(activeDataInfoCbk);
@@ -1477,7 +1477,7 @@ void cfdDataSet::StoreScalarInfo()
     m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
     
     // count the number of vectors and store names ...
-    this->numScalars = dynamic_cast<VE_Util::CountNumberOfParametersCallback*>
+    this->numScalars = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
        (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetNumberOfParameters();
 
     vprDEBUG(vesDBG,1) << "\tStoreScalarInfo: numScalars = " 
@@ -1486,7 +1486,7 @@ void cfdDataSet::StoreScalarInfo()
 
     if ( this->numScalars )
     {
-        this->scalarName = dynamic_cast<VE_Util::CountNumberOfParametersCallback*>
+        this->scalarName = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
         (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetParameterNames();
 
         this->actualScalarRange = new double * [ this->numScalars ];
@@ -1496,8 +1496,8 @@ void cfdDataSet::StoreScalarInfo()
            this->actualScalarRange[ i ]    = new double [ 2 ];
            this->displayedScalarRange[ i ] = new double [ 2 ];
         }
-        VE_Util::ProcessScalarRangeCallback* processScalarRangeCbk =
-            dynamic_cast<VE_Util::ProcessScalarRangeCallback*>
+        ves::xplorer::util::ProcessScalarRangeCallback* processScalarRangeCbk =
+            dynamic_cast<ves::xplorer::util::ProcessScalarRangeCallback*>
             (m_dataObjectOps["Scalar Range Information"]);
         m_dataObjectHandler->SetDatasetOperatorCallback(processScalarRangeCbk);
         m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
@@ -1578,8 +1578,8 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
     {
        m_visualBBox = new VE_SceneGraph::Group();
     }
-    VE_Util::CreateDataObjectBBoxActorsCallback* bboxActorsCbk = 
-        dynamic_cast<VE_Util::CreateDataObjectBBoxActorsCallback*>
+    ves::xplorer::util::CreateDataObjectBBoxActorsCallback* bboxActorsCbk = 
+        dynamic_cast<ves::xplorer::util::CreateDataObjectBBoxActorsCallback*>
         (m_dataObjectOps["Create BBox Actors"]);
 
     m_dataObjectHandler->SetDatasetOperatorCallback(bboxActorsCbk);
@@ -1605,7 +1605,7 @@ void cfdDataSet::CreateWireframeGeode( void )
 
    vtkPolyDataMapper *wireframeMapper = vtkPolyDataMapper::New();
    //wireframeMapper->SetInput(wireframe->GetOutput());
-   vtkPolyData* poly = VE_Util::cfdGrid2Surface( this->GetDataSet(), 0.8f );
+   vtkPolyData* poly = ves::xplorer::util::cfdGrid2Surface( this->GetDataSet(), 0.8f );
    wireframeMapper->SetInput( poly );
    
    vtkActor *wireframeActor = vtkActor::New();

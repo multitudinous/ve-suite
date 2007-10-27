@@ -82,7 +82,7 @@ void cfdTranslatorToVTK::SetInputDirectory(std::string inDir)
 {
    baseFileNames.clear();
    _inputDir = inDir;
-   _infileNames = VE_Util::fileIO::GetFilesInDirectory(inDir,_fileExtension);
+   _infileNames = ves::xplorer::util::fileIO::GetFilesInDirectory(inDir,_fileExtension);
    for( size_t i = 0; i < _infileNames.size(); i++ )
    {
       ExtractBaseName(_infileNames.at(i));
@@ -262,7 +262,7 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
          _outfileNames.push_back(tempName.str());
       }  
    
-      VE_Util::writeVtkThing(_outputDataset, 
+      ves::xplorer::util::writeVtkThing(_outputDataset, 
                           (char*)_outfileNames.at(fileNum).c_str(),1);
       return true;
    }

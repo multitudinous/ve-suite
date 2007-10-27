@@ -452,7 +452,7 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
     std::vector< osg::ref_ptr<NURBS::NURBSNode> >nurbsPatches;
     //std::string nurbsfile(argv[1]);
     std::vector< std::string > patchFiles = 
-        VE_Util::fileIO::GetFilesInDirectory( directory,".txt");
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory,".txt");
     size_t nPatches = patchFiles.size();
     NURBS::Utilities::OCCNURBSFileReader patchReader;
     

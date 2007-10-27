@@ -37,7 +37,7 @@
 
 #include "vtkDataSet.h"
 #include <vtkDataObject.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    

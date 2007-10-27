@@ -37,7 +37,7 @@ DataObjectHandler API. At a minimum, converts cell data to point data in each da
 the data object.
 */
 
-/*!\class VE_Util::DataObjectHandler
+/*!\class ves::xplorer::util::DataObjectHandler
 *
 */
 class vtkDataObject;
@@ -46,7 +46,11 @@ class vtkDataSet;
 #include <ves/VEConfig.h>
 
 
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS DataObjectHandler
 {
@@ -56,7 +60,7 @@ public:
     ///Destructor
     virtual ~DataObjectHandler();
 
-    /*!\class VE_Util::DataObjectHandler::DatasetOperatorCallback
+    /*!\class ves::xplorer::util::DataObjectHandler::DatasetOperatorCallback
     *
     */
     class VE_UTIL_EXPORTS DatasetOperatorCallback
@@ -93,5 +97,7 @@ protected:
     unsigned int m_numberOfCellDataArrays;
     DatasetOperatorCallback* m_datasetOperator;///<The DatasetOperatorCallback.
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif

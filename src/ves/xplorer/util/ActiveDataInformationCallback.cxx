@@ -35,7 +35,8 @@
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
+
 //////////////////////////////////////////////////////////////
 ActiveDataInformationCallback::ActiveDataInformationCallback()
 {

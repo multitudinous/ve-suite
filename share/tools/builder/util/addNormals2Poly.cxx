@@ -39,7 +39,7 @@
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    

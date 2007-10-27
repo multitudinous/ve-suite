@@ -43,7 +43,7 @@
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/builder/converter.h"      // for "letUsersAddParamsToField>
 #include <ves/builder/gridConversion.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 vtkStructuredGrid * reiReader( std::string reiFileName, int debug )
 {

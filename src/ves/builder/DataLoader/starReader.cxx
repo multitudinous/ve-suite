@@ -47,7 +47,7 @@
 #include <ves/xplorer/util/fileIO.h>       // for "getTagAndValue>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 using std::istringstream;
 
 starReader::starReader( std::string paramFile )

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/builder/ansysReader10.h>
@@ -62,7 +60,7 @@
 #define PRINT(x) \
    std::cout << std::setw(PRINT_WIDTH-3) << #x << " = " << x << std::endl;
 #endif
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 ansysReader10::ansysReader10( std::string input )
 {

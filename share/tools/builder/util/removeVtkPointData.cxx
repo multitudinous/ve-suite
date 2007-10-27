@@ -41,7 +41,7 @@
 #include <vtkPointData.h>
 #include <vtkDataObject.h>
 #include <vtkMultiGroupDataSet.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 void removeVtkPointData( vtkDataObject* dataObject )
 {

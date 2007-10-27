@@ -55,7 +55,7 @@
 #include <ves/xplorer/util/cfdGrid2Surface.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 using namespace VE_Builder;
 
 plot3dReader::plot3dReader( void ) 

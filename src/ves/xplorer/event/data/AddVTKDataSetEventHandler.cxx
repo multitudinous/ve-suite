@@ -173,7 +173,7 @@ void AddVTKDataSetEventHandler::Execute(XMLObject* xmlObject)
             // get vtk data set name...
             std::string vtk_filein = tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
 
-            if ( VE_Util::fileIO::isFileReadable( vtk_filein ) ) 
+            if ( ves::xplorer::util::fileIO::isFileReadable( vtk_filein ) ) 
             {
                vprDEBUG(vesDBG,0) << "|\tvtk file = " << vtk_filein 
                                 << ", dcs = "  << _activeModel->GetCfdDataSet( -1 )->GetDCS()

@@ -86,7 +86,7 @@ using namespace VE_TextureBased;
 #include <ves/xplorer/cfdModel.h>
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdModel::cfdModel( VE_SceneGraph::DCS* worldDCS )

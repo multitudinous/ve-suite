@@ -36,7 +36,7 @@
 ComputeDataObjectBoundsCallback API.
 */
 
-/*!\class VE_Util::ComputeDataObjectBoundsCallback
+/*!\class ves::xplorer::util::ComputeDataObjectBoundsCallback
 *
 */
 class vtkDataSet;
@@ -45,7 +45,11 @@ class vtkDataSet;
 #include <ves/xplorer/util/DataObjectHandler.h>
 
 
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS ComputeDataObjectBoundsCallback:
         public DataObjectHandler::DatasetOperatorCallback
@@ -69,6 +73,8 @@ public:
 protected:
     double m_bounds[6];///<The bounds of the vtkDataObject;
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

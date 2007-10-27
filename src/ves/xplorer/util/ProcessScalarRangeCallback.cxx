@@ -36,7 +36,8 @@
 #include <vtkPointData.h>
 #include <iostream>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
+
 //////////////////////////////////////////////////////////////////
 ProcessScalarRangeCallback::ProcessScalarRangeCallback()
 {

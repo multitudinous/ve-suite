@@ -59,7 +59,7 @@
 #include <ves/xplorer/util/viewCells.h>
 #include <ves/xplorer/util/cfdGrid2Surface.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 void viewWhatsInFile( std::string vtkFilename, const float shrinkFactor );
 vtkActor * getActorFromDataSet( vtkDataSet * dataset );

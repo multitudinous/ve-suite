@@ -47,7 +47,7 @@
 #include <vtkIdList.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int debug = 0;
 

@@ -42,7 +42,7 @@
 #include <vtkCellData.h>
 #include <vtkDataObject.h>
 #include <vtkMultiGroupDataSet.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    

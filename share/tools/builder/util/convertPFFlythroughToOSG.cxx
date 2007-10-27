@@ -47,7 +47,7 @@
 #include <gmtl/AxisAngleOps.h>
 
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 gmtl::Matrix44f GetVjMatrix( std::vector< double > perfMat );
 
 

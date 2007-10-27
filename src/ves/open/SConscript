@@ -17,7 +17,6 @@ headers += glob.glob(pj(RootDir, buildDir, 'src','ves','open','*.inl'))
 
 lib_env = ves_pkg.getEnv().Copy()
 
-print lib_env
 tao_options.apply( lib_env )
 
 lib_env.Append( CPPDEFINES = ['VE_OPEN_MODULE_LIBRARY'])
@@ -41,5 +40,4 @@ openSubdirs = Split("""
 
 ##Run SConscript files in all of those folders.
 for d in openSubdirs:
-   #print " dir ", d
    SConscript( dirs = d )

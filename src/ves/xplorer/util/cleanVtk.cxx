@@ -45,9 +45,9 @@
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
-void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid )
+void ves::xplorer::util::dumpVerticesNotUsedByCells( vtkPointSet * grid )
 {
    if ( grid == NULL )
    {
@@ -355,7 +355,7 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid )
    delete [] isNeededPoint;
 }
 
-void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, std::string vtkFileName )
+void ves::xplorer::util::dumpVerticesNotUsedByCells( vtkPointSet * grid, std::string vtkFileName )
 {
    if ( grid == NULL )
    {

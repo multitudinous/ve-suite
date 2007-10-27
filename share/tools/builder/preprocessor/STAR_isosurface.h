@@ -45,6 +45,8 @@
 
 #include <ves/xplorer/util/setScalarAndVector.h>
 
+using namespace ves::xplorer::util;
+
 class isosurfaceVtkOutput
 {
 public:

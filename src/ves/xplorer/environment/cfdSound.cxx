@@ -87,7 +87,7 @@ bool cfdSound::initSound()
       std::cout<<"cfdSound::initSound"<<std::endl;
       return false;
    }
-   if ( VE_Util::fileIO::isFileReadable( fileName ) ) 
+   if ( ves::xplorer::util::fileIO::isFileReadable( fileName ) ) 
    {
        vprDEBUG(vesDBG,0) << "\tsound fileName = " 
                           << fileName

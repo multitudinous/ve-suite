@@ -60,7 +60,9 @@
 #include <vtkScalarsToColors.h>
 #include <vtkLookupTable.h>
 
-vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
+using namespace ves::xplorer::util;
+
+vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructuredGrid *output )
 {
     // Loop over the cells and remove interior cells...
     int pt, npts, ptId;
@@ -124,7 +126,7 @@ vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
     return exteriorCells;
 }
 
-void viewCells( vtkDataSet *dataset, const float shrinkFactor )
+void ves::xplorer::util::viewCells( vtkDataSet *dataset, const float shrinkFactor )
 {
     std::cout << "\nviewCells: Preparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();
@@ -235,7 +237,7 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
     iren->Delete();
 }
 
-void viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output )
+void ves::xplorer::util::viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output )
 {
     std::cout << "\nPreparing to view mesh..." << std::endl;
     int numCells = output->GetNumberOfCells();
@@ -360,7 +362,7 @@ void viewXSection( vtkDataObject *output )
 }
 */
 
-void GetAxesSymbol( vtkActor * axesActor )
+void ves::xplorer::util::GetAxesSymbol( vtkActor * axesActor )
 {
    // Create the axes and the associated mapper and actor.
    vtkPoints *newPts = vtkPoints::New();
@@ -415,7 +417,7 @@ void GetAxesSymbol( vtkActor * axesActor )
    axesMapper->Delete();
 }
 
-void GetAxesLabels( vtkFollower * xActor,
+void ves::xplorer::util::GetAxesLabels( vtkFollower * xActor,
                     vtkFollower * yActor,
                     vtkFollower * zActor )
 {
@@ -457,7 +459,7 @@ void GetAxesLabels( vtkFollower * xActor,
    zMapper->Delete();
 }
 
-void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor )
+void ves::xplorer::util::AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor )
 {
     //std::cout << "\nPreparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();

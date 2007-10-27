@@ -187,7 +187,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                      << std::setw( 6 ) 
                      <<j << ".vtu";
 
-               VE_Util::cfdVTKFileHandler* trans = new VE_Util::cfdVTKFileHandler();
+               ves::xplorer::util::cfdVTKFileHandler* trans = new ves::xplorer::util::cfdVTKFileHandler();
                trans->WriteDataSet( outputDataset, strm.str() );
                delete trans;
                outputDataset->Delete();

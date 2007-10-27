@@ -39,9 +39,13 @@ class vtkDataSet;
 class vtkDataObject;
 #include <ves/VEConfig.h>
 
-namespace VE_Util
+namespace ves
 {
-   ///Prints out (cout) the class of the object passed in.
+namespace xplorer
+{
+namespace util
+{
+    ///Prints out (cout) the class of the object passed in.
    ///\param readerOutput The data set printWhatItIs identifies.
    VE_UTIL_EXPORTS void printWhatItIs( vtkDataObject* readerOutput );
    ///Reads in a VTK data file and has the option to print what the data file is.
@@ -56,5 +60,7 @@ namespace VE_Util
    ///Outputs the cartesian bounds of the data object passed in.
    ///\param dataObject The data set whose bounds are to be identified.
    VE_UTIL_EXPORTS void printBounds( vtkDataObject* dataObject);//double bounds[6] );
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif

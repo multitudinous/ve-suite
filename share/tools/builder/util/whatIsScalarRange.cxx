@@ -43,7 +43,7 @@
 
 #include <vtkMultiGroupDataSet.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 void ProcessScalarRangeInfo(vtkDataObject* dataSet);
 int main( int argc, char *argv[] )
 {    

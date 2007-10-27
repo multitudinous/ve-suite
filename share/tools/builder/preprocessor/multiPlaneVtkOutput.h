@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef MULTIPLANEVTKOUTPUT_H
 #define MULTIPLANEVTKOUTPUT_H

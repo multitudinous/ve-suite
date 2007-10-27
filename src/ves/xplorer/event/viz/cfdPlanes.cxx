@@ -50,7 +50,7 @@
 #include <sstream>
 
 using namespace VE_Xplorer;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double bounds[ 6 ] )

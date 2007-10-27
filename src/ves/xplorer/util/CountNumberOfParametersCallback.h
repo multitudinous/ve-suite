@@ -36,7 +36,7 @@
 CountNumberOfParametersCallback API.
 */
 
-/*!\class VE_Util::CountNumberOfParametersCallback
+/*!\class ves::xplorer::util::CountNumberOfParametersCallback
 *
 */
 class vtkDataSet;
@@ -46,7 +46,11 @@ class vtkDataSet;
 
 #include <vector>
 #include <string>
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS CountNumberOfParametersCallback:
         public DataObjectHandler::DatasetOperatorCallback
@@ -72,6 +76,8 @@ protected:
 	std::vector<std::string> m_scalarNames;///<The scalar names
 	std::vector<std::string> m_vectorNames;///<The vector names
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

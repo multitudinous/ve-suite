@@ -41,7 +41,7 @@
 #include <vtkPointData.h>
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 int main( int argc, char *argv[] )
 {    
@@ -85,7 +85,7 @@ int main( int argc, char *argv[] )
    while( input != "exit" );
 
    // write vtk file
-   VE_Util::writeVtkThing( dataset, outFilename, 1 );
+   ves::xplorer::util::writeVtkThing( dataset, outFilename, 1 );
 
    dataset->Delete();
 

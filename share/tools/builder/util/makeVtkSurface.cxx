@@ -59,7 +59,7 @@
 #include <vtkAppendPolyData.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkMultiBlockDataSetAlgorithm.h>
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 void writeVtkGeomToStl( vtkDataObject * dataset, std::string filename )
 {

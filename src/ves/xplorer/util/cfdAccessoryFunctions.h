@@ -36,7 +36,7 @@
 /*!file cfdAccessoryFunctions.h
 cfdAccessoryFunctions API 
 */
-/*!class VE_Util::cfdAccessoryFunctions
+/*!class ves::xplorer::util::cfdAccessoryFunctions
 *This class returns information on an input vector.
 */
 
@@ -44,9 +44,13 @@ class vtkDataArray;
 class vtkDataSet;
 #include <ves/VEConfig.h>
 
-namespace VE_Util
+namespace ves
 {
-   class VE_UTIL_EXPORTS cfdAccessoryFunctions
+namespace xplorer
+{
+namespace util
+{
+    class VE_UTIL_EXPORTS cfdAccessoryFunctions
    { 
       public:
          ///Constructor
@@ -68,5 +72,7 @@ namespace VE_Util
                ///components of the vector being evaluated
          static double ComputeVectorMagnitude( double vectorComponents [ 3 ] );
    };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif

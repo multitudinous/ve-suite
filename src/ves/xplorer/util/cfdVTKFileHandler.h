@@ -36,7 +36,7 @@
 cfdVTKFileHandler API
 */
 
-/*!\class VE_Util::cfdVTKFileHandler
+/*!\class ves::xplorer::util::cfdVTKFileHandler
 *
 */
 class vtkXMLFileReadTester;
@@ -46,9 +46,13 @@ class vtkDataObject;
 #include <ves/VEConfig.h>
 #include <string>
 
-namespace VE_Util
+namespace ves
 {
-class VE_UTIL_EXPORTS cfdVTKFileHandler
+namespace xplorer
+{
+namespace util
+{
+    class VE_UTIL_EXPORTS cfdVTKFileHandler
 {
 public:
 	///Constructor
@@ -116,5 +120,7 @@ protected:
    vtkXMLFileReadTester* _xmlTester;///<Test if file is XML format   
    vtkDataObject* _dataSet;///<The vtk data.
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif// CFD_VTK_FILE_HANDLER_H

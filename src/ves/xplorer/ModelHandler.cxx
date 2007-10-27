@@ -113,7 +113,7 @@ using namespace VE_TextureBased;
 vprSingletonImpLifetime( VE_Xplorer::cfdModelHandler, 11 );
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 cfdModelHandler::cfdModelHandler( void )
 {

@@ -74,7 +74,7 @@ vprSingletonImpLifetime( VE_Xplorer::cfdEnvironmentHandler, 11 );
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )

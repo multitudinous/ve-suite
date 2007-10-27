@@ -54,9 +54,10 @@
 #include <ves/xplorer/util/ComputeDataObjectBoundsCallback.h>
 #include <vtkMultiGroupDataSet.h>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
+
 ///////////////////////////////////////////////////////////////
-void VE_Util::printWhatItIs( vtkDataObject * dataSet )
+void ves::xplorer::util::printWhatItIs( vtkDataObject * dataSet )
 {
    if ( dataSet == NULL )
    {
@@ -66,12 +67,12 @@ void VE_Util::printWhatItIs( vtkDataObject * dataSet )
    std::cout<<dataSet->GetClassName()<<std::endl;
 }
 ///////////////////////////////////////////////////////
-void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
+void ves::xplorer::util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
 {
    double bounds[6];
-   VE_Util::DataObjectHandler dataObjectHandler;
-   VE_Util::ComputeDataObjectBoundsCallback* boundsCallback = 
-	   new VE_Util::ComputeDataObjectBoundsCallback();
+   DataObjectHandler dataObjectHandler;
+   ComputeDataObjectBoundsCallback* boundsCallback = 
+	   new ComputeDataObjectBoundsCallback();
    dataObjectHandler.SetDatasetOperatorCallback(boundsCallback);
    dataObjectHandler.OperateOnAllDatasetsInObject(dataObject);
    std::cout << "Geometry bounding box information..." << std::endl;
@@ -90,19 +91,19 @@ void VE_Util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
    }
 }
 /////////////////////////////////////////////////////////////////////////////
-vtkDataObject* VE_Util::readVtkThing( std::string vtkFilename, int printFlag )
+vtkDataObject* ves::xplorer::util::readVtkThing( std::string vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
    vtkDataObject* temp = fileReader.GetDataSetFromFile(vtkFilename);
    if ( printFlag )
    {
-	  printBounds( temp );
-      VE_Util::printWhatItIs( temp );
+	  ves::xplorer::util::printBounds( temp );
+      ves::xplorer::util::printWhatItIs( temp );
    }
    return temp;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-bool VE_Util::writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
+bool ves::xplorer::util::writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
 {
    cfdVTKFileHandler fileWriter;
    if(!binaryFlag) 

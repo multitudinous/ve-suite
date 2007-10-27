@@ -48,7 +48,7 @@
 
 #include <iostream>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 using namespace VE_Builder;
 ////////////////////////////////////////
 //Constructors                        //

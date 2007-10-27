@@ -36,7 +36,7 @@
 ProcessScalarRangeCallback API.
 */
 
-/*!\class VE_Util::ProcessScalarRangeCallback
+/*!\class ves::xplorer::util::ProcessScalarRangeCallback
 *
 */
 class vtkDataSet;
@@ -47,7 +47,11 @@ class vtkDataSet;
 #include <vector>
 #include <string>
 #include <map>
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS ProcessScalarRangeCallback:
         public DataObjectHandler::DatasetOperatorCallback
@@ -68,6 +72,8 @@ public:
 protected:
     std::map<std::string, double* > m_scalarRanges;///<The scalar names	
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

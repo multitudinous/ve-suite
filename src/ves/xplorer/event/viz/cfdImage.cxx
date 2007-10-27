@@ -52,7 +52,7 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 cfdImage::cfdImage( std::string param )
 {

@@ -36,7 +36,7 @@
 ActiveDataInformationCallback API.
 */
 
-/*!\class VE_Util::ActiveDataInformationCallback
+/*!\class ves::xplorer::util::ActiveDataInformationCallback
 *
 */
 class vtkDataSet;
@@ -47,7 +47,11 @@ class vtkDataSet;
 #include <vector>
 #include <string>
 #include <map>
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS ActiveDataInformationCallback:
         public DataObjectHandler::DatasetOperatorCallback
@@ -78,6 +82,8 @@ protected:
     std::string m_activeScalar;///<The active scalar 	
     std::string m_activeVector;///<The active vector	
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

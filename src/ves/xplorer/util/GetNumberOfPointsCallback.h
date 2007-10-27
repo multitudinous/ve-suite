@@ -36,7 +36,7 @@
 GetNumberOfPointsCallback API.
 */
 
-/*!\class VE_Util::GetNumberOfPointsCallback
+/*!\class ves::xplorer::util::GetNumberOfPointsCallback
 *
 */
 class vtkDataSet;
@@ -45,10 +45,14 @@ class vtkDataSet;
 #include <ves/xplorer/util/DataObjectHandler.h>
 
 
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS GetNumberOfPointsCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:    
     ///Constructor
@@ -66,6 +70,8 @@ public:
 protected:
     unsigned int m_numberOfPoints;///<The mean cell bbox length;
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

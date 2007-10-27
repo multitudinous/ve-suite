@@ -447,7 +447,7 @@ bool VTKDataToTexture::createDataSetFromFile(const std::string filename)
    _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
    //_confirmFileType(filename);
    ///This will need to be changed to handle both vtkDataset and vtkMultigroupDataSet
-   vtkDataSet* tmpDSet = dynamic_cast<vtkDataSet*>(VE_Util::readVtkThing( filename, 0 ));
+   vtkDataSet* tmpDSet = dynamic_cast<vtkDataSet*>(ves::xplorer::util::readVtkThing( filename, 0 ));
    int dataObjectType = tmpDSet->GetDataObjectType();
    if ( dataObjectType == VTK_POLY_DATA )
    {
@@ -547,7 +547,7 @@ void VTKDataToTexture::createTextures()
       bbLocator->AutomaticOn();
       //bbLocator->SetNumberOfCellsPerBucket( 50 );
       //bbLocator->SetMaxLevel( 10 )
-      vtkDataSet* polyData = VE_Util::readVtkThing( "./step1_0.vtp" );
+      vtkDataSet* polyData = ves::xplorer::util::readVtkThing( "./step1_0.vtp" );
       bbLocator->SetDataSet( polyData );
       //build the octree
       bbLocator->BuildLocator();*/
@@ -559,7 +559,7 @@ void VTKDataToTexture::createTextures()
         vectorCellLocators.at( i )->CacheCellBoundsOn();
         vectorCellLocators.at( i )->AutomaticOn();
         vectorCellLocators.at( i )->SetNumberOfCellsPerBucket( 50 );
-        //vtkDataSet* polyData = VE_Util::readVtkThing("./tempDataDir/surface.vtp");
+        //vtkDataSet* polyData = ves::xplorer::util::readVtkThing("./tempDataDir/surface.vtp");
         vectorCellLocators.at( i )->SetDataSet(_dataSet);
         //build the octree
         vectorCellLocators.at( i )->BuildLocator();

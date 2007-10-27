@@ -36,7 +36,8 @@
 #include <vtkPointData.h>
 #include <algorithm>
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
+
 //////////////////////////////////////////////////////////////////
 CountNumberOfParametersCallback::CountNumberOfParametersCallback()
 {

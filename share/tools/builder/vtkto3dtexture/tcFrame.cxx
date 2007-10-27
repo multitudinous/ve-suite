@@ -525,9 +525,9 @@ void TCFrame::_chooseDirectory(int style, int browseID)
          inputFileDirectory.Open(wxString(_inputDir));
          if ( inputFileDirectory.IsOpened() )
          {
-           gridFiles = VE_Util::fileIO::GetFilesInDirectory( ConvertUnicode( _inputDir.c_str() ), "vtu" );
+           gridFiles = ves::xplorer::util::fileIO::GetFilesInDirectory( ConvertUnicode( _inputDir.c_str() ), "vtu" );
            if ( gridFiles.size() == 0 )
-              gridFiles = VE_Util::fileIO::GetFilesInDirectory( ConvertUnicode( _inputDir.c_str() ), "vtk" );
+              gridFiles = ves::xplorer::util::fileIO::GetFilesInDirectory( ConvertUnicode( _inputDir.c_str() ), "vtk" );
          }
          _numFiles = gridFiles.size();
          //set the text in the text box
@@ -567,9 +567,9 @@ void TCFrame::SetInputDirectory(const std::string inDirectory)
       {
         _inputDir = wxString(inDirectory.c_str(), wxConvUTF8 );
 
-        gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtu" );
+        gridFiles = ves::xplorer::util::fileIO::GetFilesInDirectory( inDirectory, "vtu" );
         if ( gridFiles.size() == 0 )
-           gridFiles = VE_Util::fileIO::GetFilesInDirectory( inDirectory, "vtk" );
+           gridFiles = ves::xplorer::util::fileIO::GetFilesInDirectory( inDirectory, "vtk" );
       }
       else
       {

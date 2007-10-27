@@ -80,13 +80,13 @@ m_currentScene( 0 )
     _worldDCS = worldDCS;
     _worldDCS->AddChild( this->dcs.get() );
     //Get ive, osg, and pfb filenames
-    pfbFileNames = VE_Util::fileIO::GetFilesInDirectory( directory, ".pfb" );
+    pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
-    tempFilenames = VE_Util::fileIO::GetFilesInDirectory( directory, ".ive" );
+    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
         tempFilenames.end() );
     tempFilenames.clear();
-    tempFilenames = VE_Util::fileIO::GetFilesInDirectory( directory, ".osg" );
+    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
         tempFilenames.end() );
 
@@ -263,13 +263,13 @@ void cfdTeacher::Reset()
     }    
     //Get ive, osg, and pfb filenames for the new application
     pfbFileNames.clear();
-    pfbFileNames = VE_Util::fileIO::GetFilesInDirectory( directory, ".pfb" );
+    pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
-    tempFilenames = VE_Util::fileIO::GetFilesInDirectory( directory, ".ive" );
+    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
                          tempFilenames.end() );
     tempFilenames.clear();
-    tempFilenames = VE_Util::fileIO::GetFilesInDirectory( directory, ".osg" );
+    tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
     pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
                          tempFilenames.end() );
     

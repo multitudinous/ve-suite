@@ -14,5 +14,4 @@ if GetPlatform() == 'win32':
 
 ##Run SConscript files in all of those folders.
 for d in toolsSubdirs:
-   #print " dir ", d
    SConscript( dirs = d )

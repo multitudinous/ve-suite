@@ -63,7 +63,7 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::open::xml::cad;

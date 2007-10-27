@@ -36,7 +36,7 @@
 CreateDataObjectBBoxActorsCallback API.
 */
 
-/*!\class VE_Util::CreateDataObjectBBoxActorsCallback
+/*!\class ves::xplorer::util::CreateDataObjectBBoxActorsCallback
 *
 */
 class vtkDataSet;
@@ -47,10 +47,14 @@ class vtkActor;
 
 
 #include <vector>
-namespace VE_Util
+namespace ves
+{
+namespace xplorer
+{
+namespace util
 {
 class VE_UTIL_EXPORTS CreateDataObjectBBoxActorsCallback:
-    public VE_Util::DataObjectHandler::DatasetOperatorCallback
+    public DataObjectHandler::DatasetOperatorCallback
 {
 public:    
     ///Constructor
@@ -67,6 +71,8 @@ protected:
     ///<The bounds of the vtkDataObject as vtkActors;
     std::vector< vtkActor* > m_bboxActors;
 };
-}
+}// end of util namesapce
+}// end of xplorer namesapce
+}// end of ves namesapce
 #endif
 

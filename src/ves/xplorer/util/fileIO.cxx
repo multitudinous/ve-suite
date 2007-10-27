@@ -42,7 +42,7 @@
 #include <list>
 namespace fs = boost::filesystem;
 
-using namespace VE_Util;
+using namespace ves::xplorer::util;
 
 fileIO::fileIO( )
 {

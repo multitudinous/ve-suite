@@ -291,7 +291,7 @@ void FlowTexture::writeFlowTexture( std::string fileName, std::string scalarName
          }
       }
       flowImage->GetPointData()->AddArray( flowData );
-      VE_Util::writeVtkThing( flowImage, fileName, 1 );
+      ves::xplorer::util::writeVtkThing( flowImage, fileName, 1 );
 
       flowImage->Delete();
       flowData->Delete();
