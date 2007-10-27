@@ -43,7 +43,7 @@ namespace VE_SceneGraph
 class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
 public:
-    SelectTechnique( osg::StateSet* stateSet );
+    SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet );
     ~SelectTechnique();
   
 protected:

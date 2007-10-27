@@ -57,9 +57,9 @@ SceneNode::~SceneNode()
 {
     //Delete techniques in map
     for( std::map< std::string, VE_SceneGraph::Technique* >::iterator 
-        iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
+         iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
     {
-		VE_SceneGraph::Technique* tempTech = iter->second;
+        VE_SceneGraph::Technique* tempTech = iter->second;
         delete tempTech;
     }
 

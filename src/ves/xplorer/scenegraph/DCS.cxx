@@ -95,7 +95,8 @@ m_btBody( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( getOrCreateStateSet() ) );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique
+        ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
@@ -110,7 +111,8 @@ m_btBody( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( getOrCreateStateSet() ) );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique
+        ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
@@ -122,7 +124,8 @@ m_btBody( 0 )
     m_udcb->SetbtRigidBody( m_btBody );
     this->setUpdateCallback( m_udcb.get() );
 
-    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique( getOrCreateStateSet() ) );
+    AddTechnique( "Select", new VE_SceneGraph::SelectTechnique
+        ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()

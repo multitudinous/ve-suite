@@ -45,7 +45,7 @@
 using namespace VE_SceneGraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-SelectTechnique::SelectTechnique( osg::StateSet* stateSet )
+SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
 :
 m_stateSet( stateSet )
 {
