@@ -54,7 +54,6 @@ namespace xml
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
-   class cfdVEBaseClass;
 }
 #include <ves/xplorer/event/EventHandler.h>
 namespace VE_EVENTS

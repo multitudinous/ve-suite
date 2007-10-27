@@ -67,6 +67,7 @@ using namespace ves::xplorer::util;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::open::xml::cad;
+using namespace ves::xplorer::plugin;
 
 //////////////////////////////////////////////////////////////////      
 // Constructor

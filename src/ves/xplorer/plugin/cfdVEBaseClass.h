@@ -84,7 +84,11 @@ namespace xml
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
+{
+namespace plugin
 {
 class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
 {
@@ -123,17 +127,17 @@ public:
 
    void SetID(int id);
 
-   cfdModel* GetCFDModel( void );
+   VE_Xplorer::cfdModel* GetCFDModel( void );
 
    void LoadSurfaceFiles( std::string );
 
    bool OnSceneGraph( void ){return _onSceneGraph;}
 
-   void SetCursor( cfdCursor* );
+   void SetCursor( VE_Xplorer::cfdCursor* );
 
    void SetInteractionDevice( VE_Xplorer::Device* device );
 
-   void SetSoundHandler( cfdSoundHandler* );
+   void SetSoundHandler( VE_Xplorer::cfdSoundHandler* );
 
    void SetModuleResults( const std::string );
 
@@ -182,9 +186,9 @@ protected:
    std::map<std::string, std::vector<double> * >      _double1D;
    std::map<std::string, std::vector<std::string> * > _string1D;
 
-   cfdObjects* dataRepresentation;
+   VE_Xplorer::cfdObjects* dataRepresentation;
 
-   cfdModel* _model;
+   VE_Xplorer::cfdModel* _model;
 
    std::string _param;
 
@@ -193,9 +197,9 @@ protected:
    int _modID;
    std::string _objectName;
    osg::ref_ptr< VE_SceneGraph::DCS > _dcs;
-   cfdCursor* _cursor;
+   VE_Xplorer::cfdCursor* _cursor;
    VE_Xplorer::Device* m_device;
-   cfdSoundHandler* soundHandler;
+   VE_Xplorer::cfdSoundHandler* soundHandler;
    
    ves::open::xml::model::ModelStrongPtr xmlModel;
    std::vector< std::string > v_desc;
@@ -203,7 +207,8 @@ protected:
    std::map< std::string, cfdVEBaseClass* > ehMap;
 };
 }
-
+}
+}
 #define VE_GRAPHICALPLUGIN_CLASS(name)  \
    extern "C" \
    { \

@@ -43,9 +43,15 @@ cfdVEPluginLoader API
 
 #include <map>
 #include <ves/VEConfig.h>
-namespace VE_Xplorer
+namespace ves
 {
-   class cfdVEBaseClass;
+namespace xplorer
+{
+namespace plugin
+{
+    class cfdVEBaseClass;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -60,7 +66,7 @@ public:
    //bool LoadPlugins(wxString dir);
    void LoadPlugins( void );
    void ScanAndLoad( void );
-   cfdVEBaseClass* CreateNewPlugin( unsigned int );
+   ves::xplorer::plugin::cfdVEBaseClass* CreateNewPlugin( unsigned int );
 
    //Load all the dlls in the given dir
 
@@ -72,10 +78,10 @@ public:
    //char* GetPluginName(int);
    int GetNumberOfPlugins();
 
-   cfdVEBaseClass* CreateObject( std::string ); 
+   ves::xplorer::plugin::cfdVEBaseClass* CreateObject( std::string ); 
 
 //private:
-   std::map< int, cfdVEBaseClass* > plugins;
+   std::map< int, ves::xplorer::plugin::cfdVEBaseClass* > plugins;
    //Keep the list of the first intance of each plugin
    //std::vector<const wxClassInfo*> plugin_cls; 
 

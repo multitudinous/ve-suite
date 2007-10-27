@@ -53,7 +53,13 @@ namespace VE_SceneGraph
 	class DCS;
 }
 
-class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public VE_Xplorer::cfdVEBaseClass 
+namespace ves
+{
+namespace xplorer
+{
+namespace DefaultGraphicalPlugin
+{
+class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass 
 {
 public:
    DefaultGraphicalPlugin( void );
@@ -62,7 +68,9 @@ public:
 	virtual void InitializeNode( VE_SceneGraph::DCS* veworldDCS );
 private:
 };
-
+}
+}
+}
 //VE_GRAPHICALPLUGIN_CLASS( DefaultGraphicalPlugin );
 
 #endif // DEFAULT_GRAPHICAL_PLUGIN_H

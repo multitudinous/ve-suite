@@ -64,9 +64,7 @@ namespace xml
 
 namespace VE_Xplorer
 {
-    class cfdModel;
     class cfdGlobalBase;
-    class cfdVEBaseClass;
 }
 
 namespace VE_EVENTS

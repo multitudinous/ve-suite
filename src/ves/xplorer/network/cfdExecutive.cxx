@@ -77,6 +77,7 @@ using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
+using namespace ves::xplorer::plugin;
 
 vprSingletonImpLifetime( VE_Xplorer::cfdExecutive, 15 );
 
@@ -164,7 +165,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
    _eventHandlers[std::string("veNetwork Update")] = new VE_EVENTS::UpdateNetworkEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map<int, cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
+std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
 {
    return &_plugins;
 }
@@ -296,7 +297,7 @@ void cfdExecutive::GetEverything( void )
    GetNetwork();
 
    std::map< int, std::string >::iterator iter;
-   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+   std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >::iterator foundPlugin;
    // Add any plugins that are present in the current network
    for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
    {
@@ -305,11 +306,11 @@ void cfdExecutive::GetEverything( void )
       {
          // if a new module is on the id map but not on the plugins map
          // create it...
-         cfdVEBaseClass* temp = dynamic_cast< cfdVEBaseClass* >( m_avModules->GetLoader()->CreateObject( iter->second ) );
+         cfdVEBaseClass* temp = dynamic_cast< ves::xplorer::plugin::cfdVEBaseClass* >( m_avModules->GetLoader()->CreateObject( iter->second ) );
          if ( temp == 0 )
          {
             //load the default plugin
-            temp = new DefaultGraphicalPlugin();
+            temp = new ves::xplorer::DefaultGraphicalPlugin::DefaultGraphicalPlugin();
             //dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
          }
 

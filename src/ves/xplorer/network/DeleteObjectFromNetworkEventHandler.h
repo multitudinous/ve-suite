@@ -56,9 +56,18 @@ namespace xml
 }
 namespace VE_Xplorer
 {
-   class cfdModel;
    class cfdGlobalBase;
-   class cfdVEBaseClass;
+}
+
+namespace ves
+{
+namespace xplorer
+{
+namespace plugin
+{
+    class cfdVEBaseClass;
+}
+}
 }
 #include <ves/xplorer/event/EventHandler.h>
 namespace VE_EVENTS
@@ -89,7 +98,7 @@ public:
    void Execute( ves::open::xml::XMLObject* command); 
 
 private:
-   std::map< int, VE_Xplorer::cfdVEBaseClass* >* _plugins;
+   std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* _plugins;
 };
 }
 #endif// DELETE_OBJECT_FROM_NETWORK_EVENT_HANDLER_H

@@ -52,6 +52,7 @@ static const std::string DSO_SUFFIX(".so");
 #include <boost/filesystem/path.hpp>
 
 using namespace VE_Xplorer;
+using namespace ves::xplorer::plugin;
 
 cfdVEPluginLoader::cfdVEPluginLoader()
 {

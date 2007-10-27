@@ -66,12 +66,22 @@ namespace VE_Xplorer
    class Body_UI_i;
    class cfdCommandArray;
    class cfdVEAvailModules;
-   class cfdVEBaseClass;
    class cfdVEAvail_Modules;
    class cfdVjObsWrapper;
    class cfdThread;
 }
 
+namespace ves
+{
+namespace xplorer
+{
+namespace plugin
+{
+    class cfdVEBaseClass;
+}
+}
+}
+        
 namespace VE_EVENTS
 {
    class EventHandler;
@@ -128,7 +138,7 @@ public:
    ///This function returns the map of the current plugins 
    ///so that evehenthandlers can manipulate the plugins while
    ///with commands from the gui
-   std::map<int, cfdVEBaseClass* >* GetTheCurrentPlugins( void );
+   std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* GetTheCurrentPlugins( void );
    ///Get available plugins object
    cfdVEAvailModules* GetAvailablePlugins( void );
    ///Accessor for ehs to use
@@ -159,10 +169,10 @@ private:
    std::map< int, ves::open::xml::model::ModelStrongPtr > idToModel;
 
    // _name_map : maps a module name to it's module id.
-   std::map<int, cfdVEBaseClass* > _plugins;
+   std::map<int, ves::xplorer::plugin::cfdVEBaseClass* > _plugins;
 
    // map to hold unique plugin command names and associated plugin pointers
-   std::map< int, std::map< std::string, cfdVEBaseClass* > > pluginEHMap;
+   std::map< int, std::map< std::string, ves::xplorer::plugin::cfdVEBaseClass* > > pluginEHMap;
    
    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
 

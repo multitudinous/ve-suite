@@ -52,6 +52,7 @@
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
+using namespace ves::xplorer::plugin;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //

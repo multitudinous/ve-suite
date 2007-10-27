@@ -37,6 +37,9 @@
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace ves::xplorer::plugin;
+using namespace ves::xplorer::DefaultGraphicalPlugin;
+
 ////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : cfdVEBaseClass()
 {
