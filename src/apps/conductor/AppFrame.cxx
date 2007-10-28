@@ -2181,36 +2181,34 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
                          wxDD_DEFAULT_STYLE
                          );
     
-    if( dialog.ShowModal() != wxID_OK )
+    if( dialog.ShowModal() == wxID_OK )
     {
-        return;
-    }
-    
-    wxFileName vesFileName( dialog.GetPath() );
-    if( !vesFileName.MakeRelativeTo( ::wxGetCwd() ) )
-    {
-        wxMessageBox( _("Can't change working directory to another drive."), 
+       wxFileName vesFileName( dialog.GetPath() );
+       if( !vesFileName.MakeRelativeTo( ::wxGetCwd() ) )
+       {
+           wxMessageBox( _("Can't change working directory to another drive."), 
                       _("Change Directory Error"), wxOK | wxICON_INFORMATION );
-        return;
+           return;
+       }
+    
+       ///Clear the canvas then change the directory
+       NewCanvas( event );
+    
+       directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+       //change conductor working dir
+       ::wxSetWorkingDirectory( directory );
+       directory.Replace( _("\\"), _("/"), true );
+    
+       DataValuePairWeakPtr dvp = new DataValuePair();
+       CommandPtr command = new Command();
+       std::string mode = ConvertUnicode( directory.c_str() );
+       dvp->SetData( std::string( "Change Working Directory" ), mode );
+       command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
+       command->AddDataValuePair( dvp );
+    
+       CORBAServiceList::instance()->
+           SendCommandStringToXplorer( command );
     }
-    
-    ///Clear the canvas then change the directory
-    NewCanvas( event );
-    
-    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
-    //change conductor working dir
-    ::wxSetWorkingDirectory( directory );
-    directory.Replace( _("\\"), _("/"), true );
-    
-    DataValuePairWeakPtr dvp = new DataValuePair();
-    CommandPtr command = new Command();
-    std::string mode = ConvertUnicode( directory.c_str() );
-    dvp->SetData( std::string( "Change Working Directory" ), mode );
-    command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
-    command->AddDataValuePair( dvp );
-    
-    CORBAServiceList::instance()->
-        SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
