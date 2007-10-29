@@ -89,6 +89,11 @@ public:
    ///Set the transient grid property
    ///\param type Static == 0\n Dynamic == 1\n
    void SetTransientGridProperty(long int type);
+
+   ///Find the nearest power of 2 for a given integer\n
+   ///This is clamped at 512
+   ///\param input The input number
+   int NearestPowerOfTwo(int input);
    
 protected:
    GridType _type;
