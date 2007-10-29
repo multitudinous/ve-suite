@@ -1,7 +1,0 @@
-#!/bin/sh
-ssh  slave8  << EOF
-source /isv/vr/VE_Suite/VE_Suite-0.9.3.r3309/rhel4-amd64/VE_Installer/setup.deere.tsh 
-echo Will change dir to $1 and use parameter file $2
-cd $1 
-/isv/vr/VE_Suite/Launch-TC/Launcher/LaunchCommand $2
-EOF

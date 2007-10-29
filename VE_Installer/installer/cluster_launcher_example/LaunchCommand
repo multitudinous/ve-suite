@@ -1,4 +1,0 @@
-#!/bin/sh
-VES -c <<EOF
-$1
-EOF

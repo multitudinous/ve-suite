@@ -1,4 +1,0 @@
-/isv/vr/VE_Suite/Launch-TC/Launcher/LaunchVEServers &
-sleep 5
-/isv/vr/VE_Suite/Launch-TC/Launcher/LaunchCommand & 
-sleep 5
