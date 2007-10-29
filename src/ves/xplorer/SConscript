@@ -90,6 +90,7 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
+   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
    
 lib_env.Append( CPPDEFINES = ['VE_XPLORER_LIBRARY','VE_XPLORER_NETWORK_LIBRARY','VE_GRAPHICALPLUGINS_LIBRARY'])
 

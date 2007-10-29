@@ -31,7 +31,7 @@
 #ifndef MODULEI_H_
 #define MODULEI_H_
 #include "bkpparser.h"
-#include <moduleS.h>
+#include <ves/open/moduleS.h>
 #include <ves/open/xml/Command.h>
 #include "VE_AspenUnit.h"
 #include "VE_AspenUnitDlg.h"

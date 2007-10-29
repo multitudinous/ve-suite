@@ -19,7 +19,7 @@ lib_env.Append( CPPDEFINES = ['LOKI_OBJECT_LEVEL_THREADING'] )
 if GetPlatform() == "win32":
    lib_env.Append( CPPDEFINES = ['LOKI_MAKE_DLL'] )
    lib_env.Append( CPPDEFINES = ['_WINDLL'] )
-   lib_env.Append( CPPDEFINES = ['_DEBUG'] )
+   ##lib_env.Append( CPPDEFINES = ['_DEBUG'] )
    lib_env.Append( CPPDEFINES = ['UNICODE'] )
    lib_env.Append( CPPDEFINES = ['LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'] )
 
