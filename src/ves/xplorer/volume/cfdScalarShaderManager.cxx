@@ -46,7 +46,7 @@
 #include <ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h>
 #include <ves/xplorer/volume/PreIntegrationTexture.h>
 #include <ves/xplorer/volume/NoiseTexture2D.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //the shader inline source
 #include <ves/xplorer/volume/volumeRenderBasicShader.h>
 #include <ves/xplorer/volume/volumeRenderPhongShader.h>
@@ -193,9 +193,9 @@ void cfdScalarShaderManager::_initTransferFunctions()
 		  delete _preIntTexture;
 		  _preIntTexture = 0;
 	  }
-	  _tf = new VE_TextureBased::RYGCBLinearTF();
+	  _tf = new ves::xplorer::volume::RYGCBLinearTF();
 	  _tf->InitializeData();
-	  _preIntTexture = new VE_TextureBased::PreIntegrationTexture2D();
+	  _preIntTexture = new ves::xplorer::volume::PreIntegrationTexture2D();
 	  _preIntTexture->SetTransferFunction(_tf);
 	  _preIntTexture->FullUpdate();
       _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());
@@ -341,6 +341,6 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setSubloadCallback(_utCbk.get());
    } 
 
-   _jitterTexture = new VE_TextureBased::NoiseTexture2D();
+   _jitterTexture = new ves::xplorer::volume::NoiseTexture2D();
 }
 #endif//_OSG

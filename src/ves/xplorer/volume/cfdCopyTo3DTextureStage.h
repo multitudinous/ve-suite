@@ -36,7 +36,7 @@
 * cfdCopyTo3DTextureStage API
 */
 
-/*!\class VE_TextureBased::cfdCopyTo3DTextureStage
+/*!\class ves::xplorer::volume::cfdCopyTo3DTextureStage
 *
 */
 #ifdef _OSG
@@ -50,7 +50,11 @@
 #include <osg/Version>
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage:
       public osgUtil::RenderStage
@@ -103,6 +107,8 @@ namespace VE_TextureBased
          int _height;
         int _nSlices;
    };
+}
+}
 }
 #endif //OSG
 #endif// CFD_COPY_TO_3DTEXTURE_STAGE_H

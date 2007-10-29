@@ -36,7 +36,7 @@
 * cfd3DTextureCullCallback API
 */
 
-/*!\class VE_TextureBased::cfd3DTextureCullCallback
+/*!\class ves::xplorer::volume::cfd3DTextureCullCallback
 *
 */
 #ifdef _OSG
@@ -59,14 +59,17 @@ namespace osgUtil
 #include <osg/Node>
 #include <osg/NodeCallback>
 #include <osg/BoundingBox>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class cfdPBufferManager;
    class cfdOSGPingPongTexture3D;
 }
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfd3DTextureCullCallback 
       : public osg::NodeCallback
@@ -103,6 +106,8 @@ namespace VE_TextureBased
          osgUtil::UpdateVisitor* _uniformUpdater;
          osg::ref_ptr<osg::FrameStamp> _fs;
    };
+}
+}
 }
 #endif//_OSG
 #endif //CFD_3D_TEXTURE_UPDATE_CALLBACK_H

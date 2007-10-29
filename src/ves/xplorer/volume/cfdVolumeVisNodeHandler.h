@@ -38,7 +38,7 @@
 * cfdVolumeVisNodeHandler API
 */
 
-/*!\class VE_TextureBased::cfdVolumeVisNodeHandler
+/*!\class ves::xplorer::volume::cfdVolumeVisNodeHandler
 *
 */
 #ifdef _OSG
@@ -51,15 +51,16 @@ namespace osg
    class Switch;
    class TexGenNode;
 }
-namespace VE_TextureBased
-{
-   class cfdTextureManager;
-   class cfdOSGShaderManager;
-}
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
 {
+namespace xplorer
+{
+namespace volume
+{
+class cfdTextureManager;
+class cfdOSGShaderManager;
+
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisNodeHandler
    {
       public:
@@ -118,18 +119,18 @@ namespace VE_TextureBased
          ///\param name The name of the shader
          ///\param newShader The shader manager
          void AddShaderManager(std::string name,
-                               VE_TextureBased::cfdOSGShaderManager* newShader,
+                               ves::xplorer::volume::cfdOSGShaderManager* newShader,
                                bool isScalar=true);
          
          ///Get the active shader
          std::string GetActiveShaderName();
 
 		 ///Get a pointer to the active shader
-		 VE_TextureBased::cfdOSGShaderManager* GetActiveShader();
+		 ves::xplorer::volume::cfdOSGShaderManager* GetActiveShader();
          
          ///Get a shader manager
          ///\param name The name of the shader
-         VE_TextureBased::cfdOSGShaderManager* GetShaderManager(std::string name);
+         ves::xplorer::volume::cfdOSGShaderManager* GetShaderManager(std::string name);
 
          cfdVolumeVisNodeHandler& operator=(const cfdVolumeVisNodeHandler& vvnh);
       protected:
@@ -159,8 +160,10 @@ namespace VE_TextureBased
          float _scale[3];///<Scale of the texture
 
          std::string _activeShader;///<The active shader
-         std::map<std::string,VE_TextureBased::cfdOSGShaderManager*> _shaderManagers;///<The shaders.
+         std::map<std::string,ves::xplorer::volume::cfdOSGShaderManager*> _shaderManagers;///<The shaders.
    };
+}
+}
 }
 #endif //_OSG
 #endif// CFD_VOLUME_VIZ_NODE_HANDLER_H

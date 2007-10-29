@@ -69,9 +69,15 @@ namespace VE_EVENTS
 }
 
 #ifdef _OSG
-namespace VE_TextureBased
+namespace ves
 {
-    class cfdTextureDataSet;
+namespace xplorer
+{
+namespace volume
+{
+   class cfdTextureDataSet;
+}
+}
 }
 #endif
 class vtkPolyData;
@@ -130,7 +136,7 @@ public:
 #ifdef _OSG
    //texture manager access
    ///Should this call be in the texture manager singleton not modelhandler
-   VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet( void );
+   ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet( void );
 #endif
    bool GetVisOption();
 protected:
@@ -146,7 +152,7 @@ private:
    cfdModel* _activeModel;
 
 #ifdef _OSG
-   VE_TextureBased::cfdTextureDataSet* _activeTDSet;
+   ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
 #endif
    bool tbased;
    vtkPolyData* arrow;

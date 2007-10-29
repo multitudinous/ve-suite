@@ -36,7 +36,7 @@
 * cfdOSGAdvectionShaderManager API
 */
 
-/*!\class VE_TextureBased::cfdOSGAdvectionShaderManager
+/*!\class ves::xplorer::volume::cfdOSGAdvectionShaderManager
 *Class that handles 3d texture advection
 */
 #ifdef _OSG
@@ -49,15 +49,15 @@ namespace osg{
 #include <ves/xplorer/volume/cfdOSGShaderManager.h>
 #include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h>
 
-namespace VE_TextureBased
+namespace ves
 {
-   class cfdUpdateParameterCallback;
-   class cfdUpdateMatrixParameterCallback;
-}
-
-namespace VE_TextureBased
+namespace xplorer
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdOSGAdvectionShaderManager
+namespace volume
+{
+class cfdUpdateParameterCallback;
+class cfdUpdateMatrixParameterCallback;
+class VE_TEXTURE_BASED_EXPORTS cfdOSGAdvectionShaderManager
       : public cfdOSGShaderManager
    {
       public:
@@ -170,6 +170,8 @@ namespace VE_TextureBased
          bool _reinit;///<Flag to re-initialize parameters
          osg::Vec3 _center;///<Center of the data
    };
+}
+}
 }
 #endif//_OSG
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

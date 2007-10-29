@@ -44,7 +44,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////
 //Constructor                   //
 //////////////////////////////////

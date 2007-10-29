@@ -77,7 +77,7 @@ void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(XMLObject* veXMLOb
       DataValuePairWeakPtr enable = command->GetDataValuePair("Iso-Surface State");      
       std::string onOff;
       enable->GetData(onOff);
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
    }
    catch(...)
    {

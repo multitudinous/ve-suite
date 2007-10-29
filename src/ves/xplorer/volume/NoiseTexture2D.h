@@ -37,14 +37,17 @@
 /*!\file NoiseTexture.h
   Texture-Based Volume Rendering NoiseTexture API
   */
-/*!\class VE_TextureBased::NoiseTexture2D
+/*!\class ves::xplorer::volume::NoiseTexture2D
  * Class defining noise texture.
  */
 #include <osg/Image>
 #include <osg/Texture2D>
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class TransferFunction;
 class VE_TEXTURE_BASED_EXPORTS NoiseTexture2D
@@ -79,5 +82,7 @@ protected:
    unsigned char* _noiseData;///<The data
    osg::ref_ptr<osg::Texture2D> _noiseTexture;///<The noise texture
 };
+}
+}
 }
 #endif //PREINTEGRATION_TEXTURE_2D_H

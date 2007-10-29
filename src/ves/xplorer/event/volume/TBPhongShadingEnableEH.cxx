@@ -77,7 +77,7 @@ void TextureBasedPhongShadingEnableEventHandler::_operateOnNode(XMLObject* veXML
       DataValuePairWeakPtr enable = command->GetDataValuePair("Phong Shading State");      
       std::string onOff;
       enable->GetData(onOff);
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->EnsurePhongShading((onOff=="On")?true:false);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->EnsurePhongShading((onOff=="On")?true:false);
    }
    catch(...)
    {

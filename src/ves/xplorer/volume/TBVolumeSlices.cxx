@@ -44,7 +44,7 @@ using namespace gmtl;
 using namespace gadget;
 #include <iostream>
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////////////////////////
 TextureBasedVolumeSlices::TextureBasedVolumeSlices()
 :osg::Drawable(),

@@ -40,8 +40,11 @@
 #ifndef WIN32
 typedef __int64 int64_t;
 #endif
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    /**
     * Dummy class to represent NULL Database Values
@@ -175,5 +178,7 @@ namespace VE_TextureBased
    };
    /// Typedef for the type of results that can be retrieved.
    typedef Loki::Variant<LOKI_TYPELIST_5(DBNullValue, int64_t, double, std::string, BinaryData) > DBValue;
+}
+}
 }
 #endif

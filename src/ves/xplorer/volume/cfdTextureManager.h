@@ -37,7 +37,7 @@
 * cfdTextureManager API
 */
 
-/*!\class VE_TextureBased::cfdTextureManager
+/*!\class ves::xplorer::volume::cfdTextureManager
 *
 */
 #ifdef WIN32
@@ -53,8 +53,11 @@ struct ScalarRange
    float range[2];
 };
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class  VE_TEXTURE_BASED_EXPORTS cfdTextureManager{
 public:
@@ -183,5 +186,7 @@ protected:
    PlayMode _mode;///<Play mode
    std::string dataName;///<Name of this data solution.
 };
+}
+}
 }
 #endif //_BIV_TEXTURE_MANAGER_H_

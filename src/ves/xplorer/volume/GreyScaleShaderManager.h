@@ -36,17 +36,20 @@
 * GreyScaleShaderManager API
 */
 
-/*!\class VE_TextureBased::GreyScaleShaderManager
+/*!\class ves::xplorer::volume::GreyScaleShaderManager
 *
 */
 #ifdef _OSG
 #include <ves/xplorer/volume/cfdScalarShaderManager.h>
-namespace VE_TextureBased
+
+namespace ves
 {
-   class cfdTextureManager;
-}
-namespace VE_TextureBased
+namespace xplorer
 {
+namespace volume
+{
+class cfdTextureManager;
+
 class GreyScaleShaderManager: public cfdScalarShaderManager{
 public:
    ///Constructor
@@ -61,6 +64,8 @@ protected:
    ///Initialize the transfer functions
    virtual void _initTransferFunctions();
 };
+}
+}
 }
 #endif//_OSG
 #endif// GREY_SCALE_SHADER_MANAGER_H

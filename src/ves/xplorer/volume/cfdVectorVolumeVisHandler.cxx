@@ -49,7 +49,7 @@
 #include <ves/xplorer/volume/cfd3DTextureCullCallback.h>
 #include <ves/xplorer/volume/cfdOSGPingPongTexture3d.h>
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////
 //Constructors                                      //
 //////////////////////////////////////////////////////
@@ -186,7 +186,7 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
    _velocityCbk->SetDelayTime(0.1);
 }
 ////////////////////////////////////////////////////////////////////////
-void cfdVectorVolumeVisHandler::SetTextureManager(VE_TextureBased::cfdTextureManager* tm)
+void cfdVectorVolumeVisHandler::SetTextureManager(ves::xplorer::volume::cfdTextureManager* tm)
 {
    cfdVolumeVisNodeHandler::SetTextureManager(tm);
    _createVelocityFromTextureManager();

@@ -38,7 +38,7 @@
 * cfdUpdateableOSGNoiseTexture3d API
 */
 
-/*!\class VE_TextureBased::cfdUpdateableOSGNoiseTexture3d
+/*!\class ves::xplorer::volume::cfdUpdateableOSGNoiseTexture3d
 *
 */
 #ifdef _PERFORMER
@@ -50,7 +50,11 @@ namespace osg
 }
 #include <osg/Texture3D>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGNoiseTexture3d 
          : public  osg::Texture3D::SubloadCallback{
@@ -80,6 +84,8 @@ namespace VE_TextureBased
 
          unsigned char* _data;
    };
+}
+}
 }
 #endif //_OSG
 #endif// CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H

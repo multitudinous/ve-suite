@@ -37,7 +37,7 @@
 
 #include <osg/State>
 #include <ves/xplorer/volume/cfdUpdateableOSGNoiseTexture3d.h> 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////////////////////////////////////
 //Constructors                                                //
 ////////////////////////////////////////////////////////////////

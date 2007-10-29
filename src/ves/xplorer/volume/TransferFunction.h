@@ -39,11 +39,15 @@
 /*!\file TransferFunction.h
   Transfer function API
   */
-/*!\class VE_TextureBased::TransferFunction
+/*!\class ves::xplorer::volume::TransferFunction
  * Abstract class defining a transfer function.
  */
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class VE_TEXTURE_BASED_EXPORTS TransferFunction
 {
@@ -182,5 +186,7 @@ protected:
    UpdateCallback* _updateCallback;///<Callback function to update the data in the TF
 };
 #define TransferFunction1D(X) TransferFunction(1,X,1,1)
+}
+}
 }
 #endif// TRANSFER_FUNCTION_H

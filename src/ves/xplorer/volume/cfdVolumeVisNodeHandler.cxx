@@ -45,7 +45,7 @@
 #include <ves/xplorer/volume/cfdScalarShaderManager.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/cfdTextureMatrixCallback.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////
 //Constructors                                  //
 //////////////////////////////////////////////////
@@ -91,7 +91,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
 cfdVolumeVisNodeHandler::~cfdVolumeVisNodeHandler()
 {
    for ( std::map<std::string ,
-         VE_TextureBased::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
+         ves::xplorer::volume::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
          itr != _shaderManagers.end(); itr++ )
    {
       delete itr->second;
@@ -366,7 +366,7 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
 }
 ////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::AddShaderManager(std::string name,
-                               VE_TextureBased::cfdOSGShaderManager* newShader,
+                               ves::xplorer::volume::cfdOSGShaderManager* newShader,
                                bool isScalar)
 {
    int* fieldSize = _tm->fieldResolution();
@@ -380,7 +380,7 @@ void cfdVolumeVisNodeHandler::AddShaderManager(std::string name,
    _shaderManagers[name] = newShader;
 }
 //////////////////////////////////////////////////////////
-VE_TextureBased::cfdOSGShaderManager* 
+ves::xplorer::volume::cfdOSGShaderManager* 
 cfdVolumeVisNodeHandler::GetShaderManager(std::string name)
 {
    try
@@ -399,7 +399,7 @@ std::string cfdVolumeVisNodeHandler::GetActiveShaderName()
    return _activeShader;
 }
 //////////////////////////////////////////////////////////
-VE_TextureBased::cfdOSGShaderManager* 
+ves::xplorer::volume::cfdOSGShaderManager* 
 cfdVolumeVisNodeHandler::GetActiveShader()
 {
    return GetShaderManager(_activeShader);

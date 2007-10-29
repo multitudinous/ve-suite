@@ -36,7 +36,7 @@
 * cfdVolumeVisualization API
 */
 
-/*!\class VE_TextureBased::cfdVolumeVisualization
+/*!\class ves::xplorer::volume::cfdVolumeVisualization
 *
 */
 #ifdef _PERFORMER
@@ -67,21 +67,20 @@ namespace osg
 #include <osg/TexMat>
 #include <osg/Vec3>
 
-namespace VE_TextureBased
-{
-   class cfdTextureMatrixCallback;
-   class cfdTextureManager;
-   class TextureBasedVolumeSlices;
-}
-
-
 #include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
 #include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
 
 #include <ves/VEConfig.h>
 #include <string>
-namespace VE_TextureBased
+namespace ves
 {
+namespace xplorer
+{
+namespace volume
+{
+class cfdTextureMatrixCallback;
+class cfdTextureManager;
+class TextureBasedVolumeSlices;
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization{
    public:
       ///Constructor
@@ -184,7 +183,7 @@ namespace VE_TextureBased
       ///Get the node to attach shaders to
       osg::ref_ptr<osg::Group> GetDecoratorAttachNode();
       ///Get the proxy geometry
-      VE_TextureBased::TextureBasedVolumeSlices* GetGeometryProxyNode(){return _slices.get();}
+      ves::xplorer::volume::TextureBasedVolumeSlices* GetGeometryProxyNode(){return _slices.get();}
    
       ///Copy constructor
       ///\param rhs The cfdVolumeVisualization to set equal to
@@ -240,7 +239,7 @@ namespace VE_TextureBased
       osg::BoundingBox* _bbox;///< The bounding box of the data
       osg::ref_ptr<osg::ClipNode> _clipNode;///<Clipping nodes for the volume
       osg::ref_ptr<osg::StateSet> _stateSet;///<The default state set
-      osg::ref_ptr<VE_TextureBased::TextureBasedVolumeSlices> _slices;///<The volume rendering slices
+      osg::ref_ptr<ves::xplorer::volume::TextureBasedVolumeSlices> _slices;///<The volume rendering slices
       osg::ref_ptr<osg::PositionAttitudeTransform> _volumeDCS;///<The transform for the volume rendering
       osg::ref_ptr<osg::Geode> _billboard;///<The geode holding the slice
       osg::ref_ptr<osg::Group> _noShaderGroup;///<The default group for volume rendering
@@ -251,6 +250,8 @@ namespace VE_TextureBased
       osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;///<Texture update callback
 #endif
    };
+}
+}
 }
 #endif//OSG
 #endif// CFD_VOLUME_VISUALIZATION_H

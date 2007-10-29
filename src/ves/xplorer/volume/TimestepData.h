@@ -41,8 +41,11 @@
 #include <limits>
 
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    struct VE_TEXTURE_BASED_EXPORTS TimestepData
    {
@@ -64,5 +67,7 @@ namespace VE_TextureBased
       ScalarDataMap                                   mScalarData;
 
    };
+}
+}
 }
 #endif

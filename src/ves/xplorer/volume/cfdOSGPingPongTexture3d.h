@@ -36,7 +36,7 @@
 * cfdOSGPingPongTexture3D API
 */
 
-/*!\class VE_TextureBased::cfdOSGPingPongTexture3D
+/*!\class ves::xplorer::volume::cfdOSGPingPongTexture3D
 *
 */
 #ifdef _PERFORMER
@@ -47,7 +47,11 @@ namespace osg
    class Texture3D;
 }
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdOSGPingPongTexture3D{
       public:
@@ -67,6 +71,8 @@ namespace VE_TextureBased
          unsigned int _pingUnit;
          unsigned int _pongUnit;
    };
+}
+}
 }
 #endif //_OSG
 #endif // CFD_OSG_PING_PONG_TEXTURE_3D_H

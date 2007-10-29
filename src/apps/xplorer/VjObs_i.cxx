@@ -58,7 +58,7 @@
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 #endif
 
 #include <vpr/System.h>

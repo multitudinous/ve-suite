@@ -36,7 +36,7 @@
 * cfdUpdateTextureCallback API
 */
 
-/*!\class VE_TextureBased::cfdUpdateTextureCallback
+/*!\class ves::xplorer::volume::cfdUpdateTextureCallback
 *
 */
 #ifdef _PERFORMER
@@ -50,12 +50,15 @@ namespace osg
    class State;
 }
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class cfdTextureManager;
 }
-namespace VE_TextureBased
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback 
                               : public  osg::Texture3D::SubloadCallback{
@@ -170,6 +173,8 @@ namespace VE_TextureBased
          GLint _subloadImageOffsetX, _subloadImageOffsetY,_subloadImageOffsetZ;
          GLsizei _subloadImageWidth, _subloadImageHeight,_subloadImageDepth;
    };
+}
+}
 }
 #endif //OSG
 #endif //CFD_UPDATE_TEXTURE_CALLBACK_H

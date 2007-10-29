@@ -34,8 +34,11 @@
 #define JPG_SINGLETON_DLL_H_
 
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    /**
     * This little Singleton is necessary to 
@@ -47,6 +50,8 @@ namespace VE_TextureBased
    public:
       static T& Instance();
    };
+}
+}
 }
 
 #endif

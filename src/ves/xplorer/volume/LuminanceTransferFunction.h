@@ -37,13 +37,17 @@
 /*!\file LuminanceTransferFunction.h
   Grey scale transfer function API
   */
-/*!\class VE_TextureBased::LuminanceTF
+/*!\class ves::xplorer::volume::LuminanceTF
  * Class defining grey scale transfer function.
  */
 #include <vector>
 #include <ves/xplorer/volume/TransferFunction.h>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class VE_TEXTURE_BASED_EXPORTS LuminanceTF: public TransferFunction
 {
@@ -78,5 +82,7 @@ protected:
 	///Update the transfer function
    virtual void _update();
 };
+}
+}
 }
 #endif// LUMINANCE_TRANSFER_FUNCTION_H

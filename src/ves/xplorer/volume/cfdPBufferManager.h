@@ -36,7 +36,7 @@
 * cfdPBufferManager API
 */
 
-/*!\class VE_TextureBased::cfdPBufferManager
+/*!\class ves::xplorer::volume::cfdPBufferManager
 *
 */
 #ifdef _PBUFFER
@@ -59,8 +59,11 @@
 #include <iostream>
 
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdPBufferManager
    {
@@ -135,6 +138,8 @@ namespace VE_TextureBased
       int _h;
       int _w;
    };
+}
+}
 }
 #endif
 #endif

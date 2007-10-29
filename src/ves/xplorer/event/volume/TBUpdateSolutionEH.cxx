@@ -90,7 +90,7 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(XMLObject* veXMLObje
          {
             _activeTDSet->SetActiveScalar( dataName );
             
-            VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateActiveTextureManager();
+            ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateActiveTextureManager();
             
             double scalarRange[2] = {0.f,100.f};
 
@@ -103,7 +103,7 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(XMLObject* veXMLObje
             float floatRange[2];
             floatRange[0] = scalarRange[0];
             floatRange[1] = scalarRange[1];
-            VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
+            ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
             //need to pass the scalar range command to update it
             
             //if ( _activeModel )

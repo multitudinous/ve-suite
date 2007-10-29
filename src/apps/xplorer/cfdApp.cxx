@@ -88,7 +88,7 @@
 
 #ifdef _OSG
 #include <ves/xplorer/volume/cfdPBufferManager.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 #endif
 
 /// C/C++ libraries
@@ -371,7 +371,7 @@ void cfdApp::initScene( void )
    //create the volume viz handler
 #ifdef _OSG
    _start_tick = _timer.tick();
-   _tbvHandler = cfdTextureBasedVizHandler::instance();
+   _tbvHandler = ves::xplorer::volume::cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    _tbvHandler->SetMasterNode( _vjobsWrapper->IsMaster() );
 #endif

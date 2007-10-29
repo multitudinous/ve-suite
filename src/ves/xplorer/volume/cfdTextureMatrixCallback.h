@@ -37,7 +37,7 @@
 * cfdTextureMatrixCallback API
 */
 
-/*!\class VE_TextureBased::cfdTextureMatrixCallback
+/*!\class ves::xplorer::volume::cfdTextureMatrixCallback
 *
 */
 #ifdef _OSG
@@ -50,8 +50,11 @@ namespace osg
 #include <osg/NodeCallback>
 #include <osg/Vec3f>
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback : public osg::NodeCallback
    {
@@ -74,6 +77,8 @@ namespace VE_TextureBased
          osg::Vec3f _center;///<The center
         mutable osg::ref_ptr<osg::TexMat> _texMat;///<The texture matrix
    };
+}
+}
 }
 #endif //_OSG
 #endif// CFD_TEXTURE_MATRIX_CALLBACK_H 

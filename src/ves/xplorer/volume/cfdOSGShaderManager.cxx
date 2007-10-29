@@ -40,7 +40,7 @@
 
 
 #include <ves/xplorer/volume/cfdOSGShaderManager.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////
 //Constructors                          //
 //////////////////////////////////////////

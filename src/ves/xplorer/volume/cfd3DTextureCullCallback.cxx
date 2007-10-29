@@ -46,7 +46,7 @@
 #include <osgUtil/UpdateVisitor>
 #include <osg/FrameStamp>
 //#include <osg/BoundingBox>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,

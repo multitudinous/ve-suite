@@ -36,22 +36,22 @@
 * cfdScalarVolumeVisHandler API
 */
 
-/*!\class VE_TextureBased::cfdScalarVolumeVisHandler
+/*!\class ves::xplorer::volume::cfdScalarVolumeVisHandler
 *
 */
 #ifdef _OSG
 namespace osg { class Group; }
 
-namespace VE_TextureBased
-{
-   class cfdScalarShaderManager;
-   class cfdTextureManager;
-}
 #include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h> 
-
-namespace VE_TextureBased
+namespace ves
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler 
+namespace xplorer
+{
+namespace volume
+{
+class cfdScalarShaderManager;
+class cfdTextureManager;
+class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler 
       : public cfdVolumeVisNodeHandler
    {
       public:
@@ -80,6 +80,8 @@ namespace VE_TextureBased
          void _createDefaultShaders();
          cfdScalarShaderManager* _transferSM;///<cfdScalarShaderManager
    };
+}
+}
 }
 #endif //_OSG
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H

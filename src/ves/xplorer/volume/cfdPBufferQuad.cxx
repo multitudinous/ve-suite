@@ -41,7 +41,7 @@
 //need a better way to do this but leaving global for now
 unsigned int curSlice =1;
 osg::ref_ptr<osg::Texture3D> texture;
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////
 //Constructor                 //
 ////////////////////////////////

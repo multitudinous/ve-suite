@@ -36,22 +36,24 @@
 * TextureData API
 */
 
-/*!\class VE_TextureBased::TextureDataInfo
+/*!\class ves::xplorer::volume::TextureDataInfo
 *
 */
 #ifdef _OSG
-namespace VE_TextureBased
-{
-   class cfdVolumeVisualization;
-   class cfdTextureManager;
-}
+
 #include <vector>
 #include <map>
 #include <iostream>
 #include <string>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
 {
+namespace xplorer
+{
+namespace volume
+{
+class cfdVolumeVisualization;
+class cfdTextureManager;
 class VE_TEXTURE_BASED_EXPORTS TextureDataInfo
 {
 public:
@@ -70,7 +72,7 @@ protected:
 };
 
 
-/*!\class VE_TextureBased::cfdTextureDataSet
+/*!\class ves::xplorer::volume::cfdTextureDataSet
 *
 */
 class VE_TEXTURE_BASED_EXPORTS cfdTextureDataSet
@@ -154,6 +156,8 @@ protected:
    TextureDataList _scalars;///<The list of TextureDataInfo for each available scalar
    TextureDataList _vectors;///<The list of TextureDataInfo for each available vector
 };
+}
+}
 }
 #endif
 #endif// CFD_TEXTURE_DATA_SET_H

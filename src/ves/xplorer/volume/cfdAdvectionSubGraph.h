@@ -36,17 +36,10 @@
 * CreateAdvectionSubGraph API
 */
 
-/*!\class VE_TextureBased::CreateAdvectionSubGraph
+/*!\class ves::xplorer::volume::CreateAdvectionSubGraph
 *
 */
 #ifdef _OSG
-namespace VE_TextureBased
-{
-   class cfdOSGAdvectionShaderManager;
-   class cfdTextureManager;
-   class cfdPBufferManager;
-}
-
 namespace osg
 {
    class Texture3D;
@@ -55,13 +48,21 @@ namespace osg
 #include <osg/Group>
 #include <osg/Drawable>
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
 {
+namespace xplorer
+{
+namespace volume
+{
+class cfdOSGAdvectionShaderManager;
+class cfdTextureManager;
+class cfdPBufferManager;
    VE_TEXTURE_BASED_EXPORTS osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
                                            cfdPBufferManager* pbm,
                                            float deltaZ);
 
+}
+}
 }
 #endif// _OSG
 #endif //CFD_AVDECTION_SUBGRAPH_H

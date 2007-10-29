@@ -50,9 +50,15 @@ namespace ves
 }
 }
 }
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class cfdTextureDataSet;
+}
+}
 }
 namespace VE_Xplorer
 {
@@ -93,7 +99,7 @@ protected:
 
    ///Set the active cfdTextureDataset
    void _setActiveTextureDataset(/*std::string tdsName*/);
-   VE_TextureBased::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
+   ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
 };
 }

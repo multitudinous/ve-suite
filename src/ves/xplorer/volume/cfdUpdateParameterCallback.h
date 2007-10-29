@@ -36,14 +36,18 @@
 * cfdUpdateParameterCallback API
 */
 
-/*!\class VE_TextureBased::cfdUpdateParameterCallback
+/*!\class ves::xplorer::volume::cfdUpdateParameterCallback
 *
 */
 #ifdef _OSG
 
 #include <osg/Uniform>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback
       : public osg::Uniform::Callback{
@@ -72,6 +76,8 @@ namespace VE_TextureBased
          cfdParameterType _type;
          cfdParameterSize _size;
    };
+}
+}
 }
 #endif //_OSG
 #endif //CFD_UPDATE_PARAMETER_CALLBACK_H

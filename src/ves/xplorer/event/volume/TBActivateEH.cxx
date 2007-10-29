@@ -90,7 +90,7 @@ void TextureBasedActivateEventHandler::_operateOnNode(XMLObject* veXMLObject)
         ///what happens if texture is somehow added first? Is that possible?
         _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
         _activeTDSet = _activeModel->GetTextureDataSet( 0 );
-        VE_TextureBased::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
+        ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
 
         } 
     }

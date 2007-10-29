@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/xplorer/volume/TransferFunction.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////////
 //Constructor                                           //
 //////////////////////////////////////////////////////////

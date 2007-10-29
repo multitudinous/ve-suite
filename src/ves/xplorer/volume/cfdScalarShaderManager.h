@@ -38,17 +38,20 @@
 * cfdScalarShaderManager API
 */
 
-/*!\class VE_TextureBased::cfdScalarShaderManager
+/*!\class ves::xplorer::volume::cfdScalarShaderManager
 *
 */
 #ifdef _OSG
 #include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
-namespace VE_TextureBased
+
+namespace ves
 {
-   class cfdTextureManager;
-}
-namespace VE_TextureBased
+namespace xplorer
 {
+namespace volume
+{
+class cfdTextureManager;
+
 class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager
   :public cfdOSGTransferShaderManager{
 public:
@@ -107,6 +110,8 @@ protected:
      ///Initialize property texture
      void _initPropertyTexture();
 };
+}
+}
 }
 #endif//_OSG
 #endif// CFD_SCALAR_SHADER_MANAGER_H

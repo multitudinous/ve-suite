@@ -201,13 +201,13 @@ public:
    //////////////////////////
    //texture based interface
 #ifdef _OSG
-   void SetActiveTextureDataSet( VE_TextureBased::cfdTextureDataSet* tDS);
+   void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS);
   void CreateTextureDataSet();
    void AddDataSetToTextureDataSet(unsigned int index,
                          std::string textureDescriptionFile);
    unsigned int GetNumberOfTextureDataSets();
-   VE_TextureBased::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
-   VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet();
+   ves::xplorer::volume::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
+   ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
 #endif
    ///////////////////////////////////////////////////
 
@@ -250,9 +250,9 @@ private:
    std::map< std::string, ves::xplorer::scenegraph::Clone* > _cloneList;///A list of clones.
 */
 #ifdef _OSG
-   typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;
+   typedef std::vector<ves::xplorer::volume::cfdTextureDataSet*> TextureDataSetList;
    TextureDataSetList mTextureDataSets;
-   VE_TextureBased::cfdTextureDataSet* _activeTextureDataSet;
+   ves::xplorer::volume::cfdTextureDataSet* _activeTextureDataSet;
 #endif
 
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;

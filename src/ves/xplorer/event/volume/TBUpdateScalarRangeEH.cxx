@@ -74,7 +74,7 @@ void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode(XMLObject* veXMLO
    try
    {
       Command* command = dynamic_cast< Command* >( veXMLObject );
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateActiveTextureManager();
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateActiveTextureManager();
       
       double scalarRange[2] = {0.f,100.f};
 
@@ -88,7 +88,7 @@ void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode(XMLObject* veXMLO
       float floatRange[2];
       floatRange[0] = scalarRange[0];
       floatRange[1] = scalarRange[1];
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
       
    }
    catch(...)

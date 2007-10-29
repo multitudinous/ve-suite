@@ -35,7 +35,7 @@
 /*!\file cfdTextureBasedVizHandler.h
 cfdTextureBasedVizHandler API
 */
-/*!\class VE_TextureBased::cfdTextureBasedVizHandler
+/*!\class ves::xplorer::volume::cfdTextureBasedVizHandler
 * 
 */
 #include <vpr/Util/Singleton.h>
@@ -75,20 +75,20 @@ namespace VE_Xplorer
 
 //namespace osgUtil { class SceneView; }
 
-namespace VE_TextureBased
+namespace ves
 {
-   class cfdTextureManager;
-   class cfdPBufferManager;
-   class cfdVolumeVisualization;
-   class cfdTextureDataSet;
-   class cfdVolumeVisNodeHandler;
-   class cfdScalarVolumeVisHandler;
-   class cfdVectorVolumeVisHandler;
-}
-
-namespace VE_TextureBased
+namespace xplorer
 {
-   class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cfdTextureBasedVizHandler >
+namespace volume
+{
+class cfdTextureManager;
+class cfdPBufferManager;
+class cfdVolumeVisualization;
+class cfdTextureDataSet;
+class cfdVolumeVisNodeHandler;
+class cfdScalarVolumeVisHandler;
+class cfdVectorVolumeVisHandler;
+class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cfdTextureBasedVizHandler >
    {
       public:
          void PreFrameUpdate( void );
@@ -226,6 +226,8 @@ namespace VE_TextureBased
          ~cfdTextureBasedVizHandler( void );
          vprSingletonHeader( cfdTextureBasedVizHandler );   
    };
+}
+}
 }
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

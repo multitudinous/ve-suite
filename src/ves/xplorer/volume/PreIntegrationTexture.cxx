@@ -2,7 +2,7 @@
 #include <ves/xplorer/volume/TransferFunction.h>
 #include <iostream>
 #include <fstream>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 unsigned char clamp(unsigned char lower,unsigned char upper, unsigned char value)
 {
 	return (value<lower)?lower:(value>upper)?upper:value;

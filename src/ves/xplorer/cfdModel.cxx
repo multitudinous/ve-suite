@@ -56,7 +56,7 @@
 #ifdef _OSG
 #include <osg/StateSet>
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 #endif
 
 #include <ves/xplorer/cfdDebug.h>
@@ -328,7 +328,7 @@ unsigned int cfdModel::GetIndexOfDataSet( std::string dataSetName )
 }
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
-VE_TextureBased::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
+ves::xplorer::volume::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
 {
    if(mTextureDataSets.empty())
    {
@@ -338,12 +338,12 @@ VE_TextureBased::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int ind
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetActiveTextureDataSet(VE_TextureBased::cfdTextureDataSet* tDS)
+void cfdModel::SetActiveTextureDataSet(ves::xplorer::volume::cfdTextureDataSet* tDS)
 {
    _activeTextureDataSet = tDS;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_TextureBased::cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
+ves::xplorer::volume::cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
 {
    return _activeTextureDataSet;
 }

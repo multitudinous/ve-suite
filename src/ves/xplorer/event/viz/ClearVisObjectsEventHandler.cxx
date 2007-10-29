@@ -53,7 +53,7 @@
 
 using namespace VE_EVENTS;
 using namespace VE_Xplorer;
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //

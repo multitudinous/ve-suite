@@ -47,7 +47,7 @@
 #include <ves/xplorer/volume/NoiseTexture2D.h>
 #include <ves/xplorer/volume/PreIntegrationTexture.h>
 #include <ves/xplorer/volume/TransferFunction.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //the shader inline source
 static const char* volumeTransferFragSource = {
    

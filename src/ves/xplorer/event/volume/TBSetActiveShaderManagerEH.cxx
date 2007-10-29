@@ -74,7 +74,7 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(XMLObject* v
       DataValuePairWeakPtr activeSM = command->GetDataValuePair("Active Shader Manager");      
 	  std::string value;
       activeSM->GetData(value);
-	  VE_TextureBased::cfdTextureBasedVizHandler::instance()->SetActiveShaderManager( value );
+	  ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->SetActiveShaderManager( value );
    }
    catch(...)
    {

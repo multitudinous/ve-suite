@@ -33,7 +33,7 @@
 #include <ves/xplorer/volume/NoiseTexture2D.h>
 #include <iostream>
 #include <fstream>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ///////////////////////////////////////////////////////////////
 NoiseTexture2D::NoiseTexture2D(unsigned int x, unsigned int y)
 {

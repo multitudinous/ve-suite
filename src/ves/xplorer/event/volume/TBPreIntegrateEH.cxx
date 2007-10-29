@@ -77,7 +77,7 @@ void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(XMLObject* veXML
       DataValuePairWeakPtr enable = command->GetDataValuePair("Recalculate Pre-Integration");      
       unsigned int onOff;
       enable->GetData(onOff);
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);
    }
    catch(...)
    {

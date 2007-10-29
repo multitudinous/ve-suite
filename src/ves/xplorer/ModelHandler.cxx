@@ -89,7 +89,7 @@
 #ifdef _OSG
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 #endif
 #include <fstream>
 #include <string>

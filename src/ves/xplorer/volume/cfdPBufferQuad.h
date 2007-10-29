@@ -38,7 +38,7 @@
 * cfdPBufferQuad API
 */
 
-/*!\class VE_TextureBased::cfdPBufferQuad
+/*!\class ves::xplorer::volume::cfdPBufferQuad
 *
 */
 #ifdef _OSG
@@ -52,7 +52,11 @@ namespace osg
    class Texture3D;
 }
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdPBufferQuad : public osg::Drawable{
       public:
@@ -102,6 +106,8 @@ protected:
    float _deltaZ;
    osg::ref_ptr<osg::Texture3D> _texture;
 };
+}
+}
 }
 #endif// _OSG
 #endif// CFD_PBUFFER_QUAD_H

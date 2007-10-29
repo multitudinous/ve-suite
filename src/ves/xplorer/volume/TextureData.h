@@ -49,8 +49,11 @@
 #include <string>
 #include <vector>
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    /**
     * Represents a data set that is used to create a texture.  This data
@@ -235,5 +238,7 @@ namespace VE_TextureBased
 
    /// Typedef for a SmartPtr type for the TextureData.
    typedef Loki::SmartPtrDef<TextureData>::type TextureDataPtr;
+}
+}
 }
 #endif

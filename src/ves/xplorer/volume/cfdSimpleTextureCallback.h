@@ -36,7 +36,7 @@
 * cfdSimpleTextureCallback API
 */
 
-/*!\class VE_TextureBased::cfdSimpleTextureCallback
+/*!\class ves::xplorer::volume::cfdSimpleTextureCallback
 *
 */
 #ifdef _PERFORMER
@@ -44,7 +44,11 @@
 #elif _OSG
 #include <osg/Texture3D>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdSimpleTextureCallback 
       : public  osg::Texture3D::SubloadCallback{
@@ -68,6 +72,8 @@ namespace VE_TextureBased
          bool _isLuminance;
          mutable GLsizei _textureWidth, _textureHeight,_textureDepth;
    };
+}
+}
 }
 #endif //OSG
 #endif //CFD_SIMPLE_TEXTURE_CALLBACK_H

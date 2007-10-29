@@ -52,9 +52,9 @@
 #include <osg/StateSet>
 #include <osg/TexGenNode>
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 
-osg::ref_ptr<osg::Group> VE_TextureBased::CreateAdvectionSubGraph(cfdTextureManager* tm,
+osg::ref_ptr<osg::Group> ves::xplorer::volume::CreateAdvectionSubGraph(cfdTextureManager* tm,
                                             cfdPBufferManager* pbm,
                                             float deltaZ)
 {

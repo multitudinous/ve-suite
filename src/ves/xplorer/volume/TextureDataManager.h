@@ -48,7 +48,11 @@
 #include <map>
 #include <vector>
 #include <string>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    /**
     * This Singleton manages each simulation contained in a TextureData 
@@ -109,5 +113,7 @@ namespace VE_TextureBased
 #endif
    /// Typedef for the singleton TextureDataManager.
    typedef Singleton<TextureDataManager_t> TextureDataManager;
+}
+}
 }
 #endif

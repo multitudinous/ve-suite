@@ -43,7 +43,7 @@
 #include <osg/TexGen>
 #include <osg/TexMat>
 #include <osg/Group>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////
 //Constructors                                      //
 //////////////////////////////////////////////////////
@@ -107,10 +107,10 @@ void cfdScalarVolumeVisHandler::SetTextureManager(cfdTextureManager* tm)
    { 
       size_t nShaderManagers = _shaderManagers.size();
       for ( std::map<std::string ,
-         VE_TextureBased::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
+         ves::xplorer::volume::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
          itr != _shaderManagers.end(); itr++ )
       {
-         dynamic_cast<VE_TextureBased::cfdScalarShaderManager*>(itr->second)->UpdateTextureManager(_tm);
+         dynamic_cast<ves::xplorer::volume::cfdScalarShaderManager*>(itr->second)->UpdateTextureManager(_tm);
       }
    }
 }

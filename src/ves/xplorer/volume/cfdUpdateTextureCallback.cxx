@@ -41,7 +41,7 @@
 #include <osg/NodeVisitor>
 #include <vpr/Util/Debug.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////

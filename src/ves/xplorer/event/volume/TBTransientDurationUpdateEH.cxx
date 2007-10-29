@@ -78,7 +78,7 @@ void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode(XMLObject* 
       double value;
       playDuration->GetData(value);
 
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateTransientDuration(value);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateTransientDuration(value);
    }
    catch(...)
    {

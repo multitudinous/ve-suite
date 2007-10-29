@@ -37,7 +37,7 @@
 /*!\file TBVolumeSlices.h
   Texture-Based Volume Rendering Slices API
   */
-/*!\class VE_TextureBased::TextureBasedVolumeSlices
+/*!\class ves::xplorer::volume::TextureBasedVolumeSlices
  * Class defining slices for texture-based volume rendering .
  */
 
@@ -58,7 +58,11 @@ namespace osg
 {
    class Matrixf;  
 }
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class  VE_TEXTURE_BASED_EXPORTS TextureBasedVolumeSlices : public osg::Drawable
 {
@@ -76,7 +80,7 @@ public:
    TextureBasedVolumeSlices(const TextureBasedVolumeSlices& slices,
                             const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
 
-   META_Object(VE_TextureBased,VE_TextureBased::TextureBasedVolumeSlices)
+   META_Object(VE_TextureBased,ves::xplorer::volume::TextureBasedVolumeSlices)
   
    ///Update the bounding box for this dataset
    ///\param dataBoundingBox The data bounding box
@@ -200,6 +204,8 @@ protected:
    mutable osg::ref_ptr<osg::Vec4Array> _tcoordBBox;///<The rotated bbox.
    mutable gadget::PositionInterface head;///<vjPosInterface Head Position from Juggler;
 };
+}
+}
 }
 #endif //_OSG
 #endif// TEXTURE_BASED_VOLUME_SLICES_H

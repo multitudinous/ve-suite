@@ -36,7 +36,7 @@
 * cfdOSGTransferShaderManager API
 */
 
-/*!\class VE_TextureBased::cfdOSGTransferShaderManager
+/*!\class ves::xplorer::volume::cfdOSGTransferShaderManager
 *
 */
 #ifdef _OSG
@@ -47,22 +47,28 @@ namespace osg{
    class TexMat;
 }
 #include <vector>
-namespace VE_TextureBased
+
+namespace volume
 {
-   class cfdTextureManager;
-   class cfdUpdateTextureCallback;
-   class TransferFunction;
-   class PreIntegrationTexture2D;
-   class NoiseTexture2D;
+   
 }
 
 #include <ves/xplorer/volume/cfdOSGShaderManager.h>
 #include <ves/xplorer/volume/cfdUpdateableOSGTexture1d.h>
 
 #include <string>
-namespace VE_TextureBased
+namespace ves
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager
+namespace xplorer
+{
+namespace volume
+{
+class cfdTextureManager;
+class cfdUpdateTextureCallback;
+class TransferFunction;
+class PreIntegrationTexture2D;
+class NoiseTexture2D;
+class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager
       : public cfdOSGShaderManager{
       public:
          ///Constructor
@@ -131,10 +137,12 @@ namespace VE_TextureBased
          bool _useTM;///<Use the cfdTextureManager for texture data
          cfdTextureManager* _tm;///<cfdTextureManager
          osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;///<The update callback for the texture
-		 VE_TextureBased::TransferFunction* _tf;///<The transfer function for preIntegration.
-		 VE_TextureBased::PreIntegrationTexture2D* _preIntTexture;///<The preIntegrated texture.
-       VE_TextureBased::NoiseTexture2D* _jitterTexture;///<The noise texture
+		 ves::xplorer::volume::TransferFunction* _tf;///<The transfer function for preIntegration.
+		 ves::xplorer::volume::PreIntegrationTexture2D* _preIntTexture;///<The preIntegrated texture.
+       ves::xplorer::volume::NoiseTexture2D* _jitterTexture;///<The noise texture
    };
+}
+}
 }
 #endif//_OSG
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

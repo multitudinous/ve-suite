@@ -47,7 +47,7 @@
 #include <ves/xplorer/volume/cfdUpdateParameterCallback.h>
 
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //#include "cfdUpdateMatrixParameterCallback.h>
 #define PI  3.1416
 

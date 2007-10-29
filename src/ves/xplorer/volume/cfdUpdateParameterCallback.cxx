@@ -35,7 +35,7 @@
 #include <iostream>
 #include <ves/xplorer/volume/cfdUpdateParameterCallback.h>
 #include <osg/NodeVisitor>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////////////////////////////
 //Constructors                                        //
 ////////////////////////////////////////////////////////

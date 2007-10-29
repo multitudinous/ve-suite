@@ -77,7 +77,7 @@ void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode(XMLObject* veXMLO
       DataValuePairWeakPtr isovalue = command->GetDataValuePair("Number of Slice Planes");      
       unsigned int value;
       isovalue->GetData(value);
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes(value);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes(value);
    }
    catch(...)
    {

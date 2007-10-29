@@ -46,7 +46,7 @@
 #include <vtkPointData.h>
 #include <sstream>
 
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////
 //Constructor                 //
 ////////////////////////////////

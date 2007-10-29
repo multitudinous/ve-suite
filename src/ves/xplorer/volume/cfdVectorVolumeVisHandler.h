@@ -36,7 +36,7 @@
 * cfdVectorVolumeVisHandler API
 */
 
-/*!\class VE_TextureBased::cfdVectorVolumeVisHandler
+/*!\class ves::xplorer::volume::cfdVectorVolumeVisHandler
 *
 */
 #ifdef _OSG
@@ -46,20 +46,22 @@ namespace osg
    class Texture3D;
 }
 #include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
-namespace VE_TextureBased
-{
-   class cfdOSGAdvectionShaderManager;
-   class cfdOSGTransferShaderManager;
-   class cfdTextureManager;
-   class cfdPBufferManager;
-   class cfdUpdateTextureCallback;
-   class cfd3DTextureCullCallback;
-   class cfdOSGPingPongTexture3D;
-}
 
-namespace VE_TextureBased
+namespace ves
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler{
+namespace xplorer
+{
+namespace volume
+{
+class cfdOSGAdvectionShaderManager;
+class cfdOSGTransferShaderManager;
+class cfdTextureManager;
+class cfdPBufferManager;
+class cfdUpdateTextureCallback;
+class cfd3DTextureCullCallback;
+class cfdOSGPingPongTexture3D;
+
+class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler{
       public:
          ///Constructor
          cfdVectorVolumeVisHandler();
@@ -124,6 +126,8 @@ namespace VE_TextureBased
          osg::ref_ptr<osg::Texture3D> _velocity;///<Velocity texture
 
    };
+}
+}
 }
 #endif //_OSG
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H

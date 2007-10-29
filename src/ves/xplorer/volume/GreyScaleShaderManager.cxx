@@ -44,7 +44,7 @@
 #include <ves/xplorer/volume/GreyScaleShaderManager.h>
 #include <ves/xplorer/volume/LuminanceTransferFunction.h>
 #include <ves/xplorer/volume/PreIntegrationTexture.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////
 /*void GreyScaleShaderManager::_updateTransferFunction(bool preIntegrated)
@@ -196,9 +196,9 @@ void GreyScaleShaderManager::_initTransferFunctions()
 		  delete _preIntTexture;
 		  _preIntTexture = 0;
 	  }
-	  _tf = new VE_TextureBased::LuminanceTF();
+	  _tf = new ves::xplorer::volume::LuminanceTF();
 	  _tf->InitializeData();
-	  _preIntTexture = new VE_TextureBased::PreIntegrationTexture2D();
+	  _preIntTexture = new ves::xplorer::volume::PreIntegrationTexture2D();
 	  _preIntTexture->SetTransferFunction(_tf);
 	  _preIntTexture->FullUpdate();
       _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());

@@ -62,7 +62,7 @@
 #include <osg/Switch>
 #include <osg/BoundingBox>
 #include <osg/PositionAttitudeTransform>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////
 //Constructor                                 //
@@ -624,7 +624,7 @@ void cfdVolumeVisualization::TranslateCenterBy(float* translate)
 void cfdVolumeVisualization::_buildSlices()
 {
    
-   _slices = new VE_TextureBased::TextureBasedVolumeSlices(_vtkBBox,100);
+   _slices = new ves::xplorer::volume::TextureBasedVolumeSlices(_vtkBBox,100);
    _slices->setUseDisplayList(false);
    _billboard = new osg::Geode();
    _billboard->addDrawable(_slices.get());
@@ -677,7 +677,7 @@ void cfdVolumeVisualization::_buildSlices()
 void cfdVolumeVisualization::_createVolumeSlices()
 {
    std::cout<<"Creating Slices"<<std::endl;
-   _slices = new VE_TextureBased::TextureBasedVolumeSlices(_vtkBBox,100);
+   _slices = new ves::xplorer::volume::TextureBasedVolumeSlices(_vtkBBox,100);
    _slices->setUseDisplayList(false);
    _billboard = new osg::Geode();
    _billboard->addDrawable(_slices.get());

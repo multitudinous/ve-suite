@@ -37,14 +37,17 @@
 /*!\file PreIntegrationTexture.h
   Texture-Based Volume Rendering PreIntegrationTexture API
   */
-/*!\class VE_TextureBased::PreIntegrationTexture2D
+/*!\class ves::xplorer::volume::PreIntegrationTexture2D
  * Class defining preintegrated classification texture for texture-based volume rendering .
  */
 #include <osg/Image>
 #include <osg/Texture2D>
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class TransferFunction;
 class VE_TEXTURE_BASED_EXPORTS PreIntegrationTexture2D
@@ -94,5 +97,7 @@ protected:
    osg::ref_ptr<osg::Image> _imageData;///<The image
    osg::ref_ptr<osg::Texture2D> _preIntegratedTexture;///<The image
 };
+}
+}
 }
 #endif //PREINTEGRATION_TEXTURE_2D_H

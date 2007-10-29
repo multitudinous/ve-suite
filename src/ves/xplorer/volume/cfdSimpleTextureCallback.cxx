@@ -38,7 +38,7 @@
 #include <osg/TexMat>
 #include <osg/StateAttribute>
 #include <iostream>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////

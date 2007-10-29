@@ -34,7 +34,7 @@
 #include <ves/xplorer/volume/RedYellowGreenCyanBlueTransferFunction.h>
 #include <ves/xplorer/volume/TransferFunction.h>
 #include <iostream>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////////////////
 RYGCBLinearTF::RYGCBLinearTF(unsigned int s)
 :TransferFunction1D(s)

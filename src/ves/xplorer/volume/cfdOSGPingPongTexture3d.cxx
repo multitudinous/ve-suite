@@ -38,7 +38,7 @@
 #include <osg/Texture3D>
 #include <osg/StateAttribute>
 static bool start = false;
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////
 //Constructors                                  //
 //////////////////////////////////////////////////

@@ -51,7 +51,7 @@
 #ifdef _OSG
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 #endif
 
 #include <vpr/System.h>
@@ -62,7 +62,7 @@ using namespace VE_TextureBased;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 using namespace ves::xplorer::scenegraph;
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
 Body_VEXplorer_i::Body_VEXplorer_i (void)

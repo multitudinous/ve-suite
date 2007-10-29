@@ -41,7 +41,7 @@
 #include <iostream>
 
 using namespace VE_EVENTS;
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 using namespace ves::open::xml;
 
 //////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ void TextureBasedEventHandler::_setActiveTextureDataset()
       //This assumes there is only one texture dataset per model which isn't quite right---biv
       _activeTDSet = _activeModel->GetTextureDataSet(0);
       _activeModel->SetActiveTextureDataSet(_activeTDSet);
-      VE_TextureBased::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet(_activeTDSet);
+      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet(_activeTDSet);
 
    }
 }

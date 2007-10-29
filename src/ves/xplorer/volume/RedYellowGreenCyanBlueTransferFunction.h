@@ -37,15 +37,18 @@
 /*!\file RedYellowGreenCyanBlueTransferFunction.h
   Red-to-Blue transfer function API
   */
-/*!\class VE_TextureBased::RYGCBLinearTF
+/*!\class ves::xplorer::volume::RYGCBLinearTF
  * Class defining defining Red-to-Blue transfer function.
  */
 #include <map>
 #include <vector>
 #include <ves/xplorer/volume/TransferFunction.h>
 #include <ves/VEConfig.h>
-
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class VE_TEXTURE_BASED_EXPORTS RYGCBLinearTF: public TransferFunction
 {
@@ -80,5 +83,7 @@ protected:
 	///Update the transfer function
 	virtual void _update();
 };
+}
+}
 }
 #endif// RED_YELLOW_GREE_CYAN_BLUE_LINEAR_TRANSFER_FUNCTION_H

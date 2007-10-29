@@ -36,14 +36,18 @@
 * cfdUpdateableOSGTexture1d API
 */
 
-/*!\class VE_TextureBased::cfdUpdateableOSGTexture1d
+/*!\class ves::xplorer::volume::cfdUpdateableOSGTexture1d
 *
 */
 #ifdef _PERFORMER
 #elif _OSG
 #include <osg/Texture1D>
 #include <ves/VEConfig.h>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGTexture1d
       : public  osg::Texture1D::SubloadCallback{
@@ -76,6 +80,8 @@ namespace VE_TextureBased
          TransType _type;
          mutable GLsizei _textureWidth,_oWidth;
    };
+}
+}
 }
 #endif //_OSG
 #endif //CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H

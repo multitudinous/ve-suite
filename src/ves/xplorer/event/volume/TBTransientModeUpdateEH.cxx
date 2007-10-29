@@ -83,15 +83,15 @@ void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(XMLObject* veXM
          DataValuePairWeakPtr playDirection = command->GetDataValuePair("Direction");      
          std::string direction;
          playDirection->GetData(direction);
-         VE_TextureBased::cfdTextureBasedVizHandler::instance()->StepTransientVisualization(direction);
+         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->StepTransientVisualization(direction);
       }
       else if(mode == "Play")
       {
-         VE_TextureBased::cfdTextureBasedVizHandler::instance()->PlayTransientVisualization();
+         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->PlayTransientVisualization();
       }
       else if(mode == "Stop")
       {
-         VE_TextureBased::cfdTextureBasedVizHandler::instance()->StopTransientVisualization();
+         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->StopTransientVisualization();
       }
    }
    catch(...)

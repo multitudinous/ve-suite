@@ -36,7 +36,7 @@
 #include <osg/TexMat>
 #include <osg/Matrix>
 #include <osg/Node>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 ////////////////////////////////////////////////////////////////////////
 //Constructor                                                         //
 ////////////////////////////////////////////////////////////////////////

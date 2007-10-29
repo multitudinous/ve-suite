@@ -35,7 +35,7 @@
 #include <ves/xplorer/volume/TransferFunction.h>
 #include <iostream>
 #include <cmath>
-using namespace VE_TextureBased;
+using namespace ves::xplorer::volume;
 //////////////////////////////////////////////
 LuminanceTF::LuminanceTF(unsigned int s)
 :TransferFunction1D(s)

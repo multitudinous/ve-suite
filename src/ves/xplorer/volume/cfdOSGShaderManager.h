@@ -36,7 +36,7 @@
 * cfdOSGShaderManager API
 */
 
-/*!\class VE_TextureBased::cfdOSGShaderManager
+/*!\class ves::xplorer::volume::cfdOSGShaderManager
 *
 */
 #ifdef _OSG
@@ -47,7 +47,11 @@ namespace osg
 }
 #include <ves/VEConfig.h>
 #include <string>
-namespace VE_TextureBased
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
 {
 class VE_TEXTURE_BASED_EXPORTS cfdOSGShaderManager
 {
@@ -122,6 +126,8 @@ protected:
    float* _bounds;///<The data boundary
    bool _useGLSL;///<Use GLSL instead of CG
 };
+}
+}
 }
 #endif //_OSG
 #endif// CFD_OSG_SHADER_MANAGER_H
