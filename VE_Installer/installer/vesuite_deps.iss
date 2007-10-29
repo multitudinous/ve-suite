@@ -20,15 +20,15 @@ AllowNoIcons=true
 OutputBaseFilename=vesuite_deps{#VEVERSION}
 Compression=lzma
 SolidCompression=true
-OutputDir={#VEHOME}\VE_Installer\installer
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
+OutputDir={#VEDEVHOME}\VE_Installer\installer
+WizardImageFile={#VEINSTALLHOME}\bin\installerImages\velauncher_banner.bmp
+WizardSmallImageFile={#VEINSTALLHOME}\bin\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageStretch=false
 WizardImageBackColor=clWhite
 BackColor=$a16502
 BackColor2=$1b84f7
-SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
+SetupIconFile={#VEINSTALLHOME}\bin\installerImages\Ve_icon.ico
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
@@ -73,14 +73,14 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-c_2_7D.dll; DestDir: {app}\
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
-Source: {#VEHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
+Source: {#VEDEVHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
 Source: {#OSGHOME}\bin\win32\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#XERCESHOME}\include\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\lib\win32\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -105,7 +105,7 @@ Source: {#APRUTILHOME}\Release\*.dll; DestDir: {app}\lib; Components: osg; Flags
 Source: {#APRICONVHOME}\Release\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion skipifsourcedoesntexist
 
 Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#XERCESHOME}\src\*.c; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#XERCESHOME}\src\*.c; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 ;Source: {#ACETAOHOME}\tao\tao\*.i; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
