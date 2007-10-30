@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-08-24 12:53:30 -0400 (Fri, 24 Aug 2007) $
- * Version:       $Rev: 8827 $
- * Author:        $Author: mccdo $
- * Id:            $Id: HierarchyTree.h 8827 2007-08-24 16:53:30Z mccdo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

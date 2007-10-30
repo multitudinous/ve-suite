@@ -23,10 +23,10 @@
 * Boston, MA 02111-1307, USA.
 *
 * -----------------------------------------------------------------
-* Date modified: $Date: 2007-10-05 20:50:26 -0500 (Fri, 05 Oct 2007) $
-* Version:       $Rev: 9227 $
-* Author:        $Author: mccdo $
-* Id:            $Id: Network.cxx 9227 2007-10-06 01:50:26Z mccdo $
+* Date modified: $Date$
+* Version:       $Rev$
+* Author:        $Author$
+* Id:            $Id$
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/

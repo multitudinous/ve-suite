@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-09-25 11:23:45 -0400 (Tue, 25 Sep 2007) $
- * Version:       $Rev: 9149 $
- * Author:        $Author: tjordan $
- * Id:            $Id: Network.cxx 9149 2007-09-25 15:23:45Z tjordan $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
