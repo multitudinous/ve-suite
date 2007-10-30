@@ -1,4 +1,4 @@
-# $Id: Makefile 16737 2005-02-03 19:47:26Z patrickh $
+# $Id$
 
 default: all
 
