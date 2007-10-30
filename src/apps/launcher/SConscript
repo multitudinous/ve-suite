@@ -10,4 +10,5 @@ launcherBundle = ves_pkg.createFileBundle( 'bin' )
 pyFile = sca_util.getFilesRecursiveByExt( '.', ['.py'] )
 
 launcherBundle.addFiles( pyFile )
+launcherBundle.addFiles( ['velauncher.sh'] )
 

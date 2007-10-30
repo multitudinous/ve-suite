@@ -442,7 +442,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    ##Tack on path prefixes to subdirs specified above.
    vesSubdirs=pj(buildDir, 'src' )
-   distSubdirs = pj(buildDir,'dist')
+   distSubdirs = pj(buildDir,'dist','installerImages')
    #veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
    #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    #installerSubdirs = pj(buildDir,'VE_Installer' )

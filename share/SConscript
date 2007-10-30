@@ -19,6 +19,7 @@ shareSubdirs = Split("""
     examples
     tools
     fpc
+    scripts
 """)
 
 ##Set the Sconscript files to build.
