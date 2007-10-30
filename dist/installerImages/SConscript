@@ -1,0 +1,14 @@
+##get images used by the launcher
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg', 'RootDir')
+env = ves_pkg.getEnv().Copy()
+
+launcherBundle = ves_pkg.createFileBundle( pj('bin','installerImages' ) )
+pyFile = sca_util.getFilesRecursiveByExt( '.', ['.xpm'] )
+pyFile += sca_util.getFilesRecursiveByExt( '.', ['.bmp'] )
+pyFile += sca_util.getFilesRecursiveByExt( '.', ['.png'] )
+pyFile += sca_util.getFilesRecursiveByExt( '.', ['.ico'] )
+launcherBundle.addFiles( pyFile )
