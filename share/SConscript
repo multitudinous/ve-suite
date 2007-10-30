@@ -18,6 +18,7 @@ shareSubdirs = Split("""
     vrj_configs
     examples
     tools
+    fpc
 """)
 
 ##Set the Sconscript files to build.

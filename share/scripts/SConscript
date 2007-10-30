@@ -1,0 +1,12 @@
+##Builds idl skeleton files for veopen
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+scriptsSubdirs = Split("""
+    linux
+""")
+
+##Run SConscript files in all of those folders.
+for d in scriptsSubdirs:
+   SConscript( dirs = d )

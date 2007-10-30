@@ -145,7 +145,7 @@ private:
    VE_Xplorer::cfdImage*            image;///<A cfdObject
    VE_Xplorer::cfdAnimatedImage*    animImg;///<A cfdObject
    VE_Xplorer::cfdAnimatedStreamlineCone* animStreamer;///<A cfdObject
-   VE_Xplorer::cfdTextOutput*       textOutput;///<A cfdObject
+   //VE_Xplorer::cfdTextOutput*       textOutput;///<A cfdObject
    
    // Vectors that will eventually be stored as maps
    // these hold all the objectsa for easy access and management

@@ -118,7 +118,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    this->image = 0;
    this->animStreamer = 0;
    this->animImg = 0;
-   this->textOutput = 0;
+   //this->textOutput = 0;
    //_activeModel = 0;
    
    // Initialize all the vis objects from ssvishandler
@@ -650,12 +650,12 @@ CreateVisObjectEventHandler::~CreateVisObjectEventHandler()
       delete this->animStreamer;
    }
    
-   if ( this->textOutput ) 
+   /*if ( this->textOutput ) 
    {
       //vprDEBUG(vesDBG,2)  
       //<< "deleting this->textOutput" << std::endl << vprDEBUG_FLUSH;
       delete this->textOutput;
-   }
+   }*/ 
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator

@@ -442,18 +442,17 @@ if not SConsAddons.Util.hasHelpFlag():
 
    ##Tack on path prefixes to subdirs specified above.
    vesSubdirs=pj(buildDir, 'src' )
-   veiSubdirs = pj(buildDir,'VE_Installer','installer')
-   veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
-   fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
-   installerSubdirs = pj(buildDir,'VE_Installer' )
+   distSubdirs = pj(buildDir,'dist')
+   #veiDistSubdirs = pj(buildDir,'VE_Installer','installer', 'dist')
+   #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
+   #installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    #osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    
-   ves_dirs = [vesSubdirs, veiDistSubdirs, veiSubdirs, 
-               shareSubdirs, fpcSubdirs, lokiSubdirs, osgOQSubdirs, 
-               installerSubdirs ]
+   ves_dirs = [vesSubdirs, distSubdirs,
+               shareSubdirs, lokiSubdirs, osgOQSubdirs ]
 
    # freeze the python code
    if 'freeze' in  COMMAND_LINE_TARGETS:

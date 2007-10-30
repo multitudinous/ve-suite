@@ -44,7 +44,7 @@ name_parts = ['osg', cppdom_version_str, arch]
 osgFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
 cppdom_pc = lib_env.ConfigBuilder(osgFileName, 
-                     pj('#','VE_Installer','fpc','osg.fpc.in'), submap = submap)
+                     pj('#','share','fpc','osg.fpc.in'), submap = submap)
 
 # Build up the provides vars for the .fpc files
 provides = "ves"
@@ -90,7 +90,7 @@ name_parts = ['ves', ves_version_str, arch]
 vesFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
 ves_pc = lib_env.ConfigBuilder(vesFileName, 
-                        pj('#','VE_Installer','fpc','ves.fpc.in'), submap = submap)
+                        pj('#','share','fpc','ves.fpc.in'), submap = submap)
 
 # Build up the provides vars for the .fpc files
 provides = "vtk"
@@ -126,7 +126,7 @@ name_parts = ['vtk', vtk_version_str, arch]
 vtkFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
 ves_pc = lib_env.ConfigBuilder(vtkFileName, 
-                        pj('#','VE_Installer','fpc','vtk.fpc.in'), submap = submap)
+                        pj('#','share','fpc','vtk.fpc.in'), submap = submap)
 
 # Build up the provides vars for the .fpc files
 provides = "xerces"
@@ -162,7 +162,7 @@ name_parts = ['xerces', xerces_version_str, arch]
 xercesFileName = "-".join(name_parts) + ".fpc"
 ##tempName = pj(inst_paths['flagpoll'], pc_filename)
 ves_pc = lib_env.ConfigBuilder(xercesFileName, 
-                        pj('#','VE_Installer','fpc','xerces.fpc.in'), submap = submap)
+                        pj('#','share','fpc','xerces.fpc.in'), submap = submap)
 
 # Build up the provides vars for the .fpc files
 #if  !os.getenv('CASROOT').empty():
@@ -201,7 +201,7 @@ submap = {
 name_parts = ['occ', xerces_version_str, arch]
 occFileName = "-".join(name_parts) + ".fpc"
 ves_pc = lib_env.ConfigBuilder(occFileName, 
-                        pj('#','VE_Installer','fpc','occ.fpc.in'), submap = submap)
+                        pj('#','share','fpc','occ.fpc.in'), submap = submap)
 
 # prepare the installer
 fpcBundle = ves_pkg.createFileBundle( pj('lib','flagpoll' )  )

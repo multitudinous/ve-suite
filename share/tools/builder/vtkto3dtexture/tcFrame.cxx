@@ -592,14 +592,14 @@ void TCFrame::SetTextureResolution(int x,int y, int z)
    _resolution[2] = NearestPowerOfTwo(z);
 }
 ///////////////////////////////////////////
-int TCFrame::NeareastPowerOfTwo(int input)
+int TCFrame::NearestPowerOfTwo(int input)
 {
     int value = 1;
     while (value <= input)
     {
        value = value << 1;
     }
-    return if(value > 512)?512:value;
+    return (value > 512)?512:value;
 }
 /////////////////////////////////////////////////
 void TCFrame::SetGridType(GridType type)
