@@ -449,9 +449,9 @@ if not SConsAddons.Util.hasHelpFlag():
    shareSubdirs = pj(buildDir,'share')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
-   #osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
+   osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    
-   ves_dirs = [vesSubdirs, distSubdirs,
+   ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, osgOQSubdirs ]
 
    # freeze the python code
