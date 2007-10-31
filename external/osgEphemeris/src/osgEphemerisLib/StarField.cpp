@@ -22,6 +22,8 @@
 #include <osgEphemeris/StarField>
 #include <osgEphemeris/SkyDome>
 
+#include <osg/Version>
+
 #include "star_data.h"
 
 using namespace osgEphemeris;
@@ -132,10 +134,15 @@ class UPCB : public osg::NodeCallback
             osgUtil::CullVisitor *cv = dynamic_cast<osgUtil::CullVisitor *>(nv);
             if( cv != 0L )
             {
+#if (((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2)) || (OSG_VERSION_MAJOR>=2))
+                osg::Matrixf m = *(cv->getModelViewMatrix());
+#else
                 osg::Matrixf m = cv->getModelViewMatrix();
+#endif
+
                 osg::Matrixf mi;
                 mi.invert(m);
-
+                
                 //a += osg::PI/180.0;
                 //mi = osg::Matrix::rotate( a, 1, 0, 0 );
 
