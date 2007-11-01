@@ -96,9 +96,9 @@ Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags
 ;Source: {#VEHOME}/share/vrj_configs/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\stereo_desktop; Components: nameserver; Flags: recursesubdirs
 ;Source: {#VEHOME}/share/vrj_configs/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\vecr_configs; Components: nameserver; Flags: recursesubdirs
 
-Source: {#VEINSTALLHOME}\bin\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#VEINSTALLHOME}\bin\installerImages\velauncher_banner.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-Source: {#VEDEVHOME}\VE_Installer\installer\installerImages\VE_document.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
+Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
+;Source: {#VEINSTALLHOME}\bin\installerImages\velauncher_banner.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
+;Source: {#VEDEVHOME}\VE_Installer\installer\installerImages\VE_document.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 ;Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 ;Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
 ;Source: {#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp; DestDir: {app}\bin\installerImages; DestName: velauncher_banner.bmp
