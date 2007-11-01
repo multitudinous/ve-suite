@@ -169,7 +169,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
     EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
     EVT_MENU( XPLORER_COLOR, AppFrame::SetBackgroundColor )
-	EVT_MENU( XPLORER_EPHEMERIS, AppFrame::SetEphemerisData)
+    EVT_MENU( XPLORER_EPHEMERIS, AppFrame::SetEphemerisData)
     EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
@@ -747,7 +747,7 @@ void AppFrame::CreateMenu()
     xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
     xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
     xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
-    //xplorerMenu->Append( XPLORER_EPHEMERIS, _("Ephemeris Data") );
+    xplorerMenu->Append( XPLORER_EPHEMERIS, _("Ephemeris Data") );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
     xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            
@@ -1891,8 +1891,9 @@ void AppFrame::SetEphemerisData( wxCommandEvent& WXUNUSED(event) )
 {
 	if(!m_ephemeris)
 	{
-		m_ephemeris = new EphemerisDialog(this,wxID_ANY);
+            m_ephemeris = new EphemerisDialog(this,wxID_ANY);
 	}
+
 	if(m_ephemeris->ShowModal() == wxID_OK)
 	{
 	}
