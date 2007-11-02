@@ -66,6 +66,7 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <osgEphemeris/EphemerisModel>
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>
@@ -416,6 +417,15 @@ ves::xplorer::scenegraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
 		return _seedPointsDCS.get();
 	}
 	return 0;
+}
+////////////////////////////////////////////////////////////////////////
+osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel()
+{
+    if(!m_ephemerisModel.valid())
+    {
+        m_ephemerisModel = new osgEphemeris::EphemerisModel();
+    }
+    return m_ephemerisModel.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void cfdEnvironmentHandler::CreateObjects( void )

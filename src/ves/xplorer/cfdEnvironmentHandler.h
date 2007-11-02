@@ -48,6 +48,10 @@ cfdEnvironmentHandler API
 
 #include <vrj/vrjParam.h>
 
+namespace osgEphemeris
+{
+   class EphemerisModel;
+}
 namespace VE_Xplorer
 {
     class cfdCursor;
@@ -167,6 +171,9 @@ public:
    ///\return Return the DCS for the seed points
    ves::xplorer::scenegraph::DCS* GetSeedPointsDCS();
 
+   ///Get the ephemeris data
+   osgEphemeris::EphemerisModel* GetEphemerisModel();
+
 private:
    osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
    osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
@@ -211,6 +218,8 @@ private:
 
    float framerate;///<Frame rate.
     std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;///<The event handler for commands.
+
+    osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data
 };
 }
 
