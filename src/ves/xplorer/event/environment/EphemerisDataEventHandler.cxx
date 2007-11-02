@@ -51,6 +51,11 @@ EphemerisDataEventHandler::~EphemerisDataEventHandler()
 EphemerisDataEventHandler&
 EphemerisDataEventHandler::operator=(const EphemerisDataEventHandler& rhs)
 {
+    if(this != &rhs)
+    {
+
+    }
+    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////
 void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)

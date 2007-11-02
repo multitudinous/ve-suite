@@ -44,14 +44,10 @@ cfdEnvironmentHandler API
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <map>
 #include <vector>
-#include <osg/ref_ptr>
 
 #include <vrj/vrjParam.h>
-
-namespace osgEphemeris
-{
-   class EphemerisModel;
-}
+#include <osgEphemeris/EphemerisModel>
+#include <osg/ref_ptr>
 namespace VE_Xplorer
 {
     class cfdCursor;
