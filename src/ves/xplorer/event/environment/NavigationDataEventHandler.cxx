@@ -56,19 +56,19 @@
 #include <unistd.h>
 #endif
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler::NavigationDataEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 NavigationDataEventHandler::NavigationDataEventHandler(const NavigationDataEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
@@ -105,7 +105,7 @@ void NavigationDataEventHandler::Execute(XMLObject* veXMLObject)
 NavigationDataEventHandler& NavigationDataEventHandler::operator=(const NavigationDataEventHandler& rhs)
 {
    if(this!=&rhs){
-      VE_EVENTS::EventHandler::operator=(rhs);
+      ves::xplorer::event::EventHandler::operator=(rhs);
    }
 
    return *this;

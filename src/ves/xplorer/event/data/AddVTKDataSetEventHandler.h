@@ -61,7 +61,11 @@ namespace VE_Xplorer
 
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS AddVTKDataSetEventHandler: public EventHandler
 {
@@ -98,5 +102,9 @@ protected:
 
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

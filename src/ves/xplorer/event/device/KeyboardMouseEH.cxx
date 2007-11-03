@@ -51,19 +51,19 @@
 #include <unistd.h>
 #endif
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouseEventHandler::KeyboardMouseEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouseEventHandler::KeyboardMouseEventHandler(const KeyboardMouseEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
@@ -103,7 +103,7 @@ void KeyboardMouseEventHandler::Execute(XMLObject* veXMLObject)
 KeyboardMouseEventHandler& KeyboardMouseEventHandler::operator=(const KeyboardMouseEventHandler& rhs)
 {
    if(this!=&rhs){
-      VE_EVENTS::EventHandler::operator=(rhs);
+      ves::xplorer::event::EventHandler::operator=(rhs);
    }
 
    return *this;

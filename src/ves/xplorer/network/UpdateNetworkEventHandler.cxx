@@ -41,7 +41,7 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
@@ -50,13 +50,13 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::UpdateNetworkEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::UpdateNetworkEventHandler(const UpdateNetworkEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+:ves::xplorer::event::EventHandler(rhs)
 {
    ;
 }

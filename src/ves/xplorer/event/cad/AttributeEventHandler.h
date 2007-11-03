@@ -51,8 +51,14 @@ namespace VE_Xplorer
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS AttributeEventHandler : public EventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS AttributeEventHandler : public EventHandler
+{
 public:
    ///Constructor
    AttributeEventHandler();
@@ -68,14 +74,14 @@ public:
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-   
+
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    AttributeEventHandler& operator=(const AttributeEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
@@ -84,5 +90,9 @@ protected:
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
    ves::open::xml::cad::CADAttribute* _activeAttribute;///<The CADNode.
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

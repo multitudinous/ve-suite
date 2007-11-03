@@ -54,20 +54,20 @@
 // --- C/C++ Libraries --- //
 #include <string>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler( const ViewEventHandler& rhs )
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -113,7 +113,7 @@ ViewEventHandler& ViewEventHandler::operator=( const ViewEventHandler& rhs )
 {
     if( this != &rhs )
     {
-        VE_EVENTS::EventHandler::operator=( rhs );
+        ves::xplorer::event::EventHandler::operator=( rhs );
     }
 
     return *this;

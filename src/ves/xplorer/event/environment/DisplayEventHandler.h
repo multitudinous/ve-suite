@@ -55,34 +55,42 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
 {
-   class DisplayEventHandler:public EventHandler
-   {
-      public:
-         //Constructor
-         DisplayEventHandler();
+namespace xplorer
+{
+namespace event
+{
 
-         //Copy Constructor
-         DisplayEventHandler(const DisplayEventHandler& ceh);
+class DisplayEventHandler:public EventHandler
+{
+   public:
+      //Constructor
+      DisplayEventHandler();
 
-         //Destructor
-         virtual ~DisplayEventHandler();
+      //Copy Constructor
+      DisplayEventHandler(const DisplayEventHandler& ceh);
 
-         //Set the cfdModel
-         //param model The cfdModelHandler to execute the Command on
-         void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
-   
-         //Exectute the event
-         //param xmlObject The current xmlObject event.
-         void Execute(ves::open::xml::XMLObject* command); 
+      //Destructor
+      virtual ~DisplayEventHandler();
 
-         //Equal operator
-         DisplayEventHandler& operator=(const DisplayEventHandler& rhs);
-   
-      private:
+      //Set the cfdModel
+      //param model The cfdModelHandler to execute the Command on
+      void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler);
 
-   };
+      //Exectute the event
+      //param xmlObject The current xmlObject event.
+      void Execute(ves::open::xml::XMLObject* command); 
+
+      //Equal operator
+      DisplayEventHandler& operator=(const DisplayEventHandler& rhs);
+
+   private:
+
+};
+
+}
+}
 }
 
 #endif//DISPLAY_EVENT_HANDLER_H

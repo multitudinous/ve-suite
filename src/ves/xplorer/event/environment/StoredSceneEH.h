@@ -59,8 +59,14 @@ namespace VE_Xplorer
 
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-   class VE_XPLORER_EXPORTS StoredSceneEventHandler : public VE_EVENTS::EventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS StoredSceneEventHandler : public EventHandler
+{
 public:
    ///Constructor
    StoredSceneEventHandler();
@@ -74,12 +80,16 @@ public:
    StoredSceneEventHandler& operator=(const StoredSceneEventHandler& rhs);
    ///\param baseObject The cfdGlobalBase object to apply the command to.
    virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject=0); 
-   
+
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
    virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
 protected:
 
 };
+
 }
+}
+}
+
 #endif// QUAT_CAM_LOAD_FILE_H

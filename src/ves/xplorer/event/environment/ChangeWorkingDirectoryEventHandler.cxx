@@ -51,18 +51,18 @@
 #include <unistd.h>
 #endif
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
 }
 ////////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler(const ChangeWorkingDirectoryEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
 }
 ////////////////////////////////////

@@ -42,22 +42,28 @@
 #include <ves/xplorer/event/EventHandler.h>
 namespace VE_Xplorer
 {
-	class cfdModel;
+   class cfdModel;
 }
 namespace ves
 {
-    namespace open
-    {
-        namespace xml
-    {
-        class XMLObject;
-    }
-    }
+namespace open
+{
+namespace xml
+{
+   class XMLObject;
+}
+}
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-	class VE_XPLORER_EXPORTS SoundAddNewEventHandler: public VE_EVENTS::EventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS SoundAddNewEventHandler: public EventHandler
+{
 public:
    ///Constructor
    SoundAddNewEventHandler();
@@ -77,9 +83,13 @@ public:
    ///Set the active model
    ///\param baseObject Active model
    virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject);
-   
+
 protected:
-	VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
+   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
 };
+
 }
+}
+}
+
 #endif//SOUND_ADD_NEW_EVENT_HANDLER_H

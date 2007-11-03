@@ -58,7 +58,11 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class KeyboardMouseEventHandler:public EventHandler
 {
@@ -86,6 +90,8 @@ public:
 protected:
 
 };
+}
+}
 }
 
 #endif//KEYBOARD_MOUSE_EVENT_HANDLER_H

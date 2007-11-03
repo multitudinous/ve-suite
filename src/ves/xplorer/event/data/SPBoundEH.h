@@ -56,8 +56,13 @@ namespace VE_Xplorer
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS SeedPointBoundsEventHandler : public VE_EVENTS::EventHandler
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS SeedPointBoundsEventHandler : public EventHandler
 {
 public:
    ///Constructor
@@ -81,5 +86,9 @@ public:
 protected:
    VE_Xplorer::cfdModel* _activeModel;///<The active model;
 };
+
 }
+}
+}
+
 #endif// TEXTURE_BASED_UPDATE_SCALAR_RANGE_EVENT_HANDLER_H

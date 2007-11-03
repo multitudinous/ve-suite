@@ -51,9 +51,14 @@ namespace xml
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_EXPORTS CADRemoveAttributeEventHandler: public CADEventHandler{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS CADRemoveAttributeEventHandler: public CADEventHandler
+{
 public:
    ///Constructor
    CADRemoveAttributeEventHandler();
@@ -71,5 +76,9 @@ protected:
    ///\param command The Command containing the udpated transform.
    void _operateOnNode(ves::open::xml::XMLObject* command);
 };
+
 }
+}
+}
+
 #endif// VE_ATTRIBUTE_HANDLER_H

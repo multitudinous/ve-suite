@@ -52,7 +52,12 @@ namespace xml
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
 class VE_XPLORER_EXPORTS TextureBasedActivateEventHandler : public TextureBasedEventHandler{
 public:
    ///Constructor
@@ -65,11 +70,15 @@ public:
 
    ///Equal operator
    TextureBasedActivateEventHandler& operator=(const TextureBasedActivateEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
 };
+
 }
+}
+}
+
 #endif// TEXTURE_BASED_ACTIVATE_EVENT_HANDLER_H

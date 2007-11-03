@@ -162,7 +162,7 @@ protected:
     ///Update the gui with the new data
     void _updateViewGUIPointData();
 
-   std::map<std::string,VE_EVENTS::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+   std::map<std::string,ves::xplorer::event::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
 
 
 private:

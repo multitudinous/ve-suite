@@ -56,8 +56,14 @@ namespace ves
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-	class VE_XPLORER_EXPORTS SoundActivateEventHandler: public VE_EVENTS::EventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS SoundActivateEventHandler: public EventHandler
+{
 public:
    ///Constructor
    SoundActivateEventHandler();
@@ -77,9 +83,13 @@ public:
    ///Set the active model
    ///\param baseObject Active model
    virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject);
-   
+
 protected:
-	VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
+   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
 };
+
 }
+}
+}
+
 #endif//SOUND_ACTIVATE_EVENT_HANDLER_H

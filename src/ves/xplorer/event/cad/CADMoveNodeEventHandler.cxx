@@ -46,19 +46,19 @@
 #include <ves/open/xml/cad/CADAssembly.h>
 
 #include <iostream>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADMoveNodeEventHandler::CADMoveNodeEventHandler()
-:VE_EVENTS::CADEventHandler()
+:ves::xplorer::event::CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADMoveNodeEventHandler::CADMoveNodeEventHandler(const CADMoveNodeEventHandler& rhs)
-:VE_EVENTS::CADEventHandler(rhs)
+:ves::xplorer::event::CADEventHandler(rhs)
 {
    
 }
@@ -74,7 +74,7 @@ CADMoveNodeEventHandler& CADMoveNodeEventHandler::operator=(const CADMoveNodeEve
 {
    if(this != &rhs)
    {
-      VE_EVENTS::CADEventHandler::operator=(rhs);
+      ves::xplorer::event::CADEventHandler::operator=(rhs);
    }
    return *this;
 }

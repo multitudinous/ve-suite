@@ -43,15 +43,15 @@
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/open/xml/XMLObjectPtr.h>
+#include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
 {
-   class cfdGlobalBase;
-}
-namespace VE_EVENTS
+namespace xplorer
 {
-class ActiveModelEventHandler : public EventHandler
+namespace event
+{
+class VE_XPLORER_EXPORTS ActiveModelEventHandler : public EventHandler
 {
 public:
    ///Constructor
@@ -66,15 +66,19 @@ public:
    ///Set the cfdModel.
    ///\param model The cfdModelHandler to execute the Command on.
    void SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler );
-   
+
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    ActiveModelEventHandler& operator=(const ActiveModelEventHandler& rhs);
-   
+
 protected:
 };
+
 }
+}
+}
+
 #endif// ACTIVE_MODEL_EVENT_HANDLER_H

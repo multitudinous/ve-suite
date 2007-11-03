@@ -51,35 +51,33 @@
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-//#include <ves/xplorer/event/viz/cfdReadParam.h>
-//#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/event/cad/CADTransformEH.h>
+#include <ves/xplorer/event/ActiveModelEventHandler.h>
+
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
-#include <ves/xplorer/event/cad/CADDeleteNodeEH.h>
 #include <ves/xplorer/event/cad/CADAddAttributeEH.h>
+#include <ves/xplorer/event/cad/CADDeleteNodeEH.h>
+#include <ves/xplorer/event/cad/CADInitializePhysicsEventHandler.h>
+#include <ves/xplorer/event/cad/CADMoveNodeEventHandler.h>
+#include <ves/xplorer/event/cad/CADPhysicsMeshEventHandler.h>
+#include <ves/xplorer/event/cad/CADPhysicsPropertiesEventHandler.h>
+#include <ves/xplorer/event/cad/CADRemoveAttributeEH.h>
 #include <ves/xplorer/event/cad/CADSetActiveAttributeEH.h>
 #include <ves/xplorer/event/cad/CADSetNameEH.h>
 #include <ves/xplorer/event/cad/CADSetRootNodeEH.h>
 #include <ves/xplorer/event/cad/CADToggleEH.h>
-#include <ves/xplorer/event/cad/CADRemoveAttributeEH.h>
-#include <ves/xplorer/event/cad/CADMoveNodeEventHandler.h>
+#include <ves/xplorer/event/cad/CADTransformEH.h>
 #include <ves/xplorer/event/cad/MaterialUpdateEH.h>
 #include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
-#include <ves/xplorer/event/cad/CADInitializePhysicsEventHandler.h>
-#include <ves/xplorer/event/cad/CADPhysicsMeshEventHandler.h>
-#include <ves/xplorer/event/cad/CADPhysicsPropertiesEventHandler.h>
-
-#include <ves/xplorer/event/ActiveModelEventHandler.h>
 
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
-#include <ves/xplorer/event/data/BBoxEventHandler.h>
-#include <ves/xplorer/event/data/WireframeEventHandler.h>
 #include <ves/xplorer/event/data/AxesEventHandler.h>
 #include <ves/xplorer/event/data/AxesLabelsEventHandler.h>
-#include <ves/xplorer/event/data/ScalarBarEventHandler.h>
+#include <ves/xplorer/event/data/BBoxEventHandler.h>
 #include <ves/xplorer/event/data/DataTransformEH.h>
+#include <ves/xplorer/event/data/ScalarBarEventHandler.h>
+#include <ves/xplorer/event/data/WireframeEventHandler.h>
 
 #include <ves/xplorer/event/environment/SoundActivateEH.h>
 #include <ves/xplorer/event/environment/SoundAddNewEH.h>
@@ -134,31 +132,31 @@ cfdModelHandler::cfdModelHandler( void )
    nullCommand->SetCommandName( "NULL" );
    
    tbased = false;
-   _eventHandlers[ std::string("SET_ROOT_CAD_NODE")] = new VE_EVENTS::CADSetRootNodeEventHandler();   
-   _eventHandlers[ std::string("CAD_TRANSFORM_UPDATE")] = new VE_EVENTS::CADTransformEventHandler();   
-   _eventHandlers[ std::string("CAD_ADD_NODE") ] = new VE_EVENTS::CADAddNodeEventHandler();
-   _eventHandlers[ std::string("CAD_DELETE_NODE") ] = new VE_EVENTS::CADDeleteNodeEventHandler();
-   _eventHandlers[ std::string("CAD_ADD_ATTRIBUTE_TO_NODE") ] = new VE_EVENTS::CADAddAttributeEventHandler();
-   _eventHandlers[ std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE") ] = new VE_EVENTS::CADSetActiveAttributeEventHandler();
-   _eventHandlers[ std::string("CAD_SET_NODE_NAME") ] = new VE_EVENTS::CADSetNameEventHandler();
-   _eventHandlers[ std::string("CAD_TOGGLE_NODE") ] = new VE_EVENTS::CADToggleEventHandler();
-   _eventHandlers[ std::string("CHANGE_ACTIVE_MODEL") ] = new VE_EVENTS::ActiveModelEventHandler();
-   _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE") ] = new VE_EVENTS::MaterialUpdateEventHandler();
-   _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_MODE") ] = new VE_EVENTS::MaterialModeUpdateEventHandler();
-   _eventHandlers[ std::string("CAD_REMOVE_ATTRIBUTE") ] = new VE_EVENTS::CADRemoveAttributeEventHandler();
-   _eventHandlers[ std::string("CAD_MOVE_NODE") ] = new VE_EVENTS::CADMoveNodeEventHandler();
-   _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new VE_EVENTS::AddVTKDataSetEventHandler();
-   _eventHandlers[ std::string("Change Bounding Box State") ] = new VE_EVENTS::BBoxEventHandler();
-   _eventHandlers[ std::string("Change Wire Frame State") ] = new VE_EVENTS::WireframeEventHandler();
-   _eventHandlers[ std::string("Change Axes State") ] = new VE_EVENTS::AxesEventHandler();
-   _eventHandlers[ std::string("Change Axes Labels") ] = new VE_EVENTS::AxesLabelsEventHandler();
-   _eventHandlers[ std::string("Change Scalar Bar State") ] = new VE_EVENTS::ScalarBarEventHandler();
-   _eventHandlers[ std::string("DATA_TRANSFORM_UPDATE") ] = new VE_EVENTS::DataTransformEventHandler();
-   _eventHandlers[ std::string("Enable/Disable Sound") ] = new VE_EVENTS::SoundActivateEventHandler();
-   _eventHandlers[ std::string("Add New Sound") ] = new VE_EVENTS::SoundAddNewEventHandler();
-   _eventHandlers[ std::string("INITIALIZE_PHYSICS") ] = new VE_EVENTS::CADInitializePhysicsEventHandler();
-   _eventHandlers[ std::string("PHYSICS_MESH") ] = new VE_EVENTS::CADPhysicsMeshEventHandler();
-   _eventHandlers[ std::string("PHYSICS_PROPERTIES") ] = new VE_EVENTS::CADPhysicsPropertiesEventHandler();
+   _eventHandlers[ std::string("SET_ROOT_CAD_NODE")] = new ves::xplorer::event::CADSetRootNodeEventHandler();   
+   _eventHandlers[ std::string("CAD_TRANSFORM_UPDATE")] = new ves::xplorer::event::CADTransformEventHandler();   
+   _eventHandlers[ std::string("CAD_ADD_NODE") ] = new ves::xplorer::event::CADAddNodeEventHandler();
+   _eventHandlers[ std::string("CAD_DELETE_NODE") ] = new ves::xplorer::event::CADDeleteNodeEventHandler();
+   _eventHandlers[ std::string("CAD_ADD_ATTRIBUTE_TO_NODE") ] = new ves::xplorer::event::CADAddAttributeEventHandler();
+   _eventHandlers[ std::string("CAD_SET_ACTIVE_ATTRIBUTE_ON_NODE") ] = new ves::xplorer::event::CADSetActiveAttributeEventHandler();
+   _eventHandlers[ std::string("CAD_SET_NODE_NAME") ] = new ves::xplorer::event::CADSetNameEventHandler();
+   _eventHandlers[ std::string("CAD_TOGGLE_NODE") ] = new ves::xplorer::event::CADToggleEventHandler();
+   _eventHandlers[ std::string("CHANGE_ACTIVE_MODEL") ] = new ves::xplorer::event::ActiveModelEventHandler();
+   _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE") ] = new ves::xplorer::event::MaterialUpdateEventHandler();
+   _eventHandlers[ std::string("CAD_ATTRIBUTE_MATERIAL_MODE") ] = new ves::xplorer::event::MaterialModeUpdateEventHandler();
+   _eventHandlers[ std::string("CAD_REMOVE_ATTRIBUTE") ] = new ves::xplorer::event::CADRemoveAttributeEventHandler();
+   _eventHandlers[ std::string("CAD_MOVE_NODE") ] = new ves::xplorer::event::CADMoveNodeEventHandler();
+   _eventHandlers[ std::string("UPDATE_MODEL_DATASETS") ] = new ves::xplorer::event::AddVTKDataSetEventHandler();
+   _eventHandlers[ std::string("Change Bounding Box State") ] = new ves::xplorer::event::BBoxEventHandler();
+   _eventHandlers[ std::string("Change Wire Frame State") ] = new ves::xplorer::event::WireframeEventHandler();
+   _eventHandlers[ std::string("Change Axes State") ] = new ves::xplorer::event::AxesEventHandler();
+   _eventHandlers[ std::string("Change Axes Labels") ] = new ves::xplorer::event::AxesLabelsEventHandler();
+   _eventHandlers[ std::string("Change Scalar Bar State") ] = new ves::xplorer::event::ScalarBarEventHandler();
+   _eventHandlers[ std::string("DATA_TRANSFORM_UPDATE") ] = new ves::xplorer::event::DataTransformEventHandler();
+   _eventHandlers[ std::string("Enable/Disable Sound") ] = new ves::xplorer::event::SoundActivateEventHandler();
+   _eventHandlers[ std::string("Add New Sound") ] = new ves::xplorer::event::SoundAddNewEventHandler();
+   _eventHandlers[ std::string("INITIALIZE_PHYSICS") ] = new ves::xplorer::event::CADInitializePhysicsEventHandler();
+   _eventHandlers[ std::string("PHYSICS_MESH") ] = new ves::xplorer::event::CADPhysicsMeshEventHandler();
+   _eventHandlers[ std::string("PHYSICS_PROPERTIES") ] = new ves::xplorer::event::CADPhysicsPropertiesEventHandler();
    
 #ifdef _OSG
    _activeTDSet = 0;
@@ -200,7 +198,7 @@ cfdModelHandler::~cfdModelHandler( void )
       //   << std::endl << vprDEBUG_FLUSH;
    }
    
-   for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
+   for ( std::map<std::string ,ves::xplorer::event::EventHandler*>::iterator itr = _eventHandlers.begin();
                                        itr != _eventHandlers.end(); itr++ )
    {
       delete itr->second;
@@ -529,7 +527,7 @@ void cfdModelHandler::InitScene( void )
 void cfdModelHandler::PreFrameUpdate( void )
 {
    bool updateScalarRange = false;
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
    if( activeCommand )
    {
       vprDEBUG(vesDBG,3) << "|\tcfdModelHandler::PreFrameUpdate Command Name : "

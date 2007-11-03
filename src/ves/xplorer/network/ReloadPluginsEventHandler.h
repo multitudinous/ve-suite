@@ -62,7 +62,7 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS ReloadPluginsEventHandler: public VE_EVENTS::EventHandler
+class VE_XPLORER_NETWORK_EXPORTS ReloadPluginsEventHandler: public ves::xplorer::event::EventHandler
 {
 public:
    ///Constructor

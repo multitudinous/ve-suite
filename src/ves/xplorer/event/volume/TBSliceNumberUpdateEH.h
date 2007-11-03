@@ -52,8 +52,14 @@ namespace ves
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS TextureBasedSliceNumberUpdateEventHandler : public TextureBasedEventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS TextureBasedSliceNumberUpdateEventHandler : public TextureBasedEventHandler
+{
 public:
    ///Constructor
    TextureBasedSliceNumberUpdateEventHandler();
@@ -65,11 +71,15 @@ public:
 
    ///Equal operator
    TextureBasedSliceNumberUpdateEventHandler& operator=(const TextureBasedSliceNumberUpdateEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
 };
+
 }
+}
+}
+
 #endif// TEXTURE_BASED_SLICE_NUMBER_UPDATE_EVENT_HANDLER_H

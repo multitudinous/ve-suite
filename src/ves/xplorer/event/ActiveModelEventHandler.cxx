@@ -39,17 +39,17 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 ActiveModelEventHandler::ActiveModelEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler::ActiveModelEventHandler(const ActiveModelEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
 }
 ////////////////////////////////////

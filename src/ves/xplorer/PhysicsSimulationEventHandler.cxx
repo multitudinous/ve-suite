@@ -53,19 +53,19 @@
 #include <unistd.h>
 #endif
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulationEventHandler::PhysicsSimulationEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulationEventHandler::PhysicsSimulationEventHandler( const PhysicsSimulationEventHandler& rhs )
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -79,7 +79,7 @@ PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=( const P
 {
     if( this != &rhs )
     {
-        VE_EVENTS::EventHandler::operator=( rhs );
+        ves::xplorer::event::EventHandler::operator=( rhs );
     }
 
     return *this;

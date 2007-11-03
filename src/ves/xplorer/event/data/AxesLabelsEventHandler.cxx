@@ -51,7 +51,7 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 
@@ -59,13 +59,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 AxesLabelsEventHandler::AxesLabelsEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 AxesLabelsEventHandler::AxesLabelsEventHandler(const AxesLabelsEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+:ves::xplorer::event::EventHandler(rhs)
 {
    ;
 }
@@ -83,7 +83,7 @@ AxesLabelsEventHandler& AxesLabelsEventHandler::operator=(const AxesLabelsEventH
 {
    if(this != &rhs)
    {
-      VE_EVENTS::EventHandler::operator=(rhs);
+      ves::xplorer::event::EventHandler::operator=(rhs);
    }
    return *this;
 }

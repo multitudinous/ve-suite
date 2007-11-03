@@ -216,7 +216,7 @@ class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cf
          bool _cleared;
          bool _textureBaseSelected;
 
-         std::map<std::string,VE_EVENTS::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+         std::map<std::string,ves::xplorer::event::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
 
       private:
          // Required so that vpr::Singleton can instantiate this class.

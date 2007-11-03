@@ -60,7 +60,7 @@
 #ifdef _OSG
 #include <osg/Node>
 #endif
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
 using namespace ves::xplorer::scenegraph;
@@ -68,7 +68,7 @@ using namespace ves::xplorer::scenegraph;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
     m_cadNode = 0;
     m_activeModel = 0;
@@ -76,7 +76,7 @@ CADEventHandler::CADEventHandler()
 }
 ////////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler(const CADEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
     m_cadNode = rhs.m_cadNode;
     m_activeModel = rhs.m_activeModel;

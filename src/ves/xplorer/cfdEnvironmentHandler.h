@@ -59,9 +59,15 @@ namespace VE_Xplorer
     class DisplayInformation;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
     class EventHandler;
+}
+}
 }
 
 class vtkPolyData;
@@ -213,7 +219,7 @@ private:
    float _frustumFar;///<Far frustum.
 
    float framerate;///<Frame rate.
-    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;///<The event handler for commands.
+    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<The event handler for commands.
 
     osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data
 };

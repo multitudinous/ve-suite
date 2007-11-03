@@ -43,19 +43,19 @@
 #include <iostream>
 
 using namespace ves::xplorer::scenegraph::util;
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetActiveAttributeEventHandler::CADSetActiveAttributeEventHandler()
-:VE_EVENTS::CADEventHandler()
+:ves::xplorer::event::CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADSetActiveAttributeEventHandler::CADSetActiveAttributeEventHandler(const CADSetActiveAttributeEventHandler& rhs)
-:VE_EVENTS::CADEventHandler(rhs)
+:ves::xplorer::event::CADEventHandler(rhs)
 {
    
 }
@@ -71,7 +71,7 @@ CADSetActiveAttributeEventHandler& CADSetActiveAttributeEventHandler::operator=(
 {
    if(this != &rhs)
    {
-      VE_EVENTS::CADEventHandler::operator=(rhs);
+      ves::xplorer::event::CADEventHandler::operator=(rhs);
    }
    return *this;
 }

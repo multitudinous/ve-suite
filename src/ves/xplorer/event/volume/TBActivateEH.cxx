@@ -38,7 +38,7 @@
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/cfdDebug.h>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 

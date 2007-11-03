@@ -51,20 +51,20 @@
 #include <unistd.h>
 #endif
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::DeviceModeEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::DeviceModeEventHandler( const DeviceModeEventHandler& rhs )
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
    ;
 }
@@ -93,7 +93,7 @@ DeviceModeEventHandler& DeviceModeEventHandler::operator=( const DeviceModeEvent
 {
    if( this != &rhs )
    {
-      VE_EVENTS::EventHandler::operator=( rhs );
+      ves::xplorer::event::EventHandler::operator=( rhs );
    }
 
    return *this;

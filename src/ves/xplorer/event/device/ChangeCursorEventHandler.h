@@ -62,7 +62,11 @@ namespace VE_Xplorer
    class cfdVEBaseClass;
 }
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS ChangeCursorEventHandler: public EventHandler
 {
@@ -84,7 +88,7 @@ public:
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-   
+
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute( ves::open::xml::XMLObject* command); 
@@ -92,5 +96,8 @@ public:
 private:
    VE_Xplorer::cfdModel* _activeModel; ///<The active model
 };
+
+}
+}
 }
 #endif// CHANGE_CURSOR_EVENT_HANDLER_H

@@ -44,19 +44,19 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler::CADToggleEventHandler()
-:VE_EVENTS::CADEventHandler()
+:ves::xplorer::event::CADEventHandler()
 {
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADToggleEventHandler::CADToggleEventHandler(const CADToggleEventHandler& rhs)
-:VE_EVENTS::CADEventHandler(rhs)
+:ves::xplorer::event::CADEventHandler(rhs)
 {
    
 }
@@ -72,7 +72,7 @@ CADToggleEventHandler& CADToggleEventHandler::operator=(const CADToggleEventHand
 {
    if(this != &rhs)
    {
-      VE_EVENTS::CADEventHandler::operator=(rhs);
+      ves::xplorer::event::CADEventHandler::operator=(rhs);
    }
    return *this;
 }

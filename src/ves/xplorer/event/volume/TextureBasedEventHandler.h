@@ -67,8 +67,14 @@ namespace VE_Xplorer
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS TextureBasedEventHandler : public EventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS TextureBasedEventHandler : public EventHandler
+{
 public:
    ///Constructor
    TextureBasedEventHandler();
@@ -84,14 +90,14 @@ public:
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-   
+
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute(ves::open::xml::XMLObject* command); 
 
    ///Equal operator
    TextureBasedEventHandler& operator=(const TextureBasedEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
@@ -102,5 +108,9 @@ protected:
    ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
 };
+
 }
+}
+}
+
 #endif// TEXTURE_BASED_EVENT_HANDLER_H

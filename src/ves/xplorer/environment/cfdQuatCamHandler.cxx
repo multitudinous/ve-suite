@@ -99,8 +99,8 @@ cfdQuatCamHandler::cfdQuatCamHandler() :
 
    quatCamFileName = "stored_viewpts_flythroughs.vel";
    
-   _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new VE_EVENTS::QuatCamLoadFileEventHandler();
-   _eventHandlers[std::string("QC_CLEAR_QUAT_DATA")] = new VE_EVENTS::QuatCamClearDataEventHandler();
+   _eventHandlers[std::string("QC_LOAD_STORED_POINTS")] = new ves::xplorer::event::QuatCamLoadFileEventHandler();
+   _eventHandlers[std::string("QC_CLEAR_QUAT_DATA")] = new ves::xplorer::event::QuatCamClearDataEventHandler();
  
    ///more hacking to initialize the flythroughlist
    ///This forces us to only have one flythrought per ves file
@@ -572,7 +572,7 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
 {
    currentFrame += 1;
 
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
    if( cfdModelHandler::instance()->GetXMLCommand() )
    {
       vprDEBUG(vesDBG,3) << "|\tcfdQuatCamHandler::PreFrameUpdate Command Name : "

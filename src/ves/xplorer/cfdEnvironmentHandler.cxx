@@ -124,27 +124,27 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _seedPointsDCS->addChild(_seedPoints.get());
 
    _eventHandlers[ std::string( "PHYSICS_SIMULATION" ) ] = 
-       new VE_EVENTS::PhysicsSimulationEventHandler();
+       new ves::xplorer::event::PhysicsSimulationEventHandler();
    _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = 
-       new VE_EVENTS::ViewEventHandler();
+       new ves::xplorer::event::ViewEventHandler();
    _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] = 
-       new VE_EVENTS::ChangeCursorEventHandler();
+       new ves::xplorer::event::ChangeCursorEventHandler();
    _eventHandlers[ std::string( "Stored Scenes" ) ] = 
-       new VE_EVENTS::StoredSceneEventHandler();
+       new ves::xplorer::event::StoredSceneEventHandler();
    _eventHandlers[ std::string( "Change Working Directory" ) ] = 
-       new VE_EVENTS::ChangeWorkingDirectoryEventHandler();
+       new ves::xplorer::event::ChangeWorkingDirectoryEventHandler();
    _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" ) ] = 
-       new VE_EVENTS::ChangeBackgroundColorEventHandler();
+       new ves::xplorer::event::ChangeBackgroundColorEventHandler();
    _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] = 
-       new VE_EVENTS::DisplayEventHandler();
+       new ves::xplorer::event::DisplayEventHandler();
    _eventHandlers[ std::string( "Display Seed Points" ) ] = 
-       new VE_EVENTS::SeedPointActivateEventHandler();
+       new ves::xplorer::event::SeedPointActivateEventHandler();
    _eventHandlers[ std::string( "Seed Points Bounds" ) ] = 
-       new VE_EVENTS::SeedPointBoundsEventHandler();
+       new ves::xplorer::event::SeedPointBoundsEventHandler();
    _eventHandlers[ std::string( "Seed Points Dimensions" ) ] = 
-       new VE_EVENTS::SeedPointDimensionsEventHandler();
+       new ves::xplorer::event::SeedPointDimensionsEventHandler();
    _eventHandlers[ std::string( "DOT_FILE" ) ] = 
-       new VE_EVENTS::ExportDOTFileEventHandler();
+       new ves::xplorer::event::ExportDOTFileEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
@@ -333,7 +333,7 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    // Update Navigation variables   
    vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
-   std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+   std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
    if( cfdModelHandler::instance()->GetXMLCommand() )
    {
       vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::LatePreFrameUpdate Command Name : "

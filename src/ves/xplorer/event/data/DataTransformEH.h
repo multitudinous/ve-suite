@@ -53,7 +53,12 @@ namespace VE_Xplorer
    class cfdVEBaseClass;
 }
 
-namespace VE_EVENTS{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
 class VE_XPLORER_EXPORTS DataTransformEventHandler: public EventHandler
 {
 public:
@@ -83,5 +88,9 @@ protected:
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
 
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

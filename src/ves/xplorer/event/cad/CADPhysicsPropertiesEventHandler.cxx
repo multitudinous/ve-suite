@@ -43,21 +43,21 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 using namespace ves::open::xml::cad;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler::CADPhysicsPropertiesEventHandler()
 :
-VE_EVENTS::CADEventHandler()
+ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsPropertiesEventHandler::CADPhysicsPropertiesEventHandler( const CADPhysicsPropertiesEventHandler& rhs )
 :
-VE_EVENTS::CADEventHandler( rhs )
+ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }
@@ -71,7 +71,7 @@ CADPhysicsPropertiesEventHandler& CADPhysicsPropertiesEventHandler::operator=( c
 {
     if( this != &rhs )
     {
-        VE_EVENTS::CADEventHandler::operator=( rhs );
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
     }
 
     return *this;

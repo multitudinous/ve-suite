@@ -49,20 +49,20 @@
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 DataTransformEventHandler::DataTransformEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 DataTransformEventHandler::DataTransformEventHandler(const DataTransformEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+:ves::xplorer::event::EventHandler(rhs)
 {
    
 }
@@ -78,7 +78,7 @@ DataTransformEventHandler& DataTransformEventHandler::operator=(const DataTransf
 {
    if(this != &rhs)
    {
-      VE_EVENTS::EventHandler::operator=(rhs);
+      ves::xplorer::event::EventHandler::operator=(rhs);
    }
    return *this;
 }

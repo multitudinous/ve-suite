@@ -64,7 +64,11 @@ namespace VE_Xplorer
 }
 #include <ves/VEConfig.h>
 #include <string>
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler
 {
@@ -83,7 +87,7 @@ public:
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-  
+
    ///Set the node descriptors from the xml to the SceneNode
    ///\param nodeID The CADNode to update
    ///\param nodeType The type of CADNode
@@ -99,7 +103,7 @@ public:
 
    ///Equal operator
    CADEventHandler& operator=(const CADEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
@@ -109,18 +113,22 @@ protected:
    ///\param parentID The ID of the node to add the new node to.
    ///\param node The new CADNode to add to the model
    void _addNodeToNode(std::string parentID, ves::open::xml::cad::CADNode* node);
-   
+
    ///Internal method to extract attribtutes from CADNodes.
    ///\param node CADNode to extra attributes from.
    void _setAttributesOnNode(ves::open::xml::cad::CADNode* node);
- 
+
    ///Internal method to extract transform from CADNodes.
    ///\param node CADNode to extract transform from.
    void _setTransformOnNode(ves::open::xml::cad::CADNode* node);
-   
+
    VE_Xplorer::cfdModel* m_activeModel;///<The active cfdModel;
    VE_Xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
    ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

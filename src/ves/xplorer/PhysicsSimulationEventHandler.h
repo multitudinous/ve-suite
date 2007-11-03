@@ -40,7 +40,7 @@
 *Class for changing physics simulation events
 */
 
-/*!\namespace VE_EVENTS
+/*!\namespace ves::xplorer::event
 *
 */
 
@@ -54,7 +54,11 @@ namespace VE_Xplorer
     class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class PhysicsSimulationEventHandler : public EventHandler
 {
@@ -82,6 +86,9 @@ public:
 protected:
 
 };
+
+}
+}
 }
 
 #endif //PHYSICS_SIMULATION_EVENT_HANDLER_H

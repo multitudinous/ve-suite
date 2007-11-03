@@ -51,18 +51,18 @@
    #include <unistd.h>
 #endif
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler::DisplayEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler::DisplayEventHandler(const DisplayEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
@@ -104,7 +104,7 @@ DisplayEventHandler& DisplayEventHandler::operator=(const DisplayEventHandler& r
 {
    if(this!=&rhs)
 	{
-      VE_EVENTS::EventHandler::operator=(rhs);
+      ves::xplorer::event::EventHandler::operator=(rhs);
    }
 
    return *this;

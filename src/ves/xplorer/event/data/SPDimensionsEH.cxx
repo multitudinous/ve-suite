@@ -42,7 +42,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <vtkDataSet.h>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 

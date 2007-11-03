@@ -86,9 +86,15 @@ namespace scenegraph
 }
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
    class EventHandler;
+}
+}
 }
 
 namespace VE_Xplorer

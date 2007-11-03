@@ -60,7 +60,11 @@ namespace xml
 
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS CADInitializePhysicsEventHandler : public CADEventHandler
 {
@@ -83,6 +87,9 @@ protected:
     void _operateOnNode( ves::open::xml::XMLObject* command );
 
 };
+
+}
+}
 }
 
 #endif //CAD_INITIALIZE_PHYSICS_EVENT_HANDLER_H

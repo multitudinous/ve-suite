@@ -318,7 +318,7 @@ void cfdVEBaseClass::SetXMLModel( ModelWeakPtr tempModel )
       cadCommand->SetCommandName( _commandName );
 
       //Process the cad
-      VE_EVENTS::CADAddNodeEventHandler newCADNode;
+      ves::xplorer::event::CADAddNodeEventHandler newCADNode;
       newCADNode.SetGlobalBaseObject( _model );
       newCADNode.Execute( cadCommand );
       delete cadCommand;
@@ -336,7 +336,7 @@ void cfdVEBaseClass::SetXMLModel( ModelWeakPtr tempModel )
       dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
       
       //Process the vtk data
-      VE_EVENTS::AddVTKDataSetEventHandler addVTKEH;
+      ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
       addVTKEH.SetGlobalBaseObject( _model );
       addVTKEH.Execute( dataCommand );
       delete dataCommand;

@@ -59,9 +59,15 @@ namespace VE_Xplorer
     class KeyboardMouse;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
     class EventHandler;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -114,7 +120,7 @@ public:
 
 private:
     std::map< std::string, VE_Xplorer::Device* > devices; ///<
-    std::map< std::string, VE_EVENTS::EventHandler* > _eventHandlers;
+    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
 
     VE_Xplorer::Device* active_device; ///<The active device
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_activeDCS;///<The active coordinate system

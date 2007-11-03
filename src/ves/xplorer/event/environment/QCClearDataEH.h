@@ -60,10 +60,14 @@ namespace VE_Xplorer
 
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler : 
-    public VE_EVENTS::EventHandler
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler :
+    public EventHandler
 {
 public:
    ///Constructor
@@ -85,5 +89,9 @@ public:
 protected:
 
 };
+
 }
+}
+}
+
 #endif// QUAT_CAM_LOAD_FILE_H

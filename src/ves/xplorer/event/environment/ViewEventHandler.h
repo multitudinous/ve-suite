@@ -58,7 +58,11 @@ namespace VE_Xplorer
     class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class ViewEventHandler : public EventHandler
 {
@@ -86,6 +90,9 @@ public:
 protected:
 
 };
+
+}
+}
 }
 
 #endif //VIEW_EVENT_HANDLER_H

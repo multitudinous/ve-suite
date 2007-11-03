@@ -45,20 +45,20 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
    ;
 }
@@ -87,7 +87,7 @@ DeviceEventHandler& DeviceEventHandler::operator=( const DeviceEventHandler& rhs
 {
    if( this != &rhs )
    {
-      VE_EVENTS::EventHandler::operator=( rhs );
+      ves::xplorer::event::EventHandler::operator=( rhs );
    }
 
    return *this;

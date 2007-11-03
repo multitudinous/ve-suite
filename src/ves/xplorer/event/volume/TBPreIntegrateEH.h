@@ -52,8 +52,14 @@ namespace ves
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS TextureBasedPreIntegrateEnableEventHandler : public TextureBasedEventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS TextureBasedPreIntegrateEnableEventHandler : public TextureBasedEventHandler
+{
 public:
    ///Constructor
    TextureBasedPreIntegrateEnableEventHandler();
@@ -65,11 +71,15 @@ public:
 
    ///Equal operator
    TextureBasedPreIntegrateEnableEventHandler& operator=(const TextureBasedPreIntegrateEnableEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
 };
+
 }
+}
+}
+
 #endif// TEXTURE_BASED_PREINTEGRATE_ENABLE_EVENT_HANDLER_H

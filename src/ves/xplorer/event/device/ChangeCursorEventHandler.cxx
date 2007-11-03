@@ -49,7 +49,7 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::open::xml;
 
@@ -57,13 +57,13 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ChangeCursorEventHandler::ChangeCursorEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ChangeCursorEventHandler::ChangeCursorEventHandler(const ChangeCursorEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+:ves::xplorer::event::EventHandler(rhs)
 {
    ;
 }
@@ -81,7 +81,7 @@ ChangeCursorEventHandler& ChangeCursorEventHandler::operator=(const ChangeCursor
 {
    if(this != &rhs)
    {
-      VE_EVENTS::ChangeCursorEventHandler::operator=(rhs);
+      ves::xplorer::event::ChangeCursorEventHandler::operator=(rhs);
    }
    return *this;
 }

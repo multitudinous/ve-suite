@@ -34,7 +34,7 @@
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/open/xml/XMLObject.h>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 //////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler()
 {

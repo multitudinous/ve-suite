@@ -45,20 +45,20 @@
 
 namespace VE_Xplorer
 {
-   class cfdPolyData;      
-   class cfdIsosurface;    
-   class cfdPresetContour; 
-   class cfdContours;      
-   class cfdMomentum;      
+   class cfdPolyData;
+   class cfdIsosurface;
+   class cfdPresetContour;
+   class cfdContours;
+   class cfdMomentum;
    class cfdPresetMomentum;
-   class cfdMomentums;     
-   class cfdVector;        
-   class cfdPresetVector;  
-   class cfdVectors;       
-   class cfdStreamers;     
-   class cfdPolyData;      
-   class cfdImage;         
-   class cfdAnimatedImage; 
+   class cfdMomentums;
+   class cfdVector;
+   class cfdPresetVector;
+   class cfdVectors;
+   class cfdStreamers;
+   class cfdPolyData;
+   class cfdImage;
+   class cfdAnimatedImage;
    class cfdAnimatedStreamlineCone;
    class cfdContour;
    class cfdGlobalBase;
@@ -78,7 +78,11 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS CreateVisObjectEventHandler: public EventHandler
 {
@@ -100,7 +104,7 @@ public:
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
-   
+
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute( ves::open::xml::XMLObject* command); 
@@ -146,13 +150,17 @@ private:
    VE_Xplorer::cfdAnimatedImage*    animImg;///<A cfdObject
    VE_Xplorer::cfdAnimatedStreamlineCone* animStreamer;///<A cfdObject
    //VE_Xplorer::cfdTextOutput*       textOutput;///<A cfdObject
-   
+
    // Vectors that will eventually be stored as maps
    // these hold all the objectsa for easy access and management
    //std::vector< VE_Xplorer::cfdObjects* > dataList;
    //std::vector< VE_Xplorer::cfdGlobalBase* > commandList;
    std::map< std::pair< std::string, std::pair< std::string, std::string > >, VE_Xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
-   
+
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

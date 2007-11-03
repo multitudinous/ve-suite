@@ -40,23 +40,16 @@
 *Class to handle physics properties for CADEntities
 */
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-
+#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS CADPhysicsPropertiesEventHandler : public CADEventHandler
 {
@@ -79,6 +72,9 @@ protected:
     void _operateOnNode( ves::open::xml::XMLObject* command );
 
 };
+
+}
+}
 }
 
 #endif //CAD_PHYSICS_PROPERTIES_EVENT_HANDLER_H

@@ -42,7 +42,7 @@
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
 
@@ -50,12 +50,12 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADRemoveAttributeEventHandler::CADRemoveAttributeEventHandler()
-:VE_EVENTS::CADEventHandler()
+:ves::xplorer::event::CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADRemoveAttributeEventHandler::CADRemoveAttributeEventHandler(const CADRemoveAttributeEventHandler& rhs)
-:VE_EVENTS::CADEventHandler(rhs)
+:ves::xplorer::event::CADEventHandler(rhs)
 {
    
 }
@@ -71,7 +71,7 @@ CADRemoveAttributeEventHandler& CADRemoveAttributeEventHandler::operator=(const 
 {
    if(this != &rhs)
    {
-      VE_EVENTS::CADEventHandler::operator=(rhs);
+      ves::xplorer::event::CADEventHandler::operator=(rhs);
    }
    return *this;
 }

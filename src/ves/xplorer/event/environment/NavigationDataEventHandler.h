@@ -55,9 +55,13 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
 {
-class NavigationDataEventHandler:public EventHandler
+namespace xplorer
+{
+namespace event
+{
+class NavigationDataEventHandler: public EventHandler
 {
 public:
    //Constructor
@@ -82,5 +86,9 @@ public:
 
 protected:
 };
+
 }
+}
+}
+
 #endif//NAVIGATION_EVENT_HANDLER_H

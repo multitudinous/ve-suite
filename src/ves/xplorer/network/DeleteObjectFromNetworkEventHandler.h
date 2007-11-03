@@ -76,7 +76,7 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public VE_EVENTS::EventHandler
+class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public ves::xplorer::event::EventHandler
 {
 public:
    ///Constructor

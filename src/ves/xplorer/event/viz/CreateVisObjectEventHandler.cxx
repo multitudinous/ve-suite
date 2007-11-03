@@ -79,7 +79,7 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::volume;
@@ -88,7 +88,7 @@ using namespace ves::xplorer::volume;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    this->surface = 0;
    this->isosurface = 0;
@@ -438,7 +438,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
 }
 ////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::CreateVisObjectEventHandler(const CreateVisObjectEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+:ves::xplorer::event::EventHandler(rhs)
 {
    
 }
@@ -664,7 +664,7 @@ CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=(const Create
 {
    if(this != &rhs)
    {
-      VE_EVENTS::CreateVisObjectEventHandler::operator=(rhs);
+      ves::xplorer::event::CreateVisObjectEventHandler::operator=(rhs);
    }
    return *this;
 }

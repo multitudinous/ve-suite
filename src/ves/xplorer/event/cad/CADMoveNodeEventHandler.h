@@ -51,9 +51,14 @@ namespace xml
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 #include <ves/VEConfig.h>
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_EXPORTS CADMoveNodeEventHandler: public CADEventHandler{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS CADMoveNodeEventHandler: public CADEventHandler
+{
 public:
    ///Constructor
    CADMoveNodeEventHandler();
@@ -71,5 +76,9 @@ protected:
    ///\param command The Command containing the udpated transform.
    void _operateOnNode(ves::open::xml::XMLObject* command);
 };
+
 }
+}
+}
+
 #endif// VE_CAD_MOVE_NODE_EVENT_HANDLER_H

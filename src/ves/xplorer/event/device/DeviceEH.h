@@ -55,7 +55,11 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class DeviceEventHandler:public EventHandler
 {
@@ -83,6 +87,9 @@ public:
 protected:
 
 };
+
+}
+}
 }
 
 #endif//DEVICE_EVENT_HANDLER_H

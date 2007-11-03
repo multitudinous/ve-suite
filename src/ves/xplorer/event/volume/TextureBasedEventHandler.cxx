@@ -40,7 +40,7 @@
 #include <ves/open/xml/XMLObject.h>
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::xplorer::volume;
 using namespace ves::open::xml;
 
@@ -48,14 +48,14 @@ using namespace ves::open::xml;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 TextureBasedEventHandler::TextureBasedEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = 0;
    _activeTDSet = 0;
 }
 ////////////////////////////////////////////////////////////
 TextureBasedEventHandler::TextureBasedEventHandler(const TextureBasedEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = rhs._activeModel;
    _activeTDSet = rhs._activeTDSet;

@@ -39,7 +39,7 @@
 #include <ves/open/xml/FloatArray.h>
 
 #include <ves/open/xml/cad/CADMaterial.h>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 using namespace ves::open::xml::cad;
 
@@ -47,14 +47,14 @@ using namespace ves::open::xml::cad;
 //Constructor                                         //
 ////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler()
-:VE_EVENTS::AttributeEventHandler()
+:ves::xplorer::event::AttributeEventHandler()
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Copy Constructor                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler(const MaterialModeUpdateEventHandler& ceh)
-:VE_EVENTS::AttributeEventHandler(ceh)
+:ves::xplorer::event::AttributeEventHandler(ceh)
 {
 }
 /////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ MaterialModeUpdateEventHandler& MaterialModeUpdateEventHandler::operator=(const 
 {
    if(this != &rhs)
    {
-      VE_EVENTS::AttributeEventHandler::operator=(rhs);
+      ves::xplorer::event::AttributeEventHandler::operator=(rhs);
    }
    return *this;
 }

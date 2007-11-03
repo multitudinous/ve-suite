@@ -56,7 +56,11 @@ namespace VE_Xplorer
    class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class DeviceModeEventHandler : public EventHandler
 {
@@ -73,17 +77,19 @@ public:
    //Set the cfdModel
    //param model The cfdModelHandler to execute the Command on
    void SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler );
-      
+
    //Exectute the event
    //param xmlObject The current xmlObject event.
    void Execute( ves::open::xml::XMLObject* command ); 
 
    //Equal operator
    DeviceModeEventHandler& operator=( const DeviceModeEventHandler& rhs );
-   
+
 protected:
 
 };
+}
+}
 }
 
 #endif//DEVICE_MODE_EVENT_HANDLER_H

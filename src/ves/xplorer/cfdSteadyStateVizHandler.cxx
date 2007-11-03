@@ -104,9 +104,9 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    this->vjTh[0] = 0;
    _param.erase();// = 0;
    
-   _eventHandlers[std::string("VISUALIZATION_SETTINGS")] = new VE_EVENTS::CreateVisObjectEventHandler();
-   _eventHandlers[std::string("CLEAR_VIS_OBJECTS")] = new VE_EVENTS::ClearVisObjectsEventHandler();
-   _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new VE_EVENTS::ClearVisObjectsEventHandler();
+   _eventHandlers[std::string("VISUALIZATION_SETTINGS")] = new ves::xplorer::event::CreateVisObjectEventHandler();
+   _eventHandlers[std::string("CLEAR_VIS_OBJECTS")] = new ves::xplorer::event::ClearVisObjectsEventHandler();
+   _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new ves::xplorer::event::ClearVisObjectsEventHandler();
 }
 
 void cfdSteadyStateVizHandler::Initialize( std::string param )
@@ -119,7 +119,7 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 {
    this->runIntraParallelThread = false;
 
-   std::map< std::string,VE_EVENTS::EventHandler*>::iterator pos;
+   std::map< std::string,ves::xplorer::event::EventHandler*>::iterator pos;
    for ( pos = _eventHandlers.begin(); pos != _eventHandlers.end(); )
    {
       delete pos->second;
@@ -205,7 +205,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    {
       if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
       {
-         std::map<std::string,VE_EVENTS::EventHandler*>::iterator currentEventHandler;
+         std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
          ves::open::xml::Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )

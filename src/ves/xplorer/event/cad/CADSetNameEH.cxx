@@ -43,19 +43,19 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetNameEventHandler::CADSetNameEventHandler()
-:VE_EVENTS::CADEventHandler()
+:ves::xplorer::event::CADEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADSetNameEventHandler::CADSetNameEventHandler(const CADSetNameEventHandler& rhs)
-:VE_EVENTS::CADEventHandler(rhs)
+:ves::xplorer::event::CADEventHandler(rhs)
 {
    
 }
@@ -71,7 +71,7 @@ CADSetNameEventHandler& CADSetNameEventHandler::operator=(const CADSetNameEventH
 {
    if(this != &rhs)
    {
-      VE_EVENTS::CADEventHandler::operator=(rhs);
+      ves::xplorer::event::CADEventHandler::operator=(rhs);
    }
    return *this;
 }

@@ -58,7 +58,11 @@ namespace VE_Xplorer
    class cfdVEBaseClass;
 }
 #include <ves/xplorer/event/EventHandler.h>
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS AxesEventHandler: public EventHandler
 {
@@ -88,5 +92,9 @@ public:
 private:
    VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
 };
+
 }
+}
+}
+
 #endif// AXES_EVENT_HANDLER_H

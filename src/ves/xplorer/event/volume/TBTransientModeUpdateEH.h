@@ -54,8 +54,14 @@ namespace ves
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS TextureBasedTransientModeUpdateEventHandler : public TextureBasedEventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS TextureBasedTransientModeUpdateEventHandler : public TextureBasedEventHandler
+{
 public:
    ///Constructor
    TextureBasedTransientModeUpdateEventHandler();
@@ -67,11 +73,15 @@ public:
 
    ///Equal operator
    TextureBasedTransientModeUpdateEventHandler& operator=(const TextureBasedTransientModeUpdateEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
 };
+
 }
+}
+}
+
 #endif// TEXTURE_BASED_ISOSURFACE_UPDATE_EVENT_HANDLER_H

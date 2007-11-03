@@ -85,9 +85,15 @@ namespace plugin
 }
 }
         
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
    class EventHandler;
+}
+}
 }
 
 namespace Body { class Executive; }
@@ -183,7 +189,7 @@ private:
    // map to hold unique plugin command names and associated plugin pointers
    std::map< int, std::map< std::string, ves::xplorer::plugin::cfdVEBaseClass* > > pluginEHMap;
    
-   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+   std::map< std::string,ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
 
 };
 }

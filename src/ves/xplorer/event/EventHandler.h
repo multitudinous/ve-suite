@@ -38,17 +38,24 @@
 /*!\class EventHandler
  * Base class for event handling.
  */
-/*!\namespace VE_EVENTS
+/*!\namespace ves::xplorer::event
  * Namespace for ve-event handlers.
  */
+
 #include <ves/open/xml/XMLObjectPtr.h>
+
 namespace VE_Xplorer
 {
    class cfdGlobalBase;
 }
+
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS EventHandler
 {
@@ -69,5 +76,9 @@ protected:
    ///<the variable of the global base object to operate on
    VE_Xplorer::cfdGlobalBase* _baseObject;
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

@@ -59,7 +59,11 @@ namespace VE_Xplorer
     class cfdGlobalBase;
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class UnselectObjectsEventHandler : public EventHandler
 {
@@ -76,17 +80,20 @@ public:
     //Set the cfdModel
     //param model The cfdModelHandler to execute the Command on
     void SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler );
-      
+
     //Exectute the event
     //param xmlObject The current xmlObject event.
     void Execute( ves::open::xml::XMLObject* command ); 
 
     //Equal operator
     UnselectObjectsEventHandler& operator=( const UnselectObjectsEventHandler& rhs );
-   
+
 protected:
 
 };
+
+}
+}
 }
 
 #endif//UNSELECT_OBJECTS_EVENT_HANDLER_H

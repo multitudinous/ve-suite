@@ -119,7 +119,7 @@ cfdModel::~cfdModel()
    //                       << std::endl << vprDEBUG_FLUSH;
 
  
-  /* for ( std::map<std::string ,VE_EVENTS::EventHandler*>::iterator itr = _eventHandlers.begin();
+  /* for ( std::map<std::string ,ves::xplorer::event::EventHandler*>::iterator itr = _eventHandlers.begin();
                                        itr != _eventHandlers.end(); itr++ )
    {
       delete itr->second;

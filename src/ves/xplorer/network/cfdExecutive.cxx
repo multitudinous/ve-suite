@@ -425,7 +425,7 @@ void cfdExecutive::PreFrameUpdate( void )
    //process the current command form the gui
     if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
     {
-        std::map< std::string, VE_EVENTS::EventHandler* >::iterator 
+        std::map< std::string, ves::xplorer::event::EventHandler* >::iterator 
             currentEventHandler;
         Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );

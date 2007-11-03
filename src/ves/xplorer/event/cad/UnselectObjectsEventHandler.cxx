@@ -43,20 +43,20 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 UnselectObjectsEventHandler::UnselectObjectsEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnselectObjectsEventHandler::UnselectObjectsEventHandler( const UnselectObjectsEventHandler& rhs )
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -85,7 +85,7 @@ UnselectObjectsEventHandler& UnselectObjectsEventHandler::operator=( const Unsel
 {
     if( this != &rhs )
     {
-        VE_EVENTS::EventHandler::operator=( rhs );
+        ves::xplorer::event::EventHandler::operator=( rhs );
     }
 
     return *this;

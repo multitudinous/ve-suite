@@ -97,9 +97,15 @@ namespace scenegraph
 }
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
    class EventHandler;
+}
+}
 }
 
 namespace VE_Xplorer
@@ -225,7 +231,7 @@ private:
    /// multi map to hold graphics objects
    /// the key is the viz type and the value is cfdGraphicsObject
    std::multimap< int, cfdGraphicsObject* > graphicsObjects;
-   std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;///<The event handler for commands.
+   std::map< std::string,ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
 }
 #endif

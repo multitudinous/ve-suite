@@ -105,19 +105,19 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    m_isMaster = false;
 
    
-   _eventHandlers[std::string("TB_SET_ACTIVE_SHADER_MANAGER")] = new VE_EVENTS::TextureBasedSetActiveShaderManagerEventHandler();
-   _eventHandlers[std::string("TB_ACTIVATE")] = new VE_EVENTS::TextureBasedActivateEventHandler();
-   _eventHandlers[std::string("TB_ACTIVE_SOLUTION")] = new VE_EVENTS::TextureBasedUpdateSolutionEventHandler();
-   _eventHandlers[std::string("TB_SCALAR_RANGE")] = new VE_EVENTS::TextureBasedUpdateScalarRangeEventHandler();
-   _eventHandlers[std::string("TB_BBOX_DISPLAY")] = new VE_EVENTS::TextureBasedBoundingBoxEventHandler();
-   _eventHandlers[std::string("TB_ROI_UPDATE")] = new VE_EVENTS::TextureBasedClipPlaneEventHandler();
-   _eventHandlers[std::string("TB_ISOSURFACE_ENABLE")] = new VE_EVENTS::TextureBasedIsosurfaceEnableEventHandler();
-   _eventHandlers[std::string("TB_UPDATE_ISOSURFACE")] = new VE_EVENTS::TextureBasedIsosurfaceUpdateEventHandler();
-   _eventHandlers[std::string("TB_TRANSIENT_MODE_UPDATE")] = new VE_EVENTS::TextureBasedTransientModeUpdateEventHandler();
-   _eventHandlers[std::string("TB_TRANSIENT_DURATION_UPDATE")] = new VE_EVENTS::TextureBasedTransientDurationUpdateEventHandler();
-   _eventHandlers[std::string("TB_UPDATE_NUMBER_SLICE_PLANES")] = new VE_EVENTS::TextureBasedSliceNumberUpdateEventHandler();
-   _eventHandlers[std::string("TB_PHONG_SHADING_ENABLE")] = new VE_EVENTS::TextureBasedPhongShadingEnableEventHandler();
-   _eventHandlers[std::string("TB_FULL_PREINTEGRATE_UPDATE")] = new VE_EVENTS::TextureBasedPreIntegrateEnableEventHandler();
+   _eventHandlers[std::string("TB_SET_ACTIVE_SHADER_MANAGER")] = new ves::xplorer::event::TextureBasedSetActiveShaderManagerEventHandler();
+   _eventHandlers[std::string("TB_ACTIVATE")] = new ves::xplorer::event::TextureBasedActivateEventHandler();
+   _eventHandlers[std::string("TB_ACTIVE_SOLUTION")] = new ves::xplorer::event::TextureBasedUpdateSolutionEventHandler();
+   _eventHandlers[std::string("TB_SCALAR_RANGE")] = new ves::xplorer::event::TextureBasedUpdateScalarRangeEventHandler();
+   _eventHandlers[std::string("TB_BBOX_DISPLAY")] = new ves::xplorer::event::TextureBasedBoundingBoxEventHandler();
+   _eventHandlers[std::string("TB_ROI_UPDATE")] = new ves::xplorer::event::TextureBasedClipPlaneEventHandler();
+   _eventHandlers[std::string("TB_ISOSURFACE_ENABLE")] = new ves::xplorer::event::TextureBasedIsosurfaceEnableEventHandler();
+   _eventHandlers[std::string("TB_UPDATE_ISOSURFACE")] = new ves::xplorer::event::TextureBasedIsosurfaceUpdateEventHandler();
+   _eventHandlers[std::string("TB_TRANSIENT_MODE_UPDATE")] = new ves::xplorer::event::TextureBasedTransientModeUpdateEventHandler();
+   _eventHandlers[std::string("TB_TRANSIENT_DURATION_UPDATE")] = new ves::xplorer::event::TextureBasedTransientDurationUpdateEventHandler();
+   _eventHandlers[std::string("TB_UPDATE_NUMBER_SLICE_PLANES")] = new ves::xplorer::event::TextureBasedSliceNumberUpdateEventHandler();
+   _eventHandlers[std::string("TB_PHONG_SHADING_ENABLE")] = new ves::xplorer::event::TextureBasedPhongShadingEnableEventHandler();
+   _eventHandlers[std::string("TB_FULL_PREINTEGRATE_UPDATE")] = new ves::xplorer::event::TextureBasedPreIntegrateEnableEventHandler();
 
 }
 ///////////////////////////////////////////////
@@ -150,7 +150,7 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler( void )
       _vvvh = 0;
    }
 
-   std::map< std::string,VE_EVENTS::TextureBasedEventHandler*>::iterator pos;
+   std::map< std::string,ves::xplorer::event::TextureBasedEventHandler*>::iterator pos;
    for ( pos = _eventHandlers.begin(); pos != _eventHandlers.end(); )
    {
       delete pos->second;
@@ -575,7 +575,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    {
       if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
       {
-         std::map<std::string,VE_EVENTS::TextureBasedEventHandler*>::iterator currentEventHandler;
+         std::map<std::string,ves::xplorer::event::TextureBasedEventHandler*>::iterator currentEventHandler;
          ves::open::xml::Command* tbvizCommand = cfdModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )

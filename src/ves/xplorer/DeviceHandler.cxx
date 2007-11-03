@@ -89,12 +89,12 @@ m_jump( 10.0f )
 
     active_device = devices[ "KeyboardMouse" ];
 
-    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new VE_EVENTS::DeviceEventHandler();
-    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new VE_EVENTS::DeviceModeEventHandler();
-    _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new VE_EVENTS::UnselectObjectsEventHandler();
-    _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" ) ] = new VE_EVENTS::CenterPointJumpEventHandler();
-    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new VE_EVENTS::KeyboardMouseEventHandler();
-    _eventHandlers[ std::string( "Navigation_Data" ) ] = new VE_EVENTS::NavigationDataEventHandler();
+    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new ves::xplorer::event::DeviceEventHandler();
+    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new ves::xplorer::event::DeviceModeEventHandler();
+    _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new ves::xplorer::event::UnselectObjectsEventHandler();
+    _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" ) ] = new ves::xplorer::event::CenterPointJumpEventHandler();
+    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new ves::xplorer::event::KeyboardMouseEventHandler();
+    _eventHandlers[ std::string( "Navigation_Data" ) ] = new ves::xplorer::event::NavigationDataEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
@@ -111,7 +111,7 @@ DeviceHandler::~DeviceHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
 {
-    std::map< std::string, VE_EVENTS::EventHandler* >::iterator currentEventHandler;
+    std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
     if( cfdModelHandler::instance()->GetXMLCommand() )
     {
         currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );

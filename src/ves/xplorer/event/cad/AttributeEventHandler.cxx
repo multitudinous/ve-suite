@@ -38,20 +38,20 @@
 #include <ves/open/xml/XMLObject.h>
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace ves::open::xml::cad;
 using namespace ves::xplorer::scenegraph;
 //////////////////////////////////////////////////////////
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 AttributeEventHandler::AttributeEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////
 AttributeEventHandler::AttributeEventHandler(const AttributeEventHandler& rhs)
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    _activeModel = rhs._activeModel;
 }

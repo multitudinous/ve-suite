@@ -73,7 +73,7 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS SwitchXplorerViewEventHandler: public VE_EVENTS::EventHandler
+class VE_XPLORER_NETWORK_EXPORTS SwitchXplorerViewEventHandler: public ves::xplorer::event::EventHandler
 {
 public:
     ///Constructor

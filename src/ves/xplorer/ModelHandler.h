@@ -58,14 +58,20 @@ namespace xplorer
 {
 namespace scenegraph
 {
-	class CADEntity;
+   class CADEntity;
 }
 }
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
    class EventHandler;
+}
+}
 }
 
 #ifdef _OSG
@@ -161,7 +167,7 @@ private:
    std::string oldDatasetName;//[256];
 
     ///The event handler for commands.
-    std::map< std::string,VE_EVENTS::EventHandler*> _eventHandlers;
+    std::map< std::string,ves::xplorer::event::EventHandler*> _eventHandlers;
     ///This map connects filenames to GUIDs so that we can 
     ///figure out what CAD files should be copied
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;

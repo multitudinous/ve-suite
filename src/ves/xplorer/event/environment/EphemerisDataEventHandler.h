@@ -56,8 +56,14 @@ namespace ves
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-	class VE_XPLORER_EXPORTS EphemerisDataEventHandler: public VE_EVENTS::EventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS EphemerisDataEventHandler: public EventHandler
+{
 public:
    ///Constructor
    EphemerisDataEventHandler();
@@ -77,9 +83,13 @@ public:
    ///Set the active model
    ///\param baseObject Active model
    virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject);
-   
+
 protected:
-	VE_Xplorer::cfdModel* m_activeModel;///<The active cfdModel
+   VE_Xplorer::cfdModel* m_activeModel;///<The active cfdModel
 };
+
 }
+}
+}
+
 #endif//EPHEMERIS_DATA_EVENT_HANDLER_H

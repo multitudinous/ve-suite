@@ -51,7 +51,7 @@
 
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::xplorer::volume;
 
@@ -59,13 +59,13 @@ using namespace ves::xplorer::volume;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ClearVisObjectsEventHandler::ClearVisObjectsEventHandler()
-:VE_EVENTS::EventHandler()
+:ves::xplorer::event::EventHandler()
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ClearVisObjectsEventHandler::ClearVisObjectsEventHandler(const ClearVisObjectsEventHandler& rhs)
-:VE_EVENTS::EventHandler(rhs)
+:ves::xplorer::event::EventHandler(rhs)
 {
    ;
 }
@@ -83,7 +83,7 @@ ClearVisObjectsEventHandler& ClearVisObjectsEventHandler::operator=(const ClearV
 {
    if(this != &rhs)
    {
-      VE_EVENTS::ClearVisObjectsEventHandler::operator=(rhs);
+      ves::xplorer::event::ClearVisObjectsEventHandler::operator=(rhs);
    }
    return *this;
 }

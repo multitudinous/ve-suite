@@ -52,8 +52,14 @@ namespace xml
 }
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS{
-class VE_XPLORER_EXPORTS MaterialUpdateEventHandler : public AttributeEventHandler{
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS MaterialUpdateEventHandler : public AttributeEventHandler
+{
 public:
    ///Constructor
    MaterialUpdateEventHandler();
@@ -66,11 +72,15 @@ public:
 
    ///Equal operator
    MaterialUpdateEventHandler& operator=(const MaterialUpdateEventHandler& rhs);
-   
+
 protected:
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

@@ -52,7 +52,11 @@ namespace xml
 }
 }
 
-namespace VE_EVENTS
+namespace ves
+{
+namespace xplorer
+{
+namespace event
 {
 class VE_XPLORER_EXPORTS CADSetNameEventHandler: public CADEventHandler
 {
@@ -73,5 +77,9 @@ protected:
    ///\param command The Command containing the CADNode to remove.
    void _operateOnNode(ves::open::xml::XMLObject* command);
 };
+
 }
+}
+}
+
 #endif// VE_EVENT_HANDLER_H

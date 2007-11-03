@@ -61,7 +61,7 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace VE_EVENTS;
+using namespace ves::xplorer::event;
 using namespace VE_Xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
@@ -70,7 +70,7 @@ using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
 :
-VE_EVENTS::EventHandler()
+ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -78,7 +78,7 @@ VE_EVENTS::EventHandler()
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler( const SwitchXplorerViewEventHandler& rhs )
 :
-VE_EVENTS::EventHandler( rhs )
+ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }

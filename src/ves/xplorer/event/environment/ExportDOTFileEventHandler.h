@@ -58,9 +58,13 @@ namespace VE_Xplorer
 
 #include <ves/VEConfig.h>
 
-namespace VE_EVENTS
+namespace ves
 {
-class VE_XPLORER_EXPORTS ExportDOTFileEventHandler : public VE_EVENTS::EventHandler
+namespace xplorer
+{
+namespace event
+{
+class VE_XPLORER_EXPORTS ExportDOTFileEventHandler : public EventHandler
 {
 public:
    ///Constructor
@@ -82,5 +86,9 @@ public:
 protected:
 
 };
+
 }
+}
+}
+
 #endif// EXPORT_DOT_FILE_EVENT_HANDLER_H
