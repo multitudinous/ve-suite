@@ -15,6 +15,7 @@
 
 #include <osg/Geode>
 #include <osg/LOD>
+#include <osgEphemeris/Export>
 
 namespace osgEphemeris {
 
@@ -24,7 +25,7 @@ namespace osgEphemeris {
     */
            
 
-class Sphere : public osg::Group
+class OSGEPHEMERIS_EXPORTS Sphere : public osg::Group
 {
     public:
         enum Orientation

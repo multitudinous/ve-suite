@@ -28,6 +28,7 @@
 #include <osgEphemeris/DateTime>
 #include <osgEphemeris/Planets>
 #include <osgEphemeris/EphemerisUpdateCallback>
+#include <osgEphemeris/Export>
 
 namespace osgEphemeris {
 
@@ -62,7 +63,7 @@ namespace osgEphemeris {
          traverse() method where it does internal updates at run-time.
          */
 
-class EphemerisModel : public osg::Group
+class OSGEPHEMERIS_EXPORTS EphemerisModel : public osg::Group
 {
     public:
         enum Members {

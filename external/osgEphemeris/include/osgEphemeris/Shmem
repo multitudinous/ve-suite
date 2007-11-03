@@ -29,8 +29,8 @@
     mapped file.  Contents of classes or structs drived from Shmem will 
     survive process restart and even system reboot.
     */
-
-class Shmem 
+#include <osgEphemeris/Export>
+class OSGEPHEMERIS_EXPORTS Shmem 
 {
     public :
         /**

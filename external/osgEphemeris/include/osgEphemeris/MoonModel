@@ -15,6 +15,7 @@
 
 #include <string>
 #include <osgEphemeris/Sphere>
+#include <osgEphemeris/Export>
 
 namespace osgEphemeris {
 
@@ -22,7 +23,7 @@ namespace osgEphemeris {
         \brief The model of the Moon.
       */
 
-class MoonModel : public Sphere
+class OSGEPHEMERIS_EXPORTS MoonModel : public Sphere
 {
     public:
         /**

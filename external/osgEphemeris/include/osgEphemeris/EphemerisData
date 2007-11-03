@@ -16,6 +16,8 @@
 
 #include <osgEphemeris/Shmem>
 #include <osgEphemeris/DateTime>
+#include <osgEphemeris/Export>
+
 
 namespace osgEphemeris {
 
@@ -44,7 +46,7 @@ enum CelestialBodyName {
 
    */
 
-struct CelestialBodyData
+struct OSGEPHEMERIS_EXPORTS CelestialBodyData
 {
     /*!
       The name of the Celestial body
@@ -90,7 +92,7 @@ struct CelestialBodyData
   */
 
 
-struct EphemerisData : public Shmem
+struct OSGEPHEMERIS_EXPORT EphemerisData : public Shmem
 {
     /*! 
       Latitude of view point in degrees 

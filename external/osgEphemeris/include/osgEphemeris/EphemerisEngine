@@ -20,6 +20,8 @@
 
 #include <osgEphemeris/EphemerisData>
 #include <osgEphemeris/DateTime>
+#include <osgEphemeris/Export>
+
 
 namespace osgEphemeris {
 
@@ -28,7 +30,7 @@ namespace osgEphemeris {
               from latitude, longitude, altitude, date and time.
       */
 
-class EphemerisEngine: public osg::Referenced
+class OSGEPHEMERIS_EXPORTS EphemerisEngine: public osg::Referenced
 {
     public:
 
