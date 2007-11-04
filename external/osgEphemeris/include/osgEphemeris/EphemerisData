@@ -92,7 +92,7 @@ struct OSGEPHEMERIS_EXPORTS CelestialBodyData
   */
 
 
-struct OSGEPHEMERIS_EXPORT EphemerisData : public Shmem
+struct OSGEPHEMERIS_EXPORTS EphemerisData : public Shmem
 {
     /*! 
       Latitude of view point in degrees 

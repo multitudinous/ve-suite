@@ -27,17 +27,15 @@
 
 #if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__) || defined( __BCPLUSPLUS__)
     #  if defined( OSG_LIBRARY_STATIC )
-    #    define OSGEPHEMERIS_EXPORT
+    #    define OSGEPHEMERIS_EXPORTS
     #  elif defined( OSGEPHEMERIS_LIBRARY )
-    #    define OSGEPHEMERIS_EXPORT   __declspec(dllexport)
+    #    define OSGEPHEMERIS_EXPORTS   __declspec(dllexport)
     #  else
-    #    define OSGEPHEMERIS_EXPORT   __declspec(dllimport)
+    #    define OSGEPHEMERIS_EXPORTS   __declspec(dllimport)
     #  endif
 #else
-    #  define OSGEPHEMERIS_EXPORT
+    #  define OSGEPHEMERIS_EXPORTS
 #endif  
-
-/**
 
 
 #endif
