@@ -18,6 +18,7 @@
 #include <osgUtil/CullVisitor>
 #include <osg/ClipPlane>
 #include <osg/ClipNode>
+#include <osg/LightSource>
 
 #include <osgEphemeris/SkyDome>
 #include <osgEphemeris/GroundPlane>
