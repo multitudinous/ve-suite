@@ -21,7 +21,7 @@
 #include <osg/ref_ptr>
 
 #include <osgEphemeris/EphemerisData>
-#include <osgEphemeris/Export>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
@@ -29,7 +29,7 @@ namespace osgEphemeris {
    \brief A callback pure virtual super class for updating EphemerisData at run-time.
    */
 
-class OSGEPHEMERIS_EXPORTS EphemerisUpdateCallback : public virtual osg::Referenced
+class OSGEPHEMERIS_EXPORT EphemerisUpdateCallback : public virtual osg::Referenced
 {
     public:
         /** Default constructor.  

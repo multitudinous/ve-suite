@@ -21,7 +21,7 @@
 #include <osg/MatrixTransform>
 
 #include <osgEphemeris/Sphere>
-#include <osgEphemeris/Export>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
@@ -31,7 +31,7 @@ namespace osgEphemeris {
 
       */
 
-class OSGEPHEMERIS_EXPORTS SkyDome:  public Sphere
+class OSGEPHEMERIS_EXPORT SkyDome:  public Sphere
 {
     public:
         /**
@@ -63,7 +63,7 @@ class OSGEPHEMERIS_EXPORTS SkyDome:  public Sphere
 
         bool _mirrorInSouthernHemisphere;
 
-        class OSGEPHEMERIS_EXPORTS SectorCullCallback: public osg::Drawable::CullCallback
+        class SectorCullCallback: public osg::Drawable::CullCallback
         {
             public:
                 SectorCullCallback( double &sunAz, double min, double max, unsigned int sunTextureUnit );
@@ -85,10 +85,10 @@ class OSGEPHEMERIS_EXPORTS SkyDome:  public Sphere
 
         double _findIncidenceLength(double);
 
-        static unsigned int _sunImageWidth;
-        static unsigned int _sunImageHeight;
-        static unsigned int _sunImageInternalTextureFormat;
-        static unsigned int _sunImagePixelFormat;
+        static unsigned int  _sunImageWidth;
+	static unsigned int  _sunImageHeight;
+        static unsigned int  _sunImageInternalTextureFormat;
+        static unsigned int  _sunImagePixelFormat;
         static unsigned char _sunImageData[];
 
 /* Sky luminance model adapted from:

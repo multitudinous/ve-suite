@@ -97,7 +97,7 @@ else:
 ## setup the uuid for the build directory
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
 buildUUID = buildUUID.replace('/', '-')
-
+print "Build identifier %s" %buildUUID
 if ARGUMENTS.has_key("build_dir"):
    buildDir = ARGUMENTS["build_dir"]
 elif GetPlatform() == 'win32':

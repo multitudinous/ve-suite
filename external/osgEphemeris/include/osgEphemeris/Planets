@@ -15,7 +15,7 @@
 
 #include <osg/Group>
 #include <osgEphemeris/EphemerisData>
-#include <osgEphemeris/Export>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
@@ -23,7 +23,7 @@ namespace osgEphemeris {
     \brief A container class which updates Planet position in the sky - used internally.
     */
 
-class OSGEPHEMERIS_EXPORTS Planets : public osg::Group
+class OSGEPHEMERIS_EXPORT Planets : public osg::Group
 {
     public:
         Planets();

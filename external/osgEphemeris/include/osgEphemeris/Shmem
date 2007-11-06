@@ -19,6 +19,9 @@
 #else
 #include <malloc.h>
 #endif
+
+#include <osgEphemeris/Export.h>
+
 /** \class Shmem
     \brief A shared memory super class.
 
@@ -29,8 +32,8 @@
     mapped file.  Contents of classes or structs drived from Shmem will 
     survive process restart and even system reboot.
     */
-#include <osgEphemeris/Export>
-class OSGEPHEMERIS_EXPORTS Shmem 
+
+class OSGEPHEMERIS_EXPORT Shmem 
 {
     public :
         /**

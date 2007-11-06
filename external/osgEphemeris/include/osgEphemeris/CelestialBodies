@@ -32,7 +32,7 @@
 
 
 #include <osg/Referenced>
-#include <osgEphemeris/Export>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
@@ -42,7 +42,7 @@ class Sun;
     \brief A super class for all celestial bodies - Used Internally.
 
     */
-class OSGEPHEMERIS_EXPORTS CelestialBody: public osg::Referenced
+class OSGEPHEMERIS_EXPORT CelestialBody: public osg::Referenced
 {
     public:
         CelestialBody(double Nf, double Ns,
@@ -98,7 +98,7 @@ class OSGEPHEMERIS_EXPORTS CelestialBody: public osg::Referenced
    \brief The Sun celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Sun : public CelestialBody
+class OSGEPHEMERIS_EXPORT Sun : public CelestialBody
 {
     public:
         Sun (double mjd);
@@ -123,7 +123,7 @@ class OSGEPHEMERIS_EXPORTS Sun : public CelestialBody
    \brief The Moon celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Moon: public CelestialBody
+class OSGEPHEMERIS_EXPORT Moon: public CelestialBody
 {
     public:
         Moon(double mjd);
@@ -139,7 +139,7 @@ class OSGEPHEMERIS_EXPORTS Moon: public CelestialBody
    \brief Mercury celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS  Mercury : public CelestialBody
+class OSGEPHEMERIS_EXPORT Mercury : public CelestialBody
 {
     public:
         Mercury (double mjd);
@@ -154,7 +154,7 @@ class OSGEPHEMERIS_EXPORTS  Mercury : public CelestialBody
    \brief Venus celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Venus : public CelestialBody
+class OSGEPHEMERIS_EXPORT Venus : public CelestialBody
 {
     public:
         Venus (double mjd);
@@ -169,7 +169,7 @@ class OSGEPHEMERIS_EXPORTS Venus : public CelestialBody
    \brief Mars celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Mars : public CelestialBody
+class OSGEPHEMERIS_EXPORT Mars : public CelestialBody
 {
     public:
         Mars ( double mjd );
@@ -184,7 +184,7 @@ class OSGEPHEMERIS_EXPORTS Mars : public CelestialBody
    \brief Jupiter celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Jupiter : public CelestialBody
+class OSGEPHEMERIS_EXPORT Jupiter : public CelestialBody
 {
     public:
         Jupiter (double mjd);
@@ -200,7 +200,7 @@ class OSGEPHEMERIS_EXPORTS Jupiter : public CelestialBody
    \brief Saturn celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Saturn : public CelestialBody
+class OSGEPHEMERIS_EXPORT Saturn : public CelestialBody
 {
     public:
         Saturn (double mjd);
@@ -216,7 +216,7 @@ class OSGEPHEMERIS_EXPORTS Saturn : public CelestialBody
 
    */
 
-class OSGEPHEMERIS_EXPORTS Uranus : public CelestialBody
+class OSGEPHEMERIS_EXPORT Uranus : public CelestialBody
 {
     public:
         Uranus (double mjd);
@@ -225,12 +225,13 @@ class OSGEPHEMERIS_EXPORTS Uranus : public CelestialBody
 
     protected:
         virtual ~Uranus () {}
-}; 
+};
+
 /**\class Neptune
    \brief Neptune celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS Neptune : public CelestialBody
+class OSGEPHEMERIS_EXPORT Neptune : public CelestialBody
 {
     public:
         Neptune (double mjd);
@@ -245,7 +246,7 @@ class OSGEPHEMERIS_EXPORTS Neptune : public CelestialBody
    \brief Pluto celestial body - used internally
 
    */
-class OSGEPHEMERIS_EXPORTS  Pluto : public CelestialBody
+class OSGEPHEMERIS_EXPORT Pluto : public CelestialBody
 {
     public:
         Pluto (double mjd);

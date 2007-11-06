@@ -15,7 +15,7 @@
 
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osgEphemeris/Export>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
@@ -23,7 +23,7 @@ namespace osgEphemeris {
         \brief A geometric model of the ground plane at elevation 0.
         */
 
-class OSGEPHEMERIS_EXPORTS GroundPlane: public osg::Geode
+class OSGEPHEMERIS_EXPORT GroundPlane: public osg::Geode
 {
     public:
         /** 

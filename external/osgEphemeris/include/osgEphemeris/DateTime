@@ -18,7 +18,7 @@
 #include <time.h>
 #include <string>
 #include <osg/Referenced>
-#include <osgEphemeris/Export>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
@@ -26,7 +26,7 @@ namespace osgEphemeris {
    \brief Data and methods to store, query and set the current date and time.
    */
 
-class OSGEPHEMERIS_EXPORTS DateTime 
+class OSGEPHEMERIS_EXPORT DateTime 
 {
     public:
         /** Default Constructor */

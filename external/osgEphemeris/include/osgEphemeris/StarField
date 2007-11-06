@@ -20,7 +20,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Geode>
 #include <osg/Uniform>
-#include <osgEphemeris/Export>
+
 namespace osgEphemeris {
 
 /** \class StarField
@@ -43,7 +43,7 @@ namespace osgEphemeris {
     positions in the sky given latitude, longitude, date and time.
     */
 
-class OSGEPHEMERIS_EXPORTS StarField: public osg::MatrixTransform
+class OSGEPHEMERIS_EXPORT StarField: public osg::MatrixTransform
 {
     public:
         /**
