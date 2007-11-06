@@ -20,6 +20,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Geode>
 #include <osg/Uniform>
+#include <osgEphemeris/Export.h>
 
 namespace osgEphemeris {
 
