@@ -4,7 +4,7 @@
 
 aspenSubdirs = Split("""
     CASILib
-    #VE_AspenUnit
+    VE_AspenUnit
 """)
 
 ##Run SConscript files in all of those folders.
