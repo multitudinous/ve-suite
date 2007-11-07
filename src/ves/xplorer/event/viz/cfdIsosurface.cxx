@@ -147,12 +147,14 @@ void cfdIsosurface::Update()
    this->contour->SetValue( 0, this->value );
    
    vtkPolyData* polydata = ApplyGeometryFilter(contour->GetOutputPort());
+   
    polydata->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
+   polydata->Update();
    this->normals->SetInput(polydata);
    this->mapper->SetInputConnection(normals->GetOutputPort());
 #endif
 
-   double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
+   //double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
    this->mapper->SetScalarRange( minValue, maxValue );
 
    vtkLookupTable* lut = vtkLookupTable::New();
