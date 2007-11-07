@@ -225,7 +225,7 @@ void EphemerisDialog::CreateGUIControls()
     SetAutoLayout(true);
 	
 	////GUI Items Creation End
-	/*m_date = new Command();
+	m_date = new Command();
     m_date->SetCommandName("Ephemeris Date");
 	
 	//m_date->AddDataValuePair(new ves::open::xml::DataValuePair("Day",
@@ -234,27 +234,32 @@ void EphemerisDialog::CreateGUIControls()
     m_time = new ves::open::xml::Command();
 
     m_latitudeDegreeValue = new ves::open::xml::DataValuePair();
-	m_latitudeDegreeValue->SetData("Latitude Degrees",double(0));
-    
-	m_latitudeMinuteValue = new ves::open::xml::DataValuePair();
-	m_latitudeMinuteValue->SetData("Latitude Minutes", double(0));
+    m_latitudeDegreeValue->SetData("Latitude",0.0);
 
     m_latitudeDirectionValue = new ves::open::xml::DataValuePair();
-	m_latitudeDirectionValue->SetData("Latitude Direction","North");
+    m_latitudeDirectionValue->SetData("Latitude Direction","North");
 
     m_longitudeDegreeValue = new ves::open::xml::DataValuePair();
-    m_longitudeDegreeValue->SetData("Longitude Degrees",double(0));
+    m_longitudeDegreeValue->SetData("Longitude", 0.0);
 
-	m_longitudeMinuteValue = new ves::open::xml::DataValuePair();
-	m_longitudeMinuteValue->SetData("Longitude Minutes",0);
     
-	m_longitudeDirectionValue = new ves::open::xml::DataValuePair();
-	m_longitudeDirectionValue->SetData("Longitude Direction","East");*/
+    m_longitudeDirectionValue = new ves::open::xml::DataValuePair();
+    m_longitudeDirectionValue->SetData("Longitude Direction","East");
 }
 //////////////////////////////////////////////////////
 void EphemerisDialog::OnClose(wxCloseEvent& /*event*/)
 {
     Destroy();
+}
+///////////////////////////////////////////////////////////////////
+double EphemerisDialog::ConvertSexagesimalToDecimal(int degree,
+                                                    int minutes,
+                                                    int seconds)
+{
+    double degreeConversion = degree;
+    double minConversion = double(minutes)/60.0; 
+    double secondsConversion = double(seconds)/3600.0; 
+    return degreeConversion + minConversion + secondsConversion;
 }
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeLatitudeMinutes(wxSpinEvent& event )
