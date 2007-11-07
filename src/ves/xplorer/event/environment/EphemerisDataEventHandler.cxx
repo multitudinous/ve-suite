@@ -38,10 +38,12 @@ using namespace ves::xplorer::event;
 //////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler()
 {
+    m_activeModel = 0;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler(const EphemerisDataEventHandler& ceh)
 {
+    m_activeModel = ceh.m_activeModel;
 }
 ///////////////////////////////////////////////////////
 EphemerisDataEventHandler::~EphemerisDataEventHandler()
@@ -53,15 +55,41 @@ EphemerisDataEventHandler::operator=(const EphemerisDataEventHandler& rhs)
 {
     if(this != &rhs)
     {
-
+        m_activeModel = rhs.m_activeModel;    
     }
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////
 void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
 {
+    try
+    {
+    }
+    catch(...)
+    {
+        m_activeModel = 0;
+	std::cout<<"Invalid command passed to EphemerisDataEventHandler!!"<<std::endl;
+    }
+   
 }
-//////////////////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+//////////////////////////////////////////////////////////////////////////////
+void EphemerisDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase*
+                                                     baseObject)
 {
+    try
+    {
+        if(baseObject)
+	{
+            m_activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(baseObject);
+	}
+	else
+	{
+            m_activeModel =
+		    VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+	}
+    }
+    catch(...)
+    {
+        m_activeModel = 0;
+    }
 }

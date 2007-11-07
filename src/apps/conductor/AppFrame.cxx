@@ -1889,14 +1889,14 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
 //////////////////////////////////////////////////////////////////
 void AppFrame::SetEphemerisData( wxCommandEvent& WXUNUSED(event) )
 {
-	if(!m_ephemeris)
-	{
-            m_ephemeris = new EphemerisDialog(this,wxID_ANY);
-	}
+    if(!m_ephemeris)
+    {
+        m_ephemeris = new EphemerisDialog(this,wxID_ANY);
+    }
 
-	if(m_ephemeris->ShowModal() == wxID_OK)
-	{
-	}
+    if(m_ephemeris->ShowModal() == wxID_OK)
+    {
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )

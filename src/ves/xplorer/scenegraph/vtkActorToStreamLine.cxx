@@ -150,7 +150,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
         bool isFirstPoint = true;
         int count = 0;
         double leftOver = 0;
-        double delta = 0.5;
+        double delta = 0.1;
 
         for( int i = 0; i < npts - 1; ++i )
         {
@@ -251,7 +251,8 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-    bf->setFunction( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    //bf->setFunction( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    bf->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     stateset->setAttribute( bf.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
@@ -266,7 +267,8 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.4 ) );
     stateset->addUniform( parSize.get() );
 
-    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.04 ) );
+    //osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.04 ) );
+    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.1 ) );
     stateset->addUniform( parExp.get() );
 
     geometry->setStateSet( stateset.get() );

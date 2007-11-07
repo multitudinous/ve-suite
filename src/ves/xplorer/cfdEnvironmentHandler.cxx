@@ -412,11 +412,11 @@ VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
 {
-	if(_seedPointsDCS.valid())
-	{
-		return _seedPointsDCS.get();
-	}
-	return 0;
+    if(_seedPointsDCS.valid())
+    {
+        return _seedPointsDCS.get();
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////
 osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel()
@@ -424,6 +424,7 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel()
     if(!m_ephemerisModel.valid())
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
+
     }
     return m_ephemerisModel.get();
 }

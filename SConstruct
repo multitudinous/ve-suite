@@ -481,7 +481,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    # Requires one build on command line to verify options are correct.
    if GetPlatform() == 'win32':
-      SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg)
+      SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg,'VisualStudio')
 
    ##Setup the install flag to install VE-Suite
    if 'install' in COMMAND_LINE_TARGETS:

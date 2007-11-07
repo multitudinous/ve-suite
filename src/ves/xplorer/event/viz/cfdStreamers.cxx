@@ -241,8 +241,8 @@ void cfdStreamers::Update()
     try
     {
         osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-        tempGeode->TranslateToGeode( temp );
-        //tempGeode->StreamLineToGeode( temp );
+        //tempGeode->TranslateToGeode( temp );
+        tempGeode->StreamLineToGeode( temp );
         geodes.push_back( tempGeode ); 
         updateFlag = true;
     }

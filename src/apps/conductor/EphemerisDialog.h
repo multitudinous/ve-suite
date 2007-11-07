@@ -34,6 +34,8 @@
 #include <wx/notebook.h>
 #include <wx/sizer.h>
 ////Header Include End
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 ////Dialog Style Start
 #undef EphemerisDialog_STYLE
@@ -48,47 +50,61 @@ class EphemerisDialog : public wxDialog
 	public:
 		EphemerisDialog(wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT("Ephemeris Data"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = EphemerisDialog_STYLE);
 		virtual ~EphemerisDialog();
-		void WxTimer1Timer(wxTimerEvent& event);
-		void m_longitudeMinutesUpdated(wxSpinEvent& event );
-		void m_amPmSelected(wxCommandEvent& event );
-		void m_calendarDay(wxCalendarEvent& event);
-		void m_hourTextUpdated(wxCommandEvent& event );
+		void OnChangeLongitudeMinutes(wxSpinEvent& event );
+		void OnChangeLongitudeDegrees(wxSpinEvent& event );
+		void OnChangeLatitudeMinutes(wxSpinEvent& event );
+		void OnChangeLatitudeDegrees(wxSpinEvent& event );
+
+		void OnChangeTimeOfDay(wxTimerEvent& event);
+		void OnAmPmSelected(wxCommandEvent& event );
+		void OnHourTextUpdated(wxCommandEvent& event );
+		void OnCalendarDay(wxCalendarEvent& event);
 	
 	private:
 		//Do not add custom control declarations between 
 		//GUI Control Declaration Start and GUI Control Declaration End.
 		//wxDev-C++ will remove them. Add custom code after the block.
 		////GUI Control Declaration Start
-		wxChoice *m_amPm;
-		wxButton *m_close;
-		wxButton *m_cancel;
-		wxBoxSizer *m_buttonsSizer;
-		wxChoice *m_lonHemisphere;
-		wxStaticText *m_lonMinutesSymbol;
-		wxSpinCtrl *m_longitudeMinutes;
-		wxStaticText *m_degreeLonSymbol;
-		wxSpinCtrl *m_longitudeDegree;
-		wxStaticBoxSizer *m_longitudeSizer;
-		wxChoice *m_latHemisphere;
-		wxStaticText *m_minutesSymbol;
-		wxSpinCtrl *m_latitudeMinutes;
-		wxStaticText *m_degreeSymbol;
-		wxSpinCtrl *m_latDegrees;
-		wxStaticBoxSizer *m_latitudeSizer;
-		wxBoxSizer *m_latLongSizer;
-		wxSpinCtrl *m_minutes;
-		wxStaticText *m_hourColon;
-		wxSpinCtrl *m_hour;
-		wxStaticBoxSizer *m_timeSizer;
-		wxCalendarCtrl *m_calendar;
-		wxStaticBoxSizer *m_dateSizer;
-		wxBoxSizer *m_dateTimeSizer;
-		wxPanel *m_latitudeLongitude;
-		wxPanel *m_dateTime;
-		wxNotebook *m_dataEntryPages;
-		wxBoxSizer *m_mainSizer;
+		wxChoice* m_amPm;
+		wxButton* m_close;
+		wxButton* m_cancel;
+		wxBoxSizer* m_buttonsSizer;
+		wxChoice* m_lonHemisphere;
+		wxStaticText* m_lonMinutesSymbol;
+		wxSpinCtrl* m_longitudeMinutes;
+		wxStaticText* m_degreeLonSymbol;
+		wxSpinCtrl* m_longitudeDegree;
+		wxStaticBoxSizer* m_longitudeSizer;
+		wxChoice* m_latHemisphere;
+		wxStaticText* m_minutesSymbol;
+		wxSpinCtrl* m_latitudeMinutes;
+		wxStaticText* m_degreeSymbol;
+		wxSpinCtrl* m_latDegrees;
+		wxStaticBoxSizer* m_latitudeSizer;
+		wxBoxSizer* m_latLongSizer;
+		wxSpinCtrl* m_minutes;
+		wxStaticText* m_hourColon;
+		wxSpinCtrl* m_hour;
+		wxStaticBoxSizer* m_timeSizer;
+		wxCalendarCtrl* m_calendar;
+		wxStaticBoxSizer* m_dateSizer;
+		wxBoxSizer* m_dateTimeSizer;
+		wxPanel* m_latitudeLongitude;
+		wxPanel* m_dateTime;
+		wxNotebook* m_dataEntryPages;
+		wxBoxSizer* m_mainSizer;
 		////GUI Control Declaration End
 		
+		ves::open::xml::CommandPtr m_date;
+        ves::open::xml::CommandPtr m_time;
+        ves::open::xml::DataValuePairPtr m_latitudeDegreeValue;
+        ves::open::xml::DataValuePairPtr m_latitudeMinuteValue;
+        ves::open::xml::DataValuePairPtr m_latitudeDirectionValue;
+        ves::open::xml::DataValuePairPtr m_longitudeDegreeValue;
+        ves::open::xml::DataValuePairPtr m_longitudeMinuteValue;
+        ves::open::xml::DataValuePairPtr m_longitudeDirectionValue;
+
+		ves::open::xml::CommandPtr m_ephemerisData;
 	private:
 		//Note: if you receive any error with these enum IDs, then you need to
 		//change your old form code that are based on the #define control IDs.

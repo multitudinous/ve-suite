@@ -6,9 +6,14 @@
 // Description: EphemerisDialog class implementation
 //
 //---------------------------------------------------------------------------
-
+#include <ves/conductor/util/CORBAServiceList.h>
 #include "EphemerisDialog.h"
 
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+#include <ves/conductor/UserPreferencesDataBuffer.h>
+
+using namespace ves::open::xml;
 //Do not add custom headers
 //wxDev-C++ designer will remove them
 ////Header Include Start
@@ -25,32 +30,39 @@ BEGIN_EVENT_TABLE(EphemerisDialog,wxDialog)
 	////Manual Code End
 	
 	EVT_CLOSE(EphemerisDialog::OnClose)
-	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::m_amPmSelected)
-	EVT_SPINCTRL(ID_M_LONGITUDEMINUTES,EphemerisDialog::m_longitudeMinutesUpdated)
+	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnAmPmSelected)
+	EVT_SPINCTRL(ID_M_LATITUDEMINUTES,EphemerisDialog::OnChangeLongitudeMinutes)
+	EVT_SPINCTRL(ID_M_LATITUDEMINUTES,EphemerisDialog::OnChangeLatitudeMinutes)
+	EVT_SPINCTRL(ID_M_LONGITUDEDEGREE,EphemerisDialog::OnChangeLongitudeDegrees)
+	EVT_SPINCTRL(ID_M_LATDEGREES,EphemerisDialog::OnChangeLatitudeDegrees)
 	
-	EVT_TEXT(ID_M_HOUR,EphemerisDialog::m_hourTextUpdated)
 	
-	EVT_CALENDAR_DAY(ID_M_CALENDAR,EphemerisDialog::m_calendarDay)
+	EVT_TEXT(ID_M_HOUR,EphemerisDialog::OnHourTextUpdated)
+	
+	EVT_CALENDAR_DAY(ID_M_CALENDAR,EphemerisDialog::OnCalendarDay)
 END_EVENT_TABLE()
 ////Event Table End
-
-EphemerisDialog::EphemerisDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
-: wxDialog(parent, id, title, position, size, style)
+/////////////////////////////////////////////////////////////////
+EphemerisDialog::EphemerisDialog(wxWindow *parent, wxWindowID id,
+                                 const wxString &title,
+				 const wxPoint &position,
+				 const wxSize& size, long style)
+:wxDialog(parent, id, title, position, size, style)
 {
-	CreateGUIControls();
+    CreateGUIControls();
 }
-
+///////////////////////////////////
 EphemerisDialog::~EphemerisDialog()
 {
 } 
-
+/////////////////////////////////////////
 void EphemerisDialog::CreateGUIControls()
 {
-	//Do not add custom code between
-	//GUI Items Creation Start and GUI Items Creation End.
-	//wxDev-C++ designer will remove them.
-	//Add the custom code before or after the blocks
-	////GUI Items Creation Start
+    //Do not add custom code between
+    //GUI Items Creation Start and GUI Items Creation End.
+    //wxDev-C++ designer will remove them.
+    //Add the custom code before or after the blocks
+    ////GUI Items Creation Start
 
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
 	this->SetSizer(m_mainSizer);
@@ -77,7 +89,9 @@ void EphemerisDialog::CreateGUIControls()
 	m_dateSizer = new wxStaticBoxSizer(m_dateSizer_StaticBoxObj, wxHORIZONTAL);
 	m_dateTimeSizer->Add(m_dateSizer, 1, wxALIGN_CENTER |wxEXPAND| wxALL, 5);
 
-	m_calendar = new wxCalendarCtrl(m_dateTime, ID_M_CALENDAR, wxDateTime(3,(wxDateTime::Month)10,2007),
+	wxDateTime dt;
+	dt.SetToCurrent();
+	m_calendar = new wxCalendarCtrl(m_dateTime, ID_M_CALENDAR, dt,
                                         wxDefaultPosition, wxDefaultSize,
                                          wxCAL_SUNDAY_FIRST | wxCAL_SHOW_HOLIDAYS | wxCAL_SHOW_SURROUNDING_WEEKS | wxCAL_SEQUENTIAL_MONTH_SELECTION);
 	m_calendar->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Segoe UI")));
@@ -208,46 +222,93 @@ void EphemerisDialog::CreateGUIControls()
 	GetSizer()->Fit(this);
 	GetSizer()->SetSizeHints(this);
 	Center();
-        SetAutoLayout(true);
+    SetAutoLayout(true);
 	
 	////GUI Items Creation End
-}
+	/*m_date = new Command();
+    m_date->SetCommandName("Ephemeris Date");
+	
+	//m_date->AddDataValuePair(new ves::open::xml::DataValuePair("Day",
+	//	                                                       m_calendar->GetDate().Get);
 
+    m_time = new ves::open::xml::Command();
+
+    m_latitudeDegreeValue = new ves::open::xml::DataValuePair();
+	m_latitudeDegreeValue->SetData("Latitude Degrees",double(0));
+    
+	m_latitudeMinuteValue = new ves::open::xml::DataValuePair();
+	m_latitudeMinuteValue->SetData("Latitude Minutes", double(0));
+
+    m_latitudeDirectionValue = new ves::open::xml::DataValuePair();
+	m_latitudeDirectionValue->SetData("Latitude Direction","North");
+
+    m_longitudeDegreeValue = new ves::open::xml::DataValuePair();
+    m_longitudeDegreeValue->SetData("Longitude Degrees",double(0));
+
+	m_longitudeMinuteValue = new ves::open::xml::DataValuePair();
+	m_longitudeMinuteValue->SetData("Longitude Minutes",0);
+    
+	m_longitudeDirectionValue = new ves::open::xml::DataValuePair();
+	m_longitudeDirectionValue->SetData("Longitude Direction","East");*/
+}
+//////////////////////////////////////////////////////
 void EphemerisDialog::OnClose(wxCloseEvent& /*event*/)
 {
-	Destroy();
+    Destroy();
 }
-
-
-
-/*
- * m_longitudeMinutesUpdated
- */
-void EphemerisDialog::m_longitudeMinutesUpdated(wxSpinEvent& event )
+//////////////////////////////////////////////////////////////////
+void EphemerisDialog::OnChangeLatitudeMinutes(wxSpinEvent& event )
+{
+	wxString s;
+    s.Printf("...%d", event.GetPosition());
+	wxMessageBox( _("Change lat minutes"),s, 
+                 wxOK | wxICON_INFORMATION );
+}
+//////////////////////////////////////////////////////////////////
+void EphemerisDialog::OnChangeLatitudeDegrees(wxSpinEvent& event )
+{
+	wxString s;
+    s.Printf("...%d", event.GetPosition());
+	wxMessageBox( _("Change lat degrees"),s, 
+                 wxOK | wxICON_INFORMATION );
+}
+///////////////////////////////////////////////////////////////////
+void EphemerisDialog::OnChangeLongitudeMinutes(wxSpinEvent& event )
+{/*
+    wxString s;
+    s.Printf("...%d", event.GetPosition());
+	wxMessageBox( _("Change lon minutes"),s, 
+                 wxOK | wxICON_INFORMATION );
+     ves::conductor::UserPreferencesDataBuffer::instance()->
+       SetCommand( "Ephemeris Data", );*/
+	// insert your code here
+}
+///////////////////////////////////////////////////////////////////
+void EphemerisDialog::OnChangeLongitudeDegrees(wxSpinEvent& event )
+{
+	wxString s;
+    s.Printf("...%d", event.GetPosition());
+	wxMessageBox( _("Change long degrees"),s, 
+                 wxOK | wxICON_INFORMATION );
+}
+////////////////////////////////////////////////////////////
+void EphemerisDialog::OnAmPmSelected(wxCommandEvent& event )
 {
 	// insert your code here
 }
-
-/*
- * m_amPmSelected
- */
-void EphemerisDialog::m_amPmSelected(wxCommandEvent& event )
+///////////////////////////////////////////////////////////
+void EphemerisDialog::OnCalendarDay(wxCalendarEvent& event)
 {
 	// insert your code here
 }
-
-/*
- * m_calendarDay
- */
-void EphemerisDialog::m_calendarDay(wxCalendarEvent& event)
+///////////////////////////////////////////////////////////////
+void EphemerisDialog::OnHourTextUpdated(wxCommandEvent& event )
 {
 	// insert your code here
 }
-
-/*
- * m_hourTextUpdated
- */
-void EphemerisDialog::m_hourTextUpdated(wxCommandEvent& event )
+////////////////////////////////////////////////////////////
+void EphemerisDialog::OnChangeTimeOfDay(wxTimerEvent& event)
 {
-	// insert your code here
 }
+
+
