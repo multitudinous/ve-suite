@@ -31,6 +31,8 @@ BEGIN_EVENT_TABLE(EphemerisDialog,wxDialog)
 	
 	EVT_CLOSE(EphemerisDialog::OnClose)
 	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnAmPmSelected)
+	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnLongitudeDirection)
+	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnLatitudeDirection)
 	EVT_SPINCTRL(ID_M_LATITUDEMINUTES,EphemerisDialog::OnChangeLongitudeMinutes)
 	EVT_SPINCTRL(ID_M_LATITUDEMINUTES,EphemerisDialog::OnChangeLatitudeMinutes)
 	EVT_SPINCTRL(ID_M_LONGITUDEDEGREE,EphemerisDialog::OnChangeLongitudeDegrees)
@@ -233,15 +235,14 @@ void EphemerisDialog::CreateGUIControls()
 
     m_time = new ves::open::xml::Command();
 
-    m_latitudeDegreeValue = new ves::open::xml::DataValuePair();
-    m_latitudeDegreeValue->SetData("Latitude",0.0);
+    m_latitudeDecimalValue = new ves::open::xml::DataValuePair();
+    m_latitudeDecimalValue->SetData("Latitude",0.0);
 
     m_latitudeDirectionValue = new ves::open::xml::DataValuePair();
     m_latitudeDirectionValue->SetData("Latitude Direction","North");
 
-    m_longitudeDegreeValue = new ves::open::xml::DataValuePair();
-    m_longitudeDegreeValue->SetData("Longitude", 0.0);
-
+    m_longitudeDecimalValue = new ves::open::xml::DataValuePair();
+    m_longitudeDecimalValue->SetData("Longitude", 0.0);
     
     m_longitudeDirectionValue = new ves::open::xml::DataValuePair();
     m_longitudeDirectionValue->SetData("Longitude Direction","East");
@@ -250,6 +251,13 @@ void EphemerisDialog::CreateGUIControls()
 void EphemerisDialog::OnClose(wxCloseEvent& /*event*/)
 {
     Destroy();
+}
+///////////////////////////////////////////////////////////////
+double
+EphemerisDialog::ConvertSexagesimalComponentToDecimal(int minutesOrSeconds,
+                                                      bool isMinutes)
+{
+    return (isMinutes)?double(minutesOrSeconds)/60.0:double(minutesOrSeconds)/3600.0;
 }
 ///////////////////////////////////////////////////////////////////
 double EphemerisDialog::ConvertSexagesimalToDecimal(int degree,
@@ -264,56 +272,89 @@ double EphemerisDialog::ConvertSexagesimalToDecimal(int degree,
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeLatitudeMinutes(wxSpinEvent& event )
 {
-	wxString s;
-    s.Printf("...%d", event.GetPosition());
-	wxMessageBox( _("Change lat minutes"),s, 
-                 wxOK | wxICON_INFORMATION );
+    UpdateLatitudeInfo();
 }
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeLatitudeDegrees(wxSpinEvent& event )
 {
-	wxString s;
-    s.Printf("...%d", event.GetPosition());
-	wxMessageBox( _("Change lat degrees"),s, 
-                 wxOK | wxICON_INFORMATION );
+    UpdateLatitudeInfo();
 }
 ///////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeLongitudeMinutes(wxSpinEvent& event )
-{/*
-    wxString s;
-    s.Printf("...%d", event.GetPosition());
-	wxMessageBox( _("Change lon minutes"),s, 
-                 wxOK | wxICON_INFORMATION );
-     ves::conductor::UserPreferencesDataBuffer::instance()->
-       SetCommand( "Ephemeris Data", );*/
-	// insert your code here
+{
+    UpdateLongitudeInfo();
 }
 ///////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeLongitudeDegrees(wxSpinEvent& event )
 {
-	wxString s;
-    s.Printf("...%d", event.GetPosition());
-	wxMessageBox( _("Change long degrees"),s, 
-                 wxOK | wxICON_INFORMATION );
+    UpdateLongitudeInfo();
 }
 ////////////////////////////////////////////////////////////
 void EphemerisDialog::OnAmPmSelected(wxCommandEvent& event )
 {
-	// insert your code here
+    UpdateEphemerisData();
+}
+////////////////////////////////////////////////////////////
+void EphemerisDialog::OnLatitudeDirection(wxCommandEvent& event )
+{
+    UpdateLatitudeInfo();
+}
+////////////////////////////////////////////////////////////
+void EphemerisDialog::OnLongitudeDirection(wxCommandEvent& event )
+{
+    UpdateLongitudeInfo();
 }
 ///////////////////////////////////////////////////////////
 void EphemerisDialog::OnCalendarDay(wxCalendarEvent& event)
 {
-	// insert your code here
+    UpdateEphemerisData();
 }
 ///////////////////////////////////////////////////////////////
 void EphemerisDialog::OnHourTextUpdated(wxCommandEvent& event )
 {
-	// insert your code here
+    UpdateEphemerisData();
 }
 ////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeTimeOfDay(wxTimerEvent& event)
 {
+    UpdateEphemerisData();
+}
+///////////////////////////////////////////
+void EphemerisDialog::UpdateLongitudeInfo()
+{
+    m_longitudeDecimalValue->SetData("Longitude",
+                               ConvertSexagesimalToDecimal(
+                                             m_longitudeDegree->GetValue(),
+                                             m_longitudeMinutes->GetValue(),
+                                             /*m_longitudeDegree->GetValue()*/0));
+    m_longitudeDirectionValue->SetData("Latitude Direction",
+                                       m_lonHemisphere->GetStringSelection().c_str());
+    UpdateEphemerisData();
+}
+//////////////////////////////////////////
+void EphemerisDialog::UpdateLatitudeInfo()
+{
+    m_latitudeDecimalValue->SetData("Latitude",
+                               ConvertSexagesimalToDecimal(
+                                m_latDegrees->GetValue(),
+                                m_latitudeMinutes->GetValue(),
+                                /*m_longitudeDegree->GetValue()*/0));
+    m_latitudeDirectionValue->SetData("Latitude Direction",
+                                       m_latHemisphere->GetStringSelection().c_str());
+    UpdateEphemerisData();
+}
+///////////////////////////////////////////
+void EphemerisDialog::UpdateEphemerisData()
+{
+    CommandWeakPtr ephemerisData = new Command();
+    ephemerisData->SetCommandName("Ephemeris Data");
+    ephemerisData->AddDataValuePair(m_latitudeDecimalValue);
+    ephemerisData->AddDataValuePair(m_latitudeDirectionValue);
+    ephemerisData->AddDataValuePair(m_longitudeDecimalValue);
+    ephemerisData->AddDataValuePair(m_longitudeDirectionValue);
+    ves::conductor::UserPreferencesDataBuffer::instance()
+                            ->SetCommand( ephemerisData->GetCommandName(),
+                                          ephemerisData) ;
 }
 
 

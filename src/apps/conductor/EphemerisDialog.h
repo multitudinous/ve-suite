@@ -54,12 +54,14 @@ class EphemerisDialog : public wxDialog
 		void OnChangeLongitudeDegrees(wxSpinEvent& event );
 		void OnChangeLatitudeMinutes(wxSpinEvent& event );
 		void OnChangeLatitudeDegrees(wxSpinEvent& event );
+                void OnLatitudeDirection(wxCommandEvent& event);
+                void OnLongitudeDirection(wxCommandEvent& event);
 
 		void OnChangeTimeOfDay(wxTimerEvent& event);
 		void OnAmPmSelected(wxCommandEvent& event );
 		void OnHourTextUpdated(wxCommandEvent& event );
 		void OnCalendarDay(wxCalendarEvent& event);
-                
+ 
                 ///Convert the input sexagesimal value to decimal values
                 ///\param degree Degree of Latitude or Longitude
                 ///\param minutes Minutes of Latitude or Longitude
@@ -67,6 +69,20 @@ class EphemerisDialog : public wxDialog
                 double EphemerisDialog::ConvertSexagesimalToDecimal(int degree,
                                                                     int minutes,
                                                                     int seconds);
+ 
+                
+                ///Convert the input sexagesimal value to decimal values
+                ///\param minSecs Minutes or seconds of Latitude or Longitude
+                ///\param isMinutes Converts minutes or seconds 
+                double ConvertSexagesimalComponentToDecimal(int minSecs,
+                                                            bool isMinutes=true);
+
+                ///Update the longitude info
+                void UpdateLongitudeInfo();
+                ///Update the latitude info
+                void UpdateLatitudeInfo();
+                ///Send the ephemeris data to Xplorer
+                void UpdateEphemerisData();
 
 	
 	private:
