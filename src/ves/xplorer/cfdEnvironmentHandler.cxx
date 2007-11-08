@@ -60,6 +60,7 @@
 #include <ves/xplorer/event/data/SPBoundEH.h>
 #include <ves/xplorer/event/data/SPDimensionsEH.h>
 #include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
+#include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -67,6 +68,9 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <osgEphemeris/EphemerisModel>
+
+#include <osg/Vec3f>
+#include <osg/BoundingSphere>
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>
@@ -145,6 +149,8 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
        new ves::xplorer::event::SeedPointDimensionsEventHandler();
    _eventHandlers[ std::string( "DOT_FILE" ) ] = 
        new ves::xplorer::event::ExportDOTFileEventHandler();
+   _eventHandlers[ std::string( "Ephemeris Data" ) ] = 
+       new ves::xplorer::event::EphemerisDataEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::Initialize( void )
@@ -418,13 +424,26 @@ ves::xplorer::scenegraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
     }
     return 0;
 }
-////////////////////////////////////////////////////////////////////////
-osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel()
+/////////////////////////////////////////////////////////////////////////////////////////////////
+osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool createIfDoesNotExist)
 {
-    if(!m_ephemerisModel.valid())
+    if(!m_ephemerisModel.valid() && createIfDoesNotExist)
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
+        osg::ref_ptr<ves::xplorer::scenegraph::DCS> worldDCS = 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
+        if(worldDCS->getBound().valid())
+        {
+            m_ephemerisModel->setSkyDomeRadius( worldDCS->getBound().radius()*2 );
+            m_ephemerisModel->setSkyDomeCenter( worldDCS->getBound().center() );
+        }
+        else
+        {
+            m_ephemerisModel->setSkyDomeRadius( 100. );
+            m_ephemerisModel->setSkyDomeCenter( osg::Vec3f(0.,0.,0.) );
+        }
+        worldDCS->addChild(m_ephemerisModel.get()); 
     }
     return m_ephemerisModel.get();
 }

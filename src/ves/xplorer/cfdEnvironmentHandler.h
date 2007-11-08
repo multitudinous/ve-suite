@@ -174,7 +174,8 @@ public:
    ves::xplorer::scenegraph::DCS* GetSeedPointsDCS();
 
    ///Get the ephemeris data
-   osgEphemeris::EphemerisModel* GetEphemerisModel();
+   ///\param createIfDoesNotExist Force creation of EphemerisModel if it doesn't exist
+   osgEphemeris::EphemerisModel* GetEphemerisModel(bool createIfDoesNotExist=false);
 
 private:
    osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset

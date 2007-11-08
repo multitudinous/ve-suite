@@ -34,6 +34,10 @@
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/cfdModel.h>
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+#include <osgEphemeris/EphemerisModel>
 using namespace ves::xplorer::event;
 //////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler()
@@ -64,6 +68,32 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
 {
     try
     {
+        ves::open::xml::Command* ephemerisInfo = dynamic_cast<ves::open::xml::Command*>(xmlObject);
+        if( ephemerisInfo )
+        {
+            std::cout<<"Got ephemeris data"<<std::endl;
+            ves::open::xml::DataValuePairWeakPtr latitude =
+                                 ephemerisInfo->GetDataValuePair( "Latitude" );
+            double latitudeData = 0;
+            latitude->GetData(latitudeData);
+            ves::open::xml::DataValuePairWeakPtr latitudeDir=
+                                 ephemerisInfo->GetDataValuePair( "Latitude Direction" );
+            std::string northSouth;
+            latitudeDir->GetData(northSouth);
+            ves::open::xml::DataValuePairWeakPtr longitude =
+                                 ephemerisInfo->GetDataValuePair( "Longitude" );
+            double longitudeData = 0; 
+            ves::open::xml::DataValuePairWeakPtr longitudeDir =
+                                 ephemerisInfo->GetDataValuePair( "Longitude Direction" );
+            longitudeDir->GetData(longitudeData);
+            std::string eastWest;
+            longitudeDir->GetData(eastWest);
+            osgEphemeris::EphemerisModel* ephemerisModel = 
+                  VE_Xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
+            ephemerisModel->setLatitudeLongitude((eastWest == "West")?-1*latitudeData:latitudeData,
+                                                 (northSouth == "South")?-1*longitudeData:longitudeData);
+            
+        }
     }
     catch(...)
     {
