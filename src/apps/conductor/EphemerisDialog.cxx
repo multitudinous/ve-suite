@@ -328,7 +328,7 @@ void EphemerisDialog::UpdateLongitudeInfo()
                                              m_longitudeMinutes->GetValue(),
                                              /*m_longitudeDegree->GetValue()*/0));
     m_longitudeDirectionValue->SetData("Longitude Direction",
-                                       m_lonHemisphere->GetStringSelection().c_str());
+                                       ConvertUnicode( m_lonHemisphere->GetStringSelection().c_str() ) );
     UpdateEphemerisData();
 }
 //////////////////////////////////////////
@@ -340,7 +340,7 @@ void EphemerisDialog::UpdateLatitudeInfo()
                                 m_latitudeMinutes->GetValue(),
                                 /*m_longitudeDegree->GetValue()*/0));
     m_latitudeDirectionValue->SetData("Latitude Direction",
-                                       m_latHemisphere->GetStringSelection().c_str());
+                                      ConvertUnicode( m_latHemisphere->GetStringSelection().c_str() ) );
     UpdateEphemerisData();
 }
 ///////////////////////////////////////////
