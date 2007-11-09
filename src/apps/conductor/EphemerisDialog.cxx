@@ -11,7 +11,9 @@
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
+#include <ves/open/xml/OneDIntArray.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <wx/string.h>
 
 using namespace ves::open::xml;
 //Do not add custom headers
@@ -31,15 +33,14 @@ BEGIN_EVENT_TABLE(EphemerisDialog,wxDialog)
 	
 	EVT_CLOSE(EphemerisDialog::OnClose)
 	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnAmPmSelected)
-	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnLongitudeDirection)
-	EVT_CHOICE(ID_M_AMPM,EphemerisDialog::OnLatitudeDirection)
+	EVT_CHOICE(ID_M_LONHEMISPHERE,EphemerisDialog::OnLongitudeDirection)
+	EVT_CHOICE(ID_M_LATHEMISPHERE,EphemerisDialog::OnLatitudeDirection)
 	EVT_SPINCTRL(ID_M_LATITUDEMINUTES,EphemerisDialog::OnChangeLongitudeMinutes)
 	EVT_SPINCTRL(ID_M_LATITUDEMINUTES,EphemerisDialog::OnChangeLatitudeMinutes)
 	EVT_SPINCTRL(ID_M_LONGITUDEDEGREE,EphemerisDialog::OnChangeLongitudeDegrees)
 	EVT_SPINCTRL(ID_M_LATDEGREES,EphemerisDialog::OnChangeLatitudeDegrees)
-	
-	
 	EVT_TEXT(ID_M_HOUR,EphemerisDialog::OnHourTextUpdated)
+	EVT_TEXT(ID_M_MINUTES,EphemerisDialog::OnMinuteTextUpdated)
 	
 	EVT_CALENDAR_DAY(ID_M_CALENDAR,EphemerisDialog::OnCalendarDay)
 END_EVENT_TABLE()
@@ -103,7 +104,9 @@ void EphemerisDialog::CreateGUIControls()
 	m_timeSizer = new wxStaticBoxSizer(m_timeSizer_StaticBoxObj, wxHORIZONTAL);
 	m_dateTimeSizer->Add(m_timeSizer, 0, wxALIGN_CENTER | wxALL, 5);
 
-	m_hour = new wxSpinCtrl(m_dateTime, ID_M_HOUR, wxT("12"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS|wxSP_WRAP, 1, 12, 12);
+	wxString hourString;
+	hourString <<dt.GetHour();
+	m_hour = new wxSpinCtrl(m_dateTime, ID_M_HOUR, hourString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS|wxSP_WRAP, 1, 12, 12);
 	m_hour->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Segoe UI")));
 	m_timeSizer->Add(m_hour,1,wxALIGN_CENTER | wxALL,5);
 
@@ -111,7 +114,9 @@ void EphemerisDialog::CreateGUIControls()
 	m_hourColon->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Segoe UI")));
 	m_timeSizer->Add(m_hourColon,0,wxALIGN_CENTER | wxALL,5);
 
-	m_minutes = new wxSpinCtrl(m_dateTime, ID_M_MINUTES, wxT("0"), wxDefaultPosition, wxDefaultSize,wxSP_ARROW_KEYS|wxSP_WRAP, 0, 59, 0);
+	wxString minutesString;
+	minutesString << dt.GetMinute();
+	m_minutes = new wxSpinCtrl(m_dateTime, ID_M_MINUTES,minutesString, wxDefaultPosition, wxDefaultSize,wxSP_ARROW_KEYS|wxSP_WRAP, 0, 59, 0);
 	m_minutes->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Segoe UI")));
 	m_timeSizer->Add(m_minutes,1,wxALIGN_CENTER | wxALL,5);
 
@@ -246,6 +251,8 @@ void EphemerisDialog::CreateGUIControls()
     
     m_longitudeDirectionValue = new ves::open::xml::DataValuePair();
     m_longitudeDirectionValue->SetData("Longitude Direction","East");
+
+	m_dateAndTimeInfo = new ves::open::xml::DataValuePair();
 }
 //////////////////////////////////////////////////////
 void EphemerisDialog::OnClose(wxCloseEvent& /*event*/)
@@ -292,6 +299,7 @@ void EphemerisDialog::OnChangeLongitudeDegrees(wxSpinEvent& event )
 ////////////////////////////////////////////////////////////
 void EphemerisDialog::OnAmPmSelected(wxCommandEvent& event )
 {
+	UpdateDateAndTimeInfo();
     UpdateEphemerisData();
 }
 ////////////////////////////////////////////////////////////
@@ -307,17 +315,42 @@ void EphemerisDialog::OnLongitudeDirection(wxCommandEvent& event )
 ///////////////////////////////////////////////////////////
 void EphemerisDialog::OnCalendarDay(wxCalendarEvent& event)
 {
+	UpdateDateAndTimeInfo();
     UpdateEphemerisData();
+}
+////////////////////////////////////////////////////////////////
+void EphemerisDialog::OnMinuteTextUpdated(wxCommandEvent& event)
+{
+	UpdateDateAndTimeInfo();
+	UpdateEphemerisData();
 }
 ///////////////////////////////////////////////////////////////
 void EphemerisDialog::OnHourTextUpdated(wxCommandEvent& event )
 {
+	UpdateDateAndTimeInfo();
     UpdateEphemerisData();
 }
 ////////////////////////////////////////////////////////////
 void EphemerisDialog::OnChangeTimeOfDay(wxTimerEvent& event)
 {
+	UpdateDateAndTimeInfo();
     UpdateEphemerisData();
+}
+/////////////////////////////////////////////
+void EphemerisDialog::UpdateDateAndTimeInfo()
+{
+	ves::open::xml::OneDIntArray* dateAndTime = 
+		           new ves::open::xml::OneDIntArray();
+	wxDateTime dt = m_calendar->GetDate();
+	
+	dateAndTime->AddElementToArray(dt.GetYear());
+	dateAndTime->AddElementToArray(dt.GetMonth());
+	dateAndTime->AddElementToArray(dt.GetDay());
+	dateAndTime->AddElementToArray(m_hour->GetValue());
+	dateAndTime->AddElementToArray(m_minutes->GetValue());
+	m_dateAndTimeInfo->SetData("Date and Time Info",
+		                          dateAndTime);
+
 }
 ///////////////////////////////////////////
 void EphemerisDialog::UpdateLongitudeInfo()
@@ -352,6 +385,7 @@ void EphemerisDialog::UpdateEphemerisData()
     ephemerisData->AddDataValuePair(m_latitudeDirectionValue);
     ephemerisData->AddDataValuePair(m_longitudeDecimalValue);
     ephemerisData->AddDataValuePair(m_longitudeDirectionValue);
+	ephemerisData->AddDataValuePair(m_dateAndTimeInfo);
     ves::conductor::UserPreferencesDataBuffer::instance()
                             ->SetCommand( ephemerisData->GetCommandName(),
                                           ephemerisData) ;

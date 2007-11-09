@@ -61,7 +61,7 @@ class EphemerisDialog : public wxDialog
       void OnAmPmSelected(wxCommandEvent& event );
       void OnHourTextUpdated(wxCommandEvent& event );
       void OnCalendarDay(wxCalendarEvent& event);
- 
+	  void OnMinuteTextUpdated(wxCommandEvent& event);
        ///Convert the input sexagesimal value to decimal values
        ///\param degree Degree of Latitude or Longitude
        ///\param minutes Minutes of Latitude or Longitude
@@ -83,6 +83,9 @@ class EphemerisDialog : public wxDialog
        void UpdateLatitudeInfo();
        ///Send the ephemeris data to Xplorer
        void UpdateEphemerisData();
+
+	   ///Update the date and time information
+	   void UpdateDateAndTimeInfo();
 
    
    private:
@@ -121,11 +124,12 @@ class EphemerisDialog : public wxDialog
       ////GUI Control Declaration End
       
       ves::open::xml::CommandPtr m_date;
-       ves::open::xml::CommandPtr m_time;
-       ves::open::xml::DataValuePairPtr m_latitudeDecimalValue;
-       ves::open::xml::DataValuePairPtr m_latitudeDirectionValue;
-       ves::open::xml::DataValuePairPtr m_longitudeDecimalValue;
-       ves::open::xml::DataValuePairPtr m_longitudeDirectionValue;
+      ves::open::xml::CommandPtr m_time;
+      ves::open::xml::DataValuePairPtr m_latitudeDecimalValue;
+      ves::open::xml::DataValuePairPtr m_latitudeDirectionValue;
+      ves::open::xml::DataValuePairPtr m_longitudeDecimalValue;
+      ves::open::xml::DataValuePairPtr m_longitudeDirectionValue;
+      ves::open::xml::DataValuePairPtr m_dateAndTimeInfo;
 
       ves::open::xml::CommandPtr m_ephemerisData;
    private:

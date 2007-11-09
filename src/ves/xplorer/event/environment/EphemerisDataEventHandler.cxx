@@ -38,6 +38,7 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <osgEphemeris/EphemerisModel>
+#include <osgEphemeris/DateTime>
 using namespace ves::xplorer::event;
 //////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler()
@@ -92,7 +93,16 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
                   VE_Xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
             ephemerisModel->setLatitudeLongitude((eastWest == "West")?-1*latitudeData:latitudeData,
                                                  (northSouth == "South")?-1*longitudeData:longitudeData);
-        }
+			std::vector<long> dateTimeInfo;
+            ves::open::xml::DataValuePairWeakPtr dateTimeData =
+                                 ephemerisInfo->GetDataValuePair("Date and Time Info");
+			dateTimeData->GetData(dateTimeInfo);
+			ephemerisModel->setDateTime(osgEphemeris::DateTime(dateTimeInfo[0],
+				                                               dateTimeInfo[1],
+															   dateTimeInfo[2],
+															   dateTimeInfo[3],
+															   dateTimeInfo[4]));
+		}
     }
     catch(...)
     {

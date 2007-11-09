@@ -63,7 +63,7 @@
 #include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-
+#include <ves/xplorer/scenegraph/Group.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -71,6 +71,7 @@
 
 #include <osg/Vec3f>
 #include <osg/BoundingSphere>
+#include <osg/Group>
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>
@@ -430,8 +431,8 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool crea
     if(!m_ephemerisModel.valid() && createIfDoesNotExist)
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
-        osg::ref_ptr<ves::xplorer::scenegraph::DCS> worldDCS = 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+		osg::ref_ptr<osg::Group> worldDCSParent = 
+			ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetParent(0);
 
         /*if(worldDCS->getBound().valid())
         {
@@ -442,10 +443,11 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool crea
         else*/
         {
             m_ephemerisModel->setSkyDomeRadius( 5000. );
+			m_ephemerisModel->setAutoDateTime(true);
             m_ephemerisModel->setSkyDomeCenter( osg::Vec3f(0.,0.,0.) );
 			m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
         }
-        worldDCS->addChild(m_ephemerisModel.get()); 
+        worldDCSParent->addChild(m_ephemerisModel.get()); 
     }
     return m_ephemerisModel.get();
 }
