@@ -129,7 +129,7 @@ def LoadConfig(name, state, loadLastConfig = False):
                 "TaoMachine": os.getenv("TAO_MACHINE"),
                 "TaoPort": os.getenv("TAO_PORT"),
                 "BuilderDir": None,
-                "OSGNotifyLevel": os.getenv("OSGNOTIFYLEVEL"),
+                "OSGNotifyLevel": None,
                 "User": None,
                 "FileDir": None,
                 "DefaultWorkingDir": None,
