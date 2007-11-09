@@ -433,15 +433,17 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool crea
         osg::ref_ptr<ves::xplorer::scenegraph::DCS> worldDCS = 
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
-        if(worldDCS->getBound().valid())
+        /*if(worldDCS->getBound().valid())
         {
             m_ephemerisModel->setSkyDomeRadius( worldDCS->getBound().radius()*2 );
             m_ephemerisModel->setSkyDomeCenter( worldDCS->getBound().center() );
+			m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
         }
-        else
+        else*/
         {
-            m_ephemerisModel->setSkyDomeRadius( 100. );
+            m_ephemerisModel->setSkyDomeRadius( 5000. );
             m_ephemerisModel->setSkyDomeCenter( osg::Vec3f(0.,0.,0.) );
+			m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
         }
         worldDCS->addChild(m_ephemerisModel.get()); 
     }

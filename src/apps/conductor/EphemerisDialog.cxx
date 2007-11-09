@@ -355,6 +355,7 @@ void EphemerisDialog::UpdateEphemerisData()
     ves::conductor::UserPreferencesDataBuffer::instance()
                             ->SetCommand( ephemerisData->GetCommandName(),
                                           ephemerisData) ;
+	ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( ephemerisData);
 }
 
 

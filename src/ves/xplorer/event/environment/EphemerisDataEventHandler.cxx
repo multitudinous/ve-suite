@@ -92,7 +92,6 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
                   VE_Xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
             ephemerisModel->setLatitudeLongitude((eastWest == "West")?-1*latitudeData:latitudeData,
                                                  (northSouth == "South")?-1*longitudeData:longitudeData);
-            
         }
     }
     catch(...)
