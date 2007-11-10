@@ -40,7 +40,7 @@
 
 #include <ves/xplorer/cfdDebug.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 cfd1DTextInput::cfd1DTextInput( void ):DCS()

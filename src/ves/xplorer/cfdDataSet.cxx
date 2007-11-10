@@ -79,7 +79,7 @@
 #include <iostream>
 #include <sstream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::builder::DataLoader;
@@ -1684,12 +1684,12 @@ void cfdDataSet::SetAxesState( unsigned int state )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
+ves::xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
 {
    return dataSetAxes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::DataSetScalarBar* cfdDataSet::GetDataSetScalarBar( void )
+ves::xplorer::DataSetScalarBar* cfdDataSet::GetDataSetScalarBar( void )
 {
    return dataSetScalarBar;
 }

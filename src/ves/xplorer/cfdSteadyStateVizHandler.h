@@ -35,7 +35,7 @@
 /*!\file cfdSteadyStateVizHandler.h
 cfdSteadyStateVizHandler API
 */
-/*!\class VE_Xplorer::cfdSteadyStateVizHandler
+/*!\class ves::xplorer::cfdSteadyStateVizHandler
 * 
 */
 #include <ves/VEConfig.h>
@@ -59,7 +59,9 @@ cfdSteadyStateVizHandler API
 
 class vtkPolyData;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdPolyData;      
    class cfdIsosurface;    
@@ -85,6 +87,7 @@ namespace VE_Xplorer
    class cfdModel;
    class cfdTextOutput;
 }
+}
 
 namespace ves
 {
@@ -108,14 +111,16 @@ namespace event
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
    //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
-	///Constructor
+   ///Constructor
    cfdSteadyStateVizHandler( void );
    //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
    //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
@@ -195,7 +200,7 @@ private:
    cfdTextOutput*       textOutput;
    // Common objects for all functions
    cfdCommandArray*  commandArray;
-	osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
+   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
    cfdObjects* _activeObject;
    //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
 
@@ -233,5 +238,6 @@ private:
    std::multimap< int, cfdGraphicsObject* > graphicsObjects;
    std::map< std::string,ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
 };
+}
 }
 #endif

@@ -37,37 +37,44 @@
 /*!\file cfdCommandObjects.h
 cfdCommandObjects API
 */
-/*!\class VE_Xplorer::cfdCommandObjects
+/*!\class ves::xplorer::cfdCommandObjects
 * 
 */
 #include <ves/xplorer/cfdGlobalBase.h>
-namespace VE_Xplorer
+
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
 {
-   class VE_XPLORER_EXPORTS cfdCommandObjects : public cfdGlobalBase
-   {
-      public:
-         ///Base Constructor
-         cfdCommandObjects ();
-         ///Destructor
-         virtual ~cfdCommandObjects ();
+namespace xplorer
+{
+class VE_XPLORER_EXPORTS cfdCommandObjects : public cfdGlobalBase
+{
+   public:
+      ///Base Constructor
+      cfdCommandObjects ();
+      ///Destructor
+      virtual ~cfdCommandObjects ();
 
-         // pure virtual int functions to be specified in concrete implementations
+      // pure virtual int functions to be specified in concrete implementations
 
-         ///compare VjObs_i commandArray with its child's value
-         ///\param _cfdCommandArray
-         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ) = 0;
+      ///compare VjObs_i commandArray with its child's value
+      ///\param _cfdCommandArray
+      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ) = 0;
 
-         ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand() = 0;
+      ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand() = 0;
 
-      protected:
-      private:
-   };
+   protected:
+   private:
+};
+}
 }
 #endif
 

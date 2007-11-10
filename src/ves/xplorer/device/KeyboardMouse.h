@@ -70,7 +70,9 @@ namespace osg
     class LineSegment;
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS KeyboardMouse : public Device
 {
@@ -238,5 +240,5 @@ private:
     gadget::PositionInterface m_head;///<VRJuggler's head positional interface
 };
 }
-
+}
 #endif //KEYBOARD_MOUSE_H

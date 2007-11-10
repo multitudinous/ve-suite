@@ -59,12 +59,15 @@ class vtkUnstructuredGridReader;
 class vtkDataSet;
 class vtkDataObject;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdPlanes;
    class DataSetAxis;
    class DataSetScalarBar;
    //class SeedPoints;
+}
 }
 
 namespace ves
@@ -109,7 +112,9 @@ namespace DataLoader
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdDataSet
 {
@@ -276,12 +281,12 @@ public:
     ///\param state The state of the axes state 0 or 1 
     void SetAxesState( unsigned int state );
     ///Set the bounding box for this dataset
-    VE_Xplorer::DataSetAxis* GetDataSetAxes( void );
+    ves::xplorer::DataSetAxis* GetDataSetAxes( void );
     ///Set the scalar for this dataset
     ///\param state The state of the scalar bar 0 or 1 
     void SetDataSetScalarState( unsigned int state );
     ///Get the scalar bar
-    VE_Xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
+    ves::xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
 
     ///Get the bounds of the vtkDataObject contained in the cfdDataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
@@ -362,8 +367,8 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased; 
 
-    VE_Xplorer::DataSetAxis* dataSetAxes;
-    VE_Xplorer::DataSetScalarBar* dataSetScalarBar;
+    ves::xplorer::DataSetAxis* dataSetAxes;
+    ves::xplorer::DataSetScalarBar* dataSetScalarBar;
     ves::xplorer::util::cfdVTKFileHandler* _vtkFHndlr;
     ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
     int partOfTransientSeries;
@@ -376,5 +381,6 @@ private:
     vtkUnstructuredGrid *data[MAX_DATA];
 #endif
 };
+}
 }
 #endif

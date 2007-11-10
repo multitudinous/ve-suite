@@ -52,7 +52,7 @@
 #include <iostream>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,7 @@ ClearVisObjectsEventHandler& ClearVisObjectsEventHandler::operator=(const ClearV
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ClearVisObjectsEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void ClearVisObjectsEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
    ;
 }

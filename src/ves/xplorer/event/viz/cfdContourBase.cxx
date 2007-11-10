@@ -60,7 +60,7 @@
 
 #include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a scalar field.

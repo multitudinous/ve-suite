@@ -81,7 +81,7 @@ namespace xml
 }
 }
 
-namespace osg 
+namespace osg
 {
     class Geode;
     class Group;
@@ -91,7 +91,9 @@ namespace osg
     class LineSegment;
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS Wand : public Device
 {
@@ -218,5 +220,5 @@ private:
     double m_worldTrans[ 3 ];
 };
 }
-
+}
 #endif //WAND_H

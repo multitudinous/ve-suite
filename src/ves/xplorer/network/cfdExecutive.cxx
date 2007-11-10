@@ -73,7 +73,7 @@ XERCES_CPP_NAMESPACE_USE
 #include <ves/xplorer/network/cfdExecutive.h>
 #include <ves/xplorer/cfdDebug.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;

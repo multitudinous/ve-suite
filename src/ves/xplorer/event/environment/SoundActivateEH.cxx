@@ -39,7 +39,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -68,18 +68,18 @@ SoundActivateEventHandler::operator=(const SoundActivateEventHandler& rhs)
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void SoundActivateEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+void SoundActivateEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
 {
    ///is this overkill????
    try
    {
       if(baseObject)
       {
-         _activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(baseObject);
+         _activeModel = dynamic_cast<ves::xplorer::cfdModel*>(baseObject);
       }
       else
       {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

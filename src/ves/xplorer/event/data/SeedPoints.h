@@ -44,42 +44,44 @@
 
 namespace osg
 {
-	class StateSet;
-	class Geometry;
-	class Point;
+   class StateSet;
+   class Geometry;
+   class Point;
 }
 /*!\file SeedPoints.h
   Seed Points 
   */
 
-/*!\class VE_Xplorer::SeedPoints
+/*!\class ves::xplorer::SeedPoints
  * Class defining the a volume of points
  */
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS SeedPoints: public osg::Geode
 {
 public:
-	///Constructor
-	///\param numX The number in X.
+   ///Constructor
+   ///\param numX The number in X.
     ///\param numY The number in Y.
     ///\param numZ The number in Z.
-	///\param xMin Minimum x
+   ///\param xMin Minimum x
     ///\param yMin Minimum y
     ///\param zMin Minimum z
     ///\param xMax Maximum x
     ///\param yMax Maximum y
     ///\param zMax Maximum z
-	SeedPoints(unsigned int nX = 1,
-		           unsigned int nY = 1,
-				   unsigned int nZ =1,
-		           float xmin = 0.f,
-				   float xmax =1.f,
-				   float ymin = 0.f,
-				   float ymax = 1.f,
-				   float zmin = 0.f,
-				   float zmax = 1.f);
-	///Copy Constructor
+   SeedPoints(unsigned int nX = 1,
+                 unsigned int nY = 1,
+               unsigned int nZ =1,
+                 float xmin = 0.f,
+               float xmax =1.f,
+               float ymin = 0.f,
+               float ymax = 1.f,
+               float zmin = 0.f,
+               float zmax = 1.f);
+   ///Copy Constructor
     SeedPoints(const SeedPoints& seedPoints,
                const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
 
@@ -130,37 +132,37 @@ protected:
    class PointsDrawable: public osg::Geometry
    {
    public:
-	   ///Constructor
-	   ///\param dimensions The xyz dimensions of the volume
-	   ///\param bounds The bbox of the volume
-	   PointsDrawable(unsigned int* dimensions=0,float* bounds=0);
+      ///Constructor
+      ///\param dimensions The xyz dimensions of the volume
+      ///\param bounds The bbox of the volume
+      PointsDrawable(unsigned int* dimensions=0,float* bounds=0);
 
-	   ///Copy Constructor
-	   PointsDrawable(const PointsDrawable& pointsDrawable,
+      ///Copy Constructor
+      PointsDrawable(const PointsDrawable& pointsDrawable,
                            const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
 
-	   META_Object(VE_Xplorer,PointsDrawable)
-	   ///Set the bounding box of the point volume
-	   ///\parm bounds The bounding box\n xmin,xmax,ymin,ymax,zmin,zmax
-	   void SetBounds(float* bounds);
+      META_Object(VE_Xplorer,PointsDrawable)
+      ///Set the bounding box of the point volume
+      ///\parm bounds The bounding box\n xmin,xmax,ymin,ymax,zmin,zmax
+      void SetBounds(float* bounds);
 
-	   ///Set the xyz dimensions
-	   ///\param dimensions x,y,z size of the point volume
-	   void SetDimensions(unsigned int* dimensions);
+      ///Set the xyz dimensions
+      ///\param dimensions x,y,z size of the point volume
+      void SetDimensions(unsigned int* dimensions);
 
-	   ///Set the size for the seed points in pixels
-	   ///\param size Size in pixels
-	   //void SetSize(float size);
+      ///Set the size for the seed points in pixels
+      ///\param size Size in pixels
+      //void SetSize(float size);
 
-	   ///Set the rgb color for the points
-	   ///\param color The rgb color
-	   void SetColor(float* color); 
+      ///Set the rgb color for the points
+      ///\param color The rgb color
+      void SetColor(float* color); 
 
-	   ///Set the alpha value
-	   ///\param alpha Transparency
-	   void SetAlpha(float alpha);
-	  
-	   /// we need to set up the bounding box of the data too, so that the scene graph knows where this
+      ///Set the alpha value
+      ///\param alpha Transparency
+      void SetAlpha(float alpha);
+     
+      /// we need to set up the bounding box of the data too, so that the scene graph knows where this
            /// objects is, for both positioning the camera at start up, and most importantly for culling.
            virtual osg::BoundingBox computeBound() const;
 
@@ -194,6 +196,7 @@ protected:
    void _initializePoints();
  
 };
+}
 }
 #endif//_OSG
 #endif// VE_SEED_POINTS_H

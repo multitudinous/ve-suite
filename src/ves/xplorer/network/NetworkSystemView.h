@@ -49,7 +49,7 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public VE_Xplorer::cfdGlobalBase
+class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public ves::xplorer::cfdGlobalBase
 {
 public:
    NetworkSystemView();
@@ -59,7 +59,7 @@ public:
    virtual ~NetworkSystemView( void );
    NetworkSystemView& operator=( const NetworkSystemView& );
    
-   bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return true;}
+   bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ){return true;}
    void UpdateCommand( void ){;}
    osg::ref_ptr< osg::Group > DrawNetwork( void );
 private:

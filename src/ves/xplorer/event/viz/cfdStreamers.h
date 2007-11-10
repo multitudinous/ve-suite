@@ -37,7 +37,7 @@
 cfdStreamers API
 */
 
-/*!\class VE_Xplorer::cfdStreamers
+/*!\class ves::xplorer::cfdStreamers
 *   A class to takes input data set(s) and generates streamlines 
 *   based on the active glyph. Update member function will update
 *   the position and direction.
@@ -52,14 +52,19 @@ class vtkPoints;
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class cfdCommandArray;
+}
 }
 
 #include <ves/open/xml/CommandPtr.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects
 {
@@ -126,5 +131,5 @@ private:
     double zMaxBB;///>number of points for z direction
 };
 }
-
+}
 #endif //CFD_STREAMERS_H

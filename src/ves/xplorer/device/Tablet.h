@@ -37,7 +37,7 @@
   Tablet API
 */
 
-/*!\class VE_Xplorer::Tablet
+/*!\class ves::xplorer::Tablet
 * A class to track the wand location, object translation,
   and virtual cursor location in virtual environment.
 */
@@ -82,7 +82,9 @@ namespace xml
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS Tablet : public Device
 {
@@ -136,5 +138,6 @@ private:
     ves::open::xml::Command* command; ///<Stores xml command
 
 };
+}
 }
 #endif //TABLET_H

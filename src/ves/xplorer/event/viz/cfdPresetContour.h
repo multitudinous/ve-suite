@@ -35,7 +35,7 @@
 /*!\file cfdPresetContour.h
 cfdPresetContour API
 */
-/*!\class VE_Xplorer::cfdPresetContour
+/*!\class ves::xplorer::cfdPresetContour
 * A class that takes input data set(s) and generates a 
 * cutting plane based on the position and direction
 * selected. Update member function will update
@@ -46,26 +46,32 @@ cfdPresetContour API
 class vtkCutter;
 class vtkPolyData;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCuttingPlane;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
 {
-   class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase
-   {
-      public:
-         ///Initialize the pipeline, (and set the number of cutting plane increments for blue menu)
-         ///\param xyx
-         ///\param numSteps
-         cfdPresetContour( const int xyz, const int numSteps = 10 );
-         ///Destructor
-         virtual ~cfdPresetContour();
-         ///Update
-         virtual void Update( void );
+namespace xplorer
+{
+class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase
+{
+public:
+   ///Initialize the pipeline, (and set the number of cutting plane increments for blue menu)
+   ///\param xyx
+   ///\param numSteps
+   cfdPresetContour( const int xyz, const int numSteps = 10 );
+   ///Destructor
+   virtual ~cfdPresetContour();
+   ///Update
+   virtual void Update( void );
 
-      private:
-   };
+private:
+};
+}
 }
 #endif

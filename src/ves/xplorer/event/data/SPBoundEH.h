@@ -49,10 +49,15 @@ namespace xml
 }
 }
 }
-namespace VE_Xplorer
+
+namespace ves
+{
+namespace xplorer
 {
    class cfdModel;
 }
+}
+
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/VEConfig.h>
 
@@ -82,9 +87,9 @@ public:
 
    ///Set the active cfdModel
    ///\param model The active cfdModel
-   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model);
+   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model);
 protected:
-   VE_Xplorer::cfdModel* _activeModel;///<The active model;
+   ves::xplorer::cfdModel* _activeModel;///<The active model;
 };
 
 }

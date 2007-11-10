@@ -48,7 +48,7 @@
 #include <vtkDemandDrivenPipeline.h>
 
 using namespace ves::xplorer::scenegraph;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdObjects::cfdObjects( void )
 {

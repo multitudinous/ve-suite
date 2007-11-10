@@ -49,7 +49,7 @@
 
 using namespace gmtl;
 using namespace gadget;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 

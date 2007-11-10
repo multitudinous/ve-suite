@@ -50,7 +50,7 @@
 
 #include <fstream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 

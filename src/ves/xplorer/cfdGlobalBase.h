@@ -35,19 +35,24 @@
 /*!\file cfdGlobalBase.h
 cfdGlobalBase API
 */
-/*!\class VE_Xplorer::cfdGlobalBase
+/*!\class ves::xplorer::cfdGlobalBase
 * 
 */
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
+}
 }
 
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdGlobalBase
 {
@@ -61,7 +66,7 @@ public:
    ///specified in concrete implementations
 
    ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ) = 0;
+   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ) = 0;
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() = 0;
@@ -75,11 +80,12 @@ public:
 protected:
 
 
-   VE_Xplorer::cfdCommandArray* _cfdCommandArray;///<cfdApp side variables declared in VjObs_i.h
+   ves::xplorer::cfdCommandArray* _cfdCommandArray;///<cfdApp side variables declared in VjObs_i.h
 
    ves::open::xml::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
 
 private:
 };
+}
 }
 #endif

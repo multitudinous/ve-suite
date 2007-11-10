@@ -42,7 +42,7 @@
 #include <iostream>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
 
@@ -79,7 +79,7 @@ UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=(const UpdateNetw
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateNetworkEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void UpdateNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
    ;
 }

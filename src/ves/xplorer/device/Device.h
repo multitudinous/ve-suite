@@ -67,7 +67,9 @@ namespace xml
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS Device : public cfdGlobalBase
 {
@@ -93,7 +95,7 @@ public:
 
     ///Do not know what this is
     ///\param _cfdCommandArray 
-    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray* _cfdCommandArray = 0 );
+    virtual bool CheckCommandId( ves::xplorer::cfdCommandArray* _cfdCommandArray = 0 );
 
     ///Get the active coordinate system
     ves::xplorer::scenegraph::DCS* GetActiveDCS();
@@ -140,5 +142,5 @@ protected:
     double* m_jump;///<
 };
 }
-
+}
 #endif //DEVICE_H

@@ -35,7 +35,7 @@
 #include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/util/fileIO.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 ////////////////////
 cfdSound::cfdSound()
 :ambient(true),

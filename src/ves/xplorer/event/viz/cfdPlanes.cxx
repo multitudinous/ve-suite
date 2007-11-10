@@ -49,7 +49,7 @@
 
 #include <sstream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],

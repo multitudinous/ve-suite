@@ -50,7 +50,7 @@ static const std::string DSO_SUFFIX(".so");
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////

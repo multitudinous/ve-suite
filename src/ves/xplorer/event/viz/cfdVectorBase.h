@@ -38,7 +38,7 @@
 cfdVectorBase API
 */
 
-/*!\class VE_Xplorer::cfdVectorBase
+/*!\class ves::xplorer::cfdVectorBase
 *
 */
 
@@ -52,17 +52,22 @@ class vtkTriangleFilter;
 class vtkStripper;
 class vtkThresholdPoints;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdVectorBase : public cfdObjects
 {
 public:
-	///Constructor
+   ///Constructor
    cfdVectorBase();
 
    ///Destructor
@@ -123,5 +128,6 @@ protected:
    int _scaleByVector;
    float _vectorScale;
 };
+}
 }
 #endif

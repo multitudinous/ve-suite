@@ -35,7 +35,7 @@
 /*!\file DisplayInformation.h
 DisplayInformation API
 */
-/*!\class VE_Xplorer::DisplayInformation
+/*!\class ves::xplorer::DisplayInformation
 * 
 */
 #include <ves/VEConfig.h>
@@ -57,13 +57,15 @@ namespace xplorer
 {
 namespace scenegraph
 {
-	class Switch;
-	class CADEntity;
+   class Switch;
+   class CADEntity;
 }
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS DisplayInformation
 {
@@ -101,18 +103,19 @@ private:
    ///Initialize the world coordinate system display
    void InitCoordSysDisplay();
 
-	osg::ref_ptr< ves::xplorer::scenegraph::Switch > display_switch; ///<Allows switching between different display options
+   osg::ref_ptr< ves::xplorer::scenegraph::Switch > display_switch; ///<Allows switching between different display options
 
-	osg::ref_ptr< osg::CameraNode > framerate;
-	osg::ref_ptr< osg::CameraNode > wcs;
+   osg::ref_ptr< osg::CameraNode > framerate;
+   osg::ref_ptr< osg::CameraNode > wcs;
 
-	osg::ref_ptr< osgText::Text > framerate_text; ///<Text for the frame rate
-	osg::ref_ptr< osgText::Text > wcs_x_text; ///<Text for the x world coordinate system
-	osg::ref_ptr< osgText::Text > wcs_y_text; ///<Text for the y world coordinate system
-	osg::ref_ptr< osgText::Text > wcs_z_text; ///<Text for the z world coordinate system
+   osg::ref_ptr< osgText::Text > framerate_text; ///<Text for the frame rate
+   osg::ref_ptr< osgText::Text > wcs_x_text; ///<Text for the x world coordinate system
+   osg::ref_ptr< osgText::Text > wcs_y_text; ///<Text for the y world coordinate system
+   osg::ref_ptr< osgText::Text > wcs_z_text; ///<Text for the z world coordinate system
 
-	ves::xplorer::scenegraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
+   ves::xplorer::scenegraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
 };
+}
 }
 
 #endif //DISPLAY_INFORMATION

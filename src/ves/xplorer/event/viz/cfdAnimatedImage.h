@@ -35,7 +35,7 @@
 /*!\file cfdAnimatedImage.h
 cfdAnimatedImage API
 */
-/*!\class VE_Xplorer::cfdAnimatedImage
+/*!\class ves::xplorer::cfdAnimatedImage
 * 
 */
 #include <ves/xplorer/event/viz/cfdObjects.h>
@@ -52,11 +52,14 @@ class vtkSphereSource;
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdImage;
    class cfdReadParam;
    class cfdCommandArray;
+}
 }
 
 namespace ves
@@ -70,7 +73,9 @@ namespace scenegraph
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdAnimatedImage : public cfdObjects
    {
@@ -108,7 +113,7 @@ namespace VE_Xplorer
          std::vector< cfdImage* > _images;///<The vector of images.
 
       private:
-			osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;///<reference pointer to the dcs
+         osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;///<reference pointer to the dcs
          char basename[256];///<Holds basename input.
          int frames;///<Number of frames.
          int ex_x, ex_y;///<ex_x and ex_y.
@@ -123,5 +128,6 @@ namespace VE_Xplorer
          cfdReadParam* _readParam;///<Read out parameters.
          //int _which_frame;
    };
+}
 }
 #endif

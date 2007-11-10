@@ -60,10 +60,13 @@ namespace scenegraph
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
    class cfdGraphicsObject;
+}
 }
 
 #include <vector>
@@ -96,7 +99,7 @@ class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cf
          void UpdateTransientFrame();
          //void CleanUp( void );
          void SetParameterFile(std::string paramFile);
-         void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
+         void SetCommandArray( ves::xplorer::cfdCommandArray* cmdArray);
          void SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs);
          void SetParentNode( ves::xplorer::scenegraph::Group* parent);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
@@ -132,19 +135,19 @@ class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cf
          ///\param value The new isosurface value.
          void UpdateIsosurface(double value);
 
-		 ///Set the number of Slice planes per brick
-		 ///\param nSlices The number of slices per brick
-		 void UpdateNumberOfSlicePlanes(unsigned int nSlices);
+       ///Set the number of Slice planes per brick
+       ///\param nSlices The number of slices per brick
+       void UpdateNumberOfSlicePlanes(unsigned int nSlices);
 
-		 ///Flag how the PreIntegration Table is update.\n true == full update\nfalse==fast update\n
-		 void UpdatePreIntegrationTable(bool trueFalse);
+       ///Flag how the PreIntegration Table is update.\n true == full update\nfalse==fast update\n
+       void UpdatePreIntegrationTable(bool trueFalse);
          
-		 ///Clear the texture-based visualization
+       ///Clear the texture-based visualization
          void ClearAll();
 
-		 ///Set the active shader mananger
-		 ///\param The name of the shader mananger to set active
-		 void SetActiveShaderManager(std::string name);
+       ///Set the active shader mananger
+       ///\param The name of the shader mananger to set active
+       void SetActiveShaderManager(std::string name);
 
          ///Set the current frame
          ///\param frame The current step in the transient visualization.
@@ -197,14 +200,14 @@ class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cf
          double _appTime;
          double _animationDelay;
          std::string _paramFile;
-         VE_Xplorer::cfdCommandArray* _cmdArray;
+         ves::xplorer::cfdCommandArray* _cmdArray;
          osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
          cfdTextureDataSet* _activeTDSet;
          cfdTextureManager* _activeTM;
 
-			//std::vector<cfdVolumeVisualization*> _volumeVisNodes;
+         //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
          cfdVolumeVisualization* _activeVolumeVizNode;
-			osg::ref_ptr< ves::xplorer::scenegraph::Group > _parent;
+         osg::ref_ptr< ves::xplorer::scenegraph::Group > _parent;
          cfdPBufferManager* _pbm;
          //osgUtil::SceneView* _sceneView;
          cfdVolumeVisNodeHandler* _activeVisNodeHdlr;

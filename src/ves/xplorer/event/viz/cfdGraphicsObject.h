@@ -35,7 +35,7 @@
 /*!\file cfdGraphicsObject.h
 cfdGraphicsObject API
 */
-/*!\class VE_Xplorer::cfdGraphicsObject
+/*!\class ves::xplorer::cfdGraphicsObject
 * 
 */
 #include <ves/VEConfig.h>
@@ -57,10 +57,13 @@ namespace scenegraph
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class cfdModel;
     class cfdObjects;
+}
 }
 
 #include <vector>
@@ -70,7 +73,9 @@ namespace VE_Xplorer
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdGraphicsObject
 {
@@ -113,7 +118,7 @@ public:
    void SetTypeOfViz( VizType );
 
    ///Set geodes for classic and trans viz objects
-   void SetGeodes( VE_Xplorer::cfdObjects* input );
+   void SetGeodes( ves::xplorer::cfdObjects* input );
 
    ///Return parent node for a this object
    ves::xplorer::scenegraph::DCS* GetParentNode( void );
@@ -125,15 +130,16 @@ public:
    //ves::xplorer::scenegraph::cfdTempAnimation* GetAnimation( void );
 
 protected:
-	std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<SceneGraph Geode.
-	ves::xplorer::scenegraph::DCS* parentNode;///<SceneGraph parent node.
+   std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<SceneGraph Geode.
+   ves::xplorer::scenegraph::DCS* parentNode;///<SceneGraph parent node.
    ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
    VizType type;///<Type of viz: trans, classic, texture.
 
    // used for animated particles and other ss 
    // animated features
    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
-   VE_Xplorer::cfdModel* model;///<Xplorer cfd model.
+   ves::xplorer::cfdModel* model;///<Xplorer cfd model.
 };
+}
 }
 #endif

@@ -72,7 +72,7 @@ ChangeWorkingDirectoryEventHandler::~ChangeWorkingDirectoryEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////
-void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
 }
 ///////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ void ChangeWorkingDirectoryEventHandler::Execute(XMLObject* veXMLObject)
 #endif
    //A new working directory also means that 
    //the STORED scenes are no longer valid
-   VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->Reset();
+   ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->Reset();
    //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
    ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }

@@ -36,7 +36,7 @@
 VjObs_i API
 */
 
-/*!\class VE_Xplorer::VjObs_i
+/*!\class ves::xplorer::VjObs_i
 *
 */
 #include <ves/open/VjObsS.h>
@@ -60,10 +60,13 @@ VjObs_i API
 
 #include <ves/xplorer/cfdStateInfo.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class cfdModelHandler;
     class cfdCommandArray;
+}
 }
 
 namespace ves
@@ -71,7 +74,7 @@ namespace ves
 namespace open
 {
 namespace xml
-{        
+{
     class DOMDocumentManager;
     class Command;
 }
@@ -80,7 +83,9 @@ namespace xml
 
 #include <vector>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
     public PortableServer::RefCountServantBase
@@ -192,5 +197,6 @@ protected:
    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
    bool isCluster;///<cluster mode
 };
+}
 }
 #endif

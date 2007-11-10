@@ -35,7 +35,7 @@
 /*!\file cfdAnimatedStreamlineCone.h
 cfdAnimatedStreamlineCone API
 */
-/*!\class VE_Xplorer::cfdAnimatedStreamlineCone
+/*!\class ves::xplorer::cfdAnimatedStreamlineCone
 * 
 */
 #include <ves/xplorer/event/viz/cfdObjects.h>
@@ -44,12 +44,17 @@ class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
 class vtkSphereSource;
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
 {
@@ -97,5 +102,6 @@ private:
    //int nPts, nStr, iPts;
    //float ptData[3], direction[3], center[3];   
 };
+}
 }
 #endif

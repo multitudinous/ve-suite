@@ -85,7 +85,7 @@ PhysicsSimulationEventHandler& PhysicsSimulationEventHandler::operator=( const P
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void PhysicsSimulationEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
     ;
 }

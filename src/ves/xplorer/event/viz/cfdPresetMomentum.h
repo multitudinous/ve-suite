@@ -35,7 +35,7 @@
 /*!\file cfdPresetMomentum.h
 cfdPresetMomentum API
 */
-/*!\class VE_Xplorer::cfdPresetMomentum
+/*!\class ves::xplorer::cfdPresetMomentum
 *  A class that takes input data set(s) and generates a 
 *  cutting plane of momentum profile based on the position 
 *  and direction selected. Update member function will update
@@ -46,12 +46,17 @@ cfdPresetMomentum API
 class vtkCutter;
 class vtkWarpVector;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCuttingPlane;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdPresetMomentum : public cfdContourBase
    {
@@ -71,5 +76,6 @@ namespace VE_Xplorer
       private:
          vtkWarpVector   * warper;///<warper.
    };
+}
 }
 #endif

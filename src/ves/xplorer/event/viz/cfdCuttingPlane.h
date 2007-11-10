@@ -35,14 +35,16 @@
 /*!\file cfdCuttingPlane.h
 cfdCuttingPlane API
 */
-/*!\class VE_Xplorer::cfdCuttingPlane
+/*!\class ves::xplorer::cfdCuttingPlane
 * 
 */
 #include <ves/VEConfig.h>
 class vtkPlane;
 class vtkDataSet;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdCuttingPlane
    {
@@ -100,5 +102,6 @@ namespace VE_Xplorer
 
          int type;///<Plane direction: 0=X, 1=Y, 2=Z.
    };
+}
 }
 #endif

@@ -44,7 +44,7 @@
 
 #include <ves/xplorer/cfdThread.h>
 #include <ves/VEConfig.h>
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 int main(int argc, char* argv[])
 {

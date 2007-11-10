@@ -80,7 +80,7 @@
 
 vprSingletonImpLifetime( ves::xplorer::volume::cfdTextureBasedVizHandler, 140 );
 using namespace ves::xplorer::volume;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////

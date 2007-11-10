@@ -43,7 +43,7 @@
 #include <osg/BlendFunc>
 #include <osgDB/WriteFile>
 #endif
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 // constructor
@@ -188,10 +188,10 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 }
 
 // set actor for classic and trans viz objects
-void cfdGraphicsObject::SetGeodes( VE_Xplorer::cfdObjects* input )
+void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
 {
     bool isStreamLine = false;
-    if( dynamic_cast< VE_Xplorer::cfdStreamers* >( input ) )
+    if( dynamic_cast< ves::xplorer::cfdStreamers* >( input ) )
     {
         isStreamLine = true;
     }

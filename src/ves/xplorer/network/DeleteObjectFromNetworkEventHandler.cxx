@@ -50,7 +50,7 @@
 #include <iostream>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
@@ -88,7 +88,7 @@ DeleteObjectFromNetworkEventHandler& DeleteObjectFromNetworkEventHandler::operat
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
    ;
 }

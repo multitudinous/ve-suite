@@ -36,7 +36,7 @@
 /*!\file cfdQuatCamHandler.h
 cfdQuatCamHandler API
 */
-/*!\class VE_Xplorer::cfdQuatCamHandler
+/*!\class ves::xplorer::cfdQuatCamHandler
 * 
 */
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -64,11 +64,14 @@ namespace scenegraph
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdQuatCam;
    class cfdCommandArray;
    class cfdReadParam;
+}
 }
 
 namespace ves
@@ -93,7 +96,9 @@ namespace xml
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdQuatCamHandler : public cfdGlobalBase
 {
@@ -206,5 +211,6 @@ private:
    virtual ~cfdQuatCamHandler( void );// Never gets called, don't implement
    vprSingletonHeader( cfdQuatCamHandler );
 };
+}
 }
 #endif

@@ -69,9 +69,9 @@ using namespace ves::xplorer::volume;
 #include <iostream>
 #include <map>
 
-//vprSingletonImp( VE_Xplorer::VjObs_i );
+//vprSingletonImp( ves::xplorer::VjObs_i );
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 //using namespace ves::xplorer::scenegraph;
 //using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;

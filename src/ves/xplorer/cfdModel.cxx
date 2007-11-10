@@ -84,7 +84,7 @@ using namespace ves::xplorer::volume;
 #include <boost/bind.hpp>
 
 #include <ves/xplorer/cfdModel.h>
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
@@ -99,7 +99,7 @@ cfdModel::cfdModel( ves::xplorer::scenegraph::DCS* worldDCS )
    // Will fix this later so that each model has a dcs
    //mModelDCS = new ves::xplorer::scenegraph::DCS();
    _worldDCS = worldDCS;
-   m_cadHandler = new VE_Xplorer::ModelCADHandler( _worldDCS.get() );
+   m_cadHandler = new ves::xplorer::ModelCADHandler( _worldDCS.get() );
    //mirrorNode = 0;
    //mirrorGroupNode = 0;
 
@@ -193,7 +193,7 @@ cfdModel::~cfdModel()
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::ModelCADHandler* cfdModel::GetModelCADHandler()
+ves::xplorer::ModelCADHandler* cfdModel::GetModelCADHandler()
 {
     return m_cadHandler;
 }

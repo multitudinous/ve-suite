@@ -50,7 +50,7 @@
 #include <iostream>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -86,17 +86,17 @@ ChangeCursorEventHandler& ChangeCursorEventHandler::operator=(const ChangeCursor
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeCursorEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void ChangeCursorEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
    try
    {
       if ( model )
       {
-         _activeModel = dynamic_cast< VE_Xplorer::cfdModel* >( model );
+         _activeModel = dynamic_cast< ves::xplorer::cfdModel* >( model );
       }
       else
       {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

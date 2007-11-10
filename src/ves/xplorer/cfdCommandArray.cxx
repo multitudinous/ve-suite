@@ -34,7 +34,7 @@
 #include <ves/xplorer/cfdCommandArray.h>
 #include <iostream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdCommandArray::cfdCommandArray( const cfdCommandArray& input )
 {

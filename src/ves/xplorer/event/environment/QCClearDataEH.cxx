@@ -39,7 +39,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ QuatCamClearDataEventHandler::operator=(const QuatCamClearDataEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void QuatCamClearDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+void QuatCamClearDataEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////   
@@ -79,7 +79,7 @@ void QuatCamClearDataEventHandler::Execute(XMLObject* veXMLObject)
       DataValuePairWeakPtr velFile = command->GetDataValuePair("Clear Quat Data");      
       std::string clearCmdDummy;
       velFile->GetData(clearCmdDummy);
-      VE_Xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();
+      ves::xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();
    }
    catch(...)
    {

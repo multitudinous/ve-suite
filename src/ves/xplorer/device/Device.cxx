@@ -52,7 +52,7 @@
 
 #include <osgUtil/IntersectVisitor>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ void Device::SetVECommand( Command* command )
     positionStartPosition->SetData( "POSITION_START_POSITION", positionsData );
     viewPointGUIData->AddDataValuePair( positionStartPosition );
 
-    VE_Xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
+    ves::xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
     delete viewPointGUIData;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ void Device::UpdateCommand()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Device::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray )
+bool Device::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray )
 {
     return false;
 }

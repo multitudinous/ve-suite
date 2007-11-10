@@ -40,7 +40,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ StoredSceneEventHandler::operator=(const StoredSceneEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void StoredSceneEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+void StoredSceneEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
 {
 }
 //////////////////////////////////////////////////////////////////////////   
@@ -81,16 +81,16 @@ void StoredSceneEventHandler::Execute(XMLObject* veXMLObject)
       if(command->GetDataValuePair("LOAD_PFB_FILE"))
       {
          command->GetDataValuePair("LOAD_PFB_FILE")->GetData(whichChild);
-	      VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
+	      ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
          
       }
       else if(command->GetDataValuePair("CLEAR_PFB_FILE"))
       {
-	      VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
+	      ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
       }
       else if(command->GetDataValuePair("RECORD_SCENE"))
       {
-	      VE_Xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->RecordScene();
+	      ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->RecordScene();
       }
    }
    catch(...)

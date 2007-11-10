@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/cfdThread.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdThread::cfdThread( void )
 {

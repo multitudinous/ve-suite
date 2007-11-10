@@ -35,7 +35,7 @@
 /*!\file cfdVEPluginLoader.h
 cfdVEPluginLoader API
 */
-/*!\class VE_Xplorer::cfdVEPluginLoader
+/*!\class ves::xplorer::cfdVEPluginLoader
 * 
 */
 

@@ -54,7 +54,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()

@@ -35,7 +35,7 @@
 /*!\file DeviceHandler.h
 DeviceHandler API
 */
-/*!\class VE_Xplorer::DeviceHandler
+/*!\class ves::xplorer::DeviceHandler
 * 
 */
 // --- VE-Suite Stuff --- //
@@ -52,11 +52,14 @@ DeviceHandler API
 #include <string>
 #include <map>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class Device;
     class Wand;
     class KeyboardMouse;
+}
 }
 
 namespace ves
@@ -70,7 +73,9 @@ namespace event
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS DeviceHandler
 {
@@ -112,17 +117,17 @@ public:
     ///Get a device
     ///\param device The device
     ///\return Get the device being requested
-    VE_Xplorer::Device* GetDevice( std::string device );
+    ves::xplorer::Device* GetDevice( std::string device );
     
     ///Get active device
     ///\return Get the active device
-    VE_Xplorer::Device* GetActiveDevice();
+    ves::xplorer::Device* GetActiveDevice();
 
 private:
-    std::map< std::string, VE_Xplorer::Device* > devices; ///<
+    std::map< std::string, ves::xplorer::Device* > devices; ///<
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
 
-    VE_Xplorer::Device* active_device; ///<The active device
+    ves::xplorer::Device* active_device; ///<The active device
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_activeDCS;///<The active coordinate system
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > selectedDCS;///<The selected coordinate system
     std::string device_mode; ///<Tells whether navigation or selection is active
@@ -130,6 +135,7 @@ private:
     double m_threshold;///<
     double m_jump;///<
 };
+}
 }
 
 #endif //DEVICE_HANDLER_H

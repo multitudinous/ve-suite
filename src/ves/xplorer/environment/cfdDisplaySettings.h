@@ -44,13 +44,15 @@ namespace jccl
 /*!\file cfdDisplaySettings.h
   VE_XplorerHandlers Interface
   */
-/*!\class VE_Xplorer::cfdDisplaySettings
+/*!\class ves::xplorer::cfdDisplaySettings
  * This class is used to adjust juggler display properties during runtime
  */
-/*!\namespace VE_Xplorer
+/*!\namespace ves { namespace xplorer
  * Contains VE_XplorerHandler objects.
  */
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdDisplaySettings : public cfdGlobalBase
 {
@@ -65,13 +67,13 @@ public:
    //cfdDisplaySettings& operator= ( const cfdDisplaySettings& ) { ; }
 
    ///command array virtual function overriden from globalbase.
-   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray );
+   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray );
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray.
    virtual void UpdateCommand() { ; }
 
    ///Obtains the screen resolution.
-	std::pair< int, int > GetScreenResolution( void );
+   std::pair< int, int > GetScreenResolution( void );
    ///Sets screen corner values.
    std::map< std::string, double > GetScreenCornerValues( void );
    
@@ -85,8 +87,8 @@ private:
 
     jccl::Configuration* configuration;///<A vector that contains current configurations.
 
-	int xSize;///<Screen size in pixels for x direction.
-	int ySize;///<Screen size in pixels for y direction.
+   int xSize;///<Screen size in pixels for x direction.
+   int ySize;///<Screen size in pixels for y direction.
 
     double newXmin;///<Sets new x min value for screen corner.
     double newXmax;///<Sets new x max value for screen corner.
@@ -94,5 +96,6 @@ private:
     double newYmax;///<Sets new y max value for screen corner.
     double newZval;///<Sets new z value for screen.
 };
+}
 }
 #endif

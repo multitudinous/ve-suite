@@ -108,8 +108,8 @@ using namespace ves::xplorer::volume;
 #include <direct.h>
 #endif 
 
-vprSingletonImpLifetime( VE_Xplorer::cfdModelHandler, 11 );
-using namespace VE_Xplorer;
+vprSingletonImpLifetime( ves::xplorer::cfdModelHandler, 11 );
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 

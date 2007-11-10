@@ -68,7 +68,7 @@ DeviceEventHandler::~DeviceEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
    ;
 }
@@ -80,7 +80,7 @@ void DeviceEventHandler::Execute( XMLObject* veXMLObject )
    std::string device;
    command->GetDataValuePair( "Device" )->GetData( device );
 
-   VE_Xplorer::DeviceHandler::instance()->SetActiveDevice( device );
+   ves::xplorer::DeviceHandler::instance()->SetActiveDevice( device );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler& DeviceEventHandler::operator=( const DeviceEventHandler& rhs )

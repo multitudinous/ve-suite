@@ -35,7 +35,7 @@
 /*!\file cfdVector.h
 cfdVector API
 */
-/*!\class VE_Xplorer::cfdVector
+/*!\class ves::xplorer::cfdVector
 * A class to takes input data set(s) and generates a 
 * cutting planes of vector profile based on the position 
 * and direction selected. Update member function will update
@@ -54,34 +54,37 @@ class vtkCutter;
 class vtkGlyph3D;
 class vtkMaskPoints;
 
-namespace VE_Xplorer
+namespace ves
 {
-   class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase
-   {
-      public:
-         // Initialize the VTK objects and pipeline.
-		  ///Constructor
-         cfdVector( );
-		 ///Destructor
-         virtual ~cfdVector( );
-  
-         /* Update the position, x, and normal direction to cut.
-         Output a updated pfGeoSet.  */
-         virtual void Update( void );
+namespace xplorer
+{
+class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase
+{
+public:
+   // Initialize the VTK objects and pipeline.
+  ///Constructor
+   cfdVector( );
+ ///Destructor
+   virtual ~cfdVector( );
 
-      private:
+   /* Update the position, x, and normal direction to cut.
+   Output a updated pfGeoSet.  */
+   virtual void Update( void );
 
-      #ifdef USE_OMP
-         vtkPlane *plane[MAX_VECTOR];
-         vtkCutter *cutter[MAX_VECTOR];
-         vtkGlyph3D *glyph[MAX_VECTOR];
-         vtkMaskPoints   *ptmask[MAX_VECTOR];
-         vtkAppendFilter *append;
-         float nData;
-      #else
-         vtkPlane           *plane;
-         vtkCutter          *cutter;
-      #endif
-   };
+private:
+
+#ifdef USE_OMP
+   vtkPlane *plane[MAX_VECTOR];
+   vtkCutter *cutter[MAX_VECTOR];
+   vtkGlyph3D *glyph[MAX_VECTOR];
+   vtkMaskPoints   *ptmask[MAX_VECTOR];
+   vtkAppendFilter *append;
+   float nData;
+#else
+   vtkPlane           *plane;
+   vtkCutter          *cutter;
+#endif
+};
+}
 }
 #endif

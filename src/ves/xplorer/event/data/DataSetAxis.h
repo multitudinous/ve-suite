@@ -35,7 +35,7 @@
 /*!\file DataSetAxis.h
 DataSetAxis API
 */
-/*!\class VE_Xplorer::DataSetAxis
+/*!\class ves::xplorer::DataSetAxis
 *   Renders an axis for a given dataset
 */
 #include <ves/xplorer/cfdGlobalBase.h>
@@ -58,14 +58,19 @@ namespace scenegraph
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
    class cfdDataSet;
    class cfdReadParam;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS DataSetAxis : public cfdGlobalBase
 {
@@ -102,5 +107,6 @@ private:
    std::string zAxisLabel; ///<Z axis label
    osg::ref_ptr< ves::xplorer::scenegraph::Group > axisGroup; ///<Do not know what this is
 };
+}
 }
 #endif

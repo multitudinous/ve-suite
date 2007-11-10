@@ -56,14 +56,19 @@ namespace xml
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdGlobalBase;
    class cfdModel;
    class ModelCADHandler;
 }
+}
+
 #include <ves/VEConfig.h>
 #include <string>
+
 namespace ves
 {
 namespace xplorer
@@ -86,7 +91,7 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
 
    ///Set the node descriptors from the xml to the SceneNode
    ///\param nodeID The CADNode to update
@@ -122,8 +127,8 @@ protected:
    ///\param node CADNode to extract transform from.
    void _setTransformOnNode(ves::open::xml::cad::CADNode* node);
 
-   VE_Xplorer::cfdModel* m_activeModel;///<The active cfdModel;
-   VE_Xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
+   ves::xplorer::cfdModel* m_activeModel;///<The active cfdModel;
+   ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
    ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
 };
 

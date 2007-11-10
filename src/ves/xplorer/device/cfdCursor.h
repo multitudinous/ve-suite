@@ -75,15 +75,20 @@ class vtkPolyDataSource;
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
    class cfdDataSet;
 }
+}
 
 #include <ves/xplorer/cfdGlobalBase.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase
 {
@@ -92,7 +97,7 @@ public:
    virtual ~cfdCursor();
 
    // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray*  );
+   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray*  );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
@@ -245,10 +250,11 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS;
 
    osg::ref_ptr< ves::xplorer::scenegraph::Group > _rootNode;
-   VE_Xplorer::cfdDataSet* _activeDataSet;
+   ves::xplorer::cfdDataSet* _activeDataSet;
    int cursorId;
    float sphereRadius;
    float last_sphereRadius;
 };
+}
 }
 #endif

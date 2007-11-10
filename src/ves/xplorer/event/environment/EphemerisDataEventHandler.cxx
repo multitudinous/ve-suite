@@ -90,7 +90,7 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
             std::string eastWest;
             longitudeDir->GetData(eastWest);
             osgEphemeris::EphemerisModel* ephemerisModel = 
-                  VE_Xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
+                  ves::xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
             ephemerisModel->setLatitudeLongitude((eastWest == "West")?-1*latitudeData:latitudeData,
                                                  (northSouth == "South")?-1*longitudeData:longitudeData);
 			std::vector<long> dateTimeInfo;
@@ -112,19 +112,19 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
    
 }
 //////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase*
+void EphemerisDataEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase*
                                                      baseObject)
 {
     try
     {
         if(baseObject)
 	{
-            m_activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(baseObject);
+            m_activeModel = dynamic_cast<ves::xplorer::cfdModel*>(baseObject);
 	}
 	else
 	{
             m_activeModel =
-		    VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+		    ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
 	}
     }
     catch(...)

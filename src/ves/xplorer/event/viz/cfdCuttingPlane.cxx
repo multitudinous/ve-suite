@@ -35,7 +35,7 @@
 #include <vtkPlane.h>
 #include <ves/xplorer/cfdDebug.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
                                   const int numSteps )

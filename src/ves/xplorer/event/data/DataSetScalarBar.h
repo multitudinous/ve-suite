@@ -35,7 +35,7 @@
 /*!\file DataSetScalarBar.h
 DataSetScalarBar API
 */
-/*!\class VE_Xplorer::DataSetScalarBar
+/*!\class ves::xplorer::DataSetScalarBar
 *   Renders an axis for a given dataset
 */
 #include <string>
@@ -66,14 +66,19 @@ namespace scenegraph
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
    class cfdDataSet;
    class cfdReadParam;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS DataSetScalarBar : public cfdGlobalBase
 {
@@ -91,7 +96,7 @@ public:
    /// cleanup and add the scalar bar to the dcs
    void AddScalarBarToGroup( void );
    /// Get the scalar bar that was created
-	ves::xplorer::scenegraph::DCS* GetScalarBar( void );
+   ves::xplorer::scenegraph::DCS* GetScalarBar( void );
    ///Create the osg scalar bar
    osg::ref_ptr< ScalarBar > CreateScalarBar( void );
    // Create a custom scalar printer
@@ -141,5 +146,6 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > scalarBarDCS; ///<Scalar bar coordinate system
    double bbox[ 6 ]; ///<Bounding box
 };
+}
 }
 #endif //DATASET_SCALARBAR_H

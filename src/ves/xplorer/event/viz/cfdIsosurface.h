@@ -35,7 +35,7 @@
 /*!\file cfdIsosurface.h
 cfdIsosurface API
 */
-/*!\class VE_Xplorer::cfdIsosurface
+/*!\class ves::xplorer::cfdIsosurface
 *   A class that takes input data set(s) and generates an isosurface
 *   based on the value selected.  Update member function will
 *   update the value.
@@ -58,7 +58,9 @@ class vtkMultiGroupPolyDataMapper;
 
 #include <string>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
 {
@@ -103,5 +105,6 @@ private:
    vtkMultiGroupDataGeometryFilter* filter;///<Filter for vtk.
    vtkMultiGroupPolyDataMapper* mapper;///<Mapper for vtk.
 };
+}
 }
 #endif

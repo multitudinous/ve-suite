@@ -57,7 +57,7 @@
 #endif
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ NavigationDataEventHandler::~NavigationDataEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationDataEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler)
+void NavigationDataEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler)
 {
    _baseObject = modelHandler;
 }

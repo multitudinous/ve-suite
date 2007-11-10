@@ -42,7 +42,7 @@
 #include <sstream>
 #include <iomanip>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 // Fix need to add the new style read param to this class

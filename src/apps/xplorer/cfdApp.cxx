@@ -98,7 +98,7 @@ using namespace ves::xplorer::volume;
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
@@ -434,7 +434,7 @@ void cfdApp::latePreFrame( void )
    {
       float framerate;
       framerate = _frameNumber - lastFrame;
-      VE_Xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
+      ves::xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
 
       lastTime = current_time;
       lastFrame = _frameNumber;

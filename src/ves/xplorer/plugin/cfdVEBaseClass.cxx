@@ -61,7 +61,7 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::open::xml;
@@ -214,7 +214,7 @@ void cfdVEBaseClass::SetCursor( cfdCursor* input )
 
 // Set the pointer to the navigate class so that dynamic
 // objects can do custom features with the wand buttons
-void cfdVEBaseClass::SetInteractionDevice( VE_Xplorer::Device* device )
+void cfdVEBaseClass::SetInteractionDevice( ves::xplorer::Device* device )
 {
    if ( device != NULL )
    {

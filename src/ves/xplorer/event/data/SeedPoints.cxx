@@ -42,7 +42,7 @@
 #include <osg/Node>
 #include <osg/Uniform>
 #include <iostream>
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////
 SeedPoints::SeedPoints(unsigned int nX , unsigned int nY,
                               unsigned int nZ, 

@@ -44,7 +44,7 @@
 
 #include <iostream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {

@@ -39,7 +39,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ QuatCamLoadFileEventHandler::operator=(const QuatCamLoadFileEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void QuatCamLoadFileEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+void QuatCamLoadFileEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////   
@@ -78,7 +78,7 @@ void QuatCamLoadFileEventHandler::Execute(XMLObject* veXMLObject)
       Command* command = dynamic_cast< Command* >( veXMLObject );
       DataValuePairWeakPtr velFile = command->GetDataValuePair("View Locations file");      
       velFile->GetData(fileName);
-      VE_Xplorer::cfdQuatCamHandler::instance()->LoadFromFile(fileName);
+      ves::xplorer::cfdQuatCamHandler::instance()->LoadFromFile(fileName);
    }
    catch(...)
    {

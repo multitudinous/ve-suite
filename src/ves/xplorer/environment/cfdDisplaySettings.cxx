@@ -38,7 +38,7 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <string>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 //////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ cfdDisplaySettings::cfdDisplaySettings( void )
    newZval = 0;
 }
 //////////////////////////////////////////////////////////////////////////
-bool cfdDisplaySettings::CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray )
+bool cfdDisplaySettings::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray )
 {
    std::string commandType;
    if ( veCommand )

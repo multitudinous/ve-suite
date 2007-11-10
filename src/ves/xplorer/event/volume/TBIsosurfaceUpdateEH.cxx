@@ -42,7 +42,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////

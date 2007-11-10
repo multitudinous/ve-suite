@@ -101,9 +101,9 @@ void DataTransformEventHandler::Execute(XMLObject* xmlObject)
                 transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
                 transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
                 transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-		        VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-                VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-                VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
+		        ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+                ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+                ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
             }
         }
     }
@@ -113,17 +113,17 @@ void DataTransformEventHandler::Execute(XMLObject* xmlObject)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void DataTransformEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
    try
    {
       if ( model )
       {
-         _activeModel = dynamic_cast< VE_Xplorer::cfdModel* >( model );
+         _activeModel = dynamic_cast< ves::xplorer::cfdModel* >( model );
       }
       else
       {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

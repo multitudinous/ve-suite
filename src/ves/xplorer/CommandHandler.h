@@ -34,7 +34,7 @@
 #define COMMAND_HANDLER_H
 /*!\file CommandHandler.h
 */
-/*!\class VE_Xplorer::CommandHandler
+/*!\class ves::xplorer::CommandHandler
 * 
 */
 #include <ves/VEConfig.h>
@@ -45,9 +45,11 @@
 
 #include <vpr/Util/Singleton.h>
 
-namespace VE_Xplorer
+namespace ves
 {
-class VE_XPLORER_EXPORTS CommandHandler 
+namespace xplorer
+{
+class VE_XPLORER_EXPORTS CommandHandler
 {
 private:
    CommandHandler( void );
@@ -84,5 +86,6 @@ private:
 
    Body_VEXplorer_i* m_xplorer;
 };
+}
 }
 #endif //COMMAND_HANDLER_H

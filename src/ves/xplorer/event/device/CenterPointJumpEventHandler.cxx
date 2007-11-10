@@ -74,7 +74,7 @@ CenterPointJumpEventHandler::~CenterPointJumpEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CenterPointJumpEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
    ;
 }
@@ -86,7 +86,7 @@ void CenterPointJumpEventHandler::Execute( XMLObject* veXMLObject )
    std::string mode;
    command->GetDataValuePair( "Mode" )->GetData( mode );
 
-   VE_Xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
+   ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CenterPointJumpEventHandler& CenterPointJumpEventHandler::operator=( const CenterPointJumpEventHandler& rhs )

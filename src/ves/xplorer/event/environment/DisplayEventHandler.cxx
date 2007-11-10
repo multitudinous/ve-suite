@@ -72,7 +72,7 @@ DisplayEventHandler::~DisplayEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler)
+void DisplayEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler)
 {
    ;
 }
@@ -88,7 +88,7 @@ void DisplayEventHandler::Execute(XMLObject* veXMLObject)
       DVP=command->GetDataValuePair("FrameRateID");
       DVP->GetData(value);
    
-      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
+      ves::xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
    }
 
    else if(command->GetDataValuePair("CoordSysID"))
@@ -96,7 +96,7 @@ void DisplayEventHandler::Execute(XMLObject* veXMLObject)
       DVP=command->GetDataValuePair("CoordSysID");
       DVP->GetData(value);
    
-      VE_Xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
+      ves::xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

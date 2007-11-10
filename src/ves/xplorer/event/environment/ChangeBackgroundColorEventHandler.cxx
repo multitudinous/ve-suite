@@ -72,7 +72,7 @@ ChangeBackgroundColorEventHandler::~ChangeBackgroundColorEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,7 +87,7 @@ void ChangeBackgroundColorEventHandler::Execute(XMLObject* veXMLObject)
    if(!color.empty())
    {
       ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor(color);
-      VE_Xplorer::cfdEnvironmentHandler::instance()->
+      ves::xplorer::cfdEnvironmentHandler::instance()->
        GetDisplayInformation()->SetTextColor( color );
    }
 }

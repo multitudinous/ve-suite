@@ -43,7 +43,9 @@
 #include <map>
 #include <utility>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdPolyData;
    class cfdIsosurface;
@@ -71,12 +73,17 @@ namespace VE_Xplorer
    class cfdObjects;
    class cfdGlobalBase;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdModel;
    class cfdGlobalBase;
 }
+}
+
 #include <ves/xplorer/event/EventHandler.h>
 namespace ves
 {
@@ -103,7 +110,7 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
@@ -119,43 +126,43 @@ private:
    ///Set the active cfd object based on the command
    void SetActiveCfdObject( ves::open::xml::XMLObject* xmlObject );
 
-   //VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel
-   VE_Xplorer::cfdObjects* activeObject;   ///<The active cfdObject
-   VE_Xplorer::cfdPolyData*         surface;///<A cfdObject
-   VE_Xplorer::cfdIsosurface*       isosurface;///<A cfdObject
-   VE_Xplorer::cfdContour*          contour;///<A cfdObject
-   VE_Xplorer::cfdPresetContour*    x_contour;///<A cfdObject
-   VE_Xplorer::cfdPresetContour*    y_contour;///<A cfdObject
-   VE_Xplorer::cfdPresetContour*    z_contour;///<A cfdObject
-   VE_Xplorer::cfdContours*         x_contours;///<A cfdObject
-   VE_Xplorer::cfdContours*         y_contours;///<A cfdObject
-   VE_Xplorer::cfdContours*         z_contours;///<A cfdObject
-   VE_Xplorer::cfdMomentum*         momentum;///<A cfdObject
-   VE_Xplorer::cfdPresetMomentum*   x_momentum;///<A cfdObject
-   VE_Xplorer::cfdPresetMomentum*   y_momentum;///<A cfdObject
-   VE_Xplorer::cfdPresetMomentum*   z_momentum;///<A cfdObject
-   VE_Xplorer::cfdMomentums*        x_momentums;///<A cfdObject
-   VE_Xplorer::cfdMomentums*        y_momentums;///<A cfdObject
-   VE_Xplorer::cfdMomentums*        z_momentums;///<A cfdObject
-   VE_Xplorer::cfdVector*           vector;///<A cfdObject
-   VE_Xplorer::cfdPresetVector*     x_vector;///<A cfdObject
-   VE_Xplorer::cfdPresetVector*     y_vector;///<A cfdObject
-   VE_Xplorer::cfdPresetVector*     z_vector;///<A cfdObject
-   VE_Xplorer::cfdVectors*          x_vectors;///<A cfdObject
-   VE_Xplorer::cfdVectors*          y_vectors;///<A cfdObject
-   VE_Xplorer::cfdVectors*          z_vectors;///<A cfdObject
-   VE_Xplorer::cfdStreamers*        streamlines;///<A cfdObject
-   VE_Xplorer::cfdPolyData*         particles;///<A cfdObject
-   VE_Xplorer::cfdImage*            image;///<A cfdObject
-   VE_Xplorer::cfdAnimatedImage*    animImg;///<A cfdObject
-   VE_Xplorer::cfdAnimatedStreamlineCone* animStreamer;///<A cfdObject
-   //VE_Xplorer::cfdTextOutput*       textOutput;///<A cfdObject
+   //ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   ves::xplorer::cfdObjects* activeObject;   ///<The active cfdObject
+   ves::xplorer::cfdPolyData*         surface;///<A cfdObject
+   ves::xplorer::cfdIsosurface*       isosurface;///<A cfdObject
+   ves::xplorer::cfdContour*          contour;///<A cfdObject
+   ves::xplorer::cfdPresetContour*    x_contour;///<A cfdObject
+   ves::xplorer::cfdPresetContour*    y_contour;///<A cfdObject
+   ves::xplorer::cfdPresetContour*    z_contour;///<A cfdObject
+   ves::xplorer::cfdContours*         x_contours;///<A cfdObject
+   ves::xplorer::cfdContours*         y_contours;///<A cfdObject
+   ves::xplorer::cfdContours*         z_contours;///<A cfdObject
+   ves::xplorer::cfdMomentum*         momentum;///<A cfdObject
+   ves::xplorer::cfdPresetMomentum*   x_momentum;///<A cfdObject
+   ves::xplorer::cfdPresetMomentum*   y_momentum;///<A cfdObject
+   ves::xplorer::cfdPresetMomentum*   z_momentum;///<A cfdObject
+   ves::xplorer::cfdMomentums*        x_momentums;///<A cfdObject
+   ves::xplorer::cfdMomentums*        y_momentums;///<A cfdObject
+   ves::xplorer::cfdMomentums*        z_momentums;///<A cfdObject
+   ves::xplorer::cfdVector*           vector;///<A cfdObject
+   ves::xplorer::cfdPresetVector*     x_vector;///<A cfdObject
+   ves::xplorer::cfdPresetVector*     y_vector;///<A cfdObject
+   ves::xplorer::cfdPresetVector*     z_vector;///<A cfdObject
+   ves::xplorer::cfdVectors*          x_vectors;///<A cfdObject
+   ves::xplorer::cfdVectors*          y_vectors;///<A cfdObject
+   ves::xplorer::cfdVectors*          z_vectors;///<A cfdObject
+   ves::xplorer::cfdStreamers*        streamlines;///<A cfdObject
+   ves::xplorer::cfdPolyData*         particles;///<A cfdObject
+   ves::xplorer::cfdImage*            image;///<A cfdObject
+   ves::xplorer::cfdAnimatedImage*    animImg;///<A cfdObject
+   ves::xplorer::cfdAnimatedStreamlineCone* animStreamer;///<A cfdObject
+   //ves::xplorer::cfdTextOutput*       textOutput;///<A cfdObject
 
    // Vectors that will eventually be stored as maps
    // these hold all the objectsa for easy access and management
-   //std::vector< VE_Xplorer::cfdObjects* > dataList;
-   //std::vector< VE_Xplorer::cfdGlobalBase* > commandList;
-   std::map< std::pair< std::string, std::pair< std::string, std::string > >, VE_Xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
+   //std::vector< ves::xplorer::cfdObjects* > dataList;
+   //std::vector< ves::xplorer::cfdGlobalBase* > commandList;
+   std::map< std::pair< std::string, std::pair< std::string, std::string > >, ves::xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
 
 };
 

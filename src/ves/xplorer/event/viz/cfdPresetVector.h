@@ -35,7 +35,7 @@
 /*!\file cfdPresetVector.h
 cfdPresetVector API
 */
-/*!\class VE_Xplorer::cfdPresetVector
+/*!\class ves::xplorer::cfdPresetVector
 * A class that takes input data set(s) and generates a 
 * cutting plane of vector profile based on the position 
 * and direction selected. Update member function will update
@@ -44,13 +44,18 @@ cfdPresetVector API
 
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCuttingPlane;
 }
+}
 class vtkCutter;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
    {
@@ -71,5 +76,6 @@ namespace VE_Xplorer
 
          cfdCuttingPlane * cuttingPlane;///<cutting plane
    };
+}
 }
 #endif

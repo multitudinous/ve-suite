@@ -35,20 +35,25 @@
 /*!\file cfdContours.h
 cfdContours API
 */
-/*!\class VE_Xplorer::cfdContours
+/*!\class ves::xplorer::cfdContours
 * 
 */
 #include <ves/xplorer/event/viz/cfdContourBase.h>
 
 #include <string>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdPlanes;
 }
+}
 
 // A class that generates contour plots on multiple planes of data.
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
 {
@@ -63,5 +68,6 @@ public:
 private:
     int xyz;///<The value of the contour to display.
 };
+}
 }
 #endif

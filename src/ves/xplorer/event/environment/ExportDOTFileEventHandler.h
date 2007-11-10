@@ -49,9 +49,13 @@ namespace ves
 }
 }
 }
-namespace VE_Xplorer
+
+namespace ves
+{
+namespace xplorer
 {
    class cfdGlobalBase;
+}
 }
 
 #include <ves/xplorer/event/EventHandler.h>
@@ -78,7 +82,7 @@ public:
    ///Equal operator
    ExportDOTFileEventHandler& operator=(const ExportDOTFileEventHandler& rhs);
    ///\param baseObject The cfdGlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject=0); 
+   virtual void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject=0); 
    
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.

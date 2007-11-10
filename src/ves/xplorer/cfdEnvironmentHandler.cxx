@@ -76,9 +76,9 @@
 #include <fstream>
 #include <cstdlib>
 
-vprSingletonImpLifetime( VE_Xplorer::cfdEnvironmentHandler, 11 );
+vprSingletonImpLifetime( ves::xplorer::cfdEnvironmentHandler, 11 );
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
@@ -119,7 +119,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    desktopHeight = 0;
 
    ///create seed points drawable
-   _seedPoints = new VE_Xplorer::SeedPoints(4,4,1);
+   _seedPoints = new ves::xplorer::SeedPoints(4,4,1);
    _seedPoints->Toggle(false);
    
    ///add a transform for manipulation of the seed points 
@@ -170,9 +170,9 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
       delete this->cursor;
    }
 
-   //if(VE_Xplorer::cfdQuatCamHandler::instance())
+   //if(ves::xplorer::cfdQuatCamHandler::instance())
    {
-      //VE_Xplorer::cfdQuatCamHandler::instance()->CleanUp();
+      //ves::xplorer::cfdQuatCamHandler::instance()->CleanUp();
    }
 
    /*if ( this->_soundHandler )
@@ -204,7 +204,7 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
    }
 
    //Delete all the devices in DeviceHandler
-   //VE_Xplorer::DeviceHandler::instance()->CleanUp();
+   //ves::xplorer::DeviceHandler::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
@@ -272,7 +272,7 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initiate quatcam
    //
    std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
-   VE_Xplorer::cfdQuatCamHandler::instance()->SetDCS(ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS());
+   ves::xplorer::cfdQuatCamHandler::instance()->SetDCS(ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS());
 
    //
    // Initiate quatcam
@@ -311,15 +311,15 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initialize DisplayInformation
    //
    std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
-   this->display_information = new VE_Xplorer::DisplayInformation;
+   this->display_information = new ves::xplorer::DisplayInformation;
    std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
 	this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
 
-   static_cast< VE_Xplorer::KeyboardMouse* >( 
-         VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+   static_cast< ves::xplorer::KeyboardMouse* >( 
+         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
          SetWindowValues( screenDims.first, screenDims.second );
-   static_cast< VE_Xplorer::KeyboardMouse* >( 
-         VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+   static_cast< ves::xplorer::KeyboardMouse* >( 
+         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
          SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -328,10 +328,10 @@ void cfdEnvironmentHandler::InitScene( void )
 void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
    //Process all events for active device
-   VE_Xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+   ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
 
-   VE_Xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
-   VE_Xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+   ves::xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
+   ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
 
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -401,13 +401,13 @@ float cfdEnvironmentHandler::GetFrameRate()
 void cfdEnvironmentHandler::PostFrameUpdate()
 {
 	//Update the values in trackball
-	static_cast< VE_Xplorer::KeyboardMouse* >( 
-        VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+	static_cast< ves::xplorer::KeyboardMouse* >( 
+        ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
         SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, 
             _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
+ves::xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
 {
 	if(_seedPoints.valid())
 	{

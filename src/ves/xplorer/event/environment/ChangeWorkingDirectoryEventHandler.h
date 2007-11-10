@@ -40,6 +40,7 @@
  */
 
 #include <ves/xplorer/event/EventHandler.h>
+
 namespace ves
 {
     namespace open
@@ -50,10 +51,15 @@ namespace ves
 }
 }
 }
-namespace VE_Xplorer
+
+namespace ves
+{
+namespace xplorer
 {
    class cfdGlobalBase;
 }
+}
+
 namespace ves
 {
 namespace xplorer
@@ -74,7 +80,7 @@ public:
 
    ///Set the cfdModel.
    ///\param model The cfdModelHandler to execute the Command on.
-   void SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler );
+   void SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler );
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.

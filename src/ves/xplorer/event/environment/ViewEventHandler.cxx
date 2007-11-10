@@ -77,7 +77,7 @@ ViewEventHandler::~ViewEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
     ;
 }
@@ -91,20 +91,20 @@ void ViewEventHandler::Execute( XMLObject* veXMLObject )
 
     if( view == "Frame All" )
     {
-        static_cast< VE_Xplorer::KeyboardMouse* >
-            ( VE_Xplorer::DeviceHandler::instance()->
+        static_cast< ves::xplorer::KeyboardMouse* >
+            ( ves::xplorer::DeviceHandler::instance()->
               GetDevice( "KeyboardMouse" ) )->FrameAll();
     }
     else if( view == "Frame Selection" )
     {
-        static_cast< VE_Xplorer::KeyboardMouse* >
-            ( VE_Xplorer::DeviceHandler::instance()->
+        static_cast< ves::xplorer::KeyboardMouse* >
+            ( ves::xplorer::DeviceHandler::instance()->
               GetDevice( "KeyboardMouse" ) )->FrameSelection();
     }
     else if( view == "Reset" )
     {
-        static_cast< VE_Xplorer::KeyboardMouse* >
-            ( VE_Xplorer::DeviceHandler::instance()->
+        static_cast< ves::xplorer::KeyboardMouse* >
+            ( ves::xplorer::DeviceHandler::instance()->
               GetDevice( "KeyboardMouse" ) )->ResetTransforms();
     }
 }

@@ -38,25 +38,30 @@
 cfdVectors API
 */
 
-/*!\class VE_Xplorer::cfdVectors
+/*!\class ves::xplorer::cfdVectors
 *
 */
 
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdPlanes;
 }
+}
 
 // A class that generates multiple planes of vector plots.
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
 {
 public:
    // Initialize the multiple vector plots for a particular plane direction
-	///Constructor
+   ///Constructor
    cfdVectors( const int xyz );
 
    ///Destructor
@@ -69,5 +74,6 @@ private:
    int xyz;
    cfdPlanes* planes;
 };
+}
 }
 #endif

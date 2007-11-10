@@ -81,7 +81,7 @@
 #include <gmtl/AxisAngleOps.h>
 
 using namespace gmtl; //added by Gengxun
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 

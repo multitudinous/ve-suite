@@ -44,9 +44,12 @@
 
 #include <ves/open/xml/XMLObjectPtr.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdGlobalBase;
+}
 }
 
 #include <ves/VEConfig.h>
@@ -71,10 +74,10 @@ public:
    virtual void Execute(ves::open::xml::XMLObject* objectToProcess=0) = 0;
 
    ///\param baseObject The cfdGlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject=0) = 0;
+   virtual void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject=0) = 0;
 protected:
    ///<the variable of the global base object to operate on
-   VE_Xplorer::cfdGlobalBase* _baseObject;
+   ves::xplorer::cfdGlobalBase* _baseObject;
 };
 
 }

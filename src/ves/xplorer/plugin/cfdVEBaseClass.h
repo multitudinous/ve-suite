@@ -58,18 +58,21 @@ namespace xplorer
 namespace scenegraph
 {
     class DCS;
-	class Group;
+    class Group;
 }
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdModel;
    class cfdCursor;
    class Device;
    class cfdObjects;
    class cfdSoundHandler;
+}
 }
 
 namespace ves
@@ -133,17 +136,17 @@ public:
 
    void SetID(int id);
 
-   VE_Xplorer::cfdModel* GetCFDModel( void );
+   ves::xplorer::cfdModel* GetCFDModel( void );
 
    void LoadSurfaceFiles( std::string );
 
    bool OnSceneGraph( void ){return _onSceneGraph;}
 
-   void SetCursor( VE_Xplorer::cfdCursor* );
+   void SetCursor( ves::xplorer::cfdCursor* );
 
-   void SetInteractionDevice( VE_Xplorer::Device* device );
+   void SetInteractionDevice( ves::xplorer::Device* device );
 
-   void SetSoundHandler( VE_Xplorer::cfdSoundHandler* );
+   void SetSoundHandler( ves::xplorer::cfdSoundHandler* );
 
    void SetModuleResults( const std::string );
 
@@ -167,7 +170,7 @@ public:
    virtual void ProcessOnSubmitJob( void ){ ; }
    ///Return map that maps command names to this plugin
    std::map< std::string, cfdVEBaseClass* > GetCommandNameMap( void );
-   
+
 private:
    // This needs to be vector of geometry nodes
    //cfdModuleGeometry*  geometryNode;
@@ -192,9 +195,9 @@ protected:
    std::map<std::string, std::vector<double> * >      _double1D;
    std::map<std::string, std::vector<std::string> * > _string1D;
 
-   VE_Xplorer::cfdObjects* dataRepresentation;
+   ves::xplorer::cfdObjects* dataRepresentation;
 
-   VE_Xplorer::cfdModel* _model;
+   ves::xplorer::cfdModel* _model;
 
    std::string _param;
 
@@ -203,10 +206,10 @@ protected:
    int _modID;
    std::string _objectName;
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;
-   VE_Xplorer::cfdCursor* _cursor;
-   VE_Xplorer::Device* m_device;
-   VE_Xplorer::cfdSoundHandler* soundHandler;
-   
+   ves::xplorer::cfdCursor* _cursor;
+   ves::xplorer::Device* m_device;
+   ves::xplorer::cfdSoundHandler* soundHandler;
+
    ves::open::xml::model::ModelStrongPtr xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;

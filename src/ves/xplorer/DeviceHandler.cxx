@@ -54,10 +54,12 @@
 
 #include <osg/BoundingSphere>
 
-vprSingletonImp( VE_Xplorer::DeviceHandler );
+vprSingletonImp( ves::xplorer::DeviceHandler );
 
-using namespace VE_Xplorer;
-
+namespace ves
+{
+namespace xplorer
+{
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
 :
@@ -72,12 +74,12 @@ m_jump( 10.0f )
     //activeDCS->setPosition( osg::Vec3d( 0.0, 2.0, 0.0 ) );
 
     //Initialize Devices
-    devices[ std::string( "Tablet" ) ] = new VE_Xplorer::Tablet();
-    devices[ std::string( "Wand" ) ] = new VE_Xplorer::Wand();
-    devices[ std::string( "KeyboardMouse" ) ] = new VE_Xplorer::KeyboardMouse();
+    devices[ std::string( "Tablet" ) ] = new ves::xplorer::Tablet();
+    devices[ std::string( "Wand" ) ] = new ves::xplorer::Wand();
+    devices[ std::string( "KeyboardMouse" ) ] = new ves::xplorer::KeyboardMouse();
 
     //Set properties in Devices
-    std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+    std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
     for( itr = devices.begin(); itr != devices.end(); itr++ )
     {
         itr->second->SetActiveDCS( m_activeDCS.get() );
@@ -100,7 +102,7 @@ m_jump( 10.0f )
 DeviceHandler::~DeviceHandler()
 {
     //Delete devices in map
-    for( std::map< std::string, VE_Xplorer::Device* >::iterator 
+    for( std::map< std::string, ves::xplorer::Device* >::iterator 
         itr = devices.begin(); itr != devices.end(); ++itr )
     {
         delete itr->second;
@@ -119,7 +121,7 @@ void DeviceHandler::ExecuteCommands()
         if( currentEventHandler != _eventHandlers.end() )
         {
             //Set properties in Devices
-            std::map< std::string, VE_Xplorer::Device* >::const_iterator itr;
+            std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
             for( itr = devices.begin(); itr != devices.end(); itr++ )
             {
                 itr->second->SetActiveDCS( m_activeDCS.get() );
@@ -142,7 +144,7 @@ void DeviceHandler::ExecuteCommands()
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( std::string device )
 {
-    std::map< std::string, VE_Xplorer::Device* >::iterator itr = devices.find( device );
+    std::map< std::string, ves::xplorer::Device* >::iterator itr = devices.find( device );
     if ( itr != devices.end() )
     {
         active_device = devices[ device ];
@@ -233,13 +235,15 @@ void DeviceHandler::ProcessDeviceEvents()
     devices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::Device* DeviceHandler::GetDevice( std::string device )
+ves::xplorer::Device* DeviceHandler::GetDevice( std::string device )
 {
     return devices[ device ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-VE_Xplorer::Device* DeviceHandler::GetActiveDevice()
+ves::xplorer::Device* DeviceHandler::GetActiveDevice()
 {
     return active_device;
 }
 ////////////////////////////////////////////////////////////////////////////////
+}
+}

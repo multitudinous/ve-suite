@@ -39,9 +39,9 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-vprSingletonImp( VE_Xplorer::CommandHandler );
+vprSingletonImp( ves::xplorer::CommandHandler );
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 CommandHandler::CommandHandler():

@@ -55,10 +55,13 @@
 
 #include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdModelHandler;
    class cfdCommandArray;
+}
 }
 
 #include <ves/open/xml/CommandPtr.h>
@@ -124,9 +127,9 @@ public:
    ///Get the command queue
    std::vector <ves::open::xml::Command*> GetCommandQueue();
 
-   VE_Xplorer::cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
+   ves::xplorer::cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
    ves::open::xml::Command* bufferCommand;///< Data to hold command data
-   std::vector< VE_Xplorer::cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
+   std::vector< ves::xplorer::cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
 
    ///Set xplorer data
    ///\param input
@@ -137,7 +140,7 @@ protected:
    ///Should be removed once non texture pipelines are created
    void CreateCommandQueue( void );
 
-   VE_Xplorer::cfdCommandArray* _bufferArray;///< command data
+   ves::xplorer::cfdCommandArray* _bufferArray;///< command data
    std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
    std::vector< std::string > commandStringQueue;///< command queue with raw string data
 

@@ -66,7 +66,7 @@ UnselectObjectsEventHandler::~UnselectObjectsEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void UnselectObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
     ;
 }
@@ -77,7 +77,7 @@ void UnselectObjectsEventHandler::Execute( XMLObject* veXMLObject )
 
     if( command->GetCommandName() == "UNSELECT_OBJECTS" )
     {
-        VE_Xplorer::DeviceHandler::instance()->UnselectObjects();
+        ves::xplorer::DeviceHandler::instance()->UnselectObjects();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

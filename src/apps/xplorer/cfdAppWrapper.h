@@ -36,19 +36,24 @@
 cfdAppWrapper API
 */
 
-/*!\class VE_Xplorer::cfdAppWrapper
+/*!\class ves::xplorer::cfdAppWrapper
 *
 */
 #include <vrj/vrjParam.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdThread;
    class cfdApp;
    class cfdVjObsWrapper;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class cfdAppWrapper
 {
@@ -73,5 +78,6 @@ private:
    int argc;///<command line args
    char** argv;///<command line args
 }; 
+}
 }
 #endif

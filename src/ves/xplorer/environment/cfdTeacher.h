@@ -35,7 +35,7 @@
 /*!\file cfdTeacher.h
 cfdTeacher API
 */
-/*!\class VE_Xplorer::cfdTeacher
+/*!\class ves::xplorer::cfdTeacher
 * 
 */
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -50,10 +50,13 @@ cfdTeacher API
 #elif _PERFORMER
 #endif
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class cfdWriteTraverser;
     class cfdCommandArray;
+}
 }
 
 namespace ves
@@ -69,7 +72,9 @@ namespace scenegraph
 }
 
 //A reader that reads performer binary files
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
 {
@@ -121,5 +126,6 @@ private:
     std::vector<std::string> pfbFileNames;
     std::string directory;
 };
+}
 }
 #endif   // CFD_TEACHER_H

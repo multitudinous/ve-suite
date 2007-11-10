@@ -74,7 +74,7 @@ DeviceModeEventHandler::~DeviceModeEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceModeEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* modelHandler )
+void DeviceModeEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
 {
    ;
 }
@@ -86,7 +86,7 @@ void DeviceModeEventHandler::Execute( XMLObject* veXMLObject )
    std::string mode;
    command->GetDataValuePair( "Mode" )->GetData( mode );
 
-   VE_Xplorer::DeviceHandler::instance()->SetDeviceMode( mode );
+   ves::xplorer::DeviceHandler::instance()->SetDeviceMode( mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler& DeviceModeEventHandler::operator=( const DeviceModeEventHandler& rhs )

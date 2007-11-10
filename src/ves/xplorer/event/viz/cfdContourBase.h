@@ -35,7 +35,7 @@
 /*!\file cfdContourBase.h
 cfdContourBase API
 */
-/*!\class VE_Xplorer::cfdContourBase
+/*!\class ves::xplorer::cfdContourBase
 * 
 */
 #include <ves/xplorer/event/viz/cfdObjects.h>
@@ -53,13 +53,18 @@ class vtkStripper;
 class vtkPolyDataNormals;
 class vtkCutter;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
    class cfdCuttingPlane;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
 {
@@ -111,5 +116,6 @@ protected:
    int xyz;///<Value of surface.
    int numSteps;///<Number of timesteps.
 };
+}
 }
 #endif

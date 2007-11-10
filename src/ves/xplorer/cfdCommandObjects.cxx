@@ -34,7 +34,7 @@
 #include <ves/xplorer/cfdCommandObjects.h>
 #include <iostream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdCommandObjects::cfdCommandObjects () : cfdGlobalBase ()
 { 

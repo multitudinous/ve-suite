@@ -35,7 +35,7 @@
 /*!\file cfdThread.h
 cfdThread API
 */
-/*!\class VE_Xplorer::cfdThread
+/*!\class ves::xplorer::cfdThread
 * 
 */
 
@@ -43,7 +43,9 @@ cfdThread API
 
 #include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdThread
    {
@@ -59,5 +61,6 @@ namespace VE_Xplorer
          vpr::Thread* new_thread;
       
    };
+}
 }
 #endif

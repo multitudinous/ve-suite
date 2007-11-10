@@ -61,13 +61,13 @@
 #include <boost/filesystem/path.hpp>
 
 using namespace gmtl;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 using namespace ves::xplorer::scenegraph;
 
 using namespace ves::open::xml;
 
-vprSingletonImp( VE_Xplorer::cfdQuatCamHandler );
+vprSingletonImp( ves::xplorer::cfdQuatCamHandler );
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 //NOTE: ALL USEFUL COUT'S SHOULD BE MADE VPR:DEBUG STATEMENTS, LEVEL 2
@@ -564,7 +564,7 @@ void cfdQuatCamHandler::_updateViewGUIPointData()
         viewPointGUIData->AddDataValuePair( viewPointNames );
         name.clear( );
     }
-    VE_Xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
+    ves::xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
     delete viewPointGUIData;
 }
 // If a quat is active this will move the cam to the next location

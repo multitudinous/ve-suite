@@ -86,7 +86,7 @@ void CADDeleteNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
       DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
       DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
 
-      //VE_Xplorer::cfdModel* activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(_baseObject);
+      //ves::xplorer::cfdModel* activeModel = dynamic_cast<ves::xplorer::cfdModel*>(_baseObject);
       std::cout<<"---Deleting node---"<<std::endl;
       ves::xplorer::scenegraph::DCS* parentAssembly = 0;
       parentAssembly = m_cadHandler->GetAssembly(parentID->GetDataString());

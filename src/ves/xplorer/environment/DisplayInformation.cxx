@@ -50,7 +50,7 @@
 //C/C++ libraries
 #include <sstream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ void DisplayInformation::LatePreFrame()
 	if( display_switch->getChildValue( framerate.get() ) )
 	{
 		std::stringstream ss;
-		ss << VE_Xplorer::cfdEnvironmentHandler::instance()->GetFrameRate();
+		ss << ves::xplorer::cfdEnvironmentHandler::instance()->GetFrameRate();
 		ss << " fps";
 
 		framerate_text->setText( ss.str() );

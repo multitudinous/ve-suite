@@ -49,7 +49,7 @@
 #include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a vector field.

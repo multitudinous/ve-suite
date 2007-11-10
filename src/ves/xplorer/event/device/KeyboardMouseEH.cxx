@@ -73,7 +73,7 @@ KeyboardMouseEventHandler::~KeyboardMouseEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouseEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* modelHandler)
+void KeyboardMouseEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler)
 {
    ;
 }
@@ -90,12 +90,12 @@ void KeyboardMouseEventHandler::Execute(XMLObject* veXMLObject)
    {
       if( animate == 0 )
 		{
-         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( false );
+         static_cast< ves::xplorer::KeyboardMouse* >( ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( false );
       }
 
       else if( animate == 1 )
 		{
-         static_cast< VE_Xplorer::KeyboardMouse* >( VE_Xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( true );
+         static_cast< ves::xplorer::KeyboardMouse* >( ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( true );
       }
    }
 }

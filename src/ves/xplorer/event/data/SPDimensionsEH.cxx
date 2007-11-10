@@ -43,7 +43,7 @@
 
 #include <vtkDataSet.h>
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -72,17 +72,17 @@ SeedPointDimensionsEventHandler::operator=(const SeedPointDimensionsEventHandler
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
-void SeedPointDimensionsEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void SeedPointDimensionsEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
    try
    {
       if(model)
       {
-         _activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(model);
+         _activeModel = dynamic_cast<ves::xplorer::cfdModel*>(model);
       }
       else
       {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -103,7 +103,7 @@ void SeedPointDimensionsEventHandler::Execute(XMLObject* veXMLObject)
      std::vector<long> allDimensions;
      DataValuePairWeakPtr dimensions = command->GetDataValuePair("Dimensions");
      dimensions->GetData(allDimensions);
-     VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->SetDimensions(allDimensions[0],
+     ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->SetDimensions(allDimensions[0],
                                                                                    allDimensions[1],
                                                                                    allDimensions[2]);
    }

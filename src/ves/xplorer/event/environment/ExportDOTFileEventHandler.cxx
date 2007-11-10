@@ -39,7 +39,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ ExportDOTFileEventHandler::operator=(const ExportDOTFileEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+void ExportDOTFileEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
 {
     ;
 }

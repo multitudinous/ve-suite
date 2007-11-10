@@ -36,15 +36,17 @@
 cfdVjObsWrapper API
 */
 
-/*!\class VE_Xplorer::cfdVjObsWrapper
+/*!\class ves::xplorer::cfdVjObsWrapper
 *
 */
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VjObs_i;
    class cfdCommandArray;
-   
+}
 }
 
 class Body_VEXplorer_i;
@@ -60,12 +62,15 @@ namespace ves
 namespace open
 {
 namespace xml
-{        
+{
     class Command;
 }
 }
 }
-namespace VE_Xplorer
+
+namespace ves
+{
+namespace xplorer
 {
 class cfdVjObsWrapper
 {
@@ -110,5 +115,6 @@ private:
    CORBA::ORB* _orbPtr;///<holds the orb pointer for tao
    bool isMaster;///is the master should be removed
 };
+}
 }
 #endif

@@ -51,7 +51,7 @@
 
 #include <ves/xplorer/cfdDebug.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )

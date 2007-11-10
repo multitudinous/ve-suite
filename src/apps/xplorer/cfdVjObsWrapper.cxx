@@ -54,7 +54,7 @@
 #include <vpr/IO/Socket/InetAddr.h>
 
 using namespace CosNaming;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 cfdVjObsWrapper::cfdVjObsWrapper( void )
@@ -100,7 +100,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    }
    catch( ... )
    {
-	   std::cerr << "Unknown exception." << std::endl;
+      std::cerr << "Unknown exception." << std::endl;
    }
 
    //if ( !CORBA::is_nil( _orbPtr ) )
@@ -201,8 +201,8 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input,
          naming_context->rebind(name, vjobs.in());
       }
 
-	   ///This is the new way of communication
-	   Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
+      ///This is the new way of communication
+      Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
       
       CosNaming::Name xplorerName;
       xplorerName.length(1);
@@ -218,7 +218,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input,
       {
          naming_context->rebind(xplorerName, xplorerCom.in());
       }
-      VE_Xplorer::CommandHandler::instance()->SetXplorer(m_xplorer);
+      ves::xplorer::CommandHandler::instance()->SetXplorer(m_xplorer);
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

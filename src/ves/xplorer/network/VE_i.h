@@ -36,7 +36,7 @@
 /*!\file Body_UI_i.h
 Body_UI_i API
 */
-/*!\class VE_Xplorer::Body_UI_i
+/*!\class ves::xplorer::Body_UI_i
 * 
 */
 #include <ves/open/moduleS.h>

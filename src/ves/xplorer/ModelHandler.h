@@ -35,7 +35,7 @@
 /*!\file cfdModelHandler.h
 cfdModelHandler API
 */
-/*!\class VE_Xplorer::cfdModelHandler
+/*!\class ves::xplorer::cfdModelHandler
 * 
 */
 #include <vpr/Util/Singleton.h>
@@ -45,11 +45,14 @@ cfdModelHandler API
 
 #include <ves/open/xml/CommandPtr.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class cfdDataSet;
     class cfdModel;
     class cfdCommandArray;
+}
 }
 
 namespace ves
@@ -91,7 +94,9 @@ class vtkPolyData;
 #include <vector>
 #include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
 {
@@ -172,5 +177,6 @@ private:
     ///figure out what CAD files should be copied
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* > m_filenameToCADMap;
 };
+}
 }
 #endif

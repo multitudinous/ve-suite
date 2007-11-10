@@ -35,7 +35,7 @@
 /*!\file cfdMomentums.h
 cfdMomentums API
 */
-/*!\class VE_Xplorer::cfdMomentums
+/*!\class ves::xplorer::cfdMomentums
 *   A class that generates warped contour plots on multiple planes of data.
 */
 
@@ -43,16 +43,21 @@ cfdMomentums API
 
 class vtkWarpVector;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdPlanes;
+}
 }
 
 //! VTK momentums renderer.
 /*!
 */
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
    {
@@ -73,5 +78,6 @@ namespace VE_Xplorer
          vtkWarpVector * warper;///<warper used by vtk
          cfdPlanes* planes;///<planes
    };
+}
 }
 #endif

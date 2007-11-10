@@ -59,7 +59,7 @@ using namespace ves::xplorer::volume;
 
 #include <jccl/RTRC/ConfigManager.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::volume;

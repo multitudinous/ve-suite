@@ -51,7 +51,7 @@
 
 #include <ves/xplorer/cfdDebug.h>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 cfdVectors::cfdVectors( const int xyz )
 {

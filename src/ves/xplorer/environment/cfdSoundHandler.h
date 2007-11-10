@@ -34,7 +34,7 @@
 /*!\file cfdSoundHandler.h
 cfdSoundHandler API
 */
-/*!\class VE_Xplorer::cfdSoundHandler
+/*!\class ves::xplorer::cfdSoundHandler
 *
 */
 
@@ -42,14 +42,19 @@ cfdSoundHandler API
 #include <vector>
 #include <ves/xplorer/cfdGlobalBase.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
    class cfdSound;
    class cfdReadParam;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdSoundHandler : public cfdGlobalBase
 {
@@ -81,5 +86,6 @@ private:
    std::vector< cfdSound* > sounds;///<The vector of sounds.
    //cfdCommandArray* commandArray;
 };
+}
 }
 #endif

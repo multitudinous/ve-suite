@@ -35,7 +35,7 @@
 /*!\file cfdEnvironmentHandler.h
 cfdEnvironmentHandler API
 */
-/*!\class VE_Xplorer::cfdEnvironmentHandler
+/*!\class ves::xplorer::cfdEnvironmentHandler
 * 
 */
 #include <vpr/Util/Singleton.h>
@@ -48,7 +48,9 @@ cfdEnvironmentHandler API
 #include <vrj/vrjParam.h>
 #include <osgEphemeris/EphemerisModel>
 #include <osg/ref_ptr>
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
     class cfdCursor;
     class cfdCommandArray;
@@ -57,6 +59,7 @@ namespace VE_Xplorer
     class cfdDisplaySettings;
 
     class DisplayInformation;
+}
 }
 
 namespace ves
@@ -72,7 +75,9 @@ namespace event
 
 class vtkPolyData;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
 {
@@ -178,7 +183,7 @@ public:
    osgEphemeris::EphemerisModel* GetEphemerisModel(bool createIfDoesNotExist=false);
 
 private:
-   osg::ref_ptr<VE_Xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
+   osg::ref_ptr<ves::xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
    osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
    cfdTeacher* _teacher;///<Handle teacher functionality.
    //cfdSoundHandler* _soundHandler;///<Handle the sound.
@@ -225,5 +230,5 @@ private:
     osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data
 };
 }
-
+}
 #endif //CFD_ENVIRONMENTHANDLER_H

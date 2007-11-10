@@ -37,14 +37,17 @@
 cfdApp API
 */
 
-/*!\class VE_Xplorer::cfdApp
+/*!\class ves::xplorer::cfdApp
 *
 */
 
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdVjObsWrapper;
+}
 }
 
 // Scene graph dependent forward declarations
@@ -93,11 +96,13 @@ const float SAMPLE_TIME = 1.0f;
 #endif
          class cfdTextureBasedVizHandler;
       }
-	  }
-	  }
+     }
+     }
 #endif //_PERFORMER _OSG
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 #ifdef _PERFORMER
 class cfdApp : public vrj::PfApp
@@ -206,12 +211,12 @@ private:
     double time_since_start;///< time to start
     int argc;///< command line args
     char** argv;///< command line args
-	bool runWebImageSaveThread;///< not sure what this is for
-	bool readyToWriteWebImage;///< not sure what this is for
-	bool writingWebImageNow;///< not sure what this is for
-	bool captureNextFrameForWeb;///< not sure what this is for
-	int webImageWidth;///< not sure what this is for
-	int webImageHeight;///< not sure what this is for
+   bool runWebImageSaveThread;///< not sure what this is for
+   bool readyToWriteWebImage;///< not sure what this is for
+   bool writingWebImageNow;///< not sure what this is for
+   bool captureNextFrameForWeb;///< not sure what this is for
+   int webImageWidth;///< not sure what this is for
+   int webImageHeight;///< not sure what this is for
 
 #ifdef _OSG
    osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;///<update visitor
@@ -221,5 +226,6 @@ private:
    osg::ref_ptr< osg::LightModel > light_model_0;///< light model for the scene
 #endif
 };
+}
 }
 #endif

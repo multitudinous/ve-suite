@@ -35,15 +35,20 @@
 
 #include <iostream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::plugin;
-using namespace ves::xplorer::DefaultGraphicalPlugin;
 
+namespace ves
+{
+namespace xplorer
+{
+namespace DefaultGraphicalPlugin
+{
 ////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : cfdVEBaseClass()
 {
-	SetObjectName( std::string( "DefaultPlugin" ) );
+   SetObjectName( std::string( "DefaultPlugin" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
@@ -56,3 +61,6 @@ void DefaultGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* vewo
    cfdVEBaseClass::InitializeNode( veworldDCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
+}
+}
+}

@@ -62,7 +62,7 @@
 #include <iostream>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
@@ -98,7 +98,7 @@ SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=( const S
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::SetGlobalBaseObject( VE_Xplorer::cfdGlobalBase* model )
+void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* model )
 {
     ;
 }
@@ -140,7 +140,7 @@ void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
         SceneManager::instance()->SetActiveSwitchNode( 0 );
     }
    
-    VE_Xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS( 
+    ves::xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS( 
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////

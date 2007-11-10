@@ -75,7 +75,7 @@
 #include <iostream>
 #include <cmath>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 
 const double OneEightyDivPI = 57.29577951;
 const double PIDivOneEighty = 0.0174532925;

@@ -35,7 +35,7 @@
 /*!\file cfd1DTextInput.h
 cfd1DTextInput API
 */
-/*!\class VE_Xplorer::cfd1DTextInput
+/*!\class ves::xplorer::cfd1DTextInput
 * 
 */
 #include <string>
@@ -61,7 +61,9 @@ namespace scenegraph
 
 class  vtkActor;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfd1DTextInput : public ves::xplorer::scenegraph::DCS
    {
@@ -93,7 +95,8 @@ namespace VE_Xplorer
          std::string text;///<The string to hold the text.
          vtkActor*   actor;///<The VTKactor.
          //DCS*      dcs;
-			osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.  
+         osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.  
    };
+}
 }
 #endif

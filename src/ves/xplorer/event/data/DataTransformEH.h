@@ -46,11 +46,15 @@ namespace ves
 }
 }
 }
-namespace VE_Xplorer
+
+namespace ves
+{
+namespace xplorer
 {
    class cfdModel;
    class cfdGlobalBase;
    class cfdVEBaseClass;
+}
 }
 
 namespace ves
@@ -82,10 +86,10 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
 
 protected:
-   VE_Xplorer::cfdModel* _activeModel;///<The active cfdModel;
+   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel;
 
 };
 

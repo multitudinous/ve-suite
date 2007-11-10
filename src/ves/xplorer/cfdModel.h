@@ -35,7 +35,7 @@
 /*!\file cfdModel.h
 cfdModel API
 */
-/*!\class VE_Xplorer::cfdModel
+/*!\class ves::xplorer::cfdModel
 * 
 */
 
@@ -97,12 +97,15 @@ namespace event
 }
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdDataSet;
    class cfdCommandArray;
    class cfdSound;
    class ModelCADHandler;
+}
 }
 
 #ifdef _OSG
@@ -136,7 +139,9 @@ enum Operation2Model
    DeleteGeomdataset
 };
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
 {
@@ -148,7 +153,7 @@ public:
    ///VE-Conductor
    void PreFrameUpdate(); 
    ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){return false;} 
+   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ){return false;} 
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() {}
@@ -159,14 +164,14 @@ public:
    void SetMirrorDataFlag( bool );
    void SetMirrorNode( ves::xplorer::scenegraph::Group* );
 
-   VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
+   ves::xplorer::cfdDataSet* GetCfdDataSet( int );
    unsigned int GetIndexOfDataSet( std::string dataSetName );
    unsigned int GetNumberOfCfdDataSets( void );
    std::string GetCfdDataSetFileName( int );
    void CreateCfdDataSet( void );
    int GetKeyForCfdDataSet( cfdDataSet* );
-   VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
-   void SetActiveDataSet( VE_Xplorer::cfdDataSet* );
+   ves::xplorer::cfdDataSet* GetActiveDataSet( void );
+   void SetActiveDataSet( ves::xplorer::cfdDataSet* );
 
    ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
    unsigned int GetNumberOfGeomDataSets( void );
@@ -176,7 +181,7 @@ public:
    ///Get the CADModelHandler for manipulation/management\n
    ///of CADNode s
    ///\return ModelCADHandler 
-   VE_Xplorer::ModelCADHandler* GetModelCADHandler();
+   ves::xplorer::ModelCADHandler* GetModelCADHandler();
 
    ///Get the node for the cfd data set
    ves::xplorer::scenegraph::CADEntityHelper* GetCfdNode( void );
@@ -248,7 +253,7 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
    typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;
    GeometoryDataSetList mGeomDataSets;
-   typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
+   typedef std::vector< ves::xplorer::cfdDataSet* > VTKDataSetList;
    VTKDataSetList mVTKDataSets;
 
    /*std::map< std::string, ves::xplorer::scenegraph::CADEntity* > _partList;///<A list of the current parts.
@@ -285,7 +290,8 @@ private:
          std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 #endif
 
-         VE_Xplorer::ModelCADHandler* m_cadHandler;///<The CADHandler for this model.
+         ves::xplorer::ModelCADHandler* m_cadHandler;///<The CADHandler for this model.
    };
+}
 }
 #endif

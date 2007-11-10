@@ -35,7 +35,7 @@
 /*!\file ModelCADHandler.h
 Mananger for the CAD associated with a cfdModel
 */
-/*!\class VE_Xplorer::ModelCADHandler
+/*!\class ves::xplorer::ModelCADHandler
 * 
 */
 #include <ves/xplorer/cfdGlobalBase.h>
@@ -69,7 +69,9 @@ namespace osg
     class ClipPlane;
 }
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
 class VE_XPLORER_EXPORTS ModelCADHandler : public cfdGlobalBase
 {
@@ -192,7 +194,7 @@ public:
     ModelCADHandler& operator=(const ModelCADHandler& rhs);
 
     ///Not used
-    virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ){ return false; }
+    virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ){ return false; }
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand(){ ; }
 
@@ -207,8 +209,8 @@ protected:
     std::map< std::string, ves::xplorer::scenegraph::Clone* > m_cloneList;
     ///ID for root CAD node id
     std::string m_rootCADNodeID;
-	///Attribute list mapping for all CAD
-	std::map<std::string, osg::ref_ptr< osg::StateSet> > m_globalAttributeList;
+   ///Attribute list mapping for all CAD
+   std::map<std::string, osg::ref_ptr< osg::StateSet> > m_globalAttributeList;
 #ifdef _OSG
     ///The map of node attributes.
     std::map< std::string, std::vector< 
@@ -216,5 +218,6 @@ protected:
         > m_nodeAttributes;
 #endif
 };
+}
 }
 #endif // MODEL_CAD_HANDLER_H

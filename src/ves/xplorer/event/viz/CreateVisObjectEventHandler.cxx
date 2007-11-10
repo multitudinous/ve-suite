@@ -80,7 +80,7 @@
 #include <iostream>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::volume;
 
@@ -669,17 +669,17 @@ CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=(const Create
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* model)
+void CreateVisObjectEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
 {
 /*   try
    {
       if ( model )
       {
-         _activeModel = dynamic_cast< VE_Xplorer::cfdModel* >( model );
+         _activeModel = dynamic_cast< ves::xplorer::cfdModel* >( model );
       }
       else
       {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

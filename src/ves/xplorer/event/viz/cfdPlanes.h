@@ -37,7 +37,7 @@
 /*!\file cfdPlanes.h
 cfdPlanes API
 */
-/*!\class VE_Xplorer::cfdPlanes
+/*!\class ves::xplorer::cfdPlanes
 *   A class that reads in precomputed plane data files corresponding to a 
 *   specific axis direction.  The files are located in a specified directory.
 *   The plane files were created by the preprocessor acting on a flowdata.vtk.
@@ -45,66 +45,73 @@ cfdPlanes API
 
 class vtkPolyData;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCuttingPlane;
 }
+}
+
 #include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
 {
-   class VE_XPLORER_EXPORTS cfdPlanes
-   {
-      public:
-         ///Initialize the VTK objects and pipeline.
-         ///\param xyz 0 = x plane cuts, 1 = y plane cuts, and 2 = z plane cuts.
-         ///\param directory Location of where to store planes.
-         ///\param bounds Boundary of cutting planes.
-         cfdPlanes( const int xyz, const char directory[], const double bounds[ 6 ] );
-         ///Constructor
-         cfdPlanes();
-         ///Destructor
-         ~cfdPlanes();
+namespace xplorer
+{
+class VE_XPLORER_EXPORTS cfdPlanes
+{
+public:
+   ///Initialize the VTK objects and pipeline.
+   ///\param xyz 0 = x plane cuts, 1 = y plane cuts, and 2 = z plane cuts.
+   ///\param directory Location of where to store planes.
+   ///\param bounds Boundary of cutting planes.
+   cfdPlanes( const int xyz, const char directory[], const double bounds[ 6 ] );
+   ///Constructor
+   cfdPlanes();
+   ///Destructor
+   ~cfdPlanes();
 
-         ///Set all planes to be selected concatenate them all into one
-         void SetAllPlanesSelected( void );
+   ///Set all planes to be selected concatenate them all into one
+   void SetAllPlanesSelected( void );
 
-         // Get the cut planes polydata
-         vtkPolyData * GetPlanesData();
+   // Get the cut planes polydata
+   vtkPolyData * GetPlanesData();
 
-         ///Selects the closest cutting plane depending on the slider bar position.
-         ///0 <= sliderBarPos <= 100
-         ///\param sliderBarPos The position of the slider bar.
-         vtkPolyData * GetClosestPlane( const int sliderBarPos );
+   ///Selects the closest cutting plane depending on the slider bar position.
+   ///0 <= sliderBarPos <= 100
+   ///\param sliderBarPos The position of the slider bar.
+   vtkPolyData * GetClosestPlane( const int sliderBarPos );
 
-         ///Concatenate them all into one.
-         void ConcatenateSelectedPlanes( void );
+   ///Concatenate them all into one.
+   void ConcatenateSelectedPlanes( void );
+
+   ///Get the number of planes.
+   int GetNumberOfPlanes();
+   
+   ///Get a particular plane.
+   ///\param i
+   vtkPolyData * GetPlane( const int i );
+
+private:
+   int numPlanes;///<Total number of precomputed planes found in the directory.
+   int type;///<Direction of cuts. 0=x planes, 1=y planes, 2=z planes.
+   char typeLabel;///<'X', 'Y', or 'Z'.
+
+
+   cfdCuttingPlane *cuttingPlane;///<Cutting plane for data.
+   //vtkTriangleFilter *tFilter;
+   //vtkDecimatePro *deci;
+   
+   vtkPolyData ** append;///<Individual polydata planes of data.
+   
+   int * isPlaneSelected;///<array that keeps track of which planes are selected for display.
+   
+   float * sliceLocation;///<array that keeps track of the physical location of a particular plane.
+
   
-         ///Get the number of planes.
-         int GetNumberOfPlanes();
-         
-         ///Get a particular plane.
-         ///\param i
-         vtkPolyData * GetPlane( const int i );
-
-      private:
-         int numPlanes;///<Total number of precomputed planes found in the directory.
-         int type;///<Direction of cuts. 0=x planes, 1=y planes, 2=z planes.
-         char typeLabel;///<'X', 'Y', or 'Z'.
-
-
-         cfdCuttingPlane *cuttingPlane;///<Cutting plane for data.
-         //vtkTriangleFilter *tFilter;
-         //vtkDecimatePro *deci;
-         
-         vtkPolyData ** append;///<Individual polydata planes of data.
-         
-         int * isPlaneSelected;///<array that keeps track of which planes are selected for display.
-         
-         float * sliceLocation;///<array that keeps track of the physical location of a particular plane.
-
-        
-         vtkPolyData * collectivePolyData;///<polydata planes of data stored in a single object.
-   };
+   vtkPolyData * collectivePolyData;///<polydata planes of data stored in a single object.
+};
+}
 }
 #endif

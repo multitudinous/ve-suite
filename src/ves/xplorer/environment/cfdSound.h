@@ -35,69 +35,72 @@
 /*!\file cfdSound.h
 cfdSound API
 */
-/*!\class VE_Xplorer::cfdSound
+/*!\class ves::xplorer::cfdSound
 *
 */
 
 #include <snx/SoundHandle.h>
 #include <ves/VEConfig.h>
-namespace VE_Xplorer
+namespace ves
 {
-   class VE_XPLORER_EXPORTS cfdSound
-   { 
-      public:
-         ///Constructor
-         cfdSound();
-         ///Copy Constructor
-         ///\param rhs The cfdSound to copy
-         cfdSound(const cfdSound& rhs);
-         ///Destructor
-         ~cfdSound();
+namespace xplorer
+{
+class VE_XPLORER_EXPORTS cfdSound
+{ 
+public:
+   ///Constructor
+   cfdSound();
+   ///Copy Constructor
+   ///\param rhs The cfdSound to copy
+   cfdSound(const cfdSound& rhs);
+   ///Destructor
+   ~cfdSound();
 
-         ///Equal operator
-         ///\param rhs The cfdSound to set equal to
-         cfdSound& operator=(const cfdSound& rhs);
+   ///Equal operator
+   ///\param rhs The cfdSound to set equal to
+   cfdSound& operator=(const cfdSound& rhs);
 
-         ///Initialize sound
-		 bool initSound();
-		 ///Play sound
-         void playSound();
-		 ///Stop playing sound
-         void stopSound();
-		 ///Check if sound is on
-         bool IsSounding();
+   ///Initialize sound
+ bool initSound();
+ ///Play sound
+   void playSound();
+ ///Stop playing sound
+   void stopSound();
+ ///Check if sound is on
+   bool IsSounding();
 
-         std::string fileName;///<Filename 
-         std::string soundName;///< This is displayed on the gui
+   std::string fileName;///<Filename 
+   std::string soundName;///< This is displayed on the gui
 
-         /// sound is either ambient or positional.  If the sound is ambient, it is
-         /// attached to the listener, and its volume does not change when the
-         /// listener moves. If the sound is positional, the volume changes when the
-         /// listener moves
-         bool   ambient;
+   /// sound is either ambient or positional.  If the sound is ambient, it is
+   /// attached to the listener, and its volume does not change when the
+   /// listener moves. If the sound is positional, the volume changes when the
+   /// listener moves
+   bool   ambient;
 
-         /// retriggerable specifies whether a currently playing sound restarts
-         /// from the beginning when triggered.
-         bool   retriggerable;  
+   /// retriggerable specifies whether a currently playing sound restarts
+   /// from the beginning when triggered.
+   bool   retriggerable;  
 
-         /// Number of times to play: -1 to loop, 1 (single shot) is default.
-         int   repeat;      
+   /// Number of times to play: -1 to loop, 1 (single shot) is default.
+   int   repeat;      
 
-         float volume;  /// between 0.0 and 1.0 inclusive, 1 is loud
+   float volume;  /// between 0.0 and 1.0 inclusive, 1 is loud
 
-         float pitchbend;
-         /// pitchbend alters the frequency of the sample.  1.0 is neutral.
-         /// A value less than 1.0 is low; a value greater than 1.0 is high.
+   float pitchbend;
+   /// pitchbend alters the frequency of the sample.  1.0 is neutral.
+   /// A value less than 1.0 is low; a value greater than 1.0 is high.
 
-         ///????
-		 float cutoff;
-         float soundPositionX;
-         float soundPositionY;
-         float soundPositionZ;
-   
-         ///????
-		 snx::SoundHandle soundHandle;
-         snx::SoundInfo si;
-   };
+   ///????
+ float cutoff;
+   float soundPositionX;
+   float soundPositionY;
+   float soundPositionZ;
+
+   ///????
+ snx::SoundHandle soundHandle;
+   snx::SoundInfo si;
+};
+}
 }
 #endif

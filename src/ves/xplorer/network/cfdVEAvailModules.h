@@ -35,7 +35,7 @@
 /*!\file cfdVEAvailModules.h
 cfdVEAvailModules API
 */
-/*!\class VE_Xplorer::cfdVEAvailModules
+/*!\class ves::xplorer::cfdVEAvailModules
 * 
 */
 

@@ -35,13 +35,15 @@
 /*!\file cfdCommandArray.h
 cfdCommandArray API
 */
-/*!\class VE_Xplorer::cfdCommandArray
+/*!\class ves::xplorer::cfdCommandArray
 * 
 */
 // cfdApp side variables declared in VjObs_i.h
 #include <ves/VEConfig.h>
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdCommandArray
    {
@@ -92,6 +94,7 @@ namespace VE_Xplorer
          double   cfdTeacher_state; ///<The teacher state.
 
    };
+}
 }
 #endif
 

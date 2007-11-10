@@ -50,7 +50,7 @@
 
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::ModelCADHandler(ves::xplorer::scenegraph::DCS* rootNode)
 {

@@ -37,7 +37,7 @@
 /*!\file cfdPolyData.h
 cfdPolyData API
 */
-/*!\class VE_Xplorer::cfdPolyData
+/*!\class ves::xplorer::cfdPolyData
 * 
 */
 #include <ves/xplorer/event/viz/cfdObjects.h>
@@ -48,12 +48,17 @@ cfdPolyData API
 class vtkPolyDataMapper;
 class vtkWarpVector;
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class cfdCommandArray;
 }
+}
 
-namespace VE_Xplorer
+namespace ves
+{
+namespace xplorer
 {
    class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
    {
@@ -96,12 +101,13 @@ namespace VE_Xplorer
 
          vtkPolyDataMapper *map;///<Map for vtk.
          vtkWarpVector* warper;///<Warper for vtk.
-	      //cfdCommandArray* commandArray;
+         //cfdCommandArray* commandArray;
          bool warpSurface;///Test for warped surface.
          double warpedContourScale;///<warped contour scale value
 
          unsigned int  _particleOption;///<point cloud or variably sized spheres.
          float _particleScale;///<particle scale.
    };
+}
 }
 #endif

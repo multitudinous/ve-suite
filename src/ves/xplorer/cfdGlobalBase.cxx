@@ -36,7 +36,7 @@
 
 #include <iostream>
 
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 cfdGlobalBase::cfdGlobalBase()

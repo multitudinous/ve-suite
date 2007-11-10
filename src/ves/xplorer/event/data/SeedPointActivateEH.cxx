@@ -44,7 +44,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 using namespace ves::xplorer::event;
-using namespace VE_Xplorer;
+using namespace ves::xplorer;
 using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
@@ -73,18 +73,18 @@ SeedPointActivateEventHandler::operator=(const SeedPointActivateEventHandler& rh
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void SeedPointActivateEventHandler::SetGlobalBaseObject(VE_Xplorer::cfdGlobalBase* baseObject)
+void SeedPointActivateEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
 {
    ///is this overkill????
    try
    {
       if(baseObject)
       {
-         _activeModel = dynamic_cast<VE_Xplorer::cfdModel*>(baseObject);
+         _activeModel = dynamic_cast<ves::xplorer::cfdModel*>(baseObject);
       }
       else
       {
-         _activeModel = VE_Xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -109,9 +109,9 @@ void SeedPointActivateEventHandler::Execute(XMLObject* veXMLObject)
 		   std::string datasetname;
 		   activeDataset->GetData(datasetname);
 		   //check to see if the seed points exist
-		   if(!ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SearchChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
+		   if(!ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SearchChild(ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()))
 		   {
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->addChild(VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->addChild(ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS());   
 		   }
 		 
             //this seems to be a bad sequence of calls but we need to set the
@@ -119,12 +119,12 @@ void SeedPointActivateEventHandler::Execute(XMLObject* veXMLObject)
             //as well as all the commands have to lug this extra info.
             _activeModel->SetActiveDataSet(_activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname)));
             ves::xplorer::scenegraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
-            ves::xplorer::scenegraph::DCS* seedPointDCS = VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
+            ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS();
 
             seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
             seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
             seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
-            VE_Xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
+            ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
         } 
    }
    catch(...)
