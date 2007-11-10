@@ -443,9 +443,10 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool crea
         else*/
         {
             m_ephemerisModel->setSkyDomeRadius( 5000. );
-			m_ephemerisModel->setAutoDateTime(true);
+            m_ephemerisModel->setAutoDateTime(false);
             m_ephemerisModel->setSkyDomeCenter( osg::Vec3f(0.,0.,0.) );
-			m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
+            m_ephemerisModel->setSunLightNum(2);
+            m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
         }
         worldDCSParent->addChild(m_ephemerisModel.get()); 
     }

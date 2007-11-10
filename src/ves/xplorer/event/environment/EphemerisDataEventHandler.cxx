@@ -86,23 +86,29 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
             double longitudeData = 0; 
             ves::open::xml::DataValuePairWeakPtr longitudeDir =
                                  ephemerisInfo->GetDataValuePair( "Longitude Direction" );
-            longitudeDir->GetData(longitudeData);
+            longitude->GetData(longitudeData);
             std::string eastWest;
             longitudeDir->GetData(eastWest);
+            std::cout<<"Latitude: "<<latitudeData<<std::endl;
+            std::cout<<"Longitude: "<<longitudeData<<std::endl;
             osgEphemeris::EphemerisModel* ephemerisModel = 
                   ves::xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
-            ephemerisModel->setLatitudeLongitude((eastWest == "West")?-1*latitudeData:latitudeData,
-                                                 (northSouth == "South")?-1*longitudeData:longitudeData);
-			std::vector<long> dateTimeInfo;
+            ephemerisModel->setLatitudeLongitude((northSouth == "South")?-1*latitudeData:latitudeData,
+                                                 (eastWest == "West")?-1*longitudeData:longitudeData);
+            std::vector<long> dateTimeInfo;
             ves::open::xml::DataValuePairWeakPtr dateTimeData =
                                  ephemerisInfo->GetDataValuePair("Date and Time Info");
-			dateTimeData->GetData(dateTimeInfo);
-			ephemerisModel->setDateTime(osgEphemeris::DateTime(dateTimeInfo[0],
-				                                               dateTimeInfo[1],
-															   dateTimeInfo[2],
-															   dateTimeInfo[3],
-															   dateTimeInfo[4]));
-		}
+            dateTimeData->GetData(dateTimeInfo);
+            std::cout<<"Date: "<<dateTimeInfo[0]<<" "<<dateTimeInfo[1]<<" "
+                               <<dateTimeInfo[2]<<std::endl;
+            std::cout<<"Time: "<<dateTimeInfo[3]<<":"<<dateTimeInfo[4]<<std::endl;
+                               
+            ephemerisModel->setDateTime(osgEphemeris::DateTime(dateTimeInfo[0],
+                                                               dateTimeInfo[1],
+                                                               dateTimeInfo[2],
+                                                               dateTimeInfo[3],
+                                                               dateTimeInfo[4]));
+	}
     }
     catch(...)
     {
