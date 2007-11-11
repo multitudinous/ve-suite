@@ -30,17 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/cfdThread.h>
+#include <ves/xplorer/Thread.h>
 
-using namespace ves::xplorer;
-
-cfdThread::cfdThread( void )
+namespace ves
+{
+namespace xplorer
+{
+Thread::Thread( void )
 {
    //corba_run = NULL;
    new_thread = NULL;
 }
 
-cfdThread::~cfdThread( void )
+Thread::~Thread( void )
 {
    /*if ( corba_run != NULL )
    {
@@ -52,3 +54,6 @@ cfdThread::~cfdThread( void )
       delete new_thread;
    }
 }
+
+} // end xplorer
+} // end ves

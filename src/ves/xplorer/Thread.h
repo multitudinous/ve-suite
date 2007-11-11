@@ -30,37 +30,38 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_THREAD_H
-#define CFD_THREAD_H
+#ifndef VE_XPLORER_THREAD_H
+#define VE_XPLORER_THREAD_H
+
+#include <ves/xplorer/ThreadPtr.h>
+#include <ves/VEConfig.h>
+
+#include <vpr/Thread/Thread.h>
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file cfdThread.h
 cfdThread API
 */
 /*!\class ves::xplorer::cfdThread
 * 
 */
-
-#include <vpr/Thread/Thread.h>
-
-#include <ves/VEConfig.h>
-
-namespace ves
+class VE_XPLORER_EXPORTS cfdThread
 {
-namespace xplorer
-{
-   class VE_XPLORER_EXPORTS cfdThread
-   {
-      public:
-        ///Constructor
-         cfdThread( void );
-       ///Destructor
-         ~cfdThread( void );
+public:
+  ///Constructor
+   cfdThread( void );
+ ///Destructor
+   ~cfdThread( void );
 
-      //   private:
-         //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
-         //vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
-         vpr::Thread* new_thread;
-      
-   };
+   //   private:
+   //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
+   //vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
+   vpr::Thread* new_thread;
+
+};
 }
 }
 #endif

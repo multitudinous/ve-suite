@@ -50,7 +50,7 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;
    this->argv = argv;
-   _thread = new cfdThread();
+   _thread = new Thread();
    _vjObsWrapper = input;
 #if __VJ_version > 2000003
    _thread->new_thread=new vpr::Thread( boost::bind(&cfdAppWrapper::init, this) );
