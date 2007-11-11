@@ -30,60 +30,66 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 
-#include <ves/xplorer/util/fileIO.h>
 
-#include <ves/xplorer/event/EventHandler.h>
-#include <ves/xplorer/environment/cfdSoundHandler.h>
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Debug.h>
+#include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/PhysicsSimulationEventHandler.h>
+
 #include <ves/xplorer/device/cfdCursor.h>
+#include <ves/xplorer/device/KeyboardMouse.h>
+
+#include <ves/xplorer/environment/cfdSoundHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
-#include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
+#include <ves/xplorer/environment/DisplayInformation.h>
+
+#include <ves/xplorer/event/EventHandler.h>
+#include <ves/xplorer/event/data/SeedPointActivateEH.h>
+#include <ves/xplorer/event/data/SPBoundEH.h>
+#include <ves/xplorer/event/data/SPDimensionsEH.h>
 #include <ves/xplorer/event/device/ChangeCursorEventHandler.h>
 #include <ves/xplorer/event/environment/StoredSceneEH.h>
 #include <ves/xplorer/event/environment/ChangeWorkingDirectoryEventHandler.h>
 #include <ves/xplorer/event/environment/ChangeBackgroundColorEventHandler.h>
-#include <ves/xplorer/environment/DisplayInformation.h>
 #include <ves/xplorer/event/environment/DisplayEventHandler.h>
 #include <ves/xplorer/event/environment/ViewEventHandler.h>
-#include <ves/xplorer/PhysicsSimulationEventHandler.h>
-#include <ves/xplorer/DeviceHandler.h>
-#include <ves/xplorer/device/KeyboardMouse.h>
-#include <ves/xplorer/event/data/SeedPointActivateEH.h>
-#include <ves/xplorer/event/data/SPBoundEH.h>
-#include <ves/xplorer/event/data/SPDimensionsEH.h>
 #include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
+
+#include <ves/xplorer/util/fileIO.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
 #include <osgEphemeris/EphemerisModel>
-
 #include <osg/Vec3f>
 #include <osg/BoundingSphere>
 #include <osg/Group>
+
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>
 
-vprSingletonImpLifetime( ves::xplorer::cfdEnvironmentHandler, 11 );
+vprSingletonImpLifetime( ves::xplorer::EnvironmentHandler, 11 );
 
-using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
-////////////////////////////////////////////////////////////////////////////////
-cfdEnvironmentHandler::cfdEnvironmentHandler( void )
+namespace ves
+{
+namespace xplorer
+{
+EnvironmentHandler::EnvironmentHandler( void )
 {
    _teacher = 0;
    //_soundHandler = 0;
@@ -154,14 +160,14 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
        new ves::xplorer::event::EphemerisDataEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::Initialize( void )
+void EnvironmentHandler::Initialize( void )
 {
    displaySettings = new cfdDisplaySettings();
 
    this->arrow = cfdModelHandler::instance()->GetArrow();
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
+EnvironmentHandler::~EnvironmentHandler( void )
 {
    if ( this->cursor )
    {  
@@ -207,56 +213,56 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
    //ves::xplorer::DeviceHandler::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
+void EnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
+/*cfdSoundHandler* EnvironmentHandler::GetSoundHandler( void )
 {
    return _soundHandler;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
+cfdTeacher* EnvironmentHandler::GetTeacher( void )
 {
    return _teacher;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*cfdQuatCamHandler* cfdEnvironmentHandler::GetQuatCamHandler( void )
+/*cfdQuatCamHandler* EnvironmentHandler::GetQuatCamHandler( void )
 {
    return _camHandler;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-cfdDisplaySettings* cfdEnvironmentHandler::GetDisplaySettings( void )
+cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings( void )
 {
    return displaySettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdCursor* cfdEnvironmentHandler::GetCursor( void )
+cfdCursor* EnvironmentHandler::GetCursor( void )
 {
    return this->cursor;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-DisplayInformation* cfdEnvironmentHandler::GetDisplayInformation( void )
+DisplayInformation* EnvironmentHandler::GetDisplayInformation( void )
 {
    return this->display_information;
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::SetDesktopSize( int width, int height )
+void EnvironmentHandler::SetDesktopSize( int width, int height )
 {
    desktopWidth = width;
    desktopHeight = height;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::GetDesktopSize( int &width, int &height )
+void EnvironmentHandler::GetDesktopSize( int &width, int &height )
 {
     width = desktopWidth;
     height = desktopHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::InitScene( void )
+void EnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
    //
@@ -313,7 +319,7 @@ void cfdEnvironmentHandler::InitScene( void )
    std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
    this->display_information = new ves::xplorer::DisplayInformation;
    std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
-	this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
+   this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
 
    static_cast< ves::xplorer::KeyboardMouse* >( 
          ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
@@ -325,7 +331,7 @@ void cfdEnvironmentHandler::InitScene( void )
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
 //(i.e) trackball, wand, gui nav,...
-void cfdEnvironmentHandler::PreFrameUpdate( void )
+void EnvironmentHandler::PreFrameUpdate( void )
 {
    //Process all events for active device
    ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
@@ -335,21 +341,21 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::LatePreFrameUpdate()
+void EnvironmentHandler::LatePreFrameUpdate()
 {
    // Update Navigation variables   
-   vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
    std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
    if( cfdModelHandler::instance()->GetXMLCommand() )
    {
-      vprDEBUG(vesDBG,3) << "|\tcfdEnvironmentHandler::LatePreFrameUpdate Command Name : "
+      vprDEBUG(vesDBG,3) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
                            << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                            << std::endl<< vprDEBUG_FLUSH;
       currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
-         vprDEBUG(vesDBG,1) << "|\tcfdEnvironmentHandler::LatePreFrameUpdate Executing: "
+         vprDEBUG(vesDBG,1) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
                               << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                               << std::endl<< vprDEBUG_FLUSH;
          currentEventHandler->second->SetGlobalBaseObject();
@@ -358,66 +364,66 @@ void cfdEnvironmentHandler::LatePreFrameUpdate()
    }
 
    displaySettings->CheckCommandId( _commandArray );
-	display_information->LatePreFrame();
-   vprDEBUG(vesDBG,3) << "|\tEnd cfdEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
+   display_information->LatePreFrame();
+   vprDEBUG(vesDBG,3) << "|\tEnd EnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
+void EnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
 {
-	_windowWidth = w;
-	_windowHeight = h;
+   _windowWidth = w;
+   _windowHeight = h;
 }
 
-void cfdEnvironmentHandler::SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far )
+void EnvironmentHandler::SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far )
 {
    _frustumLeft = _left;
    _frustumRight = _right;
-	_frustumTop = _top;
-	_frustumBottom = _bottom;
-	_frustumNear = _near;
+   _frustumTop = _top;
+   _frustumBottom = _bottom;
+   _frustumNear = _near;
    _frustumFar = _far;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdEnvironmentHandler::GetWindowWidth()
+unsigned int EnvironmentHandler::GetWindowWidth()
 {
    return _windowWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdEnvironmentHandler::GetWindowHeight()
+unsigned int EnvironmentHandler::GetWindowHeight()
 {
    return _windowHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::SetFrameRate( float value )
+void EnvironmentHandler::SetFrameRate( float value )
 {
-	framerate = value;
+   framerate = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
-float cfdEnvironmentHandler::GetFrameRate()
+float EnvironmentHandler::GetFrameRate()
 {
-	return framerate;
+   return framerate;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdEnvironmentHandler::PostFrameUpdate()
+void EnvironmentHandler::PostFrameUpdate()
 {
-	//Update the values in trackball
-	static_cast< ves::xplorer::KeyboardMouse* >( 
+   //Update the values in trackball
+   static_cast< ves::xplorer::KeyboardMouse* >( 
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
         SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, 
             _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::SeedPoints* cfdEnvironmentHandler::GetSeedPoints()
+ves::xplorer::SeedPoints* EnvironmentHandler::GetSeedPoints()
 {
-	if(_seedPoints.valid())
-	{
-		return _seedPoints.get();
-	}
+   if(_seedPoints.valid())
+   {
+      return _seedPoints.get();
+   }
 
-	return 0;
+   return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
+ves::xplorer::scenegraph::DCS* EnvironmentHandler::GetSeedPointsDCS()
 {
     if(_seedPointsDCS.valid())
     {
@@ -426,19 +432,19 @@ ves::xplorer::scenegraph::DCS* cfdEnvironmentHandler::GetSeedPointsDCS()
     return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool createIfDoesNotExist)
+osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel(bool createIfDoesNotExist)
 {
     if(!m_ephemerisModel.valid() && createIfDoesNotExist)
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
-		osg::ref_ptr<osg::Group> worldDCSParent = 
-			ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetParent(0);
+      osg::ref_ptr<osg::Group> worldDCSParent = 
+         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetParent(0);
 
         /*if(worldDCS->getBound().valid())
         {
             m_ephemerisModel->setSkyDomeRadius( worldDCS->getBound().radius()*2 );
             m_ephemerisModel->setSkyDomeCenter( worldDCS->getBound().center() );
-			m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
+         m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
         }
         else*/
         {
@@ -453,7 +459,7 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool crea
     return m_ephemerisModel.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void cfdEnvironmentHandler::CreateObjects( void )
+/*void EnvironmentHandler::CreateObjects( void )
 {  
    int numObjects;
    char text[ 256 ];
@@ -486,3 +492,5 @@ osgEphemeris::EphemerisModel* cfdEnvironmentHandler::GetEphemerisModel(bool crea
 */
 ////////////////////////////////////////////////////////////////////////////////
 
+} // end xplorer
+} // end ves

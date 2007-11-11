@@ -30,46 +30,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_ENVIRONMENTHANDLER_H
-#define CFD_ENVIRONMENTHANDLER_H
-/*!\file cfdEnvironmentHandler.h
-cfdEnvironmentHandler API
-*/
-/*!\class ves::xplorer::cfdEnvironmentHandler
-* 
-*/
-#include <vpr/Util/Singleton.h>
+#ifndef VE_XPLORER_ENVIRONMENTHANDLER_H
+#define VE_XPLORER_ENVIRONMENTHANDLER_H
+
 #include <ves/VEConfig.h>
+#include <ves/xplorer/EnvironmentHandlerPtr.h>
+
+#include <ves/xplorer/event/EventHandlerPtr.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+
+#include <vpr/Util/Singleton.h>
+#include <vrj/vrjParam.h>
+
+#include <osgEphemeris/EphemerisModel>
+#include <osg/ref_ptr>
+
 #include <map>
 #include <vector>
 
-#include <vrj/vrjParam.h>
-#include <osgEphemeris/EphemerisModel>
-#include <osg/ref_ptr>
 namespace ves
 {
 namespace xplorer
 {
     class cfdCursor;
-    class cfdCommandArray;
     class cfdTeacher;
     class cfdQuatCamHandler;
     class cfdDisplaySettings;
 
     class DisplayInformation;
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-namespace event
-{
-    class EventHandler;
-}
 }
 }
 
@@ -79,20 +68,27 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
+
+/*!\file EnvironmentHandler.h
+EnvironmentHandler API
+*/
+/*!\class ves::xplorer::EnvironmentHandler
+* 
+*/
+class VE_XPLORER_EXPORTS EnvironmentHandler
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdEnvironmentHandler >;
-   //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
-   //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
+   //friend class vpr::Singleton< EnvironmentHandler >;
+   //EnvironmentHandler(const EnvironmentHandler& o) { ; }
+   //EnvironmentHandler& operator=(const EnvironmentHandler& o) { ; }
 
    ///Constructor
-   cfdEnvironmentHandler( void );
+   EnvironmentHandler( void );
 
    ///Destructor
-   ~cfdEnvironmentHandler( void );
-   vprSingletonHeader( cfdEnvironmentHandler );   
+   ~EnvironmentHandler( void );
+   vprSingletonHeader( EnvironmentHandler );
 
 public:
    ///Initialize environment.
