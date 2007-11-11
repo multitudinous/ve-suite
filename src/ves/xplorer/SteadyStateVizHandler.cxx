@@ -31,6 +31,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <ves/xplorer/SteadyStateVizHandler.h>
+
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Debug.h>
+#include <ves/xplorer/GlobalBase.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/ModelHandler.h>
+
+#include <ves/xplorer/device/cfdCursor.h>
+
+#include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/event/viz/cfdPresetMomentum.h>
 #include <ves/xplorer/event/viz/cfdPolyData.h>
@@ -51,33 +63,19 @@
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
-
-#include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdGlobalBase.h>
-#include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/device/cfdCursor.h>
-#include <ves/xplorer/cfdModel.h>
-
-#include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/viz/CreateVisObjectEventHandler.h>
 #include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
+
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
-#include <ves/xplorer/cfdDebug.h>
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
 #include <boost/bind.hpp>
-
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
-//This is WAY down here to fix compile errors on IRIX
-#include <ves/xplorer/cfdSteadyStateVizHandler.h>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
@@ -85,12 +83,14 @@
 
 vprSingletonImpLifetime( ves::xplorer::cfdSteadyStateVizHandler, 10 );
 
-using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
+namespace ves
+{
+namespace xplorer
+{
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
-   this->commandArray = 0;
    //this->_activeDataSetDCS = 0;
    this->_activeObject = 0;
    this->lastSource = 0;
@@ -140,15 +140,6 @@ bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
 ////////////////////
 // Helper functions
 ////////////////////
-void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
-{
-   if ( input == NULL )
-   {
-      std::cerr << "cfdSteadyStateVizHandler::SetCommandArray input is NULL" << std::endl;
-      exit( 1 );
-   }
-   commandArray = input;
-}
 ////////////////////////////////////////////////////////////////////////////////
 /*
 ves::xplorer::scenegraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
@@ -442,4 +433,6 @@ void cfdSteadyStateVizHandler::streamers( void )
    this->_activeObject->Update();
    //this->_activeObject = NULL;
 }
-////////////////////////////////////////////////////////////////////////////////
+
+} // end xplorer
+} // end ves

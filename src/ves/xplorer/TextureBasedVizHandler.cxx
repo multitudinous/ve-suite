@@ -30,20 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
-#ifdef _PERFORMER
-#elif _OPENSG
-#elif _OSG 
-#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
-#include <ves/xplorer/volume/cfdTextureDataSet.h>
-#include <ves/xplorer/volume/cfdTextureManager.h>
-#include <ves/xplorer/volume/cfdVolumeVisualization.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
+#include <ves/xplorer/Debug.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 
-#include <osg/State>
-//#include <osgUtil/SceneView>
-#include <osgDB/WriteFile>
-#endif
 #include <ves/xplorer/event/volume/TBTransientDurationUpdateEH.h>
 #include <ves/xplorer/event/volume/TBTransientModeUpdateEH.h>
 #include <ves/xplorer/event/volume/TBIsosurfaceUpdateEH.h>
@@ -58,15 +50,25 @@
 #include <ves/xplorer/event/volume/TBPhongShadingEnableEH.h>
 #include <ves/xplorer/event/volume/TBPreIntegrateEH.h>
 
-#include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdModel.h>
 
 #include <ves/open/xml/Command.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#ifdef _PERFORMER
+#elif _OPENSG
+#elif _OSG 
+#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
+#include <ves/xplorer/volume/cfdTextureDataSet.h>
+#include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/cfdVolumeVisualization.h>
+
+#include <osg/State>
+//#include <osgUtil/SceneView>
+#include <osgDB/WriteFile>
+#endif
+
+
 #include <fstream>
 #ifdef _PERFORMER
 #elif _OPENSG
@@ -78,13 +80,13 @@
 #include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 
-vprSingletonImpLifetime( ves::xplorer::volume::cfdTextureBasedVizHandler, 140 );
+vprSingletonImpLifetime( ves::xplorer::volume::TextureBasedVizHandler, 140 );
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer;
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
-cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
+TextureBasedVizHandler::TextureBasedVizHandler()
 {
    _animationDelay = 0.0001f;
    _appTime = 0.0;
@@ -121,7 +123,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 
 }
 ///////////////////////////////////////////////
-cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler( void )
+TextureBasedVizHandler::~TextureBasedVizHandler( void )
 {
    if ( !_paramFile.empty() )
    {
@@ -158,12 +160,12 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler( void )
    }
 }
 //////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetMasterNode( bool isMaster )
+void TextureBasedVizHandler::SetMasterNode( bool isMaster )
 {
     m_isMaster = isMaster;
 }
 /////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::_updateShaders()
+void TextureBasedVizHandler::_updateShaders()
 {
    if(_activeTM )
    {
@@ -179,7 +181,7 @@ void cfdTextureBasedVizHandler::_updateShaders()
    }
 }
 //////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateTransientFrame()
+void TextureBasedVizHandler::UpdateTransientFrame()
 {
     if( _activeTM )
     {
@@ -191,12 +193,12 @@ void cfdTextureBasedVizHandler::UpdateTransientFrame()
     }
 }
 ////////////////////////////////////////////////////////////////////////
-cfdTextureManager* cfdTextureBasedVizHandler::GetActiveTextureManager()
+cfdTextureManager* TextureBasedVizHandler::GetActiveTextureManager()
 {
    return _activeTM;
 }
 //////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
+void TextureBasedVizHandler::UpdateIsosurface(double value)
 {
    if(_svvh)
    {
@@ -210,7 +212,7 @@ void cfdTextureBasedVizHandler::UpdateIsosurface(double value)
    }
 }
 ////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
+void TextureBasedVizHandler::EnsureIsosurface(bool onOff)
 {
    if(_svvh)
    {
@@ -231,7 +233,7 @@ void cfdTextureBasedVizHandler::EnsureIsosurface(bool onOff)
    }
 }
 //////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::EnsurePhongShading(bool onOff)
+void TextureBasedVizHandler::EnsurePhongShading(bool onOff)
 {
    if(_svvh)
    {
@@ -254,7 +256,7 @@ void cfdTextureBasedVizHandler::EnsurePhongShading(bool onOff)
    }
 }
 ////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
+void TextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
                                            std::string planeDirection,
                                            double alpha)
 {   
@@ -317,11 +319,11 @@ void cfdTextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
    else
    {
       std::cout<<"Invalid Clipping plane coordinate specified!!"<<std::endl;
-      std::cout<<"cfdTextureBasedVizHandler::UpdateClipPlane"<<std::endl;
+      std::cout<<"TextureBasedVizHandler::UpdateClipPlane"<<std::endl;
    }
 }
 ///////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateNumberOfSlicePlanes(unsigned int nSlices)
+void TextureBasedVizHandler::UpdateNumberOfSlicePlanes(unsigned int nSlices)
 {
 	if(_activeVolumeVizNode)
 	{
@@ -329,7 +331,7 @@ void cfdTextureBasedVizHandler::UpdateNumberOfSlicePlanes(unsigned int nSlices)
 	}
 }
 ////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetTransientDirection(std::string direction)
+void TextureBasedVizHandler::SetTransientDirection(std::string direction)
 {
    if(_activeTM)
    {
@@ -338,7 +340,7 @@ void cfdTextureBasedVizHandler::SetTransientDirection(std::string direction)
 }
 
 ////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::StopTransientVisualization()
+void TextureBasedVizHandler::StopTransientVisualization()
 {
    if(_activeTM)
    {
@@ -347,7 +349,7 @@ void cfdTextureBasedVizHandler::StopTransientVisualization()
 
 }
 ////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::PlayTransientVisualization()
+void TextureBasedVizHandler::PlayTransientVisualization()
 {
    if(_activeTM)
    {
@@ -356,7 +358,7 @@ void cfdTextureBasedVizHandler::PlayTransientVisualization()
    }
 }
 ////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateTransientDuration(double duration)
+void TextureBasedVizHandler::UpdateTransientDuration(double duration)
 {
    if(_activeTM)
    {
@@ -374,7 +376,7 @@ void cfdTextureBasedVizHandler::UpdateTransientDuration(double duration)
    }
 }
 /////////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction)
+void TextureBasedVizHandler::StepTransientVisualization(std::string direction)
 {
    try
    {
@@ -394,11 +396,11 @@ void cfdTextureBasedVizHandler::StepTransientVisualization(std::string direction
    catch(...)
    {
       std::cout<<"Texture Manager not set!!"<<std::endl;
-      std::cout<<" cfdTextureBasedVizHandler::StepTransientVisualization"<<std::endl;
+      std::cout<<" TextureBasedVizHandler::StepTransientVisualization"<<std::endl;
    }
 }
 ///////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetCurrentFrame(unsigned int frame)
+void TextureBasedVizHandler::SetCurrentFrame(unsigned int frame)
 {
    try
    {
@@ -409,11 +411,11 @@ void cfdTextureBasedVizHandler::SetCurrentFrame(unsigned int frame)
    catch(...)
    { 
       std::cout<<"Texture Manager not set!!"<<std::endl;
-      std::cout<<" cfdTextureBasedVizHandler::SetCurrentFrame"<<std::endl;
+      std::cout<<" TextureBasedVizHandler::SetCurrentFrame"<<std::endl;
    }
 }
 //////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::_updateVisualization()
+void TextureBasedVizHandler::_updateVisualization()
 {
 
    /*if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ARBITRARY){
@@ -487,7 +489,7 @@ void cfdTextureBasedVizHandler::_updateVisualization()
    }*/
 }
 //////////////////////////////////////////////
-void cfdTextureBasedVizHandler::_updateGraph()
+void TextureBasedVizHandler::_updateGraph()
 {
    //place vv node on the graph
    if(_activeVolumeVizNode)
@@ -503,7 +505,7 @@ void cfdTextureBasedVizHandler::_updateGraph()
    }
 }
 /////////////////////////////////////////
-void cfdTextureBasedVizHandler::ClearAll()
+void TextureBasedVizHandler::ClearAll()
 {
    if(_parent.valid())
    {
@@ -529,12 +531,12 @@ void cfdTextureBasedVizHandler::ClearAll()
    }
 }
 ///////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetCurrentTime(double time)
+void TextureBasedVizHandler::SetCurrentTime(double time)
 {
     _appTime = time;
 }
 ////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateBoundingBox(bool value)
+void TextureBasedVizHandler::UpdateBoundingBox(bool value)
 {
    if(_activeVolumeVizNode && _activeVisNodeHdlr)
    {
@@ -549,7 +551,7 @@ void cfdTextureBasedVizHandler::UpdateBoundingBox(bool value)
    }
 }
 ////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateActiveTextureManager()
+void TextureBasedVizHandler::UpdateActiveTextureManager()
 {
    if(_activeTDSet)
    {
@@ -569,7 +571,7 @@ void cfdTextureBasedVizHandler::UpdateActiveTextureManager()
    }
 }
 ////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::PreFrameUpdate()
+void TextureBasedVizHandler::PreFrameUpdate()
 {
    //if ( cfdModelHandler::instance()->GetActiveModel() )
    {
@@ -594,12 +596,12 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    
 }
 ///////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetParameterFile(std::string paramFile)
+void TextureBasedVizHandler::SetParameterFile(std::string paramFile)
 {
    _paramFile = paramFile;
 }
 //////////////////////////////////////////////////////////
-cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
+cfdPBufferManager* TextureBasedVizHandler::GetPBuffer()
 {
    if(_pbm){
       return _pbm;
@@ -607,7 +609,7 @@ cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
    return 0;
 }
 ////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::_updateShaderState()
+void TextureBasedVizHandler::_updateShaderState()
 {
    //first check which option is active
    /*if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ADVECTION_SHADER){
@@ -650,7 +652,7 @@ void cfdTextureBasedVizHandler::_updateShaderState()
    }*/
 }
 ////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdateScalarRange(float* range)
+void TextureBasedVizHandler::UpdateScalarRange(float* range)
 {
    if(_svvh)
    {
@@ -665,7 +667,7 @@ void cfdTextureBasedVizHandler::UpdateScalarRange(float* range)
    }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::UpdatePreIntegrationTable(bool trueFalse)
+void TextureBasedVizHandler::UpdatePreIntegrationTable(bool trueFalse)
 {
    if(_svvh)
    {
@@ -686,37 +688,37 @@ void cfdTextureBasedVizHandler::UpdatePreIntegrationTable(bool trueFalse)
    }
 }
 //////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::PingPongTextures()
+void TextureBasedVizHandler::PingPongTextures()
 {
    if(_vvvh && _vvvh->IsThisActive()){
       _vvvh->PingPongTextures();
    }
 }
 //////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
+void TextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
 {
    if(_pbm != pbm)
       _pbm = pbm;
 }
 ////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
+void TextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
 {
    _cmdArray = cmdArray;
 }
 //////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetWorldDCS(ves::xplorer::scenegraph::DCS* dcs)
+void TextureBasedVizHandler::SetWorldDCS(ves::xplorer::scenegraph::DCS* dcs)
 {
    if(_worldDCS != dcs)
       _worldDCS = dcs;
 }
 ///////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetParentNode(ves::xplorer::scenegraph::Group* parent)
+void TextureBasedVizHandler::SetParentNode(ves::xplorer::scenegraph::Group* parent)
 {
    if(_parent != parent)
       _parent = parent;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
+void TextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
 {
    if(tds != _activeTDSet)
    {
@@ -724,7 +726,7 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
    }
 }
 ////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetActiveShaderManager(std::string name)
+void TextureBasedVizHandler::SetActiveShaderManager(std::string name)
 {
 	if(_activeVisNodeHdlr)
 	{
@@ -735,7 +737,7 @@ void cfdTextureBasedVizHandler::SetActiveShaderManager(std::string name)
 	}
 }
 /////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::_updateScalarVisHandler()
+void TextureBasedVizHandler::_updateScalarVisHandler()
 {
    if(_activeTM && _activeVolumeVizNode){
       if(!_svvh){
@@ -758,7 +760,7 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
    }
 }
 /////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::_updateVectorVisHandler()
+void TextureBasedVizHandler::_updateVectorVisHandler()
 {
    if(_activeTM && _activeVolumeVizNode && _pbm){
       if(!_vvvh){
@@ -779,19 +781,19 @@ void cfdTextureBasedVizHandler::_updateVectorVisHandler()
    }
 }
 /////////////////////////////////////////////////////////////////////////////////
-cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
+cfdVolumeVisualization* TextureBasedVizHandler::GetActiveVolumeVizNode()
 {
    return _activeVolumeVizNode;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 // Can this function be removed????
-cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode( int whichModel )
+cfdVolumeVisualization* TextureBasedVizHandler::GetVolumeVizNode( int whichModel )
 {
    std::cout << whichModel << std::endl;
    return 0;
 }
 ///////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
+void TextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
 {
    _textureBaseSelected = trueFalse;
 }

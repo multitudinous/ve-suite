@@ -30,21 +30,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_TEXTURE_BASED_MODEL_HANDLER_H
-#define CFD_TEXTURE_BASED_MODEL_HANDLER_H
-/*!\file cfdTextureBasedVizHandler.h
-cfdTextureBasedVizHandler API
-*/
-/*!\class ves::xplorer::volume::cfdTextureBasedVizHandler
-* 
-*/
-#include <vpr/Util/Singleton.h>
+#ifndef VE_XPLORER_TEXTURE_BASED_MODEL_HANDLER_H
+#define VE_XPLORER_TEXTURE_BASED_MODEL_HANDLER_H
+
+#include <ves/xplorer/TextureBasedVizHandlerPtr.h>
 #include <ves/VEConfig.h>
+
+
+#include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
+
+#include <vpr/Util/Singleton.h>
 
 #include <string>
 
@@ -64,7 +63,6 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
    class cfdGraphicsObject;
 }
 }
@@ -75,6 +73,23 @@ namespace xplorer
 #elif _OPENSG
 #elif _OSG 
 #include <osg/ref_ptr>
+
+namespace ves
+{
+namespace xplorer
+{
+namespace volume
+{
+   class cfdTextureManager;
+   class cfdPBufferManager;
+   class cfdVolumeVisualization;
+   class cfdTextureDataSet;
+   class cfdVolumeVisNodeHandler;
+   class cfdScalarVolumeVisHandler;
+   class cfdVectorVolumeVisHandler;
+}
+}
+}
 
 //namespace osgUtil { class SceneView; }
 
@@ -91,7 +106,13 @@ class cfdTextureDataSet;
 class cfdVolumeVisNodeHandler;
 class cfdScalarVolumeVisHandler;
 class cfdVectorVolumeVisHandler;
-class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cfdTextureBasedVizHandler >
+/*!\file TextureBasedVizHandler.h
+TextureBasedVizHandler API
+*/
+/*!\class ves::xplorer::volume::TextureBasedVizHandler
+* 
+*/
+class VE_XPLORER_EXPORTS TextureBasedVizHandler //: public vpr::Singleton< TextureBasedVizHandler >
    {
       public:
          void PreFrameUpdate( void );
@@ -223,11 +244,11 @@ class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cf
 
       private:
          // Required so that vpr::Singleton can instantiate this class.
-         //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
-         cfdTextureBasedVizHandler( void );
+         //friend class vpr::Singleton< TextureBasedVizHandler >;
+         TextureBasedVizHandler( void );
   
-         ~cfdTextureBasedVizHandler( void );
-         vprSingletonHeader( cfdTextureBasedVizHandler );   
+         ~TextureBasedVizHandler( void );
+         vprSingletonHeader( TextureBasedVizHandler );   
    };
 }
 }

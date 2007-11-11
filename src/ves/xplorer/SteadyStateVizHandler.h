@@ -30,32 +30,27 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_STEADYSTATEVIZHANDLER_H
-#define CFD_STEADYSTATEVIZHANDLER_H
-/*!\file cfdSteadyStateVizHandler.h
-cfdSteadyStateVizHandler API
-*/
-/*!\class ves::xplorer::cfdSteadyStateVizHandler
-* 
-*/
+#ifndef VE_XPLORER_STEADY_STATE_VIZ_HANDLER_H
+#define VE_XPLORER_STEADY_STATE_VIZ_HANDLER_H
+
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <vector>
-#include <map>
+#include <ves/open/xml/CommandPtr.h>
+
+#include <vrj/vrjParam.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
-
-#include <vrj/vrjParam.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>
 #elif _PERFORMER
 #endif
 
-#include <ves/open/xml/CommandPtr.h>
+#include <vector>
+#include <map>
 
 class vtkPolyData;
 
@@ -104,30 +99,25 @@ namespace ves
 {
 namespace xplorer
 {
-namespace event
-{
-   class EventHandler;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler
+/*!\file SteadyStateVizHandler.h
+SteadyStateVizHandler API
+*/
+/*!\class ves::xplorer::SteadyStateVizHandler
+* 
+*/
+class VE_XPLORER_EXPORTS SteadyStateVizHandler
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
+   //friend class vpr::Singleton< SteadyStateVizHandler >;
    ///Constructor
-   cfdSteadyStateVizHandler( void );
-   //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
-   //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
+   SteadyStateVizHandler( void );
+   //SteadyStateVizHandler(const SteadyStateVizHandler& o) { ; }
+   //SteadyStateVizHandler& operator=(const SteadyStateVizHandler& o) { ; }
    ///Destructor
-   ~cfdSteadyStateVizHandler( void );
+   ~SteadyStateVizHandler( void );
    ///????
-   vprSingletonHeader( cfdSteadyStateVizHandler );   
+   vprSingletonHeader( SteadyStateVizHandler );   
 
 public:
    ///Initialize the sshandler claass
@@ -164,7 +154,6 @@ public:
    void ClearVisObjects( void );
    
    // Helper functions
-   void SetCommandArray( cfdCommandArray* );
    //ves::xplorer::scenegraph::cfdTempAnimation* GetActiveAnimation( void );
    bool TransientGeodesIsBusy();
 
@@ -199,7 +188,6 @@ private:
    cfdAnimatedStreamlineCone* animStreamer;
    cfdTextOutput*       textOutput;
    // Common objects for all functions
-   cfdCommandArray*  commandArray;
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _activeDataSetDCS;
    cfdObjects* _activeObject;
    //ves::xplorer::scenegraph::cfdTempAnimation* _activeTempAnimation;
@@ -210,7 +198,7 @@ private:
    // Vectors that will eventually be stored as maps
    // these hold all the objectsa for easy access and management
    //std::vector< cfdObjects* > dataList;
-   std::vector< cfdGlobalBase* > commandList;
+   std::vector< GlobalBase* > commandList;
 
    std::string _param;
    bool actorsAreReady;
