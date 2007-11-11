@@ -31,29 +31,35 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
+
 #include <ves/open/xml/Command.h>
 
-#include <iostream>
+using namespace ves;
 
-using namespace ves::xplorer;
-using namespace ves::open::xml;
-
-cfdGlobalBase::cfdGlobalBase()
-{ 
-   veCommand = 0;
-   //std::cout << "cfdGlobalBase constructor" << std::endl;
+namespace ves
+{
+namespace xplorer
+{
+cfdGlobalBase::cfdGlobalBase() : veCommand(0)
+{
+   ; // Do nothing.
 }
 
 cfdGlobalBase::~cfdGlobalBase()
 {
+   ; // Do nothing.
 }
-void cfdGlobalBase::SetVECommand( ves::open::xml::Command* command )
+
+void cfdGlobalBase::SetVECommand( open::xml::Command* command )
 {
    veCommand = command;
 }
-//////////////////////////////////////////////
-ves::open::xml::Command* cfdGlobalBase::GetVECommand()
+
+open::xml::Command* cfdGlobalBase::GetVECommand()
 {
    return veCommand;
 }
+
+} // end xplorer
+} // end ves

@@ -30,43 +30,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_GLOBAL_BASE_H
-#define CFD_GLOBAL_BASE_H
-/*!\file cfdGlobalBase.h
-cfdGlobalBase API
-*/
-/*!\class ves::xplorer::cfdGlobalBase
-* 
-*/
+#ifndef VE_XPLORER_GLOBAL_BASE_H
+#define VE_XPLORER_GLOBAL_BASE_H
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdCommandArray;
-}
-}
+#include <ves/VEConfig.h>
+#include <ves/xplorer/GlobalBasePtr.h>
 
 #include <ves/open/xml/CommandPtr.h>
-#include <ves/VEConfig.h>
 
 namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdGlobalBase
+
+/*!\file GlobalBase.h
+GlobalBase API
+*/
+/*!\class ves::xplorer::GlobalBase
+*
+*/
+class VE_XPLORER_EXPORTS GlobalBase
 {
 public:
-   cfdGlobalBase();
-   virtual ~cfdGlobalBase ();
+   GlobalBase();
+   virtual ~GlobalBase ();
    ///copy constructor
-   cfdGlobalBase( const cfdGlobalBase& ){;}
+   GlobalBase( const GlobalBase& ){;}
 
    ///this abstract base class declares some pure virtual int functions to be
    ///specified in concrete implementations
-
-   ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ) = 0;
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() = 0;
@@ -78,9 +70,6 @@ public:
    ///Get the current command
    ves::open::xml::Command* GetVECommand();
 protected:
-
-
-   ves::xplorer::cfdCommandArray* _cfdCommandArray;///<cfdApp side variables declared in VjObs_i.h
 
    ves::open::xml::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
 
