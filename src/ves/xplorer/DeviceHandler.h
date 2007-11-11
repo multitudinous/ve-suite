@@ -30,16 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef DEVICE_HANDLER
-#define DEVICE_HANDLER
-/*!\file DeviceHandler.h
-DeviceHandler API
-*/
-/*!\class ves::xplorer::DeviceHandler
-* 
-*/
+#ifndef VE_XPLORER_DEVICE_HANDLER
+#define VE_XPLORER_DEVICE_HANDLER
+
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
+#include <ves/xplorer/DeviceHandlerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
@@ -77,6 +73,13 @@ namespace ves
 {
 namespace xplorer
 {
+
+/*!\file DeviceHandler.h
+DeviceHandler API
+*/
+/*!\class ves::xplorer::DeviceHandler
+* 
+*/
 class VE_XPLORER_EXPORTS DeviceHandler
 {
 private:
