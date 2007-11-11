@@ -176,7 +176,7 @@ private:
 
    // _name_map : maps a module id to it's module name.
    std::map< int, std::string> _id_map;
-   std::map< int, ves::open::xml::model::ModelStrongPtr > idToModel;
+   std::map< int, ves::open::xml::model::ModelPtr > idToModel;
 
    // _name_map : maps a module name to it's module id.
    std::map<int, ves::xplorer::plugin::cfdVEBaseClass* > _plugins;

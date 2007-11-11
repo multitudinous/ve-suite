@@ -72,7 +72,6 @@ XERCES_CPP_NAMESPACE_USE
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::open::xml;
-using namespace ves::open::xml::model;
 using namespace ves::xplorer::plugin;
 using namespace ves::xplorer::network;
 
@@ -263,19 +262,19 @@ void cfdExecutive::GetNetwork( void )
    // do this for models
    networkWriter.ReadXMLData( network, "System", "veSystem" );
    currentModels = networkWriter.GetLoadedXMLObjects();
-   SystemWeakPtr tempSystem = 
-       dynamic_cast< System* >( currentModels.at( 0 ) );
+   model::SystemWeakPtr tempSystem = 
+       dynamic_cast< model::System* >( currentModels.at( 0 ) );
 
-	veNetwork = network;
+   veNetwork = network;
 
    // now lets create a list of them
    _id_map.clear();
    idToModel.clear();
-   std::vector< ModelWeakPtr > tempModels;
+   std::vector< model::ModelWeakPtr > tempModels;
    tempModels = tempSystem->GetModels();
    for ( size_t i = 0; i < tempModels.size(); ++i )
    {
-      ModelWeakPtr model = tempModels.at( i );
+      model::ModelWeakPtr model = tempModels.at( i );
       _id_map[  model->GetModelID() ] = model->GetModelName();
       idToModel[ model->GetModelID() ] = model;
    }
@@ -327,7 +326,7 @@ void cfdExecutive::GetEverything( void )
          //_plugins[ iter->first ]->SetSoundHandler( EnvironmentHandler::instance()->GetSoundHandler() );
          pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }
-      std::map< int, ModelStrongPtr >::iterator modelIter;
+      std::map< int, model::ModelPtr >::iterator modelIter;
       // this call always returns something because it is up to date with the id map
       modelIter = idToModel.find( iter->first );
       _plugins[ iter->first ]->SetXMLModel( modelIter->second );

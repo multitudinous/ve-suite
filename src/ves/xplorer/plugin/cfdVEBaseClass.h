@@ -200,7 +200,7 @@ protected:
    ves::xplorer::Device* m_device;
    ves::xplorer::cfdSoundHandler* soundHandler;
 
-   ves::open::xml::model::ModelStrongPtr xmlModel;
+   ves::open::xml::model::ModelPtr xmlModel;
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
    std::map< std::string, cfdVEBaseClass* > ehMap;

@@ -35,8 +35,10 @@
 #endif
 #include <ves/xplorer/network/NetworkSystemView.h>
 #include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Link.h>
 
 #include <osgDB/ReadFile>

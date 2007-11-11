@@ -65,7 +65,6 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::open::xml;
-using namespace ves::open::xml::model;
 using namespace ves::open::xml::cad;
 using namespace ves::xplorer::plugin;
 
@@ -93,7 +92,7 @@ void cfdVEBaseClass::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
    //this->dataRepresentation = new cfdObjects();
    //this->geometryNode = new cfdModuleGeometry( groupNode );
    this->worldDCS = veworldDCS;
-   this->_model = new cfdModel( _dcs.get() );
+   this->_model = new Model( _dcs.get() );
    //this->_readParam = new cfdReadParam();
 }
 //////////////////////////////////////////////////////////////////      
@@ -300,7 +299,7 @@ Model* cfdVEBaseClass::GetCFDModel( void )
    return this->worldDCS.get();
 }*/
 //////////////////////////////////////////////////////////////////   
-void cfdVEBaseClass::SetXMLModel( ModelWeakPtr tempModel )
+void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
 {
    xmlModel = tempModel;
 
@@ -329,7 +328,7 @@ void cfdVEBaseClass::SetXMLModel( ModelWeakPtr tempModel )
    {
       DataValuePair* modelNode = new DataValuePair();
       modelNode->SetDataType( std::string("XMLOBJECT") );
-      modelNode->SetData( "CREATE_NEW_DATASETS", new Model( *xmlModel ) );
+      modelNode->SetData( "CREATE_NEW_DATASETS", new model::Model( *xmlModel ) );
       
       Command* dataCommand = new Command();
       dataCommand->AddDataValuePair( modelNode );
