@@ -33,6 +33,7 @@
 
 #ifndef Tag_H_
 #define Tag_H_
+#include <ves/open/xml/model/TagPtr.h>
 /*!\file Tag.h
   *Data ports API
   */

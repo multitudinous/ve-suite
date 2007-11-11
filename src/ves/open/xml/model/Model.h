@@ -32,6 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef XML_MODEL_H_
 #define XML_MODEL_H_
+
+#include <ves/open/xml/model/ModelPtr.h>
 /*!\file Model.h
   *Model API
   */
@@ -46,9 +48,8 @@
 #include <string>
 #include <vector>
 #include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/model/SystemStrongPtr.h>
-#include <ves/open/xml/model/SystemWeakPtr.h>
-#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/model/SystemPtr.h>
+#include <ves/open/xml/CommandPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 
@@ -58,8 +59,6 @@ namespace open
 {
 namespace xml
 {
-   class DataValuePair;
-   class Command;
    class ParameterBlock;
    namespace model
    {
@@ -245,7 +244,7 @@ private:
    ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
    unsigned int iconMirror;
    ///The sub network for this model
-   ves::open::xml::model::SystemStrongPtr m_subSystem;
+   ves::open::xml::model::SystemPtr m_subSystem;
 };
 }
 template<>

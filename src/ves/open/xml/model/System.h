@@ -30,8 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef SYSTEM_H
-#define SYSTEM_H
+#ifndef VE_OPEN_XML_SYSTEM_H
+#define VE_OPEN_XML_SYSTEM_H
+#include <ves/open/xml/model/SystemPtr.h>
 /*!\file System.h
   *System System API
   */
@@ -44,12 +45,8 @@
 
 #include <ves/open/xml/XMLObject.h>
 
-#include <ves/open/xml/model/ModelStrongPtr.h>
-#include <ves/open/xml/model/ModelWeakPtr.h>
-#include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/NetworkStrongPtr.h>
-#include <ves/open/xml/model/NetworkWeakPtr.h>
-#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/NetworkPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 
@@ -104,9 +101,9 @@ protected:
 
 private:
     ///The systems network
-    NetworkStrongPtr m_network;
+    NetworkPtr m_network;
     ///The vector of models for this system
-    std::vector< ModelStrongPtr > m_models;
+    std::vector< ModelPtr > m_models;
 };
 }
 template<>
