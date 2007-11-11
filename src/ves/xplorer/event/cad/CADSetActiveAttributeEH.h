@@ -32,32 +32,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_SET_ACTIVE_ATTRIBUTE_EVENT_HANDLER_H
 #define VE_CAD_SET_ACTIVE_ATTRIBUTE_EVENT_HANDLER_H
-/*!\file CADSetActiveAttributeEH.h
-  CADSetActiveAttributeEventHandler API
-  */
-/*!\class CADSetActiveAttributeEventHandler
- * Class for handling CADNode attributes.
- */
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
-#include <ves/VEConfig.h>
+
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
-class VE_XPLORER_EXPORTS CADSetActiveAttributeEventHandler: public CADEventHandler
+/*!\file CADSetActiveAttributeEH.h
+  CADSetActiveAttributeEventHandler API
+  */
+/*!\class CADSetActiveAttributeEventHandler
+ * Class for handling CADNode attributes.
+ */
+class VE_XPLORER_EXPORTS CADSetActiveAttributeEventHandler : public CADEventHandler
 {
 public:
    ///Constructor

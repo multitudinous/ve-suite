@@ -33,34 +33,8 @@
 #ifndef UNSELECT_OBJECTS_EVENT_HANDLER_H
 #define UNSELECT_OBJECTS_EVENT_HANDLER_H
 
-/*!\file UnselectObjectsEventHandler.h
-*/
-
-/*!\class UnselectObjectsEventHandler
-* Class for unselecting all current selected objects
-*/
-
-// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-    class GlobalBase;
-}
-}
 
 namespace ves
 {
@@ -68,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file UnselectObjectsEventHandler.h
+*/
+
+/*!\class UnselectObjectsEventHandler
+* Class for unselecting all current selected objects
+*/
 class UnselectObjectsEventHandler : public EventHandler
 {
 public:

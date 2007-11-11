@@ -32,22 +32,22 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_TOGGLE_EVENT_HANDLER_H
 #define VE_CAD_TOGGLE_EVENT_HANDLER_H
-/*!\file CADToggleEventHandler.h
-  CADToggleEventHandler API
-  */
-/*!\class CADToggleEventHandler
- * Class to toggle CADNode on/off.
- */
-#include <ves/open/xml/XMLObjectPtr.h>
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
-#include <ves/VEConfig.h>
+
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
+/*!\file CADToggleEventHandler.h
+  CADToggleEventHandler API
+  */
+/*!\class CADToggleEventHandler
+ * Class to toggle CADNode on/off.
+ */
 class VE_XPLORER_EXPORTS CADToggleEventHandler : public CADEventHandler
 {
 public:

@@ -33,17 +33,8 @@
 #ifndef CAD_PHYSICS_PROPERTIES_EVENT_HANDLER_H
 #define CAD_PHYSICS_PROPERTIES_EVENT_HANDLER_H
 
-/*!\file CADPhysicsPropertiesEventHandler.h
-*/
-
-/*!\class CADPhysicsPropertiesEventHandler
-*Class to handle physics properties for CADEntities
-*/
-
-#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -51,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file CADPhysicsPropertiesEventHandler.h
+*/
+
+/*!\class CADPhysicsPropertiesEventHandler
+*Class to handle physics properties for CADEntities
+*/
 class VE_XPLORER_EXPORTS CADPhysicsPropertiesEventHandler : public CADEventHandler
 {
 public:

@@ -32,31 +32,22 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_REMOVE_ATTRIBUTE_EVENT_HANDLER_H
 #define VE_CAD_REMOVE_ATTRIBUTE_EVENT_HANDLER_H
-/*!\file CADAddAttributeEventHandler.h
-  CADTransfomrEventHandler API
-  */
-/*!\class CADRemoveAttributeEventHandler
- * Class for handling CADNode transforms.
- */
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
-#include <ves/VEConfig.h>
+
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
+/*!\file CADAddAttributeEventHandler.h
+  CADTransfomrEventHandler API
+  */
+/*!\class CADRemoveAttributeEventHandler
+ * Class for handling CADNode transforms.
+ */
 class VE_XPLORER_EXPORTS CADRemoveAttributeEventHandler: public CADEventHandler
 {
 public:

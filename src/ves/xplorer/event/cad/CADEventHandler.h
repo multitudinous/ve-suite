@@ -32,41 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_EVENT_HANDLER_H
 #define CAD_EVENT_HANDLER_H
-/*!\file CADEventHandler.h
-  CADEventHandler API
-  */
-/*!\class CADEventHandler
- * Base class for CADNode event handling.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
+#include <ves/xplorer/ModelCADHandlerPtr.h>
+#include <ves/xplorer/ModelPtr.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-    namespace cad
-    {
-        class CADNode;
-    }
-}
-}
-}
+#include <ves/open/xml/cad/CADNodePtr.h>
 
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-   class cfdModel;
-   class ModelCADHandler;
-}
-}
-
-#include <ves/VEConfig.h>
 #include <string>
 
 namespace ves
@@ -75,6 +47,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file CADEventHandler.h
+  CADEventHandler API
+  */
+/*!\class CADEventHandler
+ * Base class for CADNode event handling.
+ */
 class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler
 {
 public:

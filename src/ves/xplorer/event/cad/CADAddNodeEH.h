@@ -32,44 +32,24 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_ADD_NODE_EVENT_HANDLER_H
 #define VE_CAD_ADD_NODE_EVENT_HANDLER_H
-/*!\file CADAddNodeEventHandler.h
-  CADTransfomrEventHandler API
-  */
-/*!\class CADAddNodeEventHandler
- * Class for handling CADNode transforms.
- */
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace cad
-{
-    class CADNode;
-}
-}
-}
-}
+
 #include <ves/xplorer/event/cad/CADEventHandler.h>
-#include <ves/VEConfig.h>
+
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
-class VE_XPLORER_EXPORTS CADAddNodeEventHandler: public CADEventHandler{
+/*!\file CADAddNodeEventHandler.h
+  CADTransfomrEventHandler API
+  */
+/*!\class CADAddNodeEventHandler
+ * Class for handling CADNode transforms.
+ */
+class VE_XPLORER_EXPORTS CADAddNodeEventHandler: public CADEventHandler
+{
 public:
    ///Constructor
    CADAddNodeEventHandler();

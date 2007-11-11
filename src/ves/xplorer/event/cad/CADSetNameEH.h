@@ -32,25 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_SET_NAME_EVENT_HANDLER_H
 #define VE_CAD_SET_NAME_EVENT_HANDLER_H
-/*!\file CADSetNameEventHandler.h
-  CADSetNameEventHandler API
-  */
-/*!\class CADSetNameEventHandler
- * Class for setting name on CADNode.
- */
-#include <ves/xplorer/event/cad/CADEventHandler.h>
-#include <ves/VEConfig.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
+#include <ves/xplorer/event/cad/CADEventHandler.h>
+
 
 namespace ves
 {
@@ -58,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file CADSetNameEventHandler.h
+  CADSetNameEventHandler API
+  */
+/*!\class CADSetNameEventHandler
+ * Class for setting name on CADNode.
+ */
 class VE_XPLORER_EXPORTS CADSetNameEventHandler: public CADEventHandler
 {
 public:

@@ -32,31 +32,22 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_MOVE_NODE_EVENT_HANDLER_H
 #define VE_CAD_MOVE_NODE_EVENT_HANDLER_H
-/*!\file CADMoveNodeEventHandler.h
-  CADMoveNodeEventHandler API
-  */
-/*!\class CADMoveNodeEventHandler
- * Class that handles moving a CADNode to a different CADAssembly.
- */
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
-#include <ves/VEConfig.h>
+
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
+/*!\file CADMoveNodeEventHandler.h
+  CADMoveNodeEventHandler API
+  */
+/*!\class CADMoveNodeEventHandler
+ * Class that handles moving a CADNode to a different CADAssembly.
+ */
 class VE_XPLORER_EXPORTS CADMoveNodeEventHandler: public CADEventHandler
 {
 public:

@@ -32,30 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_CAD_DELETE_NODE_EVENT_HANDLER_H
 #define VE_CAD_DELETE_NODE_EVENT_HANDLER_H
-/*!\file CADDeleteNodeEventHandler.h
-  CADDeleteNodeEventHandler API
-  */
-/*!\class CADDeleteNodeEventHandler
- * Class for removing CADNode from the current tree.
- */
+
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-namespace cad
-{
-    class CADNode;
-}
-}
-}
-}
 
 namespace ves
 {
@@ -63,6 +44,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file CADDeleteNodeEventHandler.h
+  CADDeleteNodeEventHandler API
+  */
+/*!\class CADDeleteNodeEventHandler
+ * Class for removing CADNode from the current tree.
+ */
 class VE_XPLORER_EXPORTS CADDeleteNodeEventHandler: public CADEventHandler
 {
 public:

@@ -32,28 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef ATTRIBUTE_EVENT_HANDLER_H
 #define ATTRIBUTE_EVENT_HANDLER_H
-/*!\file AttributeEventHandler.h
-  AttributeEventHandler API
-  */
-/*!\class AttributeEventHandler
- * Base class for CADAttribute event handling.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/open/xml/XMLObjectPtr.h>
+#include <ves/xplorer/ModelPtr.h>
+
 #include <ves/open/xml/cad/CADAttributePtr.h>
 
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-   class cfdModel;
-}
-}
-
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -61,6 +46,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file AttributeEventHandler.h
+  AttributeEventHandler API
+  */
+/*!\class AttributeEventHandler
+ * Base class for CADAttribute event handling.
+ */
 class VE_XPLORER_EXPORTS AttributeEventHandler : public EventHandler
 {
 public:
@@ -91,7 +82,7 @@ protected:
    ///\param veXMLObject The veXMLObject to execute.
    virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
 
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   ves::xplorer::Model* _activeModel;///<The active cfdModel
    ves::open::xml::cad::CADAttribute* _activeAttribute;///<The CADNode.
 };
 

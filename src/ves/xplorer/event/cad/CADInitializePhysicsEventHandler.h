@@ -33,32 +33,8 @@
 #ifndef CAD_INITIALIZE_PHYSICS_EVENT_HANDLER_H
 #define CAD_INITIALIZE_PHYSICS_EVENT_HANDLER_H
 
-/*!\file CADInitializePhysicsEventHandler.h
-*/
-
-/*!\class CADInitializePhysicsEventHandler
-*Class to initialize phyics for a CADEntities
-*/
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-    namespace cad
-    {
-        class CADNode;
-    }
-}
-}
-}
-
-
 #include <ves/xplorer/event/cad/CADEventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -66,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file CADInitializePhysicsEventHandler.h
+*/
+
+/*!\class CADInitializePhysicsEventHandler
+*Class to initialize phyics for a CADEntities
+*/
 class VE_XPLORER_EXPORTS CADInitializePhysicsEventHandler : public CADEventHandler
 {
 public:

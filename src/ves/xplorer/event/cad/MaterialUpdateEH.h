@@ -32,25 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef MATERIAL_UPDATE_EVENT_HANDLER_H
 #define MATERIAL_UPDATE_EVENT_HANDLER_H
-/*!\file MaterialUpdateEH.h
-  MaterialUpdateEventHandler API
-  */
-/*!\class MaterialUpdateEventHandler
- * CADMaterial event handling.
- */
 
 #include <ves/xplorer/event/cad/AttributeEventHandler.h>
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
+
 
 namespace ves
 {
@@ -58,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file MaterialUpdateEH.h
+  MaterialUpdateEventHandler API
+  */
+/*!\class MaterialUpdateEventHandler
+ * CADMaterial event handling.
+ */
 class VE_XPLORER_EXPORTS MaterialUpdateEventHandler : public AttributeEventHandler
 {
 public:
