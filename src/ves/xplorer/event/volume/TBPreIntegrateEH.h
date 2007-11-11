@@ -32,25 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_PREINTEGRATE_ENABLE_EVENT_HANDLER_H
 #define TEXTURE_BASED_PREINTEGRATE_ENABLE_EVENT_HANDLER_H
-/*!\file TBPreIntegrateEH.h
-  TextureBasedPreIntegrateEnableEventHandler API
-  */
-/*!\class TextureBasedPreIntegrateEnableEventHandler
- * Activate the texture based visualization.
- */
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
+
 
 namespace ves
 {
@@ -58,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TBPreIntegrateEH.h
+  TextureBasedPreIntegrateEnableEventHandler API
+  */
+/*!\class TextureBasedPreIntegrateEnableEventHandler
+ * Activate the texture based visualization.
+ */
 class VE_XPLORER_EXPORTS TextureBasedPreIntegrateEnableEventHandler : public TextureBasedEventHandler
 {
 public:

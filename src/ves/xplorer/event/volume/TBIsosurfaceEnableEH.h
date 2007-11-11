@@ -32,25 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_ISOSURFACE_ENABLE_EVENT_HANDLER_H
 #define TEXTURE_BASED_ISOSURFACE_ENABLE_EVENT_HANDLER_H
-/*!\file TBIsosurfaceEnableEH.h
-  TextureBasedIsosurfaceEnableEventHandler API
-  */
-/*!\class TextureBasedIsosurfaceEnableEventHandler
- * Activate the texture based visualization.
- */
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
+
 
 namespace ves
 {
@@ -58,6 +42,13 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TBIsosurfaceEnableEH.h
+  TextureBasedIsosurfaceEnableEventHandler API
+  */
+/*!\class TextureBasedIsosurfaceEnableEventHandler
+ * Activate the texture based visualization.
+ */
+
 class VE_XPLORER_EXPORTS TextureBasedIsosurfaceEnableEventHandler : public TextureBasedEventHandler
 {
 public:

@@ -34,28 +34,8 @@
 #define VE_DATA_TRANSFORM_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/VEConfig.h>
 
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-   class cfdVEBaseClass;
-}
-}
+#include <ves/xplorer/ModelPtr.h>
 
 namespace ves
 {
@@ -89,7 +69,7 @@ public:
    void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 
 protected:
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel;
+   ves::xplorer::Model* _activeModel;///<The active cfdModel;
 
 };
 

@@ -34,25 +34,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_UPDATE_SCALAR_RANGE_EVENT_HANDLER_H
 #define TEXTURE_BASED_UPDATE_SCALAR_RANGE_EVENT_HANDLER_H
-/*!\file TBUpdateScalarRangeEH.h
-  TextureBasedUpdateScalarRangeEventHandler API
-  */
-/*!\class TextureBasedUpdateScalarRangeEventHandler
- * Activate the texture based visualization.
- */
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
+
 
 namespace ves
 {
@@ -60,6 +44,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TBUpdateScalarRangeEH.h
+  TextureBasedUpdateScalarRangeEventHandler API
+  */
+/*!\class TextureBasedUpdateScalarRangeEventHandler
+ * Activate the texture based visualization.
+ */
 class VE_XPLORER_EXPORTS TextureBasedUpdateScalarRangeEventHandler : public TextureBasedEventHandler
 {
 public:

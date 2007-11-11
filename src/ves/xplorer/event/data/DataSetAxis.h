@@ -32,12 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DATASET_AXIS_H
 #define DATASET_AXIS_H
-/*!\file DataSetAxis.h
-DataSetAxis API
-*/
-/*!\class ves::xplorer::DataSetAxis
-*   Renders an axis for a given dataset
-*/
 
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/GlobalBase.h>
@@ -64,6 +58,12 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file DataSetAxis.h
+DataSetAxis API
+*/
+/*!\class ves::xplorer::DataSetAxis
+*   Renders an axis for a given dataset
+*/
 class VE_XPLORER_EXPORTS DataSetAxis : public GlobalBase
 {
 public:

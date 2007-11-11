@@ -32,16 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DATASET_SCALARBAR_H
 #define DATASET_SCALARBAR_H
-/*!\file DataSetScalarBar.h
-DataSetScalarBar API
-*/
-/*!\class ves::xplorer::DataSetScalarBar
-*   Renders an axis for a given dataset
-*/
-#include <string>
-#include <vector>
-#include <sstream>
-#include <iostream>
+
 #include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -55,6 +46,11 @@ using osgSim::ScalarBar;
 #include <osg/ref_ptr>
 #include <osg/Geode>
 
+#include <string>
+#include <vector>
+#include <sstream>
+#include <iostream>
+
 namespace ves
 {
 namespace xplorer
@@ -66,20 +62,17 @@ namespace scenegraph
 }
 }
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdCommandArray;
-   class cfdDataSet;
-   class cfdReadParam;
-}
-}
 
 namespace ves
 {
 namespace xplorer
 {
+/*!\file DataSetScalarBar.h
+DataSetScalarBar API
+*/
+/*!\class ves::xplorer::DataSetScalarBar
+*   Renders an axis for a given dataset
+*/
 class VE_XPLORER_EXPORTS DataSetScalarBar : public GlobalBase
 {
 public:
@@ -87,8 +80,6 @@ public:
    DataSetScalarBar( void );
    ///Destructor
    virtual ~DataSetScalarBar( void );
-   /// compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ){ return true; }
    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
    /// Create the scalar bar

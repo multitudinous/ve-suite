@@ -32,37 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef AXES_LABELS_EVENT_HANDLER_H
 #define AXES_LABELS_EVENT_HANDLER_H
-/*!\file AxesLabelsEventHandler.h
-  AxesLabelsEventHandler API
-  */
-/*!\class AxesLabelsEventHandler
- * 
- */
-#include <map>
-#include <ves/VEConfig.h>
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-   class cfdVEBaseClass;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
+
+#include <ves/xplorer/ModelPtr.h>
+
+#include <map>
 
 namespace ves
 {
@@ -70,6 +45,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file AxesLabelsEventHandler.h
+  AxesLabelsEventHandler API
+  */
+/*!\class AxesLabelsEventHandler
+ * 
+ */
 class VE_XPLORER_EXPORTS AxesLabelsEventHandler: public EventHandler
 {
 public:
@@ -96,7 +77,7 @@ public:
    void Execute( ves::open::xml::XMLObject* command); 
 
 private:
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

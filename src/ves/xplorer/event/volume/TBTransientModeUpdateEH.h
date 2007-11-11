@@ -33,26 +33,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_TRANSIENT_MODE_UPDATE_EVENT_HANDLER_H
-#define TEXTURE_BASED_TRANSIENT_MODE_EVENT_HANDLER_H
-/*!\file TBTransientModeUpdateEH.h
-  TextureBasedTransientModeUpdateEventHandler API
-  */
-/*!\class TextureBasedTransientModeUpdateEventHandler
- * Activate the texture based visualization.
- */
+#define TEXTURE_BASED_TRANSIENT_MODE_UPDATE_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
+
 
 namespace ves
 {
@@ -60,6 +44,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TBTransientModeUpdateEH.h
+  TextureBasedTransientModeUpdateEventHandler API
+  */
+/*!\class TextureBasedTransientModeUpdateEventHandler
+ * Activate the texture based visualization.
+ */
 class VE_XPLORER_EXPORTS TextureBasedTransientModeUpdateEventHandler : public TextureBasedEventHandler
 {
 public:

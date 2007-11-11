@@ -32,34 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef SEED_POINT_DIMENSIONS_EVENT_HANDLER_H
 #define SEED_POINT_DIMENSIONS_EVENT_HANDLER_H
-/*!\file SPDimensionsEH.h
-  SeedPointDimensionsEventHandler API
-  */
-/*!\class SeedPointDimensionsEventHandler
- * Update the SeedPoints Bounding box.
- */
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
-#include <ves/VEConfig.h>
+
+#include <ves/xplorer/ModelPtr.h>
+
 
 namespace ves
 {
@@ -67,6 +44,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file SPDimensionsEH.h
+  SeedPointDimensionsEventHandler API
+  */
+/*!\class SeedPointDimensionsEventHandler
+ * Update the SeedPoints Bounding box.
+ */
 class VE_XPLORER_EXPORTS SeedPointDimensionsEventHandler : public EventHandler
 {
 public:
@@ -89,7 +72,7 @@ public:
    ///\param model The active cfdModel
    void SetGlobalBaseObject(ves::xplorer::GlobalBase* model);
 protected:
-   ves::xplorer::cfdModel* _activeModel;///<The active model;
+   ves::xplorer::Model* _activeModel;///<The active model;
 };
 
 }

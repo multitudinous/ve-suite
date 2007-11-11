@@ -32,37 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef AXES_EVENT_HANDLER_H
 #define AXES_EVENT_HANDLER_H
-/*!\file AxesEventHandler.h
-  AxesEventHandler API
-  */
-/*!\class AxesEventHandler
- * 
- */
-#include <map>
-#include <ves/VEConfig.h>
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-   class cfdVEBaseClass;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
+
+#include <ves/xplorer/ModelPtr.h>
+
+#include <map>
+
 
 namespace ves
 {
@@ -70,6 +46,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file AxesEventHandler.h
+  AxesEventHandler API
+  */
+/*!\class AxesEventHandler
+ * 
+ */
 class VE_XPLORER_EXPORTS AxesEventHandler: public EventHandler
 {
 public:
@@ -85,7 +67,7 @@ public:
    ///Equal operator
    AxesEventHandler& operator=(const AxesEventHandler& rhs);
 
-   ///Set the cfdModel.
+   ///Set the Model.
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
@@ -96,7 +78,7 @@ public:
    void Execute( ves::open::xml::XMLObject* command); 
 
 private:
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

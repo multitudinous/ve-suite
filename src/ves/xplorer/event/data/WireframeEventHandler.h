@@ -32,37 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef WIREFRAME_EVENT_HANDLER_H
 #define WIREFRAME_EVENT_HANDLER_H
-/*!\file WireframeEventHandler.h
-  WireframeEventHandler API
-  */
-/*!\class WireframeEventHandler
- * 
- */
-#include <map>
-#include <ves/VEConfig.h>
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-   class cfdVEBaseClass;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
+
+#include <ves/xplorer/ModelPtr.h>
+
+#include <map>
 
 namespace ves
 {
@@ -70,6 +45,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file WireframeEventHandler.h
+  WireframeEventHandler API
+  */
+/*!\class WireframeEventHandler
+ * 
+ */
 class VE_XPLORER_EXPORTS WireframeEventHandler: public EventHandler
 {
 public:
@@ -96,7 +77,7 @@ public:
    void Execute( ves::open::xml::XMLObject* command); 
 
 private:
-   ves::xplorer::cfdModel* _activeModel; ///<The current active model 
+   ves::xplorer::Model* _activeModel; ///<The current active model 
 };
 
 }

@@ -34,35 +34,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef ADD_VTK_DATASET_EVENT_HANDLER_H
 #define ADD_VTK_DATASET_EVENT_HANDLER_H
-/*!\file AddVTKDataSetEventHandler.h
-  AddVTKDataSetEventHandler API
-  */
-/*!\class AddVTKDataSetEventHandler
- * Class for adding vtk datasets.
- */
-#include <string>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
+
+#include <ves/xplorer/ModelPtr.h>
+
+#include <string>
+
 
 namespace ves
 {
@@ -70,6 +48,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file AddVTKDataSetEventHandler.h
+  AddVTKDataSetEventHandler API
+  */
+/*!\class AddVTKDataSetEventHandler
+ * Class for adding vtk datasets.
+ */
 class VE_XPLORER_EXPORTS AddVTKDataSetEventHandler: public EventHandler
 {
 public:
@@ -103,7 +87,7 @@ protected:
    ///\param directory to load files from
    void Load3DTextureDirectories( std::string dirToLoad );
 
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel;
+   ves::xplorer::Model* _activeModel;///<The active cfdModel;
 };
 
 }

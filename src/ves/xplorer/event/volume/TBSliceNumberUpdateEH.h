@@ -32,25 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_SLICE_NUMBER_UPDATE_EVENT_HANDLER_H
 #define TEXTURE_BASED_SLICE_NUMBER_UPDATE_EVENT_HANDLER_H
-/*!\file TBSliceNumberUpdateEH.h
-  TextureBasedSliceNumberUpdateEventHandler API
-  */
-/*!\class TextureBasedSliceNumberUpdateEventHandler
- * Update the number of slice planes per brick.
- */
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
+
 
 namespace ves
 {
@@ -58,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TBSliceNumberUpdateEH.h
+  TextureBasedSliceNumberUpdateEventHandler API
+  */
+/*!\class TextureBasedSliceNumberUpdateEventHandler
+ * Update the number of slice planes per brick.
+ */
 class VE_XPLORER_EXPORTS TextureBasedSliceNumberUpdateEventHandler : public TextureBasedEventHandler
 {
 public:

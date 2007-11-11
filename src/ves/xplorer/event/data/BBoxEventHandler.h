@@ -32,36 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef BBOX_EVENT_HANDLER_H
 #define BBOX_EVENT_HANDLER_H
-/*!\file BBoxEventHandler.h
-  BBoxEventEventHandler API
-  */
-/*!\class BBoxEventHandler
- * Class for handling Bounding Box.
- */
-#include <map>
-#include <ves/VEConfig.h>
+
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
+#include <ves/xplorer/ModelPtr.h>
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-   class cfdVEBaseClass;
-}
-}
+#include <map>
 
 namespace ves
 {
@@ -69,6 +45,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file BBoxEventHandler.h
+  BBoxEventEventHandler API
+  */
+/*!\class BBoxEventHandler
+ * Class for handling Bounding Box.
+ */
 class VE_XPLORER_EXPORTS BBoxEventHandler: public EventHandler
 {
 public:
@@ -95,7 +77,7 @@ public:
    void Execute( ves::open::xml::XMLObject* command); 
 
 private:
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

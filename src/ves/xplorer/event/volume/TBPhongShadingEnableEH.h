@@ -32,25 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_PHONG_SHADING_ENABLE_EVENT_HANDLER_H
 #define TEXTURE_BASED_PHONG_SHADING_ENABLE_EVENT_HANDLER_H
-/*!\file TBPhongShadingEnableEH.h
-  TextureBasedPhongShadingEnableEventHandler API
-  */
-/*!\class TextureBasedPhongShadingEnableEventHandler
- * Activate phong shading on the texture based visualization.
- */
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -58,6 +41,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TBPhongShadingEnableEH.h
+  TextureBasedPhongShadingEnableEventHandler API
+  */
+/*!\class TextureBasedPhongShadingEnableEventHandler
+ * Activate phong shading on the texture based visualization.
+ */
 class VE_XPLORER_EXPORTS TextureBasedPhongShadingEnableEventHandler : public TextureBasedEventHandler
 {
 public:

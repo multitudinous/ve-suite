@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_SEED_POINTS_H
 #define VE_SEED_POINTS_H
+
 #ifdef _OSG
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -48,6 +49,11 @@ namespace osg
    class Geometry;
    class Point;
 }
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file SeedPoints.h
   Seed Points 
   */
@@ -55,10 +61,6 @@ namespace osg
 /*!\class ves::xplorer::SeedPoints
  * Class defining the a volume of points
  */
-namespace ves
-{
-namespace xplorer
-{
 class VE_XPLORER_EXPORTS SeedPoints: public osg::Geode
 {
 public:

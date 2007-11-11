@@ -32,25 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXTURE_BASED_EVENT_HANDLER_H
 #define TEXTURE_BASED_EVENT_HANDLER_H
-/*!\file TextureBasedEventHandler.h
-  TextureBasedEventHandler API
-  */
-/*!\class TextureBasedEventHandler
- * Base class for TextureBased Visualization event handling.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
+#include <ves/xplorer/ModelPtr.h>
 
 namespace ves
 {
@@ -63,16 +47,6 @@ namespace volume
 }
 }
 
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-   class cfdModel;
-}
-}
-
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -80,6 +54,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file TextureBasedEventHandler.h
+  TextureBasedEventHandler API
+  */
+/*!\class TextureBasedEventHandler
+ * Base class for TextureBased Visualization event handling.
+ */
 class VE_XPLORER_EXPORTS TextureBasedEventHandler : public EventHandler
 {
 public:
@@ -113,7 +93,7 @@ protected:
    ///Set the active cfdTextureDataset
    void _setActiveTextureDataset(/*std::string tdsName*/);
    ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel;
+   ves::xplorer::Model* _activeModel;///<The active cfdModel;
 };
 
 }
