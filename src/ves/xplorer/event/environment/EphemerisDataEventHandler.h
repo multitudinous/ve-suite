@@ -71,7 +71,7 @@ public:
    virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
 
 protected:
-   ves::xplorer::cfdModel* m_activeModel;///<The active cfdModel
+   ves::xplorer::Model* m_activeModel;///<The active cfdModel
 };
 
 }

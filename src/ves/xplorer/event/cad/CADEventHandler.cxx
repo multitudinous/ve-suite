@@ -95,7 +95,7 @@ void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model)
     {
         if( model )
         {
-            m_activeModel = dynamic_cast<ves::xplorer::cfdModel*>(model);
+            m_activeModel = dynamic_cast<ves::xplorer::Model*>(model);
         }
         else
         {

@@ -105,7 +105,7 @@ protected:
    ///\param node CADNode to extract transform from.
    void _setTransformOnNode(ves::open::xml::cad::CADNode* node);
 
-   ves::xplorer::cfdModel* m_activeModel;///<The active cfdModel;
+   ves::xplorer::Model* m_activeModel;///<The active cfdModel;
    ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
    ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
 };

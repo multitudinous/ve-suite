@@ -225,7 +225,7 @@ ves::xplorer::scenegraph::DCS* cfdGraphicsObject::GetParentNode( void )
 }
 
 // Return parent node for a this object
-void cfdGraphicsObject::SetActiveModel( cfdModel* input )
+void cfdGraphicsObject::SetActiveModel( Model* input )
 {
    model = input;
 }

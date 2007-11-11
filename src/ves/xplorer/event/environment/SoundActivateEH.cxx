@@ -75,7 +75,7 @@ void SoundActivateEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* ba
    {
       if(baseObject)
       {
-         _activeModel = dynamic_cast<ves::xplorer::cfdModel*>(baseObject);
+         _activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
       }
       else
       {

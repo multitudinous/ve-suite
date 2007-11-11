@@ -125,7 +125,7 @@ void EphemerisDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase*
     {
         if(baseObject)
 	{
-            m_activeModel = dynamic_cast<ves::xplorer::cfdModel*>(baseObject);
+            m_activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
 	}
 	else
 	{

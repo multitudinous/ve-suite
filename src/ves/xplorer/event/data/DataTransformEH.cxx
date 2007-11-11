@@ -119,7 +119,7 @@ void DataTransformEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* mo
    {
       if ( model )
       {
-         _activeModel = dynamic_cast< ves::xplorer::cfdModel* >( model );
+         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
       }
       else
       {

@@ -267,7 +267,7 @@ void cfdModelHandler::SetActiveModel( int modelNumber )
          _activeModel = 0;
 }
 /////////////////////////////////////////////
-cfdModel* cfdModelHandler::GetModel( int i )
+Model* cfdModelHandler::GetModel( int i )
 {
    if ( _modelList.empty() )
       return NULL;
@@ -275,20 +275,20 @@ cfdModel* cfdModelHandler::GetModel( int i )
       return _modelList.at( i );
 }
 /////////////////////////////////////////////////
-void cfdModelHandler::AddModel( cfdModel* input )
+void cfdModelHandler::AddModel( Model* input )
 {
    _modelList.push_back( input );
 }
 ///////////////////////////////////////////////////////////////
-void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
+void cfdModelHandler::RemoveModel( Model* modelToBeRemoved )
 {
-   std::vector< cfdModel* >::iterator iter;
+   std::vector< Model* >::iterator iter;
    for ( iter=_modelList.begin(); iter!=_modelList.end(); )
    {  
       if ( (*iter) == modelToBeRemoved )
       {
          //delete (*iter);
-         //cfdModel* tempModel = (*iter);
+         //Model* tempModel = (*iter);
          _modelList.erase( iter++ ); 
          delete modelToBeRemoved;
          //tempModel = 0;
@@ -302,7 +302,7 @@ void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
    }
 }
 /////////////////////////////////////////////////
-cfdModel* cfdModelHandler::GetActiveModel( void )
+Model* cfdModelHandler::GetActiveModel( void )
 {
    return _activeModel;
 }

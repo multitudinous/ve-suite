@@ -136,7 +136,7 @@ public:
 
    void SetID(int id);
 
-   ves::xplorer::cfdModel* GetCFDModel( void );
+   ves::xplorer::Model* GetCFDModel( void );
 
    void LoadSurfaceFiles( std::string );
 
@@ -197,7 +197,7 @@ protected:
 
    ves::xplorer::cfdObjects* dataRepresentation;
 
-   ves::xplorer::cfdModel* _model;
+   ves::xplorer::Model* _model;
 
    std::string _param;
 

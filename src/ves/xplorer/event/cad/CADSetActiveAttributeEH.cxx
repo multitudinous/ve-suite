@@ -86,7 +86,7 @@ void CADSetActiveAttributeEventHandler::_operateOnNode(XMLObject* xmlObject)
       DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Active Attribute");
 
       std::cout<<"--Setting active attribute--"<<std::endl;
-      //ves::xplorer::cfdModel* activeModel = dynamic_cast<ves::xplorer::cfdModel*>(_baseObject);
+      //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
       m_cadHandler->SetActiveAttributeOnNode(nodeID->GetDataString(),nodeType->GetDataString(),activeAttribute->GetDataString());
       std::cout<<"--done--"<<std::endl;
    }

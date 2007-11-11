@@ -123,10 +123,10 @@ public:
    //void CreateObjects( void );      
    void LoadSurfaceFiles( std::string );
    vtkPolyData* GetArrow( void );
-   cfdModel* GetModel( int );
-   void AddModel( cfdModel* );
-   void RemoveModel( cfdModel* );
-   cfdModel* GetActiveModel( void );
+   Model* GetModel( int );
+   void AddModel( Model* );
+   void RemoveModel( Model* );
+   Model* GetActiveModel( void );
    void SetActiveModel( int modelNumber );
    int GetNumberOfModels( void );
 
@@ -160,14 +160,14 @@ private:
    ves::open::xml::Command* nullCommand;
    //cfdReadParam* _readParam;
    //cfdScalarBarActor* _scalarBar;
-   cfdModel* _activeModel;
+   Model* _activeModel;
 
 #ifdef _OSG
    ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
 #endif
    bool tbased;
    vtkPolyData* arrow;
-   std::vector< cfdModel* > _modelList;
+   std::vector< Model* > _modelList;
    // Used to store data for multi-dataset functions
    std::string oldDatasetName;//[256];
 

@@ -319,7 +319,7 @@ void cfdExecutive::GetEverything( void )
          // When we create the _plugin map here we will do the following
          _plugins[ iter->first ]->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
          _plugins[ iter->first ]->AddSelfToSG();
-         cfdModel* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
+         Model* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
          tempCFDModel->SetID( iter->first );
          cfdModelHandler::instance()->AddModel( tempCFDModel );
          // Give graphical plugins access to wand position, wand buttons, and gui variables

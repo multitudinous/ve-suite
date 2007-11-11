@@ -94,7 +94,7 @@ void ScalarBarEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
    {
       if ( model )
       {
-         _activeModel = dynamic_cast< ves::xplorer::cfdModel* >( model );
+         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
       }
       else
       {

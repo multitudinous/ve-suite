@@ -80,7 +80,7 @@ void SeedPointActivateEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase
    {
       if(baseObject)
       {
-         _activeModel = dynamic_cast<ves::xplorer::cfdModel*>(baseObject);
+         _activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
       }
       else
       {

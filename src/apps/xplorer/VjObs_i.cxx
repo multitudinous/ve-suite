@@ -181,7 +181,7 @@ VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
    }
    
    // find the right model
-   cfdModel* tempCfdModel = 0;
+   Model* tempCfdModel = 0;
    for ( int i = 0; i < numberOfModels; ++i )
    {
       tempCfdModel = cfdModelHandler::instance()->GetModel( i );
@@ -341,7 +341,7 @@ void VjObs_i::CreateDatasetInfo( void )
                           << std::endl << vprDEBUG_FLUSH;
       for ( CORBA::ULong i = 0; i < numberOfModels; i++ )
       {
-         cfdModel* temp = cfdModelHandler::instance()->GetModel( i );
+         Model* temp = cfdModelHandler::instance()->GetModel( i );
          CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
          vprDEBUG(vesDBG,0) << " numDatasets = " << numDatasets
                           << std::endl << vprDEBUG_FLUSH;

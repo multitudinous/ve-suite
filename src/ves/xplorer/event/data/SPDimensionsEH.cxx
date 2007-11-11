@@ -78,7 +78,7 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBa
    {
       if(model)
       {
-         _activeModel = dynamic_cast<ves::xplorer::cfdModel*>(model);
+         _activeModel = dynamic_cast<ves::xplorer::Model*>(model);
       }
       else
       {

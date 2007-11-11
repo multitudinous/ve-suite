@@ -675,7 +675,7 @@ void CreateVisObjectEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* 
    {
       if ( model )
       {
-         _activeModel = dynamic_cast< ves::xplorer::cfdModel* >( model );
+         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
       }
       else
       {
@@ -793,7 +793,7 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xm
    vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
       << std::endl << vprDEBUG_FLUSH;
    
-   cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   Model* activeModel = cfdModelHandler::instance()->GetActiveModel();
    cfdDataSet* activeDataset = activeModel->GetActiveDataSet();
    // need to set the vector by name
    activeDataset->SetActiveVector( activeVector );
@@ -844,7 +844,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
    activeModelDVP->GetData( dataSetName );
 
    //Need to set the active datasetname and get the position of the dataset
-   cfdModel* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   Model* activeModel = cfdModelHandler::instance()->GetActiveModel();
    unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
       vprDEBUG(vesDBG,1) 
          << "|\tCreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i 

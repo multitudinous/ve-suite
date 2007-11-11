@@ -116,7 +116,7 @@ private:
    ///Set the active cfd object based on the command
    void SetActiveCfdObject( ves::open::xml::XMLObject* xmlObject );
 
-   //ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   //ves::xplorer::Model* _activeModel;///<The active cfdModel
    ves::xplorer::cfdObjects* activeObject;   ///<The active cfdObject
    ves::xplorer::cfdPolyData*         surface;///<A cfdObject
    ves::xplorer::cfdIsosurface*       isosurface;///<A cfdObject
