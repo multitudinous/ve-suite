@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBIsosurfaceEnableEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -77,7 +77,7 @@ void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(XMLObject* veXMLOb
       DataValuePairWeakPtr enable = command->GetDataValuePair("Iso-Surface State");      
       std::string onOff;
       enable->GetData(onOff);
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
+      ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
    }
    catch(...)
    {

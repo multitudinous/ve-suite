@@ -33,12 +33,13 @@
 #include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/DataValuePairPtr.h>
 #include <osgEphemeris/EphemerisModel>
 #include <osgEphemeris/DateTime>
+
 using namespace ves::xplorer::event;
 //////////////////////////////////////////////////////
 EphemerisDataEventHandler::EphemerisDataEventHandler()

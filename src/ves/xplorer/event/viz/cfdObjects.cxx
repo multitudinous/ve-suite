@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 
 // Juggler Includes
 #include <ves/xplorer/Debug.h>
@@ -93,12 +92,12 @@ std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdObjects::GetGe
 
 void cfdObjects::ClearGeodes( void )
 {
-	/*
+   /*
    for ( unsigned int i = 0; i < geodes.size(); ++i )
    {
       delete geodes.at( i );
    }
-	*/
+   */
 
    geodes.clear();
 }
@@ -149,14 +148,6 @@ void cfdObjects::SetSourcePoints( vtkPolyData* pointSource )
    this->pointSource = pointSource;
 }
 
-// THIS CODE SHOULD BE REMOVED
-// THIS DOESN'T BELONG IN THIS CLASS
-// Fix this
-bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
-{
-   return false;
-}
-
 void cfdObjects::UpdateCommand()
 {
    ;
@@ -164,17 +155,17 @@ void cfdObjects::UpdateCommand()
 ///////////////////////////////////////
 void cfdObjects::SetActiveVtkPipeline()
 {
-	if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
+   if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
     {
         // we have to use a compsite pipeline
         vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
         vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
         prototype->Delete();
-	}
-	else
-	{   
+   }
+   else
+   {   
         vtkAlgorithm::SetDefaultExecutivePrototype(0);
-	}
+   }
 }
 ///////////////////////////////
 void cfdObjects::UpdateActors()
@@ -184,24 +175,24 @@ void cfdObjects::UpdateActors()
 /////////////////////////////////////////////////////////////////////////
 vtkPolyData* cfdObjects::ApplyGeometryFilter(vtkAlgorithmOutput* input)
 {
-	if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
+   if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
     {
         m_multiGroupGeomFilter->SetInputConnection(input);
-		return m_multiGroupGeomFilter->GetOutput();
-	}
-	else
-	{
+      return m_multiGroupGeomFilter->GetOutput();
+   }
+   else
+   {
         m_geometryFilter->SetInputConnection(input);
-		return m_geometryFilter->GetOutput();
-	}
+      return m_geometryFilter->GetOutput();
+   }
 }
 /////////////////////////////////////////////
-DataSet cfdObjects::GetActiveDataSet()
+DataSet* cfdObjects::GetActiveDataSet()
 {
    return activeDataSet;
 }
 
-void cfdObjects::SetActiveDataSet( DataSet dataset )
+void cfdObjects::SetActiveDataSet( DataSet* dataset )
 {
    /*vprDEBUG(vesDBG, 4) 
       << "cfdObjects::SetActiveDataSet: " << dataset

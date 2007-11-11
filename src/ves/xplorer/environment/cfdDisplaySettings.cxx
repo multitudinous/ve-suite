@@ -46,8 +46,8 @@ cfdDisplaySettings::cfdDisplaySettings( void )
 { 
    configuration = 0;
 
-	xSize = 0;
-	ySize = 0;
+   xSize = 0;
+   ySize = 0;
 
    newXmin = 0;
    newXmax = 0;
@@ -56,6 +56,7 @@ cfdDisplaySettings::cfdDisplaySettings( void )
    newZval = 0;
 }
 //////////////////////////////////////////////////////////////////////////
+/*
 bool cfdDisplaySettings::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray )
 {
    std::string commandType;
@@ -185,6 +186,7 @@ bool cfdDisplaySettings::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCom
    veCommand = 0;
    return true;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )
 {

@@ -66,9 +66,6 @@ public:
    ///equal operator
    //cfdDisplaySettings& operator= ( const cfdDisplaySettings& ) { ; }
 
-   ///command array virtual function overriden from globalbase.
-   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray );
-
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray.
    virtual void UpdateCommand() { ; }
 

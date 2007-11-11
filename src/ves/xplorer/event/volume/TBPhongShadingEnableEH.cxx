@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBPhongShadingEnableEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -77,7 +77,7 @@ void TextureBasedPhongShadingEnableEventHandler::_operateOnNode(XMLObject* veXML
       DataValuePairWeakPtr enable = command->GetDataValuePair("Phong Shading State");      
       std::string onOff;
       enable->GetData(onOff);
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->EnsurePhongShading((onOff=="On")?true:false);
+      ves::xplorer::TextureBasedVizHandler::instance()->EnsurePhongShading((onOff=="On")?true:false);
    }
    catch(...)
    {

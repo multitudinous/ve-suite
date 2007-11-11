@@ -69,8 +69,6 @@ namespace ves
 namespace xplorer
 {
    class cfdQuatCam;
-   class cfdCommandArray;
-   class cfdReadParam;
 }
 }
 
@@ -103,8 +101,6 @@ namespace xplorer
 class VE_XPLORER_EXPORTS cfdQuatCamHandler : public GlobalBase
 {
 public:
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
    ///Set the DCS 
@@ -174,7 +170,6 @@ private:
 
    cfdQuatCam* thisQuatCam;
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-   cfdReadParam* _readParam;
    std::string   _param;
    double t;
    std::string quatCamFileName;
@@ -205,7 +200,7 @@ private:
    ves::open::xml::Command* command;
 
     // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
+   //friend class vpr::Singleton< TextureBasedVizHandler >;
    cfdQuatCamHandler( void );
 
    virtual ~cfdQuatCamHandler( void );// Never gets called, don't implement

@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBTransientModeUpdateEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -83,15 +83,15 @@ void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(XMLObject* veXM
          DataValuePairWeakPtr playDirection = command->GetDataValuePair("Direction");      
          std::string direction;
          playDirection->GetData(direction);
-         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->StepTransientVisualization(direction);
+         ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization(direction);
       }
       else if(mode == "Play")
       {
-         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->PlayTransientVisualization();
+         ves::xplorer::TextureBasedVizHandler::instance()->PlayTransientVisualization();
       }
       else if(mode == "Stop")
       {
-         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->StopTransientVisualization();
+         ves::xplorer::TextureBasedVizHandler::instance()->StopTransientVisualization();
       }
    }
    catch(...)

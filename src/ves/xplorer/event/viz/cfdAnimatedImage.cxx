@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdAnimatedImage.h>
 #include <ves/xplorer/event/viz/cfdImage.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -134,11 +133,6 @@ cfdAnimatedImage::~cfdAnimatedImage()
       //delete this->_sequence;
       //delete this->_dcs;
    }
-}
-
-bool cfdAnimatedImage::CheckCommandId( cfdCommandArray* commandArray )
-{
-   return false;
 }
 
 void cfdAnimatedImage::UpdateCommand()

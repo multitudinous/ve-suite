@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -117,12 +116,6 @@ cfdVectorBase::~cfdVectorBase()
    
    this->mapper->Delete();
    this->mapper = 0;
-}
-
-bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
-{
-   //May be removed because of new vecommand code
-   return false;
 }
 
 void cfdVectorBase::UpdateCommand()
@@ -402,7 +395,7 @@ int cfdVectors::GetVectorRatioFactor()
 void cfdVectorBase::UpdateThreshHoldValues()
 {
    //double currentScalarRange[ 2 ];
-   DataSet temp = GetActiveDataSet();
+   DataSet* temp = GetActiveDataSet();
 
    if ( temp != NULL )
    {

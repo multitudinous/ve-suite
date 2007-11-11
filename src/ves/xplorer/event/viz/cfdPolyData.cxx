@@ -32,8 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdPolyData.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdEnum.h>
+
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>
@@ -258,7 +260,7 @@ void cfdPolyData::Update()
    temp->Delete();
    this->updateFlag = true;
 }
-
+#if 0
 bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
 {
 /*
@@ -310,6 +312,7 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
 */
    return true;
 }
+#endif
 //////////////////////////////////////////////////////////
 void cfdPolyData::SetParticleOption( unsigned int option )
 {

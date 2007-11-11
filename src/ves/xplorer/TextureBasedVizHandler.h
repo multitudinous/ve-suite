@@ -100,7 +100,7 @@ namespace xplorer
 /*!\file TextureBasedVizHandler.h
 TextureBasedVizHandler API
 */
-/*!\class ves::xplorer::volume::TextureBasedVizHandler
+/*!\class ves::xplorer::TextureBasedVizHandler
 * 
 */
 class VE_XPLORER_EXPORTS TextureBasedVizHandler

@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdContourBase.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/Debug.h>
@@ -215,11 +214,6 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
    }
    mapper->SetInputConnection( normals->GetOutputPort() );
    mapper->ImmediateModeRenderingOn();    
-}
-
-bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
-{
-   return true;
 }
 
 void cfdContourBase::UpdateCommand()

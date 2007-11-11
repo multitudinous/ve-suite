@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/ModelHandler.h>
@@ -223,7 +222,7 @@ void cfdCursor::Initialize( double x[3], double v[3] )
    this->BuildPlaneSource();
 
    this->cursorGeode->TranslateToGeode( this->sphereActor );
-	(( ves::xplorer::scenegraph::DCS* )this->cursorDCS->GetChild( 0 ))->AddChild( this->cursorGeode.get() );
+   (( ves::xplorer::scenegraph::DCS* )this->cursorDCS->GetChild( 0 ))->AddChild( this->cursorGeode.get() );
 }
 
 int cfdCursor::GetCursorID( void )
@@ -559,15 +558,15 @@ vtkCubeSource * cfdCursor::getBox()
 
 
 void cfdCursor::SetPlaneSize( float size )
-{	
+{  
    double* dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
-	double* worldDCSScale = this->worldDCS->GetScaleArray();
-	double combineScale[ 3 ];
-	combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+   double* worldDCSScale = this->worldDCS->GetScaleArray();
+   double combineScale[ 3 ];
+   combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
    //this controls the size of the plane for the seed points
    //the range on the GUI is from 1 to 100
-	size = combineScale[ 0 ] * size * 0.5 * 1.0f; 
+   size = combineScale[ 0 ] * size * 0.5 * 1.0f; 
 
    this->last_pSize = this->pSize;
    this->pSize = size;
@@ -726,7 +725,7 @@ void cfdCursor::SetTranslation( void )
       combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
 
-		dynamic_cast< ves::xplorer::scenegraph::DCS* >(this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
+      dynamic_cast< ves::xplorer::scenegraph::DCS* >(this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
       Matrix44d dataSetMatrix = this->activeDataSetDCS->GetMat();
 
       totalMat = worldMat * dataSetMatrix;
@@ -823,14 +822,13 @@ void cfdCursor::SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS )
    this->activeDataSetDCS = myDCS;
 }
 
-void cfdCursor::SetActiveDataSet( DataSet input )
+void cfdCursor::SetActiveDataSet( DataSet* input )
 {
    _activeDataSet = input;
    if ( _activeDataSet != NULL )
       this->SetActiveDataSetDCS( _activeDataSet->GetDCS() );
 }
-
-// compare VjObs_i commandArray with its child's value
+/*
 bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 {
    bool flag = false; //cfdObjects::CheckCommandId( commandArray );
@@ -918,27 +916,28 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          {
             this->SetPlaneReso( (int)commandIds.at(1) ); 
 
-	         if ( this->activeDataSetDCS.valid() )
-	         {
-		         double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-		         double* worldDCSScale = this->worldDCS->GetScaleArray();
-		         double combineScale[ 3 ];
-		         combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+            if ( this->activeDataSetDCS.valid() )
+            {
+               double* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+               double* worldDCSScale = this->worldDCS->GetScaleArray();
+               double combineScale[ 3 ];
+               combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
                //this controls the size of the plane for the seed points
                //the range on the GUI is from 1 to 100
-		         this->SetPlaneSize( combineScale[ 0 ] * commandIds.at(2) * 0.5 * 0.0025 * 1.0f); 
+               this->SetPlaneSize( combineScale[ 0 ] * commandIds.at(2) * 0.5 * 0.0025 * 1.0f); 
 
                //this controls the size of the sphere seed points
                //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
-		         sphereRadius = (commandIds.at(3) + 5 ) * 0.01f;
-		      }
+               sphereRadius = (commandIds.at(3) + 5 ) * 0.01f;
+            }
          }
       }
    }
 
    return true;
 }
+*/
 
 // in future, multi-threaded apps will make a copy of VjObs_i commandArray
 void cfdCursor::UpdateCommand()

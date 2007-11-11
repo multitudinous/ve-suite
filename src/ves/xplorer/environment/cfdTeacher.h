@@ -55,7 +55,6 @@ namespace ves
 namespace xplorer
 {
     class cfdWriteTraverser;
-    class cfdCommandArray;
 }
 }
 
@@ -84,10 +83,6 @@ public:
 
     ///Destructor
     virtual ~cfdTeacher();
-
-    // compare VjObs_i commandArray with its child's value
-    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray )
-        { return false;}
 
     // in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand();

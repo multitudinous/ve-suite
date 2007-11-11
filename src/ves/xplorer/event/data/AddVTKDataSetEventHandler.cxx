@@ -55,8 +55,8 @@
 #include <sstream>
 
 using namespace ves::xplorer::event;
+using namespace ves::open;
 using namespace ves::open::xml;
-using namespace ves::open::xml::model;
 
 /////////////////////////////////////////////////////
 //Constructor                                      //
@@ -110,13 +110,13 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* mo
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AddVTKDataSetEventHandler::Execute(XMLObject* xmlObject)
+void AddVTKDataSetEventHandler::Execute(xml::XMLObject* xmlObject)
 {
    try
    {
       Command* command = dynamic_cast<Command*>(xmlObject);
       DataValuePairWeakPtr veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
-      Model* veModel = dynamic_cast< Model* >( veModelDVP->GetDataXMLObject() );
+      xml::model::Model* veModel = dynamic_cast< xml::model::Model* >( veModelDVP->GetDataXMLObject() );
       size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
       for ( size_t i = (numInfoPackets-1); i < numInfoPackets; ++i )
       {

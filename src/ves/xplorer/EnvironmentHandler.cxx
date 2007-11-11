@@ -303,7 +303,7 @@ void EnvironmentHandler::InitScene( void )
       displayCommand->AddDataValuePair( dvpDesktopWidth );
       displayCommand->AddDataValuePair( dvpDesktopHeight );
       displaySettings->SetVECommand( displayCommand );
-      displaySettings->CheckCommandId( NULL );
+      //displaySettings->CheckCommandId( NULL );
       delete displayCommand;
    }
 

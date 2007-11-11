@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBTransientDurationUpdateEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -78,7 +78,7 @@ void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode(XMLObject* 
       double value;
       playDuration->GetData(value);
 
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateTransientDuration(value);
+      ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration(value);
    }
    catch(...)
    {

@@ -117,7 +117,7 @@ void AxesLabelsEventHandler::Execute( XMLObject* xmlObject )
    
    if ( _activeModel && !labels.empty() )
    {
-      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->GetDataSetAxes()->SetAxisLabels( labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );

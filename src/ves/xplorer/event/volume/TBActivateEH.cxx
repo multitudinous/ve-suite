@@ -35,7 +35,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelCADHandler.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/Debug.h>
 using namespace ves::xplorer::event;
@@ -90,7 +90,7 @@ void TextureBasedActivateEventHandler::_operateOnNode(XMLObject* veXMLObject)
         ///what happens if texture is somehow added first? Is that possible?
         _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
         _activeTDSet = _activeModel->GetTextureDataSet( 0 );
-        ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
+        ves::xplorer::TextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
 
         } 
     }

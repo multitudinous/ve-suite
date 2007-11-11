@@ -35,6 +35,7 @@
 
 #include <ves/xplorer/event/EventHandler.h>
 
+#include <ves/xplorer/ModelPtr.h>
 
 namespace ves
 {

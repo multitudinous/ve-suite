@@ -241,7 +241,7 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS;
 
    osg::ref_ptr< ves::xplorer::scenegraph::Group > _rootNode;
-   ves::xplorer::DataSet _activeDataSet;
+   ves::xplorer::DataSet* _activeDataSet;
    int cursorId;
    float sphereRadius;
    float last_sphereRadius;

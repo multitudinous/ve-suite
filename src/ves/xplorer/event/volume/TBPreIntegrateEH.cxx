@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBPreIntegrateEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -77,7 +77,7 @@ void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(XMLObject* veXML
       DataValuePairWeakPtr enable = command->GetDataValuePair("Recalculate Pre-Integration");      
       unsigned int onOff;
       enable->GetData(onOff);
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);
+      ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);
    }
    catch(...)
    {

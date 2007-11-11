@@ -35,7 +35,7 @@
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <iostream>
@@ -156,7 +156,7 @@ void TextureBasedEventHandler::_setActiveTextureDataset()
       //This assumes there is only one texture dataset per model which isn't quite right---biv
       _activeTDSet = _activeModel->GetTextureDataSet(0);
       _activeModel->SetActiveTextureDataSet(_activeTDSet);
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->SetActiveTextureDataSet(_activeTDSet);
+      ves::xplorer::TextureBasedVizHandler::instance()->SetActiveTextureDataSet(_activeTDSet);
 
    }
 }

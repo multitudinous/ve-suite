@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdAnimatedStreamlineCone.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -260,6 +259,7 @@ void cfdAnimatedStreamlineCone::Update( void )
    vprDEBUG(vesDBG, 1) << "|   Exiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
 }
 
+#if 0
 bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
 {
    // This is here because Dr. K. has code in 
@@ -338,6 +338,8 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
 
    return flag;
 }
+#endif
+
 
 void cfdAnimatedStreamlineCone::UpdateCommand()
 {

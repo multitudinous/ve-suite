@@ -31,31 +31,31 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_SOUNDHANDLER
 #define CFD_SOUNDHANDLER
+
+#include <ves/xplorer/GlobalBase.h>
+
+#include <string>
+#include <vector>
+
+namespace ves
+{
+namespace xplorer
+{
+   class cfdSound;
+}
+}
+
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file cfdSoundHandler.h
 cfdSoundHandler API
 */
 /*!\class ves::xplorer::cfdSoundHandler
 *
 */
-
-#include <string>
-#include <vector>
-#include <ves/xplorer/GlobalBase.h>
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdCommandArray;
-   class cfdSound;
-   class cfdReadParam;
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
 class VE_XPLORER_EXPORTS cfdSoundHandler : public GlobalBase
 {
 public:
@@ -66,10 +66,6 @@ public:
 
    ///Used to read parameter file and configure objects
    void CreateObjects( void );
-
-   ///Compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
-
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
@@ -82,7 +78,6 @@ public:
    std::vector< cfdSound* > GetSounds( void );
 private:
    std::string _param;
-   cfdReadParam* _readParam;
    std::vector< cfdSound* > sounds;///<The vector of sounds.
    //cfdCommandArray* commandArray;
 };

@@ -117,7 +117,7 @@ void WireframeEventHandler::Execute( XMLObject* xmlObject )
    
    if ( ModelHandler::instance()->GetActiveModel() )
    {
-      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetWireframeState( state );

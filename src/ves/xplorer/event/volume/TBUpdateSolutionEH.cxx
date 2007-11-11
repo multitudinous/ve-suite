@@ -36,7 +36,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -90,7 +90,7 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(XMLObject* veXMLObje
          {
             _activeTDSet->SetActiveScalar( dataName );
             
-            ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateActiveTextureManager();
+            ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
             
             double scalarRange[2] = {0.f,100.f};
 
@@ -103,12 +103,12 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(XMLObject* veXMLObje
             float floatRange[2];
             floatRange[0] = scalarRange[0];
             floatRange[1] = scalarRange[1];
-            ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
+            ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
             //need to pass the scalar range command to update it
             
             //if ( _activeModel )
             {
-               DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+               DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
                //if ( dataSet )
                {
                   DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();

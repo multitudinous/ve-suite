@@ -55,7 +55,7 @@
 #include <ves/xplorer/event/viz/cfdContour.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/device/cfdCursor.h>
 
 
@@ -778,9 +778,9 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
    activeObject->SetUpdateFlag( false );
    
    //call back over to ssvishandler to set the flags
-   cfdSteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
-   cfdSteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
-   cfdSteadyStateVizHandler::instance()->SetActorsAreReady( true );
+   SteadyStateVizHandler::instance()->SetActiveVisObject( activeObject );
+   SteadyStateVizHandler::instance()->SetComputeActorsAndGeodes( true );
+   SteadyStateVizHandler::instance()->SetActorsAreReady( true );
 }
 //////////////////////////////////////////////////////////////////   
 void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xmlObject )
@@ -794,7 +794,7 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xm
       << std::endl << vprDEBUG_FLUSH;
    
    Model* activeModel = ModelHandler::instance()->GetActiveModel();
-   DataSet activeDataset = activeModel->GetActiveDataSet();
+   DataSet* activeDataset = activeModel->GetActiveDataSet();
    // need to set the vector by name
    activeDataset->SetActiveVector( activeVector );
    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
@@ -826,7 +826,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
       << ", min = " << scalarMin
       << ", max = " << scalarMax
       << std::endl << vprDEBUG_FLUSH;
-   DataSet activeDataset = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+   DataSet* activeDataset = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
    //update active scalar texture if it exists
    
    activeDataset->SetActiveScalar( activeScalarName );
@@ -871,7 +871,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
       
       // set the dataset as the appropriate dastaset type
       // (and the active dataset as well)
-      DataSet activeDataset = activeModel->GetCfdDataSet( i );         
+      DataSet* activeDataset = activeModel->GetCfdDataSet( i );         
       
       std::string oldDatasetName = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
       vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = " 

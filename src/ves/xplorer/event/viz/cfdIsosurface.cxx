@@ -32,9 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdIsosurface.h>
 #include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
+
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 #include <vtkLookupTable.h>
 //#include <vtkUnstructuredGrid.h>
@@ -50,7 +54,6 @@
 #include <vtkPolyData.h>
 
 //#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
-#include <ves/xplorer/Debug.h>
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
@@ -109,7 +112,7 @@ cfdIsosurface::~cfdIsosurface()
 
 void cfdIsosurface::Update()
 {
-	SetActiveVtkPipeline();
+   SetActiveVtkPipeline();
    vprDEBUG(vesDBG, 1) <<"|\tcfdIsosurface::Update: FileName: "
       << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
@@ -255,7 +258,7 @@ void cfdIsosurface::UpdateCommand()
 
    //if ( _activeModel )
    {
-      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( !colorByScalar.empty() )
       {
          unsigned int activeTempScalar = dataSet->GetActiveScalar();

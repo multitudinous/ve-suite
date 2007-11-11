@@ -34,7 +34,6 @@
 
 #include <ves/xplorer/environment/cfdSoundHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/environment/cfdSound.h>
 
@@ -103,9 +102,10 @@ std::vector< cfdSound* > cfdSoundHandler::GetSounds( void )
 {
    return sounds;
 }
+/*
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
-   /*if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SOUNDS )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SOUNDS )
    {
       this->_readParam->convertDecimalToBinary( (long)
             commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
@@ -138,9 +138,10 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
       }      
 
       return true;
-   }*/
+   }
    return false;
 }
+*/
 
 void cfdSoundHandler::UpdateCommand()
 {

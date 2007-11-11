@@ -41,7 +41,6 @@
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/environment/cfdQuatCam.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDIntArray.h>
@@ -337,7 +336,7 @@ void cfdQuatCamHandler::Relocate( ves::xplorer::scenegraph::DCS* worldDCS )
 
    if ( t == 0.0f )
    {
-		QuatCams.at( cam_id )->SetCamPos( worldDCS->GetVETranslationArray(), worldDCS );
+      QuatCams.at( cam_id )->SetCamPos( worldDCS->GetVETranslationArray(), worldDCS );
    }
    double temp = this->GetQuatCamIncrementor();
 
@@ -384,7 +383,7 @@ void cfdQuatCamHandler::RemoveFlythroughPt( unsigned int flyindex, unsigned int 
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::AddViewPtToFlyThrough( unsigned int flyindex, unsigned int ptindex )
 {
-	flyThroughList.at( flyindex ).push_back( ptindex );
+   flyThroughList.at( flyindex ).push_back( ptindex );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::InsertViewPtInFlyThrough( unsigned int flyindex, unsigned int beforept, unsigned int ptindex )
@@ -411,6 +410,7 @@ void cfdQuatCamHandler::AddNewFlythrough( void )
    flyThroughList.push_back( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( !onMasterNode )
@@ -443,7 +443,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       {
          writeFrame = currentFrame;
          this->TurnOffMovement();
-	      AddViewPtToFlyThrough(0,QuatCams.size());
+         AddViewPtToFlyThrough(0,QuatCams.size());
          this->LoadData( _worldDCS.get() );
          this->WriteToFile( this->quatCamFileName );
          this->writeReadComplete = true;
@@ -547,6 +547,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
    return flag;
 }
+*/
 /////////////////////////////////////////////////////
 void cfdQuatCamHandler::_updateViewGUIPointData()
 {
@@ -614,10 +615,10 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
       if ( t == 0.0f )
       {
          gmtl::Vec3d vjVecTemp;
-			double* veTransTemp = _worldDCS->GetVETranslationArray();
+         double* veTransTemp = _worldDCS->GetVETranslationArray();
          for ( int i=0; i<3; i++ )
-         {				
-				vjVecTemp[i] = veTransTemp[i];
+         {           
+            vjVecTemp[i] = veTransTemp[i];
          } 
          vecDistance = getLinearDistance( vjVecTemp, QuatCams.at( cam_id )->GetTrans() );
       }

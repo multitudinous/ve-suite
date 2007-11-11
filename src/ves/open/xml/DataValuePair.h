@@ -33,6 +33,9 @@
 
 #ifndef _XML_VE_DATA_VALUE_PAIR_H_
 #define _XML_VE_DATA_VALUE_PAIR_H_
+
+#include <ves/open/xml/DataValuePairPtr.h>
+
 /*!\file DataValuePair.h
   *Data value pairs API
   */

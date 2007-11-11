@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/ClearVisObjectsEventHandler.h>
-#include <ves/xplorer/cfdSteadyStateVizHandler.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/SteadyStateVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
@@ -96,14 +96,14 @@ void ClearVisObjectsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* 
 void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
 {
    //call back over to ssvishandler to clear the vis objects
-   cfdSteadyStateVizHandler::instance()->ClearVisObjects();
-   cfdTextureBasedVizHandler::instance()->ClearAll();
+   SteadyStateVizHandler::instance()->ClearVisObjects();
+   TextureBasedVizHandler::instance()->ClearAll();
    if ( ModelHandler::instance()->GetActiveModel() )
    {
       ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
 
       unsigned int state = 0;
-      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetBoundingBoxState( state );

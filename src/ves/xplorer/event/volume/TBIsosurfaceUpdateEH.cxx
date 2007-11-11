@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBIsosurfaceUpdateEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -77,7 +77,7 @@ void TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode(XMLObject* veXMLOb
       DataValuePairWeakPtr isovalue = command->GetDataValuePair("Iso-Surface Value");      
       double value;
       isovalue->GetData(value);
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateIsosurface(value);
+      ves::xplorer::TextureBasedVizHandler::instance()->UpdateIsosurface(value);
    }
    catch(...)
    {

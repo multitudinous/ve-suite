@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBBBoxEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -75,7 +75,7 @@ void TextureBasedBoundingBoxEventHandler::_operateOnNode(XMLObject* veXMLObject)
    {
       Command* command = dynamic_cast< Command* >( veXMLObject );
       DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateBoundingBox((bboxFlag->GetUIntData()==1)?true:false);
+      ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox((bboxFlag->GetUIntData()==1)?true:false);
       
    }
    catch(...)

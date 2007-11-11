@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBClipPlaneEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -87,7 +87,7 @@ void TextureBasedClipPlaneEventHandler::_operateOnNode(XMLObject* veXMLObject)
          DataValuePairWeakPtr value = command->GetDataValuePair("ROI Value");      
          double alpha;
          value->GetData( alpha );
-         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
+         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
                                                                       planeDirection,
 		                                                                 alpha);
       }
@@ -96,14 +96,14 @@ void TextureBasedClipPlaneEventHandler::_operateOnNode(XMLObject* veXMLObject)
          DataValuePairWeakPtr minValue = command->GetDataValuePair("ROI Min Value");      
          double minAlpha;
          minValue->GetData( minAlpha );
-         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
+         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
                                                                          "Positive",
 		                                                                    minAlpha);
       
          DataValuePairWeakPtr maxValue = command->GetDataValuePair("ROI Max Value");      
          double maxAlpha;
          maxValue->GetData( maxAlpha );
-         ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
+         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
                                                                          "Negative",
 		                                                                    maxAlpha);
       }

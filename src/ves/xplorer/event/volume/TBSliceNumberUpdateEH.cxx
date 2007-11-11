@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBSliceNumberUpdateEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -77,7 +77,7 @@ void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode(XMLObject* veXMLO
       DataValuePairWeakPtr isovalue = command->GetDataValuePair("Number of Slice Planes");      
       unsigned int value;
       isovalue->GetData(value);
-      ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes(value);
+      ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes(value);
    }
    catch(...)
    {

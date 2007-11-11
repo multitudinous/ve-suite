@@ -117,7 +117,7 @@ void BBoxEventHandler::Execute( XMLObject* xmlObject )
    activeModelDVP->GetData( state );
    if ( _activeModel )
    {
-      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetBoundingBoxState( state );

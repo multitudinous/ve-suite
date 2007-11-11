@@ -33,7 +33,6 @@
 #include <ves/xplorer/event/viz/cfdImage.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/util/fileIO.h>
 
 #include <vtkPlaneSource.h>
@@ -245,11 +244,6 @@ void cfdImage::Update( void )
 {
    //this->actor->Print(cout);
    this->updateFlag = true;
-}
-
-bool cfdImage::CheckCommandId( cfdCommandArray* commandArray  )
-{
-   return false;
 }
 
 void cfdImage::UpdateCommand()

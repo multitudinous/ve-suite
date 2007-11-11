@@ -114,11 +114,6 @@ void Device::UpdateCommand()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Device::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray )
-{
-    return false;
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* Device::GetActiveDCS()
 {
     return activeDCS.get();

@@ -37,7 +37,6 @@
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/xplorer/cfdCommandArray.h>
 //#include <ves/xplorer/event/viz/cfdScalarBarActor.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Debug.h>

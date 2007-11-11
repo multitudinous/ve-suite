@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/volume/TBSetActiveShaderManagerEH.h>
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -74,7 +74,7 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(XMLObject* v
       DataValuePairWeakPtr activeSM = command->GetDataValuePair("Active Shader Manager");      
 	  std::string value;
       activeSM->GetData(value);
-	  ves::xplorer::volume::cfdTextureBasedVizHandler::instance()->SetActiveShaderManager( value );
+	  ves::xplorer::TextureBasedVizHandler::instance()->SetActiveShaderManager( value );
    }
    catch(...)
    {
