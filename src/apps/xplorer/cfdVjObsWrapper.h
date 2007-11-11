@@ -40,12 +40,13 @@ cfdVjObsWrapper API
 *
 */
 
+#include <ves/open/xml/CommandPtr.h>
+
 namespace ves
 {
 namespace xplorer
 {
    class VjObs_i;
-   class cfdCommandArray;
 }
 }
 
@@ -57,16 +58,6 @@ namespace PortableServer{ class POA; }
 #include <vector>
 #include <string>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class Command;
-}
-}
-}
 
 namespace ves
 {
@@ -81,9 +72,6 @@ public:
    ~cfdVjObsWrapper( void );
    ///init function to pass corba pointers arounf for registration purposes
    void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
-   ///get command array
-   ///shoudl be removed
-   cfdCommandArray* GetCommandArray( void );
    ///get xml command data
    ves::open::xml::Command* GetXMLCommand( void );
    ///Get short array

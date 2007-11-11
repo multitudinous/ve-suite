@@ -33,7 +33,7 @@
 #include "cfdAppWrapper.h"
 
 #include "cfdApp.h"
-#include <ves/xplorer/cfdThread.h>
+#include <ves/xplorer/Thread.h>
 #include "cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>

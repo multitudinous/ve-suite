@@ -42,7 +42,7 @@
 #include <cstdlib>
 #include <vpr/System.h>
 
-#include <ves/xplorer/cfdThread.h>
+#include <ves/xplorer/Thread.h>
 #include <ves/VEConfig.h>
 using namespace ves::xplorer;
 

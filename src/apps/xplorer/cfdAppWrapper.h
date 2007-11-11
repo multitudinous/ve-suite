@@ -41,11 +41,12 @@ cfdAppWrapper API
 */
 #include <vrj/vrjParam.h>
 
+#include <ves/xplorer/ThreadPtr.h>
+
 namespace ves
 {
 namespace xplorer
 {
-   class cfdThread;
    class cfdApp;
    class cfdVjObsWrapper;
 }
@@ -70,7 +71,7 @@ public:
 #elif __VJ_version == 2000003
    void init( void * );
 #endif
-   cfdThread* _thread;///< the thread to run things in
+   Thread* _thread;///< the thread to run things in
 private:
    cfdApp* _cfdApp;///< the app that is running
    bool jugglerIsRunning;///< is juggler running

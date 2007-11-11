@@ -94,10 +94,10 @@ const float SAMPLE_TIME = 1.0f;
 #ifdef _PBUFFER
          class cfdPBufferManager;
 #endif
-         class cfdTextureBasedVizHandler;
       }
      }
      }
+#include <ves/xplorer/TextureBasedVizHandlerPtr.h>
 #endif //_PERFORMER _OSG
 
 namespace ves
@@ -186,7 +186,7 @@ public:
 
 #ifdef _OSG
    bool svUpdate; ///< update sceneview
-   ves::xplorer::volume::cfdTextureBasedVizHandler* _tbvHandler;///< should be removed since this is a singleton
+   ves::xplorer::TextureBasedVizHandler* _tbvHandler;///< should be removed since this is a singleton
 #ifdef _PBUFFER
    //biv --may convert this to a singleton later
    ves::xplorer::volume::cfdPBufferManager* _pbuffer;///< should be removed since this is a singleton

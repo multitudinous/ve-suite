@@ -76,7 +76,6 @@ interface VjObs
    
    // transfer data to explorer
    void SetClientInfoFlag( in short value );
-   void SetClientInfoData( in obj_pd o);
    obj_pd GetClientInfoData();
 
    // write xerces string
@@ -90,10 +89,4 @@ interface VjObs
    //void setIsoValue(in long value);
    long getIsoValue();
 
-   void setSc(in long value);
-
-   short getPostdataState();
-
-   //void setTimesteps(in short value);
-   short getTimesteps();
 };

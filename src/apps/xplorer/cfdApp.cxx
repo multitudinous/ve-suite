@@ -34,7 +34,7 @@
 #include "cfdVjObsWrapper.h"
 
 #ifdef _OSG
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 #endif
 
 #include <ves/xplorer/util/fileIO.h>
@@ -42,17 +42,15 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
-#include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/cfdSteadyStateVizHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
-#include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DataSet.h>
 
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
@@ -192,11 +190,6 @@ void cfdApp::appChanFunc( pfChannel* chan )
 {
    // used to adjust lod scaling
    vrj::PfApp::appChanFunc( chan );
-   
-   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_LOD_SCALE )
-   {
-      chan->setLODAttr(PFLOD_SCALE, (float)_vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_SC ));
-   }
 }
 
 inline void cfdApp::preSync( )
@@ -341,18 +334,16 @@ void cfdApp::initScene( void )
 #endif
 
    // modelHandler stores the arrow and holds all data and geometry
-   cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   cfdModelHandler::instance()->SetXMLCommand( _vjobsWrapper->GetXMLCommand() );
-   cfdModelHandler::instance()->InitScene();
+   ModelHandler::instance()->SetXMLCommand( _vjobsWrapper->GetXMLCommand() );
+   ModelHandler::instance()->InitScene();
    
    // navigation and cursor 
-   cfdEnvironmentHandler::instance()->Initialize();
-   cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   EnvironmentHandler::instance()->Initialize();
    for(int i=1;i<argc;++i)
    {
       if( (std::string( argv[i] ) == std::string("-VESDesktop"))&&(argc>=i+2) )
       {
-         cfdEnvironmentHandler::instance()->
+         EnvironmentHandler::instance()->
                      SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
       }
       else if ( std::string( argv[i] ) == std::string("-VESCluster") )
@@ -360,19 +351,17 @@ void cfdApp::initScene( void )
           isCluster = true;
       }
    }
-   cfdEnvironmentHandler::instance()->InitScene();
+   EnvironmentHandler::instance()->InitScene();
    cfdQuatCamHandler::instance()->SetMasterNode( _vjobsWrapper->IsMaster() );
    
    // create steady state visualization objects
-   cfdSteadyStateVizHandler::instance()->Initialize( std::string() );
-   cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   cfdSteadyStateVizHandler::instance()->InitScene();
+   SteadyStateVizHandler::instance()->Initialize( std::string() );
+   SteadyStateVizHandler::instance()->InitScene();
 
    //create the volume viz handler
 #ifdef _OSG
    _start_tick = _timer.tick();
-   _tbvHandler = ves::xplorer::volume::cfdTextureBasedVizHandler::instance();
-   _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   _tbvHandler = ves::xplorer::TextureBasedVizHandler::instance();
    _tbvHandler->SetMasterNode( _vjobsWrapper->IsMaster() );
 #endif
 
@@ -394,7 +383,7 @@ void cfdApp::preFrame( void )
     VPR_PROFILE_GUARD_HISTORY("cfdApp::preFrame",20);
     vprDEBUG(vesDBG,3)<<"|cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
     //Sets the worldDCS before it is synced
-    cfdEnvironmentHandler::instance()->PreFrameUpdate();
+    EnvironmentHandler::instance()->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdApp::latePreFrame( void )
@@ -434,7 +423,7 @@ void cfdApp::latePreFrame( void )
    {
       float framerate;
       framerate = _frameNumber - lastFrame;
-      ves::xplorer::cfdEnvironmentHandler::instance()->SetFrameRate( framerate );
+      ves::xplorer::EnvironmentHandler::instance()->SetFrameRate( framerate );
 
       lastTime = current_time;
       lastFrame = _frameNumber;
@@ -452,21 +441,21 @@ void cfdApp::latePreFrame( void )
 
     ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();
     ///////////////////////
-    cfdModelHandler::instance()->PreFrameUpdate();
+    ModelHandler::instance()->PreFrameUpdate();
     ///////////////////////
-    cfdEnvironmentHandler::instance()->LatePreFrameUpdate(); 
+    EnvironmentHandler::instance()->LatePreFrameUpdate(); 
     ///////////////////////
     //svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
     ///////////////////////
-    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
+    SteadyStateVizHandler::instance()->PreFrameUpdate();
 
-    if( cfdModelHandler::instance()->GetActiveModel() )
+    if( ModelHandler::instance()->GetActiveModel() )
     {
-        if( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+        if( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
         {
-            _tbvHandler->SetParentNode((ves::xplorer::scenegraph::Group*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
-            _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
-            _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
+            _tbvHandler->SetParentNode((ves::xplorer::scenegraph::Group*)ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+            _tbvHandler->SetActiveTextureDataSet(ModelHandler::instance()->GetActiveTextureDataSet());
+            _tbvHandler->ViewTextureBasedVis(ModelHandler::instance()->GetVisOption());
             _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
             _tbvHandler->PreFrameUpdate();
         }
@@ -533,7 +522,7 @@ void cfdApp::postFrame()
 
 #ifdef _OSG
     this->_vjobsWrapper->GetSetAppTime( time_since_start );
-    cfdEnvironmentHandler::instance()->PostFrameUpdate();
+    EnvironmentHandler::instance()->PostFrameUpdate();
     //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
     
     ///update the transient frame number on the master
@@ -574,7 +563,7 @@ void cfdApp::writeImageFileForWeb()
     std::vector< osg::ref_ptr< osg::Image > > imageList;
     // get the image ratio:
     int w = 0; int  h = 0;
-    cfdEnvironmentHandler::instance()->GetDesktopSize( w, h );
+    EnvironmentHandler::instance()->GetDesktopSize( w, h );
     int largeWidth = w * 2;
     int largeHeight = h * 2;
     shot->allocateImage( largeWidth, largeHeight, 1, GL_RGB, GL_UNSIGNED_BYTE);
@@ -801,7 +790,7 @@ void cfdApp::draw()
                                      frustum[vrj::Frustum::VJ_FAR]);
     
     //Allow trackball to grab frustum values to calculate FOVy
-    cfdEnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
+    EnvironmentHandler::instance()->SetFrustumValues(frustum[vrj::Frustum::VJ_LEFT],
                                                         frustum[vrj::Frustum::VJ_RIGHT],
                                                         frustum[vrj::Frustum::VJ_TOP],
                                                         frustum[vrj::Frustum::VJ_BOTTOM],

@@ -39,12 +39,11 @@
 
 
 #include <ves/xplorer/Xplorer_i.h>
-#include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/CommandHandler.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
 
@@ -220,11 +219,6 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input,
       }
       ves::xplorer::CommandHandler::instance()->SetXplorer(m_xplorer);
    }
-}
-////////////////////////////////////////////////////////////////////////////////
-cfdCommandArray* cfdVjObsWrapper::GetCommandArray( void )
-{
-   return _vjObs->_cfdArray;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Command* cfdVjObsWrapper::GetXMLCommand( void )
