@@ -39,7 +39,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/cfdThread.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 
 #include <ves/open/xml/XMLObject.h>

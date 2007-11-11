@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/data/WireframeEventHandler.h>
-#include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
@@ -117,7 +117,7 @@ void WireframeEventHandler::Execute( XMLObject* xmlObject )
    
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
-      cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetWireframeState( state );

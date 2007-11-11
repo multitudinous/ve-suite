@@ -31,9 +31,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

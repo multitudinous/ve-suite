@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/environment/QCLoadFileEH.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 
 #include <ves/open/xml/Command.h>

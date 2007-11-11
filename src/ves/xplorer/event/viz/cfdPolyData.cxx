@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdPolyData.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 

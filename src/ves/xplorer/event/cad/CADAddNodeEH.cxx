@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/open/xml/XMLObject.h>

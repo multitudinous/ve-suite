@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdIsosurface.h>
-#include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
@@ -255,7 +255,7 @@ void cfdIsosurface::UpdateCommand()
 
    //if ( _activeModel )
    {
-      cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( !colorByScalar.empty() )
       {
          unsigned int activeTempScalar = dataSet->GetActiveScalar();

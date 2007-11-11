@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/CreateVisObjectEventHandler.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/event/viz/cfdPolyData.h>
@@ -794,7 +794,7 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xm
       << std::endl << vprDEBUG_FLUSH;
    
    Model* activeModel = cfdModelHandler::instance()->GetActiveModel();
-   cfdDataSet* activeDataset = activeModel->GetActiveDataSet();
+   DataSet activeDataset = activeModel->GetActiveDataSet();
    // need to set the vector by name
    activeDataset->SetActiveVector( activeVector );
    //activeDataset->GetParent()->SetActiveVector( vectorIndex );
@@ -826,7 +826,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
       << ", min = " << scalarMin
       << ", max = " << scalarMax
       << std::endl << vprDEBUG_FLUSH;
-   cfdDataSet* activeDataset = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+   DataSet activeDataset = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
    //update active scalar texture if it exists
    
    activeDataset->SetActiveScalar( activeScalarName );
@@ -871,7 +871,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
       
       // set the dataset as the appropriate dastaset type
       // (and the active dataset as well)
-      cfdDataSet* activeDataset = activeModel->GetCfdDataSet( i );         
+      DataSet activeDataset = activeModel->GetCfdDataSet( i );         
       
       std::string oldDatasetName = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
       vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = " 

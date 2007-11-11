@@ -34,8 +34,8 @@
 
 #include <ves/xplorer/cfdDebug.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Model.h>
 
 #include <osg/Node>
 #include <osg/Geode>
@@ -117,7 +117,7 @@ ves::xplorer::scenegraph::DCS* DataSetScalarBar::GetScalarBar( void )
 //////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
 {
-   cfdDataSet* activeDataSet = 0;
+   DataSet activeDataSet = 0;
    if ( cfdModelHandler::instance()->GetActiveModel() )
    {
       if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )

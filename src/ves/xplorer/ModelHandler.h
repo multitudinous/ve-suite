@@ -154,7 +154,7 @@ protected:
    vtkPolyData* _GetArrowPolyData();
 private:
    std::string _param;
-   cfdDataSet* activeDataset;
+   DataSet activeDataset;
    cfdCommandArray* commandArray;
    ves::open::xml::Command* activeCommand;
    ves::open::xml::Command* nullCommand;

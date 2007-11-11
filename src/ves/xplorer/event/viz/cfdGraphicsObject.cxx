@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdGraphicsObject.h>
-#include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdStreamers.h>
 
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>

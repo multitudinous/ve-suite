@@ -146,14 +146,14 @@ public:
    void SetMirrorDataFlag( bool );
    void SetMirrorNode( ves::xplorer::scenegraph::Group* );
 
-   ves::xplorer::cfdDataSet* GetCfdDataSet( int );
+   ves::xplorer::DataSet GetCfdDataSet( int );
    unsigned int GetIndexOfDataSet( std::string dataSetName );
    unsigned int GetNumberOfCfdDataSets( void );
    std::string GetCfdDataSetFileName( int );
    void CreateCfdDataSet( void );
-   int GetKeyForCfdDataSet( cfdDataSet* );
-   ves::xplorer::cfdDataSet* GetActiveDataSet( void );
-   void SetActiveDataSet( ves::xplorer::cfdDataSet* );
+   int GetKeyForCfdDataSet( DataSet );
+   ves::xplorer::DataSet GetActiveDataSet( void );
+   void SetActiveDataSet( ves::xplorer::DataSet );
 
    ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
    unsigned int GetNumberOfGeomDataSets( void );
@@ -235,7 +235,7 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
    typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;
    GeometoryDataSetList mGeomDataSets;
-   typedef std::vector< ves::xplorer::cfdDataSet* > VTKDataSetList;
+   typedef std::vector< ves::xplorer::DataSet > VTKDataSetList;
    VTKDataSetList mVTKDataSets;
 
    /*std::map< std::string, ves::xplorer::scenegraph::CADEntity* > _partList;///<A list of the current parts.
@@ -251,7 +251,7 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
    ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
-   cfdDataSet* activeDataSet;
+   DataSet activeDataSet;
    ves::xplorer::scenegraph::Clone* mirrorNode;
    osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
 

@@ -148,7 +148,7 @@ public:
    float boxExtent;
 
    void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
-   void SetActiveDataSet( cfdDataSet* input );
+   void SetActiveDataSet( DataSet input );
 
    int GetCursorID( void );
    double* GetCursorLocation( void );
@@ -250,7 +250,7 @@ private:
    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS;
 
    osg::ref_ptr< ves::xplorer::scenegraph::Group > _rootNode;
-   ves::xplorer::cfdDataSet* _activeDataSet;
+   ves::xplorer::DataSet _activeDataSet;
    int cursorId;
    float sphereRadius;
    float last_sphereRadius;

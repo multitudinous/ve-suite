@@ -37,9 +37,9 @@
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -199,7 +199,7 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
    double activeMinMax[ 2 ];
    cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
 
-   std::map< int, cfdDataSet* >::iterator iter;
+   std::map< int, DataSet >::iterator iter;
    
    commandQueue.push_back( new cfdCommandArray() );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );

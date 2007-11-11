@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdCommandArray.h>
 
@@ -402,7 +402,7 @@ int cfdVectors::GetVectorRatioFactor()
 void cfdVectorBase::UpdateThreshHoldValues()
 {
    //double currentScalarRange[ 2 ];
-   cfdDataSet* temp = GetActiveDataSet();
+   DataSet temp = GetActiveDataSet();
 
    if ( temp != NULL )
    {

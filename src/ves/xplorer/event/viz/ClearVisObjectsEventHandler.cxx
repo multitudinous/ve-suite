@@ -35,8 +35,8 @@
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
-#include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/data/DataSetAxis.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -103,7 +103,7 @@ void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
       cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
 
       unsigned int state = 0;
-      cfdDataSet* dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetBoundingBoxState( state );

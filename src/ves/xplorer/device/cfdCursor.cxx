@@ -33,10 +33,10 @@
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/Model.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -823,7 +823,7 @@ void cfdCursor::SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS )
    this->activeDataSetDCS = myDCS;
 }
 
-void cfdCursor::SetActiveDataSet( cfdDataSet* input )
+void cfdCursor::SetActiveDataSet( DataSet input )
 {
    _activeDataSet = input;
    if ( _activeDataSet != NULL )

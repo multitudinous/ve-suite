@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/viz/cfdObjects.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/cfdCommandArray.h>
 
@@ -196,12 +196,12 @@ vtkPolyData* cfdObjects::ApplyGeometryFilter(vtkAlgorithmOutput* input)
 	}
 }
 /////////////////////////////////////////////
-cfdDataSet* cfdObjects::GetActiveDataSet()
+DataSet cfdObjects::GetActiveDataSet()
 {
    return activeDataSet;
 }
 
-void cfdObjects::SetActiveDataSet( cfdDataSet* dataset )
+void cfdObjects::SetActiveDataSet( DataSet dataset )
 {
    /*vprDEBUG(vesDBG, 4) 
       << "cfdObjects::SetActiveDataSet: " << dataset

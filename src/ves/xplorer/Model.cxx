@@ -164,7 +164,7 @@ Model::~Model()
    //   << std::endl << vprDEBUG_FLUSH;
 #endif
  
-   //std::map<int,cfdDataSet*>::iterator foundPlugin;
+   //std::map<int,DataSet>::iterator foundPlugin;
    // Remove any plugins that aren't present in the current network
    /*for ( foundPlugin=transientDataSets.begin(); foundPlugin!=transientDataSets.end(); )
    {
@@ -241,13 +241,13 @@ void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDataSet* Model::GetActiveDataSet( void )
+DataSet Model::GetActiveDataSet( void )
 {
    return activeDataSet;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetActiveDataSet( cfdDataSet* input )
+void Model::SetActiveDataSet( DataSet input )
 {
    activeDataSet = input;
 }
@@ -305,7 +305,7 @@ void Model::SetID( unsigned int id )
    modelID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDataSet* Model::GetCfdDataSet( int dataset )
+DataSet Model::GetCfdDataSet( int dataset )
 {
    // Check and see if we have any datasets
    // if not return null
@@ -359,7 +359,7 @@ unsigned int Model::GetNumberOfTextureDataSets()
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-int Model::GetKeyForCfdDataSet( cfdDataSet* input )
+int Model::GetKeyForCfdDataSet( DataSet input )
 {
    int key = -1;
    for ( unsigned int i = 0; i < mVTKDataSets.size(); ++i )

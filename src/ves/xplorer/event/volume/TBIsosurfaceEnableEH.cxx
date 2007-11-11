@@ -32,8 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/event/volume/TBIsosurfaceEnableEH.h>
-#include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>

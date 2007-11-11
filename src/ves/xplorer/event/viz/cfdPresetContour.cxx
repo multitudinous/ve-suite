@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
