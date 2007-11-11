@@ -39,21 +39,21 @@
  * \file
  *
  * Include this file to get a forward declaration of the type
- * ves::xplorer:CfdDataSet and its pointer types.
- * For the full declaration of ves::xplorer::CfdDataSet
- * ves/xplorer/CfdDataSet.h must be included, too.
+ * ves::xplorer:DataSet and its pointer types.
+ * For the full declaration of ves::xplorer::DataSet
+ * ves/xplorer/DataSet.h must be included, too.
  */
 
 namespace ves
 {
 namespace xplorer
 {
-   class CfdDataSet;
+   class DataSet;
    /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<CfdDataSet>::type  CfdDataSetPtr;
-   typedef ves::util::SharedPtrDef<CfdDataSet>::type CfdDataSetSharedPtr;
-   typedef ves::util::WeakPtrDef<CfdDataSet>::type   CfdDataSetWeakPtr;
-   typedef ves::util::ScopedPtrDef<CfdDataSet>::type CfdDataSetScopedPtr;
+   typedef ves::util::ClassPtrDef<DataSet>::type  DataSetPtr;
+   typedef ves::util::SharedPtrDef<DataSet>::type DataSetSharedPtr;
+   typedef ves::util::WeakPtrDef<DataSet>::type   DataSetWeakPtr;
+   typedef ves::util::ScopedPtrDef<DataSet>::type DataSetScopedPtr;
 }
 }
 #endif

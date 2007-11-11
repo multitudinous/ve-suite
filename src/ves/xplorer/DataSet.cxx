@@ -37,7 +37,7 @@
    computation.
 */
 
-#include <ves/xplorer/CfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/data/DataSetAxis.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
@@ -88,7 +88,7 @@ namespace ves
 namespace xplorer
 {
 
-CfdDataSet::CfdDataSet( ) :
+DataSet::DataSet( ) :
     parent( this ),
     dataSet( 0 ),
     x_planes( 0 ),
@@ -155,7 +155,7 @@ CfdDataSet::CfdDataSet( ) :
    m_dataObjectOps["Create BBox Actors"] = new ves::xplorer::util::CreateDataObjectBBoxActorsCallback();
 }
 
-CfdDataSet::~CfdDataSet()
+DataSet::~DataSet()
 {
    this->lut->Delete();
    this->lut = NULL;
@@ -261,145 +261,145 @@ CfdDataSet::~CfdDataSet()
    }
 }
 
-void CfdDataSet::SetRange( double * dataRange )
+void DataSet::SetRange( double * dataRange )
 {
    this->SetRange( dataRange[ 0 ], dataRange[ 1 ] );
 }
 
-void CfdDataSet::SetRange( double dataMin, double dataMax )
+void DataSet::SetRange( double dataMin, double dataMax )
 {
    this->range[ 0 ] = dataMin;
    this->range[ 1 ] = dataMax;
 }
 
-void CfdDataSet::GetRange( double * dataRange )
+void DataSet::GetRange( double * dataRange )
 {
    this->GetRange( dataRange[ 0 ], dataRange[ 1 ] );
 }
 
-void CfdDataSet::GetRange( double &dataMin, double &dataMax )
+void DataSet::GetRange( double &dataMin, double &dataMax )
 {
    dataMin = this->range[ 0 ];
    dataMax = this->range[ 1 ];
 }
 
-double * CfdDataSet::GetRange()
+double * DataSet::GetRange()
 {
    return this->range;
 }
 
-void CfdDataSet::SetUserRange( double userRange[2] )
+void DataSet::SetUserRange( double userRange[2] )
 {
-   vprDEBUG(vesDBG,1) << "CfdDataSet::SetUserRange OLD userRange = " 
+   vprDEBUG(vesDBG,1) << "DataSet::SetUserRange OLD userRange = " 
       << userRange[0] << " : " << userRange[1]
       << std::endl << vprDEBUG_FLUSH;
 
    this->SetUserRange( userRange[0], userRange[1] );
    
-   vprDEBUG(vesDBG,1) << "CfdDataSet::SetUserRange NEW userRange = " 
+   vprDEBUG(vesDBG,1) << "DataSet::SetUserRange NEW userRange = " 
       << userRange[0] << " : " << userRange[1]
       << std::endl << vprDEBUG_FLUSH;
 }
 
-void CfdDataSet::SetUserRange( double userMin, double userMax )
+void DataSet::SetUserRange( double userMin, double userMax )
 {
    this->definedRange[0] = userMin;
    this->definedRange[1] = userMax;
    this->SetDisplayedScalarRange( this->activeScalar, this->definedRange );
 }
 
-void CfdDataSet::GetUserRange( double userRange[2] )
+void DataSet::GetUserRange( double userRange[2] )
 {
    this->GetUserRange( userRange[0], userRange[1] );
 }
 
-void CfdDataSet::GetUserRange( double &userMin, double &userMax )
+void DataSet::GetUserRange( double &userMin, double &userMax )
 {
    userMin = this->definedRange[0];
    userMax = this->definedRange[1];
 }
 
-double * CfdDataSet::GetUserRange()
+double * DataSet::GetUserRange()
 {
    return this->definedRange;
 }
 
-void CfdDataSet::SetLength( float len )
+void DataSet::SetLength( float len )
 {
    this->bbDiagonal = len;
 }
 
-/*void CfdDataSet::GetLength( float &len )
+/*void DataSet::GetLength( float &len )
 {
    len = this->bbDiagonal;
 }
 
-float CfdDataSet::GetLength()
+float DataSet::GetLength()
 {
    return this->bbDiagonal;
 }*/
 
-/*void CfdDataSet::GetMeanCellLength( float &len )
+/*void DataSet::GetMeanCellLength( float &len )
 {
    len = this->meanCellBBLength;
 }
 
-float CfdDataSet::GetMeanCellLength()
+float DataSet::GetMeanCellLength()
 {
    return this->meanCellBBLength;
 }*/
 
-void CfdDataSet::SetStepLength( float sLen )
+void DataSet::SetStepLength( float sLen )
 {
    this->stepLength = sLen;
 }
 
-void CfdDataSet::GetStepLength( float &sLen )
+void DataSet::GetStepLength( float &sLen )
 {
    sLen = this->stepLength;
 }
 
-float CfdDataSet::GetStepLength()
+float DataSet::GetStepLength()
 {
    return this->stepLength;
 }
 
-void CfdDataSet::SetMaxTime( float mT )
+void DataSet::SetMaxTime( float mT )
 {
    this->maxTime = mT;
 }
 
-void CfdDataSet::GetMaxTime( float &mT )
+void DataSet::GetMaxTime( float &mT )
 {
    mT = this->maxTime;
 }
 
-float CfdDataSet::GetMaxTime()
+float DataSet::GetMaxTime()
 {
    return this->maxTime;
 }
 
-void CfdDataSet::SetTimeStep( float tStep )
+void DataSet::SetTimeStep( float tStep )
 {
    this->timeStep = tStep;
 }
 
-void CfdDataSet::GetTimeStep( float &tStep )
+void DataSet::GetTimeStep( float &tStep )
 {
    tStep = this->timeStep;
 }
 
-float CfdDataSet::GetTimeStep()
+float DataSet::GetTimeStep()
 {
    return this->timeStep;
 }
 
-vtkLookupTable * CfdDataSet::GetLookupTable()
+vtkLookupTable * DataSet::GetLookupTable()
 {
    return this->lut;
 }
 
-vtkUnstructuredGrid * CfdDataSet::GetUnsData()
+vtkUnstructuredGrid * DataSet::GetUnsData()
 {
    if ( ! this->dataSet ) 
    {
@@ -409,7 +409,7 @@ vtkUnstructuredGrid * CfdDataSet::GetUnsData()
    if ( ! this->dataSet->IsA("vtkUnstructuredGrid") ) 
    {
       vprDEBUG(vesDBG,0) 
-         << "CfdDataSet::GetUnsData - dataset is not an unsGrid !!"
+         << "DataSet::GetUnsData - dataset is not an unsGrid !!"
          << std::endl << vprDEBUG_FLUSH;
 
       return NULL;
@@ -418,7 +418,7 @@ vtkUnstructuredGrid * CfdDataSet::GetUnsData()
    return (vtkUnstructuredGrid*)this->dataSet;
 }
 
-vtkPolyData * CfdDataSet::GetPolyData()
+vtkPolyData * DataSet::GetPolyData()
 {
    if ( ! this->dataSet ) 
    {
@@ -428,7 +428,7 @@ vtkPolyData * CfdDataSet::GetPolyData()
    if ( ! this->dataSet->IsA("vtkPolyData") ) 
    {
       vprDEBUG(vesDBG,0) 
-         << "CfdDataSet::GetPolyData - dataset is not a vtkPolyData !!"
+         << "DataSet::GetPolyData - dataset is not a vtkPolyData !!"
          << std::endl << vprDEBUG_FLUSH;
 
       return NULL;
@@ -437,12 +437,12 @@ vtkPolyData * CfdDataSet::GetPolyData()
    return (vtkPolyData*)this->dataSet;
 }
 
-vtkDataObject* CfdDataSet::GetDataSet()
+vtkDataObject* DataSet::GetDataSet()
 {
    return this->dataSet;
 }
 
-void CfdDataSet::SetType()
+void DataSet::SetType()
 {
    // this code only needs to be done once for each dataset...
    if ( this->datasetType == -1 )
@@ -475,38 +475,38 @@ void CfdDataSet::SetType()
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-void CfdDataSet::SetType( int type )
+void DataSet::SetType( int type )
 {
    if ( 0 <= type && type < 3 )
       this->datasetType = type;
 }
 
-int CfdDataSet::GetType()
+int DataSet::GetType()
 {
    return this->datasetType;
 }
 
 #ifdef USE_OMP
-vtkUnstructuredGrid * CfdDataSet::GetData( int i )
+vtkUnstructuredGrid * DataSet::GetData( int i )
 {
    return this->data[i];
 }
 
-int CfdDataSet::GetNoOfDataForProcs()
+int DataSet::GetNoOfDataForProcs()
 {
    return this->noOfData;
 }
 #endif
 
-void CfdDataSet::LoadData( const std::string filename )
+void DataSet::LoadData( const std::string filename )
 {
    this->SetFileName( filename );
    this->LoadData();
 }
 
-void CfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
+void DataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
 {
-   std::cout<<"[DBG]...Inside LoadData of CfdDataSet"<<std::endl;
+   std::cout<<"[DBG]...Inside LoadData of DataSet"<<std::endl;
    this->SetFileName_OnFly(datasetindex);
    
    vtkPointSet* pointset = NULL;
@@ -528,7 +528,7 @@ void CfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
    this->LoadData();
 }
 ///////////////////////////
-void CfdDataSet::LoadData()
+void DataSet::LoadData()
 {
    if ( this->dataSet != NULL )
    {
@@ -709,7 +709,7 @@ void CfdDataSet::LoadData()
   
 }
 ////////////////////////////////////////////
-unsigned int CfdDataSet::GetNumberOfPoints()
+unsigned int DataSet::GetNumberOfPoints()
 {
     if(m_dataObjectHandler)
     {
@@ -724,13 +724,13 @@ unsigned int CfdDataSet::GetNumberOfPoints()
     return 0;
 }
 /////////////////////////////////////////
-double* CfdDataSet::GetBounds()
+double* DataSet::GetBounds()
 {
     GetBounds(m_bounds);
     return m_bounds;
 }
 //////////////////////////////////////////////////////////
-void CfdDataSet::GetBounds(double bounds[6])
+void DataSet::GetBounds(double bounds[6])
 {
     
     if(m_dataObjectHandler)
@@ -745,13 +745,13 @@ void CfdDataSet::GetBounds(double bounds[6])
     }
 }
 //////////////////////////////////////////////////////////////////
-int CfdDataSet::CountNumberOfParameters( const int numComponents )
+int DataSet::CountNumberOfParameters( const int numComponents )
 {
    int numParameters = 0;
    return numParameters;
 }
 
-std::vector<std::string> CfdDataSet::GetParameterNames( const int numComponents, 
+std::vector<std::string> DataSet::GetParameterNames( const int numComponents, 
                                        const int numParameters )
 {
 
@@ -760,12 +760,12 @@ std::vector<std::string> CfdDataSet::GetParameterNames( const int numComponents,
    return name;
 }
 
-void CfdDataSet::UpdatePropertiesForNewMesh()
+void DataSet::UpdatePropertiesForNewMesh()
 {
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetActiveScalar( std::string tempActiveScalar )
+void DataSet::SetActiveScalar( std::string tempActiveScalar )
 {
    if ( tempActiveScalar.empty() )
    {
@@ -795,7 +795,7 @@ void CfdDataSet::SetActiveScalar( std::string tempActiveScalar )
       this->activeScalar = scalar;
       
       vprDEBUG(vesDBG,1) 
-         << "CfdDataSet::SetActiveScalar: requested activeScalar = "
+         << "DataSet::SetActiveScalar: requested activeScalar = "
          << this->activeScalar << ", scalarName = " 
          << this->scalarName[ this->activeScalar ]
          << std::endl << vprDEBUG_FLUSH;
@@ -883,7 +883,7 @@ void CfdDataSet::SetActiveScalar( std::string tempActiveScalar )
    this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetActiveScalar( int scalar )
+void DataSet::SetActiveScalar( int scalar )
 {
    if ( this->numScalars == 0 )
    {
@@ -903,7 +903,7 @@ void CfdDataSet::SetActiveScalar( int scalar )
       this->activeScalar = scalar;
 
       vprDEBUG(vesDBG,1) 
-         << "CfdDataSet::SetActiveScalar: requested activeScalar = "
+         << "DataSet::SetActiveScalar: requested activeScalar = "
          << this->activeScalar << ", scalarName = " 
          << this->scalarName[ this->activeScalar ]
          << std::endl << vprDEBUG_FLUSH;
@@ -991,18 +991,18 @@ void CfdDataSet::SetActiveScalar( int scalar )
    this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
-int CfdDataSet::GetActiveScalar()
+int DataSet::GetActiveScalar()
 {
    // 0 <= activeScalar < numScalars
    return this->activeScalar;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double * CfdDataSet::GetVectorMagRange()
+double * DataSet::GetVectorMagRange()
 {
    return this->vectorMagRange;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetActiveVector( int vector )
+void DataSet::SetActiveVector( int vector )
 {
    if ( this->numVectors == 0 )
    {
@@ -1022,7 +1022,7 @@ void CfdDataSet::SetActiveVector( int vector )
       this->activeVector = vector;
 
       vprDEBUG(vesDBG,1) 
-         << "CfdDataSet::SetActiveVector: requested activeVector = "
+         << "DataSet::SetActiveVector: requested activeVector = "
          << this->activeVector << ", vectorName= " 
          << this->vectorName[ this->activeVector ]
          << std::endl << vprDEBUG_FLUSH;
@@ -1056,7 +1056,7 @@ void CfdDataSet::SetActiveVector( int vector )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetActiveVector( std::string tempVectorName )
+void DataSet::SetActiveVector( std::string tempVectorName )
 {
    if ( tempVectorName.empty() )
    {
@@ -1086,7 +1086,7 @@ void CfdDataSet::SetActiveVector( std::string tempVectorName )
       this->activeVector = vector;
       
       vprDEBUG(vesDBG,1) 
-         << "CfdDataSet::SetActiveVector: requested activeVector = "
+         << "DataSet::SetActiveVector: requested activeVector = "
          << this->activeVector << ", vectorName= " 
          << this->vectorName[ this->activeVector ]
          << std::endl << vprDEBUG_FLUSH;
@@ -1120,12 +1120,12 @@ void CfdDataSet::SetActiveVector( std::string tempVectorName )
    }
 }
 
-int CfdDataSet::GetActiveVector()
+int DataSet::GetActiveVector()
 {
    return this->activeVector;
 }
 
-void CfdDataSet::AutoComputeUserRange( const double rawRange[2],
+void DataSet::AutoComputeUserRange( const double rawRange[2],
                                        double prettyRange[2] )
 {
    double highMinusLow = rawRange[1] - rawRange[0];
@@ -1149,10 +1149,10 @@ void CfdDataSet::AutoComputeUserRange( const double rawRange[2],
       << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::ResetScalarBarRange( double min, double max )
+void DataSet::ResetScalarBarRange( double min, double max )
 {
    // converts percentile parameters into decimal values for a particular scalar
-   vprDEBUG(vesDBG,1) << "CfdDataSet::ResetScalarBarRange "
+   vprDEBUG(vesDBG,1) << "DataSet::ResetScalarBarRange "
                           << "min = " << min << ", max = " << max
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -1182,7 +1182,7 @@ void CfdDataSet::ResetScalarBarRange( double min, double max )
    this->lut->Build();
 }
 
-void CfdDataSet::SetFileName( const std::string newName )
+void DataSet::SetFileName( const std::string newName )
 {
    if ( this->fileName.c_str() )
    {
@@ -1193,7 +1193,7 @@ void CfdDataSet::SetFileName( const std::string newName )
    fileName.assign( newName );//strcpy( this->fileName, newName );
 }
 
-void CfdDataSet::SetFileName_OnFly(int datasetindex)
+void DataSet::SetFileName_OnFly(int datasetindex)
 {
    std :: ostringstream file_name;
    std :: string currentVtkFileName = "NewlyLoadedDataSet_000.vtk";
@@ -1207,12 +1207,12 @@ void CfdDataSet::SetFileName_OnFly(int datasetindex)
    this->SetFileName ( newName.c_str() );
 }
 ////////////////////////////////////////////
-std::string CfdDataSet::GetFileName()
+std::string DataSet::GetFileName()
 {
   return this->fileName;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetPrecomputedDataSliceDir( const std::string newName )
+void DataSet::SetPrecomputedDataSliceDir( const std::string newName )
 {
    if ( this->precomputedDataSliceDir.c_str() )
    {
@@ -1230,12 +1230,12 @@ void CfdDataSet::SetPrecomputedDataSliceDir( const std::string newName )
    precomputedDataSliceDir.assign( newName );//strcpy( this->precomputedDataSliceDir, newName );
 }
 /////////////////////////////////////////////////////////////////
-std::string CfdDataSet::GetPrecomputedDataSliceDir()
+std::string DataSet::GetPrecomputedDataSliceDir()
 {
    return this->precomputedDataSliceDir;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetPrecomputedSurfaceDir( const std::string newName )
+void DataSet::SetPrecomputedSurfaceDir( const std::string newName )
 {
    if ( this->precomputedSurfaceDir.c_str() )
    {
@@ -1253,56 +1253,56 @@ void CfdDataSet::SetPrecomputedSurfaceDir( const std::string newName )
    precomputedSurfaceDir.assign( newName );//strcpy( this->precomputedSurfaceDir, newName );
 }
 ///////////////////////////////////////////////////////////////
-std::string CfdDataSet::GetPrecomputedSurfaceDir()
+std::string DataSet::GetPrecomputedSurfaceDir()
 {
    return this->precomputedSurfaceDir;
 }
 ////////////////////////////////////////////////////////////
-cfdPlanes * CfdDataSet::GetPrecomputedXSlices()
+cfdPlanes * DataSet::GetPrecomputedXSlices()
 {
    return this->x_planes;
 }
 /////////////////////////////////////////////////////////////
-cfdPlanes * CfdDataSet::GetPrecomputedYSlices()
+cfdPlanes * DataSet::GetPrecomputedYSlices()
 {
    return this->y_planes;
 }
 /////////////////////////////////////////////////////////////
-cfdPlanes * CfdDataSet::GetPrecomputedZSlices()
+cfdPlanes * DataSet::GetPrecomputedZSlices()
 {
    return this->z_planes;
 }
 /////////////////////////////////////////////////////////////////////
-cfdPlanes * CfdDataSet::GetPrecomputedSlices( int xyz )
+cfdPlanes * DataSet::GetPrecomputedSlices( int xyz )
 {
    if      ( xyz == 0 ) return this->x_planes;
    else if ( xyz == 1 ) return this->y_planes;
    else if ( xyz == 2 ) return this->z_planes;
    else
    {
-      std::cerr << "ERROR: CfdDataSet::GetPrecomputedSlices cannot " 
+      std::cerr << "ERROR: DataSet::GetPrecomputedSlices cannot " 
                 << "handle index " << xyz << std::endl;
       exit(1);
       return NULL; // to eliminate compile warning
    }
 }
 ////////////////////////////////////////////////////////////
-void CfdDataSet::SetArrow( vtkPolyData * arrow)
+void DataSet::SetArrow( vtkPolyData * arrow)
 {
    this->arrow = arrow;
 }
 ///////////////////////////////////////////////
-vtkPolyData * CfdDataSet::GetArrow( )
+vtkPolyData * DataSet::GetArrow( )
 {
    return this->arrow;
 } 
 //////////////////////////////////////////////
-int CfdDataSet::GetNumberOfScalars()
+int DataSet::GetNumberOfScalars()
 {
    return this->numScalars;
 }
 ///////////////////////////////////////////////////////
-std::string CfdDataSet::GetScalarName( int i )
+std::string DataSet::GetScalarName( int i )
 {
    if ( 0 <= i && i < this->numScalars )
    {
@@ -1310,18 +1310,18 @@ std::string CfdDataSet::GetScalarName( int i )
    }
    else
    {
-      std::cerr << "ERROR: CfdDataSet::GetScalarName cannot "
+      std::cerr << "ERROR: DataSet::GetScalarName cannot "
                 << "handle index " << i << std::endl;
       return NULL;
    }
 }
 ///////////////////////////////////////////////
-int CfdDataSet::GetNumberOfVectors()
+int DataSet::GetNumberOfVectors()
 {
    return this->numVectors;
 }
 ////////////////////////////////////////////////////////
-std::string CfdDataSet::GetVectorName( int i )
+std::string DataSet::GetVectorName( int i )
 {
    if ( 0 <= i && i < this->numVectors )
    {
@@ -1329,38 +1329,38 @@ std::string CfdDataSet::GetVectorName( int i )
    }
    else
    {
-      std::cerr << "ERROR: CfdDataSet::GetScalarName cannot "
+      std::cerr << "ERROR: DataSet::GetScalarName cannot "
                 << "handle index " << i << std::endl;
       return NULL;
    }
 }
 //////////////////////////////////////////////
-void CfdDataSet::SetNewlyActivated()
+void DataSet::SetNewlyActivated()
 {
    this->isNewlyActivated = 1;
 }
 ///////////////////////////////////////////////////
-void CfdDataSet::SetNotNewlyActivated()
+void DataSet::SetNotNewlyActivated()
 {
    this->isNewlyActivated = 0;
 }
 //////////////////////////////////////////
-int CfdDataSet::IsNewlyActivated()
+int DataSet::IsNewlyActivated()
 {
    return this->isNewlyActivated;
 }
 /////////////////////////////////////////////
-CfdDataSet* CfdDataSet::GetParent()
+DataSet* DataSet::GetParent()
 {
    return this->parent;
 }
 /////////////////////////////////////////////////////////////////
-void CfdDataSet::SetParent( CfdDataSet* myParent )
+void DataSet::SetParent( DataSet* myParent )
 {
    this->parent = myParent;
 }
 //////////////////////////////////////////////////////////////////////////
-double* CfdDataSet::GetActualScalarRange(std::string name)
+double* DataSet::GetActualScalarRange(std::string name)
 {
     for(int i = 0; i < numScalars; ++i)
     {
@@ -1372,32 +1372,32 @@ double* CfdDataSet::GetActualScalarRange(std::string name)
     return 0;
 }
 //////////////////////////////////////////////////////////////////
-double* CfdDataSet::GetActualScalarRange( int index )
+double* DataSet::GetActualScalarRange( int index )
 {
    return this->actualScalarRange[ index ];
 }
 /////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::GetActualScalarRange( int index, double* range )
+void DataSet::GetActualScalarRange( int index, double* range )
 {
    range[ 0 ] = this->actualScalarRange[ index ][ 0 ];
    range[ 1 ] = this->actualScalarRange[ index ][ 1 ];
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetActualScalarRange( int index, double* range )
+void DataSet::SetActualScalarRange( int index, double* range )
 {
    vprDEBUG(vesDBG,2) 
-      << "CfdDataSet::SetActualScalarRange, for file " << this->fileName 
+      << "DataSet::SetActualScalarRange, for file " << this->fileName 
       << ", index: " << index
       << std::endl << vprDEBUG_FLUSH;
 
    vprDEBUG(vesDBG,2) 
-      << "CfdDataSet::SetActualScalarRange OLD actualScalarRange[" 
+      << "DataSet::SetActualScalarRange OLD actualScalarRange[" 
       << index << "] = " 
       << this->actualScalarRange[ index ][ 0 ] << " : " 
       << this->actualScalarRange[ index ][ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vesDBG,2) << "CfdDataSet::SetActualScalarRange request range: "
+   vprDEBUG(vesDBG,2) << "DataSet::SetActualScalarRange request range: "
       << range[0] << " : " << range[1]
       << std::endl << vprDEBUG_FLUSH;
 
@@ -1405,27 +1405,27 @@ void CfdDataSet::SetActualScalarRange( int index, double* range )
    this->actualScalarRange[ index ][ 1 ] = range[ 1 ];
 
    vprDEBUG(vesDBG,1) 
-      << "CfdDataSet::SetActualScalarRange NEW actualScalarRange[" 
+      << "DataSet::SetActualScalarRange NEW actualScalarRange[" 
       << index << "] = " 
       << this->actualScalarRange[ index ][ 0 ] << " : " 
       << this->actualScalarRange[ index ][ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////////
-double * CfdDataSet::GetDisplayedScalarRange()
+double * DataSet::GetDisplayedScalarRange()
 {
-   vprDEBUG(vesDBG,1) << "CfdDataSet::GetDisplayedScalarRange"
+   vprDEBUG(vesDBG,1) << "DataSet::GetDisplayedScalarRange"
       << " activeScalar = " << this->activeScalar
       << std::endl << vprDEBUG_FLUSH;
    return this->displayedScalarRange[ this->activeScalar ];
 }
 ////////////////////////////////////////////////////////////////////////
-double * CfdDataSet::GetDisplayedScalarRange( int index )
+double * DataSet::GetDisplayedScalarRange( int index )
 {
    return this->displayedScalarRange[ index ];
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetDisplayedScalarRange( int index, double* range )
+void DataSet::SetDisplayedScalarRange( int index, double* range )
 {
    this->displayedScalarRange[ index ][ 0 ] = range[ 0 ];
    this->displayedScalarRange[ index ][ 1 ] = range[ 1 ];
@@ -1433,7 +1433,7 @@ void CfdDataSet::SetDisplayedScalarRange( int index, double* range )
    //this->definedRange[ 1 ] = range[ 1 ];
 }
 //////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Switch* CfdDataSet::GetSwitchNode()
+ves::xplorer::scenegraph::Switch* DataSet::GetSwitchNode()
 {
    if ( !switchNode )
    {
@@ -1443,7 +1443,7 @@ ves::xplorer::scenegraph::Switch* CfdDataSet::GetSwitchNode()
    return switchNode.get();
 }
 /////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* CfdDataSet::GetDCS()
+ves::xplorer::scenegraph::DCS* DataSet::GetDCS()
 {
    if ( dcs == NULL )
    {
@@ -1454,7 +1454,7 @@ ves::xplorer::scenegraph::DCS* CfdDataSet::GetDCS()
       return this->dcs.get();
 }
 /////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
+void DataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
 {
    if ( dcs == NULL )
       this->dcs = myDCS;
@@ -1462,17 +1462,17 @@ void CfdDataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
       std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
 }
 /////////////////////////////////////////////////
-int CfdDataSet::IsPartOfTransientSeries()
+int DataSet::IsPartOfTransientSeries()
 {
    return this->partOfTransientSeries;
 }
 ////////////////////////////////////////////////////////
-void CfdDataSet::SetAsPartOfTransientSeries()
+void DataSet::SetAsPartOfTransientSeries()
 {
    this->partOfTransientSeries = 1;
 }
 /////////////////////////////////////////
-void CfdDataSet::StoreScalarInfo()
+void DataSet::StoreScalarInfo()
 {
     //Get the scalar and vector information
     m_dataObjectHandler->SetDatasetOperatorCallback(m_dataObjectOps["Count Number Of Vectors And Scalars"]);
@@ -1518,7 +1518,7 @@ void CfdDataSet::StoreScalarInfo()
    }
 }
 //////////////////////////////////////////////////////////
-double* CfdDataSet::GetScalarRange(std::string scalarName)
+double* DataSet::GetScalarRange(std::string scalarName)
 {
     for(int i = 0; i < this->numScalars; ++i)
     {
@@ -1529,7 +1529,7 @@ double* CfdDataSet::GetScalarRange(std::string scalarName)
     }
 }
 /////////////////////////////
-void CfdDataSet::Print()
+void DataSet::Print()
 {
    std::cout << "filename = " << this->fileName << std::endl;
    std::cout << "numScalars = " << this->numScalars << std::endl;
@@ -1556,12 +1556,12 @@ void CfdDataSet::Print()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetUUID( std::string attribute, std::string uuid )
+void DataSet::SetUUID( std::string attribute, std::string uuid )
 {
    dataSetUUIDMap[ attribute ] = uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CfdDataSet::GetUUID( std::string attribute )
+std::string DataSet::GetUUID( std::string attribute )
 {
    std::map< std::string, std::string >::iterator iter;
    iter = dataSetUUIDMap.find( attribute );
@@ -1577,7 +1577,7 @@ std::string CfdDataSet::GetUUID( std::string attribute )
 ////////////////////////////////////////////////////////////////////////////////
 //create visual representation of bounding box
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::CreateBoundingBoxGeode( void )
+void DataSet::CreateBoundingBoxGeode( void )
 {
     if( !m_visualBBox.valid() )
     {
@@ -1602,7 +1602,7 @@ void CfdDataSet::CreateBoundingBoxGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 //create wireframe to ensure accurate representation
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::CreateWireframeGeode( void )
+void DataSet::CreateWireframeGeode( void )
 {
    //vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
    //wireframe->SetInput( this->GetDataSet() );
@@ -1628,7 +1628,7 @@ void CfdDataSet::CreateWireframeGeode( void )
    wireframeActor->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetBoundingBoxState( unsigned int state )
+void DataSet::SetBoundingBoxState( unsigned int state )
 {
     if( !m_visualBBox.valid() )
     {
@@ -1652,7 +1652,7 @@ void CfdDataSet::SetBoundingBoxState( unsigned int state )
    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetWireframeState( unsigned int state )
+void DataSet::SetWireframeState( unsigned int state )
 {
    if ( (state == 0) && wireframeGeode.valid() )
    {
@@ -1669,7 +1669,7 @@ void CfdDataSet::SetWireframeState( unsigned int state )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetAxesState( unsigned int state )
+void DataSet::SetAxesState( unsigned int state )
 {
    if ( (state == 0) && dataSetAxes )
    {
@@ -1688,17 +1688,17 @@ void CfdDataSet::SetAxesState( unsigned int state )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::DataSetAxis* CfdDataSet::GetDataSetAxes( void )
+ves::xplorer::DataSetAxis* DataSet::GetDataSetAxes( void )
 {
    return dataSetAxes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::DataSetScalarBar* CfdDataSet::GetDataSetScalarBar( void )
+ves::xplorer::DataSetScalarBar* DataSet::GetDataSetScalarBar( void )
 {
    return dataSetScalarBar;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CfdDataSet::SetDataSetScalarState( unsigned int state )
+void DataSet::SetDataSetScalarState( unsigned int state )
 {
    if ( (state == 0) && dataSetScalarBar )
    {

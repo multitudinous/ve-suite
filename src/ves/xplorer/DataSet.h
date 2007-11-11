@@ -34,7 +34,7 @@
 #define VE_XPLORER_CFD_DATA_SET_H
 
 #include <ves/VEConfig.h>
-#include <ves/CfdDataSetPtr.h>
+#include <ves/DataSetPtr.h>
 
 #include <ves/xplorer/util/DataObjectHandler.h>
 
@@ -111,20 +111,20 @@ namespace ves
 namespace xplorer
 {
 
-/*!\file CfdDataSet.h
-CfdDataSet API
+/*!\file DataSet.h
+DataSet API
 */
-/*!\class ves::xplorer::CfdDataSet
+/*!\class ves::xplorer::DataSet
 * A class to load data set and pre-compute flow parameters 
 * or properties for virtual environment interactive 
 * computation.
 */
-class VE_XPLORER_EXPORTS CfdDataSet
+class VE_XPLORER_EXPORTS DataSet
 {
 public:
-    CfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
+    DataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
 
-    ~CfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
+    ~DataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
 
     // Initialize the number of data to load and parallel process.
     // By default, use the octree table.
@@ -235,8 +235,8 @@ public:
     int GetNumberOfVectors();
     std::string GetVectorName( int );
 
-    CfdDataSet * GetParent();
-    void SetParent( CfdDataSet * );
+    DataSet * GetParent();
+    void SetParent( DataSet * );
 
     void SetActualScalarRange( int, double * );
     void GetActualScalarRange( int, double * );
@@ -266,7 +266,7 @@ public:
 
     void Print();
     ///Accessor methods to store and query the uuids for specfic
-    ///attributes of a CfdDataSet
+    ///attributes of a DataSet
     void SetUUID( std::string attribute, std::string uuid );
     std::string GetUUID( std::string attribute );
 
@@ -291,11 +291,11 @@ public:
     ///Get the scalar bar
     ves::xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
 
-    ///Get the bounds of the vtkDataObject contained in the CfdDataSet
+    ///Get the bounds of the vtkDataObject contained in the DataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
     void GetBounds(double bounds[6]);
 
-    ///Get the bounds of the vtkDataObject contained in the CfdDataSet
+    ///Get the bounds of the vtkDataObject contained in the DataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
     double* GetBounds();
 
@@ -313,7 +313,7 @@ private:
     double** actualScalarRange;
     double** displayedScalarRange;
 
-    CfdDataSet* parent;
+    DataSet* parent;
     double m_bounds[6];///The bounding box data;
     int isNewlyActivated;
 
