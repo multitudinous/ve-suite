@@ -35,8 +35,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
-#include <ves/xplorer/cfdSteadyStateVizHandler.h>
-#include <ves/xplorer/cfdCommandArray.h>
+#include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 #include <ves/xplorer/DataSet.h>
@@ -49,7 +48,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #ifdef _OSG
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
 using namespace ves::xplorer::volume;
 #endif
@@ -186,6 +185,7 @@ void Body_VEXplorer_i::PreFrameUpdate( void )
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
  }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void Body_VEXplorer_i::CreateCommandQueue( void )
 {
    double newId = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
@@ -209,6 +209,7 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::InitCluster( void )
 {
@@ -258,7 +259,7 @@ void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
    {
       return;
    }
-   
+/*
    {
       vpr::Guard<vpr::Mutex> val_guard(mValueLock);
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
@@ -272,6 +273,7 @@ void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
       _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
    }
+*/
 
    vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
                            << mStates.isLocal() << " " 
@@ -303,9 +305,9 @@ void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
 
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
-      if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
+      if ( TextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
       {
-         cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
+         TextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
       }
 #endif
    }

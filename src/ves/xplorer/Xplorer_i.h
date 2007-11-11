@@ -128,7 +128,7 @@ public:
 protected:
    ///Create command queue for transient vis
    ///Should be removed once non texture pipelines are created
-   void CreateCommandQueue( void );
+   //void CreateCommandQueue( void );
 
    std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
    std::vector< std::string > commandStringQueue;///< command queue with raw string data

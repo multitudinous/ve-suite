@@ -80,7 +80,7 @@
 #include <ves/xplorer/volume/cfdVectorVolumeVisHandler.h>
 #include <ves/xplorer/volume/cfdOSGAdvectionShaderManager.h>
 
-vprSingletonImpLifetime( ves::xplorer::volume::TextureBasedVizHandler, 140 );
+vprSingletonImpLifetime( ves::xplorer::TextureBasedVizHandler, 140 );
 using namespace ves::xplorer::volume;
 using namespace ves::xplorer;
 //////////////////////////////////////////////////////////
@@ -91,7 +91,6 @@ TextureBasedVizHandler::TextureBasedVizHandler()
    _animationDelay = 0.0001f;
    _appTime = 0.0;
    _paramFile = '\0';
-   _cmdArray = 0;
    _activeVolumeVizNode = 0;
    _activeTM = 0;
    _parent = 0;
@@ -128,12 +127,6 @@ TextureBasedVizHandler::~TextureBasedVizHandler( void )
    if ( !_paramFile.empty() )
    {
       _paramFile.clear();
-   }
-
-   if ( _cmdArray )
-   {
-      delete  _cmdArray;
-      _cmdArray = 0;
    }
 
    if ( _currentBBox )
@@ -202,7 +195,7 @@ void TextureBasedVizHandler::UpdateIsosurface(double value)
 {
    if(_svvh)
    {
-	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          sShader->FastTransferFunctionUpdate();
@@ -216,7 +209,7 @@ void TextureBasedVizHandler::EnsureIsosurface(bool onOff)
 {
    if(_svvh)
    {
-	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          if(onOff)
@@ -237,7 +230,7 @@ void TextureBasedVizHandler::EnsurePhongShading(bool onOff)
 {
    if(_svvh)
    {
-	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          //this is hard coded and will need to change--biv
@@ -325,10 +318,10 @@ void TextureBasedVizHandler::UpdateClipPlane(std::string planeCoordinate,
 ///////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::UpdateNumberOfSlicePlanes(unsigned int nSlices)
 {
-	if(_activeVolumeVizNode)
-	{
-		_activeVolumeVizNode->SetNumberOfSlices(nSlices);
-	}
+   if(_activeVolumeVizNode)
+   {
+      _activeVolumeVizNode->SetNumberOfSlices(nSlices);
+   }
 }
 ////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetTransientDirection(std::string direction)
@@ -367,7 +360,7 @@ void TextureBasedVizHandler::UpdateTransientDuration(double duration)
          ///duration calculation
          unsigned int nTimesteps = _activeTM->numberOfFields();
          _animationDelay = duration/((double)nTimesteps); 
-		   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+         cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
          if(sShader)
          {
             sShader->SetDelayTime(_animationDelay);
@@ -386,7 +379,7 @@ void TextureBasedVizHandler::StepTransientVisualization(std::string direction)
       int curFrame = _activeTM->getNextFrame();
       if(_svvh)
       {
-		  cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+        cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
         if(sShader)
         {
            sShader->SetCurrentTransientTexture(curFrame,true);
@@ -513,7 +506,7 @@ void TextureBasedVizHandler::ClearAll()
       if(_activeVolumeVizNode)
       {
          _activeVolumeVizNode->ResetClipPlanes();
-			_parent->removeChild( _activeVolumeVizNode->GetVolumeVisNode().get() );
+         _parent->removeChild( _activeVolumeVizNode->GetVolumeVisNode().get() );
          _activeVolumeVizNode = 0;
       }
       _activeTM = 0;
@@ -671,7 +664,7 @@ void TextureBasedVizHandler::UpdatePreIntegrationTable(bool trueFalse)
 {
    if(_svvh)
    {
-	   cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
+      cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>(_svvh->GetActiveShader());
       if(sShader)
       {
          //this is hard coded and will need to change--biv
@@ -683,7 +676,7 @@ void TextureBasedVizHandler::UpdatePreIntegrationTable(bool trueFalse)
          {
             sShader->FastTransferFunctionUpdate();
          }
-		 sShader->EnsureScalarRange();
+       sShader->EnsureScalarRange();
       }
    }
 }
@@ -699,11 +692,6 @@ void TextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
 {
    if(_pbm != pbm)
       _pbm = pbm;
-}
-////////////////////////////////////////////////////////////////////////////
-void TextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
-{
-   _cmdArray = cmdArray;
 }
 //////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetWorldDCS(ves::xplorer::scenegraph::DCS* dcs)
@@ -728,13 +716,13 @@ void TextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
 ////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetActiveShaderManager(std::string name)
 {
-	if(_activeVisNodeHdlr)
-	{
-	   if(name != "CUSTOM")
-	   {
+   if(_activeVisNodeHdlr)
+   {
+      if(name != "CUSTOM")
+      {
           _activeVisNodeHdlr->SetActiveShader(name);
-	   }
-	}
+      }
+   }
 }
 /////////////////////////////////////////////////////////
 void TextureBasedVizHandler::_updateScalarVisHandler()
@@ -752,7 +740,7 @@ void TextureBasedVizHandler::_updateScalarVisHandler()
       _svvh->SetTextureManager(_activeTM);
       _svvh->Init();
       //_svvh->SetActiveShader("BLUE_RED_LINEAR_SHADER");
-	  _activeVisNodeHdlr = _svvh;
+     _activeVisNodeHdlr = _svvh;
       if(!_svvh->IsThisActive())
       {
          _svvh->EnableDecorator();
@@ -775,7 +763,7 @@ void TextureBasedVizHandler::_updateVectorVisHandler()
       _vvvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _vvvh->SetTextureManager(_activeTM);
       _vvvh->Init();
-	  _activeVisNodeHdlr = _vvvh;
+     _activeVisNodeHdlr = _vvvh;
       if(!_vvvh->IsThisActive())
          _vvvh->EnableDecorator();
    }
