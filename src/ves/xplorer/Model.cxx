@@ -30,9 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <ves/xplorer/cfdDataSet.h>
-#include <ves/xplorer/environment/cfdSound.h>
+
+#include <ves/xplorer/Mode.h>
+
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelCADHandler.h>
+
+#include <ves/xplorer/environment/cfdSound.h>
 
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
@@ -59,7 +64,6 @@
 using namespace ves::xplorer::volume;
 #endif
 
-#include <ves/xplorer/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
@@ -78,20 +82,21 @@ using namespace ves::xplorer::volume;
 
 #include <osg/BlendFunc>
 
+#include <boost/bind.hpp>
+
 #include <fstream>
 #include <sstream>
 
-#include <boost/bind.hpp>
-
-#include <ves/xplorer/cfdModel.h>
-using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
-////////////////////////////////////////////////////////////////////////////////
-cfdModel::cfdModel( ves::xplorer::scenegraph::DCS* worldDCS )
+namespace ves
 {
-   vprDEBUG(vesDBG,1) << "|\tNew cfdModel ! " 
+namespace xplorer
+{
+Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
+{
+   vprDEBUG(vesDBG,1) << "|\tNew Model ! " 
                           << std::endl << vprDEBUG_FLUSH;
    this->mModelNode = 0;
    //this->actor = NULL;
@@ -113,9 +118,9 @@ cfdModel::cfdModel( ves::xplorer::scenegraph::DCS* worldDCS )
    
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdModel::~cfdModel()
+Model::~Model()
 {
-   //vprDEBUG(vesDBG,2) << "cfdModel destructor"
+   //vprDEBUG(vesDBG,2) << "Model destructor"
    //                       << std::endl << vprDEBUG_FLUSH;
 
  
@@ -130,7 +135,7 @@ cfdModel::~cfdModel()
    /*for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )
    {
-      vprDEBUG(vesDBG,2) << "deleting a cfdModel"
+      vprDEBUG(vesDBG,2) << "deleting a Model"
                              << std::endl << vprDEBUG_FLUSH;
       delete *itr;
    }*/
@@ -176,13 +181,13 @@ cfdModel::~cfdModel()
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); )
    {
-      vprDEBUG(vesDBG,2) << "erasing a cfdModel"
+      vprDEBUG(vesDBG,2) << "erasing a Model"
                              << std::endl << vprDEBUG_FLUSH;
       mVTKDataSets.erase( itr++ );
    }
 */
 
-   //vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
+   //vprDEBUG(vesDBG,2) << "Model destructor finished"
    //                       << std::endl << vprDEBUG_FLUSH;
    _availableSounds.clear();
 
@@ -193,23 +198,23 @@ cfdModel::~cfdModel()
    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::ModelCADHandler* cfdModel::GetModelCADHandler()
+ves::xplorer::ModelCADHandler* Model::GetModelCADHandler()
 {
     return m_cadHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::PreFrameUpdate()
+void Model::PreFrameUpdate()
 {
-   vprDEBUG(vesDBG,1) << "cfdModel::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
+   vprDEBUG(vesDBG,1) << "Model::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::CreateCfdDataSet( void )
+void Model::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
+void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
 {
    if ( !mirrorNode )
    {
@@ -236,71 +241,71 @@ void cfdModel::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDataSet* cfdModel::GetActiveDataSet( void )
+cfdDataSet* Model::GetActiveDataSet( void )
 {
    return activeDataSet;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetActiveDataSet( cfdDataSet* input )
+void Model::SetActiveDataSet( cfdDataSet* input )
 {
    activeDataSet = input;
 }
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::CreateTextureDataSet()
+void Model::CreateTextureDataSet()
 {
    mTextureDataSets.push_back(new cfdTextureDataSet());
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
+void Model::AddDataSetToTextureDataSet(unsigned int index,
                                      std::string textureDescriptionFile)
 {
    mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::CreateGeomDataSet( std::string filename )
+void Model::CreateGeomDataSet( std::string filename )
 {
    mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get(), false, true ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::setModelType( ModelTypeIndex type )
+void Model::setModelType( ModelTypeIndex type )
 {
    this->mModelType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntityHelper* cfdModel::GetCfdNode( )
+ves::xplorer::scenegraph::CADEntityHelper* Model::GetCfdNode( )
 {
    return this->mModelNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* cfdModel::GetDCS( )
+ves::xplorer::scenegraph::DCS* Model::GetDCS( )
 {
    return this->_worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool cfdModel::GetMirrorDataFlag( void )
+bool Model::GetMirrorDataFlag( void )
 {
    return mirrorDataFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetMirrorDataFlag( bool input )
+void Model::SetMirrorDataFlag( bool input )
 {
    mirrorDataFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdModel::GetID( void )
+unsigned int Model::GetID( void )
 {
    return modelID;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetID( unsigned int id )
+void Model::SetID( unsigned int id )
 {
    modelID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
+cfdDataSet* Model::GetCfdDataSet( int dataset )
 {
    // Check and see if we have any datasets
    // if not return null
@@ -313,7 +318,7 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
       return mVTKDataSets.at( dataset );
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdModel::GetIndexOfDataSet( std::string dataSetName )
+unsigned int Model::GetIndexOfDataSet( std::string dataSetName )
 {
    unsigned int dataSetIndex = 0;
    for ( size_t i = 0; i < mVTKDataSets.size(); ++i )
@@ -328,7 +333,7 @@ unsigned int cfdModel::GetIndexOfDataSet( std::string dataSetName )
 }
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::volume::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
+ves::xplorer::volume::cfdTextureDataSet* Model::GetTextureDataSet(unsigned int index)
 {
    if(mTextureDataSets.empty())
    {
@@ -338,23 +343,23 @@ ves::xplorer::volume::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned in
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::SetActiveTextureDataSet(ves::xplorer::volume::cfdTextureDataSet* tDS)
+void Model::SetActiveTextureDataSet(ves::xplorer::volume::cfdTextureDataSet* tDS)
 {
    _activeTextureDataSet = tDS;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::volume::cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
+ves::xplorer::volume::cfdTextureDataSet* Model::GetActiveTextureDataSet()
 {
    return _activeTextureDataSet;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdModel::GetNumberOfTextureDataSets()
+unsigned int Model::GetNumberOfTextureDataSets()
 {
    return mTextureDataSets.size();
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
+int Model::GetKeyForCfdDataSet( cfdDataSet* input )
 {
    int key = -1;
    for ( unsigned int i = 0; i < mVTKDataSets.size(); ++i )
@@ -369,12 +374,12 @@ int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
    return key;
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdModel::GetNumberOfCfdDataSets( void )
+unsigned int Model::GetNumberOfCfdDataSets( void )
 {
    return mVTKDataSets.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity* cfdModel::GetGeomDataSet( int dataset )
+CADEntity* Model::GetGeomDataSet( int dataset )
 {
    // Check and see if we have any datasets
    // if not return null
@@ -387,14 +392,14 @@ CADEntity* cfdModel::GetGeomDataSet( int dataset )
       return mGeomDataSets.at( dataset );
 }
 ////////////////////////////////////////////////////////////////////////////////
-unsigned int cfdModel::GetNumberOfGeomDataSets( void )
+unsigned int Model::GetNumberOfGeomDataSets( void )
 {
    return mGeomDataSets.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Dynamic Loading Data Start From Here
-void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, double* scale, double* trans, double* rotate)
+void Model::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, double* scale, double* trans, double* rotate)
 {
    this->CreateCfdDataSet();
    
@@ -426,7 +431,7 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::DynamicLoadingGeom(std::string surfacefilename, double* scale, 
+void Model::DynamicLoadingGeom(std::string surfacefilename, double* scale, 
                double* trans, double* rotate, double* stlColor, int color, int transFlag)
 {  
    std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
@@ -437,15 +442,15 @@ void cfdModel::DynamicLoadingGeom(std::string surfacefilename, double* scale,
    this->GetGeomDataSet(-1)->GetDCS()->SetRotationArray(rotate);
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector<vtkDataSet*> cfdModel::GetWaitingDataList()
+std::vector<vtkDataSet*> Model::GetWaitingDataList()
 {
    return this->waitingdatalist;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
-void cfdModel::GetDataFromUnit(void)
+void Model::GetDataFromUnit(void)
 #elif __VJ_version == 2000003
-void cfdModel::GetDataFromUnit(void* unused)
+void Model::GetDataFromUnit(void* unused)
 #endif
 {
 
@@ -602,18 +607,18 @@ void cfdModel::GetDataFromUnit(void* unused)
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModel::ActiveLoadingThread()
+void Model::ActiveLoadingThread()
 {
 #if __VJ_version > 2000003
-   this->loadDataTh = new vpr::Thread( boost::bind( &cfdModel::GetDataFromUnit, this ) );
+   this->loadDataTh = new vpr::Thread( boost::bind( &Model::GetDataFromUnit, this ) );
 #elif __VJ_version == 2000003
    this->loadDataTh = new vpr::Thread( 
-                        new vpr::ThreadMemberFunctor< cfdModel >( 
-                                 this, &cfdModel::GetDataFromUnit) );
+                        new vpr::ThreadMemberFunctor< Model >( 
+                                 this, &Model::GetDataFromUnit) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
+const std::string Model::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 {
    std::ostringstream file_name;
    std::string currentStlFileName = "NewlyLoadedDataSet_000.stl";
@@ -658,7 +663,7 @@ const std::string cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 }
 //Dynamic Loading Data End Here
 /////////////////////////////////////////////////
-void cfdModel::AddNewSound(std::string soundName,
+void Model::AddNewSound(std::string soundName,
                            std::string filename)
 {
    cfdSound newSound;
@@ -672,7 +677,7 @@ void cfdModel::AddNewSound(std::string soundName,
 
 }
 ///////////////////////////////////////////////////
-void cfdModel::ActivateSound(std::string soundName)
+void Model::ActivateSound(std::string soundName)
 {
    try
    {
@@ -681,11 +686,11 @@ void cfdModel::ActivateSound(std::string soundName)
    catch(...)
    {
       std::cout<<"Invalid sound: "<<soundName<<std::endl;
-      std::cout<<"cfdModel::ActivateSound"<<std::endl;
+      std::cout<<"Model::ActivateSound"<<std::endl;
    }
 }
 /////////////////////////////////////////////////////
-void cfdModel::DeactivateSound(std::string soundName)
+void Model::DeactivateSound(std::string soundName)
 {
    try
    {
@@ -694,6 +699,9 @@ void cfdModel::DeactivateSound(std::string soundName)
    catch(...)
    {
       std::cout<<"Invalid sound: "<<soundName<<std::endl;
-      std::cout<<"cfdModel::ActivateSound"<<std::endl;
+      std::cout<<"Model::ActivateSound"<<std::endl;
    }
 }
+
+} // end xplorer
+} // end ves

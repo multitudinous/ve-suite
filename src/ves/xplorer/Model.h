@@ -30,44 +30,41 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_MODEL_H
-#define CFD_MODEL_H
-/*!\file cfdModel.h
-cfdModel API
-*/
-/*!\class ves::xplorer::cfdModel
-* 
-*/
+#ifndef VE_XPLORER_MODEL_H
+#define VE_XPLORER_MODEL_H
 
-/*
-1.The difference between the concept of multiple models and multiple datasets 
-is that:
+#include <ves/xplorer/ModelPtr.h>
+#include <ves/xplorer/GlobalBase.h>
 
-A model can contain several vtkDataSets, geometricalDataSets (surface dataset). 
-These datasets have the same operations. For example, for the same shape design,
-if we want to see the effects of different boundary condition, we can put two 
-different cases into the same model, so the comparision can be made very 
-easily.But if we want to see the two different shape design or need to see 
-the difference between the experiment results and the simulation results, 
-it is better to treat these two dataset as two different models.
-*/
-#include <ves/VEConfig.h>
-#include <ves/xplorer/cfdGlobalBase.h>
-#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/ModelHandlerPtr.h>
+#include <ves/xplorer/ModelCADHandlerPtr.h>
+#include <ves/xplorer/DataSetPtr.h>
+
+#include <ves/xplorer/event/EventHandlerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
 
-#include <string>
-#include <vector>
-#include <map>
-#include <utility>
+#include <vrj/vrjParam.h>
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
 
-#include <vrj/vrjParam.h>
+#ifdef _OSG
+#include <osg/ref_ptr>
+#include <osg/StateSet>
+
+namespace VE_TextureBased
+{
+   class cfdTextureDataSet;
+}
+#endif
+
+#include <string>
+#include <vector>
+#include <map>
+#include <utility>
 
 namespace ves
 {
@@ -85,38 +82,6 @@ namespace scenegraph
 }
 }
 }
-
-namespace ves
-{
-namespace xplorer
-{
-namespace event
-{
-   class EventHandler;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdDataSet;
-   class cfdCommandArray;
-   class cfdSound;
-   class ModelCADHandler;
-}
-}
-
-#ifdef _OSG
-#include <osg/ref_ptr>
-#include <osg/StateSet>
-
-namespace VE_TextureBased
-{
-   class cfdTextureDataSet;
-}
-#endif
 
 class vtkDataSet;
 class vtkUnstructuredGrid;
@@ -143,17 +108,34 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdModel : public cfdGlobalBase
+/*!\file Model.h
+Model API
+*/
+/*!\class ves::xplorer::Model
+* 
+*/
+
+/*
+1.The difference between the concept of multiple models and multiple datasets 
+is that:
+
+A model can contain several vtkDataSets, geometricalDataSets (surface dataset). 
+These datasets have the same operations. For example, for the same shape design,
+if we want to see the effects of different boundary condition, we can put two 
+different cases into the same model, so the comparision can be made very 
+easily.But if we want to see the two different shape design or need to see 
+the difference between the experiment results and the simulation results, 
+it is better to treat these two dataset as two different models.
+*/
+class VE_XPLORER_EXPORTS Model : public GlobalBase
 {
 public:
-   cfdModel( ves::xplorer::scenegraph::DCS* );
-   virtual ~cfdModel();
+   Model( ves::xplorer::scenegraph::DCS* );
+   virtual ~Model();
 
    ///PreFrame callback to update the model based on commands from
    ///VE-Conductor
    void PreFrameUpdate(); 
-   ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ){return false;} 
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() {}
