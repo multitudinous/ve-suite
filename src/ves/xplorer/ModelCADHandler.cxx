@@ -32,6 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
+
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -50,8 +51,11 @@
 
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
-using namespace ves::xplorer;
-/////////////////////////////////////////////////////////////////////////////////////////////
+
+namespace ves
+{
+namespace xplorer
+{
 ModelCADHandler::ModelCADHandler(ves::xplorer::scenegraph::DCS* rootNode)
 {
     m_assemblyList["rootNode"] = rootNode;
@@ -607,3 +611,5 @@ bool ModelCADHandler::CloneExists(std::string cloneID)
     return false;
 }
 
+} // end xplorer
+} // end ves

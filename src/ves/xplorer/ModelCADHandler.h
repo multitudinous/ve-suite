@@ -30,17 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef MODEL_CAD_HANDLER_H
-#define MODEL_CAD_HANDLER_H
-/*!\file ModelCADHandler.h
-Mananger for the CAD associated with a cfdModel
-*/
-/*!\class ves::xplorer::ModelCADHandler
-* 
-*/
-#include <ves/xplorer/cfdGlobalBase.h>
+#ifndef VE_XPLORER_MODEL_CAD_HANDLER_H
+#define VE_XPLORER_MODEL_CAD_HANDLER_H
 
-#include <ves/VEConfig.h>
+#include <ves/xplorer/ModelCADHandlerPtr.h>
+#include <ves/xplorer/GlobalBase.h>
+
+#include <ves/open/xml/cad/CADNodePtr.h>
+#include <ves/open/xml/cad/CADAttributePtr.h>
+
+#include <osg/StateSet>
 
 #include <map>
 #include <string>
@@ -60,10 +59,6 @@ namespace scenegraph
 }
 }
 
-#include <ves/open/xml/cad/CADNodePtr.h>
-#include <ves/open/xml/cad/CADAttributePtr.h>
-
-#include <osg/StateSet>
 namespace osg
 {
     class ClipPlane;
@@ -73,7 +68,13 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS ModelCADHandler : public cfdGlobalBase
+/*!\file ModelCADHandler.h
+Mananger for the CAD associated with a cfdModel
+*/
+/*!\class ves::xplorer::ModelCADHandler
+* 
+*/
+class VE_XPLORER_EXPORTS ModelCADHandler : public GlobalBase
 {
 public:
     ///Constructor
@@ -194,7 +195,6 @@ public:
     ModelCADHandler& operator=(const ModelCADHandler& rhs);
 
     ///Not used
-    virtual bool CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray ){ return false; }
     ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand(){ ; }
 
