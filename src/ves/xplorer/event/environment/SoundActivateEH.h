@@ -88,7 +88,7 @@ public:
 
    ///Set the active model
    ///\param baseObject Active model
-   virtual void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject);
+   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
 
 protected:
    ves::xplorer::cfdModel* _activeModel;///<The active cfdModel

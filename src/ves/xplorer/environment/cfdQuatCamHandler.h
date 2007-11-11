@@ -88,7 +88,7 @@ namespace xml
 #include <vector>
 #include <map>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/event/EventHandler.h>
 
 #ifdef _OSG
@@ -100,7 +100,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdQuatCamHandler : public cfdGlobalBase
+class VE_XPLORER_EXPORTS cfdQuatCamHandler : public GlobalBase
 {
 public:
    // compare VjObs_i commandArray with its child's value

@@ -30,15 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-//! CFD data set loader and handler.
-/*!
-   A class to load data set and pre-compute flow parameters 
-   or properties for virtual environment interactive 
-   computation.
-*/
-
 #include <ves/xplorer/DataSet.h>
+
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
+
 #include <ves/xplorer/event/data/DataSetAxis.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
@@ -74,7 +70,6 @@
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
 
-#include <ves/xplorer/cfdDebug.h>
 
 #include <iostream>
 #include <sstream>

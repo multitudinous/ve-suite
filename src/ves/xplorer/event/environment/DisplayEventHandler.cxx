@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/event/environment/DisplayEventHandler.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/environment/DisplayInformation.h>
 
@@ -72,7 +72,7 @@ DisplayEventHandler::~DisplayEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler)
+void DisplayEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler)
 {
    ;
 }

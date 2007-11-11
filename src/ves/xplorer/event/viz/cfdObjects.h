@@ -38,7 +38,7 @@ cfdObjects API
 /*!\class ves::xplorer::cfdObjects
 * 
 */
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/Geode.h>
 
@@ -66,7 +66,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdObjects : public cfdGlobalBase
+class VE_XPLORER_EXPORTS cfdObjects : public GlobalBase
 {
 public:
 

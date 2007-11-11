@@ -88,7 +88,7 @@ DeleteObjectFromNetworkEventHandler& DeleteObjectFromNetworkEventHandler::operat
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    ;
 }

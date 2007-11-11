@@ -48,7 +48,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdGlobalBase;
+   class GlobalBase;
    class cfdModel;
 }
 }
@@ -77,7 +77,7 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.

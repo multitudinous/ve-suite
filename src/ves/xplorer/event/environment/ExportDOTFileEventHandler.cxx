@@ -67,7 +67,7 @@ ExportDOTFileEventHandler::operator=(const ExportDOTFileEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
+void ExportDOTFileEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
 {
     ;
 }

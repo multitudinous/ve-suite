@@ -41,7 +41,7 @@ Device API
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
@@ -71,7 +71,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS Device : public cfdGlobalBase
+class VE_XPLORER_EXPORTS Device : public GlobalBase
 {
 public:
     ///Constructor

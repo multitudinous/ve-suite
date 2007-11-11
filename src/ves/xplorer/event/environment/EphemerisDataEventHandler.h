@@ -32,35 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef EPHEMERIS_DATA_EVENT_HANDLER_H
 #define EPHEMERIS_DATA_EVENT_HANDLER_H
-/*!\file EphemerisDataEventHandler.h
-  EphemerisDataEventHandler API
-  */
-/*!\class EphemerisDataEventHandler
- * Update ephemeris data.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-}
-}
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-   class XMLObject;
-}
-}
-}
-
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -68,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file EphemerisDataEventHandler.h
+  EphemerisDataEventHandler API
+  */
+/*!\class EphemerisDataEventHandler
+ * Update ephemeris data.
+ */
 class VE_XPLORER_EXPORTS EphemerisDataEventHandler: public EventHandler
 {
 public:
@@ -88,7 +68,7 @@ public:
 
    ///Set the active model
    ///\param baseObject Active model
-   virtual void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject);
+   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
 
 protected:
    ves::xplorer::cfdModel* m_activeModel;///<The active cfdModel

@@ -66,7 +66,7 @@ QuatCamClearDataEventHandler::operator=(const QuatCamClearDataEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void QuatCamClearDataEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
+void QuatCamClearDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////   

@@ -669,7 +669,7 @@ CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=(const Create
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void CreateVisObjectEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
 /*   try
    {

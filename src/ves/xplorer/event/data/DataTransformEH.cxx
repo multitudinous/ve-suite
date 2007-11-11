@@ -113,7 +113,7 @@ void DataTransformEventHandler::Execute(XMLObject* xmlObject)
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void DataTransformEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

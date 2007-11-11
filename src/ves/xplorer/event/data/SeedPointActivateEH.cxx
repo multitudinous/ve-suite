@@ -73,7 +73,7 @@ SeedPointActivateEventHandler::operator=(const SeedPointActivateEventHandler& rh
    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void SeedPointActivateEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
+void SeedPointActivateEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
 {
    ///is this overkill????
    try

@@ -60,7 +60,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdGlobalBase;
+   class GlobalBase;
    class cfdModel;
    class ModelCADHandler;
 }
@@ -91,7 +91,7 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 
    ///Set the node descriptors from the xml to the SceneNode
    ///\param nodeID The CADNode to update

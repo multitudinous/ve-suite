@@ -88,7 +88,7 @@ AxesLabelsEventHandler& AxesLabelsEventHandler::operator=(const AxesLabelsEventH
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AxesLabelsEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void AxesLabelsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

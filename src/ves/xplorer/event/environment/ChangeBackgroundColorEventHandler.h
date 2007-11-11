@@ -32,32 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CHANGE_BACKGROUND_COLOR_EVENT_HANDLER_H
 #define CHANGE_BACKGROUND_COLOR_EVENT_HANDLER_H
-/*!\file ChangeBackgroundColorEventHandler.h
-  ChangeBackgroundColorEventHandler API
-  */
-/*!\class ChangeBackgroundColorEventHandler
- * Class for changing background color in xplorer.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdGlobalBase;
-}
-}
 
 namespace ves
 {
@@ -65,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file ChangeBackgroundColorEventHandler.h
+  ChangeBackgroundColorEventHandler API
+  */
+/*!\class ChangeBackgroundColorEventHandler
+ * Class for changing background color in xplorer.
+ */
 class ChangeBackgroundColorEventHandler : public EventHandler
 {
 public:
@@ -79,7 +62,7 @@ public:
 
    ///Set the cfdModel.
    ///\param model The cfdModelHandler to execute the Command on.
-   void SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler );
+   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.

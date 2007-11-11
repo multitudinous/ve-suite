@@ -68,7 +68,7 @@ SoundActivateEventHandler::operator=(const SoundActivateEventHandler& rhs)
    return *this;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void SoundActivateEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
+void SoundActivateEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
 {
    ///is this overkill????
    try

@@ -33,7 +33,7 @@
 #ifndef NETWORK_SYSTEM_VIEW_H
 #define NETWORK_SYSTEM_VIEW_H
 #include <ves/VEConfig.h>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #include <string>
 #include <osg/ref_ptr>
@@ -49,7 +49,7 @@ namespace xplorer
 {
 namespace network
 {
-class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public ves::xplorer::cfdGlobalBase
+class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public ves::xplorer::GlobalBase
 {
 public:
    NetworkSystemView();

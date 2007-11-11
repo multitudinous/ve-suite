@@ -63,7 +63,7 @@ namespace xplorer
    class cfdAnimatedImage;
    class cfdAnimatedStreamlineCone;
    class cfdContour;
-   class cfdGlobalBase;
+   class GlobalBase;
    class cfdObjects;
    class cfdCommandArray;
    class cfdCursor;
@@ -71,7 +71,7 @@ namespace xplorer
    class cfdModel;
    class cfdTextOutput;
    class cfdObjects;
-   class cfdGlobalBase;
+   class GlobalBase;
 }
 }
 
@@ -80,7 +80,7 @@ namespace ves
 namespace xplorer
 {
    class cfdModel;
-   class cfdGlobalBase;
+   class GlobalBase;
 }
 }
 
@@ -110,7 +110,7 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
@@ -161,7 +161,7 @@ private:
    // Vectors that will eventually be stored as maps
    // these hold all the objectsa for easy access and management
    //std::vector< ves::xplorer::cfdObjects* > dataList;
-   //std::vector< ves::xplorer::cfdGlobalBase* > commandList;
+   //std::vector< ves::xplorer::GlobalBase* > commandList;
    std::map< std::pair< std::string, std::pair< std::string, std::string > >, ves::xplorer::cfdObjects* > visObjectMap;///<The container for all of the cfdObjects
 
 };

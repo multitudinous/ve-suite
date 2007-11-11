@@ -87,7 +87,7 @@ AxesEventHandler& AxesEventHandler::operator=(const AxesEventHandler& rhs)
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AxesEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void AxesEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

@@ -74,7 +74,7 @@ namespace xplorer
    class cfdAnimatedImage; 
    class cfdAnimatedStreamlineCone;
    class cfdContour;
-   class cfdGlobalBase;
+   class GlobalBase;
    class cfdObjects;
    class cfdCommandArray;
    class cfdCursor;

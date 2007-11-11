@@ -38,7 +38,9 @@ DataSetAxis API
 /*!\class ves::xplorer::DataSetAxis
 *   Renders an axis for a given dataset
 */
-#include <ves/xplorer/cfdGlobalBase.h>
+
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/Group.h>
 
@@ -62,25 +64,13 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
-   class cfdDataSet;
-   class cfdReadParam;
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-class VE_XPLORER_EXPORTS DataSetAxis : public cfdGlobalBase
+class VE_XPLORER_EXPORTS DataSetAxis : public GlobalBase
 {
 public:
    ///Constructor
    DataSetAxis( void );
    ///Destructor
    virtual ~DataSetAxis( void );
-   /// compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ){ return true; }
    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
    /// Create the scalar bar

@@ -88,7 +88,7 @@ ScalarBarEventHandler& ScalarBarEventHandler::operator=(const ScalarBarEventHand
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ScalarBarEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void ScalarBarEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

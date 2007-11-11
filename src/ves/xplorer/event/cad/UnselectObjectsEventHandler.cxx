@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -66,7 +66,7 @@ UnselectObjectsEventHandler::~UnselectObjectsEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void UnselectObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }

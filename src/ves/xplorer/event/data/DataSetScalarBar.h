@@ -42,7 +42,7 @@ DataSetScalarBar API
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
@@ -80,7 +80,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS DataSetScalarBar : public cfdGlobalBase
+class VE_XPLORER_EXPORTS DataSetScalarBar : public GlobalBase
 {
 public:
    ///Constructor

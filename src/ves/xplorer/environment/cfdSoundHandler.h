@@ -40,7 +40,7 @@ cfdSoundHandler API
 
 #include <string>
 #include <vector>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 namespace ves
 {
@@ -56,7 +56,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdSoundHandler : public cfdGlobalBase
+class VE_XPLORER_EXPORTS cfdSoundHandler : public GlobalBase
 {
 public:
    ///Constructor

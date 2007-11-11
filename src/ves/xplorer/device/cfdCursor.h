@@ -84,13 +84,13 @@ namespace xplorer
 }
 }
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase
+class VE_XPLORER_EXPORTS cfdCursor : public GlobalBase
 {
 public:
    cfdCursor( vtkPolyData* , ves::xplorer::scenegraph::DCS* , ves::xplorer::scenegraph::Group* );

@@ -98,7 +98,7 @@ SwitchXplorerViewEventHandler& SwitchXplorerViewEventHandler::operator=( const S
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* model )
+void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
     ;
 }

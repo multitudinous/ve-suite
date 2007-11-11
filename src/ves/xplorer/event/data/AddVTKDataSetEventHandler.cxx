@@ -90,7 +90,7 @@ AddVTKDataSetEventHandler& AddVTKDataSetEventHandler::operator=(const AddVTKData
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AddVTKDataSetEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void AddVTKDataSetEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

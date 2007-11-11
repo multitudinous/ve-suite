@@ -72,7 +72,7 @@ SeedPointBoundsEventHandler::operator=(const SeedPointBoundsEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
-void SeedPointBoundsEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void SeedPointBoundsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

@@ -34,7 +34,7 @@
 #define VE_XPLORER_CFD_DATA_SET_H
 
 #include <ves/VEConfig.h>
-#include <ves/DataSetPtr.h>
+#include <ves/xplorer/DataSetPtr.h>
 
 #include <ves/xplorer/util/DataObjectHandler.h>
 

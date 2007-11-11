@@ -32,32 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DEVICE_MODE_EVENT_HANDLER_H
 #define DEVICE_MODE_EVENT_HANDLER_H
-/*!\file DeviceModeEH.h
-  DeviceModeEventHandler API
-  */
-/*!\class DeviceModeEventHandler
- * Class for changing between navigation and selection for the active device
- */
+
 #include <ves/xplorer/event/EventHandler.h>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdGlobalBase;
-}
-}
 
 namespace ves
 {
@@ -65,6 +41,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file DeviceModeEH.h
+  DeviceModeEventHandler API
+  */
+/*!\class DeviceModeEventHandler
+ * Class for changing between navigation and selection for the active device
+ */
 class DeviceModeEventHandler : public EventHandler
 {
 public:
@@ -79,7 +61,7 @@ public:
 
    //Set the cfdModel
    //param model The cfdModelHandler to execute the Command on
-   void SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler );
+   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
    //Exectute the event
    //param xmlObject The current xmlObject event.

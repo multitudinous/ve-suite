@@ -43,7 +43,7 @@ cfdTeacher API
 #include <vector>
 #include <string>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #ifdef _OSG
     #include <osg/ref_ptr>
@@ -76,7 +76,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
+class VE_XPLORER_EXPORTS cfdTeacher : public GlobalBase
 {
 public:
     ///Constructor

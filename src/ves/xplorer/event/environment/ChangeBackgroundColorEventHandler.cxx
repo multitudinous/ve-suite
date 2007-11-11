@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/environment/ChangeBackgroundColorEventHandler.h>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/environment/DisplayInformation.h>
@@ -72,7 +72,7 @@ ChangeBackgroundColorEventHandler::~ChangeBackgroundColorEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
 }
 ///////////////////////////////////////////////////////////////////////////////

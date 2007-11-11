@@ -79,7 +79,7 @@ UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=(const UpdateNetw
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void UpdateNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    ;
 }

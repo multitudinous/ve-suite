@@ -67,7 +67,7 @@ StoredSceneEventHandler::operator=(const StoredSceneEventHandler& rhs)
    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void StoredSceneEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject)
+void StoredSceneEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
 {
 }
 //////////////////////////////////////////////////////////////////////////   

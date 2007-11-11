@@ -40,7 +40,7 @@ namespace jccl
 
 #include <utility>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 /*!\file cfdDisplaySettings.h
   VE_XplorerHandlers Interface
   */
@@ -54,7 +54,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdDisplaySettings : public cfdGlobalBase
+class VE_XPLORER_EXPORTS cfdDisplaySettings : public GlobalBase
 {
 public:
    ///Base constructor.

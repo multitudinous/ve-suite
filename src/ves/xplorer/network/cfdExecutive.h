@@ -39,7 +39,7 @@ cfdExecutive API
 * 
 */
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 
 #include <ves/VEConfig.h>
 #include <vpr/Util/Singleton.h>
@@ -111,7 +111,7 @@ namespace network
 {
     class cfdVEAvailModules;
     class Body_UI_i;
-class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::cfdGlobalBase//: public vpr::Singleton< cfdModelHandler >
+class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase//: public vpr::Singleton< cfdModelHandler >
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.

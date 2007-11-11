@@ -33,35 +33,7 @@
 #ifndef CENTER_POINT_JUMP_EVENT_HANDLER_H
 #define CENTER_POINT_JUMP_EVENT_HANDLER_H
 
-/*!\file CenterPointJumpEventHandler.h
- *
- */
-
-/*!\class CenterPointJumpEventHandler
- * 
- */
-
-// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdGlobalBase;
-}
-}
 
 namespace ves
 {
@@ -69,6 +41,13 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file CenterPointJumpEventHandler.h
+ *
+ */
+
+/*!\class CenterPointJumpEventHandler
+ * 
+ */
 class CenterPointJumpEventHandler : public EventHandler
 {
 public:
@@ -83,7 +62,7 @@ public:
 
    //Set the cfdModel
    //param model The cfdModelHandler to execute the Command on
-   void SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler );
+   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
    //Exectute the event
    //param xmlObject The current xmlObject event.

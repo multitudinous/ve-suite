@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/environment/ChangeWorkingDirectoryEventHandler.h>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/cfdEnvironmentHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -72,7 +72,7 @@ ChangeWorkingDirectoryEventHandler::~ChangeWorkingDirectoryEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////
-void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
 }
 ///////////////////////////////////////////////////////

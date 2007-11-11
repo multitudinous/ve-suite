@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/event/device/KeyboardMouseEH.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -73,7 +73,7 @@ KeyboardMouseEventHandler::~KeyboardMouseEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouseEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler)
+void KeyboardMouseEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler)
 {
    ;
 }

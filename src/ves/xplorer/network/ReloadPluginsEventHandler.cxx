@@ -78,7 +78,7 @@ ReloadPluginsEventHandler& ReloadPluginsEventHandler::operator=(const ReloadPlug
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ReloadPluginsEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void ReloadPluginsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    ;
 }

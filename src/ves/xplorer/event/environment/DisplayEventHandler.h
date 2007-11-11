@@ -32,32 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef DISPLAY_EVENT_HANDLER_H
 #define DISPLAY_EVENT_HANDLER_H
-/*!\file DisplayEventHandler.h
-  DisplayEventHandler API
-  */
-/*!\class DisplayEventHandler
- * Class for changing trackball properties in xplorer
- */
+
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdGlobalBase;
-}
-}
 
 namespace ves
 {
@@ -65,8 +42,13 @@ namespace xplorer
 {
 namespace event
 {
-
-class DisplayEventHandler:public EventHandler
+/*!\file DisplayEventHandler.h
+  DisplayEventHandler API
+  */
+/*!\class DisplayEventHandler
+ * Class for changing trackball properties in xplorer
+ */
+class DisplayEventHandler : public EventHandler
 {
    public:
       //Constructor
@@ -80,7 +62,7 @@ class DisplayEventHandler:public EventHandler
 
       //Set the cfdModel
       //param model The cfdModelHandler to execute the Command on
-      void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler);
+      void SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler);
 
       //Exectute the event
       //param xmlObject The current xmlObject event.

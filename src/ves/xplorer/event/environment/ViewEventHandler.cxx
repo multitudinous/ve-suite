@@ -39,7 +39,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/ViewEventHandler.h>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 
@@ -77,7 +77,7 @@ ViewEventHandler::~ViewEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }

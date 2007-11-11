@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/Device.h>
 
@@ -78,7 +78,7 @@ NavigationDataEventHandler::~NavigationDataEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationDataEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* modelHandler)
+void NavigationDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler)
 {
    _baseObject = modelHandler;
 }

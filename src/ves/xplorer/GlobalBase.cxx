@@ -41,22 +41,22 @@ namespace ves
 {
 namespace xplorer
 {
-cfdGlobalBase::cfdGlobalBase() : veCommand(0)
+GlobalBase::GlobalBase() : veCommand(0)
 {
    ; // Do nothing.
 }
 
-cfdGlobalBase::~cfdGlobalBase()
+GlobalBase::~GlobalBase()
 {
    ; // Do nothing.
 }
 
-void cfdGlobalBase::SetVECommand( open::xml::Command* command )
+void GlobalBase::SetVECommand( open::xml::Command* command )
 {
    veCommand = command;
 }
 
-open::xml::Command* cfdGlobalBase::GetVECommand()
+open::xml::Command* GlobalBase::GetVECommand()
 {
    return veCommand;
 }

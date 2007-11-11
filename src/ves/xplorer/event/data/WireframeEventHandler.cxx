@@ -87,7 +87,7 @@ WireframeEventHandler& WireframeEventHandler::operator=(const WireframeEventHand
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WireframeEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void WireframeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

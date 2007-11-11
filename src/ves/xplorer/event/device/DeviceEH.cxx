@@ -34,7 +34,7 @@
 
 #include <ves/xplorer/event/device/DeviceEH.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 
@@ -68,7 +68,7 @@ DeviceEventHandler::~DeviceEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
    ;
 }

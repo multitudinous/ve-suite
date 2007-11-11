@@ -68,7 +68,7 @@ public:
    ///\param objectToProcess The xml Object to process
    virtual void Execute(ves::open::xml::XMLObject* objectToProcess=0) = 0;
 
-   ///\param baseObject The cfdGlobalBase object to apply the command to.
+   ///\param baseObject The GlobalBase object to apply the command to.
    virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject=0) = 0;
 protected:
    ///<the variable of the global base object to operate on

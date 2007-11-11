@@ -32,46 +32,26 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CHANGE_CURSOR_EVENT_HANDLER_H
 #define CHANGE_CURSOR_EVENT_HANDLER_H
-/*!\file ChangeCursorEventHandler.h
-  ChangeCursorEventHandler API
-  */
-/*!\class ChangeCursorEventHandler
- * Class for deleting objects from network.
- */
-//#include <string>
-//#include <vector>
-#include <map>
-#include <ves/VEConfig.h>
-//#include <utility>
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class cfdGlobalBase;
-   class cfdVEBaseClass;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
+
+#include <ves/xplorer/ModelPtr.h>
+
+#include <map>
+
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
+/*!\file ChangeCursorEventHandler.h
+  ChangeCursorEventHandler API
+  */
+/*!\class ChangeCursorEventHandler
+ * Class for deleting objects from network.
+ */
 class VE_XPLORER_EXPORTS ChangeCursorEventHandler: public EventHandler
 {
 public:
@@ -91,14 +71,14 @@ public:
    ///\param model The cfdModel to execute the Command on\n.
    ///Default uses the active cfdModel from cfdModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model=0);
+   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.
    void Execute( ves::open::xml::XMLObject* command); 
 
 private:
-   ves::xplorer::cfdModel* _activeModel; ///<The active model
+   ves::xplorer::Model* _activeModel; ///<The active model
 };
 
 }

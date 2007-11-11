@@ -86,7 +86,7 @@ ChangeCursorEventHandler& ChangeCursorEventHandler::operator=(const ChangeCursor
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeCursorEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void ChangeCursorEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

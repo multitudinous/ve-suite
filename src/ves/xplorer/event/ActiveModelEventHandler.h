@@ -65,7 +65,7 @@ public:
 
    ///Set the cfdModel.
    ///\param model The cfdModelHandler to execute the Command on.
-   void SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler );
+   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
    ///Exectute the event
    ///\param xmlObject The current xmlObject event.

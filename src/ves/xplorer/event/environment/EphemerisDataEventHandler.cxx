@@ -118,7 +118,7 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
    
 }
 //////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase*
+void EphemerisDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase*
                                                      baseObject)
 {
     try

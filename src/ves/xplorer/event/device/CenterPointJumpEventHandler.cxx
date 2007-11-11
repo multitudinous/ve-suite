@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/xplorer/event/device/CenterPointJumpEventHandler.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 
@@ -74,7 +74,7 @@ CenterPointJumpEventHandler::~CenterPointJumpEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
    ;
 }

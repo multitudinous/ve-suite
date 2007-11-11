@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/xplorer/event/device/DeviceModeEH.h>
 
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 
 
@@ -74,7 +74,7 @@ DeviceModeEventHandler::~DeviceModeEventHandler()
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceModeEventHandler::SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler )
+void DeviceModeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
    ;
 }

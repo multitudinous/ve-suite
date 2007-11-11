@@ -54,7 +54,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdGlobalBase;
+   class GlobalBase;
    class cfdModel;
 }
 }
@@ -83,8 +83,8 @@ public:
 
    ///Equal operator
    QuatCamClearDataEventHandler& operator=(const QuatCamClearDataEventHandler& rhs);
-   ///\param baseObject The cfdGlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject=0); 
+   ///\param baseObject The GlobalBase object to apply the command to.
+   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject=0); 
    
    ///The internal operation on the CADNode.
    ///\param veXMLObject The veXMLObject to execute.

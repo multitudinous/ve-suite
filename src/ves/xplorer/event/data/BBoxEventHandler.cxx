@@ -88,7 +88,7 @@ BBoxEventHandler& BBoxEventHandler::operator=(const BBoxEventHandler& rhs)
    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BBoxEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void BBoxEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {

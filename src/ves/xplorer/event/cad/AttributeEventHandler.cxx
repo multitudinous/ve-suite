@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/cad/AttributeEventHandler.h>
 #include <ves/xplorer/cfdModel.h>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/ModelHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -62,7 +62,7 @@ AttributeEventHandler::~AttributeEventHandler()
 {
 }
 ///////////////////////////////////////////////////////////////////////////
-void AttributeEventHandler::SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* model)
+void AttributeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
 {
    try
    {
