@@ -30,18 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef COMMAND_HANDLER_H
-#define COMMAND_HANDLER_H
+#ifndef VE_XPLORER_COMMAND_HANDLER_H
+#define VE_XPLORER_COMMAND_HANDLER_H
 /*!\file CommandHandler.h
 */
 /*!\class ves::xplorer::CommandHandler
 * 
 */
 #include <ves/VEConfig.h>
-
-#include <ves/open/xml/Command.h>
+#include <ves/xplorer/CommandHandlerPtr.h>
 
 #include <ves/xplorer/Xplorer_i.h>
+
+#include <ves/open/xml/CommandPtr.h>
 
 #include <vpr/Util/Singleton.h>
 
@@ -78,6 +79,7 @@ public:
 
    ///
    void SetXplorer( Body_VEXplorer_i* xplorer );
+
    ///Send a text message to all conductors
    void SendConductorMessage( std::string message );
 
