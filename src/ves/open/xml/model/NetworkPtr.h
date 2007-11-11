@@ -30,18 +30,18 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef XML_MODEL_NETWORK_PTR_H
-#define XML_MODEL_NETWORK_PTR_H
+#ifndef XML_Network_NETWORK_PTR_H
+#define XML_Network_NETWORK_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::NetworkPtr.  To get the full 
- * declaration of VE_XML::VE_Model::Network
- * VE_Open/XML/Model/Network.h must be included, too.
+ * VE_XML::VE_Network::NetworkPtr.  To get the full 
+ * declaration of VE_XML::VE_Network::Network
+ * VE_Open/XML/Network/Network.h must be included, too.
  */
 
 namespace ves
@@ -54,12 +54,13 @@ namespace model
 {
    class Network;
    /// Typedef for a SmartPtr type for the Network.
-   typedef Loki::SmartPtrDef<Network>::type NetworkPtr;
+   typedef ves::util::ClassPtrDef<Network>::type  NetworkPtr;
+   typedef ves::util::SharedPtrDef<Network>::type NetworkSharedPtr;
+   typedef ves::util::WeakPtrDef<Network>::type   NetworkWeakPtr;
+   typedef ves::util::ScopedPtrDef<Network>::type NetworkScopedPtr;
 }
 }
 }
 }
-#include <ves/open/xml/model/NetworkWeakPtr.h>
-#include <ves/open/xml/model/NetworkStrongPtr.h>
 
 #endif

@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/network/VE_i.h>
 //#include <ves/xplorer/XplorerHandlers/cfdEnum.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
@@ -46,10 +45,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/ModelWeakPtr.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/model/SystemWeakPtr.h>
-#include <ves/open/xml/model/SystemStrongPtr.h>
 #include <ves/open/xml/model/System.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

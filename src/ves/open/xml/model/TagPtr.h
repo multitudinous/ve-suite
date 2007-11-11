@@ -33,7 +33,7 @@
 #ifndef TAG_PTR_H
 #define TAG_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
@@ -54,12 +54,13 @@ namespace model
 {
    class Tag;
    /// Typedef for a SmartPtr type for the Tag.
-   typedef Loki::SmartPtrDef<Tag>::type TagPtr;
+   typedef ves::util::ClassPtrDef<Tag>::type  TagPtr;
+   typedef ves::util::SharedPtrDef<Tag>::type TagSharedPtr;
+   typedef ves::util::WeakPtrDef<Tag>::type   TagWeakPtr;
+   typedef ves::util::ScopedPtrDef<Tag>::type TagScopedPtr;
 }
 }
 }
 }
-#include <ves/open/xml/model/TagWeakPtr.h>
-#include <ves/open/xml/model/TagStrongPtr.h>
 
 #endif

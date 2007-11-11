@@ -40,14 +40,13 @@ cfdExecutive API
 */
 
 #include <ves/xplorer/GlobalBase.h>
+#include <ves/xplorer/ThreadPtr.h>
 
-#include <ves/VEConfig.h>
 #include <vpr/Util/Singleton.h>
 
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/open/xml/model/ModelStrongPtr.h>
-#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelPtr.h>
 
 #include <map>
 #include <string>
@@ -68,12 +67,7 @@ namespace ves
 {
 namespace xplorer
 {
-   //class cfdGauges;
-   //class cfdDashboard;
-   //class cfdInteractiveGeometry;
-   class cfdCommandArray;
    class cfdVjObsWrapper;
-   class Thread;
 }
 }
 
@@ -111,7 +105,7 @@ namespace network
 {
     class cfdVEAvailModules;
     class Body_UI_i;
-class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase//: public vpr::Singleton< ModelHandler >
+class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
@@ -149,8 +143,6 @@ public:
    ///Function called within preFrame to allow cfdExecutive
    ///to have access to scalar information
    void UnbindORB( void );
-   ///compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray* ){ return true; }
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand(){ ; }
    ///This function returns the map of the current plugins 

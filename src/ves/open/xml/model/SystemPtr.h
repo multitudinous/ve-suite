@@ -33,7 +33,7 @@
 #ifndef XML_MODEL_SYSTEM_PTR_H
 #define XML_MODEL_SYSTEM_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
@@ -54,12 +54,13 @@ namespace model
 {
    class System;
    /// Typedef for a SmartPtr type for the System.
-   typedef Loki::SmartPtrDef<System>::type SystemPtr;
+   typedef ves::util::ClassPtrDef<System>::type  SystemPtr;
+   typedef ves::util::SharedPtrDef<System>::type SystemSharedPtr;
+   typedef ves::util::WeakPtrDef<System>::type   SystemWeakPtr;
+   typedef ves::util::ScopedPtrDef<System>::type SystemScopedPtr;
 }
 }
 }
 }
-#include <ves/open/xml/model/SystemWeakPtr.h>
-#include <ves/open/xml/model/SystemStrongPtr.h>
 
 #endif
