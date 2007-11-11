@@ -32,8 +32,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_DEBUG_H
-#define CFD_DEBUG_H
+#ifndef VE_XPLORER_DEBUG_H
+#define VE_XPLORER_DEBUG_H
 
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/GUID.h>

@@ -37,7 +37,7 @@
    computation.
 */
 
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/CfdDataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/data/DataSetAxis.h>
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
@@ -79,12 +79,16 @@
 #include <iostream>
 #include <sstream>
 
-using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 using namespace ves::builder::DataLoader;
 
-cfdDataSet::cfdDataSet( ) :
+namespace ves
+{
+namespace xplorer
+{
+
+CfdDataSet::CfdDataSet( ) :
     parent( this ),
     dataSet( 0 ),
     x_planes( 0 ),
@@ -104,7 +108,7 @@ cfdDataSet::cfdDataSet( ) :
     dataSetScalarBar( 0 ),
     _vtkFHndlr( 0 ),
     m_externalFileLoader( 0 ),
-	m_dataObjectHandler( 0 )
+   m_dataObjectHandler( 0 )
 {
    this->lut = vtkLookupTable::New();
    this->arrow = NULL;
@@ -151,7 +155,7 @@ cfdDataSet::cfdDataSet( ) :
    m_dataObjectOps["Create BBox Actors"] = new ves::xplorer::util::CreateDataObjectBBoxActorsCallback();
 }
 
-cfdDataSet::~cfdDataSet()
+CfdDataSet::~CfdDataSet()
 {
    this->lut->Delete();
    this->lut = NULL;
@@ -252,150 +256,150 @@ cfdDataSet::~cfdDataSet()
    }
    if( m_dataObjectHandler )
    {
-	   delete m_dataObjectHandler;
-	   m_dataObjectHandler = 0;
+      delete m_dataObjectHandler;
+      m_dataObjectHandler = 0;
    }
 }
 
-void cfdDataSet::SetRange( double * dataRange )
+void CfdDataSet::SetRange( double * dataRange )
 {
    this->SetRange( dataRange[ 0 ], dataRange[ 1 ] );
 }
 
-void cfdDataSet::SetRange( double dataMin, double dataMax )
+void CfdDataSet::SetRange( double dataMin, double dataMax )
 {
    this->range[ 0 ] = dataMin;
    this->range[ 1 ] = dataMax;
 }
 
-void cfdDataSet::GetRange( double * dataRange )
+void CfdDataSet::GetRange( double * dataRange )
 {
    this->GetRange( dataRange[ 0 ], dataRange[ 1 ] );
 }
 
-void cfdDataSet::GetRange( double &dataMin, double &dataMax )
+void CfdDataSet::GetRange( double &dataMin, double &dataMax )
 {
    dataMin = this->range[ 0 ];
    dataMax = this->range[ 1 ];
 }
 
-double * cfdDataSet::GetRange()
+double * CfdDataSet::GetRange()
 {
    return this->range;
 }
 
-void cfdDataSet::SetUserRange( double userRange[2] )
+void CfdDataSet::SetUserRange( double userRange[2] )
 {
-   vprDEBUG(vesDBG,1) << "cfdDataSet::SetUserRange OLD userRange = " 
+   vprDEBUG(vesDBG,1) << "CfdDataSet::SetUserRange OLD userRange = " 
       << userRange[0] << " : " << userRange[1]
       << std::endl << vprDEBUG_FLUSH;
 
    this->SetUserRange( userRange[0], userRange[1] );
    
-   vprDEBUG(vesDBG,1) << "cfdDataSet::SetUserRange NEW userRange = " 
+   vprDEBUG(vesDBG,1) << "CfdDataSet::SetUserRange NEW userRange = " 
       << userRange[0] << " : " << userRange[1]
       << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfdDataSet::SetUserRange( double userMin, double userMax )
+void CfdDataSet::SetUserRange( double userMin, double userMax )
 {
    this->definedRange[0] = userMin;
    this->definedRange[1] = userMax;
    this->SetDisplayedScalarRange( this->activeScalar, this->definedRange );
 }
 
-void cfdDataSet::GetUserRange( double userRange[2] )
+void CfdDataSet::GetUserRange( double userRange[2] )
 {
    this->GetUserRange( userRange[0], userRange[1] );
 }
 
-void cfdDataSet::GetUserRange( double &userMin, double &userMax )
+void CfdDataSet::GetUserRange( double &userMin, double &userMax )
 {
    userMin = this->definedRange[0];
    userMax = this->definedRange[1];
 }
 
-double * cfdDataSet::GetUserRange()
+double * CfdDataSet::GetUserRange()
 {
    return this->definedRange;
 }
 
-void cfdDataSet::SetLength( float len )
+void CfdDataSet::SetLength( float len )
 {
    this->bbDiagonal = len;
 }
 
-/*void cfdDataSet::GetLength( float &len )
+/*void CfdDataSet::GetLength( float &len )
 {
    len = this->bbDiagonal;
 }
 
-float cfdDataSet::GetLength()
+float CfdDataSet::GetLength()
 {
    return this->bbDiagonal;
 }*/
 
-/*void cfdDataSet::GetMeanCellLength( float &len )
+/*void CfdDataSet::GetMeanCellLength( float &len )
 {
    len = this->meanCellBBLength;
 }
 
-float cfdDataSet::GetMeanCellLength()
+float CfdDataSet::GetMeanCellLength()
 {
    return this->meanCellBBLength;
 }*/
 
-void cfdDataSet::SetStepLength( float sLen )
+void CfdDataSet::SetStepLength( float sLen )
 {
    this->stepLength = sLen;
 }
 
-void cfdDataSet::GetStepLength( float &sLen )
+void CfdDataSet::GetStepLength( float &sLen )
 {
    sLen = this->stepLength;
 }
 
-float cfdDataSet::GetStepLength()
+float CfdDataSet::GetStepLength()
 {
    return this->stepLength;
 }
 
-void cfdDataSet::SetMaxTime( float mT )
+void CfdDataSet::SetMaxTime( float mT )
 {
    this->maxTime = mT;
 }
 
-void cfdDataSet::GetMaxTime( float &mT )
+void CfdDataSet::GetMaxTime( float &mT )
 {
    mT = this->maxTime;
 }
 
-float cfdDataSet::GetMaxTime()
+float CfdDataSet::GetMaxTime()
 {
    return this->maxTime;
 }
 
-void cfdDataSet::SetTimeStep( float tStep )
+void CfdDataSet::SetTimeStep( float tStep )
 {
    this->timeStep = tStep;
 }
 
-void cfdDataSet::GetTimeStep( float &tStep )
+void CfdDataSet::GetTimeStep( float &tStep )
 {
    tStep = this->timeStep;
 }
 
-float cfdDataSet::GetTimeStep()
+float CfdDataSet::GetTimeStep()
 {
    return this->timeStep;
 }
 
-vtkLookupTable * cfdDataSet::GetLookupTable()
+vtkLookupTable * CfdDataSet::GetLookupTable()
 {
    return this->lut;
 }
 
-vtkUnstructuredGrid * cfdDataSet::GetUnsData()
+vtkUnstructuredGrid * CfdDataSet::GetUnsData()
 {
    if ( ! this->dataSet ) 
    {
@@ -405,7 +409,7 @@ vtkUnstructuredGrid * cfdDataSet::GetUnsData()
    if ( ! this->dataSet->IsA("vtkUnstructuredGrid") ) 
    {
       vprDEBUG(vesDBG,0) 
-         << "cfdDataSet::GetUnsData - dataset is not an unsGrid !!"
+         << "CfdDataSet::GetUnsData - dataset is not an unsGrid !!"
          << std::endl << vprDEBUG_FLUSH;
 
       return NULL;
@@ -414,7 +418,7 @@ vtkUnstructuredGrid * cfdDataSet::GetUnsData()
    return (vtkUnstructuredGrid*)this->dataSet;
 }
 
-vtkPolyData * cfdDataSet::GetPolyData()
+vtkPolyData * CfdDataSet::GetPolyData()
 {
    if ( ! this->dataSet ) 
    {
@@ -424,7 +428,7 @@ vtkPolyData * cfdDataSet::GetPolyData()
    if ( ! this->dataSet->IsA("vtkPolyData") ) 
    {
       vprDEBUG(vesDBG,0) 
-         << "cfdDataSet::GetPolyData - dataset is not a vtkPolyData !!"
+         << "CfdDataSet::GetPolyData - dataset is not a vtkPolyData !!"
          << std::endl << vprDEBUG_FLUSH;
 
       return NULL;
@@ -433,12 +437,12 @@ vtkPolyData * cfdDataSet::GetPolyData()
    return (vtkPolyData*)this->dataSet;
 }
 
-vtkDataObject* cfdDataSet::GetDataSet()
+vtkDataObject* CfdDataSet::GetDataSet()
 {
    return this->dataSet;
 }
 
-void cfdDataSet::SetType()
+void CfdDataSet::SetType()
 {
    // this code only needs to be done once for each dataset...
    if ( this->datasetType == -1 )
@@ -471,38 +475,38 @@ void cfdDataSet::SetType()
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfdDataSet::SetType( int type )
+void CfdDataSet::SetType( int type )
 {
    if ( 0 <= type && type < 3 )
       this->datasetType = type;
 }
 
-int cfdDataSet::GetType()
+int CfdDataSet::GetType()
 {
    return this->datasetType;
 }
 
 #ifdef USE_OMP
-vtkUnstructuredGrid * cfdDataSet::GetData( int i )
+vtkUnstructuredGrid * CfdDataSet::GetData( int i )
 {
    return this->data[i];
 }
 
-int cfdDataSet::GetNoOfDataForProcs()
+int CfdDataSet::GetNoOfDataForProcs()
 {
    return this->noOfData;
 }
 #endif
 
-void cfdDataSet::LoadData( const std::string filename )
+void CfdDataSet::LoadData( const std::string filename )
 {
    this->SetFileName( filename );
    this->LoadData();
 }
 
-void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
+void CfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
 {
-   std::cout<<"[DBG]...Inside LoadData of cfdDataSet"<<std::endl;
+   std::cout<<"[DBG]...Inside LoadData of CfdDataSet"<<std::endl;
    this->SetFileName_OnFly(datasetindex);
    
    vtkPointSet* pointset = NULL;
@@ -524,7 +528,7 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
    this->LoadData();
 }
 ///////////////////////////
-void cfdDataSet::LoadData()
+void CfdDataSet::LoadData()
 {
    if ( this->dataSet != NULL )
    {
@@ -609,7 +613,7 @@ void cfdDataSet::LoadData()
    }
    if(!m_dataObjectHandler)
    {
-	   m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
+      m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
    }
    m_dataObjectHandler->OperateOnAllDatasetsInObject(dataSet);
 
@@ -654,7 +658,7 @@ void cfdDataSet::LoadData()
    {   
       double bounds[ 6 ];
       GetBounds(bounds);
-	  vprDEBUG(vesDBG,0) << "\tLoading precomputed planes from " 
+     vprDEBUG(vesDBG,0) << "\tLoading precomputed planes from " 
            << this->GetPrecomputedDataSliceDir() << std::endl << vprDEBUG_FLUSH;
       this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
       this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
@@ -666,11 +670,11 @@ void cfdDataSet::LoadData()
    
    // count the number of vectors and store names ...
    this->numVectors = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
-	   (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetNumberOfParameters(true);
+      (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetNumberOfParameters(true);
    if ( this->numVectors )
    {
       this->vectorName = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
-	   (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetParameterNames(true);
+      (m_dataObjectOps["Count Number Of Vectors And Scalars"])->GetParameterNames(true);
    }
 
    // if there are point data, set the first scalar and vector as active...
@@ -705,7 +709,7 @@ void cfdDataSet::LoadData()
   
 }
 ////////////////////////////////////////////
-unsigned int cfdDataSet::GetNumberOfPoints()
+unsigned int CfdDataSet::GetNumberOfPoints()
 {
     if(m_dataObjectHandler)
     {
@@ -720,13 +724,13 @@ unsigned int cfdDataSet::GetNumberOfPoints()
     return 0;
 }
 /////////////////////////////////////////
-double* cfdDataSet::GetBounds()
+double* CfdDataSet::GetBounds()
 {
     GetBounds(m_bounds);
     return m_bounds;
 }
 //////////////////////////////////////////////////////////
-void cfdDataSet::GetBounds(double bounds[6])
+void CfdDataSet::GetBounds(double bounds[6])
 {
     
     if(m_dataObjectHandler)
@@ -741,13 +745,13 @@ void cfdDataSet::GetBounds(double bounds[6])
     }
 }
 //////////////////////////////////////////////////////////////////
-int cfdDataSet::CountNumberOfParameters( const int numComponents )
+int CfdDataSet::CountNumberOfParameters( const int numComponents )
 {
    int numParameters = 0;
    return numParameters;
 }
 
-std::vector<std::string> cfdDataSet::GetParameterNames( const int numComponents, 
+std::vector<std::string> CfdDataSet::GetParameterNames( const int numComponents, 
                                        const int numParameters )
 {
 
@@ -756,12 +760,12 @@ std::vector<std::string> cfdDataSet::GetParameterNames( const int numComponents,
    return name;
 }
 
-void cfdDataSet::UpdatePropertiesForNewMesh()
+void CfdDataSet::UpdatePropertiesForNewMesh()
 {
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetActiveScalar( std::string tempActiveScalar )
+void CfdDataSet::SetActiveScalar( std::string tempActiveScalar )
 {
    if ( tempActiveScalar.empty() )
    {
@@ -791,7 +795,7 @@ void cfdDataSet::SetActiveScalar( std::string tempActiveScalar )
       this->activeScalar = scalar;
       
       vprDEBUG(vesDBG,1) 
-         << "cfdDataSet::SetActiveScalar: requested activeScalar = "
+         << "CfdDataSet::SetActiveScalar: requested activeScalar = "
          << this->activeScalar << ", scalarName = " 
          << this->scalarName[ this->activeScalar ]
          << std::endl << vprDEBUG_FLUSH;
@@ -879,7 +883,7 @@ void cfdDataSet::SetActiveScalar( std::string tempActiveScalar )
    this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetActiveScalar( int scalar )
+void CfdDataSet::SetActiveScalar( int scalar )
 {
    if ( this->numScalars == 0 )
    {
@@ -899,7 +903,7 @@ void cfdDataSet::SetActiveScalar( int scalar )
       this->activeScalar = scalar;
 
       vprDEBUG(vesDBG,1) 
-         << "cfdDataSet::SetActiveScalar: requested activeScalar = "
+         << "CfdDataSet::SetActiveScalar: requested activeScalar = "
          << this->activeScalar << ", scalarName = " 
          << this->scalarName[ this->activeScalar ]
          << std::endl << vprDEBUG_FLUSH;
@@ -987,18 +991,18 @@ void cfdDataSet::SetActiveScalar( int scalar )
    this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
-int cfdDataSet::GetActiveScalar()
+int CfdDataSet::GetActiveScalar()
 {
    // 0 <= activeScalar < numScalars
    return this->activeScalar;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double * cfdDataSet::GetVectorMagRange()
+double * CfdDataSet::GetVectorMagRange()
 {
    return this->vectorMagRange;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetActiveVector( int vector )
+void CfdDataSet::SetActiveVector( int vector )
 {
    if ( this->numVectors == 0 )
    {
@@ -1018,7 +1022,7 @@ void cfdDataSet::SetActiveVector( int vector )
       this->activeVector = vector;
 
       vprDEBUG(vesDBG,1) 
-         << "cfdDataSet::SetActiveVector: requested activeVector = "
+         << "CfdDataSet::SetActiveVector: requested activeVector = "
          << this->activeVector << ", vectorName= " 
          << this->vectorName[ this->activeVector ]
          << std::endl << vprDEBUG_FLUSH;
@@ -1052,7 +1056,7 @@ void cfdDataSet::SetActiveVector( int vector )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetActiveVector( std::string tempVectorName )
+void CfdDataSet::SetActiveVector( std::string tempVectorName )
 {
    if ( tempVectorName.empty() )
    {
@@ -1082,7 +1086,7 @@ void cfdDataSet::SetActiveVector( std::string tempVectorName )
       this->activeVector = vector;
       
       vprDEBUG(vesDBG,1) 
-         << "cfdDataSet::SetActiveVector: requested activeVector = "
+         << "CfdDataSet::SetActiveVector: requested activeVector = "
          << this->activeVector << ", vectorName= " 
          << this->vectorName[ this->activeVector ]
          << std::endl << vprDEBUG_FLUSH;
@@ -1116,12 +1120,12 @@ void cfdDataSet::SetActiveVector( std::string tempVectorName )
    }
 }
 
-int cfdDataSet::GetActiveVector()
+int CfdDataSet::GetActiveVector()
 {
    return this->activeVector;
 }
 
-void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
+void CfdDataSet::AutoComputeUserRange( const double rawRange[2],
                                        double prettyRange[2] )
 {
    double highMinusLow = rawRange[1] - rawRange[0];
@@ -1145,10 +1149,10 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
       << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::ResetScalarBarRange( double min, double max )
+void CfdDataSet::ResetScalarBarRange( double min, double max )
 {
    // converts percentile parameters into decimal values for a particular scalar
-   vprDEBUG(vesDBG,1) << "cfdDataSet::ResetScalarBarRange "
+   vprDEBUG(vesDBG,1) << "CfdDataSet::ResetScalarBarRange "
                           << "min = " << min << ", max = " << max
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -1178,7 +1182,7 @@ void cfdDataSet::ResetScalarBarRange( double min, double max )
    this->lut->Build();
 }
 
-void cfdDataSet::SetFileName( const std::string newName )
+void CfdDataSet::SetFileName( const std::string newName )
 {
    if ( this->fileName.c_str() )
    {
@@ -1189,7 +1193,7 @@ void cfdDataSet::SetFileName( const std::string newName )
    fileName.assign( newName );//strcpy( this->fileName, newName );
 }
 
-void cfdDataSet::SetFileName_OnFly(int datasetindex)
+void CfdDataSet::SetFileName_OnFly(int datasetindex)
 {
    std :: ostringstream file_name;
    std :: string currentVtkFileName = "NewlyLoadedDataSet_000.vtk";
@@ -1203,12 +1207,12 @@ void cfdDataSet::SetFileName_OnFly(int datasetindex)
    this->SetFileName ( newName.c_str() );
 }
 ////////////////////////////////////////////
-std::string cfdDataSet::GetFileName()
+std::string CfdDataSet::GetFileName()
 {
   return this->fileName;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetPrecomputedDataSliceDir( const std::string newName )
+void CfdDataSet::SetPrecomputedDataSliceDir( const std::string newName )
 {
    if ( this->precomputedDataSliceDir.c_str() )
    {
@@ -1226,12 +1230,12 @@ void cfdDataSet::SetPrecomputedDataSliceDir( const std::string newName )
    precomputedDataSliceDir.assign( newName );//strcpy( this->precomputedDataSliceDir, newName );
 }
 /////////////////////////////////////////////////////////////////
-std::string cfdDataSet::GetPrecomputedDataSliceDir()
+std::string CfdDataSet::GetPrecomputedDataSliceDir()
 {
    return this->precomputedDataSliceDir;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetPrecomputedSurfaceDir( const std::string newName )
+void CfdDataSet::SetPrecomputedSurfaceDir( const std::string newName )
 {
    if ( this->precomputedSurfaceDir.c_str() )
    {
@@ -1249,56 +1253,56 @@ void cfdDataSet::SetPrecomputedSurfaceDir( const std::string newName )
    precomputedSurfaceDir.assign( newName );//strcpy( this->precomputedSurfaceDir, newName );
 }
 ///////////////////////////////////////////////////////////////
-std::string cfdDataSet::GetPrecomputedSurfaceDir()
+std::string CfdDataSet::GetPrecomputedSurfaceDir()
 {
    return this->precomputedSurfaceDir;
 }
 ////////////////////////////////////////////////////////////
-cfdPlanes * cfdDataSet::GetPrecomputedXSlices()
+cfdPlanes * CfdDataSet::GetPrecomputedXSlices()
 {
    return this->x_planes;
 }
 /////////////////////////////////////////////////////////////
-cfdPlanes * cfdDataSet::GetPrecomputedYSlices()
+cfdPlanes * CfdDataSet::GetPrecomputedYSlices()
 {
    return this->y_planes;
 }
 /////////////////////////////////////////////////////////////
-cfdPlanes * cfdDataSet::GetPrecomputedZSlices()
+cfdPlanes * CfdDataSet::GetPrecomputedZSlices()
 {
    return this->z_planes;
 }
 /////////////////////////////////////////////////////////////////////
-cfdPlanes * cfdDataSet::GetPrecomputedSlices( int xyz )
+cfdPlanes * CfdDataSet::GetPrecomputedSlices( int xyz )
 {
    if      ( xyz == 0 ) return this->x_planes;
    else if ( xyz == 1 ) return this->y_planes;
    else if ( xyz == 2 ) return this->z_planes;
    else
    {
-      std::cerr << "ERROR: cfdDataSet::GetPrecomputedSlices cannot " 
+      std::cerr << "ERROR: CfdDataSet::GetPrecomputedSlices cannot " 
                 << "handle index " << xyz << std::endl;
       exit(1);
       return NULL; // to eliminate compile warning
    }
 }
 ////////////////////////////////////////////////////////////
-void cfdDataSet::SetArrow( vtkPolyData * arrow)
+void CfdDataSet::SetArrow( vtkPolyData * arrow)
 {
    this->arrow = arrow;
 }
 ///////////////////////////////////////////////
-vtkPolyData * cfdDataSet::GetArrow( )
+vtkPolyData * CfdDataSet::GetArrow( )
 {
    return this->arrow;
 } 
 //////////////////////////////////////////////
-int cfdDataSet::GetNumberOfScalars()
+int CfdDataSet::GetNumberOfScalars()
 {
    return this->numScalars;
 }
 ///////////////////////////////////////////////////////
-std::string cfdDataSet::GetScalarName( int i )
+std::string CfdDataSet::GetScalarName( int i )
 {
    if ( 0 <= i && i < this->numScalars )
    {
@@ -1306,18 +1310,18 @@ std::string cfdDataSet::GetScalarName( int i )
    }
    else
    {
-      std::cerr << "ERROR: cfdDataSet::GetScalarName cannot "
+      std::cerr << "ERROR: CfdDataSet::GetScalarName cannot "
                 << "handle index " << i << std::endl;
       return NULL;
    }
 }
 ///////////////////////////////////////////////
-int cfdDataSet::GetNumberOfVectors()
+int CfdDataSet::GetNumberOfVectors()
 {
    return this->numVectors;
 }
 ////////////////////////////////////////////////////////
-std::string cfdDataSet::GetVectorName( int i )
+std::string CfdDataSet::GetVectorName( int i )
 {
    if ( 0 <= i && i < this->numVectors )
    {
@@ -1325,38 +1329,38 @@ std::string cfdDataSet::GetVectorName( int i )
    }
    else
    {
-      std::cerr << "ERROR: cfdDataSet::GetScalarName cannot "
+      std::cerr << "ERROR: CfdDataSet::GetScalarName cannot "
                 << "handle index " << i << std::endl;
       return NULL;
    }
 }
 //////////////////////////////////////////////
-void cfdDataSet::SetNewlyActivated()
+void CfdDataSet::SetNewlyActivated()
 {
    this->isNewlyActivated = 1;
 }
 ///////////////////////////////////////////////////
-void cfdDataSet::SetNotNewlyActivated()
+void CfdDataSet::SetNotNewlyActivated()
 {
    this->isNewlyActivated = 0;
 }
 //////////////////////////////////////////
-int cfdDataSet::IsNewlyActivated()
+int CfdDataSet::IsNewlyActivated()
 {
    return this->isNewlyActivated;
 }
 /////////////////////////////////////////////
-cfdDataSet* cfdDataSet::GetParent()
+CfdDataSet* CfdDataSet::GetParent()
 {
    return this->parent;
 }
 /////////////////////////////////////////////////////////////////
-void cfdDataSet::SetParent( cfdDataSet* myParent )
+void CfdDataSet::SetParent( CfdDataSet* myParent )
 {
    this->parent = myParent;
 }
 //////////////////////////////////////////////////////////////////////////
-double* cfdDataSet::GetActualScalarRange(std::string name)
+double* CfdDataSet::GetActualScalarRange(std::string name)
 {
     for(int i = 0; i < numScalars; ++i)
     {
@@ -1368,32 +1372,32 @@ double* cfdDataSet::GetActualScalarRange(std::string name)
     return 0;
 }
 //////////////////////////////////////////////////////////////////
-double* cfdDataSet::GetActualScalarRange( int index )
+double* CfdDataSet::GetActualScalarRange( int index )
 {
    return this->actualScalarRange[ index ];
 }
 /////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::GetActualScalarRange( int index, double* range )
+void CfdDataSet::GetActualScalarRange( int index, double* range )
 {
    range[ 0 ] = this->actualScalarRange[ index ][ 0 ];
    range[ 1 ] = this->actualScalarRange[ index ][ 1 ];
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetActualScalarRange( int index, double* range )
+void CfdDataSet::SetActualScalarRange( int index, double* range )
 {
    vprDEBUG(vesDBG,2) 
-      << "cfdDataSet::SetActualScalarRange, for file " << this->fileName 
+      << "CfdDataSet::SetActualScalarRange, for file " << this->fileName 
       << ", index: " << index
       << std::endl << vprDEBUG_FLUSH;
 
    vprDEBUG(vesDBG,2) 
-      << "cfdDataSet::SetActualScalarRange OLD actualScalarRange[" 
+      << "CfdDataSet::SetActualScalarRange OLD actualScalarRange[" 
       << index << "] = " 
       << this->actualScalarRange[ index ][ 0 ] << " : " 
       << this->actualScalarRange[ index ][ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vesDBG,2) << "cfdDataSet::SetActualScalarRange request range: "
+   vprDEBUG(vesDBG,2) << "CfdDataSet::SetActualScalarRange request range: "
       << range[0] << " : " << range[1]
       << std::endl << vprDEBUG_FLUSH;
 
@@ -1401,27 +1405,27 @@ void cfdDataSet::SetActualScalarRange( int index, double* range )
    this->actualScalarRange[ index ][ 1 ] = range[ 1 ];
 
    vprDEBUG(vesDBG,1) 
-      << "cfdDataSet::SetActualScalarRange NEW actualScalarRange[" 
+      << "CfdDataSet::SetActualScalarRange NEW actualScalarRange[" 
       << index << "] = " 
       << this->actualScalarRange[ index ][ 0 ] << " : " 
       << this->actualScalarRange[ index ][ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////////
-double * cfdDataSet::GetDisplayedScalarRange()
+double * CfdDataSet::GetDisplayedScalarRange()
 {
-   vprDEBUG(vesDBG,1) << "cfdDataSet::GetDisplayedScalarRange"
+   vprDEBUG(vesDBG,1) << "CfdDataSet::GetDisplayedScalarRange"
       << " activeScalar = " << this->activeScalar
       << std::endl << vprDEBUG_FLUSH;
    return this->displayedScalarRange[ this->activeScalar ];
 }
 ////////////////////////////////////////////////////////////////////////
-double * cfdDataSet::GetDisplayedScalarRange( int index )
+double * CfdDataSet::GetDisplayedScalarRange( int index )
 {
    return this->displayedScalarRange[ index ];
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetDisplayedScalarRange( int index, double* range )
+void CfdDataSet::SetDisplayedScalarRange( int index, double* range )
 {
    this->displayedScalarRange[ index ][ 0 ] = range[ 0 ];
    this->displayedScalarRange[ index ][ 1 ] = range[ 1 ];
@@ -1429,7 +1433,7 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double* range )
    //this->definedRange[ 1 ] = range[ 1 ];
 }
 //////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Switch* cfdDataSet::GetSwitchNode()
+ves::xplorer::scenegraph::Switch* CfdDataSet::GetSwitchNode()
 {
    if ( !switchNode )
    {
@@ -1439,7 +1443,7 @@ ves::xplorer::scenegraph::Switch* cfdDataSet::GetSwitchNode()
    return switchNode.get();
 }
 /////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* cfdDataSet::GetDCS()
+ves::xplorer::scenegraph::DCS* CfdDataSet::GetDCS()
 {
    if ( dcs == NULL )
    {
@@ -1450,7 +1454,7 @@ ves::xplorer::scenegraph::DCS* cfdDataSet::GetDCS()
       return this->dcs.get();
 }
 /////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
+void CfdDataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
 {
    if ( dcs == NULL )
       this->dcs = myDCS;
@@ -1458,17 +1462,17 @@ void cfdDataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
       std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
 }
 /////////////////////////////////////////////////
-int cfdDataSet::IsPartOfTransientSeries()
+int CfdDataSet::IsPartOfTransientSeries()
 {
    return this->partOfTransientSeries;
 }
 ////////////////////////////////////////////////////////
-void cfdDataSet::SetAsPartOfTransientSeries()
+void CfdDataSet::SetAsPartOfTransientSeries()
 {
    this->partOfTransientSeries = 1;
 }
 /////////////////////////////////////////
-void cfdDataSet::StoreScalarInfo()
+void CfdDataSet::StoreScalarInfo()
 {
     //Get the scalar and vector information
     m_dataObjectHandler->SetDatasetOperatorCallback(m_dataObjectOps["Count Number Of Vectors And Scalars"]);
@@ -1514,7 +1518,7 @@ void cfdDataSet::StoreScalarInfo()
    }
 }
 //////////////////////////////////////////////////////////
-double* cfdDataSet::GetScalarRange(std::string scalarName)
+double* CfdDataSet::GetScalarRange(std::string scalarName)
 {
     for(int i = 0; i < this->numScalars; ++i)
     {
@@ -1525,7 +1529,7 @@ double* cfdDataSet::GetScalarRange(std::string scalarName)
     }
 }
 /////////////////////////////
-void cfdDataSet::Print()
+void CfdDataSet::Print()
 {
    std::cout << "filename = " << this->fileName << std::endl;
    std::cout << "numScalars = " << this->numScalars << std::endl;
@@ -1552,12 +1556,12 @@ void cfdDataSet::Print()
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetUUID( std::string attribute, std::string uuid )
+void CfdDataSet::SetUUID( std::string attribute, std::string uuid )
 {
    dataSetUUIDMap[ attribute ] = uuid;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string cfdDataSet::GetUUID( std::string attribute )
+std::string CfdDataSet::GetUUID( std::string attribute )
 {
    std::map< std::string, std::string >::iterator iter;
    iter = dataSetUUIDMap.find( attribute );
@@ -1573,7 +1577,7 @@ std::string cfdDataSet::GetUUID( std::string attribute )
 ////////////////////////////////////////////////////////////////////////////////
 //create visual representation of bounding box
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::CreateBoundingBoxGeode( void )
+void CfdDataSet::CreateBoundingBoxGeode( void )
 {
     if( !m_visualBBox.valid() )
     {
@@ -1598,7 +1602,7 @@ void cfdDataSet::CreateBoundingBoxGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 //create wireframe to ensure accurate representation
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::CreateWireframeGeode( void )
+void CfdDataSet::CreateWireframeGeode( void )
 {
    //vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
    //wireframe->SetInput( this->GetDataSet() );
@@ -1615,7 +1619,7 @@ void cfdDataSet::CreateWireframeGeode( void )
    wireframeActor->GetProperty()->SetOpacity(0.7f);
    wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
-	wireframeGeode = new ves::xplorer::scenegraph::Geode();
+   wireframeGeode = new ves::xplorer::scenegraph::Geode();
    wireframeGeode->TranslateToGeode( wireframeActor );
    
    //wireframe->Delete();
@@ -1624,7 +1628,7 @@ void cfdDataSet::CreateWireframeGeode( void )
    wireframeActor->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetBoundingBoxState( unsigned int state )
+void CfdDataSet::SetBoundingBoxState( unsigned int state )
 {
     if( !m_visualBBox.valid() )
     {
@@ -1648,7 +1652,7 @@ void cfdDataSet::SetBoundingBoxState( unsigned int state )
    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetWireframeState( unsigned int state )
+void CfdDataSet::SetWireframeState( unsigned int state )
 {
    if ( (state == 0) && wireframeGeode.valid() )
    {
@@ -1665,7 +1669,7 @@ void cfdDataSet::SetWireframeState( unsigned int state )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetAxesState( unsigned int state )
+void CfdDataSet::SetAxesState( unsigned int state )
 {
    if ( (state == 0) && dataSetAxes )
    {
@@ -1684,17 +1688,17 @@ void cfdDataSet::SetAxesState( unsigned int state )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::DataSetAxis* cfdDataSet::GetDataSetAxes( void )
+ves::xplorer::DataSetAxis* CfdDataSet::GetDataSetAxes( void )
 {
    return dataSetAxes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::DataSetScalarBar* cfdDataSet::GetDataSetScalarBar( void )
+ves::xplorer::DataSetScalarBar* CfdDataSet::GetDataSetScalarBar( void )
 {
    return dataSetScalarBar;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdDataSet::SetDataSetScalarState( unsigned int state )
+void CfdDataSet::SetDataSetScalarState( unsigned int state )
 {
    if ( (state == 0) && dataSetScalarBar )
    {
@@ -1712,3 +1716,6 @@ void cfdDataSet::SetDataSetScalarState( unsigned int state )
       GetDCS()->AddChild( dataSetScalarBar->GetScalarBar() );
    }
 }
+
+} // end xplorer
+} // end ves

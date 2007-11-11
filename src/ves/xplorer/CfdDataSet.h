@@ -30,20 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_DATA_H
-#define CFD_DATA_H
-/*!\file cfdDataSet.h
-cfdDataSet API
-*/
-/*!\class VE_XPlorer::cfdDataSet
-* A class to load data set and pre-compute flow parameters 
-* or properties for virtual environment interactive 
-* computation.
-*/
+#ifndef VE_XPLORER_CFD_DATA_SET_H
+#define VE_XPLORER_CFD_DATA_SET_H
+
+#include <ves/VEConfig.h>
+#include <ves/CfdDataSetPtr.h>
+
+#include <ves/xplorer/util/DataObjectHandler.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
 #include <ves/xplorer/scenegraph/Geode.h>
+
+#include <osg/ref_ptr>
+
 #ifdef USE_OMP
 #define MAX_DATA 20
 #endif
@@ -66,7 +67,6 @@ namespace xplorer
    class cfdPlanes;
    class DataSetAxis;
    class DataSetScalarBar;
-   //class SeedPoints;
 }
 }
 
@@ -105,23 +105,26 @@ namespace DataLoader
 }
 }
 }
-#include <ves/VEConfig.h>
-#include <ves/xplorer/util/DataObjectHandler.h>
-#ifdef _OSG
-#include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
 
 namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdDataSet
+
+/*!\file CfdDataSet.h
+CfdDataSet API
+*/
+/*!\class ves::xplorer::CfdDataSet
+* A class to load data set and pre-compute flow parameters 
+* or properties for virtual environment interactive 
+* computation.
+*/
+class VE_XPLORER_EXPORTS CfdDataSet
 {
 public:
-    cfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
+    CfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
 
-    ~cfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
+    ~CfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
 
     // Initialize the number of data to load and parallel process.
     // By default, use the octree table.
@@ -232,8 +235,8 @@ public:
     int GetNumberOfVectors();
     std::string GetVectorName( int );
 
-    cfdDataSet * GetParent();
-    void SetParent( cfdDataSet * );
+    CfdDataSet * GetParent();
+    void SetParent( CfdDataSet * );
 
     void SetActualScalarRange( int, double * );
     void GetActualScalarRange( int, double * );
@@ -263,7 +266,7 @@ public:
 
     void Print();
     ///Accessor methods to store and query the uuids for specfic
-    ///attributes of a cfdDataSet
+    ///attributes of a CfdDataSet
     void SetUUID( std::string attribute, std::string uuid );
     std::string GetUUID( std::string attribute );
 
@@ -288,11 +291,11 @@ public:
     ///Get the scalar bar
     ves::xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
 
-    ///Get the bounds of the vtkDataObject contained in the cfdDataSet
+    ///Get the bounds of the vtkDataObject contained in the CfdDataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
     void GetBounds(double bounds[6]);
 
-    ///Get the bounds of the vtkDataObject contained in the cfdDataSet
+    ///Get the bounds of the vtkDataObject contained in the CfdDataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
     double* GetBounds();
 
@@ -310,7 +313,7 @@ private:
     double** actualScalarRange;
     double** displayedScalarRange;
 
-    cfdDataSet* parent;
+    CfdDataSet* parent;
     double m_bounds[6];///The bounding box data;
     int isNewlyActivated;
 
