@@ -115,7 +115,7 @@ namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
+class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.

@@ -31,8 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/PhysicsSimulationEventHandler.h>
-#include <ves/xplorer/cfdGlobalBase.h>
+#include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 
 #include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
@@ -53,9 +52,12 @@
 #include <unistd.h>
 #endif
 
-using namespace ves::xplorer::event;
-
-////////////////////////////////////////////////////////////////////////////////
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
 PhysicsSimulationEventHandler::PhysicsSimulationEventHandler()
 :
 ves::xplorer::event::EventHandler()
@@ -113,4 +115,7 @@ void PhysicsSimulationEventHandler::Execute( ves::open::xml::XMLObject* veXMLObj
         ves::xplorer::scenegraph::PhysicsSimulator::instance()->StepSimulation();
     }
 }
-////////////////////////////////////////////////////////////////////////////////
+
+} // end event
+} // end xplorer
+} // end ves

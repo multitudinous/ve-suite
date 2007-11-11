@@ -30,8 +30,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef VE_EVENT_HANDLER_H
-#define VE_EVENT_HANDLER_H
+#ifndef VE_XPLORER_EVENT_HANDLER_H
+#define VE_XPLORER_EVENT_HANDLER_H
+
+#include <ves/VEConfig.h>
+#include <ves/xplorer/event/EventHandlerPtr.h>
+
+#include <ves/xplorer/GlobalBasePtr.h>
+
+#include <ves/open/xml/XMLObjectPtr.h>
+
+namespace ves
+{
+namespace xplorer
+{
+namespace event
+{
 /*!\file EventHandler.h
   EventHandler API
   */
@@ -41,25 +55,6 @@
 /*!\namespace ves::xplorer::event
  * Namespace for ve-event handlers.
  */
-
-#include <ves/open/xml/XMLObjectPtr.h>
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdGlobalBase;
-}
-}
-
-#include <ves/VEConfig.h>
-
-namespace ves
-{
-namespace xplorer
-{
-namespace event
-{
 class VE_XPLORER_EXPORTS EventHandler
 {
 public:
@@ -74,10 +69,10 @@ public:
    virtual void Execute(ves::open::xml::XMLObject* objectToProcess=0) = 0;
 
    ///\param baseObject The cfdGlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(ves::xplorer::cfdGlobalBase* baseObject=0) = 0;
+   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject=0) = 0;
 protected:
    ///<the variable of the global base object to operate on
-   ves::xplorer::cfdGlobalBase* _baseObject;
+   ves::xplorer::GlobalBase* _baseObject;
 };
 
 }

@@ -33,29 +33,8 @@
 #ifndef PHYSICS_SIMULATION_EVENT_HANDLER_H
 #define PHYSICS_SIMULATION_EVENT_HANDLER_H
 
-/*!\file DeviceEH.h
-*/
-
-/*!\class DeviceEventHandler
-*Class for changing physics simulation events
-*/
-
-/*!\namespace ves::xplorer::event
-*
-*/
-
-// --- VE-Suite Includes --- //
+#include <ves/xplorer/event/environment/PhysicsSimulationEventHandlerPtr.h>
 #include <ves/xplorer/event/EventHandler.h>
-
-#include <ves/open/xml/XMLObjectPtr.h>
-
-namespace ves
-{
-namespace xplorer
-{
-    class cfdGlobalBase;
-}
-}
 
 namespace ves
 {
@@ -63,6 +42,16 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file PhysicsSimulationEventHandler.h
+*/
+
+/*!\class PhysicsSimulationEventHandler
+*Class for changing physics simulation events
+*/
+
+/*!\namespace ves::xplorer::event
+*
+*/
 class PhysicsSimulationEventHandler : public EventHandler
 {
 public:
@@ -80,12 +69,12 @@ public:
 
     ///Set the cfdModel
     ///\param modelHandler The cfdModelHandler to execute the Command on
-    void SetGlobalBaseObject( ves::xplorer::cfdGlobalBase* modelHandler );
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
     void Execute( ves::open::xml::XMLObject* command ); 
-   
+
 protected:
 
 };
