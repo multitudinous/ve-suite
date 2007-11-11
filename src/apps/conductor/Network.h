@@ -43,7 +43,7 @@ Network API
 #include <ves/conductor/util/Tag.h>
 #include <ves/conductor/util/Polygon.h>
 #include <ves/conductor/Module.h>
-#include <ves/open/xml/model/SystemStrongPtr.h>
+#include <ves/open/xml/model/SystemPtr.h>
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>
@@ -119,7 +119,7 @@ public:
    ///always want this action
    void Load( std::string xmlNetwork, bool promptClearXplorer );
    void CreateNetwork( std::string xmlNetwork );
-   void LoadSystem( ves::open::xml::model::SystemStrongPtr system, Canvas * parent );
+   void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas * parent );
    ///Clear the deisgn canvas and xplorer objects if desired
    void New( bool clearXplorer = false );
    ///Acessors
@@ -225,7 +225,7 @@ private:
    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
    ///System for this network
-   ves::open::xml::model::SystemStrongPtr systemPtr;
+   ves::open::xml::model::SystemPtr systemPtr;
    ///Parent window pointer to the splitter in AppFrame
    Canvas* parent;
    ///wxframe pointer for frame.cxx

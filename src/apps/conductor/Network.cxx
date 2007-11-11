@@ -1838,7 +1838,7 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
    // Here we wshould loop over all of the following
     std::vector< std::pair< XMLObject*, std::string > > nodes;
     ///Create the system
-    SystemStrongPtr tempSystem = 
+    SystemPtr tempSystem = 
         new System();
     //Setup the network to populate
     NetworkWeakPtr tempNetwork = 
@@ -2254,7 +2254,7 @@ void Network::CreateNetwork( std::string xmlNetwork )
 	*/
 }
 ////////////////////////////////////////////////////////
-void Network::LoadSystem( model::SystemStrongPtr system, Canvas * parent )
+void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 {	
    this->parent = parent;
    modules.clear();
@@ -2270,7 +2270,7 @@ void Network::LoadSystem( model::SystemStrongPtr system, Canvas * parent )
    systemPtr = system;
    
    // do this for network
-   model::NetworkStrongPtr veNetwork = system->GetNetwork();
+   model::NetworkPtr veNetwork = system->GetNetwork();
    
 //This is needed because on windows the scale must be 1 for the
 //wxAutoBufferedPaintDC to work properly

@@ -34,8 +34,8 @@
 #include "Canvas.h"
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/System.h>
-#include <ves/open/xml/model/SystemStrongPtr.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/StateInfo.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
@@ -141,11 +141,11 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 	XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 	
 	//get the map count
-	std::map< std::string, model::SystemStrongPtr> systems =
+	std::map< std::string, model::SystemPtr> systems =
 		XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
 
 	// iterate through the systems
-	for( std::map< std::string, model::SystemStrongPtr>::iterator 
+	for( std::map< std::string, model::SystemPtr>::iterator 
         iter = systems.begin(); iter != systems.end(); iter++ )
 	{
 		Network* tempNetwork = new Network( this );

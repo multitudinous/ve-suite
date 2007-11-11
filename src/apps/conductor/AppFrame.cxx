@@ -87,10 +87,10 @@
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/model/ModelCreator.h>
 #include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/User.h>
-#include <ves/open/xml/CommandPtr.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/image.h>
