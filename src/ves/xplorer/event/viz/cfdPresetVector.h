@@ -32,6 +32,24 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PRESET_VECTOR_H
 #define CFD_PRESET_VECTOR_H
+
+#include <ves/xplorer/event/viz/cfdVectorBase.h>
+
+
+namespace ves
+{
+namespace xplorer
+{
+   class cfdCuttingPlane;
+}
+}
+
+class vtkCutter;
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file cfdPresetVector.h
 cfdPresetVector API
 */
@@ -41,41 +59,25 @@ cfdPresetVector API
 * and direction selected. Update member function will update
 * the plane position and direction.
 */
-
-#include <ves/xplorer/event/viz/cfdVectorBase.h>
-
-namespace ves
+class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
 {
-namespace xplorer
-{
-   class cfdCuttingPlane;
-}
-}
-class vtkCutter;
+public:
+   ///Initialize the VTK objects and pipeline, (and set the number of isosurface increments for blue menu)
+   ///\param xyz
+   ///\param numSteps
+   cfdPresetVector( const int xyz, const int numSteps = 10 );
+   ///Destructor
+   virtual ~cfdPresetVector();
+   ///Update the preset vectors
+   virtual void Update( void );
 
-namespace ves
-{
-namespace xplorer
-{
-   class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
-   {
-      public:
-         ///Initialize the VTK objects and pipeline, (and set the number of isosurface increments for blue menu)
-         ///\param xyz
-         ///\param numSteps
-         cfdPresetVector( const int xyz, const int numSteps = 10 );
-         ///Destructor
-         virtual ~cfdPresetVector();
-         ///Update the preset vectors
-         virtual void Update( void );
+private:
+   int xyz;///<value of location
+   int numSteps;///<number of steps
+   vtkCutter *cutter;///<cutter
 
-      private:
-         int xyz;///<value of location
-         int numSteps;///<number of steps
-         vtkCutter *cutter;///<cutter
-
-         cfdCuttingPlane * cuttingPlane;///<cutting plane
-   };
+   cfdCuttingPlane * cuttingPlane;///<cutting plane
+};
 }
 }
 #endif

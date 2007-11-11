@@ -32,13 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_1DTEXTINPUT_H
 #define CFD_1DTEXTINPUT_H
-/*!\file cfd1DTextInput.h
-cfd1DTextInput API
-*/
-/*!\class ves::xplorer::cfd1DTextInput
-* 
-*/
-#include <string>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Geode.h>
@@ -47,6 +40,8 @@ cfd1DTextInput API
 #include <osg/ref_ptr>
 #elif _PERFORMER
 #endif
+
+#include <string>
 
 namespace ves
 {
@@ -65,38 +60,44 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfd1DTextInput : public ves::xplorer::scenegraph::DCS
-   {
-      public:
-         ///Constructor
-         cfd1DTextInput( void );
-         ///Destructor
-         virtual ~cfd1DTextInput( void );
-         ///get the Performer DCS (may need to remove)
-         ves::xplorer::scenegraph::DCS* getpfDCS( void );
-         ///set transform values.
-         ///\param scale The scale value.
-         ///\param trans The translation value.
-         ///\param rot The rotation value.
-         void SetTransforms( double scale[ 3 ] , double trans[ 3 ] , double rot[ 3 ]  );
-         ///Set the Filename of the dataset
-         ///\param fileName
-         void SetFilename( std::string fileName);
-         ///update the text
-         void Update( void );
-         ///Update the colors
-         ///\param red The red value.
-         ///\param green The green value.
-         ///\param blue The blue value.
-         void UpdateTextColor( double red, double green, double blue );
+/*!\file cfd1DTextInput.h
+cfd1DTextInput API
+*/
+/*!\class ves::xplorer::cfd1DTextInput
+* 
+*/
+class cfd1DTextInput : public ves::xplorer::scenegraph::DCS
+{
+public:
+   ///Constructor
+   cfd1DTextInput( void );
+   ///Destructor
+   virtual ~cfd1DTextInput( void );
+   ///get the Performer DCS (may need to remove)
+   ves::xplorer::scenegraph::DCS* getpfDCS( void );
+   ///set transform values.
+   ///\param scale The scale value.
+   ///\param trans The translation value.
+   ///\param rot The rotation value.
+   void SetTransforms( double scale[ 3 ] , double trans[ 3 ] , double rot[ 3 ]  );
+   ///Set the Filename of the dataset
+   ///\param fileName
+   void SetFilename( std::string fileName);
+   ///update the text
+   void Update( void );
+   ///Update the colors
+   ///\param red The red value.
+   ///\param green The green value.
+   ///\param blue The blue value.
+   void UpdateTextColor( double red, double green, double blue );
 
-      private:
-   
-         std::string text;///<The string to hold the text.
-         vtkActor*   actor;///<The VTKactor.
-         //DCS*      dcs;
-         osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.  
-   };
+private:
+
+   std::string text;///<The string to hold the text.
+   vtkActor*   actor;///<The VTKactor.
+   //DCS*      dcs;
+   osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.  
+};
 }
 }
 #endif

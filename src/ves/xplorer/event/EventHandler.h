@@ -40,6 +40,7 @@
 
 #include <ves/open/xml/XMLObjectPtr.h>
 
+
 namespace ves
 {
 namespace xplorer

@@ -32,36 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef STORED_SCENE_LOAD_FILE_H
 #define STORED_SCENE_LOAD_FILE_H
-/*!\file StoredSceneLoadEH.h
-  StoredSceneLoadEventHandler API
-  */
-/*!\class StoredSceneLoadEventHandler
- * load a stored scene.
- */
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-   class cfdModel;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -69,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file StoredSceneLoadEH.h
+  StoredSceneLoadEventHandler API
+  */
+/*!\class StoredSceneLoadEventHandler
+ * load a stored scene.
+ */
 class VE_XPLORER_EXPORTS StoredSceneEventHandler : public EventHandler
 {
 public:

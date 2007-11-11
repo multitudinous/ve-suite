@@ -34,14 +34,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PLANES_H
 #define CFD_PLANES_H
-/*!\file cfdPlanes.h
-cfdPlanes API
-*/
-/*!\class ves::xplorer::cfdPlanes
-*   A class that reads in precomputed plane data files corresponding to a 
-*   specific axis direction.  The files are located in a specified directory.
-*   The plane files were created by the preprocessor acting on a flowdata.vtk.
-*/
+
+#include <ves/VEConfig.h>
 
 class vtkPolyData;
 
@@ -53,12 +47,18 @@ namespace xplorer
 }
 }
 
-#include <ves/VEConfig.h>
-
 namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdPlanes.h
+cfdPlanes API
+*/
+/*!\class ves::xplorer::cfdPlanes
+*   A class that reads in precomputed plane data files corresponding to a 
+*   specific axis direction.  The files are located in a specified directory.
+*   The plane files were created by the preprocessor acting on a flowdata.vtk.
+*/
 class VE_XPLORER_EXPORTS cfdPlanes
 {
 public:

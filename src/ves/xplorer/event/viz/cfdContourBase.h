@@ -32,12 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CONTOUR_BASE_H
 #define CFD_CONTOUR_BASE_H
-/*!\file cfdContourBase.h
-cfdContourBase API
-*/
-/*!\class ves::xplorer::cfdContourBase
-* 
-*/
+
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
 class vtkPolyData;
@@ -57,7 +52,6 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
    class cfdCuttingPlane;
 }
 }
@@ -66,6 +60,12 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdContourBase.h
+cfdContourBase API
+*/
+/*!\class ves::xplorer::cfdContourBase
+* 
+*/
 class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
 {
 public:
@@ -76,10 +76,6 @@ public:
 
    ///update the actor
    virtual void Update( void ) = 0;
-
-   ///compare VjObs_i commandArray with its child's value
-   ///\param _cfdCommandArray
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();

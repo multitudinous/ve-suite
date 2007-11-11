@@ -32,6 +32,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_MOMENTUM_H
 #define CFD_MOMENTUM_H
+
+#include <ves/xplorer/event/viz/cfdContourBase.h>
+
+#ifdef USE_OMP
+#include <vtkAppendPolyData.h>
+#define MAX_MOMENTUM 20
+#endif
+
+class vtkPlane;
+class vtkCutter;
+class vtkWarpVector;
+
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file cfdMomentum.h
 cfdMomentum API
 */
@@ -41,46 +58,30 @@ cfdMomentum API
 *   and direction selected. Update member function will be update
 *   the position and direction as each "Update" being called.
 */
+class VE_XPLORER_EXPORTS cfdMomentum : public cfdContourBase
+{
+public:
+   ///Initialize the VTK objects and pipeline.
+   cfdMomentum( void );
+   ///Destructor
+   virtual ~cfdMomentum( void );
 
+   ///Update the position, x, and normal direction to cut.
+   ///Output a updated pfGeoSet. 
+   virtual void Update( void );
+
+private:  
 #ifdef USE_OMP
-#include <vtkAppendPolyData.h>
-#define MAX_MOMENTUM 20
+   vtkPlane *plane[MAX_MOMENTUM];///<Momenutum plane
+   vtkCutter *cutter[MAX_MOMENTUM];///<Momenutum plane cutter
+   vtkAppendPolyData *append;///<append to polydata
+   float nData;///<number of datasets
+#else
+   vtkPlane *plane;///<plane for vtk
+   vtkCutter *cutter;///<cutter for vtk
 #endif
-
-#include <ves/xplorer/event/viz/cfdContourBase.h>
-
-class vtkPlane;
-class vtkCutter;
-class vtkWarpVector;
-
-namespace ves
-{
-namespace xplorer
-{
-   class VE_XPLORER_EXPORTS cfdMomentum : public cfdContourBase
-   {
-      public:
-         ///Initialize the VTK objects and pipeline.
-         cfdMomentum( void );
-         ///Destructor
-         virtual ~cfdMomentum( void );
-
-         ///Update the position, x, and normal direction to cut.
-         ///Output a updated pfGeoSet. 
-         virtual void Update( void );
-
-      private:  
-      #ifdef USE_OMP
-         vtkPlane *plane[MAX_MOMENTUM];///<Momenutum plane
-         vtkCutter *cutter[MAX_MOMENTUM];///<Momenutum plane cutter
-         vtkAppendPolyData *append;///<append to polydata
-         float nData;///<number of datasets
-      #else
-         vtkPlane *plane;///<plane for vtk
-         vtkCutter *cutter;///<cutter for vtk
-      #endif
-         vtkWarpVector *warper;///<warper for vtk
-   };
+   vtkWarpVector *warper;///<warper for vtk
+};
 }
 }
 #endif

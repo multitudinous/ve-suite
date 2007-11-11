@@ -32,15 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PRESET_CONTOUR_H
 #define CFD_PRESET_CONTOUR_H
-/*!\file cfdPresetContour.h
-cfdPresetContour API
-*/
-/*!\class ves::xplorer::cfdPresetContour
-* A class that takes input data set(s) and generates a 
-* cutting plane based on the position and direction
-* selected. Update member function will update
-* the plane position and direction.
-*/
+
 #include <ves/xplorer/event/viz/cfdContourBase.h>
 
 class vtkCutter;
@@ -58,6 +50,15 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdPresetContour.h
+cfdPresetContour API
+*/
+/*!\class ves::xplorer::cfdPresetContour
+* A class that takes input data set(s) and generates a 
+* cutting plane based on the position and direction
+* selected. Update member function will update
+* the plane position and direction.
+*/
 class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase
 {
 public:

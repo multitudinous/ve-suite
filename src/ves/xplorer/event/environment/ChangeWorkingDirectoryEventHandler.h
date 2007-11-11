@@ -32,33 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CHANGE_WORKING_DIRECTORY_EVENT_HANDLER_H
 #define CHANGE_WORKING_DIRECTORY_EVENT_HANDLER_H
-/*!\file ChangeWorkingDirectoryEventHandler.h
-  ChangeWorkingDirectoryEventHandler API
-  */
-/*!\class ChangeWorkingDirectoryEventHandler
- * Class for changing workign directory in xplorer.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-}
-}
 
 namespace ves
 {
@@ -66,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file ChangeWorkingDirectoryEventHandler.h
+  ChangeWorkingDirectoryEventHandler API
+  */
+/*!\class ChangeWorkingDirectoryEventHandler
+ * Class for changing workign directory in xplorer.
+ */
 class ChangeWorkingDirectoryEventHandler : public EventHandler
 {
 public:

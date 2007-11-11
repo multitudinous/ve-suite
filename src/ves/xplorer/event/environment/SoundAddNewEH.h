@@ -32,35 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef SOUND_ADD_NEW_EVENT_HANDLER_H
 #define SOUND_ADD_NEW_EVENT_HANDLER_H
-/*!\file SoundAddNewEH.h
-  SoundAddNewEventHandler API
-  */
-/*!\class SoundAddNew EventHandler
- * Add a new sound.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-}
-}
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-   class XMLObject;
-}
-}
-}
-
-#include <ves/VEConfig.h>
+#include <ves/xplorer/ModelPtr.h>
 
 namespace ves
 {
@@ -68,6 +43,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file SoundAddNewEH.h
+  SoundAddNewEventHandler API
+  */
+/*!\class SoundAddNew EventHandler
+ * Add a new sound.
+ */
 class VE_XPLORER_EXPORTS SoundAddNewEventHandler: public EventHandler
 {
 public:
@@ -91,7 +72,7 @@ public:
    virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
 
 protected:
-   ves::xplorer::cfdModel* _activeModel;///<The active cfdModel
+   ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

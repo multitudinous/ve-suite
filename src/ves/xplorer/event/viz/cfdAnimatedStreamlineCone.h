@@ -32,30 +32,25 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ANIMATED_STREAMLINE_CONE_H
 #define CFD_ANIMATED_STREAMLINE_CONE_H
-/*!\file cfdAnimatedStreamlineCone.h
-cfdAnimatedStreamlineCone API
-*/
-/*!\class ves::xplorer::cfdAnimatedStreamlineCone
-* 
-*/
+
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
 class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
 class vtkSphereSource;
-namespace ves
-{
-namespace xplorer
-{
-   class cfdCommandArray;
-}
-}
+
 
 namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdAnimatedStreamlineCone.h
+cfdAnimatedStreamlineCone API
+*/
+/*!\class ves::xplorer::cfdAnimatedStreamlineCone
+* 
+*/
 class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
 {
 public:
@@ -72,10 +67,6 @@ public:
    ///Set the Polydata Source
    ///\param polySource
    void SetPolyDataSource( vtkPolyData * polySource);
-
-   ///compare VjObs_i commandArray with its child's value
-   ///\param _cfdCommandArray
-   virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
 
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();

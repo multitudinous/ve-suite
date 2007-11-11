@@ -30,24 +30,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_VECTOR_H
-#define CFD_VECTOR_H
-/*!\file cfdVector.h
-cfdVector API
-*/
-/*!\class ves::xplorer::cfdVector
-* A class to takes input data set(s) and generates a 
-* cutting planes of vector profile based on the position 
-* and direction selected. Update member function will update
-* the position and direction as each "Update" being called.
-*/
+#ifndef VE_XPLORER_CFD_VECTOR_H
+#define VE_XPLORER_CFD_VECTOR_H
+
+#include <ves/xplorer/event/viz/cfdVectorBase.h>
 
 #ifdef USE_OMP
 class vtkAppendFilter;
 #define MAX_VECTOR 20
 #endif
 
-#include <ves/xplorer/event/viz/cfdVectorBase.h>
 
 class vtkPlane;
 class vtkCutter;
@@ -58,6 +50,15 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdVector.h
+cfdVector API
+*/
+/*!\class ves::xplorer::cfdVector
+* A class to takes input data set(s) and generates a 
+* cutting planes of vector profile based on the position 
+* and direction selected. Update member function will update
+* the position and direction as each "Update" being called.
+*/
 class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase
 {
 public:

@@ -32,15 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CONTOURS_H
 #define CFD_CONTOURS_H
-/*!\file cfdContours.h
-cfdContours API
-*/
-/*!\class ves::xplorer::cfdContours
-* 
-*/
-#include <ves/xplorer/event/viz/cfdContourBase.h>
 
-#include <string>
+#include <ves/xplorer/event/viz/cfdContourBase.h>
 
 namespace ves
 {
@@ -55,6 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdContours.h
+cfdContours API
+*/
+/*!\class ves::xplorer::cfdContours
+* 
+*/
 class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
 {
 public:

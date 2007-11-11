@@ -32,12 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_MOMENTUMS_H
 #define CFD_MOMENTUMS_H
-/*!\file cfdMomentums.h
-cfdMomentums API
-*/
-/*!\class ves::xplorer::cfdMomentums
-*   A class that generates warped contour plots on multiple planes of data.
-*/
+
 
 #include <ves/xplorer/event/viz/cfdContourBase.h>
 
@@ -51,33 +46,39 @@ namespace xplorer
 }
 }
 
-//! VTK momentums renderer.
-/*!
-*/
 
 namespace ves
 {
 namespace xplorer
 {
-   class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
-   {
-      public:
-         ///Initialize the multiple momentum profiles, based on the input 
-         ///from the vtkPolyData generated from cfdPlanes.  
-         ///\param xyz
-         cfdMomentums( const int xyz );
-         ///Destructor
-         virtual ~cfdMomentums( void );
+/*!\file cfdMomentums.h
+cfdMomentums API
+*/
+/*!\class ves::xplorer::cfdMomentums
+*   A class that generates warped contour plots on multiple planes of data.
+*/
+//! VTK momentums renderer.
+/*!
+*/
+class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
+{
+public:
+   ///Initialize the multiple momentum profiles, based on the input 
+   ///from the vtkPolyData generated from cfdPlanes.  
+   ///\param xyz
+   cfdMomentums( const int xyz );
+   ///Destructor
+   virtual ~cfdMomentums( void );
 
-         ///Output an updated pfGeoSet.
-         virtual void Update( void );
+   ///Output an updated pfGeoSet.
+   virtual void Update( void );
 
-      private:
-         int xyz;///<relative locatio
-  
-         vtkWarpVector * warper;///<warper used by vtk
-         cfdPlanes* planes;///<planes
-   };
+private:
+   int xyz;///<relative locatio
+
+   vtkWarpVector * warper;///<warper used by vtk
+   cfdPlanes* planes;///<planes
+};
 }
 }
 #endif

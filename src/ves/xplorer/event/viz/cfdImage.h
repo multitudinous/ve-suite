@@ -32,13 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_IMAGE_H
 #define CFD_IMAGE_H
-/*!\file cfdImage.h
-cfdImage API
-*/
-/*!\class ves::xplorer::cfdImage
-* 
-*/
-#include <ves/VEConfig.h>
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
@@ -53,15 +46,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
-   class cfdReadParam;
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
+/*!\file cfdImage.h
+cfdImage API
+*/
+/*!\class ves::xplorer::cfdImage
+* 
+*/
 class VE_XPLORER_EXPORTS cfdImage : public cfdObjects
 {
    public:
@@ -83,10 +73,6 @@ class VE_XPLORER_EXPORTS cfdImage : public cfdObjects
       
       ///Destructor.
       virtual ~cfdImage( );
-
-      ///Compare VjObs_i commandArray with its child's value.
-      ///\param commandArray
-      virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
       ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
       virtual void UpdateCommand();
@@ -114,7 +100,6 @@ class VE_XPLORER_EXPORTS cfdImage : public cfdObjects
       double bmpPosition[ 3 ];///<Stores bitmap position.
       int bmpOrientation;///<0=X-plane, 1=Y-plane, and 2=Z-plane.
       std::string _param;///<The string storing parameters.
-      ves::xplorer::cfdReadParam* _readParam;///<Read out parameters.
 };
 }
 }

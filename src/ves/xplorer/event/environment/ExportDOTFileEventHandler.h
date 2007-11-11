@@ -32,35 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef EXPORT_DOT_FILE_EVENT_HANDLER_H
 #define EXPORT_DOT_FILE_EVENT_HANDLER_H
-/*!\file ExportDOTfileEventHandler.h
-  ExportDOTfileEventHandler API
-  */
-/*!\class ExportDOTfileEventHandler
- * load a stored scene.
- */
-
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -68,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file ExportDOTfileEventHandler.h
+  ExportDOTfileEventHandler API
+  */
+/*!\class ExportDOTfileEventHandler
+ * load a stored scene.
+ */
 class VE_XPLORER_EXPORTS ExportDOTFileEventHandler : public EventHandler
 {
 public:

@@ -34,16 +34,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_POLYDATA_H
 #define CFD_POLYDATA_H
-/*!\file cfdPolyData.h
-cfdPolyData API
-*/
-/*!\class ves::xplorer::cfdPolyData
-* 
-*/
-#include <ves/xplorer/event/viz/cfdObjects.h>
 
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/DataValuePair.h>
+#include <ves/xplorer/event/viz/cfdObjects.h>
 
 class vtkPolyDataMapper;
 class vtkWarpVector;
@@ -52,62 +44,56 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
-}
-}
-
-namespace ves
+/*!\file cfdPolyData.h
+cfdPolyData API
+*/
+/*!\class ves::xplorer::cfdPolyData
+* 
+*/
+class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
 {
-namespace xplorer
-{
-   class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
-   {
-      public:
-         ///Constructor.
-         ///\param op_val Set to 1.0.
-         cfdPolyData( float op_val = 1.0 );
+public:
+   ///Constructor.
+   ///\param op_val Set to 1.0.
+   cfdPolyData( float op_val = 1.0 );
 
-         ///Destructor.
-         virtual ~cfdPolyData();
+   ///Destructor.
+   virtual ~cfdPolyData();
 
-         ///Update.
-         virtual void Update( void );
+   ///Update.
+   virtual void Update( void );
 
-         ///Compare VjObs_i commandArray with its child's value.
-         ///\param _cfdCommandArray
-         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+   ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
+   virtual void UpdateCommand();
 
-         ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
-         virtual void UpdateCommand();
-   
-         ///Assigns particle option.
-         ///\param option
-         void SetParticleOption( unsigned int option);
+   ///Assigns particle option.
+   ///\param option
+   void SetParticleOption( unsigned int option);
 
-         ///Gets particle option.
-         unsigned int GetParticleOption();
+   ///Gets particle option.
+   unsigned int GetParticleOption();
 
-         ///Sets particle scale.
-         ///\param x
-         void SetParticleScale( float x);
+   ///Sets particle scale.
+   ///\param x
+   void SetParticleScale( float x);
 
-         ///Gets particle scale.
-         float GetParticleScale();
+   ///Gets particle scale.
+   float GetParticleScale();
 
-      private:
-         float GetSphereScaleFactor();///Sphere scaling.
+private:
+   float GetSphereScaleFactor();///Sphere scaling.
 
-         std::string colorByScalar;///<String to hold color by scalar.
+   std::string colorByScalar;///<String to hold color by scalar.
 
-         vtkPolyDataMapper *map;///<Map for vtk.
-         vtkWarpVector* warper;///<Warper for vtk.
-         //cfdCommandArray* commandArray;
-         bool warpSurface;///Test for warped surface.
-         double warpedContourScale;///<warped contour scale value
+   vtkPolyDataMapper *map;///<Map for vtk.
+   vtkWarpVector* warper;///<Warper for vtk.
+   //cfdCommandArray* commandArray;
+   bool warpSurface;///Test for warped surface.
+   double warpedContourScale;///<warped contour scale value
 
-         unsigned int  _particleOption;///<point cloud or variably sized spheres.
-         float _particleScale;///<particle scale.
-   };
+   unsigned int  _particleOption;///<point cloud or variably sized spheres.
+   float _particleScale;///<particle scale.
+};
 }
 }
 #endif

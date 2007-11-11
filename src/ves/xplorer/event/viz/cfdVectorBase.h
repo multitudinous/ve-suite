@@ -34,13 +34,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VECTOR_BASE_H
 #define CFD_VECTOR_BASE_H
-/*!\file cfdVectorBase.h
-cfdVectorBase API
-*/
-
-/*!\class ves::xplorer::cfdVectorBase
-*
-*/
 
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
@@ -56,14 +49,13 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
-}
-}
+/*!\file cfdVectorBase.h
+cfdVectorBase API
+*/
 
-namespace ves
-{
-namespace xplorer
-{
+/*!\class ves::xplorer::cfdVectorBase
+*
+*/
 class VE_XPLORER_EXPORTS cfdVectorBase : public cfdObjects
 {
 public:
@@ -74,9 +66,6 @@ public:
    virtual ~cfdVectorBase();
 
    // pure virtual int functions to be specified in concrete implementations
-
-   /// compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();

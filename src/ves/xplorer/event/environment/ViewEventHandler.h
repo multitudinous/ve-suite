@@ -33,34 +33,8 @@
 #ifndef VIEW_EVENT_HANDLER_H
 #define VIEW_EVENT_HANDLER_H
 
-/*!\file ViewEventHandler.h
- */
-
-/*!\class ViewEventHandler
- * Class for changing trackball properties in xplorer
- */
-
-// --- VE-Suite Includes
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-    class GlobalBase;
-}
-}
 
 namespace ves
 {
@@ -68,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file ViewEventHandler.h
+ */
+
+/*!\class ViewEventHandler
+ * Class for changing trackball properties in xplorer
+ */
 class ViewEventHandler : public EventHandler
 {
 public:

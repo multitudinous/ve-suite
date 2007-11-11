@@ -34,13 +34,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VECTORS_H
 #define CFD_VECTORS_H
-/*!\file cfdVectors.h
-cfdVectors API
-*/
-
-/*!\class ves::xplorer::cfdVectors
-*
-*/
 
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
 
@@ -57,6 +50,13 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdVectors.h
+cfdVectors API
+*/
+
+/*!\class ves::xplorer::cfdVectors
+*
+*/
 class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
 {
 public:

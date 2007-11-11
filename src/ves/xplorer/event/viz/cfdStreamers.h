@@ -33,6 +33,20 @@
 #ifndef CFD_STREAMERS_H
 #define CFD_STREAMERS_H
 
+#include <ves/xplorer/event/viz/cfdObjects.h>
+
+class vtkStreamTracer;
+class vtkTubeFilter;
+class vtkPolyDataMapper;
+class vtkPolyData;
+class vtkRungeKutta45;
+class vtkPoints;
+
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file cfdStreamers.h
 cfdStreamers API
 */
@@ -42,30 +56,6 @@ cfdStreamers API
 *   based on the active glyph. Update member function will update
 *   the position and direction.
 */
-
-class vtkStreamTracer;
-class vtkTubeFilter;
-class vtkPolyDataMapper;
-class vtkPolyData;
-class vtkRungeKutta45;
-class vtkPoints;
-
-#include <ves/xplorer/event/viz/cfdObjects.h>
-
-namespace ves
-{
-namespace xplorer
-{
-    class cfdCommandArray;
-}
-}
-
-#include <ves/open/xml/CommandPtr.h>
-
-namespace ves
-{
-namespace xplorer
-{
 class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects
 {
 public:
@@ -76,9 +66,6 @@ public:
 
     ///Destructor
     virtual ~cfdStreamers();
-
-    // compare VjObs_i commandArray with its child's value
-    //virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
 
     // in future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand();

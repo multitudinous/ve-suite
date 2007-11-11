@@ -32,12 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CUTTING_PLANE
 #define CFD_CUTTING_PLANE
-/*!\file cfdCuttingPlane.h
-cfdCuttingPlane API
-*/
-/*!\class ves::xplorer::cfdCuttingPlane
-* 
-*/
+
 #include <ves/VEConfig.h>
 class vtkPlane;
 class vtkDataSet;
@@ -46,62 +41,68 @@ namespace ves
 {
 namespace xplorer
 {
-   class VE_XPLORER_EXPORTS cfdCuttingPlane
-   {
-      public:
-         ///Constructor
-         cfdCuttingPlane( const double bounds[6], const int xyz, 
-                     const int numSteps = 10 );
-         ///Destructor
-         ~cfdCuttingPlane( );
-    
-         void SetBounds( const double bounds[6] );
+/*!\file cfdCuttingPlane.h
+cfdCuttingPlane API
+*/
+/*!\class ves::xplorer::cfdCuttingPlane
+* 
+*/
+class VE_XPLORER_EXPORTS cfdCuttingPlane
+{
+public:
+   ///Constructor
+   cfdCuttingPlane( const double bounds[6], const int xyz, 
+               const int numSteps = 10 );
+   ///Destructor
+   ~cfdCuttingPlane( );
 
-         vtkPlane * GetPlane( );
-         
-         ///This reads in the requested value for the cutting plane.
-         ///\param requestedValue
-         void Advance( int requestedValue );
+   void SetBounds( const double bounds[6] );
 
-         ///This reads in the requested value for the cutting plane.
-         ///\param Origin
-         void GetOrigin( double Origin[ 3 ] );
+   vtkPlane * GetPlane( );
+   
+   ///This reads in the requested value for the cutting plane.
+   ///\param requestedValue
+   void Advance( int requestedValue );
 
-      private:
-         double origin[3];    // Position of cut.
+   ///This reads in the requested value for the cutting plane.
+   ///\param Origin
+   void GetOrigin( double Origin[ 3 ] );
 
-         ///This computes the origin as requested from the user.
-         ///\param requestedValue
-         void ComputeOrigin( int requestedValue );
-    
-         ///Used to test if past range.
-         int isPastEnd();
+private:
+   double origin[3];    // Position of cut.
 
-         ///Used to test if at end of range.      
-         int isAtEnd();
+   ///This computes the origin as requested from the user.
+   ///\param requestedValue
+   void ComputeOrigin( int requestedValue );
 
-         ///Used to test if at start of range. 
-         int isAtStart();
+   ///Used to test if past range.
+   int isPastEnd();
 
-         ///Used to reset the origin to low value. 
-         void ResetOriginToLow();
+   ///Used to test if at end of range.      
+   int isAtEnd();
 
-         ///Used to reset the origin to high value. 
-         void ResetOriginToHigh();
+   ///Used to test if at start of range. 
+   int isAtStart();
 
-         ///Used to advance the origin.
-         void IncrementOrigin();
+   ///Used to reset the origin to low value. 
+   void ResetOriginToLow();
 
-         vtkPlane * plane;///<Plane for vtk.
+   ///Used to reset the origin to high value. 
+   void ResetOriginToHigh();
 
-         double normal[3];///<Normal direction to cut.
+   ///Used to advance the origin.
+   void IncrementOrigin();
 
-         double bd[6];///<Boundary of the whole data sets.
+   vtkPlane * plane;///<Plane for vtk.
 
-         float dx;///<Used only by blue menu.
+   double normal[3];///<Normal direction to cut.
 
-         int type;///<Plane direction: 0=X, 1=Y, 2=Z.
-   };
+   double bd[6];///<Boundary of the whole data sets.
+
+   float dx;///<Used only by blue menu.
+
+   int type;///<Plane direction: 0=X, 1=Y, 2=Z.
+};
 }
 }
 #endif

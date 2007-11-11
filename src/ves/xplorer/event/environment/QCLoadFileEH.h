@@ -32,36 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef QUAT_CAM_LOAD_FILE_H
 #define QUAT_CAM_LOAD_FILE_H
-/*!\file QCLoadFileEH.h
-  QuatCamLoadFileEventHandler API
-  */
-/*!\class QuatCamLoadFileEventHandler
- * Activate the texture based visualization.
- */
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-   class cfdModel;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -69,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file QCLoadFileEH.h
+  QuatCamLoadFileEventHandler API
+  */
+/*!\class QuatCamLoadFileEventHandler
+ * Activate the texture based visualization.
+ */
 class VE_XPLORER_EXPORTS QuatCamLoadFileEventHandler : public EventHandler
 {
 public:

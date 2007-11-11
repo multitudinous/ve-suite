@@ -32,15 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CONTOUR_H
 #define CFD_CONTOUR_H
-/*!\file cfdContour.h
-cfdContour API
-*/
-/*!\class ves::xplorer::cfdContour
-*   A class to takes input data set(s) and generates on 
-*   cutting planes based on the position and direction
-*   selected. Update member function will be update
-*   the position and direction as each "Update" being called.
-*/
+
 #include <ves/xplorer/event/viz/cfdContourBase.h>
 
 class vtkPlane;
@@ -55,29 +47,38 @@ namespace ves
 {
 namespace xplorer
 {
-   class VE_XPLORER_EXPORTS cfdContour : public cfdContourBase
-   {
-      public:
-         ///Initialize the VTK objects and pipeline.
-         cfdContour( );
-         ///Destructor
-         virtual ~cfdContour( );
+/*!\file cfdContour.h
+cfdContour API
+*/
+/*!\class ves::xplorer::cfdContour
+*   A class to takes input data set(s) and generates on 
+*   cutting planes based on the position and direction
+*   selected. Update member function will be update
+*   the position and direction as each "Update" being called.
+*/
+class VE_XPLORER_EXPORTS cfdContour : public cfdContourBase
+{
+public:
+   ///Initialize the VTK objects and pipeline.
+   cfdContour( );
+   ///Destructor
+   virtual ~cfdContour( );
 
-         ///Update the position, x, and normal direction to cut.
-         virtual void Update( void );
+   ///Update the position, x, and normal direction to cut.
+   virtual void Update( void );
 
-      private:
+private:
 
-      #ifdef USE_OMP
-         vtkPlane *plane[MAX_CONTOUR];///<Contour cutting plane.
-         vtkCutter *cutter[MAX_CONTOUR];///<Used for the cutter code.
-         vtkAppendPolyData *append;///<Appends to the dataset for number of processors.
-         float nData;///<Total number of data to be parallel processed.
-      #else
-         vtkPlane *plane;///<Plane for vtk.
-         vtkCutter *cutter;///<Cutter for vtk.
-      #endif
-   };
+#ifdef USE_OMP
+   vtkPlane *plane[MAX_CONTOUR];///<Contour cutting plane.
+   vtkCutter *cutter[MAX_CONTOUR];///<Used for the cutter code.
+   vtkAppendPolyData *append;///<Appends to the dataset for number of processors.
+   float nData;///<Total number of data to be parallel processed.
+#else
+   vtkPlane *plane;///<Plane for vtk.
+   vtkCutter *cutter;///<Cutter for vtk.
+#endif
+};
 }
 }
 #endif

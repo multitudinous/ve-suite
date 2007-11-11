@@ -34,16 +34,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef ACTIVE_MODEL_EVENT_HANDLER_H
 #define ACTIVE_MODEL_EVENT_HANDLER_H
-/*!\file ActiveModelEventHandler.h
-  ActiveModelEventHandler API
-  */
-/*!\class ActiveModelEventHandler
- * Class for handling the active model change.
- */
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -51,6 +44,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file ActiveModelEventHandler.h
+  ActiveModelEventHandler API
+  */
+/*!\class ActiveModelEventHandler
+ * Class for handling the active model change.
+ */
 class VE_XPLORER_EXPORTS ActiveModelEventHandler : public EventHandler
 {
 public:

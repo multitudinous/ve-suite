@@ -32,32 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef NAVIGATION_EVENT_HANDLER_H
 #define NAVIGATION_EVENT_HANDLER_H
-/*!\file NavigationDataEventHandler.h
-  NavigationDataEventHandler API
-  */
-/*!\class NavigationDataEventHandler
- * Class for changing trackball properties in xplorer
- */
+
 #include <ves/xplorer/event/EventHandler.h>
 
-namespace ves
-{
-    namespace open
-{
-    namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-}
-}
 
 namespace ves
 {
@@ -65,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file NavigationDataEventHandler.h
+  NavigationDataEventHandler API
+  */
+/*!\class NavigationDataEventHandler
+ * Class for changing trackball properties in xplorer
+ */
 class NavigationDataEventHandler: public EventHandler
 {
 public:
@@ -77,7 +60,7 @@ public:
    //Destructor
    virtual ~NavigationDataEventHandler();
 
-   //Set the cfdModel
+   //Set the Model
    //param model The cfdModelHandler to execute the Command on
    void SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler);
 

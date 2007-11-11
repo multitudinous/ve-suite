@@ -32,36 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef QUAT_CAM_CLEAR_DATA_H
 #define QUAT_CAM_CLear_DATA_H
-/*!\file QCClearDataEH.h
-  QuatCamClearDataEventHandler API
-  */
-/*!\class QuatCamClearDataEventHandler
- * Activate the texture based visualization.
- */
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class XMLObject;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-   class cfdModel;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
 
-#include <ves/VEConfig.h>
 
 namespace ves
 {
@@ -69,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file QCClearDataEH.h
+  QuatCamClearDataEventHandler API
+  */
+/*!\class QuatCamClearDataEventHandler
+ * Activate the texture based visualization.
+ */
 class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler :
     public EventHandler
 {

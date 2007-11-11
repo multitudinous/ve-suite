@@ -32,19 +32,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_PRESET_MOMENTUM_H
 #define CFD_PRESET_MOMENTUM_H
-/*!\file cfdPresetMomentum.h
-cfdPresetMomentum API
-*/
-/*!\class ves::xplorer::cfdPresetMomentum
-*  A class that takes input data set(s) and generates a 
-*  cutting plane of momentum profile based on the position 
-*  and direction selected. Update member function will update
-*  the plane position and direction.
-*/
-#include <ves/xplorer/event/viz/cfdContourBase.h>
 
-class vtkCutter;
-class vtkWarpVector;
+#include <ves/xplorer/event/viz/cfdContourBase.h>
 
 namespace ves
 {
@@ -54,28 +43,41 @@ namespace xplorer
 }
 }
 
+class vtkCutter;
+class vtkWarpVector;
+
+
 namespace ves
 {
 namespace xplorer
 {
-   class VE_XPLORER_EXPORTS cfdPresetMomentum : public cfdContourBase
-   {
-      public:
-         ///Initialize the pipeline.
-         ///(and set the number of cutting plane increments for blue menu)
-         ///\param xyz
-         ///\param numSteps
-         cfdPresetMomentum( const int xyz, int numSteps = 10 );
-         ///Destructor
-         virtual ~cfdPresetMomentum( void );
+/*!\file cfdPresetMomentum.h
+cfdPresetMomentum API
+*/
+/*!\class ves::xplorer::cfdPresetMomentum
+*  A class that takes input data set(s) and generates a 
+*  cutting plane of momentum profile based on the position 
+*  and direction selected. Update member function will update
+*  the plane position and direction.
+*/
+class VE_XPLORER_EXPORTS cfdPresetMomentum : public cfdContourBase
+{
+public:
+   ///Initialize the pipeline.
+   ///(and set the number of cutting plane increments for blue menu)
+   ///\param xyz
+   ///\param numSteps
+   cfdPresetMomentum( const int xyz, int numSteps = 10 );
+   ///Destructor
+   virtual ~cfdPresetMomentum( void );
 
-         ///Update the position, x, and normal direction to cut. Output a updated pfGeoSet.  
-         virtual void Update( void );
+   ///Update the position, x, and normal direction to cut. Output a updated pfGeoSet.  
+   virtual void Update( void );
 //         void CreatePlane( void );
 
-      private:
-         vtkWarpVector   * warper;///<warper.
-   };
+private:
+   vtkWarpVector   * warper;///<warper.
+};
 }
 }
 #endif

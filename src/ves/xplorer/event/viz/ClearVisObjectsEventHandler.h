@@ -32,24 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CLEAR_VIS_OBJECTS_EVENT_HANDLER_H
 #define CLEAR_VIS_OBJECTS_EVENT_HANDLER_H
-/*!\file ClearVisObjectsEventHandler.h
-  ClearVisObjectsEventHandler API
-  */
-/*!\class ClearVisObjectsEventHandler
- * Class for clearing vis options.
- */
-
-#include <ves/open/xml/XMLObjectPtr.h>
-
-namespace ves
-{
-namespace xplorer
-{
-   class GlobalBase;
-}
-}
 
 #include <ves/xplorer/event/EventHandler.h>
+
 
 namespace ves
 {
@@ -57,6 +42,12 @@ namespace xplorer
 {
 namespace event
 {
+/*!\file ClearVisObjectsEventHandler.h
+  ClearVisObjectsEventHandler API
+  */
+/*!\class ClearVisObjectsEventHandler
+ * Class for clearing vis options.
+ */
 class VE_XPLORER_EXPORTS ClearVisObjectsEventHandler: public EventHandler
 {
 public:

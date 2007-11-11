@@ -32,6 +32,26 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_ISOSURFACE_H
 #define CFD_ISOSURFACE_H
+
+#include <ves/xplorer/event/viz/cfdObjects.h>
+
+#ifdef USE_OMP
+#define MAX_ISOSURFACE 20
+#include <vtkAppendPolyData.h>
+#endif
+
+#include <string>
+
+class vtkContourFilter;
+class vtkPolyDataNormals;
+class vtkMultiGroupDataGeometryFilter;
+class vtkMultiGroupPolyDataMapper;
+
+
+namespace ves
+{
+namespace xplorer
+{
 /*!\file cfdIsosurface.h
 cfdIsosurface API
 */
@@ -40,28 +60,6 @@ cfdIsosurface API
 *   based on the value selected.  Update member function will
 *   update the value.
 */
-
-#ifdef USE_OMP
-#define MAX_ISOSURFACE 20
-#include <vtkAppendPolyData.h>
-#endif
-
-#include <ves/xplorer/event/viz/cfdObjects.h>
-
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/DataValuePair.h>
-
-class vtkContourFilter;
-class vtkPolyDataNormals;
-class vtkMultiGroupDataGeometryFilter;
-class vtkMultiGroupPolyDataMapper;
-
-#include <string>
-
-namespace ves
-{
-namespace xplorer
-{
 class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
 {
 public:

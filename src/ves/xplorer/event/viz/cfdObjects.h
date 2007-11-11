@@ -32,25 +32,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_OBJECTS_H
 #define CFD_OBJECTS_H
-/*!\file cfdObjects.h
-cfdObjects API
-*/
-/*!\class ves::xplorer::cfdObjects
-* 
-*/
+
 #include <ves/xplorer/GlobalBase.h>
 
+#include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/scenegraph/Geode.h>
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdDataSet;
-   class cfdReadParam;
-   class cfdCommandArray;
-}
-}
+#include <vector>
 
 // VTK Classes
 class vtkPolyData;
@@ -60,12 +48,18 @@ class vtkMaskPoints;
 class vtkMultiGroupDataGeometryFilter;
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
-#include <vector>
+
 
 namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdObjects.h
+cfdObjects API
+*/
+/*!\class ves::xplorer::cfdObjects
+* 
+*/
 class VE_XPLORER_EXPORTS cfdObjects : public GlobalBase
 {
 public:
@@ -81,10 +75,6 @@ public:
    virtual ~cfdObjects( void );
 
    // pure virtual functions to be specified in concrete implementations
-
-   ///compare VjObs_i commandArray with its child's value
-   ///\param commandArray
-   virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
    ///Process the VECommand from Conductor
    virtual void UpdateCommand( void );

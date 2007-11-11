@@ -32,13 +32,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_GRAPHICSOBJECT_H
 #define CFD_GRAPHICSOBJECT_H
-/*!\file cfdGraphicsObject.h
-cfdGraphicsObject API
-*/
-/*!\class ves::xplorer::cfdGraphicsObject
-* 
-*/
+
 #include <ves/VEConfig.h>
+
+#include <ves/xplorer/ModelPtr.h>
 
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Geode.h>
@@ -61,7 +58,6 @@ namespace ves
 {
 namespace xplorer
 {
-    class cfdModel;
     class cfdObjects;
 }
 }
@@ -77,6 +73,12 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file cfdGraphicsObject.h
+cfdGraphicsObject API
+*/
+/*!\class ves::xplorer::cfdGraphicsObject
+* 
+*/
 class VE_XPLORER_EXPORTS cfdGraphicsObject
 {
 public:
@@ -108,7 +110,7 @@ public:
    ///set model pointer to be able to grab
    ///transient info and the switch node
    ///\param input
-   void SetActiveModel( cfdModel* input );
+   void SetActiveModel( Model* input );
 
    ///add "child node" to scene graph
    void AddGraphicsObjectToSceneGraph( void );
@@ -138,7 +140,7 @@ protected:
    // used for animated particles and other ss 
    // animated features
    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
-   ves::xplorer::cfdModel* model;///<Xplorer cfd model.
+   ves::xplorer::Model* model;///<Xplorer cfd model.
 };
 }
 }

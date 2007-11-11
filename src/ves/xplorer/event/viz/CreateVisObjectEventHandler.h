@@ -32,12 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CREATE_VIS_OBJECT_EVENT_HANDLER_H
 #define CREATE_VIS_OBJECT_EVENT_HANDLER_H
-/*!\file CreateVisObjectEventHandler.h
-  CreateVisObjectEventHandler API
-  */
-/*!\class CreateVisObjectEventHandler
- * Class for creating vis options.
- */
+
+#include <ves/xplorer/event/EventHandler.h>
+
 #include <string>
 #include <vector>
 #include <map>
@@ -63,34 +60,27 @@ namespace xplorer
    class cfdAnimatedImage;
    class cfdAnimatedStreamlineCone;
    class cfdContour;
-   class GlobalBase;
    class cfdObjects;
-   class cfdCommandArray;
    class cfdCursor;
    class cfdGraphicsObject;
    class cfdModel;
    class cfdTextOutput;
    class cfdObjects;
-   class GlobalBase;
 }
 }
 
-namespace ves
-{
-namespace xplorer
-{
-   class cfdModel;
-   class GlobalBase;
-}
-}
-
-#include <ves/xplorer/event/EventHandler.h>
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
+/*!\file CreateVisObjectEventHandler.h
+  CreateVisObjectEventHandler API
+  */
+/*!\class CreateVisObjectEventHandler
+ * Class for creating vis options.
+ */
 class VE_XPLORER_EXPORTS CreateVisObjectEventHandler: public EventHandler
 {
 public:
@@ -106,10 +96,10 @@ public:
    ///Equal operator
    CreateVisObjectEventHandler& operator=(const CreateVisObjectEventHandler& rhs);
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from cfdModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
+   ///Set the Model.
+   ///\param model The Model to execute the Command on\n.
+   ///Default uses the active Model from ModelHandler\n
+   ///Otherwise, the Model passed in is used.
    void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 
    ///Exectute the event
