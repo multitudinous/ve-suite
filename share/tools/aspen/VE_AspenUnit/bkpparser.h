@@ -112,7 +112,7 @@ public:
 
 	void CreateNetworkLinks( ves::open::xml::model::NetworkWeakPtr subNetwork, std::string hierName );
    void CreateNetworkInformation( std::string networkData );
-   void ParseSubSystem(ves::open::xml::model::ModelStrongPtr model, std::string networkName);
+   void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
    std::string CreateNetwork( void );
    std::string GetInputModuleParamProperties(std::string modname, std::string paramName);
    std::string GetInputModuleParams(std::string modname);

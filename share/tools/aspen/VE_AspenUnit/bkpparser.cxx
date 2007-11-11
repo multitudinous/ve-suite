@@ -1038,7 +1038,7 @@ std::string BKPParser::CreateNetwork( void )
    std::map< std::string, int >::iterator blockIter;
    for ( blockIter = models["0"].begin(); blockIter != models["0"].end(); ++blockIter )
    {
-	   ves::open::xml::model::ModelStrongPtr tempModel = new ves::open::xml::model::Model();
+	   ves::open::xml::model::ModelPtr tempModel = new ves::open::xml::model::Model();
 	  tempModel->SetModelID( blockIter->second );
 	  tempModel->SetModelName( blockIter->first );
 	  tempModel->SetVendorName( "ASPENUNIT" );
@@ -1080,7 +1080,7 @@ std::string BKPParser::CreateNetwork( void )
       }
 
 	  //acquire sublinks
-	  //VE_XML::VE_Model::NetworkStrongPtr subnet = new VE_XML::VE_Model::Network();
+	  //VE_XML::VE_Model::NetworkPtr subnet = new VE_XML::VE_Model::Network();
 	  //CreateNetworkLinks(subnet, tempModel->GetModelName());
 
 	  //recursively parse subsystems of each block
@@ -1103,10 +1103,10 @@ std::string BKPParser::CreateNetwork( void )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void BKPParser::ParseSubSystem(ves::open::xml::model::ModelStrongPtr model, std::string networkName)
+void BKPParser::ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName)
 {
 	ves::open::xml::model::System* subSystem = new ves::open::xml::model::System();
-	ves::open::xml::model::NetworkStrongPtr subNetwork = new ves::open::xml::model::Network();
+	ves::open::xml::model::NetworkPtr subNetwork = new ves::open::xml::model::Network();
 	subSystem->AddNetwork(subNetwork);
 
 	CreateNetworkLinks(subNetwork, networkName);
@@ -1115,7 +1115,7 @@ void BKPParser::ParseSubSystem(ves::open::xml::model::ModelStrongPtr model, std:
 	std::map< std::string, int >::iterator blockIter;
 	for ( blockIter = models[networkName].begin(); blockIter != models[networkName].end(); ++blockIter )
 	{
-		ves::open::xml::model::ModelStrongPtr tempModel = new ves::open::xml::model::Model();
+		ves::open::xml::model::ModelPtr tempModel = new ves::open::xml::model::Model();
 		tempModel->SetModelID( blockIter->second );
 		tempModel->SetModelName( blockIter->first );
 		tempModel->SetVendorName( "ASPENUNIT" );
