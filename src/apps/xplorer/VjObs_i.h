@@ -58,16 +58,10 @@ VjObs_i API
 
 #include <vpr/IO/SerializableObject.h>
 
-#include <ves/xplorer/cfdStateInfo.h>
+#include <ves/xplorer/StateInfo.h>
+#include <ves/xplorer/ModelHandlerPtr.h>
 
-namespace ves
-{
-namespace xplorer
-{
-    class cfdModelHandler;
-    class cfdCommandArray;
-}
-}
+#include <ves/open/xml/CommandPtr.h>
 
 namespace ves
 {
@@ -76,7 +70,6 @@ namespace open
 namespace xml
 {
     class DOMDocumentManager;
-    class Command;
 }
 }
 }
@@ -139,16 +132,10 @@ public:
     void GetCfdStateVariables( void );
     ///Create the vector with XML Commands to be used by Xplorer
     void CreatCommandVector( std::string commandString );
-    cfdCommandArray* _cfdArray;///< Data to hold command data shoudl be delete in the future
     ves::open::xml::Command* bufferCommand;///< Data to hold command data
     double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
-   
-    std::vector< cfdCommandArray* > commandQueue; ///< vector to hold current list of commands
-protected:
-   ///Create command queue for transient vis
-   ///Should be removed once non texture pipelines are created
-   void CreateCommandQueue( void );
 
+protected:
    VjObs::scalar_p_var teacher_name; ///< hold the list of teacher file names
    VjObs::Models* _models;///< fold the list of IDL models
 
@@ -192,7 +179,6 @@ protected:
    ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
    std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
    std::vector< std::string > commandStringQueue;///< command queue with raw string data
-   cfdCommandArray* _bufferArray;///< command data
    // Cluster Stuff for the above state variables
    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
    bool isCluster;///<cluster mode

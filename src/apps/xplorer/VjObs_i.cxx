@@ -37,14 +37,13 @@
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdDataSet.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/cfdSteadyStateVizHandler.h>
-#include <ves/xplorer/cfdModel.h>
+#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/SteadyStateVizHandler.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
-#include <ves/xplorer/cfdCommandArray.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -54,7 +53,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #ifdef _OSG
-#include <ves/xplorer/cfdTextureBasedVizHandler.h>
+#include <ves/xplorer/TextureBasedVizHandler.h>
 #include <ves/xplorer/volume/cfdVolumeVisualization.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 
@@ -82,10 +81,6 @@ VjObs_i::VjObs_i()
    isCluster = false;
    //int temp=0;
    //this->setClients( 0 );
-   _cfdArray = new cfdCommandArray();
-   _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-   _bufferArray = new cfdCommandArray();
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
 
    teacher_name   = new VjObs::scalar_p();
 
@@ -174,17 +169,17 @@ VjObs::Model* VjObs_i::GetModel( CORBA::Long modelID )
    VjObs::Model_var tempModel = 0;
    tempModel = new VjObs::Model();
    //Make sure we have some models
-   int numberOfModels = cfdModelHandler::instance()->GetNumberOfModels();
+   int numberOfModels = ModelHandler::instance()->GetNumberOfModels();
    if ( numberOfModels == 0 )
    {
       return tempModel._retn();
    }
    
    // find the right model
-   Model* tempCfdModel = 0;
+   ves::xplorer::Model* tempCfdModel = 0;
    for ( int i = 0; i < numberOfModels; ++i )
    {
-      tempCfdModel = cfdModelHandler::instance()->GetModel( i );
+      tempCfdModel = ModelHandler::instance()->GetModel( i );
       if ( (CORBA::Long)tempCfdModel->GetID() == modelID )
       {
          std::cout<<"Found model: "<<modelID<<std::endl;
@@ -327,7 +322,7 @@ VjObs::Models* VjObs_i::GetModels()
 /////////////////////////////////////////////////////////////
 void VjObs_i::CreateDatasetInfo( void )
 {   
-   CORBA::ULong numberOfModels = cfdModelHandler::instance()->GetNumberOfModels();
+   CORBA::ULong numberOfModels = ModelHandler::instance()->GetNumberOfModels();
    if ( numberOfModels > 0 )
    {
       if ( _models != NULL )
@@ -341,7 +336,7 @@ void VjObs_i::CreateDatasetInfo( void )
                           << std::endl << vprDEBUG_FLUSH;
       for ( CORBA::ULong i = 0; i < numberOfModels; i++ )
       {
-         Model* temp = cfdModelHandler::instance()->GetModel( i );
+         Model* temp = ModelHandler::instance()->GetModel( i );
          CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
          vprDEBUG(vesDBG,0) << " numDatasets = " << numDatasets
                           << std::endl << vprDEBUG_FLUSH;
@@ -458,7 +453,7 @@ void VjObs_i::CreateDatasetInfo( void )
 /////////////////////////////////////////////////////////////
 void VjObs_i::CreateTeacherInfo( void )
 {   
-   CORBA::Short numTeacherArrays = cfdEnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
+   CORBA::Short numTeacherArrays = EnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
    vprDEBUG(vesDBG,0)
       << " Number of performer binary files to be transfered to the client: "
       << numTeacherArrays
@@ -471,7 +466,7 @@ void VjObs_i::CreateTeacherInfo( void )
       for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
       {
          this->teacher_name[ i ] = CORBA::string_dup(
-                                        cfdEnvironmentHandler::instance()->GetTeacher()->getFileName( i ).c_str() );
+                                        EnvironmentHandler::instance()->GetTeacher()->getFileName( i ).c_str() );
       }
    }
 }
@@ -556,41 +551,6 @@ CORBA::Long VjObs_i::getIsoValue()
    return cfdQuatCamHandler::instance()->getNumLocs();
 }
 
-void VjObs_i::setSc(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_SC, value );
-}
-
-short VjObs_i::getPostdataState()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
-}
-
-short VjObs_i::getTimesteps()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 2)
-   //   << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
-   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
-}
-
 // These functions are called from the java side
 // Need to figure out a better notation so that this all makes sense
 short VjObs_i::get_teacher_num()
@@ -601,7 +561,7 @@ short VjObs_i::get_teacher_num()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL,0) << "Returning num teacher'" << this->mTeacher->getNumberOfFiles()<< "' to caller\n"
    //     << vprDEBUG_FLUSH;
-   return cfdEnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
+   return EnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
 }
 
 void VjObs_i::GetCfdStateVariables( void )
@@ -609,7 +569,6 @@ void VjObs_i::GetCfdStateVariables( void )
    // Called in post frame to get next command out to all the cfdobjects
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
     VPR_PROFILE_GUARD_HISTORY("Set application data", 20 );
-   (*_cfdArray) = (*_bufferArray);
    
    for ( int i = 0; i < 9; i++ )
    {
@@ -633,16 +592,6 @@ void VjObs_i::GetCfdStateVariables( void )
       return;
    }
 
-   this->mStates->clusterIso_value        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-   this->mStates->clusterSc               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
-   this->mStates->clusterMin              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
-   this->mStates->clusterMax              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
-   this->mStates->clusterId               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
-   this->mStates->clusterGeo_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
-   this->mStates->clusterPostdata_state   = _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
-   this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
-   this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
-   this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
    this->mStates->clusterTime_since_start = time_since_start;
 
    gmtl::Matrix44d matrix=ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat();
@@ -665,9 +614,9 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterXMLCommands.erase();
    }
 #ifdef _OSG
-   if ( cfdTextureBasedVizHandler::instance()->GetActiveTextureManager() )
+   if ( TextureBasedVizHandler::instance()->GetActiveTextureManager() )
    {
-      this->mStates->clusterFrameNumber = cfdTextureBasedVizHandler::instance()->GetActiveTextureManager()->GetCurrentFrame();   
+      this->mStates->clusterFrameNumber = TextureBasedVizHandler::instance()->GetActiveTextureManager()->GetCurrentFrame();   
       //std::cout<<"Master frame :"<<this->mStates->clusterFrameNumber<<std::endl;
    }
    else
@@ -700,20 +649,6 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
         << vpr::System::getHostname() 
         << std::endl << vprDEBUG_FLUSH;
     
-   {
-      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
-   }  
-
     //Do for all the slaves
     if ( this->mStates->clusterXMLCommands.size() > 0 )
     {  
@@ -738,10 +673,10 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
-      if ( cfdTextureBasedVizHandler::instance()->GetActiveTextureManager() )
+      if ( TextureBasedVizHandler::instance()->GetActiveTextureManager() )
       {
          //std::cout<<"Updating slaves with frame :"<<this->mStates->clusterFrameNumber<<std::endl;
-         cfdTextureBasedVizHandler::instance()->GetActiveTextureManager()->SetCurrentFrame( this->mStates->clusterFrameNumber);
+         TextureBasedVizHandler::instance()->GetActiveTextureManager()->SetCurrentFrame( this->mStates->clusterFrameNumber);
       }
 #endif
    }
@@ -764,91 +699,9 @@ VjObs::obj_pd* VjObs_i::GetClientInfoData()
    return clientInfoObserverDataArray._retn();    //check this
 }
 
-void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-   //do
-   //{
-   //   vpr::System::msleep( 50 );  // 50 milli-second delay
-   //}
-   //while ( this->_unusedNewData );
-   //this->_unusedNewData = true;
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   // The order of setting these values
-   // MUST MATCH the order in which they are set in 
-   // my_orb.java
-   commandQueue.push_back( new cfdCommandArray() );
-   if ( (value[ 7 ] != -1) && (value [ 8 ] != -1) )
-   {
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
-      //std::cout<<"update:this->corba_mutex.C_id = "<<this->mId<<std::endl;
-
-      // get the value of the slider bar, used by many visualizations
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value[ 1 ] );
-      //std::cout<<"iso_value"<<this->mIso_value<<std::endl;
-
-      //NOTE: Data is oneway transfer from
-      //cfdApp -> GUI so we don't need to
-      //transfer from the GUI -> cfdApp
-      //DON'T set array index [2]  on the
-      //GUI side
-      //this->mTimesteps = value[ 2 ];
-
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC, value[ 3 ] );
-      //std::cout<<"select scalar:"<<this->mSc<<std::endl;
-
-      // change scalar range or cursor settings
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MIN, value[ 4 ] );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MAX, value[ 5 ] );
-      //std::cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<std::endl;
-
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value[ 6 ] );
-      //std::cout<<"geometry state:"<< this->mGeo_state <<std::endl;
-
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value[ 7 ] );
-      //std::cout<<"pre_state:"<< this->mPre_state <<std::endl;
-
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value[ 8 ] );
-      //std::cout<<"mTeacher state:"<< this->mTeacher_state <<std::endl;
-   }
-   else
-   {
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
-      for ( int i = 0; i < 9; i ++ )
-      {
-         mShort_data_array[ i ] = value[ i ];
-         std::cout << value[ i ] << std::endl;
-      }
-   }
-}
-
 void VjObs_i::PreFrameUpdate( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   // If the data is transient command data
-   if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-            == TRANSIENT_VIS_ACTIVE )
-   {
-      CreateCommandQueue();
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-      return;
-   }
-
-   // Jsut reinitialize the cfdid to null essentially
-   if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
-
-   // Populate the buffer array with the next command queue command
-   if ( !commandQueue.empty() && !cfdSteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
-   {
-      std::vector< cfdCommandArray* >::iterator iter;
-      iter = commandQueue.begin();
-      (*_bufferArray) = (*(*iter));
-      delete commandQueue.at( 0 );
-      commandQueue.erase( iter );
-   }
 
     // New xml command queue
     if( !commandVectorQueue.empty() )
@@ -859,11 +712,11 @@ void VjObs_i::PreFrameUpdate( void )
         delete commandVectorQueue.at( 0 );
         commandVectorQueue.erase( iter );
         cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
-        cfdEnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
-        cfdModelHandler::instance()->SetXMLCommand( bufferCommand );
-        if( cfdModelHandler::instance()->GetActiveModel() )
+        EnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );
+        ModelHandler::instance()->SetXMLCommand( bufferCommand );
+        if( ModelHandler::instance()->GetActiveModel() )
         {
-            cfdModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
+            ModelHandler::instance()->GetActiveModel()->SetVECommand( bufferCommand );
         }
     }
     ///If the command name is null
@@ -879,50 +732,6 @@ void VjObs_i::PreFrameUpdate( void )
     }
  }
 
-void VjObs_i::CreateCommandQueue( void )
-{
-   double newId = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
-   double newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
-   double newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-   
-   //if we are doing transient vis then we already have an active model and dataset
-   int activeVector = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveVector();
-   int activeScalar = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveScalar();
-
-   double activeMinMax[ 2 ];
-   cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
-
-   std::map< int, cfdDataSet* >::iterator iter;
-   
-   commandQueue.push_back( new cfdCommandArray() );
-   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
-   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 0 );
-
-   /*for ( iter = cfdModelHandler::instance()->GetActiveModel()->transientDataSets.begin(); 
-         iter != cfdModelHandler::instance()->GetActiveModel()->transientDataSets.end(); ++iter)
-   { 
-      // Set the active datasets
-      commandQueue.push_back( new cfdCommandArray() );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_STEADYSTATE_DATASET );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, iter->first );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC, activeScalar);
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MIN, activeMinMax[ 0 ] );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MAX, activeMinMax[ 1 ] );
-      // Set active Vector
-      commandQueue.push_back( new cfdCommandArray() );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_VECTOR );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC,  activeVector);
-      // Set current viz      
-      commandQueue.push_back( new cfdCommandArray() );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, newId );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, newIsoValue );
-      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, newPreState );
-   }*/
-
-   commandQueue.push_back( new cfdCommandArray() );
-   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
-   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
-}
 ////////////////////////////////////////////////////////////////////////////////
 void VjObs_i::SetCommandString( const char* value)
   ACE_THROW_SPEC ((
