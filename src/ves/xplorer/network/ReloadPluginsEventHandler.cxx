@@ -34,7 +34,7 @@
 #include <ves/xplorer/network/cfdExecutive.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/XMLObject.h>
 

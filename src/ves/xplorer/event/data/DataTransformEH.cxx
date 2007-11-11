@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/data/DataTransformEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
@@ -101,9 +101,9 @@ void DataTransformEventHandler::Execute(XMLObject* xmlObject)
                 transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
                 transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
                 transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-		        ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-                ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-                ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
+		        ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
             }
         }
     }

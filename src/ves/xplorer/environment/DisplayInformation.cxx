@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 #include <ves/xplorer/environment/DisplayInformation.h>
 
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -187,7 +187,7 @@ void DisplayInformation::LatePreFrame()
 	if( display_switch->getChildValue( framerate.get() ) )
 	{
 		std::stringstream ss;
-		ss << ves::xplorer::cfdEnvironmentHandler::instance()->GetFrameRate();
+		ss << ves::xplorer::EnvironmentHandler::instance()->GetFrameRate();
 		ss << " fps";
 
 		framerate_text->setText( ss.str() );

@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <ves/xplorer/Mode.h>
+#include <ves/xplorer/Model.h>
 
-#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelCADHandler.h>
 
 #include <ves/xplorer/environment/cfdSound.h>
@@ -210,7 +210,7 @@ void Model::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateCfdDataSet( void )
 {
-   mVTKDataSets.push_back( new cfdDataSet() );
+   mVTKDataSets.push_back( new DataSet() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -241,13 +241,13 @@ void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-DataSet Model::GetActiveDataSet( void )
+DataSet* Model::GetActiveDataSet( void )
 {
    return activeDataSet;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetActiveDataSet( DataSet input )
+void Model::SetActiveDataSet( DataSet* input )
 {
    activeDataSet = input;
 }
@@ -305,7 +305,7 @@ void Model::SetID( unsigned int id )
    modelID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DataSet Model::GetCfdDataSet( int dataset )
+DataSet* Model::GetCfdDataSet( int dataset )
 {
    // Check and see if we have any datasets
    // if not return null
@@ -359,7 +359,7 @@ unsigned int Model::GetNumberOfTextureDataSets()
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-int Model::GetKeyForCfdDataSet( DataSet input )
+int Model::GetKeyForCfdDataSet( DataSet* input )
 {
    int key = -1;
    for ( unsigned int i = 0; i < mVTKDataSets.size(); ++i )

@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/environment/ChangeBackgroundColorEventHandler.h>
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/DisplayInformation.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -87,7 +87,7 @@ void ChangeBackgroundColorEventHandler::Execute(XMLObject* veXMLObject)
    if(!color.empty())
    {
       ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor(color);
-      ves::xplorer::cfdEnvironmentHandler::instance()->
+      ves::xplorer::EnvironmentHandler::instance()->
        GetDisplayInformation()->SetTextColor( color );
    }
 }

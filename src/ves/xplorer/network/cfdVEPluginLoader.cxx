@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <iostream>
 

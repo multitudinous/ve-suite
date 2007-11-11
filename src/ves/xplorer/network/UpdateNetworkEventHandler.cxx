@@ -33,7 +33,7 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/network/cfdExecutive.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

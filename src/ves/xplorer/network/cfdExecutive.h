@@ -73,7 +73,7 @@ namespace xplorer
    //class cfdInteractiveGeometry;
    class cfdCommandArray;
    class cfdVjObsWrapper;
-   class cfdThread;
+   class Thread;
 }
 }
 

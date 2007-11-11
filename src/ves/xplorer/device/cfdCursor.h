@@ -32,13 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_CURSOR_H
 #define CFD_CURSOR_H
-/*!\file cfdCursor.h
-cfdCursor API
-*/
-/*!\class VE_XPlorer::cfdCursor
-*  A class to build virtual cursors. Type of virtual
-*  cursor built are single point, arrow, and multiple points.
-*/
+
+#include <ves/xplorer/GlobalBase.h>
+
+#include <ves/xplorer/DataSetPtr.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Geode.h>
@@ -79,25 +77,18 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCommandArray;
-   class cfdDataSet;
-}
-}
-
-#include <ves/xplorer/GlobalBase.h>
-
-namespace ves
-{
-namespace xplorer
-{
+/*!\file cfdCursor.h
+cfdCursor API
+*/
+/*!\class VE_XPlorer::cfdCursor
+*  A class to build virtual cursors. Type of virtual
+*  cursor built are single point, arrow, and multiple points.
+*/
 class VE_XPLORER_EXPORTS cfdCursor : public GlobalBase
 {
 public:
    cfdCursor( vtkPolyData* , ves::xplorer::scenegraph::DCS* , ves::xplorer::scenegraph::Group* );
    virtual ~cfdCursor();
-
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( ves::xplorer::cfdCommandArray*  );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
@@ -148,7 +139,7 @@ public:
    float boxExtent;
 
    void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
-   void SetActiveDataSet( DataSet input );
+   void SetActiveDataSet( DataSet* input );
 
    int GetCursorID( void );
    double* GetCursorLocation( void );
@@ -182,7 +173,7 @@ private:
    vtkPolyDataMapper * arrowMapperS;
    vtkActor * arrowActorS;
    vtkGlyph3D * arrowGlyphS;
-   //cfdDataSet * dataSet;
+   //DataSet * dataSet;
 
    // Line Source Stuff
    void UpdateLineSource( int );

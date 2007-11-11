@@ -45,7 +45,7 @@
 #include <vtkAppendPolyData.h>
 #include <vtkCutter.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <sstream>
 

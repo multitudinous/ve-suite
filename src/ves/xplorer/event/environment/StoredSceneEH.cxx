@@ -33,7 +33,7 @@
 
 #include <ves/xplorer/event/environment/StoredSceneEH.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 
 #include <ves/open/xml/Command.h>
@@ -81,16 +81,16 @@ void StoredSceneEventHandler::Execute(XMLObject* veXMLObject)
       if(command->GetDataValuePair("LOAD_PFB_FILE"))
       {
          command->GetDataValuePair("LOAD_PFB_FILE")->GetData(whichChild);
-	      ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
+	      ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
          
       }
       else if(command->GetDataValuePair("CLEAR_PFB_FILE"))
       {
-	      ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
+	      ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
       }
       else if(command->GetDataValuePair("RECORD_SCENE"))
       {
-	      ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->RecordScene();
+	      ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->RecordScene();
       }
    }
    catch(...)

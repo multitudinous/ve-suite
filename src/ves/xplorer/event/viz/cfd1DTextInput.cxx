@@ -38,7 +38,7 @@
 #include <vtkVectorText.h>
 #include <vtkProperty.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;

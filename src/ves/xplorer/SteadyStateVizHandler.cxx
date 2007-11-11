@@ -81,7 +81,7 @@
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
 
-vprSingletonImpLifetime( ves::xplorer::cfdSteadyStateVizHandler, 10 );
+vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 10 );
 
 using namespace ves::xplorer::scenegraph;
 
@@ -89,7 +89,7 @@ namespace ves
 {
 namespace xplorer
 {
-cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
+SteadyStateVizHandler::SteadyStateVizHandler( void )
 {
    //this->_activeDataSetDCS = 0;
    this->_activeObject = 0;
@@ -109,13 +109,13 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    _eventHandlers[std::string("DELETE_OBJECT_FROM_NETWORK")] = new ves::xplorer::event::ClearVisObjectsEventHandler();
 }
 
-void cfdSteadyStateVizHandler::Initialize( std::string param )
+void SteadyStateVizHandler::Initialize( std::string param )
 {
    _param = param;
-   cursor = cfdEnvironmentHandler::instance()->GetCursor();
+   cursor = EnvironmentHandler::instance()->GetCursor();
 }
 
-cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
+SteadyStateVizHandler::~SteadyStateVizHandler( void )
 {
    this->runIntraParallelThread = false;
 
@@ -132,7 +132,7 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
       delete this->vjTh[0];
    }
 }
-bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
+bool SteadyStateVizHandler::TransientGeodesIsBusy()
 {
    //return this->transientBusy;
    return this->computeActorsAndGeodes;
@@ -142,28 +142,28 @@ bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
 ////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 /*
-ves::xplorer::scenegraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
+ves::xplorer::scenegraph::cfdTempAnimation* SteadyStateVizHandler::GetActiveAnimation( void )
 {
    return this->_activeTempAnimation;
 }
 */
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
+void SteadyStateVizHandler::SetActiveVisObject( cfdObjects* tempObject )
 {
    _activeObject = tempObject;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::SetComputeActorsAndGeodes( bool actorsAndGeodes )
+void SteadyStateVizHandler::SetComputeActorsAndGeodes( bool actorsAndGeodes )
 {
    computeActorsAndGeodes = actorsAndGeodes;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
+void SteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
 {
    actorsAreReady = actorsReady;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::ClearVisObjects( void )
+void SteadyStateVizHandler::ClearVisObjects( void )
 {
    vprDEBUG(vesDBG,2) << "|\tClear All Graphics Objects From Scene Graph"
                           << std::endl << vprDEBUG_FLUSH;
@@ -176,20 +176,20 @@ void cfdSteadyStateVizHandler::ClearVisObjects( void )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::InitScene( void )
+void SteadyStateVizHandler::InitScene( void )
 {
 
    // This set of thread stuff needs to be in ssvizhandler and transvizhandler
    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
    this->runIntraParallelThread = true;
 #if __VJ_version > 2000003
-   this->vjTh[0] = new vpr::Thread( boost::bind( &cfdSteadyStateVizHandler::CreateActorThread, this ) );
+   this->vjTh[0] = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
 #elif __VJ_version == 2000003
-   this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler >( this, &cfdSteadyStateVizHandler::CreateActorThread ) );
+   this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< SteadyStateVizHandler >( this, &SteadyStateVizHandler::CreateActorThread ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::PreFrameUpdate( void )
+void SteadyStateVizHandler::PreFrameUpdate( void )
 {
    //process the current command form the gui
    //if ( ModelHandler::instance()->GetActiveModel() )
@@ -208,11 +208,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          }
       }
    }
-
+   /*
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE )
    {
       this->transientActors = (commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )== 1)?true:false;
    }
+   */
    // check any virtual objects need to be updated
    if ( this->actorsAreReady && this->transientActors )
    {
@@ -284,11 +285,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          }
       }
    }
-
+/*
    if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
    {
       this->useLastSource = (this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )== 0)?false:true;
    }
+*/
    /*else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
    {
       std::multimap< int, cfdGraphicsObject* >::iterator pos;
@@ -304,9 +306,9 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
-void cfdSteadyStateVizHandler::CreateActorThread( void )
+void SteadyStateVizHandler::CreateActorThread( void )
 #elif __VJ_version == 2000003
-void cfdSteadyStateVizHandler::CreateActorThread( void * )
+void SteadyStateVizHandler::CreateActorThread( void * )
 #endif
 {
    // DO NOT put scene graph manipulation code in this function
@@ -394,7 +396,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
    } // End of While loop
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdSteadyStateVizHandler::streamers( void )
+void SteadyStateVizHandler::streamers( void )
 {
    vprDEBUG(vesDBG,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
    if ( this->cursor->GetCursorID() == NONE )

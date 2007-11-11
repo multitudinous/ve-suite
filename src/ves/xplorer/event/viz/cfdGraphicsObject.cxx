@@ -36,7 +36,7 @@
 #include <ves/xplorer/event/viz/cfdStreamers.h>
 
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>
 #elif _OSG

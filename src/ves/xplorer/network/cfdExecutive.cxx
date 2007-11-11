@@ -37,8 +37,8 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
-#include <ves/xplorer/cfdThread.h>
+#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/Thread.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 
@@ -71,7 +71,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 #include <ves/xplorer/network/cfdExecutive.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -323,12 +323,12 @@ void cfdExecutive::GetEverything( void )
          tempCFDModel->SetID( iter->first );
          ModelHandler::instance()->AddModel( tempCFDModel );
          // Give graphical plugins access to wand position, wand buttons, and gui variables
-         _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
+         _plugins[ iter->first ]->SetCursor( EnvironmentHandler::instance()->GetCursor() );
          //Need to pass an active device in here or something
          //This needs to be fixed
-         //_plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+         //_plugins[ iter->first ]->SetNavigate( EnvironmentHandler::instance()->GetNavigate() );
          //This is now handled by the active model and eventhandlers rather than cfdSoundHandler
-         //_plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
+         //_plugins[ iter->first ]->SetSoundHandler( EnvironmentHandler::instance()->GetSoundHandler() );
          pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
       }
       std::map< int, ModelStrongPtr >::iterator modelIter;

@@ -96,7 +96,6 @@ EnvironmentHandler::EnvironmentHandler( void )
    //_camHandler = 0;
    cursor = 0;
    _param.erase();// = 0;
-   _commandArray = 0;
    //_readParam = 0;
    arrow = 0;
    displaySettings = 0;
@@ -331,7 +330,6 @@ void EnvironmentHandler::PreFrameUpdate( void )
    //Process all events for active device
    ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
 
-   ves::xplorer::cfdQuatCamHandler::instance()->CheckCommandId( _commandArray );
    ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
 
 }
@@ -358,7 +356,6 @@ void EnvironmentHandler::LatePreFrameUpdate()
       }
    }
 
-   displaySettings->CheckCommandId( _commandArray );
    display_information->LatePreFrame();
    vprDEBUG(vesDBG,3) << "|\tEnd EnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }

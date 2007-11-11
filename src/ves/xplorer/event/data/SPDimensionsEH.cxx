@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/data/SPDimensionsEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/DataSet.h>
 
@@ -103,7 +103,7 @@ void SeedPointDimensionsEventHandler::Execute(XMLObject* veXMLObject)
      std::vector<long> allDimensions;
      DataValuePairWeakPtr dimensions = command->GetDataValuePair("Dimensions");
      dimensions->GetData(allDimensions);
-     ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->SetDimensions(allDimensions[0],
+     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetDimensions(allDimensions[0],
                                                                                    allDimensions[1],
                                                                                    allDimensions[2]);
    }

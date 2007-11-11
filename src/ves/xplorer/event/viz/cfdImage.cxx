@@ -46,7 +46,7 @@
 #include <vtkProperty.h>
 #include <vtkActor.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <fstream>
 

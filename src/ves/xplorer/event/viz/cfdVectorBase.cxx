@@ -41,7 +41,7 @@
 
 #include <cmath>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <vtkPolyData.h>
 #include <vtkMultiGroupDataGeometryFilter.h>

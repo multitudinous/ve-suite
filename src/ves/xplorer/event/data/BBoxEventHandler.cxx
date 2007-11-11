@@ -34,7 +34,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/device/cfdCursor.h>
 
@@ -46,7 +46,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <iostream>
 

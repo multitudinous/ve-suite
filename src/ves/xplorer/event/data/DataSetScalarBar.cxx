@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/data/DataSetScalarBar.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
@@ -117,7 +117,7 @@ ves::xplorer::scenegraph::DCS* DataSetScalarBar::GetScalarBar( void )
 //////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
 {
-   DataSet activeDataSet = 0;
+   DataSet* activeDataSet = 0;
    if ( ModelHandler::instance()->GetActiveModel() )
    {
       if ( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )

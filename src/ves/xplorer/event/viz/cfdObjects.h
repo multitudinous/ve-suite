@@ -175,17 +175,17 @@ public:
 
    ///Selects the active dataset.
    ///\param dataset
-   void SetActiveDataSet( DataSet dataset );
+   void SetActiveDataSet( DataSet* dataset );
 
    ///Gets the active dataset.
-   DataSet GetActiveDataSet( void );
+   DataSet* GetActiveDataSet( void );
 
    //void ClearTransientVector( void );
    //static void SetVectorScale( float );
    //static float GetVectorScale();
 
 protected:
-   DataSet activeDataSet;///<active dataset.
+   DataSet* activeDataSet;///<active dataset.
 
    // used by vectors and intended for warped contours
    //static float vectorScale;

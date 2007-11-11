@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -92,7 +92,7 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
             std::cout<<"Latitude: "<<latitudeData<<std::endl;
             std::cout<<"Longitude: "<<longitudeData<<std::endl;
             osgEphemeris::EphemerisModel* ephemerisModel = 
-                  ves::xplorer::cfdEnvironmentHandler::instance()->GetEphemerisModel(true);
+                  ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel(true);
             ephemerisModel->setLatitudeLongitude((northSouth == "South")?-1*latitudeData:latitudeData,
                                                  (eastWest == "West")?-1*longitudeData:longitudeData);
             std::vector<long> dateTimeInfo;

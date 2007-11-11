@@ -35,7 +35,7 @@
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>

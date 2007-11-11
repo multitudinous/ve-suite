@@ -33,6 +33,8 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 
+#include <ves/xplorer/Debug.h>
+
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -44,7 +46,6 @@
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>
 
-#include <ves/xplorer/cfdDebug.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>

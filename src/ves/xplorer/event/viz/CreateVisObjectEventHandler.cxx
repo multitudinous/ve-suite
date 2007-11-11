@@ -54,7 +54,7 @@
 #include <ves/xplorer/event/viz/cfdAnimatedStreamlineCone.h>
 #include <ves/xplorer/event/viz/cfdContour.h>
 #include <ves/xplorer/environment/cfdEnum.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/device/cfdCursor.h>
 
@@ -70,7 +70,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/volume/cfdTextureDataSet.h>
 
@@ -772,9 +772,9 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
                         << activeDataSetDCS.get()
                         << std::endl << vprDEBUG_FLUSH;
    this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-   //this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
-   //this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
-   this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
+   //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
+   //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
+   this->activeObject->SetCursorType( EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
    activeObject->SetUpdateFlag( false );
    
    //call back over to ssvishandler to set the flags

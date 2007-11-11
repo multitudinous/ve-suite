@@ -42,19 +42,19 @@ namespace ves
 {
 namespace xplorer
 {
-/*!\file cfdThread.h
-cfdThread API
+/*!\file Thread.h
+Thread API
 */
-/*!\class ves::xplorer::cfdThread
+/*!\class ves::xplorer::Thread
 * 
 */
-class VE_XPLORER_EXPORTS cfdThread
+class VE_XPLORER_EXPORTS Thread
 {
 public:
   ///Constructor
-   cfdThread( void );
+   Thread( void );
  ///Destructor
-   ~cfdThread( void );
+   ~Thread( void );
 
    //   private:
    //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;

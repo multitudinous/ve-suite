@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/data/SPBoundEH.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/event/data/SeedPoints.h>
 #include <ves/xplorer/DataSet.h>
 
@@ -120,7 +120,7 @@ void SeedPointBoundsEventHandler::Execute(XMLObject* veXMLObject)
          newValue[4] = databounds[4] + allBoundaryData.at(4)*(databounds[5] - databounds[4]);
          newValue[5] = databounds[4] + allBoundaryData.at(5)*(databounds[5] - databounds[4]);
 
-         ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->SetBounds(newValue[0],
+         ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetBounds(newValue[0],
                                                                                    newValue[1],
                                                                                    newValue[2],
                                                                                    newValue[3],
@@ -148,7 +148,7 @@ void SeedPointBoundsEventHandler::Execute(XMLObject* veXMLObject)
             unsigned int index = (boundCoordinate=="X")?0:(boundCoordinate=="Y")?2:4;
             double newValue = 0;
             newValue = databounds[index] + alpha*(databounds[index+1] - databounds[index]);
-            ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue,
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue,
                                                                                          boundCoordinate,
                                                                                          minMaxUpdate);
          }
@@ -168,7 +168,7 @@ void SeedPointBoundsEventHandler::Execute(XMLObject* veXMLObject)
 
             double newValue = 0;
             newValue = databounds[index] + minAlpha*(databounds[index+1] - databounds[index]);
-            ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue, 
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue, 
                                                                                          boundCoordinate,
                                                                                          "Min");
             DataValuePairWeakPtr maxValue = command->GetDataValuePair("Max Value");      
@@ -176,7 +176,7 @@ void SeedPointBoundsEventHandler::Execute(XMLObject* veXMLObject)
             maxValue->GetData( maxAlpha );
             
             newValue = databounds[index] + maxAlpha*(databounds[index+1] - databounds[index]);
-            ves::xplorer::cfdEnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue,
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue,
                                                                                           boundCoordinate,
                                                                                          "Max");
 

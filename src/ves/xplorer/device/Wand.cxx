@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Wand.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>

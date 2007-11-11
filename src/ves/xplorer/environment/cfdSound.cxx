@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/xplorer/environment/cfdSound.h>
 #include <snx/sonix.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/util/fileIO.h>
 
 using namespace ves::xplorer;

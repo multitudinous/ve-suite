@@ -33,7 +33,7 @@
 #include <ves/xplorer/Xplorer_i.h>
 
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/cfdSteadyStateVizHandler.h>
 #include <ves/xplorer/cfdCommandArray.h>

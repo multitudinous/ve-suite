@@ -34,6 +34,11 @@
 #define VE_XPLORER_STEADY_STATE_VIZ_HANDLER_H
 
 #include <ves/VEConfig.h>
+#include <ves/xplorer/SteadyStateVizHandlerPtr.h>
+
+#include <ves/xplorer/GlobalBasePtr.h>
+
+#include <ves/xplorer/event/EventHandlerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
@@ -74,12 +79,9 @@ namespace xplorer
    class cfdAnimatedImage; 
    class cfdAnimatedStreamlineCone;
    class cfdContour;
-   class GlobalBase;
    class cfdObjects;
-   class cfdCommandArray;
    class cfdCursor;
    class cfdGraphicsObject;
-   class cfdModel;
    class cfdTextOutput;
 }
 }

@@ -120,7 +120,6 @@ private:
    double imageRot[ 3 ];///<Rotation of image.
    std::string _param;///<The string storing parameters.
    //std::string _param
-   cfdReadParam* _readParam;///<Read out parameters.
    //int _which_frame;
 };
 }

@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/device/ChangeCursorEventHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/device/cfdCursor.h>
 
@@ -45,7 +45,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <iostream>
 
@@ -137,7 +137,7 @@ void ChangeCursorEventHandler::Execute( XMLObject* xmlObject )
    {
       pointsDVP->GetData( numPointsPerPlane );
       std::cout << " num points " << numPointsPerPlane << std::endl;
-      cfdEnvironmentHandler::instance()->GetCursor()->SetPlaneReso( static_cast< int >( numPointsPerPlane ) );
+      EnvironmentHandler::instance()->GetCursor()->SetPlaneReso( static_cast< int >( numPointsPerPlane ) );
    }
    
    double planeSize = 1;
@@ -146,7 +146,7 @@ void ChangeCursorEventHandler::Execute( XMLObject* xmlObject )
    {
       sizeDVP->GetData( planeSize );      
       std::cout << " planesize " << planeSize << std::endl;
-      cfdEnvironmentHandler::instance()->GetCursor()->SetPlaneSize( static_cast< int >( planeSize ) );
+      EnvironmentHandler::instance()->GetCursor()->SetPlaneSize( static_cast< int >( planeSize ) );
    }
    
 
@@ -154,38 +154,38 @@ void ChangeCursorEventHandler::Execute( XMLObject* xmlObject )
    {
       if ( direction == "x" )
       {
-         cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( XPLANE );
+         EnvironmentHandler::instance()->GetCursor()->SetCursorType( XPLANE );
       }
       else if ( direction == "y" )
       {
-         cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( YPLANE );
+         EnvironmentHandler::instance()->GetCursor()->SetCursorType( YPLANE );
       }
       else if ( direction == "z" )
       {
-         cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( ZPLANE );
+         EnvironmentHandler::instance()->GetCursor()->SetCursorType( ZPLANE );
       }
    }
    else if ( planes == "none" )
    {
-      cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( NONE );
+      EnvironmentHandler::instance()->GetCursor()->SetCursorType( NONE );
    }
    else if ( planes == "point" )
    {
-      cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( SPHERE );
+      EnvironmentHandler::instance()->GetCursor()->SetCursorType( SPHERE );
    }
    else if ( planes == "line" )
    {
       if ( direction == "x" )
       {
-         cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( XLINE );
+         EnvironmentHandler::instance()->GetCursor()->SetCursorType( XLINE );
       }
       else if ( direction == "y" )
       {
-         cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( YLINE );
+         EnvironmentHandler::instance()->GetCursor()->SetCursorType( YLINE );
       }
       else if ( direction == "z" )
       {
-         cfdEnvironmentHandler::instance()->GetCursor()->SetCursorType( ZLINE );
+         EnvironmentHandler::instance()->GetCursor()->SetCursorType( ZLINE );
       }
    }
 

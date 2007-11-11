@@ -494,7 +494,7 @@ void ModelHandler::InitScene( void )
    if ( activeDataset != NULL )
    {
       // Fix this later - we need to check and see if this is already 
-      // done in cfdDataSet upon initialization
+      // done in DataSet upon initialization
       // set first scalar active
       activeDataset->SetActiveScalar( 0 );
    

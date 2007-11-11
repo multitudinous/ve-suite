@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/environment/ChangeWorkingDirectoryEventHandler.h>
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -102,7 +102,7 @@ void ChangeWorkingDirectoryEventHandler::Execute(XMLObject* veXMLObject)
 #endif
    //A new working directory also means that 
    //the STORED scenes are no longer valid
-   ves::xplorer::cfdEnvironmentHandler::instance()->GetTeacher()->Reset();
+   ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
    //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
    ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }

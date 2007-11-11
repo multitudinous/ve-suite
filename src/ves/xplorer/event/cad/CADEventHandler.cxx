@@ -52,7 +52,7 @@
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <boost/filesystem/path.hpp>
 #include <iostream>

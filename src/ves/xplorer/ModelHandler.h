@@ -37,7 +37,7 @@
 #include <ves/xplorer/ModelHandlerPtr.h>
 
 #include <ves/xplorer/ModelPtr.h>
-#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/DataSetPtr.h>
 #include <ves/xplorer/event/EventHandlerPtr.h>
 
 #include <ves/open/xml/CommandPtr.h>
@@ -143,7 +143,7 @@ protected:
    vtkPolyData* _GetArrowPolyData();
 private:
    std::string _param;
-   DataSet activeDataset;
+   DataSet* activeDataset;
    ves::open::xml::Command* activeCommand;
    ves::open::xml::Command* nullCommand;
    //cfdReadParam* _readParam;

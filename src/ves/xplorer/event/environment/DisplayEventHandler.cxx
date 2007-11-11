@@ -35,7 +35,7 @@
 #include <ves/xplorer/event/environment/DisplayEventHandler.h>
 
 #include <ves/xplorer/GlobalBase.h>
-#include <ves/xplorer/cfdEnvironmentHandler.h>
+#include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/DisplayInformation.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -88,7 +88,7 @@ void DisplayEventHandler::Execute(XMLObject* veXMLObject)
       DVP=command->GetDataValuePair("FrameRateID");
       DVP->GetData(value);
    
-      ves::xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
+      ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
    }
 
    else if(command->GetDataValuePair("CoordSysID"))
@@ -96,7 +96,7 @@ void DisplayEventHandler::Execute(XMLObject* veXMLObject)
       DVP=command->GetDataValuePair("CoordSysID");
       DVP->GetData(value);
    
-      ves::xplorer::cfdEnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
+      ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////

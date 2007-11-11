@@ -33,7 +33,7 @@
 // --- VE-Suite Stuff --- //
 #include <ves/xplorer/device/KeyboardMouse.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>

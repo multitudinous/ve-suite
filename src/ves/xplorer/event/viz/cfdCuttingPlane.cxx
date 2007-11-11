@@ -33,7 +33,7 @@
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
 #include <ves/xplorer/DataSet.h>
 #include <vtkPlane.h>
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 using namespace ves::xplorer;
 
@@ -169,7 +169,7 @@ void cfdCuttingPlane::ComputeOrigin( int requestedValue )
    if ( requestedValue > 100 ) requestedValue = 100;
 
    // bd is an array of 6 values xmin, xmax, ymin, ymax, zmin, zmax
-   // bd is calculated from the raw cfdDataSet NOT from the precalc values
+   // bd is calculated from the raw DataSet NOT from the precalc values
    // type is either 0,1,2 representing x,y,z
    this->origin[this->type] = this->bd[2*this->type] + 
                               ( requestedValue * 0.010f ) * 

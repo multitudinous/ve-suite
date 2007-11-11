@@ -37,7 +37,7 @@
 #include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/SceneNode.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

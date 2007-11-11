@@ -110,7 +110,6 @@ namespace ves
 {
 namespace xplorer
 {
-
 /*!\file DataSet.h
 DataSet API
 */

@@ -34,7 +34,7 @@
 #include <ves/xplorer/event/volume/TBSetActiveShaderManagerEH.h>
 #include <ves/xplorer/cfdTextureBasedVizHandler.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

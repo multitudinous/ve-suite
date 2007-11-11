@@ -191,7 +191,6 @@ private:
 
    cfdCursor* cursor;///<The cursor.
    std::string _param;///<Store parameters.
-   cfdCommandArray* _commandArray;///<Command array.
 
    // cur_box will eventually be used to define bounding box
    // for data interagation

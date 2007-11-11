@@ -35,7 +35,7 @@
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
 
-#include <ves/xplorer/cfdDebug.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/util/fileIO.h>
 
