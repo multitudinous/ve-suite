@@ -35,8 +35,6 @@
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/model/ModelStrongPtr.h>
-#include <ves/open/xml/model/ModelWeakPtr.h>
 #include <ves/open/xml/model/Model.h>
 
 #include <vector>
@@ -149,7 +147,7 @@ private:
    
    // The holder of the raw data for this class
    // This class is responsible for the memory management here
-   ves::open::xml::model::ModelStrongPtr veModel;
+   ves::open::xml::model::ModelPtr veModel;
    //Container for input data
    std::vector< ves::open::xml::Command* > inputs;
    //Container for results data

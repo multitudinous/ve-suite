@@ -238,7 +238,7 @@ private:
 
    wxArrayString _availableDatasets;///<The list of datasets(should this be called something else?)
 ////@end DataSetLoaderUI member variables
-   ves::open::xml::model::ModelStrongPtr m_veModel;
+   ves::open::xml::model::ModelPtr m_veModel;
    ves::open::xml::ParameterBlock* paramBlock;
 
    int lastAddition;

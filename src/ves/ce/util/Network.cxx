@@ -38,7 +38,6 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/ModelWeakPtr.h>
 #include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Network.h>
@@ -89,7 +88,7 @@ int Network::parse( std::string xmlNetwork )
    networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
    std::vector< XMLObject* > objectVector = 
        networkWriter.GetLoadedXMLObjects();
-   model::SystemStrongPtr tempSystem = 
+   model::SystemPtr tempSystem = 
        dynamic_cast< model::System* >( objectVector.at( 0 ) );
    if( !tempSystem )
    {
@@ -192,7 +191,7 @@ std::string Network::GetNetworkString( void )
         return std::string( "" );
     }
     
-    model::SystemStrongPtr tempSystem = 
+    model::SystemPtr tempSystem = 
         new model::System();
     //  Models
     for( size_t i = 0; i < _module_ptrs.size(); ++i )

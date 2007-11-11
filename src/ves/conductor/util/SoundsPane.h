@@ -94,7 +94,7 @@ protected:
     wxButton* _loadButton;
 
     unsigned int _numSounds;///<The number of sounds
-    ves::open::xml::model::ModelStrongPtr m_activeModel;///<The current model;
+    ves::open::xml::model::ModelPtr m_activeModel;///<The current model;
     wxArrayString _loadedSounds;///<The sounds loaded already;
 
     ///Update the current sound information from a given model

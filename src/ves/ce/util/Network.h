@@ -35,7 +35,7 @@
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/model/NetworkStrongPtr.h>
+#include <ves/open/xml/model/NetworkPtr.h>
 
 
 #include <string>
@@ -113,7 +113,7 @@ protected:
    /// easy access to modules from conductor ids.
    std::map< int, Module* > moduleIDMap;
    /// Holder of the network
-   ves::open::xml::model::NetworkStrongPtr veNetwork;
+   ves::open::xml::model::NetworkPtr veNetwork;
 };
 }
 }

@@ -307,7 +307,7 @@ protected:
    wxPoint actionPoint;
 
    ///Copy of the model element pointer
-   ves::open::xml::model::ModelStrongPtr m_veModel;
+   ves::open::xml::model::ModelPtr m_veModel;
    ///Name seen by the user and rendered on the canvas
    wxString name;
 

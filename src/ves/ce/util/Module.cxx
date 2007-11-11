@@ -37,13 +37,10 @@
 #include <ves/ce/util/Connection.h>
 
 #include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/ModelWeakPtr.h>
 #include <ves/open/xml/model/Port.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-
-#include <ves/open/xml/DataValuePairPtr.h>
 
 using namespace VE_CE::Utilities;
 using namespace ves::open::xml;

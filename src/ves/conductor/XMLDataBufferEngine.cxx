@@ -64,7 +64,7 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
    m_commandMap[ "NULL" ] = nullCommand;
 
     //Setup default system
-    ves::open::xml::model::SystemStrongPtr tempSystem = 
+    ves::open::xml::model::SystemPtr tempSystem = 
        new ves::open::xml::model::System();
     m_systemMap[tempSystem->GetID()] = tempSystem;
     //get the main systems id
@@ -155,7 +155,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 	std::vector< ves::open::xml::XMLObject* >::iterator objectIter;
     std::vector< ves::open::xml::XMLObject* > objectVector = 
         networkWriter.GetLoadedXMLObjects();
-    ves::open::xml::model::SystemStrongPtr tempSystem = 0;
+    ves::open::xml::model::SystemPtr tempSystem = 0;
     
     // we are expecting that a network will be found
     if ( !objectVector.empty() )
@@ -269,7 +269,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     if( tempNetwork->GetNumberOfLinks() == 0 )
     {
         std::ostringstream modelID;
-        for( std::map< std::string, ves::open::xml::model::ModelStrongPtr >::iterator 
+        for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator 
             modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
              ++modelIter )
         {
@@ -371,7 +371,7 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     m_commandMap[ "NULL" ] = nullCommand;
     
     //Setup default system
-    ves::open::xml::model::SystemStrongPtr tempSystem = 
+    ves::open::xml::model::SystemPtr tempSystem = 
         new ves::open::xml::model::System();
     m_systemMap[ tempSystem->GetID() ] = tempSystem;
     //get the main systems id
@@ -415,13 +415,13 @@ std::string XMLDataBufferEngine::GetTopSystemId( )
    return topId;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::model::SystemStrongPtr XMLDataBufferEngine::GetXMLSystemDataObject(
+ves::open::xml::model::SystemPtr XMLDataBufferEngine::GetXMLSystemDataObject(
    std::string id )
 {
    return m_systemMap[id];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::model::SystemStrongPtr >XMLDataBufferEngine::
+std::map< std::string, ves::open::xml::model::SystemPtr >XMLDataBufferEngine::
     GetXMLSystemDataMap( )
 {
    return m_systemMap;

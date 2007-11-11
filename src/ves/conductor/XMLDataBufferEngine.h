@@ -101,12 +101,12 @@ public:
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
    ///Get the map of all systems
-   std::map< std::string, ves::open::xml::model::SystemStrongPtr >
+   std::map< std::string, ves::open::xml::model::SystemPtr >
       GetXMLSystemDataMap();
    ///Get a system
    std::string GetTopSystemId( );
    ///Get a system
-   ves::open::xml::model::SystemStrongPtr GetXMLSystemDataObject( std::string id );
+   ves::open::xml::model::SystemPtr GetXMLSystemDataObject( std::string id );
     ///Get data
     ves::open::xml::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
    ///Parse system for subsystems
@@ -118,15 +118,15 @@ private:
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
     ///Map of systems
-    std::map< std::string, ves::open::xml::model::SystemStrongPtr > m_systemMap;
+    std::map< std::string, ves::open::xml::model::SystemPtr > m_systemMap;
     ///Map of networks - backwards compatibility
-    std::map< std::string, ves::open::xml::model::NetworkStrongPtr > m_networkMap;
+    std::map< std::string, ves::open::xml::model::NetworkPtr > m_networkMap;
     //Map of model ids for the given network
     std::map< std::string, std::vector< std::string > > m_networkModelMap;
     ///Map
-    std::map< std::string, ves::open::xml::model::ModelStrongPtr > m_modelMap;
+    std::map< std::string, ves::open::xml::model::ModelPtr > m_modelMap;
     ///Map
-    std::map< std::string, ves::open::xml::model::TagStrongPtr > m_tagMap;
+    std::map< std::string, ves::open::xml::model::TagPtr > m_tagMap;
     ///Map
     std::map< std::string, ves::open::xml::UserPtr > m_userMap;
    //Top most id
