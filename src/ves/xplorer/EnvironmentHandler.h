@@ -106,9 +106,6 @@ public:
    ///Late pre-frame update ???
    void LatePreFrameUpdate( void );
 
-   ///Set the command array ?
-   ///\param input
-   void SetCommandArray( cfdCommandArray* input );
    ///Accessor for cfdCursor
    cfdCursor* GetCursor( void );
    ///Accessor for cfdTeacher

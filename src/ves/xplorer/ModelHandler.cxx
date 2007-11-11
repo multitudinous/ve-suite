@@ -33,13 +33,7 @@
 
 #include <ves/xplorer/ModelHandler.h>
 
-#include <ves/xplorer/cfdDebug.h>
-
-//#include <vtkPolyDataWriter.h>
-#include <vtkPolyDataNormals.h>
-#include <vtkPolyData.h>
-#include <vtkLookupTable.h>
-#include <vtkPolyData.h>
+#include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/util/fileIO.h>
 
@@ -49,7 +43,6 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
-#include <ves/xplorer/cfdCommandArray.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/event/EventHandler.h>
@@ -89,13 +82,20 @@
 #include <ves/xplorer/volume/cfdTextureManager.h>
 using namespace ves::xplorer::volume;
 #endif
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <algorithm>
+
+//#include <vtkPolyDataWriter.h>
+#include <vtkPolyDataNormals.h>
+#include <vtkPolyData.h>
+#include <vtkLookupTable.h>
+#include <vtkPolyData.h>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
+
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+
 
 #ifndef WIN32
 // Needed for irix
@@ -108,14 +108,14 @@ using namespace ves::xplorer::volume;
 #include <direct.h>
 #endif 
 
-vprSingletonImpLifetime( ves::xplorer::cfdModelHandler, 11 );
+vprSingletonImpLifetime( ves::xplorer::ModelHandler, 11 );
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::util;
 
-cfdModelHandler::cfdModelHandler( void )
+ModelHandler::ModelHandler( void )
 {
-   vprDEBUG(vesDBG,2) << "cfdModelHandler constructor"
+   vprDEBUG(vesDBG,2) << "ModelHandler constructor"
                           << std::endl << vprDEBUG_FLUSH;
    _param.erase();//_param = 0;
    
@@ -123,7 +123,6 @@ cfdModelHandler::cfdModelHandler( void )
    //_scalarBar     = 0;
    arrow          = 0;
    //_readParam     = 0;
-   commandArray   = 0;
    _activeModel   = 0;
    activeCommand  = 0;
 
@@ -163,14 +162,14 @@ cfdModelHandler::cfdModelHandler( void )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModelHandler::Initialize( std::string param )
+void ModelHandler::Initialize( std::string param )
 {
    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdModelHandler::~cfdModelHandler( void )
+ModelHandler::~ModelHandler( void )
 {
-   //vprDEBUG(vesDBG,2) << "cfdModelHandler destructor"
+   //vprDEBUG(vesDBG,2) << "ModelHandler destructor"
    //                       << std::endl << vprDEBUG_FLUSH;
    delete nullCommand;
    nullCommand = 0;
@@ -205,7 +204,7 @@ cfdModelHandler::~cfdModelHandler( void )
       itr->second = 0;
    }
    _eventHandlers.clear();
-   //vprDEBUG(vesDBG,2) << "cfdModelHandler end destructor"
+   //vprDEBUG(vesDBG,2) << "ModelHandler end destructor"
    //   << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -213,13 +212,7 @@ cfdModelHandler::~cfdModelHandler( void )
 // Helper functions
 ///////////////////////
 /////////////////////////////////////////////////////////////
-void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
-{
-   // Must be set before PreFrameUpdate is called
-   commandArray = input;
-}
-/////////////////////////////////////////////////////////////
-void cfdModelHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
+void ModelHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
 {
    //if ( inputCommand )
    {
@@ -231,31 +224,31 @@ void cfdModelHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
    }*/
 }
 /////////////////////////////////////////////////////////////
-ves::open::xml::Command* cfdModelHandler::GetXMLCommand( void )
+ves::open::xml::Command* ModelHandler::GetXMLCommand( void )
 {
    return activeCommand;
 }
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 #ifdef _OSG
-cfdTextureDataSet* cfdModelHandler::GetActiveTextureDataSet()
+cfdTextureDataSet* ModelHandler::GetActiveTextureDataSet()
 {
    return _activeTDSet;
 }
 #endif
 /////////////////////////////////////////////////////
-//cfdScalarBarActor* cfdModelHandler::GetScalarBar(void)
+//cfdScalarBarActor* ModelHandler::GetScalarBar(void)
 //{
 //   return _scalarBar;
 //}
 /////////////////////////////////////////////////////
-void cfdModelHandler::SetActiveModel( int modelNumber )
+void ModelHandler::SetActiveModel( int modelNumber )
 {
       for ( size_t i = 0; i < _modelList.size(); i++ )
       {
          if ( modelNumber == _modelList.at( i )->GetID() )
          {
-            vprDEBUG(vesDBG,1) << "|\tcfdModelHandler::SetActiveModel : " 
+            vprDEBUG(vesDBG,1) << "|\tModelHandler::SetActiveModel : " 
                   << modelNumber 
                   << " is set." << std::endl << vprDEBUG_FLUSH;
             _activeModel = _modelList.at( i );
@@ -267,7 +260,7 @@ void cfdModelHandler::SetActiveModel( int modelNumber )
          _activeModel = 0;
 }
 /////////////////////////////////////////////
-Model* cfdModelHandler::GetModel( int i )
+Model* ModelHandler::GetModel( int i )
 {
    if ( _modelList.empty() )
       return NULL;
@@ -275,12 +268,12 @@ Model* cfdModelHandler::GetModel( int i )
       return _modelList.at( i );
 }
 /////////////////////////////////////////////////
-void cfdModelHandler::AddModel( Model* input )
+void ModelHandler::AddModel( Model* input )
 {
    _modelList.push_back( input );
 }
 ///////////////////////////////////////////////////////////////
-void cfdModelHandler::RemoveModel( Model* modelToBeRemoved )
+void ModelHandler::RemoveModel( Model* modelToBeRemoved )
 {
    std::vector< Model* >::iterator iter;
    for ( iter=_modelList.begin(); iter!=_modelList.end(); )
@@ -302,17 +295,17 @@ void cfdModelHandler::RemoveModel( Model* modelToBeRemoved )
    }
 }
 /////////////////////////////////////////////////
-Model* cfdModelHandler::GetActiveModel( void )
+Model* ModelHandler::GetActiveModel( void )
 {
    return _activeModel;
 }
 //////////////////////////////////////////////
-int cfdModelHandler::GetNumberOfModels( void )
+int ModelHandler::GetNumberOfModels( void )
 {
    return static_cast< int >( _modelList.size() ); 
 }
 ///////////////////////////////////////////////////
-vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )
+vtkPolyData* ModelHandler::_GetArrowPolyData(  )
 {    
    //ripped from cfdArrow in the Utilities/arrowCreator directory
    float shaftAngleIncrement = (3.14159265/1.5);
@@ -454,14 +447,14 @@ vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )
    return arrowPolys;
 }
 ///////////////////////////////////////
-void cfdModelHandler::InitScene( void )
+void ModelHandler::InitScene( void )
 {
 
    this->arrow = _GetArrowPolyData();
 
    if(!arrow)
    {
-      std::cerr<<"Error: cfdModelHandler::InitScene()"<<std::endl;
+      std::cerr<<"Error: ModelHandler::InitScene()"<<std::endl;
       std::cerr<<"Couldn't create arrow polydata!!"<<std::endl;
       exit(1);
    }
@@ -506,7 +499,7 @@ void cfdModelHandler::InitScene( void )
       activeDataset->SetActiveScalar( 0 );
    
       oldDatasetName.assign( activeDataset->GetFileName() );//strcpy( oldDatasetName, activeDataset->GetFileName() );
-      vprDEBUG(vesDBG,1) << "cfdModelHandler: Setting active dataset to " 
+      vprDEBUG(vesDBG,1) << "ModelHandler: Setting active dataset to " 
                << activeDataset->GetFileName() << " , " 
                << oldDatasetName << std::endl << vprDEBUG_FLUSH;
    }
@@ -524,18 +517,18 @@ void cfdModelHandler::InitScene( void )
 // PreFrameUpdate - Be sure to set the commandArray before calling this
 // function.
 /////////////////////////////////
-void cfdModelHandler::PreFrameUpdate( void )
+void ModelHandler::PreFrameUpdate( void )
 {
    bool updateScalarRange = false;
    std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
    if( activeCommand )
    {
-      vprDEBUG(vesDBG,3) << "|\tcfdModelHandler::PreFrameUpdate Command Name : "
+      vprDEBUG(vesDBG,3) << "|\tModelHandler::PreFrameUpdate Command Name : "
             << activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
       currentEventHandler = _eventHandlers.find( activeCommand->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
-         vprDEBUG(vesDBG,1) << "|\tcfdModelHandler::PreFrameUpdate Executing: "
+         vprDEBUG(vesDBG,1) << "|\tModelHandler::PreFrameUpdate Executing: "
           << activeCommand->GetCommandName() <<std::endl<< vprDEBUG_FLUSH;;
          currentEventHandler->second->SetGlobalBaseObject();
          currentEventHandler->second->Execute( activeCommand );
@@ -543,7 +536,6 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
    
    // Check and see if we need to refresh the scalar bar
-   //_scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();
 }
@@ -551,7 +543,7 @@ void cfdModelHandler::PreFrameUpdate( void )
 ///////////////////////////////////////////////
 // Used to initialize data for the simulation
 ///////////////////////////////////////////////
-void cfdModelHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
+void ModelHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
 {
    if ( precomputedSurfaceDir.empty() )// == NULL )
    {
@@ -623,24 +615,24 @@ void cfdModelHandler::LoadSurfaceFiles( std::string precomputedSurfaceDir )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool cfdModelHandler::GetVisOption()
+bool ModelHandler::GetVisOption()
 {
    return tbased;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vtkPolyData* cfdModelHandler::GetArrow( void )
+vtkPolyData* ModelHandler::GetArrow( void )
 {
    return this->arrow;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
+void ModelHandler::RegisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
 {
     m_filenameToCADMap.insert( 
         std::pair< std::string, ves::xplorer::scenegraph::CADEntity* >( 
         tempEntity->GetFilename(), tempEntity ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::string filename )
+ves::xplorer::scenegraph::CADEntity* ModelHandler::IsCADFileLoaded( std::string filename )
 {
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
     iter = m_filenameToCADMap.find( filename );
@@ -651,7 +643,7 @@ ves::xplorer::scenegraph::CADEntity* cfdModelHandler::IsCADFileLoaded( std::stri
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
+void ModelHandler::UnregisterCADFile( ves::xplorer::scenegraph::CADEntity* tempEntity )
 {
     std::multimap< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
     for( iter = m_filenameToCADMap.begin(); iter != m_filenameToCADMap.end(); ++iter )

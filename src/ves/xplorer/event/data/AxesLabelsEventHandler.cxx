@@ -98,7 +98,7 @@ void AxesLabelsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -117,7 +117,7 @@ void AxesLabelsEventHandler::Execute( XMLObject* xmlObject )
    
    if ( _activeModel && !labels.empty() )
    {
-      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->GetDataSetAxes()->SetAxisLabels( labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );

@@ -255,7 +255,7 @@ void cfdIsosurface::UpdateCommand()
 
    //if ( _activeModel )
    {
-      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( !colorByScalar.empty() )
       {
          unsigned int activeTempScalar = dataSet->GetActiveScalar();

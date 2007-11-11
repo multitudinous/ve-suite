@@ -60,7 +60,7 @@ public:
    virtual ~DeviceEventHandler();
 
    //Set the cfdModel
-   //param model The cfdModelHandler to execute the Command on
+   //param model The ModelHandler to execute the Command on
    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
       
    //Exectute the event

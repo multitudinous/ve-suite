@@ -192,12 +192,12 @@ void cfdSteadyStateVizHandler::InitScene( void )
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 {
    //process the current command form the gui
-   //if ( cfdModelHandler::instance()->GetActiveModel() )
+   //if ( ModelHandler::instance()->GetActiveModel() )
    {
-      if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
+      if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
       {
          std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
-         ves::open::xml::Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
+         ves::open::xml::Command* tempCommand = ModelHandler::instance()->GetXMLCommand();
          currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
          if ( currentEventHandler != _eventHandlers.end() )
          {
@@ -226,14 +226,14 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          {  
             // set the update flag in steadystate viz handler
             // now update the vis object
-            cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
+            ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
             vprDEBUG(vesDBG,2) << "|\tCreating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
-            temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
+            temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
             temp->SetGeodes( _activeObject );
             temp->AddGraphicsObjectToSceneGraph();
@@ -265,12 +265,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             vprDEBUG(vesDBG,2) << "|\tDone Creating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
 
-            /*if ( cfdModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
+            /*if ( ModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
             {
                // we mirror the dataset in two places
                // once here for data viz and once in modelhandler for geom
-               ves::xplorer::scenegraph::Group* temp = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
-               cfdModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
+               ves::xplorer::scenegraph::Group* temp = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
+               ModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
             }*/
             this->_activeObject = NULL;
          }

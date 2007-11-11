@@ -97,7 +97,7 @@ void WireframeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -115,9 +115,9 @@ void WireframeEventHandler::Execute( XMLObject* xmlObject )
    unsigned int state = 0;
    activeModelDVP->GetData( state );
    
-   if ( cfdModelHandler::instance()->GetActiveModel() )
+   if ( ModelHandler::instance()->GetActiveModel() )
    {
-      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetWireframeState( state );

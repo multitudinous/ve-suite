@@ -98,7 +98,7 @@ void ScalarBarEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -117,7 +117,7 @@ void ScalarBarEventHandler::Execute( XMLObject* xmlObject )
    activeModelDVP->GetData( state );
    if ( _activeModel )
    {
-      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetDataSetScalarState( state );

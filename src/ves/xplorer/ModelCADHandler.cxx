@@ -82,7 +82,7 @@ ModelCADHandler::~ModelCADHandler()
     std::map<std::string, ves::xplorer::scenegraph::CADEntity*>::iterator iter;
     for ( iter = m_partList.begin(); iter != m_partList.end(); iter++ )
     {
-        cfdModelHandler::instance()->UnregisterCADFile( iter->second );
+        ModelHandler::instance()->UnregisterCADFile( iter->second );
         delete iter->second;
     }
     m_partList.clear();
@@ -172,7 +172,7 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
     std::string parentID )
 {
     ves::xplorer::scenegraph::CADEntity* tempCAD = 
-        cfdModelHandler::instance()->IsCADFileLoaded( fileName );
+        ModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
     {
         ///If we have already loaded the parts
@@ -192,7 +192,7 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
         vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
                             << std::endl << vprDEBUG_FLUSH;
     }
-    cfdModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
+    ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
 }

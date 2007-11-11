@@ -68,7 +68,7 @@ public:
     PhysicsSimulationEventHandler& operator=( const PhysicsSimulationEventHandler& rhs );
 
     ///Set the cfdModel
-    ///\param modelHandler The cfdModelHandler to execute the Command on
+    ///\param modelHandler The ModelHandler to execute the Command on
     void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
     ///Exectute the event

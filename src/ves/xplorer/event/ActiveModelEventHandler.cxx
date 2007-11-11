@@ -71,7 +71,7 @@ void ActiveModelEventHandler::Execute(ves::open::xml::XMLObject* veXMLObject)
    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
    unsigned int newModel;
    activeModelDVP->GetData( newModel );
-   ves::xplorer::cfdModelHandler::instance()->SetActiveModel( newModel );
+   ves::xplorer::ModelHandler::instance()->SetActiveModel( newModel );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ActiveModelEventHandler& ActiveModelEventHandler::operator=(const ActiveModelEventHandler& rhs)

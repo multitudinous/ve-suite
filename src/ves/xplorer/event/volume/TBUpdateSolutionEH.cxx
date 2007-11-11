@@ -108,7 +108,7 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode(XMLObject* veXMLObje
             
             //if ( _activeModel )
             {
-               DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+               DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
                //if ( dataSet )
                {
                   DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();

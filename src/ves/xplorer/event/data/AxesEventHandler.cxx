@@ -97,7 +97,7 @@ void AxesEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -116,7 +116,7 @@ void AxesEventHandler::Execute( XMLObject* xmlObject )
    activeModelDVP->GetData( state );
    if ( _activeModel )
    {
-      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetAxesState( state );

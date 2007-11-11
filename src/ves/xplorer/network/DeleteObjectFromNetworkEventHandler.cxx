@@ -115,7 +115,7 @@ void DeleteObjectFromNetworkEventHandler::Execute( XMLObject* xmlObject )
                               << std::endl << vprDEBUG_FLUSH;
       // if a module is on the plugins map then remove it
       foundPlugin->second->RemoveSelfFromSG();
-      cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
+      ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
       // Must delete current instance of vebaseclass object
       delete foundPlugin->second;
       _plugins->erase( foundPlugin );
@@ -128,7 +128,7 @@ void DeleteObjectFromNetworkEventHandler::Execute( XMLObject* xmlObject )
    }
    //Set active model to null so that if the previous active model is deleted
    //that we don't get errors in our code other places.
-   cfdModelHandler::instance()->SetActiveModel( 0 );
+   ModelHandler::instance()->SetActiveModel( 0 );
    vprDEBUG(vesDBG,1) << "|\t\tPlugin is deleted if present."
                            << std::endl << vprDEBUG_FLUSH;
 }

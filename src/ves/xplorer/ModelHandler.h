@@ -30,30 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_MODELHANDLER_H
-#define CFD_MODELHANDLER_H
-/*!\file cfdModelHandler.h
-cfdModelHandler API
-*/
-/*!\class ves::xplorer::cfdModelHandler
-* 
-*/
-#include <vpr/Util/Singleton.h>
+#ifndef VE_XPLORER_MODELHANDLER_H
+#define VE_XPLORER_MODELHANDLER_H
 
-#include <map>
-#include <utility>
+#include <ves/VEConfig.h>
+#include <ves/xplorer/ModelHandlerPtr.h>
+
+#include <ves/xplorer/ModelPtr.h>
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/event/EventHandlerPtr.h>
 
 #include <ves/open/xml/CommandPtr.h>
 
-namespace ves
-{
-namespace xplorer
-{
-    class cfdDataSet;
-    class cfdModel;
-    class cfdCommandArray;
-}
-}
+#include <vpr/Util/Singleton.h>
+
+#include <vector>
+#include <string>
+#include <map>
+#include <utility>
+
+
 
 namespace ves
 {
@@ -66,16 +62,6 @@ namespace scenegraph
 }
 }
 
-namespace ves
-{
-namespace xplorer
-{
-namespace event
-{
-   class EventHandler;
-}
-}
-}
 
 #ifdef _OSG
 namespace ves
@@ -91,30 +77,33 @@ namespace volume
 #endif
 class vtkPolyData;
 
-#include <vector>
-#include <ves/VEConfig.h>
 
 namespace ves
 {
 namespace xplorer
 {
-class VE_XPLORER_EXPORTS cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
+/*!\file ModelHandler.h
+ModelHandler API
+*/
+/*!\class ves::xplorer::ModelHandler
+* 
+*/
+class VE_XPLORER_EXPORTS ModelHandler
 {
 private:
    // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdModelHandler >;
-   //cfdModelHandler(const cfdModelHandler& o) { ; }
-   //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
-   cfdModelHandler( void );
-   ~cfdModelHandler( void );
-   vprSingletonHeader( cfdModelHandler );   
+   //friend class vpr::Singleton< ModelHandler >;
+   //ModelHandler(const ModelHandler& o) { ; }
+   //ModelHandler& operator=(const ModelHandler& o) { ; }
+   ModelHandler( void );
+   ~ModelHandler( void );
+   vprSingletonHeader( ModelHandler );   
 public:
    void Initialize( std::string );
    //void CleanUp( void );
    void InitScene( void );
    void PreFrameUpdate( void );
 
-   void SetCommandArray( cfdCommandArray* );
    ///Set the active xml command
    ///\param inputCommand input xml command
    void SetXMLCommand( ves::open::xml::Command* inputCommand );
@@ -155,7 +144,6 @@ protected:
 private:
    std::string _param;
    DataSet activeDataset;
-   cfdCommandArray* commandArray;
    ves::open::xml::Command* activeCommand;
    ves::open::xml::Command* nullCommand;
    //cfdReadParam* _readParam;

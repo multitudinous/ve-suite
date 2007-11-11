@@ -82,7 +82,7 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBa
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

@@ -42,9 +42,10 @@ cfdVEBaseClass API
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
-#include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/ModelWeakPtr.h>
-#include <ves/open/xml/model/ModelStrongPtr.h>
+#include <ves/xplorer/ModelPtr.h>
+
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/CommandPtr.h>
 
 #include <string>
 #include <vector>
@@ -67,7 +68,6 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdModel;
    class cfdCursor;
    class Device;
    class cfdObjects;
@@ -75,16 +75,6 @@ namespace xplorer
 }
 }
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-    class Command;
-}
-}
-}
 
 #include <ves/VEConfig.h>
 

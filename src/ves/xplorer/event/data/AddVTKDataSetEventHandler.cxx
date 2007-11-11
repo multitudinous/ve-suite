@@ -100,7 +100,7 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* mo
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -233,7 +233,7 @@ void AddVTKDataSetEventHandler::Execute(XMLObject* xmlObject)
                            << _activeModel->GetCfdDataSet( i )->GetFileName()
                            << std::endl;
                _activeModel->GetCfdDataSet( i )->LoadData();
-               _activeModel->GetCfdDataSet( i )->SetArrow( ves::xplorer::cfdModelHandler::instance()->GetArrow() );
+               _activeModel->GetCfdDataSet( i )->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
                if ( _activeModel->GetCfdDataSet( i )->GetParent() == _activeModel->GetCfdDataSet( i ) )
                {
                   ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->

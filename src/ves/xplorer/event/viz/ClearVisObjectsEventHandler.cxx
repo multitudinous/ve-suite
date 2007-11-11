@@ -98,12 +98,12 @@ void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
    //call back over to ssvishandler to clear the vis objects
    cfdSteadyStateVizHandler::instance()->ClearVisObjects();
    cfdTextureBasedVizHandler::instance()->ClearAll();
-   if ( cfdModelHandler::instance()->GetActiveModel() )
+   if ( ModelHandler::instance()->GetActiveModel() )
    {
-      cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
+      ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
 
       unsigned int state = 0;
-      DataSet dataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+      DataSet dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       if ( dataSet )
       {
          dataSet->SetBoundingBoxState( state );

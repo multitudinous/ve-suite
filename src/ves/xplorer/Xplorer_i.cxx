@@ -193,11 +193,11 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
    double newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    
    //if we are doing transient vis then we already have an active model and dataset
-   int activeVector = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveVector();
-   int activeScalar = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveScalar();
+   int activeVector = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveVector();
+   int activeScalar = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveScalar();
 
    double activeMinMax[ 2 ];
-   cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
+   ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
 
    std::map< int, DataSet >::iterator iter;
    

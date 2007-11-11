@@ -79,7 +79,7 @@ void SoundAddNewEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* base
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

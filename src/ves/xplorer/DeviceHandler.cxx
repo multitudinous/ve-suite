@@ -114,9 +114,9 @@ DeviceHandler::~DeviceHandler()
 void DeviceHandler::ExecuteCommands()
 {
     std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
-    if( cfdModelHandler::instance()->GetXMLCommand() )
+    if( ModelHandler::instance()->GetXMLCommand() )
     {
-        currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+        currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
 
         if( currentEventHandler != _eventHandlers.end() )
         {
@@ -129,14 +129,14 @@ void DeviceHandler::ExecuteCommands()
             }
 
             currentEventHandler->second->SetGlobalBaseObject( active_device );
-            currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+            currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
             //Tablet and Wand is always active and need updated...
-            if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
+            if( ModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
             {
                 currentEventHandler->second->SetGlobalBaseObject( devices[ "Tablet" ] );
-                currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+                currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
                 currentEventHandler->second->SetGlobalBaseObject( devices[ "Wand" ] );
-                currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+                currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
             }
         }
     }

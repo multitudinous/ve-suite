@@ -93,10 +93,6 @@ public:
     ///Do not know what this is
     virtual void UpdateCommand();
 
-    ///Do not know what this is
-    ///\param _cfdCommandArray 
-    virtual bool CheckCommandId( ves::xplorer::cfdCommandArray* _cfdCommandArray = 0 );
-
     ///Get the active coordinate system
     ves::xplorer::scenegraph::DCS* GetActiveDCS();
 

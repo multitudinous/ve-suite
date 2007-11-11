@@ -72,7 +72,7 @@ void AttributeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

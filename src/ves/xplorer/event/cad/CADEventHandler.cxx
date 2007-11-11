@@ -99,7 +99,7 @@ void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model)
         }
         else
         {
-            m_activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+            m_activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
         if( m_activeModel )
         {

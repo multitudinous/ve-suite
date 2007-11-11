@@ -65,7 +65,7 @@ public:
 
    ///Set the cfdModel.
    ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from cfdModelHandler\n
+   ///Default uses the active cfdModel from ModelHandler\n
    ///Otherwise, the cfdModel passed in is used.
    void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
 

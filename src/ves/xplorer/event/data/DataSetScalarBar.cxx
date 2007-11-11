@@ -118,11 +118,11 @@ ves::xplorer::scenegraph::DCS* DataSetScalarBar::GetScalarBar( void )
 osg::ref_ptr< ScalarBar > DataSetScalarBar::CreateScalarBar( void )
 {
    DataSet activeDataSet = 0;
-   if ( cfdModelHandler::instance()->GetActiveModel() )
+   if ( ModelHandler::instance()->GetActiveModel() )
    {
-      if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+      if ( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
       {
-         activeDataSet = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+         activeDataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
       }
    }
    

@@ -130,7 +130,7 @@ void EphemerisDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase*
 	else
 	{
             m_activeModel =
-		    ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+		    ves::xplorer::ModelHandler::instance()->GetActiveModel();
 	}
     }
     catch(...)

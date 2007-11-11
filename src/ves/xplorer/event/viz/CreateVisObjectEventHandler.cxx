@@ -433,7 +433,7 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
    {
       // Initialize all the geode creation flags and dcs flags for all the geodes
       iter->SetUpdateFlag( false );
-      iter->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
+      iter->SetActiveDataSet( ModelHandler::instance()->GetActiveDataSet() );
    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -679,7 +679,7 @@ void CreateVisObjectEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* 
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)
@@ -745,17 +745,17 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
    if ( scalarDVP )
    {
       scalarDVP->GetData( scalarBarState );
-      cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetDataSetScalarState( scalarBarState );
+      ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->SetDataSetScalarState( scalarBarState );
    }
 
    // Check to see if any of the objectss need updated before we
    // create actors
-   if ( cfdModelHandler::instance()->GetActiveModel() && activeObject)
+   if ( ModelHandler::instance()->GetActiveModel() && activeObject)
    {
-      activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
-      activeObject->SetVECommand( cfdModelHandler::instance()->GetXMLCommand() );
+      activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
+      activeObject->SetVECommand( ModelHandler::instance()->GetXMLCommand() );
       activeObject->UpdateCommand();
-      cfdModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
+      ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootTransparent();
    }
    
    // get the active vis object
@@ -765,13 +765,13 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
 
    //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
-	osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS();
 
    // add active dataset DCS to scene graph if not already there...
    vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
                         << activeDataSetDCS.get()
                         << std::endl << vprDEBUG_FLUSH;
-   this->activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
+   this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
    //this->activeObject->SetNormal( cfdEnvironmentHandler::instance()->GetNavigate()->GetDirection() );
    //this->activeObject->SetOrigin( cfdEnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
    this->activeObject->SetCursorType( cfdEnvironmentHandler::instance()->GetCursor()->GetCursorID() );
@@ -793,7 +793,7 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xm
    vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveVector Setting Active Vector = " << activeVector
       << std::endl << vprDEBUG_FLUSH;
    
-   Model* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   Model* activeModel = ModelHandler::instance()->GetActiveModel();
    DataSet activeDataset = activeModel->GetActiveDataSet();
    // need to set the vector by name
    activeDataset->SetActiveVector( activeVector );
@@ -826,7 +826,7 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
       << ", min = " << scalarMin
       << ", max = " << scalarMax
       << std::endl << vprDEBUG_FLUSH;
-   DataSet activeDataset = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+   DataSet activeDataset = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
    //update active scalar texture if it exists
    
    activeDataset->SetActiveScalar( activeScalarName );
@@ -844,7 +844,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
    activeModelDVP->GetData( dataSetName );
 
    //Need to set the active datasetname and get the position of the dataset
-   Model* activeModel = cfdModelHandler::instance()->GetActiveModel();
+   Model* activeModel = ModelHandler::instance()->GetActiveModel();
    unsigned int i = activeModel->GetIndexOfDataSet( dataSetName );
       vprDEBUG(vesDBG,1) 
          << "|\tCreateVisObjectEventHandler CHANGE_STEADYSTATE_DATASET " << i 
@@ -873,7 +873,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
       // (and the active dataset as well)
       DataSet activeDataset = activeModel->GetCfdDataSet( i );         
       
-      std::string oldDatasetName = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
+      std::string oldDatasetName = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
       vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = " 
          << oldDatasetName
          << std::endl << vprDEBUG_FLUSH;

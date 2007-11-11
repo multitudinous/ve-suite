@@ -96,7 +96,7 @@ void ChangeCursorEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* mod
       }
       else
       {
-         _activeModel = ves::xplorer::cfdModelHandler::instance()->GetActiveModel();
+         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
       }
    }
    catch(...)

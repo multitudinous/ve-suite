@@ -560,7 +560,7 @@ vtkCubeSource * cfdCursor::getBox()
 
 void cfdCursor::SetPlaneSize( float size )
 {	
-   double* dataDCSScale = cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
+   double* dataDCSScale = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetDCS()->GetScaleArray();
 	double* worldDCSScale = this->worldDCS->GetScaleArray();
 	double combineScale[ 3 ];
 	combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];

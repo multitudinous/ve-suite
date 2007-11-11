@@ -573,19 +573,19 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
    currentFrame += 1;
 
    std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
-   if( cfdModelHandler::instance()->GetXMLCommand() )
+   if( ModelHandler::instance()->GetXMLCommand() )
    {
       vprDEBUG(vesDBG,3) << "|\tcfdQuatCamHandler::PreFrameUpdate Command Name : "
-                           << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                           << ModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                            << std::endl<< vprDEBUG_FLUSH;
-      currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+      currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
          vprDEBUG(vesDBG,1) << "|\t cfdQuatCamHandler::PreFrameUpdate Executing: "
-                              << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                              << ModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                               << std::endl<< vprDEBUG_FLUSH;
          currentEventHandler->second->SetGlobalBaseObject();
-         currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+         currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
       }
    }
    frameTimer->stopTiming();

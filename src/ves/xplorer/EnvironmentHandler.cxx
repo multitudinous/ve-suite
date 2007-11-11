@@ -38,7 +38,7 @@
 #include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/PhysicsSimulationEventHandler.h>
+#include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 
 #include <ves/xplorer/device/cfdCursor.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
@@ -164,7 +164,7 @@ void EnvironmentHandler::Initialize( void )
 {
    displaySettings = new cfdDisplaySettings();
 
-   this->arrow = cfdModelHandler::instance()->GetArrow();
+   this->arrow = ModelHandler::instance()->GetArrow();
 }
 ////////////////////////////////////////////////////////////////////////////////
 EnvironmentHandler::~EnvironmentHandler( void )
@@ -211,11 +211,6 @@ EnvironmentHandler::~EnvironmentHandler( void )
 
    //Delete all the devices in DeviceHandler
    //ves::xplorer::DeviceHandler::instance()->CleanUp();
-}
-////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::SetCommandArray( cfdCommandArray* input )
-{
-   _commandArray = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*cfdSoundHandler* EnvironmentHandler::GetSoundHandler( void )
@@ -347,19 +342,19 @@ void EnvironmentHandler::LatePreFrameUpdate()
    vprDEBUG(vesDBG,3) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
    std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
-   if( cfdModelHandler::instance()->GetXMLCommand() )
+   if( ModelHandler::instance()->GetXMLCommand() )
    {
       vprDEBUG(vesDBG,3) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
-                           << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                           << ModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                            << std::endl<< vprDEBUG_FLUSH;
-      currentEventHandler = _eventHandlers.find( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+      currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
       if(currentEventHandler != _eventHandlers.end())
       {
          vprDEBUG(vesDBG,1) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
-                              << cfdModelHandler::instance()->GetXMLCommand()->GetCommandName() 
+                              << ModelHandler::instance()->GetXMLCommand()->GetCommandName() 
                               << std::endl<< vprDEBUG_FLUSH;
          currentEventHandler->second->SetGlobalBaseObject();
-         currentEventHandler->second->Execute( cfdModelHandler::instance()->GetXMLCommand() );
+         currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
       }
    }
 

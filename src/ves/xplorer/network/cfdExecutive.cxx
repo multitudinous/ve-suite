@@ -321,7 +321,7 @@ void cfdExecutive::GetEverything( void )
          _plugins[ iter->first ]->AddSelfToSG();
          Model* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
          tempCFDModel->SetID( iter->first );
-         cfdModelHandler::instance()->AddModel( tempCFDModel );
+         ModelHandler::instance()->AddModel( tempCFDModel );
          // Give graphical plugins access to wand position, wand buttons, and gui variables
          _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
          //Need to pass an active device in here or something
@@ -384,7 +384,7 @@ void cfdExecutive::GetEverything( void )
       {
          // if a module is on the pugins map but not on the id map
          foundPlugin->second->RemoveSelfFromSG();
-         cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
+         ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
          // Remove a plugins event handler map
          // do this before the foundPlugin is deleted
          std::map< int, std::map< std::string, cfdVEBaseClass* > >::iterator cmdIter;
@@ -407,7 +407,7 @@ void cfdExecutive::GetEverything( void )
    }
    //Set active model to null so that if the previous active model is deleted
    //that we don't get errors in our code other places.
-   cfdModelHandler::instance()->SetActiveModel( 0 );
+   ModelHandler::instance()->SetActiveModel( 0 );
    vprDEBUG(vesDBG,0) << "|\t\tDone Getting Network From Executive"
                           << std::endl << vprDEBUG_FLUSH;    
 }
@@ -423,11 +423,11 @@ void cfdExecutive::PreFrameUpdate( void )
                           << std::endl << vprDEBUG_FLUSH;
 
    //process the current command form the gui
-    if( cfdModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
+    if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare("wait") )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator 
             currentEventHandler;
-        Command* tempCommand = cfdModelHandler::instance()->GetXMLCommand();
+        Command* tempCommand = ModelHandler::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
@@ -455,21 +455,21 @@ void cfdExecutive::PreFrameUpdate( void )
          ++foundPlugin )
    {
       //1. Set the current command on all plugins
-      /*if ( cfdModelHandler::instance()->GetActiveModel() )
+      /*if ( ModelHandler::instance()->GetActiveModel() )
       {
          Command* tempCommand = 
-                  cfdModelHandler::instance()->GetActiveModel()->GetVECommand();
+                  ModelHandler::instance()->GetActiveModel()->GetVECommand();
          foundPlugin->second->SetCurrentCommand( tempCommand );
       }*/
       //2. if active model is the plugin's model...
-      if ( cfdModelHandler::instance()->GetActiveModel() &&
-           ( cfdModelHandler::instance()->GetActiveModel() == 
+      if ( ModelHandler::instance()->GetActiveModel() &&
+           ( ModelHandler::instance()->GetActiveModel() == 
             foundPlugin->second->GetCFDModel() )
          )
       {  
          //Process a special plugin command
          Command* tempCommand = 
-          cfdModelHandler::instance()->GetXMLCommand();
+          ModelHandler::instance()->GetXMLCommand();
          //if( tempCommand )
          {
             std::string cmdName = tempCommand->GetCommandName();
