@@ -350,7 +350,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    right.push_back(0.0);
 
    ///Compute the basis functions and derivatives -- Algo A2.3 Pigel
-   for(size_t j = 1; j <= _degree[direction]; j++)
+   for(size_t j = 1; j <= /*_degree[direction]*/1; j++)
    {
 
       left.push_back(parameter - _knotVectors[direction].Knot(_currentSpan[direction] + 1 - j));
@@ -375,7 +375,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    _derivativeBasisFunctions[direction].clear();
    
    //Initialize the "0th" derivative in our derivative map
-   for(size_t j = 0; j <= _degree[direction]; j++)
+   for(size_t j = 0; j <= /*_degree[direction]*/1; j++)
    {
       _derivativeBasisFunctions[direction][0].push_back(_knotDifferences[direction][j].at(_degree[direction]));
    }
@@ -393,14 +393,14 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
    double d = 0.0;
    double* a = new double [2*(_degree[direction]+1)];
    //Compute the derivatives
-   for( int r = 0; r <= static_cast<int>(_degree[direction]); r++)
+   for( int r = 0; r <= /*static_cast<int>(_degree[direction])*/1; r++)
    {
       row1 = 0;
       row2 = 1;
 
       a[0] = 1.0;
 
-      for( int k = 1; k <= static_cast<int>(_degree[direction]); k++)
+      for( int k = 1; k <= /*static_cast<int>(_degree[direction])*/1; k++)
       {
           d = 0.0;
           rk = r-k;
@@ -456,9 +456,9 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives(double parameter,
       
    }
    int r= _degree[direction];
-   for(int k=1; k <= static_cast<int>(_degree[direction]); k++)
+   for(int k=1; k <= /*static_cast<int>(_degree[direction])*/1; k++)
    {
-      for(int j =0; j <= int(_degree[direction]); j++)
+      for(int j =0; j <= /*int(_degree[direction])*/1; j++)
       {
          _derivativeBasisFunctions[direction][k][j]*=r;
       }

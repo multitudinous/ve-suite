@@ -242,17 +242,17 @@ std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>
    double ucontrib [4] = {0.,0.,0.,0.0};
    unsigned int udegree = _degree["U"];
    unsigned int vdegree = _degree["V"];
-   for(unsigned int n = 0; n < udegree; n++)
+   for(unsigned int n = 0; n < /*udegree*/1; n++)
    {
       tempUContribution.clear();
-      for(unsigned int l = 0; l <= vdegree; l++)
+      for(unsigned int l = 0; l <= /*vdegree*/1; l++)
       {
          vindex = _currentSpan["V"] - vdegree + l;
          ucontrib[0] = 0;
          ucontrib[1] = 0;
          ucontrib[2] = 0;
          ucontrib[3] = 0.0;
-         for(unsigned int k = 0; k <= udegree; k++)
+         for(unsigned int k = 0; k <= /*udegree*/1; k++)
          {
             uindex = _currentSpan["U"] - udegree + k;
          
@@ -273,13 +273,13 @@ std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>
       }
 
       double sw [4] = {0.,0.,0.,0.0};
-      for(unsigned int j = 0; j < vdegree; j++)
+      for(unsigned int j = 0; j < /*vdegree*/1; j++)
       {
          sw[0] = 0;
          sw[1] = 0;
          sw[2] = 0;
          sw[3] = 0.0;
-         for(unsigned int l = 0; l <= vdegree; l++)
+         for(unsigned int l = 0; l <= /*vdegree*/1; l++)
          {
             sw[0]+=(tempUContribution[l].X()
                     *_derivativeBasisFunctions["V"][j].at(l));
@@ -298,7 +298,7 @@ std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint>
    double vContrib[3] = {0.,0.,0.};
    double v2[3] = {0.,0.,0.};
    unsigned int bcoeff = 1;
-   for(unsigned int k=0; k <=d;k++)
+   for(unsigned int k=0; k <=1/*d*/;k++)
    {
       for(unsigned int l = 0; l <= d-k;l++)
       {

@@ -144,13 +144,13 @@ std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> NURBSCurve::_calculat
    double resultPtWeight = 1.0;
    double cw[3] = {0,0,0};
    unsigned int udegree = _degree["U"];
-   for(unsigned int k = 0; k < udegree; k++)
+   for(unsigned int k = 0; k < /*udegree*/1; k++)
    {
       cw[0] = 0.0;
       cw[1] = 0.0;
       cw[2] = 0.0;
       resultPtWeight=0.0;
-      for(unsigned int j = 0; j <= udegree; j++)
+      for(unsigned int j = 0; j <= /*udegree*/1; j++)
       {                 
          cw[0] += (_controlPoints[0][span - udegree +j].WeightedX()
                    *_derivativeBasisFunctions["U"][k].at(j));
