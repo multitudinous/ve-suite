@@ -199,7 +199,6 @@ f_geometry( true ),
 f_visualization( true ),
 xplorerMenu( 0 ),
 recordScenes( 0 ),
-//network( 0 ),
 canvas( 0 ),
 hierarchyTree(),
 m_frame( 0 ),
@@ -216,7 +215,7 @@ m_ephemeris( 0 )
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
     serviceList = CORBAServiceList::instance();
-    serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
+    CORBAServiceList::instance()->SetArgcArgv( ::wxGetApp().argc, tempArray );
 
     this->SetIcon( ve_icon32x32_xpm );
     //Initialize recent files menu
@@ -251,20 +250,6 @@ m_ephemeris( 0 )
     XMLObjectFactory::Instance()->RegisterObjectCreator( "Model", new model::ModelCreator() );
     XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD", new cad::CADCreator() );
 
-    //Try and load network from server if one is already present
-    std::string nw_str = serviceList->GetNetwork();
-    //network->Load( nw_str, true );
-	if(!nw_str.empty())
-	{
-		canvas->PopulateNetworks( nw_str );
-	}
-    //create hierarchy page
-	hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-		GetXMLModels(), XMLDataBufferEngine::instance()->
-		GetTopSystemId());
-    //Process command line args to see if ves file needs to be loaded
-    ProcessCommandLineArgs();
-
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
@@ -293,7 +278,20 @@ m_ephemeris( 0 )
     UserPreferencesDataBuffer::instance()->SetCommand( 
         "CHANGE_BACKGROUND_COLOR", veCommand );
     
-    serviceList->SendCommandStringToXplorer( veCommand );
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    
+    //Try and load network from server if one is already present
+    std::string nw_str = CORBAServiceList::instance()->GetNetwork();
+	if(!nw_str.empty())
+	{
+		canvas->PopulateNetworks( nw_str );
+	}
+    //create hierarchy page
+	hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
+                                GetXMLModels(), XMLDataBufferEngine::instance()->
+                                GetTopSystemId());
+    //Process command line args to see if ves file needs to be loaded
+    ProcessCommandLineArgs();    
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()

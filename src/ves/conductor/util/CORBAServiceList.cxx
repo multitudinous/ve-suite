@@ -55,6 +55,9 @@ vprSingletonImp( CORBAServiceList );
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetArgcArgv( int argc, char** argv )
 {
+    p_ui_i = 0;
+    pelog = 0;
+
    //Copy the command line args because tao deletes them after processing them
    peArgc = argc;
    peArgv = new char*[ argc ];
@@ -64,9 +67,6 @@ void CORBAServiceList::SetArgcArgv( int argc, char** argv )
       peArgv[ i ] = new char[ stringLength + 1 ];
       strcpy(peArgv[ i ], argv[ i ] );
    }
-
-   p_ui_i = 0;
-   pelog = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::CleanUp()
@@ -131,30 +131,36 @@ std::vector< std::string > CORBAServiceList::GetListOfServices( void )
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::ConnectToCE( void )
 {
-   if( pelog == NULL )
-   {
-	   pelog = new PEThread();
-   }
+    if( pelog == NULL )
+    {
+        pelog = new PEThread();
+    }
 
-   if( !IsConnectedToNamingService() )
-   {
-      return false;
-   }
+    if( !IsConnectedToNamingService() )
+    {
+        return false;
+    }
 
-   if( p_ui_i == 0 )
-   {
-      try
-      {   
-         CreateCORBAModule();
-      } 
-      catch ( CORBA::Exception& ex ) 
-      {
-         GetMessageLog()->SetMessage( "Can't find executive or UI registration error\n");
-		 GetMessageLog()->SetMessage( ex._info().c_str() );
-         return false;
-      }
-   }
-   return true;
+    if( ( p_ui_i != 0 ) && !CORBA::is_nil( veCE.in() ) )
+    {
+        return true;
+    }
+   
+    try
+    {   
+        CreateCORBAModule();
+        if( ( p_ui_i == 0 ) || CORBA::is_nil( veCE.in() ) )
+        {
+            return false;
+        }
+    } 
+    catch ( CORBA::Exception& ex ) 
+    {
+        GetMessageLog()->SetMessage( "Can't find executive or UI registration error\n");
+        GetMessageLog()->SetMessage( ex._info().c_str() );
+        return false;
+    }
+    return true;
 }
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::ConnectToXplorer( void )
@@ -389,9 +395,7 @@ void CORBAServiceList::CreateCORBAModule( void )
         
          try 
          {
-            //std::cout << "corba 6 " << std::endl;      
             veCE->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in());
-            //std::cout << "corba 7 " << std::endl;      
          }
          catch ( CORBA::Exception& ex ) 
          {
@@ -532,6 +536,12 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
 ///////////////////////////////////////////////////////////////////////
 ves::open::xml::Command CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
 {
+    if( p_ui_i == 0 )
+    {
+        ves::open::xml::Command tempCommand;
+        tempCommand.SetCommandName( "NULL" );
+        return tempCommand;
+    }
     return p_ui_i->GetXplorerData( commandName );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -549,7 +559,7 @@ std::string CORBAServiceList::GetNetwork( void )
    }
    catch ( ... )
    {
-      return std::string();
+       return std::string();
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
