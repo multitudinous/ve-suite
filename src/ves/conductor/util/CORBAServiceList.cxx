@@ -85,7 +85,7 @@ void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_con
 /////////////////////////////////////////////////////////////
 bool CORBAServiceList::IsConnectedToXplorer( void )
 {
-   if ( CORBA::is_nil( vjobs.in() ) )
+   if( CORBA::is_nil( vjobs.in() ) )
    {
       return ConnectToXplorer();
    }
@@ -168,9 +168,8 @@ bool CORBAServiceList::ConnectToXplorer( void )
    if ( pelog == NULL )
    {
 	   pelog = new PEThread();
-//	   pelog->activate();
    }
-   
+
    if ( !IsConnectedToNamingService() )
    {
       return false;
@@ -185,7 +184,7 @@ bool CORBAServiceList::ConnectToXplorer( void )
       name[0].id   = CORBA::string_dup ("Master");
       name[0].kind = CORBA::string_dup ("VE_Xplorer");
       CORBA::Object_var naming_context_object =
-      orb->resolve_initial_references ("NameService");
+            orb->resolve_initial_references ("NameService");
       CosNaming::NamingContext_var naming_context1 = 
                CosNaming::NamingContext::_narrow( naming_context_object.in() );
       CORBA::Object_var ve_object = naming_context1->resolve(name);
@@ -200,6 +199,16 @@ bool CORBAServiceList::ConnectToXplorer( void )
       return false;
    }
   
+    ///Cannot assume that p_ui_i and m_ui have been initialized yet
+    if( ( p_ui_i == 0 ) || CORBA::is_nil( m_ui.in() ) )
+    {
+        CreateCORBAModule();
+        if( ( p_ui_i == 0 ) || CORBA::is_nil( m_ui.in() ) )
+        {
+            return false;
+        }
+    }
+    
    ///This is the new way of communication
    try 
    {
@@ -210,12 +219,12 @@ bool CORBAServiceList::ConnectToXplorer( void )
       xplorerCom[0].kind = CORBA::string_dup ("VE_Xplorer");
       CORBA::Object_var naming_context_object =
       orb->resolve_initial_references ("NameService");
-      CosNaming::NamingContext_var naming_context1 = 
+     CosNaming::NamingContext_var naming_context1 = 
                CosNaming::NamingContext::_narrow( naming_context_object.in() );
       CORBA::Object_var ve_object = naming_context1->resolve(xplorerCom);
 	   m_xplorer = Body::VEXplorer::_narrow( ve_object.in() );
 	   m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() ); 
-      GetMessageLog()->SetMessage( "Connected to NEW VE server.\n");
+      GetMessageLog()->SetMessage( "Connected to two-way VE server.\n");
    } 
    catch ( CORBA::Exception& ex ) 
    {
