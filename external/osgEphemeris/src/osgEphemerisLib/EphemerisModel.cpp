@@ -153,7 +153,11 @@ bool EphemerisModel::_init()
 
     // Ground Plane
     if( _members & GROUND_PLANE )
-        _memberGroup->addChild( new GroundPlane( SkyDome::getMeanDistanceToMoon() ));
+    {
+        _groundPlane = new GroundPlane(SkyDome::getMeanDistanceToMoon());
+        _memberGroup->addChild( _groundPlane.get());
+        //_memberGroup->addChild( new GroundPlane( SkyDome::getMeanDistanceToMoon() ));
+    }
 
     // Moon
     if( _members & MOON )
@@ -278,6 +282,15 @@ double EphemerisModel::getLongitude() const
     if( _ephemerisData != 0L )
         return _ephemerisData->longitude;
     return 0.0;
+}
+
+GroundPlane* EphemerisModel::getGroundPlane()
+{
+    if( _groundPlane.valid() )
+    {
+        return _groundPlane.get();
+    }
+    return 0;
 }
 
 void EphemerisModel::setLongitude( double longitude)

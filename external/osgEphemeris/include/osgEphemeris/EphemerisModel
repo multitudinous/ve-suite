@@ -294,6 +294,11 @@ class OSGEPHEMERIS_EXPORT EphemerisModel : public osg::Group
         const EphemerisUpdateCallback *getEphemerisUpdateCallback() const;
 
         /**
+          Return a pointer to the GroundPlane
+        */
+        GroundPlane* getGroundPlane();
+
+        /**
           * Effect an update.  Used internally by the internal UpdateCallback
           */
         void update();
