@@ -450,9 +450,10 @@ if not SConsAddons.Util.hasHelpFlag():
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
+   testDir = pj(buildDir,'test','testNURBS')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, osgOQSubdirs ]
+               shareSubdirs, lokiSubdirs, osgOQSubdirs, testDir ]
 
    # freeze the python code
    if 'freeze' in  COMMAND_LINE_TARGETS:

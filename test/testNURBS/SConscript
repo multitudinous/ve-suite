@@ -1,0 +1,21 @@
+##Builds a multitude of utilities
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir osg_options')
+
+srcs = Split("""
+   NURBTest.cxx
+""")
+
+
+env = ves_pkg.getEnv().Copy()
+env.Append(LIBS = ['ves_xplorer_util'])
+env.Append(LIBS = ['ves_xplorer_scenegraph'])
+env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')])
+env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','scenegraph')])
+osg_options.apply( env )
+
+testNURBS = ves_pkg.createProgram('testNURBS' + env["PROGSUFFIX"], env, 'bin')
+testNURBS.addSources( srcs )
+testNURBS.build()
