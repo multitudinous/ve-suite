@@ -341,7 +341,7 @@ void cfdApp::initScene( void )
    EnvironmentHandler::instance()->Initialize();
    for(int i=1;i<argc;++i)
    {
-      if( (std::string( argv[i] ) == std::string("-VESDesktop"))&&(argc>=i+2) )
+      if( (std::string( argv[i] ) == std::string("-VESDesktop")) && (argc>=i+2) )
       {
          EnvironmentHandler::instance()->
                      SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
