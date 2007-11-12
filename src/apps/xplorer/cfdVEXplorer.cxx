@@ -30,13 +30,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include "cfdAppWrapper.h"
-#include "cfdVjObsWrapper.h"
-
-#include <apps/ce/Executive_i.h>
+//TAO headers need to be first or else windows complains
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+//End TAO headers
+
+#include <ves/open/moduleS.h>
+//#include <tao/ORB.h>
+#include "cfdAppWrapper.h"
+#include "cfdVjObsWrapper.h"
 
 #include <iostream>
 #include <cstdlib>

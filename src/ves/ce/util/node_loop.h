@@ -47,7 +47,7 @@ class VE_CE_UTILS_EXPORTS node_loop : public node_base
 {
 public:
 
-   node_loop  (Network *);
+	node_loop  (VE_CE::Utilities::Network *);
    node_loop  (const node_loop&);
    ~node_loop ();
 

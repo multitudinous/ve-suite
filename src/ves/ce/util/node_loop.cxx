@@ -32,15 +32,15 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/ce/util/node_loop.h>
 #include <ves/ce/util/node_module.h>
-#include <ves/ce/util/Network.h>
 #include <ves/ce/util/Module.h>
+#include <ves/ce/util/Network.h>
 #include <iostream>
 #include <algorithm>
 
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 
-node_loop::node_loop(Network *n)
+node_loop::node_loop(VE_CE::Utilities::Network *n)
   : node_base(n, 1)
 {
 }

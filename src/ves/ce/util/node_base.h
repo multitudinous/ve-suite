@@ -46,11 +46,11 @@ class Network;
 class VE_CE_UTILS_EXPORTS node_base 
 {
 public:
-   node_base( Network *, int );
+	node_base( VE_CE::Utilities::Network *, int );
    node_base( const node_base& );
    virtual ~node_base();
 
-   void set_net( Network* );
+   void set_net( VE_CE::Utilities::Network* );
 
    virtual int  mod_count ()=0;
    virtual void get_mods (std::set<int> &)=0;
@@ -61,7 +61,7 @@ public:
    virtual void need_execute ()=0;
    virtual void clear_out_to (std::set<int>)=0;
 
-   Network *_net;
+   VE_CE::Utilities::Network* _net;
    int     _type;
 };
 }

@@ -30,13 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdVjObsWrapper.h"
-#include "VjObs_i.h"     //added for corba stuff
-
+//TAO headers need to be first or else windows complains
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+//End TAO headers
 
+#include "cfdVjObsWrapper.h"
+#include "VjObs_i.h"     //added for corba stuff
 
 #include <ves/xplorer/Xplorer_i.h>
 #include <ves/xplorer/EnvironmentHandler.h>

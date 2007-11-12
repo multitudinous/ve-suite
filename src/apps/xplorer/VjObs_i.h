@@ -161,11 +161,7 @@ protected:
    ///\param value the sc
    void setSc( CORBA::Long value) throw (CORBA::SystemException);
    ///get post data
-   ///This should be removed
-   short getPostdataState( void ) throw (CORBA::SystemException);
-   ///Get the time step info
-   short getTimesteps( void ) throw (CORBA::SystemException);
-
+  
    vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
 
    /// Buffer variables...always right

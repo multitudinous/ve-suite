@@ -62,7 +62,7 @@ namespace Utilities
 {
 class OPort;
 class IPort;
-class Network;
+//class Network;
 class Connection;
 
 ///??

@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
-
+#include <ves/open/xml/model/Model.h>
 #include <iostream>
 
 using namespace ves::xplorer;

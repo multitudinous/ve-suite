@@ -33,7 +33,7 @@
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 #include <ves/xplorer/Debug.h>
-
+#include <ves/open/xml/model/Model.h>
 #include <iostream>
 
 #include <vpr/vpr.h>

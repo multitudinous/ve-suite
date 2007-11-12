@@ -34,7 +34,7 @@
 #define CE_UTILITIES_NETWORK_H
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
-
+#include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/NetworkPtr.h>
 
 

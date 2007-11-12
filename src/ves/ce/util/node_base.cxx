@@ -31,9 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/ce/util/node_base.h>
+#include <ves/ce/util/Network.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
-node_base::node_base(Network *n, int t)
+node_base::node_base(VE_CE::Utilities::Network *n, int t)
   : _net(n), _type(t)
 {
 }
@@ -48,7 +49,7 @@ node_base::~node_base()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void node_base::set_net( Network *n )
+void node_base::set_net( VE_CE::Utilities::Network *n )
 {
   _net = n;
 }
