@@ -66,6 +66,9 @@ public:
    ///equal operator
    //cfdDisplaySettings& operator= ( const cfdDisplaySettings& ) { ; }
 
+    ///Process the display command
+    virtual void ProcessCommand();
+    
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray.
    virtual void UpdateCommand() { ; }
 

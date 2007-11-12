@@ -56,8 +56,7 @@ cfdDisplaySettings::cfdDisplaySettings( void )
    newZval = 0;
 }
 //////////////////////////////////////////////////////////////////////////
-/*
-bool cfdDisplaySettings::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCommandArray )
+void cfdDisplaySettings::ProcessCommand()
 {
    std::string commandType;
    if ( veCommand )
@@ -184,9 +183,7 @@ bool cfdDisplaySettings::CheckCommandId( ves::xplorer::cfdCommandArray * _cfdCom
       jccl::ConfigManager::instance()->unlockActive();
    }
    veCommand = 0;
-   return true;
 }
-*/
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )
 {

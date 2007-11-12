@@ -266,19 +266,12 @@ void EnvironmentHandler::InitScene( void )
    this->cursor = new cfdCursor( this->arrow, 
                              ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(), 
                              ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
-   //this->cursor->Initialize( NULL, NULL );
-
+            
    //
    // Initiate quatcam
    //
    std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS(ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS());
-
-   //
-   // Initiate quatcam
-   //
-   //std::cout << "| 10. Initializing................................... Sound Handler |" << std::endl;
-   //this->_soundHandler = new cfdSoundHandler( /*_param.c_str()*/ );
 
    //
    // Initiate the Performer Stored Binary objects.
@@ -303,7 +296,7 @@ void EnvironmentHandler::InitScene( void )
       displayCommand->AddDataValuePair( dvpDesktopWidth );
       displayCommand->AddDataValuePair( dvpDesktopHeight );
       displaySettings->SetVECommand( displayCommand );
-      //displaySettings->CheckCommandId( NULL );
+      displaySettings->ProcessCommand();
       delete displayCommand;
    }
 

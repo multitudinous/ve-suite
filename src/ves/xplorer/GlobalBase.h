@@ -59,7 +59,9 @@ public:
 
    ///this abstract base class declares some pure virtual int functions to be
    ///specified in concrete implementations
-
+   ///Process the ves::open::xml::Command that has been passed in
+    virtual void ProcessCommand(){;}
+   
    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand() = 0;
 
