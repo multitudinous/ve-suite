@@ -371,8 +371,8 @@ bool EphemerisModel::getAutoDateTime() const
 
 void EphemerisModel::update()
 {
-    if( !_inited ) 
-        _init();
+    //if( !_inited ) 
+    //    _init();
 
     if( _ephemerisUpdateCallback.valid() )
         (*_ephemerisUpdateCallback.get())(_ephemerisData);

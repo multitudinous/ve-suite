@@ -16,6 +16,7 @@
 #include <osgDB/ReadFile>
 
 #include <osgUtil/CullVisitor>
+#include <osgUtil/UpdateVisitor>
 
 #include <osg/StateSet>
 #include <osg/CullFace>
@@ -153,6 +154,8 @@ void SkyDome::setTurbidity( float t )
 
 void SkyDome::traverse(osg::NodeVisitor&nv)
 {
+    if (dynamic_cast<osgUtil::UpdateVisitor*>(&nv))
+                   return;
     // The sun fills 0.53 degrees of visual angle.  The 1.45 multiplier is because the sun texture includes
     // a partially transparent halo around it so there isn't a hard edge.
     osg::Matrix  P;
