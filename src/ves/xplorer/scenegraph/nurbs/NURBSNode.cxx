@@ -391,10 +391,6 @@ bool NURBSControlMesh::TranslateSelectedControlPoint(float dx,
                                                      float dy,
                                                      float dz)
 {
-   /*double eyeSpaceTranslation[3] = {0,0,0};
-   eyeSpaceTranslation[0] = dx;
-   eyeSpaceTranslation[1] = dy;
-   eyeSpaceTranslation[2] = dz;*/
    if(_selection)
    {
       if(_selectedControlPointIndex > -1)
@@ -440,14 +436,14 @@ void NURBSControlMesh::drawImplementation(osg::State& renderState) const
    }
    if(_isSurface)
    {
-      _drawUCurves();
-      _drawVCurves();
+      //_drawUCurves();
+      //_drawVCurves();
    }
    else
    {
       if(_numUControlPoints > _numVControlPoints)
       {
-         _drawUCurves();
+         //_drawUCurves();
       }
       else
       {
@@ -660,7 +656,7 @@ void NURBSTessellatedSurface::_tessellateSurface()const
 
    //std::cout<<"Num u interpolated points:"<<nUPoints<<std::endl;
    //std::cout<<"Num v interpolated points:"<<nVPoints<<std::endl;
-
+	Point tempPoint;
    for(unsigned int v = 0; v </*2;*/ nVPoints - 1;v++)
    {
       //new tristrip
@@ -669,40 +665,38 @@ void NURBSTessellatedSurface::_tessellateSurface()const
       
       //bottom corner vert
       glNormal3fv(_calculateSurfaceNormalAtPoint(v*nUPoints).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at(v*nUPoints).X(),
-                 _nurbsObject->InterpolatedPoints().at(v*nUPoints).Y(),
-                 _nurbsObject->InterpolatedPoints().at(v*nUPoints).Z());
+	  tempPoint = _nurbsObject->InterpolatedPoints().at(v*nUPoints);
+      glVertex3f( tempPoint.X(),tempPoint.Y(),tempPoint.Z());
 
       //right corner vert
       glNormal3fv(_calculateSurfaceNormalAtPoint((v+1)*nUPoints).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at((v+1)*nUPoints).X(),
-                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints).Y(),
-                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints).Z());
+	  tempPoint = _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints);
+      glVertex3f( tempPoint.X(),tempPoint.Y(),tempPoint.Z());
 
       //next top vert 
       glNormal3fv(_calculateSurfaceNormalAtPoint(v*nUPoints+1).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1).X(),
-                 _nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1).Y(),
-                 _nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1).Z());
+	  tempPoint = _nurbsObject->InterpolatedPoints().at((v)*nUPoints + 1);
+      glVertex3f( tempPoint.X(),tempPoint.Y(),tempPoint.Z());
 
       //interior points
       for(unsigned int u = 1; u < nUPoints - 1; u++)
       {
          glNormal3fv(_calculateSurfaceNormalAtPoint((v+1)*nUPoints+u).ptr());
-         glVertex3f(_nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u).X(),
-                    _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u).Y(),
-                    _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u).Z());
+		 tempPoint = _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + u);
+         glVertex3f( tempPoint.X(),
+                    tempPoint.Y(),
+                    tempPoint.Z());
 
          glNormal3fv(_calculateSurfaceNormalAtPoint((v)*nUPoints+(u+1)).ptr());
-         glVertex3f(_nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1)).X(),
-                    _nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1)).Y(),
-                    _nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1)).Z());
+		 tempPoint = _nurbsObject->InterpolatedPoints().at(v*nUPoints + (u+1));
+         glVertex3f( tempPoint.X(),
+                    tempPoint.Y(),
+                    tempPoint.Z());
       }
       //handle last point
       glNormal3fv(_calculateSurfaceNormalAtPoint((v+1)*nUPoints+(nUPoints - 1)).ptr());
-      glVertex3f(_nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1).X(),
-                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1).Y(),
-                 _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1).Z());
+	  tempPoint = _nurbsObject->InterpolatedPoints().at((v+1)*nUPoints + nUPoints - 1);
+      glVertex3f( tempPoint.X(),tempPoint.Y(),tempPoint.Z());
       glEnd();
    }
 }
@@ -719,14 +713,13 @@ void NURBSTessellatedSurface::_tessellateCurve()const
       return;
    }
    unsigned int nUPoints = _nurbsObject->NumInterpolatedPoints("U");
-   
+   Point tempPoint;
    //new linestrip
    glBegin(GL_LINE_STRIP);
    for(unsigned int u = 0; u < nUPoints; u++)
    {
-      glVertex3f(_nurbsObject->InterpolatedPoints().at(u).X(),
-                 _nurbsObject->InterpolatedPoints().at(u).Y(),
-                 _nurbsObject->InterpolatedPoints().at(u).Z());
+	 tempPoint = _nurbsObject->InterpolatedPoints().at(u);
+      glVertex3f( tempPoint.X(),tempPoint.Y(),tempPoint.Z());
    }
    glEnd();
 }	
@@ -737,7 +730,7 @@ osg::Vec3 NURBSTessellatedSurface::_calculateSurfaceNormalAtPoint(unsigned int i
    if(_nurbsObject->GetMinimumDegree() > 1)
    //if(_nurbsObject->GetType() == NURBSObject::Surface)
    {
-      ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = dynamic_cast<ves::xplorer::scenegraph::nurbs::NURBSSurface*>(_nurbsObject);
+      ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = static_cast<ves::xplorer::scenegraph::nurbs::NURBSSurface*>(_nurbsObject);
       
       ves::xplorer::scenegraph::nurbs::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at(index);
       ves::xplorer::scenegraph::nurbs::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at(index);
