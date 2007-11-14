@@ -152,7 +152,9 @@ public:
 
    // New function for testing the new VECommand structure
    void SetVECommand( ves::open::xml::Command* veCommand );
-
+   ///Process the command that was set by conductor
+   virtual void ProcessCommand();
+   
    unsigned int numQuatCams;
    unsigned int numFlyThroughs;
    unsigned int* numPointsInFlyThrough;

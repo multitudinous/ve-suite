@@ -132,7 +132,7 @@ public:
    ///Set the cursor type
    ///\param The type of cursor to use
    void SetCursorType( int type );
-
+   virtual void ProcessCommand();
    // for box cursor...
    void getExtent(double boxExtent[6]);
    vtkCubeSource *getBox();

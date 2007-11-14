@@ -29,7 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <ves/xplorer/environment/cfdSoundHandler.h>

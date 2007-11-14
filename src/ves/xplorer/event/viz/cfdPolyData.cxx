@@ -260,59 +260,7 @@ void cfdPolyData::Update()
    temp->Delete();
    this->updateFlag = true;
 }
-#if 0
-bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
-{
-/*
-   // This is here because Dr. K. has code in 
-   // cfdObjects that doesn't belong there
-   // Fix this
-   bool flag = cfdObjects::CheckCommandId( commandArray );
-   
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) == 1 &&
-         commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == POLYDATA)
-   {
-      warpSurface = true;
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
-               == CHANGE_CONTOUR_SETTINGS )
-   {  
-      // warped contour settings
-      //double v[2];
-	  // this->GetActiveDataSet()->GetParent()->GetUserRange( v );
-      int scale = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
-      this->warpedContourScale = (scale/50.0) * 0.1 
-                    * 1.0f;//this->GetActiveDataSet()->GetParent()->GetLength();///(float)(v[1]-v[0]);
-*/
-      // contour lod control
-      /*int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
-      double realLOD = (double)lod/100.0;
-      this->deci->SetTargetReduction( realLOD );*/
-//      return true;
-//   }
-/*
-   else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
-   {
-      SetParticleOption((int)commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
 
-      vprDEBUG(vesDBG,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      vprDEBUG(vesDBG,0) << " CHANGE_SPHERE_SIZE, value = " 
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << std::endl << vprDEBUG_FLUSH;
-
-      SetParticleScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-
-      return true;
-   }
-   return flag;
-*/
-   return true;
-}
-#endif
 //////////////////////////////////////////////////////////
 void cfdPolyData::SetParticleOption( unsigned int option )
 {

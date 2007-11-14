@@ -219,7 +219,7 @@ void cfdTeacher::LoadScene(unsigned int whichChild)
 void cfdTeacher::ClearStoredScenes()
 {
     vprDEBUG(vesDBG,2) 
-        << "|\tcfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE "
+        << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
         << std::endl  << vprDEBUG_FLUSH;
 
     if( !this->dcs.valid() )

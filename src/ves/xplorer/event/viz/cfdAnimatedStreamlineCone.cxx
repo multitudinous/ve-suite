@@ -260,6 +260,7 @@ void cfdAnimatedStreamlineCone::Update( void )
 }
 
 #if 0
+///This code needs to be updated to ves::open::xml::command
 bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
 {
    // This is here because Dr. K. has code in 

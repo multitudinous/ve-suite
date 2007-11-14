@@ -828,10 +828,10 @@ void cfdCursor::SetActiveDataSet( DataSet* input )
    if ( _activeDataSet != NULL )
       this->SetActiveDataSetDCS( _activeDataSet->GetDCS() );
 }
-/*
-bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
+////////////////////////////////////////////////////////////////////////////////
+void cfdCursor::ProcessCommand()
 {
-   bool flag = false; //cfdObjects::CheckCommandId( commandArray );
+   bool flag = false;
    std::string commandType;
    if ( veCommand )
    {
@@ -934,25 +934,22 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          }
       }
    }
-
-   return true;
 }
-*/
-
+////////////////////////////////////////////////////////////////////////////////
 // in future, multi-threaded apps will make a copy of VjObs_i commandArray
 void cfdCursor::UpdateCommand()
 {
    std::cerr << "doing nothing in cfdCursor::UpdateCommand()" << std::endl;
 
 }
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetSphereScale( float scale )
 {
    //this controls the size of the sphere seed points
    //when the GUI is from 1 to 100, this will take the seed points from approximately 0.1 foot to 3 feet
    sphereRadius = ( scale + 5 ) * 0.01f;
 }
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdCursor::SetCursorType( int type )
 {
    cursorId = type;

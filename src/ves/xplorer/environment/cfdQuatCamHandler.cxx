@@ -410,12 +410,11 @@ void cfdQuatCamHandler::AddNewFlythrough( void )
    flyThroughList.push_back( temp );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
+void cfdQuatCamHandler::ProcessCommand()
 {
    if ( !onMasterNode )
    {
-      return true;
+      return;
    }
 
    bool flag = false;
@@ -545,10 +544,8 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
           _updateViewGUIPointData();
       }
    }
-   return flag;
 }
-*/
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::_updateViewGUIPointData()
 {
     Command* viewPointGUIData = new Command();
