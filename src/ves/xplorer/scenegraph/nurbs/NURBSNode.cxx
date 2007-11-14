@@ -309,6 +309,7 @@ void NURBSControlMesh::Selection()const
    //get the current viewport
    glGetIntegerv(GL_VIEWPORT,viewport);
    hits = glRenderMode(GL_SELECT);
+   //hits = glRenderMode(GL_RENDER);
    glInitNames();
    glPushName(0);
 
@@ -354,7 +355,7 @@ void NURBSControlMesh::Selection()const
    }
    else
    {
-	   m_hasSelectedControlPoint = false;
+	   //m_hasSelectedControlPoint = false;
    }
    //restoring the original projection matrix
    glMatrixMode(GL_PROJECTION);
@@ -379,7 +380,8 @@ void NURBSControlMesh::Selection()const
 ////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::ResetSelection()
 {
-   _selectedControlPointIndex = -1;
+    _selectedControlPointIndex = -1;
+    m_hasSelectedControlPoint = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool NURBSControlMesh::IsControlPointSelected( )
@@ -426,7 +428,7 @@ void NURBSControlMesh::drawImplementation(osg::State& renderState) const
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
    osg::State& currentState = renderState;
 #endif
-   if(_selection)
+   if( _selection && !m_hasSelectedControlPoint )
    {
       _projectionMatrix = const_cast<double*>(currentState.getProjectionMatrix().ptr());
       _modelViewMatrix = const_cast<double*>(currentState.getModelViewMatrix().ptr());

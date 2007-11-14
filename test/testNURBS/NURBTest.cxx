@@ -64,10 +64,10 @@ public:
                if((ea.getButtonMask()== osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON)||
                  (ea.getButtonMask()== osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON))
                {
-                  UpdateLastMousePosition(ea.getX(),ea.getY());
+                  UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                   for(size_t i =0; i < _nPatches; i++)
                   {
-                     _patches.at(i)->SetMousePosition(ea.getX(),ea.getY());
+                     _patches.at(i)->SetMousePosition(ea.getXnormalized(),ea.getYnormalized());
                      _patches.at(i)->SetSelectionStatus(true);
                   }
                   //to process drag events...
@@ -85,7 +85,7 @@ public:
                      _patches.at(i)->SetSelectionStatus(false);
                   }
                }
-               UpdateLastMousePosition(ea.getX(),ea.getY());
+               UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                break;
             }
             case(osgGA::GUIEventAdapter::DRAG):
@@ -97,28 +97,28 @@ public:
                {
                   //x mouse move == X direction (left/right)
                   //y mouse move == Z direction (up/down)
-                  dx = ea.getX() - _lastMousePosition[0];
-                  dz = ea.getY() - _lastMousePosition[1];
+                  dx = ea.getXnormalized() - _lastMousePosition[0];
+                  dz = ea.getYnormalized() - _lastMousePosition[1];
                   if((fabs(dx) > .05)||(fabs(dz) > .05))
                   {
                      for(size_t i =0; i < _nPatches; i++)
                      {
                         _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
                      }
-                     UpdateLastMousePosition(ea.getX(),ea.getY());
+                     UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                   }
                }
                else if(ea.getButtonMask() == osgGA::GUIEventAdapter::RIGHT_MOUSE_BUTTON)
                {
                   //y mouse move == zoom direction (in/out)
-                  dy = ea.getY() - _lastMousePosition[2];
+                  dy = ea.getYnormalized() - _lastMousePosition[2];
                   if((fabs(dy) > .05))
                   {
                      for(size_t i =0; i < _nPatches; i++)
                      {
                         _patches.at(i)->MoveSelectedControlPoint(0,-dy,0);
                      }
-                     UpdateLastMousePosition(ea.getX(),ea.getY());
+                     UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                   }
                }
                break;

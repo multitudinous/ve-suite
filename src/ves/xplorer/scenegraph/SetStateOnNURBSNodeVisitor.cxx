@@ -74,24 +74,22 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
     if( tempNode )
     {
         //process patches
-        //std::cout << " found a patch " << std::endl;
         tempNode->SetSelectionStatus( m_selectedState );
         if( !m_selectedState )
         {
             return;
         }
+        std::cout << " found a patch " << m_selectedState << " " << tempNode->IsControlPointSelected() << std::endl;
 
-        if( m_dragState )
+        if( m_dragState && tempNode->IsControlPointSelected() )
         {
             tempNode->MoveSelectedControlPoint( 
-                m_mouseDelta.first * 5, 0, -m_mouseDelta.second * 5);
-            std::cout <<  "Have a selected point " 
-                << tempNode->IsControlPointSelected() << std::endl;
+                m_mouseDelta.first * 10, 0, -m_mouseDelta.second * 10);
         }
         else
         {
             tempNode->SetMousePosition( -1.0 + m_mousePoint.first*2.0,
-                                        -1.0 + m_mousePoint.second*2.0 );
+                                        1.0 - m_mousePoint.second*2.0 );
         }
     }
     else
