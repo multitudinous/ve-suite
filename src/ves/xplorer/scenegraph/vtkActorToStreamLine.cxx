@@ -283,9 +283,6 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
         "uniform float particleLength; \n"
         "uniform float particleSize; \n"
 
-        "varying vec2 texCoord; \n"
-        "varying vec4 color; \n"
-
         "void main() \n"
         "{ \n"
             //Billboard the quads
@@ -305,19 +302,16 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
 
             //Set the variables
             "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
-            "texCoord = gl_Vertex.xy; \n"
-            "color = gl_Color; \n"
+            "gl_TexCoord[0].xy = gl_Vertex.xy; \n"
+            "gl_FrontColor = gl_Color; \n"
         "} \n";
 
     char fragmentPass[] =
         "uniform float particleExp; \n"
 
-        "varying vec2 texCoord; \n"
-        "varying vec4 color; \n"
-
         "void main() \n"
         "{ \n"
-            "vec4 totalColor = ( 1.0 - pow( dot( texCoord, texCoord ), particleExp ) ) * color; \n"
+            "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
 
             "gl_FragColor = totalColor; \n"
         "} \n";
