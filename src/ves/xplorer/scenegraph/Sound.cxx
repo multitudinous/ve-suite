@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-09-24 15:35:46 -0500 (Mon, 24 Sep 2007) $
- * Version:       $Rev: 9142 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: Sound.cxx 9142 2007-09-24 20:35:46Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

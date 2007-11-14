@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-10-13 22:40:37 -0500 (Sat, 13 Oct 2007) $
- * Version:       $Rev: 9483 $
- * Author:        $Author: mccdo $
- * Id:            $Id: SoundActivateEH.h 9483 2007-10-14 03:40:37Z mccdo $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
