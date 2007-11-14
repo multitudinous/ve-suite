@@ -5,8 +5,13 @@
 
 #include <osg/Geode>
 #include <osg/PositionAttitudeTransform>
-
+#include <osg/Version>
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
+#include <osgViewer/Viewer>
+#include <osgViewer/ViewerEventHandlers>
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 #include <osgProducer/Viewer>
+#endif
 
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
@@ -16,14 +21,18 @@
 #include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
 #ifndef WIN32
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
+#ifdef HAS_OCC
 #include <ves/xplorer/scenegraph/nurbs/util/IGES2VENURBS.h>
+#endif
 #endif
 #include <ves/xplorer/util/fileIO.h>
 
 void createTestNURBS(int argc, char** argv);
 #ifndef WIN32
 int parseOCCNURBSFile(int argc, char** argv);
+#ifdef HAS_OCC
 int parseIGESFile(int argc, char** argv);
+#endif
 #endif
 
 class KeyboardEventHandler : public osgGA::GUIEventHandler
@@ -159,21 +168,7 @@ void render(int argc, char** argv,
     arguments.getApplicationUsage()->setCommandLineUsage(arguments.getApplicationName()+"[options] [filename] ...");
     arguments.getApplicationUsage()->addCommandLineOption("-h or --help","Display this information");
     arguments.getApplicationUsage()->addCommandLineOption("ps","Render the Professional Services logo");
-   
-    // construct the viewer.
-    osgProducer::Viewer viewer(arguments);
-
-    
-
     KeyboardEventHandler* keh = new KeyboardEventHandler(surfacePatches);
-    viewer.getEventHandlerList().push_front(keh);
-
-    // set up the value with sensible default event handlers.
-    viewer.setUpViewer(osgProducer::Viewer::STANDARD_SETTINGS);
-
-    // get details on keyboard and mouse bindings used by the viewer.
-    viewer.getUsage(*arguments.getApplicationUsage());
-
     // if user request help write it out to cout.
     if (arguments.read("-h") || arguments.read("--help"))
     {
@@ -183,7 +178,7 @@ void render(int argc, char** argv,
     
     // any option left unread are converted into errors to write out later.
     arguments.reportRemainingOptionsAsUnrecognized();
-
+    
     // report any errors if they have occured when parsing the program aguments.
     if (arguments.errors())
     {
@@ -193,24 +188,34 @@ void render(int argc, char** argv,
     osg::ref_ptr<osg::PositionAttitudeTransform> root = new osg::PositionAttitudeTransform();
     for(size_t i = 0; i < surfacePatches.size(); i++)
     {
-       root->addChild(surfacePatches.at(i).get());
+        root->addChild(surfacePatches.at(i).get());
     }
-
-    // add model to viewer.
+#if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
+    // construct the viewer.
+    osgViewer::Viewer viewer(arguments);
+    viewer.addEventHandler(keh);
+    viewer.addEventHandler(new osgViewer::WindowSizeHandler);
     viewer.setSceneData( root.get());
-
-    // create the windows and run the threads.
     viewer.realize();
-
+    viewer.run();
+#elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
+    // construct the viewer.
+    osgProducer::Viewer viewer(arguments);
+    viewer.getEventHandlerList().push_front(keh);
+    // set up the value with sensible default event handlers.
+    viewer.setUpViewer(osgProducer::Viewer::STANDARD_SETTINGS);
+    
+    // get details on keyboard and mouse bindings used by the viewer.
+    viewer.getUsage(*arguments.getApplicationUsage());
     while( !viewer.done() )
     {
         // wait for all cull and draw threads to complete.
-        viewer.sync();
-
+        viewer.run();
+        
         // update the scene by traversing it with the the update visitor which will
         // call all node update callbacks and animations.
         viewer.update();
-         
+        
         // fire off the cull and draw traversals of the scene.
         viewer.frame();
         
@@ -218,12 +223,14 @@ void render(int argc, char** argv,
     
     // wait for all cull and draw threads to complete.
     viewer.sync();
-
+    
     // run a clean up frame to delete all OpenGL objects.
     viewer.cleanup_frame();
-
+    
     // wait for all the clean up frame to complete.
     viewer.sync();
+#endif
+    
 }
 
 int main(int argc, char** argv)
@@ -234,8 +241,10 @@ int main(int argc, char** argv)
       if(std::string::npos != firstArg.find(".iges"))
       {
          std::cout<<"Found Iges file: "<<firstArg<<std::endl;  
-#ifndef WIN32
+#ifndef WIN32 
+#ifdef HAS_OCC
          parseIGESFile(argc,argv);
+#endif
 #endif
          return 0;
       }
@@ -256,12 +265,13 @@ int main(int argc, char** argv)
 }
 ///////////////////////////////////////
 #ifndef WIN32
+#ifdef HAS_OCC
 int parseIGESFile(int argc,char** argv)
 {
 
    std::string igesFile(argv[1]);
    std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >nurbsPatches;
-   ves::xplorer::scenegraph::nurbs::Utilities::IGES2VENURBS igesReader;
+   ves::xplorer::scenegraph::nurbs::util::IGES2VENURBS igesReader;
    std::vector<ves::xplorer::scenegraph::nurbs::NURBSSurface*> surfaces = igesReader.GetVectorOfVENURBSSurface(igesFile);
    size_t nPatches = surfaces.size();
    for(size_t i = 0; i < nPatches;i++)
@@ -289,7 +299,7 @@ int parseIGESFile(int argc,char** argv)
    }
    return 0;
 }
-
+#endif
 ////////////////////////////////////////////
 int parseOCCNURBSFile(int argc, char** argv)
 {
@@ -297,7 +307,7 @@ int parseOCCNURBSFile(int argc, char** argv)
    //std::string nurbsfile(argv[1]);
    std::vector< std::string > patchFiles = ves::xplorer::util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
-   ves::xplorer::scenegraph::nurbs::Utilities::OCCNURBSFileReader patchReader;
+   ves::xplorer::scenegraph::nurbs::util::OCCNURBSFileReader patchReader;
 
    for(size_t i = 0; i < nPatches;i++)
    {
