@@ -123,10 +123,8 @@ void CADEntity::InitPhysics()
 {
     if( !m_physicsRigidBody.valid() )
     {
-        m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody( 
-            m_cadEntityHelper->GetNode() );
-
-        m_dcs->SetbtRigidBody( m_physicsRigidBody.get() );
+        m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody( m_dcs.get() );
+        m_dcs->SetbtRigidBody( m_physicsRigidBody->GetRigidBody() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

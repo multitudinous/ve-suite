@@ -34,6 +34,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/TransferPhysicsDataCallback.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/vesMotionState.h>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btRigidBody.h>
@@ -69,11 +70,19 @@ void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor*
 
     if( dcs.valid() && m_btBody )
     {
-        btQuaternion quat = m_btBody->getWorldTransform().getRotation();
+        ves::xplorer::scenegraph::vesMotionState* motionState =
+            static_cast< vesMotionState* >( m_btBody->getMotionState() );
+        btTransform transform;
+        if( motionState )
+        {
+            motionState->getWorldTransform( transform );
+        }
+
+        btQuaternion quat = transform.getRotation();
         dcs->setAttitude( osg::Quat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] ) );
 
-        btVector3 position = m_btBody->getWorldTransform().getOrigin();
-        dcs->setPosition( osg::Vec3d( position[0], position[ 1 ], position[ 2 ] ) );
+        btVector3 position = transform.getOrigin();
+        dcs->setPosition( osg::Vec3d( position[ 0 ], position[ 1 ], position[ 2 ] ) );
     }
 
     traverse( node, nv );

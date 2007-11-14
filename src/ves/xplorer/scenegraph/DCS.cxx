@@ -33,7 +33,9 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/vesMotionState.h>
 #include <ves/xplorer/scenegraph/TransferPhysicsDataCallback.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/SelectTechnique.h>
 
 // --- OSG Includes --- //
@@ -52,9 +54,8 @@
 
 // --- Bullet Includes --- //
 #include <LinearMath/btTransform.h>
-#include <LinearMath/btMotionState.h>
-#include <LinearMath/btDefaultMotionState.h>
 #include <BulletDynamics/Dynamics/btRigidBody.h>
+#include <BulletDynamics/Dynamics/btDynamicsWorld.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -89,11 +90,11 @@ m_btBody( 0 )
     SetScaleArray( temp );
 
     //_scale is defined in the inherited class osg::PositionAttitudeTransform
-    this->_scale[0] = 1;
+    _scale[0] = 1;
 
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
-    this->setUpdateCallback( m_udcb.get() );
+    setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
         ( new osg::StateSet( *getOrCreateStateSet() ) ) );
@@ -103,13 +104,13 @@ DCS::DCS( double* scale, double* trans, double* rot )
 :
 m_btBody( 0 )
 {
-    this->SetTranslationArray( trans );
-    this->SetRotationArray( rot );
-    this->SetScaleArray( scale );
+    SetTranslationArray( trans );
+    SetRotationArray( rot );
+    SetScaleArray( scale );
 
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
-    this->setUpdateCallback( m_udcb.get() );
+    setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
         ( new osg::StateSet( *getOrCreateStateSet() ) ) );
@@ -122,7 +123,7 @@ m_btBody( 0 )
 {
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetbtRigidBody( m_btBody );
-    this->setUpdateCallback( m_udcb.get() );
+    setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
         ( new osg::StateSet( *getOrCreateStateSet() ) ) );
@@ -135,7 +136,7 @@ DCS::~DCS()
 ////////////////////////////////////////////////////////////////////////////////
 double* DCS::GetVETranslationArray()
 {
-    osg::Vec3d trans = this->getPosition();
+    osg::Vec3d trans = getPosition();
     for( size_t i = 0; i < 3; ++i )
     {
         m_Translation[i] = trans[i];
@@ -146,7 +147,7 @@ double* DCS::GetVETranslationArray()
 ////////////////////////////////////////////////////////////////////////////////
 double* DCS::GetRotationArray()
 {
-    osg::Quat quat = this->getAttitude();
+    osg::Quat quat = getAttitude();
 
     gmtl::Quatd tempQuat( quat[0], quat[1], quat[2], quat[3] );
     gmtl::Matrix44d _vjMatrix = gmtl::makeRot< gmtl::Matrix44d >( tempQuat );
@@ -161,7 +162,7 @@ double* DCS::GetRotationArray()
 ////////////////////////////////////////////////////////////////////////////////
 double* DCS::GetScaleArray()
 {
-    osg::Vec3d tempScale = this->getScale();
+    osg::Vec3d tempScale = getScale();
     for ( size_t i = 0; i < 3; ++i )
     {
         m_Scale[i] = tempScale[i];
@@ -173,7 +174,7 @@ double* DCS::GetScaleArray()
 void DCS::SetTranslationArray( std::vector< double > transArray )
 {
 #ifdef _OSG           
-    this->setPosition( osg::Vec3d( transArray[0], transArray[1], transArray[2] ) );
+    setPosition( osg::Vec3d( transArray[0], transArray[1], transArray[2] ) );
 #elif _OPENSG
 #endif
 
@@ -183,7 +184,7 @@ void DCS::SetTranslationArray( std::vector< double > transArray )
 void DCS::SetQuat( osg::Quat quat )
 {
 #ifdef _OSG
-    this->setAttitude( quat );
+    setAttitude( quat );
 #elif _OPENSG
 #endif
 
@@ -205,8 +206,8 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
 
     osg::Quat quat;
     rotateMat.get( quat );
-    this->setAttitude( quat );
-    this->setPivotPoint( osg::Vec3d( 0, 0, 0) );
+    setAttitude( quat );
+    setPivotPoint( osg::Vec3d( 0, 0, 0) );
 #elif _OPENSG
 #endif
 
@@ -216,17 +217,17 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
 void DCS::SetScaleArray( std::vector< double > scaleArray )
 {
 #ifdef _OSG
-    this->setScale( osg::Vec3d( scaleArray[0], scaleArray[1], scaleArray[2] ) );
+    setScale( osg::Vec3d( scaleArray[0], scaleArray[1], scaleArray[2] ) );
 
     ///Do this so that the normals will not be affected by the scaling applied by the user
     ///See osg post one April 19, 2007
     if ( scaleArray[0] != 1 )
     {
-        this->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
+        getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
     }
     else
     {
-        this->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::OFF );
+        getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::OFF );
     }
 
 #elif _OPENSG
@@ -268,15 +269,15 @@ void DCS::SetScaleArray( double* scale )
 gmtl::Matrix44d DCS::GetMat()
 {
 #ifdef _OSG
-    osg::Matrixd scaleMat = osg::Matrixd::scale( this->getScale() );
-    osg::Matrixd translationMat = osg::Matrixd::translate( this->getPosition() );
-    osg::Matrixd inverseTranslationMat = osg::Matrixd::translate( -this->getPosition()[0],
-                                                                  -this->getPosition()[1],
-                                                                  -this->getPosition()[2] );
+    osg::Matrixd scaleMat = osg::Matrixd::scale( getScale() );
+    osg::Matrixd translationMat = osg::Matrixd::translate( getPosition() );
+    osg::Matrixd inverseTranslationMat = osg::Matrixd::translate( -getPosition()[0],
+                                                                  -getPosition()[1],
+                                                                  -getPosition()[2] );
     scaleMat = inverseTranslationMat * scaleMat * translationMat;
 
     osg::Matrixd rotateMat;   
-    rotateMat.makeRotate( this->getAttitude() );
+    rotateMat.makeRotate( getAttitude() );
     rotateMat = inverseTranslationMat * rotateMat * translationMat;
 
     osg::Matrixd osgMat = translationMat * scaleMat * rotateMat;
@@ -312,20 +313,20 @@ void DCS::SetMat( gmtl::Matrix44d& input )
     gmtl::Matrix44d unScaleInput = tempScaleMat * input;
 
     //Set scale values
-    this->setScale( osg::Vec3d( gmtl::length( scaleXVec ), 
+    setScale( osg::Vec3d( gmtl::length( scaleXVec ), 
                                 gmtl::length( scaleYVec ), 
                                 gmtl::length( scaleZVec ) ) );
 
     //Set rotation values
     gmtl::Quatd tempQuat = gmtl::make< gmtl::Quatd >( unScaleInput );
     osg::Quat quat( tempQuat[0], tempQuat[1], tempQuat[2], tempQuat[3] );
-    this->setAttitude( quat );
+    setAttitude( quat );
 
     //Set translation array
     osg::Matrix inMat;
     inMat.set( input.getData() );
     osg::Vec3d trans = inMat.getTrans();
-    this->setPosition( trans );
+    setPosition( trans );
 #elif _OPENSG
     std::cerr << " ERROR: DCS::SetMat is NOT implemented " << std::endl;
     exit( 1 );
@@ -352,7 +353,7 @@ void DCS::SetRotationMatrix( gmtl::Matrix44d& input )
     //Create the quat for rotataion
     gmtl::Quatd tempQuat = gmtl::make< gmtl::Quatd >( unScaleInput );
     osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-    this->setAttitude( quat );
+    setAttitude( quat );
 #elif _OPENSG
     std::cerr << " ERROR: DCS::SetRotationMatrix is NOT implemented " << std::endl;
     exit( 1 );
@@ -364,7 +365,7 @@ void DCS::SetRotationMatrix( gmtl::Matrix44d& input )
 int DCS::RemoveChild( SceneNode* child )
 {
 #ifdef _OSG
-    return this->removeChild( dynamic_cast< osg::Node* >( child ) );
+    return removeChild( dynamic_cast< osg::Node* >( child ) );
 #elif _OPENSG
     cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -376,7 +377,7 @@ int DCS::RemoveChild( SceneNode* child )
 int DCS::AddChild( SceneNode* child )
 {
 #ifdef _OSG
-    return this->addChild( dynamic_cast< Node* >( child ) );
+    return addChild( dynamic_cast< Node* >( child ) );
 #elif _OPENSG
     cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -388,7 +389,7 @@ int DCS::AddChild( SceneNode* child )
 void DCS::InsertChild( int position, SceneNode* child )
 {
 #ifdef _OSG
-    this->insertChild( position, dynamic_cast< Node* >( child ) );
+    insertChild( position, dynamic_cast< Node* >( child ) );
 #elif _OPENSG
     cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -400,7 +401,7 @@ void DCS::InsertChild( int position, SceneNode* child )
 int DCS::GetNumChildren()
 {
 #ifdef _OSG
-    return this->getNumChildren();
+    return getNumChildren();
 #elif _OPENSG
     cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -412,7 +413,7 @@ int DCS::GetNumChildren()
 const std::string DCS::GetName()
 {
 #ifdef _OSG
-    return this->getName().data();
+    return getName().data();
 #elif _OPENSG
     return 0;
 #endif
@@ -421,7 +422,7 @@ const std::string DCS::GetName()
 void DCS::SetName( std::string name )
 {
 #ifdef _OSG
-    this->setName( name );
+    setName( name );
 #elif _OPENSG
     std::cerr << " ERROR: DCS::SetName is NOT implemented " << std::endl;
     exit( 1 );
@@ -431,7 +432,7 @@ void DCS::SetName( std::string name )
 int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
 #ifdef _OSG
-    return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
+    return replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
 #elif _OPENSG
     cerr << " ERROR: DCS::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -443,7 +444,7 @@ int DCS::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 bool DCS::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
 #ifdef _OSG
-    return this->containsNode( dynamic_cast< osg::Node* >( searchChild ) );
+    return containsNode( dynamic_cast< osg::Node* >( searchChild ) );
 #elif _OPENSG
 #endif
 }
@@ -451,7 +452,7 @@ bool DCS::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 osg::Group* DCS::GetParent( unsigned int position )
 {
 #ifdef _OSG
-    return this->getParent( position );
+    return getParent( position );
 #elif _OPENSG
 #endif
 }
@@ -459,7 +460,7 @@ osg::Group* DCS::GetParent( unsigned int position )
 osg::Node* DCS::GetChild( unsigned int position )
 {
 #ifdef _OSG
-    return this->getChild( position );
+    return getChild( position );
 #elif _OPENSG
 #endif
 }
@@ -476,14 +477,14 @@ void DCS::ToggleDisplay( std::string onOff )
     if( onOff == "ON" )
     {
 #ifdef _OSG
-        this->setNodeMask( 1 );
+        setNodeMask( 1 );
 #elif _OPENSG
 #endif
     }
     else if( onOff == "OFF" )
     {
 #ifdef _OSG
-        this->setNodeMask( 0 );
+        setNodeMask( 0 );
 #elif _OPENSG
 #endif
     }
@@ -496,21 +497,36 @@ void DCS::UpdatePhysicsTransform()
         return;
     }
 
-    osg::Quat quat = this->getAttitude();
-    osg::Vec3d trans = this->getPosition();
+    osg::Quat quat = getAttitude();
+    osg::Vec3d trans = getPosition();
 
-    btTransform bulletTransform;
-    bulletTransform.setIdentity();
+    btTransform transform = btTransform::getIdentity();
     btQuaternion btQuat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
-    bulletTransform.setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
-    bulletTransform.setRotation( btQuat );
+    transform.setOrigin( btVector3( trans.x(), trans.y(), trans.z() ) );
+    transform.setRotation( btQuat );
 
-    if( m_btBody->getMotionState() )
+    ves::xplorer::scenegraph::vesMotionState* motionState =
+        static_cast< vesMotionState* >( m_btBody->getMotionState() );
+    if( motionState )
     {
-        btDefaultMotionState* dcsMotionState = (btDefaultMotionState*)m_btBody->getMotionState();
-        m_btBody->setWorldTransform( bulletTransform );
-        dcsMotionState->m_startWorldTrans = bulletTransform;
+        motionState->m_startWorldTrans = transform;
+        motionState->m_graphicsWorldTrans = transform;
+        m_btBody->setWorldTransform( transform );
+        m_btBody->setInterpolationWorldTransform( transform );
     }
+
+    //Removed cached contact points
+    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->
+        getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs
+        ( m_btBody->getBroadphaseHandle(),
+          ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->getDispatcher() );
+
+    if( m_btBody && !m_btBody->isStaticObject() )
+    {
+        m_btBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
+        m_btBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetbtRigidBody( btRigidBody* rigidBody )

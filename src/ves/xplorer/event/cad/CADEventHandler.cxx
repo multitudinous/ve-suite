@@ -296,8 +296,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
                 partNode->InitPhysics();
 
                 partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
-                partNode->GetPhysicsRigidBody()->setFriction( newPart->GetFriction() );
-                partNode->GetPhysicsRigidBody()->setRestitution( newPart->GetRestitution() );
+                partNode->GetPhysicsRigidBody()->SetFriction( newPart->GetFriction() );
+                partNode->GetPhysicsRigidBody()->SetRestitution( newPart->GetRestitution() );
                 
                 std::string physicsMesh = newPart->GetPhysicsMesh();
                 if( physicsMesh == "Bounding Box" )

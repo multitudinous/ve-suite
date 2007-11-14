@@ -35,6 +35,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/vesMotionState.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -277,15 +278,16 @@ void PhysicsSimulator::ResetScene()
 
         if( body && body->getMotionState() )
         {
-            btDefaultMotionState* myMotionState = ( btDefaultMotionState* )body->getMotionState();
-            myMotionState->m_graphicsWorldTrans = myMotionState->m_startWorldTrans;
+            ves::xplorer::scenegraph::vesMotionState* motionState = 
+                static_cast< ves::xplorer::scenegraph::vesMotionState* >( body->getMotionState() );
+            motionState->m_graphicsWorldTrans = motionState->m_startWorldTrans;
 
-            colObj->setWorldTransform( myMotionState->m_graphicsWorldTrans );
-            colObj->setInterpolationWorldTransform( myMotionState->m_startWorldTrans );
+            colObj->setWorldTransform( motionState->m_graphicsWorldTrans );
+            colObj->setInterpolationWorldTransform( motionState->m_startWorldTrans );
             colObj->activate();
 
             //Removed cached contact points
-				m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), m_dynamicsWorld->getDispatcher() );
+			m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), m_dynamicsWorld->getDispatcher() );
 
             btRigidBody* body = btRigidBody::upcast( colObj );
 
