@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite"
-#define MyAppVerName "VE-Suite 1.1"
+#define MyAppVerName "VE-Suite 1.1.2"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VELauncher "velauncher.exe"
@@ -18,7 +18,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
-OutputDir={#VEDEVHOME}\VE_Installer\installer
+OutputDir={#VEDEVHOME}\install
 OutputBaseFilename=vesuite{#VEVERSION}_{#SVNVERSION}
 Compression=lzma
 SolidCompression=true
