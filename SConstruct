@@ -109,6 +109,7 @@ else:
 ## setup the uuid for the build directory
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
 buildUUID = buildUUID.replace('/', '-')
+print "Build identifier %s" %buildUUID
 
 if ARGUMENTS.has_key("build_dir"):
    buildDir = ARGUMENTS["build_dir"]
@@ -283,7 +284,7 @@ vpr_options = fp_option.FlagPollBasedOption("Vapor",
 gadgeteer_options = fp_option.FlagPollBasedOption("Gadgeteer",
                                                "gadgeteer", "1.0", True, True)
 
-osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True)
+osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, None, True, headerToCheck=None)
 
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
