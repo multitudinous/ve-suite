@@ -109,7 +109,7 @@ else:
 ## setup the uuid for the build directory
 buildUUID = GetPlatform()+'.'+kernelVersion+'.'+machineType+'.'+GetArch()
 buildUUID = buildUUID.replace('/', '-')
-print "Build identifier %s" %buildUUID
+
 if ARGUMENTS.has_key("build_dir"):
    buildDir = ARGUMENTS["build_dir"]
 elif GetPlatform() == 'win32':
@@ -283,6 +283,8 @@ vpr_options = fp_option.FlagPollBasedOption("Vapor",
 gadgeteer_options = fp_option.FlagPollBasedOption("Gadgeteer",
                                                "gadgeteer", "1.0", True, True)
 
+osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True)
+
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
 opts.AddOption( bullet_options )
@@ -292,6 +294,7 @@ opts.AddOption( boost_options )
 opts.AddOption( gmtl_options )
 opts.AddOption( vpr_options )
 opts.AddOption( gadgeteer_options )
+opts.AddOption( osgal_options )
 
 Export('opts', 'vtk_options', 'osg_options', 
          'xerces_options','wxwidgets_options',
@@ -302,7 +305,7 @@ Export('opts', 'vtk_options', 'osg_options',
          'bullet_options', 'tao_options',
          'vrjuggler_options', 'boost_options',
          'gmtl_options', 'vpr_options',
-         'gadgeteer_options')
+         'gadgeteer_options', 'osgal_options')
 
 ##Display some help
 help_text = """--- VE-Suite Build system ---
@@ -407,6 +410,9 @@ if not SConsAddons.Util.hasHelpFlag():
       base_bldr.enableOpt()
       base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
 
+   if osgal_options.isAvailable():
+      baseEnv.Append( CPPDEFINES = ['VE_SOUND'] )  
+
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
@@ -499,7 +505,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    # Requires one build on command line to verify options are correct.
    if GetPlatform() == 'win32':
-      SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg,'VisualStudio')
+      SConsAddons.AutoDist.GenerateVisualStudioSolution(ves_pkg, 'VisualStudio')
 
    ##Setup the install flag to install VE-Suite
    if 'install' in COMMAND_LINE_TARGETS:
