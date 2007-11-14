@@ -72,9 +72,14 @@
 #include <istream>
 #include <sstream>
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
 vprSingletonImpLifetime( SceneManager, 100 );
 
-namespace ves{namespace xplorer{namespace scenegraph{
 SceneManager::SceneManager()
 :
 #ifdef VE_SOUND
