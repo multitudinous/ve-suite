@@ -2,6 +2,12 @@
 EnsureSConsVersion(0,96)
 SConsignFile()
 
+###
+from SCons.Defaults import SharedCheck, ProgScan
+from SCons.Script.SConscript import SConsEnvironment
+import fnmatch
+###
+
 import os, sys, re,string, smtplib,platform
 import distutils.util
 import commands
@@ -14,6 +20,12 @@ try:
 except:
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
+
+try:
+   from MacBundle import *
+except:
+   sys.path.append(pj(os.getcwd(), 'share', 'python'))
+   from MacBundle import *
 
 # Pull in HDF options files
 try:
@@ -194,7 +206,7 @@ else:
    osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',
                          'osgGA', 'osgDB', 'osgUtil', 'osg', 'OpenThreads',
-                         'osgSim', 'osgFX'])
+                         'osgSim', 'osgFX','osgViewer'])
 opts.AddOption( osg_options )
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
@@ -359,6 +371,10 @@ base_bldr.addOptions( opts )
 
 baseEnv = base_bldr.buildEnvironment()
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
+# Load some default tools
+baseEnv.AppendUnique(tools=('default', TOOL_SUBST))
+#baseEnv.AppendUnique(tools=('default', TOOL_BUNDLE))
+TOOL_BUNDLE( baseEnv )
 
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
@@ -492,3 +508,4 @@ if not SConsAddons.Util.hasHelpFlag():
          
    baseEnv.Alias('install', PREFIX)
    Default('.')
+
