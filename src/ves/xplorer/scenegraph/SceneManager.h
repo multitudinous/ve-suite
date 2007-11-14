@@ -33,23 +33,15 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
-/*!\file SceneManager.h
-*/
-
-/*!\class ves::xplorer::scenegraph::SceneManager
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
-
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
+#ifdef VE_SOUND
+#include <ves/xplorer/scenegraph/Sound.h>
+#endif
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -60,6 +52,12 @@
 #include <osgOQ/OcclusionQueryRoot.h>
 #include <osgOQ/OcclusionQueryContext.h>
 
+#ifdef VE_SOUND
+#include <osgAL/SoundRoot>
+#include <osgAL/SoundNode>
+#include <osgAL/SoundState>
+#endif
+
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -69,21 +67,25 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class Group;
-    class Switch;
-    class CADEntity;
-}
-}
-}
+class DCS;
+class Group;
+class Switch;
+class CADEntity;
+#ifdef VE_SOUND
+class Sound;
+#endif
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-class VE_SCENEGRAPH_EXPORTS SceneManager //: public vpr::Singleton< SceneManager >
+/*!\file SceneManager.h
+*/
+
+/*!\class ves::xplorer::scenegraph::SceneManager
+*
+*/
+
+/*!\namespace ves::xplorer::scenegraph
+*
+*/
+class VE_SCENEGRAPH_EXPORTS SceneManager
 {
 public:
     ///???
@@ -129,7 +131,7 @@ public:
     ///Reset the osgOQC node accessor
     ///Should be used when new ves files are loaded
     void ResetOcclusionQueryContext();
-       
+
 private:
     //Required so that vpr::Singleton can instantiate this class
     //Friend class vpr::Singleton< SceneManager >;
@@ -152,6 +154,17 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;///<Node to control navigation
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
 
+    #ifdef VE_SOUND
+    //Create ONE (only one, otherwise the transformation
+    //of the listener and update for SoundManager will be
+    //called several times, which is not catastrophic, but unnecessary) 
+    //SoundRoot that will make sure the listener is updated and
+    //to keep the internal state of the SoundManager updated
+    //This could also be done manually, this is just a handy way of doing it.
+    osg::ref_ptr< osgAL::SoundRoot > m_soundRoot;
+    //osg::ref_ptr< ves::xplorer::scenegraph::Sound > m_sound;
+    #endif
+
     //The logo
     ves::xplorer::scenegraph::CADEntity* m_blueArrow;
     ves::xplorer::scenegraph::CADEntity* m_greyArrow;
@@ -161,11 +174,11 @@ private:
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
-    osg::ref_ptr<osgOQ::OcclusionQueryContext> m_oqc;
+    osg::ref_ptr< osgOQ::OcclusionQueryContext > m_oqc;
 
     ///Map to store state information about each dcs
     std::map< int, gmtl::Matrix44d > m_matrixStore;
-   
+
 protected:
     ///Create the model for the logo
 #ifdef _OSG
@@ -177,4 +190,4 @@ protected:
 }
 }
 
-#endif //SCENE_MANAGER_H
+#endif // SCENE_MANAGER_H

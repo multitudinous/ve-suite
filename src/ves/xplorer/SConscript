@@ -5,7 +5,7 @@ import glob
 import SConsAddons.Util as sca_util
 
 Import('baseEnv buildDir RootDir ves_pkg vtk_options osg_options xerces_options LIBDIR')
-Import('tao_options boost_options vrjuggler_options bullet_options GetPlatform')
+Import('tao_options boost_options vrjuggler_options bullet_options osgal_options GetPlatform')
 
 xplorerSubdirs = Split("""
     scenegraph
@@ -81,7 +81,7 @@ tao_options.apply( lib_env )
 boost_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 bullet_options.apply( lib_env )
-
+osgal_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )

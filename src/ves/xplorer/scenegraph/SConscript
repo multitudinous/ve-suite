@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR osg_options vtk_options RootDir buildDir xerces_options GetPlatform')
-Import('gmtl_options bullet_options vpr_options gadgeteer_options vrjuggler_options')
+Import('gmtl_options bullet_options vpr_options gadgeteer_options vrjuggler_options osgal_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','scenegraph') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -28,6 +28,7 @@ vrjuggler_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
+osgal_options.apply( lib_env )
 #lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
 
 if GetPlatform() == 'win32':

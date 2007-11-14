@@ -39,7 +39,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
-
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/scenegraph/logo/BlueArrow.h>
@@ -47,6 +46,8 @@
 #include <ves/xplorer/scenegraph/logo/OrangeArrow.h>
 #include <ves/xplorer/scenegraph/logo/VE.h>
 #include <ves/xplorer/scenegraph/logo/Suite.h>
+
+#include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -60,28 +61,33 @@
 #include <osg/Switch>
 #endif
 
+#ifdef VE_SOUND
+// --- osgAL Includes --- //
+#include <osgAL/SoundManager>
+#endif
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <string>
 #include <istream>
 #include <sstream>
 
-#include <ves/xplorer/Debug.h>
-
-using namespace ves::xplorer::scenegraph;
-
 vprSingletonImpLifetime( SceneManager, 100 );
 
-////////////////////////////////////////////////////////////////////////////////
+namespace ves{namespace xplorer{namespace scenegraph{
 SceneManager::SceneManager()
+:
+#ifdef VE_SOUND
+m_soundRoot( 0 ),
+//m_sound( 0 ),
+#endif
+m_blueArrow( 0 ),
+m_greyArrow( 0 ),
+m_orangeArrow( 0 ),
+m_veText( 0 ),
+m_suiteText( 0 )
 {
     _param.erase();
-
-    m_blueArrow = 0;
-    m_greyArrow = 0;
-    m_orangeArrow = 0;
-    m_veText = 0;
-    m_suiteText = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize( std::string param )
@@ -121,6 +127,11 @@ SceneManager::~SceneManager()
         delete m_suiteText;
         m_suiteText = 0;
     }
+
+#ifdef VE_SOUND
+    //delete m_sound;
+    osgAL::SoundManager::instance()->shutdown();
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::InitScene()
@@ -130,6 +141,16 @@ void SceneManager::InitScene()
     rootNode = new ves::xplorer::scenegraph::Group();
     rootNode->SetName( "Root Node" );
     rootNode->setThreadSafeRefUnref( true );
+
+#ifdef VE_SOUND
+    osgAL::SoundManager::instance()->init( 32 );
+    osgAL::SoundManager::instance()->getEnvironment()->setDistanceModel( openalpp::InverseDistance );
+    osgAL::SoundManager::instance()->getEnvironment()->setDopplerFactor( 1 );
+
+    m_soundRoot = new osgAL::SoundRoot();
+    m_soundRoot->setName( "SoundRoot Node" );
+    rootNode->addChild( m_soundRoot.get() );
+#endif
 
     worldDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->SetName( "World DCS" );
@@ -145,9 +166,13 @@ void SceneManager::InitScene()
     //Create the switch for our logo
     _createLogo();
 
+    //m_sound = new ves::xplorer::scenegraph::Sound();
+    //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
+    //_logoNode->addChild( m_sound.get() );
+
     _logoSwitch->AddChild( worldDCS.get() );
     _logoSwitch->AddChild( _logoNode.get() );
-    _logoSwitch->AddChild( networkDCS.get() );   
+    _logoSwitch->AddChild( networkDCS.get() );
 
     ///World DCS
     m_matrixStore[ 0 ] = gmtl::Matrix44d();
@@ -161,7 +186,7 @@ void SceneManager::InitScene()
     m_oqc->setVisibilityThreshold( 1000 );
     ///Number of verts
     m_oqc->setOccluderThreshold( 1000 );
-    ///Specifies how many frames to wait before issuing another query    
+    ///Specifies how many frames to wait before issuing another query
     m_oqc->setQueryFrameCount( 3 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
@@ -189,7 +214,7 @@ void SceneManager::InitScene()
     bool loadedLib = osgDB::Registry::instance()->loadLibrary( pluginName );
     if( !loadedLib )
     {
-        vprDEBUG( vesDBG,2 ) << "Can't load plugin \"" 
+        vprDEBUG( vesDBG,2 ) << "Can't load plugin \""
         << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
     }
 }
@@ -226,7 +251,7 @@ void SceneManager::_createLogo()
 #ifdef _OSG
     if( !_logoSwitch )
     {
-        _logoSwitch = new ves::xplorer::scenegraph::Switch();   
+        _logoSwitch = new ves::xplorer::scenegraph::Switch();
     }
 
     if( !_logoNode.valid() )
@@ -269,7 +294,7 @@ void SceneManager::_createLogo()
             "varying vec3 normal; \n"
 
             "void main() \n"
-            "{ \n"   
+            "{ \n"
                 "vec3 N=normalize(normal); \n"
                 "vec3 L=normalize(lightPos); \n"
                 "float NDotL=max(dot(N,L),0.0); \n"
@@ -317,7 +342,7 @@ void SceneManager::PreFrameUpdate()
 ves::xplorer::scenegraph::DCS* SceneManager::GetActiveSwitchNode()
 {
    osg::Switch::ValueList boolList = _logoSwitch->getValueList();
-   
+
    for( size_t i = 0; i < boolList.size(); ++i )
    {
       if( boolList.at( i ) )
@@ -344,7 +369,7 @@ void SceneManager::ResetOcclusionQueryContext()
     m_oqc->setVisibilityThreshold( 500 );
     ///Number of verts
     m_oqc->setOccluderThreshold( 1000 );
-    ///Specifies how many frames to wait before issuing another query    
+    ///Specifies how many frames to wait before issuing another query
     m_oqc->setQueryFrameCount( 5 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
     m_oqc->setNonFlatPlacement( true );
@@ -359,4 +384,7 @@ void SceneManager::ResetOcclusionQueryContext()
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
 }
-////////////////////////////////////////////////////////////////////////////////
+
+} // end scenegraph
+} // end xplorer
+} // end ves
