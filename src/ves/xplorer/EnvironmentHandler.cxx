@@ -422,7 +422,7 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel(bool createI
     if(!m_ephemerisModel.valid() && createIfDoesNotExist)
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
-        osg::ref_ptr<osg::Group> worldDCSParent = 
+        osg::ref_ptr<osg::Group> worldDCS = 
          ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
         /*if(worldDCS->getBound().valid())
@@ -440,7 +440,7 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel(bool createI
             m_ephemerisModel->setMoveWithEyePoint(false);
             m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
         }
-        worldDCSParent->addChild(m_ephemerisModel.get()); 
+        worldDCS->addChild(m_ephemerisModel.get()); 
     }
     return m_ephemerisModel.get();
 }
