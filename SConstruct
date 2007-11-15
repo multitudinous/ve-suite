@@ -237,6 +237,7 @@ opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the bu
 opts.Add('Patented', 'If "yes", make the patented version of VE-Suite', 'no')
 opts.Add('UseMPI', 'If "yes", make 3D texture creator with MPI support', 'no')
 opts.Add('validate', 'If "no", do not validate flagpoll packages. Should help speed up the build', 'yes')
+opts.Add('buildTests', 'If "yes", Build tests applications', 'no')
 ##Added options for velauncher build.
 ##opts.Add('LauncherExe', 'If true, builds velauncher.py as an executable', 'yes')
 ##opts.Add('CxPath', "Set CXPATH to find 
@@ -474,10 +475,14 @@ if not SConsAddons.Util.hasHelpFlag():
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-   testDir = pj(buildDir,'test','testNURBS')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, osgOQSubdirs, testDir ]
+               shareSubdirs, lokiSubdirs, osgOQSubdirs]
+
+   #build applications in test/ directory
+   if baseEnv[ 'buildTests' ] == 'yes':
+      testDir = pj(buildDir,'test','testNURBS')
+      ves_dirs.append( testDir )
 
    # freeze the python code
    if 'freeze' in  COMMAND_LINE_TARGETS:
