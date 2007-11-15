@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir osg_options')
+Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir osg_options vtk_options xerces_options')
 
 srcs = Split("""
    NURBTest.cxx
@@ -12,9 +12,15 @@ srcs = Split("""
 env = ves_pkg.getEnv().Copy()
 env.Append(LIBS = ['ves_xplorer_util'])
 env.Append(LIBS = ['ves_xplorer_scenegraph'])
+env.Append(LIBS = ['ves_open_xml'])
+env.Append(LIBS = ['osgOQ'])
 env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')])
 env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','scenegraph')])
+env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','open','xml')])
+env.Append(LIBPATH = [pj('#', buildDir, 'external','osgOQ')])
 osg_options.apply( env )
+vtk_options.apply( env )
+xerces_options.apply( env )
 
 testNURBS = ves_pkg.createProgram('testNURBS' + env["PROGSUFFIX"], env, 'bin')
 testNURBS.addSources( srcs )
