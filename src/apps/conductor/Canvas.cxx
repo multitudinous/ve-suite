@@ -97,7 +97,8 @@ END_EVENT_TABLE()
 Canvas::Canvas(wxWindow* parent, int id)
   :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
 		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE),
-previousId("-1")
+previousId("-1"),
+m_treeView( 0 )
 {
     userScale.first = 1;
     userScale.second = 1;
@@ -258,22 +259,29 @@ wxRect Canvas::GetAppropriateSubDialogSize()
     int displayHeight = 0;
     
     ::wxDisplaySize(&displayWidth,&displayHeight);
-    /*if( GetDisplayMode() == std::string( "Desktop" ) )
+    wxRect tempRect = m_treeView->GetScreenRect();
+
+    //if( GetDisplayMode() == std::string( "Desktop" ) )
     {
         wxRect bbox = GetRect();
         int xStart = lrint( 2.0f*displayWidth/3.0f );
         int width = lrint( displayWidth/3.0f );
-        int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
-        return wxRect( xStart, bbox.GetBottomRight().y, width, height );
+        int height = lrint( 3.0f * (displayHeight-tempRect.GetTopLeft().y )/4.0f );
+        return wxRect( xStart, tempRect.GetTopLeft().y , width, height );
     }
-    else*/
+    /*else
     {
         int xStart = lrint( 2.0f*displayWidth/3.0f );
         int width = lrint( displayWidth/3.0f );
         int height = lrint( 3*displayHeight/4.0f );
         //int height = lrint( 3.0f * (displayHeight-bbox.GetBottomRight().y)/4.0f );
         return wxRect( xStart, 0, width, height );
-    }
+    }*/
+}
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::SetTreeViewWindow( wxWindow* treeView )
+{
+    m_treeView = treeView;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::CleanUpNetworks()

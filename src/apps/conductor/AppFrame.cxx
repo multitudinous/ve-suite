@@ -394,7 +394,15 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 	//add network to splitter
 	//network = new Network( wx_nw_splitter, -1 );
 	canvas = new Canvas( wx_nw_splitter, -1 );
-
+    if( GetDisplayMode() == "Tablet" )
+    {
+        canvas->SetTreeViewWindow( this );
+    }
+    else
+    {
+        canvas->SetTreeViewWindow( _treeView );
+    }
+    
 	//tells module panel where to send the selected module
 	Network * network = canvas->GetActiveNetwork();
     av_modules->SetFrame( this );

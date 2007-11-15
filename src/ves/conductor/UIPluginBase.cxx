@@ -1545,7 +1545,7 @@ void UIPluginBase::OnVisualization(wxCommandEvent& event )
 
    if(isDataSet)
    {
-      int error = vistab->ShowModal(); 
+      int error = vistab->Show(); 
    }
    else
    {

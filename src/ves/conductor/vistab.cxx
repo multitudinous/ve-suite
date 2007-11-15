@@ -588,7 +588,7 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
    if(_tbTools->ActivateTextureVisualization())
    {
       _tbTools->CentreOnParent();
-      _tbTools->ShowModal();
+      _tbTools->Show();
    }
 }
 ////////////////////////////////////////////////////////////
