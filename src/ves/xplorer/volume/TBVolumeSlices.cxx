@@ -389,13 +389,8 @@ void TextureBasedVolumeSlices::_calculateEdgeIntersections(osg::State& currentSt
    int datacenterLocation = currentState.getUniformLocation("datacenter");
    gl2extensions->glUniform3f(datacenterLocation, _center[0], _center[1], _center[2]);
    
-   osg::Vec4 textureSpaceDelta = slicePlaneNormal*_deltaZ[1];
-   gl2extensions->glUniform3f(dsLocation, textureSpaceDelta[0],
-                                          textureSpaceDelta[1],
-                                          textureSpaceDelta[2]);
-   //gl2extensions->glUniform3f(dsLocation, -slicePlaneNormal[0],
-   //                                         -slicePlaneNormal[1],
-   //                                         -slicePlaneNormal[2]);
+
+   gl2extensions->glUniform3f(dsLocation, sliceDelta[0], sliceDelta[1], sliceDelta[2]);
    gl2extensions->glUniform1f(alphaRatioLocation, deltaRatio);
 
    glDisable(GL_TEXTURE_GEN_S);

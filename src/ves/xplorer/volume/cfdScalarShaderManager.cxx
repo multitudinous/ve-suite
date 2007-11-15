@@ -124,8 +124,7 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("jitter2D",3));
    _ss->addUniform(new osg::Uniform("viewRay",osg::Vec3(0,1,0)));
    _ss->addUniform(new osg::Uniform("alphaRatio",1.f));
-   _ss->addUniform(new osg::Uniform("jitterSize", osg::Vec2(_jitterTexture->GetResolutionX()*3,
-                                                             _jitterTexture->GetResolutionY()*3)));
+   _ss->addUniform(new osg::Uniform("jitterSize",osg::Vec2(_jitterTexture->GetResolutionX(),_jitterTexture->GetResolutionY())));
    //_ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
    _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
    _ss->addUniform(new osg::Uniform("datacenter",osg::Vec3f(0,0,0)));
