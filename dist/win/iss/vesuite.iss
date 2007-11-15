@@ -27,15 +27,15 @@ ShowLanguageDialog=yes
 AlwaysRestart=false
 UninstallFilesDir={app}\bin
 UninstallRestartComputer=false
-WizardImageFile={#VEDEVHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp
+WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
 WizardImageStretch=false
-WizardSmallImageFile={#VEDEVHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
+WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WindowVisible=true
 WizardImageBackColor=clWhite
 ChangesAssociations=true
 BackColor=$a16502
 BackColor2=$1b84f7
-SetupIconFile={#VEDEVHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 
 [Types]
 Name: full; Description: Full installation
