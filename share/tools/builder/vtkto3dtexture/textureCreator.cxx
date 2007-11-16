@@ -1221,130 +1221,121 @@ void VTKDataToTexture::_applyCorrectedNamesToDataArrays()
 ////////////////////////////////////////////////////////////
 void VTKDataToTexture::writeVelocityTexture(int whichVector)
 {
-   std::string nameString;
+    std::string nameString;
 
-   if ( _outputDir )
-   {
-      nameString = _outputDir;
-   }
-   else
-   {
-      nameString = "./";
-   }
-   nameString.append( "/vectors/" );
-
-   boost::filesystem::path vectorPath( nameString, boost::filesystem::no_check );
-   try
-   {
-      boost::filesystem::is_directory( vectorPath );
-   }
-   catch ( const std::exception& ex )
-	{
+    if ( _outputDir )
+    {
+       nameString = _outputDir;
+    }
+    else
+    {
+       nameString = "./";
+    }
+   
+    boost::filesystem::path vectorPath( nameString, boost::filesystem::no_check );
+    vectorPath/=std::string("vectors");
+    try
+    {
+       boost::filesystem::is_directory( vectorPath );
+    }
+    catch ( const std::exception& ex )
+  	{
 	   std::cout << ex.what() << std::endl;
-      boost::filesystem::create_directory( vectorPath );
+       boost::filesystem::create_directory( vectorPath );
 	   std::cout << "...so we made it for you..." << std::endl;
 	}
 
-   nameString.append( _vectorNames[whichVector] );
-
-   boost::filesystem::path vectorNamePath( nameString, boost::filesystem::no_check );
-   try
-   {
-      boost::filesystem::is_directory( vectorNamePath );
-   }
-   catch ( const std::exception& ex )
+    vectorPath/=(_vectorNames[whichVector]);
+    try
+    {
+        boost::filesystem::is_directory( vectorPath );
+    }
+    catch ( const std::exception& ex )
 	{
-	   std::cout << ex.what() << std::endl;
-      boost::filesystem::create_directory( vectorNamePath );
-	   std::cout << "...so we made it for you..." << std::endl;
+	    std::cout << ex.what() << std::endl;
+        boost::filesystem::create_directory( vectorPath );
+	    std::cout << "...so we made it for you..." << std::endl;
 	}
+    nameString.append( "/" );
+    nameString.append(vectorPath.string());
+    nameString.append( "/" );
+    nameString.append( _vectorNames[whichVector] );
 
-   nameString.append( "/" );
-   nameString.append( _vectorNames[whichVector] );
+    if ( _vFileName )
+    {
+       nameString.append( _vFileName );
+    }
+    else
+    {
+       nameString.append( "flow" );
+    }
+    nameString.append( ".vti" ); 
 
-   if ( _vFileName )
-   {
-      nameString.append( _vFileName );
-   }
-   else
-   {
-      nameString.append( "flow" );
-   }
-   nameString.append( ".vti" );
-
-   double velRange[2] = {0,0};
-   velRange[0] = _vectorRanges.at(whichVector)[0];
-   velRange[1] = _vectorRanges.at(whichVector)[1];
-   wxString msg = wxString("Writing file: ", wxConvUTF8) + wxString("\n", wxConvUTF8) + wxString(nameString.c_str(), wxConvUTF8);
-   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
-   _velocity.at(0).writeFlowTexture( nameString, std::string( _vectorNames[whichVector] ) );
+    double velRange[2] = {0,0};
+    velRange[0] = _vectorRanges.at(whichVector)[0];
+    velRange[1] = _vectorRanges.at(whichVector)[1];
+    wxString msg = wxString("Writing file: ", wxConvUTF8) + wxString("\n", wxConvUTF8) + wxString(nameString.c_str(), wxConvUTF8);
+    _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
+    _velocity.at(0).writeFlowTexture( nameString, std::string( _vectorNames[whichVector] ) );
 }
 ///////////////////////////////////////////
 void VTKDataToTexture::writeScalarTexture(int whichScalar)
 {
-   std::string nameString;
-   if ( _outputDir )
-   {
+    std::string nameString;
+    if ( _outputDir )
+    {
       nameString = _outputDir;
-   }
-   else
-   {
-      nameString = "./";
-   }
-   nameString.append( "/scalars/" );
+    }
+    else
+    {
+      nameString = ".";
+    }
 
-   boost::filesystem::path scalarPath( nameString, boost::filesystem::no_check );
-   try
-   {
+    boost::filesystem::path scalarPath( nameString,boost::filesystem::no_check );
+    scalarPath/=std::string("scalars");
+    try
+    {
       boost::filesystem::is_directory( scalarPath );
-   }
-   catch ( const std::exception& ex )
+    }
+    catch ( const std::exception& ex )
 	{
 	   std::cout << ex.what() << std::endl;
       boost::filesystem::create_directory( scalarPath );
 	   std::cout << "...so we made it for you..." << std::endl;
 	}
 
-   nameString.append( _scalarNames[whichScalar] );
-   try
-   {
-      boost::filesystem::path scalarNamePath( nameString, boost::filesystem::no_check );
-      try
-      {
-         boost::filesystem::is_directory( scalarNamePath );
-      }
-      catch ( const std::exception& ex )
-	   {
-	      std::cout << ex.what() << std::endl;
-         boost::filesystem::create_directory( scalarNamePath );
-	      std::cout << "...so we made it for you..." << std::endl;
-	   }
-   }
-   catch ( const std::exception& ex )
+    scalarPath/=(_scalarNames[whichScalar]);
+    try
+    {
+        boost::filesystem::is_directory( scalarPath );
+    }
+    catch ( const std::exception& ex )
 	{
-	   std::cout << ex.what() << std::endl;
-	   std::cout << "...bad filename creation..." << std::endl;
-	   std::cout << "...must expand the filename cleanup function..." << std::endl;
-   }   
+	    std::cout << ex.what() << std::endl;
+        boost::filesystem::create_directory( scalarPath );
+	    std::cout << "...so we made it for you..." << std::endl;
+	}   
 
-   nameString.append( "/" );
-   nameString.append( _scalarNames[whichScalar] );
+    nameString.append( "/" );
+    nameString.append(scalarPath.string());
+    nameString.append( "/" );
+    nameString.append( _scalarNames[whichScalar] );
    
-   if ( _vFileName )
-   {
+    if ( _vFileName )
+    {
       nameString.append( _vFileName );
-   }
-   else
-   {
+    }
+    else
+    {
       nameString.append( "scalar" );
-   }
-   nameString.append( ".vti" );
+    }
+    nameString.append( ".vti" );
 
-   double scalarRange[2] = {0,0};
-   scalarRange[0] = _scalarRanges.at(whichScalar)[0];
-   scalarRange[1] = _scalarRanges.at(whichScalar)[1];
-   wxString msg = wxString("Writing file: ", wxConvUTF8) + wxString("\n", wxConvUTF8) + wxString(nameString.c_str(), wxConvUTF8);
-   _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
-   _curScalar.at(0).writeFlowTexture( nameString, std::string( _scalarNames[whichScalar] ) );  
+    double scalarRange[2] = {0,0};
+    scalarRange[0] = _scalarRanges.at(whichScalar)[0];
+    scalarRange[1] = _scalarRanges.at(whichScalar)[1];
+    wxString msg = wxString("Writing file: ", wxConvUTF8) + wxString("\n", wxConvUTF8) + wxString(nameString.c_str(), wxConvUTF8);
+    _updateTranslationStatus( ConvertUnicode( msg.c_str() ) );
+    _curScalar.at(0).writeFlowTexture( nameString, std::string( _scalarNames[whichScalar] ) );  
 }
 	
