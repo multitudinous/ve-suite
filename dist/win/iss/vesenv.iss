@@ -8,7 +8,7 @@
 #define VEDEVHOME "D:\devEnv\VES\"
 #define ACETAOHOME "D:\devEnv\VES-Deps_1.1\source\ACE-5.5+TAO-1.5\ACE_wrappers"
 #define VTKHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\VTK_Pre-Compile_5.1"
-#define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OpenSceneGraph-2.2_vs80_sp1"
+#define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_2.2.0_Pre-Compile_vc8.0_SP1"
 #define WXHOME "D:\devEnv\VES-Deps_1.1\source\wxWidgets-2.8.4"
 #define XERCESHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\Xerces-c_2.7_Pre-Compile"
 #define JUGGLERINSTHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\VRJuggler-2.2.0"
@@ -19,3 +19,4 @@
 #define APRICONVHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\apr-vc8\apr-iconv"
 #define BULLETHOME "D:\devEnv\VES-Deps_1.1\source\bullet-2.60\bullet-2.60"
 #define SKEWMATRIXHOME "D:\devEnv\VES-Deps_1.1\source\skewmatrix"
+#define DEPENDSINSTALLHOME "D:\devEnv\VES\dist\win\iss"

@@ -6,7 +6,7 @@
 #define MyAppVerName "OSG_{#OSGVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define OSGSRCHOME "D:\devEnv\VES-Deps_1.1\source\OpenSceneGraph-2.2.0\install"
+#define OSGSRCHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_2.2.0_Pre-Compile_vc8.0_SP1"
 [Setup]
 AppName={#MyAppName}
 AppVerName=OSG_{#OSGVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -19,7 +19,7 @@ DefaultGroupName={#MyAppName}
 OutputBaseFilename=osg{#OSGVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
-OutputDir={#VEDEVHOME}\dist\win
+OutputDir={#DEPENDSINSTALLHOME}
 WindowVisible=true
 WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
 BackColor=$a16502
@@ -40,22 +40,11 @@ Source: {#OSGSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion re
 Source: {#OSGSRCHOME}\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGSRCHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSGSRCHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-;Producer
-;Source: {#OSGHOME}\..\Producer\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#OSGHOME}\..\Producer\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#OSGHOME}\..\Producer\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#OSGHOME}\..\Producer\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-;OpenThreads
-;Source: {#OSGHOME}\..\OpenThreads\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#OSGHOME}\..\OpenThreads\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#OSGHOME}\..\OpenThreads\bin\*.exe; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#OSGHOME}\..\OpenThreads\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ;simage
 Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ;coin
 Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib\win32; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs

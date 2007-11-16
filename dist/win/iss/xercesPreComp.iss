@@ -21,7 +21,7 @@ AllowNoIcons=true
 OutputBaseFilename=xerces-c_PreCompile_{#XERCESVERSION}
 Compression=lzma
 SolidCompression=yes
-OutputDir={#VEHOME}\VE_Installer\installer
+OutputDir={#DEPENDSINSTALLHOME}
 WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WindowVisible=true
@@ -45,4 +45,3 @@ Source: {#XERCESHOME}\src\*.c; DestDir: {app}\src; Flags: ignoreversion recurses
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-

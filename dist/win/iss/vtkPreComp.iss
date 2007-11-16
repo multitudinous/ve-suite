@@ -28,7 +28,7 @@ BackColor2=$0080ff
 WizardImageBackColor=clGray
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
 WizardImageStretch=false
-OutputDir={#VEHOME}\VE_Installer\installer
+OutputDir={#DEPENDSINSTALLHOME}
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
