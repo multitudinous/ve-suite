@@ -167,10 +167,10 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
 
             if( isFirstPoint )
             {
-                vertices->push_back( osg::Vec3( -1.0,  1.0, 0 ) );
-                vertices->push_back( osg::Vec3( -1.0, -1.0, 0 ) );
-                vertices->push_back( osg::Vec3(  1.0, -1.0, 0 ) );
-                vertices->push_back( osg::Vec3(  1.0,  1.0, 0 ) );
+                //A unit equilateral triangle
+                vertices->push_back( osg::Vec3(    0.0,  1.0, 0 ) );
+                vertices->push_back( osg::Vec3( -0.866, -0.5, 0 ) );
+                vertices->push_back( osg::Vec3(  0.866, -0.5, 0 ) );
 
                 unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
                 colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
@@ -178,13 +178,13 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
                                               aColor[ 2 ] / 255.0f,
                                               aColor[ 3 ] / 255.0f ) );
 
-                for( int k = 0; k < 4; ++k )
+                for( int k = 0; k < 3; ++k )
                 {
                     texcoord0->push_back( pointA );
                     texcoord1->push_back( BminusA );
                 }
 
-                count += 4;
+                count += 3;
                 isFirstPoint = false;
             }
 
@@ -202,10 +202,10 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
                 double j = firstPos;
                 while( j <= 1 )
                 {
-                    vertices->push_back( osg::Vec3( -1.0,  1.0, j ) );
-                    vertices->push_back( osg::Vec3( -1.0, -1.0, j ) );
-                    vertices->push_back( osg::Vec3(  1.0, -1.0, j ) );
-                    vertices->push_back( osg::Vec3(  1.0,  1.0, j ) );
+                    //A unit equilateral triangle
+                    vertices->push_back( osg::Vec3(    0.0,  1.0, j ) );
+                    vertices->push_back( osg::Vec3( -0.866, -0.5, j ) );
+                    vertices->push_back( osg::Vec3(  0.866, -0.5, j ) );
 
                     unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
                     colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
@@ -213,13 +213,13 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
                                                   aColor[ 2 ] / 255.0f,
                                                   aColor[ 3 ] / 255.0f ) );
 
-                    for( int k = 0; k < 4; ++k )
+                    for( int k = 0; k < 3; ++k )
                     {
                         texcoord0->push_back( pointA );
                         texcoord1->push_back( BminusA );
                     }
 
-                    count += 4;
+                    count += 3;
                     j += ds;
                 }
             }
@@ -229,7 +229,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
             }
         }
 
-        geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, totpts, count ) );
+        geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::TRIANGLES, totpts, count ) );
         totpts += count;
     }
 
@@ -238,7 +238,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     geometry->setColorArray( colors.get() );
     geometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
-    normals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
+    normals->push_back( osg::Vec3d( 0.0f, 0.0f, 1.0f ) );
     geometry->setNormalArray( normals.get() );
     geometry->setNormalBinding( osg::Geometry::BIND_OVERALL );
 
@@ -251,8 +251,8 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-    //bf->setFunction( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-    bf->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+    bf->setFunction( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
+    //bf->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     stateset->setAttribute( bf.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Depth > depth = new osg::Depth();
@@ -264,11 +264,10 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
 
     stateset->setAttribute( GetShader().get(), osg::StateAttribute::ON );
 
-    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.4 ) );
+    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 1.0 ) );
     stateset->addUniform( parSize.get() );
 
-    //osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.04 ) );
-    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.1 ) );
+    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.3 ) );
     stateset->addUniform( parExp.get() );
 
     geometry->setStateSet( stateset.get() );
@@ -311,7 +310,7 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
+            "vec4 totalColor = ( 0.5 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
 
             "gl_FragColor = totalColor; \n"
         "} \n";
