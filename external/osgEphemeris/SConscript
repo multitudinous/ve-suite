@@ -18,6 +18,7 @@ lib_env.Append( CPPDEFINES  = ['OSGEPHEMERIS_LIBRARY'] )
 
 if GetPlatform() == 'darwin':
     lib_env.Append( CPPDEFINES  = ['_DARWIN'] )
+    lib_env.Append( LINKFLAGS  = ['-framework','OpenGL'] )
 
 osg_options.apply( lib_env )
 
