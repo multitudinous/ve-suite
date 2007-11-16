@@ -423,11 +423,18 @@ if not SConsAddons.Util.hasHelpFlag():
    if GetPlatform() == 'win32':
         baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
    
+   if GetPlatform() == 'darwin':
+      baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
+
    #setup default libraries and defines
    baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
+
+   #baseEnv.Append( LINKFLAGS = ['-g'] )
+   #baseEnv.Append( CXXFLAGS = ['-g'] )
+
    if GetPlatform() == 'win32':
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
 

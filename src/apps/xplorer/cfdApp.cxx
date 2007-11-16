@@ -157,47 +157,8 @@ void cfdApp::exit()
 {
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
-
-    //ves::xplorer::scenegraph::SceneManager::instance()->CleanUp();
-    //cfdModelHandler::instance()->CleanUp();
-    //cfdEnvironmentHandler::instance()->CleanUp();
-    //cfdSteadyStateVizHandler::instance()->CleanUp();
-
-#ifdef _OSG
-    //cfdTextureBasedVizHandler::instance()->CleanUp();
-#endif
-
-    //cfdExecutive::instance()->CleanUp();
 }
-
-#ifdef _PERFORMER
-inline void cfdApp::apiInit( )
-{
-   vrj::PfApp::apiInit();
-   vprDEBUG( vesDBG, 1 ) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
-   pfNotifyHandler( notifyHandler );
-}
-
-inline void cfdApp::preForkInit( )
-{
-   vrj::PfApp::preForkInit();
-   vprDEBUG(vesDBG,1) << "cfdApp::preForkInit"
-                          << std::endl << vprDEBUG_FLUSH;
-   //pfdInitConverter( "air_system.flt" );
-}
-
-void cfdApp::appChanFunc( pfChannel* chan )
-{
-   // used to adjust lod scaling
-   vrj::PfApp::appChanFunc( chan );
-}
-
-inline void cfdApp::preSync( )
-{
-  vprDEBUG(vesDBG,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
-}
-#endif
-
+////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
 osg::Group* cfdApp::getScene()
 #endif
