@@ -341,7 +341,7 @@ bool SkyDome::SectorCullCallback::cull(osg::NodeVisitor* nv, osg::Drawable *dbl,
 
     double sun = _range(_sunAz, 360);
 
-    if( _withinDeg( sun, _min, _max ))
+    /*if( _withinDeg( sun, _min, _max ))
     {
         dbl->getStateSet()->setTextureMode( _sunTextureUnit, GL_TEXTURE_2D, osg::StateAttribute::ON);
     }
@@ -350,7 +350,7 @@ bool SkyDome::SectorCullCallback::cull(osg::NodeVisitor* nv, osg::Drawable *dbl,
         dbl->getStateSet()->setTextureMode( _sunTextureUnit, GL_TEXTURE_2D, osg::StateAttribute::OFF);
         // For testing, cull geometry
         //return true;
-    }
+    }*/
 
     return false;
 }
