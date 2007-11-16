@@ -595,7 +595,7 @@ void TCFrame::SetTextureResolution(int x,int y, int z)
 int TCFrame::NearestPowerOfTwo(int input)
 {
     int value = 1;
-    while (value <= input)
+    while (value < input)
     {
        value = value << 1;
     }
