@@ -57,8 +57,6 @@ using namespace ves::xplorer::scenegraph;
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
 :cfdContourBase()
 {
-   vprDEBUG(vesDBG, 1) << "cfdPresetContour::cfdPresetMomentum"
-                           << std::endl << vprDEBUG_FLUSH;
    this->xyz = xyz;
    this->numSteps = numSteps;
    cuttingPlane = 0;

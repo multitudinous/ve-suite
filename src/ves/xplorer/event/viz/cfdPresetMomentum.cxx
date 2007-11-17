@@ -58,9 +58,6 @@ using namespace ves::xplorer::scenegraph;
 cfdPresetMomentum::cfdPresetMomentum( const int xyz,
                                       int numSteps )
 {  
-   vprDEBUG(vesDBG, 1) << "cfdPresetMomentum::cfdPresetMomentum"
-                           << std::endl << vprDEBUG_FLUSH;
-
    this->xyz = xyz;
    this->numSteps = numSteps;
 
