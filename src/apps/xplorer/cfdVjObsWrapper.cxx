@@ -102,16 +102,6 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Unknown exception." << std::endl;
    }
-
-   //if ( !CORBA::is_nil( _orbPtr ) )
-   //{
-   //   std::cout << this->_orbPtr->id() << std::endl;
-   //   this->_orbPtr->shutdown();
-   //}
-
-   vprDEBUG(vesDBG,1) 
-      << " End VjObsWraper Destructor  " 
-      << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVjObsWrapper::init( CosNaming::NamingContext* input, 
