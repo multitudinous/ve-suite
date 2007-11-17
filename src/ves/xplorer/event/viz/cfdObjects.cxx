@@ -49,22 +49,14 @@
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 
-cfdObjects::cfdObjects( void )
+cfdObjects::cfdObjects( void ):
+    pointSource( 0 ),
+    vtkToPFDebug( 0 ),
+    usePreCalcData( false ),
+    activeDataSet( 0 )
 {
-   vprDEBUG(vesDBG, 1) << " New cfdObjects ! " 
-                           << std::endl << vprDEBUG_FLUSH;
-   //this->_geode = NULL;
-   //this->_sequence = NULL;
-   this->pointSource = NULL;
-   this->vtkToPFDebug = 0;
-   this->usePreCalcData = false;
-   activeDataSet = 0;
    m_multiGroupGeomFilter = vtkMultiGroupDataGeometryFilter::New();
    m_geometryFilter = vtkGeometryFilter::New();
-
-   //this->actor = NULL;
-   //this->PDactor = NULL;
-   //this->addTransientGeode = 0;
 }
 
 cfdObjects::cfdObjects( const cfdObjects& src)
