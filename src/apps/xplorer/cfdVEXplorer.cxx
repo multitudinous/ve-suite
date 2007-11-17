@@ -43,6 +43,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <vpr/System.h>
+#include <vrj/Kernel/Kernel.h>
 
 #include <ves/xplorer/Thread.h>
 #include <ves/VEConfig.h>
@@ -100,21 +101,48 @@ int main(int argc, char* argv[])
 
         poa_manager->activate();
 
+        //Start the juggler kernel here so that we can run on darwin
+        vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+#if __VJ_version >= 2003000
+        kernel->init(argc, argv);
+#elif __VJ_version == 2000003
+#endif
+        for ( int i = 1; i < argc; ++i )          // Configure the kernel
+        {
+            if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
+            {
+                //skip the resolutions
+                i = i + 2;
+            }
+            else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
+            {
+                //Skip the master computer name
+                i = i + 1;
+            }
+            else
+            {
+                kernel->loadConfigFile( argv[i] );  
+            }
+        }
+                
         cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
-        vjobsWrapper->init( naming_context.in(), NULL, child_poa.in(), NULL, argc, argv );
+        vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
         cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
+        kernel->waitForKernelStop();              // Block until kernel stops
+
+        //Block and wait for juggler and the orb to stop
         //orb->run();
-        while( appWrapper->JugglerIsRunning() )
+        /*while( appWrapper->JugglerIsRunning() )
         {
             vpr::System::msleep( 10 );  // one-second delay
             if( orb->work_pending() )
             {
                 orb->perform_work();
             }
-        }
+        }*/
 
-        appWrapper->_thread->new_thread->join();
+        //appWrapper->m_thread->new_thread->join();
         delete appWrapper;
     }
     catch( CORBA::SystemException& ) 

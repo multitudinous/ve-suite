@@ -45,76 +45,69 @@
 #include <iostream>
 
 using namespace ves::xplorer;
-
-cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
+////////////////////////////////////////////////////////////////////////////////
+cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input ):
+    m_argc( argc ),
+    m_argv( argv ),
+    m_vjObsWrapper( input ),
+    m_thread( 0 ),
+    m_jugglerIsRunning( false )
 {
-   this->argc = argc;
-   this->argv = argv;
-   _thread = new Thread();
-   _vjObsWrapper = input;
-#if __VJ_version > 2000003
-   _thread->new_thread=new vpr::Thread( boost::bind(&cfdAppWrapper::init, this) );
-#elif __VJ_version == 2000003
-   _thread->new_thread=new vpr::Thread( new vpr::ThreadMemberFunctor< cfdAppWrapper >( this, &cfdAppWrapper::init ) );
-#endif
-   jugglerIsRunning = true;
-}
+    //Setup the juggler kernel now
+    // block it on another thread
+    // Delcare an instance of my application
+    m_cfdApp = new cfdApp( m_argc, m_argv );
+    m_cfdApp->SetWrapper( m_vjObsWrapper );
 
+    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+    kernel->start();                          // Start the kernel thread
+
+    kernel->setApplication( m_cfdApp );    // Give application to kernel
+
+    /*m_thread = new Thread();
+#if __VJ_version > 2000003
+    m_thread->new_thread = 
+        new vpr::Thread( boost::bind(&cfdAppWrapper::init, this) );
+#elif __VJ_version == 2000003
+    m_thread->new_thread = 
+        new vpr::Thread( new vpr::ThreadMemberFunctor< cfdAppWrapper >( this, &cfdAppWrapper::init ) );
+#endif
+    m_jugglerIsRunning = true;*/
+}
+////////////////////////////////////////////////////////////////////////////////
 cfdAppWrapper::~cfdAppWrapper( void )
 {
-   if ( _thread )
+   if ( m_thread )
    {
-	  // _thread->new_thread->kill();
-      delete _thread;
+      delete m_thread;
    }
-}
 
+    delete m_cfdApp;
+    m_cfdApp = NULL;
+    
+    delete m_vjObsWrapper;
+    m_vjObsWrapper = NULL;
+    m_jugglerIsRunning = false;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool cfdAppWrapper::JugglerIsRunning( void )
 {
-   return jugglerIsRunning;
+   return m_jugglerIsRunning;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
 void cfdAppWrapper::init( void )
 #elif __VJ_version == 2000003
 void cfdAppWrapper::init( void* )
 #endif
 {
-    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-    _cfdApp = new cfdApp( argc, argv );  // Delcare an instance of my application
-    _cfdApp->SetWrapper( _vjObsWrapper );
-#if __VJ_version >= 2003000
-    kernel->init(argc, argv);
-#elif __VJ_version == 2000003
-#endif
-    for ( int i = 1; i < argc; ++i )          // Configure the kernel
-    {
-        if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
-        {
-            //skip the resolutions
-            i = i + 2;
-        }
-        else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
-        {
-            //Skip the master computer name
-            i = i + 1;
-        }
-        else
-        {
-            kernel->loadConfigFile( argv[i] );  
-        }
-    }
-    
-    kernel->start();                          // Start the kernel thread
+    //vrj::Kernel::instance()->doWaitForKernelStop();// Block until kernel stops
 
-    kernel->setApplication( _cfdApp );    // Give application to kernel
+    delete m_cfdApp;
+    m_cfdApp = NULL;
 
-    kernel->waitForKernelStop();              // Block until kernel stops
-
-    delete this->_cfdApp;
-    this->_cfdApp = NULL;
-
-    delete this->_vjObsWrapper;
-    this->_vjObsWrapper = NULL;
-    jugglerIsRunning = false;
+    delete m_vjObsWrapper;
+    m_vjObsWrapper = NULL;
+    m_jugglerIsRunning = false;
 }
+////////////////////////////////////////////////////////////////////////////////

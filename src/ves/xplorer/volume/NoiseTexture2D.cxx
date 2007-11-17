@@ -1,3 +1,4 @@
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> *************
  *
  * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
@@ -53,7 +54,7 @@ NoiseTexture2D::NoiseTexture2D(unsigned int x, unsigned int y)
       
       index = (1./(float)_resolution[0])*255.*rand()/(float)RAND_MAX;
       _noiseData[i] = static_cast<unsigned char>(data[index]);
-      std::cout<<data<<" "<<index<<std::endl;
+      //std::cout<<"NoiseTexture2D::NoiseTexture2D " << data<<" "<<index<<std::endl;
    }
 	 
    _noiseTexture = new osg::Texture2D();

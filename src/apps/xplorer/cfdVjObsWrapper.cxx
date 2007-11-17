@@ -110,6 +110,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input,
 {
     //boost::ignore_unused_variable_warning( argc );
     //boost::ignore_unused_variable_warning( argv );
+    m_orbPtr = orbPtr;
     bool isCluster = false;
     std::string masterhost;
    for(int i=1;i<argc;++i)
@@ -230,6 +231,14 @@ void cfdVjObsWrapper::GetCfdStateVariables( void )
 void cfdVjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdVjObsWrapper::CheckORBWorkLoad( void )
+{
+    if( m_orbPtr->work_pending() )
+    {
+        m_orbPtr->perform_work();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point

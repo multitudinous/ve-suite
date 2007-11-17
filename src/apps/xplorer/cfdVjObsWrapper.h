@@ -93,6 +93,9 @@ public:
    long GetSetFrameNumber( long );
    ///This should be removed as soon as the quat cam code is fixed
    bool IsMaster( void );
+   ///Check to see if the orb needs to work. This ties the orb performance
+   /// to the framerate
+   void CheckORBWorkLoad();
 
    CosNaming::NamingContext* naming_context;///< holds the naming context for tao
    PortableServer::POA* child_poa;///< holds the poa server for tao
@@ -100,7 +103,7 @@ public:
    VjObs_i* _vjObs;///< holds the vjobs pointer for tao
    Body_VEXplorer_i* m_xplorer;///< holds the xplorer pointer for tao
 private:
-   CORBA::ORB* _orbPtr;///<holds the orb pointer for tao
+   CORBA::ORB* m_orbPtr;///<holds the orb pointer for tao
    bool isMaster;///is the master should be removed
 };
 }

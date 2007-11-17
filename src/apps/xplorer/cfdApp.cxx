@@ -343,6 +343,8 @@ void cfdApp::preFrame( void )
 {
     VPR_PROFILE_GUARD_HISTORY("cfdApp::preFrame",20);
     vprDEBUG(vesDBG,3)<<"|cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
+    //Check and see if the ord has any work to do
+    _vjobsWrapper->CheckORBWorkLoad();
     //Sets the worldDCS before it is synced
     EnvironmentHandler::instance()->PreFrameUpdate();
 }
@@ -651,7 +653,7 @@ void cfdApp::writeImageFileForWeb()
     sv->update();
     sv->cull();
     sv->draw();
-    //Reset the old data to the sceneView, so it doesn«t always render to image:
+    //Reset the old data to the sceneView, so it doesnÂ´t always render to image:
     sv->setSceneData( subgraph.get() );
     ///Now put the images together
     std::vector< osg::ref_ptr< osg::Image > >::iterator activeImage;

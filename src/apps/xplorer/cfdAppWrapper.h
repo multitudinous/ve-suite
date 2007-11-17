@@ -71,13 +71,13 @@ public:
 #elif __VJ_version == 2000003
    void init( void * );
 #endif
-   Thread* _thread;///< the thread to run things in
+   Thread* m_thread;///< the thread to run things in
 private:
-   cfdApp* _cfdApp;///< the app that is running
-   bool jugglerIsRunning;///< is juggler running
-   cfdVjObsWrapper* _vjObsWrapper;///< points to the wrapper to send to cfdapp
-   int argc;///<command line args
-   char** argv;///<command line args
+   cfdApp* m_cfdApp;///< the app that is running
+   bool m_jugglerIsRunning;///< is juggler running
+   cfdVjObsWrapper* m_vjObsWrapper;///< points to the wrapper to send to cfdapp
+   int m_argc;///<command line args
+   char** m_argv;///<command line args
 }; 
 }
 }
