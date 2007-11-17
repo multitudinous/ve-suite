@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdApp.h"
-#include "cfdVjObsWrapper.h"
+#include "App.h"
+#include "VjObsWrapper.h"
 
 #ifdef _OSG
 #include <ves/xplorer/TextureBasedVizHandler.h>
@@ -102,7 +102,7 @@ using namespace ves::open::xml;
 using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdApp::cfdApp( int argc, char* argv[] ) 
+App::App( int argc, char* argv[] ) 
 #ifdef _OSG
 #if __VJ_version >= 2003000
 : vrj::osg::App( vrj::Kernel::instance() ),
@@ -153,14 +153,14 @@ isCluster( false )
    this->argv = argv;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::exit()
+void App::exit()
 {
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-osg::Group* cfdApp::getScene()
+osg::Group* App::getScene()
 #endif
 {
    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
@@ -172,7 +172,7 @@ osg::Group* cfdApp::getScene()
 
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::contextInit()
+void App::contextInit()
 {
     //vrj::OsgApp::contextInit();
     
@@ -202,7 +202,7 @@ void cfdApp::contextInit()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::contextClose()
+void App::contextClose()
 {
 #ifdef _PBUFFER
    if(_pbuffer)
@@ -214,18 +214,18 @@ void cfdApp::contextClose()
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _PBUFFER
-cfdPBufferManager* cfdApp::GetPBuffer()
+cfdPBufferManager* App::GetPBuffer()
 {
     return _pbuffer;
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-/*osgUtil::SceneView::Options cfdApp::getSceneViewDefaults()
+/*osgUtil::SceneView::Options App::getSceneViewDefaults()
 {
     return osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
+void App::configSceneView( osgUtil::SceneView* newSceneViewer )
 {
     newSceneViewer->setDefaults( osgUtil::SceneView::COMPILE_GLOBJECTS_AT_INIT );
     
@@ -262,20 +262,20 @@ void cfdApp::configSceneView( osgUtil::SceneView* newSceneViewer )
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
-void cfdApp::bufferPreDraw()
+void App::bufferPreDraw()
 {
     ;
 }
 #endif //_OSG
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::SetWrapper( cfdVjObsWrapper* input )
+void App::SetWrapper( VjObsWrapper* input )
 {
-   _vjobsWrapper = input;
+   m_vjobsWrapper = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::initScene( void )
+void App::initScene( void )
 {
-    vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;   
+    vprDEBUG(vesDBG,0) << "App::initScene" << std::endl << vprDEBUG_FLUSH;   
    //Initialize all the XML objects
    XMLObjectFactory::Instance()->RegisterObjectCreator("XML",new XMLCreator());
    XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new shader::ShaderCreator());
@@ -284,7 +284,7 @@ void cfdApp::initScene( void )
 
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
-   _vjobsWrapper->InitCluster();
+   m_vjobsWrapper->InitCluster();
    // define the rootNode, worldDCS, and lighting
    ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
 
@@ -295,7 +295,7 @@ void cfdApp::initScene( void )
 #endif
 
    // modelHandler stores the arrow and holds all data and geometry
-   ModelHandler::instance()->SetXMLCommand( _vjobsWrapper->GetXMLCommand() );
+   ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
    ModelHandler::instance()->InitScene();
    
    // navigation and cursor 
@@ -313,7 +313,7 @@ void cfdApp::initScene( void )
       }
    }
    EnvironmentHandler::instance()->InitScene();
-   cfdQuatCamHandler::instance()->SetMasterNode( _vjobsWrapper->IsMaster() );
+   cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
    
    // create steady state visualization objects
    SteadyStateVizHandler::instance()->Initialize( std::string() );
@@ -323,14 +323,14 @@ void cfdApp::initScene( void )
 #ifdef _OSG
    _start_tick = _timer.tick();
    _tbvHandler = ves::xplorer::TextureBasedVizHandler::instance();
-   _tbvHandler->SetMasterNode( _vjobsWrapper->IsMaster() );
+   _tbvHandler->SetMasterNode( m_vjobsWrapper->IsMaster() );
 #endif
 
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   cfdExecutive::instance()->Initialize( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
+   cfdExecutive::instance()->Initialize( m_vjobsWrapper->naming_context, m_vjobsWrapper->child_poa );
 
    // This may need to be fixed
-   this->_vjobsWrapper->GetCfdStateVariables();
+   this->m_vjobsWrapper->GetCfdStateVariables();
    
    //Setup near and far plane
    float nearPlane;
@@ -339,39 +339,39 @@ void cfdApp::initScene( void )
    vrj::Projection::setNearFar( nearPlane, farPlane + 100000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::preFrame( void )
+void App::preFrame( void )
 {
-    VPR_PROFILE_GUARD_HISTORY("cfdApp::preFrame",20);
-    vprDEBUG(vesDBG,3)<<"|cfdApp::preFrame"<<std::endl<<vprDEBUG_FLUSH;
+    VPR_PROFILE_GUARD_HISTORY("App::preFrame",20);
+    vprDEBUG(vesDBG,3)<<"|App::preFrame"<<std::endl<<vprDEBUG_FLUSH;
     //Check and see if the ord has any work to do
-    _vjobsWrapper->CheckORBWorkLoad();
+    m_vjobsWrapper->CheckORBWorkLoad();
     //Sets the worldDCS before it is synced
     EnvironmentHandler::instance()->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::latePreFrame( void )
+void App::latePreFrame( void )
 {
-    VPR_PROFILE_GUARD_HISTORY("cfdApp::latePreFrame", 20 );
+    VPR_PROFILE_GUARD_HISTORY("App::latePreFrame", 20 );
     static long lastFrame=0;
     //Used for framerate calculation as integers only
     static float lastTime=0.0f;
 
-    vprDEBUG(vesDBG,3)<<"|cfdApp::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG,3)<<"|App::latePreFrame"<<std::endl<<vprDEBUG_FLUSH;
     //The calls below are order dependent so do not move them around
     //call the parent method
-    _vjobsWrapper->GetUpdateClusterStateVariables();
+    m_vjobsWrapper->GetUpdateClusterStateVariables();
     //This should be called after the update so that
     //all the singletons below get the updated command
-    _vjobsWrapper->PreFrameUpdate();
-    //Exit - must be called AFTER _vjobsWrapper->PreFrameUpdate();
-    if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
+    m_vjobsWrapper->PreFrameUpdate();
+    //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
+    if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
     {
         VPR_PROFILE_RESULTS();
-        // exit cfdApp was selected
+        // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel 
     }    
     
-    float current_time = this->_vjobsWrapper->GetSetAppTime( -1 );
+    float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
 #ifdef _OSG
     //This is order dependent
     //don't move above function call
@@ -394,7 +394,7 @@ void cfdApp::latePreFrame( void )
       if( (vpr::Debug::instance()->isDebugEnabled()) && (3 <= vpr::Debug::instance()->getLevel()) )
       {
         if( (_frameNumber%500) == 0.0f )
-        {    vprDEBUG(vesDBG,3)<<" cfdApp::latePreFrame Profiling data for frame " 
+        {    vprDEBUG(vesDBG,3)<<" App::latePreFrame Profiling data for frame " 
                 << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
             VPR_PROFILE_RESULTS();
         }
@@ -419,7 +419,7 @@ void cfdApp::latePreFrame( void )
             _tbvHandler->SetParentNode((ves::xplorer::scenegraph::Group*)ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
             _tbvHandler->SetActiveTextureDataSet(ModelHandler::instance()->GetActiveTextureDataSet());
             _tbvHandler->ViewTextureBasedVis(ModelHandler::instance()->GetVisOption());
-            _tbvHandler->SetCurrentTime(this->_vjobsWrapper->GetSetAppTime(-1));
+            _tbvHandler->SetCurrentTime(this->m_vjobsWrapper->GetSetAppTime(-1));
             _tbvHandler->PreFrameUpdate();
         }
     }
@@ -439,22 +439,22 @@ void cfdApp::latePreFrame( void )
 #ifdef _OSG
    //profile the update call
    {
-       VPR_PROFILE_GUARD_HISTORY("cfdApp::latePreFrame update", 20);
+       VPR_PROFILE_GUARD_HISTORY("App::latePreFrame update", 20);
        this->update();
    }
 #endif
    ///Increment framenumber now that we are done using it everywhere
    _frameNumber += 1;
    
-   if( _vjobsWrapper->GetXMLCommand()->GetCommandName() == "SCREEN_SHOT" )
+   if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "SCREEN_SHOT" )
    {
        captureNextFrameForWeb = true;
-       _vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Filename" )->GetData( m_filename );
+       m_vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Filename" )->GetData( m_filename );
    }
-   vprDEBUG(vesDBG,3) << "|cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << "|App::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::intraFrame()
+void App::intraFrame()
 {
    vprDEBUG(vesDBG,3) << "|intraFrame" << std::endl << vprDEBUG_FLUSH;
    // Do nothing here
@@ -462,18 +462,18 @@ void cfdApp::intraFrame()
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-void cfdApp::contextPostDraw()
+void App::contextPostDraw()
 {
-    VPR_PROFILE_GUARD_HISTORY("cfdApp::contextPostDraw", 20 );
+    VPR_PROFILE_GUARD_HISTORY("App::contextPostDraw", 20 );
     _tbvHandler->PingPongTextures();
     //here for testing...
     glFinish();
 }
 #endif//_OSG
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::postFrame()
+void App::postFrame()
 {
-    VPR_PROFILE_GUARD_HISTORY("cfdApp::postFrame",20);
+    VPR_PROFILE_GUARD_HISTORY("App::postFrame",20);
     vprDEBUG(vesDBG,3) << "|postFrame" << std::endl << vprDEBUG_FLUSH;
    
 #ifdef _OSG
@@ -484,20 +484,20 @@ void cfdApp::postFrame()
 
 
 #ifdef _OSG
-    this->_vjobsWrapper->GetSetAppTime( time_since_start );
+    this->m_vjobsWrapper->GetSetAppTime( time_since_start );
     EnvironmentHandler::instance()->PostFrameUpdate();
-    //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
+    //this->m_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
     
     ///update the transient frame number on the master
     _tbvHandler->UpdateTransientFrame();
 #endif   //_OSG
     cfdExecutive::instance()->PostFrameUpdate();
 
-    this->_vjobsWrapper->GetCfdStateVariables();
+    this->m_vjobsWrapper->GetCfdStateVariables();
     vprDEBUG(vesDBG,3) << "|End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::writeImageFileForWeb()
+void App::writeImageFileForWeb()
 {
   /* while(runWebImageSaveThread)
    {
@@ -677,16 +677,16 @@ void cfdApp::writeImageFileForWeb()
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
-void cfdApp::contextPreDraw( void )
+void App::contextPreDraw( void )
 {
-    VPR_PROFILE_GUARD_HISTORY("cfdApp::contextPreDraw",20);
+    VPR_PROFILE_GUARD_HISTORY("App::contextPreDraw",20);
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
-void cfdApp::draw()
+void App::draw()
 {
-    VPR_PROFILE_GUARD_HISTORY("cfdApp::draw",20);
+    VPR_PROFILE_GUARD_HISTORY("App::draw",20);
     glClear(GL_DEPTH_BUFFER_BIT);
     
     // Users have reported problems with OpenGL reporting stack underflow
@@ -776,12 +776,12 @@ void cfdApp::draw()
     // osgUtil::SceneView::update() is in vrj::OsgApp::update().
     //profile the cull call
     {
-        VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->cull",20);
+        VPR_PROFILE_GUARD_HISTORY("App::draw sv->cull",20);
         sv->cull();        
     }
     //profile the draw call
     {
-        VPR_PROFILE_GUARD_HISTORY("cfdApp::draw sv->draw",20);
+        VPR_PROFILE_GUARD_HISTORY("App::draw sv->draw",20);
         sv->draw();        
     }
     ///Screen capture code
@@ -807,7 +807,7 @@ void cfdApp::draw()
     glFlush();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdApp::update( void )
+void App::update( void )
 {
     // Update the frame stamp with information from this frame
     //frameStamp->setFrameNumber( getFrameNumber() );

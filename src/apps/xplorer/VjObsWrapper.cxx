@@ -36,7 +36,7 @@
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 //End TAO headers
 
-#include "cfdVjObsWrapper.h"
+#include "VjObsWrapper.h"
 #include "VjObs_i.h"     //added for corba stuff
 
 #include <ves/xplorer/Xplorer_i.h>
@@ -57,24 +57,24 @@ using namespace CosNaming;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
-cfdVjObsWrapper::cfdVjObsWrapper( void )
+VjObsWrapper::VjObsWrapper( void )
 {
    _vjObs = new VjObs_i();
    m_xplorer = new Body_VEXplorer_i();
    isMaster = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVjObsWrapper::InitCluster( void )
+void VjObsWrapper::InitCluster( void )
 {
    _vjObs->InitCluster();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVjObsWrapper::GetUpdateClusterStateVariables( void )
+void VjObsWrapper::GetUpdateClusterStateVariables( void )
 {
    _vjObs->GetUpdateClusterStateVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdVjObsWrapper::~cfdVjObsWrapper( void )
+VjObsWrapper::~VjObsWrapper( void )
 {
    CosNaming::Name name(1);
 
@@ -104,7 +104,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVjObsWrapper::init( CosNaming::NamingContext* input, 
+void VjObsWrapper::init( CosNaming::NamingContext* input, 
     CORBA::ORB* orbPtr, PortableServer::POA* child_poa, 
     PortableServer::POA* poa,int argc, char* argv[]  )
 {
@@ -213,27 +213,27 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input,
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Command* cfdVjObsWrapper::GetXMLCommand( void )
+Command* VjObsWrapper::GetXMLCommand( void )
 {
    return _vjObs->bufferCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
-double cfdVjObsWrapper::GetShortArray( int i )
+double VjObsWrapper::GetShortArray( int i )
 {
    return _vjObs->cfdShort_data_array[ i ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVjObsWrapper::GetCfdStateVariables( void )
+void VjObsWrapper::GetCfdStateVariables( void )
 {
    _vjObs->GetCfdStateVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVjObsWrapper::PreFrameUpdate( void )
+void VjObsWrapper::PreFrameUpdate( void )
 {
    _vjObs->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVjObsWrapper::CheckORBWorkLoad( void )
+void VjObsWrapper::CheckORBWorkLoad( void )
 {
     if( m_orbPtr->work_pending() )
     {
@@ -242,17 +242,17 @@ void cfdVjObsWrapper::CheckORBWorkLoad( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point
-float cfdVjObsWrapper::GetSetAppTime( float x )
+float VjObsWrapper::GetSetAppTime( float x )
 {
    return _vjObs->GetSetAppTime( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
-long cfdVjObsWrapper::GetSetFrameNumber( long x )
+long VjObsWrapper::GetSetFrameNumber( long x )
 {
    return _vjObs->GetSetFrameNumber( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int cfdVjObsWrapper::getStringTokens(const char* buffer, char* delim, 
+int VjObsWrapper::getStringTokens(const char* buffer, char* delim, 
     std::vector<std::string> &toks)
 {
    char* token;
@@ -272,7 +272,7 @@ int cfdVjObsWrapper::getStringTokens(const char* buffer, char* delim,
    return i;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool cfdVjObsWrapper::IsMaster( void )
+bool VjObsWrapper::IsMaster( void )
 {
    return isMaster;
 }

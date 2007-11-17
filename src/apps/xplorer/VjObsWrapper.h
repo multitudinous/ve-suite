@@ -32,11 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VJOBSWRAPPER_H
 #define CFD_VJOBSWRAPPER_H
-/*!\file cfdVjObsWrapper.h
-cfdVjObsWrapper API
+/*!\file VjObsWrapper.h
+VjObsWrapper API
 */
 
-/*!\class ves::xplorer::cfdVjObsWrapper
+/*!\class ves::xplorer::VjObsWrapper
 *
 */
 
@@ -63,13 +63,13 @@ namespace ves
 {
 namespace xplorer
 {
-class cfdVjObsWrapper
+class VjObsWrapper
 {
 public:
    ///Constructor
-   cfdVjObsWrapper( void );
+   VjObsWrapper( void );
    ///Destructor
-   ~cfdVjObsWrapper( void );
+   ~VjObsWrapper( void );
    ///init function to pass corba pointers arounf for registration purposes
    void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
    ///get xml command data

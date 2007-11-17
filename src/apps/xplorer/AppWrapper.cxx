@@ -30,11 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdAppWrapper.h"
+#include "AppWrapper.h"
 
-#include "cfdApp.h"
+#include "App.h"
 #include <ves/xplorer/Thread.h>
-#include "cfdVjObsWrapper.h"
+#include "VjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
 
@@ -46,7 +46,7 @@
 
 using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
-cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input ):
+AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
     m_argc( argc ),
     m_argv( argv ),
     m_vjObsWrapper( input ),
@@ -56,7 +56,7 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input ):
     //Setup the juggler kernel now
     // block it on another thread
     // Delcare an instance of my application
-    m_cfdApp = new cfdApp( m_argc, m_argv );
+    m_cfdApp = new App( m_argc, m_argv );
     m_cfdApp->SetWrapper( m_vjObsWrapper );
 
     vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
@@ -67,15 +67,15 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input ):
     /*m_thread = new Thread();
 #if __VJ_version > 2000003
     m_thread->new_thread = 
-        new vpr::Thread( boost::bind(&cfdAppWrapper::init, this) );
+        new vpr::Thread( boost::bind(&AppWrapper::init, this) );
 #elif __VJ_version == 2000003
     m_thread->new_thread = 
-        new vpr::Thread( new vpr::ThreadMemberFunctor< cfdAppWrapper >( this, &cfdAppWrapper::init ) );
+        new vpr::Thread( new vpr::ThreadMemberFunctor< AppWrapper >( this, &AppWrapper::init ) );
 #endif
     m_jugglerIsRunning = true;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdAppWrapper::~cfdAppWrapper( void )
+AppWrapper::~AppWrapper( void )
 {
    if ( m_thread )
    {
@@ -90,15 +90,15 @@ cfdAppWrapper::~cfdAppWrapper( void )
     m_jugglerIsRunning = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool cfdAppWrapper::JugglerIsRunning( void )
+bool AppWrapper::JugglerIsRunning( void )
 {
    return m_jugglerIsRunning;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
-void cfdAppWrapper::init( void )
+void AppWrapper::init( void )
 #elif __VJ_version == 2000003
-void cfdAppWrapper::init( void* )
+void AppWrapper::init( void* )
 #endif
 {
     //vrj::Kernel::instance()->doWaitForKernelStop();// Block until kernel stops

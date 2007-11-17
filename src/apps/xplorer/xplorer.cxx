@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
@@ -37,8 +36,8 @@
 
 #include <ves/open/moduleS.h>
 //#include <tao/ORB.h>
-#include "cfdAppWrapper.h"
-#include "cfdVjObsWrapper.h"
+#include "AppWrapper.h"
+#include "VjObsWrapper.h"
 
 #include <iostream>
 #include <cstdlib>
@@ -125,9 +124,9 @@ int main(int argc, char* argv[])
             }
         }
                 
-        cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
+        VjObsWrapper* vjobsWrapper = new VjObsWrapper();
         vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
-        cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
+        AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
 
         kernel->waitForKernelStop();              // Block until kernel stops
 

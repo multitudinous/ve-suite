@@ -32,11 +32,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
-/*!\file cfdAppWrapper.h
-cfdAppWrapper API
+/*!\file AppWrapper.h
+AppWrapper API
 */
 
-/*!\class ves::xplorer::cfdAppWrapper
+/*!\class ves::xplorer::AppWrapper
 *
 */
 #include <vrj/vrjParam.h>
@@ -47,8 +47,8 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdApp;
-   class cfdVjObsWrapper;
+   class App;
+   class VjObsWrapper;
 }
 }
 
@@ -56,13 +56,13 @@ namespace ves
 {
 namespace xplorer
 {
-class cfdAppWrapper
+class AppWrapper
 {
 public:
    ///Contructor
-   cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
+   AppWrapper( int argc,  char* argv[], VjObsWrapper* );
    ///destructor
-   ~cfdAppWrapper( void );
+   ~AppWrapper( void );
    ///Is juggler running
    bool JugglerIsRunning( void );
    ///Initilize things in a seperate thread
@@ -73,9 +73,9 @@ public:
 #endif
    Thread* m_thread;///< the thread to run things in
 private:
-   cfdApp* m_cfdApp;///< the app that is running
+   ves::xplorer::App* m_cfdApp;///< the app that is running
    bool m_jugglerIsRunning;///< is juggler running
-   cfdVjObsWrapper* m_vjObsWrapper;///< points to the wrapper to send to cfdapp
+   ves::xplorer::VjObsWrapper* m_vjObsWrapper;///< points to the wrapper to send to cfdapp
    int m_argc;///<command line args
    char** m_argv;///<command line args
 }; 

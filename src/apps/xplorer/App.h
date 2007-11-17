@@ -33,11 +33,11 @@
 #ifndef CFD_APP_H
 #define CFD_APP_H
 
-/*!\file cfdApp.h
-cfdApp API
+/*!\file App.h
+App API
 */
 
-/*!\class ves::xplorer::cfdApp
+/*!\class ves::xplorer::App
 *
 */
 
@@ -46,7 +46,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdVjObsWrapper;
+   class VjObsWrapper;
 }
 }
 
@@ -105,21 +105,21 @@ namespace ves
 namespace xplorer
 {
 #ifdef _PERFORMER
-class cfdApp : public vrj::PfApp
+class App : public vrj::PfApp
 #elif _OSG
 #if __VJ_version >= 2003000
-class cfdApp : public vrj::osg::App
+class App : public vrj::osg::App
 #else
-class cfdApp : public vrj::OsgApp
+class App : public vrj::OsgApp
 #endif
 #elif _OPENSG
 #endif //_PERFORMER _OSG _OPENSG
 {
 public:
    ///Contructor
-   cfdApp( int argc, char* argv[] );
+   App( int argc, char* argv[] );
    ///destructor
-   virtual ~cfdApp( void ) { ; }
+   virtual ~App( void ) { ; }
    /// Initialize the scene graph
    virtual void initScene( void );
    /// Juggler calls before exiting
@@ -182,7 +182,7 @@ public:
    ///Push data to state info shoudl be removed 
    void pushDataToStateInfo( void );
    ///Set the wrapper for vjobs so that we can change things
-   void SetWrapper( cfdVjObsWrapper* );
+   void SetWrapper( VjObsWrapper* );
 
 #ifdef _OSG
    bool svUpdate; ///< update sceneview
@@ -196,7 +196,7 @@ public:
    osg::Timer_t _start_tick;///< The timer for framestamp
    unsigned int _frameNumber;///< the current frame number
 #endif
-   cfdVjObsWrapper*              _vjobsWrapper;///< the vjobs wrapper
+   VjObsWrapper* m_vjobsWrapper;///< the vjobs wrapper
 
    // Only used in preframe for transient stuff
    int   lastFrame;///The last frame
