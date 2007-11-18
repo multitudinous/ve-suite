@@ -277,8 +277,8 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 
         if( type == gadget::KeyPressEvent )
         {
-            gadget::KeyEventPtr m_key_evt = boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
-            m_key = m_key_evt->getKey();
+            gadget::KeyEventPtr keyEvt = boost::dynamic_pointer_cast< gadget::KeyEvent >( *i );
+            m_key = keyEvt->getKey();
 
             //Navigation mode
             if( mode == 0 )
