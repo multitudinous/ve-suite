@@ -66,8 +66,6 @@ using namespace ves::xplorer::scenegraph;
 cfdContourBase::cfdContourBase()
 :cfdObjects()
 {
-   vprDEBUG(vesDBG,2) << "cfdContourBase constructor"
-                          << std::endl << vprDEBUG_FLUSH;
    deci = vtkDecimatePro::New();
    
    this->filter = vtkMultiGroupDataGeometryFilter::New();

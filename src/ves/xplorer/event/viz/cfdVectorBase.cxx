@@ -58,9 +58,6 @@ using namespace ves::xplorer;
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()
 {
-   vprDEBUG(vesDBG,2) << "cfdVectorBase constructor"
-                          << std::endl  << vprDEBUG_FLUSH;
-
    this->ptmask = vtkMaskPoints::New();
    this->ptmask->RandomModeOn();
 

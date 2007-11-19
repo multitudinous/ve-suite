@@ -55,8 +55,6 @@ using namespace ves::xplorer::scenegraph;
 cfdContour::cfdContour()
 :cfdContourBase()
 {
-   vprDEBUG(vesDBG,2) << "cfdContour constructor"
-                          << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP 
    float b[6];
    float c[3];

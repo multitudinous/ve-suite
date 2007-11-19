@@ -53,8 +53,6 @@ using namespace ves::xplorer::scenegraph;
 
 cfdMomentum::cfdMomentum( )
 {
-   vprDEBUG(vesDBG,2) << "cfdMomentum constructor"
-                          << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP  
    float b[6];
    float c[3];
