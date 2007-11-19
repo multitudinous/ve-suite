@@ -73,8 +73,8 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-c_2_7D.dll; DestDir: {app}\
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
-Source: {#VEDEVHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
-Source: {#OSGHOME}\bin\win32\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
+Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
+Source: {#OSGHOME}\bin\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
@@ -111,8 +111,8 @@ Source: {#ACETAOHOME}\tao\*.inl; DestDir: {app}\include\tao; Attribs: readonly; 
 ;Source: {#ACETAOHOME}\tao\tao\*.i; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\include\ace; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\tao\*.cpp; DestDir: {app}\include\tao\tao; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\bin\win32\osgviewer*.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
-Source: {#OSGHOME}\bin\win32\osgconv*.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgviewer*.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
+Source: {#OSGHOME}\bin\osgconv*.exe; DestDir: {app}\bin; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion
 Source: {#WXHOME}\lib\vc_dll\mswd\wx\setup.h; DestDir: {app}\include\wx\; Attribs: readonly; Flags: uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\TAO_IDL\*.h; DestDir: {app}\include\TAO_IDL; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\orbsvcs\*.h; DestDir: {app}\include\orbsvcs; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv

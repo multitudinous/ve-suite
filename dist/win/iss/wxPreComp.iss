@@ -19,17 +19,17 @@ DefaultDirName=C:\WxWidgets_{#WXVERSION}_Pre-Compile_vc{#MSVCVERSION}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 OutputBaseFilename=wx{#WXVERSION}-precompile_{#MSVCVERSION}
-SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=true
-OutputDir={#DEPENDSINSTALLHOME}
 WindowVisible=true
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
-WizardImageStretch=false
-WizardImageBackColor=clWhite
+WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
 BackColor=$a16502
 BackColor2=$1b84f7
+WizardImageBackColor=clWhite
+WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
+WizardImageStretch=false
+OutputDir={#DEPENDSINSTALLHOME}
 AppVersion={#WXVERSION}_{#VEVERSION}
 
 [Languages]

@@ -81,6 +81,24 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\*.lib; DestDir: {app}\Build\Win32\VC7.1\
 Source: {#XERCESHOME}\*.h*; DestDir: {app}\; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#XERCESHOME}\*.c; DestDir: {app}\; Flags: ignoreversion recursesubdirs createallsubdirs
 
+;apr
+Source: {#APRHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs
+Source: {#APRUTILHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs
+Source: {#APRICONVHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion createallsubdirs
+Source: {#APRHOME}\Debug\libapr*_d.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion
+Source: {#APRUTILHOME}\Debug\libaprutil*_d.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion
+Source: {#APRICONVHOME}\Debug\libapriconv*_d.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion
+Source: {#APRHOME}\Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#APRUTILHOME}\Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#APRICONVHOME}\Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+
+Source: {#APRHOME}\Release\libapr*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist
+Source: {#APRUTILHOME}\Release\libaprutil*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist
+Source: {#APRICONVHOME}\Release\libapriconv*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist
+Source: {#APRHOME}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist
+Source: {#APRUTILHOME}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist
+Source: {#APRICONVHOME}\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist
+
 ;ACE/TAO
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly createallsubdirs

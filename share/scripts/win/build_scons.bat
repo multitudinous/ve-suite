@@ -1,5 +1,5 @@
 REM Double click this file to start Visual Studio with the projects loaded
-@ECHO OFF
+@ECHO ON
 REM Specify the environment variables
 REM pass in DEBUG or RELEASE
 set VE_CONFIGURATION=%1
@@ -16,11 +16,11 @@ call setupXP.bat %VE_CONFIGURATION%
 REM "C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\devenv.exe" %VE_SUITE_HOME%\VE_Suite.sln
 cd %VE_SUITE_HOME%
 
-if "%VE_CONFIGURATION%" == "RELEASE" GOTO Release else GOTO Debug
-:Release
-set
-scons default_debug_level=none install
+if "%VE_CONFIGURATION%" == "RELEASE" (GOTO ReleaseBUILD) else (GOTO DebugBUILD)
 
-:Debug
-scons default_debug_level=standard install
+:ReleaseBUILD
+scons default_debug_level=none prefix=D:\devEnv\VES\install\release options_file=D:\devEnv\VES\options.cache.win32.XP.ia32.release install
+
+:DebugBUILD
+scons default_debug_level=standard prefix=D:\devEnv\VES\install\debug options_file=D:\devEnv\VES\options.cache.win32.XP.ia32.debug install
 cmd

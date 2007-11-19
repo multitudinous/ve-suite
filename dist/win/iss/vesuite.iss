@@ -62,71 +62,26 @@ Root: HKCR; Subkey: VESNetworkfile\shell\OpenWithVELauncher\command; ValueType: 
 Name: desktopVELauncherIcon; Description: VE-Launcher; GroupDescription: Create Desktop Icon
 
 [Files]
-;Source: {#VEINSTALLHOME}\bin\ves_conducto*; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
-;Source: {#VEHOME}\bin\win32\WinClient.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
-;Source: {#VEINSTALLHOME}\bin\ves_xplore*.exe; DestDir: {app}\bin; Components: vexplorer; Flags: ignoreversion
-;Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages\; Components: vexplorer; Flags: ignoreversion
 Source: {#VEINSTALLHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-;Source: {#VEHOME}\bin\VE_AspenUnit.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEINSTALLHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
-;Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 
 Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: examples; Flags: recursesubdirs createallsubdirs
-;Source: {#VEHOME}\share\examples\simple\3scl2vec.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-;Source: {#VEHOME}\share\examples\simple\3scl.vtu; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-;Source: {#VEHOME}\share\examples\simple\eightCorners.stl; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-;Source: {#VEHOME}\share\examples\simple\Surface0.75.stl; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-;Source: {#VEHOME}\share\examples\simple\vtkPolyData.vtk; DestDir: {app}\share\vesuite\examples\simple; Components: examples
-;Source: {#VEHOME}\share\examples\simple\SURFACE1\*; DestDir: {app}\share\vesuite\examples\simple\SURFACE1\; Components: examples; Flags: recursesubdirs
-;Source: {#VEHOME}\share\examples\simple\POST_DATA1\*; DestDir: {app}\share\vesuite\examples\simple\POST_DATA1; Components: examples; Flags: recursesubdirs
-;Source: {#VEHOME}\share\examples\simple\POST_DATA2\*; DestDir: {app}\share\vesuite\examples\simple\POST_DATA2; Components: examples; Flags: recursesubdirs
 Source: {#VEINSTALLHOME}\include\; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
-;Source: {#VEHOME}\VE_Conductor\*.h; DestDir: {app}\include\VE_Conductor; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-;Source: {#VEHOME}\VE_Xplorer\*.h; DestDir: {app}\include\VE_Xplorer; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-;Source: {#VEHOME}\VE_Open\skel\*; DestDir: {app}\include\VE_Open\skel; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-;Source: {#VEHOME}\VE_Installer\include\VEConfig.h; DestDir: {app}\include\VE_Installer\include; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-;Source: {#VEHOME}\external\osgOQ\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
-;Source: {#VEHOME}\external\loki-0.1.6\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
-
-;Source: {#VEHOME}\VE_Conductor\*.xpm; DestDir: {app}\include\VE_Conductor; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-
-;Source: {#JUGGLERINSTHOME}\lib\dbghelp.dll; DestDir: {app}\bin; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: veconductor vexplorer nameserver
 Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
-;Source: {#VEHOME}/share/vrj_configs/dualhead_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\dualhead_configs; Components: nameserver; Flags: recursesubdirs
-;Source: {#VEHOME}/share/vrj_configs/stereo_desktop/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\stereo_desktop; Components: nameserver; Flags: recursesubdirs
-;Source: {#VEHOME}/share/vrj_configs/vecr_configs/*.jconf; DestDir: {app}\share\vesuite\vrj_configs\vecr_configs; Components: nameserver; Flags: recursesubdirs
-
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-;Source: {#VEINSTALLHOME}\bin\installerImages\velauncher_banner.xpm; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-;Source: {#VEDEVHOME}\VE_Installer\installer\installerImages\VE_document.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-;Source: {#VEHOME}\VE_Open\XML\*.h; DestDir: {app}\include\VE_Open\XML; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-;Source: {#VEHOME}\VE_Builder\*.h; DestDir: {app}\include\VE_Builder; Attribs: readonly; Flags: uninsremovereadonly replacesameversion recursesubdirs createallsubdirs; Components: vebuildenv
-;Source: {#VEHOME}\VE_Installer\installer\installerImages\velauncher_banner.bmp; DestDir: {app}\bin\installerImages; DestName: velauncher_banner.bmp
-;Source: {#VEHOME}\share\examples\simple\simple.ves; DestDir: {app}\share\vesuite\examples\simple; Components: examples; Flags: overwritereadonly replacesameversion
-;Source: {#VEHOME}\VE_Installer\installer\clusterTemplate.txt; DestDir: {app}; Flags: ignoreversion
-;Source: {#VEHOME}\VE_Installer\installer\VELauncher_Readme.txt; DestDir: {app}; Flags: ignoreversion replacesameversion
-;Source: {#VEHOME}\VE_Installer\installer\installerImages\ve_logo.xpm; DestDir: {app}\bin\installerImages; DestName: ve_logo.xpm
-;Source: {#VEHOME}\share\fonts\*.ttf; DestDir: {app}\share\vesuite\fonts; Flags: recursesubdirs createallsubdirs
-;Source: {#VEHOME}\VE_Installer\installer\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; DestDir: {tmp}; Components: ; Tasks:
 Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-
-;Source: {#VEHOME}\share\ptconfigfile.txt; DestDir: {app}\share\vesuite
-Source: {#VEINSTALLHOME}\..\external\vcredist_x86.exe; DestDir: {tmp}
-;Source: {#VEHOME}\VE_Installer\installer\installerImages\VE_icon.ico; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-
+Source: {#VEDEVHOME}\external\vcredist_x86.exe; DestDir: {tmp}
+Source: {#VEDEVHOME}\src\apps\launcher\velauncher.exe; DestDir: {app}\bin
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 Name: {group}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\{#VELauncher}; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico
 Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe; WorkingDir: {app}; IconFilename: {app}\bin\installerImages\VE_icon.ico; Tasks: desktopVELauncherIcon
 
-;Name: {commondesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\VE_icon.ico
-;Name: {group}\velauncher; Filename: {app}\velauncher.exe; WorkingDir: {app}; Comment: velauncher; Flags: createonlyiffileexists
 [Run]
-;Filename: {tmp}\vebuildertools{#VEVERSION}_{#SVNVERSION}.exe; WorkingDir: {tmp}; Description: Install VE-BuilderTools; StatusMsg: Installing VE-BuilderTools {#VEVERSION}_{#SVNVERSION}; Flags: postinstall; Components: buildertools; Tasks:
 Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
 [_ISToolPreCompile]
-Name: .\buildVELauncher.exe.bat; Parameters: 
+Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
 [_ISTool]
 UseAbsolutePaths=false
 LogFile=C:\devEnv\VE_Suite_1.0\VE_Installer\installer\compile.log

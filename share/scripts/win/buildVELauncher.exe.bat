@@ -1,9 +1,9 @@
-call ..\setupXP.bat
-cd /D %VE_SUITE_HOME%\VE_Installer\installer
+call D:\devEnv\VES\share\scripts\win\setupXP.bat
+cd /D %VE_SUITE_HOME%\src\apps\launcher
 echo %VE_SUITE_HOME%
-set PYTHONPATH=%VE_SUITE_HOME%\VE_Installer\installer\python
-set INSTIMGDIR=%VE_SUITE_HOME%\VE_Installer\installer\installerImages
-set FREEZEOUTDIR=
+set PYTHONPATH=%VE_SUITE_HOME%\src\apps\launcher\python
+set INSTIMGDIR=%VE_SUITE_HOME%\dist\installerImages
+set FREEZEOUTDIR=%VE_SUITE_HOME%\install\release\bin
 
 set PYDIR=%VE_SUITE_HOME%\external\FreezePython
 set PYINSTDIR=%PYDIR%\pyinstaller-1.3

@@ -19,17 +19,17 @@ DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 OutputBaseFilename=xerces-c_PreCompile_{#XERCESVERSION}
+SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
-SolidCompression=yes
-OutputDir={#DEPENDSINSTALLHOME}
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
+SolidCompression=true
 WindowVisible=true
+WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
+BackColor=$a16502
+BackColor2=$1b84f7
+WizardImageBackColor=clWhite
+WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
-WizardImageBackColor=clGray
-BackColor=clBlack
-BackColor2=$0080ff
-SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
+OutputDir={#DEPENDSINSTALLHOME}
 
 
 [Languages]

@@ -18,15 +18,15 @@ DefaultDirName=C:\Bullet_Pre-Compile_{#BULLETVERSION}
 DefaultGroupName={#MyAppName}
 OutputDir={#DEPENDSINSTALLHOME}
 OutputBaseFilename=bulletPreCompile_{#BULLETVERSION}_{#MSVCVERSION}
-SetupIconFile={#VEHOME}\VE_Installer\installer\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
 SolidCompression=yes
 WindowVisible=true
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_banner_1.0.bmp
-BackColor=clBlack
-BackColor2=$0080ff
-WizardImageBackColor=clGray
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_icon.bmp
+WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
+BackColor=$a16502
+BackColor2=$1b84f7
+WizardImageBackColor=clWhite
+WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 
 [Languages]
