@@ -31,9 +31,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> **************/
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
+// --- VTK Includes --- //
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkProperty.h>
@@ -42,6 +44,7 @@
 #include <vtkMapper.h>
 #include <vtkPolyDataMapper.h>
 
+// --- OSG Includes --- //
 #include <osg/Vec3>
 #include <osg/BlendFunc>
 #include <osg/Depth>
@@ -102,6 +105,8 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkAc
     {
         geode->addDrawable( lines.get() );
     }
+
+    geode->setCullingActive( false );
 
     return geode;
 }
@@ -264,7 +269,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
 
     stateset->setAttribute( GetShader().get(), osg::StateAttribute::ON );
 
-    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 1.0 ) );
+    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.5 ) );
     stateset->addUniform( parSize.get() );
 
     osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.3 ) );
