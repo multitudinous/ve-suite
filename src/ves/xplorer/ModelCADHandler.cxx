@@ -60,11 +60,12 @@ namespace xplorer
 ModelCADHandler::ModelCADHandler(ves::xplorer::scenegraph::DCS* rootNode)
 {
     m_assemblyList["rootNode"] = rootNode;
-    m_clipPlane = new osg::ClipPlane();
+    //m_clipPlane = new osg::ClipPlane();
     //m_clipPlane->setClipPlane(1,0,0,-.5);
-    m_assemblyList["rootNode"]
+    /*m_assemblyList["rootNode"]
     ->getOrCreateStateSet()->setAttributeAndModes(m_clipPlane.get(),
                                                                   osg::StateAttribute::OFF);
+*/
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
@@ -119,11 +120,18 @@ ModelCADHandler::operator=( const ModelCADHandler& rhs )
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::SetClipPlane(double a, double b, double c, double d)
 {
-    m_clipPlane->setClipPlane(a,b,c,d);
+	if(m_clipPlane.valid())
+	{
+        m_clipPlane->setClipPlane(a,b,c,d);
+	}
 }
 //////////////////////////////////////////////////////////////////
 void ModelCADHandler::ToggleClipPlane(bool onOff)
 {
+	if(!m_clipPlane.valid())
+	{
+		return;
+	}
     if(onOff)
     {
         m_assemblyList["rootNode"]->getOrCreateStateSet()
