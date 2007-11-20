@@ -146,10 +146,12 @@ void cfdIsosurface::Update()
       << this->GetActiveDataSet()->GetDataSet()
       << std::endl << vprDEBUG_FLUSH;
 
-   this->contour->SetInput( this->GetActiveDataSet()->GetDataSet() );
-   this->contour->SetValue( 0, this->value );
-   
-   vtkPolyData* polydata = ApplyGeometryFilter(contour->GetOutputPort());
+   vtkContourFilter* contourFilter = vtkContourFilter::New();
+   contourFilter->UseScalarTreeOn();
+   contourFilter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+   contourFilter->SetValue( 0, this->value );
+  
+   vtkPolyData* polydata = ApplyGeometryFilter(contourFilter->GetOutputPort());
    
    polydata->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
    polydata->Update();
@@ -175,6 +177,7 @@ void cfdIsosurface::Update()
    geodes.back()->TranslateToGeode( temp );
    temp->Delete();
    lut->Delete();
+   contourFilter->Delete();
    this->updateFlag = true;
 }
 
