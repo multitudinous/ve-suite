@@ -326,10 +326,8 @@ void DataSetLoaderUI::InitializeWidgets( void )
    }
       size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
 
-	  _availableDatasets.Clear();
-      for ( size_t i = 0; i < numParamBlocks; ++i )
+	  for ( size_t i = 0; i < numParamBlocks; ++i )
       {
-		  _availableDatasets.Add(wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ));
 		  dataSetList->Append( wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
       }
 }
@@ -696,7 +694,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
    newDataSetName.CentreOnParent();
    newDataSetName.ShowModal();
    std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue().GetData() ) ) );
-   if(DatasetExists( tempStr ) )
+   if(dataSetList->FindString( tempStr ) != wxNOT_FOUND)
    {
       wxMessageBox( _("Data with this name is already loaded."), 
                           newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
@@ -704,8 +702,8 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
    }
    else
    {
-      _availableDatasets.Add(newDataSetName.GetValue());
-      dataSetList->Append(newDataSetName.GetValue());
+      
+	   dataSetList->Append(newDataSetName.GetValue());
       dataSetList->SetStringSelection(newDataSetName.GetValue());
       
       paramBlock = m_veModel->GetInformationPacket( -1 );
@@ -774,16 +772,6 @@ void DataSetLoaderUI::EnableUI( bool flag )
    surfaceDataOpenButton->Enable( flag );
    transformButton->Enable( flag );
    itemButton22->Enable( flag );
-}
-////////////////////////////////////////////////////////////////////////////////
-bool DataSetLoaderUI::DatasetExists(std::string name)
-{
-   for(size_t i = 0; i < _availableDatasets.GetCount(); i++)
-   {
-      if( wxString( name.c_str(), wxConvUTF8 ) == _availableDatasets[i])
-         return true;
-   }
-   return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string DataSetLoaderUI::GetActiveDataSetName()

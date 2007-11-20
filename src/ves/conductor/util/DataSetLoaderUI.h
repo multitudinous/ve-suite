@@ -202,10 +202,6 @@ public:
    ///Set the text controls when the text is modified
    void SetTextCtrls( void );
 
-   ///Check for dataset name in the combo box
-   ///\param name The name of the dataset to search for.
-   bool DatasetExists(std::string name);
-   
 ////@end DataSetLoaderUI event handler declarations
 
 ////@begin DataSetLoaderUI member function declarations
@@ -241,7 +237,6 @@ private:
    wxStaticBox* itemStaticBoxSizer19Static;
    std::set< wxString > textureDirs;
 
-   wxArrayString _availableDatasets;///<The list of datasets(should this be called something else?)
    ves::open::xml::model::ModelPtr m_veModel;
    ves::open::xml::ParameterBlock* paramBlock;
 
