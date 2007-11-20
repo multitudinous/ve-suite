@@ -41,6 +41,7 @@ DataSetLoaderUI API
 #include <ves/VEConfig.h>
 
 #include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 #include <wx/string.h>
 #include <wx/gdicmn.h>
@@ -156,7 +157,7 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
     ///Send commands to xplorer as events are processed
-    void SendCommandToXplorer( ves::open::xml::XMLObject* tempObject );
+    void SendCommandToXplorer( ves::open::xml::DataValuePairSharedPtr tempObject );
 
 ////@begin DataSetLoaderUI event handler declarations
 
@@ -183,6 +184,9 @@ public:
 
     /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_INFORMATION_PACKET_CHANGE_NAME
     void OnInformationPacketAdd( wxCommandEvent& event );
+
+    /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_INFORMATION_PACKET_CHANGE_NAME
+    void OnDeleteDataset( wxCommandEvent& event );
 
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_INFORMATION_PACKET_ADD_NAME
     void OnInformationPacketChangeName( wxCommandEvent& event );

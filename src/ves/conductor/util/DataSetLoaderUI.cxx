@@ -83,6 +83,7 @@ BEGIN_EVENT_TABLE( DataSetLoaderUI, wxDialog )
    EVT_BUTTON( ID_BUTTON6, DataSetLoaderUI::OnTransformDataset )
    EVT_BUTTON( ID_BUTTON2, DataSetLoaderUI::OnLoadTextureFile )
    EVT_BUTTON( ID_ADD_DATASET, DataSetLoaderUI::OnInformationPacketAdd )
+   EVT_BUTTON( ID_DELETE_DATASET, DataSetLoaderUI::OnDeleteDataset )
    EVT_LISTBOX_DCLICK( ID_LISTBOX, DataSetLoaderUI::OnListboxSelected )
    EVT_COMBOBOX( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChange ) // this will refresh all the widgets for the given dataset
    //EVT_TEXT( ID_COMBOBOX, DataSetLoaderUI::OnInformationPacketChangeName ) // change the name of a given data set, will also need to change the name seen by xplorer
@@ -438,8 +439,13 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED(event) )
       }
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) ) );
       tempDVP->SetData( "VTK_DATA_FILE", tempStr );
+      
+       ves::open::xml::DataValuePairSharedPtr dataValuePair 
+            = new ves::open::xml::DataValuePair();
+       dataValuePair->SetData( "CREATE_NEW_DATASETS", 
+            new ves::open::xml::model::Model( *m_veModel ) );
+       SendCommandToXplorer( dataValuePair );       
    }
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON in DataSetLoaderUI. 
 }
 
 
@@ -477,6 +483,11 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
          }
          std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeSurfaceDirPath.c_str() ) ) );
          tempDVP->SetData( "VTK_SURFACE_DIR_PATH", tempStr );
+         
+          ves::open::xml::DataValuePairSharedPtr dataValuePair 
+                = new ves::open::xml::DataValuePair();
+          dataValuePair->SetData( "ADD_SURFACE_DATA_DIR", tempDVP );
+          SendCommandToXplorer( dataValuePair );                 
       }
       else if ( event.GetId() == ID_BUTTON3 )
       {
@@ -491,6 +502,11 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
          std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativePrecomputedDirPath.c_str() ) ) );
          tempDVP->SetData( "VTK_PRECOMPUTED_DIR_PATH", tempStr );
          preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
+
+          ves::open::xml::DataValuePairSharedPtr dataValuePair 
+            = new ves::open::xml::DataValuePair();
+          dataValuePair->SetData( "ADD_PRECOMPUTED_DATA_DIR", tempDVP );
+          SendCommandToXplorer( dataValuePair );                 
       }
    }
 ////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI. 
@@ -697,7 +713,33 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
       paramBlock->SetBlockId( ::wxNewId() );
       EnableUI( true );
    }
-  
+}
+//////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED(event) )
+{
+    /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_LISTBOX
+    // When enter is pushed on the combox and new entry is specifiy and
+    // the appropriate widgets should be updated
+    /*std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue().GetData() ) ) );
+    if(DatasetExists( tempStr ) )
+    {
+        wxMessageBox( _("Data with this name is already loaded."), 
+                     newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
+        return;
+    }
+    else
+    {
+        _availableDatasets.Add(newDataSetName.GetValue());
+        dataSetList->Append(newDataSetName.GetValue());
+        dataSetList->SetStringSelection(newDataSetName.GetValue());
+        
+        paramBlock = m_veModel->GetInformationPacket( -1 );
+        tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
+        paramBlock->SetName( tempStr );
+        paramBlock->SetBlockId( ::wxNewId() );
+        EnableUI( true );
+    }*/
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED(event) )
@@ -752,7 +794,7 @@ ves::open::xml::ParameterBlock* DataSetLoaderUI::GetParamBlock()
    return paramBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSetLoaderUI::SendCommandToXplorer( ves::open::xml::XMLObject* tempObject )
+void DataSetLoaderUI::SendCommandToXplorer( ves::open::xml::DataValuePairSharedPtr tempObject )
 {
     //if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
     {
@@ -761,12 +803,9 @@ void DataSetLoaderUI::SendCommandToXplorer( ves::open::xml::XMLObject* tempObjec
         netowrkWriter.UseStandaloneDOMDocumentManager();
         
         // Create the command and data value pairs
-        ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
-        dataValuePair->SetData( "CREATE_NEW_DATASETS", 
-                               new ves::open::xml::model::Model( *m_veModel ) );
         ves::open::xml::Command* veCommand = new ves::open::xml::Command();
         veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
-        veCommand->AddDataValuePair( dataValuePair );
+        veCommand->AddDataValuePair( tempObject );
         
         CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
         
