@@ -131,7 +131,8 @@ UIPluginBase::UIPluginBase() :
     m_selTagCon( 0 ),
     highlightFlag( false ),
     serviceList( 0 ),
-    m_veModel( new Model() )
+    m_veModel( new Model() ),
+    m_dataSetLoaderDlg( 0 )
 { 
     pos = wxPoint(0,0); //default position
 
@@ -1405,32 +1406,17 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
     }
     
     // Here we launch a dialog for a specific plugins input values
-	ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
-   ves::conductor::util::DataSetLoaderUI dataSetLoaderDlg( m_canvas, ::wxNewId(), 
-               SYMBOL_DATASETLOADERUI_TITLE, SYMBOL_DATASETLOADERUI_POSITION, 
-               SYMBOL_DATASETLOADERUI_SIZE, SYMBOL_DATASETLOADERUI_STYLE, veModel );
-   dataSetLoaderDlg.SetSize( dialogSize );
+    if( !m_dataSetLoaderDlg )
+    {
+        ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
+        m_dataSetLoaderDlg = new ves::conductor::util::DataSetLoaderUI( 
+            m_canvas, ::wxNewId(), SYMBOL_DATASETLOADERUI_TITLE, 
+            SYMBOL_DATASETLOADERUI_POSITION, SYMBOL_DATASETLOADERUI_SIZE, 
+            SYMBOL_DATASETLOADERUI_STYLE, veModel );
+        m_dataSetLoaderDlg->SetSize( dialogSize );
+    }
 
-   if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
-   {
-      //Now send the data to xplorer
-      ves::open::xml::XMLReaderWriter netowrkWriter;
-      netowrkWriter.UseStandaloneDOMDocumentManager();
-
-      // Create the command and data value pairs
-      ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
-      dataValuePair->SetData( "CREATE_NEW_DATASETS", 
-            new ves::open::xml::model::Model( *m_veModel ) );
-      ves::open::xml::Command* veCommand = new ves::open::xml::Command();
-      veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
-      veCommand->AddDataValuePair( dataValuePair );
-
-      serviceList->SendCommandStringToXplorer( veCommand );
-
-      //Clean up memory
-      delete veCommand;
-      veCommand = 0;
-   }
+    m_dataSetLoaderDlg->Show();
 }
 //////////////////////////////////////////////////////////
 void UIPluginBase::OnVisualization(wxCommandEvent& event )

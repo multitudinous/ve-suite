@@ -155,6 +155,8 @@ public:
 
     /// Creates the controls and sizers
     void CreateControls();
+    ///Send commands to xplorer as events are processed
+    void SendCommandToXplorer( ves::open::xml::XMLObject* tempObject );
 
 ////@begin DataSetLoaderUI event handler declarations
 

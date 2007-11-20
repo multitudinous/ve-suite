@@ -30,8 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <wx/wxprec.h>
-
+#include <ves/conductor/util/CORBAServiceList.h>
 
 ////@begin includes
 #include <wx/sizer.h>
@@ -57,6 +56,7 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/XMLReaderWriter.h>
 
 #include <iostream>
 
@@ -699,7 +699,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
    }
   
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED(event) )
 {
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_LISTBOX
@@ -714,7 +714,7 @@ void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED(ev
       //std::cout << "OnInformationPacketChangeName " << paramBlock->GetName() << std::endl;
    }
 }
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::EnableUI( bool flag )
 {
    if(dataSetList->GetCount())
@@ -731,7 +731,7 @@ void DataSetLoaderUI::EnableUI( bool flag )
    transformButton->Enable( flag );
    itemButton22->Enable( flag );
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool DataSetLoaderUI::DatasetExists(std::string name)
 {
    for(size_t i = 0; i < _availableDatasets.GetCount(); i++)
@@ -741,13 +741,37 @@ bool DataSetLoaderUI::DatasetExists(std::string name)
    }
    return false;
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string DataSetLoaderUI::GetActiveDataSetName()
 {
    return paramBlock->GetName();
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::ParameterBlock* DataSetLoaderUI::GetParamBlock()
 {
    return paramBlock;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::SendCommandToXplorer( ves::open::xml::XMLObject* tempObject )
+{
+    //if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
+    {
+        //Now send the data to xplorer
+        ves::open::xml::XMLReaderWriter netowrkWriter;
+        netowrkWriter.UseStandaloneDOMDocumentManager();
+        
+        // Create the command and data value pairs
+        ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
+        dataValuePair->SetData( "CREATE_NEW_DATASETS", 
+                               new ves::open::xml::model::Model( *m_veModel ) );
+        ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+        veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
+        veCommand->AddDataValuePair( dataValuePair );
+        
+        CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+        
+        //Clean up memory
+        delete veCommand;
+        veCommand = 0;
+    }
 }

@@ -82,6 +82,7 @@ namespace util
     class CORBAServiceList;
     class CADNodeManagerDlg;
     class SoundsPane;
+    class DataSetLoaderUI;
 }
 }
 }
@@ -299,6 +300,9 @@ protected:
    TextResultDialog* result_dlg;
    TextResultDialog* port_dlg;
    GeometryDialog* geom_dlg;
+   ///Dataset dialog to load and control dataset
+   util::DataSetLoaderUI* m_dataSetLoaderDlg;
+   ///id
    unsigned int id;
 
    ///The Position to draw Icon
