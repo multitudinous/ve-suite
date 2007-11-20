@@ -321,44 +321,15 @@ void cfdContourBase::CreatePlane( void )
          GetActiveDataSet()->GetBounds() );
 
    cuttingPlane->Advance( requestedValue );
+   cutter->Delete();
+   cutter = vtkCutter::New();
    cutter->SetCutFunction( cuttingPlane->GetPlane() );
    cutter->SetInput(GetActiveDataSet()->GetDataSet());
-   vtkPolyData* polydata = ApplyGeometryFilter(cutter->GetOutputPort());
-   ///this is not working AT ALL!!!!
-   /*if( (polydata->GetNumberOfPoints()) < 1 || (polydata->GetNumberOfPolys()) < 1 ) 
-   {
-      std::cerr<<"No data for this plane : cfdPresetContour"<<std::endl;
-      std::cerr<<"Finding next closest plane"<<std::endl;
-      int counter = 0;
-      ///Especially NOT this!!!! Should probably be changed to && but....
-      while ( (polydata->GetNumberOfPoints()) < 1 ||
-		      (polydata->GetNumberOfPolys() < 1 ) || 
-			  counter < 3 )//&&(this->TargetReduction > 0.0) )
-      {
-         if( requestedValue < 50 )
-         {
-            requestedValue = requestedValue + 1;
-         }
-         else 
-         {
-            requestedValue = requestedValue - 1;
-         }
-         cuttingPlane->Advance( requestedValue ); 
-         cutter->SetCutFunction( cuttingPlane->GetPlane() );
-         cutter->SetInput(GetActiveDataSet()->GetDataSet());
-         filter->SetInputConnection(cutter->GetOutputPort());
-         filter->Update();
-         polydata = filter->GetOutput();      
-         //cutter->Print( std::cout );
-         //std::cout << std::endl;
-         //std::cout << std::endl;
-         //std::cout << std::endl;
-         //std::cout << std::endl;
-         counter += 1;      
-      }    
-   } */      
-
-   SetMapperInput( polydata );
+   cutter->Update();
+   vtkPolyData* tempPolydata = 0;
+   tempPolydata = ApplyGeometryFilter(cutter->GetOutputPort());
+   tempPolydata->Update();
+   SetMapperInput( tempPolydata );
 
    mapper->SetScalarRange( GetActiveDataSet()
                                      ->GetUserRange() );

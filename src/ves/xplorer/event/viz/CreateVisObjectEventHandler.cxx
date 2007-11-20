@@ -771,7 +771,7 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
    vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
                         << activeDataSetDCS.get()
                         << std::endl << vprDEBUG_FLUSH;
-   this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
+   //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
    //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
    //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );
    this->activeObject->SetCursorType( EnvironmentHandler::instance()->GetCursor()->GetCursorID() );
@@ -873,14 +873,15 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
       // (and the active dataset as well)
       DataSet* activeDataset = activeModel->GetCfdDataSet( i );         
       
-      std::string oldDatasetName = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetFileName();
+      std::string oldDatasetName = activeModel->GetActiveDataSet()->GetFileName();
       vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = " 
          << oldDatasetName
          << std::endl << vprDEBUG_FLUSH;
       
       activeModel->SetActiveDataSet( activeDataset );         
       vprDEBUG(vesDBG,1) << "|\tCreateVisObjectEventHandler::SetActiveDataSet Activating steady state file " 
-         << activeDataset->GetFileName()
+         << activeDataset->GetFileName() << " == " 
+		 << activeModel->GetActiveDataSet()->GetFileName()
          << std::endl << vprDEBUG_FLUSH;
       
       // make sure that the user did not just hit same dataset button

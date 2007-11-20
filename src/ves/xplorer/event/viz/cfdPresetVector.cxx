@@ -123,7 +123,8 @@ void cfdPresetVector::Update( void )
       this->cuttingPlane->SetBounds( 
             this->GetActiveDataSet()->GetBounds() );
       this->cuttingPlane->Advance( this->requestedValue );
-
+      cutter->Delete();
+	  cutter = vtkCutter::New();
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
 

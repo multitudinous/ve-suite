@@ -2320,8 +2320,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 	size_t modelCount = system->GetModels().size();
     for( size_t j = 0; j < modelCount; j++ )
     {
-		model::Model* model = new model::Model( 
-			*(system->GetModel(j)) );
+		model::ModelSharedPtr model = system->GetModel(j);
 
         wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
         // If the class has not had a custom module been created

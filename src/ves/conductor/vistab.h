@@ -57,11 +57,12 @@ namespace xml
 {
    class Command;
    class DataValuePair;
-}
-namespace model
+   namespace model
 {
    class Model;
 }
+}
+
 }
 }
 
