@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoinFunnelGP", "CoinFunnelGP\CoinFunnelGP.vcproj", "{5DE747EB-35CF-4CF2-A951-EE0D1E2B347D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CoinFunnelUI", "CoinFunnelUI\CoinFunnelUI.vcproj", "{69D2C74A-AC5F-451E-B7E0-7E70247D3C26}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DE747EB-35CF-4CF2-A951-EE0D1E2B347D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5DE747EB-35CF-4CF2-A951-EE0D1E2B347D}.Debug|Win32.Build.0 = Debug|Win32
+		{5DE747EB-35CF-4CF2-A951-EE0D1E2B347D}.Release|Win32.ActiveCfg = Release|Win32
+		{5DE747EB-35CF-4CF2-A951-EE0D1E2B347D}.Release|Win32.Build.0 = Release|Win32
+		{69D2C74A-AC5F-451E-B7E0-7E70247D3C26}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69D2C74A-AC5F-451E-B7E0-7E70247D3C26}.Debug|Win32.Build.0 = Debug|Win32
+		{69D2C74A-AC5F-451E-B7E0-7E70247D3C26}.Release|Win32.ActiveCfg = Release|Win32
+		{69D2C74A-AC5F-451E-B7E0-7E70247D3C26}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
