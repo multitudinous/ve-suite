@@ -66,15 +66,15 @@ Source: {#WXHOME}\lib\vc_dll\wxbase28d_vc_custom.dll; DestDir: {app}\lib; Flags:
 Source: {#WXHOME}\lib\vc_dll\wxmsw28d_core_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28d_gl_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28d_adv_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
-Source: {#ACETAOHOME}\lib\TAO*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: acetao
+Source: {#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: acetao
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#ACETAOHOME}\lib\aced.dll; DestDir: {app}\lib; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\aced.dll; DestDir: {app}\lib; Components: acetao; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-c_2_7D.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
+Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
 Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
-Source: {#OSGHOME}\bin\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\bin\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
@@ -83,7 +83,7 @@ Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags:
 Source: {#XERCESHOME}\include\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#OSGHOME}\lib\win32\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv; Attribs: readonly
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -93,9 +93,9 @@ Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; 
 Source: {#APRHOME}\Debug\libapr*_d.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#APRUTILHOME}\Debug\libaprutil*_d.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#APRICONVHOME}\Debug\libapriconv*_d.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#APRHOME}\Debug\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#APRUTILHOME}\Debug\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#APRICONVHOME}\Debug\*.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#APRHOME}\Debug\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
+Source: {#APRUTILHOME}\Debug\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
+Source: {#APRICONVHOME}\Debug\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 
 Source: {#APRHOME}\Release\libapr*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
 Source: {#APRUTILHOME}\Release\libaprutil*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion skipifsourcedoesntexist; Components: depsbuildenv
@@ -121,8 +121,8 @@ Source: {#JUGGLERINSTHOME}\share\vrjuggler\data\configFiles\*; DestDir: {app}\sh
 Source: {#JUGGLERINSTHOME}\share\vrjuggler\data\definitions\*; DestDir: {app}\share\definitions; Flags: ignoreversion recursesubdirs createallsubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
 Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs; Components: depsbuildenv; Languages: 
-Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
-Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-depdom_2_7.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
+Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-depdom_2_7.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
@@ -131,7 +131,7 @@ Source: {#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; DestDir: {app}\lib; Comp
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_gl_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_core_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxbase28_vc_custom.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: wxwidgets
-Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Debug\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
+Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
 
 [Icons]
