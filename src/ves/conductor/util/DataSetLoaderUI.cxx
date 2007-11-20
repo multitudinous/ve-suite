@@ -32,7 +32,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 
-////@begin includes
 #include <wx/sizer.h>
 #include <wx/scrolwin.h>
 #include <wx/statbox.h>
@@ -47,7 +46,6 @@
 #include <wx/msgdlg.h>
 #include <wx/textdlg.h>
 #include <wx/string.h>
-////@end includes
 
 //#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
 #include <ves/conductor/util/DataSetLoaderUI.h>
@@ -604,15 +602,20 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED(event) )
    while ( answer == wxID_NO );
    wxFileName::SetCwd( cwd );
    
-   std::set< wxString >::iterator iter;
-   for ( iter = textureDirs.begin(); iter != textureDirs.end(); ++iter )
-   {
-      ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( -1 );
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( (*iter).c_str() ) ) );
-      tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", tempStr );
-      wxString* dirString = new wxString( (*iter) );
-      itemListBox24->InsertItems( 1, dirString, 0 );
-   }
+    std::set< wxString >::iterator iter;
+    for ( iter = textureDirs.begin(); iter != textureDirs.end(); ++iter )
+    {
+        ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( -1 );
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( (*iter).c_str() ) ) );
+        tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", tempStr );
+        wxString* dirString = new wxString( (*iter) );
+        itemListBox24->InsertItems( 1, dirString, 0 );
+        //Send data to xplorer
+        ves::open::xml::DataValuePairSharedPtr dataValuePair 
+            = new ves::open::xml::DataValuePair();
+        dataValuePair->SetData( "ADD_TEXTURE_DATA_DIR", tempDVP );
+        SendCommandToXplorer( dataValuePair );                        
+    }
 }
 
 /*!
@@ -784,7 +787,8 @@ ves::open::xml::ParameterBlock* DataSetLoaderUI::GetParamBlock()
    return paramBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataSetLoaderUI::SendCommandToXplorer( ves::open::xml::DataValuePairSharedPtr tempObject )
+void DataSetLoaderUI::SendCommandToXplorer( 
+    ves::open::xml::DataValuePairSharedPtr tempObject )
 {
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;

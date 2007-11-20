@@ -257,28 +257,22 @@ void AddVTKDataSetEventHandler::Execute(xml::XMLObject* xmlObject)
         tempDataSet->SetUUID( "VTK_SURFACE_DIR_PATH", tempDVP->GetID() );
         tempDataSet->SetPrecomputedSurfaceDir( precomputedSurfaceDir );
         
-        LoadSurfaceFiles( _activeModel->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
+        LoadSurfaceFiles( tempDataSet->GetPrecomputedSurfaceDir() );
     }
     else if( command->GetDataValuePair("ADD_TEXTURE_DATA_DIR") )
     {
-        /*//Load texture datasets
-        if ( tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" ) )
-        {
-            vprDEBUG(vesDBG,0) << "|\tCreating texture dataset." << std::endl << vprDEBUG_FLUSH;
-            _activeModel->CreateTextureDataSet();
-            size_t numProperties = tempInfoPacket->GetNumberOfProperties();
-            for ( size_t j = 0; j < numProperties; ++j )
-            {
-                if ( tempInfoPacket->GetProperty( j )->GetDataName() == 
-                    std::string( "VTK_TEXTURE_DIR_PATH" ) )
-                {
-                    _activeModel->AddDataSetToTextureDataSet( 0, tempInfoPacket->GetProperty( j )->GetDataString() );
-                    std::ostringstream textId;
-                    textId << "VTK_SURFACE_DIR_PATH_" << j;
-                    _activeModel->GetCfdDataSet( -1 )->SetUUID( textId.str(), tempInfoPacket->GetProperty( "VTK_TEXTURE_DIR_PATH" )->GetID() );
-                }
-            }
-        }*/
+        //Load texture datasets
+        vprDEBUG(vesDBG,0) << "|\tCreating texture dataset." 
+            << std::endl << vprDEBUG_FLUSH;
+        _activeModel->CreateTextureDataSet();
+        DataValuePairSharedPtr tempDVP = 
+            static_cast< DataValuePair* >( command->GetDataValuePair("VTK_TEXTURE_DIR_PATH")->GetDataXMLObject() );
+        _activeModel->AddDataSetToTextureDataSet( 0, tempDVP->GetDataString() );
+        
+        std::ostringstream textId;
+        textId << "VTK_SURFACE_DIR_PATH_" << tempDVP->GetID();
+        DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
+        tempDataSet->SetUUID( textId.str(), tempDVP->GetID() );
     }
     else if( command->GetDataValuePair("DELETE_DATASET") )
     {

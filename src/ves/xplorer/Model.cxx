@@ -251,19 +251,28 @@ void Model::SetActiveDataSet( DataSet* input )
 {
    activeDataSet = input;
 }
-#ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateTextureDataSet()
 {
-   mTextureDataSets.push_back(new cfdTextureDataSet());
-}
+    // Currently we only have the capability to work with 1 texture dataset
+    // per Model. This can change once the Visualization GUI is capable of 
+    // working with multiple texture datasets. Once that is possible
+    // we will need a map of texture datasets organized by the overall
+    // vtk dataset UUID.
+    if( mTextureDataSets.size() > 0 )
+    {
+        return;
+    }
+    // Add a new texture dataset
+    mTextureDataSets.push_back(new cfdTextureDataSet());
+    // Map texture dataset to UUID of overall vtk dataset
+}  
 ////////////////////////////////////////////////////////////////////////////////
 void Model::AddDataSetToTextureDataSet(unsigned int index,
                                      std::string textureDescriptionFile)
 {
    mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
 }
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateGeomDataSet( std::string filename )
 {
