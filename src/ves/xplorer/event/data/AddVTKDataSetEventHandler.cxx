@@ -118,11 +118,9 @@ void AddVTKDataSetEventHandler::Execute(xml::XMLObject* xmlObject)
       DataValuePairWeakPtr veModelDVP = command->GetDataValuePair("CREATE_NEW_DATASETS");
       xml::model::Model* veModel = dynamic_cast< xml::model::Model* >( veModelDVP->GetDataXMLObject() );
       size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
-      //for ( size_t i = (numInfoPackets-1); i < numInfoPackets; ++i )
       for ( size_t i = 0; i < numInfoPackets; ++i )
       {
          ParameterBlock* tempInfoPacket = veModel->GetInformationPacket( i );
-         std::cout<<"..."<<std::endl;
 
          if ( tempInfoPacket->GetProperty( "VTK_DATA_FILE" ) )
          {
@@ -132,32 +130,24 @@ void AddVTKDataSetEventHandler::Execute(xml::XMLObject* xmlObject)
             {
                return;
             }
-
-            //Check to see if a dataset with same name has been loaded
-            /*for( size_t k = 0; k < (numInfoPackets-1); ++k )
-            {
-                if( tempInfoPacket->GetName() == veModel->GetInformationPacket( k )->GetName() )
-                {
-                    std::cerr << "ERROR: Dataset with same name already loaded. No dataset loaded.  "
-                              << "Please choose a different name for your dataset."<< std::endl;
-                    veModel->RemoveInformationPacket( numInfoPackets-1 );
-                    //Reset number of information packets
-                    numInfoPackets = veModel->GetNumberOfInformationPackets();
-                    return;
-                }
-            }*/
+            size_t currentNumberOfDataSets = _activeModel->GetNumberOfCfdDataSets();
+            bool foundDataSet = false;
 
             //check to see if dataset is already on this particular model
-            for ( size_t j = 0; j < _activeModel->GetNumberOfCfdDataSets(); ++j )
+            for ( size_t j = 0; j < currentNumberOfDataSets; ++j )
             {
-                  std::cout<<"ID: "<<tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID()<<std::endl;
-                  std::cout<<"UUID: "<<tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID()<<std::endl;
                if ( tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() == 
                     _activeModel->GetCfdDataSet( j )->GetUUID( "VTK_DATA_FILE" ) )
                {
-                  std::cout<<"Skipping..."<<std::endl;
-                  continue;
+                  foundDataSet = true;
+                  break;
                }
+            }
+            if( foundDataSet )
+            {
+                std::cout<<"Skipping load of dataset: ";
+                std::cout<< tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() <<std::endl; 
+                continue;
             }
 
             //If not already there lets create a new dataset
