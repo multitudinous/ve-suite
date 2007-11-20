@@ -302,67 +302,68 @@ Model* cfdVEBaseClass::GetCFDModel( void )
 //////////////////////////////////////////////////////////////////   
 void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
 {
-   xmlModel = tempModel;
+    xmlModel = tempModel;
 
-   //Decompose model to be utilized by the event handlers
-   CADAssembly* cadNodeData = dynamic_cast< CADAssembly* >( xmlModel->GetGeometry() );
-   if ( cadNodeData )
-   {
-      DataValuePair* cadNode = new DataValuePair();
-      cadNode->SetDataType( std::string("XMLOBJECT") );
-      cadNode->SetData("New Node", cadNodeData );
+    //Decompose model to be utilized by the event handlers
+    CADAssembly* cadNodeData = 
+        dynamic_cast< CADAssembly* >( xmlModel->GetGeometry() );
+    if( cadNodeData )
+    {
+        DataValuePair* cadNode = new DataValuePair();
+        cadNode->SetDataType( std::string("XMLOBJECT") );
+        cadNode->SetData("New Node", cadNodeData );
 
-      Command* cadCommand = new Command();
-      cadCommand->AddDataValuePair( cadNode );
-      std::string _commandName = "CAD_ADD_NODE";
-      cadCommand->SetCommandName( _commandName );
+        Command* cadCommand = new Command();
+        cadCommand->AddDataValuePair( cadNode );
+        std::string _commandName = "CAD_ADD_NODE";
+        cadCommand->SetCommandName( _commandName );
 
-      //Process the cad
-      ves::xplorer::event::CADAddNodeEventHandler newCADNode;
-      newCADNode.SetGlobalBaseObject( _model );
-      newCADNode.Execute( cadCommand );
-      delete cadCommand;
-   }
+        //Process the cad
+        ves::xplorer::event::CADAddNodeEventHandler newCADNode;
+        newCADNode.SetGlobalBaseObject( _model );
+        newCADNode.Execute( cadCommand );
+        delete cadCommand;
+    }
 
-   //process the information blocks
-   size_t numberOfInformationPackets = xmlModel->GetNumberOfInformationPackets();
-   for(size_t p = 0;  p < numberOfInformationPackets; ++p)
-   {
+    //process the information blocks
+    if( xmlModel->GetNumberOfInformationPackets() > 0 )
+    {
+        DataValuePairPtr modelNode = new DataValuePair();
+        modelNode->SetDataType( std::string("XMLOBJECT") );
+        modelNode->SetData( "CREATE_NEW_DATASETS", 
+            new model::Model( *xmlModel ) );
 
-      DataValuePair* modelNode = new DataValuePair();
-      modelNode->SetDataType( std::string("XMLOBJECT") );
-      modelNode->SetData( "CREATE_NEW_DATASETS", new model::Model( *xmlModel ) );
-      
-      Command* dataCommand = new Command();
-      dataCommand->AddDataValuePair( modelNode );
-      dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
-      
-	  ves::open::xml::ParameterBlock* parameterBlock = xmlModel->GetInformationPacket(p);
+        Command* dataCommand = new Command();
+        dataCommand->AddDataValuePair( modelNode );
+        dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
 
-	  //Add the active dataset name to the command
-      ves::open::xml::DataValuePairSharedPtr dataSetName = 
-           new ves::open::xml::DataValuePair();
-      dataSetName->SetData( "VTK_DATASET_NAME", 
+        //Add the active dataset name to the command
+        ves::open::xml::ParameterBlock* parameterBlock = 
+            xmlModel->GetInformationPacket(0);
+        ves::open::xml::DataValuePairPtr dataSetName = 
+            new ves::open::xml::DataValuePair();
+        dataSetName->SetData( "VTK_DATASET_NAME", 
         parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
-      dataCommand->AddDataValuePair( dataSetName );
-      //Process the vtk data
-      ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
-      addVTKEH.SetGlobalBaseObject( _model );
-      addVTKEH.Execute( dataCommand );
-      delete dataCommand;
-   }
+        dataCommand->AddDataValuePair( dataSetName );
+        
+        //Process the vtk data
+        ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
+        addVTKEH.SetGlobalBaseObject( _model );
+        addVTKEH.Execute( dataCommand );
+        delete dataCommand;
+    }
 
-   //process inputs
-   if ( xmlModel->GetNumberOfInputs() > 0 )
-   {
-      //do something
-   }
-   
-   //process results
-   if ( xmlModel->GetNumberOfResults() > 0 )
-   {
-      //do something
-   }
+    //process inputs
+    if( xmlModel->GetNumberOfInputs() > 0 )
+    {
+        //do something
+    }
+
+    //process results
+    if( xmlModel->GetNumberOfResults() > 0 )
+    {
+        //do something
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetCurrentCommand( Command* command )
