@@ -1,0 +1,13 @@
+##sets up jconf files for stereo_desktop
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg')
+
+imagesBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
+imagesFile = sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
+imagesFile += sca_util.getFilesRecursiveByExt( '.', ['.rgb'] )
+
+print imagesFile
+imagesBundle.addFiles( imagesFile )
