@@ -221,7 +221,6 @@ public:
     static bool ShowToolTips();
 
 private:
-////@begin DataSetLoaderUI member variables
    wxComboBox* dataSetList;
    wxTextCtrl* dataSetTextEntry;
    wxButton* dataSetOpenButton;
@@ -243,7 +242,6 @@ private:
    std::set< wxString > textureDirs;
 
    wxArrayString _availableDatasets;///<The list of datasets(should this be called something else?)
-////@end DataSetLoaderUI member variables
    ves::open::xml::model::ModelPtr m_veModel;
    ves::open::xml::ParameterBlock* paramBlock;
 

@@ -615,7 +615,6 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED(event) )
       wxString* dirString = new wxString( (*iter) );
       itemListBox24->InsertItems( 1, dirString, 0 );
    }
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON2 in DataSetLoaderUI. 
 }
 
 /*!
@@ -712,7 +711,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
       paramBlock = m_veModel->GetInformationPacket( -1 );
       tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
       paramBlock->SetName( tempStr );
-      paramBlock->SetBlockId( ::wxNewId() );
+      //paramBlock->SetBlockId( ::wxNewId() );
       EnableUI( true );
    }
 }
@@ -740,6 +739,7 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED(event) )
         paramBlock->SetName( tempStr );
         paramBlock->SetBlockId( ::wxNewId() );
         EnableUI( true );
+        SendCommandToXplorer();
     }*/
     
 }
@@ -798,21 +798,24 @@ ves::open::xml::ParameterBlock* DataSetLoaderUI::GetParamBlock()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::SendCommandToXplorer( ves::open::xml::DataValuePairSharedPtr tempObject )
 {
-    //if ( dataSetLoaderDlg.ShowModal() == wxID_OK )
-    {
-        //Now send the data to xplorer
-        ves::open::xml::XMLReaderWriter netowrkWriter;
-        netowrkWriter.UseStandaloneDOMDocumentManager();
-        
-        // Create the command and data value pairs
-        ves::open::xml::Command* veCommand = new ves::open::xml::Command();
-        veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
-        veCommand->AddDataValuePair( tempObject );
-        
-        CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-        
-        //Clean up memory
-        delete veCommand;
-        veCommand = 0;
-    }
+    //Now send the data to xplorer
+    ves::open::xml::XMLReaderWriter netowrkWriter;
+    netowrkWriter.UseStandaloneDOMDocumentManager();
+
+    // Create the command and data value pairs
+    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    veCommand->SetCommandName( std::string("UPDATE_MODEL_DATASETS") );
+    veCommand->AddDataValuePair( tempObject );
+    //Add the active dataset name to the command
+    ves::open::xml::DataValuePairSharedPtr dataSetName = 
+        new ves::open::xml::DataValuePair();
+    dataSetName->SetData( "VTK_DATASET_NAME", 
+        paramBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+    veCommand->AddDataValuePair( dataSetName );
+    //Now send the command
+    CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+
+    //Clean up memory
+    delete veCommand;
+    veCommand = 0;
 }

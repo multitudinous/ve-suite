@@ -676,7 +676,7 @@ void Model::AddNewSound(std::string soundName,
    }
 
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::ActivateSound(std::string soundName)
 {
    try
@@ -689,7 +689,7 @@ void Model::ActivateSound(std::string soundName)
       std::cout<<"Model::ActivateSound"<<std::endl;
    }
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::DeactivateSound(std::string soundName)
 {
    try
@@ -702,6 +702,20 @@ void Model::DeactivateSound(std::string soundName)
       std::cout<<"Model::ActivateSound"<<std::endl;
    }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void Model::DeleteDataSet( std::string dataSetName )
+{
+    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin(); 
+        iter != mVTKDataSets.end(); ++iter )
+    {
+        if( (*iter)->GetFileName() == dataSetName )
+        {
+            delete *iter;
+            mVTKDataSets.erase( iter );
+            break;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 } // end xplorer
 } // end ves

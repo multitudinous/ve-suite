@@ -162,6 +162,9 @@ public:
    int GetKeyForCfdDataSet( DataSet* );
    ves::xplorer::DataSet* GetActiveDataSet( void );
    void SetActiveDataSet( ves::xplorer::DataSet* );
+    ///Delete the named dataset
+    void DeleteDataSet( std::string dataSetName );
+
 
    ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
    unsigned int GetNumberOfGeomDataSets( void );

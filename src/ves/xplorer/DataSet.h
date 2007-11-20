@@ -130,6 +130,9 @@ public:
     void LoadData( const std::string fileName );
     void LoadData(vtkUnstructuredGrid*,int);
     void LoadData();
+    ///Load the precomputed data directory
+    void LoadPrecomputedDataSlices();
+
 
     // Set/get the range of velocity based on the data set.
     void SetRange( double dataRange[2] );

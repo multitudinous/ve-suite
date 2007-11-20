@@ -646,22 +646,14 @@ void DataSet::LoadData()
    }
 #endif
 
-   // Compute the geometrical properties of the mesh
-   //this->UpdatePropertiesForNewMesh();
+    // Compute the geometrical properties of the mesh
+    //this->UpdatePropertiesForNewMesh();
 
-   if ( this->GetPrecomputedDataSliceDir().c_str() )
-   {   
-      double bounds[ 6 ];
-      GetBounds(bounds);
-     vprDEBUG(vesDBG,0) << "\tLoading precomputed planes from " 
-           << this->GetPrecomputedDataSliceDir() << std::endl << vprDEBUG_FLUSH;
-      this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
-      this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
-      this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir().c_str(), bounds );
-   }
+    /// Load the precomputed data
+    LoadPrecomputedDataSlices();
 
-   // count the number of scalars and store names and ranges...
-   this->StoreScalarInfo();
+    // count the number of scalars and store names and ranges...
+    this->StoreScalarInfo();
    
    // count the number of vectors and store names ...
    this->numVectors = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>
@@ -1201,35 +1193,52 @@ void DataSet::SetFileName_OnFly(int datasetindex)
 
    this->SetFileName ( newName.c_str() );
 }
-////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string DataSet::GetFileName()
 {
   return this->fileName;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetPrecomputedDataSliceDir( const std::string newName )
 {
-   if ( this->precomputedDataSliceDir.c_str() )
-   {
-      precomputedDataSliceDir.erase();//delete [] this->precomputedDataSliceDir;
-   }
-
-   //if ( newName == NULL )
-   if ( newName.empty() )
-   {
-      precomputedDataSliceDir.empty();//this->precomputedDataSliceDir = NULL;
-      return;
-   }
-
-   //this->precomputedDataSliceDir = new char [strlen(newName)+1];  
-   precomputedDataSliceDir.assign( newName );//strcpy( this->precomputedDataSliceDir, newName );
+    precomputedDataSliceDir.assign( newName );
+    LoadPrecomputedDataSlices();
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void DataSet::LoadPrecomputedDataSlices()
+{
+    if( x_planes )
+    {
+        delete x_planes;
+    }
+    
+    if( y_planes )
+    {
+        delete y_planes;
+    }
+    
+    if( z_planes )
+    {
+        delete z_planes;
+    }
+    
+    if ( precomputedDataSliceDir.size() )
+    {   
+        double bounds[ 6 ];
+        GetBounds(bounds);
+        vprDEBUG(vesDBG,0) << "\tLoading precomputed planes from " 
+        << this->GetPrecomputedDataSliceDir() << std::endl << vprDEBUG_FLUSH;
+        this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+        this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+        this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir().c_str(), bounds );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 std::string DataSet::GetPrecomputedDataSliceDir()
 {
    return this->precomputedDataSliceDir;
 }
-///////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetPrecomputedSurfaceDir( const std::string newName )
 {
    if ( this->precomputedSurfaceDir.c_str() )
