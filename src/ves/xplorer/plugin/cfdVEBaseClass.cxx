@@ -45,6 +45,7 @@
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -324,8 +325,10 @@ void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
    }
 
    //process the information blocks
-   if( xmlModel->GetNumberOfInformationPackets() > 0 )
+   size_t numberOfInformationPackets = xmlModel->GetNumberOfInformationPackets();
+   for(size_t p = 0;  p < numberOfInformationPackets; ++p)
    {
+
       DataValuePair* modelNode = new DataValuePair();
       modelNode->SetDataType( std::string("XMLOBJECT") );
       modelNode->SetData( "CREATE_NEW_DATASETS", new model::Model( *xmlModel ) );
@@ -334,6 +337,14 @@ void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
       dataCommand->AddDataValuePair( modelNode );
       dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
       
+	  ves::open::xml::ParameterBlock* parameterBlock = xmlModel->GetInformationPacket(p);
+
+	  //Add the active dataset name to the command
+      ves::open::xml::DataValuePairSharedPtr dataSetName = 
+           new ves::open::xml::DataValuePair();
+      dataSetName->SetData( "VTK_DATASET_NAME", 
+        parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+      dataCommand->AddDataValuePair( dataSetName );
       //Process the vtk data
       ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
       addVTKEH.SetGlobalBaseObject( _model );
