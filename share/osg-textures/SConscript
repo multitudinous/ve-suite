@@ -8,6 +8,4 @@ Import('ves_pkg')
 imagesBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 imagesFile = sca_util.getFilesRecursiveByExt( '.', ['.jpg'] )
 imagesFile += sca_util.getFilesRecursiveByExt( '.', ['.rgb'] )
-
-print imagesFile
 imagesBundle.addFiles( imagesFile )
