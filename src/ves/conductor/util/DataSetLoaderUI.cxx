@@ -326,8 +326,10 @@ void DataSetLoaderUI::InitializeWidgets( void )
    }
       size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
 
+	  _availableDatasets.Clear();
       for ( size_t i = 0; i < numParamBlocks; ++i )
       {
+		  _availableDatasets.Add(wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ));
 		  dataSetList->Append( wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
       }
 }
