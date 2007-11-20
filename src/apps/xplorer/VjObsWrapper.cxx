@@ -52,6 +52,7 @@
 #include <boost/concept_check.hpp>
 
 #include <vpr/IO/Socket/InetAddr.h>
+#include <jccl/RTRC/ConfigManager.h>
 
 using namespace CosNaming;
 using namespace ves::xplorer;
@@ -235,6 +236,14 @@ void VjObsWrapper::PreFrameUpdate( void )
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::CheckORBWorkLoad( void )
 {
+    //If juggler still has to do some work then wait
+    // to process CORBA calls
+    /*if( !jccl::ConfigManager::instance()->isPendingStale() )
+    {
+        return;
+    }*/
+
+    //Now process if there is work to do
     if( m_orbPtr->work_pending() )
     {
         m_orbPtr->perform_work();

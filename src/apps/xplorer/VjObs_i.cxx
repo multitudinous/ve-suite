@@ -740,10 +740,10 @@ void VjObs_i::SetCommandString( const char* value)
 {
     //When starting xplorer it is possible to connect and send a command before 
     // xplorer is ready to receive it
-    while ( !jccl::ConfigManager::instance()->isPendingStale() )
+    /*while ( !jccl::ConfigManager::instance()->isPendingStale() )
     {
         vpr::System::msleep( 50 );  // 50 milli-second delay
-    }
+    }*/
 
     std::string commandString( value );
     if( isCluster )

@@ -100,6 +100,10 @@ int main(int argc, char* argv[])
 
         poa_manager->activate();
 
+        //Initialize Xplorer CORBA interfaces
+        VjObsWrapper* vjobsWrapper = new VjObsWrapper();
+        vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
+        
         //Start the juggler kernel here so that we can run on darwin
         vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 #if __VJ_version >= 2003000
@@ -124,8 +128,6 @@ int main(int argc, char* argv[])
             }
         }
                 
-        VjObsWrapper* vjobsWrapper = new VjObsWrapper();
-        vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
         AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
 
         kernel->waitForKernelStop();              // Block until kernel stops
