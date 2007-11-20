@@ -693,8 +693,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
 
    newDataSetName.CentreOnParent();
    newDataSetName.ShowModal();
-   std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue().GetData() ) ) );
-   if(dataSetList->FindString( tempStr ) != wxNOT_FOUND)
+   if(dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND)
    {
       wxMessageBox( _("Data with this name is already loaded."), 
                           newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
