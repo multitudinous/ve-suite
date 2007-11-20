@@ -352,8 +352,8 @@ void cfdStreamers::UpdateCommand()
     double tempPropagationTime = 1.0f;
     activeModelDVP->GetData( tempPropagationTime );
     vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
-    << tempPropagationTime 
-    << std::endl << vprDEBUG_FLUSH;
+                       << tempPropagationTime 
+                       << std::endl << vprDEBUG_FLUSH;
     SetPropagationTime( tempPropagationTime );
 
     /////////////////////

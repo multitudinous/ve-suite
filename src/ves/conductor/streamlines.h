@@ -30,170 +30,159 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#ifndef STREAM_LINES_H
+#define STREAM_LINES_H
 
-#ifndef _STREAMLINES_H_
-#define _STREAMLINES_H_
-/*!\file streamlines.h
-*streamlines API
-*/
-/*!\class Streamlines
-* 
-*/
-#include <vector>
-#include <string>
-
-#include <wx/dialog.h>
-
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-////@end includes
-
-/*!
- * Forward declarations
- */
-
-////@begin forward declarations
 namespace ves
 {
 namespace open
 {
 namespace xml
 {
-   class Command;
-   class DataValuePair;
+    class Command;
+    class DataValuePair;
 }
 }
 }
 
-namespace ves
-{
-namespace conductor
-{
-namespace util
-{
-   class WPDialog;
-}
-}
-}
+// --- wxWidgets Includes --- //
+#include <wx/dialog.h>
 
 class wxRadioBox;
 class wxSlider;
 class wxButton;
-////@end forward declarations
 
-/*!
- * Control identifiers
- */
+// --- C/C++ Libraries --- //
+#include <vector>
+#include <string>
 
-////@begin control identifiers
 #define ID_DIALOG 10000
-#define SYMBOL_STREAMLINES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_STREAMLINES_TITLE _T("Streamlines")
-#define SYMBOL_STREAMLINES_IDNAME ID_DIALOG
-#define SYMBOL_STREAMLINES_SIZE wxSize(400, 300)
+#define SYMBOL_STREAMLINES_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCLOSE_BOX
+#define SYMBOL_STREAMLINES_TITLE _T( "Streamlines" )
+#define SYMBOL_STREAMLINES_IDNAME 10000
+#define SYMBOL_STREAMLINES_SIZE wxSize( 400, 300 )
 #define SYMBOL_STREAMLINES_POSITION wxDefaultPosition
-/*#define ID_RADIOBOX 10001
-#define ID_RADIOBOX1 10002
-#define ID_RADIOBOX2 10003
-#define ID_SLIDER 10004
-#define ID_SLIDER1 10005
-#define ID_BUTTON 10006
-#define ID_BUTTON1 10007*/
 
 namespace ves
 {
 namespace conductor
 {
-class VE_GUIPLUGINS_EXPORTS Streamlines: public wxDialog
+
+namespace util
+{
+    class WPDialog;
+}
+
+/*!\file streamlines.h
+ *streamlines API
+ */
+
+/*!\class Streamlines
+ * 
+ */
+class VE_GUIPLUGINS_EXPORTS Streamlines : public wxDialog
 {    
-//    DECLARE_DYNAMIC_CLASS( Streamlines )
-    DECLARE_EVENT_TABLE()
-
 public:
-    /// Constructors
-    Streamlines( );
-    Streamlines( wxWindow* parent, wxWindowID id = SYMBOL_STREAMLINES_IDNAME, const wxString& caption = SYMBOL_STREAMLINES_TITLE, const wxPoint& pos = SYMBOL_STREAMLINES_POSITION, const wxSize& size = SYMBOL_STREAMLINES_SIZE, long style = SYMBOL_STREAMLINES_STYLE );
-//    Streamlines(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn);
+    Streamlines();
+    Streamlines( wxWindow* parent,
+                 wxWindowID id = SYMBOL_STREAMLINES_IDNAME,
+                 const wxString& caption = SYMBOL_STREAMLINES_TITLE,
+                 const wxPoint& pos = SYMBOL_STREAMLINES_POSITION,
+                 const wxSize& size = SYMBOL_STREAMLINES_SIZE,
+                 long style = SYMBOL_STREAMLINES_STYLE );
 
-   enum STREAMLINE_IDS
-   {
-      CURSOR_RBOX,
-      DIRECTION_RBOX,
-      INTEGRATION_DIR_RBOX,
-      PLANE_SIZE_SLIDER,
-      NUMBER_PTS_SLIDER,
-      ADVANCED_STREAMLINE_BUTTON,
-      COMPUTE_STREAMLINE_BUTTON,
-      SET_SEED_POINTS_BUTTON
-   };
+    virtual ~Streamlines();
 
-    void SendCommandsToXplorer( void );
-    /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_STREAMLINES_IDNAME, const wxString& caption = SYMBOL_STREAMLINES_TITLE, const wxPoint& pos = SYMBOL_STREAMLINES_POSITION, const wxSize& size = SYMBOL_STREAMLINES_SIZE, long style = SYMBOL_STREAMLINES_STYLE );
+    enum STREAMLINE_IDS
+    {
+        CURSOR_RBOX,
+        DIRECTION_RBOX,
+        INTEGRATION_DIR_RBOX,
+        PLANE_SIZE_SLIDER,
+        NUMBER_PTS_SLIDER,
+        ADVANCED_STREAMLINE_BUTTON,
+        COMPUTE_STREAMLINE_BUTTON,
+        SET_SEED_POINTS_BUTTON
+    };
 
-    /// Creates the controls and sizers
+    void SendCommandsToXplorer();
+
+    ///Creation
+    bool Create( wxWindow* parent,
+                 wxWindowID id = SYMBOL_STREAMLINES_IDNAME,
+                 const wxString& caption = SYMBOL_STREAMLINES_TITLE,
+                 const wxPoint& pos = SYMBOL_STREAMLINES_POSITION,
+                 const wxSize& size = SYMBOL_STREAMLINES_SIZE,
+                 long style = SYMBOL_STREAMLINES_STYLE );
+
+    ///Creates the controls and sizers
     void CreateControls();
 
-    /// Retrieves bitmap resources
+    ///Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
-    /// Retrieves icon resources
+    ///Retrieves icon resources
     wxIcon GetIconResource( const wxString& name );
-    /// Should we show tooltips?
+
+    ///Should we show tooltips?
     static bool ShowToolTips();
-    virtual ~Streamlines();
-  
-   wxButton*   itemButton14;
+
+    wxButton* itemButton14;
+
 protected: 
-   void _onCursorSelect(wxCommandEvent& event );
-   void _onDirection(wxCommandEvent& event );
-   void _onIntegrateDir(wxCommandEvent& event );
-   void _onPointsSlider(wxScrollEvent& event );
-   void _onAdvanced(wxCommandEvent& event );
-   void _onSizeSlider(wxScrollEvent& event);
-   void _onCompute(wxCommandEvent& event);
-   void SetSeedPoints( wxCommandEvent& event );
+    void _onCursorSelect( wxCommandEvent& event );
+    void _onDirection( wxCommandEvent& event );
+    void _onIntegrateDir( wxCommandEvent& event );
+    void _onPointsSlider( wxScrollEvent& event );
+    void _onAdvanced( wxCommandEvent& event );
+    void _onSizeSlider( wxScrollEvent& event);
+    void _onCompute( wxCommandEvent& event);
+    void SetSeedPoints( wxCommandEvent& event );
 
-   ///Update the streamlines information
-   void _updateStreamlineInformation();
-   ///Update the advanced settings
-   void _updateAdvancedSettings();
+    ///Update the streamlines information
+    void _updateStreamlineInformation();
+    ///Update the advanced settings
+    void _updateAdvancedSettings();
 
-   wxRadioBox* _cursorRBox;
-   wxRadioBox* _directionRBox;
-   wxRadioBox* _integrationRBox;
-   wxSlider* _sizeSlider;
-   wxSlider* _nPointsSlider;
-   wxButton* itemButton13;
+    wxRadioBox* _cursorRBox;
+    wxRadioBox* _directionRBox;
+    wxRadioBox* _integrationRBox;
+    wxSlider* _sizeSlider;
+    wxSlider* _nPointsSlider;
+    wxButton* itemButton13;
 
-   std::vector<ves::open::xml::DataValuePair*> _advancedSettings;///<The advanced settings.
-   std::vector<ves::open::xml::DataValuePair*> _streamlineInformation;///<The streamline setting data
-   std::vector<ves::open::xml::DataValuePair* > seedPointInformation;///<The streamline setting data
+    std::vector< ves::open::xml::DataValuePair* > _advancedSettings;///<The advanced settings.
+    std::vector< ves::open::xml::DataValuePair* > _streamlineInformation;///<The streamline setting data
+    std::vector< ves::open::xml::DataValuePair* > seedPointInformation;///<The streamline setting data
 
-   double _streamSize;///<The size of the streamlines.
-   unsigned int _nPointsPerPlane;///<The number of seed points.
-   std::string _streamlineDirection;///<Store the value of the direction.
-   std::string _cursorType;///<The contour type.
-   std::string _integrationDirection;///<Single or Multiple planes.
+    double _streamSize;///<The size of the streamlines.
+    unsigned int _nPointsPerPlane;///<The number of seed points.
+    std::string _streamlineDirection;///<Store the value of the direction.
+    std::string _cursorType;///<The contour type.
+    std::string _integrationDirection;///<Single or Multiple planes.
 
-   double _lastIntegrationStepSize;///<Integration step size from advanced settings.
-   double _lastPropagationSize;///<Propagation size from advanced settings.
-   double _lastLineDiameter;///<Line diameter from advanced settings.
-   double _lastSphereArrowParticleSize;///<Sphere arrow particles from advanced settings.
-   bool _lastSeedPtFlag;///<Seed pt flat from advanced settings.
-   bool _lastStreamArrow;///<Stream arrow from advanced settings.
+    double _lastIntegrationStepSize;///<Integration step size from advanced settings.
+    double _lastPropagationSize;///<Propagation size from advanced settings.
+    double _lastLineDiameter;///<Line diameter from advanced settings.
+    double _lastSphereArrowParticleSize;///<Sphere arrow particles from advanced settings.
+    bool _lastSeedPtFlag;///<Seed pt flat from advanced settings.
+    bool _lastStreamArrow;///<Stream arrow from advanced settings.
 
-   int cId, cIso_value, cMin, cMax, cSc;
-   std::vector< long > commandInputs;
+    int cId, cIso_value, cMin, cMax, cSc;
+    std::vector< long > commandInputs;
 
-   ves::conductor::util::WPDialog* seedPointDialog;
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
+    ves::conductor::util::WPDialog* seedPointDialog;
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+    DECLARE_EVENT_TABLE()
 };
 }
 }
-#endif
-    // _STREAMLINES_H_
+#endif // end STREAM_LINES_H

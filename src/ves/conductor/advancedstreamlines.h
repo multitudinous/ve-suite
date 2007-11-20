@@ -30,174 +30,171 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#ifndef ADVANCED_STREAMLINES_H
+#define ADVANCED_STREAMLINES_H
 
-#ifndef _ADVANCEDSTREAMLINES_H_
-#define _ADVANCEDSTREAMLINES_H_
-/*!\file advancedstreamlines.h
-*advancedstreamlines API
-*/
-/*!\class AdvancedStreamlines
-* 
-*/
-#include <vector>
-#include <wx/dialog.h>
-
-
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-////@end includes
 
-/*!
- * Forward declarations
- */
-
-////@begin forward declarations
 namespace ves
 {
 namespace open
 {
 namespace xml
 {
-   class Command;
+    class Command;
 }
 }
 }
+
+// --- wxWidgets Includes --- //
+#include <wx/dialog.h>
+
+class wxSlider;
+class wxCheckBox;
+class wxButton;
+
+// --- C/C++ Libraries --- //
+#include <vector>
+
+#define SYMBOL_ADVANCEDSTREAMLINES_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCLOSE_BOX
+#define SYMBOL_ADVANCEDSTREAMLINES_TITLE _T( "Advanced Streamlines" )
+#define SYMBOL_ADVANCEDSTREAMLINES_IDNAME 10000
+#define SYMBOL_ADVANCEDSTREAMLINES_SIZE wxSize( 400, 300 )
+#define SYMBOL_ADVANCEDSTREAMLINES_POSITION wxDefaultPosition
 
 namespace ves
 {
 namespace conductor
 {
+
 namespace util
 {
     class UI_TransientDialog;
 }
-}
-}
-class wxSlider;
-class wxCheckBox;
-class wxButton;
-////@end forward declarations
-
-/*!
- * Control identifiers
+/*!\file advancedstreamlines.h
+ *advancedstreamlines API
  */
 
-////@begin control identifiers
-#define ID_DIALOG 10000
-#define SYMBOL_ADVANCEDSTREAMLINES_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
-#define SYMBOL_ADVANCEDSTREAMLINES_TITLE _T("Advanced Streamlines")
-#define SYMBOL_ADVANCEDSTREAMLINES_IDNAME ID_DIALOG
-#define SYMBOL_ADVANCEDSTREAMLINES_SIZE wxSize(400, 300)
-#define SYMBOL_ADVANCEDSTREAMLINES_POSITION wxDefaultPosition
-/*#define ID_SLIDER 10001
-#define ID_SLIDER1 10002
-#define ID_SLIDER2 10003
-#define ID_SLIDER3 10004
-#define ID_SLIDER4 10005
-#define ID_CHECKBOX 10006
-#define ID_CHECKBOX1 10007
-#define ID_BUTTON 10008*/
-
-////@end control identifiers
-
-namespace ves
-{
-namespace conductor
-{
+/*!\class AdvancedStreamlines
+ * 
+ */
 class VE_GUIPLUGINS_EXPORTS AdvancedStreamlines: public wxDialog
 {    
-    DECLARE_EVENT_TABLE()
 public:
     /// Constructors
-    AdvancedStreamlines( );
-    AdvancedStreamlines( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
+    AdvancedStreamlines();
+    AdvancedStreamlines( wxWindow* parent,
+                         wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME,
+                         const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE,
+                         const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION,
+                         const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE,
+                         long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
 
-   enum ADVANCED_STREAMLINE_IDS
-   {
-      PARTICLE_TRACKING_BUTTON,
-      USE_SEED_POINT_CHK,
-      PROPOGATION_SLIDER,
-      INTEGRATION_STEP_SLIDER,
-      ARROWS_CHK,
-      SPHERE_SIZE_SLIDER,
-      LINE_DIAMETER_SLIDER,
-      PARTICLE_TRACKING,
-      PARTICLE_TRACKING_DIALOG
-   };
+    enum ADVANCED_STREAMLINE_IDS
+    {
+        PARTICLE_TRACKING_BUTTON,
+        USE_SEED_POINT_CHK,
+        PROPOGATION_SLIDER,
+        INTEGRATION_STEP_SLIDER,
+        ARROWS_CHK,
+        SPHERE_SIZE_SLIDER,
+        LINE_DIAMETER_SLIDER,
+        GLOW_SLIDER,
+        PARTICLE_TRACKING,
+        PARTICLE_TRACKING_DIALOG
+    };
 
-    void SendCommandsToXplorer( void );
+    void SendCommandsToXplorer();
     /// Creation
-    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME, const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE, const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION, const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE, long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
+    bool Create( wxWindow* parent,
+                 wxWindowID id = SYMBOL_ADVANCEDSTREAMLINES_IDNAME,
+                 const wxString& caption = SYMBOL_ADVANCEDSTREAMLINES_TITLE,
+                 const wxPoint& pos = SYMBOL_ADVANCEDSTREAMLINES_POSITION,
+                 const wxSize& size = SYMBOL_ADVANCEDSTREAMLINES_SIZE,
+                 long style = SYMBOL_ADVANCEDSTREAMLINES_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
 
-   ///Set the propagation slider value
-   ///\param value The size
-   void SetPropagationSize(double value);
+    ///Set the propagation slider value
+    ///\param value The size
+    void SetPropagationSize( double value );
 
-   ///Set the integration step size.
-   ///\param value The size
-   void SetIntegrationStepSize(double value);
-   ///Set the sphere/arrow/particle(?) size
-   ///\param value The size
-   void SetSphereArrowParticleSize(double value);
+    ///Set the integration step size.
+    ///\param value The size
+    void SetIntegrationStepSize( double value );
+    ///Set the sphere/arrow/particle(?) size
+    ///\param value The size
+    void SetSphereArrowParticleSize( double value );
 
-   ///Set the stream arrow flag
-   ///\param value The stream arrow flag
-   void SetStreamArrow(bool value);
+    ///Set the stream arrow flag
+    ///\param value The stream arrow flag
+    void SetStreamArrow( bool value );
 
-   ///Set the use last seed pt flag
-   ///\param value The use last seed pt flag
-   void SetUseLastSeedPt(bool value);
+    ///Set the use last seed pt flag
+    ///\param value The use last seed pt flag
+    void SetUseLastSeedPt( bool value );
 
-   ///Set the line diameter
-   ///\param value The size
-   void SetLineDiameter(double value);
+    ///Set the line diameter
+    ///\param value The size
+    void SetLineDiameter( double value );
 
-   ///Call particle tracking gui
-   void _OnParticleTracking( wxCommandEvent& WXUNUSED(event) ); 
+    ///Set the glow strength
+    ///\param value The strength
+    void SetGlowStrength( double value );
 
-   ///Get the propagation step size.
-   double GetPropagationSize();
-   ///Get the integration step size
-   double GetIntegrationStepSize();
-   ///Get the Sphere/Arrow/Particle(?) size
-   double GetSphereArrowParticleSize();
+    ///Call particle tracking gui
+    void _OnParticleTracking( wxCommandEvent& WXUNUSED( event ) ); 
 
-   ///Get the line diameter.
-   double GetLineDiameter();
+    ///Get the propagation step size.
+    double GetPropagationSize();
 
-   ///Get the stream arrow.
-   bool GetStreamArrow();
+    ///Get the integration step size
+    double GetIntegrationStepSize();
 
-   ///Get the use last seed point flag
-   bool GetUseLastSeedPoint();
+    ///Get the Sphere/Arrow/Particle(?) size
+    double GetSphereArrowParticleSize();
 
+    ///Get the line diameter.
+    double GetLineDiameter();
 
-   /// Retrieves bitmap resources
-   wxBitmap GetBitmapResource( const wxString& name );
+    ///Get the glow strength.
+    double GetGlowStrength();
 
-   /// Retrieves icon resources
-   wxIcon GetIconResource( const wxString& name );
+    ///Get the stream arrow.
+    bool GetStreamArrow();
 
-   /// Should we show tooltips?
-   static bool ShowToolTips();
+    ///Get the use last seed point flag
+    bool GetUseLastSeedPoint();
 
-   wxWindow* _parentLocal;
+    ///Retrieves bitmap resources
+    wxBitmap GetBitmapResource( const wxString& name );
+
+    ///Retrieves icon resources
+    wxIcon GetIconResource( const wxString& name );
+
+    ///Should we show tooltips?
+    static bool ShowToolTips();
+
+    wxWindow* _parentLocal;
 
 protected:
 
-   wxSlider* _propagationSlider;  
-   wxSlider* _integrationSlider; 
-   wxSlider* _sphereArrowParticleSlider; 
-   wxSlider* _diameterSlider; 
-   wxCheckBox* _lastSeedPtCheck;
-   wxCheckBox* _streamArrowCheck;
+    wxSlider* _propagationSlider;  
+    wxSlider* _integrationSlider; 
+    wxSlider* _sphereArrowParticleSlider; 
+    wxSlider* _diameterSlider;
+    wxSlider* _glowSlider;
+    wxCheckBox* _lastSeedPtCheck;
+    wxCheckBox* _streamArrowCheck;
 
-   ves::conductor::util::UI_TransientDialog* particleControls;
-   AdvancedStreamlines* _particleParent;
+    ves::conductor::util::UI_TransientDialog* particleControls;
+    AdvancedStreamlines* _particleParent;
+
+    DECLARE_EVENT_TABLE()
 };
 }
 }
-#endif
-    // _ADVANCEDSTREAMLINES_H_
+
+#endif // end ADVANCED_STREAMLINES_H
