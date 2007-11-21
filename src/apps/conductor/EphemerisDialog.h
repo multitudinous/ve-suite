@@ -84,8 +84,11 @@ class EphemerisDialog : public wxDialog
        ///Send the ephemeris data to Xplorer
        void UpdateEphemerisData();
 
-	   ///Update the date and time information
-	   void UpdateDateAndTimeInfo();
+       ///Update the date and time information
+       void UpdateDateAndTimeInfo();
+
+       ///Make sure the hour is correct
+       void EnsureHour();
 
    
    private:
@@ -132,6 +135,7 @@ class EphemerisDialog : public wxDialog
       ves::open::xml::DataValuePairPtr m_dateAndTimeInfo;
 
       ves::open::xml::CommandPtr m_ephemerisData;
+      int m_lastMinute;///<The last value of the minutes;
    private:
       //Note: if you receive any error with these enum IDs, then you need to
       //change your old form code that are based on the #define control IDs.
