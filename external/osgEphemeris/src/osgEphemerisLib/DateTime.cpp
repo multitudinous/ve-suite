@@ -193,7 +193,7 @@ double DateTime::getModifiedJulianDate() const
     struct tm gmt = _tm;
     tzset();
 #ifdef  _DARWIN
-    gmt.tm_sec += gmt.tm_gmtoff;           /* Seconds east of UTC.  */
+    gmt.tm_sec -= gmt.tm_gmtoff;           /* Seconds east of UTC.  */
 #else
     gmt.tm_sec += timezone;         /* Seconds east of UTC.  */
 #endif
@@ -247,7 +247,7 @@ DateTime DateTime::getGMT() const
 
     tzset();
 #ifdef  _DARWIN
-    gmt.tm_sec += gmt.tm_gmtoff;           /* Seconds east of UTC.  */
+    //gmt.tm_sec += gmt.tm_gmtoff;           /* Seconds east of UTC.  */
 #else
     gmt.tm_sec += timezone;         /* Seconds east of UTC.  */
 #endif
