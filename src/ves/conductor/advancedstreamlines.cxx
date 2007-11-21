@@ -32,7 +32,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/UI_TransientDialog.h>
+#include <ves/conductor/util/CORBAServiceList.h>
+
 #include <ves/conductor/advancedstreamlines.h>
+
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
@@ -46,6 +51,8 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( AdvancedStreamlines, wxDialog )
+EVT_SLIDER( LINE_DIAMETER_SLIDER, AdvancedStreamlines::_OnLineDiameter )
+EVT_SLIDER( GLOW_SLIDER, AdvancedStreamlines::_OnGlowStrength )
 EVT_BUTTON( PARTICLE_TRACKING, AdvancedStreamlines::_OnParticleTracking )
 END_EVENT_TABLE()
 
@@ -299,6 +306,36 @@ bool AdvancedStreamlines::GetUseLastSeedPoint()
 bool AdvancedStreamlines::GetStreamArrow()
 {
     return _streamArrowCheck->GetValue();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::_OnLineDiameter( wxCommandEvent& WXUNUSED( event ) )
+{
+    ves::open::xml::DataValuePair* dvp = new ves::open::xml::DataValuePair();
+    ves::open::xml::CommandSharedPtr command = new ves::open::xml::Command();
+
+    double value = static_cast< double >( _diameterSlider->GetValue() ); 
+
+    dvp->SetData( std::string( "Size" ), value );
+
+    command->SetCommandName( std::string( "LIVE_STREAMLINE_UPDATE" ) );
+    command->AddDataValuePair( dvp );
+
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AdvancedStreamlines::_OnGlowStrength( wxCommandEvent& WXUNUSED( event ) )
+{
+    ves::open::xml::DataValuePair* dvp = new ves::open::xml::DataValuePair();
+    ves::open::xml::CommandSharedPtr command = new ves::open::xml::Command();
+
+    double value = static_cast< double >( _glowSlider->GetValue() ); 
+
+    dvp->SetData( std::string( "Glow" ), value );
+
+    command->SetCommandName( std::string( "LIVE_STREAMLINE_UPDATE" ) );
+    command->AddDataValuePair( dvp );
+
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::_OnParticleTracking( wxCommandEvent& WXUNUSED( event ) )

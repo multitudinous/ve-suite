@@ -144,6 +144,12 @@ public:
     ///\param value The strength
     void SetGlowStrength( double value );
 
+    ///Live command for setting streamline size
+    void _OnLineDiameter( wxCommandEvent& WXUNUSED( event ) ); 
+
+    ///Live command for setting streamline glow strength
+    void _OnGlowStrength( wxCommandEvent& WXUNUSED( event ) ); 
+
     ///Call particle tracking gui
     void _OnParticleTracking( wxCommandEvent& WXUNUSED( event ) ); 
 

@@ -43,8 +43,11 @@ using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE(WPDialog,BaseDialog)
 EVT_SPINCTRL(WPDialog::DIMENSION_SPINNER_ID,WPDialog::_updateDimensions)
 END_EVENT_TABLE()
-WPDialog::WPDialog(wxWindow* parent, int id, std::string title):
-BaseDialog(parent, id, title)
+
+////////////////////////////////////////////////////////////////////////////////////
+WPDialog::WPDialog( wxWindow* parent, int id, std::string title )
+:
+BaseDialog( parent, id, title )
 {
    _xBounds = 0;
    _yBounds = 0;

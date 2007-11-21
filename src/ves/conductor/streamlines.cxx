@@ -469,7 +469,7 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
 
         ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
         activeDataset->SetData( "Active Dataset", dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName());
-        newCommand->AddDataValuePair( activeDataset );
+        newCommand->AddDataValuePair(activeDataset);
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 
         delete newCommand;
