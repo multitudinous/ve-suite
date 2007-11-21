@@ -23,6 +23,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/GL2Extensions>
+#include <osg/GL>
 #include <osg/Material>
 #include <osg/Math>
 #include <osg/MatrixTransform>
@@ -44,7 +45,6 @@
 
 #include <osgText/Text>
 
-#include <osgViewer/Viewer>
 
 #include <iostream>
 
@@ -77,6 +77,8 @@ public:
                 _errorMessage = "ERROR: GLSL not supported by OpenGL driver.";
             }
 
+            // not sure why this doesn't compile on mac
+#ifndef _DARWIN
             GLint numVertexTexUnits = 0;
             glGetIntegerv( GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, &numVertexTexUnits );
             if( numVertexTexUnits <= 0 )
@@ -84,6 +86,7 @@ public:
                 _supported = false;
                 _errorMessage = "ERROR: vertex texturing not supported by OpenGL driver.";
             }
+#endif
         }
         else
         {
@@ -166,7 +169,7 @@ osg::ref_ptr<osg::Geometry> CreateTerrain(double radius)
         for(c=0;c<numColumns;++c)
         {
             *((float*)(terrainImage->data(c,r))) = (vertex[r+c*numRows][2]-min_z)*scale_z;
-            std::cout<<(vertex[r+c*numRows][2]-min_z)*scale_z<<std::endl;
+            //std::cout<<(vertex[r+c*numRows][2]-min_z)*scale_z<<std::endl;
         }
     }
     
