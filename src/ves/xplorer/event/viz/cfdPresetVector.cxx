@@ -57,15 +57,11 @@ cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
 {
    this->xyz = xyz;
    this->numSteps = numSteps;
-
-   // set the cut function
-   this->cutter = vtkCutter::New();
 }
 
 cfdPresetVector::~cfdPresetVector()
 {
-   this->cutter->Delete();
-   this->cutter = NULL;
+    ;
 }
 
 void cfdPresetVector::Update( void )
@@ -123,16 +119,15 @@ void cfdPresetVector::Update( void )
       this->cuttingPlane->SetBounds( 
             this->GetActiveDataSet()->GetBounds() );
       this->cuttingPlane->Advance( this->requestedValue );
-      cutter->Delete();
-	  cutter = vtkCutter::New();
-      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-      this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-
+	  vtkCutter* cutter = vtkCutter::New();
+      cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+      cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+      cutter->Update();
       delete this->cuttingPlane;
       this->cuttingPlane = NULL;
 
       // get every nth point from the dataSet data
-	  this->ptmask->SetInput( ApplyGeometryFilter(this->cutter->GetOutputPort()) );
+	  this->ptmask->SetInput( ApplyGeometryFilter(cutter->GetOutputPort()) );
       this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
       this->ptmask->Update();      
 
@@ -146,7 +141,8 @@ void cfdPresetVector::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
-
+      
+       cutter->Delete();
       vprDEBUG(vesDBG, 1) 
          << "No Precalc : " << this->cursorType << " : " << usePreCalcData
          << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;

@@ -44,8 +44,6 @@ namespace xplorer
 }
 }
 
-class vtkCutter;
-
 namespace ves
 {
 namespace xplorer
@@ -74,7 +72,6 @@ public:
 private:
    int xyz;///<value of location
    int numSteps;///<number of steps
-   vtkCutter *cutter;///<cutter
 
    cfdCuttingPlane * cuttingPlane;///<cutting plane
 };

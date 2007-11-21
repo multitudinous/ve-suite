@@ -1,3 +1,4 @@
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
@@ -76,7 +77,6 @@ cfdContourBase::cfdContourBase()
    bfilter->ClippingOn();   
    tris = vtkTriangleFilter::New();
    strip = vtkStripper::New();
-   cutter = vtkCutter::New();
 
    mapper = vtkMultiGroupPolyDataMapper::New();
    mapper->SetColorModeToMapScalars();
@@ -135,12 +135,6 @@ cfdContourBase::~cfdContourBase()
    {
       normals->Delete();
       normals = 0;
-   }
-
-   if(cutter)
-   {
-     cutter->Delete();
-     cutter = 0;
    }
 
    if(cuttingPlane)
@@ -321,13 +315,12 @@ void cfdContourBase::CreatePlane( void )
          GetActiveDataSet()->GetBounds() );
 
    cuttingPlane->Advance( requestedValue );
-   cutter->Delete();
-   cutter = vtkCutter::New();
-   cutter->SetCutFunction( cuttingPlane->GetPlane() );
-   cutter->SetInput(GetActiveDataSet()->GetDataSet());
-   cutter->Update();
+   vtkCutter* tempCutter = vtkCutter::New();
+   tempCutter->SetCutFunction( cuttingPlane->GetPlane() );
+   tempCutter->SetInput(GetActiveDataSet()->GetDataSet());
+   tempCutter->Update();
    vtkPolyData* tempPolydata = 0;
-   tempPolydata = ApplyGeometryFilter(cutter->GetOutputPort());
+   tempPolydata = ApplyGeometryFilter(tempCutter->GetOutputPort());
    tempPolydata->Update();
    SetMapperInput( tempPolydata );
 
@@ -340,4 +333,5 @@ void cfdContourBase::CreatePlane( void )
       delete cuttingPlane;
       cuttingPlane = NULL;
    }
+   tempCutter->Delete();
 }

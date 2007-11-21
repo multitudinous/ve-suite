@@ -78,10 +78,6 @@ cfdIsosurface::cfdIsosurface( int numsteps )
       this->append->AddInput( this->normals[i]->GetOutput( ) );
    }
 #else
-   this->contour = vtkContourFilter::New();
-   this->contour->UseScalarTreeOn();
-//   this->contour->UseScalarTreeOff();
-
    this->normals = vtkPolyDataNormals::New();
 #endif
 
@@ -104,7 +100,6 @@ cfdIsosurface::~cfdIsosurface()
    }
    this->append->Delete();
 #else
-   this->contour->Delete();
    this->normals->Delete();
 #endif
    this->mapper->Delete();

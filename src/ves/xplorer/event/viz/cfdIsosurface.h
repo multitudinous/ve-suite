@@ -96,7 +96,6 @@ private:
    vtkPolyDataNormals *normals[MAX_ISOSURFACE];///<Normal for polydata in vtk.
    vtkAppendPolyData *append;///<Append to dataset.
 #else
-   vtkContourFilter *contour;///<Contour filter for vtk.
    vtkPolyDataNormals *normals;///<Normals for vtk.
 #endif
 

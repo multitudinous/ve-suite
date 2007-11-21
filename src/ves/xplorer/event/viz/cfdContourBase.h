@@ -46,7 +46,6 @@ class vtkDecimatePro;
 class vtkTriangleFilter;
 class vtkStripper;
 class vtkPolyDataNormals;
-class vtkCutter;
 
 namespace ves
 {
@@ -101,7 +100,6 @@ protected:
    vtkTriangleFilter*   tris;///<trangle filter for vtk.
    vtkStripper*         strip;///<strip.
    vtkPolyDataNormals*  normals;///<polydata normals.
-   vtkCutter*           cutter;///<cutter for vtk.
 
    cfdCuttingPlane* cuttingPlane;///<cutting plane
 
