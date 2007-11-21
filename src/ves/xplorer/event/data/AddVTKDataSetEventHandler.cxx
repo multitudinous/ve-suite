@@ -276,7 +276,9 @@ void AddVTKDataSetEventHandler::Execute(xml::XMLObject* xmlObject)
     }
     else if( command->GetDataValuePair("DELETE_DATASET") )
     {
-        _activeModel->DeleteDataSet( dataSetName );
+        DataValuePairSharedPtr tempDVP = 
+            command->GetDataValuePair("DELETE_DATASET");
+        _activeModel->DeleteDataSet( tempDVP->GetDataString() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////   

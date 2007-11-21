@@ -204,7 +204,6 @@ public:
  
    //////////////////////////
    //texture based interface
-#ifdef _OSG
    void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS);
   void CreateTextureDataSet();
    void AddDataSetToTextureDataSet(unsigned int index,
@@ -212,7 +211,6 @@ public:
    unsigned int GetNumberOfTextureDataSets();
    ves::xplorer::volume::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
    ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
-#endif
    ///////////////////////////////////////////////////
 
 //Dynamically load data from unit

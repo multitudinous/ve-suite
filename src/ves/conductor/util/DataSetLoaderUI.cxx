@@ -181,11 +181,7 @@ void DataSetLoaderUI::CreateControls()
     wxString* dataSetListStrings = NULL;
     //dataSetList = new wxComboBox( itemScrolledWindow3, ID_COMBOBOX, _("Type New DataSet Name Here"), wxDefaultPosition, wxSize(250, -1), 0, dataSetListStrings, wxCB_DROPDOWN );
     dataSetList = new wxComboBox( itemDialog1, ID_COMBOBOX, _(""), wxDefaultPosition, wxDefaultSize, 0, dataSetListStrings, wxCB_DROPDOWN );
-    //dataSetList->SetStringSelection(_("Type New DataSet Name Here"));
-    //dataSetList->Append(_("Unselect"));
-    //dataSetList->Append(_("Add Dataset"));
-    //dataSetList->Append(_("Edit Dataset"));
-    //dataSetList->Append(_("Delete Dataset"));
+
     dataSetList->SetHelpText(_("Text Entry"));
     if (ShowToolTips())
         dataSetList->SetToolTip(_("Text Entry"));
@@ -318,16 +314,17 @@ void DataSetLoaderUI::CreateControls()
 ///////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::InitializeWidgets( void )
 {
-   if ( !m_veModel )
-   {
-       return;
-   }
-      size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
-
-	  for ( size_t i = 0; i < numParamBlocks; ++i )
-      {
-		  dataSetList->Append( wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
-      }
+    if( !m_veModel )
+    {
+        return;
+    }
+    size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
+    //Clear so that we can use this function in delete
+    dataSetList->Clear();
+    for( size_t i = 0; i < numParamBlocks; ++i )
+    {
+        dataSetList->Append( wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::SetTextCtrls( void )
@@ -558,7 +555,6 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED(event) )
    {
       ;
    }
-////@end wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON6 in DataSetLoaderUI. 
 }
 
 /*!
@@ -651,26 +647,8 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED(event)
    // appropriate info
 
    wxString selection = dataSetList->GetStringSelection();
-    //std::cout<<wxConvCurrent->cWX2MB( selection )<<std::endl;
-   if ( selection == wxString( _("Add Dataset") ) )
-   {
-      lastAddition = dataSetList->Append( _("Type new data block name here") );
-      dataSetList->SetStringSelection( _("Type new data block name here") );
-      paramBlock = 0;
-      EnableUI( false );
-      return;
-   }
-
-   if ( selection == wxString( _("Unselect") ) )
-   {
-      paramBlock = 0;
-      // disable all other guis
-      EnableUI( false );
-      return;
-   }
 
    size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
-//std::cout<<"NUMBER OF PACKETS: "<<numParamBlocks<<std::endl;
    for ( size_t i = 0; i < numParamBlocks; ++i )
    {
       std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
@@ -694,55 +672,56 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED(event) )
                                         wxString( _("Enter name for new Dataset:") ),
                                         wxString( _("Dataset") ),wxOK);
 
-   newDataSetName.CentreOnParent();
-   newDataSetName.ShowModal();
-   if(dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND)
-   {
-      wxMessageBox( _("Data with this name is already loaded."), 
-                          newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
-                              return;
-   }
-   else
-   {
-      
-	   dataSetList->Append(newDataSetName.GetValue());
-      dataSetList->SetStringSelection(newDataSetName.GetValue());
-      
-      paramBlock = m_veModel->GetInformationPacket( -1 );
-      std::string tempStr;
-      tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
-      paramBlock->SetName( tempStr );
-      //paramBlock->SetBlockId( ::wxNewId() );
-      EnableUI( true );
-   }
-}
-//////////////////////////////////////////////////////////////////////////////
-void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED(event) )
-{
-    /// wxEVT_COMMAND_TEXT_ENTER event handler for ID_LISTBOX
-    // When enter is pushed on the combox and new entry is specifiy and
-    // the appropriate widgets should be updated
-    /*std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue().GetData() ) ) );
-    if(DatasetExists( tempStr ) )
+    newDataSetName.CentreOnParent();
+    newDataSetName.ShowModal();
+    if(dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND)
     {
         wxMessageBox( _("Data with this name is already loaded."), 
-                     newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
+            newDataSetName.GetValue(), wxOK | wxICON_INFORMATION );
         return;
     }
     else
     {
-        _availableDatasets.Add(newDataSetName.GetValue());
         dataSetList->Append(newDataSetName.GetValue());
         dataSetList->SetStringSelection(newDataSetName.GetValue());
-        
+
         paramBlock = m_veModel->GetInformationPacket( -1 );
+        std::string tempStr;
         tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
         paramBlock->SetName( tempStr );
-        paramBlock->SetBlockId( ::wxNewId() );
+        //paramBlock->SetBlockId( ::wxNewId() );
         EnableUI( true );
-        SendCommandToXplorer();
-    }*/
+    }
+}
+//////////////////////////////////////////////////////////////////////////////
+void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED(event) )
+{
+    if( dataSetList->GetCount() == 0 )
+    {
+        return;
+    }
     
+    wxString selection = dataSetList->GetStringSelection();
+
+    std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
+
+    std::string tempDataSetName = 
+        paramBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString();
+    
+    m_veModel->RemoveInformationPacket( tempStr );
+    paramBlock = 0;
+
+    ves::open::xml::DataValuePairSharedPtr dataValuePair = 
+        new ves::open::xml::DataValuePair();
+    dataValuePair->SetData( "DELETE_DATASET", tempDataSetName );
+    
+    SendCommandToXplorer( dataValuePair );
+    //Rebuild GUI
+    InitializeWidgets();
+    dataSetList->SetSelection( 0 );
+    wxCommandEvent event;
+    OnInformationPacketChange( event );
+    Refresh();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED(event) )
@@ -801,8 +780,15 @@ void DataSetLoaderUI::SendCommandToXplorer(
     //Add the active dataset name to the command
     ves::open::xml::DataValuePairSharedPtr dataSetName = 
         new ves::open::xml::DataValuePair();
-    dataSetName->SetData( "VTK_DATASET_NAME", 
-        paramBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+    if( paramBlock )
+    {
+        dataSetName->SetData( "VTK_DATASET_NAME", 
+            paramBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+    }
+    else
+    {
+        dataSetName->SetData( "VTK_DATASET_NAME", "NULL" );
+    }
     veCommand->AddDataValuePair( dataSetName );
     //Now send the command
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );

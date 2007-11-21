@@ -668,9 +668,9 @@ void Model::DeleteGeometry( void )
 void Model::RemoveInformationPacket( unsigned int i )
 {
    std::vector< ves::open::xml::ParameterBlock* >::iterator iter;
-   for ( iter = informationPackets.begin(); iter != informationPackets.end(); ++iter )
+   for( iter = informationPackets.begin(); iter != informationPackets.end(); ++iter )
    {
-      if ( informationPackets.at( i ) == (*iter) )
+      if( informationPackets.at( i ) == (*iter) )
       {
          delete informationPackets.at( i );
          informationPackets.erase( iter );
@@ -687,7 +687,7 @@ void Model::RemoveInformationPacket(std::string name )
       if((*iter)->GetName() == name)
       {
          delete *iter;
-         informationPackets.erase( ++iter );
+         informationPackets.erase( iter );
          return;
       }
    }
