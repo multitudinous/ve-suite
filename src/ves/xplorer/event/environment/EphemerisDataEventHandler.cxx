@@ -73,7 +73,7 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
         ves::open::xml::Command* ephemerisInfo = dynamic_cast<ves::open::xml::Command*>(xmlObject);
         if( ephemerisInfo )
         {
-            std::cout<<"Got ephemeris data"<<std::endl;
+            //std::cout<<"Got ephemeris data"<<std::endl;
             ves::open::xml::DataValuePairWeakPtr latitude =
                                  ephemerisInfo->GetDataValuePair( "Latitude" );
             double latitudeData = 0;
@@ -90,8 +90,8 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
             longitude->GetData(longitudeData);
             std::string eastWest;
             longitudeDir->GetData(eastWest);
-            std::cout<<"Latitude: "<<latitudeData<<std::endl;
-            std::cout<<"Longitude: "<<longitudeData<<std::endl;
+            //std::cout<<"Latitude: "<<latitudeData<<std::endl;
+            //std::cout<<"Longitude: "<<longitudeData<<std::endl;
             osgEphemeris::EphemerisModel* ephemerisModel = 
                   ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel(true);
             ephemerisModel->setLatitudeLongitude((northSouth == "South")?-1*latitudeData:latitudeData,
@@ -100,9 +100,9 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
             ves::open::xml::DataValuePairWeakPtr dateTimeData =
                                  ephemerisInfo->GetDataValuePair("Date and Time Info");
             dateTimeData->GetData(dateTimeInfo);
-            std::cout<<"Date: "<<dateTimeInfo[0]<<" "<<dateTimeInfo[1]<<" "
+            //std::cout<<"Date: "<<dateTimeInfo[0]<<" "<<dateTimeInfo[1]<<" "
                                <<dateTimeInfo[2]<<std::endl;
-            std::cout<<"Time: "<<dateTimeInfo[3]<<":"<<dateTimeInfo[4]<<std::endl;
+            //std::cout<<"Time: "<<dateTimeInfo[3]<<":"<<dateTimeInfo[4]<<std::endl;
                                
             ephemerisModel->setDateTime(osgEphemeris::DateTime(dateTimeInfo[0],
                                                                dateTimeInfo[1],
