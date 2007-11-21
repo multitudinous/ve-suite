@@ -101,7 +101,7 @@ void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
                                  ephemerisInfo->GetDataValuePair("Date and Time Info");
             dateTimeData->GetData(dateTimeInfo);
             //std::cout<<"Date: "<<dateTimeInfo[0]<<" "<<dateTimeInfo[1]<<" "
-                               <<dateTimeInfo[2]<<std::endl;
+            //                   <<dateTimeInfo[2]<<std::endl;
             //std::cout<<"Time: "<<dateTimeInfo[3]<<":"<<dateTimeInfo[4]<<std::endl;
                                
             ephemerisModel->setDateTime(osgEphemeris::DateTime(dateTimeInfo[0],
