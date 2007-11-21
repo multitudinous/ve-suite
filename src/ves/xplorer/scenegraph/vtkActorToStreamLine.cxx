@@ -173,9 +173,9 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
             if( isFirstPoint )
             {
                 //A unit equilateral triangle
-                vertices->push_back( osg::Vec3(    0.0,  1.0, 0 ) );
-                vertices->push_back( osg::Vec3( -0.866, -0.5, 0 ) );
-                vertices->push_back( osg::Vec3(  0.866, -0.5, 0 ) );
+                vertices->push_back( osg::Vec3(      0.0,  2.0, 0 ) );
+                vertices->push_back( osg::Vec3( -1.73205, -1.0, 0 ) );
+                vertices->push_back( osg::Vec3(  1.73205, -1.0, 0 ) );
 
                 unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
                 colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
@@ -208,9 +208,9 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
                 while( j <= 1 )
                 {
                     //A unit equilateral triangle
-                    vertices->push_back( osg::Vec3(    0.0,  1.0, j ) );
-                    vertices->push_back( osg::Vec3( -0.866, -0.5, j ) );
-                    vertices->push_back( osg::Vec3(  0.866, -0.5, j ) );
+                    vertices->push_back( osg::Vec3(      0.0,  2.0, j ) );
+                    vertices->push_back( osg::Vec3( -1.73205, -1.0, j ) );
+                    vertices->push_back( osg::Vec3(  1.73205, -1.0, j ) );
 
                     unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
                     colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
@@ -269,10 +269,10 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
 
     stateset->setAttribute( GetShader().get(), osg::StateAttribute::ON );
 
-    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.5 ) );
+    osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.4 ) );
     stateset->addUniform( parSize.get() );
 
-    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.3 ) );
+    osg::ref_ptr< osg::Uniform > parExp = new osg::Uniform( "particleExp", static_cast< float >( 0.04 ) );
     stateset->addUniform( parExp.get() );
 
     geometry->setStateSet( stateset.get() );
@@ -315,7 +315,7 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            "vec4 totalColor = ( 0.5 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
+            "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
 
             "gl_FragColor = totalColor; \n"
         "} \n";

@@ -153,7 +153,10 @@ std::vector< cfdGraphicsObject* > SteadyStateVizHandler::GetGraphicsObjectsOfTyp
     for( itr = graphicsObjects.lower_bound( type ); 
          itr != graphicsObjects.upper_bound( type ); ++itr )
     {
-        cfdGraphicsObjects.push_back( itr->second );
+        if( itr->second )
+        {
+            cfdGraphicsObjects.push_back( itr->second );
+        }
     }
 
     return cfdGraphicsObjects;

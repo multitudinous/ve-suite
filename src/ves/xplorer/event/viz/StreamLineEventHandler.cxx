@@ -99,7 +99,7 @@ void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
     if( sizeDVP && !cfdGraphicsObject.empty() )
     {
         sizeDVP->GetData( size );
-        size /= 100.0;
+        size /= 200.0;
         for( size_t i = 0; i < cfdGraphicsObject.size(); ++i )
         {
             std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes =

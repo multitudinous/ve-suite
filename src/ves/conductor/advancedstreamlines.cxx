@@ -150,7 +150,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText21 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Line Diameter"), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add(itemStaticText21, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
 
-    _diameterSlider = new wxSlider( itemDialog1, LINE_DIAMETER_SLIDER, 40, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
+    _diameterSlider = new wxSlider( itemDialog1, LINE_DIAMETER_SLIDER, 80, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
     itemStaticBoxSizer3->Add(_diameterSlider, 0, wxGROW|wxLEFT|wxRIGHT, 5);
 
     wxBoxSizer* itemBoxSizer23 = new wxBoxSizer(wxHORIZONTAL);
@@ -166,7 +166,7 @@ void AdvancedStreamlines::CreateControls()
     wxStaticText* itemStaticText31 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Glow Strength" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText31, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _glowSlider = new wxSlider( itemDialog1, GLOW_SLIDER, 50, 0, 50, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    _glowSlider = new wxSlider( itemDialog1, GLOW_SLIDER, 4, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
     itemStaticBoxSizer3->Add( _glowSlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
 
     wxBoxSizer* itemBoxSizer33 = new wxBoxSizer( wxHORIZONTAL );
