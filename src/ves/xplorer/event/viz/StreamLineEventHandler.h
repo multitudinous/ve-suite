@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-11-11 15:59:48 -0600 (Sun, 11 Nov 2007) $
- * Version:       $Rev: 9866 $
- * Author:        $Author: dshipton $
- * Id:            $Id: StreamLineEventHandler.h 9866 2007-11-11 21:59:48Z dshipton $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
