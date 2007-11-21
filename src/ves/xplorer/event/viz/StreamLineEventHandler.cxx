@@ -32,15 +32,20 @@
  *************** <auto-copyright.pl END do not edit this line> **************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/viz/StreamLineEventHandler.h>
+#include <ves/xplorer/event/viz/cfdGraphicsObject.h>
 
 #include <ves/xplorer/SteadyStateVizHandler.h>
 
+#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/GlobalBase.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+// --- Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
@@ -49,6 +54,9 @@
 #else
 #include <unistd.h>
 #endif
+
+// --- C/C++ Libraries --- //
+#include <vector>
 
 using namespace ves::xplorer::event;
 
@@ -84,28 +92,49 @@ void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
     ves::open::xml::DataValuePairWeakPtr glowDVP = command->GetDataValuePair( "Glow" );
 
     double size, glow;
-    if( sizeDVP )
+    std::vector< ves::xplorer::cfdGraphicsObject* > cfdGraphicsObject = 
+        ves::xplorer::SteadyStateVizHandler::instance()->
+            GetGraphicsObjectsOfType( STREAMLINES );
+
+    if( sizeDVP && !cfdGraphicsObject.empty() )
     {
         sizeDVP->GetData( size );
-    }
-    
-    if( glowDVP )
-    {
-        glowDVP->GetData( glow );
-    }
-
-    //ves::xplorer::SteadyStateVizHandler::instance()->
-
-   /*
-        if( _activeObject )
-    {
-        ves::xplorer::cfdStreamers* temp = dynamic_cast< ves::xplorer::cfdStreamers* >( _activeObject );
-        if( temp )
+        size /= 100.0;
+        for( size_t i = 0; i < cfdGraphicsObject.size(); ++i )
         {
-            ;//temp->Update
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes =
+                cfdGraphicsObject.at( i )->GetGeodes();
+            for( size_t j = 0; j < geodes.size(); ++j )
+            {
+                osg::ref_ptr< osg::Uniform > parSize = 
+                    geodes.at( j )->getDrawable( 0 )->getStateSet()->getUniform( "particleSize" );
+                if( parSize.valid() )
+                {
+                    parSize->set( static_cast< float >( size ) );
+                }
+            }
         }
     }
-    */
+    
+    if( glowDVP && !cfdGraphicsObject.empty() )
+    {
+        glowDVP->GetData( glow );
+        glow /= 100.0;
+        for( size_t i = 0; i < cfdGraphicsObject.size(); ++i )
+        {
+            std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes =
+                cfdGraphicsObject.at( i )->GetGeodes();
+            for( size_t j = 0; j < geodes.size(); ++j )
+            {
+                osg::ref_ptr< osg::Uniform > parExp = 
+                    geodes.at( j )->getDrawable( 0 )->getStateSet()->getUniform( "particleExp" );
+                if( parExp.valid() )
+                {
+                    parExp->set( static_cast< float >( glow ) );
+                }
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler& StreamLineEventHandler::operator=( const StreamLineEventHandler& rhs )

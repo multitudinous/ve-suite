@@ -30,9 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_GRAPHICSOBJECT_H
-#define CFD_GRAPHICSOBJECT_H
+#ifndef CFD_GRAPHICS_OBJECT_H
+#define CFD_GRAPHICS_OBJECT_H
 
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/ModelPtr.h>
@@ -41,107 +42,100 @@
 #include <ves/xplorer/scenegraph/Geode.h>
 #include <ves/xplorer/scenegraph/DCS.h>
 
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/ref_ptr>
+#endif
+
+// --- C/C++ Libraries --- //
+#include <vector>
+
 namespace ves
 {
 namespace xplorer
 {
+
+class cfdObjects;
+
 namespace scenegraph
 {
     class Group;
     class Geode;
     ///class DCS;
 }
-}
-}
 
-namespace ves
-{
-namespace xplorer
-{
-    class cfdObjects;
-}
-}
-
-#include <vector>
-
-#ifdef _OSG
-#include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
-
-namespace ves
-{
-namespace xplorer
-{
 /*!\file cfdGraphicsObject.h
-cfdGraphicsObject API
-*/
+ * cfdGraphicsObject API
+ */
+
 /*!\class ves::xplorer::cfdGraphicsObject
-* 
-*/
+ * 
+ */
 class VE_XPLORER_EXPORTS cfdGraphicsObject
 {
 public:
-   ///constructor
-   cfdGraphicsObject( void );
+    ///constructor
+    cfdGraphicsObject();
 
-   ///destructor
-   ~cfdGraphicsObject( void );
+    ///destructor
+    ~cfdGraphicsObject();
 
-   ///copy constructor
-   ///\param &input
-   cfdGraphicsObject( const cfdGraphicsObject& input );
+    ///copy constructor
+    ///\param &input
+    cfdGraphicsObject( const cfdGraphicsObject& input );
 
-   ///equal operator
-   ///\param &input
-   cfdGraphicsObject& operator=( const cfdGraphicsObject& input );
+    ///equal operator
+    ///\param &input
+    cfdGraphicsObject& operator=( const cfdGraphicsObject& input );
 
+    enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};///<types of viz objects possible to add to scene
 
-   enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};///<types of viz objects possible to add to scene
+    ///Set parent node to add "graphics node" to
+    ///\param input
+    void SetParentNode( ves::xplorer::scenegraph::DCS* input );
 
-   ///Set parent node to add "graphics node" to
-   ///\param input
-   void SetParentNode( ves::xplorer::scenegraph::DCS* input );
+    ///node the parent node will be added to
+    ///\param input
+    void SetWorldNode( ves::xplorer::scenegraph::DCS* input );
 
-   ///node the parent node will be added to
-   ///\param input
-   void SetWorldNode( ves::xplorer::scenegraph::DCS* input );
+    ///set model pointer to be able to grab
+    ///transient info and the switch node
+    ///\param input
+    void SetActiveModel( Model* input );
 
-   ///set model pointer to be able to grab
-   ///transient info and the switch node
-   ///\param input
-   void SetActiveModel( Model* input );
+    ///add "child node" to scene graph
+    void AddGraphicsObjectToSceneGraph();
 
-   ///add "child node" to scene graph
-   void AddGraphicsObjectToSceneGraph( void );
+    ///Set type of viz: trans, classic, texture
+    ///\param VizType
+    void SetTypeOfViz( VizType );
 
-   ///Set type of viz: trans, classic, texture
-   ///\param VizType
-   void SetTypeOfViz( VizType );
+    ///Set geodes for classic and trans viz objects
+    void SetGeodes( ves::xplorer::cfdObjects* input );
 
-   ///Set geodes for classic and trans viz objects
-   void SetGeodes( ves::xplorer::cfdObjects* input );
+    ///Return parent node for a this object
+    ves::xplorer::scenegraph::DCS* GetParentNode();
 
-   ///Return parent node for a this object
-   ves::xplorer::scenegraph::DCS* GetParentNode( void );
+    ///Clear geodes vector and geode from memory and the graph
+    void RemoveGeodeFromDCS();
 
-   ///Clear geodes vector and geode from memory and the graph
-   void RemoveGeodeFromDCS( void );
+    // Return the animation so that we can change the speed of the animation
+    //ves::xplorer::scenegraph::cfdTempAnimation* GetAnimation();
 
-   // Return the animation so that we can change the speed of the animation
-   //ves::xplorer::scenegraph::cfdTempAnimation* GetAnimation( void );
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes();
 
 protected:
-   std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<SceneGraph Geode.
-   ves::xplorer::scenegraph::DCS* parentNode;///<SceneGraph parent node.
-   ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
-   VizType type;///<Type of viz: trans, classic, texture.
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<SceneGraph Geode.
+    ves::xplorer::scenegraph::DCS* parentNode;///<SceneGraph parent node.
+    ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
+    VizType type;///<Type of viz: trans, classic, texture.
 
-   // used for animated particles and other ss 
-   // animated features
-   //ves::xplorer::scenegraph::cfdTempAnimation* animation;
-   ves::xplorer::Model* model;///<Xplorer cfd model.
+    // used for animated particles and other ss 
+    // animated features
+    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
+    ves::xplorer::Model* model;///<Xplorer cfd model.
 };
 }
 }
-#endif
+
+#endif // end CFD_GRAPHICS_OBJECT_H
