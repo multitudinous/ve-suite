@@ -480,7 +480,7 @@ void Vistab::_onContour( wxCommandEvent& WXUNUSED(event) )
    }
 
    scalarContour->SetSize( this->GetRect() );
-   scalarContour->ShowModal();
+   scalarContour->Show();
 }
 /////////////////////////////////////////////////////////
 void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
@@ -502,7 +502,7 @@ void Vistab::_onVector( wxCommandEvent& WXUNUSED(event) )
    }
 
    vectorContour->SetSize( this->GetRect() );
-   vectorContour->ShowModal();
+   vectorContour->Show();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
@@ -566,10 +566,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )
    isosurface->SetScalarRange( _activeScalarName, _activeScalarRange );
    isosurface->SetAvailableScalars( _availableSolutions["MESH_SCALARS"] );
    isosurface->SetScalarList( _originalScalarRanges );
-//   isosurface->InitializeScalarData( _activeScalarName );
-   isosurface->ShowModal();
-   //_activeScalarName.erase();
-   
+   isosurface->Show();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED(event) )
@@ -612,7 +609,7 @@ void Vistab::_onPolydata( wxCommandEvent& WXUNUSED(event) )
    polydata->SetSize(this->GetRect());
    polydata->SetAvailableScalars(_availableSolutions["MESH_SCALARS"]);
    polydata->SetActiveScalar(_activeScalarName);
-   polydata->ShowModal();
+   polydata->Show();
 }
 ///////////////////////////////////////////////////////
 void Vistab::SetActiveModel(VjObs::Model_var activeModel)
