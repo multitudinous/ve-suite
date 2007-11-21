@@ -88,7 +88,8 @@ class EphemerisDialog : public wxDialog
        void UpdateDateAndTimeInfo();
 
        ///Make sure the hour is correct
-       void EnsureHour();
+       ///\param hourChange Negative or Positive hour change
+       void EnsureHour(int hourChange);
 
    
    private:

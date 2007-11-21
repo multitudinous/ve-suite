@@ -219,7 +219,7 @@ void EphemerisDialog::CreateGUIControls()
 	m_close->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Segoe UI")));
 	m_buttonsSizer->Add(m_close,0,wxALIGN_CENTER | wxALL,5);
 
-	wxArrayString arrayStringFor_m_amPm;
+	/*wxArrayString arrayStringFor_m_amPm;
 	arrayStringFor_m_amPm.Add(wxT("AM"));
 	arrayStringFor_m_amPm.Add(wxT("PM"));
 	m_amPm = new wxChoice(m_dateTime, ID_M_AMPM,
@@ -229,7 +229,7 @@ void EphemerisDialog::CreateGUIControls()
 	m_amPm->SetFont(wxFont(9, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Segoe UI")));
 	m_amPm->SetSelection(0);
 	m_timeSizer->Add(m_amPm,2,wxALIGN_CENTER | wxALL,5);
-        m_amPm->Enable(false);
+        m_amPm->Enable(false);*/
 
 	SetTitle(wxT("Ephemeris Data"));
 	SetIcon(wxNullIcon);
@@ -331,7 +331,20 @@ void EphemerisDialog::OnCalendarDay(wxCalendarEvent& event)
 ////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnMinuteTextUpdated(wxCommandEvent& event)
 {
-    EnsureHour();
+    int currentMinute =  m_minutes->GetValue();
+    int currentHour =  m_hour->GetValue();
+    int hourChange = 0;
+    if(currentMinute == 0 && m_lastMinute == 59) 
+    {
+        hourChange = 1;
+    }
+    else if(currentMinute == 59 && m_lastMinute == 0) 
+    {
+        hourChange = -1;
+    }
+    m_lastMinute = currentMinute;
+
+    EnsureHour(hourChange);
     UpdateDateAndTimeInfo();
     UpdateEphemerisData();
 }
@@ -347,22 +360,24 @@ void EphemerisDialog::OnChangeTimeOfDay(wxTimerEvent& event)
     UpdateDateAndTimeInfo();
     UpdateEphemerisData();
 }
-//////////////////////////////////
-void EphemerisDialog::EnsureHour()
+////////////////////////////////////////////////
+void EphemerisDialog::EnsureHour(int hourChange)
 {
-    int currentMinute =  m_minutes->GetValue();
     int currentHour =  m_hour->GetValue();
-    int hourChange = 0;
-    if(currentMinute == 0 && m_lastMinute == 59) 
+    if( currentHour == 23 && hourChange > 0)
     {
-        hourChange = 1;
+        m_hour->SetValue(0);
     }
-    else if(currentMinute == 59 && m_lastMinute == 0) 
+    else if( currentHour == 0 && hourChange < 0)
     {
-        hourChange = -1;
+        m_hour->SetValue(23);
     }
-    m_hour->SetValue(currentHour + hourChange);
-    m_lastMinute = currentMinute;
+    else
+    {
+        m_hour->SetValue( currentHour + hourChange);
+    }
+    
+    
 }
 /////////////////////////////////////////////
 void EphemerisDialog::UpdateDateAndTimeInfo()
