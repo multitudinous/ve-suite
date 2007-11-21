@@ -1481,9 +1481,9 @@ void DataSet::StoreScalarInfo()
     //Get the scalar and vector information
     m_dataObjectHandler->SetDatasetOperatorCallback(m_dataObjectOps["Count Number Of Vectors And Scalars"]);
     m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
-    
+    /*
     m_dataObjectHandler->SetDatasetOperatorCallback(m_dataObjectOps["Count Number Of Vectors And Scalars"]);
-    m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);
+    m_dataObjectHandler->OperateOnAllDatasetsInObject(this->dataSet);*/
     
     // count the number of vectors and store names ...
     this->numScalars = dynamic_cast<ves::xplorer::util::CountNumberOfParametersCallback*>

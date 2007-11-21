@@ -52,6 +52,10 @@ void ComputeVectorMagnitudeRangeCallback::GetVectorMagnitudeRange(double*& vMagR
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ComputeVectorMagnitudeRangeCallback::OperateOnDataset(vtkDataSet* dataset)
 {
+    if(!dataset->GetPointData()->GetVectors())
+    {
+        return;
+    }
 	double* range = 
 	    cfdAccessoryFunctions::ComputeVectorMagnitudeRange(dataset->GetPointData()->GetVectors());    
 	m_magnitudeRange[0] = (range[0] < m_magnitudeRange[0])?range[0]:m_magnitudeRange[0];
