@@ -68,6 +68,7 @@ EVT_COMMAND_SCROLL( PLANE_SIZE_SLIDER, Streamlines::_onSizeSlider )
 EVT_BUTTON( ADVANCED_STREAMLINE_BUTTON, Streamlines::_onAdvanced )
 EVT_BUTTON( COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
 EVT_BUTTON( SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
+EVT_BUTTON( wxID_OK, Streamlines::OnClose )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -534,3 +535,24 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Streamlines::OnClose( wxCommandEvent& event )
+{
+    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    veCommand->SetCommandName( std::string("Display Seed Points") );
+    ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
+    seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
+    veCommand->AddDataValuePair(seedPointDVP);
+    
+    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
+    activeDataset->SetData("Active Dataset",dataSetName);
+    veCommand->AddDataValuePair(activeDataset);
+    
+    ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    delete veCommand;
+    event.Skip();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Streamlines::SetActiveDataSetName( std::string name )
+{
+    dataSetName = name;
+}

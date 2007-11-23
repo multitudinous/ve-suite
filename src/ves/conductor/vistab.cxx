@@ -523,22 +523,8 @@ void Vistab::_onStreamline( wxCommandEvent& WXUNUSED(event) )
                   SYMBOL_STREAMLINES_STYLE );
    }
    streamline->SetSize( this->GetRect() );
-   
-   if ( streamline->ShowModal() == wxID_OK )
-   {
-      ves::open::xml::Command* veCommand = new ves::open::xml::Command();
-      veCommand->SetCommandName( std::string("Display Seed Points") );
-	  ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
-      seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
-      veCommand->AddDataValuePair(seedPointDVP);
-
-      ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
-      activeDataset->SetData("Active Dataset",GetActiveDatasetName());
-      veCommand->AddDataValuePair(activeDataset);
-
-	  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-      delete veCommand;   
-   }
+   streamline->SetActiveDataSetName( GetActiveDatasetName() );
+   streamline->Show();
 }
 ////////////////////////////////////////////////////////////
 void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED(event) )

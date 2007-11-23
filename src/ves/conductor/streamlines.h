@@ -129,6 +129,8 @@ public:
 
     ///Should we show tooltips?
     static bool ShowToolTips();
+    ///Set the active dataset name
+    void SetActiveDataSetName( std::string name );
 
     wxButton* itemButton14;
 
@@ -141,6 +143,7 @@ protected:
     void _onSizeSlider( wxScrollEvent& event);
     void _onCompute( wxCommandEvent& event);
     void SetSeedPoints( wxCommandEvent& event );
+    void OnClose( wxCommandEvent& event );
 
     ///Update the streamlines information
     void _updateStreamlineInformation();
@@ -163,6 +166,8 @@ protected:
     std::string _streamlineDirection;///<Store the value of the direction.
     std::string _cursorType;///<The contour type.
     std::string _integrationDirection;///<Single or Multiple planes.
+    ///Active dataset name
+    std::string dataSetName;
 
     double _lastIntegrationStepSize;///<Integration step size from advanced settings.
     double _lastPropagationSize;///<Propagation size from advanced settings.

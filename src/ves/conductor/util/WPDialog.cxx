@@ -148,6 +148,9 @@ void WPDialog::_buildGUI()
    _yBounds->Raise();
    _zBounds->Raise();
    
+   numZPointsSpinner->Raise();
+   numYPointsSpinner->Raise();
+   numXPointsSpinner->Raise();
    SetAutoLayout(true);
    
    SetSizer(mainSizer);
