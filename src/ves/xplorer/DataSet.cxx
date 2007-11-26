@@ -1262,33 +1262,57 @@ std::string DataSet::GetPrecomputedSurfaceDir()
    return this->precomputedSurfaceDir;
 }
 ////////////////////////////////////////////////////////////
-cfdPlanes * DataSet::GetPrecomputedXSlices()
+cfdPlanes* DataSet::GetPrecomputedXSlices()
 {
-   return this->x_planes;
+    if( x_planes->GetNumberOfPlanes() == 0 )
+    {
+        return 0;
+    }
+    
+    return this->x_planes;
 }
 /////////////////////////////////////////////////////////////
-cfdPlanes * DataSet::GetPrecomputedYSlices()
+cfdPlanes* DataSet::GetPrecomputedYSlices()
 {
-   return this->y_planes;
+    if( y_planes->GetNumberOfPlanes() == 0 )
+    {
+        return 0;
+    }
+    
+    return this->y_planes;
 }
 /////////////////////////////////////////////////////////////
-cfdPlanes * DataSet::GetPrecomputedZSlices()
+cfdPlanes* DataSet::GetPrecomputedZSlices()
 {
-   return this->z_planes;
+    if( z_planes->GetNumberOfPlanes() == 0 )
+    {
+        return 0;
+    }
+    
+    return this->z_planes;
 }
 /////////////////////////////////////////////////////////////////////
-cfdPlanes * DataSet::GetPrecomputedSlices( int xyz )
+cfdPlanes* DataSet::GetPrecomputedSlices( int xyz )
 {
-   if      ( xyz == 0 ) return this->x_planes;
-   else if ( xyz == 1 ) return this->y_planes;
-   else if ( xyz == 2 ) return this->z_planes;
-   else
-   {
-      std::cerr << "ERROR: DataSet::GetPrecomputedSlices cannot " 
-                << "handle index " << xyz << std::endl;
-      exit(1);
-      return NULL; // to eliminate compile warning
-   }
+    if( xyz == 0 ) 
+    {
+        return GetPrecomputedXSlices();
+    }
+    else if( xyz == 1 )
+    { 
+        return GetPrecomputedYSlices();
+    }
+    else if( xyz == 2 )
+    {
+        return GetPrecomputedZSlices();
+    }
+    else
+    {
+        std::cerr << "ERROR: DataSet::GetPrecomputedSlices cannot " 
+            << "handle index " << xyz << std::endl;
+        exit(1);
+        return NULL; // to eliminate compile warning
+    }
 }
 ////////////////////////////////////////////////////////////
 void DataSet::SetArrow( vtkPolyData * arrow)

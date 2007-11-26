@@ -63,7 +63,8 @@ cfdVectors::cfdVectors( const int xyz )
 }
 
 cfdVectors::~cfdVectors()
-{ 
+{
+    ;
 }
 
 void cfdVectors::Update( void )
@@ -71,21 +72,13 @@ void cfdVectors::Update( void )
 
    cfdPlanes* precomputedPlanes = 
        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+
    if (!precomputedPlanes)
    {
       vprDEBUG(vesDBG, 0) 
           << "Dataset contains no precomputed vector planes." 
          << std::endl << vprDEBUG_FLUSH;
       ves::xplorer::CommandHandler::instance()
-             ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
-      return;
-   }
-   if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
-   {
-       vprDEBUG(vesDBG, 0) 
-         << "Dataset contains no precomputed vector planes." 
-         << std::endl << vprDEBUG_FLUSH;
-       ves::xplorer::CommandHandler::instance()
              ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
       return;
    }

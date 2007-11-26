@@ -89,15 +89,7 @@ void cfdPresetContour::Update( void )
                ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
            return;
        }
-       if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
-       {
-           vprDEBUG(vesDBG, 0) 
-             << "Dataset contains no precomputed contour planes." 
-             << std::endl << vprDEBUG_FLUSH;
-           ves::xplorer::CommandHandler::instance()
-                ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
-           return;
-       }
+
        vtkPolyData * preCalcData = precomputedPlanes
                               ->GetClosestPlane( this->requestedValue );
 

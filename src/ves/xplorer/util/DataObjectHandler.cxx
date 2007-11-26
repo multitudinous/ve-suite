@@ -72,7 +72,6 @@ void DataObjectHandler::OperateOnAllDatasetsInObject(vtkDataObject* dataObject)
     {
         try
 	    {
-            std::cout<<"MultiGroupDataSet"<<std::endl;
             vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
             unsigned int nGroups = mgd->GetNumberOfGroups();
             unsigned int nDatasetsInGroup = 0;

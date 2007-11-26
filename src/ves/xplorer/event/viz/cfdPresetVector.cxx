@@ -92,15 +92,7 @@ void cfdPresetVector::Update( void )
                ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
            return;
        }
-       if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
-       {
-           vprDEBUG(vesDBG, 0) 
-             << "Dataset contains no precomputed vector planes." 
-             << std::endl << vprDEBUG_FLUSH;
-           ves::xplorer::CommandHandler::instance()
-                ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
-           return;
-       }
+
        vtkPolyData * preCalcData = precomputedPlanes
                               ->GetClosestPlane( this->requestedValue );
 

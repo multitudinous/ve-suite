@@ -29,21 +29,11 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_VECTORS_H
 #define CFD_VECTORS_H
 
 #include <ves/xplorer/event/viz/cfdVectorBase.h>
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdPlanes;
-}
-}
 
 // A class that generates multiple planes of vector plots.
 namespace ves
@@ -72,7 +62,6 @@ public:
 
 private:
    int xyz;
-   cfdPlanes* planes;
 };
 }
 }
