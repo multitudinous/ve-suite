@@ -93,7 +93,9 @@ public:
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData( 
         XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
-    
+    void SetParentModel( ModelSharedPtr parent );
+    ModelSharedPtr GetParentModel( );
+
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
@@ -104,6 +106,7 @@ private:
     NetworkPtr m_network;
     ///The vector of models for this system
     std::vector< ModelPtr > m_models;
+    ModelSharedPtr parentModel;
 };
 }
 template<>

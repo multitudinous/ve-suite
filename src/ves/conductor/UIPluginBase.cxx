@@ -690,6 +690,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
    //veModel->SetObjectFromXMLData( modelElement );
    name = wxString( m_veModel->GetModelName().c_str(),wxConvUTF8 );
    id = m_veModel->GetModelID();
+   parentModel = tempModel->GetParentModel();
    std::string tempFilename = m_veModel->GetIconFilename();
    pos.x = m_veModel->GetIconLocation()->GetPoint().first;
    pos.y = m_veModel->GetIconLocation()->GetPoint().second;
@@ -1214,9 +1215,16 @@ void  UIPluginBase::OnShowIconChooser(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 {  
-    UIPLUGIN_CHECKID( event )
+   UIPLUGIN_CHECKID( event )
    std::string compName = GetVEModel()->GetModelName();
 
+   ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+   while(parentTraverser != NULL)
+   {
+      compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      parentTraverser = parentTraverser->GetParentModel();
+   }
+   
    ves::open::xml::Command returnState;
    returnState.SetCommandName("getInputModuleParamList");
    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
@@ -1275,6 +1283,13 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 {  
     UIPLUGIN_CHECKID( event )
    std::string compName = GetVEModel()->GetModelName();
+
+   ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+   while(parentTraverser != NULL)
+   {
+      compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      parentTraverser = parentTraverser->GetParentModel();
+   }
 
    ves::open::xml::Command returnState;
    returnState.SetCommandName("getOutputModuleParamList");
@@ -1955,4 +1970,3 @@ double UIPluginBase::computenorm( wxPoint pt1, wxPoint pt2 )
 {
     return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
 }
-////////////////////////////////////////////////////////////////////////////////

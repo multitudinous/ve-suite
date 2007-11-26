@@ -215,7 +215,10 @@ public:
     ///Get the sub network for this model
     ///\return The subnetwork for this model
     ves::open::xml::model::SystemWeakPtr GetSubSystem();
-    
+
+	void SetParentModel( ModelSharedPtr parent );
+	ModelSharedPtr GetParentModel( );
+
 protected:
    ///Internally update the data.
    ///\param tagName The tag name of this element.
@@ -245,6 +248,7 @@ private:
    unsigned int iconMirror;
    ///The sub network for this model
    ves::open::xml::model::SystemPtr m_subSystem;
+   ModelSharedPtr parentModel;
 };
 }
 template<>

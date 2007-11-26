@@ -63,6 +63,7 @@ Model::Model()
    iconScale = 1.0f;
    iconRotation = 0.0f;
    iconMirror = 0;
+   parentModel = NULL;
 }
 ///////////////////////////////////
 Model::~Model()
@@ -154,6 +155,13 @@ Model::Model( const Model& input )
     {
         modelAttribute = new Command( *(input.modelAttribute) );
     }
+	
+	//add ptr to parent - used for querying
+	if( input.parentModel )
+    {
+        parentModel = new Model( *(input.parentModel) );
+    }
+   //parentModel = NULL;
 }
 /////////////////////////////////////////////////////
 Model& Model::operator=( const Model& input)
@@ -236,7 +244,13 @@ Model& Model::operator=( const Model& input)
             modelAttribute = new Command();
          }
          *modelAttribute = *(input.modelAttribute);
+      }	
+	  //add ptr to parent - used for querying
+      if( input.parentModel )
+      {
+         parentModel = new Model( *(input.parentModel) );
       }
+      //parentModel = NULL;
    }
    return *this;
 }
@@ -416,6 +430,8 @@ void Model::SetObjectFromXMLData(DOMNode* element)
         if( dataValueStringName )
         {
             m_subSystem = new System();
+            //set parent
+            m_subSystem->SetParentModel(this);
             m_subSystem->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -825,4 +841,14 @@ void Model::SetSubSystem( ves::open::xml::model::SystemWeakPtr inputSystem )
 ves::open::xml::model::SystemWeakPtr Model::GetSubSystem()
 {
     return m_subSystem;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetParentModel( ModelSharedPtr parent )
+{
+    parentModel = parent;
+}
+////////////////////////////////////////////////////////////////////////////////
+ModelSharedPtr Model::GetParentModel( )
+{
+    return parentModel;
 }

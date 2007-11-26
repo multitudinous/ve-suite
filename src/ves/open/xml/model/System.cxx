@@ -47,6 +47,7 @@ System::System()
 {
     SetObjectType("System");
     SetObjectNamespace("Model");
+    parentModel = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////   
 System::~System()
@@ -143,7 +144,9 @@ void System::SetObjectFromXMLData(DOMNode* element)
             {
                 dataValueStringName = 
                     static_cast< DOMElement* >( subElements->item( i ) );
-                m_models.push_back( new Model() );
+                ves::open::xml::model::ModelSharedPtr newModel = new Model();
+                newModel->SetParentModel(parentModel);
+                m_models.push_back( newModel );				
                 m_models.back()->SetObjectFromXMLData( dataValueStringName );
             }
         }
@@ -182,4 +185,13 @@ std::vector< ModelWeakPtr > System::GetModels()
                std::back_inserter( tempModels ) );
     return tempModels;
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
+void System::SetParentModel( ModelSharedPtr parent )
+{
+    parentModel = parent;
+}
+////////////////////////////////////////////////////////////////////////////////
+ModelSharedPtr System::GetParentModel( )
+{
+    return parentModel;
+}
