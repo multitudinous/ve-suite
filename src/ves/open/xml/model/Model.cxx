@@ -157,11 +157,7 @@ Model::Model( const Model& input )
     }
 	
 	//add ptr to parent - used for querying
-	if( input.parentModel )
-    {
-        parentModel = new Model( *(input.parentModel) );
-    }
-   //parentModel = NULL;
+    parentModel = input.parentModel;
 }
 /////////////////////////////////////////////////////
 Model& Model::operator=( const Model& input)
@@ -245,12 +241,9 @@ Model& Model::operator=( const Model& input)
          }
          *modelAttribute = *(input.modelAttribute);
       }	
-	  //add ptr to parent - used for querying
-      if( input.parentModel )
-      {
-         parentModel = new Model( *(input.parentModel) );
-      }
-      //parentModel = NULL;
+      
+       //add ptr to parent - used for querying
+       parentModel = input.parentModel;
    }
    return *this;
 }

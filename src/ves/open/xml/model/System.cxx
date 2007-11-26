@@ -64,6 +64,7 @@ System::System( const System& input )
     {
         m_models.push_back( new Model( *input.m_models.at( i ) ) );
     }
+    parentModel = input.parentModel;
 }
 ////////////////////////////////////////////////////////////////////////////////   
 System& System::operator=( const System& input)
@@ -79,6 +80,7 @@ System& System::operator=( const System& input)
         {
             m_models.push_back( new Model( *input.m_models.at( i ) ) );
         }
+        parentModel = input.parentModel;
     }
     return *this;
 }
