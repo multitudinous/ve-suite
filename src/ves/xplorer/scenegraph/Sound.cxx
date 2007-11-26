@@ -51,16 +51,16 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Sound::Sound()
+Sound::Sound( ves::xplorer::scenegraph::DCS* parent )
 :
-//m_soundGeode( new osg::Geode() ),
+m_soundGeode( new osg::Geode() ),
 m_soundNode( new osgAL::SoundNode() ),
 m_soundState( new osgAL::SoundState() ),
 m_sample( 0 )
 {
-    //parent->addChild(
-    //addChild( m_soundNode.get() );
-    //m_soundNode->setSoundState( m_soundState.get() );
+    parent->addChild( m_soundNode.get() );
+    parent->addChild( m_soundGeode.get() );
+    m_soundNode->setSoundState( m_soundState.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sound::~Sound()
@@ -71,9 +71,15 @@ Sound::~Sound()
 void Sound::Draw()
 {
     //Create a drawable so we can "see" the sound
+    osg::ref_ptr< osg::Drawable > drawable = m_soundGeode->getDrawable( 0 );
+    if( drawable.valid() )
+    {
+        m_soundGeode->removeDrawable( drawable.get() );
+    }
+
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     hints->setDetailRatio( 0.5f );
-    //addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
+    m_soundGeode->addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::LoadFile( std::string name )
@@ -91,7 +97,7 @@ void Sound::LoadFile( std::string name )
     m_soundState->setPlay( true );
     m_soundState->setLooping( true );
 
-    //Allocate a hardware soundsource to this soundstate ( priority 10 )
+    //Allocate a hardware soundsource to this soundstate( priority 10 )
     m_soundState->allocateSource( 10, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -101,4 +107,4 @@ osgAL::SoundNode* Sound::GetSoundNode()
 }
 ////////////////////////////////////////////////////////////////////////////////
 
-#endif //VE_SOUND
+#endif // end VE_SOUND

@@ -33,17 +33,6 @@
 #ifndef SOUND_H
 #define SOUND_H
 
-/*!\file Sound.h
-*/
-
-/*!\class ves::xplorer::scenegraph::Sound
-* 
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
-
 #ifdef VE_SOUND
 
 // --- VE-Suite Includes --- //
@@ -51,6 +40,11 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+
+namespace osg
+{
+    class Geode;
+}
 
 namespace osgAL
 {
@@ -72,10 +66,23 @@ namespace xplorer
 {
 namespace scenegraph
 {
+
+class DCS;
+
+/*!\file Sound.h
+ */
+
+/*!\class ves::xplorer::scenegraph::Sound
+ * 
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS Sound
 {
 public:
-    Sound();
+    Sound( ves::xplorer::scenegraph::DCS* parent );
     ~Sound();
 
     void Draw();
@@ -83,7 +90,7 @@ public:
     osgAL::SoundNode* GetSoundNode();
     
 private:
-    //osg::ref_ptr< osg::Geode > m_soundGeode;
+    osg::ref_ptr< osg::Geode > m_soundGeode;
     osg::ref_ptr< osgAL::SoundNode > m_soundNode;
     osg::ref_ptr< osgAL::SoundState > m_soundState;
     osg::ref_ptr< openalpp::Sample > m_sample;
@@ -93,6 +100,6 @@ private:
 }
 }
 
-#endif //VE_SOUND
+#endif // end VE_SOUND
 
-#endif //SOUND_H
+#endif // end SOUND_H

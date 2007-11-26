@@ -39,9 +39,6 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/Switch.h>
-#ifdef VE_SOUND
-#include <ves/xplorer/scenegraph/Sound.h>
-#endif
 
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -53,9 +50,8 @@
 #include <osgOQ/OcclusionQueryContext.h>
 
 #ifdef VE_SOUND
+// --- osgAL Includes --- //
 #include <osgAL/SoundRoot>
-#include <osgAL/SoundNode>
-#include <osgAL/SoundState>
 #endif
 
 // --- VR Juggler Includes --- //
@@ -162,7 +158,7 @@ private:
     //to keep the internal state of the SoundManager updated
     //This could also be done manually, this is just a handy way of doing it.
     osg::ref_ptr< osgAL::SoundRoot > m_soundRoot;
-    //osg::ref_ptr< ves::xplorer::scenegraph::Sound > m_sound;
+    ves::xplorer::scenegraph::Sound* m_sound;
     #endif
 
     //The logo

@@ -40,6 +40,9 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#ifdef VE_SOUND
+#include <ves/xplorer/scenegraph/Sound.h>
+#endif
 
 #include <ves/xplorer/scenegraph/logo/BlueArrow.h>
 #include <ves/xplorer/scenegraph/logo/GreyArrow.h>
@@ -64,6 +67,8 @@
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAL/SoundManager>
+#include <osgAL/SoundNode>
+#include <osgAL/SoundState>
 #endif
 
 // --- C/C++ Libraries --- //
@@ -84,7 +89,7 @@ SceneManager::SceneManager()
 :
 #ifdef VE_SOUND
 m_soundRoot( 0 ),
-//m_sound( 0 ),
+m_sound( 0 ),
 #endif
 m_blueArrow( 0 ),
 m_greyArrow( 0 ),
@@ -134,7 +139,7 @@ SceneManager::~SceneManager()
     }
 
 #ifdef VE_SOUND
-    //delete m_sound;
+    delete m_sound;
     osgAL::SoundManager::instance()->shutdown();
 #endif
 }
@@ -171,9 +176,10 @@ void SceneManager::InitScene()
     //Create the switch for our logo
     _createLogo();
 
-    //m_sound = new ves::xplorer::scenegraph::Sound();
+#ifdef VE_SOUND
+    //m_sound = new ves::xplorer::scenegraph::Sound( _logoNode.get() );
     //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
-    //_logoNode->addChild( m_sound.get() );
+#endif
 
     _logoSwitch->AddChild( worldDCS.get() );
     _logoSwitch->AddChild( _logoNode.get() );
