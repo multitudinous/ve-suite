@@ -30,6 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
+#include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetContour.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
@@ -74,23 +78,42 @@ void cfdPresetContour::Update( void )
 
    if ( this->usePreCalcData )
    {
-      vtkPolyData * preCalcData = this->GetActiveDataSet()
-                                      ->GetPrecomputedSlices( this->xyz )
-                                      ->GetClosestPlane( this->requestedValue );
+       cfdPlanes* precomputedPlanes = 
+       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+       if (!precomputedPlanes)
+       {
+           vprDEBUG(vesDBG, 0) 
+              << "Dataset contains no precomputed contour planes." 
+              << std::endl << vprDEBUG_FLUSH;
+           ves::xplorer::CommandHandler::instance()
+               ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
+           return;
+       }
+       if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
+       {
+           vprDEBUG(vesDBG, 0) 
+             << "Dataset contains no precomputed contour planes." 
+             << std::endl << vprDEBUG_FLUSH;
+           ves::xplorer::CommandHandler::instance()
+                ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
+           return;
+       }
+       vtkPolyData * preCalcData = precomputedPlanes
+                              ->GetClosestPlane( this->requestedValue );
 
-      if ( preCalcData == NULL )
-      {
-         vprDEBUG(vesDBG, 0) << "cfdPresetContour: no precalculated data"
+       if ( preCalcData == NULL )
+       {
+          vprDEBUG(vesDBG, 0) << "cfdPresetContour: no precalculated data"
                                  << std::endl << vprDEBUG_FLUSH;
 
-         this->updateFlag = false;
-         return;
-      }
+          this->updateFlag = false;
+          return;
+       }
 
-      this->SetMapperInput( preCalcData );
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
+       this->SetMapperInput( preCalcData );
+       this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
+       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
    }
    else

@@ -30,6 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
+#include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdContours.h>
 
 #include <ves/xplorer/DataSet.h>
@@ -63,11 +67,24 @@ void cfdContours::Update( void )
    vprDEBUG(vesDBG,1) << "cfdContours::Update" 
                           << std::endl << vprDEBUG_FLUSH;
 
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
+   cfdPlanes* precomputedPlanes = 
+       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+   if (!precomputedPlanes)
    {
       vprDEBUG(vesDBG, 0) 
-         << "cfdContours: planesData == NULL so returning" 
+          << "Dataset contains no precomputed contour planes." 
          << std::endl << vprDEBUG_FLUSH;
+      ves::xplorer::CommandHandler::instance()
+             ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
+      return;
+   }
+   if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
+   {
+       vprDEBUG(vesDBG, 0) 
+         << "Dataset contains no precomputed contour planes." 
+         << std::endl << vprDEBUG_FLUSH;
+       ves::xplorer::CommandHandler::instance()
+             ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
       return;
    }
  

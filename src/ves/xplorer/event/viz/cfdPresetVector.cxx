@@ -30,6 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
+#include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetVector.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
@@ -77,35 +81,54 @@ void cfdPresetVector::Update( void )
    if ( this->usePreCalcData )
    {
 
-      vtkPolyData * preCalcData = this->GetActiveDataSet()
-                              ->GetPrecomputedSlices( this->xyz )
+       cfdPlanes* precomputedPlanes = 
+       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+       if (!precomputedPlanes)
+       {
+           vprDEBUG(vesDBG, 0) 
+              << "Dataset contains no precomputed vector planes." 
+              << std::endl << vprDEBUG_FLUSH;
+           ves::xplorer::CommandHandler::instance()
+               ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
+           return;
+       }
+       if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
+       {
+           vprDEBUG(vesDBG, 0) 
+             << "Dataset contains no precomputed vector planes." 
+             << std::endl << vprDEBUG_FLUSH;
+           ves::xplorer::CommandHandler::instance()
+                ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
+           return;
+       }
+       vtkPolyData * preCalcData = precomputedPlanes
                               ->GetClosestPlane( this->requestedValue );
 
-      if ( preCalcData == NULL )
-      {
-         vprDEBUG(vesDBG, 0) 
+       if ( preCalcData == NULL )
+       {
+          vprDEBUG(vesDBG, 0) 
             << "cfdPresetVector: no precalculated data available"
             << std::endl << vprDEBUG_FLUSH;
-         this->updateFlag = false;
-         return;
-      }
+          this->updateFlag = false;
+          return;
+       }
 
-      // get every nth point from the dataSet data
-      this->ptmask->SetInput( preCalcData );
-      this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-      this->ptmask->Update();
+       // get every nth point from the dataSet data
+       this->ptmask->SetInput( preCalcData );
+       this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+       this->ptmask->Update();
 
-      this->SetGlyphWithThreshold();
-      this->SetGlyphAttributes();
-      this->glyph->Update();
+       this->SetGlyphWithThreshold();
+       this->SetGlyphAttributes();
+       this->glyph->Update();
       //this->glyph->DebugOn();
 
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
+       this->mapper->SetScalarRange( this->GetActiveDataSet()
                                           ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
+       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                           ->GetLookupTable() );
-      this->mapper->Update();
-      vprDEBUG(vesDBG, 1)
+       this->mapper->Update();
+       vprDEBUG(vesDBG, 1)
          << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
          << std::endl << vprDEBUG_FLUSH;
    }

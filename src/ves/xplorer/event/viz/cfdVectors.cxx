@@ -30,6 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#if defined(WIN32)
+    #define WIN32_LEAN_AND_MEAN
+#endif
+#include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdVectors.h>
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
@@ -64,11 +68,25 @@ cfdVectors::~cfdVectors()
 
 void cfdVectors::Update( void )
 {
-std::cout << " vectors update " << this->xyz << " " << this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() << std::endl;
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
+
+   cfdPlanes* precomputedPlanes = 
+       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+   if (!precomputedPlanes)
    {
       vprDEBUG(vesDBG, 0) 
-         << "cfdVectors, planesData has 0 planes so returning\n" << vprDEBUG_FLUSH;
+          << "Dataset contains no precomputed vector planes." 
+         << std::endl << vprDEBUG_FLUSH;
+      ves::xplorer::CommandHandler::instance()
+             ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
+      return;
+   }
+   if(!precomputedPlanes->GetNumberOfPlanes() == 0 )
+   {
+       vprDEBUG(vesDBG, 0) 
+         << "Dataset contains no precomputed vector planes." 
+         << std::endl << vprDEBUG_FLUSH;
+       ves::xplorer::CommandHandler::instance()
+             ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
       return;
    }
 

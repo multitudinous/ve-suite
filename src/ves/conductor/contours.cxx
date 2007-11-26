@@ -330,7 +330,14 @@ void Contours::_onMultiplePlanes( wxCommandEvent& WXUNUSED(event) )
 //////////////////////////////////////////////////////
 void Contours::_onCyclePlanes( wxCommandEvent& WXUNUSED(event) )
 {
-   _planeOption = ConvertUnicode( _cyclePrecomputedCBox->GetLabel() );
+    if(_cyclePrecomputedCBox->GetValue())
+    {
+       _planeOption = ConvertUnicode( _cyclePrecomputedCBox->GetLabel() );
+    }
+    else
+    {
+        _planeOption.clear();
+    }
 }
 ///////////////////////////////////////////////////////
 void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED(event) )
@@ -346,7 +353,14 @@ void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED(event) )
 ////////////////////////////////////////////////////////////
 void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED(event) )
 {
-   _planeOption = ConvertUnicode( _nearestPrecomputedCBox->GetLabel() );
+    if(_nearestPrecomputedCBox->GetValue())
+    {
+       _planeOption = ConvertUnicode( _nearestPrecomputedCBox->GetLabel() );
+    }
+    else
+    {
+        _planeOption.clear();
+    }
 }
 /////////////////////////////////////////////////
 void Contours::_onPlane( wxCommandEvent& WXUNUSED(event) )
