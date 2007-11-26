@@ -24,7 +24,7 @@
     </network>
     <model ID="102" id="56b3dba4-fa6b-4b34-9226-c181996af2ca" name="DefaultPlugin" vendorUnit="DefaultPlugin">
       <iconLocation xLocation="10" yLocation="10"/>
-      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">iconFilename</icon>
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
       <informationPackets id="5e62c92e-8820-4972-be32-a211a7b55fdc">
         <blockID type="xs:unsignedInt">105</blockID>
         <blockName type="xs:string">simple</blockName>
@@ -78,6 +78,9 @@
         <properties dataName="VTK_DATA_FILE" id="57183100-f39b-4ae4-8d76-d660cc67881b" objectType="DataValuePair">
           <dataValue type="xs:string">3scl.vtu</dataValue>
         </properties>
+        <properties dataName="VTK_PRECOMPUTED_DIR_PATH" id="90cbb734-1030-4480-b9d3-7b2a3bed49ee" objectType="DataValuePair">
+          <dataValue type="xs:string">POST_DATA1</dataValue>
+        </properties>
       </informationPackets>
       <informationPackets id="df0dd685-f485-41ff-ad3c-66bb5bc15655">
         <blockID type="xs:unsignedInt">111</blockID>
@@ -94,7 +97,7 @@
             <value>0.25</value>
           </scale>
           <rotation>
-            <value>-45.0</value>
+            <value>-45</value>
             <value>0</value>
             <value>0</value>
           </rotation>
