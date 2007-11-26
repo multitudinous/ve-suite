@@ -74,14 +74,14 @@ void World::Initialize()
                      osgDB::readImageFile( "Textures/CloudyHills/front.tga" ) );
 
 
-    /*m_funnelEntity = new demo::FunnelEntity( "Models/IVEs/funnel_physics.ive", m_pluginDCS.get() );
+    m_funnelEntity = new demo::FunnelEntity( "Models/IVEs/funnel_physics.ive", m_pluginDCS.get() );
     m_funnelEntity->SetNameAndDescriptions( "funnel_physics" );
     m_funnelEntity->InitPhysics();
     m_funnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
     m_funnelEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
     m_funnelEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
     m_funnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    m_funnelEntity->SetShaders();*/
+    m_funnelEntity->SetShaders( m_tcm.get() );
 
     m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive", m_pluginDCS.get() );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
@@ -99,7 +99,7 @@ void World::Initialize()
     //sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
     //m_marbleEntity->GetDCS()->addChild( sound->GetSoundNode() );
 
-    /*m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive", m_pluginDCS.get() );
+    m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive", m_pluginDCS.get() );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );
     double quarterPosition[ 3 ] = { 0, 0, 0 };
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
@@ -126,7 +126,8 @@ void World::Initialize()
     m_slideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
 
     m_waterEntity = new demo::WaterEntity( "Models/IVEs/water.ive", m_pluginDCS.get() );
-    m_waterEntity->SetNameAndDescriptions( "water" );*/
+    m_waterEntity->SetNameAndDescriptions( "water" );
+    m_waterEntity->SetShaders( m_tcm.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void World::PreFrameUpdate()
