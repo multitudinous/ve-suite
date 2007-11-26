@@ -1264,6 +1264,11 @@ std::string DataSet::GetPrecomputedSurfaceDir()
 ////////////////////////////////////////////////////////////
 cfdPlanes* DataSet::GetPrecomputedXSlices()
 {
+    if( !x_planes )
+    {
+        return 0;
+    }
+    
     if( x_planes->GetNumberOfPlanes() == 0 )
     {
         return 0;
@@ -1274,6 +1279,11 @@ cfdPlanes* DataSet::GetPrecomputedXSlices()
 /////////////////////////////////////////////////////////////
 cfdPlanes* DataSet::GetPrecomputedYSlices()
 {
+    if( !y_planes )
+    {
+        return 0;
+    }
+    
     if( y_planes->GetNumberOfPlanes() == 0 )
     {
         return 0;
@@ -1284,6 +1294,11 @@ cfdPlanes* DataSet::GetPrecomputedYSlices()
 /////////////////////////////////////////////////////////////
 cfdPlanes* DataSet::GetPrecomputedZSlices()
 {
+    if( !z_planes )
+    {
+        return 0;
+    }
+
     if( z_planes->GetNumberOfPlanes() == 0 )
     {
         return 0;
