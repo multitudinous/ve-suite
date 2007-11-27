@@ -65,7 +65,8 @@ namespace CASI
 		
 		hAPsim->SetVisible(TRUE);
 
-		nodePath=_T("Data");
+		//nodePath=_T("Data");
+		nodePath=_T("");
 
 		ihRoot = new IHNode();
 		(*ihRoot) = hAPsim->GetTree();
@@ -138,7 +139,7 @@ namespace CASI
 		int slength = nodePath.GetLength();
 		blocknodepath=nodePath;
 
-		blocknodepath.Insert(slength,".Blocks");
+		//blocknodepath.Insert(slength,".Blocks");
 			
 		IHNode node;
 
@@ -154,7 +155,7 @@ namespace CASI
 		int slength = nodePath.GetLength();
 		blocknodepath=nodePath;
 
-		blocknodepath.Insert(slength,".Streams");
+		//blocknodepath.Insert(slength,".Streams");
 			
 		IHNode node;
 		
@@ -294,8 +295,8 @@ namespace CASI
 		CString blockNodePath = nodePath;
 
 		int slength = blockNodePath.GetLength();
-		blockNodePath.Insert(slength,".Blocks.");
-		slength = blockNodePath.GetLength();
+		//blockNodePath.Insert(slength,".Blocks.");
+		//slength = blockNodePath.GetLength();
 		blockNodePath.Insert(slength,blockName);
 
 		CASIObj result(*ihRoot, blockNodePath, BLOCK);
@@ -323,8 +324,8 @@ namespace CASI
 		CString streamNodePath = nodePath;
 
 		int slength = streamNodePath.GetLength();
-		streamNodePath.Insert(slength,".Streams.");
-		slength = streamNodePath.GetLength();
+		//streamNodePath.Insert(slength,".Streams.");
+		//slength = streamNodePath.GetLength();
 		streamNodePath.Insert(slength,streamName);
 
 		CASIObj result(*ihRoot, streamNodePath, STREAM);

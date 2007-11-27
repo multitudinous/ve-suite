@@ -131,6 +131,7 @@ void System::SetObjectFromXMLData(DOMNode* element)
     {
         dataValueStringName = GetSubElement( currentElement, "network", 0 );
         m_network = new Network();
+		m_network->SetParentModel(parentModel);
         m_network->SetObjectFromXMLData( dataValueStringName );
         dataValueStringName = 0;            
     }

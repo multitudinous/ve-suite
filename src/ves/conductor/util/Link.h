@@ -45,6 +45,7 @@ Link API
 #include <ves/VEConfig.h>
 #include <ves/conductor/util/Polygon.h>
 #include <ves/open/xml/model/LinkPtr.h>
+#include <ves/open/xml/model/ModelPtr.h>
 
 #include <wx/gdicmn.h>
 #include <wx/dc.h>
@@ -192,6 +193,7 @@ private:
     std::pair< double, double >* userScale;
     ///The XML Link rep
     ves::open::xml::model::LinkSharedPtr m_veLink;
+    ves::open::xml::model::ModelPtr parentModel;
     
     std::string ConvertUnicode( const wxChar* data )
     {

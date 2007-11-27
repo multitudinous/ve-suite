@@ -47,6 +47,7 @@ Link::Link()
     moduleInfo.second = new DataValuePair( "FLOAT" );
     portInfo.first = 0;
     portInfo.second = 0;
+    parentModel = NULL;
 
     SetObjectType( "Link" );
     SetObjectNamespace( "Model" );
@@ -78,6 +79,7 @@ Link::Link( const Link& input )
     moduleInfo.second = new DataValuePair( *(input.moduleInfo.second) );
 
     portInfo = input.portInfo;
+    parentModel = input.parentModel;
 }
 /////////////////////////////////////////////////////
 Link& Link::operator=( const Link& input )
@@ -103,6 +105,7 @@ Link& Link::operator=( const Link& input )
         *(moduleInfo.second) = *(input.moduleInfo.second);
         portInfo = input.portInfo;
         linkName = input.linkName;
+        parentModel = input.parentModel;
     }
     return *this;
 }
@@ -277,3 +280,12 @@ std::string Link::GetLinkType()
     return m_type;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Link::SetParentModel( ModelSharedPtr parent )
+{
+    parentModel = parent;
+}
+////////////////////////////////////////////////////////////////////////////////
+ModelSharedPtr Link::GetParentModel( )
+{
+    return parentModel;
+}

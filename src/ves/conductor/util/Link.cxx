@@ -411,7 +411,17 @@ void Link::OnQueryStreamInputs(wxCommandEvent& event )
     UILINK_CHECKID( event )
 
 	std::string compName = ConvertUnicode( GetName().c_str() );
-    
+	compName = "Data.Streams." + compName;
+
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+    while(parentTraverser != NULL)
+    {
+       //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+       compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+       parentTraverser = parentTraverser->GetParentModel();
+    }
+
 	ves::open::xml::Command returnState;
 	returnState.SetCommandName("getStreamInputModuleParamList");
 	ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
@@ -465,6 +475,16 @@ void Link::OnQueryStreamOutputs(wxCommandEvent& event )
     
 	//UIPLUGIN_CHECKID( event )
 	std::string compName = ConvertUnicode( GetName().c_str() );
+	compName = "Data.Streams." + compName;
+
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+    while(parentTraverser != NULL)
+    {
+       //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+       compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+       parentTraverser = parentTraverser->GetParentModel();
+    }
     
 	ves::open::xml::Command returnState;
 	returnState.SetCommandName("getStreamOutputModuleParamList");
@@ -768,7 +788,7 @@ void Link::SetLink( ves::open::xml::model::LinkWeakPtr inputLink )
     }
     // Create the polygon for links
     CalcLinkPoly();
-    
+    parentModel = m_veLink->GetParentModel();
     SetName( wxString( m_veLink->GetLinkName().c_str(), wxConvUTF8) );
     SetUUID( m_veLink->GetID() );    
 }

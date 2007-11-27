@@ -46,6 +46,8 @@
 #include <vector>
 #include <utility>
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 
@@ -119,6 +121,8 @@ public:
     ///Get the link type
     ///\return The link type in a string
     std::string GetLinkType();
+    void SetParentModel( ModelSharedPtr parent );
+    ModelSharedPtr GetParentModel( );
 
 protected:
     ///Internally update the data.
@@ -138,6 +142,7 @@ private:
     std::string linkName;
     ///The link type
     std::string m_type;
+    ModelSharedPtr parentModel;
 };
 }
 template<>

@@ -1217,11 +1217,14 @@ void  UIPluginBase::OnQueryInputs(wxCommandEvent& event )
 {  
    UIPLUGIN_CHECKID( event )
    std::string compName = GetVEModel()->GetModelName();
+	compName = "Data.Blocks." + compName;
 
+   //generate hierarchical name if necessary
    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
    while(parentTraverser != NULL)
    {
-      compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
       parentTraverser = parentTraverser->GetParentModel();
    }
    
@@ -1283,11 +1286,14 @@ void  UIPluginBase::OnQueryOutputs(wxCommandEvent& event )
 {  
     UIPLUGIN_CHECKID( event )
    std::string compName = GetVEModel()->GetModelName();
+   compName = "Data.Blocks." + compName;
 
+   //generate hierarchical name if necessary
    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
    while(parentTraverser != NULL)
    {
-      compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
       parentTraverser = parentTraverser->GetParentModel();
    }
 

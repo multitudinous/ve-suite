@@ -47,6 +47,8 @@
 
 #include <ves/open/xml/model/TagPtr.h>
 #include <ves/open/xml/model/LinkPtr.h>
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/Model.h>
 
 #include <xercesc/dom/DOM.hpp>
 
@@ -110,6 +112,9 @@ public:
     ///Remove a link from the network
     ///\param oldLink The link to be removed
     void RemoveLink( LinkWeakPtr oldLink );
+    void SetParentModel( ModelSharedPtr parent );
+    ModelSharedPtr GetParentModel( );
+
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
@@ -121,6 +126,7 @@ private:
     std::vector< ves::open::xml::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
     ///The vector of tags for this network
     std::vector< TagPtr > tags;
+    ModelSharedPtr parentModel;
 };
 }
 template<>

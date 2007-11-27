@@ -47,6 +47,7 @@ Network::Network(  )
 {
    SetObjectType("Network");
    SetObjectNamespace("Model");
+   parentModel = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////   
 Network::~Network()
@@ -79,6 +80,7 @@ Network::Network( const Network& input )
    {
        tags.push_back( new Tag( *input.tags.at( i ) ) );
    }
+    parentModel = input.parentModel;
 }
 ////////////////////////////////////////////////////////////////////////////////   
 Network& Network::operator=( const Network& input)
@@ -111,6 +113,7 @@ Network& Network::operator=( const Network& input)
         {
             tags.push_back( new Tag( *input.tags.at( i ) ) );
         }
+        parentModel = input.parentModel;
     }
     return *this;
 }
@@ -188,7 +191,9 @@ void Network::SetObjectFromXMLData(DOMNode* element)
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "link", i );
-            links.push_back( new Link() );
+			ves::open::xml::model::LinkSharedPtr newLink = new Link();
+			newLink->SetParentModel( parentModel );
+            links.push_back( newLink );
             links.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -269,4 +274,13 @@ void Network::AddLink( LinkWeakPtr newLink )
 {
     links.push_back( newLink );
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
+void Network::SetParentModel( ModelSharedPtr parent )
+{
+    parentModel = parent;
+}
+////////////////////////////////////////////////////////////////////////////////
+ModelSharedPtr Network::GetParentModel( )
+{
+    return parentModel;
+}
