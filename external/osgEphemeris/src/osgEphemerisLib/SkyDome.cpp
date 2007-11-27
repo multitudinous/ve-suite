@@ -15,11 +15,11 @@
 
 #include <osgDB/ReadFile>
 
-#include <osgUtil/CullVisitor>
+//#include <osgUtil/CullVisitor>
 #include <osgUtil/UpdateVisitor>
 
 #include <osg/StateSet>
-#include <osg/CullFace>
+//#include <osg/CullFace>
 #include <osg/BlendFunc>
 #include <osg/Texture2D>
 #include <osg/TexGen>
@@ -71,13 +71,13 @@ SkyDome::SkyDome():
         osg::Drawable *dbl = _northernHemisphere->getDrawable(sector);
         dbl->setStateSet( new osg::StateSet );
 
-        dbl->setCullCallback( new SectorCullCallback( _sunAzimuth, min, max, _sunTextureUnit));
+        dbl->setUpdateCallback( new SectorUpdateCallback( _sunAzimuth, min, max, _sunTextureUnit));
 
         if( _southernHemisphere.valid () )
         {
             dbl = _southernHemisphere->getDrawable(sector);
             dbl->setStateSet( new osg::StateSet );
-            dbl->setCullCallback( new SectorCullCallback( _sunAzimuth, min, max, _sunTextureUnit));
+            dbl->setUpdateCallback( new SectorUpdateCallback( _sunAzimuth, min, max, _sunTextureUnit));
         }
     }
 
@@ -324,7 +324,7 @@ void SkyDome::_buildStateSet()
     }
 }
 
-SkyDome::SectorCullCallback::SectorCullCallback( double &sunAz, double min, double max, unsigned int sunTextureUnit ):
+SkyDome::SectorUpdateCallback::SectorUpdateCallback( double &sunAz, double min, double max, unsigned int sunTextureUnit ):
     _sunAz(sunAz),
     _sunTextureUnit(sunTextureUnit)
 {
@@ -332,16 +332,18 @@ SkyDome::SectorCullCallback::SectorCullCallback( double &sunAz, double min, doub
     _max = _range( max, 360 );
 }
 
-bool SkyDome::SectorCullCallback::cull(osg::NodeVisitor* nv, osg::Drawable *dbl, osg::State*) const
+void SkyDome::SectorUpdateCallback::update(osg::NodeVisitor* nv, osg::Drawable* dbl) 
 {
-    osgUtil::CullVisitor *cv = dynamic_cast<osgUtil::CullVisitor *>(nv);
+    osg::ref_ptr<osgUtil::UpdateVisitor> updateVisitor = dynamic_cast<osgUtil::UpdateVisitor*>(nv);
 
-    if( cv != NULL && cv->isCulled(dbl->getBound()) )
-        return true;
+    if( !updateVisitor.valid()  )
+    {
+       return;
+    }
 
     double sun = _range(_sunAz, 360);
 
-    /*if( _withinDeg( sun, _min, _max ))
+    if( _withinDeg( sun, _min, _max ))
     {
         dbl->getStateSet()->setTextureMode( _sunTextureUnit, GL_TEXTURE_2D, osg::StateAttribute::ON);
     }
@@ -350,12 +352,12 @@ bool SkyDome::SectorCullCallback::cull(osg::NodeVisitor* nv, osg::Drawable *dbl,
         dbl->getStateSet()->setTextureMode( _sunTextureUnit, GL_TEXTURE_2D, osg::StateAttribute::OFF);
         // For testing, cull geometry
         //return true;
-    }*/
+    }
 
-    return false;
+    return;
 }
 
-bool SkyDome::SectorCullCallback::_withinDeg( double x, double min, double max ) const
+bool SkyDome::SectorUpdateCallback::_withinDeg( double x, double min, double max ) const
 {
     if( min > max )
         return ((x >= min) && (x <= (max+360.0))) || ((x <= max) && (x >= (min-360.0)));

@@ -63,11 +63,12 @@ class OSGEPHEMERIS_EXPORT SkyDome:  public Sphere
 
         bool _mirrorInSouthernHemisphere;
 
-        class SectorCullCallback: public osg::Drawable::CullCallback
+        class SectorUpdateCallback: public osg::Drawable::UpdateCallback
         {
             public:
-                SectorCullCallback( double &sunAz, double min, double max, unsigned int sunTextureUnit );
-                virtual bool cull(osg::NodeVisitor* nv, osg::Drawable *dbl, osg::State*) const ;
+                SectorUpdateCallback( double &sunAz, double min, double max, unsigned int sunTextureUnit );
+                //virtual bool cull(osg::NodeVisitor* nv, osg::Drawable *dbl, osg::State*) const ;
+                virtual void update(osg::NodeVisitor* nv, osg::Drawable* dbl);
             private:
                 double &_sunAz;
                 double _min, _max;
