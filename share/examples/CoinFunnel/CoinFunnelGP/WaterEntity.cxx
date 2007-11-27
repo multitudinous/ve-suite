@@ -1,6 +1,7 @@
 // --- My Includes --- //
 #include "WaterEntity.h"
 #include "TimeUpdateCallback.h"
+#include "ViewPositionUpdateCallback.h"
 
 // --- VE-Suite Includes --- //
 //#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
@@ -63,8 +64,8 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         "{ \n"
             "gl_Position = ftransform(); \n"
 
-            "vTexCoord = gl_Vertex.xyz * 1.0; \n"
-            "vViewVec = gl_Vertex.xyz - viewPosition; \n"
+            "vTexCoord = gl_Vertex.xyz * 0.8; \n"
+            "vViewVec = vTexCoord - viewPosition; \n"
             "vNormal = gl_Normal; \n"
         "} \n";
 
@@ -105,11 +106,11 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
 
             "float lrp = 1.0 - dot( -normalize( vViewVec ), bump ); \n"
 
-            "vec4 waterColor = vec4( 0.2, 0.7, 0.2, 1.0 ); \n"
-            "float fadeExp = 6.08; \n"
+            "vec4 waterColor = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
+            "float fadeExp = 30.0; \n"
             "float fadeBias = 0.30; \n"
             "vec4 color = mix( waterColor, refl, clamp( fadeBias + pow( lrp, fadeExp ), 0.0, 1.0 ) ); \n"
-            "color.a = 0.5; \n"
+            "color.a = 0.4; \n"
 
             //Interpolate between the water color and reflection
             "gl_FragColor = color; \n"
@@ -145,6 +146,8 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
     stateset->setTextureAttributeAndModes( 1, texture.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > viewPosition = new osg::Uniform( "viewPosition", osg::Vec3( 0, 0, 0 ) );
+    osg::ref_ptr< demo::ViewPositionUpdateCallback > viewPositionCallback = new demo::ViewPositionUpdateCallback();
+    viewPosition->setUpdateCallback( viewPositionCallback.get() );
     stateset->addUniform( viewPosition.get() );
 
     osg::ref_ptr< osg::Uniform > time = new osg::Uniform( "time", static_cast< float >( 0.0 ) );
