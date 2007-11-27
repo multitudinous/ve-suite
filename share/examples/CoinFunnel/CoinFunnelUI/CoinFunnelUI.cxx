@@ -24,6 +24,7 @@ CoinFunnelUI::CoinFunnelUI()
 
     n_pts = 4;
 
+    poly = new wxPoint[ n_pts ];
     poly[0] = wxPoint( 0, 0 );
     poly[1] = wxPoint( icon_w, 0 );
     poly[2] = wxPoint( icon_w, icon_h );

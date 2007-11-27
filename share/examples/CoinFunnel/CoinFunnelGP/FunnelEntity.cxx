@@ -69,27 +69,81 @@ void FunnelEntity::SetShaderOne( osg::TextureCubeMap* tcm )
     char fragmentPass[]=
         "uniform sampler3D noise; \n"
 
-        "varying vec3 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+        "varying vec3  lightPos; \n"
+        "varying vec3  eyePos; \n"
+        "varying vec3  normal; \n"
 
+        ////////////////////////////////////////////////////////////////////////////////
+        "vec3 Snoise( vec3 x ) \n"
+        "{ \n"
+            "return 2.0 * texture3D( noise, x ).xyz - 1.0; \n"
+        "} \n"
+        ////////////////////////////////////////////////////////////////////////////////
+        "vec3 Noisy( vec3 x ) \n"
+        "{ \n"
+            "return texture3D( noise, x ).xyz; \n"
+        "} \n"
+        ////////////////////////////////////////////////////////////////////////////////
+        "vec4 Ambient() \n"
+        "{ \n"
+            "return vec4( 0.51, 0.51, 0.51, 1.0 ); \n"
+        "} \n"
+        ////////////////////////////////////////////////////////////////////////////////
+        "vec4 SoftDiffuse( vec3 Neye, vec3 Peye ) \n"
+        "{ \n"
+            "vec3 Leye = ( lightPos - Peye ) / length( lightPos - Peye ); \n"
+
+            "float NdotL = dot( Neye, Leye ) * 0.5 + 0.5; \n"
+
+            "return vec4( NdotL ); \n"
+        "} \n"
+        ////////////////////////////////////////////////////////////////////////////////
+        "vec4 Specular( vec3 NNeye, vec3 Peye ) \n"
+        "{ \n"
+            "vec3 Leye = normalize( lightPos - Peye ); \n"
+            "vec3 Veye = -( normalize( Peye ) ); \n"
+            "vec3 Heye = normalize( Leye + Veye ); \n"
+
+            "float NdotH = clamp( dot( NNeye, Heye ), 0.0, 1.0 ); \n"
+
+            "return vec4( pow( NdotH, 64.0 ) ); \n"     
+        "} \n"
+        ////////////////////////////////////////////////////////////////////////////////
         "void main() \n"
         "{ \n"
-            "float noisy = texture3D( noise, gl_TexCoord[ 0 ].xyz ).x; \n"
-            "float marble = ( 0.2 + 5.0 * abs( noisy - 0.5 ) ); \n"
+            "float noiseAmplitude = 1.0; \n"
+            "float sharpness = 50.0; \n"
+            "vec3 PP = gl_TexCoord[ 0 ].xyz + noiseAmplitude * Noisy( gl_TexCoord[ 0 ].xyz ); \n"
+            "float veinFrequency = 0.2; \n"
+            "PP *= veinFrequency; \n"
 
-            "vec3 V = normalize( eyePos ); \n"
-            "vec3 L = normalize( lightPos ); \n"
-            "vec3 N = normalize( normal ); \n"
+            //Calculate the veining function for the lookup area
+            "float turb, turbsum = 0.0; \n"
+            "float freq = 1.0; \n"
 
-            "float diffuse = 0.5 * dot( N, L ) + 0.5; \n"
-            "float specular = pow( clamp( dot( reflect( V, N ), L ), 0.0, 1.0 ), 24.0 ); \n"
+            "for( int i = 0; i < 2; ++i ) \n"
+            "{ \n"
+                "turb = abs( Snoise( PP ).x ); \n"
+                "turb = pow( smoothstep( 0.8, 1.0, 1.0 - turb ), sharpness ) / freq; \n"
+                "turbsum += ( 1.0 - turbsum ) * turb; \n"
+                "freq *= 3.0; \n"
+                "PP *= 3.0; \n"
+            "} \n"
 
-            //We assume dark parts of the marble reflect light better
-            "float Ks = clamp( 1.1 - 1.3 * marble, 0.0, 1.0 ); \n"
+            //Blend between the two colors
+            "vec4 baseColor = vec4( 1.0, 1.0, 0.842105, 1.0 ); \n"
+            "vec4 veinColor = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
+            "vec4 Ct = mix( baseColor, veinColor, turbsum ); \n"
 
-            "gl_FragColor = diffuse * marble * vec4( 1.0, 0.84272, 0.62515, 1.0 ) + Ks * specular; \n"
+            "vec4 Ka = vec4( 0.00000, 0.00000, 0.00000, 1.0 ); \n"
+            "vec4 Kd = vec4( 0.83333, 0.83333, 0.83333, 1.0 ); \n"
+            "vec4 Ks = vec4( 0.19333, 0.19333, 0.19333, 1.0 ); \n"
+
+            "gl_FragColor = ( Ct * ( Ka * Ambient() + Kd * SoftDiffuse( normal, eyePos ) ) +  \n"
+            "                        Ks * Specular( normalize( normal ), eyePos ) ); \n"
         "} \n";
+        ////////////////////////////////////////////////////////////////////////////////
+
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
@@ -182,7 +236,7 @@ void FunnelEntity::SetShaderTwo()
             "float noiseAmplitude = 1.0; \n"
             "float sharpness = 50.0; \n"
             "vec3 PP = gl_TexCoord[ 0 ].xyz + noiseAmplitude * Noisy( gl_TexCoord[ 0 ].xyz ); \n"
-            "float veinFrequency = 0.2; \n"
+            "float veinFrequency = 0.15; \n"
             "PP *= veinFrequency; \n"
 
             //Calculate the veining function for the lookup area

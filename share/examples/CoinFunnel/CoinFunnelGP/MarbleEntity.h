@@ -36,6 +36,8 @@ public:
 
     void SetShaders( osg::TextureCubeMap* tcm );
 
+    void SetSounds();
+
     ves::xplorer::scenegraph::Sound* GetSound();
 
 private:

@@ -16,6 +16,8 @@ namespace osg
 
 namespace demo
 {
+class UniformUpdateCallback;
+
 class WaterEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:

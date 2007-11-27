@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UniformUpdateCallback.cxx"
+				>
+			</File>
+			<File
 				RelativePath=".\WaterEntity.cxx"
 				>
 			</File>
@@ -238,6 +242,10 @@
 			</File>
 			<File
 				RelativePath=".\SlideEntity.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UniformUpdateCallback.h"
 				>
 			</File>
 			<File

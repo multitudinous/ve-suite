@@ -32,6 +32,9 @@ CADEntity( geomFile, pluginDCS )
 {
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
+
+    m_sound = new ves::xplorer::scenegraph::Sound( pluginDCS );
+    m_sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MarbleEntity::~MarbleEntity()
@@ -57,6 +60,11 @@ void MarbleEntity::SetShaders( osg::TextureCubeMap* tcm )
 {
     SetShaderOne( tcm );
     SetShaderTwo();
+}
+////////////////////////////////////////////////////////////////////////////////
+void MarbleEntity::SetSounds()
+{
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )

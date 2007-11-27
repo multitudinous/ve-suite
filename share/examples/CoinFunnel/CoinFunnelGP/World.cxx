@@ -94,10 +94,7 @@ void World::Initialize()
     //The real value of the radius should be 0.05, need to look at this
     m_marbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
     m_marbleEntity->SetShaders( m_tcm.get() );
-
-    //ves::xplorer::scenegraph::Sound* sound = new ves::xplorer::scenegraph::Sound( m_marbleEntity->GetDCS() );
-    //sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
-    //m_marbleEntity->GetDCS()->addChild( sound->GetSoundNode() );
+    m_marbleEntity->SetSounds();
 
     m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive", m_pluginDCS.get() );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );

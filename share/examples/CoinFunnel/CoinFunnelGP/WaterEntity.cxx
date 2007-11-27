@@ -1,5 +1,6 @@
 // --- My Includes --- //
 #include "WaterEntity.h"
+#include "TimeUpdateCallback.h"
 
 // --- VE-Suite Includes --- //
 //#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
@@ -52,31 +53,26 @@ void WaterEntity::SetShaders( osg::TextureCubeMap* tcm )
 void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
 {
     char vertexPass[]=
+        "uniform vec3 viewPosition; \n"
+
         "varying vec3 vTexCoord; \n"
         "varying vec3 vNormal; \n"
         "varying vec3 vViewVec; \n"
 
         "void main() \n"
         "{ \n"
-            "vTexCoord = gl_Vertex.xyz; \n"
-            "vViewVec = gl_Vertex.xyz; \n"
-            "vNormal = gl_Normal; \n"
-
             "gl_Position = ftransform(); \n"
+
+            "vTexCoord = gl_Vertex.xyz * 1.0; \n"
+            "vViewVec = gl_Vertex.xyz - viewPosition; \n"
+            "vNormal = gl_Normal; \n"
         "} \n";
 
     char fragmentPass[]=
+        "uniform float time; \n"
+
         "uniform sampler3D noise; \n"
         "uniform samplerCube skyBox; \n"
-
-        "uniform float time_0_X; \n"
-        "uniform vec4  waterColor; \n"
-        "uniform float fadeExp; \n"
-        "uniform float fadeBias; \n"
-        "uniform float noiseSpeed; \n"
-        "uniform vec4  scale; \n"
-
-        "uniform float waveSpeed; \n"
 
         "varying vec3 vTexCoord; \n"
         "varying vec3 vNormal; \n"
@@ -85,8 +81,11 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         "void main() \n"
         "{ \n"
             "vec3 tcoord = vTexCoord; \n"
-            "tcoord.x += waveSpeed * time_0_X; \n"
-            "tcoord.z += noiseSpeed * time_0_X; \n"
+
+            "float noiseSpeed = 0.18; \n"
+            "float waveSpeed = 0.34; \n"
+            "tcoord.x += waveSpeed * time; \n"
+            "tcoord.z += noiseSpeed * time; \n"
 
             "vec4 noisy = texture3D( noise, tcoord ); \n"
 
@@ -104,10 +103,16 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "vec3 reflVec = reflect( vViewVec, bump ); \n"
             "vec4 refl = textureCube( skyBox, reflVec.yzx ); \n"
 
-            "float lrp = 1.0 - dot(-normalize(vViewVec), bump ); \n"
+            "float lrp = 1.0 - dot( -normalize( vViewVec ), bump ); \n"
+
+            "vec4 waterColor = vec4( 0.2, 0.7, 0.2, 1.0 ); \n"
+            "float fadeExp = 6.08; \n"
+            "float fadeBias = 0.30; \n"
+            "vec4 color = mix( waterColor, refl, clamp( fadeBias + pow( lrp, fadeExp ), 0.0, 1.0 ) ); \n"
+            "color.a = 0.5; \n"
 
             //Interpolate between the water color and reflection
-            "gl_FragColor = mix( waterColor, refl, clamp( fadeBias + pow( lrp, fadeExp ), 0.0, 0.5 ) ); \n"
+            "gl_FragColor = color; \n"
         "} \n";
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
@@ -138,6 +143,14 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
 
     stateset->setTextureAttributeAndModes( 0, tcm, osg::StateAttribute::ON );
     stateset->setTextureAttributeAndModes( 1, texture.get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Uniform > viewPosition = new osg::Uniform( "viewPosition", osg::Vec3( 0, 0, 0 ) );
+    stateset->addUniform( viewPosition.get() );
+
+    osg::ref_ptr< osg::Uniform > time = new osg::Uniform( "time", static_cast< float >( 0.0 ) );
+    osg::ref_ptr< demo::TimeUpdateCallback > timeCallback = new demo::TimeUpdateCallback();
+    time->setUpdateCallback( timeCallback.get() );
+    stateset->addUniform( time.get() );
 
     osg::ref_ptr< osg::Uniform > skyBox = new osg::Uniform( "skyBox", 0 );
     stateset->addUniform( skyBox.get() );
