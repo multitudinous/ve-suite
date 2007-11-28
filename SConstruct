@@ -370,11 +370,6 @@ base_bldr.addOptions( opts )
 
 baseEnv = base_bldr.buildEnvironment()
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
-if GetPlatform() == 'darwin':
-   # Load some default tools
-   baseEnv.AppendUnique(tools=('default', TOOL_SUBST))
-   #baseEnv.AppendUnique(tools=('default', TOOL_BUNDLE))
-   TOOL_BUNDLE( baseEnv )
 
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
