@@ -37,6 +37,7 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/environment/cfdSoundHandler.h>
@@ -56,6 +57,11 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>
+
+#ifdef VE_SOUND
+// --- osgAL Includes --- //
+#include <osgAL/SoundManager>
+#endif
 
 // --- vrJuggler Includes --- //
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
@@ -78,6 +84,10 @@ xmlModel( 0 ),
 _onSceneGraph( false ),
 m_device( 0 ),
 m_physicsSimulator( 0 )
+#ifdef VE_SOUND
+,
+m_soundManager( 0 )
+#endif
 {
     _network.empty();
 }
@@ -237,6 +247,21 @@ void cfdVEBaseClass::SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimul
                   << std::endl;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+#ifdef VE_SOUND
+void cfdVEBaseClass::SetSoundManager( osgAL::SoundManager* soundManager )
+{
+    if( soundManager )
+    {
+        m_soundManager = soundManager;
+    }
+    else
+    {
+        std::cerr << " ERROR : cfdVEBaseClass::SetSoundManager soundManager is NULL "
+                  << std::endl;
+    }
+}
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetModuleResults( const std::string network )
 {

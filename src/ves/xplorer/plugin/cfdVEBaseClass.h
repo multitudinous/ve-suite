@@ -43,6 +43,14 @@
 
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
+
+#ifdef VE_SOUND
+// --- osgAL Includes --- //
+namespace osgAL
+{
+    class SoundManager;
+}
+#endif
  
 // --- OSG Includes --- //
 #ifdef _OSG
@@ -143,6 +151,10 @@ public:
 
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
+#ifdef VE_SOUND
+    void SetSoundManager( osgAL::SoundManager* soundManager );
+#endif
+
     //Set the results for a particluar module so that we can use
     //them for custom viz features
     void SetModuleResults( const std::string );
@@ -221,6 +233,9 @@ private:
     ves::xplorer::Device* m_device;
     ves::xplorer::cfdSoundHandler* soundHandler;
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
+#ifdef VE_SOUND
+    osgAL::SoundManager* m_soundManager;
+#endif
 
     ves::open::xml::model::ModelPtr xmlModel;
     std::vector< std::string > v_desc;

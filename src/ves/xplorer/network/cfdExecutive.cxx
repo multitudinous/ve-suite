@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <ves/xplorer/network/VE_i.h>
-//#include <ves/xplorer/XplorerHandlers/cfdEnum.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
@@ -54,6 +54,11 @@
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
+
+#ifdef VE_SOUND
+// --- osgAL Includes --- //
+#include <osgAL/SoundManager>
+#endif
 
 #include <iostream>
 #include <fstream>
@@ -314,6 +319,9 @@ void cfdExecutive::GetEverything( void )
          _plugins[ iter->first ] = temp;
          // When we create the _plugin map here we will do the following
          _plugins[ iter->first ]->SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator::instance() );
+#ifdef VE_SOUND
+         _plugins[ iter->first ]->SetSoundManager( osgAL::SoundManager::instance() );
+#endif
          _plugins[ iter->first ]->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
          _plugins[ iter->first ]->AddSelfToSG();
          Model* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
