@@ -426,8 +426,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
-   baseEnv.Append( LINKFLAGS = ['-g'] )
-   baseEnv.Append( CXXFLAGS = ['-g'] )
+   #baseEnv.Append( LINKFLAGS = ['-g'] )
+   #baseEnv.Append( CXXFLAGS = ['-g'] )
 
    if GetPlatform() == 'win32':
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
