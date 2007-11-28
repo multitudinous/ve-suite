@@ -61,7 +61,8 @@ class EphemerisDialog : public wxDialog
       void OnAmPmSelected(wxCommandEvent& event );
       void OnHourTextUpdated(wxCommandEvent& event );
       void OnCalendarDay(wxCalendarEvent& event);
-	  void OnMinuteTextUpdated(wxCommandEvent& event);
+      void OnMinuteTextUpdated(wxCommandEvent& event);
+      void OnAutoDateTime(wxCommandEvent& event);
        ///Convert the input sexagesimal value to decimal values
        ///\param degree Degree of Latitude or Longitude
        ///\param minutes Minutes of Latitude or Longitude
@@ -90,7 +91,13 @@ class EphemerisDialog : public wxDialog
        ///Make sure the hour is correct
        ///\param hourChange Negative or Positive hour change
        void EnsureHour(int hourChange);
-
+  
+       ///Update the Auto Date And Time of osgEphemerisModel
+       ///\param useAutoDateTime Flag triggering auto date/time usage
+       void UpdateAutoDateTime(bool useAutoDateTime);
+       
+       ///Toggle on/off controls for date and time setting 
+       void ToggleCalendarAndTimerState(bool onOff);
    
    private:
       //Do not add custom control declarations between 
@@ -126,6 +133,7 @@ class EphemerisDialog : public wxDialog
       wxNotebook* m_dataEntryPages;
       wxBoxSizer* m_mainSizer;
       ////GUI Control Declaration End
+      wxCheckBox* m_autoDateTime;
       
       ves::open::xml::CommandPtr m_date;
       ves::open::xml::CommandPtr m_time;
@@ -163,6 +171,7 @@ class EphemerisDialog : public wxDialog
          ID_M_LATITUDELONGITUDE = 1004,
          ID_M_DATETIME = 1003,
          ID_M_DATAENTRYPAGES = 1002,
+         ID_AUTO_DATE_TIME = 1234,
          ////GUI Enum Control ID End
          ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
       };

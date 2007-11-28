@@ -44,6 +44,7 @@ BEGIN_EVENT_TABLE(EphemerisDialog,wxDialog)
 	EVT_TEXT(ID_M_MINUTES,EphemerisDialog::OnMinuteTextUpdated)
 	
 	EVT_CALENDAR_DAY(ID_M_CALENDAR,EphemerisDialog::OnCalendarDay)
+	EVT_CHECKBOX(ID_AUTO_DATE_TIME,EphemerisDialog::OnAutoDateTime)
 END_EVENT_TABLE()
 ////Event Table End
 /////////////////////////////////////////////////////////////////
@@ -230,6 +231,9 @@ void EphemerisDialog::CreateGUIControls()
 	m_amPm->SetSelection(0);
 	m_timeSizer->Add(m_amPm,2,wxALIGN_CENTER | wxALL,5);
         m_amPm->Enable(false);*/
+        m_autoDateTime = new wxCheckBox(m_dateTime, ID_AUTO_DATE_TIME,
+                                        wxT("Auto Date/Time"));
+	m_timeSizer->Add(m_autoDateTime,2,wxALIGN_CENTER | wxALL,5);
 
 	SetTitle(wxT("Ephemeris Data"));
 	SetIcon(wxNullIcon);
@@ -360,6 +364,12 @@ void EphemerisDialog::OnChangeTimeOfDay(wxTimerEvent& event)
     UpdateDateAndTimeInfo();
     UpdateEphemerisData();
 }
+/////////////////////////////////////////////////////////
+void EphemerisDialog::OnAutoDateTime(wxCommandEvent& event)
+{
+    ToggleCalendarAndTimerState( !m_autoDateTime->IsChecked() );
+    UpdateAutoDateTime(m_autoDateTime->IsChecked());
+}
 ////////////////////////////////////////////////
 void EphemerisDialog::EnsureHour(int hourChange)
 {
@@ -433,6 +443,33 @@ void EphemerisDialog::UpdateEphemerisData()
                             ->SetCommand( ephemerisData->GetCommandName(),
                                           ephemerisData) ;
 	ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( ephemerisData);
+}
+//////////////////////////////////////////////////////////////
+void EphemerisDialog::UpdateAutoDateTime(bool useAutoDateTime)
+{
+    CommandWeakPtr ephemerisAutoDateTime = new Command();
+    ephemerisAutoDateTime->SetCommandName("Ephemeris Auto Date and Time");
+    DataValuePair* autoDateTime = new ves::open::xml::DataValuePair();
+    autoDateTime->SetData("Auto Date Time",static_cast<long int>((useAutoDateTime)?1:0));
+    ephemerisAutoDateTime->AddDataValuePair(autoDateTime);
+    
+    ves::conductor::UserPreferencesDataBuffer::instance()
+                   ->SetCommand( ephemerisAutoDateTime->GetCommandName(),
+                                          ephemerisAutoDateTime);
+    ves::conductor::util::CORBAServiceList::instance()
+                 ->SendCommandStringToXplorer( ephemerisAutoDateTime);
+
+    if(!useAutoDateTime)
+    {
+        UpdateEphemerisData();
+    }
+}
+/////////////////////////////////////////////////////////////
+void EphemerisDialog::ToggleCalendarAndTimerState(bool onOff)
+{
+    m_calendar->Enable(onOff);
+    m_hour->Enable(onOff);
+    m_minutes->Enable(onOff);
 }
 
 
