@@ -29,9 +29,11 @@ namespace demo
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-World::World( ves::xplorer::scenegraph::DCS* pluginDCS )
+World::World( ves::xplorer::scenegraph::DCS* pluginDCS,
+              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 m_pluginDCS( pluginDCS ),
+m_physicsSimulator( physicsSimulator ),
 m_tcm( new osg::TextureCubeMap() ),
 m_funnelEntity( 0 ),
 m_marbleEntity( 0 ),
@@ -74,7 +76,9 @@ void World::Initialize()
                      osgDB::readImageFile( "Textures/CloudyHills/front.tga" ) );
 
 
-    m_funnelEntity = new demo::FunnelEntity( "Models/IVEs/funnel_physics.ive", m_pluginDCS.get() );
+    m_funnelEntity = new demo::FunnelEntity( "Models/IVEs/funnel_physics.ive",
+                                             m_pluginDCS.get(),
+                                             m_physicsSimulator );
     m_funnelEntity->SetNameAndDescriptions( "funnel_physics" );
     m_funnelEntity->InitPhysics();
     m_funnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -83,7 +87,9 @@ void World::Initialize()
     m_funnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
     m_funnelEntity->SetShaders( m_tcm.get() );
 
-    m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive", m_pluginDCS.get() );
+    m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive",
+                                             m_pluginDCS.get(),
+                                             m_physicsSimulator );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
     double marblePosition[ 3 ] = { 5.5, 2.0, 5.0 };
     m_marbleEntity->GetDCS()->SetTranslationArray( marblePosition );
@@ -96,7 +102,9 @@ void World::Initialize()
     m_marbleEntity->SetShaders( m_tcm.get() );
     m_marbleEntity->SetSounds();
 
-    m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive", m_pluginDCS.get() );
+    m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive",
+                                               m_pluginDCS.get(),
+                                               m_physicsSimulator );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );
     double quarterPosition[ 3 ] = { 0, 0, 0 };
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
@@ -106,7 +114,9 @@ void World::Initialize()
     m_quarterEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
     m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
 
-    m_rampEntity = new demo::RampEntity( "Models/IVEs/ramp_physics.ive", m_pluginDCS.get() );
+    m_rampEntity = new demo::RampEntity( "Models/IVEs/ramp_physics.ive",
+                                         m_pluginDCS.get(),
+                                         m_physicsSimulator );
     m_rampEntity->SetNameAndDescriptions( "ramp_physics" );
     m_rampEntity->InitPhysics();
     m_rampEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -114,7 +124,9 @@ void World::Initialize()
     m_rampEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
     m_rampEntity->GetPhysicsRigidBody()->StaticConcaveShape();
 
-    m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive", m_pluginDCS.get() );
+    m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive",
+                                           m_pluginDCS.get(),
+                                           m_physicsSimulator );
     m_slideEntity->SetNameAndDescriptions( "slide_physics" );
     m_slideEntity->InitPhysics();
     m_slideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );

@@ -18,7 +18,10 @@ namespace demo
 class SlideEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    SlideEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS );
+    SlideEntity( std::string geomFile,
+                 ves::xplorer::scenegraph::DCS* pluginDCS,
+                 ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
     virtual ~SlideEntity();
 
     void SetNameAndDescriptions( std::string geomFile );

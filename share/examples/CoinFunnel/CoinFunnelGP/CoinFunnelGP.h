@@ -4,6 +4,17 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+    class Sound;
+}
+}
+}
+
 // --- My Includes --- //
 namespace demo
 {
@@ -24,6 +35,7 @@ protected:
 
 private:
     demo::World* world;
+    ves::xplorer::scenegraph::Sound* m_sound;
 
 };
 

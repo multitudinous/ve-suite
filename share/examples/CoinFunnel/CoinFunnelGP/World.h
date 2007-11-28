@@ -10,6 +10,7 @@ namespace scenegraph
 {
     class DCS;
     class CADEntity;
+    class PhysicsSimulator;
 }
 }
 }
@@ -34,7 +35,8 @@ class WaterEntity;
 class World
 {
 public:
-    World( ves::xplorer::scenegraph::DCS* pluginDCS );
+    World( ves::xplorer::scenegraph::DCS* pluginDCS,
+           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
     ~World();
 
     void Initialize();
@@ -44,6 +46,8 @@ public:
 
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
+
+    ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
     osg::ref_ptr< osg::TextureCubeMap > m_tcm;
 

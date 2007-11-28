@@ -19,9 +19,11 @@ namespace demo
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-RampEntity::RampEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS )
+RampEntity::RampEntity( std::string geomFile,
+                        ves::xplorer::scenegraph::DCS* pluginDCS,
+                        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( geomFile, pluginDCS )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
     ;
 }

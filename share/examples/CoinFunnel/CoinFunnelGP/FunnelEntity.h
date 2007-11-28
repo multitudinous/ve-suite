@@ -18,7 +18,10 @@ namespace demo
 class FunnelEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    FunnelEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS );
+    FunnelEntity( std::string geomFile,
+                  ves::xplorer::scenegraph::DCS* pluginDCS,
+                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
     virtual ~FunnelEntity();
 
     void SetNameAndDescriptions( std::string geomFile );

@@ -12,7 +12,10 @@ namespace demo
 class QuarterEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    QuarterEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS );
+    QuarterEntity( std::string geomFile,
+                   ves::xplorer::scenegraph::DCS* pluginDCS,
+                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
     virtual ~QuarterEntity();
 
     void SetNameAndDescriptions( std::string geomFile );

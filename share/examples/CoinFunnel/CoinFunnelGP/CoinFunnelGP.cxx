@@ -4,6 +4,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/Sound.h>
 
 #include <ves/open/xml/model/Model.h>
 
@@ -32,12 +33,15 @@ void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-    world = new demo::World( _dcs.get() );
+    m_sound = new ves::xplorer::scenegraph::Sound( _dcs.get() );
+    m_sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
+
+    world = new demo::World( _dcs.get(), m_physicsSimulator );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::PreFrameUpdate()
 {
-    if( !ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetIdle() )
+    if( m_physicsSimulator->GetIdle() )
     {
         world->PreFrameUpdate();
     }

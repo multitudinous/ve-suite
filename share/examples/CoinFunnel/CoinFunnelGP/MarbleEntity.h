@@ -29,7 +29,10 @@ namespace demo
 class MarbleEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    MarbleEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS );
+    MarbleEntity( std::string geomFile,
+                  ves::xplorer::scenegraph::DCS* pluginDCS,
+                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
     virtual ~MarbleEntity();
 
     void SetNameAndDescriptions( std::string geomFile );

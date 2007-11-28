@@ -12,7 +12,10 @@ namespace demo
 class RampEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    RampEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS );
+    RampEntity( std::string geomFile,
+                ves::xplorer::scenegraph::DCS* pluginDCS,
+                ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
     virtual ~RampEntity();
 
     void SetNameAndDescriptions( std::string geomFile );

@@ -19,9 +19,11 @@ namespace demo
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-QuarterEntity::QuarterEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS )
+QuarterEntity::QuarterEntity( std::string geomFile,
+                              ves::xplorer::scenegraph::DCS* pluginDCS,
+                              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( geomFile, pluginDCS )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
     ;
 }

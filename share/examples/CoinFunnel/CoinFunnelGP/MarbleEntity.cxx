@@ -24,17 +24,16 @@ namespace demo
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-MarbleEntity::MarbleEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS )
+MarbleEntity::MarbleEntity( std::string geomFile,
+                            ves::xplorer::scenegraph::DCS* pluginDCS,
+                            ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 m_sound( 0 ),
 m_nonPhysicsGeometry( 0 ),
-CADEntity( geomFile, pluginDCS )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
-
-    m_sound = new ves::xplorer::scenegraph::Sound( pluginDCS );
-    m_sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MarbleEntity::~MarbleEntity()
