@@ -3,7 +3,7 @@ import os, sys, string
 import SConsAddons.Util as sca_util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir osg_options vtk_options xerces_options GetSVNVersion RootDir')
+Import('baseEnv ves_pkg GetPlatform buildDir osg_options vtk_options xerces_options GetSVNVersion RootDir')
 Import('tao_options boost_options vrjuggler_options bullet_options osgal_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'apps', 'xplorer') )
@@ -41,6 +41,7 @@ env.Append(LIBS = ['osgOQ'])
 env.Append(LIBS = ['osgEphemeris'])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
+
 vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )
@@ -52,9 +53,13 @@ bullet_options.apply( env )
 
 if GetPlatform() == 'win32':
    env.Append( CPPDEFINES = ['LOKI_DLL'])
+
+resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
+    pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]
    
-prog = ves_pkg.createProgram('ves_xplorer' + env["PROGSUFFIX"], env, 'bin')
+prog = ves_pkg.createProgram('ves_xplorer' + env["PROGSUFFIX"], env, 'bin',
+    True,resources,pj( RootDir, 'src', 'apps', 'xplorer','Info.plist'),
+    pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
 prog.addSources( srcs )
 prog.addHeaders( headers )
 prog.build()
-

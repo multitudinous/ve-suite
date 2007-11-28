@@ -30,21 +30,11 @@ vrjuggler_options.apply( env )
 if GetPlatform() == 'win32':
    env.Append( CPPDEFINES = ['LOKI_DLL'])
    
-prog = ves_pkg.createProgram('ves_conductor' + env["PROGSUFFIX"], env, 'bin')
+resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns')]
+   
+prog = ves_pkg.createProgram('ves_conductor' + env["PROGSUFFIX"], env, 'bin',
+    True,resources,pj( RootDir, 'src', 'apps', 'conductor','Info.plist'),
+    pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
 prog.addSources( srcs )
 prog.addHeaders( headers )
-prog.build()
-
-if GetPlatform() == "darwin":
-   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o ${SOURCE}'
-   bld = Builder(action = idlCmd )
-   env.Append(BUILDERS = {'apple_rez': bld})
-   if 'install' in COMMAND_LINE_TARGETS:
-      conductorTarget = pj(PREFIX,'bin','Conductor')
-      winTarget = pj(PREFIX,'bin','ves_conductor' + env["PROGSUFFIX"])
-   else:
-      conductorTarget = pj( '#', buildDir,'src', 'apps', 'conductor','Conductor')
-      winTarget = pj( '#',buildDir,'src', 'apps', 'conductor','ves_conductor' + env["PROGSUFFIX"])
-
-   env.apple_rez( conductorTarget, winTarget)
-   env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
+prog.build()       

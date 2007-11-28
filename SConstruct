@@ -21,12 +21,6 @@ except:
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
    sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
 
-try:
-   from MacBundle import *
-except:
-   sys.path.append(pj(os.getcwd(), 'share', 'python'))
-   from MacBundle import *
-
 # Pull in HDF options files
 try:
    import HDF5
@@ -432,8 +426,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
-   #baseEnv.Append( LINKFLAGS = ['-g'] )
-   #baseEnv.Append( CXXFLAGS = ['-g'] )
+   baseEnv.Append( LINKFLAGS = ['-g'] )
+   baseEnv.Append( CXXFLAGS = ['-g'] )
 
    if GetPlatform() == 'win32':
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
