@@ -1837,7 +1837,8 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
-   ::wxLaunchDefaultBrowser( wxString( "http://www.vrac.iastate.edu/%7Ebiv/vesuite_installs/docs/releases/1.0.3/vesuite/vesuite.html", wxConvUTF8 ) );
+    ::wxLaunchDefaultBrowser( 
+        wxString( "http://vesuite.org/content.php?id=421", wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
