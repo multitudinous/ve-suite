@@ -49,6 +49,7 @@
 #include <ves/open/xml/model/System.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
@@ -312,6 +313,7 @@ void cfdExecutive::GetEverything( void )
 
          _plugins[ iter->first ] = temp;
          // When we create the _plugin map here we will do the following
+         _plugins[ iter->first ]->SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator::instance() );
          _plugins[ iter->first ]->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
          _plugins[ iter->first ]->AddSelfToSG();
          Model* tempCFDModel = _plugins[ iter->first ]->GetCFDModel();
