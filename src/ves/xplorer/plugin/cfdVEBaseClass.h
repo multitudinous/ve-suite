@@ -30,15 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_VE_BASECLASS_H
-#define CFD_VE_BASECLASS_H
-/*!\file cfdVEBaseClass.h
-cfdVEBaseClass API
-*/
+#ifndef CFD_VE_BASE_CLASS_H
+#define CFD_VE_BASE_CLASS_H
 
-/*!\class ::cfdVEBaseClass
-*
-*/
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/Group.h>
 
@@ -46,175 +43,202 @@ cfdVEBaseClass API
 
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
+ 
+// --- OSG Includes --- //
+#ifdef _OSG
+#include <osg/ref_ptr>
+#endif
 
+// --- C/C++ Libraries --- //
 #include <string>
 #include <vector>
 #include <map>
 
-//class cfdModuleGeometry;
 namespace ves
 {
 namespace xplorer
 {
+class cfdCursor;
+class Device;
+class cfdObjects;
+class cfdSoundHandler;
+
 namespace scenegraph
 {
     class DCS;
     class Group;
-}
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
-   class cfdCursor;
-   class Device;
-   class cfdObjects;
-   class cfdSoundHandler;
-}
+    class PhysicsSimulator;
 }
 
-
-#include <ves/VEConfig.h>
-
-#ifdef _OSG
-#include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
-
-namespace ves
-{
-namespace xplorer
-{
 namespace plugin
 {
+/*!\file cfdVEBaseClass.h
+ * cfdVEBaseClass API
+ */
+
+/*!\class ::cfdVEBaseClass
+ *
+ */
 class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
 {
 public:
-   cfdVEBaseClass( void );
-   //cfdVEBaseClass( ves::xplorer::scenegraph::DCS* );
-   virtual ~cfdVEBaseClass( void );
+    cfdVEBaseClass();
 
-   virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
-   // Methods to do scene graph manipulations
-   // New methods may have to be added later
-   virtual void AddSelfToSG( void );
-   virtual void RemoveSelfFromSG( void );
+    //cfdVEBaseClass( ves::xplorer::scenegraph::DCS* );
+    virtual ~cfdVEBaseClass();
 
-   // Change state information for geometric representation
-   void MakeTransparent( void );
-   void SetColor( double* );
+    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
 
-   // transform object based 
-   void SetTransforms( double*, double*, double* );
+    //Methods to do scene graph manipulations
+    //New methods may have to be added later
+    virtual void AddSelfToSG();
 
-   // Implement Gengxun's work by using socket
-   // stuff from vtk. This will be used in parallel
-   // with implementation of a unit connected to the 
-   // computational engine.
-   virtual void GetDataFromUnit( void );
-   // Basically uses vtkActorToPF to create a geode and 
-   // add it to the scene graph. Probably use cfdObject.
-   virtual void MakeGeodeByUserRequest( int );
+    virtual void RemoveSelfFromSG();
 
-   std::string GetName();
-   //This returns the name of the module
+    //Change state information for geometric representation
+    void MakeTransparent();
 
-   std::string GetDesc();
-   //This returns the description of the module, This should be a short description
+    void SetColor( double* );
 
-   void SetID(int id);
+    //transform object based 
+    void SetTransforms( double*, double*, double* );
 
-   ves::xplorer::Model* GetCFDModel( void );
+    //Implement Gengxun's work by using socket
+    //stuff from vtk. This will be used in parallel
+    //with implementation of a unit connected to the 
+    //computational engine.
+    virtual void GetDataFromUnit();
 
-   void LoadSurfaceFiles( std::string );
+    //Basically uses vtkActorToPF to create a geode and 
+    //add it to the scene graph. Probably use cfdObject.
+    virtual void MakeGeodeByUserRequest( int );
 
-   bool OnSceneGraph( void ){return _onSceneGraph;}
+    //This returns the name of the module
+    std::string GetName();
 
-   void SetCursor( ves::xplorer::cfdCursor* );
+    //This returns the description of the module, This should be a short description
+    std::string GetDesc();
+    
+    //Set the id for a particular module
+    void SetID( int id );
 
-   void SetInteractionDevice( ves::xplorer::Device* device );
+    ves::xplorer::Model* GetCFDModel();
 
-   void SetSoundHandler( ves::xplorer::cfdSoundHandler* );
+    void LoadSurfaceFiles( std::string );
 
-   void SetModuleResults( const std::string );
+    bool OnSceneGraph()
+    {
+        return _onSceneGraph;
+    }
 
-   void SetObjectName( std::string );
-   virtual void CreateCustomVizFeature( int );
+    //Set the pointer to the cursor class so that dynamic
+    //objects can do custom features with the wand input
+    void SetCursor( ves::xplorer::cfdCursor* );
 
-   ///This function gets called if the model is selected
-   virtual void SelectedPreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+    //Set the pointer to the navigate class so that dynamic
+    //objects can do custom features with the wand buttons
+    void SetInteractionDevice( ves::xplorer::Device* device );
 
-   ///This gets called every frame no matter what
-   virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+    void SetSoundHandler( ves::xplorer::cfdSoundHandler* input );
 
-   ///Set the VE_Model to be used by this plugin
-   ///\param tempModel Pointer to VE_Model
-   void SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel );
-   ///Set current command whatever it is
-   ///\param command Current command from conductor
-   virtual void SetCurrentCommand( ves::open::xml::Command* command );
-   ///Allow the users to process new inputs after a job has 
-   ///been submitted for all plugins
-   virtual void ProcessOnSubmitJob( void ){ ; }
-   ///Return map that maps command names to this plugin
-   std::map< std::string, cfdVEBaseClass* > GetCommandNameMap( void );
+    void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
+    //Set the results for a particluar module so that we can use
+    //them for custom viz features
+    void SetModuleResults( const std::string );
+
+    void SetObjectName( std::string );
+
+    //Viz feature for the devloper to define
+    //Can be anything that creates a geode
+    virtual void CreateCustomVizFeature( int );
+
+    ///This function gets called if the model is selected
+    virtual void SelectedPreFrameUpdate()
+    {
+        //Allows graphical plugins access to scenegraph
+        ;
+    }
+
+    ///This gets called every frame no matter what
+    virtual void PreFrameUpdate()
+    {
+        //Allows graphical plugins access to scenegraph
+        ;
+    }
+
+    ///Set the VE_Model to be used by this plugin
+    ///\param tempModel Pointer to VE_Model
+    void SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel );
+
+    ///Set current command whatever it is
+    ///\param command Current command from conductor
+    virtual void SetCurrentCommand( ves::open::xml::Command* command );
+
+    ///Allow the users to process new inputs after a job has 
+    ///been submitted for all plugins
+    virtual void ProcessOnSubmitJob(){;}
+
+    ///Return map that maps command names to this plugin
+    std::map< std::string, cfdVEBaseClass* > GetCommandNameMap();
 
 private:
-   // This needs to be vector of geometry nodes
-   //cfdModuleGeometry*  geometryNode;
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > groupNode;
+    //This needs to be vector of geometry nodes
+    //cfdModuleGeometry*  geometryNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > groupNode;
 
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
 
-   std::string _objectDescription;
+    std::string _objectDescription;
 
-   std::string _network;
+    std::string _network;
 
-protected:
-   long pos_x;
-   long pos_y;
+    protected:
+    long pos_x;
+    long pos_y;
 
-   //ves::xplorer::scenegraph::DCS* GetWorldDCS();
+    //ves::xplorer::scenegraph::DCS* GetWorldDCS();
 
-   std::map<std::string, long *>                      _int;
-   std::map<std::string, double *>                    _double;
-   std::map<std::string, std::string *>               _string;
-   std::map<std::string, std::vector<long> * >        _int1D;
-   std::map<std::string, std::vector<double> * >      _double1D;
-   std::map<std::string, std::vector<std::string> * > _string1D;
+    std::map< std::string, long* > _int;
+    std::map< std::string, double* > _double;
+    std::map< std::string, std::string* > _string;
+    std::map< std::string, std::vector< long >* > _int1D;
+    std::map< std::string, std::vector< double >* > _double1D;
+    std::map< std::string, std::vector< std::string >* > _string1D;
 
-   ves::xplorer::cfdObjects* dataRepresentation;
+    ves::xplorer::cfdObjects* dataRepresentation;
 
-   ves::xplorer::Model* _model;
+    ves::xplorer::Model* _model;
 
-   std::string _param;
+    std::string _param;
 
-   bool _onSceneGraph;
+    bool _onSceneGraph;
 
-   int _modID;
-   std::string _objectName;
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;
-   ves::xplorer::cfdCursor* _cursor;
-   ves::xplorer::Device* m_device;
-   ves::xplorer::cfdSoundHandler* soundHandler;
+    int _modID;
+    std::string _objectName;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;
+    ves::xplorer::cfdCursor* _cursor;
+    ves::xplorer::Device* m_device;
+    ves::xplorer::cfdSoundHandler* soundHandler;
+    ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
-   ves::open::xml::model::ModelPtr xmlModel;
-   std::vector< std::string > v_desc;
-   std::vector< std::string > v_value;
-   std::map< std::string, cfdVEBaseClass* > ehMap;
+    ves::open::xml::model::ModelPtr xmlModel;
+    std::vector< std::string > v_desc;
+    std::vector< std::string > v_value;
+    std::map< std::string, cfdVEBaseClass* > ehMap;
+
 };
 }
 }
 }
-#define VE_GRAPHICALPLUGIN_CLASS(name)  \
-   extern "C" \
-   { \
-      VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin() \
-      { \
-         return new name(); \
-      } \
-   }
 
-#endif
+#define VE_GRAPHICALPLUGIN_CLASS( name ) \
+    extern "C" \
+    { \
+        VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin() \
+        { \
+            return new name(); \
+        } \
+    }
+
+#endif // end CFD_VE_BASE_CLASS_H

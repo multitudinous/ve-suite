@@ -30,14 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
-
-#include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DataSet.h>
+#include <ves/xplorer/Debug.h>
+
+#include <ves/xplorer/scenegraph/CADEntity.h>
+
 #include <ves/xplorer/environment/cfdSoundHandler.h>
+
+#include <ves/xplorer/device/Device.h>
+
 #include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
@@ -52,268 +57,255 @@
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>
 
-#include <ves/xplorer/device/Device.h>
-
-#include <fstream>
-#include <sstream>
-
-#include <ves/xplorer/Debug.h>
-
+// --- vrJuggler Includes --- //
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-using namespace ves::xplorer;
-using namespace ves::xplorer::scenegraph;
-using namespace ves::xplorer::util;
-using namespace ves::open::xml;
-using namespace ves::open::xml::cad;
-using namespace ves::xplorer::plugin;
+// --- C/C++ Libraries
+#include <fstream>
+#include <sstream>
 
-//////////////////////////////////////////////////////////////////      
-// Constructor
-cfdVEBaseClass::cfdVEBaseClass( void ):
+namespace ves
+{
+namespace xplorer
+{
+namespace plugin
+{
+
+////////////////////////////////////////////////////////////////////////////////
+cfdVEBaseClass::cfdVEBaseClass():
 xmlModel( 0 ),
 _onSceneGraph( false ),
-m_device( 0 )
+m_device( 0 ),
+m_physicsSimulator( 0 )
 {
-   _network.empty();
+    _network.empty();
 }
-//////////////////////////////////////////////////////////////////      
-// Destructor
-cfdVEBaseClass::~cfdVEBaseClass( void )
+////////////////////////////////////////////////////////////////////////////////
+cfdVEBaseClass::~cfdVEBaseClass()
 {
     ;
 }
-//////////////////////////////////////////////////////////////////      
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-   //this->groupNode = new ves::xplorer::scenegraph::Group();
-   this->_dcs = new ves::xplorer::scenegraph::DCS(); 
-   this->_dcs->SetName("cfdVEBaseClass");
-   //this->dataRepresentation = new cfdObjects();
-   //this->geometryNode = new cfdModuleGeometry( groupNode );
-   this->worldDCS = veworldDCS;
-   this->_model = new Model( _dcs.get() );
-   //this->_readParam = new cfdReadParam();
+    //groupNode = new ves::xplorer::scenegraph::Group();
+    _dcs = new ves::xplorer::scenegraph::DCS(); 
+    _dcs->SetName( "cfdVEBaseClass" );
+    //dataRepresentation = new cfdObjects();
+    //geometryNode = new cfdModuleGeometry( groupNode );
+    worldDCS = veworldDCS;
+    _model = new Model( _dcs.get() );
+    //_readParam = new cfdReadParam();
 }
-//////////////////////////////////////////////////////////////////      
-// Methods to do scene graph manipulations
-// New methods may have to be added later
-void cfdVEBaseClass::AddSelfToSG( void )
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::AddSelfToSG()
 {
-   _onSceneGraph = true;
-   this->worldDCS->AddChild( this->_dcs.get() );
+    _onSceneGraph = true;
+    worldDCS->AddChild( _dcs.get() );
 }
-//////////////////////////////////////////////////////////////////      
-void cfdVEBaseClass::RemoveSelfFromSG( void )
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::RemoveSelfFromSG()
 {
-   _onSceneGraph = false;
-   this->worldDCS->RemoveChild( this->_dcs.get() );
+    _onSceneGraph = false;
+    worldDCS->RemoveChild( _dcs.get() );
 }
-//////////////////////////////////////////////////////////////////      
-// Change state information for geometric representation
-void cfdVEBaseClass::MakeTransparent( void )
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::MakeTransparent()
 {
-   ;
+    ;
 }
-//////////////////////////////////////////////////////////////////      
+//////////////////////////////////////////////////////////////////////////////// 
 void cfdVEBaseClass::SetColor( double* color )
 {
-   ;
+    ;
 }
-//////////////////////////////////////////////////////////////////      
-// transform object based 
-void cfdVEBaseClass::SetTransforms( double* scale, double* rot, double* trans)
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::SetTransforms( double* scale, double* rot, double* trans )
 {
-   this->_dcs->SetTranslationArray( trans );
-   this->_dcs->SetScaleArray( scale );
-   this->_dcs->SetRotationArray( rot );
+    _dcs->SetTranslationArray( trans );
+    _dcs->SetScaleArray( scale );
+    _dcs->SetRotationArray( rot );
 }
-//////////////////////////////////////////////////////////////////      
-// Implement Gengxun's work by using socket
-// stuff from vtk. This will be used in parallel
-// with implementation of a unit connected to the 
-// computational engine.
-void cfdVEBaseClass::GetDataFromUnit( void )
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::GetDataFromUnit()
 {
-   // Need to get Gengxun's work
-   /*std::cout << "this->cfdId = " << geodeEnumToString(this->cfdId) << std::endl;
-   this-> sock = vtkSocketCommunicator::New();
-   this-> sock->WaitForConnection(33000);
+    //Need to get Gengxun's work
+    /*std::cout << "cfdId = " << geodeEnumToString( cfdId ) << std::endl;
+    sock = vtkSocketCommunicator::New();
+    sock->WaitForConnection( 33000 );
 
-   std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
-      
-   vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
-   
-   if (!this->sock->Receive(ugrid,1,9))
-   {
-      std::cerr << " cfdCalculator side error :: Error receiving data." << std::endl;
-      if (this->sock)
-      {
-         this->sock->CloseConnection();
-         this->sock->Delete();
-         this->sock = NULL;
+    std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
 
-      }
+    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
 
-      ugrid->Delete();
+    if( !sock->Receive( ugrid, 1, 9 ) )
+    {
+        std::cerr << " cfdCalculator side error :: Error receiving data." << std::endl;
+        if( sock )
+        {
+            sock->CloseConnection();
+            sock->Delete();
+            sock = NULL;
+        }
 
-   }
+        ugrid->Delete();
 
-   std::cout << "[DBG] Receiving ugrid data..." << std::endl;
-   
-   
-   
-   if( this -> sock)
-   {
-      std::cout << "[DBG] testing if the sock is still connected" << std::endl;
-      this->sock->CloseConnection();
-      this->sock->Delete();
-      this->sock = NULL;
+    }
 
-   }*/
+    std::cout << "[DBG] Receiving ugrid data..." << std::endl;
+
+
+
+    if( this -> sock )
+    {
+        std::cout << "[DBG] testing if the sock is still connected" << std::endl;
+        sock->CloseConnection();
+        sock->Delete();
+        sock = NULL;
+    }*/
 }
-
-// Basically uses vtkActorToPF to create a geode and 
-// add it to the scene graph. Probably use cfdObject.
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::MakeGeodeByUserRequest( int )
 {
-   //this->dataRepresentation->UpdatecfdGeode();
+    //dataRepresentation->UpdatecfdGeode();
 }
-
-//This returns the name of the module
-std::string cfdVEBaseClass::GetName( void )
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdVEBaseClass::GetName()
 {
-   return this->_objectName;
+    return _objectName;
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetObjectName( std::string input )
 {
-   _objectName = input;
+    _objectName = input;
 }
-//This returns the description of the module, This should be a short description
-std::string cfdVEBaseClass::GetDesc( void )
+////////////////////////////////////////////////////////////////////////////////
+std::string cfdVEBaseClass::GetDesc()
 {
-   return this->_objectDescription;
+    return _objectDescription;
 }
-
-// Set the pointer to the cursor class so that dynamic
-// objects can do custom features with the wand input
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetCursor( cfdCursor* input )
 {
-   if ( input != NULL )
-   {
-      _cursor = input;
-   }
-   else
-   {
-      std::cerr << " ERROR : cfdVEBaseClass::SetCursor input is NULL "
-                << std::endl;
-   }
+    if( input != NULL )
+    {
+        _cursor = input;
+    }
+    else
+    {
+        std::cerr << " ERROR : cfdVEBaseClass::SetCursor input is NULL "
+                  << std::endl;
+    }
 }
-
-// Set the pointer to the navigate class so that dynamic
-// objects can do custom features with the wand buttons
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetInteractionDevice( ves::xplorer::Device* device )
 {
-   if ( device != NULL )
-   {
-      m_device = device;
-   }
-   else
-   {
-      std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL "
-                << std::endl;
-   }
+    if( device != NULL )
+    {
+        m_device = device;
+    }
+    else
+    {
+        std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL "
+                  << std::endl;
+    }
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
 {
-   if ( input )
-   {
-      soundHandler = input;
-   }
-   else
-   {
-      std::cerr << " ERROR : cfdVEBaseClass::SetSoundHandler input is NULL "
-                << std::endl;
-   }
+    if( input )
+    {
+        soundHandler = input;
+    }
+    else
+    {
+        std::cerr << " ERROR : cfdVEBaseClass::SetSoundHandler input is NULL "
+                  << std::endl;
+    }
 }
-//////////////////////////////////////////////////////////////////////
-// Set the results for a particluar module so that we can use them for custom 
-// viz features
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+{
+    if( physicsSimulator )
+    {
+        m_physicsSimulator = physicsSimulator;
+    }
+    else
+    {
+        std::cerr << " ERROR : cfdVEBaseClass::SetPhysicsSimulator physicsSimulator is NULL "
+                  << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetModuleResults( const std::string network )
 {
-   if ( network.empty() || network == "NULL" )
-   {
-      std::cout << "|\tNo results for " << _objectName << std::endl;
-      return;
-   }
-   //add inputs to xml model
-   //
-   XMLReaderWriter networkWriter;
-   networkWriter.UseStandaloneDOMDocumentManager();
-   networkWriter.ReadFromString();
-   networkWriter.ReadXMLData( network, "Command", "vecommand" );
-   std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
-   
-   if ( objectVector.empty() )
-   {
-      std::cerr << "|\tBad command sent to graphical plugin : " << network << std::endl;
-      return;
-   }
+    if( network.empty() || network == "NULL" )
+    {
+        std::cout << "|\tNo results for " << _objectName << std::endl;
 
-   Command* tempCommand = dynamic_cast< Command* >( objectVector.at( 0 ) );
-   size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
-   for ( size_t i = 0; i < numDVP; ++i )
-   {
-      Command* command = xmlModel->GetResult( i );
-      DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
-      Command* copyCommand = dynamic_cast< Command* >( tempPair->GetDataXMLObject() );
-      *command = *copyCommand;
-   }
+        return;
+    }
+    //add inputs to xml model
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( network, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+
+    if( objectVector.empty() )
+    {
+        std::cerr << "|\tBad command sent to graphical plugin : " << network << std::endl;
+        return;
+    }
+
+    ves::open::xml::Command* tempCommand = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numDVP; ++i )
+    {
+        ves::open::xml::Command* command = xmlModel->GetResult( i );
+        ves::open::xml::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
+        ves::open::xml::Command* copyCommand = dynamic_cast< ves::open::xml::Command* >( tempPair->GetDataXMLObject() );
+        *command = *copyCommand;
+    }
 }
-//////////////////////////////////////////////////////////////////////
-// Viz feature for the devloper to define
-// Can be anything that creates a geode
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::CreateCustomVizFeature( int input )
 {
-   // Do nothing
-   // Implement for each module
+    ;
 }
-// Set the id for a particular module
-//////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetID(int id)
+////////////////////////////////////////////////////////////////////////////////
+void cfdVEBaseClass::SetID( int id )
 {
-   _modID = id;
+    _modID = id;
 }
-//////////////////////////////////////////////////////////////////////
-Model* cfdVEBaseClass::GetCFDModel( void )
+////////////////////////////////////////////////////////////////////////////////
+Model* cfdVEBaseClass::GetCFDModel()
 {
-   return _model;
+    return _model;
 }
-//////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////   
-/*ves::xplorer::scenegraph::DCS* cfdVEBaseClass::GetWorldDCS()
+////////////////////////////////////////////////////////////////////////////////   
+/*
+ves::xplorer::scenegraph::DCS* cfdVEBaseClass::GetWorldDCS()
 {
-   return this->worldDCS.get();
-}*/
-//////////////////////////////////////////////////////////////////   
-void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
+    return worldDCS.get();
+}
+*/
+////////////////////////////////////////////////////////////////////////////////   
+void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel )
 {
     xmlModel = tempModel;
 
     //Decompose model to be utilized by the event handlers
-    CADAssembly* cadNodeData = 
-        dynamic_cast< CADAssembly* >( xmlModel->GetGeometry() );
+    ves::open::xml::cad::CADAssembly* cadNodeData = 
+        dynamic_cast< ves::open::xml::cad::CADAssembly* >( xmlModel->GetGeometry() );
     if( cadNodeData )
     {
-        DataValuePair* cadNode = new DataValuePair();
-        cadNode->SetDataType( std::string("XMLOBJECT") );
-        cadNode->SetData("New Node", cadNodeData );
+        ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+        cadNode->SetDataType( std::string( "XMLOBJECT" ) );
+        cadNode->SetData( "New Node", cadNodeData );
 
-        Command* cadCommand = new Command();
+        ves::open::xml::Command* cadCommand = new ves::open::xml::Command();
         cadCommand->AddDataValuePair( cadNode );
         std::string _commandName = "CAD_ADD_NODE";
         cadCommand->SetCommandName( _commandName );
@@ -328,24 +320,24 @@ void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
     //process the information blocks
     if( xmlModel->GetNumberOfInformationPackets() > 0 )
     {
-        DataValuePairPtr modelNode = new DataValuePair();
-        modelNode->SetDataType( std::string("XMLOBJECT") );
+        ves::open::xml::DataValuePairPtr modelNode = new ves::open::xml::DataValuePair();
+        modelNode->SetDataType( std::string( "XMLOBJECT" ) );
         modelNode->SetData( "CREATE_NEW_DATASETS", 
-            new model::Model( *xmlModel ) );
+            new ves::open::xml::model::Model( *xmlModel ) );
 
-        Command* dataCommand = new Command();
+        ves::open::xml::Command* dataCommand = new ves::open::xml::Command();
         dataCommand->AddDataValuePair( modelNode );
-        dataCommand->SetCommandName(  "UPDATE_MODEL_DATASETS" );
+        dataCommand->SetCommandName( "UPDATE_MODEL_DATASETS" );
 
         //Add the active dataset name to the command
         ves::open::xml::ParameterBlock* parameterBlock = 
-            xmlModel->GetInformationPacket(0);
+            xmlModel->GetInformationPacket( 0 );
         ves::open::xml::DataValuePairPtr dataSetName = 
-            new ves::open::xml::DataValuePair();
+        new ves::open::xml::DataValuePair();
         dataSetName->SetData( "VTK_DATASET_NAME", 
-        parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+            parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
         dataCommand->AddDataValuePair( dataSetName );
-        
+
         //Process the vtk data
         ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
         addVTKEH.SetGlobalBaseObject( _model );
@@ -356,25 +348,30 @@ void cfdVEBaseClass::SetXMLModel( model::ModelWeakPtr tempModel )
     //process inputs
     if( xmlModel->GetNumberOfInputs() > 0 )
     {
-        //do something
+        ;
     }
 
     //process results
     if( xmlModel->GetNumberOfResults() > 0 )
     {
-        //do something
+        ;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetCurrentCommand( Command* command )
+void cfdVEBaseClass::SetCurrentCommand( ves::open::xml::Command* command )
 {
-   if(command)
-   {
-      vprDEBUG(vesDBG,4) << command->GetCommandName() << std::endl << vprDEBUG_FLUSH;
-   }
+    if( command )
+    {
+        vprDEBUG( vesDBG, 4 ) << command->GetCommandName() << std::endl << vprDEBUG_FLUSH;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, cfdVEBaseClass* > cfdVEBaseClass::GetCommandNameMap( void )
+std::map< std::string, cfdVEBaseClass* > cfdVEBaseClass::GetCommandNameMap()
 {
-   return ehMap;
+    return ehMap;
 }
+////////////////////////////////////////////////////////////////////////////////
+
+} // end plugin
+} // end xplorer
+} // end ves

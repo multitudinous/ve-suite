@@ -85,6 +85,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class PhysicsSimulator;
+
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
 public:
@@ -93,21 +95,29 @@ public:
     ///\param parentDCS The parent DCS that CADEntity is added to
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the node with osgOQ
-    CADEntity( std::string geomFile,
+    ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
+    CADEntity( std::string geomFile, 
                ves::xplorer::scenegraph::DCS* parentDCS, 
-               bool isStream = false, bool occlude = false );
+               bool isStream = false, 
+               bool occlude = false,
+               PhysicsSimulator* physicsSimulator = NULL );
 
     ///Constructor that takes an osg::Node*
     ///\param node
     ///\param parentDCS
-    CADEntity( osg::Node* node, ves::xplorer::scenegraph::DCS* parentDCS );
+    ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
+    CADEntity( osg::Node* node, 
+               ves::xplorer::scenegraph::DCS* parentDCS,
+               PhysicsSimulator* physicsSimulator = NULL );
 
     ///Constructor that takes a CADEntityHelper and deep copies 
     ///the osg node contained in the CADEntityHelper
     ///\param nodeToCopy The node to copy
     ///\param parentDCS The parent DCS that CADEntity is added to
+    ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
     CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy, 
-               ves::xplorer::scenegraph::DCS* parentDCS );
+               ves::xplorer::scenegraph::DCS* parentDCS,
+               PhysicsSimulator* physicsSimulator = NULL );
 
     ///Destructor
     virtual ~CADEntity();
@@ -147,6 +157,8 @@ private:
     bool m_transparencyFlag;///<The current state of transparency
 
     std::string m_fileName;///<The name of the geometry file loaded
+
+    PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
 };
 }
 }

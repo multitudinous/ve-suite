@@ -33,17 +33,6 @@
 #ifndef PHYSICS_RIGID_BODY_H
 #define PHYSICS_RIGID_BODY_H
 
-/*!\file PhysicsRigidBody.h
-*/
-
-/*!\class ves::xplorer::scenegraph::PhysicsRigidBody
-* 
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
-
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
 
@@ -65,15 +54,26 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class PhysicsSimulator;
 class vesMotionState;
 
+/*!\file PhysicsRigidBody.h
+ *
+ */
+/*!\class ves::xplorer::scenegraph::PhysicsRigidBody
+ * 
+ */
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public osg::NodeVisitor
 {
 public:
     ///Constructor
     ///\param node The node to create a physics mesh from
-    ///\param startTransform The beginning transform for the rigid body
-    PhysicsRigidBody( osg::Node* node );
+    ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
+    PhysicsRigidBody( osg::Node* node,
+                      PhysicsSimulator* physicsSimulator );
 
     ///Destructor
     virtual ~PhysicsRigidBody();
@@ -123,6 +123,8 @@ private:
     btCompoundShape* m_compoundShape;
     btCollisionShape* m_collisionShape;
     btTriangleMesh* m_triangleMesh;///<The triangle mesh for physics
+
+    PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
 
 };
 }

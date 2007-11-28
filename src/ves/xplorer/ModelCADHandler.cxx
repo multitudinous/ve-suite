@@ -40,6 +40,7 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 
@@ -187,8 +188,10 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
         ///If we have already loaded the parts
         ves::xplorer::scenegraph::CADEntityHelper* tempNode = tempCAD->GetNode();
         m_partList[ partID ] = 
-            new ves::xplorer::scenegraph::CADEntity( tempNode, 
-                                          m_assemblyList[ parentID ].get() );
+            new ves::xplorer::scenegraph::CADEntity( 
+                tempNode,
+                m_assemblyList[ parentID ].get(),
+                ves::xplorer::scenegraph::PhysicsSimulator::instance() );
         vprDEBUG(vesDBG,1) << "|\t--Cloned new part--"
                             << std::endl << vprDEBUG_FLUSH;
     }
@@ -197,7 +200,12 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
         ///If we have not loaded this part
         ///turn on occlusion culling by default
         m_partList[ partID ] = 
-            new ves::xplorer::scenegraph::CADEntity( fileName, m_assemblyList[ parentID ].get(), false, true );
+            new ves::xplorer::scenegraph::CADEntity( 
+                fileName,
+                m_assemblyList[ parentID ].get(),
+                false, 
+                true,
+                ves::xplorer::scenegraph::PhysicsSimulator::instance() );
         vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
                             << std::endl << vprDEBUG_FLUSH;
     }

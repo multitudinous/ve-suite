@@ -74,7 +74,8 @@ public:
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsRigidBody::PhysicsRigidBody( osg::Node* node )
+PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, 
+                                    PhysicsSimulator* physicsSimulator )
 :
 m_traversed( false ),
 m_numVertices( 0 ),
@@ -86,6 +87,7 @@ m_vesMotionState( new vesMotionState() ),
 m_compoundShape( 0 ),
 m_collisionShape( 0 ),
 m_triangleMesh( 0 ),
+m_physicsSimulator( physicsSimulator ),
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     node->accept( *this );
@@ -199,7 +201,7 @@ void PhysicsRigidBody::BoundingBoxShape()
 {
     if( m_rigidBody )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
         delete m_rigidBody;
         m_rigidBody = 0;
     }
@@ -239,14 +241,14 @@ void PhysicsRigidBody::BoundingBoxShape()
         m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
     }
 
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SphereShape( double radius )
 {
     if( m_rigidBody )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
         delete m_rigidBody;
         m_rigidBody = 0;
     }
@@ -291,14 +293,14 @@ void PhysicsRigidBody::SphereShape( double radius )
         m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
     }
 
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
     if( m_rigidBody )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
         delete m_rigidBody;
         m_rigidBody = 0;
     }
@@ -324,14 +326,14 @@ void PhysicsRigidBody::StaticConcaveShape()
                                    m_collisionShape,
                                    localInertia );
 
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::ConvexShape()
 {
     if( m_rigidBody )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
         delete m_rigidBody;
         m_rigidBody = 0;
     }
@@ -371,6 +373,6 @@ void PhysicsRigidBody::ConvexShape()
         m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
     }
 
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
 }
 ////////////////////////////////////////////////////////////////////////////////
