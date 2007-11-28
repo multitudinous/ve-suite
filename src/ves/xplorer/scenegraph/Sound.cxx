@@ -51,12 +51,13 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-Sound::Sound( ves::xplorer::scenegraph::DCS* parent )
+Sound::Sound( ves::xplorer::scenegraph::DCS* parent, osgAL::SoundManager* soundManager )
 :
-m_soundGeode( new osg::Geode() ),
+m_soundManager( soundManager ),
 m_soundNode( new osgAL::SoundNode() ),
 m_soundState( new osgAL::SoundState() ),
-m_sample( 0 )
+m_sample( 0 ),
+m_soundGeode( new osg::Geode() )
 {
     parent->addChild( m_soundNode.get() );
     parent->addChild( m_soundGeode.get() );
@@ -85,7 +86,7 @@ void Sound::Draw()
 void Sound::LoadFile( std::string name )
 {
     bool addToCache = true;
-    m_sample = osgAL::SoundManager::instance()->getSample( name, addToCache );
+    m_sample = m_soundManager->getSample( name, addToCache );
     m_soundState->setName( name );
 
     //Create a new soundstate, give it the name of the file we loaded.

@@ -48,6 +48,7 @@ namespace osg
 
 namespace osgAL
 {
+    class SoundManager;
     class SoundNode;
     class SoundState;
 }
@@ -66,7 +67,6 @@ namespace xplorer
 {
 namespace scenegraph
 {
-
 class DCS;
 
 /*!\file Sound.h
@@ -82,7 +82,7 @@ class DCS;
 class VE_SCENEGRAPH_EXPORTS Sound
 {
 public:
-    Sound( ves::xplorer::scenegraph::DCS* parent );
+    Sound( ves::xplorer::scenegraph::DCS* parent, osgAL::SoundManager* soundManager );
     ~Sound();
 
     void Draw();
@@ -90,10 +90,12 @@ public:
     osgAL::SoundNode* GetSoundNode();
     
 private:
-    osg::ref_ptr< osg::Geode > m_soundGeode;
+    osgAL::SoundManager* m_soundManager;
     osg::ref_ptr< osgAL::SoundNode > m_soundNode;
     osg::ref_ptr< osgAL::SoundState > m_soundState;
     osg::ref_ptr< openalpp::Sample > m_sample;
+
+    osg::ref_ptr< osg::Geode > m_soundGeode;
 
 };
 }
