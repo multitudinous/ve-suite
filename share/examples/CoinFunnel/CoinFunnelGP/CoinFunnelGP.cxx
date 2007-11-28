@@ -33,7 +33,14 @@ void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-    m_sound = new ves::xplorer::scenegraph::Sound( _dcs.get() );
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CoinFunnelGP::AddSelfToSG()
+{
+    cfdVEBaseClass::AddSelfToSG();
+
+    m_sound = new ves::xplorer::scenegraph::Sound( _dcs.get(), m_soundManager );
     m_sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
 
     world = new demo::World( _dcs.get(), m_physicsSimulator );

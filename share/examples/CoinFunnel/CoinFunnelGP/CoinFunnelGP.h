@@ -27,6 +27,7 @@ public:
     CoinFunnelGP();
     virtual ~CoinFunnelGP();
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
+    virtual void AddSelfToSG();
     virtual void PreFrameUpdate();
     virtual void SetCurrentCommand( ves::open::xml::Command* command );
 
