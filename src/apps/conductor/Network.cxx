@@ -2290,11 +2290,11 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 	size_t maxX = 7000;
 	size_t maxY = 7000;
     //Setup the links
+	links.assign( veNetwork->GetNumberOfLinks(), Link( parent ) );
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
-        links.push_back( Link( parent ) );
-        links.back().SetDCScale( &userScale );
-        links.back().SetLink( veNetwork->GetLink( i ) );
+        links.at( i ).SetDCScale( &userScale );
+        links.at( i ).SetLink( veNetwork->GetLink( i ) );
         ///Need to somehow get max and maxy from links here
     }
 
