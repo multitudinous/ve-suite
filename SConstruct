@@ -341,9 +341,8 @@ Targets:
       changelog - Create ChangeLog and ChangeLog.xml
       > scons changelog SVN_Previous_Date=2007-06-01' you can change a start date
 
-   To generate the doxygen documents:
-      doxygen - Generate Doxygen Document
-      > scons doxygen
+   To generate documentation:
+      > scons docs
 
    Make sure that:
       vrjuggler, 
@@ -374,9 +373,8 @@ base_bldr.addOptions( opts )
 baseEnv = base_bldr.buildEnvironment()
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
 
+# Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
-#baseEnv.Append( toolpath = './dist/build/tools' )
-#baseEnv.Append( tools = 'doxygen' )
 
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)
