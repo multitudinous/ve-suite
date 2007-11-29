@@ -193,7 +193,7 @@ private:
     std::pair< double, double >* userScale;
     ///The XML Link rep
     ves::open::xml::model::LinkSharedPtr m_veLink;
-    ves::open::xml::model::ModelPtr parentModel;
+    ves::open::xml::model::ModelSharedPtr parentModel;
     
     std::string ConvertUnicode( const wxChar* data )
     {
