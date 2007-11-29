@@ -68,19 +68,26 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataObject*& outputData
       //dicomTranslator->DebugOn();
       dicomTranslator->SetDirectoryName(dicomToVTK->GetInputDirectory().c_str());
       dicomTranslator->Update();
+      if(!outputDataset)
+      {
+         outputDataset = vtkImageData::New();
+      }
+       outputDataset->DeepCopy(dicomTranslator->GetOutput(0));
+       outputDataset->Update();
+     
       
-      double delta[3] = {0,0,0};
-      double origin[3] = {0,0,0};
-      dicomTranslator->GetOutput()->GetOrigin(origin);
-      dicomTranslator->GetOutput()->GetSpacing(delta);
+//      double delta[3] = {0,0,0};
+//      double origin[3] = {0,0,0};
+ //     dicomTranslator->GetOutput()->GetOrigin(origin);
+  //    dicomTranslator->GetOutput()->GetSpacing(delta);
 
-      int dims[3];
-      dicomTranslator->GetOutput()->GetDimensions(dims);
+   //   int dims[3];
+    //  dicomTranslator->GetOutput()->GetDimensions(dims);
  /*     dims[0] = dicomTranslator->GetWidth();
       dims[1] = dicomTranslator->GetHeight();
       dims[2] = 16;//how do we get the number of files?dicomTranslator->GetNumberOfDICOMFileNames();
 */
-      vtkProbeFilter* probeFilter = vtkProbeFilter::New();
+     /* vtkProbeFilter* probeFilter = vtkProbeFilter::New();
       //probeFilter->DebugOn();
 
       if(!outputDataset){
@@ -122,7 +129,7 @@ void cfdDICOMTranslator::DICOMTranslateCbk::Translate(vtkDataObject*& outputData
       //outputDataset->Print(std::cerr);
       tempPoints->Delete();
       tempGrid->Delete();
-      probeFilter->Delete();
+      probeFilter->Delete();*/
       dicomTranslator->Delete();
    }
 }
