@@ -2,7 +2,7 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR GetPlatform vtk_options buildDir wxwidgets_options boost_options PREFIX')
+Import('baseEnv ves_pkg LIBDIR GetPlatform vtk_options buildDir wxwidgets_options boost_options PREFIX RootDir')
 
 srcs = Split("""
    flowTexture.cxx 
@@ -31,21 +31,28 @@ env.Append(LIBPATH = [pj('#', buildDir, 'src','ves','xplorer','util')],
 boost_options.apply( env )
 wxwidgets_options.apply( env )
 vtk_options.apply( env )
-prog = ves_pkg.createProgram( programName + env["PROGSUFFIX"], env, 'bin')
+
+resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns') ]
+
+prog = ves_pkg.createProgram( programName + env["PROGSUFFIX"], env, 'bin',
+                             True,resources,
+                             pj( RootDir, 'share', 'tools', 'builder','vtkTo3DTexture', 'Info.plist'),
+                             pj( RootDir, 'dist', 'darwin', 'PkgInfo') )
 prog.addSources( srcs )
 prog.addHeaders( headers )
 prog.build()
 
-if GetPlatform() == "darwin":
-   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o ${SOURCE}'
-   bld = Builder(action = idlCmd )
-   env.Append(BUILDERS = {'apple_rez': bld})
-   if 'install' in COMMAND_LINE_TARGETS:
-      conductorTarget = pj(PREFIX,'bin','Texture' + env["PROGSUFFIX"])
-      winTarget = pj(PREFIX,'bin','vtkTo3DTexture' + env["PROGSUFFIX"])
-   else:
-      conductorTarget = pj( '#', buildDir,'share','tools','builder','vtkto3dtexture','Texture' + env["PROGSUFFIX"])
-      winTarget = pj( '#', buildDir,'share','tools','builder','vtkto3dtexture','vtkTo3DTexture' + env["PROGSUFFIX"])
+#if GetPlatform() == "darwin":
+#   idlCmd = '/Developer/Tools/Rez -d __DARWIN__ -t APPL Carbon.r -o ${SOURCE}'
+#   bld = Builder(action = idlCmd )
+#   env.Append(BUILDERS = {'apple_rez': bld})
+#   if 'install' in COMMAND_LINE_TARGETS:
+#      conductorTarget = pj(PREFIX,'bin','Texture' + env["PROGSUFFIX"])
+#      winTarget = pj(PREFIX,'bin','vtkTo3DTexture' + env["PROGSUFFIX"])
+#   else:
+#      conductorTarget = pj( '#', buildDir,'share','tools','builder','vtkto3dtexture','Texture' + env["PROGSUFFIX"])
+#      winTarget = pj( '#', buildDir,'share','tools','builder','vtkto3dtexture','vtkTo3DTexture' + env["PROGSUFFIX"])
+#
+#   env.apple_rez( conductorTarget, winTarget)
+#   env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
 
-   env.apple_rez( conductorTarget, winTarget)
-   env.AddPostAction( conductorTarget,Copy('$TARGET','$SOURCE'))
