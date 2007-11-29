@@ -14,6 +14,9 @@ import commands
 from time import sleep
 pj = os.path.join
 
+sys.path.append(pj(os.getcwd(), 'dist', 'build', 'tools'))
+import doxygen
+
 # Pull in SConsAddons from the source directory if necessary.
 try:
    import SConsAddons
@@ -370,6 +373,10 @@ base_bldr.addOptions( opts )
 
 baseEnv = base_bldr.buildEnvironment()
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
+
+doxygen.generate(baseEnv)
+#baseEnv.Append( toolpath = './dist/build/tools' )
+#baseEnv.Append( tools = 'doxygen' )
 
 help_text += opts.GenerateHelpText(baseEnv)
 baseEnv.Help(help_text)

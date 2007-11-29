@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg buildDir')
+Import('ves_pkg buildDir RootDir')
 
 fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
@@ -25,8 +25,8 @@ shareSubdirs = Split("""
 
 ##Set the Sconscript files to build.
 if 'docs' in COMMAND_LINE_TARGETS:
+  ves_pkg.getEnv().Alias('docs', pj(RootDir, 'share', 'docs'))
   shareSubdirs.append(pj('docs'))
-  ves_pkg.getEnv().Alias('docs', pj('docs'))
 #elif 'changelog' in COMMAND_LINE_TARGETS:
 #  ves_dirs = [ chlogSubdirs ]
 #  baseEnv.Alias('changelog', chlogSubdirs)
