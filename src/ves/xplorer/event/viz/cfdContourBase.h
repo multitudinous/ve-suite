@@ -93,7 +93,7 @@ public:
 protected:
    //vtkPolyDataMapper*   mapper;
    vtkMultiGroupPolyDataMapper* mapper;///<mapper.
-   vtkMultiGroupDataGeometryFilter*   filter;
+   //vtkMultiGroupDataGeometryFilter*   filter;
    vtkContourFilter*    cfilter;///<Contour filter.
    vtkBandedPolyDataContourFilter* bfilter;///<banded contour filter.
    vtkDecimatePro*      deci;///<decimator.

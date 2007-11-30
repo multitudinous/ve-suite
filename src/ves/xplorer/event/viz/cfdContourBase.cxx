@@ -69,7 +69,7 @@ cfdContourBase::cfdContourBase()
 {
    deci = vtkDecimatePro::New();
    
-   this->filter = vtkMultiGroupDataGeometryFilter::New();
+   //this->filter = vtkMultiGroupDataGeometryFilter::New();
    cfilter = vtkContourFilter::New();              // for contourlines
    bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
    // turn clipping on to avoid unnecessary value generations with 
@@ -94,8 +94,8 @@ cfdContourBase::~cfdContourBase()
    //vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
     //                      << std::endl  << vprDEBUG_FLUSH;
 
-   this->filter->Delete();
-   this->filter = NULL;
+   //this->filter->Delete();
+   //this->filter = NULL;
 
    if(cfilter)
    {

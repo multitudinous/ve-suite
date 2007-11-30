@@ -58,32 +58,32 @@ using namespace ves::xplorer;
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()
 {
-   this->ptmask = vtkMaskPoints::New();
-   this->ptmask->RandomModeOn();
+    this->ptmask = vtkMaskPoints::New();
+    this->ptmask->RandomModeOn();
 
-   // Using glyph3D to insert arrow to the data sets
-   this->glyph = vtkGlyph3D::New(); 
+    // Using glyph3D to insert arrow to the data sets
+    this->glyph = vtkGlyph3D::New(); 
 
-   tfilter = vtkThresholdPoints::New();
-   this->filter = vtkMultiGroupDataGeometryFilter::New();
-   //this->filter->SetInputConnection( this->glyph->GetOutputPort() );
-//   filter->GetOutput()->ReleaseDataFlagOn();
+    tfilter = vtkThresholdPoints::New();
+    //this->filter = vtkMultiGroupDataGeometryFilter::New();
+    //this->filter->SetInputConnection( this->glyph->GetOutputPort() );
+    //filter->GetOutput()->ReleaseDataFlagOn();
 
-   this->tris = vtkTriangleFilter::New();
-   this->strip = vtkStripper::New();
+    this->tris = vtkTriangleFilter::New();
+    this->strip = vtkStripper::New();
 
-   this->mapper = vtkMultiGroupPolyDataMapper::New();
-   //this->mapper->SetInputConnection( this->filter->GetOutputPort() );
-   this->mapper->SetColorModeToMapScalars();
-   mapper->ImmediateModeRenderingOn();   
+    this->mapper = vtkMultiGroupPolyDataMapper::New();
+    //this->mapper->SetInputConnection( this->filter->GetOutputPort() );
+    this->mapper->SetColorModeToMapScalars();
+    mapper->ImmediateModeRenderingOn();   
 
-   _vectorScale = 1.0;
-   _vectorThreshHoldMinPercentage = 0;
-   _vectorThreshHoldMaxPercentage = 100;
-   _vectorThreshHoldValues[ 0 ] = 0.0;
-   _vectorThreshHoldValues[ 1 ] = 100.0;
-   _scaleByVector = 0;
-   _vectorRatioFactor = 1;
+    _vectorScale = 1.0;
+    _vectorThreshHoldMinPercentage = 0;
+    _vectorThreshHoldMaxPercentage = 100;
+    _vectorThreshHoldValues[ 0 ] = 0.0;
+    _vectorThreshHoldValues[ 1 ] = 100.0;
+    _scaleByVector = 0;
+    _vectorRatioFactor = 1;
 }
 
 
@@ -101,8 +101,8 @@ cfdVectorBase::~cfdVectorBase()
    this->glyph->Delete();
    this->glyph = 0;
    
-   this->filter->Delete();
-   this->filter = 0;
+   //this->filter->Delete();
+   //this->filter = 0;
 
    this->tris->Delete();
    this->tris = 0;
@@ -185,9 +185,10 @@ float cfdVectorBase::GetVectorScale()
 ///////////////////////////////////////////
 void cfdVectorBase::SetGlyphWithThreshold()
 {
-   vprDEBUG(vesDBG, 1) << "vectorThreshHoldValues : " 
-      << _vectorThreshHoldValues[ 0 ] << " : " 
-      << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG, 1) 
+        << "|\tcfdVectorBase::SetGlyphWithThreshold vectorThreshHoldValues : " 
+        << _vectorThreshHoldValues[ 0 ] << " : " 
+        << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 
    double currentScalarRange[ 2 ];
    this->GetActiveDataSet()->GetRange( currentScalarRange );
@@ -294,45 +295,49 @@ void cfdVectorBase::SetGlyphWithThreshold()
 
 void cfdVectorBase::SetGlyphAttributes()
 {
-   this->glyph->SetSource( this->GetActiveDataSet()->GetArrow() );
-   this->glyph->SetVectorModeToUseVector();
-   //this->glyph->DebugOn();
+    glyph->SetSource( GetActiveDataSet()->GetArrow() );
+    glyph->SetVectorModeToUseVector();
+    //glyph->DebugOn();
 
-   this->glyph->SetScaleFactor( GetVectorScaleFactor() );
-   if ( _scaleByVector == 0 )
-   {  
-      this->glyph->SetScaleModeToDataScalingOff();
-   }
-   else
-   {
-      this->glyph->SetScaleModeToScaleByVector();
-      this->glyph->SetColorModeToColorByScalar();
-      this->glyph->ClampingOn();
-      this->glyph->SetRange( this->GetActiveDataSet()->GetVectorMagRange() );
-   }
+    glyph->SetScaleFactor( GetVectorScaleFactor() );
+    if ( _scaleByVector == 0 )
+    {  
+        glyph->SetScaleModeToDataScalingOff();
+    }
+    else
+    {
+        glyph->SetScaleModeToScaleByVector();
+        glyph->SetColorModeToColorByScalar();
+        glyph->ClampingOn();
+        glyph->SetRange( GetActiveDataSet()->GetVectorMagRange() );
+    }
+
+    glyph->Update();
 }
 
 float cfdVectorBase::GetVectorScaleFactor()
 {
-   // this->GetVectorScale() is obtained from gui, -100 < vectorScale < 100
-   // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
-   // convert range to -2.5 < x < 2.5, and compute the exponent...
+    // this->GetVectorScale() is obtained from gui, -100 < vectorScale < 100
+    // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
+    // convert range to -2.5 < x < 2.5, and compute the exponent...
 
-/*
-   float range = 2.5;
-   float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
-                       this->GetActiveDataSet()->GetMeanCellLength();
-*/
-   // This scale returns a range of ~ 0.024' -> 0.75'
-   float range = 2.5;
-   float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.30f; 
+    /*
+    float range = 2.5;
+    float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
+    this->GetActiveDataSet()->GetMeanCellLength();
+    */
+    // This scale returns a range of ~ 0.024' -> 0.75'
+    float range = 2.5;
+    float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.30f; 
 
 
 
-   vprDEBUG(vesDBG, 1) << " scaleFactor = " << scaleFactor 
-                           << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vesDBG, 1) 
+        << "|\tcfdVectorBase::GetVectorScaleFactor scaleFactor = " 
+        << scaleFactor 
+        << std::endl << vprDEBUG_FLUSH;
 
-   return scaleFactor;
+    return scaleFactor;
 }
 
 /*

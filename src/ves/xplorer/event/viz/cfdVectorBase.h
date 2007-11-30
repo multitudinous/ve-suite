@@ -100,7 +100,7 @@ public:
 
 protected:
    vtkGlyph3D*          glyph;
-   vtkMultiGroupDataGeometryFilter*   filter;
+   //vtkMultiGroupDataGeometryFilter*   filter;
    vtkMultiGroupPolyDataMapper*   mapper;
    vtkMaskPoints*       ptmask;
    vtkTriangleFilter*   tris;

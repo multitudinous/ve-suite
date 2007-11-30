@@ -132,11 +132,15 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
         _eventHandlers.erase( pos++ );
     }
 
-    if( vjTh[ 0 ] )
+    try
     {
         vjTh[ 0 ]->join();
-        delete vjTh[ 0 ];
     }
+    catch(...)
+    {
+        ;//do nothing
+    }
+    delete vjTh[ 0 ];
 }
 bool SteadyStateVizHandler::TransientGeodesIsBusy()
 {

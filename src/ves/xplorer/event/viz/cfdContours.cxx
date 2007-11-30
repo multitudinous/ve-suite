@@ -85,10 +85,10 @@ void cfdContours::Update( void )
       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-      std::string vectorName = this->GetActiveDataSet()->
-                              GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-         ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+      //std::string vectorName = this->GetActiveDataSet()->
+      //                         GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
+      //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+      //   ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
 
       std::string scalarName = this->GetActiveDataSet()->
                               GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );

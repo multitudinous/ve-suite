@@ -119,7 +119,7 @@ void cfdVectors::Update( void )
          else
             //--biv do we need this call ??this->filter->ExtentClippingOff();
 */
-         this->filter->Update();
+         //this->filter->Update();
       
          this->mapper->SetScalarRange( this->GetActiveDataSet()
                                            ->GetUserRange() );
@@ -165,7 +165,7 @@ void cfdVectors::Update( void )
       //this->glyph->Print( cout );
 
       //--biv do we need this call ??this->filter->ExtentClippingOff();
-      this->filter->Update();
+      //this->filter->Update();
       
       // Good Test code to see if you are actually getting streamlines
 /*      
@@ -174,10 +174,12 @@ void cfdVectors::Update( void )
       writer->SetFileName( "teststreamers.vtk" );
       writer->Write();
 */     
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                        ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                        ->GetLookupTable() );
+        mapper->SetInputConnection( glyph->GetOutputPort() );
+        mapper->ImmediateModeRenderingOn();    
+        this->mapper->SetScalarRange( 
+            this->GetActiveDataSet()->GetUserRange() );
+        this->mapper->SetLookupTable( 
+            this->GetActiveDataSet()->GetLookupTable() );
      // this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
 
       //this->mapper->Update();  //sgent

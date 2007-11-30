@@ -119,12 +119,12 @@ cfdVector::cfdVector()
    this->cutter = vtkCutter::New();
    this->cutter->SetCutFunction( this->plane );
 
+    this->filter = vtkMultiGroupDataGeometryFilter::New();
+
 #endif
 
 #ifdef USE_OMP
    this->filter->SetInput( (vtkDataSet *)this->append->GetOutput() );
-#else
-   this->filter->SetInput( this->glyph->GetOutput() );
 #endif
 
   //biv--do we need this? this->filter->ExtentClippingOn();
@@ -193,7 +193,8 @@ void cfdVector::Update( void )
       this->ptmask->Update();
       this->glyph->Update();
 #endif
-      this->filter->Update();
+       this->filter->SetInput( this->glyph->GetOutput() );
+       this->filter->Update();
 
       this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
@@ -212,20 +213,20 @@ void cfdVector::Update( void )
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
    
-   try
-   {
-		osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-      tempGeode->TranslateToGeode( temp );
-      geodes.push_back( tempGeode.get() ); 
-      this->updateFlag = true;
-   }
-   catch( std::bad_alloc )
-   {
-      mapper->Delete();
-      mapper = vtkMultiGroupPolyDataMapper::New();
-      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVector " 
-                           << std::endl << vprDEBUG_FLUSH;
-   }
-  temp->Delete();
+    try
+    {
+        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+        tempGeode->TranslateToGeode( temp );
+        geodes.push_back( tempGeode.get() ); 
+        this->updateFlag = true;
+    }
+    catch( std::bad_alloc )
+    {
+        mapper->Delete();
+        mapper = vtkMultiGroupPolyDataMapper::New();
+        vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVector " 
+            << std::endl << vprDEBUG_FLUSH;
+    }
+    temp->Delete();
 }
 
