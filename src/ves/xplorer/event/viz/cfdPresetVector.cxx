@@ -120,9 +120,9 @@ void cfdPresetVector::Update( void )
        this->mapper->SetLookupTable( this->GetActiveDataSet()
                                           ->GetLookupTable() );
        this->mapper->Update();
-       vprDEBUG(vesDBG, 1)
-         << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
-         << std::endl << vprDEBUG_FLUSH;
+       vprDEBUG(vesDBG, 1) << "|\tcfdPresetVector::Update Yes Precalc : " 
+            << this->cursorType << " : " << usePreCalcData 
+            << std::endl << vprDEBUG_FLUSH;
    }
    else
    {

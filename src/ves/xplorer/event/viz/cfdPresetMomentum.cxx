@@ -105,10 +105,10 @@ void cfdPresetMomentum::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      //this->mapper->Update();
-      vprDEBUG(vesDBG, 1)
-         << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
-         << std::endl << vprDEBUG_FLUSH;
+       //this->mapper->Update();
+       vprDEBUG(vesDBG, 1) << "|\tcfdPresetMomentum::Update Yes Precalc : " 
+            << this->cursorType << " : " << usePreCalcData 
+            << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
