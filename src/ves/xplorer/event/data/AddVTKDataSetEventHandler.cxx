@@ -112,6 +112,11 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* mo
 ////////////////////////////////////////////////////////////////////////////////
 void AddVTKDataSetEventHandler::Execute(xml::XMLObject* xmlObject)
 {
+    if( !_activeModel )
+    {
+        return;
+    }
+    
     Command* command = dynamic_cast<Command*>(xmlObject);
     std::string dataSetName = 
         command->GetDataValuePair("VTK_DATASET_NAME")->GetDataString();
