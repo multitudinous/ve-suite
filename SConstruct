@@ -416,7 +416,9 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    if GetPlatform() == 'win32':
         baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
-   
+        baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
+        baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
+
    if GetPlatform() == 'darwin':
       baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
 
@@ -428,9 +430,6 @@ if not SConsAddons.Util.hasHelpFlag():
 
    #baseEnv.Append( LINKFLAGS = ['-g'] )
    #baseEnv.Append( CXXFLAGS = ['-g'] )
-
-   if GetPlatform() == 'win32':
-      baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
 
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir

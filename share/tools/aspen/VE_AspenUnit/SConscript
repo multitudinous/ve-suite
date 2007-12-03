@@ -58,7 +58,7 @@ env.Append(LIBS = ['gdiplus'])
 env.Append(LIBS = ['odbc32.lib'])
 env.Append(LIBS = ['odbccp32.lib'])
 
-env.Append(LINKFLAGS = ['/SUBSYSTEM:WINDOWS','/MACHINE:I386'])
+env.Append(LINKFLAGS = ['/SUBSYSTEM:WINDOWS'])
 
 #env.Append( RCFLAGS = ['/L 0x409'])
 
