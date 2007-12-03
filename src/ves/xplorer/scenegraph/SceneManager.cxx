@@ -67,6 +67,7 @@
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAL/SoundManager>
+#include <osgAL/SoundRoot>
 #include <osgAL/SoundNode>
 #include <osgAL/SoundState>
 #endif
@@ -88,7 +89,6 @@ vprSingletonImpLifetime( SceneManager, 100 );
 SceneManager::SceneManager()
 :
 #ifdef VE_SOUND
-m_soundRoot( 0 ),
 m_sound( 0 ),
 #endif
 m_blueArrow( 0 ),
@@ -157,9 +157,9 @@ void SceneManager::InitScene()
     osgAL::SoundManager::instance()->getEnvironment()->setDistanceModel( openalpp::InverseDistance );
     osgAL::SoundManager::instance()->getEnvironment()->setDopplerFactor( 1 );
 
-    m_soundRoot = new osgAL::SoundRoot();
-    m_soundRoot->setName( "SoundRoot Node" );
-    rootNode->addChild( m_soundRoot.get() );
+    osg::ref_ptr< osgAL::SoundRoot > soundRoot = new osgAL::SoundRoot();
+    soundRoot->setName( "Sound Root" );
+    rootNode->addChild( soundRoot.get() );
 #endif
 
     worldDCS = new ves::xplorer::scenegraph::DCS();

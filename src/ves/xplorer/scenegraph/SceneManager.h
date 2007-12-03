@@ -49,11 +49,6 @@
 #include <osgOQ/OcclusionQueryRoot.h>
 #include <osgOQ/OcclusionQueryContext.h>
 
-#ifdef VE_SOUND
-// --- osgAL Includes --- //
-#include <osgAL/SoundRoot>
-#endif
-
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
@@ -151,13 +146,6 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
 
     #ifdef VE_SOUND
-    //Create ONE (only one, otherwise the transformation
-    //of the listener and update for SoundManager will be
-    //called several times, which is not catastrophic, but unnecessary) 
-    //SoundRoot that will make sure the listener is updated and
-    //to keep the internal state of the SoundManager updated
-    //This could also be done manually, this is just a handy way of doing it.
-    osg::ref_ptr< osgAL::SoundRoot > m_soundRoot;
     ves::xplorer::scenegraph::Sound* m_sound;
     #endif
 

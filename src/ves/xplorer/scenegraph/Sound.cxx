@@ -48,20 +48,39 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-using namespace ves::xplorer::scenegraph;
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
 
 ////////////////////////////////////////////////////////////////////////////////
-Sound::Sound( ves::xplorer::scenegraph::DCS* parent, osgAL::SoundManager* soundManager )
+Sound::Sound( const std::string& name,
+              ves::xplorer::scenegraph::DCS* parent )
 :
-m_soundManager( soundManager ),
-m_soundNode( new osgAL::SoundNode() ),
-m_soundState( new osgAL::SoundState() ),
+m_soundManager( osgAL::SoundManager::instance() ),
 m_sample( 0 ),
+m_soundState( new osgAL::SoundState( name ) ),
+m_soundNode( new osgAL::SoundNode( m_soundState.get() ) ),
 m_soundGeode( new osg::Geode() )
 {
     parent->addChild( m_soundNode.get() );
     parent->addChild( m_soundGeode.get() );
-    m_soundNode->setSoundState( m_soundState.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+Sound::Sound( const std::string& name,
+              ves::xplorer::scenegraph::DCS* parent,
+              osgAL::SoundManager* soundManager )
+:
+m_soundManager( soundManager ),
+m_sample( 0 ),
+m_soundState( new osgAL::SoundState( name, m_soundManager ) ),
+m_soundNode( new osgAL::SoundNode( m_soundState.get(), m_soundManager ) ),
+m_soundGeode( new osg::Geode() )
+{
+    parent->addChild( m_soundNode.get() );
+    parent->addChild( m_soundGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sound::~Sound()
@@ -83,23 +102,27 @@ void Sound::Draw()
     m_soundGeode->addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Sound::LoadFile( std::string name )
+void Sound::LoadFile( std::string fileName )
 {
     bool addToCache = true;
-    m_sample = m_soundManager->getSample( name, addToCache );
-    m_soundState->setName( name );
+
+    m_sample = m_soundManager->getSample( fileName, addToCache );
 
     //Create a new soundstate, give it the name of the file we loaded.
     m_soundState->setSample( m_sample.get() );
 
     m_soundState->setGain( 1.0f );
-    m_soundState->setReferenceDistance( 60 );
+    m_soundState->setReferenceDistance( 10 );
     m_soundState->setRolloffFactor( 4 );
     m_soundState->setPlay( true );
     m_soundState->setLooping( true );
 
     //Allocate a hardware soundsource to this soundstate( priority 10 )
     m_soundState->allocateSource( 10, false );
+
+    m_soundManager->addSoundState( m_soundState.get() );
+
+    m_soundState->apply();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osgAL::SoundNode* Sound::GetSoundNode()
@@ -107,5 +130,9 @@ osgAL::SoundNode* Sound::GetSoundNode()
     return m_soundNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+} // end scenegraph
+} // end xplorer
+} // end ves
 
 #endif // end VE_SOUND
