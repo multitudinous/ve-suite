@@ -71,7 +71,7 @@ Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 Source: {#VEDEVHOME}\external\vcredist_x86_sp1.exe; DestDir: {tmp}
-Source: {#VEDEVHOME}\src\apps\launcher\velauncher.exe; DestDir: {app}\bin
+Source: {#MSREDISTRIBUTABLE}; DestDir: {app}\bin
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
