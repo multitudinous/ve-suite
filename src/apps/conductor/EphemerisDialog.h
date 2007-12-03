@@ -36,6 +36,8 @@
 ////Header Include End
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
+#include <string>
+#include <map>
 
 ////Dialog Style Start
 #undef EphemerisDialog_STYLE
@@ -63,6 +65,9 @@ class EphemerisDialog : public wxDialog
       void OnCalendarDay(wxCalendarEvent& event);
       void OnMinuteTextUpdated(wxCommandEvent& event);
       void OnAutoDateTime(wxCommandEvent& event);
+      void OnSaveLocationInformation(wxCommandEvent& event);
+      void OnLoadLocationInformation(wxCommandEvent& event);
+
        ///Convert the input sexagesimal value to decimal values
        ///\param degree Degree of Latitude or Longitude
        ///\param minutes Minutes of Latitude or Longitude
@@ -98,8 +103,26 @@ class EphemerisDialog : public wxDialog
        
        ///Toggle on/off controls for date and time setting 
        void ToggleCalendarAndTimerState(bool onOff);
+
+       ///Load the location selected
+       //void LoadLocationInformation();
+
+       ///Read the location saved location information 
+       void ReadLocationInformation();
+ 
+       ///Write the location data to wxconfig
+       void WriteLocationInformation();
+
+       ///Use decimal values to set the GUI
+       ///\param latitude The decimal latitude
+       ///\param longitude The decimal ongitude
+       void SetLatitudeAndLongitudeOnGUI(double latitude,double longitude);
    
    private:
+       ///Write the location information to config block
+       ///\param location The location information
+       ///\param  key The block to write the location information 
+       void _writeLocation(ves::open::xml::CommandWeakPtr location, wxString key);
       //Do not add custom control declarations between 
       //GUI Control Declaration Start and GUI Control Declaration End.
       //wxDev-C++ will remove them. Add custom code after the block.
@@ -134,6 +157,8 @@ class EphemerisDialog : public wxDialog
       wxBoxSizer* m_mainSizer;
       ////GUI Control Declaration End
       wxCheckBox* m_autoDateTime;
+      wxButton* m_saveLocationButton;
+      wxButton* m_loadLocationButton;
       
       ves::open::xml::CommandPtr m_date;
       ves::open::xml::CommandPtr m_time;
@@ -145,6 +170,8 @@ class EphemerisDialog : public wxDialog
 
       ves::open::xml::CommandPtr m_ephemerisData;
       int m_lastMinute;///<The last value of the minutes;
+
+      std::map<std::string, ves::open::xml::CommandPtr> m_storedLocations;///<The saved locations
    private:
       //Note: if you receive any error with these enum IDs, then you need to
       //change your old form code that are based on the #define control IDs.
@@ -172,6 +199,8 @@ class EphemerisDialog : public wxDialog
          ID_M_DATETIME = 1003,
          ID_M_DATAENTRYPAGES = 1002,
          ID_AUTO_DATE_TIME = 1234,
+         ID_M_SAVE_LOCATION_BUTTON = 1235,
+         ID_M_LOAD_LOCATION_BUTTON = 1236,
          ////GUI Enum Control ID End
          ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
       };
