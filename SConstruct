@@ -1,5 +1,4 @@
 #!python
-
 EnsureSConsVersion(0,96)
 SConsignFile()
 
