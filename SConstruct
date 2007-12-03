@@ -1,4 +1,5 @@
 #!python
+
 EnsureSConsVersion(0,96)
 SConsignFile()
 
@@ -415,7 +416,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    if GetPlatform() == 'win32':
-        baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
+        baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK',
+            'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
         baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
         baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
 
@@ -428,8 +430,8 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
    #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
-   #baseEnv.Append( LINKFLAGS = ['-g'] )
-   #baseEnv.Append( CXXFLAGS = ['-g'] )
+   baseEnv.Append( LINKFLAGS = ['-g'] )
+   baseEnv.Append( CXXFLAGS = ['-g'] )
 
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
