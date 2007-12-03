@@ -83,7 +83,8 @@ cfdVEBaseClass::cfdVEBaseClass():
 xmlModel( 0 ),
 _onSceneGraph( false ),
 m_device( 0 ),
-m_physicsSimulator( 0 )
+m_physicsSimulator( 0 ),
+_modID( -1 )
 #ifdef VE_SOUND
 ,
 m_soundManager( 0 )

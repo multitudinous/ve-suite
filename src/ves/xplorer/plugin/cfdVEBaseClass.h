@@ -205,7 +205,7 @@ private:
 
     std::string _network;
 
-    protected:
+protected:
     long pos_x;
     long pos_y;
 
