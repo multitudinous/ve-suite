@@ -80,17 +80,19 @@ namespace plugin
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEBaseClass::cfdVEBaseClass():
-xmlModel( 0 ),
-_onSceneGraph( false ),
+m_xmlModel( 0 ),
+m_onSceneGraph( false ),
 m_device( 0 ),
 m_physicsSimulator( 0 ),
-_modID( -1 )
+m_modID( -1 ),
+m_pos_x( 0 ),
+m_pos_y( 0 )
 #ifdef VE_SOUND
 ,
 m_soundManager( 0 )
 #endif
 {
-    _network.empty();
+    m_network.empty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEBaseClass::~cfdVEBaseClass()
@@ -101,42 +103,30 @@ cfdVEBaseClass::~cfdVEBaseClass()
 void cfdVEBaseClass::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     //groupNode = new ves::xplorer::scenegraph::Group();
-    _dcs = new ves::xplorer::scenegraph::DCS(); 
-    _dcs->SetName( "cfdVEBaseClass" );
-    //dataRepresentation = new cfdObjects();
-    //geometryNode = new cfdModuleGeometry( groupNode );
-    worldDCS = veworldDCS;
-    _model = new Model( _dcs.get() );
-    //_readParam = new cfdReadParam();
+    m_dcs = new ves::xplorer::scenegraph::DCS(); 
+    m_dcs->SetName( "cfdVEBaseClass" );
+    //m_dataRepresentation = new cfdObjects();
+    m_worldDCS = veworldDCS;
+    m_model = new Model( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::AddSelfToSG()
 {
-    _onSceneGraph = true;
-    worldDCS->AddChild( _dcs.get() );
+    m_onSceneGraph = true;
+    m_worldDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::RemoveSelfFromSG()
 {
-    _onSceneGraph = false;
-    worldDCS->RemoveChild( _dcs.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::MakeTransparent()
-{
-    ;
-}
-//////////////////////////////////////////////////////////////////////////////// 
-void cfdVEBaseClass::SetColor( double* color )
-{
-    ;
+    m_onSceneGraph = false;
+    m_worldDCS->RemoveChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetTransforms( double* scale, double* rot, double* trans )
 {
-    _dcs->SetTranslationArray( trans );
-    _dcs->SetScaleArray( scale );
-    _dcs->SetRotationArray( rot );
+    m_dcs->SetTranslationArray( trans );
+    m_dcs->SetScaleArray( scale );
+    m_dcs->SetRotationArray( rot );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::GetDataFromUnit()
@@ -184,24 +174,24 @@ void cfdVEBaseClass::MakeGeodeByUserRequest( int )
 ////////////////////////////////////////////////////////////////////////////////
 std::string cfdVEBaseClass::GetName()
 {
-    return _objectName;
+    return m_objectName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetObjectName( std::string input )
 {
-    _objectName = input;
+    m_objectName = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string cfdVEBaseClass::GetDesc()
 {
-    return _objectDescription;
+    return m_objectDescription;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetCursor( cfdCursor* input )
 {
     if( input != NULL )
     {
-        _cursor = input;
+        m_cursor = input;
     }
     else
     {
@@ -227,7 +217,7 @@ void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
 {
     if( input )
     {
-        soundHandler = input;
+        m_soundHandler = input;
     }
     else
     {
@@ -268,7 +258,7 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
 {
     if( network.empty() || network == "NULL" )
     {
-        std::cout << "|\tNo results for " << _objectName << std::endl;
+        std::cout << "|\tNo results for " << m_objectName << std::endl;
 
         return;
     }
@@ -289,7 +279,7 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
     {
-        ves::open::xml::Command* command = xmlModel->GetResult( i );
+        ves::open::xml::Command* command = m_xmlModel->GetResult( i );
         ves::open::xml::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
         ves::open::xml::Command* copyCommand = dynamic_cast< ves::open::xml::Command* >( tempPair->GetDataXMLObject() );
         *command = *copyCommand;
@@ -303,28 +293,22 @@ void cfdVEBaseClass::CreateCustomVizFeature( int input )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetID( int id )
 {
-    _modID = id;
+    m_modID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model* cfdVEBaseClass::GetCFDModel()
 {
-    return _model;
+    return m_model;
 }
-////////////////////////////////////////////////////////////////////////////////   
-/*
-ves::xplorer::scenegraph::DCS* cfdVEBaseClass::GetWorldDCS()
-{
-    return worldDCS.get();
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////   
 void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel )
 {
-    xmlModel = tempModel;
+    m_xmlModel = tempModel;
 
     //Decompose model to be utilized by the event handlers
     ves::open::xml::cad::CADAssembly* cadNodeData = 
-        dynamic_cast< ves::open::xml::cad::CADAssembly* >( xmlModel->GetGeometry() );
+        dynamic_cast< ves::open::xml::cad::CADAssembly* >( 
+        m_xmlModel->GetGeometry() );
     if( cadNodeData )
     {
         ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
@@ -338,18 +322,18 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
 
         //Process the cad
         ves::xplorer::event::CADAddNodeEventHandler newCADNode;
-        newCADNode.SetGlobalBaseObject( _model );
+        newCADNode.SetGlobalBaseObject( m_model );
         newCADNode.Execute( cadCommand );
         delete cadCommand;
     }
 
     //process the information blocks
-    if( xmlModel->GetNumberOfInformationPackets() > 0 )
+    if( m_xmlModel->GetNumberOfInformationPackets() > 0 )
     {
         ves::open::xml::DataValuePairPtr modelNode = new ves::open::xml::DataValuePair();
         modelNode->SetDataType( std::string( "XMLOBJECT" ) );
         modelNode->SetData( "CREATE_NEW_DATASETS", 
-            new ves::open::xml::model::Model( *xmlModel ) );
+            new ves::open::xml::model::Model( *m_xmlModel ) );
 
         ves::open::xml::Command* dataCommand = new ves::open::xml::Command();
         dataCommand->AddDataValuePair( modelNode );
@@ -357,7 +341,7 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
 
         //Add the active dataset name to the command
         ves::open::xml::ParameterBlock* parameterBlock = 
-            xmlModel->GetInformationPacket( 0 );
+            m_xmlModel->GetInformationPacket( 0 );
         ves::open::xml::DataValuePairPtr dataSetName = 
         new ves::open::xml::DataValuePair();
         dataSetName->SetData( "VTK_DATASET_NAME", 
@@ -366,19 +350,19 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
 
         //Process the vtk data
         ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
-        addVTKEH.SetGlobalBaseObject( _model );
+        addVTKEH.SetGlobalBaseObject( m_model );
         addVTKEH.Execute( dataCommand );
         delete dataCommand;
     }
 
     //process inputs
-    if( xmlModel->GetNumberOfInputs() > 0 )
+    if( m_xmlModel->GetNumberOfInputs() > 0 )
     {
         ;
     }
 
     //process results
-    if( xmlModel->GetNumberOfResults() > 0 )
+    if( m_xmlModel->GetNumberOfResults() > 0 )
     {
         ;
     }
@@ -394,7 +378,7 @@ void cfdVEBaseClass::SetCurrentCommand( ves::open::xml::Command* command )
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::string, cfdVEBaseClass* > cfdVEBaseClass::GetCommandNameMap()
 {
-    return ehMap;
+    return m_ehMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -53,9 +53,7 @@ namespace osgAL
 #endif
  
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/ref_ptr>
-#endif
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -92,7 +90,6 @@ class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
 public:
     cfdVEBaseClass();
 
-    //cfdVEBaseClass( ves::xplorer::scenegraph::DCS* );
     virtual ~cfdVEBaseClass();
 
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
@@ -102,11 +99,6 @@ public:
     virtual void AddSelfToSG();
 
     virtual void RemoveSelfFromSG();
-
-    //Change state information for geometric representation
-    void MakeTransparent();
-
-    void SetColor( double* );
 
     //transform object based 
     void SetTransforms( double*, double*, double* );
@@ -132,11 +124,9 @@ public:
 
     ves::xplorer::Model* GetCFDModel();
 
-    void LoadSurfaceFiles( std::string );
-
     bool OnSceneGraph()
     {
-        return _onSceneGraph;
+        return m_onSceneGraph;
     }
 
     //Set the pointer to the cursor class so that dynamic
@@ -197,51 +187,37 @@ public:
 private:
     //This needs to be vector of geometry nodes
     //cfdModuleGeometry*  geometryNode;
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > groupNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > m_groupNode;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_worldDCS;
 
-    std::string _objectDescription;
+    std::string m_objectDescription;
 
-    std::string _network;
+    std::string m_network;
 
 protected:
-    long pos_x;
-    long pos_y;
+    long m_pos_x;
+    long m_pos_y;
 
-    //ves::xplorer::scenegraph::DCS* GetWorldDCS();
+    ves::xplorer::cfdObjects* m_dataRepresentation;
 
-    std::map< std::string, long* > _int;
-    std::map< std::string, double* > _double;
-    std::map< std::string, std::string* > _string;
-    std::map< std::string, std::vector< long >* > _int1D;
-    std::map< std::string, std::vector< double >* > _double1D;
-    std::map< std::string, std::vector< std::string >* > _string1D;
+    ves::xplorer::Model* m_model;
 
-    ves::xplorer::cfdObjects* dataRepresentation;
+    bool m_onSceneGraph;
 
-    ves::xplorer::Model* _model;
-
-    std::string _param;
-
-    bool _onSceneGraph;
-
-    int _modID;
-    std::string _objectName;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _dcs;
-    ves::xplorer::cfdCursor* _cursor;
+    int m_modID;
+    std::string m_objectName;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
+    ves::xplorer::cfdCursor* m_cursor;
     ves::xplorer::Device* m_device;
-    ves::xplorer::cfdSoundHandler* soundHandler;
+    ves::xplorer::cfdSoundHandler* m_soundHandler;
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 #ifdef VE_SOUND
     osgAL::SoundManager* m_soundManager;
 #endif
 
-    ves::open::xml::model::ModelPtr xmlModel;
-    std::vector< std::string > v_desc;
-    std::vector< std::string > v_value;
-    std::map< std::string, cfdVEBaseClass* > ehMap;
-
+    ves::open::xml::model::ModelPtr m_xmlModel;
+    std::map< std::string, cfdVEBaseClass* > m_ehMap;
 };
 }
 }
