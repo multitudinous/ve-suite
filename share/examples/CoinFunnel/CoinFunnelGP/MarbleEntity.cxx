@@ -26,19 +26,21 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////
 MarbleEntity::MarbleEntity( std::string geomFile,
                             ves::xplorer::scenegraph::DCS* pluginDCS,
-                            ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+                            ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+                            osgAL::SoundManager* soundManager )
 :
-m_sound( 0 ),
-m_nonPhysicsGeometry( 0 ),
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+m_sound( new ves::xplorer::scenegraph::Sound( geomFile, GetDCS(), soundManager ) ),
+m_nonPhysicsGeometry( 0 )
 {
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
+    m_sound->LoadFile( "Sounds/bee.wav" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MarbleEntity::~MarbleEntity()
 {
-    ;
+    delete m_sound;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetNameAndDescriptions( std::string geomFile )
@@ -50,20 +52,15 @@ void MarbleEntity::SetNameAndDescriptions( std::string geomFile )
     GetDCS()->setName( geomFile );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Sound* MarbleEntity::GetSound()
-{
-    return m_sound;
-}
-////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetShaders( osg::TextureCubeMap* tcm )
 {
     SetShaderOne( tcm );
     SetShaderTwo();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MarbleEntity::SetSounds()
+ves::xplorer::scenegraph::Sound* MarbleEntity::GetSound()
 {
-
+    return m_sound;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )

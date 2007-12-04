@@ -21,6 +21,12 @@ namespace osg
     class TextureCubeMap;
 }
 
+// --- osgAL Includes --- //
+namespace osgAL
+{
+    class SoundManager;
+}
+
 // --- C/C++ Libraries --- //
 #include <string>
 
@@ -31,15 +37,14 @@ class MarbleEntity : public ves::xplorer::scenegraph::CADEntity
 public:
     MarbleEntity( std::string geomFile,
                   ves::xplorer::scenegraph::DCS* pluginDCS,
-                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+                  osgAL::SoundManager* soundManager );
 
     virtual ~MarbleEntity();
 
     void SetNameAndDescriptions( std::string geomFile );
 
     void SetShaders( osg::TextureCubeMap* tcm );
-
-    void SetSounds();
 
     ves::xplorer::scenegraph::Sound* GetSound();
 

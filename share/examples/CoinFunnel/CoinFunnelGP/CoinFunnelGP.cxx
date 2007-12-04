@@ -8,9 +8,16 @@
 
 #include <ves/open/xml/model/Model.h>
 
+#include <osgAL/SoundRoot>
+#include <osgAL/SoundManager>
+#include <osgAL/SoundNode>
+#include <osgAL/SoundState>
+
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
+
+#include <osgUtil/Optimizer>
 
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelGP::CoinFunnelGP()
@@ -18,7 +25,7 @@ CoinFunnelGP::CoinFunnelGP()
 cfdVEBaseClass(),
 world( 0 )
 {
-    _objectName = "CoinFunnelUI";
+    m_objectName = "CoinFunnelUI";
 }
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelGP::~CoinFunnelGP()
@@ -33,17 +40,12 @@ void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-
+    world = new demo::World( m_dcs.get(), m_physicsSimulator, m_soundManager );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::AddSelfToSG()
 {
     cfdVEBaseClass::AddSelfToSG();
-
-    m_sound = new ves::xplorer::scenegraph::Sound( _dcs.get(), m_soundManager );
-    m_sound->LoadFile( "Sounds/31295_Corsica_S_ridged_coin.wav" );
-
-    world = new demo::World( _dcs.get(), m_physicsSimulator );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::PreFrameUpdate()

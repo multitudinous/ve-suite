@@ -30,10 +30,12 @@ namespace demo
 
 ////////////////////////////////////////////////////////////////////////////////
 World::World( ves::xplorer::scenegraph::DCS* pluginDCS,
-              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+              osgAL::SoundManager* soundManager  )
 :
 m_pluginDCS( pluginDCS ),
 m_physicsSimulator( physicsSimulator ),
+m_soundManager( soundManager ),
 m_tcm( new osg::TextureCubeMap() ),
 m_funnelEntity( 0 ),
 m_marbleEntity( 0 ),
@@ -89,7 +91,8 @@ void World::Initialize()
 
     m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive",
                                              m_pluginDCS.get(),
-                                             m_physicsSimulator );
+                                             m_physicsSimulator,
+                                             m_soundManager );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
     double marblePosition[ 3 ] = { 5.5, 2.0, 5.0 };
     m_marbleEntity->GetDCS()->SetTranslationArray( marblePosition );
@@ -100,7 +103,6 @@ void World::Initialize()
     //The real value of the radius should be 0.05, need to look at this
     m_marbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
     m_marbleEntity->SetShaders( m_tcm.get() );
-    m_marbleEntity->SetSounds();
 
     m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive",
                                                m_pluginDCS.get(),
@@ -114,6 +116,7 @@ void World::Initialize()
     m_quarterEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
     m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
 
+    /*
     m_rampEntity = new demo::RampEntity( "Models/IVEs/ramp_physics.ive",
                                          m_pluginDCS.get(),
                                          m_physicsSimulator );
@@ -123,6 +126,7 @@ void World::Initialize()
     m_rampEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
     m_rampEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
     m_rampEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+    */
 
     m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive",
                                            m_pluginDCS.get(),
@@ -141,7 +145,14 @@ void World::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void World::PreFrameUpdate()
 {
-    ;
+    if( m_physicsSimulator->GetIdle() )
+    {
+        m_marbleEntity->GetSound()->Play();
+    }
+    else
+    {
+        m_marbleEntity->GetSound()->Pause();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* World::GetPluginDCS()

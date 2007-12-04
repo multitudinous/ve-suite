@@ -39,7 +39,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_INSTALL_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(OSG_HOME)\include&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(BULLET_HOME)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_INSTALL_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(OSG_HOME)\include&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(BULLET_HOME)\src&quot;;&quot;$(OSGAL_HOME)\include&quot;;&quot;$(OPENAL_HOME)\include&quot;;&quot;$(VORBIS_HOME)\include&quot;;&quot;$(OGG_HOME)\include&quot;"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32;VE_SOUND;_OSG;VE_USER_PLUGIN_LIBRARY;BOOST_ALL_DYN_LINK;JUGGLER_DEBUG;LOKI_DLL;LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT;LOKI_OBJECT_LEVEL_THREADING"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ves_xplorer_scenegraph.lib ves_xplorer.lib osgd.lib osgDBd.lib osgUtild.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib"
+				AdditionalDependencies="ves_xplorer_scenegraph.lib ves_xplorer.lib osgd.lib osgDBd.lib osgUtild.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib osgALd.lib oalppd.lib"
 				OutputFile="..\Plugins\GE\win32\CoinFunnelGP_d.dll"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="&quot;$(VE_INSTALL_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OSG_HOME)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;"
+				AdditionalLibraryDirectories="&quot;$(VE_INSTALL_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OSG_HOME)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;;&quot;$(OSGAL_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/CoinFunnelGP.pdb"
 				SubSystem="1"
