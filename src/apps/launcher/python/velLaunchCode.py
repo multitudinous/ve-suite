@@ -45,6 +45,16 @@ from velDepsArray import *
 import string
 import subprocess
 
+from os import name ##Used for getting system values
+pj = os.path.join
+
+# Setup prefix for mac specific calls
+# TODO: append the mac specific paths to the path env var instead of the solution
+# below
+if string.find(sys.platform, 'darwin' ) != -1:
+    darwinPlatform = True
+    exeXplorerPrefix = pj( VELAUNCHER_DIR,'ves_xplorer.app', 'Contents', 'MacOS' )
+    exeConductorPrefix = pj( VELAUNCHER_DIR,'ves_conductor.app', 'Contents', 'MacOS' )
 
 class Launch:
     """Prepares the environment and launches the chosen programs.
@@ -266,6 +276,7 @@ class Launch:
         except OSError:
             print "OS can not find \"xset\" command on your environment."
             #sys.exit(2)
+        
         ##Name Server section
         if self.settings["NameServer"]:
             sleep(2)
@@ -327,6 +338,7 @@ class Launch:
             print "Starting Xplorer."
             #Checking existence of project_tao_osg_vep file first before calling it
             exe = "ves_xplorer" + self.debugSuffix
+                
             try:
                 subprocess.Popen(self.XplorerCall(), 
                                  stdout = self.outputDestination, stderr = subprocess.STDOUT)
@@ -339,6 +351,7 @@ class Launch:
             print "Starting Conductor."
             #Checking existence of WinClient file first before calling it
             exe = "ves_conductor" + self.debugSuffix
+
             conduct_Pid = []
             try:
                 conduct_Pid.append(subprocess.Popen(self.ConductorCall(), 
@@ -392,6 +405,7 @@ class Launch:
     def ConductorCall(self):
         """Returns a generic Conductor call."""
         exe = "ves_conductor"
+            
         if unix:
             exe += self.debugSuffix
         elif windows:
@@ -425,6 +439,7 @@ class Launch:
             desktop = []
         ##Set Xplorer's type
         exe = "ves_xplorer"
+
         ##Tack on the Windows suffix.
         if unix:
             exe += self.debugSuffix
@@ -574,7 +589,7 @@ class Launch:
                 try:
                     subprocess.Popen(self.XplorerCall())
                 except OSError:
-                    exe = "ves_xplorer_tao_osg_vep"
+                    exe = "ves_xplorer"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
                     sys.exit(2)
                 return
@@ -816,7 +831,9 @@ class Launch:
             ##Update the path
             pathList= [os.path.join(VELAUNCHER_DIR),
                        os.path.join(VELAUNCHER_DIR, '..', "lib")]
-            
+            # for mac add the app bundle directories to the path
+            if darwinPlatform:
+                pathList= [exeConductorPrefix, exeXplorerPrefix]
             ##print "sysPath[0]: %s" % os.path.realpath(os.path.abspath(sys.executable))
             ##Outdated paths.
             ##pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
