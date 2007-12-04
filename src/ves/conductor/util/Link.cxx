@@ -120,6 +120,8 @@ Link::Link( const Link& input )
     action_point = input.action_point;
     m_uuid = input.m_uuid;
 	highlightFlag = false;
+	maxPointX = 0;
+	maxPointY = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
@@ -147,6 +149,9 @@ Link& Link::operator= ( const Link& input )
         action_point = input.action_point;
         m_uuid = input.m_uuid;
 		highlightFlag = false;
+
+        maxPointX = input.maxPointX;
+        maxPointY = input.maxPointY;
     }
     return *this;
 }
@@ -169,6 +174,15 @@ void Link::SetPoint( wxPoint* pnt )
    cons.push_back( wxPoint() );
    cons.back().x = pnt->x;
    cons.back().y = pnt->y;
+
+   if( pnt->x > maxPointX )
+   {
+	   maxPointX = pnt->x;
+   }
+   if( pnt->y > maxPointY )
+   {
+	   maxPointY = pnt->y;
+   }
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t Link::GetNumberOfPoints( void )

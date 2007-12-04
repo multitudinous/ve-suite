@@ -145,6 +145,9 @@ public:
    ///Update all the ve models
    void Update();
 
+   size_t GetMaxX() { return maxX; }
+   size_t GetMaxY() { return maxY; }
+
 protected:
    //Draw functions
    //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
@@ -219,6 +222,8 @@ private:
    wxBitmap * bitmapBuffer;
    wxPoint point1;
    wxPoint point2;
+   size_t maxX;
+   size_t maxY;
    
    std::string tempXMLNetworkData;
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location

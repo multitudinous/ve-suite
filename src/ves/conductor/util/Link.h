@@ -136,6 +136,8 @@ public:
    void SetLink( ves::open::xml::model::LinkWeakPtr inputLink );
    ///Get ves::open::xml::model::Link
    ves::open::xml::model::LinkWeakPtr GetLink();
+   size_t GetMaxPointX() { return maxPointX; }
+   size_t GetMaxPointY() { return maxPointY; }
    
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
@@ -180,6 +182,9 @@ private:
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;
     int m_selLinkCon; //selected Link Connector
+
+	size_t maxPointX;
+	size_t maxPointY;
     
     std::vector< wxPoint > cons; //connectors
     Polygon poly; //Poly is the current poly on the canvas

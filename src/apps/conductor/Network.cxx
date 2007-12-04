@@ -2287,14 +2287,24 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
    veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
    numUnit.second = tempScaleInfo;
 #endif
-	size_t maxX = 7000;
-	size_t maxY = 7000;
+	maxX = 7000;
+	maxY = 7000;
     //Setup the links
 	links.assign( veNetwork->GetNumberOfLinks(), Link( parent ) );
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
         links.at( i ).SetDCScale( &userScale );
         links.at( i ).SetLink( veNetwork->GetLink( i ) );
+		size_t pointX = links.at( i ).GetMaxPointX();
+		size_t pointY = links.at( i ).GetMaxPointY();
+        if( pointX > maxX )
+        {	
+           maxX = pointX + 100;
+        }
+        if( pointY > maxY )
+        {
+           maxY = pointY + 100;
+        }
         ///Need to somehow get max and maxy from links here
     }
 
@@ -2412,7 +2422,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
     m_selTagCon = -1; 
     xold = yold =0;
     
-	parent->SetVirtualSize( maxX, maxY );
+//	parent->SetVirtualSize( maxX, maxY );
 //    _fileProgress->Update( 100, _("Done") );
     parent->Refresh( true );
 }

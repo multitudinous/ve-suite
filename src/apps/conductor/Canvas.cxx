@@ -211,6 +211,7 @@ void Canvas::SetActiveNetwork(std::string id)
     PushEventHandler( networks[this->activeId] );
     networks[this->activeId]->PushAllEvents();
     this->previousId = this->activeId;
+    SetVirtualSize( networks[this->activeId]->GetMaxX(), networks[this->activeId]->GetMaxY() );
     Refresh(true);
 }
 //////////////////////////////////////////////////////////////////////////////
