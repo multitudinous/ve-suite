@@ -34,7 +34,7 @@ namespace demo
 class FunnelEntity;
 class MarbleEntity;
 class QuarterEntity;
-class RampEntity;
+class RailingEntity;
 class SlideEntity;
 class WaterEntity;
 
@@ -64,7 +64,7 @@ private:
     demo::FunnelEntity* m_funnelEntity;
     demo::MarbleEntity* m_marbleEntity;
     demo::QuarterEntity* m_quarterEntity;
-    demo::RampEntity* m_rampEntity;
+    demo::RailingEntity* m_railingEntity;
     demo::SlideEntity* m_slideEntity;
     demo::WaterEntity* m_waterEntity;
 };

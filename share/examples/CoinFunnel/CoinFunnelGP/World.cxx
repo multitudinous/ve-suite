@@ -3,7 +3,7 @@
 #include "FunnelEntity.h"
 #include "MarbleEntity.h"
 #include "QuarterEntity.h"
-#include "RampEntity.h"
+#include "RailingEntity.h"
 #include "SlideEntity.h"
 #include "WaterEntity.h"
 
@@ -40,7 +40,7 @@ m_tcm( new osg::TextureCubeMap() ),
 m_funnelEntity( 0 ),
 m_marbleEntity( 0 ),
 m_quarterEntity( 0 ),
-m_rampEntity( 0 ),
+m_railingEntity( 0 ),
 m_slideEntity( 0 ),
 m_waterEntity( 0 )
 {
@@ -52,7 +52,7 @@ World::~World()
     delete m_funnelEntity;
     delete m_marbleEntity;
     delete m_quarterEntity;
-    delete m_rampEntity;
+    delete m_railingEntity;
     delete m_slideEntity;
     delete m_waterEntity;
 }
@@ -108,7 +108,7 @@ void World::Initialize()
                                                m_pluginDCS.get(),
                                                m_physicsSimulator );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );
-    double quarterPosition[ 3 ] = { 0, 0, 0 };
+    double quarterPosition[ 3 ] = { 5.0, 2.0, 5.0 };
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
     m_quarterEntity->InitPhysics();
     m_quarterEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
@@ -116,17 +116,15 @@ void World::Initialize()
     m_quarterEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
     m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
 
-    /*
-    m_rampEntity = new demo::RampEntity( "Models/IVEs/ramp_physics.ive",
-                                         m_pluginDCS.get(),
-                                         m_physicsSimulator );
-    m_rampEntity->SetNameAndDescriptions( "ramp_physics" );
-    m_rampEntity->InitPhysics();
-    m_rampEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    m_rampEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
-    m_rampEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
-    m_rampEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    */
+    m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
+                                               m_pluginDCS.get(),
+                                               m_physicsSimulator );
+    m_railingEntity->SetNameAndDescriptions( "railing_physics" );
+    m_railingEntity->InitPhysics();
+    m_railingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
+    m_railingEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
+    m_railingEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
+    m_railingEntity->GetPhysicsRigidBody()->StaticConcaveShape();
 
     m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive",
                                            m_pluginDCS.get(),
