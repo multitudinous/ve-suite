@@ -187,6 +187,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
+	EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2281,4 +2282,10 @@ void AppFrame::ShutdownXplorerOptionOff()
 HierarchyTree * AppFrame::GetHierarchyTree()
 {
 	return hierarchyTree;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnDelMod(wxCommandEvent& event )
+{
+	int* mod = static_cast< int* >( event.GetClientData() );  
+	hierarchyTree->RemoveFromTree( *mod );
 }

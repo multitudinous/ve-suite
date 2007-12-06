@@ -85,6 +85,7 @@ public:
     ///Set the window that holds the object tree to determine the size
     ///of the child windows
     void SetTreeViewWindow( wxWindow* treeView );
+	void OnDelMod(wxCommandEvent& event );
 
 protected:
 
@@ -94,6 +95,7 @@ private:
     std::string previousId;
     void DrawNetwork(wxDC &dc, std::string id);
     wxWindow* m_treeView;
+	wxWindow* parent;
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
 

@@ -233,3 +233,43 @@ void HierarchyTree::AddtoTree( UIPluginBase *cur_module )
 	AppendItem(currentId, wxString( cur_module->GetName().c_str(), wxConvUTF8 )
 		, -1 , -1, modData);
 }
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::RemoveFromTree( unsigned int id )
+{
+   wxTreeItemId root = GetRootItem();
+   wxTreeItemId selected = SearchTree(root, id);
+   if( selected.IsOk() )
+   {
+      Delete( selected );
+   }
+}
+///////////////////////////////////////////////////////////////////////////////
+wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, int id )
+{
+   wxTreeItemIdValue cookie;
+   wxTreeItemId search;
+   wxTreeItemId item = this->GetFirstChild( root, cookie );
+   wxTreeItemId child;
+
+   while( item.IsOk() )
+   {
+      ModuleData* modData = (ModuleData*) this->GetItemData( item );
+      if( id == modData->modId )
+      {
+         return item;
+      }
+      if( this->ItemHasChildren( item ) )
+      {
+         wxTreeItemId search = SearchTree( item, id );
+         if( search.IsOk() )
+         {
+            return search;
+         }
+      }
+      item = this->GetNextChild( root, cookie);
+   }
+ 
+   /* Not found */
+   wxTreeItemId dummy;
+   return dummy;
+}

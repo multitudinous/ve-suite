@@ -85,6 +85,8 @@ public:
     void SetCanvas(Canvas *can) { m_canvas = can; }
 	//add a module to the tree
 	void AddtoTree( ves::conductor::UIPluginBase *cur_module );
+	void RemoveFromTree( unsigned int id );
+	wxTreeItemId SearchTree( wxTreeItemId root, int id );
     ///Clear the hierarchy tree
     ///This is called by default by PopulateTree
     void Clear();

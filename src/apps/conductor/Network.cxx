@@ -680,7 +680,7 @@ void Network::OnDelLink(wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelMod(wxCommandEvent& event )
 {
-    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
+//    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
 
     //Pop the link event handlers to clear these event handlers
     //for( std::vector< GUI_Utilities::Link >::iterator 
@@ -688,11 +688,15 @@ void Network::OnDelMod(wxCommandEvent& event )
     //{
     //    RemoveEventHandler( &(*iter) );
     //}
+
 	RemoveAllEvents();
 
     // Need to delete all links associated with this particular module
     // first, delete all the links connects to it
-    int* selMod = static_cast< int* >( event.GetClientData() );   
+	wxEvent * cloneEvt = event.Clone();
+	int* selMod = static_cast< int* >( event.GetClientData() );
+	//unsigned int tempMod = *selMod;
+
 	std::vector< Link >::iterator iter3;
     for ( iter3=links.begin(); iter3!=links.end(); )
     {
@@ -731,7 +735,10 @@ void Network::OnDelMod(wxCommandEvent& event )
 
 	PushAllEvents();
 
-    while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
+	//event.SetClientData(&tempMod);
+	::wxPostEvent( parent, *cloneEvt );
+
+ //   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
     parent->Refresh( true );
 }

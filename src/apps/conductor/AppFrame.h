@@ -388,6 +388,8 @@ protected:
     ///\param event The wxCommand event
     void OnChangeWorkingDirectory( wxCommandEvent& event );
 
+	void OnDelMod(wxCommandEvent& event );
+
 private:
     void ExitXplorer();
     void EnableCEGUIMenuItems();

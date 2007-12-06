@@ -91,6 +91,7 @@ lrintf( float flt )
 
 BEGIN_EVENT_TABLE(Canvas, wxScrolledWindow)
     EVT_PAINT( Canvas::OnPaint )
+	EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -118,6 +119,8 @@ m_treeView( 0 )
     ///Create default network for the user to work with
     CreateDefaultNetwork();
     
+	this->parent = parent;
+
     Refresh(true);
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -344,4 +347,10 @@ void Canvas::Update()
     {
         iter->second->Update();
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::OnDelMod(wxCommandEvent& event )
+{
+    int* selMod = static_cast< int* >( event.GetClientData() );   
+    ::wxPostEvent( parent, event );
 }

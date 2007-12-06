@@ -1757,7 +1757,8 @@ void UIPluginBase::OnDelMod(wxCommandEvent& event )
     ///Now send the erased module to xplorer to delete it as well
     ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair(  std::string("UNSIGNED INT") );
     dataValuePair->SetDataName( "Object ID" );
-    dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
+    //dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
+    dataValuePair->SetDataValue(  id );
     ves::open::xml::Command* veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
     veCommand->AddDataValuePair( dataValuePair );
