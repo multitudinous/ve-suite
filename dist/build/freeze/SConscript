@@ -27,7 +27,7 @@ installerbaseDir = pj(RootDir, installerDir)
 #installerDistDir = pj('installer')
 installerDistDir = pj(buildDir,'installer')
 installerDistbaseDir = pj(RootDir, installerDistDir)
-if not os.path.exists(installerDistDir):
+if not os.path.exists(installerDistbaseDir):
    os.mkdir(installerDistbaseDir)
 
 velauncherCodeDir = pj(RootDir,'src','apps','launcher')
