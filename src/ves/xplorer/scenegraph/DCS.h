@@ -101,6 +101,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
+class PhysicsRigidBody;
+
 #ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS DCS : public osg::PositionAttitudeTransform, public SceneNode
 #elif _OPENSG
@@ -224,14 +226,14 @@ public:
 
     ///Set the Bullet rigid body for this node, typically is set from CADEntity
     ///\param rigidBody The btRigidBody*
-    void SetbtRigidBody( btRigidBody* rigidBody );
+    void SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody );
    
 protected:
     double m_Rotation[ 3 ];///<The rotation array
     double m_Translation[ 3 ];///<The translation array
     double m_Scale[ 3 ];///<The scale array
 
-    btRigidBody* m_btBody;///<The rigid body to access the respective btTransform
+    PhysicsRigidBody* m_physicsRigidBody;///<The rigid body to access the respective btTransform
 
 private:
     ///Update the bullet matrix with the matrix from the osg node
@@ -248,8 +250,9 @@ public:
     virtual void InheritedTraverse( osg::NodeVisitor& nv );
 
 };
-}
-}
-}
+
+} // end scenegraph
+} // end xplorer
+} // end ves
 
 #endif //DCS_H

@@ -55,6 +55,7 @@ using namespace ves::xplorer::scenegraph;
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, 
                                     PhysicsSimulator* physicsSimulator )
 :
+m_storeObjectsInContact( false ),
 m_mass( 1.0 ),
 m_physicsSimulator( physicsSimulator ),
 m_osgToBullet( new osgToBullet( node ) ),
@@ -80,6 +81,11 @@ void PhysicsRigidBody::SetMass( float mass )
 {
     m_mass = mass;
     SetMassProps();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PhysicsRigidBody::IsStoringObjectsInContact()
+{
+    return m_storeObjectsInContact;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps()

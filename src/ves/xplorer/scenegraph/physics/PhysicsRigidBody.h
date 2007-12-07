@@ -88,6 +88,10 @@ public:
     ///\param mass The mass value
     void SetMass( float mass );
 
+    void SetStoreObjectsInContact( bool shouldStoreObjectsInContact );
+
+    bool IsStoringObjectsInContact();
+
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
     void BoundingBoxShape();
 
@@ -103,15 +107,17 @@ public:
 private:
     void SetMassProps();
 
+    bool m_storeObjectsInContact;///<Store the btCollisionObjects collided with per frame, yes or no
+
     float m_mass;///<The mass of the rigid body
-    float m_friction;///<The friction of the rigid body
-    float m_restitution;///<The restitution of the rigid body
 
     PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
 
     vesMotionState* m_vesMotionState;
 
     osg::ref_ptr< osgToBullet > m_osgToBullet;
+
+    std::vector< btCollisionObject* > m_objectsInContact;
 
 };
 

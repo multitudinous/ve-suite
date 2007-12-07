@@ -34,7 +34,23 @@
 #ifndef TRANSFER_PHYSICS_DATA_CALLBACK_H
 #define TRANSFER_PHYSICS_DATA_CALLBACK_H
 
+// --- VE-Suite Includes --- //
+#include <ves/VEConfig.h>
+
+// --- OSG Includes --- //
+#include <osg/NodeCallback>
+
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+class PhysicsRigidBody; 
+
+#ifdef _OSG
 /*!\file TransferPhysicsDataCallback.h
+ *
  */
 
 /*!\class ves::xplorer::scenegraph::TransferPhysicsDataCallback
@@ -44,24 +60,6 @@
 /*!\namespace ves::xplorer::scenegraph
  *
  */
-
-// --- VE-Suite Includes --- //
-#include <ves/VEConfig.h>
-
-// --- OSG Includes --- //
-#include <osg/NodeCallback>
-
-// --- Bullet Includes --- //
-
-class btRigidBody;
-
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-#ifdef _OSG
 class VE_SCENEGRAPH_EXPORTS TransferPhysicsDataCallback : public osg::NodeCallback
 {
 public:
@@ -74,21 +72,22 @@ public:
     ///Copy constructor
     TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );
 
-    ///Set the bullet rigid for this callback
-    ///\param transform bullet rigid body
-    void SetbtRigidBody( btRigidBody* transform );
+    ///Set the physics rigid body for this callback
+    ///\param physicsRigidBody physics rigid body
+    void SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody );
 
     ///Operator required by osg
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
 protected:
-    btRigidBody* m_btBody;///<Pointer to the bullet body
+    PhysicsRigidBody* m_physicsRigidBody;///<Pointer to the physics rigid body
 
 };
 #elif _OPENSG
 #endif
-}
-}
-}
+
+} // end scenegraph
+} // end xplorer
+} // end ves
 
 #endif //TRANSFER_PHYSICS_DATA_CALLBACK_H

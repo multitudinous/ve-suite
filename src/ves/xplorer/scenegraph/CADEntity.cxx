@@ -135,7 +135,7 @@ void CADEntity::InitPhysics()
     {
         m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
             m_dcs.get(), m_physicsSimulator );
-        m_dcs->SetbtRigidBody( m_physicsRigidBody );
+        m_dcs->SetPhysicsRigidBody( m_physicsRigidBody );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
