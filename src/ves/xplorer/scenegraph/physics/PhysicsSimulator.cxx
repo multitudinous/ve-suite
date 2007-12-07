@@ -211,7 +211,10 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_solver = new btSequentialImpulseConstraintSolver();
 #endif
 
+#if (BULLET_MAJOR_VERSION >= 2) && (BULLET_MINOR_VERSION > 60)
     m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration );
+#else
+#endif
     //m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;
     m_dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
