@@ -229,9 +229,11 @@ void HierarchyTree::AddtoTree( UIPluginBase *cur_module )
 	modData->modId = cur_module->GetID();
 	modData->modName = ConvertUnicode( cur_module->GetName() );
 	modData->systemId = m_canvas->GetActiveNetworkID( );
+	AddtoImageList(wxBitmap( square_xpm ));
 
-	AppendItem(currentId, wxString( cur_module->GetName().c_str(), wxConvUTF8 )
-		, -1 , -1, modData);
+	wxTreeItemId leaf = AppendItem(currentId, wxString( 
+		cur_module->GetName().c_str(), wxConvUTF8 ), -1 , -1, modData);
+	SetItemImage(leaf, images->GetImageCount()-1);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::RemoveFromTree( unsigned int id )
