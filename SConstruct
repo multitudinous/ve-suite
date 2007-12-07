@@ -337,9 +337,14 @@ Targets:
       > cd VE_CE
       > scons -u
 
+      Build velauncher.exe:
+      > scons freeze
+      NOTE (Windows Users): You will need to have Python for Windows Extensions installed:
+         http://pywin32.sourceforge.net/
+
    To create a ChageLog file:
       changelog - Create ChangeLog and ChangeLog.xml
-      > scons changelog SVN_Previous_Date=2007-06-01' you can change a start date
+      > scons changelog SVN_Previous_Date=2007-06-01
 
    To generate documentation:
       > scons docs
@@ -427,10 +432,11 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
    baseEnv.Append( LIBS = ['loki.0.1.6'] )
    baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
-   #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
-   #baseEnv.Append( LINKFLAGS = ['-g'] )
-   #baseEnv.Append( CXXFLAGS = ['-g'] )
+   if GetPlatform() != 'win32':
+      baseEnv.Append( LINKFLAGS = ['-g'] )
+      baseEnv.Append( CXXFLAGS = ['-g'] )
+      #baseEnv.Append( CXXFLAGS = ['-Wall', '-Wold-style-cast', '-Wundef', '-Wsign-compare', '-Wconversion', '-Wpointer-arith', '-pedantic'] )
 
    baseEnv.Append(BUILDERS = builders)
    #setup the build dir
