@@ -62,11 +62,7 @@
 #include <ostream>
 #include <string>
 
-using namespace ves::xplorer::scenegraph;
-
 const int maxProxies = 32766;
-
-vprSingletonImp( PhysicsSimulator );
 
 //#define PRINT_CONTACT_STATISTICS 1
 //#define SHOW_NUM_DEEP_PENETRATIONS 1
@@ -76,10 +72,20 @@ vprSingletonImp( PhysicsSimulator );
 //#define USE_CUSTOM_NEAR_CALLBACK 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+
+vprSingletonImp( PhysicsSimulator );
+
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
 :
 m_dynamicsWorld( 0 ),
+m_collisionConfiguration( 0 ),
 m_dispatcher( 0 ),
 m_broadphase( 0 ),
 m_solver( 0 ),
@@ -112,6 +118,11 @@ void PhysicsSimulator::ExitPhysics()
     //*************************************************************************//
     //Don't know if btDynamicsWorld's destructor will clean these up in the future
     //But, it looks like they are still hanging around, so delete them for now
+
+    if( m_collisionConfiguration )
+    {
+        delete m_collisionConfiguration;
+    }
 
     //Delete m_dispatcher
     if( m_dispatcher )
@@ -180,8 +191,8 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
-    btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-    m_dispatcher = new btCollisionDispatcher( collisionConfiguration );
+    m_collisionConfiguration = new btDefaultCollisionConfiguration();
+    m_dispatcher = new btCollisionDispatcher( m_collisionConfiguration );
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
     m_dispatcher->setNearCallback( customNearCallback );
@@ -199,7 +210,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_solver = new btSequentialImpulseConstraintSolver();
 #endif
 
-    m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver );
+    m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration );
     //m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;
     m_dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
@@ -461,3 +472,7 @@ btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
     return m_dynamicsWorld;
 }
 ////////////////////////////////////////////////////////////////////////////////
+
+} // end scenegraph
+} // end xplorer
+} // end ves

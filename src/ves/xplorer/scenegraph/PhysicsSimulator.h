@@ -70,6 +70,7 @@ namespace scenegraph
 #include <LinearMath/btTransform.h>
 
 class btDynamicsWorld;
+class btDefaultCollisionConfiguration;
 class btCollisionDispatcher;
 class btBroadphaseInterface;
 class btSequentialImpulseConstraintSolver;
@@ -154,6 +155,7 @@ private:
 
     btDynamicsWorld* m_dynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
 
+    btDefaultCollisionConfiguration* m_collisionConfiguration;
     btCollisionDispatcher* m_dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
     btBroadphaseInterface* m_broadphase;///<Maintains objects with overlapping AABB
     btSequentialImpulseConstraintSolver* m_solver;///<A physics solver which sequentially applies impulses
