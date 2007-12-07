@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define WXVERSION "2.8.4"
+#define WXVERSION "2.8.7"
 #define MyAppName "WxWidgets Pre-Compile"
 #define MyAppVerName "WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
