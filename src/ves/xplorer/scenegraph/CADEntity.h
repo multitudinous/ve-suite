@@ -49,7 +49,6 @@
 
 //Should not have to include these here
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/PhysicsRigidBody.h>
 
 namespace ves
 {
@@ -150,8 +149,6 @@ private:
     ves::xplorer::scenegraph::CADEntityHelper* m_cadEntityHelper;
     ///The DCS of CADEntity
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
-    ///The physics rigid body representation of CADEntity
-    osg::ref_ptr< ves::xplorer::scenegraph::PhysicsRigidBody > m_physicsRigidBody;
 
     bool m_physicsFlag;///<The current state of physics for CADEntity
     bool m_transparencyFlag;///<The current state of transparency
@@ -159,6 +156,7 @@ private:
     std::string m_fileName;///<The name of the geometry file loaded
 
     PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
+    PhysicsRigidBody* m_physicsRigidBody;
 };
 }
 }

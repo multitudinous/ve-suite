@@ -36,6 +36,8 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -97,12 +99,12 @@ void CADPhysicsPropertiesEventHandler::_operateOnNode( XMLObject* xmlObject )
             else if( command->GetDataValuePair( "Friction" ) )
             {
                 command->GetDataValuePair( "Friction" )->GetData( physicsPropertyValue );
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->SetFriction( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->setFriction( physicsPropertyValue );
             }
             else if( command->GetDataValuePair( "Restitution" ) )
             {
                 command->GetDataValuePair( "Restitution" )->GetData( physicsPropertyValue );
-                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->SetRestitution( physicsPropertyValue );
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetPhysicsRigidBody()->setRestitution( physicsPropertyValue );
             }
 
             std::cout << "Changed Physics Property: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;

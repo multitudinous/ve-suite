@@ -37,8 +37,9 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/environment/cfdSoundHandler.h>
 

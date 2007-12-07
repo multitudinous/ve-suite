@@ -40,7 +40,8 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 

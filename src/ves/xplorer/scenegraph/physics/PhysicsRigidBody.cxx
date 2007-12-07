@@ -31,45 +31,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/PhysicsRigidBody.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/vesMotionState.h>
-
-// --- OSG Includes --- //
-#include <osg/Geode>
-#include <osg/Geometry>
-#include <osg/TriangleIndexFunctor>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
-#include <BulletDynamics/Dynamics/btRigidBody.h>
 
 #include <BulletCollision/CollisionShapes/btCompoundShape.h>
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
-#include <BulletCollision/CollisionShapes/btTriangleMesh.h>
 #include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
-
-class TriIndexFunc
-{
-public:
-    TriIndexFunc(){;}
-    ~TriIndexFunc(){;}
-
-    void inline operator()( unsigned int pos1, unsigned int pos2, unsigned int pos3 )
-    {
-        m_triangleIndex.push_back( pos1 );
-        m_triangleIndex.push_back( pos2 );
-        m_triangleIndex.push_back( pos3 );
-    }
-
-    std::vector< unsigned int > m_triangleIndex;
-};
 
 using namespace ves::xplorer::scenegraph;
 
@@ -77,89 +54,26 @@ using namespace ves::xplorer::scenegraph;
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, 
                                     PhysicsSimulator* physicsSimulator )
 :
-m_traversed( false ),
-m_numVertices( 0 ),
 m_mass( 1.0 ),
-m_friction( 0.5 ),
-m_restitution( 0.0 ),
-m_rigidBody( 0 ),
-m_vesMotionState( new vesMotionState() ),
-m_compoundShape( 0 ),
-m_collisionShape( 0 ),
-m_triangleMesh( 0 ),
 m_physicsSimulator( physicsSimulator ),
-NodeVisitor( TRAVERSE_ALL_CHILDREN )
+m_vesMotionState( new vesMotionState() ),
+m_osgToBullet( new osgToBullet( node ) ),
+btRigidBody( btScalar( m_mass ),                      //mass
+             m_vesMotionState,                        //motionState
+             0,                                       //collisionShape
+             btVector3( 0.0f, 0.0f, 0.0f ),           //localInertia
+             btScalar( 0.0f ),                        //linearDamping
+             btScalar( 0.0f ),                        //angularDamping
+             btScalar( 0.5f ),                        //friction
+             btScalar( 0.0f ) )                       //restitution
 {
-    node->accept( *this );
-
     BoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()
 {
-    if( m_rigidBody )
-    {
-        delete m_rigidBody;
-    }
-
-    if( m_vesMotionState )
-    {
-        delete m_vesMotionState;
-    }
-
-    if( m_compoundShape )
-    {
-        delete m_compoundShape;
-    }
-
-    if( m_collisionShape )
-    {
-        delete m_collisionShape;
-    }
-
-    if( m_triangleMesh )
-    {
-        delete m_triangleMesh;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::apply( osg::Geode& geode )
-{
-    m_triangleMesh = new btTriangleMesh();
-
-    for( size_t i = 0; i < geode.getNumDrawables(); ++i )
-    {
-        osg::TriangleIndexFunctor< TriIndexFunc > tif;
-        osg::ref_ptr< osg::Drawable > drawable = geode.getDrawable( i );
-        drawable->accept( tif );
-        m_boundingBox.expandBy( drawable->getBound() );
-        m_boundingSphere.expandBy( drawable->getBound() );
-
-        osg::ref_ptr< osg::Vec3Array > vertexArray;
-        vertexArray = static_cast< osg::Vec3Array* >( drawable->asGeometry()->getVertexArray() );
-
-        for( size_t j = 0; j < tif.m_triangleIndex.size() / 3; ++j )
-        {
-            unsigned int index1, index2, index3;
-            index1 = tif.m_triangleIndex.at( j * 3     );
-            index2 = tif.m_triangleIndex.at( j * 3 + 1 );
-            index3 = tif.m_triangleIndex.at( j * 3 + 2 );
-
-            osg::Vec3d point1, point2, point3;
-            point1 = vertexArray->at( index1 );
-            point2 = vertexArray->at( index2 );
-            point3 = vertexArray->at( index3 );
-
-            m_triangleMesh->addTriangle( btVector3( point1.x(), point1.y(), point1.z() ),
-                                         btVector3( point2.x(), point2.y(), point2.z() ),
-                                         btVector3( point3.x(), point3.y(), point3.z() ) );
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-btRigidBody* PhysicsRigidBody::GetRigidBody()
-{
-    return m_rigidBody;
+    delete m_vesMotionState;
+    delete m_collisionShape;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMass( float mass )
@@ -168,21 +82,9 @@ void PhysicsRigidBody::SetMass( float mass )
     SetMassProps();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::SetFriction( float friction )
-{
-    m_friction = friction;
-    m_rigidBody->setFriction( m_friction );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::SetRestitution( float restitution )
-{
-    m_restitution = restitution;
-    m_rigidBody->setRestitution( m_restitution );
-}
-////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps()
 {
-    if( m_compoundShape && m_collisionShape )
+    if( m_collisionShape )
     {
         //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
         bool dynamic = ( m_mass != 0.0f );
@@ -190,26 +92,18 @@ void PhysicsRigidBody::SetMassProps()
         btVector3 localInertia( 0, 0, 0 );
         if( dynamic )
         {
-            m_compoundShape->calculateLocalInertia( m_mass, localInertia );
+            m_collisionShape->calculateLocalInertia( m_mass, localInertia );
         }
 
-        m_rigidBody->setMassProps( m_mass, localInertia );
+        setMassProps( m_mass, localInertia );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::BoundingBoxShape()
 {
-    if( m_rigidBody )
+    if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
-        delete m_rigidBody;
-        m_rigidBody = 0;
-    }
-
-    if( m_compoundShape )
-    {
-        delete m_compoundShape;
-        m_compoundShape = 0;
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -218,45 +112,29 @@ void PhysicsRigidBody::BoundingBoxShape()
         m_collisionShape = 0;
     }
 
-    m_compoundShape = new btCompoundShape();
-    m_collisionShape = new btBoxShape( btVector3( ( m_boundingBox.xMax() - m_boundingBox.xMin() ) * 0.5f,
-                                                  ( m_boundingBox.yMax() - m_boundingBox.yMin() ) * 0.5f,
-                                                  ( m_boundingBox.zMax() - m_boundingBox.zMin() ) * 0.5f ) );
+    m_collisionShape = new btBoxShape(
+        btVector3( ( m_osgToBullet->GetBoundingBox().xMax() -
+                     m_osgToBullet->GetBoundingBox().xMin() ) * 0.5f,
+                   ( m_osgToBullet->GetBoundingBox().yMax() -
+                     m_osgToBullet->GetBoundingBox().yMin() ) * 0.5f,
+                   ( m_osgToBullet->GetBoundingBox().zMax() -
+                     m_osgToBullet->GetBoundingBox().zMin() ) * 0.5f ) );
 
-    m_compoundShape->addChildShape( btTransform::getIdentity(), m_collisionShape );
-
-    btVector3 localInertia( 0, 0, 0 );
-    if( m_mass != 0 )
-    {
-        m_compoundShape->calculateLocalInertia( m_mass, localInertia );
-    }
-
-    m_rigidBody = new btRigidBody( m_mass,
-                                   m_vesMotionState,
-                                   m_compoundShape,
-                                   localInertia );
+    SetMassProps();
 
     if( m_mass != 0 )
     {
-        m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+        setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SphereShape( double radius )
 {
-    if( m_rigidBody )
+    if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
-        delete m_rigidBody;
-        m_rigidBody = 0;
-    }
-
-    if( m_compoundShape )
-    {
-        delete m_compoundShape;
-        m_compoundShape = 0;
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -265,50 +143,30 @@ void PhysicsRigidBody::SphereShape( double radius )
         m_collisionShape = 0;
     }
 
-    m_compoundShape = new btCompoundShape();
     if( radius == 0 )
     {
-        m_collisionShape = new btSphereShape( m_boundingSphere.radius() );
+        m_collisionShape = new btSphereShape( m_osgToBullet->GetBoundingSphere().radius() );
     }
     else
     {
         m_collisionShape = new btSphereShape( radius );
     }
 
-    m_compoundShape->addChildShape( btTransform::getIdentity(), m_collisionShape );
-
-    btVector3 localInertia( 0, 0, 0 );
-    if( m_mass != 0 )
-    {
-        m_compoundShape->calculateLocalInertia( m_mass, localInertia );
-    }
-
-    m_rigidBody = new btRigidBody( m_mass,
-                                   m_vesMotionState,
-                                   m_compoundShape,
-                                   localInertia );
+    SetMassProps();
 
     if( m_mass != 0 )
     {
-        m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+        setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
-    if( m_rigidBody )
+    if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
-        delete m_rigidBody;
-        m_rigidBody = 0;
-    }
-
-    if( m_compoundShape )
-    {
-        delete m_compoundShape;
-        m_compoundShape = 0;
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -317,31 +175,22 @@ void PhysicsRigidBody::StaticConcaveShape()
         m_collisionShape = 0;
     }
 
-    m_collisionShape = new btBvhTriangleMeshShape( m_triangleMesh, false );
+    //m_collisionShape = new btBvhTriangleMeshShape( m_osgToBullet->GetTriangleMesh(), false );
 
     btVector3 localInertia( 0, 0, 0 );
+    if( m_mass != 0 )
+    {
+        m_collisionShape->calculateLocalInertia( m_mass, localInertia );
+    }
 
-    m_rigidBody = new btRigidBody( 0,
-                                   m_vesMotionState,
-                                   m_collisionShape,
-                                   localInertia );
-
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::ConvexShape()
 {
-    if( m_rigidBody )
+    if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_rigidBody );
-        delete m_rigidBody;
-        m_rigidBody = 0;
-    }
-
-    if( m_compoundShape )
-    {
-        delete m_compoundShape;
-        m_compoundShape = 0;
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -350,29 +199,19 @@ void PhysicsRigidBody::ConvexShape()
         m_collisionShape = 0;
     }
 
-    m_compoundShape = new btCompoundShape();
-    m_collisionShape = new btConvexTriangleMeshShape( m_triangleMesh );
-    btTransform comOffset = btTransform::getIdentity();
-    osg::Vec3d center = m_boundingBox.center();
-    comOffset.setOrigin( btVector3( -center.x(), -center.y(), -center.z() ) );
-    m_compoundShape->addChildShape( comOffset, m_collisionShape );
+    //m_collisionShape = new btConvexTriangleMeshShape( m_osgToBullet->GetTriangleMesh() );
 
     btVector3 localInertia( 0, 0, 0 );
     if( m_mass != 0 )
     {
-        m_compoundShape->calculateLocalInertia( m_mass, localInertia );
+        m_collisionShape->calculateLocalInertia( m_mass, localInertia );
     }
-
-    m_rigidBody = new btRigidBody( m_mass,
-                                   m_vesMotionState,
-                                   m_compoundShape,
-                                   localInertia );
 
     if( m_mass != 0 )
     {
-        m_rigidBody->setActivationState( DISABLE_DEACTIVATION );
+        setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( m_rigidBody );
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////

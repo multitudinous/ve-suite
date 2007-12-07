@@ -40,7 +40,8 @@
 #include <ves/xplorer/util/fileIO.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/SteadyStateVizHandler.h>

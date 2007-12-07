@@ -42,6 +42,8 @@
 #include <ves/xplorer/scenegraph/Clone.h>
 #include <ves/xplorer/scenegraph/UpdateIDOnChildrenVisitor.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
 
 #include <ves/open/xml/cad/CADNode.h>
@@ -296,8 +298,8 @@ void CADEventHandler::_addNodeToNode(std::string parentID, CADNode* activeNode)
                 partNode->InitPhysics();
 
                 partNode->GetPhysicsRigidBody()->SetMass( newPart->GetMass() );
-                partNode->GetPhysicsRigidBody()->SetFriction( newPart->GetFriction() );
-                partNode->GetPhysicsRigidBody()->SetRestitution( newPart->GetRestitution() );
+                partNode->GetPhysicsRigidBody()->setFriction( newPart->GetFriction() );
+                partNode->GetPhysicsRigidBody()->setRestitution( newPart->GetRestitution() );
                 
                 std::string physicsMesh = newPart->GetPhysicsMesh();
                 if( physicsMesh == "Bounding Box" )

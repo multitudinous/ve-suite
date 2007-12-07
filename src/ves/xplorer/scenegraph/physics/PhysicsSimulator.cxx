@@ -31,11 +31,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/vesMotionState.h>
 
 // --- OSG Includes --- //
 #include <osg/Geode>

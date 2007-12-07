@@ -33,10 +33,11 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/vesMotionState.h>
-#include <ves/xplorer/scenegraph/TransferPhysicsDataCallback.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/SelectTechnique.h>
+
+#include <ves/xplorer/scenegraph/physics/TransferPhysicsDataCallback.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
 
 // --- OSG Includes --- //
 #ifdef _OSG

@@ -36,6 +36,8 @@
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

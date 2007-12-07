@@ -49,7 +49,8 @@
 #include <ves/open/xml/model/System.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>

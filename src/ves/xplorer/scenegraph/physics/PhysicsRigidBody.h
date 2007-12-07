@@ -33,20 +33,25 @@
 #ifndef PHYSICS_RIGID_BODY_H
 #define PHYSICS_RIGID_BODY_H
 
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-// --- OSG Stuff --- //
-#include <osg/ref_ptr>
-#include <osg/NodeVisitor>
-#include <osg/BoundingBox>
-#include <osg/BoundingSphere>
+#include <ves/xplorer/scenegraph/physics/osgToBullet.h>
 
-// --- Bullet Stuff --- //
-class btRigidBody;
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
+namespace osg
+{
+    class Node;
+    class Geode;
+}
+
+// --- Bullet Includes --- //
+#include <BulletDynamics/Dynamics/btRigidBody.h>
+
 class btCompoundShape;
 class btCollisionShape;
-class btTriangleMesh;
 
 namespace ves
 {
@@ -56,6 +61,7 @@ namespace scenegraph
 {
 class PhysicsSimulator;
 class vesMotionState;
+class osgToBullet;
 
 /*!\file PhysicsRigidBody.h
  *
@@ -66,7 +72,7 @@ class vesMotionState;
 /*!\namespace ves::xplorer::scenegraph
  *
  */
-class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public osg::NodeVisitor
+class VE_SCENEGRAPH_EXPORTS PhysicsRigidBody : public btRigidBody
 {
 public:
     ///Constructor
@@ -78,19 +84,9 @@ public:
     ///Destructor
     virtual ~PhysicsRigidBody();
 
-    ///Override NodeVisitor apply function for geode
-    ///\param geode A child geode w/in the node being traversed
-    virtual void apply( osg::Geode& geode );
-
-    btRigidBody* GetRigidBody();
-
     ///Set the mass for the rigid body
     ///\param mass The mass value
     void SetMass( float mass );
-
-    void SetFriction( float friction );
-
-    void SetRestitution( float restitution );
 
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
     void BoundingBoxShape();
@@ -107,24 +103,15 @@ public:
 private:
     void SetMassProps();
 
-    bool m_traversed;
-
-    int m_numVertices;
-
     float m_mass;///<The mass of the rigid body
     float m_friction;///<The friction of the rigid body
     float m_restitution;///<The restitution of the rigid body
 
-    osg::BoundingBox m_boundingBox;///<Bounding box of the osg node
-    osg::BoundingSphere m_boundingSphere;///<Bounding sphere of the osg node
-
-    btRigidBody* m_rigidBody;
-    vesMotionState* m_vesMotionState;
-    btCompoundShape* m_compoundShape;
-    btCollisionShape* m_collisionShape;
-    btTriangleMesh* m_triangleMesh;///<The triangle mesh for physics
-
     PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
+
+    vesMotionState* m_vesMotionState;
+
+    osg::ref_ptr< osgToBullet > m_osgToBullet;
 
 };
 }

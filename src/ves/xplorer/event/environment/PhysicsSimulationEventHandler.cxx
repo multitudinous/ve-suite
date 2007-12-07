@@ -33,7 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/event/environment/PhysicsSimulationEventHandler.h>
 
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>

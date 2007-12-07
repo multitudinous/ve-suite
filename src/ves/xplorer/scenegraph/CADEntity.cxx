@@ -34,8 +34,10 @@
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/SceneNode.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -124,15 +126,16 @@ m_physicsSimulator( physicsSimulator )
 CADEntity::~CADEntity()
 {
     delete m_cadEntityHelper;
+    delete m_physicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
-    if( !m_physicsRigidBody.valid() )
+    if( !m_physicsRigidBody )
     {
         m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
             m_dcs.get(), m_physicsSimulator );
-        m_dcs->SetbtRigidBody( m_physicsRigidBody->GetRigidBody() );
+        m_dcs->SetbtRigidBody( m_physicsRigidBody );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +151,7 @@ ves::xplorer::scenegraph::DCS* CADEntity::GetDCS()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
-    return m_physicsRigidBody.get();
+    return m_physicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetFilename()

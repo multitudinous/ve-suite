@@ -69,6 +69,7 @@ namespace scenegraph
 ////////////////////////////////////////////////////////////////////////////////
 osgToBullet::osgToBullet( osg::Node* node )
 :
+m_triangleMesh( new btTriangleMesh() ),
 NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     node->accept( *this );
@@ -82,8 +83,6 @@ osgToBullet::~osgToBullet()
 ////////////////////////////////////////////////////////////////////////////////
 void osgToBullet::apply( osg::Geode& geode )
 {
-    m_triangleMesh = new btTriangleMesh();
-
     for( size_t i = 0; i < geode.getNumDrawables(); ++i )
     {
         osg::TriangleIndexFunctor< TriIndexFunc > tif;

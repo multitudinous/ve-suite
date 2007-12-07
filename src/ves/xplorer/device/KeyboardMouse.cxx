@@ -42,8 +42,9 @@
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/Group.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>
