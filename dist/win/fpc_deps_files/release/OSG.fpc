@@ -1,6 +1,6 @@
-prefix=${fp_file_cwd}\..\..\OSG_1.2_Pre-Compile_vc8.0
+prefix=${fp_file_cwd}\..\..\OSG_2.2.0_Pre-Compile_vc8.0_SP1
 exec_prefix=${prefix}
-libdir=${exec_prefix}\lib\win32
+libdir=${exec_prefix}\lib
 includedir=${prefix}\include 
 
 Name: OpenSceneGraph
@@ -8,7 +8,7 @@ Description: OpenSceneGraph release pre-compiled for VES
 Provides: OpenSceneGraph OpenThreads
 Requires:
 Version: 1.2
-Libs: /libpath:"${libdir}" OpenThreadsWin32.lib osg.lib osgDB.lib osgFX.lib osgGA.lib osgIntrospection.lib osgParticle.lib osgProducer.lib osgSim.lib osgTerrain.lib osgText.lib osgUtil.lib Producer.lib
+Libs: /libpath:"${libdir}" opengl32.lib  OpenThreads.lib osg.lib osgDB.lib osgFX.lib osgGA.lib osgParticle.lib osgSim.lib osgTerrain.lib osgText.lib osgUtil.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 
