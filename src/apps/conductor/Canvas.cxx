@@ -350,7 +350,6 @@ void Canvas::Update()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::OnDelMod(wxCommandEvent& event )
-{
-    int* selMod = static_cast< int* >( event.GetClientData() );   
+{  
     ::wxPostEvent( parent, event );
 }

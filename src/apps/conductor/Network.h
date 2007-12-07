@@ -224,6 +224,8 @@ private:
    wxPoint point2;
    size_t maxX;
    size_t maxY;
+
+   unsigned int pluginID;
    
    std::string tempXMLNetworkData;
    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location

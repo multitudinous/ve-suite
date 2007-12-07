@@ -693,9 +693,8 @@ void Network::OnDelMod(wxCommandEvent& event )
 
     // Need to delete all links associated with this particular module
     // first, delete all the links connects to it
-	wxEvent * cloneEvt = event.Clone();
 	int* selMod = static_cast< int* >( event.GetClientData() );
-	//unsigned int tempMod = *selMod;
+	pluginID = *selMod;
 
 	std::vector< Link >::iterator iter3;
     for ( iter3=links.begin(); iter3!=links.end(); )
@@ -735,8 +734,8 @@ void Network::OnDelMod(wxCommandEvent& event )
 
 	PushAllEvents();
 
-	//event.SetClientData(&tempMod);
-	::wxPostEvent( parent, *cloneEvt );
+	event.SetClientData(&pluginID);
+	::wxPostEvent( parent, event );
 
  //   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
