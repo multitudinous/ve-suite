@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-10-27 18:39:25 -0500 (Sat, 27 Oct 2007) $
- * Version:       $Rev: 9742 $
- * Author:        $Author: jbkoch $
- * Id:            $Id: osgToBullet.h 9742 2007-10-27 23:39:25Z jbkoch $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
