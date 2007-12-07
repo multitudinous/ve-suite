@@ -211,7 +211,7 @@ void PhysicsSimulator::InitializePhysicsSimulation()
     m_solver = new btSequentialImpulseConstraintSolver();
 #endif
 
-#if (BULLET_MAJOR_VERSION >= 2) && (BULLET_MINOR_VERSION > 60)
+#if (BULLET_MAJOR_VERSION >= 2) && (BULLET_MINOR_VERSION > 63)
     m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration );
 #else
     m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver );

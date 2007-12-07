@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg', 'RootDir')
+Import('ves_pkg', 'RootDir', 'buildDir')
 env = ves_pkg.getEnv().Copy()
 
 
@@ -22,20 +22,24 @@ srcs = Split("""
 """)
 
 installerDir = pj('src', 'apps', 'launcher')
-installerbaseDir = pj('#', installerDir)
+installerbaseDir = pj(RootDir, installerDir)
 
-installerDistDir = pj('VE_Installer','installer','dist')
-installerDistbaseDir = pj('#', installerDistDir)
-
-basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
-
-makespec_py = pj(basePyinstallerDir, 'Makespec.py')
-build_py = pj(basePyinstallerDir, 'Build.py')
+#installerDistDir = pj('installer')
+installerDistDir = pj(buildDir,'installer')
+installerDistbaseDir = pj(RootDir, installerDistDir)
+if not os.path.exists(installerDistDir):
+   os.mkdir(installerDistbaseDir)
 
 velauncherCodeDir = pj(RootDir,'src','apps','launcher')
 velauncherLibDir = pj(velauncherCodeDir,'python')
-velauncherDistDir = pj(RootDir,'VE_Installer','installer','dist')
-installerImages = pj(RootDir,'VE_Installer','installer','installerImages')
+velauncherDistDir = pj(RootDir,buildDir,'installer')
+
+installerImages = pj(RootDir,'dist','installerImages')
+
+
+basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
+makespec_py = pj(basePyinstallerDir, 'Makespec.py')
+build_py = pj(basePyinstallerDir, 'Build.py')
 
 makespecSrc = map(lambda s: pj(installerbaseDir, "%s.py" %(s)), srcs)
 makespecTarget = map(lambda s: "%s.spec" %(s), srcs)
@@ -46,7 +50,7 @@ if sca_util.GetPlatform() == "win32":
     freezeTarget = map(lambda s: "%s.exe" %(s), srcs)
 else:
     freezeTarget = map(lambda s: "%s" %(s), srcs)
-	
+
 print "####################################"
 print "# Freezing Launcher Code...        #"
 print "# Please wait... it takes a minute #"

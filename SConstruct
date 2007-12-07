@@ -487,7 +487,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    # freeze the python code
    if 'freeze' in  COMMAND_LINE_TARGETS:
-      veiFreezeSubdirs = pj(buildDir,'VE_Installer','installer', 'freezeCode')	
+      veiFreezeSubdirs = pj(buildDir,'dist', 'build', 'freeze')
       ves_dirs.append( veiFreezeSubdirs )
       baseEnv.Alias('freeze', veiFreezeSubdirs) 
      
