@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PHYSICS_RIGID_BODY_H
-#define PHYSICS_RIGID_BODY_H
+#ifndef VES_PHYSICS_RIGID_BODY_H
+#define VES_PHYSICS_RIGID_BODY_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -114,8 +114,9 @@ private:
     osg::ref_ptr< osgToBullet > m_osgToBullet;
 
 };
-}
-}
-}
 
-#endif //PHYSICS_RIGID_BODY_H
+} // end scenegraph
+} // end xplorer
+} // end ves
+
+#endif //VES_PHYSICS_RIGID_BODY_H

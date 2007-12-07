@@ -42,6 +42,7 @@
 #include <BulletCollision/CollisionShapes/btCollisionShape.h>
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <BulletCollision/CollisionShapes/btSphereShape.h>
+#include <BulletCollision/CollisionShapes/btTriangleMesh.h>
 #include <BulletCollision/CollisionShapes/btBvhTriangleMeshShape.h>
 #include <BulletCollision/CollisionShapes/btConvexTriangleMeshShape.h>
 
@@ -56,16 +57,15 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
 :
 m_mass( 1.0 ),
 m_physicsSimulator( physicsSimulator ),
-m_vesMotionState( new vesMotionState() ),
 m_osgToBullet( new osgToBullet( node ) ),
-btRigidBody( btScalar( m_mass ),                      //mass
-             m_vesMotionState,                        //motionState
-             0,                                       //collisionShape
-             btVector3( 0.0f, 0.0f, 0.0f ),           //localInertia
-             btScalar( 0.0f ),                        //linearDamping
-             btScalar( 0.0f ),                        //angularDamping
-             btScalar( 0.5f ),                        //friction
-             btScalar( 0.0f ) )                       //restitution
+btRigidBody( btScalar( m_mass ),                         //mass
+             m_vesMotionState = new vesMotionState(),    //motionState
+             0,                                          //collisionShape
+             btVector3( 0.0f, 0.0f, 0.0f ),              //localInertia
+             btScalar( 0.0f ),                           //linearDamping
+             btScalar( 0.0f ),                           //angularDamping
+             btScalar( 0.5f ),                           //friction
+             btScalar( 0.0f ) )                          //restitution
 {
     BoundingBoxShape();
 }
@@ -175,7 +175,7 @@ void PhysicsRigidBody::StaticConcaveShape()
         m_collisionShape = 0;
     }
 
-    //m_collisionShape = new btBvhTriangleMeshShape( m_osgToBullet->GetTriangleMesh(), false );
+    m_collisionShape = new btBvhTriangleMeshShape( m_osgToBullet->GetTriangleMesh(), false );
 
     btVector3 localInertia( 0, 0, 0 );
     if( m_mass != 0 )
@@ -199,7 +199,7 @@ void PhysicsRigidBody::ConvexShape()
         m_collisionShape = 0;
     }
 
-    //m_collisionShape = new btConvexTriangleMeshShape( m_osgToBullet->GetTriangleMesh() );
+    m_collisionShape = new btConvexTriangleMeshShape( m_osgToBullet->GetTriangleMesh() );
 
     btVector3 localInertia( 0, 0, 0 );
     if( m_mass != 0 )
