@@ -64,6 +64,7 @@ public:
     void OnPaint( wxPaintEvent &event );
     ///Get the active network being rendered
     Network * GetActiveNetwork();
+	std::string GetActiveNetworkID( );
     ///Set active network id from hierarchy tree
     void SetActiveNetwork(std::string id);
     ///Populate canvas with network string

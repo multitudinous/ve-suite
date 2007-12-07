@@ -217,6 +217,11 @@ void Canvas::SetActiveNetwork(std::string id)
     SetVirtualSize( networks[this->activeId]->GetMaxX(), networks[this->activeId]->GetMaxY() );
     Refresh(true);
 }
+///////////////////////////////////////////////////////////////////////////////
+std::string Canvas::GetActiveNetworkID( )
+{
+   return this->activeId;
+}
 //////////////////////////////////////////////////////////////////////////////
 void Canvas::DrawNetwork(wxDC &dc, std::string id)
 {

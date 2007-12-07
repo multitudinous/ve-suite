@@ -207,7 +207,7 @@ void HierarchyTree::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 	{
         ModuleData* tempModData = 
             static_cast< ModuleData* >( this->GetItemData( GetSelection() ) );
-		m_canvas->SetActiveNetwork( tempModData->systemId);
+		m_canvas->SetActiveNetwork( tempModData->systemId );
 	    m_canvas->GetActiveNetwork()->HighlightCenter( tempModData->modId );
 		currentId = this->GetItemParent( this->GetSelection() );
 	}
@@ -228,7 +228,7 @@ void HierarchyTree::AddtoTree( UIPluginBase *cur_module )
 	ModuleData* modData = new ModuleData();
 	modData->modId = cur_module->GetID();
 	modData->modName = ConvertUnicode( cur_module->GetName() );
-	//modData->systemId = id;
+	modData->systemId = m_canvas->GetActiveNetworkID( );
 
 	AppendItem(currentId, wxString( cur_module->GetName().c_str(), wxConvUTF8 )
 		, -1 , -1, modData);
