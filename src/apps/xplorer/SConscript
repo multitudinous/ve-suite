@@ -51,6 +51,10 @@ boost_options.apply( env )
 vrjuggler_options.apply( env )
 bullet_options.apply( env )
 
+bulletVersion = bullet_options.getVersion()
+env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
+                  'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
+
 if GetPlatform() == 'win32':
    env.Append( CPPDEFINES = ['LOKI_DLL'])
 

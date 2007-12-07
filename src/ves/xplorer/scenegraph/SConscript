@@ -29,7 +29,10 @@ vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 osgal_options.apply( lib_env )
-#lib_env.Append( CPPFLAGS = ['-ffriend-injection'] )
+
+bulletVersion = bullet_options.getVersion()
+lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
+                  'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
 
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
