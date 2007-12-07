@@ -9,8 +9,10 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/Sound.h>
+
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
 #include <osg/Texture2D>
@@ -84,8 +86,8 @@ void World::Initialize()
     m_funnelEntity->SetNameAndDescriptions( "funnel_physics" );
     m_funnelEntity->InitPhysics();
     m_funnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    m_funnelEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
-    m_funnelEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
+    m_funnelEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
+    m_funnelEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_funnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
     m_funnelEntity->SetShaders( m_tcm.get() );
 
@@ -98,8 +100,8 @@ void World::Initialize()
     m_marbleEntity->GetDCS()->SetTranslationArray( marblePosition );
     m_marbleEntity->InitPhysics();
     m_marbleEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
-    m_marbleEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
-    m_marbleEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
+    m_marbleEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
+    m_marbleEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     //The real value of the radius should be 0.05, need to look at this
     m_marbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
     m_marbleEntity->SetShaders( m_tcm.get() );
@@ -112,8 +114,8 @@ void World::Initialize()
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
     m_quarterEntity->InitPhysics();
     m_quarterEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
-    m_quarterEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
-    m_quarterEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
+    m_quarterEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
+    m_quarterEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
 
     m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
@@ -122,9 +124,10 @@ void World::Initialize()
     m_railingEntity->SetNameAndDescriptions( "railing_physics" );
     m_railingEntity->InitPhysics();
     m_railingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    m_railingEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
-    m_railingEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
+    m_railingEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
+    m_railingEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_railingEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+    //m_railingEntity->SetShaders();
 
     m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive",
                                            m_pluginDCS.get(),
@@ -132,9 +135,10 @@ void World::Initialize()
     m_slideEntity->SetNameAndDescriptions( "slide_physics" );
     m_slideEntity->InitPhysics();
     m_slideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
-    m_slideEntity->GetPhysicsRigidBody()->SetFriction( 0.5 );
-    m_slideEntity->GetPhysicsRigidBody()->SetRestitution( 0.0 );
+    m_slideEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
+    m_slideEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_slideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
+    m_slideEntity->SetShaders();
 
     m_waterEntity = new demo::WaterEntity( "Models/IVEs/water.ive", m_pluginDCS.get() );
     m_waterEntity->SetNameAndDescriptions( "water" );

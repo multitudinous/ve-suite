@@ -26,7 +26,11 @@ public:
 
     void SetNameAndDescriptions( std::string geomFile );
 
+    void SetShaders();
+
 private:
+    void SetShaderOne();
+
     osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
 };
 }

@@ -4,7 +4,6 @@
 #include "ViewPositionUpdateCallback.h"
 
 // --- VE-Suite Includes --- //
-//#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
 
 // --- OSG Includes --- //
@@ -14,7 +13,6 @@
 #include <osg/TextureCubeMap>
 
 #include <osgDB/ReadFile>
-//#include <osgDB/WriteFile>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>

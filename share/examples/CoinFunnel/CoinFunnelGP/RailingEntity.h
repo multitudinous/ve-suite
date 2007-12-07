@@ -4,6 +4,12 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+// --- OSG Includes --- //
+namespace osg
+{
+    class TextureCubeMap;
+}
+
 // --- C/C++ Libraries --- //
 #include <string>
 
@@ -20,7 +26,10 @@ public:
 
     void SetNameAndDescriptions( std::string geomFile );
 
+    void SetShaders( osg::TextureCubeMap* tcm );
+
 private:
+    void SetShaderOne( osg::TextureCubeMap* tcm );
 
     osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
 };
