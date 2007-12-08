@@ -51,6 +51,7 @@ pj = os.path.join
 # Setup prefix for mac specific calls
 # TODO: append the mac specific paths to the path env var instead of the solution
 # below
+darwinPlatform = False
 if string.find(sys.platform, 'darwin' ) != -1:
     darwinPlatform = True
     exeXplorerPrefix = pj( VELAUNCHER_DIR,'ves_xplorer.app', 'Contents', 'MacOS' )
