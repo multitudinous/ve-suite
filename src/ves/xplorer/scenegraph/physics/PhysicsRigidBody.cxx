@@ -55,7 +55,7 @@ using namespace ves::xplorer::scenegraph;
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, 
                                     PhysicsSimulator* physicsSimulator )
 :
-m_storeObjectsInContact( false ),
+m_storeCollisions( false ),
 m_mass( 1.0 ),
 m_physicsSimulator( physicsSimulator ),
 m_osgToBullet( new osgToBullet( node ) ),
@@ -83,9 +83,19 @@ void PhysicsRigidBody::SetMass( float mass )
     SetMassProps();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PhysicsRigidBody::IsStoringObjectsInContact()
+void PhysicsRigidBody::SetStoreCollisions( bool storeCollisions )
 {
-    return m_storeObjectsInContact;
+    if( storeCollisions == false )
+    {
+        ClearCollisions();
+    }
+
+    m_storeCollisions = storeCollisions;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PhysicsRigidBody::IsStoringCollisions()
+{
+    return m_storeCollisions;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps()
@@ -103,6 +113,16 @@ void PhysicsRigidBody::SetMassProps()
 
         setMassProps( m_mass, localInertia );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsRigidBody::PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location )
+{
+    m_collisions.insert( std::make_pair( physicsRigidBody, location ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsRigidBody::ClearCollisions()
+{
+    m_collisions.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::BoundingBoxShape()

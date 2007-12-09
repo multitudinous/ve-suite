@@ -33,6 +33,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 #include <ves/xplorer/scenegraph/physics/vesMotionState.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -227,6 +228,49 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     if( m_dynamicsWorld && !m_idle )
     {
         m_dynamicsWorld->stepSimulation( dt );
+
+        bool clearCollisions = true;
+
+        int numManifolds = m_dispatcher->getNumManifolds();
+        for( int i = 0; i < numManifolds; ++i )
+        {
+            btPersistentManifold* contactManifold = m_dispatcher->getManifoldByIndexInternal( i );
+            //contactManifold->refreshContactPoints( bodyA->getWorldTransform(), bodyB->getWorldTransform() );
+
+            int numContacts = contactManifold->getNumContacts();
+		    for( int j = 0; j < numContacts; ++j )
+		    {
+		        btManifoldPoint& pt = contactManifold->getContactPoint( j );
+
+                PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >( contactManifold->getBody0() );
+                PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >( contactManifold->getBody1() );
+
+                if( bodyA->IsStoringCollisions() )
+                {
+                    if( clearCollisions )
+                    {
+                        bodyA->ClearCollisions();
+                        clearCollisions = false;
+                    }
+
+                    btVector3 ptA = pt.getPositionWorldOnA();
+                    bodyA->PushBackCollision( bodyB, ptA );
+                }
+
+                if( bodyB->IsStoringCollisions() )
+                {
+                    if( clearCollisions )
+                    {
+                        bodyB->ClearCollisions();
+                        clearCollisions = false;
+                    }
+
+                    btVector3 ptB = pt.getPositionWorldOnB();
+                    bodyB->PushBackCollision( bodyA, ptB );
+                }
+		    }
+        }
+
         /*
         printf( "dt = %f: ", dt );
 

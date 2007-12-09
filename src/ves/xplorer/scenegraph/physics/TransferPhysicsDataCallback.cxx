@@ -93,31 +93,6 @@ void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor*
 
         btVector3 position = transform.getOrigin();
         dcs->setPosition( osg::Vec3d( position[ 0 ], position[ 1 ], position[ 2 ] ) );
-
-        if( m_physicsRigidBody->IsStoringObjectsInContact() )
-        {
-            btDynamicsWorld* dynamicsWorld = 
-            ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld();
-
-            int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
-            for( int i = 0; i < numManifolds; ++i )
-            {
-                btPersistentManifold* contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal( i );
-                btCollisionObject* thisCollisionObject = static_cast< btCollisionObject* >( m_physicsRigidBody );
-                btCollisionObject* obA = static_cast< btCollisionObject* >( contactManifold->getBody0() );
-                btCollisionObject* obB = static_cast< btCollisionObject* >( contactManifold->getBody1() );
-                if( thisCollisionObject == obA )
-                {
-                    //std::cout << "This Collision Object = obA" << std::endl;
-                    //std::cout << std::endl;
-                }
-                else if( thisCollisionObject == obB )
-                {
-                    //std::cout << "This Collision Object = obB" << std::endl;
-                    //std::cout << std::endl;
-                }
-            }
-        }
     }
 
     traverse( node, nv );

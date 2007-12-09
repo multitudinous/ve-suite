@@ -53,6 +53,9 @@ namespace osg
 class btCompoundShape;
 class btCollisionShape;
 
+// --- C/C++ Libraries --- //
+#include <map>
+
 namespace ves
 {
 namespace xplorer
@@ -88,9 +91,9 @@ public:
     ///\param mass The mass value
     void SetMass( float mass );
 
-    void SetStoreObjectsInContact( bool shouldStoreObjectsInContact );
+    void SetStoreCollisions( bool storeCollisions );
 
-    bool IsStoringObjectsInContact();
+    bool IsStoringCollisions();
 
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
     void BoundingBoxShape();
@@ -105,9 +108,15 @@ public:
     void ConvexShape();
 
 private:
+    friend class PhysicsSimulator;
+
     void SetMassProps();
 
-    bool m_storeObjectsInContact;///<Store the btCollisionObjects collided with per frame, yes or no
+    void PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location );
+
+    void ClearCollisions();
+
+    bool m_storeCollisions;///<Store bodies currently in collision with this body, yes or no
 
     float m_mass;///<The mass of the rigid body
 
@@ -117,7 +126,7 @@ private:
 
     osg::ref_ptr< osgToBullet > m_osgToBullet;
 
-    std::vector< btCollisionObject* > m_objectsInContact;
+    std::multimap< PhysicsRigidBody*, btVector3 > m_collisions;
 
 };
 
